@@ -263,13 +263,13 @@ Public Module RegionCountryLists
     Public Function ExtractCultureFromFileName(ReportFileNameWithPath As String, FixedPart As String, Optional fuzzy As Boolean = False) As CultureInfo
         Dim filenameWithoutExtension As String = Path.GetFileNameWithoutExtension(ReportFileNameWithPath)
 
-        If filenameWithoutExtension.Count("("c) <> 1 Then
-            MsgBox("Invalid Filename", $"'{filenameWithoutExtension}' malformed,{vbCrLf}it must contain exactly one '('.", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Malformed Error Report Filename")
+        If filenameWithoutExtension.Count("("c) = 0 Then
+            MsgBox("Invalid Filename", $"'{filenameWithoutExtension}' malformed,{vbCrLf}it must contain at least one '('.", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Malformed Error Report Filename")
             Return Nothing
         End If
 
-        If filenameWithoutExtension.Count(")"c) <> 1 Then
-            MsgBox("Invalid Filename", $"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain exactly one ')'.", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Malformed Error Report Filename")
+        If filenameWithoutExtension.Count(")"c) = 0 Then
+            MsgBox("Invalid Filename", $"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain at least one ')'.", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Malformed Error Report Filename")
             Return Nothing
         End If
 

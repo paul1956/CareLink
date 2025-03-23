@@ -10,11 +10,11 @@ Public Class CarbRatioRecord
 
     Private _endTime As TimeOnly
 
-    <DisplayName(NameOf(StartTime))>
+    <DisplayName("Start Time")>
     <Column(Order:=0, TypeName:=NameOf(TimeOnly))>
     Public Property StartTime As TimeOnly
 
-    <DisplayName(NameOf(EndTime))>
+    <DisplayName("End Time")>
     <Column(Order:=1, TypeName:=NameOf(TimeOnly))>
     Public Property EndTime As TimeOnly
         Get
@@ -25,6 +25,7 @@ Public Class CarbRatioRecord
         End Set
     End Property
 
+    <DisplayName("Carb Ratio")>
     <Column(Order:=2, TypeName:=NameOf([Single]))>
     Public Property CarbRatio As Single
 

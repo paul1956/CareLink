@@ -21,31 +21,23 @@ Public Class ActiveInsulin
         End Set
     End Property
 
-    <DisplayName(NameOf(ActiveInsulin.datetime))>
+    <DisplayName("Date Time")>
     <Column(Order:=1, TypeName:="Date")>
     <JsonPropertyName("datetime")>
     Public Property datetime As Date
 
-    <DisplayName(NameOf(OAdatetime))>
-    <Column(Order:=2, TypeName:=NameOf(OADate))>
-    Public ReadOnly Property OAdatetime As OADate
-        Get
-            Return New OADate(Me.datetime)
-        End Get
-    End Property
-
     <DisplayName("Kind")>
-    <Column(Order:=3, TypeName:=NameOf([String]))>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
     <JsonPropertyName("kind")>
     Public Property kind As String
 
     <DisplayName("Precision")>
-    <Column(Order:=4, TypeName:=NameOf([String]))>
+    <Column(Order:=3, TypeName:=NameOf([String]))>
     <JsonPropertyName("precision")>
     Public Property Precision As String
 
     <DisplayName("Version")>
-    <Column(Order:=5, TypeName:=NameOf([Int32]))>
+    <Column(Order:=4, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("version")>
     Public Property Version As Integer
 

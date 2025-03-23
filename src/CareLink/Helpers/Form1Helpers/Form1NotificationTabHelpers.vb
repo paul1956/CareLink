@@ -17,7 +17,7 @@ Friend Module Form1NotificationTabHelpers
                 If innerJson.Count > 0 Then
                     innerJson.Reverse()
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-                        DisplayDataTableInDGV(
+                        DisplayNotificationDataTableInDGV(
                             realPanel:=Form1.TableLayoutPanelNotificationsCleared,
                             table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
@@ -31,7 +31,7 @@ Friend Module Form1NotificationTabHelpers
             Else
                 If innerJson.Count > 0 Then
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-                        DisplayDataTableInDGV(
+                        DisplayNotificationDataTableInDGV(
                             realPanel:=Form1.TableLayoutPanelNotificationActive,
                             table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
@@ -47,11 +47,12 @@ Friend Module Form1NotificationTabHelpers
         Next
     End Sub
 
-    Private Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As Integer)
+    Private Sub DisplayNotificationDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As Integer)
         Dim dGV As New DataGridView With {
             .AutoSize = True,
             .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
             .ColumnHeadersVisible = False,
+            .Dock = DockStyle.Top,
             .Name = $"DataGridView{className}",
             .RowHeadersVisible = False
         }
@@ -62,6 +63,12 @@ Friend Module Form1NotificationTabHelpers
         For Each column As DataGridViewColumn In dGV.Columns
             column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             column.DefaultCellStyle.WrapMode = DataGridViewTriState.False
+        Next
+        Dim index As Integer = 0
+        For Each row As DataGridViewRow In dGV.Rows
+            dGV.AutoResizeRow(rowIndex:=index, autoSizeRowMode:=DataGridViewAutoSizeRowMode.AllCellsExceptHeader)
+            index += 1
+            row.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         Next
         realPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink
         realPanel.AutoSize = True

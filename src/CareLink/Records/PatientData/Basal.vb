@@ -45,14 +45,6 @@ Public Class Basal
     <JsonPropertyName("tempBasalDurationRemaining")>
     Public Property tempBasalDurationRemaining As Integer
 
-    <DisplayName("HasValue")>
-    <Column(Order:=7, TypeName:=NameOf([Boolean]))>
-    Public ReadOnly Property HasValue As Boolean
-        Get
-            Return Not String.IsNullOrWhiteSpace(Me.ActiveBasalPattern)
-        End Get
-    End Property
-
     Public Shared Operator <>(left As Basal, right As Basal) As Boolean
         Return Not left = right
     End Operator

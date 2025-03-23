@@ -32,12 +32,12 @@ Public Class Calibration
     <Column(Order:=2, TypeName:=NameOf([String]))>
     Public ReadOnly Property Kind As String
 
-    <DisplayName(NameOf(Timestamp))>
+    <DisplayName("Timestamp")>
     <Column(Order:=3, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
 
-    <DisplayName("TimestampAsDate")>
+    <DisplayName("Timestamp As Date")>
     <Column(Order:=4, TypeName:="Date")>
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
@@ -46,12 +46,12 @@ Public Class Calibration
         End Get
     End Property
 
-    <DisplayName(NameOf(DisplayTime))>
+    <DisplayName("Display Time")>
     <Column(Order:=5, TypeName:="String")>
     <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String
 
-    <DisplayName("DisplayTimeAsDate")>
+    <DisplayName("Display Time As Date")>
     <Column(Order:=6, TypeName:="Date")>
     <JsonPropertyName("displayTimeAsDate")>
     Public ReadOnly Property DisplayTime As Date
@@ -60,11 +60,11 @@ Public Class Calibration
         End Get
     End Property
 
-    <DisplayName("UnitValue")>
+    <DisplayName("Unit Value")>
     <Column(Order:=7, TypeName:=NameOf([Single]))>
     Public Property UnitValue As Single
 
-    <DisplayName("UnitValue (mg/dL)")>
+    <DisplayName("Unit Value (mg/dL)")>
     <Column(Order:=8, TypeName:=NameOf([Single]))>
     Public ReadOnly Property UnitValueMgdL As Single
         Get
@@ -76,7 +76,7 @@ Public Class Calibration
         End Get
     End Property
 
-    <DisplayName("UnitValueMmolL (mmol/L)")>
+    <DisplayName("Unit Value (mmol/L)")>
     <Column(Order:=9, TypeName:=NameOf([Single]))>
     Public ReadOnly Property UnitValueMmolL As Single
         Get
@@ -88,7 +88,7 @@ Public Class Calibration
         End Get
     End Property
 
-    <DisplayName("BG Units")>
+    <DisplayName("Blood Glucose Units")>
     <Column(Order:=10, TypeName:=NameOf([String]))>
     Public Property bgUnits As String
 

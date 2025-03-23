@@ -26,25 +26,6 @@ Friend Module SummaryHelpers
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
-    Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
-        With e.Column
-            e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(.Name),
-                wrapHeader:=False,
-                forceReadOnly:=True,
-                caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
-            If .Name = "Value" Then
-                e.Column.MinimumWidth = 350
-            End If
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-        End With
-    End Sub
-
-    Private Sub DataGridView_VisibleChanged(sender As Object, e As EventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.ClearSelection()
-    End Sub
-
     ''' <summary>
     '''  Extracts a dictionary(of String, List(of String) from the input:
     '''  where the variable names are in parentheses, and are associated with
@@ -74,18 +55,6 @@ Friend Module SummaryHelpers
             s_wordsInParentheses.Add(kvp.Key, msgList)
         Next
     End Sub
-
-    Private Function GetMessageVariables() As List(Of String)
-        Dim result As New List(Of String)
-        Dim pattern As String = "\(([^)]+)\)"
-        Dim valuesArray() As String = s_notificationMessages.Values.ToArray()
-        Dim joinedString As String = String.Join(", ", valuesArray)
-
-        For Each match As Match In Regex.Matches(joinedString, pattern)
-            result.Add(match.Value)
-        Next
-        Return result.Distinct().ToList()
-    End Function
 
     Private Function TranslateNotificationMessageId(jsonDictionary As Dictionary(Of String, String), faultId As String) As String
         ExtractErrorMessageVariables()

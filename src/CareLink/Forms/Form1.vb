@@ -484,7 +484,8 @@ Public Class Form1
         DgvLimits.CellContextMenuStripNeeded,
         DgvMeal.CellContextMenuStripNeeded,
         DgvSGs.CellContextMenuStripNeeded,
-        DgvTherapyAlgorithmState.CellContextMenuStripNeeded
+        DgvTherapyAlgorithmState.CellContextMenuStripNeeded,
+        DgvTimeChange.CellContextMenuStripNeeded
 
         If e.RowIndex >= 0 Then
             e.ContextMenuStrip = Me.DgvCopyWithExcelMenuStrip
@@ -502,7 +503,61 @@ Public Class Form1
 
 #End Region 'ContextMenuStrip Events
 
-#Region "DataGridView Events"
+#Region "DGV Events"
+
+#Region "DGV Global Event Helper"
+
+    Friend Sub DGV_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles _
+        DgvActiveInsulin.DataBindingComplete,
+        DgvAutoBasalDelivery.DataBindingComplete,
+        DgvAutoModeStatus.DataBindingComplete,
+        DgvBannerState.DataBindingComplete,
+        DgvBasal.DataBindingComplete,
+        DgvBasalPerHour.DataBindingComplete,
+        DgvCalibration.DataBindingComplete,
+        DgvCareLinkUsers.DataBindingComplete,
+        DgvCurrentUser.DataBindingComplete,
+        DgvInsulin.DataBindingComplete,
+        DgvLastAlarm.DataBindingComplete,
+        DgvLastSensorGlucose.DataBindingComplete,
+        DgvLimits.DataBindingComplete,
+        DgvLowGlucoseSuspended.DataBindingComplete,
+        DgvMeal.DataBindingComplete,
+        DgvSensorBgReadings.DataBindingComplete,
+        DgvSGs.DataBindingComplete,
+        DgvSummary.DataBindingComplete,
+        DgvTherapyAlgorithmState.DataBindingComplete,
+        DgvTimeChange.DataBindingComplete
+
+        Dim gridView As DataGridView = CType(sender, DataGridView)
+        gridView.ClearSelection()
+    End Sub
+
+    Private Sub DgvActiveInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles _
+        DgvActiveInsulin.DataError,
+        DgvAutoBasalDelivery.DataError,
+        DgvAutoModeStatus.DataError,
+        DgvBannerState.DataError,
+        DgvBasal.DataError,
+        DgvBasalPerHour.DataError,
+        DgvCalibration.DataError,
+        DgvCareLinkUsers.DataError,
+        DgvCurrentUser.DataError,
+        DgvInsulin.DataError,
+        DgvLastAlarm.DataError,
+        DgvLastSensorGlucose.DataError,
+        DgvLimits.DataError,
+        DgvLowGlucoseSuspended.DataError,
+        DgvMeal.DataError,
+        DgvSensorBgReadings.DataError,
+        DgvSGs.DataError,
+        DgvSummary.DataError,
+        DgvTherapyAlgorithmState.DataError,
+        DgvTimeChange.DataError
+        Stop
+    End Sub
+
+#End Region ' DGV Global Event Helper
 
 #Region "Dgv Active Insulin Events"
 
@@ -532,10 +587,6 @@ Public Class Form1
                     caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             End If
         End With
-    End Sub
-
-    Private Sub DgvActiveInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvActiveInsulin.DataError
-        Stop
     End Sub
 
 #End Region ' Dgv Active Insulin Events
@@ -582,7 +633,7 @@ Public Class Form1
 
 #Region "Dgv AutoMode Status Events"
 
-    Private Sub DgvAutomodeStatus_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles dgvAutoModeStatus.CellFormatting
+    Private Sub DgvAutomodeStatus_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvAutoModeStatus.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(AutoModeStatus.DisplayTime), NameOf(AutoModeStatus.Timestamp)
@@ -592,7 +643,7 @@ Public Class Form1
         End Select
     End Sub
 
-    Private Sub DgvAutoModeStatus_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles dgvAutoModeStatus.ColumnAdded
+    Private Sub DgvAutoModeStatus_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoModeStatus.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If AutoModeStatusHelpers.HideColumn(.Name) Then
@@ -607,39 +658,7 @@ Public Class Form1
         End With
     End Sub
 
-    Private Sub DgvAutoModeStatus_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvAutoModeStatus.DataError
-        Stop
-    End Sub
-
 #End Region ' Dgv AutoMode Status Events
-
-#Region "Dgv Basal Per Hour Events"
-
-    Friend Sub DgvBasalPerHour_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvBasalPerHour.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(BasalPerHour.Hour), NameOf(BasalPerHour.Hour2)
-                Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
-                Dim time As New DateTime(1, 1, 1, hour, 0, 0)
-                e.Value = time.ToString(s_timeWithoutMinuteFormat)
-            Case Else
-                dgv.CellFormattingSingleValue(e, 3)
-        End Select
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
-
-    Friend Sub DgvBasalPerHour_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBasalPerHour.ColumnAdded
-        With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            e.DgvColumnAdded(
-                cellStyle:=BasalPerHourHelpers.GetCellStyle(columnName:= .Name),
-                wrapHeader:=True,
-                forceReadOnly:=True,
-                caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
-        End With
-    End Sub
-
-#End Region ' Dgv Basal Per Hour Events
 
 #Region "Dgv Banner State Events"
 
@@ -670,10 +689,6 @@ Public Class Form1
         End With
     End Sub
 
-    Private Sub DgvBannerState_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvBannerState.DataError
-        Stop
-    End Sub
-
 #End Region ' Dgv Banner State Events
 
 #Region "Dgv Basal Events"
@@ -700,10 +715,50 @@ Public Class Form1
 
 #End Region ' Dgv Basal Events
 
+#Region "Dgv Basal Per Hour Events"
+
+    Friend Sub DgvBasalPerHour_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvBasalPerHour.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(BasalPerHour.Hour), NameOf(BasalPerHour.Hour2)
+                Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
+                Dim time As New DateTime(1, 1, 1, hour, 0, 0)
+                e.Value = time.ToString(s_timeWithoutMinuteFormat)
+            Case Else
+                dgv.CellFormattingSingleValue(e, 3)
+        End Select
+        dgv.CellFormattingSetForegroundColor(e)
+    End Sub
+
+    Friend Sub DgvBasalPerHour_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBasalPerHour.ColumnAdded
+        With e.Column
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            e.DgvColumnAdded(
+                cellStyle:=BasalPerHourHelpers.GetCellStyle(columnName:= .Name),
+                wrapHeader:=True,
+                forceReadOnly:=True,
+                caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+        End With
+    End Sub
+
+#End Region ' Dgv Basal Per Hour Events
+
 #Region "Dgv Calibration Events"
 
     Friend Sub DgvCalibration_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCalibration.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
+        If dgv.Columns(e.ColumnIndex).Name = NameOf(Calibration.bgUnits) Then
+            If e.Value Is Nothing Then
+                e.Value = ""
+            Else
+                Try
+                    e.Value = UnitsStrings(e.Value.ToString)
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                Catch ex As Exception
+                    e.Value = e.Value.ToString
+                End Try
+            End If
+        End If
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
@@ -810,10 +865,6 @@ Public Class Form1
             End If
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
-    End Sub
-
-    Private Sub DgvCareLinkUsers_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvCareLinkUsers.DataError
-        Stop
     End Sub
 
     Private Sub DgvCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles DgvCareLinkUsers.RowsAdded
@@ -924,10 +975,6 @@ Public Class Form1
             caption:=Nothing)
     End Sub
 
-    Private Sub DgvCurrentUser_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvCurrentUser.DataError
-        Stop
-    End Sub
-
 #End Region ' Dgv Current User Events
 
 #Region "Dgv Insulin Events"
@@ -980,10 +1027,6 @@ Public Class Form1
         End With
     End Sub
 
-    Private Sub DgvInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvInsulin.DataError
-        Stop
-    End Sub
-
 #End Region ' Dgv Insulin Events
 
 #Region "Dgv Last Alarm Events"
@@ -1006,10 +1049,6 @@ Public Class Form1
                     caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             End If
         End With
-    End Sub
-
-    Friend Sub DgvLastAlarm_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastAlarm.DataError
-        Stop
     End Sub
 
 #End Region ' Dgv Last Alarm Events
@@ -1055,10 +1094,6 @@ Public Class Form1
         End With
     End Sub
 
-    Friend Sub DgvLastSensorGlucose_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLastSensorGlucose.DataError
-        Stop
-    End Sub
-
 #End Region ' Dgv Last Sensor Glucose Events
 
 #Region "Dgv Limits Events"
@@ -1082,10 +1117,6 @@ Public Class Form1
                     caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
             End If
         End With
-    End Sub
-
-    Private Sub DgvLimits_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLimits.DataError
-        Stop
     End Sub
 
 #End Region ' Dgv Limits Events
@@ -1115,10 +1146,6 @@ Public Class Form1
                     caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             End If
         End With
-    End Sub
-
-    Friend Sub DgvLowGlucoseSuspended_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvLowGlucoseSuspended.DataError
-        Stop
     End Sub
 
 #End Region ' Dgv Low Glucose Suspended Events
@@ -1178,10 +1205,6 @@ Public Class Form1
                     caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             End If
         End With
-    End Sub
-
-    Friend Sub DgvSensorBgReadings_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvSensorBgReadings.DataError
-        Stop
     End Sub
 
 #End Region ' Dgv Sensor Bg Readings Events
@@ -1413,10 +1436,6 @@ Public Class Form1
         ColumnAdded(dgv, e)
     End Sub
 
-    Private Sub DgvSummary_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvSummary.DataError
-        Stop
-    End Sub
-
 #End Region ' Dgv Summary Events
 
 #Region "Dgv Therapy Algorithm State Events"
@@ -1450,11 +1469,31 @@ Public Class Form1
 
     End Sub
 
-    Private Sub DgvTherapyAlgorithmState_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvTherapyAlgorithmState.DataError
-        Stop
+#End Region ' Dgv Therapy Algorithm State Events
+
+#Region "Dgv Time Change Events"
+
+    Friend Sub DgvTimeChange_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvTimeChange.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
-#End Region ' Dgv Therapy Algorithm State Events
+    Friend Sub DgvTimeChange_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvTimeChange.ColumnAdded
+        With e.Column
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            If TimeChangeHelpers.HideColumn(.Name) Then
+                .Visible = False
+            Else
+                e.DgvColumnAdded(
+                    cellStyle:=SensorBgReadings.GetCellStyle(columnName:= .Name),
+                    wrapHeader:=True,
+                    forceReadOnly:=True,
+                    caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+            End If
+        End With
+    End Sub
+
+#End Region ' Dgv Time Change Events
 
 #End Region ' DataGridView Events
 
@@ -1560,7 +1599,7 @@ Public Class Form1
         Me.NotifyIcon1.Visible = False
         Application.DoEvents()
 
-        If DoOptionalLoginAndUpdateData(UpdateAllTabs:=False, fileToLoad:=FileToLoadOptions.NewUser) Then
+        If DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=False, fileToLoad:=FileToLoadOptions.NewUser) Then
             Me.UpdateAllTabPages(fromFile:=False)
         End If
     End Sub
@@ -1585,9 +1624,9 @@ Public Class Form1
 #Region "Start Here Menu Events"
 
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
-        Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles(DirectoryForProjectData, $"CareLink*.json")
+        Me.MenuStartHereUseSavedDataFile.Enabled = AnyMatchingFiles(DirectoryForProjectData, $"CareLink*.json")
         Me.MenuStartHereSnapshotSave.Enabled = Not RecentDataEmpty()
-        Me.MenuStartHereExceptionReportLoad.Visible = AnyMatchingFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
+        Me.MenuStartHereUseExceptionReport.Visible = AnyMatchingFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
 
         Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(s_userName) OrElse Not AnyMatchingFiles(SettingsDirectory, $"{s_userName}Settings.pdf"))
         Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists
@@ -1599,117 +1638,8 @@ Public Class Form1
         CleanupStaleFilesDialog.ShowDialog()
     End Sub
 
-    Private Sub MenuStartHereExceptionReportLoad_Click(sender As Object, e As EventArgs) Handles MenuStartHereExceptionReportLoad.Click
-        Dim fileList As String() = Directory.GetFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
-        Using openFileDialog1 As New OpenFileDialog With {
-            .AddExtension = True,
-            .AddToRecent = False,
-            .CheckFileExists = True,
-            .CheckPathExists = True,
-            .DefaultExt = "txt",
-            .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), "CareLink"),
-            .Filter = $"Error files (*.txt)|{BaseNameSavedErrorReport}*.txt",
-            .InitialDirectory = DirectoryForProjectData,
-            .Multiselect = False,
-            .ReadOnlyChecked = True,
-            .RestoreDirectory = True,
-            .ShowPreview = False,
-            .SupportMultiDottedExtensions = False,
-            .Title = $"Select CareLink™ saved snapshot to load",
-            .ValidateNames = True}
-
-            If openFileDialog1.ShowDialog(Me) = DialogResult.OK Then
-                Try
-                    Dim fileNameWithPath As String = openFileDialog1.FileName
-                    StartOrStopServerUpdateTimer(False)
-                    If File.Exists(fileNameWithPath) Then
-                        RecentData?.Clear()
-                        ExceptionHandlerDialog.ReportFileNameWithPath = fileNameWithPath
-                        If ExceptionHandlerDialog.ShowDialog(Me) = DialogResult.OK Then
-                            ExceptionHandlerDialog.ReportFileNameWithPath = ""
-                            Try
-                                RecentData = LoadIndexedItems(ExceptionHandlerDialog.LocalRawData)
-                            Catch ex As Exception
-                                MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
-                            End Try
-                            CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"CareLink", True)
-                            Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                            Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
-                            Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
-                            SetLastUpdateTime(epochDateTime.ToShortDateTimeString, "from file", False, epochDateTime.IsDaylightSavingTime)
-                            SetUpCareLinkUser(TestSettingsFileNameWithPath)
-
-                            Try
-                                FinishInitialization()
-                            Catch ex As Exception
-                                MessageBox.Show($"Error in {NameOf(FinishInitialization)}. Original error: {ex.Message}")
-                            End Try
-                            Try
-                                Me.UpdateAllTabPages(True)
-                            Catch ex As Exception
-                                MessageBox.Show($"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
-                            End Try
-                        End If
-                    End If
-                Catch ex As Exception
-                    MessageBox.Show($"Cannot read file from disk. Original error: {ex.DecodeException()}")
-                End Try
-            End If
-        End Using
-    End Sub
-
     Private Sub MenuStartHereExit_Click(sender As Object, e As EventArgs) Handles MenuStartHereExit.Click
         Me.Close()
-    End Sub
-
-    Private Sub MenuStartHereLoadSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereLoadSavedDataFile.Click
-        Dim di As New DirectoryInfo(DirectoryForProjectData)
-        Dim fileList As String() = New DirectoryInfo(DirectoryForProjectData).
-                                        EnumerateFiles($"CareLink*.json").
-                                        OrderBy(Function(f As FileInfo) f.LastWriteTime).
-                                        Select(Function(f As FileInfo) f.Name).ToArray
-        Using openFileDialog1 As New OpenFileDialog With {
-            .AddExtension = True,
-            .AddToRecent = False,
-            .CheckFileExists = True,
-            .CheckPathExists = True,
-            .DefaultExt = "json",
-            .FileName = $"{s_userName}Settings.json",
-            .Filter = $"json files (*.json)|CareLink*.json",
-            .InitialDirectory = DirectoryForProjectData,
-            .Multiselect = False,
-            .ReadOnlyChecked = True,
-            .RestoreDirectory = True,
-            .ShowPreview = False,
-            .SupportMultiDottedExtensions = False,
-            .Title = $"Select CareLink™ saved snapshot to load",
-            .ValidateNames = True}
-
-            If openFileDialog1.ShowDialog(Me) = DialogResult.OK Then
-                Try
-                    If File.Exists(openFileDialog1.FileName) Then
-                        StartOrStopServerUpdateTimer(False)
-                        SetUpCareLinkUser(TestSettingsFileNameWithPath)
-                        CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"CareLink", True)
-                        Provider = CurrentDateCulture
-
-                        RecentData = LoadIndexedItems(File.ReadAllText(openFileDialog1.FileName))
-                        Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                        Me.Text = $"{SavedTitle} Using file {Path.GetFileName(openFileDialog1.FileName)}"
-                        Dim fileDate As Date = File.GetLastWriteTime(openFileDialog1.FileName)
-                        SetLastUpdateTime(fileDate.ToShortDateTimeString, " from file", False, fileDate.IsDaylightSavingTime)
-                        FinishInitialization()
-                        Me.UpdateAllTabPages(True)
-                    End If
-                Catch ex As Exception
-                    MessageBox.Show($"Cannot read file from disk. Original error: {ex.DecodeException()}")
-                End Try
-            End If
-        End Using
-    End Sub
-
-    Private Sub MenuStartHereLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereLogin.Click
-        DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.NewUser)
     End Sub
 
     Private Sub MenuStartHereManuallyImportDeviceSettings_Click(sender As Object, e As EventArgs) Handles MenuStartHereManuallyImportDeviceSettings.Click
@@ -1768,14 +1698,82 @@ Public Class Form1
 
     End Sub
 
+    Private Sub MenuStartHereUseExceptionReport_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseExceptionReport.Click
+        Dim fileList As String() = Directory.GetFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
+        Using openFileDialog1 As New OpenFileDialog With {
+            .AddExtension = True,
+            .AddToRecent = False,
+            .CheckFileExists = True,
+            .CheckPathExists = True,
+            .DefaultExt = "txt",
+            .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), "CareLink"),
+            .Filter = $"Error files (*.txt)|{BaseNameSavedErrorReport}*.txt",
+            .InitialDirectory = DirectoryForProjectData,
+            .Multiselect = False,
+            .ReadOnlyChecked = True,
+            .RestoreDirectory = True,
+            .ShowPreview = False,
+            .SupportMultiDottedExtensions = False,
+            .Title = $"Select CareLink™ saved snapshot to load",
+            .ValidateNames = True}
+
+            If openFileDialog1.ShowDialog(Me) = DialogResult.OK Then
+                Try
+                    Dim fileNameWithPath As String = openFileDialog1.FileName
+                    StartOrStopServerUpdateTimer(False)
+                    If File.Exists(fileNameWithPath) Then
+                        RecentData?.Clear()
+                        ExceptionHandlerDialog.ReportFileNameWithPath = fileNameWithPath
+                        If ExceptionHandlerDialog.ShowDialog(Me) = DialogResult.OK Then
+                            ExceptionHandlerDialog.ReportFileNameWithPath = ""
+                            Try
+                                RecentData = LoadIndexedItems(ExceptionHandlerDialog.LocalRawData)
+                            Catch ex As Exception
+                                MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
+                            End Try
+                            CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"CareLink", True)
+                            Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
+                            Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
+                            Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
+                            SetLastUpdateTime(msg:=epochDateTime.ToShortDateTimeString, suffixMessage:="from file", highLight:=False, isDaylightSavingTime:=epochDateTime.IsDaylightSavingTime)
+                            SetUpCareLinkUser(TestSettingsFileNameWithPath)
+
+                            Try
+                                FinishInitialization(Me)
+                            Catch ex As Exception
+                                MessageBox.Show($"Error in {NameOf(FinishInitialization)}. Original error: {ex.Message}")
+                            End Try
+                            Try
+                                Me.UpdateAllTabPages(True)
+                            Catch ex As Exception
+                                MessageBox.Show($"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
+                            End Try
+                        End If
+                    End If
+                Catch ex As Exception
+                    MessageBox.Show($"Cannot read file from disk. Original error: {ex.DecodeException()}")
+                End Try
+            End If
+        End Using
+    End Sub
+
     Private Sub MenuStartHereUseLastSavedFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseLastSavedFile.Click
-        DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.LastSaved)
+        DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.LastSaved)
         Me.MenuStartHereSnapshotSave.Enabled = False
     End Sub
 
+    Private Sub MenuStartHereUseSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseSavedDataFile.Click
+        DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.SavedFile)
+        Me.MenuStartHereUseSavedDataFile.Enabled = False
+    End Sub
+
     Private Sub MenuStartHereUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseTestData.Click
-        DoOptionalLoginAndUpdateData(UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
+        DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
         Me.MenuStartHereSnapshotSave.Enabled = False
+    End Sub
+
+    Private Sub MenuStartHereUserLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereUserLogin.Click
+        DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.NewUser)
     End Sub
 
 #End Region ' Start Here Menu Events
@@ -3444,7 +3442,7 @@ Public Class Form1
             _updating = False
         End SyncLock
 
-        FinishInitialization()
+        FinishInitialization(Me)
         Me.UpdateTrendArrows()
         UpdateSummaryTab(Me.DgvSummary, s_listOfSummaryRecords, sort:=True)
         Me.UpdateActiveInsulinChart()

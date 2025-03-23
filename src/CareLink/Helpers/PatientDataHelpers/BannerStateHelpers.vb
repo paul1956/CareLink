@@ -5,6 +5,7 @@
 Friend Module BannerStateHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String)
+
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle

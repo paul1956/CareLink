@@ -9,50 +9,38 @@ Imports System.Text.Json
 
 Public Enum FileToLoadOptions As Integer
     LastSaved = 0
-    TestData = 1
-    Login = 2
-    NewUser = 3
+    Login = 1
+    NewUser = 2
+    SavedFile = 3
+    TestData = 4
 End Enum
 
 Friend Module Form1LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginDialog
     Public Property CurrentPdf As PdfSettingsRecord
 
-    Friend Function DoOptionalLoginAndUpdateData(UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
+    Friend Function DoOptionalLoginAndUpdateData(mainForm As Form1, UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
         Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(False)
         s_listOfAutoBasalDeliveryMarkers.Clear()
         Dim fromFile As Boolean
         Select Case fileToLoad
-            Case FileToLoadOptions.LastSaved
-                Form1.Text = $"{SavedTitle} Using Last Saved Data"
-                Dim lastDownloadFileWithPath As String = GetLastDownloadFileWithPath()
-                CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(BaseNameSavedLastDownload)
-                Dim patientDataElementAsText As String = File.ReadAllText(lastDownloadFileWithPath)
-                Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(patientDataElementAsText)
-                RecentData = LoadIndexedItems(patientDataElementAsText)
-                PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
-                Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                Dim fileDate As Date = File.GetLastWriteTime(lastDownloadFileWithPath)
-                SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(TestSettingsFileNameWithPath)
-                fromFile = True
             Case FileToLoadOptions.TestData
-                Form1.Text = $"{SavedTitle} Using Test Data from 'SampleUserV2Data.json'"
+                mainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserV2Data.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 Dim patientDataElementAsText As String = File.ReadAllText(TestDataFileNameWithPath)
                 Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(patientDataElementAsText)
                 RecentData = LoadIndexedItems(patientDataElementAsText)
                 PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
-                Form1.MenuShowMiniDisplay.Visible = Debugger.IsAttached
+                mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(TestDataFileNameWithPath)
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser(TestSettingsFileNameWithPath)
                 fromFile = True
             Case FileToLoadOptions.Login, FileToLoadOptions.NewUser
-                Form1.Text = SavedTitle
+                mainForm.Text = SavedTitle
                 Do While True
                     LoginDialog.LoginSourceAutomatic = fileToLoad
-                    Dim result As DialogResult = LoginDialog.ShowDialog(My.Forms.Form1)
+                    Dim result As DialogResult = LoginDialog.ShowDialog(mainForm)
                     Select Case result
                         Case DialogResult.OK
                             Exit Do
@@ -67,7 +55,7 @@ Friend Module Form1LoginHelpers
                     StartOrStopServerUpdateTimer(True, s_5MinutesInMilliseconds)
 
                     If NetworkUnavailable() Then
-                        ReportLoginStatus(Form1.LoginStatus, hasErrors:=True, lastErrorMessage:="Network Unavailable")
+                        ReportLoginStatus(mainForm.LoginStatus, hasErrors:=True, lastErrorMessage:="Network Unavailable")
                         Return False
                     End If
 
@@ -84,38 +72,82 @@ Friend Module Form1LoginHelpers
                 StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
-                    ReportLoginStatus(Form1.LoginStatus)
+                    ReportLoginStatus(mainForm.LoginStatus)
                     Return False
                 End If
-                ErrorReportingHelpers.ReportLoginStatus(Form1.LoginStatus, RecentDataEmpty, lastErrorMessage)
-                Form1.MenuShowMiniDisplay.Visible = True
+                ErrorReportingHelpers.ReportLoginStatus(mainForm.LoginStatus, RecentDataEmpty, lastErrorMessage)
+                mainForm.MenuShowMiniDisplay.Visible = True
                 fromFile = False
+            Case FileToLoadOptions.LastSaved, FileToLoadOptions.SavedFile
+                Dim lastDownloadFileWithPath As String
+                If fileToLoad = FileToLoadOptions.LastSaved Then
+                    mainForm.Text = $"{SavedTitle} Using Last Saved Data"
+                    lastDownloadFileWithPath = GetLastDownloadFileWithPath()
+                Else
+                    mainForm.Text = $"{SavedTitle} Using Saved Data"
+                    Dim di As New DirectoryInfo(DirectoryForProjectData)
+                    Dim fileList As String() = New DirectoryInfo(DirectoryForProjectData).EnumerateFiles($"CareLink*.json").OrderBy(Function(f As FileInfo) f.LastWriteTime).Select(Function(f As FileInfo) f.Name).ToArray
+                    Using openFileDialog1 As New OpenFileDialog With {
+                        .AddExtension = True,
+                        .AddToRecent = False,
+                        .CheckFileExists = True,
+                        .CheckPathExists = True,
+                        .DefaultExt = "json",
+                        .FileName = $"{s_userName}Settings.json",
+                        .Filter = $"json files (*.json)|CareLink*.json",
+                        .InitialDirectory = DirectoryForProjectData,
+                        .Multiselect = False,
+                        .ReadOnlyChecked = True,
+                        .RestoreDirectory = True,
+                        .ShowPreview = False,
+                        .SupportMultiDottedExtensions = False,
+                        .Title = $"Select CareLink™ saved snapshot to load",
+                        .ValidateNames = True}
+
+                        If openFileDialog1.ShowDialog(mainForm) = DialogResult.OK Then
+                            lastDownloadFileWithPath = openFileDialog1.FileName
+                            If Not File.Exists(lastDownloadFileWithPath) Then
+                                Return False
+                            End If
+                        Else
+                            Return False
+                        End If
+                    End Using
+                End If
+                CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(BaseNameSavedLastDownload)
+                Dim patientDataElementAsText As String = File.ReadAllText(lastDownloadFileWithPath)
+                Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(patientDataElementAsText)
+                RecentData = LoadIndexedItems(patientDataElementAsText)
+                PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
+                mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
+                Dim fileDate As Date = File.GetLastWriteTime(lastDownloadFileWithPath)
+                SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
+                SetUpCareLinkUser(TestSettingsFileNameWithPath)
+                fromFile = True
         End Select
         If Form1.Client IsNot Nothing Then
             Form1.Client.PatientPersonalData.InsulinType = CurrentUser.InsulinTypeName
-            With Form1.DgvCurrentUser
+            With mainForm.DgvCurrentUser
                 .InitializeDgv()
                 .DataSource = Form1.Client.UserElementDictionary.ToDataSource
             End With
         End If
 
-        Form1.PumpAITLabel.Text = CurrentUser.GetPumpAitString
-        Form1.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
+        mainForm.PumpAITLabel.Text = CurrentUser.GetPumpAitString
+        mainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
         If UpdateAllTabs Then
-            FinishInitialization()
-            Form1.UpdateAllTabPages(fromFile)
+            FinishInitialization(mainForm)
+            mainForm.UpdateAllTabPages(fromFile)
         End If
         Return True
     End Function
 
-    Friend Sub FinishInitialization()
-        Form1.Cursor = Cursors.Default
+    Friend Sub FinishInitialization(mainForm As Form1)
+        mainForm.Cursor = Cursors.Default
         Application.DoEvents()
-
-        Form1.InitializeSummaryTabCharts()
-        Form1.InitializeActiveInsulinTabChart()
-        Form1.InitializeTimeInRangeArea()
-
+        mainForm.InitializeSummaryTabCharts()
+        mainForm.InitializeActiveInsulinTabChart()
+        mainForm.InitializeTimeInRangeArea()
         ProgramInitialized = True
     End Sub
 

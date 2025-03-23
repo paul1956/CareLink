@@ -13,6 +13,9 @@ Friend Module ClearedNotificationHelpers
     End Sub
 
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
+        If e.Column.Name = "RecordNumber" Then
+            e.Column.Visible = False
+        End If
         e.DgvColumnAdded(
             cellStyle:=GetCellStyle(e.Column.Name),
             wrapHeader:=False,
@@ -36,9 +39,11 @@ Friend Module ClearedNotificationHelpers
         RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
         RemoveHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         RemoveHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+        RemoveHandler dgv.DataBindingComplete, AddressOf Form1.DGV_DataBindingComplete
         AddHandler dgv.CellContextMenuStripNeeded, AddressOf Form1.Dgv_CellContextMenuStripNeededWithoutExcel
         AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
+        AddHandler dgv.DataBindingComplete, AddressOf Form1.DGV_DataBindingComplete
     End Sub
 
 End Module

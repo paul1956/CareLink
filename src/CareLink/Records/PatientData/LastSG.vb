@@ -29,7 +29,8 @@ Public Class LastSG
     <Column(Order:=4, TypeName:=NameOf([String]))>
     <JsonPropertyName("sensorState")>
     Public Property SensorState As String
-    <DisplayName(NameOf(Timestamp))>
+
+    <DisplayName("Timestamp")>
     <Column(Order:=5, TypeName:="Date")>
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
@@ -38,7 +39,7 @@ Public Class LastSG
         End Get
     End Property
 
-    <DisplayName(NameOf(Timestamp))>
+    <DisplayName("Timestamp")>
     <Column(Order:=6, TypeName:="Date")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String

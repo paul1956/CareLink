@@ -84,22 +84,25 @@ Public Class SummaryRecord
         Me.Message = message
     End Sub
 
-    <DisplayName(NameOf(Key))>
-    <Column(Order:=1, TypeName:=NameOf([String]))>
-    Public ReadOnly Property Key As String
-
-    <DisplayName(NameOf(Message))>
-    <Column(Order:=3, TypeName:=NameOf([String]))>
-    Public ReadOnly Property Message As String = ""
-
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public ReadOnly Property RecordNumber As Single
 
-    <DisplayName(NameOf(Value))>
+    <DisplayName("Key")>
+    <Column(Order:=1, TypeName:=NameOf([String]))>
+    Public ReadOnly Property Key As String
+
+    <DisplayName("Value")>
     <Column(Order:=2, TypeName:=NameOf([String]))>
     Public ReadOnly Property Value As String
 
+    <DisplayName("Message")>
+    <Column(Order:=3, TypeName:=NameOf([String]))>
+    Public ReadOnly Property Message As String = ""
+
+    ''' <summary>
+    ''' Do not delete this function. It is used to implement IComparable
+    ''' </summary>
     Public Function CompareTo(obj As Object) As Integer Implements IComparable.CompareTo
         Dim bom As SummaryRecord = CType(obj, SummaryRecord)
 

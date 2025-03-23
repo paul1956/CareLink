@@ -11,17 +11,17 @@ Public Class Marker
 
     Public Property RecordNumber As Integer
 
-    <DisplayName(NameOf(Type))>
+    <DisplayName("Type")>
     <Column(Order:=1, TypeName:="String")>
     <JsonPropertyName("type")>
     Public Property Type As String
 
-    <DisplayName(NameOf(Timestamp))>
+    <DisplayName("Timestamp")>
     <Column(Order:=1, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
 
-    <DisplayName("TimestampAsDate")>
+    <DisplayName("Timestamp As Date")>
     <Column(Order:=2, TypeName:="Date")>
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
@@ -30,12 +30,12 @@ Public Class Marker
         End Get
     End Property
 
-    <DisplayName(NameOf(DisplayTime))>
+    <DisplayName("Display Time")>
     <Column(Order:=3, TypeName:="String")>
     <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String
 
-    <DisplayName("DisplayTimeAsDate")>
+    <DisplayName("Display Time As Date")>
     <Column(Order:=4, TypeName:="Date")>
     <JsonPropertyName("displayTimeAsDate")>
     Public ReadOnly Property DisplayTime As Date

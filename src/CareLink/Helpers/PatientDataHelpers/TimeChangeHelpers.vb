@@ -5,7 +5,9 @@
 Friend Module TimeChangeHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
-           NameOf(TimeChange)}
+        NameOf(TimeChange.RecordNumber),
+        NameOf(TimeChange.Kind),
+        NameOf(TimeChange.Type)}
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 

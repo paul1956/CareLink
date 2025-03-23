@@ -69,6 +69,7 @@ Partial Class Form1
         DgvSGs = New DataGridView()
         DgvSummary = New DataGridView()
         DgvTherapyAlgorithmState = New DataGridView()
+        DgvTimeChange = New DataGridView()
         FullNameLabel = New Label()
         HighTirComplianceLabel = New Label()
         ImageList1 = New ImageList(components)
@@ -125,13 +126,13 @@ Partial Class Form1
         MenuOptionsEditPumpSettings = New ToolStripMenuItem()
         MenuShowMiniDisplay = New ToolStripMenuItem()
         MenuStartHere = New ToolStripMenuItem()
-        MenuStartHereLogin = New ToolStripMenuItem()
+        MenuStartHereUserLogin = New ToolStripMenuItem()
         ToolStripSeparator8 = New ToolStripSeparator()
         MenuStartHereManuallyImportDeviceSettings = New ToolStripMenuItem()
         MenuStartHereShowPumpSetup = New ToolStripMenuItem()
         ToolStripSeparator1 = New ToolStripSeparator()
-        MenuStartHereLoadSavedDataFile = New ToolStripMenuItem()
-        MenuStartHereExceptionReportLoad = New ToolStripMenuItem()
+        MenuStartHereUseSavedDataFile = New ToolStripMenuItem()
+        MenuStartHereUseExceptionReport = New ToolStripMenuItem()
         ToolStripSeparator4 = New ToolStripSeparator()
         MenuStartHereUseLastSavedFile = New ToolStripMenuItem()
         MenuStartHereUseTestData = New ToolStripMenuItem()
@@ -216,7 +217,7 @@ Partial Class Form1
         TabPageAutoModeStatus = New TabPage()
         TableLayoutPanelAutoModeStatus = New TableLayoutPanel()
         TableLayoutPanelAutoModeStatusTop = New TableLayoutPanelTopEx()
-        dgvAutoModeStatus = New DataGridView()
+        DgvAutoModeStatus = New DataGridView()
         TabPageBgReadings = New TabPage()
         TableLayoutPanelBgReadings = New TableLayoutPanel()
         TableLayoutPanelBgReadingsTop = New TableLayoutPanelTopEx()
@@ -267,6 +268,7 @@ Partial Class Form1
         CType(DgvSGs, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvTherapyAlgorithmState, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvTimeChange, ComponentModel.ISupportInitialize).BeginInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         Last24HTotalsPanel.SuspendLayout()
         MenuStrip1.SuspendLayout()
@@ -314,7 +316,7 @@ Partial Class Form1
         TableLayoutPanelAutoBasalDelivery.SuspendLayout()
         TabPageAutoModeStatus.SuspendLayout()
         TableLayoutPanelAutoModeStatus.SuspendLayout()
-        CType(dgvAutoModeStatus, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvAutoModeStatus, ComponentModel.ISupportInitialize).BeginInit()
         TabPageBgReadings.SuspendLayout()
         TableLayoutPanelBgReadings.SuspendLayout()
         CType(DgvSensorBgReadings, ComponentModel.ISupportInitialize).BeginInit()
@@ -808,6 +810,16 @@ Partial Class Form1
         DgvTherapyAlgorithmState.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvTherapyAlgorithmState.Size = New Size(1358, 597)
         DgvTherapyAlgorithmState.TabIndex = 0
+        '         ' 
+        ' DgvTimeChange
+        ' 
+        DgvTimeChange.Dock = DockStyle.Fill
+        DgvTimeChange.Location = New Point(6, 52)
+        DgvTimeChange.Name = "DgvTimeChange"
+        DgvTimeChange.ReadOnly = True
+        DgvTimeChange.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvTimeChange.Size = New Size(1358, 597)
+        DgvTimeChange.TabIndex = 2
         ' 
         ' FullNameLabel
         ' 
@@ -1364,16 +1376,16 @@ Partial Class Form1
         ' 
         ' MenuStartHere
         ' 
-        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartHereLogin, ToolStripSeparator8, MenuStartHereManuallyImportDeviceSettings, MenuStartHereShowPumpSetup, ToolStripSeparator1, MenuStartHereLoadSavedDataFile, MenuStartHereExceptionReportLoad, ToolStripSeparator4, MenuStartHereUseLastSavedFile, MenuStartHereUseTestData, ToolStripSeparator2, MenuStartHereSnapshotSave, MenuStartHereCleanUpObsoleteFiles, ToolStripSeparator3, MenuStartHereExit})
+        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartHereUserLogin, ToolStripSeparator8, MenuStartHereManuallyImportDeviceSettings, MenuStartHereShowPumpSetup, ToolStripSeparator1, MenuStartHereUseSavedDataFile, MenuStartHereUseExceptionReport, ToolStripSeparator4, MenuStartHereUseLastSavedFile, MenuStartHereUseTestData, ToolStripSeparator2, MenuStartHereSnapshotSave, MenuStartHereCleanUpObsoleteFiles, ToolStripSeparator3, MenuStartHereExit})
         MenuStartHere.Name = "MenuStartHere"
         MenuStartHere.Size = New Size(71, 20)
         MenuStartHere.Text = "Start Here"
         ' 
         ' MenuStartHereLogin
         ' 
-        MenuStartHereLogin.Name = "MenuStartHereLogin"
-        MenuStartHereLogin.Size = New Size(245, 22)
-        MenuStartHereLogin.Text = "Login"
+        MenuStartHereUserLogin.Name = "MenuStartHereLogin"
+        MenuStartHereUserLogin.Size = New Size(245, 22)
+        MenuStartHereUserLogin.Text = "Login"
         ' 
         ' ToolStripSeparator8
         ' 
@@ -1400,15 +1412,15 @@ Partial Class Form1
         ' 
         ' MenuStartHereLoadSavedDataFile
         ' 
-        MenuStartHereLoadSavedDataFile.Name = "MenuStartHereLoadSavedDataFile"
-        MenuStartHereLoadSavedDataFile.Size = New Size(245, 22)
-        MenuStartHereLoadSavedDataFile.Text = "Load A Saved Data File"
+        MenuStartHereUseSavedDataFile.Name = "MenuStartHereLoadSavedDataFile"
+        MenuStartHereUseSavedDataFile.Size = New Size(245, 22)
+        MenuStartHereUseSavedDataFile.Text = "Load A Saved Data File"
         ' 
         ' MenuStartHereExceptionReportLoad
         ' 
-        MenuStartHereExceptionReportLoad.Name = "MenuStartHereExceptionReportLoad"
-        MenuStartHereExceptionReportLoad.Size = New Size(245, 22)
-        MenuStartHereExceptionReportLoad.Text = "Load An Exception Report"
+        MenuStartHereUseExceptionReport.Name = "MenuStartHereExceptionReportLoad"
+        MenuStartHereUseExceptionReport.Size = New Size(245, 22)
+        MenuStartHereUseExceptionReport.Text = "Load An Exception Report"
         ' 
         ' ToolStripSeparator4
         ' 
@@ -2491,7 +2503,7 @@ Partial Class Form1
         TableLayoutPanelAutoModeStatus.ColumnCount = 1
         TableLayoutPanelAutoModeStatus.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelAutoModeStatus.Controls.Add(TableLayoutPanelAutoModeStatusTop, 0, 0)
-        TableLayoutPanelAutoModeStatus.Controls.Add(dgvAutoModeStatus, 0, 1)
+        TableLayoutPanelAutoModeStatus.Controls.Add(DgvAutoModeStatus, 0, 1)
         TableLayoutPanelAutoModeStatus.Dock = DockStyle.Fill
         TableLayoutPanelAutoModeStatus.Location = New Point(3, 3)
         TableLayoutPanelAutoModeStatus.Name = "TableLayoutPanelAutoModeStatus"
@@ -2520,13 +2532,13 @@ Partial Class Form1
         ' 
         ' dgvAutoModeStatus
         ' 
-        dgvAutoModeStatus.Dock = DockStyle.Fill
-        dgvAutoModeStatus.Location = New Point(6, 52)
-        dgvAutoModeStatus.Name = "dgvAutoModeStatus"
-        dgvAutoModeStatus.ReadOnly = True
-        dgvAutoModeStatus.SelectionMode = DataGridViewSelectionMode.CellSelect
-        dgvAutoModeStatus.Size = New Size(1358, 597)
-        dgvAutoModeStatus.TabIndex = 0
+        DgvAutoModeStatus.Dock = DockStyle.Fill
+        DgvAutoModeStatus.Location = New Point(6, 52)
+        DgvAutoModeStatus.Name = "dgvAutoModeStatus"
+        DgvAutoModeStatus.ReadOnly = True
+        DgvAutoModeStatus.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvAutoModeStatus.Size = New Size(1358, 597)
+        DgvAutoModeStatus.TabIndex = 0
         ' 
         ' TabPageBgReadings
         ' 
@@ -2715,6 +2727,7 @@ Partial Class Form1
         TableLayoutPanelTimeChange.ColumnCount = 1
         TableLayoutPanelTimeChange.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelTimeChange.Controls.Add(TableLayoutPanelTimeChangeTop, 0, 0)
+        TableLayoutPanelTimeChange.Controls.Add(DgvTimeChange, 0, 1)
         TableLayoutPanelTimeChange.Dock = DockStyle.Fill
         TableLayoutPanelTimeChange.Location = New Point(3, 3)
         TableLayoutPanelTimeChange.Name = "TableLayoutPanelTimeChange"
@@ -2740,7 +2753,7 @@ Partial Class Form1
         TableLayoutPanelTimeChangeTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelTimeChangeTop.Size = New Size(1358, 37)
         TableLayoutPanelTimeChangeTop.TabIndex = 1
-        ' 
+        '
         ' TabPageLastSG
         ' 
         TabPageLastSG.Controls.Add(TableLayoutPanelLastSG)
@@ -2982,6 +2995,7 @@ Partial Class Form1
         CType(DgvSGs, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvTherapyAlgorithmState, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvTimeChange, ComponentModel.ISupportInitialize).EndInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).EndInit()
         Last24HTotalsPanel.ResumeLayout(False)
         MenuStrip1.ResumeLayout(False)
@@ -3058,7 +3072,7 @@ Partial Class Form1
         TabPageAutoModeStatus.PerformLayout()
         TableLayoutPanelAutoModeStatus.ResumeLayout(False)
         TableLayoutPanelAutoModeStatus.PerformLayout()
-        CType(dgvAutoModeStatus, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvAutoModeStatus, ComponentModel.ISupportInitialize).EndInit()
         TabPageBgReadings.ResumeLayout(False)
         TabPageBgReadings.PerformLayout()
         TableLayoutPanelBgReadings.ResumeLayout(False)
@@ -3122,7 +3136,7 @@ Partial Class Form1
     Friend WithEvents CursorTimer As Timer
     Friend WithEvents DgvActiveInsulin As DataGridView
     Friend WithEvents DgvAutoBasalDelivery As DataGridView
-    Friend WithEvents dgvAutoModeStatus As DataGridView
+    Friend WithEvents DgvAutoModeStatus As DataGridView
     Friend WithEvents DgvBannerState As DataGridView
     Friend WithEvents DgvBasal As DataGridView
     Friend WithEvents DgvBasalPerHour As DataGridView
@@ -3140,6 +3154,7 @@ Partial Class Form1
     Friend WithEvents DgvSGs As DataGridView
     Friend WithEvents DgvSummary As DataGridView
     Friend WithEvents DgvTherapyAlgorithmState As DataGridView
+    Friend WithEvents DgvTimeChange As DataGridView
     Friend WithEvents FullNameLabel As Label
     Friend WithEvents HighTirComplianceLabel As Label
     Friend WithEvents ImageList1 As ImageList
@@ -3196,10 +3211,10 @@ Partial Class Form1
     Friend WithEvents MenuShowMiniDisplay As ToolStripMenuItem
     Friend WithEvents MenuStartHere As ToolStripMenuItem
     Friend WithEvents MenuStartHereCleanUpObsoleteFiles As ToolStripMenuItem
-    Friend WithEvents MenuStartHereExceptionReportLoad As ToolStripMenuItem
+    Friend WithEvents MenuStartHereUseExceptionReport As ToolStripMenuItem
     Friend WithEvents MenuStartHereExit As ToolStripMenuItem
-    Friend WithEvents MenuStartHereLoadSavedDataFile As ToolStripMenuItem
-    Friend WithEvents MenuStartHereLogin As ToolStripMenuItem
+    Friend WithEvents MenuStartHereUseSavedDataFile As ToolStripMenuItem
+    Friend WithEvents MenuStartHereUserLogin As ToolStripMenuItem
     Friend WithEvents MenuStartHereManuallyImportDeviceSettings As ToolStripMenuItem
     Friend WithEvents MenuStartHereShowPumpSetup As ToolStripMenuItem
     Friend WithEvents MenuStartHereSnapshotSave As ToolStripMenuItem

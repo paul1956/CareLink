@@ -12,7 +12,7 @@ Friend Module LastSgHelpers
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Public Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of ActiveInsulin)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of LastSG)(s_alignmentTable, columnName)
     End Function
 
     Public Function HideColumn(columnName As String) As Boolean

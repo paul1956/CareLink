@@ -4,8 +4,7 @@
 
 Friend Module BasalHelpers
 
-    Private ReadOnly s_columnsToHide As New List(Of String) From {
-            NameOf(Basal.HasValue)}
+    Private ReadOnly s_columnsToHide As New List(Of String)
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 

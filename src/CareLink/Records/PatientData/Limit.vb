@@ -4,7 +4,6 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports System.Globalization
 Imports System.Text.Json.Serialization
 
 Public Class Limit
@@ -12,20 +11,6 @@ Public Class Limit
     <DisplayName("Index")>
     <Column(Order:=0, TypeName:=NameOf([Int32]))>
     Public Property Index As Integer
-
-    <DisplayName(NameOf(Timestamp))>
-    <Column(Order:=9, TypeName:="String")>
-    <JsonPropertyName("timestamp")>
-    Public Property TimestampAsString As String
-
-    <DisplayName("TimestampAsDate")>
-    <Column(Order:=10, TypeName:="Date")>
-    <JsonPropertyName("timestampAsDate")>
-    Public ReadOnly Property Timestamp As Date
-        Get
-            Return TryParseDateStr(Me.TimestampAsString)
-        End Get
-    End Property
 
     <DisplayName("High Limit")>
     <Column(Order:=1, TypeName:=NameOf([Single]))>
@@ -91,5 +76,18 @@ Public Class Limit
     <JsonPropertyName("version")>
     Public Property Version As Integer
 
+    <DisplayName("Timestamp")>
+    <Column(Order:=9, TypeName:="String")>
+    <JsonPropertyName("timestamp")>
+    Public Property TimestampAsString As String
+
+    <DisplayName("Timestamp As Date")>
+    <Column(Order:=10, TypeName:="Date")>
+    <JsonPropertyName("timestampAsDate")>
+    Public ReadOnly Property Timestamp As Date
+        Get
+            Return TryParseDateStr(Me.TimestampAsString)
+        End Get
+    End Property
 
 End Class

@@ -82,7 +82,7 @@ Public Class SG
         End Get
     End Property
 
-    <DisplayName(NameOf(Timestamp))>
+    <DisplayName("Timestamp")>
     <Column(Order:=6, TypeName:="Date")>
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
@@ -91,7 +91,7 @@ Public Class SG
         End Get
     End Property
 
-    <DisplayName(NameOf(Timestamp))>
+    <DisplayName("Timestamp")>
     <Column(Order:=7, TypeName:="Date")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
@@ -103,7 +103,7 @@ Public Class SG
         End Set
     End Property
 
-    <DisplayName(NameOf(OaDateTime))>
+    <DisplayName("OA Date Time")>
     <Column(Order:=8, TypeName:=NameOf([Double]))>
     Public ReadOnly Property OaDateTime As OADate
         Get

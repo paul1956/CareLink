@@ -5,6 +5,7 @@
 Friend Module LastAlarmHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
+                        "RecordNumber",
                         NameOf(LastSG.Kind),
                         NameOf(LastSG.Version)
                     }
@@ -12,7 +13,7 @@ Friend Module LastAlarmHelpers
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Public Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of ActiveInsulin)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of LastSG)(s_alignmentTable, columnName)
     End Function
 
     Public Function HideColumn(columnName As String) As Boolean

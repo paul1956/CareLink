@@ -6,7 +6,6 @@ Friend Module ActiveInsulinHelpers
 
     Private ReadOnly s_columnsToHide As New List(Of String) From {
                          NameOf(ActiveInsulin.kind),
-                         NameOf(ActiveInsulin.OAdatetime),
                          NameOf(ActiveInsulin.Version)
                     }
 

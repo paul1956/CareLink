@@ -9,7 +9,7 @@ Imports System.Text.Json.Serialization
 Public Class ActiveNotification
 
 
-    <DisplayName(NameOf(FaultId))>
+    <DisplayName("Fault Id")>
     <Column(Order:=1, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("faultId")>
     Public Property FaultId As String
@@ -19,12 +19,12 @@ Public Class ActiveNotification
     <JsonPropertyName("version")>
     Public Property Version As Integer
 
-    <DisplayName(NameOf(ReferenceGUID))>
+    <DisplayName("Reference GUID")>
     <Column(Order:=3, TypeName:=NameOf([String]))>
     <JsonPropertyName("referenceGUID")>
     Public Property ReferenceGUID As String
 
-    <DisplayName(NameOf(dateTime))>
+    <DisplayName("Date Time")>
     <Column(Order:=4, TypeName:="Date")>
     <JsonPropertyName("dateTime")>
     Public Property [dateTime] As String
@@ -34,12 +34,12 @@ Public Class ActiveNotification
     <JsonPropertyName("type")>
     Public Property Type As String
 
-    <DisplayName("triggeredDateTime")>
+    <DisplayName("Triggered Date Time")>
     <Column(Order:=6, TypeName:="Date")>
     <JsonPropertyName("triggeredDateTime")>
     Public Property triggeredDateTime As String
 
-    <DisplayName(NameOf(SecondaryTime))>
+    <DisplayName("Secondary Time")>
     <Column(Order:=7, TypeName:="Date")>
     <JsonPropertyName("secondaryTime")>
     Public Property SecondaryTime As String
