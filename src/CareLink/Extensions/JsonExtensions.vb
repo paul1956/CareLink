@@ -336,10 +336,6 @@ Public Module JsonExtensions
     End Function
 
     Public Function JsonToLisOfSgs(value As String) As List(Of SG)
-        If String.IsNullOrWhiteSpace(value) Then
-            Return New List(Of SG)
-        End If
-
         Dim jsonList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, s_jsonDeserializerOptions)
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex

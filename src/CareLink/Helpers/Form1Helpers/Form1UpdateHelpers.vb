@@ -122,9 +122,9 @@ Friend Module Form1UpdateHelpers
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso {"AUTO_BASAL", "SAFE_BASAL"}.Contains(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmState.AutoModeShieldState)))
         End If
 
-        If RecentData.TryGetValue("sgs", value) Then
-            s_listOfSgRecords = JsonToLisOfSgs(value)
-        End If
+        s_listOfSgRecords = If(RecentData.TryGetValue("sgs", value),
+            JsonToLisOfSgs(value),
+            New List(Of SG))
 
         My.Forms.Form1.MaxBasalPerHourLabel.Text =
             If(RecentData.TryGetValue(key:="markers", value),
@@ -156,9 +156,12 @@ Friend Module Form1UpdateHelpers
                                 message = $"Your pump TimeZone '{row.Value}' is not recognized, do you want to exit? If you select No permanently use '{TimeZoneInfo.Local.Id}''? If you select Yes '{TimeZoneInfo.Local.Id}' will be used and you will not be prompted further. No will use '{TimeZoneInfo.Local.Id}' until you restart program. Cancel will exit program. Please open an issue and provide the name '{row.Value}'. After selecting 'Yes' you can change the behavior under the Options Menu."
                                 messageButtons = MessageBoxButtons.YesNoCancel
                             End If
-                            Dim result As DialogResult = MessageBox.Show(message, "TimeZone Unknown",
-                                                                                 messageButtons,
-                                                                                 MessageBoxIcon.Question)
+                            Dim result As DialogResult = MessageBox.Show(
+                                text:=message,
+                                caption:="TimeZone Unknown",
+                                buttons:=messageButtons,
+                                icon:=MessageBoxIcon.Question)
+
                             s_useLocalTimeZone = True
                             PumpTimeZoneInfo = TimeZoneInfo.Local
                             Select Case result
