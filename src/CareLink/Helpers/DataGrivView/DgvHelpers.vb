@@ -174,16 +174,14 @@ Friend Module DgvHelpers
         e.FormattingApplied = True
     End Sub
 
-    <Extension>
-    Friend Sub ColumnAdded(dgv As DataGridView, ByRef e As DataGridViewColumnEventArgs)
-        With e.Column
-            e.DgvColumnAdded(
-                cellStyle:=SummaryHelpers.GetCellStyle(.Name),
-                wrapHeader:=False,
-                forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-        End With
+    Friend Sub DgvPaint(sender As Object, e As PaintEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        If dgv.Rows.Count = 0 Then
+            TextRenderer.DrawText(e.Graphics, "No records found.",
+                font:=New Font(family:=dgv.Font.FontFamily, emSize:=20), bounds:=dgv.ClientRectangle,
+                foreColor:=dgv.ForeColor, backColor:=dgv.BackgroundColor,
+                flags:=TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
+        End If
     End Sub
 
     <Extension>
@@ -204,14 +202,14 @@ Friend Module DgvHelpers
         AddHandler dGV.Paint, AddressOf DgvPaint
     End Sub
 
-    Public Sub DgvPaint(sender As Object, e As PaintEventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        If dgv.Rows.Count = 0 Then
-            TextRenderer.DrawText(e.Graphics, "No records found.",
-                font:=New Font(family:=dgv.Font.FontFamily, emSize:=20), bounds:=dgv.ClientRectangle,
-                foreColor:=dgv.ForeColor, backColor:=dgv.BackgroundColor,
-                flags:=TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
-        End If
+    Friend Sub HideDataGridViewColumns(ByRef dgv As DataGridView, hideColumnFunction As Func(Of String, Boolean))
+        Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
+        For i As Integer = 0 To lastColumnIndex
+            If i > 0 AndAlso String.IsNullOrWhiteSpace(dgv.Columns(i).DataPropertyName) Then
+                Stop
+            End If
+            dgv.Columns(i).Visible = Not hideColumnFunction(dgv.Columns(i).DataPropertyName)
+        Next
     End Sub
 
 End Module

@@ -416,39 +416,38 @@ Friend Module Form1UpdateHelpers
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfAutoModeStatusMarkers),
                 className:=NameOf(AutoModeStatus),
-                attachHandlers:=Nothing,
-                rowIndex:=ServerDataIndexes.markers,
-                hideRecordNumberColumn:=False)
+                rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfBgReadingMarkers),
                 className:=NameOf(BgReading),
-                attachHandlers:=Nothing,
-                rowIndex:=ServerDataIndexes.markers,
-                hideRecordNumberColumn:=False)
+                rowIndex:=ServerDataIndexes.markers)
+
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfInsulinMarkers),
                 className:=NameOf(Insulin),
-                attachHandlers:=Nothing,
-                rowIndex:=ServerDataIndexes.markers,
-                hideRecordNumberColumn:=False)
+                rowIndex:=ServerDataIndexes.markers)
+
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfMealMarkers),
                 className:=NameOf(Meal),
                 rowIndex:=ServerDataIndexes.markers)
+
             .TableLayoutPanelCalibration.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfCalibrationMarkers),
                 className:=NameOf(Calibration),
-                rowIndex:=ServerDataIndexes.markers,
-                hideRecordNumberColumn:=False)
+                rowIndex:=ServerDataIndexes.markers)
+
             .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfLowGlucoseSuspendedMarkers),
                 className:=NameOf(LowGlucoseSuspended),
                 rowIndex:=ServerDataIndexes.markers)
+
             .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfTimeChangeMarkers),
                 className:=NameOf(TimeChange),
                 rowIndex:=ServerDataIndexes.markers)
+
             .TableLayoutPanelBasalPerHour.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfBasalPerHour),
                 className:=NameOf(BasalPerHour),

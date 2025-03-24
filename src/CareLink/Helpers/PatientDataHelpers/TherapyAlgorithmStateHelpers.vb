@@ -2,16 +2,13 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Module AutoModeStatusHelpers
-
-    Private ReadOnly s_columnsToHide As New List(Of String) From {
-        NameOf(AutoModeStatus.Kind),
-        NameOf(AutoModeStatus.Type)}
+Public Module TherapyAlgorithmStateHelpers
+    Private ReadOnly s_columnsToHide As New List(Of String)
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of AutoModeStatus)(s_alignmentTable, columnName)
+        Return ClassPropertiesToColumnAlignment(Of TimeChange)(s_alignmentTable, columnName)
     End Function
 
     Friend Function HideColumn(columnName As String) As Boolean

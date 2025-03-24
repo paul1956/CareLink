@@ -669,6 +669,7 @@ Partial Class Form1
         DgvAutoBasalDelivery.Location = New Point(6, 52)
         DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
         DgvAutoBasalDelivery.ReadOnly = True
+        DgvAutoModeStatus.RowHeadersVisible = False
         DgvAutoBasalDelivery.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvAutoBasalDelivery.Size = New Size(1358, 597)
         DgvAutoBasalDelivery.TabIndex = 0
@@ -2051,8 +2052,7 @@ Partial Class Form1
         ' 
         TableLayoutPanelActiveInsulin.AutoSize = True
         TableLayoutPanelActiveInsulin.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelActiveInsulin.ColumnCount = 2
-        TableLayoutPanelActiveInsulin.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelActiveInsulin.ColumnCount = 1
         TableLayoutPanelActiveInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelActiveInsulin.Controls.Add(TableLayoutPanelActiveInsulinTop, 0, 0)
         TableLayoutPanelActiveInsulin.Controls.Add(DgvActiveInsulin, 0, 1)
@@ -2144,8 +2144,7 @@ Partial Class Form1
         TableLayoutPanelLimits.AutoSize = True
         TableLayoutPanelLimits.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TableLayoutPanelLimits.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelLimits.ColumnCount = 2
-        TableLayoutPanelLimits.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelLimits.ColumnCount = 1
         TableLayoutPanelLimits.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLimits.Controls.Add(TableLayoutPanelLimitsTop, 0, 0)
         TableLayoutPanelLimits.Controls.Add(DgvLimits, 0, 1)
@@ -2578,17 +2577,11 @@ Partial Class Form1
         TableLayoutPanelBgReadingsTop.ColumnCount = 2
         TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBgReadingsTop.Dock = DockStyle.Fill
         TableLayoutPanelBgReadingsTop.LabelText = "Blood Glucose Readings"
         TableLayoutPanelBgReadingsTop.Location = New Point(6, 6)
         TableLayoutPanelBgReadingsTop.Name = "TableLayoutPanelBgReadingsTop"
         TableLayoutPanelBgReadingsTop.RowCount = 1
-        TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelBgReadingsTop.Size = New Size(1358, 37)
         TableLayoutPanelBgReadingsTop.TabIndex = 1

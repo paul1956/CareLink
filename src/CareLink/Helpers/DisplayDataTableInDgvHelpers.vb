@@ -13,48 +13,14 @@ Friend Module DisplayDataTableInDgvHelpers
         realPanel As TableLayoutPanel,
         table As DataTable,
         dGV As DataGridView,
-        rowIndex As ServerDataIndexes)
+        rowIndex As ServerDataIndexes,
+        Optional hideRecordNumberColumn As Boolean = False)
 
         realPanel.SetTabName(rowIndex, isClearedNotifications:=False)
         dGV.InitializeDgv()
         dGV.DataSource = table
-        dGV.RowHeadersVisible = False
-    End Sub
-
-    <Extension>
-    Friend Sub DisplayDataTableInDGV(
-        realPanel As TableLayoutPanel,
-        table As DataTable,
-        className As String,
-        attachHandlers As attachHandlers,
-        rowIndex As ServerDataIndexes,
-        hideRecordNumberColumn As Boolean)
-
-        realPanel.SetTabName(rowIndex, isClearedNotifications:=False)
-        If table?.Rows.Count > 0 Then
-            Dim dGVIndex As Integer = realPanel.Controls.Count - 1
-            Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)
-
-            If dGV Is Nothing Then
-                dGV = New DataGridView With {.Name = $"DataGridView{className}"}
-                dGV.InitializeDgv()
-                dGV.AutoSize = True
-                dGV.Dock = DockStyle.Fill
-                realPanel.Controls.Add(dGV, column:=0, row:=1)
-            Else
-                dGV.InitializeDgv()
-                dGV.Dock = DockStyle.Fill
-            End If
-            attachHandlers?(dGV)
-            dGV.DataSource = Nothing
-            dGV.DataSource = table
-            dGV.RowHeadersVisible = False
-            If hideRecordNumberColumn AndAlso dGV.Columns(0).Name = "RecordNumber" Then
-                dGV.Columns("RecordNumber").Visible = False
-            End If
-        Else
-            DisplayEmptyDGV(realPanel, className)
-        End If
+        dGV.AutoSize = True
+        dGV.RowHeadersVisible = hideRecordNumberColumn
         Form1.Refresh()
     End Sub
 
@@ -72,15 +38,12 @@ Friend Module DisplayDataTableInDgvHelpers
             Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)
 
             If dGV Is Nothing Then
-                dGV = New DataGridView With {.Name = $"DataGridView{className}"}
-                dGV.InitializeDgv()
-                dGV.AutoSize = True
-                dGV.Dock = DockStyle.Fill
-                realPanel.Controls.Add(dGV, column:=0, row:=1)
+                Stop
             Else
                 dGV.InitializeDgv()
-                dGV.Dock = DockStyle.Fill
+                dGV.AutoSize = True
             End If
+            dGV.Dock = DockStyle.Fill
             dGV.DataSource = Nothing
             dGV.DataSource = table
             dGV.RowHeadersVisible = False
