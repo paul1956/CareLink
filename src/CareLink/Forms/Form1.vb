@@ -601,7 +601,6 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If e.Value Is Nothing Then
             e.Value = String.Empty
-            Return
         End If
         ' Set the background to red for negative values in the Balance column.
         Select Case dgv.Columns(e.ColumnIndex).Name
@@ -614,8 +613,9 @@ Public Class Form1
                 End If
             Case NameOf(AutoBasalDelivery.DisplayTime), NameOf(AutoBasalDelivery.Timestamp)
                 dgv.CellFormattingDateTime(e)
+            Case Else
+                dgv.CellFormattingSetForegroundColor(e)
         End Select
-        dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     Private Sub DgvAutoBasalDelivery_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoBasalDelivery.ColumnAdded
@@ -1484,7 +1484,8 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
         Select Case key
-            Case NameOf(TherapyAlgorithmState.AutoModeReadinessState), NameOf(TherapyAlgorithmState.AutoModeShieldState),
+            Case NameOf(TherapyAlgorithmState.AutoModeReadinessState),
+                 NameOf(TherapyAlgorithmState.AutoModeShieldState),
                  NameOf(TherapyAlgorithmState.PlgmLgsState)
 
                 e.CellStyle = e.CellStyle.SetCellStyle(

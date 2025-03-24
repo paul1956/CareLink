@@ -410,7 +410,7 @@ Friend Module Form1UpdateHelpers
         With Form1
             .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfAutoBasalDeliveryMarkers),
-                dGV:= .DgvAutoBasalDelivery,
+                className:=NameOf(AutoBasalDelivery),
                 rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(

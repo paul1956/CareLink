@@ -31,14 +31,15 @@ Friend Module Form1CollectMarkersHelper
     ''' <returns>Max Basal/Hr</returns>
     Friend Function CollectMarkers() As String
         s_listOfAutoBasalDeliveryMarkers.Clear()
-        s_listOFBasalPerHour.Clear()
+        s_listOfAutoModeStatusMarkers.Clear()
+        s_listOfBasalPerHour.Clear()
         For index As Integer = 0 To 11
             s_listOfBasalPerHour.Add(New BasalPerHour(index * 2))
         Next
-        s_listOfAutoModeStatusMarkers.Clear()
-            s_listOfBgReadingMarkers.Clear()
+        s_listOfBgReadingMarkers.Clear()
         s_listOfCalibrationMarkers.Clear()
         s_listOfInsulinMarkers.Clear()
+        s_listOfLimitRecords.Clear()
         s_listOfLowGlucoseSuspendedMarkers.Clear()
         s_listOfMealMarkers.Clear()
         s_listOfTimeChangeMarkers.Clear()

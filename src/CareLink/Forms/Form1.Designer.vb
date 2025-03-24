@@ -225,6 +225,7 @@ Partial Class Form1
         TabPageCalibration = New TabPage()
         TableLayoutPanelCalibration = New TableLayoutPanel()
         TableLayoutPanelCalibrationTop = New TableLayoutPanelTopEx()
+        DgvCalibration = New DataGridView()
         TabPageLowGlucoseSuspended = New TabPage()
         TableLayoutPanelLowGlucoseSuspended = New TableLayoutPanel()
         TableLayoutPanelLowGlucoseSuspendedTop = New TableLayoutPanelTopEx()
@@ -247,7 +248,6 @@ Partial Class Form1
         TabPageBackToHomePage = New TabPage()
         ToolTip1 = New ToolTip(components)
         WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
-        DgvCalibration = New DataGridView()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
         CType(SmartGuardShieldPictureBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -322,6 +322,7 @@ Partial Class Form1
         CType(DgvSensorBgReadings, ComponentModel.ISupportInitialize).BeginInit()
         TabPageCalibration.SuspendLayout()
         TableLayoutPanelCalibration.SuspendLayout()
+        CType(DgvCalibration, ComponentModel.ISupportInitialize).BeginInit()
         TabPageLowGlucoseSuspended.SuspendLayout()
         TableLayoutPanelLowGlucoseSuspended.SuspendLayout()
         CType(DgvLowGlucoseSuspended, ComponentModel.ISupportInitialize).BeginInit()
@@ -337,7 +338,6 @@ Partial Class Form1
         TabPageCurrentUser.SuspendLayout()
         TabPageAllUsers.SuspendLayout()
         CType(WebView, ComponentModel.ISupportInitialize).BeginInit()
-        CType(DgvCalibration, ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
         ' AboveHighLimitMessageLabel
@@ -660,7 +660,7 @@ Partial Class Form1
         DgvActiveInsulin.Name = "DgvActiveInsulin"
         DgvActiveInsulin.ReadOnly = True
         DgvActiveInsulin.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvActiveInsulin.Size = New Size(1358, 606)
+        DgvActiveInsulin.Size = New Size(1364, 606)
         DgvActiveInsulin.TabIndex = 0
         ' 
         ' DgvAutoBasalDelivery
@@ -669,7 +669,7 @@ Partial Class Form1
         DgvAutoBasalDelivery.Location = New Point(6, 52)
         DgvAutoBasalDelivery.Name = "DgvAutoBasalDelivery"
         DgvAutoBasalDelivery.ReadOnly = True
-        DgvAutoModeStatus.RowHeadersVisible = False
+        DgvAutoBasalDelivery.RowHeadersVisible = False
         DgvAutoBasalDelivery.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvAutoBasalDelivery.Size = New Size(1358, 597)
         DgvAutoBasalDelivery.TabIndex = 0
@@ -811,7 +811,7 @@ Partial Class Form1
         DgvTherapyAlgorithmState.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvTherapyAlgorithmState.Size = New Size(1358, 597)
         DgvTherapyAlgorithmState.TabIndex = 0
-        '         ' 
+        ' 
         ' DgvTimeChange
         ' 
         DgvTimeChange.Dock = DockStyle.Fill
@@ -1382,9 +1382,9 @@ Partial Class Form1
         MenuStartHere.Size = New Size(71, 20)
         MenuStartHere.Text = "Start Here"
         ' 
-        ' MenuStartHereLogin
+        ' MenuStartHereUserLogin
         ' 
-        MenuStartHereUserLogin.Name = "MenuStartHereLogin"
+        MenuStartHereUserLogin.Name = "MenuStartHereUserLogin"
         MenuStartHereUserLogin.Size = New Size(245, 22)
         MenuStartHereUserLogin.Text = "Login"
         ' 
@@ -1411,15 +1411,15 @@ Partial Class Form1
         ToolStripSeparator1.Name = "ToolStripSeparator1"
         ToolStripSeparator1.Size = New Size(242, 6)
         ' 
-        ' MenuStartHereLoadSavedDataFile
+        ' MenuStartHereUseSavedDataFile
         ' 
-        MenuStartHereUseSavedDataFile.Name = "MenuStartHereLoadSavedDataFile"
+        MenuStartHereUseSavedDataFile.Name = "MenuStartHereUseSavedDataFile"
         MenuStartHereUseSavedDataFile.Size = New Size(245, 22)
         MenuStartHereUseSavedDataFile.Text = "Load A Saved Data File"
         ' 
-        ' MenuStartHereExceptionReportLoad
+        ' MenuStartHereUseExceptionReport
         ' 
-        MenuStartHereUseExceptionReport.Name = "MenuStartHereExceptionReportLoad"
+        MenuStartHereUseExceptionReport.Name = "MenuStartHereUseExceptionReport"
         MenuStartHereUseExceptionReport.Size = New Size(245, 22)
         MenuStartHereUseExceptionReport.Text = "Load An Exception Report"
         ' 
@@ -2079,7 +2079,7 @@ Partial Class Form1
         TableLayoutPanelActiveInsulinTop.Name = "TableLayoutPanelActiveInsulinTop"
         TableLayoutPanelActiveInsulinTop.RowCount = 1
         TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelActiveInsulinTop.Size = New Size(1364, 37)
         TableLayoutPanelActiveInsulinTop.TabIndex = 1
         ' 
         ' TabPage08SensorGlucose
@@ -2443,7 +2443,7 @@ Partial Class Form1
         TabPageAutoBasalDelivery.Name = "TabPageAutoBasalDelivery"
         TabPageAutoBasalDelivery.Padding = New Padding(3)
         TabPageAutoBasalDelivery.Size = New Size(1376, 661)
-        TabPageAutoBasalDelivery.TabIndex = 1
+        TabPageAutoBasalDelivery.TabIndex = 0
         TabPageAutoBasalDelivery.Text = "Auto Basal Delivery"
         TabPageAutoBasalDelivery.UseVisualStyleBackColor = True
         ' 
@@ -2474,7 +2474,7 @@ Partial Class Form1
         TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelAutoBasalDeliveryTop.Dock = DockStyle.Fill
-        TableLayoutPanelAutoBasalDeliveryTop.LabelText = "Basal"
+        TableLayoutPanelAutoBasalDeliveryTop.LabelText = "Auto Basal Delivery"
         TableLayoutPanelAutoBasalDeliveryTop.Location = New Point(6, 6)
         TableLayoutPanelAutoBasalDeliveryTop.Name = "TableLayoutPanelAutoBasalDeliveryTop"
         TableLayoutPanelAutoBasalDeliveryTop.RowCount = 1
@@ -2495,7 +2495,6 @@ Partial Class Form1
         ' 
         ' TableLayoutPanelAutoModeStatus
         ' 
-        TableLayoutPanelAutoModeStatus.AutoScroll = True
         TableLayoutPanelAutoModeStatus.AutoSize = True
         TableLayoutPanelAutoModeStatus.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TableLayoutPanelAutoModeStatus.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
@@ -2529,12 +2528,13 @@ Partial Class Form1
         TableLayoutPanelAutoModeStatusTop.Size = New Size(1358, 37)
         TableLayoutPanelAutoModeStatusTop.TabIndex = 1
         ' 
-        ' dgvAutoModeStatus
+        ' DgvAutoModeStatus
         ' 
         DgvAutoModeStatus.Dock = DockStyle.Fill
         DgvAutoModeStatus.Location = New Point(6, 52)
-        DgvAutoModeStatus.Name = "dgvAutoModeStatus"
+        DgvAutoModeStatus.Name = "DgvAutoModeStatus"
         DgvAutoModeStatus.ReadOnly = True
+        DgvAutoModeStatus.RowHeadersVisible = False
         DgvAutoModeStatus.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvAutoModeStatus.Size = New Size(1358, 597)
         DgvAutoModeStatus.TabIndex = 0
@@ -2643,6 +2643,17 @@ Partial Class Form1
         TableLayoutPanelCalibrationTop.Size = New Size(1358, 37)
         TableLayoutPanelCalibrationTop.TabIndex = 1
         ' 
+        ' DgvCalibration
+        ' 
+        DgvCalibration.AllowUserToAddRows = False
+        DgvCalibration.AllowUserToDeleteRows = False
+        DgvCalibration.Dock = DockStyle.Fill
+        DgvCalibration.Location = New Point(6, 52)
+        DgvCalibration.Name = "DgvCalibration"
+        DgvCalibration.ReadOnly = True
+        DgvCalibration.Size = New Size(1358, 597)
+        DgvCalibration.TabIndex = 2
+        ' 
         ' TabPageLowGlucoseSuspended
         ' 
         TabPageLowGlucoseSuspended.Controls.Add(TableLayoutPanelLowGlucoseSuspended)
@@ -2746,7 +2757,7 @@ Partial Class Form1
         TableLayoutPanelTimeChangeTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelTimeChangeTop.Size = New Size(1358, 37)
         TableLayoutPanelTimeChangeTop.TabIndex = 1
-        '
+        ' 
         ' TabPageLastSG
         ' 
         TabPageLastSG.Controls.Add(TableLayoutPanelLastSG)
@@ -2939,17 +2950,6 @@ Partial Class Form1
         WebView.TabIndex = 3
         WebView.ZoomFactor = 1.0R
         ' 
-        ' DgvCalibration
-        ' 
-        DgvCalibration.AllowUserToAddRows = False
-        DgvCalibration.AllowUserToDeleteRows = False
-        DgvCalibration.Dock = DockStyle.Fill
-        DgvCalibration.Location = New Point(0, 0)
-        DgvCalibration.Name = "DgvCalibration"
-        DgvCalibration.ReadOnly = True
-        DgvCalibration.Size = New Size(1358, 597)
-        DgvCalibration.TabIndex = 2
-        ' 
         ' Form1
         ' 
         Me.AutoScaleDimensions = New SizeF(96.0F, 96.0F)
@@ -3075,6 +3075,7 @@ Partial Class Form1
         TabPageCalibration.PerformLayout()
         TableLayoutPanelCalibration.ResumeLayout(False)
         TableLayoutPanelCalibration.PerformLayout()
+        CType(DgvCalibration, ComponentModel.ISupportInitialize).EndInit()
         TabPageLowGlucoseSuspended.ResumeLayout(False)
         TabPageLowGlucoseSuspended.PerformLayout()
         TableLayoutPanelLowGlucoseSuspended.ResumeLayout(False)
@@ -3100,7 +3101,6 @@ Partial Class Form1
         TabPageCurrentUser.ResumeLayout(False)
         TabPageAllUsers.ResumeLayout(False)
         CType(WebView, ComponentModel.ISupportInitialize).EndInit()
-        CType(DgvCalibration, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
