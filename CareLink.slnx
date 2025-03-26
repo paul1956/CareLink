@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="CareLink.vsext" />
+    <File Path="exclusion.dic" />
+    <File Path="GettingStarted.MD" />
+    <File Path="License.txt" />
+    <File Path="README.md" />
+    <File Path="Screenshot 2022-10-08 203350.png" />
+  </Folder>
+  <Folder Name="/Solution Items/.GitHub/">
+    <File Path="copilot-instructions.md" />
+  </Folder>
+  <Project Path="src/CareLink/CareLink.vbproj" />
+</Solution>
