@@ -369,12 +369,15 @@ Public Class Form1
 
     <DebuggerNonUserCode()>
     Private Sub ActiveInsulinChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles ActiveInsulinChart.PostPaint
-
-        If Not ProgramInitialized OrElse _inMouseMove Then
+        If _inMouseMove Then
             Exit Sub
         End If
         SyncLock _updatingLock
             If _updating Then
+                Exit Sub
+            End If
+            If Not ProgramInitialized Then
+                _activeInsulinChartAbsoluteRectangle = RectangleF.Empty
                 Exit Sub
             End If
             e.PostPaintSupport(
@@ -388,12 +391,15 @@ Public Class Form1
 
     <DebuggerNonUserCode()>
     Private Sub SummaryChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles SummaryChart.PostPaint
-
-        If Not ProgramInitialized OrElse _inMouseMove Then
+        If _inMouseMove Then
             Exit Sub
         End If
         SyncLock _updatingLock
             If _updating Then
+                Exit Sub
+            End If
+            If Not ProgramInitialized Then
+                _activeInsulinChartAbsoluteRectangle = RectangleF.Empty
                 Exit Sub
             End If
             e.PostPaintSupport(
@@ -407,12 +413,15 @@ Public Class Form1
 
     <DebuggerNonUserCode()>
     Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles TreatmentMarkersChart.PostPaint
-
-        If Not ProgramInitialized OrElse _inMouseMove Then
+        If _inMouseMove Then
             Exit Sub
         End If
         SyncLock _updatingLock
             If _updating Then
+                Exit Sub
+            End If
+            If Not ProgramInitialized Then
+                _activeInsulinChartAbsoluteRectangle = RectangleF.Empty
                 Exit Sub
             End If
             e.PostPaintSupport(
@@ -1815,22 +1824,22 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereUseLastSavedFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseLastSavedFile.Click
-        DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.LastSaved)
-        Me.MenuStartHereSnapshotSave.Enabled = False
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.LastSaved)
+        Me.MenuStartHereSnapshotSave.Enabled = Not success
     End Sub
 
     Private Sub MenuStartHereUseSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseSavedDataFile.Click
-        DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.SavedFile)
-        Me.MenuStartHereUseSavedDataFile.Enabled = False
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.SavedFile)
+        Me.MenuStartHereUseSavedDataFile.Enabled = Not success
     End Sub
 
     Private Sub MenuStartHereUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseTestData.Click
-        DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
-        Me.MenuStartHereSnapshotSave.Enabled = False
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
+        Me.MenuStartHereSnapshotSave.Enabled = Not success
     End Sub
 
     Private Sub MenuStartHereUserLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereUserLogin.Click
-        DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.NewUser)
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.NewUser)
     End Sub
 
 #End Region ' Start Here Menu Events

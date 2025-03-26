@@ -32,7 +32,9 @@ Friend Module PaintMarkerExtensions
     ' <DebuggerNonUserCode()>
     <Extension>
     Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelativePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)
-        If s_listOfSgRecords.Count = 0 Then Exit Sub
+        If s_listOfSgRecords.Count = 0 OrElse Not ProgramInitialized Then
+            Exit Sub
+        End If
 
         If chartRelativePosition.IsEmpty Then
             chartRelativePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_listOfSgRecords(0).OaDateTime))
