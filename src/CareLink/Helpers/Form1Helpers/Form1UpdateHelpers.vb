@@ -319,9 +319,6 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.timeFormat)
-                    s_timeFormat = PatientData.TimeFormat
-                    s_timeWithMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
-                    s_timeWithoutMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
                 Case NameOf(ServerDataIndexes.bgUnits)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))

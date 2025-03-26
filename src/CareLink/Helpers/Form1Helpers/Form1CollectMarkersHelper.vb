@@ -93,7 +93,9 @@ Friend Module Form1CollectMarkersHelper
                             Throw UnreachableException(markerEntry.Type)
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
-                    s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
+                    If Not InAutoMode Then
+                        s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
+                    End If
                     s_markers.Add(markerEntry)
                 Case "MEAL"
                     s_listOfMealMarkers.Add(New Meal(markerEntry, s_listOfMealMarkers.Count + 1))

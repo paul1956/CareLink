@@ -29,8 +29,7 @@ Friend Module Form1LoginHelpers
                 CurrentDateCulture = New CultureInfo("en-US")
                 Dim patientDataElementAsText As String = File.ReadAllText(TestDataFileNameWithPath)
                 Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(patientDataElementAsText)
-                RecentData = LoadIndexedItems(patientDataElementAsText)
-                PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
+                Client2.DeserializePatientElement(patientDataElement)
                 mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(TestDataFileNameWithPath)
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
@@ -117,8 +116,7 @@ Friend Module Form1LoginHelpers
                 CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(BaseNameSavedLastDownload)
                 Dim patientDataElementAsText As String = File.ReadAllText(lastDownloadFileWithPath)
                 Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(patientDataElementAsText)
-                RecentData = LoadIndexedItems(patientDataElementAsText)
-                PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
+                Client2.DeserializePatientElement(patientDataElement)
                 mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(lastDownloadFileWithPath)
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)

@@ -14,6 +14,7 @@ Public Class Client2
 
     ' Constants
     Private Const DEFAULT_FILENAME As String = "logindata.json"
+
     Private ReadOnly _tokenBaseFileName As String
     Private _accessTokenPayload As Dictionary(Of String, Object)
     Private _config As Dictionary(Of String, Object)
@@ -25,6 +26,7 @@ Public Class Client2
     Private _userElementDictionary As Dictionary(Of String, Object)
     Public Property LoggedIn As Boolean
     Public Property PatientPersonalData As New PatientPersonalInfo
+
     Public Property UserElementDictionary As Dictionary(Of String, Object)
         Get
             Return _userElementDictionary
@@ -384,6 +386,14 @@ Public Class Client2
         Return _lastApiStatus
     End Function
 
+    Friend Shared Sub DeserializePatientElement(patientDataElement As JsonElement)
+        PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
+        RecentData = patientDataElement.ConvertJsonElementToStringDictionary()
+        s_timeFormat = PatientData.TimeFormat
+        s_timeWithMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
+        s_timeWithoutMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
+    End Sub
+
     ''' <summary>
     ''' Get recent periodic pump data
     ''' </summary>
@@ -441,9 +451,7 @@ Public Class Client2
             File.WriteAllTextAsync(
                 path:=GetLastDownloadFileWithPath(),
                 contents:=JsonSerializer.Serialize(patientDataElement, s_jsonSerializerOptions))
-            PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
-            RecentData = patientDataElement.ConvertJsonElementToStringDictionary()
-
+            DeserializePatientElement(patientDataElement)
         Catch ex As Exception
             Stop
         End Try

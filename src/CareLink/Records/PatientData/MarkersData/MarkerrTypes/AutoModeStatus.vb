@@ -14,7 +14,7 @@ Public Class AutoModeStatus
         Me.Kind = "Marker"
         Me.TimestampAsString = markerEntry.TimestampAsString
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
-        Me.AutoModeOn = PatientData.TherapyAlgorithmState.AutoModeShieldState = "AUTO_BASAL"
+        Me.AutoModeOn = PatientData.TherapyAlgorithmState?.AutoModeShieldState = "AUTO_BASAL"
     End Sub
 
     <DisplayName("Record Number")>

@@ -2747,7 +2747,7 @@ Public Class Form1
 
     Private Sub UpdateActiveInsulin()
         Try
-            If s_activeInsulin.amount >= 0 Then
+            If s_activeInsulin IsNot Nothing AndAlso s_activeInsulin.amount >= 0 Then
                 Dim activeInsulinStr As String = $"{s_activeInsulin.amount:N3}"
                 If activeInsulinStr.ToCharArray.Last = "0" Then
                     activeInsulinStr = $"{s_activeInsulin.amount:N2}"

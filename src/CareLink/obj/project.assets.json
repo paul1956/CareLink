@@ -273,7 +273,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Web.WebView2/1.0.3065.39": {
+      "Microsoft.Web.WebView2/1.0.3124.44": {
         "type": "package",
         "build": {
           "buildTransitive/Microsoft.Web.WebView2.targets": {}
@@ -614,7 +614,7 @@
           }
         }
       },
-      "System.Formats.Asn1/9.0.2": {
+      "System.Formats.Asn1/9.0.3": {
         "type": "package",
         "compile": {
           "lib/net9.0/System.Formats.Asn1.dll": {
@@ -704,7 +704,7 @@
           "lib/netstandard1.3/System.IO.FileSystem.Primitives.dll": {}
         }
       },
-      "System.IO.Packaging/9.0.2": {
+      "System.IO.Packaging/9.0.3": {
         "type": "package",
         "compile": {
           "lib/net9.0/System.IO.Packaging.dll": {
@@ -1083,7 +1083,7 @@
           }
         }
       },
-      "System.Speech/9.0.2": {
+      "System.Speech/9.0.3": {
         "type": "package",
         "compile": {
           "lib/net9.0/System.Speech.dll": {
@@ -1139,7 +1139,7 @@
           }
         }
       },
-      "System.Text.Json/9.0.2": {
+      "System.Text.Json/9.0.3": {
         "type": "package",
         "compile": {
           "lib/net9.0/System.Text.Json.dll": {
@@ -1598,10 +1598,10 @@
         "runtime.json"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.3065.39": {
-      "sha512": "ww6ToZ2jpHyP4k3DCQJETjKcdVS1cha9pS8dV2NetyfafItxz08wcAyQV0Yl86W7euhI02UJWEaC5sM8WLr0tQ==",
+    "Microsoft.Web.WebView2/1.0.3124.44": {
+      "sha512": "sQb+ACD3ILvHxztxqCWLbhYmFNf5dH0HPhVKFYg020rpeQPkadH0nkVOSsgfSyBDMLypI9iMBeD6uVcVxsKLkg==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.3065.39",
+      "path": "microsoft.web.webview2/1.0.3124.44",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -1647,7 +1647,7 @@
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.3065.39.nupkg.sha512",
+        "microsoft.web.webview2.1.0.3124.44.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -2333,10 +2333,10 @@
         "system.diagnostics.tracing.nuspec"
       ]
     },
-    "System.Formats.Asn1/9.0.2": {
-      "sha512": "OKWHCPYQr/+cIoO8EVjFn7yFyiT8Mnf1wif/5bYGsqxQV6PrwlX2HQ9brZNx57ViOvRe4ing1xgHCKl/5Ko8xg==",
+    "System.Formats.Asn1/9.0.3": {
+      "sha512": "UzVZ0mGzqvpe5fbG6RKA0pEOuLsELtc5OzSqmCS/lE5sqAyLKm2IiozCHbJRoA5+EO9Wq/bGFuroYQZsbAu/bA==",
       "type": "package",
-      "path": "system.formats.asn1/9.0.2",
+      "path": "system.formats.asn1/9.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2356,7 +2356,7 @@
         "lib/net9.0/System.Formats.Asn1.xml",
         "lib/netstandard2.0/System.Formats.Asn1.dll",
         "lib/netstandard2.0/System.Formats.Asn1.xml",
-        "system.formats.asn1.9.0.2.nupkg.sha512",
+        "system.formats.asn1.9.0.3.nupkg.sha512",
         "system.formats.asn1.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -2625,10 +2625,10 @@
         "system.io.filesystem.primitives.nuspec"
       ]
     },
-    "System.IO.Packaging/9.0.2": {
-      "sha512": "dzRtKmBz7rv9mp/45YSgnRclL7+gbRBxA9qMT5xxsTlhceMnwztuHSZZhoVdKdnw6CwwEJxocPiddnr7f9xK3Q==",
+    "System.IO.Packaging/9.0.3": {
+      "sha512": "xNTWjkHdvSZ7pqf0UwfH+h8EIHk98ezjDkoDG6Ahkt9f0Aene/01svcBfWUMBxM9ss4LeLvCQXbXidOODq9CDA==",
       "type": "package",
-      "path": "system.io.packaging/9.0.2",
+      "path": "system.io.packaging/9.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2647,7 +2647,7 @@
         "lib/net9.0/System.IO.Packaging.xml",
         "lib/netstandard2.0/System.IO.Packaging.dll",
         "lib/netstandard2.0/System.IO.Packaging.xml",
-        "system.io.packaging.9.0.2.nupkg.sha512",
+        "system.io.packaging.9.0.3.nupkg.sha512",
         "system.io.packaging.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -3574,10 +3574,10 @@
         "system.security.cryptography.x509certificates.nuspec"
       ]
     },
-    "System.Speech/9.0.2": {
-      "sha512": "arQPudYrkW+cZfF7qyKcv9ukR7lM54AKyQDPX/2RPrC1EFlkYWHeOI6ST6VeI8hefW4zH9f/FnThuC70LFNd9A==",
+    "System.Speech/9.0.3": {
+      "sha512": "u75jktAY5Ee6DA1pXBRkWBaMpUGn+iunXt+qhqhreWjBRIcVjaSLpgxpYqA49eFBRWIfscbMvcHPLJMLyzTr6A==",
       "type": "package",
-      "path": "system.speech/9.0.2",
+      "path": "system.speech/9.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3598,7 +3598,7 @@
         "runtimes/win/lib/net8.0/System.Speech.xml",
         "runtimes/win/lib/net9.0/System.Speech.dll",
         "runtimes/win/lib/net9.0/System.Speech.xml",
-        "system.speech.9.0.2.nupkg.sha512",
+        "system.speech.9.0.3.nupkg.sha512",
         "system.speech.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -3719,10 +3719,10 @@
         "version.txt"
       ]
     },
-    "System.Text.Json/9.0.2": {
-      "sha512": "4TY2Yokh5Xp8XHFhsY9y84yokS7B0rhkaZCXuRiKppIiKwPVH4lVSFD9EEFzRpXdBM5ZeZXD43tc2vB6njEwwQ==",
+    "System.Text.Json/9.0.3": {
+      "sha512": "r2JRkLjsYrq5Dpo7+y3Wa73OfirZPdVhxiTJWwZ+oJM7FOAe0LkM3GlH+pgkNRdd1G1kwUbmRCdmh4uoaWwu1g==",
       "type": "package",
-      "path": "system.text.json/9.0.2",
+      "path": "system.text.json/9.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3785,7 +3785,7 @@
         "lib/net9.0/System.Text.Json.xml",
         "lib/netstandard2.0/System.Text.Json.dll",
         "lib/netstandard2.0/System.Text.Json.xml",
-        "system.text.json.9.0.2.nupkg.sha512",
+        "system.text.json.9.0.3.nupkg.sha512",
         "system.text.json.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -4024,14 +4024,14 @@
       "ClosedXML >= 0.104.2",
       "DataGridViewDisableButtonColumnEx >= 1.0.8",
       "FreeSpire.PDF >= 10.2.0",
-      "Microsoft.Web.WebView2 >= 1.0.3065.39",
+      "Microsoft.Web.WebView2 >= 1.0.3124.44",
       "Octokit >= 14.0.0",
-      "System.Formats.Asn1 >= 9.0.2",
-      "System.IO.Packaging >= 9.0.2",
+      "System.Formats.Asn1 >= 9.0.3",
+      "System.IO.Packaging >= 9.0.3",
       "System.Security.Cryptography.OpenSsl >= 5.0.0",
       "System.Security.Cryptography.X509Certificates >= 4.3.2",
-      "System.Speech >= 9.0.2",
-      "System.Text.Json >= 9.0.2",
+      "System.Speech >= 9.0.3",
+      "System.Text.Json >= 9.0.3",
       "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.8",
       "WebView2.DevTools.Dom >= 4.0.1",
@@ -4100,7 +4100,7 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.3065.39, )"
+            "version": "[1.0.3124.44, )"
           },
           "Octokit": {
             "target": "Package",
@@ -4108,11 +4108,11 @@
           },
           "System.Formats.Asn1": {
             "target": "Package",
-            "version": "[9.0.2, )"
+            "version": "[9.0.3, )"
           },
           "System.IO.Packaging": {
             "target": "Package",
-            "version": "[9.0.2, )"
+            "version": "[9.0.3, )"
           },
           "System.Security.Cryptography.OpenSsl": {
             "target": "Package",
@@ -4124,11 +4124,11 @@
           },
           "System.Speech": {
             "target": "Package",
-            "version": "[9.0.2, )"
+            "version": "[9.0.3, )"
           },
           "System.Text.Json": {
             "target": "Package",
-            "version": "[9.0.2, )"
+            "version": "[9.0.3, )"
           },
           "TableLayputPanelTop": {
             "target": "Package",
