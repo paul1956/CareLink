@@ -4044,7 +4044,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "5.0.0",
+    "version": "5.0.0.2",
     "restore": {
       "projectUniqueName": "C:\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "projectName": "CareLink",

@@ -30,118 +30,22 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-01/06/2025
+03/27/2025
 
 ## What's New
+ New in 5.0.0.2
+Supports new V11 Medtronic API
+
  New in 4.0.2.0
   - Limited dark mode support
 
- New in 4.0.1.5
-  - Update NuGet packages
-  - Remove form.Closing and replace with FormClosing
- 
- New in 4.0.1.3
- - Fix another login issue after EU Server Update #59
- - Update NuGet Packages
- - 
- -  New in 4.0.1.2
- - Fix issue Session expires after 35 minutes #58
-
- -  New in 4.0.1.0
- - Fix ExpireTokenFormat
- - Add new Pump message
- - Complete rewrite of PDF file handling
- 
-New in 4.0.0.16
- - Fix RoundTo025 which was rounding wrong
-
- New in 4.0.0.15
- - Improve Cleanup of obsolete files
- - Prevent crash when GitHub is unavailable
-
- New in 4.0.0.14
- - More crash prevention
- - There is a change if Login FLow outside US that I have not been able to fix yet. After successfully logging in the code is redirected to log in again.
- - Improve Debug Display
-
- New in 4.0.0.11
- - Update reCaptcha handling with code from marcindanek85
- - Improve Exit handling from Start Menu
- - Fix version checking crash when GitHub is not accessible
-
- New in 4.0.0.10
- - Update NuGet's
-
- New in 4.0.0.5
- - More fixes for reCaptcha
-
- New in 4.0.0.0
- - Add some support for reCAPTCHA login
- - Add support for 740G Pump
- - Fix Pump Settings for Military Time
- - Add support for Manual Basal
- - Plot when pump is suspended
- - Improve error handling when download CareLink Settings
-
-New in 3.9.1.0
-- Program will attempt to automatically download your CareLink Device Settings Report
-![image](https://github.com/paul1956/CareLink/assets/12789369/0331882e-68ca-42ab-9963-670e6c200b55)
-  - If successful it will update pump settings data from CareLink Report
-  - If it fails you can manually download report to your computers download directory and under "Start Here" menu there is a option to manually import your settings. It will only be enabled if the program was unable to do it was unable to do it automatically. The program checks every 30 days automatically.
-  - The second option is to show your settings in a way that maps to pump setup (**experimental**). Please report any issue with your CareLink report. Not every possible pump setting is in the PDF file on CareLink and I have not tested every possible report.
-  - All settings and reports are stored in your MyDocuments\CareLink\Settings folder.
-
-New in 3.8.5.1
-- Fix G4 Sensor life calculation and Warmup time
-
-New in 3.8.5.0
-- Improve login logic for new CareLink servers including fix for EU Security upgrades
-- Add support for new 780G unknownIncompletedFlag
-- Add new error messages
-- Cleanup sorting and display of Record Number
-- More support for Pump, Local and UTC time zones
-
-New in 3.8.4.1
-- Fixed support for Canada
-- Add support for 780G US new features
-- Voice recognition and speech
-      
-    - You can now ask "What is my SG" and other questions using your voice
-    - Audio Alerts can be disabled by unchecking "Audio Alerts Enabled" under Options menu, this also disables speech recognition
-    - Speech recognition also can be disabled by unchecking "Speech Recognition enabled" in Options menu
-    - Announcement for out of range blood glucose in mmol/L
-
-- Improve label and calculations for TIR Compliance measurement
-- Improved fonts and images
-
-New in 3.8.3.1
-- Improve display of Sg values in mmol/M
-- Make Tray Icon larger
-- Add Icon to Update Message in StatusBar
-- Add additional messages
-- Correct spelling errors in variable names
-- Align Sensor messages
-- Redo Standard Deviations Handling
-
-New in 3.8.3.0
-- Correctly handle CareLink Authorization Server redirect
-- Correct application version display
-- Update help messages for copy of tables in DataGridViews
-- Handle CareLink Partners without Patient ID
-- Fix highlighting in StatusBar TimeZone field
-- Fix TimeZone display in status bar to provide additional information and handle Daylight Savings Time
-- Temp Target display for mmol/L
-- Fix parsing of command line parameters /Safe will clear Auto Login
-- Update formatting on home page for easier viewing
-- Improve Sensor error message display when missing and add missing messages
-
 # Requires for running
-- .NET Core 7.0.7 or later
+- .NET Core 9.0 or later
 - Windows 10 or later
 
 # Requires for development
-- Visual Studio 2022 Version 17.6.4 later
-- .NET Core 7.0.7 or later
+- Visual Studio 2022 Version 17.14.0 Preview 2.0
+- .NET Core 9.0.0 or later
 - Windows 10 or later
 
 # License

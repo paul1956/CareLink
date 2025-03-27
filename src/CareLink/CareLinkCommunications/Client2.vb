@@ -92,7 +92,10 @@ Public Class Client2
                 Throw New Exception("ERROR: failed to refresh token")
             Else
                 Dim fileWithPath As String = GetLoginDataFileName(s_userName, TokenBaseFileName)
-                If Not DoOptionalLoginAndUpdateData(My.Forms.Form1, TODO, FileToLoadOptions.Login) Then
+                If Not DoOptionalLoginAndUpdateData(
+                        mainForm:=My.Forms.Form1,
+                        updateAllTabs:=False,
+                        fileToLoad:=FileToLoadOptions.Login) Then
                     Throw New Exception("ERROR: failed to refresh token")
                 End If
             End If
