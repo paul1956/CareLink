@@ -1665,7 +1665,7 @@ Public Class Form1
         Me.NotifyIcon1.Visible = False
         Application.DoEvents()
 
-        If DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=False, fileToLoad:=FileToLoadOptions.NewUser) Then
+        If DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=False, fileToLoad:=FileToLoadOptions.NewUser) Then
             Me.UpdateAllTabPages(fromFile:=False)
         End If
     End Sub
@@ -1824,22 +1824,22 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereUseLastSavedFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseLastSavedFile.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.LastSaved)
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.LastSaved)
         Me.MenuStartHereSnapshotSave.Enabled = Not success
     End Sub
 
     Private Sub MenuStartHereUseSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseSavedDataFile.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.SavedFile)
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.SavedFile)
         Me.MenuStartHereUseSavedDataFile.Enabled = Not success
     End Sub
 
     Private Sub MenuStartHereUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseTestData.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
         Me.MenuStartHereSnapshotSave.Enabled = Not success
     End Sub
 
     Private Sub MenuStartHereUserLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereUserLogin.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, UpdateAllTabs:=True, fileToLoad:=FileToLoadOptions.NewUser)
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.NewUser)
     End Sub
 
 #End Region ' Start Here Menu Events

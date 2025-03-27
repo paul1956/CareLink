@@ -13,7 +13,7 @@ Imports System.Text.Json.Nodes
 Public Class Client2
 
     ' Constants
-    Private Const DEFAULT_FILENAME As String = "logindata.json"
+    Private Const TokenBaseFileName As String = "logindata.json"
 
     Private ReadOnly _tokenBaseFileName As String
     Private _accessTokenPayload As Dictionary(Of String, Object)
@@ -36,7 +36,7 @@ Public Class Client2
         End Set
     End Property
 
-    Public Sub New(Optional tokenFile As String = DEFAULT_FILENAME)
+    Public Sub New(Optional tokenFile As String = TokenBaseFileName)
         ' Authorization
         _tokenBaseFileName = tokenFile
         _tokenDataElement = Nothing
@@ -85,9 +85,18 @@ Public Class Client2
         Debug.WriteLine($"   status: {_lastApiStatus}")
 
         If response.StatusCode <> Net.HttpStatusCode.OK Then
-            Throw New Exception("ERROR: failed to refresh token")
+            If MsgBox(
+                heading:=$"ERROR: failed to refresh token, status {_lastApiStatus}",
+                "Do you want to try logging in again?",
+                buttonStyle:=MsgBoxStyle.YesNo, "failed to refresh token") <> MsgBoxResult.Yes Then
+                Throw New Exception("ERROR: failed to refresh token")
+            Else
+                Dim fileWithPath As String = GetLoginDataFileName(s_userName, TokenBaseFileName)
+                If Not DoOptionalLoginAndUpdateData(My.Forms.Form1, TODO, FileToLoadOptions.Login) Then
+                    Throw New Exception("ERROR: failed to refresh token")
+                End If
+            End If
         End If
-
         Dim responseBody As String = response.Content.ReadAsStringAsync().Result
         Dim newData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(responseBody)
         tokenData("access_token") = newData.GetProperty("access_token").GetString()

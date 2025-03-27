@@ -19,7 +19,7 @@ Friend Module Form1LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginDialog
     Public Property CurrentPdf As PdfSettingsRecord
 
-    Friend Function DoOptionalLoginAndUpdateData(mainForm As Form1, UpdateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
+    Friend Function DoOptionalLoginAndUpdateData(mainForm As Form1, updateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
         Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(False)
         s_listOfAutoBasalDeliveryMarkers.Clear()
         ProgramInitialized = False
@@ -134,10 +134,8 @@ Friend Module Form1LoginHelpers
 
         mainForm.PumpAITLabel.Text = CurrentUser.GetPumpAitString
         mainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
-        If UpdateAllTabs Then
-            FinishInitialization(mainForm)
-            mainForm.UpdateAllTabPages(fromFile)
-        End If
+        FinishInitialization(mainForm)
+        mainForm.UpdateAllTabPages(fromFile)
         Return True
     End Function
 
