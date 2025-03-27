@@ -29,7 +29,7 @@ Friend Module PaintMarkerExtensions
         Next
     End Sub
 
-    ' <DebuggerNonUserCode()>
+    <DebuggerNonUserCode()>
     <Extension>
     Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelativePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)
         If s_listOfSgRecords.Count = 0 OrElse Not ProgramInitialized Then

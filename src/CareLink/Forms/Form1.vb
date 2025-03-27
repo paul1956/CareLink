@@ -3470,6 +3470,7 @@ Public Class Form1
         SyncLock _updatingLock
             _updating = True ' prevent paint
             _summaryChartAbsoluteRectangle = RectangleF.Empty
+            _activeInsulinChartAbsoluteRectangle = RectangleF.Empty
             _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
             Me.MenuStartHere.Enabled = False
             If fromFile Then
@@ -3490,7 +3491,6 @@ Public Class Form1
         FinishInitialization(Me)
         Me.UpdateTrendArrows()
         UpdateSummaryTab(Me.DgvSummary, s_listOfSummaryRecords, sort:=True)
-        Me.UpdateActiveInsulinChart()
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()
@@ -3558,7 +3558,9 @@ Public Class Form1
         UpdatePumpBannerStateTab()
 
         Me.MenuStartHere.Enabled = True
+        ProgramInitialized = True
         Me.UpdateTreatmentChart()
+        Me.UpdateActiveInsulinChart()
 
         Dim showLegend As Boolean = s_totalAutoCorrection > 0
         ShowHideLegendItem(

@@ -134,7 +134,6 @@ Friend Module Form1LoginHelpers
 
         mainForm.PumpAITLabel.Text = CurrentUser.GetPumpAitString
         mainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
-        FinishInitialization(mainForm)
         mainForm.UpdateAllTabPages(fromFile)
         Return True
     End Function
@@ -145,7 +144,6 @@ Friend Module Form1LoginHelpers
         mainForm.InitializeSummaryTabCharts()
         mainForm.InitializeActiveInsulinTabChart()
         mainForm.InitializeTimeInRangeArea()
-        ProgramInitialized = True
     End Sub
 
     <Extension>
