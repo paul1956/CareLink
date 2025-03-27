@@ -3,13 +3,8 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
-Imports System.Net
+Imports System.IO
 Imports System.Net.Http
-Imports System.Text.RegularExpressions
-Imports System.Threading
-Imports Microsoft.Web.WebView2.Core
-Imports Microsoft.Web.WebView2.Core.DevToolsProtocolExtension.Network
-Imports WebView2.DevTools.Dom
 
 Public Class LoginDialog
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
@@ -21,6 +16,7 @@ Public Class LoginDialog
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
     Public Property Client As Client2
     Public Property ClientDiscover As ConfigRecord
+
     Public Property LoginSourceAutomatic As FileToLoadOptions
         Get
             Return _loginSourceAutomatic
@@ -136,7 +132,6 @@ Public Class LoginDialog
         Me.CarePartnerCheckBox.Checked = careLinkPartner
     End Sub
 
-
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.Height = _initialHeight
         Me.Visible = True
@@ -161,7 +156,52 @@ Public Class LoginDialog
 
         Me.ClientDiscover = Discover.GetDiscoveryData(s_countryCode)
         Me.Ok_Button.Enabled = False
-        DoLogin(_httpClient, s_userName, Me.RegionComboBox.SelectedValue.ToString = "North America")
+
+        Dim tokenData As TokenData = ReadTokenDataFile(s_userName)
+
+        If tokenData Is Nothing Then
+            ' Get the embedded EXE as a byte array
+            Dim exeBytes() As Byte = My.Resources.carelink_carepartner_api_login
+            ' Write the EXE to the temporary file
+            ' Create a temporary file for the EXE
+            Dim exePath As String = $"{Path.GetTempFileName()}.exe"
+            Using fs As New FileStream(exePath, FileMode.Create)
+                fs.Write(exeBytes, 0, exeBytes.Length)
+            End Using
+
+            Dim isUsRegion As Boolean = Me.RegionComboBox.SelectedValue.ToString = "North America"
+            Dim isUsRegionStr As String = If(isUsRegion, "--us", "")
+            Dim tempPath As String = Path.GetDirectoryName(exePath)
+            Dim sourceFileName As String = $"{Path.GetTempFileName()}.json"
+
+            ' Format the arguments
+            Dim arguments As String = $"{If(isUsRegion, "--us ", "")} --output {sourceFileName}"
+
+            Dim startInfo As New ProcessStartInfo With {
+                .FileName = exePath,
+                .Arguments = arguments,
+                .RedirectStandardOutput = True,
+                .RedirectStandardError = True,
+                .UseShellExecute = False
+            }
+
+            Dim process As New Process With {.StartInfo = startInfo}
+            process.Start()
+
+            Dim outputText As String = process.StandardOutput.ReadToEnd()
+            Dim standardError As String = process.StandardError.ReadToEnd()
+            process.WaitForExit()
+
+            Dim exitCode As Integer = process.ExitCode
+            If exitCode = 0 Then
+                Dim destFileName As String = GetLoginDataFileName(s_userName, DEFAULT_FILENAME)
+                File.Delete(destFileName)
+                File.Move(sourceFileName, destFileName)
+            End If
+            File.Delete(exePath)
+        End If
+
+        'DoLogin(_httpClient, s_userName, isUsRegion)
         Me.Client = New Client2()
         Me.Client.Init()
 

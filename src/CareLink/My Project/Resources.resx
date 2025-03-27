@@ -316,4 +316,7 @@
   <data name="QuestionMark" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\QuestionMark.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="carelink_carepartner_api_login" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\carelink_carepartner_api_login.exe;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

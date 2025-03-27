@@ -105,6 +105,8 @@ Public Module CareLinkClientHelpers
         Return (captchaUrl, clientInitResponse)
     End Function
 
+#If False Then
+
     Friend Sub DoLogin(httpClient As HttpClient, userName As String, isUsRegion As Boolean)
         Dim tokenData As TokenData = ReadTokenDataFile(userName)
 
@@ -200,6 +202,7 @@ Public Module CareLinkClientHelpers
 
         Return
     End Sub
+#End If
 
     Private Function DoLoginWithCaptcha(captchaUrl As String, redirectUri As String) As (captchaCode As String, captchaSsoState As String)
         Dim captchaWindow As New Captcha(s_countryCode, s_password, s_userName)

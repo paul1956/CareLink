@@ -113,6 +113,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Resources\carelink_carepartner_api_login.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="SampleUserV2Data.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

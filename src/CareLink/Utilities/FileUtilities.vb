@@ -7,7 +7,6 @@ Imports System.Net.Http
 Imports System.Text.Json
 
 Friend Module FileUtilities
-    Private Const DEFAULT_FILENAME As String = "logindata.json"
 
     Private ReadOnly s_requiredFields() As String = {
         "access_token",
@@ -17,15 +16,7 @@ Friend Module FileUtilities
         "client_secret",
         "mag-identifier"}
 
-    Private Function GetLoginDataFileName(userName As String, tokenBaseFileName As String) As String
-        If String.IsNullOrWhiteSpace(tokenBaseFileName) Then
-            Throw New ArgumentException($"'{NameOf(tokenBaseFileName)}' cannot be null or whitespace.", NameOf(tokenBaseFileName))
-        End If
-
-        Return If(tokenBaseFileName.Equals(DEFAULT_FILENAME, StringComparison.InvariantCultureIgnoreCase),
-            Path.Join(Directory.GetParent(SettingsDirectory).FullName, $"{userName}{DEFAULT_FILENAME.Substring(0, 1).ToUpper}{DEFAULT_FILENAME.Substring(1)}"),
-            tokenBaseFileName)
-    End Function
+    Public Const DEFAULT_FILENAME As String = "logindata.json"
 
     Public Sub ByteArrayToFile(fileName As String, byteArray() As Byte)
         Try
@@ -36,6 +27,16 @@ Friend Module FileUtilities
             Stop
         End Try
     End Sub
+
+    Public Function GetLoginDataFileName(userName As String, tokenBaseFileName As String) As String
+        If String.IsNullOrWhiteSpace(tokenBaseFileName) Then
+            Throw New ArgumentException($"'{NameOf(tokenBaseFileName)}' cannot be null or whitespace.", NameOf(tokenBaseFileName))
+        End If
+
+        Return If(tokenBaseFileName.Equals(DEFAULT_FILENAME, StringComparison.InvariantCultureIgnoreCase),
+            Path.Join(Directory.GetParent(SettingsDirectory).FullName, $"{userName}{DEFAULT_FILENAME.Substring(0, 1).ToUpper}{DEFAULT_FILENAME.Substring(1)}"),
+            tokenBaseFileName)
+    End Function
 
     Public Function ReadTokenDataFile(userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME) As TokenData
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
