@@ -2378,8 +2378,9 @@ Partial Class Form1
         TableLayoutPanelNotificationsCleared.Dock = DockStyle.Fill
         TableLayoutPanelNotificationsCleared.Location = New Point(3, 3)
         TableLayoutPanelNotificationsCleared.Name = "TableLayoutPanelNotificationsCleared"
-        TableLayoutPanelNotificationsCleared.RowCount = 1
+        TableLayoutPanelNotificationsCleared.RowCount = 2
         TableLayoutPanelNotificationsCleared.RowStyles.Add(New RowStyle())
+        TableLayoutPanelNotificationsCleared.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelNotificationsCleared.Size = New Size(1370, 655)
         TableLayoutPanelNotificationsCleared.TabIndex = 0
         ' 
