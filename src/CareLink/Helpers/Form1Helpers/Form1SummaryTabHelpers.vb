@@ -7,17 +7,17 @@ Imports System.Runtime.CompilerServices
 Friend Module Form1SummaryTabHelpers
 
     <Extension>
-    Friend Sub UpdateSummaryTab(dgvSummary As DataGridView, classCollection As List(Of SummaryRecord), sort As Boolean)
+    Friend Sub UpdateSummaryTab(dgv As DataGridView, classCollection As List(Of SummaryRecord), sort As Boolean)
         If sort Then
             s_listOfSummaryRecords.Sort()
         End If
-        dgvSummary.InitializeDgv()
-        dgvSummary.DataSource = ClassCollectionToDataTable(classCollection)
-        dgvSummary.RowHeadersVisible = False
-        If s_currentSummaryRow <> 0 Then
-            dgvSummary.CurrentCell = dgvSummary.Rows(s_currentSummaryRow).Cells(2)
+        dgv.InitializeDgv()
+        dgv.DataSource = ClassCollectionToDataTable(classCollection)
+        dgv.RowHeadersVisible = False
+        If s_currentSummaryRow <> 0 AndAlso dgv.Name = My.Forms.Form1.DgvSummary.Name Then
+            dgv.CurrentCell = dgv.Rows(s_currentSummaryRow).Cells(2)
         End If
-        dgvSummary.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
+        dgv.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
     End Sub
 
 End Module
