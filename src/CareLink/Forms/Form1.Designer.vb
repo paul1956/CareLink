@@ -240,8 +240,6 @@ Partial Class Form1
         TableLayoutPanelLastAlarm = New TableLayoutPanel()
         TableLayoutPanelLastAlarmTop = New TableLayoutPanelTopEx()
         TabPageBasalPerHour = New TabPage()
-        TableLayoutPanelBasalPerHour = New TableLayoutPanel()
-        TableLayoutPanelBasalPerHourTop = New TableLayoutPanelTopEx()
         DgvBasalPerHour = New DataGridView()
         TabPageCurrentUser = New TabPage()
         TabPageAllUsers = New TabPage()
@@ -333,7 +331,6 @@ Partial Class Form1
         TabPageLastAlarm.SuspendLayout()
         TableLayoutPanelLastAlarm.SuspendLayout()
         TabPageBasalPerHour.SuspendLayout()
-        TableLayoutPanelBasalPerHour.SuspendLayout()
         CType(DgvBasalPerHour, ComponentModel.ISupportInitialize).BeginInit()
         TabPageCurrentUser.SuspendLayout()
         TabPageAllUsers.SuspendLayout()
@@ -2853,7 +2850,7 @@ Partial Class Form1
         ' 
         ' TabPageBasalPerHour
         ' 
-        TabPageBasalPerHour.Controls.Add(TableLayoutPanelBasalPerHour)
+        TabPageBasalPerHour.Controls.Add(DgvBasalPerHour)
         TabPageBasalPerHour.Location = New Point(4, 27)
         TabPageBasalPerHour.Name = "TabPageBasalPerHour"
         TabPageBasalPerHour.Padding = New Padding(3)
@@ -2862,45 +2859,10 @@ Partial Class Form1
         TabPageBasalPerHour.Text = "SmartGuard Basal Per Hour"
         TabPageBasalPerHour.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelBasalPerHour
-        ' 
-        TableLayoutPanelBasalPerHour.AutoSize = True
-        TableLayoutPanelBasalPerHour.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelBasalPerHour.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelBasalPerHour.ColumnCount = 1
-        TableLayoutPanelBasalPerHour.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBasalPerHour.Controls.Add(TableLayoutPanelBasalPerHourTop, 0, 0)
-        TableLayoutPanelBasalPerHour.Controls.Add(DgvBasalPerHour, 0, 1)
-        TableLayoutPanelBasalPerHour.Dock = DockStyle.Fill
-        TableLayoutPanelBasalPerHour.Location = New Point(3, 3)
-        TableLayoutPanelBasalPerHour.Name = "TableLayoutPanelBasalPerHour"
-        TableLayoutPanelBasalPerHour.RowCount = 2
-        TableLayoutPanelBasalPerHour.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBasalPerHour.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBasalPerHour.Size = New Size(1370, 655)
-        TableLayoutPanelBasalPerHour.TabIndex = 0
-        ' 
-        ' TableLayoutPanelBasalPerHourTop
-        ' 
-        TableLayoutPanelBasalPerHourTop.AutoSize = True
-        TableLayoutPanelBasalPerHourTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelBasalPerHourTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelBasalPerHourTop.ColumnCount = 2
-        TableLayoutPanelBasalPerHourTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelBasalPerHourTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBasalPerHourTop.Dock = DockStyle.Fill
-        TableLayoutPanelBasalPerHourTop.LabelText = "Basal Per Hour"
-        TableLayoutPanelBasalPerHourTop.Location = New Point(6, 6)
-        TableLayoutPanelBasalPerHourTop.Name = "TableLayoutPanelBasalPerHourTop"
-        TableLayoutPanelBasalPerHourTop.RowCount = 1
-        TableLayoutPanelBasalPerHourTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBasalPerHourTop.Size = New Size(1358, 37)
-        TableLayoutPanelBasalPerHourTop.TabIndex = 1
-        ' 
         ' DgvBasalPerHour
         ' 
         DgvBasalPerHour.Dock = DockStyle.Fill
-        DgvBasalPerHour.Location = New Point(6, 52)
+        DgvBasalPerHour.Location = New Point(0, 0)
         DgvBasalPerHour.Name = "DgvBasalPerHour"
         DgvBasalPerHour.ReadOnly = True
         DgvBasalPerHour.SelectionMode = DataGridViewSelectionMode.CellSelect
@@ -2912,6 +2874,7 @@ Partial Class Form1
         TabPageCurrentUser.Controls.Add(DgvCurrentUser)
         TabPageCurrentUser.Location = New Point(4, 27)
         TabPageCurrentUser.Name = "TabPageCurrentUser"
+        TabPageCurrentUser.Padding = New Padding(3)
         TabPageCurrentUser.Size = New Size(1376, 661)
         TabPageCurrentUser.TabIndex = 13
         TabPageCurrentUser.Text = "Current User"
@@ -3095,8 +3058,6 @@ Partial Class Form1
         TableLayoutPanelLastAlarm.PerformLayout()
         TabPageBasalPerHour.ResumeLayout(False)
         TabPageBasalPerHour.PerformLayout()
-        TableLayoutPanelBasalPerHour.ResumeLayout(False)
-        TableLayoutPanelBasalPerHour.PerformLayout()
         CType(DgvBasalPerHour, ComponentModel.ISupportInitialize).EndInit()
         TabPageCurrentUser.ResumeLayout(False)
         TabPageAllUsers.ResumeLayout(False)
@@ -3251,8 +3212,6 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanelBannerState As TableLayoutPanel
     Friend WithEvents TableLayoutPanelBannerStateTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBasal As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelBasalPerHour As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelBasalPerHourTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBasalTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBgReadings As TableLayoutPanel
     Friend WithEvents TableLayoutPanelBgReadingsTop As TableLayoutPanelTopEx

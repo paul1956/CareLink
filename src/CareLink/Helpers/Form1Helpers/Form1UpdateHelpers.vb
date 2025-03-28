@@ -448,10 +448,13 @@ Friend Module Form1UpdateHelpers
                 className:=NameOf(TimeChange),
                 rowIndex:=ServerDataIndexes.markers)
 
-            .TableLayoutPanelBasalPerHour.DisplayDataTableInDGV(
+            DisplayDataTableInDGV(
+                realPanel:=Nothing,
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfBasalPerHour),
-                className:=NameOf(BasalPerHour),
+                dGV:=Form1.DgvBasalPerHour,
                 rowIndex:=0)
+
+
         End With
 
     End Sub

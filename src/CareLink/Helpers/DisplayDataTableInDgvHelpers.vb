@@ -13,14 +13,13 @@ Friend Module DisplayDataTableInDgvHelpers
         realPanel As TableLayoutPanel,
         table As DataTable,
         dGV As DataGridView,
-        rowIndex As ServerDataIndexes,
-        Optional hideRecordNumberColumn As Boolean = False)
+        rowIndex As ServerDataIndexes)
 
-        realPanel.SetTabName(rowIndex, isClearedNotifications:=False)
+        realPanel?.SetTabName(rowIndex, isClearedNotifications:=False)
         dGV.InitializeDgv()
         dGV.DataSource = table
         dGV.AutoSize = True
-        dGV.RowHeadersVisible = hideRecordNumberColumn
+        dGV.RowHeadersVisible = False
         Form1.Refresh()
     End Sub
 
