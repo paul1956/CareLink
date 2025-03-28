@@ -18,7 +18,8 @@ Friend Module TableLayoutPanelExtensions
         NameOf(Form1.TableLayoutPanelLowGlucoseSuspendedTop),
         NameOf(Form1.TableLayoutPanelNotificationActiveTop),
         NameOf(Form1.TableLayoutPanelNotificationsClearedTop),
-        NameOf(Form1.TableLayoutPanelTherapyAlgorithmStateTop)}
+        NameOf(Form1.TableLayoutPanelTherapyAlgorithmStateTop),
+        NameOf(Form1.TableLayoutPanelTimeChangeTop)}
 
     Private ReadOnly s_tablesSupportingExportToExcel As New List(Of String) From {
         NameOf(Form1.TableLayoutPanelAutoBasalDeliveryTop),

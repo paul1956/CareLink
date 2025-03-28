@@ -3519,13 +3519,12 @@ Public Class Form1
             hideRecordNumberColumn:=True)
 
         UpdateSummaryTab(
-            dgvSummary:=Me.DgvLastAlarm,
+            dgv:=Me.DgvLastAlarm,
             classCollection:=GetSummaryRecords(s_lastAlarmValue),
             sort:=True)
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(
-            listOfClass:={s_activeInsulin}.ToList),
+            table:=ClassCollectionToDataTable(listOfClass:={s_activeInsulin}.ToList),
             className:=NameOf(ActiveInsulin),
             rowIndex:=ServerDataIndexes.activeInsulin,
             hideRecordNumberColumn:=True)
@@ -3549,13 +3548,13 @@ Public Class Form1
             rowIndex:=ServerDataIndexes.limits)
 
         UpdateSummaryTab(
-            dgvSummary:=Me.DgvTherapyAlgorithmState,
+            dgv:=Me.DgvTherapyAlgorithmState,
             classCollection:=GetSummaryRecords(s_therapyAlgorithmStateValue),
             sort:=False)
         Me.DgvTherapyAlgorithmState.Columns(0).Visible = False
+
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
-             table:=ClassCollectionToDataTable(
-             listOfClass:={s_basal}?.ToList),
+             table:=ClassCollectionToDataTable(listOfClass:={s_basal}?.ToList),
              className:=NameOf(Basal),
              rowIndex:=ServerDataIndexes.basal,
              hideRecordNumberColumn:=True)
