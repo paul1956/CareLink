@@ -15,7 +15,7 @@ Friend Module DisplayDataTableInDgvHelpers
         dGV As DataGridView,
         rowIndex As ServerDataIndexes)
 
-        realPanel?.SetTabName(rowIndex, isClearedNotifications:=False)
+        realPanel?.SetTableName(rowIndex, isClearedNotifications:=False)
         dGV.InitializeDgv()
         dGV.DataSource = table
         dGV.AutoSize = True
@@ -31,7 +31,7 @@ Friend Module DisplayDataTableInDgvHelpers
         rowIndex As ServerDataIndexes,
         Optional hideRecordNumberColumn As Boolean = False)
 
-        realPanel.SetTabName(rowIndex, isClearedNotifications:=False)
+        realPanel.SetTableName(rowIndex, isClearedNotifications:=False)
         If table?.Rows.Count > 0 Then
             Dim dGVIndex As Integer = realPanel.Controls.Count - 1
             Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)

@@ -207,6 +207,7 @@ Partial Class Form1
         TableLayoutPanelNotificationActive = New TableLayoutPanel()
         TableLayoutPanelNotificationActiveTop = New TableLayoutPanelTopEx()
         TabPage14NotificationsCleared = New TabPage()
+        SplitContainerNotificationsCleared = New SplitContainer()
         TableLayoutPanelNotificationsCleared = New TableLayoutPanel()
         TableLayoutPanelNotificationsClearedTop = New TableLayoutPanelTopEx()
         TabPage15More = New TabPage()
@@ -309,6 +310,10 @@ Partial Class Form1
         TableLayoutPanelNotificationActive.SuspendLayout()
         TabPage14NotificationsCleared.SuspendLayout()
         TableLayoutPanelNotificationsCleared.SuspendLayout()
+        CType(SplitContainerNotificationsCleared, ComponentModel.ISupportInitialize).BeginInit()
+        SplitContainerNotificationsCleared.Panel1.SuspendLayout()
+        SplitContainerNotificationsCleared.Panel2.SuspendLayout()
+        SplitContainerNotificationsCleared.SuspendLayout()
         TabControlPage2.SuspendLayout()
         TabPageAutoBasalDelivery.SuspendLayout()
         TableLayoutPanelAutoBasalDelivery.SuspendLayout()
@@ -2358,7 +2363,7 @@ Partial Class Form1
         ' 
         ' TabPage14NotificationsCleared
         ' 
-        TabPage14NotificationsCleared.Controls.Add(TableLayoutPanelNotificationsCleared)
+        TabPage14NotificationsCleared.Controls.Add(SplitContainerNotificationsCleared)
         TabPage14NotificationsCleared.Location = New Point(4, 27)
         TabPage14NotificationsCleared.Name = "TabPage14NotificationsCleared"
         TabPage14NotificationsCleared.Padding = New Padding(3)
@@ -2367,20 +2372,36 @@ Partial Class Form1
         TabPage14NotificationsCleared.Text = "Cleared Notifications"
         TabPage14NotificationsCleared.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelNotificationsCleared
+        ' SplitContainer4
         ' 
+        SplitContainerNotificationsCleared.Dock = DockStyle.Fill
+        SplitContainerNotificationsCleared.Location = New Point(3, 3)
+        SplitContainerNotificationsCleared.Name = "SplitContainer4"
+        SplitContainerNotificationsCleared.Orientation = Orientation.Horizontal
+        ' 
+        ' SplitContainer4.Panel1
+        ' 
+        SplitContainerNotificationsCleared.Panel1.Controls.Add(TableLayoutPanelNotificationsClearedTop)
+        ' 
+        ' SplitContainer4.Panel2
+        ' 
+        SplitContainerNotificationsCleared.Panel2.Controls.Add(TableLayoutPanelNotificationsCleared)
+        SplitContainerNotificationsCleared.Size = New Size(1370, 655)
+        SplitContainerNotificationsCleared.SplitterDistance = 40
+        SplitContainerNotificationsCleared.TabIndex = 0
+        ' 
+        ' TableLayoutPanelNotificationsCleared
+        '
         TableLayoutPanelNotificationsCleared.AutoScroll = True
         TableLayoutPanelNotificationsCleared.AutoSize = True
         TableLayoutPanelNotificationsCleared.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelNotificationsCleared.ColumnCount = 1
         TableLayoutPanelNotificationsCleared.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationsCleared.Controls.Add(TableLayoutPanelNotificationsClearedTop, 0, 0)
         TableLayoutPanelNotificationsCleared.Dock = DockStyle.Fill
         TableLayoutPanelNotificationsCleared.Location = New Point(3, 3)
         TableLayoutPanelNotificationsCleared.Name = "TableLayoutPanelNotificationsCleared"
-        TableLayoutPanelNotificationsCleared.RowCount = 2
-        TableLayoutPanelNotificationsCleared.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationsCleared.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelNotificationsCleared.RowCount = 1
+        TableLayoutPanelNotificationsCleared.RowStyles.Add(New RowStyle(SizeType.AutoSize))
         TableLayoutPanelNotificationsCleared.Size = New Size(1370, 655)
         TableLayoutPanelNotificationsCleared.TabIndex = 0
         ' 
@@ -2863,7 +2884,7 @@ Partial Class Form1
         ' DgvBasalPerHour
         ' 
         DgvBasalPerHour.Dock = DockStyle.Fill
-        DgvBasalPerHour.Location = New Point(0, 0)
+        DgvBasalPerHour.Location = New Point(3, 3)
         DgvBasalPerHour.Name = "DgvBasalPerHour"
         DgvBasalPerHour.ReadOnly = True
         DgvBasalPerHour.SelectionMode = DataGridViewSelectionMode.CellSelect
@@ -3020,6 +3041,12 @@ Partial Class Form1
         TabPage14NotificationsCleared.PerformLayout()
         TableLayoutPanelNotificationsCleared.ResumeLayout(False)
         TableLayoutPanelNotificationsCleared.PerformLayout()
+        SplitContainerNotificationsCleared.Panel1.ResumeLayout(False)
+        SplitContainerNotificationsCleared.Panel1.PerformLayout()
+        SplitContainerNotificationsCleared.Panel2.ResumeLayout(False)
+        SplitContainerNotificationsCleared.Panel2.PerformLayout()
+        CType(SplitContainerNotificationsCleared, ComponentModel.ISupportInitialize).EndInit()
+        SplitContainerNotificationsCleared.ResumeLayout(False)
         TabControlPage2.ResumeLayout(False)
         TabPageAutoBasalDelivery.ResumeLayout(False)
         TabPageAutoBasalDelivery.PerformLayout()
@@ -3166,14 +3193,14 @@ Partial Class Form1
     Friend WithEvents MenuShowMiniDisplay As ToolStripMenuItem
     Friend WithEvents MenuStartHere As ToolStripMenuItem
     Friend WithEvents MenuStartHereCleanUpObsoleteFiles As ToolStripMenuItem
-    Friend WithEvents MenuStartHereUseExceptionReport As ToolStripMenuItem
     Friend WithEvents MenuStartHereExit As ToolStripMenuItem
-    Friend WithEvents MenuStartHereUseSavedDataFile As ToolStripMenuItem
-    Friend WithEvents MenuStartHereUserLogin As ToolStripMenuItem
     Friend WithEvents MenuStartHereManuallyImportDeviceSettings As ToolStripMenuItem
     Friend WithEvents MenuStartHereShowPumpSetup As ToolStripMenuItem
     Friend WithEvents MenuStartHereSnapshotSave As ToolStripMenuItem
+    Friend WithEvents MenuStartHereUseExceptionReport As ToolStripMenuItem
     Friend WithEvents MenuStartHereUseLastSavedFile As ToolStripMenuItem
+    Friend WithEvents MenuStartHereUserLogin As ToolStripMenuItem
+    Friend WithEvents MenuStartHereUseSavedDataFile As ToolStripMenuItem
     Friend WithEvents MenuStartHereUseTestData As ToolStripMenuItem
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents ModelLabel As Label
@@ -3199,6 +3226,7 @@ Partial Class Form1
     Friend WithEvents SplitContainer1 As SplitContainer
     Friend WithEvents SplitContainer2 As SplitContainer
     Friend WithEvents SplitContainer3 As SplitContainer
+    Friend WithEvents SplitContainerNotificationsCleared As SplitContainer
     Friend WithEvents StatusStrip1 As StatusStrip
     Friend WithEvents StatusStripSpacerRight As ToolStripStatusLabel
     Friend WithEvents StatusStripSpeech As ToolStripStatusLabel

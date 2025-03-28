@@ -23,10 +23,10 @@ Public Module DataGridViewExtensions
             .DataSource = Nothing
             .Location = New Point(0, 0)
             .ReadOnly = True
-            .Refresh()
             .Rows.Clear()
             .RowTemplate.Height = 24
             .TabIndex = 0
+            .Refresh()
         End With
     End Sub
 

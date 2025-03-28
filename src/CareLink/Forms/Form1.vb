@@ -856,7 +856,6 @@ Public Class Form1
         If e.ColumnIndex = 0 Then
             Exit Sub
         End If
-
     End Sub
 
     Private Sub DgvCareLinkUsers_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCareLinkUsers.ColumnAdded
@@ -1341,13 +1340,11 @@ Public Class Form1
 #Region "Dgv Summary Events"
 
     Private Sub DgvSummary_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSummary.CellFormatting
-        If e.Value Is Nothing OrElse e.ColumnIndex <> 2 Then
-            Return
-        End If
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
-        Select Case GetItemIndex(key)
-            Case ServerDataIndexes.clientTimeZoneName, ServerDataIndexes.lastName,
+        If e.Value IsNot Nothing AndAlso e.ColumnIndex = 2 Then
+            Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
+            Select Case GetItemIndex(key)
+                Case ServerDataIndexes.clientTimeZoneName, ServerDataIndexes.lastName,
                  ServerDataIndexes.firstName, ServerDataIndexes.appModelType,
                  ServerDataIndexes.currentServerTime, ServerDataIndexes.conduitSerialNumber,
                  ServerDataIndexes.conduitBatteryStatus, ServerDataIndexes.lastConduitDateTime,
@@ -1359,11 +1356,11 @@ Public Class Form1
                  ServerDataIndexes.bgUnits, ServerDataIndexes.lastSensorTime,
                  ServerDataIndexes.lastSGTrend, ServerDataIndexes.sensorLifeText,
                  ServerDataIndexes.sensorLifeIcon
-                e.CellStyle = e.CellStyle.SetCellStyle(
+                    e.CellStyle = e.CellStyle.SetCellStyle(
                     alignment:=DataGridViewContentAlignment.MiddleLeft,
                     padding:=New Padding(1))
 
-            Case ServerDataIndexes.calFreeSensor, ServerDataIndexes.finalCalibration,
+                Case ServerDataIndexes.calFreeSensor, ServerDataIndexes.finalCalibration,
                  ServerDataIndexes.pumpBannerState, ServerDataIndexes.therapyAlgorithmState,
                  ServerDataIndexes.pumpSuspended, ServerDataIndexes.conduitInRange,
                  ServerDataIndexes.conduitMedicalDeviceInRange, ServerDataIndexes.conduitSensorInRange,
@@ -1372,11 +1369,11 @@ Public Class Form1
                  ServerDataIndexes.basal, ServerDataIndexes.limits,
                  ServerDataIndexes.markers, ServerDataIndexes.sgs,
                  ServerDataIndexes.notificationHistory
-                e.CellStyle = e.CellStyle.SetCellStyle(
+                    e.CellStyle = e.CellStyle.SetCellStyle(
                     alignment:=DataGridViewContentAlignment.MiddleCenter,
                     padding:=New Padding(all:=1))
 
-            Case ServerDataIndexes.conduitBatteryLevel, ServerDataIndexes.lastConduitUpdateServerDateTime,
+                Case ServerDataIndexes.conduitBatteryLevel, ServerDataIndexes.lastConduitUpdateServerDateTime,
                  ServerDataIndexes.timeToNextEarlyCalibrationMinutes,
                  ServerDataIndexes.timeToNextCalibrationMinutes, ServerDataIndexes.timeToNextCalibrationRecommendedMinutes,
                  ServerDataIndexes.timeToNextCalibHours, ServerDataIndexes.sensorDurationMinutes,
@@ -1389,33 +1386,41 @@ Public Class Form1
                  ServerDataIndexes.belowHypoLimit, ServerDataIndexes.aboveHyperLimit,
                  ServerDataIndexes.timeInRange, ServerDataIndexes.averageSGFloat,
                  ServerDataIndexes.averageSG
-                e.CellStyle = e.CellStyle.SetCellStyle(
+                    e.CellStyle = e.CellStyle.SetCellStyle(
                     alignment:=DataGridViewContentAlignment.MiddleRight,
                     padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
 
-            Case ServerDataIndexes.appModelNumber, ServerDataIndexes.transmitterPairedTime
-                If e.Value.ToString = "NA" Then
-                    e.CellStyle = e.CellStyle.SetCellStyle(
+                Case ServerDataIndexes.appModelNumber, ServerDataIndexes.transmitterPairedTime
+                    If e.Value.ToString = "NA" Then
+                        e.CellStyle = e.CellStyle.SetCellStyle(
                     alignment:=DataGridViewContentAlignment.MiddleLeft,
                     padding:=New Padding(all:=1))
-                    e.Value = "N/A"
-                Else
-                    e.CellStyle = e.CellStyle.SetCellStyle(
+                        e.Value = "N/A"
+                    Else
+                        e.CellStyle = e.CellStyle.SetCellStyle(
                     alignment:=DataGridViewContentAlignment.MiddleRight,
                     padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
-                End If
+                    End If
 
-            Case ServerDataIndexes.lastSG
-                If Not String.Equals(e.Value.ToString, "NAN", StringComparison.OrdinalIgnoreCase) Then
-                    e.Value = "---"
-                End If
-                e.CellStyle = e.CellStyle.SetCellStyle(
+                Case ServerDataIndexes.lastSG
+                    If Not String.Equals(e.Value.ToString, "NAN", StringComparison.OrdinalIgnoreCase) Then
+                        e.Value = "---"
+                    End If
+                    e.CellStyle = e.CellStyle.SetCellStyle(
                     alignment:=DataGridViewContentAlignment.MiddleCenter,
                     padding:=New Padding(all:=1))
-            Case Else
-                Stop
-        End Select
-
+                Case Else
+                    Stop
+            End Select
+        End If
+        If dgv.Columns(e.ColumnIndex).Name = NameOf(SummaryRecord.RecordNumber) Then
+            If IsSingleEqualToInteger(Single.Parse(e.Value.ToString), CInt(e.Value)) Then
+                dgv.CellFormattingSingleValue(e, 0)
+            Else
+                dgv.CellFormattingSingleValue(e, 1)
+            End If
+        End If
+        dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     Private Sub DgvSummary_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSummary.CellMouseClick
@@ -1487,33 +1492,32 @@ Public Class Form1
 #Region "Dgv Therapy Algorithm State Events"
 
     Private Sub DgvTherapyAlgorithmState_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvTherapyAlgorithmState.CellFormatting
-        If e.Value Is Nothing OrElse e.ColumnIndex <> 2 Then
-            Return
-        End If
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
-        Select Case key
-            Case NameOf(TherapyAlgorithmState.AutoModeReadinessState),
-                 NameOf(TherapyAlgorithmState.AutoModeShieldState),
-                 NameOf(TherapyAlgorithmState.PlgmLgsState)
+        If e.Value IsNot Nothing AndAlso e.ColumnIndex = 2 Then
+            Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
+            Select Case key
+                Case NameOf(TherapyAlgorithmState.AutoModeReadinessState),
+                     NameOf(TherapyAlgorithmState.AutoModeShieldState),
+                     NameOf(TherapyAlgorithmState.PlgmLgsState)
 
-                e.CellStyle = e.CellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleLeft,
-                    padding:=New Padding(1))
+                    e.CellStyle = e.CellStyle.SetCellStyle(
+                        alignment:=DataGridViewContentAlignment.MiddleLeft,
+                        padding:=New Padding(1))
 
-            Case NameOf(TherapyAlgorithmState.SafeBasalDuration), NameOf(TherapyAlgorithmState.WaitToCalibrateDuration)
-                Dim totalMinutes As Integer = CInt(e.Value)
-                Dim hours As Integer = totalMinutes \ 60
-                Dim minutes As Integer = totalMinutes Mod 60
-                e.Value = $"{hours}:{minutes:D2}"
-                e.CellStyle = e.CellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleRight,
-                    padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                Case NameOf(TherapyAlgorithmState.SafeBasalDuration), NameOf(TherapyAlgorithmState.WaitToCalibrateDuration)
+                    Dim totalMinutes As Integer = CInt(e.Value)
+                    Dim hours As Integer = totalMinutes \ 60
+                    Dim minutes As Integer = totalMinutes Mod 60
+                    e.Value = $"{hours}:{minutes:D2}"
+                    e.CellStyle = e.CellStyle.SetCellStyle(
+                        alignment:=DataGridViewContentAlignment.MiddleRight,
+                        padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
 
-            Case Else
-                Stop
-        End Select
-
+                Case Else
+                    Stop
+            End Select
+        End If
+        dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     Friend Sub DgvTherapyAlgorithmState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvTherapyAlgorithmState.ColumnAdded
@@ -1552,7 +1556,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=SensorBgReadings.GetCellStyle(columnName:= .Name),
+                cellStyle:=TimeChangeHelpers.GetCellStyle(columnName:= .Name),
                 wrapHeader:=True,
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
@@ -3490,7 +3494,7 @@ Public Class Form1
 
         FinishInitialization(Me)
         Me.UpdateTrendArrows()
-        UpdateSummaryTab(Me.DgvSummary, s_listOfSummaryRecords, sort:=True)
+        UpdateSummaryTab(Me.DgvSummary, classCollection:=s_listOfSummaryRecords, sort:=True)
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()
@@ -3514,8 +3518,10 @@ Public Class Form1
             rowIndex:=ServerDataIndexes.lastSG,
             hideRecordNumberColumn:=True)
 
-        UpdateSummaryTab(Me.DgvSummary, s_listOfSummaryRecords, sort:=True)
-        UpdateSummaryTab(Me.DgvLastAlarm, GetSummaryRecords(s_lastAlarmValue), sort:=True)
+        UpdateSummaryTab(
+            dgvSummary:=Me.DgvLastAlarm,
+            classCollection:=GetSummaryRecords(s_lastAlarmValue),
+            sort:=True)
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(
@@ -3542,7 +3548,10 @@ Public Class Form1
             className:=NameOf(Limit),
             rowIndex:=ServerDataIndexes.limits)
 
-        UpdateSummaryTab(Me.DgvTherapyAlgorithmState, GetSummaryRecords(s_therapyAlgorithmStateValue), sort:=False)
+        UpdateSummaryTab(
+            dgvSummary:=Me.DgvTherapyAlgorithmState,
+            classCollection:=GetSummaryRecords(s_therapyAlgorithmStateValue),
+            sort:=False)
         Me.DgvTherapyAlgorithmState.Columns(0).Visible = False
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
              table:=ClassCollectionToDataTable(

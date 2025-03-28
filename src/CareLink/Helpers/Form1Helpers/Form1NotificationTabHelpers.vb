@@ -50,7 +50,7 @@ Friend Module Form1NotificationTabHelpers
     Private Sub DisplayNotificationDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, rowIndex As Integer)
         Dim dGV As New DataGridView With {
             .AutoSize = True,
-            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
+            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders,
             .ColumnHeadersVisible = False,
             .Dock = DockStyle.Top,
             .Name = $"DataGridView{className}",
@@ -78,12 +78,12 @@ Friend Module Form1NotificationTabHelpers
     Friend Sub UpdateNotificationTabs()
         Try
             Form1.TableLayoutPanelNotificationActive.AutoScroll = True
-            Form1.TableLayoutPanelNotificationActive.SetTabName(ServerDataIndexes.notificationHistory, isClearedNotifications:=False)
+            Form1.TableLayoutPanelNotificationActive.SetTableName(ServerDataIndexes.notificationHistory, isClearedNotifications:=False)
             For i As Integer = Form1.TableLayoutPanelNotificationActive.Controls.Count - 1 To 1 Step -1
                 Form1.TableLayoutPanelNotificationActive.Controls.RemoveAt(i)
             Next
 
-            Form1.TableLayoutPanelNotificationsCleared.SetTabName(ServerDataIndexes.notificationHistory, isClearedNotifications:=True)
+            Form1.TableLayoutPanelNotificationsCleared.SetTableName(ServerDataIndexes.notificationHistory, isClearedNotifications:=True)
             For i As Integer = Form1.TableLayoutPanelNotificationsCleared.Controls.Count - 1 To 1 Step -1
                 Form1.TableLayoutPanelNotificationsCleared.Controls.RemoveAt(i)
             Next

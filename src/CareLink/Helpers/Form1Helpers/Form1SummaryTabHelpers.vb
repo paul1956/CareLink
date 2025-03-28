@@ -6,18 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Friend Module Form1SummaryTabHelpers
 
-    Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        If dgv.Columns(e.ColumnIndex).Name = NameOf(SummaryRecord.RecordNumber) Then
-            If IsSingleEqualToInteger(Single.Parse(e.Value.ToString), CInt(e.Value)) Then
-                dgv.CellFormattingSingleValue(e, 0)
-            Else
-                dgv.CellFormattingSingleValue(e, 1)
-            End If
-        End If
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
-
     <Extension>
     Friend Sub UpdateSummaryTab(dgvSummary As DataGridView, classCollection As List(Of SummaryRecord), sort As Boolean)
         If sort Then
@@ -30,8 +18,6 @@ Friend Module Form1SummaryTabHelpers
             dgvSummary.CurrentCell = dgvSummary.Rows(s_currentSummaryRow).Cells(2)
         End If
         dgvSummary.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
-        RemoveHandler dgvSummary.CellFormatting, AddressOf DataGridView_CellFormatting
-        AddHandler dgvSummary.CellFormatting, AddressOf DataGridView_CellFormatting
     End Sub
 
 End Module
