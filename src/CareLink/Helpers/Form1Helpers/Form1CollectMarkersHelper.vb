@@ -66,8 +66,10 @@ Friend Module Form1CollectMarkersHelper
                     If Not basalDictionary.TryAdd(item.OAdateTime, item.bolusAmount) Then
                         basalDictionary(item.OAdateTime) += item.bolusAmount
                     End If
+                    s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
                 Case "AUTO_MODE_STATUS"
                     s_listOfAutoModeStatusMarkers.Add(New AutoModeStatus(markerEntry, s_listOfAutoModeStatusMarkers.Count + 1))
+                    s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
                 Case "BG_READING"
                     s_markers.Add(markerEntry)
                     s_listOfBgReadingMarkers.Add(New BgReading(markerEntry, s_listOfBgReadingMarkers.Count + 1))
@@ -78,16 +80,18 @@ Friend Module Form1CollectMarkersHelper
                     s_markers.Add(markerEntry)
                     Dim lastInsulinRecord As New Insulin(markerEntry, s_listOfInsulinMarkers.Count + 1)
                     s_listOfInsulinMarkers.Add(lastInsulinRecord)
+                    s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
                     Select Case markerEntry.GetStringValueFromJson(NameOf(Insulin.ActivationType))
                         Case "AUTOCORRECTION"
                             If Not basalDictionary.TryAdd(lastInsulinRecord.OAdateTime, lastInsulinRecord.DeliveredFastAmount) Then
                                 basalDictionary(lastInsulinRecord.OAdateTime) += lastInsulinRecord.DeliveredFastAmount
                             End If
                         Case "MANUAL"
+                            Stop
                         Case "UNDETERMINED"
                             Stop
                         Case "RECOMMENDED"
-                            ' Do I need to do anything here?
+                            ' handled elsewhere
                         Case Else
                             Stop
                             Throw UnreachableException(markerEntry.Type)
@@ -109,6 +113,7 @@ Friend Module Form1CollectMarkersHelper
             End Select
         Next
 
+        SortAndFilterListOfLowGlucoseSuspendedMarkers()
         Dim endOADate As OADate = If(basalDictionary.Count = 0,
                                      New OADate(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime),
                                      basalDictionary.Last.Key
@@ -149,4 +154,20 @@ Friend Module Form1CollectMarkersHelper
         Return $"Max Basal/Hr ~{maxBasalPerHour.RoundTo025}U"
     End Function
 
+    Private Sub SortAndFilterListOfLowGlucoseSuspendedMarkers()
+        s_listOfLowGlucoseSuspendedMarkers.Sort(Function(x, y) x.DisplayTime.CompareTo(y.DisplayTime))
+        Dim tmpList As New List(Of LowGlucoseSuspended)
+        For Each r As IndexClass(Of LowGlucoseSuspended) In s_listOfLowGlucoseSuspendedMarkers.WithIndex
+            Dim entry As LowGlucoseSuspended = r.Value
+            entry.RecordNumber = tmpList.Count + 1
+            If r.IsFirst Then
+                tmpList.Add(entry)
+                Continue For
+            End If
+            If tmpList.Last.deliverySuspended OrElse entry.deliverySuspended Then
+                tmpList.Add(entry)
+            End If
+        Next
+        s_listOfLowGlucoseSuspendedMarkers = tmpList
+    End Sub
 End Module

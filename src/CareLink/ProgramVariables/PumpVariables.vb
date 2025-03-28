@@ -6,12 +6,16 @@ Public Module PumpVariables
 
     ' Manually computed
 
-    Friend s_totalAutoCorrection As Single
-    Friend s_totalBasal As Single
-    Friend s_totalCarbs As Single
-    Friend s_totalDailyDose As Single
-    Friend s_totalManualBolus As Single
-
+    Private s_bgUnitsNativeString As String
+    Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
+    Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatus)
+    Friend ReadOnly s_listOfBasalPerHour As New List(Of BasalPerHour)
+    Friend ReadOnly s_listOfBgReadingMarkers As New List(Of BgReading)
+    Friend ReadOnly s_listOfCalibrationMarkers As New List(Of Calibration)
+    Friend ReadOnly s_listOfInsulinMarkers As New List(Of Insulin)
+    Friend ReadOnly s_listOfMealMarkers As New List(Of Meal)
+    Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
+    Friend ReadOnly s_listOfUserSummaryRecord As New List(Of SummaryRecord)
     Friend s_aboveHyperLimit As Single
     Friend s_activeInsulin As ActiveInsulin
     Friend s_autoModeReadinessState As SummaryRecord
@@ -24,15 +28,17 @@ Public Module PumpVariables
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
     Friend s_lastSg As New LastSG
     Friend s_lastSgValue As Single = 0
+    Friend s_listOfLimitRecords As New List(Of Limit)
+    Friend s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspended)
     Friend s_listOfSgRecords As New List(Of SG)
     Friend s_listOfTimeChangeMarkers As New List(Of TimeChange)
     Friend s_markers As New List(Of Marker)
+    Friend s_modelNumber As String
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
     Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
     Friend s_pumpHardwareRevision As String
     Friend s_pumpInRangeOfPhone As Boolean
     Friend s_pumpInRangeOfTransmitter As Boolean
-    Friend s_modelNumber As String
     Friend s_reservoirLevelPercent As Integer
     Friend s_sensorDurationHours As Integer
     Friend s_sensorState As String
@@ -46,6 +52,11 @@ Public Module PumpVariables
     Friend s_timeToNextCalibrationMinutes As Short
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
+    Friend s_totalAutoCorrection As Single
+    Friend s_totalBasal As Single
+    Friend s_totalCarbs As Single
+    Friend s_totalDailyDose As Single
+    Friend s_totalManualBolus As Single
 
     Friend Property BgUnitsNativeString As String
         Get
@@ -60,19 +71,6 @@ Public Module PumpVariables
     Public Property PatientData As PatientDataInfo
     Public Property ProgramInitialized As Boolean = False
     Public Property RecentData As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
-
-    Private s_bgUnitsNativeString As String
-    Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
-    Friend ReadOnly s_listOfBasalPerHour As New List(Of BasalPerHour)
-    Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatus)
-    Friend ReadOnly s_listOfCalibrationMarkers As New List(Of Calibration)
-    Friend ReadOnly s_listOfInsulinMarkers As New List(Of Insulin)
-    Friend ReadOnly s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspended)
-    Friend ReadOnly s_listOfMealMarkers As New List(Of Meal)
-    Friend ReadOnly s_listOfBgReadingMarkers As New List(Of BgReading)
-    Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
-    Friend ReadOnly s_listOfUserSummaryRecord As New List(Of SummaryRecord)
-    Friend s_listOfLimitRecords As New List(Of Limit)
 
     Public Function GetCarbDefaultUnit() As String
         Return "Grams"

@@ -15,7 +15,7 @@ Public Class LowGlucoseSuspended
         Me.Kind = "Marker"
         Me.TimestampAsString = markerEntry.TimestampAsString
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
-        Me.deliverySuspended = True
+        Me.deliverySuspended = markerEntry.Type = "LOW_GLUCOSE_SUSPENDED"
     End Sub
 
     <DisplayName("Record Number")>

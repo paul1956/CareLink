@@ -3570,19 +3570,13 @@ Public Class Form1
             homeChartLegend:=_summaryChartLegend,
             treatmentMarkersChartLegend:=_treatmentMarkersChartLegend)
 
-        showLegend = s_listOfLowGlucoseSuspendedMarkers.Count > 0 AndAlso
-            Not (s_listOfLowGlucoseSuspendedMarkers.Count = 1 AndAlso
-            s_listOfLowGlucoseSuspendedMarkers(0).deliverySuspended = False)
+        showLegend = s_listOfLowGlucoseSuspendedMarkers.Any(Function(s) s.deliverySuspended = True)
         ShowHideLegendItem(
             showLegend,
             legendString:="Suspend",
             activeInsulinChartLegend:=_activeInsulinChartLegend,
             homeChartLegend:=_summaryChartLegend,
             treatmentMarkersChartLegend:=_treatmentMarkersChartLegend)
-
-        If s_listOfLowGlucoseSuspendedMarkers.Count = 1 AndAlso s_listOfLowGlucoseSuspendedMarkers(0).deliverySuspended = False Then
-            Exit Sub
-        End If
 
         If My.Settings.SystemAudioAlertsEnabled AndAlso My.Settings.SystemSpeechRecognitionThreshold <> 1 Then
             InitializeSpeechRecognition()

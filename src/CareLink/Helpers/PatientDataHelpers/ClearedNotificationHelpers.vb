@@ -23,6 +23,9 @@ Friend Module ClearedNotificationHelpers
             caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(e.Column.Index).Caption)
         If e.Column.Name = "Value" Then
             e.Column.MinimumWidth = 350
+        ElseIf e.Column.Name = "Message" Then
+            e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            e.Column.FillWeight = 100
         End If
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
     End Sub
