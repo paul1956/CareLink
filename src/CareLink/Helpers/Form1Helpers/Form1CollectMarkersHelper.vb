@@ -24,6 +24,23 @@ Friend Module Form1CollectMarkersHelper
         Return newMarker
     End Function
 
+    Private Sub SortAndFilterListOfLowGlucoseSuspendedMarkers()
+        s_listOfLowGlucoseSuspendedMarkers.Sort(Function(x, y) x.DisplayTime.CompareTo(y.DisplayTime))
+        Dim tmpList As New List(Of LowGlucoseSuspended)
+        For Each r As IndexClass(Of LowGlucoseSuspended) In s_listOfLowGlucoseSuspendedMarkers.WithIndex
+            Dim entry As LowGlucoseSuspended = r.Value
+            entry.RecordNumber = tmpList.Count + 1
+            If r.IsFirst Then
+                tmpList.Add(entry)
+                Continue For
+            End If
+            If tmpList.Last.deliverySuspended OrElse entry.deliverySuspended Then
+                tmpList.Add(entry)
+            End If
+        Next
+        s_listOfLowGlucoseSuspendedMarkers = tmpList
+    End Sub
+
     ''' <summary>
     ''' Collect up markers
     ''' </summary>
@@ -154,20 +171,4 @@ Friend Module Form1CollectMarkersHelper
         Return $"Max Basal/Hr ~{maxBasalPerHour.RoundTo025}U"
     End Function
 
-    Private Sub SortAndFilterListOfLowGlucoseSuspendedMarkers()
-        s_listOfLowGlucoseSuspendedMarkers.Sort(Function(x, y) x.DisplayTime.CompareTo(y.DisplayTime))
-        Dim tmpList As New List(Of LowGlucoseSuspended)
-        For Each r As IndexClass(Of LowGlucoseSuspended) In s_listOfLowGlucoseSuspendedMarkers.WithIndex
-            Dim entry As LowGlucoseSuspended = r.Value
-            entry.RecordNumber = tmpList.Count + 1
-            If r.IsFirst Then
-                tmpList.Add(entry)
-                Continue For
-            End If
-            If tmpList.Last.deliverySuspended OrElse entry.deliverySuspended Then
-                tmpList.Add(entry)
-            End If
-        Next
-        s_listOfLowGlucoseSuspendedMarkers = tmpList
-    End Sub
 End Module
