@@ -30,17 +30,20 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-03/27/2025
+03/29/2025
 
 ## What's New
+ New in 5.0.0.6
+ - Parse Json data using CurrentCulture
+
  New in 5.0.0.5
-Fixes handling of Manual Mode Suspend
+ - Fixes handling of Manual Mode Suspend
 
  New in 5.0.0.3
-Fixes plotting of TIR and other values
+ - Fixes plotting of TIR and other values
 
  New in 5.0.0.2
-Supports new V11 Medtronic API
+ - Supports new V11 Medtronic API
 
  New in 4.0.2.0
   - Limited dark mode support
