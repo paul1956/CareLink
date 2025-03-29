@@ -25,7 +25,7 @@ Public Class HighAlertRecord
             Stop
         End If
 
-        Me.HighLimit = Single.Parse(s1(1))
+        Me.HighLimit = Single.Parse(s1(1), Provider)
         If Not String.IsNullOrWhiteSpace(s.Columns(1)) Then
             Me.AlertBeforeHigh = True
             Me.TimeBeforeHigh &= " Please Verify!"

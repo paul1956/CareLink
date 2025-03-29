@@ -160,7 +160,7 @@ Public Module JsonExtensions
             Dim element As JsonElement = CType(obj, JsonElement)
             Select Case element.ValueKind
                 Case JsonValueKind.String
-                    value = Double.Parse(element.GetString)
+                    value = Double.Parse(element.GetString, Provider)
                 Case JsonValueKind.Number
                     value = element.GetDouble
                 Case Else
@@ -204,7 +204,7 @@ Public Module JsonExtensions
                     Dim element As JsonElement = CType(obj, JsonElement)
                     Select Case element.ValueKind
                         Case JsonValueKind.String
-                            value = Single.Parse(element.GetString)
+                            value = Single.Parse(element.GetString, Provider)
                         Case JsonValueKind.Number
                             value = element.GetSingle
                         Case Else
@@ -212,7 +212,7 @@ Public Module JsonExtensions
                             Return value
                     End Select
                 Case TypeOf obj Is String
-                    value = Single.Parse(CStr(obj))
+                    value = Single.Parse(CStr(obj), Provider)
                 Case Else
                     Stop
             End Select

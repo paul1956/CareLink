@@ -28,7 +28,7 @@ Public Class LowAlertRecord
             Stop
         End If
 
-        Me.LowLimit = Single.Parse(s1(1))
+        Me.LowLimit = Single.Parse(s1(1), Provider)
         Me.Suspend = s.Columns(1)
         Me.SuspendOnLow = Me.Suspend.Contains("On", StringComparison.InvariantCultureIgnoreCase)
         Me.AlertOnLow = s.Columns(2) = "x"

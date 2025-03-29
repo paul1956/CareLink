@@ -157,14 +157,14 @@ Friend Module CreateChartItems
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,
                             toPosition:=firstAxis(index:=i) + yMin,
-                            text:=$"{firstAxis(index:=i).ToString(format:=If(NativeMmolL, "F1", "F0"), provider:=Provider).Replace(oldValue:=",0", newValue:="")}",
+                            text:=$"{firstAxis(index:=i).ToString(format:=If(NativeMmolL, "F1", "F0"), Provider).Replace(oldValue:=",0", newValue:="")}",
                             labelRow:=0,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
                     .CustomLabels.Add(
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,
                             toPosition:=firstAxis(index:=i) + yMin,
-                            text:=$"{secondAxis(index:=i).ToString(format:=If(NativeMmolL, "F0", "F1"), provider:=Provider).Replace(oldValue:=".0", newValue:="").Replace(oldValue:=",0", newValue:="")}",
+                            text:=$"{secondAxis(index:=i).ToString(format:=If(NativeMmolL, "F0", "F1"), Provider).Replace(oldValue:=",0", newValue:="")}",
                             labelRow:=1,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
                 Next

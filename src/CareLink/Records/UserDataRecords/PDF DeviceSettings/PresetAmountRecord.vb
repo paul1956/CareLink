@@ -15,7 +15,7 @@ Public Class PresetAmountRecord
         Else
             _typeIsRate = True
             Dim sSplit As String() = s.Split(" ", StringSplitOptions.RemoveEmptyEntries)
-            _rate = Single.Parse(sSplit(0))
+            _rate = Single.Parse(sSplit(0), Provider)
             _units = sSplit(1)
         End If
     End Sub

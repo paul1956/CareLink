@@ -1414,7 +1414,7 @@ Public Class Form1
             End Select
         End If
         If dgv.Columns(e.ColumnIndex).Name = NameOf(SummaryRecord.RecordNumber) Then
-            If IsSingleEqualToInteger(Single.Parse(e.Value.ToString), CInt(e.Value)) Then
+            If IsSingleEqualToInteger(Single.Parse(e.Value.ToString, Provider), CInt(e.Value)) Then
                 dgv.CellFormattingSingleValue(e, 0)
             Else
                 dgv.CellFormattingSingleValue(e, 1)
@@ -1731,8 +1731,11 @@ Public Class Form1
             .ValidateNames = True}
 
             If openFileDialog1.ShowDialog(Me) = DialogResult.OK Then
+                Dim directory As String = Path.GetDirectoryName(openFileDialog1.FileName)
+                Dim destinationPath As String = Path.Combine(directory, GetUserSettingsPdfFileNameWithPath())
+                File.Move(openFileDialog1.FileName, destinationPath)
                 My.Computer.FileSystem.MoveFile(
-                    sourceFileName:=openFileDialog1.FileName,
+                    sourceFileName:=destinationPath,
                     destinationFileName:=GetUserSettingsPdfFileNameWithPath(),
                     showUI:=FileIO.UIOption.AllDialogs,
                     onUserCancel:=FileIO.UICancelOption.DoNothing)
@@ -3125,24 +3128,24 @@ Public Class Form1
                                         "???",
                                         $"{CInt(s_totalBasal / s_totalDailyDose * 100)}"
                                        )
-        Me.Last24BasalUnitsLabel.Text = $"{s_totalBasal:F1} U"
+        Me.Last24BasalUnitsLabel.Text = String.Format(Provider, $"{s_totalBasal:F1} U")
         Me.Last24BasalPercentLabel.Text = $"{totalPercent}%"
 
-        Me.Last24TotalInsulinUnitsLabel.Text = $"{s_totalDailyDose:F1} U"
+        Me.Last24TotalInsulinUnitsLabel.Text = String.Format(Provider, $"{s_totalDailyDose:F1} U")
 
         If s_totalAutoCorrection > 0 Then
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
             End If
             Me.Last24AutoCorrectionLabel.Visible = True
-            Me.Last24AutoCorrectionUnitsLabel.Text = $"{s_totalAutoCorrection:F1} U"
+            Me.Last24AutoCorrectionUnitsLabel.Text = String.Format(Provider, $"{s_totalAutoCorrection:F1} U")
             Me.Last24AutoCorrectionUnitsLabel.Visible = True
             Me.Last24AutoCorrectionPercentLabel.Text = $"{totalPercent}%"
             Me.Last24AutoCorrectionPercentLabel.Visible = True
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusUnitsLabel.Text = $"{s_totalManualBolus:F1} U"
+            Me.Last24ManualBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
             Me.Last24ManualBolusPercentLabel.Text = $"{totalPercent}%"
         Else
             Me.Last24AutoCorrectionLabel.Visible = False
@@ -3151,7 +3154,7 @@ Public Class Form1
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusUnitsLabel.Text = $"{s_totalManualBolus:F1} U"
+            Me.Last24ManualBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
             Me.Last24ManualBolusPercentLabel.Text = $"{totalPercent}%"
         End If
         Me.Last24CarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}"

@@ -31,7 +31,7 @@ Friend Module KeyValuePairExtensions
         Dim itemAsSingle As Single
         Select Case item.ValueKind
             Case JsonValueKind.String
-                itemAsSingle = Single.Parse(item.GetString())
+                itemAsSingle = Single.Parse(item.GetString(), Provider)
             Case JsonValueKind.Null
                 Return String.Empty
             Case JsonValueKind.Undefined
