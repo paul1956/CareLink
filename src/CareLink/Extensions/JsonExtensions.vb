@@ -39,6 +39,9 @@ Public Module JsonExtensions
         cleanRecentData("firstName") = "First"
         cleanRecentData("lastName") = "Last"
         cleanRecentData("medicalDeviceSerialNumber") = "NG1234567H"
+        cleanRecentData("conduitSerialNumber") = New Guid().ToString
+        cleanRecentData("systemId") = "40000000000 0000"
+        cleanRecentData("deviceSerialNumber") = "NG4000000H"
         Return JsonSerializer.Serialize(cleanRecentData, s_jsonSerializerOptions)
     End Function
 
