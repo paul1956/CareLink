@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Text.Json.Serialization
 
 Public Class SummaryRecord
     Implements IComparable
@@ -84,6 +85,7 @@ Public Class SummaryRecord
         Me.Message = message
     End Sub
 
+    <JsonIgnore>
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public ReadOnly Property RecordNumber As Single

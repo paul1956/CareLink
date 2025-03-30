@@ -1694,7 +1694,7 @@ Public Class Form1
 #Region "Start Here Menu Events"
 
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
-        Me.MenuStartHereUseSavedDataFile.Enabled = AnyMatchingFiles(DirectoryForProjectData, $"CareLink*.json")
+        Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles(DirectoryForProjectData, $"CareLink*.json")
         Me.MenuStartHereSnapshotSave.Enabled = Not RecentDataEmpty()
         Me.MenuStartHereUseExceptionReport.Visible = AnyMatchingFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
 
@@ -1765,10 +1765,11 @@ Public Class Form1
 
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
         If RecentDataEmpty() Then Exit Sub
-        Using jd As JsonDocument = JsonDocument.Parse(RecentData.CleanUserData(), New JsonDocumentOptions)
-            File.WriteAllTextAsync(GetUniqueDataFileName(BaseNameSavedSnapshot, CurrentDateCulture.Name, "json", True).withPath, JsonSerializer.Serialize(jd, s_jsonSerializerOptions))
-        End Using
 
+        Dim contents As String = JsonSerializer.Serialize(PatientData, s_jsonSerializerOptions).CleanUserData
+        File.WriteAllTextAsync(
+            path:=GetUniqueDataFileName(baseName:=BaseNameSavedSnapshot, cultureName:=CurrentDateCulture.Name, extension:="json", MustBeUnique:=True).withPath,
+            contents)
     End Sub
 
     Private Sub MenuStartHereUseExceptionReport_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseExceptionReport.Click
@@ -1835,9 +1836,9 @@ Public Class Form1
         Me.MenuStartHereSnapshotSave.Enabled = Not success
     End Sub
 
-    Private Sub MenuStartHereUseSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseSavedDataFile.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.SavedFile)
-        Me.MenuStartHereUseSavedDataFile.Enabled = Not success
+    Private Sub MenuStartHereUseSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereLoadSavedDataFile.Click
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.Snapshot)
+        Me.MenuStartHereLoadSavedDataFile.Enabled = Not success
     End Sub
 
     Private Sub MenuStartHereUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseTestData.Click

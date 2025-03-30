@@ -20,14 +20,6 @@ Public Class SupportedReportRecord
 
     End Sub
 
-    <DisplayName("Not For")>
-    <Column(Order:=3, TypeName:=NameOf([String]))>
-    Public Property notFor As String
-
-    <DisplayName("Only For")>
-    <Column(Order:=2, TypeName:=NameOf([String]))>
-    Public Property onlyFor As String
-
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(recordNumber))>
     Public Property recordNumber As Integer
@@ -35,6 +27,14 @@ Public Class SupportedReportRecord
     <DisplayName("Report")>
     <Column(Order:=1, TypeName:=NameOf([String]))>
     Public Property report As String
+
+    <DisplayName("Only For")>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
+    Public Property onlyFor As String
+
+    <DisplayName("Not For")>
+    <Column(Order:=3, TypeName:=NameOf([String]))>
+    Public Property notFor As String
 
     Private Shared Function kvpToString(forList As List(Of Dictionary(Of String, String))) As StringBuilder
         Dim sb As New StringBuilder

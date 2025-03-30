@@ -398,14 +398,6 @@ Public Class Client2
         Return _lastApiStatus
     End Function
 
-    Friend Shared Sub DeserializePatientElement(patientDataElement As JsonElement)
-        PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
-        RecentData = patientDataElement.ConvertJsonElementToStringDictionary()
-        s_timeFormat = PatientData.TimeFormat
-        s_timeWithMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
-        s_timeWithoutMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
-    End Sub
-
     ''' <summary>
     ''' Get recent periodic pump data
     ''' </summary>
@@ -459,7 +451,6 @@ Public Class Client2
         Dim metaData As JsonElement = CType(data.Values(0), JsonElement)
         Dim patientDataElement As JsonElement = CType(data.Values(1), JsonElement)
         Try
-            Dim patientDataElementAsText As String = patientDataElement.GetRawText()
             File.WriteAllTextAsync(
                 path:=GetLastDownloadFileWithPath(),
                 contents:=JsonSerializer.Serialize(patientDataElement, s_jsonSerializerOptions))

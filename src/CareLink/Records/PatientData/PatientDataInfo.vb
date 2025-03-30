@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class PatientDataInfo
+
     <JsonPropertyName("clientTimeZoneName")>
     Public Property ClientTimeZoneName As String
 

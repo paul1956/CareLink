@@ -34,15 +34,18 @@ Public Module JsonExtensions
     End Function
 
     <Extension>
-    Public Function CleanUserData(cleanRecentData As Dictionary(Of String, String)) As String
-        If cleanRecentData Is Nothing Then Return ""
-        cleanRecentData("firstName") = "First"
-        cleanRecentData("lastName") = "Last"
-        cleanRecentData("medicalDeviceSerialNumber") = "NG1234567H"
-        cleanRecentData("conduitSerialNumber") = New Guid().ToString
-        cleanRecentData("systemId") = "40000000000 0000"
-        cleanRecentData("deviceSerialNumber") = "NG4000000H"
-        Return JsonSerializer.Serialize(cleanRecentData, s_jsonSerializerOptions)
+    Public Function CleanUserData(recentDataStr As String) As String
+        If String.IsNullOrWhiteSpace(recentDataStr) Then
+            Return recentDataStr
+        End If
+        Stop
+        'recentDataStr("firstName") = "First"
+        'recentDataStr("lastName") = "Last"
+        'recentDataStr("medicalDeviceSerialNumber") = "NG1234567H"
+        'recentDataStr("conduitSerialNumber") = New Guid().ToString
+        'recentDataStr("systemId") = "40000000000 0000"
+        'recentDataStr("deviceSerialNumber") = "NG4000000H"
+        Return recentDataStr
     End Function
 
     <Extension>

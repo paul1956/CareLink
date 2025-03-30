@@ -30,9 +30,8 @@ Public Class ExceptionHandlerDialog
             ' write stack trace trailer
             stream.WriteLine(StackTraceTerminatingStr)
             ' write out data file
-            Using jd As JsonDocument = JsonDocument.Parse(jsonData.CleanUserData(), New JsonDocumentOptions)
-                stream.Write(JsonSerializer.Serialize(jd, s_jsonSerializerOptions))
-            End Using
+            Dim content As String = JsonSerializer.Serialize(PatientData, s_jsonSerializerOptions)
+            stream.Write(content)
         End Using
     End Sub
 

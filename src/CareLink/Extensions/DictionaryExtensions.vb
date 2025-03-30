@@ -14,6 +14,18 @@ Public Module DictionaryExtensions
         "MMT-1812",
         "MMT-1880"}
 
+    Private Sub SetDateProperty(Of T As {Class, New})(classObject As T, row As KeyValuePair(Of String, String), [property] As PropertyInfo)
+        Try
+            Dim propertyInfo As PropertyInfo = classObject.GetType.GetProperty($"{[property].Name}AsString")
+            If propertyInfo Is Nothing Then
+                Stop
+            End If
+            propertyInfo.SetValue(classObject, row.Value, Nothing)
+        Catch ex As Exception
+            Stop
+        End Try
+    End Sub
+
     <Extension>
     Friend Function GetBooleanValue(item As Dictionary(Of String, String), key As String) As Boolean
         Dim ret As String = ""
@@ -39,24 +51,6 @@ Public Module DictionaryExtensions
                   returnString,
                   ""
                  )
-    End Function
-
-    Public Function GetValueList(jsonString As String) As String()
-        Dim valueList As String() = JsonToDictionary(jsonString).ToCsv _
-            .Replace("{", "").Trim _
-            .Replace("}", "").Trim _
-            .Split(",")
-        Return valueList.Select(Function(s) s.Trim()).ToArray
-    End Function
-
-    Public Function GetAdditionalInformation(jsonString As String) As Dictionary(Of String, String)
-        Dim valueList() As String = GetValueList(jsonString)
-        Dim dic As New Dictionary(Of String, String)
-        For Each row As String In valueList
-            Dim value() As String = row.Split(" = ")
-            dic.Add(value(0).Trim, value(1).Trim)
-        Next
-        Return dic
     End Function
 
     <Extension>
@@ -128,17 +122,23 @@ Public Module DictionaryExtensions
         Return classObject
     End Function
 
-    Private Sub SetDateProperty(Of T As {Class, New})(classObject As T, row As KeyValuePair(Of String, String), [property] As PropertyInfo)
-        Try
-            Dim propertyInfo As PropertyInfo = classObject.GetType.GetProperty($"{[property].Name}AsString")
-            If propertyInfo Is Nothing Then
-                Stop
-            End If
-            propertyInfo.SetValue(classObject, row.Value, Nothing)
-        Catch ex As Exception
-            Stop
-        End Try
-    End Sub
+    Public Function GetAdditionalInformation(jsonString As String) As Dictionary(Of String, String)
+        Dim valueList() As String = GetValueList(jsonString)
+        Dim dic As New Dictionary(Of String, String)
+        For Each row As String In valueList
+            Dim value() As String = row.Split(" = ")
+            dic.Add(value(0).Trim, value(1).Trim)
+        Next
+        Return dic
+    End Function
+
+    Public Function GetValueList(jsonString As String) As String()
+        Dim valueList As String() = JsonToDictionary(jsonString).ToCsv _
+            .Replace("{", "").Trim _
+            .Replace("}", "").Trim _
+            .Split(",")
+        Return valueList.Select(Function(s) s.Trim()).ToArray
+    End Function
 
     <Extension>
     Public Function IndexOfValue(dic As SortedDictionary(Of String, KnownColor), item As KnownColor) As Integer

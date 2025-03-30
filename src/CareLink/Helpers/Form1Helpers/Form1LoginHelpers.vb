@@ -11,13 +11,25 @@ Public Enum FileToLoadOptions As Integer
     LastSaved = 0
     Login = 1
     NewUser = 2
-    SavedFile = 3
+    Snapshot = 3
     TestData = 4
 End Enum
 
 Friend Module Form1LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginDialog
     Public Property CurrentPdf As PdfSettingsRecord
+
+    Friend Sub DeserializePatientElement(patientDataElement As JsonElement)
+        Try
+            PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
+        Catch ex As Exception
+            Stop
+        End Try
+        RecentData = patientDataElement.ConvertJsonElementToStringDictionary()
+        s_timeFormat = PatientData.TimeFormat
+        s_timeWithMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
+        s_timeWithoutMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
+    End Sub
 
     Friend Function DoOptionalLoginAndUpdateData(mainForm As Form1, updateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
         Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(False)
@@ -30,7 +42,7 @@ Friend Module Form1LoginHelpers
                 CurrentDateCulture = New CultureInfo("en-US")
                 Dim patientDataElementAsText As String = File.ReadAllText(TestDataFileNameWithPath)
                 Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(patientDataElementAsText)
-                Client2.DeserializePatientElement(patientDataElement)
+                DeserializePatientElement(patientDataElement)
                 mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(TestDataFileNameWithPath)
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
@@ -78,23 +90,27 @@ Friend Module Form1LoginHelpers
                 ErrorReportingHelpers.ReportLoginStatus(mainForm.LoginStatus, RecentDataEmpty, lastErrorMessage)
                 mainForm.MenuShowMiniDisplay.Visible = True
                 fromFile = False
-            Case FileToLoadOptions.LastSaved, FileToLoadOptions.SavedFile
-                Dim lastDownloadFileWithPath As String
-                If fileToLoad = FileToLoadOptions.LastSaved Then
-                    mainForm.Text = $"{SavedTitle} Using Last Saved Data"
-                    lastDownloadFileWithPath = GetLastDownloadFileWithPath()
-                Else
-                    mainForm.Text = $"{SavedTitle} Using Saved Data"
-                    Dim di As New DirectoryInfo(DirectoryForProjectData)
-                    Dim fileList As String() = New DirectoryInfo(DirectoryForProjectData).EnumerateFiles($"CareLink*.json").OrderBy(Function(f As FileInfo) f.LastWriteTime).Select(Function(f As FileInfo) f.Name).ToArray
-                    Using openFileDialog1 As New OpenFileDialog With {
+            Case FileToLoadOptions.LastSaved, FileToLoadOptions.Snapshot
+                Dim lastDownloadFileWithPath As String = String.Empty
+                Dim fixedPart As String = String.Empty
+
+                Select Case fileToLoad
+                    Case FileToLoadOptions.LastSaved
+                        mainForm.Text = $"{SavedTitle} Using Last Saved Data"
+                        fixedPart = BaseNameSavedLastDownload
+                        lastDownloadFileWithPath = GetLastDownloadFileWithPath()
+                    Case FileToLoadOptions.Snapshot
+                        fixedPart = BaseNameSavedSnapshot
+                        mainForm.Text = $"{SavedTitle} Using Snapshot Data"
+                        Dim di As New DirectoryInfo(DirectoryForProjectData)
+                        Dim fileList As String() = New DirectoryInfo(DirectoryForProjectData).EnumerateFiles($"CareLinkSnapshot*.json").OrderBy(Function(f As FileInfo) f.LastWriteTime).Select(Function(f As FileInfo) f.Name).ToArray
+                        Using openFileDialog1 As New OpenFileDialog With {
                         .AddExtension = True,
                         .AddToRecent = False,
                         .CheckFileExists = True,
                         .CheckPathExists = True,
                         .DefaultExt = "json",
-                        .FileName = $"{s_userName}Settings.json",
-                        .Filter = $"json files (*.json)|CareLink*.json",
+                        .Filter = $"json files (*.json)|CareLinkSnapshot*.json",
                         .InitialDirectory = DirectoryForProjectData,
                         .Multiselect = False,
                         .ReadOnlyChecked = True,
@@ -104,20 +120,21 @@ Friend Module Form1LoginHelpers
                         .Title = $"Select CareLink™ saved snapshot to load",
                         .ValidateNames = True}
 
-                        If openFileDialog1.ShowDialog(mainForm) = DialogResult.OK Then
-                            lastDownloadFileWithPath = openFileDialog1.FileName
-                            If Not File.Exists(lastDownloadFileWithPath) Then
+                            If openFileDialog1.ShowDialog(mainForm) = DialogResult.OK Then
+                                lastDownloadFileWithPath = openFileDialog1.FileName
+                                If Not File.Exists(lastDownloadFileWithPath) Then
+                                    Return False
+                                End If
+                            Else
                                 Return False
                             End If
-                        Else
-                            Return False
-                        End If
-                    End Using
-                End If
-                CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(BaseNameSavedLastDownload)
+                        End Using
+                    Case FileToLoadOptions.Snapshot
+                End Select
+                CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(fixedPart)
                 Dim patientDataElementAsText As String = File.ReadAllText(lastDownloadFileWithPath)
                 Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(patientDataElementAsText)
-                Client2.DeserializePatientElement(patientDataElement)
+                DeserializePatientElement(patientDataElement)
                 mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(lastDownloadFileWithPath)
                 SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
@@ -252,8 +269,10 @@ Friend Module Form1LoginHelpers
             End If
         End If
         If currentUserUpdateNeeded Then
-            File.WriteAllTextAsync(GetUserSettingsJsonFileNameWithPath,
-                      JsonSerializer.Serialize(CurrentUser, s_jsonSerializerOptions))
+            Dim contents As String = JsonSerializer.Serialize(CurrentUser, s_jsonSerializerOptions)
+            File.WriteAllTextAsync(
+                path:=GetUserSettingsJsonFileNameWithPath,
+                contents)
         End If
         Form1.Cursor = Cursors.Default
         Application.DoEvents()

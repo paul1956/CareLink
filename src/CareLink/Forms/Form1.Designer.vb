@@ -130,7 +130,7 @@ Partial Class Form1
         MenuStartHereManuallyImportDeviceSettings = New ToolStripMenuItem()
         MenuStartHereShowPumpSetup = New ToolStripMenuItem()
         ToolStripSeparator1 = New ToolStripSeparator()
-        MenuStartHereUseSavedDataFile = New ToolStripMenuItem()
+        MenuStartHereLoadSavedDataFile = New ToolStripMenuItem()
         MenuStartHereUseExceptionReport = New ToolStripMenuItem()
         ToolStripSeparator4 = New ToolStripSeparator()
         MenuStartHereUseLastSavedFile = New ToolStripMenuItem()
@@ -1368,7 +1368,7 @@ Partial Class Form1
         ' 
         ' MenuStartHere
         ' 
-        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartHereUserLogin, ToolStripSeparator8, MenuStartHereManuallyImportDeviceSettings, MenuStartHereShowPumpSetup, ToolStripSeparator1, MenuStartHereUseSavedDataFile, MenuStartHereUseExceptionReport, ToolStripSeparator4, MenuStartHereUseLastSavedFile, MenuStartHereUseTestData, ToolStripSeparator2, MenuStartHereSnapshotSave, MenuStartHereCleanUpObsoleteFiles, ToolStripSeparator3, MenuStartHereExit})
+        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartHereUserLogin, ToolStripSeparator8, MenuStartHereManuallyImportDeviceSettings, MenuStartHereShowPumpSetup, ToolStripSeparator1, MenuStartHereLoadSavedDataFile, MenuStartHereUseExceptionReport, ToolStripSeparator4, MenuStartHereUseLastSavedFile, MenuStartHereUseTestData, ToolStripSeparator2, MenuStartHereSnapshotSave, MenuStartHereCleanUpObsoleteFiles, ToolStripSeparator3, MenuStartHereExit})
         MenuStartHere.Name = "MenuStartHere"
         MenuStartHere.Size = New Size(71, 20)
         MenuStartHere.Text = "Start Here"
@@ -1402,11 +1402,11 @@ Partial Class Form1
         ToolStripSeparator1.Name = "ToolStripSeparator1"
         ToolStripSeparator1.Size = New Size(242, 6)
         ' 
-        ' MenuStartHereUseSavedDataFile
+        ' MenuStartHereLoadSavedDataFile
         ' 
-        MenuStartHereUseSavedDataFile.Name = "MenuStartHereUseSavedDataFile"
-        MenuStartHereUseSavedDataFile.Size = New Size(245, 22)
-        MenuStartHereUseSavedDataFile.Text = "Load A Saved Data File"
+        MenuStartHereLoadSavedDataFile.Name = "MenuStartHereLoadSavedDataFile"
+        MenuStartHereLoadSavedDataFile.Size = New Size(245, 22)
+        MenuStartHereLoadSavedDataFile.Text = "Load Saved Data File"
         ' 
         ' MenuStartHereUseExceptionReport
         ' 
@@ -3193,7 +3193,7 @@ Partial Class Form1
     Friend WithEvents MenuStartHereUseExceptionReport As ToolStripMenuItem
     Friend WithEvents MenuStartHereUseLastSavedFile As ToolStripMenuItem
     Friend WithEvents MenuStartHereUserLogin As ToolStripMenuItem
-    Friend WithEvents MenuStartHereUseSavedDataFile As ToolStripMenuItem
+    Friend WithEvents MenuStartHereLoadSavedDataFile As ToolStripMenuItem
     Friend WithEvents MenuStartHereUseTestData As ToolStripMenuItem
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents ModelLabel As Label
