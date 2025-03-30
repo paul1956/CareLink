@@ -34,21 +34,6 @@ Public Module JsonExtensions
     End Function
 
     <Extension>
-    Public Function CleanUserData(recentDataStr As String) As String
-        If String.IsNullOrWhiteSpace(recentDataStr) Then
-            Return recentDataStr
-        End If
-        Stop
-        'recentDataStr("firstName") = "First"
-        'recentDataStr("lastName") = "Last"
-        'recentDataStr("medicalDeviceSerialNumber") = "NG1234567H"
-        'recentDataStr("conduitSerialNumber") = New Guid().ToString
-        'recentDataStr("systemId") = "40000000000 0000"
-        'recentDataStr("deviceSerialNumber") = "NG4000000H"
-        Return recentDataStr
-    End Function
-
-    <Extension>
     Public Function ConvertJsonArrayToList(jsonElement As JsonElement) As List(Of Object)
         Dim result As New List(Of Object)()
         For Each element As JsonElement In jsonElement.EnumerateArray()

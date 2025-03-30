@@ -101,30 +101,27 @@ Friend Module SummaryHelpers
                             Select Case key
                                 Case "basalName"
                                     If additionalInfo.TryGetValue(key, basalName) Then
+                                        basalName = basalName.ToTitle(separateNumbers:=True)
                                     Else
                                         Stop
                                     End If
                                 Case "bgValue"
-                                    If additionalInfo.TryGetValue(key, bgValue) Then
-                                    Else
+                                    If Not additionalInfo.TryGetValue(key, bgValue) Then
                                         Stop
                                     End If
                                 Case "criticalLow"
-                                    If additionalInfo.TryGetValue(key, criticalLow) Then
-                                    Else
+                                    If Not additionalInfo.TryGetValue(key, criticalLow) Then
                                         Stop
                                     End If
                                 Case "deliveredAmount"
-                                    If additionalInfo.TryGetValue(key, deliveredAmount) Then
-                                    Else
+                                    If Not additionalInfo.TryGetValue(key, deliveredAmount) Then
                                         Stop
                                     End If
                                 Case "lastSetChange"
                                     lastSetChange = s_oneToNineteen(CInt(additionalInfo(key))).ToTitle
                                 Case "notDeliveredAmount"
                                     If additionalInfo.TryGetValue("notDeliveredAmount", notDeliveredAmount) Then
-                                        If String.IsNullOrWhiteSpace(notDeliveredAmount) Then
-                                        Else
+                                        If Not String.IsNullOrWhiteSpace(notDeliveredAmount) Then
                                             Stop
                                         End If
                                     Else
@@ -132,34 +129,31 @@ Friend Module SummaryHelpers
                                     End If
                                 Case "programmedAmount"
                                     If additionalInfo.TryGetValue(key, programmedAmount) Then
-                                    Else
-                                        Stop
-
+                                        Exit Select
                                     End If
+                                    Stop
                                 Case "reminderName"
-                                    If additionalInfo.TryGetValue(key, reminderName) Then
-                                    Else
+                                    If Not additionalInfo.TryGetValue(key, reminderName) Then
                                         Stop
                                     End If
                                 Case "sensorUpdateTime"
-                                    If additionalInfo.TryGetValue(key, sensorUpdateTime) Then
-                                        sensorUpdateTime = GetSensorUpdateTime(sensorUpdateTime)
-                                    Else
+                                    If Not additionalInfo.TryGetValue(key, sensorUpdateTime) Then
                                         Stop
+                                    Else
+                                        sensorUpdateTime = GetSensorUpdateTime(sensorUpdateTime)
                                     End If
                                 Case "sg"
-                                    If additionalInfo.TryGetValue(key, sg) Then
+                                    If Not additionalInfo.TryGetValue(key, sg) Then
+                                        Stop
+                                    Else
                                         If faultId = "827" Then
                                             lowLimit = If(CSng(sg) < 65 AndAlso CSng(sg) > 20, "64", "3.5")
                                         End If
-                                    Else
-                                        Stop
                                     End If
                                 Case "units"
                         ' handled elsewhere
                                 Case "unitsRemaining"
-                                    If additionalInfo.TryGetValue(key, unitsRemaining) Then
-                                    Else
+                                    If Not additionalInfo.TryGetValue(key, unitsRemaining) Then
                                         Stop
                                     End If
                             End Select

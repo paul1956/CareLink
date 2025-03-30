@@ -4,11 +4,48 @@
 
 Imports System.Runtime.CompilerServices
 Imports System.Text
+Imports System.Text.Json
 Imports System.Text.RegularExpressions
 
 Public Module StringExtensions
 
     Private ReadOnly s_commaOrPeriod As Char() = {"."c, ","c}
+
+    Private ReadOnly s_keyDictionary As New Dictionary(Of String, String) From {
+        {$"""{NameOf(ServerDataIndexes.firstName)}"": ", """First"""},
+        {$"""{NameOf(ServerDataIndexes.lastName)}"": ", """Last"""},
+        {$"""{NameOf(ServerDataIndexes.conduitSerialNumber)}"": ", $"""{New Guid()}"""},
+        {$"""{NameOf(MedicalDeviceInformation.SystemId)}"": ", """40000000000 0000"""},
+        {$"""{NameOf(MedicalDeviceInformation.DeviceSerialNumber)}"": ", """NG4000000H"""}}
+
+    ''' <summary>
+    '''  Serialize <see cref="PatientData"/> while removing any personal information
+    ''' </summary>
+    ''' <param name="str"></param>
+    ''' <returns>String without any personal information</returns>
+    Friend Function CleanPatientData() As String
+        Dim str As String = JsonSerializer.Serialize(value:=PatientData, options:=s_jsonSerializerOptions)
+        If String.IsNullOrWhiteSpace(str) Then
+            Return str
+        End If
+        Stop
+
+        Dim startIndex As Integer
+        For Each kvp As KeyValuePair(Of String, String) In s_keyDictionary
+            startIndex = str.IndexOf(
+                value:=kvp.Key,
+                comparisonType:=StringComparison.OrdinalIgnoreCase) + Len(kvp.Key)
+            If startIndex = -1 Then
+                Continue For
+            End If
+            Dim endPos As Integer = str.IndexOf(
+                value:=",",
+                startIndex,
+                comparisonType:=StringComparison.OrdinalIgnoreCase)
+            str = str.Replace(str.Substring(startIndex, length:=endPos - startIndex), newValue:=kvp.Value)
+        Next
+        Return str
+    End Function
 
     <Extension()>
     Friend Function Count(s As String, c As Char) As Integer
@@ -16,7 +53,7 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    ''' Converts a string where the first letter of the string is not capitalized
+    '''  Converts a string where the first letter of the string is not capitalized
     ''' </summary>
     ''' <param name="inStr">A string like THIS_IS A TITLE</param>
     ''' <returns>doNotCapitalizedFirstLetterString</returns>
@@ -34,13 +71,13 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    ''' Converts a string of words separated by a space or underscore
-    ''' to a Title where the first letter of every word capitalized and the rest are not
+    '''  Converts a string of words separated by a space or underscore
+    '''  to a Title where the first letter of every word capitalized and the rest are not
     ''' </summary>
     ''' <param name="inStr">A string like THIS_IS A TITLE</param>
     ''' <returns>This Is A Title</returns>
     <Extension()>
-    Friend Function ToTitle(inStr As String) As String
+    Friend Function ToTitle(inStr As String, Optional separateNumbers As Boolean = False) As String
         If String.IsNullOrWhiteSpace(inStr) Then
             Return ""
         End If
@@ -52,8 +89,12 @@ Public Module StringExtensions
                 firstLetterOfWord = True
                 result.Append(" "c)
             ElseIf firstLetterOfWord Then
-                result.Append(Char.ToUpperInvariant(c))
                 firstLetterOfWord = False
+                result.Append(Char.ToUpperInvariant(c))
+            ElseIf separateNumbers AndAlso IsNumeric(c) Then
+                firstLetterOfWord = True
+                result.Append(" "c)
+                result.Append(Char.ToLowerInvariant(c))
             Else
                 result.Append(Char.ToLowerInvariant(c))
             End If
@@ -62,10 +103,10 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    ''' Converts a single string of characters that contains words that
-    ''' start with an uppercase character without spaces
-    ''' to a Title where the first letter of every word capitalized and
-    ''' words are separated by spaces
+    '''  Converts a single string of characters that contains words that
+    '''  start with an uppercase character without spaces
+    '''  to a Title where the first letter of every word capitalized and
+    '''  words are separated by spaces
     ''' </summary>
     ''' <param name="inStr">A string like ThisIsATitle</param>
     ''' <returns>This Is A Title</returns>
@@ -100,7 +141,7 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    ''' Replace multiple spaces with 1 and trim the ends
+    '''  Replace multiple spaces with 1 and trim the ends
     ''' </summary>
     ''' <param name="value">String</param>
     ''' <returns>String</returns>

@@ -72,7 +72,7 @@ Friend Module Form1CollectMarkersHelper
             Select Case markerEntry.Type
                 Case "AUTO_BASAL_DELIVERY"
                     s_markers.Add(markerEntry)
-                    Dim item As New AutoBasalDelivery(markerEntry:=markerEntry, recordNumber:=s_listOfAutoBasalDeliveryMarkers.Count + 1)
+                    Dim item As New AutoBasalDelivery(markerEntry, recordNumber:=s_listOfAutoBasalDeliveryMarkers.Count + 1)
                     s_listOfAutoBasalDeliveryMarkers.Add(item)
                     Dim index As Integer = item.DisplayTime.Hour
                     If (index And 1) = 0 Then

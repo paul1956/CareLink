@@ -40,8 +40,8 @@ Friend Module Form1LoginHelpers
             Case FileToLoadOptions.TestData
                 mainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserV2Data.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
-                Dim patientDataElementAsText As String = File.ReadAllText(TestDataFileNameWithPath)
-                Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(patientDataElementAsText)
+                Dim json As String = File.ReadAllText(TestDataFileNameWithPath)
+                Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
                 DeserializePatientElement(patientDataElement)
                 mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(TestDataFileNameWithPath)
@@ -100,7 +100,7 @@ Friend Module Form1LoginHelpers
                         fixedPart = BaseNameSavedLastDownload
                         lastDownloadFileWithPath = GetLastDownloadFileWithPath()
                     Case FileToLoadOptions.Snapshot
-                        fixedPart = BaseNameSavedSnapshot
+                        fixedPart = "CareLink"
                         mainForm.Text = $"{SavedTitle} Using Snapshot Data"
                         Dim di As New DirectoryInfo(DirectoryForProjectData)
                         Dim fileList As String() = New DirectoryInfo(DirectoryForProjectData).EnumerateFiles($"CareLinkSnapshot*.json").OrderBy(Function(f As FileInfo) f.LastWriteTime).Select(Function(f As FileInfo) f.Name).ToArray
@@ -110,7 +110,7 @@ Friend Module Form1LoginHelpers
                             .CheckFileExists = True,
                             .CheckPathExists = True,
                             .DefaultExt = "json",
-                            .Filter = $"json files (*.json)|CareLinkSnapshot*.json",
+                            .Filter = $"json files (*.json)|CareLink*.json",
                             .InitialDirectory = DirectoryForProjectData,
                             .Multiselect = False,
                             .ReadOnlyChecked = True,
@@ -131,9 +131,9 @@ Friend Module Form1LoginHelpers
                         End Using
                     Case FileToLoadOptions.Snapshot
                 End Select
-                CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(fixedPart)
-                Dim patientDataElementAsText As String = File.ReadAllText(lastDownloadFileWithPath)
-                Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(patientDataElementAsText)
+                CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(fixedPart, fuzzy:=True)
+                Dim json As String = File.ReadAllText(lastDownloadFileWithPath)
+                Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
                 DeserializePatientElement(patientDataElement)
                 mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(lastDownloadFileWithPath)
@@ -269,10 +269,9 @@ Friend Module Form1LoginHelpers
             End If
         End If
         If currentUserUpdateNeeded Then
-            Dim contents As String = JsonSerializer.Serialize(CurrentUser, s_jsonSerializerOptions)
             File.WriteAllTextAsync(
                 path:=GetUserSettingsJsonFileNameWithPath,
-                contents)
+                contents:=JsonSerializer.Serialize(CurrentUser, s_jsonSerializerOptions))
         End If
         Form1.Cursor = Cursors.Default
         Application.DoEvents()

@@ -1766,10 +1766,9 @@ Public Class Form1
     Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
         If RecentDataEmpty() Then Exit Sub
 
-        Dim contents As String = JsonSerializer.Serialize(PatientData, s_jsonSerializerOptions).CleanUserData
         File.WriteAllTextAsync(
             path:=GetUniqueDataFileName(baseName:=BaseNameSavedSnapshot, cultureName:=CurrentDateCulture.Name, extension:="json", MustBeUnique:=True).withPath,
-            contents)
+            contents:=CleanPatientData())
     End Sub
 
     Private Sub MenuStartHereUseExceptionReport_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseExceptionReport.Click

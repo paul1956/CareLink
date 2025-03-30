@@ -52,73 +52,75 @@ Friend Module UserMessageConstants
     ''' These message have parameters in (), (units) will be replace by localized units.
     ''' </summary>
     Friend ReadOnly s_notificationMessages As New Dictionary(Of String, String) From {
-    {"2", "Pump Error. Delivery Stopped"},
-    {"6", "Insert battery(triggeredDateTime). Delivery stopped. Insert a new battery now."},
-    {"7", "Delivery Stopped. Check BG"}, _ ' From Java
-    {"11", "Battery failed(triggeredDateTime). Replace Pump Battery Now."},
-    {"12", "Auto suspend Limit reached(triggeredDateTime). Insulin delivery suspended. No buttons pressed within time set in Auto Suspend."},
-    {"19", "Loading Incomplete During Infusion Set Change(triggeredDateTime)"},
-    {"24", "Critical Pump Error. Stop Pump Use. Use Other Treatment"},
-    {"25", "Pump Power Error. Record Settings"},
-    {"29", "Pump Restarted. Delivery Stopped"},
-    {"37", "Pump Motor Error. Delivery Stopped"},
-    {"51", "Bolus stopped(triggeredDateTime). Cannot resume bolus for cannula fill, (deliveredAmount) of (programmedAmount) U delivered. {vbCrLf}(notDeliveredAmount) U not delivered. If needed, enter values again."},
-    {"52", "Delivery Limit Exceeded. Check BG"}, _ ' From Java
-    {"57", "Pump Battery Not Compatible"},
-    {"58", "Insert A New AA Battery"},
-    {"61", "Stuck button(triggeredDateTime). Button pressed for more then 3 minutes."},
-    {"62", "New Notification Received From Pump"},
-    {"66", "No Reservoir Detected During Infusion Set Change"},
-    {"69", "Loading incomplete(triggeredDateTime). Restart the Reservoir & Set procedure"},
-    {"73", "Replace Pump Battery Now"},
-    {"77", "Pump Settings Error. Delivery Stopped"},
-    {"84", "Pump Battery Removed. Replace Battery"},
-    {"100", "Bolus Not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
-    {"103", "BG Check Reminder"},
-    {"104", "Battery low pump(triggeredDateTime). Replace battery soon."},
-    {"105", "Reservoir Low(triggeredDateTime). (unitsRemaining) units remaining. Change reservoir."},
-    {"107", "Missed Meal Bolus Reminder"}, _ ' From Java
-    {"109", "Set change reminder(triggeredDateTime). (lastSetChange) days since last set change. Time to change the infusion set."},
-    {"110", "Silenced Sensor Alert. Check Alarm History"},
-    {"113", "Reservoir empty reminder, change reservoir."},
-    {"117", "Active Insulin Cleared"},
-    {"130", "Rewind Required(triggeredDateTime). Delivery stopped. Rewind was required due to pump error. Select OK to continue."},
-    {"140", "Delivery Suspended. Connect Infusion Set"}, _ ' From Java
-    {"775", "Enter BG now(triggeredDateTime). Enter BG to calibrate sensor."},
-    {"776", "Calibration Not accepted(triggeredDateTime). Wait at least 15 minutes. Wash hands, test BG again and calibrate."},
-    {"777", "Change Sensor(triggeredDateTime). Sensor not working properly. Insert new sensor."},
-    {"779", "Recharge Transmitter Now"},
-    {"780", "Lost sensor signal(triggeredDateTime). Move pump closer to sensor. May take 15 minutes to find signal."},
-    {"781", "Possible signal interface(triggeredDateTime). Move away from electronic devices. May take 15 minutes to find signal."},
-    {"784", "Raise Alert(triggeredDateTime). Sensor glucose raising rapidly."},
-    {"794", "Sensor expired(triggeredDateTime). Insert New sensor."},
-    {"795", "Lost Sensor Signal. Check Transmitter"}, _ ' From Java
-    {"796", "No Sensor Signal"}, _ ' From Java
-    {"797", "Sensor connected(triggeredDateTime). Start new sensor."},
-    {"798", "Sensor connected(triggeredDateTime). If new sensor, select Start New. If not, select Reconnect."},
-    {"801", "Sensor updating(triggeredDateTime), Updating can take up it can take up to (sensorUpdateTime). Monitor BG.(vbCrLf) Entered BGs will not calibrate the sensor, but can still be used for therapy."},
-    {"802", "Alert on low (sg) (units)(triggeredDateTime). Low sensor glucose. Check BG."},
-    {"803", "Alert on low (sg) (units)(triggeredDateTime). Low sensor glucose. Insulin delivery suspended since (suspendedSince). Check BG."},
-    {"805", "Alert before low(triggeredDateTime). Sensor glucose approaching Low Limit. Check BG."},
-    {"807", "Basal delivery resumed at (secondaryTime) after suspend by sensor, Check BG."},
-    {"809", "Suspend on low(triggeredDateTime). Delivery stopped. Sensor glucose (sg) (units). Check BG."},
-    {"811", "Suspend before low. Delivery stopped. Sensor glucose approaching Low Limit. Check BG."},
-    {"812", "Call for emergency(triggeredDateTime)."},
-    {"814", "Basal Resumed. SG Still Under Low Limit. Check BG"}, _ ' From Java
-    {"815", "Low Limit Changed. Basal Manually Resumed. Check BG"}, _ ' From Java
-    {"816", "Alert on high (sg) (units)(triggeredDateTime). High sensor glucose. Check BG."},
-    {"817", "Alert before high(triggeredDateTime). Sensor glucose approaching High Limit. Check BG."},
-    {"819", "Auto Mode exit(triggeredDateTime). (basalName) started. Would you Like to review Auto Mode Readiness Screen?"},
-    {"821", "Minimum Delivery Timeout. BG Required"}, _ ' From Java
-    {"822", "SmartGuard maximum delivery. Auto Mode has been at maximum delivery for 4 hours. Enter BG to continue in SmartGuard."},
-    {"823", "High Sensor Glucose(triggeredDateTime). BG has been high over 1 hour. Change infusion set. Check Ketones. Monitor BG."},
-    {"827", "Low Sg (sg) (units)(triggeredDateTime) SG is under (lowLimit). Check BG and treat"},
-    {"829", "BG required(triggeredDateTime). Enter a New BG for SmartGuard."},
-    {"831", "Enter BG Now(triggeredDateTime). Enter a BG to continue in SmartGuard."},
-    {"832", "Calibration Required"}, _ ' From Java
-    {"833", "Bolus recommended(triggeredDateTime). For (bgValue) (units) entered, a correction bolus is recommended. Select Bolus to program a bolus."},
-    {"869", "Reminder time to take (reminderName)."},
-    {"870", "Recharge transmitter within 24 hours(triggeredDateTime)."}}
+        {"2", "Pump Error. Delivery Stopped"},
+        {"6", "Insert battery(triggeredDateTime). Delivery stopped. Insert a new battery now."},
+        {"7", "Delivery Stopped. Check BG"}, _ ' From Java
+        {"11", "Battery failed(triggeredDateTime). Replace Pump Battery Now."},
+        {"12", "Auto suspend Limit reached(triggeredDateTime). Insulin delivery suspended. No buttons pressed within time set in Auto Suspend."},
+        {"19", "Loading Incomplete During Infusion Set Change(triggeredDateTime)"},
+        {"24", "Critical Pump Error. Stop Pump Use. Use Other Treatment"},
+        {"25", "Pump Power Error. Record Settings"},
+        {"29", "Pump Restarted. Delivery Stopped"},
+        {"37", "Pump Motor Error. Delivery Stopped"},
+        {"51", "Bolus stopped(triggeredDateTime). Cannot resume bolus for cannula fill, (deliveredAmount) of (programmedAmount) U delivered. {vbCrLf}(notDeliveredAmount) U not delivered. If needed, enter values again."},
+        {"52", "Delivery Limit Exceeded. Check BG"}, _ ' From Java
+        {"57", "Pump Battery Not Compatible"},
+        {"58", "Insert A New AA Battery"},
+        {"61", "Stuck button(triggeredDateTime). Button pressed for more then 3 minutes."},
+        {"62", "New Notification Received From Pump"},
+        {"66", "No Reservoir Detected During Infusion Set Change"},
+        {"69", "Loading incomplete(triggeredDateTime). Restart the Reservoir & Set procedure"},
+        {"73", "Replace Pump Battery Now"},
+        {"77", "Pump Settings Error. Delivery Stopped"},
+        {"84", "Pump Battery Removed. Replace Battery"},
+        {"100", "Bolus Not delivered. Bolus entry timed out before delivery. If bolus was intended, enter values again."},
+        {"103", "BG Check Reminder"},
+        {"104", "Battery low pump(triggeredDateTime). Replace battery soon."},
+        {"105", "Low Reservoir(triggeredDateTime). (unitsRemaining) units remaining. Change reservoir."},
+        {"107", "Missed Meal Bolus Reminder"}, _ ' From Java
+        {"109", "Set change reminder(triggeredDateTime). (lastSetChange) days since last set change. Time to change the infusion set."},
+        {"110", "Silenced Sensor Alert. Check Alarm History"},
+        {"113", "Reservoir empty reminder, change reservoir."},
+        {"117", "Active Insulin Cleared"},
+        {"130", "Rewind Required(triggeredDateTime). Delivery stopped. Rewind was required due to pump error. Select OK to continue."},
+        {"140", "Delivery Suspended. Connect Infusion Set"}, _ ' From Java
+        {"775", "Enter BG now(triggeredDateTime). Enter BG to calibrate sensor."},
+        {"776", "Calibration Not accepted(triggeredDateTime). Wait at least 15 minutes. Wash hands, test BG again and calibrate."},
+        {"777", "Change Sensor(triggeredDateTime). Sensor not working properly. Insert new sensor."},
+        {"779", "Recharge Transmitter Now"},
+        {"780", "Lost sensor signal(triggeredDateTime). Move pump closer to sensor. May take 15 minutes to find signal."},
+        {"781", "Possible signal interface(triggeredDateTime). Move away from electronic devices. May take 15 minutes to find signal."},
+        {"784", "Raise Alert(triggeredDateTime). Sensor glucose raising rapidly."},
+        {"794", "Sensor expired(triggeredDateTime). Insert New sensor."},
+        {"795", "Lost Sensor Signal. Check Transmitter"}, _ ' From Java
+        {"796", "No Sensor Signal"}, _ ' From Java
+        {"797", "Sensor connected(triggeredDateTime). Start new sensor."},
+        {"798", "Sensor connected(triggeredDateTime). If new sensor, select Start New. If not, select Reconnect."},
+        {"801", "Sensor updating(triggeredDateTime), Updating can take up it can take up to (sensorUpdateTime). Monitor BG.(vbCrLf) Entered BGs will not calibrate the sensor, but can still be used for therapy."},
+        {"802", "Alert on low (sg) (units)(triggeredDateTime). Low sensor glucose. Check BG."},
+        {"803", "Alert on low (sg) (units)(triggeredDateTime). Low sensor glucose. Insulin delivery suspended since (suspendedSince). Check BG."},
+        {"805", "Alert before low(triggeredDateTime). Sensor glucose approaching Low Limit. Check BG."},
+        {"807", "Basal delivery resumed at (secondaryTime) after suspend by sensor, Check BG."},
+        {"809", "Suspend on low(triggeredDateTime). Delivery stopped. Sensor glucose (sg) (units). Check BG."},
+        {"811", "Suspend before low. Delivery stopped. Sensor glucose approaching Low Limit. Check BG."},
+        {"812", "Call for emergency(triggeredDateTime)."},
+        {"814", "Basal Resumed. SG Still Under Low Limit. Check BG"}, _ ' From Java
+        {"815", "Low Limit Changed. Basal Manually Resumed. Check BG"}, _ ' From Java
+        {"816", "Alert on high (sg) (units)(triggeredDateTime). High sensor glucose. Check BG."},
+        {"817", "Alert before high(triggeredDateTime). Sensor glucose approaching High Limit. Check BG."},
+        {"819", "Auto Mode exit(triggeredDateTime). (basalName) started. Would you Like to review Auto Mode Readiness Screen?"},
+        {"820", "SmartGuard exit(triggeredDateTime). (basalName) started. Would you Like to review SmartGuard Checklist?"},
+        {"821", "Minimum Delivery Timeout. BG Required"}, _ ' From Java
+        {"822", "SmartGuard maximum delivery. Auto Mode has been at maximum delivery for 4 hours. Enter BG to continue in SmartGuard."},
+        {"823", "High Sensor Glucose(triggeredDateTime). BG has been high over 1 hour. Change infusion set. Check Ketones. Monitor BG."},
+        {"827", "Low Sg (sg) (units)(triggeredDateTime) SG is under (lowLimit). Check BG and treat"},
+        {"829", "BG required(triggeredDateTime). Enter a New BG for SmartGuard."},
+        {"831", "Enter BG Now(triggeredDateTime). Enter a BG to continue in SmartGuard."},
+        {"832", "Calibration Required"}, _ ' From Java
+        {"833", "Bolus recommended(triggeredDateTime). For (bgValue) (units) entered, a correction bolus is recommended. Select Bolus to program a bolus."},
+        {"838", "Calibration not accepted(triggeredDateTime).Sensor information is unavailable for up to 2 hours. Entered BGs may not calibrate the sensor but can be used for therapy."},
+        {"869", "Reminder time to take (reminderName)."},
+        {"870", "Recharge transmitter within 24 hours(triggeredDateTime)."}}
 
     Friend ReadOnly s_plgmLgsMessages As New Dictionary(Of String, String) From {
             {"FEATURE_OFF", "Feature Off"},

@@ -303,18 +303,18 @@ Public Class Client2
     Private Function GetData(config As Dictionary(Of String, Object), tokenDataElement As JsonElement, username As String, role As String, patientId As String) As Dictionary(Of String, Object)
         Debug.WriteLine(NameOf(GetData))
         _httpClient.SetDefaultRequestHeaders()
-        Dim url As String = $"{CStr(config("baseUrlCumulus"))}/display/message"
+        Dim requestUri As String = $"{CStr(config("baseUrlCumulus"))}/display/message"
         Dim tokenData As Dictionary(Of String, String) = tokenDataElement.ConvertJsonElementToStringDictionary()
 
-        Dim data As New Dictionary(Of String, Object) From {
+        Dim value As New Dictionary(Of String, Object) From {
             {"username", username}
         }
 
         If role.Contains("Partner", StringComparison.InvariantCultureIgnoreCase) Then
-            data("role") = "carepartner"
-            data("patientId") = patientId
+            value("role") = "carepartner"
+            value("patientId") = patientId
         Else
-            data("role") = "patient"
+            value("role") = "patient"
         End If
 
         _lastApiStatus = Nothing
@@ -326,14 +326,17 @@ Public Class Client2
             _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
         Next
 
-        Dim jsonContent As New StringContent(JsonSerializer.Serialize(data), Encoding.UTF8, "application/json")
-        Dim response As HttpResponseMessage = _httpClient.PostAsync(url, jsonContent).Result
+        Dim content As New StringContent(
+            content:=JsonSerializer.Serialize(value),
+            Encoding.UTF8,
+            mediaType:="application/json")
+        Dim response As HttpResponseMessage = _httpClient.PostAsync(requestUri, content).Result
         _lastApiStatus = CInt(response.StatusCode)
         Debug.WriteLine($"   status: {_lastApiStatus}")
 
         If response.IsSuccessStatusCode Then
-            Dim content As String = response.Content.ReadAsStringAsync().Result
-            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(content)
+            Dim json As String = response.Content.ReadAsStringAsync().Result
+            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json)
         End If
         Return Nothing
     End Function
