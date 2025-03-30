@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class Ble
+
     <JsonPropertyName("msso_ble_service_uuid")>
     Public Property MssoBleServiceUuid As String
 
@@ -13,4 +14,5 @@ Public Class Ble
 
     <JsonPropertyName("msso_ble_rssi")>
     Public Property MssoBleRssi As Integer
+
 End Class

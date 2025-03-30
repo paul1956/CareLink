@@ -4,7 +4,6 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
 Public Class PatientPersonalInfo

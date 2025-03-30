@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class MagConfig
+
     <JsonPropertyName("system_endpoints")>
     Public Property SystemEndpoints As MagSystemEndpoints
 
@@ -16,4 +17,5 @@ Public Class MagConfig
 
     <JsonPropertyName("ble")>
     Public Property Ble As Ble
+
 End Class

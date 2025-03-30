@@ -165,7 +165,6 @@ Public Class PdfSettingsRecord
                         Stop
                 End Select
             Next
-
         Catch ex As Exception
             Stop
         End Try

@@ -5,9 +5,11 @@
 Imports System.Text.Json.Serialization
 
 Public Class CertificateInfo
+
     <JsonPropertyName("host")>
     Public Property Host As String
 
     <JsonPropertyName("cert")>
     Public Property Cert As String
+
 End Class

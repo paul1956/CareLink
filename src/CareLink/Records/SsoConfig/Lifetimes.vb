@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class Lifetimes
+
     <JsonPropertyName("oauth2_access_token_lifetime_sec")>
     Public Property OAuth2AccessTokenLifetimeSec As Integer
 
@@ -13,4 +14,5 @@ Public Class Lifetimes
 
     <JsonPropertyName("id_token_lifetime_s")>
     Public Property IdTokenLifetimeS As Integer
+
 End Class

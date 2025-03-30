@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class SystemEndpoints
+
     <JsonPropertyName("authorization_endpoint_path")>
     Public Property AuthorizationEndpointPath As String
 
@@ -19,4 +20,5 @@ Public Class SystemEndpoints
 
     <JsonPropertyName("usersession_status_endpoint_path")>
     Public Property UserSessionStatusEndpointPath As String
+
 End Class

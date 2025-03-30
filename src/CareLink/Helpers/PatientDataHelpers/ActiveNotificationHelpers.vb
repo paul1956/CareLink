@@ -42,4 +42,5 @@ Friend Module ActiveNotificationHelpers
         AddHandler dgv.CellFormatting, AddressOf DataGridView_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DataGridView_ColumnAdded
     End Sub
+
 End Module

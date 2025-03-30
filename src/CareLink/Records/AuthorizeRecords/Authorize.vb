@@ -5,9 +5,11 @@
 Imports System.Text.Json.Serialization
 
 Partial Public Class Authorize
+
     <JsonPropertyName("idp")>
     Public Property Idp As String
 
     <JsonPropertyName("providers")>
     Public Property Providers As List(Of ProviderWrapper)
+
 End Class

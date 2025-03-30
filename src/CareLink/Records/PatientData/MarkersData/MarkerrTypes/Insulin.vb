@@ -4,8 +4,6 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports System.Globalization
-Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
 Public Class Insulin
@@ -13,7 +11,7 @@ Public Class Insulin
 
     Public Sub New(markerEntry As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
-        Me.type = markerEntry.Type
+        Me.Type = markerEntry.Type
         Me.Kind = "Marker"
         Me.TimestampAsString = markerEntry.TimestampAsString
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString

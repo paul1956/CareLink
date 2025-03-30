@@ -4,10 +4,10 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports System.Globalization
 Imports System.Text.Json.Serialization
 
 Public Class AutoModeStatus
+
     Public Sub New(markerEntry As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
         Me.Type = markerEntry.Type

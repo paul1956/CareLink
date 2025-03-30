@@ -3,7 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
-Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module PlotMarkers
@@ -238,9 +237,9 @@ Friend Module PlotMarkers
 
                         End With
                     Case "INSULIN"
-                        Select Case marker.GetStringValueFromJson(NameOf(Insulin.activationType))
+                        Select Case marker.GetStringValueFromJson(NameOf(Insulin.ActivationType))
                             Case "AUTOCORRECTION"
-                                Dim autoCorrection As Single = marker.GetSingleValueFromJson(NameOf(Insulin.deliveredFastAmount), decimalDigits:=3)
+                                Dim autoCorrection As Single = marker.GetSingleValueFromJson(NameOf(Insulin.DeliveredFastAmount), decimalDigits:=3)
                                 With treatmentChart.Series(BasalSeriesName)
                                     .PlotBasalSeries(
                                         markerOADateTime:=markerOADateTime,
@@ -286,7 +285,7 @@ Friend Module PlotMarkers
                     Case "TIME_CHANGE"
                         With treatmentChart.Series(TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChange(marker)
-                            markerOADateTime = New OADate(lastTimeChangeRecord.timestamp)
+                            markerOADateTime = New OADate(lastTimeChangeRecord.Timestamp)
                             .AddXY(markerOADateTime, 0)
                             .AddXY(markerOADateTime, TreatmentInsulinRow)
                             .AddXY(markerOADateTime, Double.NaN)

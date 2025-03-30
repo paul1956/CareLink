@@ -203,4 +203,5 @@ Public Class PatientDataInfo
 
     <JsonPropertyName("sensorLifeIcon")>
     Public Property SensorLifeIcon As String
+
 End Class

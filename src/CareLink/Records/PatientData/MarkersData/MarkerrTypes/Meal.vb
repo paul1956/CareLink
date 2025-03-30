@@ -4,7 +4,6 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports System.Globalization
 Imports System.Text.Json.Serialization
 
 Public Class Meal
@@ -18,6 +17,7 @@ Public Class Meal
         Const fieldName As String = "amount"
         Me.amount = CInt(markerEntry.GetSingleValueFromJson(fieldName, decimalDigits:=0))
     End Sub
+
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer

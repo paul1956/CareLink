@@ -41,5 +41,4 @@ Public Class ActiveInsulin
     <JsonPropertyName("version")>
     Public Property Version As Integer
 
-
 End Class

@@ -91,7 +91,6 @@ Friend Module Form1UpdateHelpers
         Next
     End Sub
 
-
     Friend Function RecentDataEmpty() As Boolean
         Return RecentData Is Nothing OrElse RecentData.Count = 0
     End Function
@@ -453,7 +452,6 @@ Friend Module Form1UpdateHelpers
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfBasalPerHour),
                 dGV:=Form1.DgvBasalPerHour,
                 rowIndex:=0)
-
 
         End With
 

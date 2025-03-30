@@ -27,6 +27,7 @@ Public Class TimeChange
     <DisplayName("Kind")>
     <Column(Order:=2, TypeName:=NameOf([String]))>
     Public Property Kind As String
+
     <DisplayName("Timestamp")>
     <Column(Order:=3, TypeName:="String")>
     <JsonPropertyName("timestamp")>

@@ -144,7 +144,6 @@ Public Module CareLinkClientHelpers
             ' Create CSR
             Dim csr As String = CreateCSR(rsa, "socialLogin", registerDeviceId, androidModelSafe, ssoConfig.OAuth.Client.Organization)
 
-
             ' Reformat CSR (implement this function as needed)
             csr = ReformatCsr(csr)
 

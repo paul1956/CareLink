@@ -5,7 +5,9 @@
 Imports System.Text.Json.Serialization
 
 Partial Public Class Authorize
+
     Public Class Provider
+
         <JsonPropertyName("id")>
         Public Property Id As String
 
@@ -14,5 +16,6 @@ Partial Public Class Authorize
 
         <JsonPropertyName("poll_url")>
         Public Property PollUrl As String
+
     End Class
 End Class

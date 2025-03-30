@@ -5,6 +5,8 @@
 Imports System.Text.Json.Serialization
 
 Public Class OAuthProtectedEndpoints
+
     <JsonPropertyName("userinfo_endpoint_path")>
     Public Property UserInfoEndpointPath As String
+
 End Class

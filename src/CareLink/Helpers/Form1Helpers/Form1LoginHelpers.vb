@@ -105,20 +105,20 @@ Friend Module Form1LoginHelpers
                         Dim di As New DirectoryInfo(DirectoryForProjectData)
                         Dim fileList As String() = New DirectoryInfo(DirectoryForProjectData).EnumerateFiles($"CareLinkSnapshot*.json").OrderBy(Function(f As FileInfo) f.LastWriteTime).Select(Function(f As FileInfo) f.Name).ToArray
                         Using openFileDialog1 As New OpenFileDialog With {
-                        .AddExtension = True,
-                        .AddToRecent = False,
-                        .CheckFileExists = True,
-                        .CheckPathExists = True,
-                        .DefaultExt = "json",
-                        .Filter = $"json files (*.json)|CareLinkSnapshot*.json",
-                        .InitialDirectory = DirectoryForProjectData,
-                        .Multiselect = False,
-                        .ReadOnlyChecked = True,
-                        .RestoreDirectory = True,
-                        .ShowPreview = False,
-                        .SupportMultiDottedExtensions = False,
-                        .Title = $"Select CareLink™ saved snapshot to load",
-                        .ValidateNames = True}
+                            .AddExtension = True,
+                            .AddToRecent = False,
+                            .CheckFileExists = True,
+                            .CheckPathExists = True,
+                            .DefaultExt = "json",
+                            .Filter = $"json files (*.json)|CareLinkSnapshot*.json",
+                            .InitialDirectory = DirectoryForProjectData,
+                            .Multiselect = False,
+                            .ReadOnlyChecked = True,
+                            .RestoreDirectory = True,
+                            .ShowPreview = False,
+                            .SupportMultiDottedExtensions = False,
+                            .Title = $"Select CareLink™ saved snapshot to load",
+                            .ValidateNames = True}
 
                             If openFileDialog1.ShowDialog(mainForm) = DialogResult.OK Then
                                 lastDownloadFileWithPath = openFileDialog1.FileName

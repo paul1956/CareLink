@@ -33,7 +33,6 @@ Public Class AdditionalInfo
     <JsonPropertyName("alertSilenced")>
     Public Property AlertSilenced As Boolean
 
-
     <DisplayName("Last Set Change")>
     <Column(Order:=5, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("lastSetChange")>

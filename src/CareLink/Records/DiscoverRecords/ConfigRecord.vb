@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class ConfigRecord
+
     <JsonPropertyName("config")>
     Public Property Config As String
 
@@ -16,4 +17,5 @@ Public Class ConfigRecord
 
     <JsonPropertyName("certificates")>
     Public Property Certificates As List(Of CertificateInfo)
+
 End Class

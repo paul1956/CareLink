@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class CPInfo
+
     <JsonPropertyName("region")>
     Public Property Region As String
 
@@ -22,4 +23,5 @@ Public Class CPInfo
 
     <JsonPropertyName("baseUrlAem")>
     Public Property BaseUrlAem As String
+
 End Class

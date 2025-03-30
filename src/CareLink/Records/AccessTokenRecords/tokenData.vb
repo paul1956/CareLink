@@ -3,9 +3,9 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Text.Json.Serialization
-Imports Octokit
 
 Public Class TokenData
+
     <JsonPropertyName("access_token")>
     Public Property AccessToken As String
 
@@ -26,4 +26,5 @@ Public Class TokenData
 
     <JsonPropertyName("mag-identifier")>
     Public Property MagIdentifier As String
+
 End Class

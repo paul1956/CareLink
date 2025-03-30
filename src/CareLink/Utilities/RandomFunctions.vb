@@ -6,6 +6,7 @@ Imports System.Security.Cryptography
 Imports System.Text
 
 Public Module RandomFunctions
+
     Public Function GenerateRandomBase64String(length As Integer) As String
         Dim random As New Random()
         Dim chars As String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
@@ -30,4 +31,5 @@ Public Module RandomFunctions
         Dim hashBytes As Byte() = SHA256.HashData(randomBytes)
         Return Convert.ToHexStringLower(hashBytes)
     End Function
+
 End Module

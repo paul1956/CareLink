@@ -18,4 +18,5 @@ Public Module JsonDownloader
         Dim jsonContent As String = DownloadJson(url)
         Return JsonSerializer.Deserialize(Of T)(jsonContent, s_jsonDeserializerOptions)
     End Function
+
 End Module

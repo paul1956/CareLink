@@ -4,7 +4,6 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports System.Globalization
 Imports System.Text.Json.Serialization
 
 Public Class AutoBasalDelivery
@@ -68,6 +67,5 @@ Public Class AutoBasalDelivery
     <DisplayName("Max Auto Basal Rate")>
     <Column(Order:=8, TypeName:=NameOf([Single]))>
     Public Property maxAutoBasalRate As Single
-
 
 End Class

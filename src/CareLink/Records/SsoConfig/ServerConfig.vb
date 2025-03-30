@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class ServerConfig
+
     <JsonPropertyName("hostname")>
     Public Property Hostname As String
 
@@ -16,4 +17,5 @@ Public Class ServerConfig
 
     <JsonPropertyName("server_certs")>
     Public Property ServerCerts As List(Of List(Of String))
+
 End Class

@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class MetadataInfo
+
     <JsonPropertyName("kind")>
     Public Property Kind As String
 
@@ -19,4 +20,5 @@ Public Class MetadataInfo
 
     <JsonPropertyName("clientDateTime")>
     Public Property ClientDateTime As String
+
 End Class

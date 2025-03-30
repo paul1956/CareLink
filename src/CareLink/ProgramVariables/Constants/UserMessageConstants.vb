@@ -15,6 +15,7 @@ Friend Module UserMessageConstants
         strBuilder.AppendLine("}")
         Return strBuilder.ToString
     End Function
+
     Friend ReadOnly s_autoModeShieldMessages As New Dictionary(Of String, String) From {
         {"AUTO_BASAL", "Auto Basal"},
         {"FEATURE_OFF", "Feature Off"},

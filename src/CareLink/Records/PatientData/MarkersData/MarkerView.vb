@@ -5,9 +5,11 @@
 Imports System.Text.Json.Serialization
 
 Public Class MarkerView
+
     <JsonPropertyName("viewType")>
     Public Property ViewType As String
 
     <JsonPropertyName("items")>
     Public Property Items As List(Of MarkerViewItem)
+
 End Class

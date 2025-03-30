@@ -5,8 +5,6 @@
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports System.Text
-Imports System.Text.Json
-Imports WebView2.DevTools.Dom
 
 Public Module DictionaryExtensions
 

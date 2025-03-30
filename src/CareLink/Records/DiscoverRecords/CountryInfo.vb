@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class CountryInfo
+
     <JsonPropertyName("region")>
     Public Property Region As String
 
@@ -16,4 +17,5 @@ Public Class CountryInfo
 
     <JsonPropertyName("flag")>
     Public Property Flag As String
+
 End Class

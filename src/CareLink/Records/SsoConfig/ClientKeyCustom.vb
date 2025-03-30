@@ -5,9 +5,11 @@
 Imports System.Text.Json.Serialization
 
 Public Class ClientKeyCustom
+
     <JsonPropertyName("lifetimes")>
     Public Property Lifetimes As Lifetimes
 
     <JsonPropertyName("appname")>
     Public Property AppName As String
+
 End Class

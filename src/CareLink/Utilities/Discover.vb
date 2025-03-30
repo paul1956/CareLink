@@ -4,7 +4,6 @@
 
 Imports System.Net.Http
 Imports System.Text.Json
-Imports WebView2.DevTools.Dom
 
 Public Module Discover
 
@@ -61,7 +60,7 @@ Public Module Discover
     Public Function GetDiscoveryData(country As String) As ConfigRecord
         Try
             Dim region As String = If(country.Equals("US", StringComparison.InvariantCultureIgnoreCase), "US", "EU")
-            Return DownloadAndDecodeJson(Of ConfigRecord)(s_discoverUrl(Region))
+            Return DownloadAndDecodeJson(Of ConfigRecord)(s_discoverUrl(region))
         Catch ex As HttpRequestException
             Debug.WriteLine($"Error downloading JSON: {ex.Message}")
         Catch ex As JsonException

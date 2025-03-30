@@ -20,28 +20,28 @@ Friend Module PlotSuspend
                 Dim suspendRecord As LowGlucoseSuspended = e.Value
                 If suspendRecord.deliverySuspended Then
                     suspended = True
-                    .AddXY(suspendRecord.timestamp, 0)
+                    .AddXY(suspendRecord.Timestamp, 0)
                     .Last.Color = lineColor
-                    .AddXY(suspendRecord.timestamp, GetYMaxValue(NativeMmolL))
+                    .AddXY(suspendRecord.Timestamp, GetYMaxValue(NativeMmolL))
                     Dim stopTimeSpan As TimeSpan =
                                       If(Not e.IsLast,
-                                         s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).timestamp - suspendRecord.timestamp,
-                                         PumpNow() - suspendRecord.timestamp
+                                         s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).Timestamp - suspendRecord.Timestamp,
+                                         PumpNow() - suspendRecord.Timestamp
                                         )
 
                     For i As Long = 1 To CInt(Math.Ceiling(stopTimeSpan.TotalMinutes / 5)) - 1
-                        .AddXY(suspendRecord.timestamp.AddMinutes(i * 5), 0)
+                        .AddXY(suspendRecord.Timestamp.AddMinutes(i * 5), 0)
                         .Last.Color = lineColor
-                        .AddXY(suspendRecord.timestamp.AddMinutes(i * 5), GetYMaxValue(NativeMmolL))
+                        .AddXY(suspendRecord.Timestamp.AddMinutes(i * 5), GetYMaxValue(NativeMmolL))
                         .Last.Color = lineColor
                     Next
 
                     If Not e.IsLast Then
-                        .AddXY(s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).timestamp, Double.NaN)
+                        .AddXY(s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).Timestamp, Double.NaN)
                     End If
                     .Last.Color = Color.Transparent
                 Else
-                    .AddXY(suspendRecord.timestamp, Double.NaN)
+                    .AddXY(suspendRecord.Timestamp, Double.NaN)
                     .Last.Color = Color.Transparent
                 End If
             Next

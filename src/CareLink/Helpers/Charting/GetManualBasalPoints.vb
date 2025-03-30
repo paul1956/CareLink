@@ -14,7 +14,7 @@ Friend Module GetManualBasalPoints
         Dim nextPumpSuspendTime As OADate
         Dim markerDateTime? As Date
         If s_markers.Count > 1 AndAlso markerWithIndex.Index = s_markers.Count - 2 Then
-            Dim activationType As String = s_markers.Last().GetStringValueFromJson(NameOf(Insulin.activationType))
+            Dim activationType As String = s_markers.Last().GetStringValueFromJson(NameOf(Insulin.ActivationType))
             If activationType = "MANUAL" Then
                 markerDateTime = s_markers.Last().GetMarkerTimestamp
                 If markerDateTime Is Nothing Then

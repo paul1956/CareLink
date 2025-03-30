@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class MobileSdk
+
     <JsonPropertyName("sso_enabled")>
     Public Property SsoEnabled As Boolean
 
@@ -28,4 +29,5 @@ Public Class MobileSdk
 
     <JsonPropertyName("client_cert_rsa_keybits")>
     Public Property ClientCertRsaKeybits As Integer
+
 End Class

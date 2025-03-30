@@ -2,7 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-
 'Imports System.IO
 'Imports System.Net
 'Imports System.Text
@@ -40,7 +39,6 @@
 '        Debug.SetError(Debug.Out)
 '    End Sub
 
-
 '    ' Note: The CreateCsr function is omitted as it requires OpenSSL, which is not natively available in .NET
 '    ' You might need to use a different library or approach for CSR creation in VB.NET
 
@@ -49,7 +47,6 @@
 '        Dim csrRaw() As Byte = Convert.FromBase64String(csr)
 '        Return Convert.ToBase64String(csrRaw).Replace("+", "-").Replace("/", "_").Replace("=", "")
 '    End Function
-
 
 '    ' Helper functions (implement these as needed)
 

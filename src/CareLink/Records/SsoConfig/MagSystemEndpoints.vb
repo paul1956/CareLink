@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class MagSystemEndpoints
+
     <JsonPropertyName("device_register_endpoint_path")>
     Public Property DeviceRegisterEndpointPath As String
 
@@ -22,4 +23,5 @@ Public Class MagSystemEndpoints
 
     <JsonPropertyName("authenticate_otp_endpoint_path")>
     Public Property AuthenticateOtpEndpointPath As String
+
 End Class

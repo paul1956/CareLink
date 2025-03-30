@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class OAuthConfig
+
     <JsonPropertyName("client")>
     Public Property Client As ClientConfig
 
@@ -13,4 +14,5 @@ Public Class OAuthConfig
 
     <JsonPropertyName("oauth_protected_endpoints")>
     Public Property OAuthProtectedEndpoints As OAuthProtectedEndpoints
+
 End Class

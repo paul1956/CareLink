@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class SsoConfig
+
     <JsonPropertyName("server")>
     Public Property Server As ServerConfig
 
@@ -16,4 +17,5 @@ Public Class SsoConfig
 
     <JsonPropertyName("custom")>
     Public Property Custom As CustomConfig
+
 End Class

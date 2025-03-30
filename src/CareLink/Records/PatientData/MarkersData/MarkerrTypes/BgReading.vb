@@ -4,7 +4,6 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports System.Globalization
 Imports System.Text.Json.Serialization
 
 Public Class BgReading
@@ -26,7 +25,6 @@ Public Class BgReading
     <DisplayName("Type")>
     <Column(Order:=1, TypeName:=NameOf([Int32]))>
     Public Property Type As String
-
 
     <DisplayName("Kind")>
     <Column(Order:=3, TypeName:=NameOf([String]))>

@@ -37,5 +37,4 @@ Public Class BannerState
         End Get
     End Property
 
-
 End Class

@@ -5,9 +5,11 @@
 Imports System.Text.Json.Serialization
 
 Public Class IconResourceBundle
+
     <JsonPropertyName("iconBundleTimestamp")>
     Public Property IconBundleTimestamp As String
 
     <JsonPropertyName("iconBundleUrl")>
     Public Property IconBundleUrl As String
+
 End Class

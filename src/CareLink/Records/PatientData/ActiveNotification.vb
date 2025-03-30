@@ -8,7 +8,6 @@ Imports System.Text.Json.Serialization
 
 Public Class ActiveNotification
 
-
     <DisplayName("Fault Id")>
     <Column(Order:=1, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("faultId")>

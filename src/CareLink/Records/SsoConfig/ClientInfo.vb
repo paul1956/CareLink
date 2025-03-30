@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class ClientInfo
+
     <JsonPropertyName("client_id")>
     Public Property ClientId As String
 
@@ -34,4 +35,5 @@ Public Class ClientInfo
 
     <JsonPropertyName("client_key_custom")>
     Public Property ClientKeyCustom As ClientKeyCustom
+
 End Class
