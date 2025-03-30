@@ -37,6 +37,7 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
  - Parse Json data using CurrentCulture
  - Fix processing of export data
  - Add new fault codes
+ - Fix TIR Calculation
 
  New in 5.0.0.5
  - Fixes handling of Manual Mode Suspend

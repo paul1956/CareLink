@@ -3350,7 +3350,7 @@ Public Class Form1
         Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
         Dim highScale As Single = (GetYMaxValue(asMmolL:=False) - TirHighLimit(asMmolL:=False)) / (TirLowLimit(asMmolL:=False) - GetYMinValue(asMmolL:=False))
-        For Each sg As SG In s_listOfSgRecords.Where(Function(entry As SG) entry.sg.IsSgInvalid)
+        For Each sg As SG In s_listOfSgRecords.Where(Function(entry As SG) Not entry.sg.IsSgInvalid)
             elements += 1
             If sg.sgMgdL < 70 Then
                 lowCount += 1
