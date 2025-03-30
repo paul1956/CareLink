@@ -3557,10 +3557,10 @@ Public Class Form1
         Me.DgvTherapyAlgorithmState.Columns(0).Visible = False
 
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
-             table:=ClassCollectionToDataTable(listOfClass:={s_basal}?.ToList),
-             className:=NameOf(Basal),
-             rowIndex:=ServerDataIndexes.basal,
-             hideRecordNumberColumn:=True)
+            table:=ClassCollectionToDataTable(listOfClass:={s_basal}?.ToList),
+            className:=NameOf(Basal),
+            rowIndex:=ServerDataIndexes.basal,
+            hideRecordNumberColumn:=True)
 
         UpdateMarkerTabs()
 

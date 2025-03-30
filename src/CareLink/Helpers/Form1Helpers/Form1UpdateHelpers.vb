@@ -344,7 +344,7 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.basal)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
-                    s_basal = PatientData.Basal
+                    s_basal = If(String.IsNullOrWhiteSpace(row.Value), New Basal, PatientData.Basal)
                 Case NameOf(ServerDataIndexes.lastSensorTime)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
@@ -532,8 +532,9 @@ Friend Module Form1UpdateHelpers
                 Stop
             End If
         Next
+
         Dim safeBasalDurationStr As String = ""
-        If s_therapyAlgorithmStateValue.TryGetValue(NameOf(TherapyAlgorithmState.SafeBasalDuration), safeBasalDurationStr) Then
+        If s_therapyAlgorithmStateValue?.TryGetValue(NameOf(TherapyAlgorithmState.SafeBasalDuration), safeBasalDurationStr) Then
             Dim safeBasalDuration As UInteger = CUInt(safeBasalDurationStr)
             If safeBasalDuration > 0 Then
                 Form1.LastSgOrExitTimeLabel.Text = $"Exit In { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan("hr")}"

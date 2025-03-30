@@ -215,57 +215,59 @@ Friend Module SummaryHelpers
 
     Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
         Dim summaryList As New List(Of SummaryRecord)
-        For Each row As KeyValuePair(Of String, String) In dic
-            If row.Value Is Nothing OrElse (rowsToHide IsNot Nothing AndAlso rowsToHide.Contains(row.Key)) Then
-                Continue For
-            End If
+        If dic IsNot Nothing Then
+            For Each row As KeyValuePair(Of String, String) In dic
+                If row.Value Is Nothing OrElse (rowsToHide IsNot Nothing AndAlso rowsToHide.Contains(row.Key)) Then
+                    Continue For
+                End If
 
-            Select Case row.Key
-                Case "faultId"
-                    Dim message As String = String.Empty
-                    If s_notificationMessages.TryGetValue(row.Value, message) Then
-                        message = TranslateNotificationMessageId(dic, row.Value)
-                        If row.Value = "811" Then
-                            If dic.TryGetValue(NameOf(ActiveNotification.triggeredDateTime), s_suspendedSince) Then
-                                Dim resultDate As Date = Nothing
-                                s_suspendedSince = If(TryParseDate(s_suspendedSince, resultDate, NameOf(ActiveNotification.triggeredDateTime)),
-                                    resultDate.ToString(s_timeWithMinuteFormat),
-                                    "???")
+                Select Case row.Key
+                    Case "faultId"
+                        Dim message As String = String.Empty
+                        If s_notificationMessages.TryGetValue(row.Value, message) Then
+                            message = TranslateNotificationMessageId(dic, row.Value)
+                            If row.Value = "811" Then
+                                If dic.TryGetValue(NameOf(ActiveNotification.triggeredDateTime), s_suspendedSince) Then
+                                    Dim resultDate As Date = Nothing
+                                    s_suspendedSince = If(TryParseDate(s_suspendedSince, resultDate, NameOf(ActiveNotification.triggeredDateTime)),
+                                        resultDate.ToString(s_timeWithMinuteFormat),
+                                        "???")
+                                End If
                             End If
-                        End If
-                        If row.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
-                            If dic("deliveredAmount").StartsWith("3"c) Then
-                                message &= "Did you see drops at the end of the tubing?"
-                            Else
-                                message &= "Remove reservoir and select Rewind restart New reservoir procedure."
+                            If row.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
+                                If dic("deliveredAmount").StartsWith("3"c) Then
+                                    message &= "Did you see drops at the end of the tubing?"
+                                Else
+                                    message &= "Remove reservoir and select Rewind restart New reservoir procedure."
+                                End If
                             End If
+                        Else
+                            If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(row.Value) Then
+                                MsgBox(
+                                    heading:=$"{row.Value} is unknown Notification Messages",
+                                    text:=String.Empty,
+                                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                                    title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
+                            End If
+                            message = row.Value.ToTitle
                         End If
-                    Else
-                        If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(row.Value) Then
-                            MsgBox(
-                                heading:=$"{row.Value} is unknown Notification Messages",
-                                text:=String.Empty,
-                                buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                                title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
-                        End If
-                        message = row.Value.ToTitle
-                    End If
-                    summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, message))
-                Case "autoModeReadinessState"
-                    s_autoModeReadinessState = New SummaryRecord(recordNumber:=summaryList.Count, row, messages:=s_sensorMessages, messageTableName:=NameOf(s_sensorMessages))
-                    summaryList.Add(s_autoModeReadinessState)
-                Case "autoModeShieldState"
-                    summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, messages:=s_autoModeShieldMessages, messageTableName:=NameOf(s_autoModeShieldMessages)))
-                Case "plgmLgsState"
-                    summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, messages:=s_plgmLgsMessages, messageTableName:=NameOf(s_plgmLgsMessages)))
-                Case NameOf(ClearedNotifications.dateTime)
-                    summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, message:=row.Value.ParseDate(key:=NameOf(ClearedNotifications.dateTime)).ToShortDateTimeString))
-                Case "additionalInfo"
-                    HandleComplexItems(row, rowIndex:=CType(summaryList.Count, ServerDataIndexes), key:="additionalInfo", listOfSummaryRecords:=summaryList)
-                Case Else
-                    summaryList.Add(New SummaryRecord(summaryList.Count, row))
-            End Select
-        Next
+                        summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, message))
+                    Case "autoModeReadinessState"
+                        s_autoModeReadinessState = New SummaryRecord(recordNumber:=summaryList.Count, row, messages:=s_sensorMessages, messageTableName:=NameOf(s_sensorMessages))
+                        summaryList.Add(s_autoModeReadinessState)
+                    Case "autoModeShieldState"
+                        summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, messages:=s_autoModeShieldMessages, messageTableName:=NameOf(s_autoModeShieldMessages)))
+                    Case "plgmLgsState"
+                        summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, messages:=s_plgmLgsMessages, messageTableName:=NameOf(s_plgmLgsMessages)))
+                    Case NameOf(ClearedNotifications.dateTime)
+                        summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, message:=row.Value.ParseDate(key:=NameOf(ClearedNotifications.dateTime)).ToShortDateTimeString))
+                    Case "additionalInfo"
+                        HandleComplexItems(row, rowIndex:=CType(summaryList.Count, ServerDataIndexes), key:="additionalInfo", listOfSummaryRecords:=summaryList)
+                    Case Else
+                        summaryList.Add(New SummaryRecord(summaryList.Count, row))
+                End Select
+            Next
+        End If
         Return summaryList
 
     End Function

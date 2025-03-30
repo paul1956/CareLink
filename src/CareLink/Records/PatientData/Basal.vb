@@ -56,10 +56,6 @@ Public Class Basal
         Return Me.Equals(TryCast(obj, Basal))
     End Function
 
-    Public Function GetBasal() As Double
-        Return Me.GetBasalPerHour / 12
-    End Function
-
     Public Function GetBasalPerHour() As Double
         If Me.ActiveBasalPattern Is Nothing Then
             Return Double.NaN
