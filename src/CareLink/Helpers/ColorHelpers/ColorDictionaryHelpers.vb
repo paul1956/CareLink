@@ -17,19 +17,7 @@ Friend Module ColorDictionaryHelpers
                                 {"SG Series", KnownColor.White},
                                 {"SG Target", KnownColor.Blue},
                                 {"Suspend", KnownColor.Red},
-                                {"Time Change", KnownColor.White}
-                            }
-
-    Private Function GetContrastingKnownColor(knownClrBase As KnownColor) As KnownColor
-        Dim clrBase As Color = knownClrBase.ToColor
-        ' Y is the "brightness"
-        Dim y As Double = (0.299 * clrBase.R) + (0.587 * clrBase.G) + (0.114 * clrBase.B)
-        Return If(y < 140,
-                  KnownColor.White,
-                  KnownColor.Black
-                 )
-    End Function
-
+                                {"Time Change", KnownColor.White}}
     Friend Function GetGraphLineColor(lineName As String) As Color
         Dim toColor As Color = GraphColorDictionary(lineName).ToColor
         Return If(lineName = "Suspend",
@@ -64,16 +52,6 @@ Friend Module ColorDictionaryHelpers
             fileStream.Close()
         End Using
     End Sub
-
-    <Extension>
-    Public Function GetContrastingColor(baseColor As Color) As Color
-        ' Y is the "brightness"
-        Dim y As Double = (0.299 * baseColor.R) + (0.587 * baseColor.G) + (0.114 * baseColor.B)
-        Return If(y < 140,
-                  Color.White,
-                  Color.Black
-                 )
-    End Function
 
     Public Sub UpdateColorDictionary(key As String, item As KnownColor)
         GraphColorDictionary(key) = item

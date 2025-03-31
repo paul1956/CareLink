@@ -45,7 +45,7 @@ Friend Module Form1LoginHelpers
                 DeserializePatientElement(patientDataElement)
                 mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(TestDataFileNameWithPath)
-                SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
+                mainForm.SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser(TestSettingsFileNameWithPath)
                 fromFile = True
             Case FileToLoadOptions.Login, FileToLoadOptions.NewUser
@@ -71,7 +71,7 @@ Friend Module Form1LoginHelpers
                         Return False
                     End If
 
-                    SetLastUpdateTime(
+                    mainForm.SetLastUpdateTime(
                         msg:="Last Update time is unknown!",
                         suffixMessage:=String.Empty,
                         highLight:=True,
@@ -137,7 +137,7 @@ Friend Module Form1LoginHelpers
                 DeserializePatientElement(patientDataElement)
                 mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(lastDownloadFileWithPath)
-                SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
+                mainForm.SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser(TestSettingsFileNameWithPath)
                 fromFile = True
         End Select
@@ -164,27 +164,22 @@ Friend Module Form1LoginHelpers
     End Sub
 
     <Extension>
-    Friend Sub SetLastUpdateTime(msg As String, suffixMessage As String, highLight As Boolean, isDaylightSavingTime? As Boolean)
-        Dim foreColor As Color
-        Dim backColor As Color
+    Friend Sub SetLastUpdateTime(form1 As Form1, msg As String, suffixMessage As String, highLight As Boolean, isDaylightSavingTime? As Boolean)
 
-        If highLight Then
-            foreColor = GetGraphLineColor("High Limit")
-            backColor = foreColor.GetContrastingColor()
-        Else
-            foreColor = SystemColors.ControlText
-            backColor = SystemColors.Control
-        End If
-
-        With Form1.LastUpdateTimeToolStripStatusLabel
+        With form1.LastUpdateTimeToolStripStatusLabel
             If Not String.IsNullOrWhiteSpace(msg) Then
                 .Text = $"{msg}"
             End If
-            .ForeColor = foreColor
-            .BackColor = backColor
+            If highLight Then
+                .ForeColor = GetGraphLineColor("High Limit")
+                .BackColor = .ForeColor.GetContrastingColor()
+            Else
+                .BackColor = form1.UpdateAvailableStatusStripLabel.BackColor
+                .ForeColor = Color.Black
+            End If
         End With
 
-        With Form1.TimeZoneToolStripStatusLabel
+        With form1.TimeZoneToolStripStatusLabel
             If isDaylightSavingTime Is Nothing Then
                 .Text = ""
             Else
@@ -196,8 +191,7 @@ Friend Module Form1LoginHelpers
                     .Text = ""
                 End If
             End If
-            .ForeColor = foreColor
-            .BackColor = backColor
+            .ForeColor = Color.Black
         End With
 
     End Sub

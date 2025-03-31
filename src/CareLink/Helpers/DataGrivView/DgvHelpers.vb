@@ -6,18 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Friend Module DgvHelpers
 
-    <Extension>
-    Private Function InvertColor(myColor As Color) As Color
-        Return Color.FromArgb(myColor.ToArgb() Xor &HFFFFFF)
-    End Function
-
-    Private Function IsDarkMode() As Boolean
-#Disable Warning WFO5001 ' Type is for evaluation purposes only and is subject to change or removal in future updates.
-        Return Application.ColorMode = SystemColorMode.Dark
-#Enable Warning WFO5001
-
-    End Function
-
     Private Function IsDarkRow(rowIndex As Integer) As Boolean
         Dim rowMod2 As Integer = rowIndex Mod 2
         Return If(IsDarkMode(), rowMod2 = 0, rowMod2 = 1)
@@ -95,16 +83,6 @@ Friend Module DgvHelpers
     Friend Sub CellFormattingInteger(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, message As String)
         e.Value = $"{e.Value} {message}"
         dgv.CellFormattingSetForegroundColor(e)
-    End Sub
-
-    <Extension>
-    Friend Sub CellFormattingSetForegroundColor(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
-        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
-        If col IsNot Nothing Then
-            e.Value = $"{e.Value}"
-            e.CellStyle.ForeColor = If(IsDarkMode(), If(IsDarkRow(e.RowIndex), Color.White, Color.Black), Color.Black)
-            e.FormattingApplied = True
-        End If
     End Sub
 
     <Extension>
@@ -210,6 +188,16 @@ Friend Module DgvHelpers
             End If
             dgv.Columns(i).Visible = Not hideColumnFunction(dgv.Columns(i).DataPropertyName)
         Next
+    End Sub
+
+    <Extension>
+    Friend Sub CellFormattingSetForegroundColor(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
+        If col IsNot Nothing Then
+            e.Value = $"{e.Value}"
+            e.CellStyle.ForeColor = If(IsDarkMode(), If(IsDarkRow(e.RowIndex), Color.White, Color.Black), Color.Black)
+            e.FormattingApplied = True
+        End If
     End Sub
 
 End Module

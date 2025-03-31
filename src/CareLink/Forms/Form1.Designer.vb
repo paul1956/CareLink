@@ -1140,6 +1140,7 @@ Partial Class Form1
         ' 
         LastUpdateTimeToolStripStatusLabel.BorderSides = ToolStripStatusLabelBorderSides.Left
         LastUpdateTimeToolStripStatusLabel.BorderStyle = Border3DStyle.RaisedOuter
+        LastUpdateTimeToolStripStatusLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
         LastUpdateTimeToolStripStatusLabel.Name = "LastUpdateTimeToolStripStatusLabel"
         LastUpdateTimeToolStripStatusLabel.Size = New Size(160, 20)
         LastUpdateTimeToolStripStatusLabel.Text = "Last Update Time: Unknown"
@@ -1835,6 +1836,8 @@ Partial Class Form1
         ' 
         StatusStripSpeech.BorderSides = ToolStripStatusLabelBorderSides.Left
         StatusStripSpeech.BorderStyle = Border3DStyle.RaisedOuter
+        StatusStripSpeech.DisplayStyle = ToolStripItemDisplayStyle.Text
+        StatusStripSpeech.ForeColor = Color.Black
         StatusStripSpeech.Name = "StatusStripSpeech"
         StatusStripSpeech.Size = New Size(403, 20)
         StatusStripSpeech.Spring = True
@@ -1842,6 +1845,9 @@ Partial Class Form1
         ' 
         ' TimeZoneToolStripStatusLabel
         ' 
+        TimeZoneToolStripStatusLabel.BorderSides = ToolStripStatusLabelBorderSides.Left
+        TimeZoneToolStripStatusLabel.BorderStyle = Border3DStyle.RaisedOuter
+        TimeZoneToolStripStatusLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
         TimeZoneToolStripStatusLabel.Name = "TimeZoneToolStripStatusLabel"
         TimeZoneToolStripStatusLabel.Size = New Size(115, 20)
         TimeZoneToolStripStatusLabel.Text = "TimeZone Unknown"

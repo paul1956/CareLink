@@ -1808,7 +1808,7 @@ Public Class Form1
                             Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                             Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                             Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
-                            SetLastUpdateTime(msg:=epochDateTime.ToShortDateTimeString, suffixMessage:="from file", highLight:=False, isDaylightSavingTime:=epochDateTime.IsDaylightSavingTime)
+                            Me.SetLastUpdateTime(msg:=epochDateTime.ToShortDateTimeString, suffixMessage:="from file", highLight:=False, isDaylightSavingTime:=epochDateTime.IsDaylightSavingTime)
                             SetUpCareLinkUser(TestSettingsFileNameWithPath)
 
                             Try
@@ -2221,9 +2221,9 @@ Public Class Form1
             Case PowerModes.Suspend
                 StartOrStopServerUpdateTimer(False)
                 s_shuttingDown = True
-                SetLastUpdateTime("System Sleeping", "", True, Nothing)
+                Me.SetLastUpdateTime("System Sleeping", "", True, Nothing)
             Case PowerModes.Resume
-                SetLastUpdateTime("System Awake", "", True, Nothing)
+                Me.SetLastUpdateTime("System Awake", "", True, Nothing)
                 s_shuttingDown = False
                 StartOrStopServerUpdateTimer(True, s_30SecondInMilliseconds \ 3)
                 DebugPrint($"restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
@@ -2275,14 +2275,14 @@ Public Class Form1
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     Dim epochAsLocalDate As Date = lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
                     If epochAsLocalDate + s_05MinuteSpan < Now() Then
-                        SetLastUpdateTime(
+                        Me.SetLastUpdateTime(
                             msg:=Nothing,
                             suffixMessage:="",
                             highLight:=True,
                             isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString(sgString:="---", sgValue:=Single.NaN)
                     Else
-                        SetLastUpdateTime(
+                        Me.SetLastUpdateTime(
                             msg:=Nothing,
                             suffixMessage:="",
                             highLight:=False,
@@ -3483,7 +3483,7 @@ Public Class Form1
             If fromFile Then
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
             Else
-                SetLastUpdateTime($"Last Update Time: {PumpNow.ToShortDateTimeString}", "", False, PumpNow.IsDaylightSavingTime)
+                Me.SetLastUpdateTime($"Last Update Time: {PumpNow.ToShortDateTimeString}", "", False, PumpNow.IsDaylightSavingTime)
             End If
             Me.CursorPanel.Visible = False
 
