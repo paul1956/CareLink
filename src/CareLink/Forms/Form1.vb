@@ -1403,9 +1403,6 @@ Public Class Form1
                     End If
 
                 Case ServerDataIndexes.lastSG
-                    If Not String.Equals(e.Value.ToString, "NAN", StringComparison.OrdinalIgnoreCase) Then
-                        e.Value = "---"
-                    End If
                     e.CellStyle = e.CellStyle.SetCellStyle(
                     alignment:=DataGridViewContentAlignment.MiddleCenter,
                     padding:=New Padding(all:=1))
@@ -1681,7 +1678,7 @@ Public Class Form1
         dgv.FirstDisplayedScrollingRowIndex = dgv.RowCount - 1
         For Each row As DataGridViewRow In dgv.Rows
             If row.Cells(1).FormattedValue.ToString = "medicalDeviceInformation" Then
-                dgv.CurrentCell = row.Cells(2)
+                dgv.CurrentCell = dgv.Rows(row.Index).Cells(2)
                 Exit For
             End If
         Next
@@ -2191,13 +2188,14 @@ Public Class Form1
         ElseIf tabName = "SensorGlucoseValues" Then
             tabName = "Sgs"
         End If
-        For Each row As DataGridViewRow In dgv.Rows
+        For index As Integer = 0 To dgv.RowCount - 1
+            Dim row As DataGridViewRow = dgv.Rows(index)
             Dim cellValue As String = row.Cells(1).FormattedValue.ToString
             Debug.WriteLine(cellValue)
             If cellValue.Equals(tabName, StringComparison.OrdinalIgnoreCase) Then
                 Me.TabControlPage1.SelectedIndex = 3
-                dgv.CurrentCell = row.Cells(2)
-                s_currentSummaryRow = row.Index
+                dgv.CurrentCell = dgv.Rows(index).Cells(2)
+                s_currentSummaryRow = index
                 Exit Sub
             End If
         Next

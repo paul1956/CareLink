@@ -30,9 +30,12 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-03/30/2025
+03/31/2025
 
 ## What's New
+ New in 5.0.0.9
+ - Fix for crash in tab navigation
+
  New in 5.0.0.8
  - Fix Status Bar text color' this is a temporary fix until I can find a better way to handle
    Dark Mode with controls that don't support it like StatusStrip 
