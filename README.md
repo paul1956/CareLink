@@ -33,7 +33,11 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 03/30/2025
 
 ## What's New
- New in 5.0.0.7
+ New in 5.0.0.8
+ - Fix Status Bar text color' this is a temporary fix until I can find a better way to handle
+   Dark Mode with controls that don't support it like StatusStrip 
+
+ -  New in 5.0.0.7
  - Parse Json data using CurrentCulture
  - Fix processing of export data
  - Add new fault codes

@@ -15,7 +15,7 @@ Public Class ExceptionHandlerDialog
     Public Property UnhandledException As UnhandledExceptionEventArgs
     Public Property ReportFileNameWithPath As String
 
-    Private Shared Sub CreateReportFile(exceptionText As String, stackTraceText As String, UniqueFileNameWithPath As String, jsonData As Dictionary(Of String, String))
+    Private Shared Sub CreateReportFile(exceptionText As String, stackTraceText As String, UniqueFileNameWithPath As String)
         Using stream As StreamWriter = File.CreateText(UniqueFileNameWithPath)
             ' write exception header
             stream.WriteLine(ExceptionStartingString)
@@ -69,7 +69,7 @@ Public Class ExceptionHandlerDialog
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "You can review what is being stored and then attach it to a new issue at", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, $"{_gitClient.Repository.Get(GitOwnerName, "CareLink").Result.HtmlUrl}/issues.", fontNormal)
             AppendTextWithFontAndColor(Me.InstructionsRichTextBox, "This will help me isolate issues quickly.", fontNormal)
-            CreateReportFile(Me.ExceptionTextBox.Text, Me.StackTraceTextBox.Text, uniqueFileNameResult.withPath, RecentData)
+            CreateReportFile(Me.ExceptionTextBox.Text, Me.StackTraceTextBox.Text, uniqueFileNameResult.withPath)
         Else
             CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(BaseNameSavedErrorReport)
             If CurrentDateCulture Is Nothing Then
