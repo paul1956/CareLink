@@ -209,7 +209,7 @@ Friend Module ExportDataGridView
     End Sub
 
     Public Sub DgvExportToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
-        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText, False)
+        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableWithoutHeaderText, False)
     End Sub
 
     Public Sub DgvExportToExcel(sender As Object, e As EventArgs)

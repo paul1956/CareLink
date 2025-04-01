@@ -2,12 +2,15 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Friend Module Form1NotificationTabHelpers
+Friend Module NotificationHelpers
+    Private ReadOnly s_columnsToHide As New List(Of String)
 
     Private ReadOnly s_rowsToHide As New List(Of String) From {
-            NameOf(ActiveNotification.Version),
+                NameOf(ActiveNotification.Version),
             NameOf(ClearedNotifications.RecordNumber),
             NameOf(ClearedNotifications.ReferenceGUID)}
+
+    Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
     Private Sub CreateNotificationTables(notificationDictionary As Dictionary(Of String, String))
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In notificationDictionary.WithIndex()
@@ -21,7 +24,7 @@ Friend Module Form1NotificationTabHelpers
                             realPanel:=Form1.TableLayoutPanelNotificationsCleared,
                             table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
-                            attachHandlers:=AddressOf ClearedNotificationHelpers.AttachHandlers,
+                            attachHandlers:=AddressOf NotificationHelpers.AttachHandlers,
                             row:=innerDictionary.Index + 1)
                     Next
                 Else
@@ -35,7 +38,7 @@ Friend Module Form1NotificationTabHelpers
                             realPanel:=Form1.TableLayoutPanelNotificationActive,
                             table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
-                            attachHandlers:=AddressOf ActiveNotificationHelpers.AttachHandlers,
+                            attachHandlers:=AddressOf NotificationHelpers.AttachHandlers,
                             row:=innerDictionary.Index + 1)
                     Next
                 Else
@@ -47,17 +50,79 @@ Friend Module Form1NotificationTabHelpers
         Next
     End Sub
 
+    Private Sub DgvNotification_CellContextMenuStripNeededWithoutExcel(
+        sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs)
+
+        If e.RowIndex >= 0 AndAlso CType(sender, DataGridView).SelectedCells.Count > 0 Then
+            e.ContextMenuStrip = Form1.DgvCopyWithoutExcelMenuStrip
+        End If
+    End Sub
+
+    Private Sub DgvNotification_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+
+        If e.Value.ToString().StartsWith("additionalInfo", StringComparison.OrdinalIgnoreCase) Then
+            e.Value = e.Value.ToString.Replace(":", " : ")
+        End If
+        dgv.CellFormattingSetForegroundColor(e)
+    End Sub
+
+    Private Sub DgvNotification_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
+        With e.Column
+            If HideColumn(.Name) Then
+                .Visible = False
+            End If
+            e.DgvColumnAdded(
+                cellStyle:=GetCellStyle(.Name),
+                wrapHeader:=False,
+                forceReadOnly:=True,
+                caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+            If e.Column.Index = 0 Then
+                e.Column.MinimumWidth = 45
+                e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            ElseIf e.Column.Name <> "Message" Then
+                e.Column.MinimumWidth = 300
+            Else
+                e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            End If
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+        End With
+    End Sub
+
+    Private Sub DgvNotification_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.ClearSelection()
+    End Sub
+
+    Private Sub DgvNotification_Layout(sender As Object, e As LayoutEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.AutoSize = False
+
+        ' Calculate total height of rows and headers
+        Dim totalHeight As Integer = 0
+        For Each row As DataGridViewRow In dgv.Rows
+            If row.Visible Then
+                totalHeight += row.Height
+            End If
+        Next
+        ' Adjust DataGridView size if necessary
+        If dgv.ClientSize.Height <> totalHeight Then
+            dgv.ClientSize = New Size(dgv.ClientSize.Width, totalHeight)
+        End If
+    End Sub
+
     Private Sub DisplayNotificationDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, row As Integer)
         Dim dGV As New DataGridView With {
-            .AutoSize = True,
+            .AutoSize = False,
             .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders,
             .ColumnHeadersVisible = False,
             .Dock = DockStyle.Top,
             .Name = $"DataGridView{className}",
-            .RowHeadersVisible = False
-        }
+            .RowHeadersVisible = False}
+        realPanel.AutoSize = True
+        realPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink
         realPanel.Controls.Add(control:=dGV, column:=0, row)
-        dGV.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+        dGV.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         dGV.InitializeDgv()
         dGV.DataSource = table
         For Each column As DataGridViewColumn In dGV.Columns
@@ -70,10 +135,16 @@ Friend Module Form1NotificationTabHelpers
             rowIndex += 1
             dgvRow.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         Next
-        realPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        realPanel.AutoSize = True
         attachHandlers?(dGV)
     End Sub
+
+    Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+        Return ClassPropertiesToColumnAlignment(Of SummaryRecord)(s_alignmentTable, columnName)
+    End Function
+
+    Friend Function HideColumn(columnName As String) As Boolean
+        Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
+    End Function
 
     Friend Sub UpdateNotificationTabs()
         Try
@@ -93,6 +164,19 @@ Friend Module Form1NotificationTabHelpers
             Stop
             Throw
         End Try
+    End Sub
+
+    Public Sub AttachHandlers(dgv As DataGridView)
+        RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
+        RemoveHandler dgv.CellFormatting, AddressOf DgvNotification_CellFormatting
+        RemoveHandler dgv.ColumnAdded, AddressOf DgvNotification_ColumnAdded
+        RemoveHandler dgv.DataBindingComplete, AddressOf DgvNotification_DataBindingComplete
+        RemoveHandler dgv.Layout, AddressOf DgvNotification_Layout
+        AddHandler dgv.CellContextMenuStripNeeded, AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
+        AddHandler dgv.CellFormatting, AddressOf DgvNotification_CellFormatting
+        AddHandler dgv.ColumnAdded, AddressOf DgvNotification_ColumnAdded
+        AddHandler dgv.DataBindingComplete, AddressOf DgvNotification_DataBindingComplete
+        AddHandler dgv.Layout, AddressOf DgvNotification_Layout
     End Sub
 
 End Module

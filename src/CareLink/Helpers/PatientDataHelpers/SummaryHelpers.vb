@@ -217,7 +217,8 @@ Friend Module SummaryHelpers
         Dim summaryList As New List(Of SummaryRecord)
         If dic IsNot Nothing Then
             For Each row As KeyValuePair(Of String, String) In dic
-                If row.Value Is Nothing OrElse (rowsToHide IsNot Nothing AndAlso rowsToHide.Contains(row.Key)) Then
+                If row.Value Is Nothing OrElse
+                   (rowsToHide IsNot Nothing AndAlso rowsToHide.Contains(row.Key, StringComparer.OrdinalIgnoreCase)) Then
                     Continue For
                 End If
 

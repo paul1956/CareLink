@@ -70,7 +70,11 @@ Friend Module DateTimeExtensions
         Dim unixTime As Date = epoch.FromUnixTime
         Dim localTime As Date = unixTime.ToLocalTime
         Dim pumpTime As Date = epoch.Epoch2PumpDateTime
-        Return $"{unixTime.ToShortDateTimeString} UTC{If(pumpTime.ToString = localTime.ToString, $"{Space(15)}{localTime} Local & Pump Time", $"{Space(15)}{localTime} Local Time{Space(15)} {pumpTime}Pump Time")}"
+        Dim timeStr As String = If(pumpTime.ToString = localTime.ToString,
+            $"Local & Pump Time = {localTime}",
+            $"Local Time = {localTime}, Pump Time = {pumpTime}")
+        Dim unixTimeStr As String = $"{unixTime.ToShortDateTimeString} UTC"
+        Return $"{unixTimeStr,30}{Space(15)}{timeStr}"
     End Function
 
     ''' <summary>

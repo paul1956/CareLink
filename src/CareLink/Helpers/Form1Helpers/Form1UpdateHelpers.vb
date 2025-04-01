@@ -196,7 +196,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Phone battery is at {row.Value}%."))
 
                 Case NameOf(ServerDataIndexes.conduitBatteryStatus)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Phone battery status is {row.Value}"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Phone battery status is {row.Value.ToLower}."))
 
                 Case NameOf(ServerDataIndexes.lastConduitDateTime)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, New KeyValuePair(Of String, String)(NameOf(ServerDataIndexes.lastConduitDateTime), row.Value.CDateOrDefault(NameOf(ServerDataIndexes.lastConduitDateTime), Provider))))
@@ -320,7 +320,7 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.timeFormat)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
                 Case NameOf(ServerDataIndexes.bgUnits)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, BgUnitsNativeString))
 
                 Case NameOf(ServerDataIndexes.maxAutoBasalRate)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))

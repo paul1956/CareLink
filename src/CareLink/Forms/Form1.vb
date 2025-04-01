@@ -495,6 +495,7 @@ Public Class Form1
         DgvMeal.CellContextMenuStripNeeded,
         DgvSensorBgReadings.CellContextMenuStripNeeded,
         DgvSGs.CellContextMenuStripNeeded,
+        DgvSummary.CellContextMenuStripNeeded,
         DgvTherapyAlgorithmState.CellContextMenuStripNeeded,
         DgvTimeChange.CellContextMenuStripNeeded
 
@@ -503,22 +504,13 @@ Public Class Form1
         End If
     End Sub
 
-    Public Sub Dgv_CellContextMenuStripNeededWithoutExcel(
-        sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles DgvSummary.CellContextMenuStripNeeded
-
-        If e.RowIndex >= 0 AndAlso CType(sender, DataGridView).SelectedCells.Count > 0 Then
-            e.ContextMenuStrip = Me.DgvCopyWithoutExcelMenuStrip
-        End If
-
-    End Sub
-
 #End Region 'ContextMenuStrip Events
 
 #Region "DGV Events"
 
 #Region "DGV Global Event Helper"
 
-    Friend Sub DGV_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles _
+    Public Sub DGV_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles _
         DgvActiveInsulin.DataBindingComplete,
         DgvAutoBasalDelivery.DataBindingComplete,
         DgvAutoModeStatus.DataBindingComplete,
@@ -1341,82 +1333,88 @@ Public Class Form1
 
     Private Sub DgvSummary_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSummary.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        If e.Value IsNot Nothing AndAlso e.ColumnIndex = 2 Then
-            Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
-            Select Case GetItemIndex(key)
-                Case ServerDataIndexes.clientTimeZoneName, ServerDataIndexes.lastName,
-                 ServerDataIndexes.firstName, ServerDataIndexes.appModelType,
-                 ServerDataIndexes.currentServerTime, ServerDataIndexes.conduitSerialNumber,
-                 ServerDataIndexes.conduitBatteryStatus, ServerDataIndexes.lastConduitDateTime,
-                 ServerDataIndexes.medicalDeviceFamily, ServerDataIndexes.medicalDeviceInformation,
-                 ServerDataIndexes.medicalDeviceTime, ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime,
-                 ServerDataIndexes.cgmInfo, ServerDataIndexes.calibStatus,
-                 ServerDataIndexes.calibrationIconId, ServerDataIndexes.systemStatusMessage,
-                 ServerDataIndexes.sensorState, ServerDataIndexes.timeFormat,
-                 ServerDataIndexes.bgUnits, ServerDataIndexes.lastSensorTime,
-                 ServerDataIndexes.lastSGTrend, ServerDataIndexes.sensorLifeText,
-                 ServerDataIndexes.sensorLifeIcon
-                    e.CellStyle = e.CellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleLeft,
-                    padding:=New Padding(1))
+        Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
+        Select Case e.ColumnIndex
+            Case 0
+                Dim singleValue As Single = Single.Parse(e.Value.ToString, Provider)
+                If singleValue.IsSingleEqualToInteger(integerValue:=CInt(e.Value)) Then
+                    dgv.CellFormattingSingleValue(e, 0)
+                Else
+                    dgv.CellFormattingSingleValue(e, 1)
+                End If
+            Case 1
+                e.Value = e.Value.ToString.Replace(":", " : ")
+            Case 2
+                If e.Value IsNot Nothing Then
+                    Select Case GetItemIndex(key)
+                        Case ServerDataIndexes.clientTimeZoneName, ServerDataIndexes.lastName,
+                            ServerDataIndexes.firstName, ServerDataIndexes.appModelType,
+                            ServerDataIndexes.currentServerTime, ServerDataIndexes.conduitSerialNumber,
+                            ServerDataIndexes.conduitBatteryStatus, ServerDataIndexes.lastConduitDateTime,
+                            ServerDataIndexes.medicalDeviceFamily, ServerDataIndexes.medicalDeviceInformation,
+                            ServerDataIndexes.medicalDeviceTime, ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime,
+                            ServerDataIndexes.cgmInfo, ServerDataIndexes.calibStatus,
+                            ServerDataIndexes.calibrationIconId, ServerDataIndexes.systemStatusMessage,
+                            ServerDataIndexes.sensorState, ServerDataIndexes.timeFormat,
+                            ServerDataIndexes.bgUnits, ServerDataIndexes.lastSensorTime,
+                            ServerDataIndexes.lastSGTrend, ServerDataIndexes.sensorLifeText,
+                            ServerDataIndexes.sensorLifeIcon
+                            e.CellStyle = e.CellStyle.SetCellStyle(
+                                alignment:=DataGridViewContentAlignment.MiddleLeft,
+                                padding:=New Padding(1))
 
-                Case ServerDataIndexes.calFreeSensor, ServerDataIndexes.finalCalibration,
-                 ServerDataIndexes.pumpBannerState, ServerDataIndexes.therapyAlgorithmState,
-                 ServerDataIndexes.pumpSuspended, ServerDataIndexes.conduitInRange,
-                 ServerDataIndexes.conduitMedicalDeviceInRange, ServerDataIndexes.conduitSensorInRange,
-                 ServerDataIndexes.gstCommunicationState, ServerDataIndexes.pumpCommunicationState,
-                 ServerDataIndexes.lastAlarm, ServerDataIndexes.activeInsulin,
-                 ServerDataIndexes.basal, ServerDataIndexes.limits,
-                 ServerDataIndexes.markers, ServerDataIndexes.sgs,
-                 ServerDataIndexes.notificationHistory
-                    e.CellStyle = e.CellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleCenter,
-                    padding:=New Padding(all:=1))
+                        Case ServerDataIndexes.calFreeSensor, ServerDataIndexes.finalCalibration,
+                            ServerDataIndexes.pumpBannerState, ServerDataIndexes.therapyAlgorithmState,
+                            ServerDataIndexes.pumpSuspended, ServerDataIndexes.conduitInRange,
+                            ServerDataIndexes.conduitMedicalDeviceInRange, ServerDataIndexes.conduitSensorInRange,
+                            ServerDataIndexes.gstCommunicationState, ServerDataIndexes.pumpCommunicationState,
+                            ServerDataIndexes.lastAlarm, ServerDataIndexes.activeInsulin,
+                            ServerDataIndexes.basal, ServerDataIndexes.limits,
+                            ServerDataIndexes.markers, ServerDataIndexes.sgs,
+                            ServerDataIndexes.notificationHistory
+                            e.CellStyle = e.CellStyle.SetCellStyle(
+                                alignment:=DataGridViewContentAlignment.MiddleCenter,
+                                padding:=New Padding(all:=1))
 
-                Case ServerDataIndexes.conduitBatteryLevel, ServerDataIndexes.lastConduitUpdateServerDateTime,
-                 ServerDataIndexes.timeToNextEarlyCalibrationMinutes,
-                 ServerDataIndexes.timeToNextCalibrationMinutes, ServerDataIndexes.timeToNextCalibrationRecommendedMinutes,
-                 ServerDataIndexes.timeToNextCalibHours, ServerDataIndexes.sensorDurationMinutes,
-                 ServerDataIndexes.sensorDurationHours, ServerDataIndexes.systemStatusTimeRemaining,
-                 ServerDataIndexes.gstBatteryLevel, ServerDataIndexes.reservoirLevelPercent,
-                 ServerDataIndexes.reservoirAmount, ServerDataIndexes.pumpBatteryLevelPercent,
-                 ServerDataIndexes.reservoirRemainingUnits,
-                 ServerDataIndexes.maxAutoBasalRate, ServerDataIndexes.maxBolusAmount,
-                 ServerDataIndexes.sgBelowLimit, ServerDataIndexes.approvedForTreatment,
-                 ServerDataIndexes.belowHypoLimit, ServerDataIndexes.aboveHyperLimit,
-                 ServerDataIndexes.timeInRange, ServerDataIndexes.averageSGFloat,
-                 ServerDataIndexes.averageSG
-                    e.CellStyle = e.CellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleRight,
-                    padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                        Case ServerDataIndexes.conduitBatteryLevel, ServerDataIndexes.lastConduitUpdateServerDateTime,
+                            ServerDataIndexes.timeToNextEarlyCalibrationMinutes,
+                            ServerDataIndexes.timeToNextCalibrationMinutes, ServerDataIndexes.timeToNextCalibrationRecommendedMinutes,
+                            ServerDataIndexes.timeToNextCalibHours, ServerDataIndexes.sensorDurationMinutes,
+                            ServerDataIndexes.sensorDurationHours, ServerDataIndexes.systemStatusTimeRemaining,
+                            ServerDataIndexes.gstBatteryLevel, ServerDataIndexes.reservoirLevelPercent,
+                            ServerDataIndexes.reservoirAmount, ServerDataIndexes.pumpBatteryLevelPercent,
+                            ServerDataIndexes.reservoirRemainingUnits,
+                            ServerDataIndexes.maxAutoBasalRate, ServerDataIndexes.maxBolusAmount,
+                            ServerDataIndexes.sgBelowLimit, ServerDataIndexes.approvedForTreatment,
+                            ServerDataIndexes.belowHypoLimit, ServerDataIndexes.aboveHyperLimit,
+                            ServerDataIndexes.timeInRange, ServerDataIndexes.averageSGFloat,
+                            ServerDataIndexes.averageSG
+                            e.CellStyle = e.CellStyle.SetCellStyle(
+                                alignment:=DataGridViewContentAlignment.MiddleRight,
+                                padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
 
-                Case ServerDataIndexes.appModelNumber, ServerDataIndexes.transmitterPairedTime
-                    If e.Value.ToString = "NA" Then
-                        e.CellStyle = e.CellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleLeft,
-                    padding:=New Padding(all:=1))
-                        e.Value = "N/A"
-                    Else
-                        e.CellStyle = e.CellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleRight,
-                    padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
-                    End If
+                        Case ServerDataIndexes.appModelNumber, ServerDataIndexes.transmitterPairedTime
+                            If e.Value.ToString = "NA" Then
+                                e.CellStyle = e.CellStyle.SetCellStyle(
+                                    alignment:=DataGridViewContentAlignment.MiddleLeft,
+                                    padding:=New Padding(all:=1))
+                                e.Value = "N/A"
+                            Else
+                                e.CellStyle = e.CellStyle.SetCellStyle(
+                                    alignment:=DataGridViewContentAlignment.MiddleRight,
+                                    padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                            End If
 
-                Case ServerDataIndexes.lastSG
-                    e.CellStyle = e.CellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleCenter,
-                    padding:=New Padding(all:=1))
-                Case Else
-                    Stop
-            End Select
-        End If
-        If dgv.Columns(e.ColumnIndex).Name = NameOf(SummaryRecord.RecordNumber) Then
-            If IsSingleEqualToInteger(Single.Parse(e.Value.ToString, Provider), CInt(e.Value)) Then
-                dgv.CellFormattingSingleValue(e, 0)
-            Else
-                dgv.CellFormattingSingleValue(e, 1)
-            End If
-        End If
+                        Case ServerDataIndexes.lastSG
+                            e.CellStyle = e.CellStyle.SetCellStyle(
+                                alignment:=DataGridViewContentAlignment.MiddleCenter,
+                                padding:=New Padding(all:=1))
+                        Case Else
+                            Stop
+                    End Select
+                End If
+            Case Else
+        End Select
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 

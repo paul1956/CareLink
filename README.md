@@ -33,6 +33,11 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 03/31/2025
 
 ## What's New
+ New in 5.0.0.10
+ - Improve formatting of summary data
+ - Fix and simplify Summary formatting
+ - Fix DGV copy without header text.
+
  New in 5.0.0.9
  - Fix for crash in tab navigation
 
