@@ -344,7 +344,7 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.basal)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
-                    s_basal = If(String.IsNullOrWhiteSpace(row.Value), New Basal, PatientData.Basal)
+                    s_basalList(0) = If(String.IsNullOrWhiteSpace(row.Value), New Basal, PatientData.Basal)
                 Case NameOf(ServerDataIndexes.lastSensorTime)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 

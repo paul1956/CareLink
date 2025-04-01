@@ -2752,7 +2752,7 @@ Public Class Form1
                     End If
             End Select
         Else
-            Return $"{s_basal.ActiveBasalPattern} rate = {s_basal.GetBasalPerHour} U Per Hour".CleanSpaces
+            Return $"{s_basalList.ActiveBasalPattern} rate = {s_basalList.GetBasalPerHour} U Per Hour".CleanSpaces
         End If
         Return title
     End Function
@@ -2793,8 +2793,7 @@ Public Class Form1
                 s.Points.Clear()
             Next
             With Me.ActiveInsulinChart
-                Dim subtitle As String = If(s_basal Is Nothing, String.Empty, $"- {s_basal.ActiveBasalPattern}")
-                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Insulin On Board (IOB){subtitle}"
+                .Titles(NameOf(ActiveInsulinChartTitle)).Text = $"Running Insulin On Board (IOB){s_basalList.Subtitle()}"
                 .ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
 
                 ' Order all markers by time
@@ -3419,8 +3418,7 @@ Public Class Form1
         End If
         Try
             Me.InitializeTreatmentMarkersChart()
-            Dim subtitle As String = If(s_basal Is Nothing, String.Empty, $" - {s_basal.ActiveBasalPattern}")
-            Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details{subtitle}"
+            Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details{s_basalList.Subtitle()}"
             Me.TreatmentMarkersChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
             Me.TreatmentMarkersChart.PlotSuspendArea(Me.TreatmentMarkerSuspendSeries)
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
@@ -3553,7 +3551,7 @@ Public Class Form1
         Me.DgvTherapyAlgorithmState.Columns(0).Visible = False
 
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(listOfClass:={s_basal}?.ToList),
+            table:=ClassCollectionToDataTable(s_basalList.Value),
             className:=NameOf(Basal),
             rowIndex:=ServerDataIndexes.basal,
             hideRecordNumberColumn:=True)

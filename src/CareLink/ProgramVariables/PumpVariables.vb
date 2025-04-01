@@ -19,7 +19,7 @@ Public Module PumpVariables
     Friend s_aboveHyperLimit As Single
     Friend s_activeInsulin As ActiveInsulin
     Friend s_autoModeReadinessState As SummaryRecord
-    Friend s_basal As New Basal
+    Friend s_basalList As New List(Of Basal) From {New Basal}
     Friend s_belowHypoLimit As Single
     Friend s_filterJsonData As Boolean = True
     Friend s_firstName As String = ""
