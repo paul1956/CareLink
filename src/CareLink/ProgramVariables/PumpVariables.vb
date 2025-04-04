@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Text.Json
+
 Public Module PumpVariables
 
     ' Manually computed
@@ -61,6 +63,7 @@ Public Module PumpVariables
 
     Friend Property InAutoMode As Boolean
     Public Property PatientData As PatientDataInfo
+    Public Property PatientDataElement As JsonElement
     Public Property ProgramInitialized As Boolean = False
     Public Property RecentData As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
 

@@ -1651,7 +1651,7 @@ Public Class Form1
 
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
         Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles(DirectoryForProjectData, $"CareLink*.json")
-        Me.MenuStartHereSnapshotSave.Enabled = Not RecentDataEmpty()
+        Me.MenuStartHereSaveSnapshotFile.Enabled = Not RecentDataEmpty()
         Me.MenuStartHereUseExceptionReport.Visible = AnyMatchingFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
 
         Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(s_userName) OrElse Not AnyMatchingFiles(SettingsDirectory, $"{s_userName}Settings.pdf"))
@@ -1719,7 +1719,7 @@ Public Class Form1
         StartOrStopServerUpdateTimer(True)
     End Sub
 
-    Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSnapshotSave.Click
+    Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSaveSnapshotFile.Click
         If RecentDataEmpty() Then Exit Sub
 
         File.WriteAllTextAsync(
@@ -1788,7 +1788,7 @@ Public Class Form1
 
     Private Sub MenuStartHereUseLastSavedFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseLastSavedFile.Click
         Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.LastSaved)
-        Me.MenuStartHereSnapshotSave.Enabled = Not success
+        Me.MenuStartHereSaveSnapshotFile.Enabled = Not success
     End Sub
 
     Private Sub MenuStartHereUseSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereLoadSavedDataFile.Click
@@ -1798,7 +1798,7 @@ Public Class Form1
 
     Private Sub MenuStartHereUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseTestData.Click
         Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
-        Me.MenuStartHereSnapshotSave.Enabled = Not success
+        Me.MenuStartHereSaveSnapshotFile.Enabled = Not success
     End Sub
 
     Private Sub MenuStartHereUserLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereUserLogin.Click

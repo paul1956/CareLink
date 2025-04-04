@@ -19,13 +19,13 @@ Friend Module Form1LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginDialog
     Public Property CurrentPdf As PdfSettingsRecord
 
-    Friend Sub DeserializePatientElement(patientDataElement As JsonElement)
+    Friend Sub DeserializePatientElement()
         Try
-            PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(patientDataElement, s_jsonDeserializerOptions)
+            PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(PatientDataElement, s_jsonDeserializerOptions)
         Catch ex As Exception
             Stop
         End Try
-        RecentData = patientDataElement.ConvertJsonElementToStringDictionary()
+        RecentData = PatientDataElement.ConvertJsonElementToStringDictionary()
         s_timeFormat = PatientData.TimeFormat
         s_timeWithMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
         s_timeWithoutMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
@@ -41,8 +41,8 @@ Friend Module Form1LoginHelpers
                 mainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserV2Data.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 Dim json As String = File.ReadAllText(TestDataFileNameWithPath)
-                Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
-                DeserializePatientElement(patientDataElement)
+                PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
+                DeserializePatientElement()
                 mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(TestDataFileNameWithPath)
                 mainForm.SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
@@ -133,8 +133,8 @@ Friend Module Form1LoginHelpers
                 End Select
                 CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(fixedPart, fuzzy:=True)
                 Dim json As String = File.ReadAllText(lastDownloadFileWithPath)
-                Dim patientDataElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
-                DeserializePatientElement(patientDataElement)
+                PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
+                DeserializePatientElement()
                 mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(lastDownloadFileWithPath)
                 mainForm.SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)

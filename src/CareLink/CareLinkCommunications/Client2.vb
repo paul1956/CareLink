@@ -450,12 +450,12 @@ Public Class Client2
                 lastErrorMessage = "No Data Found for " & String.Join(", ", data.Keys)
         End Select
         Dim metaData As JsonElement = CType(data.Values(0), JsonElement)
-        Dim patientDataElement As JsonElement = CType(data.Values(1), JsonElement)
+        PatientDataElement = CType(data.Values(1), JsonElement)
         Try
             File.WriteAllTextAsync(
                 path:=GetLastDownloadFileWithPath(),
-                contents:=JsonSerializer.Serialize(patientDataElement, s_jsonSerializerOptions))
-            DeserializePatientElement(patientDataElement)
+                contents:=JsonSerializer.Serialize(PatientDataElement, s_jsonSerializerOptions))
+            DeserializePatientElement()
         Catch ex As Exception
             Stop
         End Try

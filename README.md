@@ -30,9 +30,17 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-03/31/2025
+04/04/2025
 
 ## What's New
+ New in 5.0.0.11
+ - Hide patient name and other personal information in Snapshots
+ - Use PatientDataElement for all stored files and make it Global
+ - Move CleanPatientData to new helper file
+ - Rename MenuStartHereSnapshotSave to MenuStartHereSaveSnapshotFile
+ - Fix missing hardwareRevision string
+
+
  New in 5.0.0.10
  - Improve formatting of summary data
  - Fix and simplify Summary formatting

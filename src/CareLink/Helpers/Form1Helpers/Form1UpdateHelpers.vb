@@ -85,8 +85,8 @@ Friend Module Form1UpdateHelpers
                 value:=strings(1).Trim,
                 message)
             listOfSummaryRecords.Add(item)
-            If item.Value = "hardwareRevision" Then
-                s_pumpHardwareRevision = item.Message
+            If item.Key.EndsWith("hardwareRevision") Then
+                s_pumpHardwareRevision = item.Value
             End If
         Next
     End Sub

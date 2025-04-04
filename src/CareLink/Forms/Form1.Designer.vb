@@ -136,7 +136,7 @@ Partial Class Form1
         MenuStartHereUseLastSavedFile = New ToolStripMenuItem()
         MenuStartHereUseTestData = New ToolStripMenuItem()
         ToolStripSeparator2 = New ToolStripSeparator()
-        MenuStartHereSnapshotSave = New ToolStripMenuItem()
+        MenuStartHereSaveSnapshotFile = New ToolStripMenuItem()
         MenuStartHereCleanUpObsoleteFiles = New ToolStripMenuItem()
         ToolStripSeparator3 = New ToolStripSeparator()
         MenuStartHereExit = New ToolStripMenuItem()
@@ -1369,7 +1369,7 @@ Partial Class Form1
         ' 
         ' MenuStartHere
         ' 
-        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartHereUserLogin, ToolStripSeparator8, MenuStartHereManuallyImportDeviceSettings, MenuStartHereShowPumpSetup, ToolStripSeparator1, MenuStartHereLoadSavedDataFile, MenuStartHereUseExceptionReport, ToolStripSeparator4, MenuStartHereUseLastSavedFile, MenuStartHereUseTestData, ToolStripSeparator2, MenuStartHereSnapshotSave, MenuStartHereCleanUpObsoleteFiles, ToolStripSeparator3, MenuStartHereExit})
+        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartHereUserLogin, ToolStripSeparator8, MenuStartHereManuallyImportDeviceSettings, MenuStartHereShowPumpSetup, ToolStripSeparator1, MenuStartHereLoadSavedDataFile, MenuStartHereUseExceptionReport, ToolStripSeparator4, MenuStartHereUseLastSavedFile, MenuStartHereUseTestData, ToolStripSeparator2, MenuStartHereSaveSnapshotFile, MenuStartHereCleanUpObsoleteFiles, ToolStripSeparator3, MenuStartHereExit})
         MenuStartHere.Name = "MenuStartHere"
         MenuStartHere.Size = New Size(71, 20)
         MenuStartHere.Text = "Start Here"
@@ -1437,12 +1437,12 @@ Partial Class Form1
         ToolStripSeparator2.Name = "ToolStripSeparator2"
         ToolStripSeparator2.Size = New Size(242, 6)
         ' 
-        ' MenuStartHereSnapshotSave
+        ' MenuStartHereSaveSnapshotFile
         ' 
-        MenuStartHereSnapshotSave.Name = "MenuStartHereSnapshotSave"
-        MenuStartHereSnapshotSave.ShortcutKeys = Keys.Control Or Keys.S
-        MenuStartHereSnapshotSave.Size = New Size(245, 22)
-        MenuStartHereSnapshotSave.Text = "Snapshot &Save"
+        MenuStartHereSaveSnapshotFile.Name = "MenuStartHereSaveSnapshotFile"
+        MenuStartHereSaveSnapshotFile.ShortcutKeys = Keys.Control Or Keys.S
+        MenuStartHereSaveSnapshotFile.Size = New Size(245, 22)
+        MenuStartHereSaveSnapshotFile.Text = "&Save Snapshot File"
         ' 
         ' MenuStartHereCleanUpObsoleteFiles
         ' 
@@ -3194,8 +3194,8 @@ Partial Class Form1
     Friend WithEvents MenuStartHereCleanUpObsoleteFiles As ToolStripMenuItem
     Friend WithEvents MenuStartHereExit As ToolStripMenuItem
     Friend WithEvents MenuStartHereManuallyImportDeviceSettings As ToolStripMenuItem
+    Friend WithEvents MenuStartHereSaveSnapshotFile As ToolStripMenuItem
     Friend WithEvents MenuStartHereShowPumpSetup As ToolStripMenuItem
-    Friend WithEvents MenuStartHereSnapshotSave As ToolStripMenuItem
     Friend WithEvents MenuStartHereUseExceptionReport As ToolStripMenuItem
     Friend WithEvents MenuStartHereUseLastSavedFile As ToolStripMenuItem
     Friend WithEvents MenuStartHereUserLogin As ToolStripMenuItem
