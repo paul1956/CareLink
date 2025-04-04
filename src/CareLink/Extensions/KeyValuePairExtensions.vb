@@ -20,12 +20,25 @@ Friend Module KeyValuePairExtensions
                  )
     End Function
 
+    ''' <summary>
+    '''  Converts a KeyValuePair to a string representation of the value, scaled according to the NativeMmolL setting.
+    ''' </summary>
+    ''' <param name="item"></param>
+    ''' <returns></returns>
+    ''' </summary>
+    ''' <param name="item"></param>
+    ''' <returns></returns>
     <Extension>
     Public Function ScaleSgToString(item As KeyValuePair(Of String, Object)) As String
         Dim jsonToSingle As Single = item.JsonToSingle
         Return ScaleSgToString(jsonToSingle)
     End Function
 
+    ''' <summary>
+    ''' Converts a JsonElement to a string representation of the value, scaled according to the NativeMmolL setting.
+    ''' </summary>
+    ''' <param name="item"></param>
+    ''' <returns></returns>
     <Extension>
     Public Function ScaleSgToString(item As JsonElement) As String
         Dim itemAsSingle As Single
@@ -47,6 +60,11 @@ Friend Module KeyValuePairExtensions
                   itemAsSingle.ToString(Provider))
     End Function
 
+    ''' <summary>
+    ''' Converts a string representation of a value to a string representation of the value, scaled according to the NativeMmolL setting.
+    ''' </summary>
+    ''' <param name="value"></param>
+    ''' <returns></returns>
     <Extension>
     Public Function ScaleSgToString(value As String) As String
         Return value.ParseSingle(decimalDigits:=If(NativeMmolL, 2, 0)).ScaleSgToString()

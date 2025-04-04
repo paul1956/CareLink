@@ -20,7 +20,7 @@ Friend Module SystemVariables
     Friend s_useLocalTimeZone As Boolean
     Friend s_countryCode As String = ""
     Friend s_password As String = ""
-    Friend s_userName As String = ""
+    Friend s_userName As String = My.Settings.CareLinkUserName
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property DecimalSeparator As String = "."
 
@@ -56,14 +56,16 @@ Friend Module SystemVariables
     End Function
 
     Friend Function GetAboveHyperLimit() As (Uint As UInteger, Str As String)
-        Return If(s_aboveHyperLimit >= 0,
-                  (CUInt(s_aboveHyperLimit), s_aboveHyperLimit.ToString),
+        Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.GetRoundedValue(decimalDigits:=1)
+        Return If(aboveHyperLimit >= 0,
+                  (CUInt(aboveHyperLimit), aboveHyperLimit.ToString),
                   (CUInt(0), "??? "))
     End Function
 
     Friend Function GetBelowHypoLimit() As (Uint As UInteger, Str As String)
-        Return If(s_belowHypoLimit >= 0,
-                  (CUInt(s_belowHypoLimit), s_belowHypoLimit.ToString),
+        Dim belowHyperLimit As Single = PatientData.BelowHypoLimit.GetRoundedValue(decimalDigits:=1)
+        Return If(belowHyperLimit >= 0,
+                  (CUInt(belowHyperLimit), belowHyperLimit.ToString),
                   (CUInt(0), "??? "))
     End Function
 

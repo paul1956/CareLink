@@ -165,7 +165,10 @@ Friend Module DgvHelpers
     <Extension>
     Friend Sub DisplayEmptyDGV(realPanel As TableLayoutPanel, className As String)
         Dim dGVIndex As Integer = realPanel.Controls.Count - 1
-        Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)
+        Dim dGV As DataGridView = Nothing
+        If dGVIndex >= 0 Then
+            dGV = TryCast(realPanel.Controls(dGVIndex), DataGridView)
+        End If
         If dGV Is Nothing Then
             dGV = New DataGridView With {
                 .AutoSize = True,

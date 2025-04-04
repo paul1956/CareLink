@@ -95,7 +95,7 @@ Friend Module SummaryHelpers
                         Stop
                     Else
                         Dim jsonString As String = String.Empty
-                        If jsonDictionary.TryGetValue(NameOf(AdditionalInfo), jsonString) Then
+                        If jsonDictionary.TryGetValue("AdditionalInfo", jsonString) Then
 
                             Dim additionalInfo As Dictionary(Of String, String) = GetAdditionalInformation(jsonString)
                             Select Case key

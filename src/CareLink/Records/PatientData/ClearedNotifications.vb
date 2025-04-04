@@ -45,6 +45,6 @@ Public Class ClearedNotifications
     <DisplayName("Additional Info")>
     <Column(Order:=7, TypeName:="AdditionalInfo")>
     <JsonPropertyName("additionalInfo")>
-    Public Property AdditionalInfo As AdditionalInfo
+    Public Property AdditionalInfo As Dictionary(Of String, Object)
 
 End Class

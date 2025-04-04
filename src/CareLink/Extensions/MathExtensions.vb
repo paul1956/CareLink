@@ -37,12 +37,17 @@ Friend Module MathExtensions
     End Function
 
     <Extension>
+    Public Function IsSgValid(number As Single) As Boolean
+        Return Not number.IsSgInvalid
+    End Function
+
+    <Extension>
     Public Function IsSgInvalid(number As Single) As Boolean
-        Return number <= 0 OrElse
-            Single.IsNaN(number) OrElse
+        Return Single.IsNaN(number) OrElse
             Single.IsInfinity(number) OrElse
             Single.IsNegativeInfinity(number) OrElse
-            Single.IsPositiveInfinity(number)
+            Single.IsPositiveInfinity(number) OrElse
+            number <= 0
     End Function
 
     <Extension>

@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Text
 Imports System.Text.Json
@@ -47,6 +48,12 @@ Public Module StringExtensions
         Return str
     End Function
 
+    ''' <summary>
+    ''' Count the number of times a character appears in a string
+    ''' </summary>
+    ''' <param name="s"></param>
+    ''' <param name="c"></param>
+    ''' <returns></returns>
     <Extension()>
     Friend Function Count(s As String, c As Char) As Integer
         Return s.Count(Function(c1 As Char) c1 = c)
@@ -149,6 +156,16 @@ Public Module StringExtensions
     Public Function CleanSpaces(value As String) As String
         If String.IsNullOrWhiteSpace(value) Then Return ""
         Return Regex.Replace(value, "\s+", " ").Trim
+    End Function
+
+    <Extension>
+    Public Function ParseDoubleInvariant(value As String) As Double
+        Return Double.Parse(value.Replace(",", "."), CultureInfo.InvariantCulture)
+    End Function
+
+    <Extension>
+    Public Function ParseSingleInvariant(value As String) As Single
+        Return Single.Parse(value.Replace(",", "."), CultureInfo.InvariantCulture)
     End Function
 
     <Extension>

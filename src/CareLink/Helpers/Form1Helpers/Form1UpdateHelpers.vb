@@ -109,12 +109,17 @@ Friend Module Form1UpdateHelpers
         If RecentData.TryGetValue("clientTimeZoneName", value) Then
             PumpTimeZoneInfo = CalculateTimeZone(value)
         End If
+        Dim bgUnitsNative As String = String.Empty
+        Dim bgUnits As String = String.Empty
+        If RecentData.TryGetValue("bgUnits", bgUnitsNative) AndAlso
+            UnitsStrings.TryGetValue(bgUnitsNative, bgUnits) Then
 
-        If Not RecentData.TryGetValue("bgUnits", BgUnitsNativeString) Then
+            NativeMmolL = bgUnits.Equals("mmol/L")
+        Else
             Stop
         End If
 
-        s_lastMedicalDeviceDataUpdateServerEpoch = CLng(RecentData("lastMedicalDeviceDataUpdateServerTime"))
+        s_lastMedicalDeviceDataUpdateServerEpoch = PatientData.LastConduitUpdateServerDateTime
 
         If RecentData.TryGetValue("therapyAlgorithmState", value) Then
             s_therapyAlgorithmStateValue = LoadIndexedItems(value)
@@ -261,7 +266,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.systemStatusTimeRemaining)
-                    s_systemStatusTimeRemaining = New TimeSpan(0, CInt(row.Value), 0)
+                    s_systemStatusTimeRemaining = New TimeSpan(0, PatientData.SystemStatusTimeRemaining, 0)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.gstBatteryLevel)
@@ -276,11 +281,11 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.reservoirLevelPercent)
-                    s_reservoirLevelPercent = CInt(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Reservoir is {row.Value}%"))
+                    s_reservoirLevelPercent = PatientData.ReservoirLevelPercent
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Reservoir is {s_reservoirLevelPercent}%"))
 
                 Case NameOf(ServerDataIndexes.reservoirAmount)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Full reservoir holds {row.Value}U"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Full reservoir holds {PatientData.ReservoirAmount}U"))
 
                 Case NameOf(ServerDataIndexes.pumpSuspended)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
@@ -289,11 +294,10 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.reservoirRemainingUnits)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Reservoir has {row.Value}U remaining"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Reservoir has {PatientData.ReservoirRemainingUnits}U remaining"))
 
                 Case NameOf(ServerDataIndexes.conduitInRange)
-                    s_pumpInRangeOfPhone = CBool(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Phone {If(s_pumpInRangeOfPhone, "is", "is not")} in range of pump"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Phone {If(PatientData.ConduitInRange, "is", "is not")} in range of pump"))
 
                 Case NameOf(ServerDataIndexes.conduitMedicalDeviceInRange)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Pump {If(CBool(row.Value), "is", "is not")} in range of phone"))
@@ -311,7 +315,6 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, s_sensorMessages, NameOf(s_sensorMessages)))
 
                 Case NameOf(ServerDataIndexes.gstCommunicationState)
-                    s_gstCommunicationState = Boolean.Parse(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.pumpCommunicationState)
@@ -349,7 +352,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.lastSG)
-                    s_lastSg = PatientData.LastSG
+                    s_lastSg = New SG(PatientData.LastSG)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.lastSGTrend)
@@ -360,11 +363,9 @@ Friend Module Form1UpdateHelpers
                     s_listOfLimitRecords = PatientData.Limits
 
                 Case NameOf(ServerDataIndexes.belowHypoLimit)
-                    s_belowHypoLimit = PatientData.BelowHypoLimit.GetRoundedValue(decimalDigits:=1)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Time below limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
 
                 Case NameOf(ServerDataIndexes.aboveHyperLimit)
-                    s_aboveHyperLimit = PatientData.AboveHyperLimit.GetRoundedValue(decimalDigits:=1)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Time above limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
 
                 Case NameOf(ServerDataIndexes.timeInRange)
@@ -548,15 +549,21 @@ Friend Module Form1UpdateHelpers
     End Sub
 
     ''' <summary>
-    ''' Returns a unique file name in MyDocuments of the form baseName(CultureCode).Extension
-    ''' given an filename and culture as a seed
+    '''  Possibility unique file name of the form baseName(<paramref name="cultureName"/>)<see cref="s_userName"/>.<paramref name="extension"/>
+    '''  given an <paramref name="baseName"/> and culture as a seed.
+    '''  If <paramref name="MustBeUnique"/> is true, a unique file name is created by appending a number to the file name.
+    '''  The file name is created in the <see cref="DirectoryForProjectData"/>
+    '''  If <paramref name="MustBeUnique"/> is false, the file name may not be unique.
     ''' </summary>
     ''' <param Name="baseName">The first part of the file name</param>
     ''' <param Name="cultureName">A valid Culture Name in the form of language-CountryCode</param>
     ''' <param Name="extension">The extension for the file</param>
+    ''' <param name="MustBeUnique">True if the file name must be unique</param>
+    ''' <example>
+    '''  GetUniqueDataFileName("MyFile", "en-US", "txt", True)
+    ''' </example>
     ''' <returns>
-    ''' A unique file name valid in MyDocuments folder or
-    ''' An empty file name on error.
+    '''  A unique file name valid in <see cref="DirectoryForProjectData"/> folder or an empty file name on error.
     ''' </returns>
     ''' <param Name="MustBeUnique"></param>
     Public Function GetUniqueDataFileName(baseName As String, cultureName As String, extension As String, MustBeUnique As Boolean) As FileNameStruct
@@ -573,20 +580,21 @@ Friend Module Form1UpdateHelpers
         End If
 
         Try
-            Dim baseWithCultureAndExtension As String = $"{baseName}({cultureName}).{extension}"
-            Dim fileNameWithPath As String = Path.Join(DirectoryForProjectData, baseWithCultureAndExtension)
+            Dim filenameWithoutExtension As String = $"{baseName}({cultureName}){s_userName}"
+            Dim filenameWithExtension As String = $"{filenameWithoutExtension}.{extension}"
+            Dim filenameFullPath As String = Path.Join(DirectoryForProjectData, filenameWithExtension)
 
-            If MustBeUnique AndAlso File.Exists(fileNameWithPath) Then
+            If MustBeUnique AndAlso File.Exists(filenameFullPath) Then
                 'Get unique file name
                 Dim count As Long
                 Do
                     count += 1
-                    fileNameWithPath = Path.Join(DirectoryForProjectData, $"{baseName}({cultureName}){count}.{extension}")
-                    baseWithCultureAndExtension = Path.GetFileName(fileNameWithPath)
-                Loop While File.Exists(fileNameWithPath)
+                    filenameFullPath = Path.Join(DirectoryForProjectData, $"{filenameWithoutExtension}{count}.{extension}")
+                    filenameWithExtension = Path.GetFileName(filenameFullPath)
+                Loop While File.Exists(filenameFullPath)
             End If
 
-            Return New FileNameStruct(fileNameWithPath, baseWithCultureAndExtension)
+            Return New FileNameStruct(filenameFullPath, filenameWithExtension)
         Catch ex As Exception
             Stop
         End Try

@@ -162,7 +162,7 @@ Friend Module NotificationHelpers
             Form1.TableLayoutPanelNotificationsCleared.AutoScroll = True
         Catch ex As Exception
             Stop
-            Throw
+            '       Throw
         End Try
     End Sub
 

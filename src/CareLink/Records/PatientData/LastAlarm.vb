@@ -93,6 +93,6 @@ Public Class LastAlarm
     <DisplayName("Additional Info")>
     <Column(Order:=20, TypeName:=NameOf(AdditionalInfo))>
     <JsonPropertyName("additionalInfo")>
-    Public Property AdditionalInfo As AdditionalInfo
+    Public Property AdditionalInfo As Dictionary(Of String, Object)
 
 End Class

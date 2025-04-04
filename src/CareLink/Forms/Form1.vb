@@ -1079,49 +1079,6 @@ Public Class Form1
 
 #End Region ' Dgv Last Alarm Events
 
-#Region "Dgv Last Sensor Glucose Events"
-
-    Private Sub DgvLastSensorGlucose_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvLastSensorGlucose.CellFormatting
-        If e.Value Is Nothing Then
-            Return
-        End If
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim alternateIndex As Integer = If(dgv.Rows(0).Cells(0).Value.ToString <> "0", 0, 1)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(SG.sensorState)
-                ' Set the background to red for negative values in the Balance column.
-                If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    CellFormattingApplyColor(e, Color.Red, isUri:=False)
-                End If
-                dgv.CellFormattingToTitle(e)
-            Case NameOf(SG.Timestamp)
-                dgv.CellFormattingDateTime(e)
-            Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
-                dgv.CellFormattingSgValue(e, NameOf(SG.sg))
-            Case Else
-                dgv.CellFormattingSetForegroundColor(e)
-        End Select
-    End Sub
-
-    Private Sub DgvLastSensorGlucose_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastSensorGlucose.ColumnAdded
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
-        With e.Column
-            .AutoSizeMode = If(e.Column.Index = lastColumnIndex, DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnMode.AllCells)
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            If LastSensorGlucoseHelpers.HideColumn(.Name) Then
-                .Visible = False
-            End If
-            e.DgvColumnAdded(
-                cellStyle:=LastSensorGlucoseHelpers.GetCellStyle(columnName:= .Name),
-                wrapHeader:=False,
-                forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
-        End With
-    End Sub
-
-#End Region ' Dgv Last Sensor Glucose Events
-
 #Region "Dgv Limits Events"
 
     Private Sub DgvLimits_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvLimits.CellFormatting
@@ -1244,7 +1201,9 @@ Public Class Form1
 
 #Region "Dgv SGs Events"
 
-    Private Sub DgvSGs_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSGs.CellFormatting
+    Private Sub DgvSGs_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles _
+        DgvSGs.CellFormatting, DgvLastSensorGlucose.CellFormatting
+
         If e.Value Is Nothing Then
             Return
         End If
@@ -1266,7 +1225,9 @@ Public Class Form1
         End Select
     End Sub
 
-    Private Sub DgvSGs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSGs.ColumnAdded
+    Private Sub DgvSGs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvSGs.ColumnAdded, DgvLastSensorGlucose.ColumnAdded
+
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
         With e.Column
@@ -1336,7 +1297,7 @@ Public Class Form1
         Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
         Select Case e.ColumnIndex
             Case 0
-                Dim singleValue As Single = Single.Parse(e.Value.ToString, Provider)
+                Dim singleValue As Single = e.Value.ToString.ParseSingleInvariant
                 If singleValue.IsSingleEqualToInteger(integerValue:=CInt(e.Value)) Then
                     dgv.CellFormattingSingleValue(e, 0)
                 Else
@@ -2666,7 +2627,7 @@ Public Class Form1
                     Dim notStr As New StringBuilder(100)
                     notStr.AppendLine(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
                     notStr.AppendLine($"Last SG {lastSgString} {BgUnitsNativeString}")
-                    If s_pumpInRangeOfPhone Then
+                    If PatientData.ConduitInRange Then
                         If s_lastSgValue.IsSgInvalid Then
                             Me.LabelTrendValue.Text = ""
                             Me.LabelTrendValue.Visible = False
@@ -2685,7 +2646,7 @@ Public Class Form1
                     Else
                         Me.LabelTrendValue.Visible = False
                     End If
-                    notStr.Append($"Active ins. {s_activeInsulin.amount:N3} U")
+                    notStr.Append($"Active ins. {PatientData.ActiveInsulin.amount:N3} U")
                     Me.NotifyIcon1.Text = notStr.ToString
                     Me.NotifyIcon1.Visible = True
                     s_lastSgValue = sg
@@ -2759,10 +2720,10 @@ Public Class Form1
 
     Private Sub UpdateActiveInsulin()
         Try
-            If s_activeInsulin IsNot Nothing AndAlso s_activeInsulin.amount >= 0 Then
-                Dim activeInsulinStr As String = $"{s_activeInsulin.amount:N3}"
+            If PatientData.ActiveInsulin IsNot Nothing AndAlso PatientData.ActiveInsulin.amount >= 0 Then
+                Dim activeInsulinStr As String = $"{PatientData.ActiveInsulin.amount:N3}"
                 If activeInsulinStr.ToCharArray.Last = "0" Then
-                    activeInsulinStr = $"{s_activeInsulin.amount:N2}"
+                    activeInsulinStr = $"{PatientData.ActiveInsulin.amount:N2}"
                 End If
                 Me.ActiveInsulinValue.Text = $"Active Insulin {activeInsulinStr} U"
                 _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr} U"
@@ -2925,7 +2886,7 @@ Public Class Form1
 
     Private Sub UpdateAutoModeShield()
         Try
-            Me.LastSgOrExitTimeLabel.Text = s_lastSg.Timestamp.ToShortTimeString
+            Me.LastSgOrExitTimeLabel.Text = s_lastSg.Timestamp.ToString(s_timeWithMinuteFormat)
             Me.LastSgOrExitTimeLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.Text = BgUnitsNativeString
@@ -3029,7 +2990,7 @@ Public Class Form1
 
     Private Sub UpdateCalibrationTimeRemaining()
         Try
-            If s_pumpInRangeOfPhone Then
+            If PatientData.ConduitInRange Then
                 If s_timeToNextCalibrationHours >= Byte.MaxValue Then
                     Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(720)
                 ElseIf s_timeToNextCalibrationHours = 0 Then
@@ -3042,7 +3003,7 @@ Public Class Form1
                     Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(s_timeToNextCalibrationMinutes)
                 End If
             End If
-            Me.CalibrationDueImage.Visible = s_pumpInRangeOfPhone
+            Me.CalibrationDueImage.Visible = PatientData.ConduitInRange
         Catch ex As Exception
             Stop
             Throw New Exception($"{ex.DecodeException()} exception in {NameOf(UpdateCalibrationTimeRemaining)}")
@@ -3158,7 +3119,7 @@ Public Class Form1
     Private Sub UpdateInsulinLevel()
 
         Me.InsulinLevelPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
-        If Not s_pumpInRangeOfPhone Then
+        If Not PatientData.ConduitInRange Then
             Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=8)
             Me.RemainingInsulinUnits.Text = "???U"
         Else
@@ -3186,7 +3147,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdatePumpBattery()
-        If Not s_pumpInRangeOfPhone Then
+        If Not PatientData.ConduitInRange Then
             Me.PumpBatteryPictureBox.Image = My.Resources.PumpConnectivityToPhoneNotOK
             Me.PumpBatteryRemainingLabel.Text = "Pump out"
             Me.PumpBatteryRemaining2Label.Text = "of range"
@@ -3216,7 +3177,7 @@ Public Class Form1
     End Sub
 
     Private Sub UpdateSensorLife()
-        If s_pumpInRangeOfPhone Then
+        If PatientData.ConduitInRange Then
 
             Select Case s_sensorDurationHours
                 Case Is >= 255
@@ -3260,7 +3221,7 @@ Public Class Form1
             End Select
             Me.SensorDaysLeftLabel.Visible = True
         End If
-        Me.SensorTimeLeftPanel.Visible = s_pumpInRangeOfPhone
+        Me.SensorTimeLeftPanel.Visible = PatientData.ConduitInRange
     End Sub
 
     Private Sub UpdateTimeInRange()
@@ -3273,11 +3234,11 @@ Public Class Form1
         With Me.TimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
-                .AddXY($"{GetBelowHypoLimit.Str}% Below {TirLowLimitAsString(asMmolL:=NativeMmolL)} {BgUnitsNativeString}", s_belowHypoLimit / 100)
+                .AddXY($"{GetBelowHypoLimit.Str}% Below {TirLowLimitAsString(asMmolL:=NativeMmolL)} {BgUnitsNativeString}", PatientData.BelowHypoLimit.GetRoundedValue(decimalDigits:=1) / 100)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{GetAboveHyperLimit.Str}% Above {TirHighLimitAsString(asMmolL:=NativeMmolL)} {BgUnitsNativeString}", s_aboveHyperLimit / 100)
+                .AddXY($"{GetAboveHyperLimit.Str}% Above {TirHighLimitAsString(asMmolL:=NativeMmolL)} {BgUnitsNativeString}", PatientData.AboveHyperLimit.GetRoundedValue(decimalDigits:=1) / 100)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
@@ -3433,7 +3394,7 @@ Public Class Form1
 
     Private Sub UpdateTrendArrows()
         Dim rowValue As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.lastSGTrend))
-        If s_pumpInRangeOfPhone Then
+        If PatientData.ConduitInRange Then
             Dim arrows As String = Nothing
             If s_trends.TryGetValue(rowValue, arrows) Then
                 Me.LabelTrendArrows.Font = If(rowValue = "NONE",
@@ -3445,9 +3406,9 @@ Public Class Form1
                 Me.LabelTrendArrows.Text = rowValue
             End If
         End If
-        Me.LabelSgTrend.Visible = s_pumpInRangeOfPhone
-        Me.LabelTrendValue.Visible = s_pumpInRangeOfPhone
-        Me.LabelTrendArrows.Visible = s_pumpInRangeOfPhone
+        Me.LabelSgTrend.Visible = PatientData.ConduitInRange
+        Me.LabelTrendValue.Visible = PatientData.ConduitInRange
+        Me.LabelTrendArrows.Visible = PatientData.ConduitInRange
     End Sub
 
     Friend Sub UpdateAllTabPages(fromFile As Boolean)
@@ -3519,12 +3480,6 @@ Public Class Form1
             dgv:=Me.DgvLastAlarm,
             classCollection:=GetSummaryRecords(s_lastAlarmValue),
             sort:=True)
-
-        Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(listOfClass:={s_activeInsulin}.ToList),
-            className:=NameOf(ActiveInsulin),
-            rowIndex:=ServerDataIndexes.activeInsulin,
-            hideRecordNumberColumn:=True)
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:={s_activeInsulin}.ToList),

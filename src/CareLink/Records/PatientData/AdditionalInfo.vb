@@ -38,4 +38,14 @@ Public Class AdditionalInfo
     <JsonPropertyName("lastSetChange")>
     Public Property LastSetChange As Integer
 
+    <DisplayName("Delivered Amount")>
+    <Column(Order:=6, TypeName:=NameOf([Double]))>
+    <JsonPropertyName("deliveredAmount")>
+    Public Property DeliveredAmount As String
+
+    <DisplayName("Not Delivered Amount")>
+    <Column(Order:=7, TypeName:=NameOf([Double]))>
+    <JsonPropertyName("notDeliveredAmount")>
+    Public Property NotDeliveredAmount As String
+
 End Class

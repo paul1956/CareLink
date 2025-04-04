@@ -70,6 +70,7 @@ Friend Module UserMessageConstants
         {"62", "New Notification Received From Pump"},
         {"66", "No Reservoir Detected During Infusion Set Change"},
         {"69", "Loading incomplete(triggeredDateTime). Restart the Reservoir & Set procedure"},
+        {"71", "Unknown notification received from pump(triggeredDateTime). Delivered Amount (deliveredAmount)."},
         {"73", "Replace Pump Battery Now"},
         {"77", "Pump Settings Error. Delivery Stopped"},
         {"84", "Pump Battery Removed. Replace Battery"},

@@ -15,6 +15,16 @@ Public Class SG
     Public Sub New()
     End Sub
 
+    Public Sub New(last As LastSG)
+        Me.Kind = last.Kind
+        Me.RecordNumber = 0
+        _sensorState = last.SensorState
+        _sg = If(last.Sg.IsSgValid, If(NativeMmolL, last.Sg / MmolLUnitsDivisor, last.Sg), Single.NaN)
+        Me.timeChange = False
+        _timestampAsString = last.TimestampAsString
+        Me.Version = last.Version
+    End Sub
+
     Public Sub New(innerJson As Dictionary(Of String, String), index As Integer)
         Try
             If innerJson(NameOf(sg)) <> "0" OrElse innerJson.Count = 5 Then

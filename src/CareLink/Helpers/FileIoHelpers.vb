@@ -52,7 +52,11 @@ Friend Module FileIoHelpers
     End Function
 
     Friend Function GetLastDownloadFileWithPath() As String
-        Return GetUniqueDataFileName(BaseNameSavedLastDownload, CultureInfo.CurrentUICulture.Name, "json", False).withPath
+        Return GetUniqueDataFileName(
+            baseName:=BaseNameSavedLastDownload,
+            cultureName:=CultureInfo.CurrentUICulture.Name,
+            extension:="json",
+            MustBeUnique:=False).withPath
     End Function
 
     Friend Function GetUserSettingsJsonFileNameWithPath() As String

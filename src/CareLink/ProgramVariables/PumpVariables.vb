@@ -6,7 +6,6 @@ Public Module PumpVariables
 
     ' Manually computed
 
-    Private s_bgUnitsNativeString As String
     Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
     Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatus)
     Friend ReadOnly s_listOfBasalPerHour As New List(Of BasalPerHour)
@@ -16,17 +15,14 @@ Public Module PumpVariables
     Friend ReadOnly s_listOfMealMarkers As New List(Of Meal)
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
     Friend ReadOnly s_listOfUserSummaryRecord As New List(Of SummaryRecord)
-    Friend s_aboveHyperLimit As Single
     Friend s_activeInsulin As ActiveInsulin
     Friend s_autoModeReadinessState As SummaryRecord
     Friend s_basalList As New List(Of Basal) From {New Basal}
-    Friend s_belowHypoLimit As Single
     Friend s_filterJsonData As Boolean = True
     Friend s_firstName As String = ""
-    Friend s_gstCommunicationState As Boolean
     Friend s_lastAlarmValue As Dictionary(Of String, String)
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
-    Friend s_lastSg As New LastSG
+    Friend s_lastSg As SG
     Friend s_lastSgValue As Single = 0
     Friend s_listOfLimitRecords As New List(Of Limit)
     Friend s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspended)
@@ -37,7 +33,6 @@ Public Module PumpVariables
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
     Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
     Friend s_pumpHardwareRevision As String
-    Friend s_pumpInRangeOfPhone As Boolean
     Friend s_pumpInRangeOfTransmitter As Boolean
     Friend s_reservoirLevelPercent As Integer
     Friend s_sensorDurationHours As Integer
@@ -58,13 +53,10 @@ Public Module PumpVariables
     Friend s_totalDailyDose As Single
     Friend s_totalManualBolus As Single
 
-    Friend Property BgUnitsNativeString As String
+    Friend ReadOnly Property BgUnitsNativeString As String
         Get
-            Return If(s_bgUnitsNativeString = "MGDL", "mg/dL", "Mmol/l")
+            Return If(NativeMmolL, "Mmol/l", "mg/dL")
         End Get
-        Set
-            s_bgUnitsNativeString = Value
-        End Set
     End Property
 
     Friend Property InAutoMode As Boolean

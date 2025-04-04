@@ -151,7 +151,7 @@ Public Module JsonExtensions
             Dim element As JsonElement = CType(obj, JsonElement)
             Select Case element.ValueKind
                 Case JsonValueKind.String
-                    value = Double.Parse(element.GetString, Provider)
+                    value = element.GetString.ParseDoubleInvariant
                 Case JsonValueKind.Number
                     value = element.GetDouble
                 Case Else
@@ -195,7 +195,7 @@ Public Module JsonExtensions
                     Dim element As JsonElement = CType(obj, JsonElement)
                     Select Case element.ValueKind
                         Case JsonValueKind.String
-                            value = Single.Parse(element.GetString, Provider)
+                            value = element.GetString.ParseSingleInvariant
                         Case JsonValueKind.Number
                             value = element.GetSingle
                         Case Else
@@ -203,7 +203,7 @@ Public Module JsonExtensions
                             Return value
                     End Select
                 Case TypeOf obj Is String
-                    value = Single.Parse(CStr(obj), Provider)
+                    value = CStr(obj).ParseSingleInvariant
                 Case Else
                     Stop
             End Select
@@ -331,7 +331,6 @@ Public Module JsonExtensions
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
             Dim resultDictionary As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
-            Dim defaultTime As Date = PumpNow() - New TimeSpan(23, 55, 0)
             For Each item As KeyValuePair(Of String, Object) In e.Value
                 If item.Value Is Nothing Then
                     resultDictionary.Add(item.Key, Nothing)
