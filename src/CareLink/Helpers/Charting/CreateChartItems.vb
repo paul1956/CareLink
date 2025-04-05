@@ -240,24 +240,21 @@ Friend Module CreateChartItems
     Friend Function CreateSeriesLimitsAndTarget(limitsLegend As Legend, seriesName As String) As Series
         Dim legendText As String
         Dim lineColor As Color
-        Dim boarderWidth As Integer = 2
+        Dim borderWidth As Integer = 2
         Select Case seriesName
             Case HighLimitSeriesName
                 legendText = "High Limit"
-                lineColor = GetGraphLineColor("High Limit")
             Case LowLimitSeriesName
                 legendText = "Low Limit"
-                lineColor = GetGraphLineColor("Low Limit")
             Case Else
                 legendText = "SG Target"
-                lineColor = GetGraphLineColor("SG Target")
-                boarderWidth = 4
+                borderWidth = 4
         End Select
-
-        Dim s As Series = CreateSeriesBase(seriesName, legendText, boarderWidth, AxisType.Secondary)
+        lineColor = GetGraphLineColor(legendText)
+        Dim s As Series = CreateSeriesBase(seriesName, legendText, borderWidth, AxisType.Secondary)
         s.IsVisibleInLegend = False
         s.EmptyPointStyle.Color = Color.Transparent
-        limitsLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
+        limitsLegend.CustomItems.Add(New LegendItem(name:=legendText, color:=GetGraphLineColor(legendText), image:=""))
         Return s
     End Function
 
@@ -282,10 +279,10 @@ Friend Module CreateChartItems
     End Function
 
     Friend Function CreateSeriesTimeChange(basalLegend As Legend) As Series
-        Const legendText As String = "Time Change"
-        Dim s As Series = CreateSeriesBase(TimeChangeSeriesName, legendText, 1, AxisType.Primary)
+        Const legendName As String = "Time Change"
+        Dim s As Series = CreateSeriesBase(TimeChangeSeriesName, legendName, borderWidth:=1, AxisType.Primary)
         s.IsVisibleInLegend = False
-        basalLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
+        basalLegend.CustomItems.Add(New LegendItem(legendName, GetGraphLineColor(legendName), ""))
         With s.EmptyPointStyle
             .BorderWidth = 4
             .Color = Color.Transparent

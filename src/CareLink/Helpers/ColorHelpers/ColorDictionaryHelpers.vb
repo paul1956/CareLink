@@ -18,9 +18,9 @@ Friend Module ColorDictionaryHelpers
                                 {"SG Target", KnownColor.Blue},
                                 {"Suspend", KnownColor.Red},
                                 {"Time Change", KnownColor.White}}
-    Friend Function GetGraphLineColor(lineName As String) As Color
-        Dim toColor As Color = GraphColorDictionary(lineName).ToColor
-        Return If(lineName = "Suspend",
+    Friend Function GetGraphLineColor(legendText As String) As Color
+        Dim toColor As Color = GraphColorDictionary(legendText).ToColor
+        Return If(legendText = "Suspend",
                   Color.FromArgb(128, toColor),
                   toColor
                  )
