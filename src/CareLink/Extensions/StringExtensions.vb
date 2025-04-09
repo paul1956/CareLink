@@ -23,7 +23,7 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    ''' Count the number of times a character appears in a string
+    '''  Count the number of times a character appears in a string
     ''' </summary>
     ''' <param name="s"></param>
     ''' <param name="c"></param>
@@ -54,11 +54,21 @@ Public Module StringExtensions
         Return -1 ' Return -1 if no character is found
     End Function
 
+    ''' <summary>
+    '''  Converts a <see langword="String"/> to a <see langword="Double"/> using <see cref="CultureInfo.InvariantCulture"/>
+    ''' </summary>
+    ''' <param name="value"></param>
+    ''' <returns></returns>
     <Extension>
     Public Function ParseDoubleInvariant(value As String) As Double
         Return Double.Parse(value.Replace(",", "."), CultureInfo.InvariantCulture)
     End Function
 
+    ''' <summary>
+    '''  Converts a <see langword="String"/> to a <see langword="Single"/> using <see cref="CultureInfo.InvariantCulture"/>
+    ''' </summary>
+    ''' <param name="value"></param>
+    ''' <returns></returns>
     <Extension>
     Public Function ParseSingleInvariant(value As String) As Single
         Return Single.Parse(value.Replace(",", "."), CultureInfo.InvariantCulture)
@@ -115,7 +125,7 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a single string of characters that contains words that
+    '''  Converts a <see langword="String"/> of characters that contains words that
     '''  start with an uppercase character without spaces
     '''  to a Title where the first letter of every word capitalized and
     '''  words are separated by spaces
@@ -152,6 +162,12 @@ Public Module StringExtensions
         Return resultString.Replace("time", " Time", False, Provider)
     End Function
 
+    ''' <summary>
+    '''  Truncates a string that represents a <see langword="Single"/> to a specified number of decimal digits
+    ''' </summary>
+    ''' <param name="s"></param>
+    ''' <param name="decimalDigits"></param>
+    ''' <returns></returns>
     <Extension>
     Public Function TruncateSingleString(s As String, decimalDigits As Integer) As String
         Dim i As Integer = s.IndexOfAny(s_commaOrPeriod)

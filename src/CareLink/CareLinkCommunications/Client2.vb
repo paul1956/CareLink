@@ -400,8 +400,12 @@ Public Class Client2
     End Function
 
     ''' <summary>
-    ''' Get recent periodic pump data
+    '''  Get recent data from the API
+    '''  This function checks if the access token is valid, refreshes it if necessary,
+    '''  and retrieves the recent data from the API.
+    '''  It returns a string indicating the status of the operation.
     ''' </summary>
+    ''' <returns></returns>
     Public Function GetRecentData() As String
         ' Check if access token is valid
         Dim lastErrorMessage As String = Nothing

@@ -477,6 +477,16 @@ Public Class Form1
         e.Cancel = False
     End Sub
 
+    ''' <summary>
+    '''  Handles the DataGridView's CellContextMenuStripNeeded event.
+    '''  This event is raised when a context menu is needed for a cell.
+    '''  The context menu is set to the DgvCopyWithExcelMenuStrip if the row index is valid.
+    ''' </summary>
+    ''' <remarks>
+    '''  This event is used to provide a context menu for copying data from the DataGridView.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Public Sub Dgv_CellContextMenuStripNeededWithExcel(sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
         DgvActiveInsulin.CellContextMenuStripNeeded,
         DgvAutoBasalDelivery.CellContextMenuStripNeeded,
@@ -510,6 +520,13 @@ Public Class Form1
 
 #Region "DGV Global Event Helper"
 
+    ''' <summary>
+    '''  Handles the DataGridView's DataBindingComplete event.
+    '''  This event is raised when the data binding operation is complete.
+    '''  It clears the selection of all DataGridViews to ensure no cells are selected after data binding.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Public Sub DGV_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles _
         DgvActiveInsulin.DataBindingComplete,
         DgvAutoBasalDelivery.DataBindingComplete,

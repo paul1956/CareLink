@@ -19,6 +19,7 @@ Friend Module NotificationHelpers
             If notificationType.Key = "clearedNotifications" Then
                 If innerJson.Count > 0 Then
                     innerJson.Reverse()
+                    Form1.TableLayoutPanelNotificationsCleared.SuspendLayout()
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         DisplayNotificationDataTableInDGV(
                             realPanel:=Form1.TableLayoutPanelNotificationsCleared,
@@ -27,6 +28,7 @@ Friend Module NotificationHelpers
                             attachHandlers:=AddressOf NotificationHelpers.AttachHandlers,
                             row:=innerDictionary.Index + 1)
                     Next
+                    Form1.TableLayoutPanelNotificationsCleared.ResumeLayout()
                 Else
                     Form1.TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
                     Form1.TableLayoutPanelNotificationsCleared.DisplayEmptyDGV(className:="clearedNotifications")
@@ -166,6 +168,13 @@ Friend Module NotificationHelpers
         End Try
     End Sub
 
+    ''' <summary>
+    '''  Attaches the handlers to the DataGridView for notifications.
+    '''  This is used to set up the DataGridView for displaying notifications.
+    '''  It includes handlers for context menu, cell formatting, column addition,
+    '''  data binding completion, and layout events.
+    ''' </summary>
+    ''' <param name="dgv"></param>
     Public Sub AttachHandlers(dgv As DataGridView)
         RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
         RemoveHandler dgv.CellFormatting, AddressOf DgvNotification_CellFormatting
