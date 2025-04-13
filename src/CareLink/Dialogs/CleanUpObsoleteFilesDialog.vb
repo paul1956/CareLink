@@ -32,7 +32,11 @@ Public Class CleanupStaleFilesDialog
                 Dim msgBoxResult As MsgBoxResult = MsgBoxResult.Yes
                 If node.Checked Then
                     If confirm Then
-                        msgBoxResult = MsgBox("", $"File {node.Text} will be deleted are you sure?", MsgBoxStyle.YesNoCancel, "File Deletion")
+                        msgBoxResult = MsgBox(
+                            heading:="",
+                            text:=$"File {node.Text} will be deleted are you sure?",
+                            buttonStyle:=MsgBoxStyle.YesNoCancel,
+                            title:="File Deletion")
                     End If
                     Select Case msgBoxResult
                         Case MsgBoxResult.Yes

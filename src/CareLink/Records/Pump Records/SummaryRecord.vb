@@ -23,7 +23,11 @@ Public Class SummaryRecord
             If Not messages.TryGetValue(row.Value, message) Then
                 If Debugger.IsAttached Then
                     Stop
-                    MsgBox($"{row.Value} is unknown message for {messageTableName}!", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
+                    MsgBox(
+                        heading:=$"{row.Value} is unknown message for {messageTableName}!",
+                        text:="",
+                        buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                        title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
                 End If
                 message = row.Value.ToTitle
             End If

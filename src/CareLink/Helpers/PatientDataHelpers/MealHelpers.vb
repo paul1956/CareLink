@@ -18,9 +18,9 @@ Friend Module MealHelpers
         Return s_filterJsonData AndAlso s_columnsToHide.Contains(dataPropertyName)
     End Function
 
-    Public Function TryGetMealRecord(recordNumber As Integer, ByRef meal As Meal) As Boolean
+    Public Function TryGetMealRecord(timestamp As Date, ByRef meal As Meal) As Boolean
         For Each m As Meal In s_listOfMealMarkers
-            If m.RecordNumber = recordNumber Then
+            If Math.Abs((timestamp - m.Timestamp).TotalMinutes) <= 2 Then
                 meal = m
                 Return True
             End If

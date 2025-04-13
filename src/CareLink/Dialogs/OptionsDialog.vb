@@ -32,7 +32,11 @@ Public Class OptionsDialog
         Me.DialogResult = DialogResult.OK
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
-        If MsgBox("Are you sure you want to continue?", $"Yes will save changes and application will restart{vbCrLf}If you select ""No"" changes will be lost.", MsgBoxStyle.YesNo Or MsgBoxStyle.Exclamation, "Color Options") = MsgBoxResult.Yes Then
+        If MsgBox(
+                heading:="Are you sure you want to continue?",
+                text:=$"Yes will save changes and application will restart{vbCrLf}If you select ""No"" changes will be lost.",
+                buttonStyle:=MsgBoxStyle.YesNo Or MsgBoxStyle.Exclamation,
+                title:="Color Options") = MsgBoxResult.Yes Then
             WriteColorDictionaryToFile()
             Application.Restart()
         Else

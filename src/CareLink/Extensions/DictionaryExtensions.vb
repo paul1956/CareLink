@@ -112,7 +112,11 @@ Public Module DictionaryExtensions
                 End If
             Else
                 Stop
-                MsgBox($"'{row.Key}' is unknown Property", $"Please open a GitHub issue at {GitHubCareLinkUrl}issues", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
+                MsgBox(
+                    heading:=$"'{row.Key}' is unknown Property",
+                    text:=$"Please open a GitHub issue at {GitHubCareLinkUrl}issues",
+                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                    title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
             End If
         Next row
 

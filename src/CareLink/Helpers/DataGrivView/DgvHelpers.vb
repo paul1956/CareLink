@@ -4,53 +4,29 @@
 
 Imports System.Runtime.CompilerServices
 
-Friend Module DgvHelpers
+Public Module DgvHelpers
 
-    Private Function IsDarkRow(rowIndex As Integer) As Boolean
-        Dim rowMod2 As Integer = rowIndex Mod 2
-        Return If(IsDarkMode(), rowMod2 = 0, rowMod2 = 1)
-    End Function
-
-    Friend Sub CellFormatting0Value(ByRef e As DataGridViewCellFormattingEventArgs)
+    Public Sub CellFormatting0Value(ByRef e As DataGridViewCellFormattingEventArgs)
         If e.Value Is Nothing OrElse e.Value.ToString = "0" Then
             e.Value = ""
             e.FormattingApplied = True
         End If
     End Sub
 
-    Friend Sub CellFormattingApplyColor(ByRef e As DataGridViewCellFormattingEventArgs, highlightColor As Color, isUri As Boolean)
+    Public Sub CellFormattingApplyColor(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, highlightColor As Color, isUri As Boolean)
         e.Value = e.Value.ToString
         With e.CellStyle
-            If IsDarkMode() Then
-                If IsDarkRow(e.RowIndex) Then
-                    .ForeColor = highlightColor
-
-                    If isUri Then
-                        .SelectionForeColor = Color.Purple
-                        .SelectionBackColor = Color.Purple.GetContrastingColor()
-                    End If
+            If isUri Then
+                Dim foregroundColor As Color = dgv.Rows(e.RowIndex).GetTextColor(Color.Purple)
+                If dgv.Rows(e.RowIndex).IsDarkRow() Then
+                    .SelectionBackColor = foregroundColor.GetContrastingColor()
+                    .SelectionForeColor = foregroundColor
                 Else
-                    .ForeColor = highlightColor.InvertColor
-                    If isUri Then
-                        .SelectionBackColor = Color.Purple
-                        .SelectionForeColor = Color.Purple.GetContrastingColor()
-                    End If
+                    .SelectionBackColor = foregroundColor
+                    .SelectionForeColor = foregroundColor.GetContrastingColor()
                 End If
             Else
-                If IsDarkRow(e.RowIndex) Then
-                    .ForeColor = highlightColor
-                    If isUri Then
-                        .SelectionForeColor = Color.Purple
-                        .SelectionBackColor = Color.Purple.GetContrastingColor()
-                    End If
-                Else
-                    .ForeColor = highlightColor.InvertColor
-                    If isUri Then
-                        .SelectionBackColor = Color.Purple
-                        .SelectionForeColor = Color.Purple.GetContrastingColor()
-
-                    End If
-                End If
+                .ForeColor = dgv.Rows(e.RowIndex).GetTextColor(highlightColor)
             End If
             .Font = New Font(prototype:= .Font, newStyle:=FontStyle.Bold)
         End With
@@ -58,7 +34,7 @@ Friend Module DgvHelpers
     End Sub
 
     <Extension>
-    Friend Sub CellFormattingDateTime(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Public Sub CellFormattingDateTime(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
         If e.Value Is Nothing Then
             e.Value = ""
         Else
@@ -74,49 +50,59 @@ Friend Module DgvHelpers
     End Sub
 
     <Extension>
-    Friend Sub CellFormattingDuration(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Public Sub CellFormattingDuration(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
         e.Value = $"{e.Value:h\:mm} left."
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     <Extension>
-    Friend Sub CellFormattingInteger(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, message As String)
+    Public Sub CellFormattingInteger(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, message As String)
         e.Value = $"{e.Value} {message}"
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     <Extension>
-    Friend Sub CellFormattingSgValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, partialKey As String)
+    Public Sub CellFormattingSetForegroundColor(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
+        If col IsNot Nothing Then
+            e.Value = $"{e.Value}"
+            e.CellStyle.ForeColor = dgv.Rows(e.RowIndex).GetTextColor(Color.White)
+            e.FormattingApplied = True
+        End If
+    End Sub
+
+    <Extension>
+    Public Sub CellFormattingSgValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, partialKey As String)
         Dim sgColumnName As String = dgv.Columns(e.ColumnIndex).Name
         Dim sensorValue As Single = ParseSingle(e.Value, decimalDigits:=2)
         If Single.IsNaN(sensorValue) Then
-            CellFormattingApplyColor(e, Color.Gray, isUri:=False)
+            CellFormattingApplyColor(dgv, e, highlightColor:=Color.Red, isUri:=False)
         Else
             Select Case sgColumnName
                 Case partialKey
                     e.Value = If(NativeMmolL, sensorValue.ToString("F2", Provider), sensorValue.ToString)
                     If sensorValue < TirLowLimit(NativeMmolL) Then
-                        CellFormattingApplyColor(e, Color.Red, isUri:=False)
+                        CellFormattingApplyColor(dgv, e, Color.Red, isUri:=False)
                     ElseIf sensorValue > TirHighLimit(NativeMmolL) Then
-                        CellFormattingApplyColor(e, Color.Yellow, isUri:=False)
+                        CellFormattingApplyColor(dgv, e, Color.Yellow, isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case $"{partialKey}MgdL"
                     e.Value = e.Value.ToString
                     If sensorValue < TirLowLimit(False) Then
-                        CellFormattingApplyColor(e, Color.Red, isUri:=False)
+                        CellFormattingApplyColor(dgv, e, Color.Red, isUri:=False)
                     ElseIf sensorValue > TirHighLimit(False) Then
-                        CellFormattingApplyColor(e, Color.Yellow, isUri:=False)
+                        CellFormattingApplyColor(dgv, e, Color.Yellow, isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case $"{partialKey}MmolL"
                     e.Value = sensorValue.ToString("F2", Provider)
                     If sensorValue.RoundSingle(1, False) < TirLowLimit(True) Then
-                        CellFormattingApplyColor(e, Color.Red, isUri:=False)
+                        CellFormattingApplyColor(dgv, e, Color.Red, isUri:=False)
                     ElseIf sensorValue > TirHighLimit(True) Then
-                        CellFormattingApplyColor(e, Color.Yellow, isUri:=False)
+                        CellFormattingApplyColor(dgv, e, Color.Yellow, isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
@@ -127,7 +113,7 @@ Friend Module DgvHelpers
     End Sub
 
     <Extension>
-    Friend Function CellFormattingSingleValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, digits As Integer) As Single
+    Public Function CellFormattingSingleValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, digits As Integer) As Single
         Dim amount As Single = ParseSingle(e.Value, digits)
         e.Value = amount.ToString($"F{digits}", Provider)
         dgv.CellFormattingSetForegroundColor(e)
@@ -135,35 +121,38 @@ Friend Module DgvHelpers
     End Function
 
     <Extension>
-    Friend Sub CellFormattingToTitle(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
-
+    Public Sub CellFormattingToTitle(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
         e.Value = e.Value.ToString.Replace(vbCrLf, " ").ToTitle
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     <Extension>
-    Friend Sub CellFormattingUrl(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Public Sub CellFormattingUrl(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
         e.Value = e.Value.ToString
         If dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Equals(dgv.CurrentCell) Then
-            CellFormattingApplyColor(e, Color.Purple, isUri:=True)
+            CellFormattingApplyColor(dgv, e, Color.Purple, isUri:=True)
         Else
-            CellFormattingApplyColor(e, Color.FromArgb(&H0, &H66, &HCC), isUri:=True)
+            CellFormattingApplyColor(dgv, e, Color.FromArgb(&H0, &H66, &HCC), isUri:=True)
         End If
         e.FormattingApplied = True
     End Sub
 
-    Friend Sub DgvPaint(sender As Object, e As PaintEventArgs)
+    Public Sub DgvPaintNoRecordsFound(sender As Object, e As PaintEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.Rows.Count = 0 Then
-            TextRenderer.DrawText(e.Graphics, "No records found.",
-                font:=New Font(family:=dgv.Font.FontFamily, emSize:=20), bounds:=dgv.ClientRectangle,
-                foreColor:=dgv.ForeColor, backColor:=dgv.BackgroundColor,
+            TextRenderer.DrawText(
+                dc:=e.Graphics,
+                text:="No records found.",
+                font:=New Font(family:=dgv.Font.FontFamily, emSize:=20),
+                bounds:=dgv.ClientRectangle,
+                foreColor:=dgv.ForeColor,
+                backColor:=dgv.BackgroundColor,
                 flags:=TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
         End If
     End Sub
 
     <Extension>
-    Friend Sub DisplayEmptyDGV(realPanel As TableLayoutPanel, className As String)
+    Public Sub DisplayEmptyDGV(realPanel As TableLayoutPanel, className As String)
         Dim dGVIndex As Integer = realPanel.Controls.Count - 1
         Dim dGV As DataGridView = Nothing
         If dGVIndex >= 0 Then
@@ -179,11 +168,16 @@ Friend Module DgvHelpers
                 .RowHeadersVisible = False}
             realPanel.Controls.Add(control:=dGV, column:=0, row:=1)
         End If
-        RemoveHandler dGV.Paint, AddressOf DgvPaint
-        AddHandler dGV.Paint, AddressOf DgvPaint
+        RemoveHandler dGV.Paint, AddressOf DgvPaintNoRecordsFound
+        AddHandler dGV.Paint, AddressOf DgvPaintNoRecordsFound
     End Sub
 
-    Friend Sub HideDataGridViewColumns(ByRef dgv As DataGridView, hideColumnFunction As Func(Of String, Boolean))
+    ''' <summary>
+    ''' Hide column based on column name matching name returned by <paramref name="hideColumnFunction"/>
+    ''' </summary>
+    ''' <param name="dgv"></param>
+    ''' <param name="hideColumnFunction"></param>
+    Public Sub HideDataGridViewColumnsByName(ByRef dgv As DataGridView, hideColumnFunction As Func(Of String, Boolean))
         Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
         For i As Integer = 0 To lastColumnIndex
             If i > 0 AndAlso String.IsNullOrWhiteSpace(dgv.Columns(i).DataPropertyName) Then
@@ -193,14 +187,37 @@ Friend Module DgvHelpers
         Next
     End Sub
 
-    <Extension>
-    Friend Sub CellFormattingSetForegroundColor(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
-        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
-        If col IsNot Nothing Then
-            e.Value = $"{e.Value}"
-            e.CellStyle.ForeColor = If(IsDarkMode(), If(IsDarkRow(e.RowIndex), Color.White, Color.Black), Color.Black)
-            e.FormattingApplied = True
-        End If
+    Public Sub HideUnneededColumns(ByRef dgv As DataGridView, columnName As String, value As String)
+        Dim isColumnNeeded As Boolean = False
+        Dim column As DataGridViewColumn = dgv.Columns(columnName)
+
+        ' Check each cell in the current column
+        For Each row As DataGridViewRow In dgv.Rows
+            ' Skip checking new rows (if AllowUserToAddRows is True)
+            If Not row.IsNewRow Then
+                Dim cellValue As Object = row.Cells(column.Index).Value
+
+                ' If the cell has value different then string then the column is needed
+                If cellValue IsNot Nothing AndAlso cellValue.ToString <> value Then
+                    isColumnNeeded = True
+                    Exit For
+                End If
+            End If
+        Next
+        column.Visible = isColumnNeeded
     End Sub
+
+    <Extension>
+    Public Function IsDarkRow(row As DataGridViewRow) As Boolean
+        Dim backColor As Color = If(
+            row.Index Mod 2 = 0,
+            row.DataGridView.DefaultCellStyle.BackColor,
+            row.DataGridView.AlternatingRowsDefaultCellStyle.BackColor)
+
+        If backColor = Color.Empty Then
+            backColor = row.DataGridView.DefaultCellStyle.BackColor
+        End If
+        Return backColor.IsDarkColor()
+    End Function
 
 End Module

@@ -131,12 +131,26 @@ Friend Module NewMessageBox
 
     <DebuggerNonUserCode()>
     Public Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String, autoCloseTimeOutSeconds As Integer, page As TaskDialogPage) As MsgBoxResult
-        Return MsgBox(heading, text, buttonStyle, title, autoCloseTimeOutSeconds, page, "Do not show again")
+        Return MsgBox(
+            heading,
+            text,
+            buttonStyle,
+            title,
+            autoCloseTimeOutSeconds,
+            page,
+            checkBoxPrompt:="Do not show again")
     End Function
 
     <DebuggerNonUserCode()>
     Public Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String) As MsgBoxResult
-        Return MsgBox(heading, text, buttonStyle, title, -1, New TaskDialogPage, "")
+        Return MsgBox(
+            heading,
+            text,
+            buttonStyle,
+            title,
+            autoCloseTimeOutSeconds:=-1,
+            page:=New TaskDialogPage,
+            checkBoxPrompt:="")
     End Function
 
 End Module

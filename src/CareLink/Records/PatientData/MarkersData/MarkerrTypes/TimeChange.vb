@@ -8,7 +8,8 @@ Imports System.Text.Json.Serialization
 
 Public Class TimeChange
 
-    Public Sub New(markerEntry As Marker)
+    Public Sub New(markerEntry As Marker, recordNumber As Integer)
+        Me.RecordNumber = recordNumber
         Me.Type = markerEntry.Type
         Me.Kind = "Marker"
         Me.TimestampAsString = markerEntry.TimestampAsString

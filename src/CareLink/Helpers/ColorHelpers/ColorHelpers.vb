@@ -27,15 +27,21 @@ Public Module ColorHelpers
     End Function
 
     <Extension>
+    Public Function GetTextColor(row As DataGridViewRow, textColor As Color) As Color
+        If textColor.IsDarkColor() Then
+            textColor = textColor.InvertColor
+        End If
+        Return If(row.IsDarkRow(), textColor, textColor.InvertColor)
+    End Function
+
+    <Extension>
     Public Function InvertColor(myColor As Color) As Color
         Return Color.FromArgb(myColor.ToArgb() Xor &HFFFFFF)
     End Function
 
-    Public Function IsDarkMode() As Boolean
-#Disable Warning WFO5001 ' Type is for evaluation purposes only and is subject to change or removal in future updates.
-        Return Application.ColorMode = SystemColorMode.Dark
-#Enable Warning WFO5001
-
+    <Extension>
+    Public Function IsDarkColor(backColor As Color) As Boolean
+        Return (0.2126 * backColor.R) + (0.7152 * backColor.G) + (0.0722 * backColor.B) < 128
     End Function
 
 End Module

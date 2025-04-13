@@ -235,7 +235,11 @@ Public Class LoginDialog
             End If
 
             Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"Response Code = {Me.Client.GetLastResponseCode}")
-            Select Case MsgBox($"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!", networkDownMessage, MsgBoxStyle.AbortRetryIgnore Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question, "Login Failed")
+            Select Case MsgBox(
+                    heading:=$"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!",
+                    text:=networkDownMessage,
+                    buttonStyle:=MsgBoxStyle.AbortRetryIgnore Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question,
+                    title:="Login Failed")
                 Case MsgBoxResult.Abort
                     End
                 Case MsgBoxResult.Ignore

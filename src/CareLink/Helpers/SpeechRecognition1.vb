@@ -59,7 +59,13 @@ Friend Module SpeechSupport
                     details.AppendLine($"    Recognizer audio position: {e.RecognizerAudioPosition}")
 
                     Dim page As New TaskDialogPage
-                    MsgBox("Audio signal problem", details.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Audio Error", 15, page)
+                    MsgBox(
+                        heading:="Audio signal problem",
+                        text:=details.ToString,
+                        buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Information,
+                        title:="Audio Error",
+                        autoCloseTimeOutSeconds:=15,
+                        page)
                     s_speechErrorReported = page.Verification.Checked
                 End If
                 errorMsg = $"Speech: signal issue {e.AudioSignalProblem}"
@@ -176,7 +182,13 @@ Friend Module SpeechSupport
                     text.AppendLine("    Used when you support more than 1 user")
                     text.AppendLine("    Example ""Tell me John's Sensor Glucose""")
                     Dim page As New TaskDialogPage
-                    MsgBox("", text.ToString, MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Speech Recognition Help", 30, page)
+                    MsgBox(
+                        heading:="",
+                        text:=text.ToString,
+                        buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Information,
+                        title:="Speech Recognition Help",
+                        autoCloseTimeOutSeconds:=30,
+                        page)
                     My.Settings.SystemSpeechHelpShown = page.Verification.Checked
                 Case Else
                     Stop

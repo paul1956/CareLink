@@ -42,9 +42,11 @@ Friend Module BrowserUtilities
                 Dim info As New ProcessStartInfo(Environment.ExpandEnvironmentVariables(browserPath), url)
                 Process.Start(info)
             Else
-                Dim msgResult As MsgBoxResult = MsgBox($"Your default browser can't be found!", $"Please use any browser and navigate to {url}.",
-                                                       MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground, "Error Launching Browser")
-
+                MsgBox(
+                    heading:=$"Your default browser can't be found!",
+                    text:=$"Please use any browser and navigate to {url}.",
+                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground,
+                    title:="Error Launching Browser")
             End If
         End Using
         Return True

@@ -6,9 +6,9 @@ Friend Module NotificationHelpers
     Private ReadOnly s_columnsToHide As New List(Of String)
 
     Private ReadOnly s_rowsToHide As New List(Of String) From {
-                NameOf(ActiveNotification.Version),
-            NameOf(ClearedNotifications.RecordNumber),
-            NameOf(ClearedNotifications.ReferenceGUID)}
+        NameOf(ActiveNotification.Version),
+        NameOf(ClearedNotifications.RecordNumber),
+        NameOf(ClearedNotifications.ReferenceGUID)}
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
@@ -71,6 +71,7 @@ Friend Module NotificationHelpers
 
     Private Sub DgvNotification_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
+            .SortMode = DataGridViewColumnSortMode.NotSortable
             If HideColumn(.Name) Then
                 .Visible = False
             End If
@@ -93,6 +94,13 @@ Friend Module NotificationHelpers
 
     Private Sub DgvNotification_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
+        If dgv.ColumnCount > 0 Then
+            dgv.ScrollBars = ScrollBars.None
+            Dim dataGridViewLastColumn As DataGridViewColumn = dgv.Columns(dgv.ColumnCount - 1)
+            If dataGridViewLastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
+                dataGridViewLastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+            End If
+        End If
         dgv.ClearSelection()
     End Sub
 
@@ -122,22 +130,23 @@ Friend Module NotificationHelpers
             .Name = $"DataGridView{className}",
             .RowHeadersVisible = False}
         realPanel.AutoSize = True
-        realPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        realPanel.AutoSizeMode = AutoSizeMode.GrowOnly
         realPanel.Controls.Add(control:=dGV, column:=0, row)
-        dGV.DefaultCellStyle.WrapMode = DataGridViewTriState.False
+
         dGV.InitializeDgv()
-        dGV.DataSource = table
+        dGV.DefaultCellStyle.WrapMode = DataGridViewTriState.False
+        attachHandlers?(dGV)
         For Each column As DataGridViewColumn In dGV.Columns
             column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             column.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         Next
         Dim rowIndex As Integer = 0
+        dGV.DataSource = table
         For Each dgvRow As DataGridViewRow In dGV.Rows
             dGV.AutoResizeRow(rowIndex, autoSizeRowMode:=DataGridViewAutoSizeRowMode.AllCellsExceptHeader)
             rowIndex += 1
             dgvRow.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         Next
-        attachHandlers?(dGV)
     End Sub
 
     Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle

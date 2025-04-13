@@ -123,7 +123,7 @@ Friend Module Form1CollectMarkersHelper
                     s_markers.Add(markerEntry)
                 Case "TIME_CHANGE"
                     s_markers.Add(markerEntry)
-                    s_listOfTimeChangeMarkers.Add(New TimeChange(markerEntry))
+                    s_listOfTimeChangeMarkers.Add(New TimeChange(markerEntry, s_listOfTimeChangeMarkers.Count + 1))
                 Case Else
                     Stop
                     Throw UnreachableException(markerEntry.Type)

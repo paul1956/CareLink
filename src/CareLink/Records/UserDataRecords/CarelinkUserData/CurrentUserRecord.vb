@@ -54,7 +54,7 @@ Public Class CurrentUserRecord
     Public Function GetCarbRatio(forTime As TimeOnly) As Single
 
         For Each carbRatio As CarbRatioRecord In Me.CarbRatios
-            If forTime.IsBetween(carbRatio.StartTime, s_eleven59) Then
+            If forTime.IsBetween(carbRatio.StartTime, carbRatio.EndTime) Then
                 Return carbRatio.CarbRatio
             End If
         Next

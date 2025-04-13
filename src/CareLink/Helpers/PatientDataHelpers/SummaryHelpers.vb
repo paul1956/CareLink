@@ -8,7 +8,8 @@ Imports System.Text.RegularExpressions
 Friend Module SummaryHelpers
 
     Friend ReadOnly s_sensorUpdateTimes As New Dictionary(Of String, String) From {
-        {"INITIAL_ALERT_SHORT", "30 minutes"}}
+        {"INITIAL_ALERT_SHORT", "30 minutes"},
+        {"INITIAL_ALERT_MEDIUM", "90 minutes"}}
 
     'Private ReadOnly s_variablesUsedInMessages As New HashSet(Of String)
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
@@ -190,7 +191,7 @@ Friend Module SummaryHelpers
                         heading:="Unknown faultId",
                         text,
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                        title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
+                        title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
                 End If
                 Return text
             End If
@@ -310,7 +311,11 @@ Friend Module SummaryHelpers
             Return CAnyType(Of T)(UShort.MaxValue)
         Else
             If Debugger.IsAttached Then
-                MsgBox($"{tReturnType} type is not yet defined.", String.Empty, MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, GetTitleFromStack(New StackFrame(0, True)))
+                MsgBox(
+                    heading:=$"{tReturnType} type is not yet defined.",
+                    text:=String.Empty,
+                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                    title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
             End If
             Return Nothing
         End If

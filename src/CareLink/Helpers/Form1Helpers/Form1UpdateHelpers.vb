@@ -176,14 +176,14 @@ Friend Module Form1UpdateHelpers
                             End Select
                         End If
                     End If
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), row.Value))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, row.Value))
 
                 Case NameOf(ServerDataIndexes.lastName)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.firstName)
                     s_firstName = row.Value
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), s_firstName))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, s_firstName))
 
                 Case NameOf(ServerDataIndexes.appModelType)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
@@ -274,11 +274,11 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.pumpBannerState)
                     s_pumpBannerStateValue = JsonToLisOfDictionary(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
                     Form1.PumpBannerStateLabel.Visible = s_pumpBannerStateValue.Count > 0
 
                 Case NameOf(ServerDataIndexes.therapyAlgorithmState)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.reservoirLevelPercent)
                     s_reservoirLevelPercent = PatientData.ReservoirLevelPercent
@@ -338,28 +338,28 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.lastAlarm)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
                     s_lastAlarmValue = LoadIndexedItems(row.Value)
 
                 Case NameOf(ServerDataIndexes.activeInsulin)
                     s_activeInsulin = PatientData.ActiveInsulin
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.basal)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
                     s_basalList(0) = If(String.IsNullOrWhiteSpace(row.Value), New Basal, PatientData.Basal)
                 Case NameOf(ServerDataIndexes.lastSensorTime)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.lastSG)
                     s_lastSg = New SG(PatientData.LastSG)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.lastSGTrend)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.limits)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
                     s_listOfLimitRecords = PatientData.Limits
 
                 Case NameOf(ServerDataIndexes.belowHypoLimit)
@@ -379,10 +379,10 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.markers)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.sgs)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, CType(recordNumber, ServerDataIndexes), ClickToShowDetails))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
                     s_lastSgValue = 0
                     If s_listOfSgRecords.Count > 2 Then
                         s_lastSgValue = s_listOfSgRecords.Item(s_listOfSgRecords.Count - 2).sg
@@ -522,10 +522,10 @@ Friend Module Form1UpdateHelpers
                     Case Else
                         If Debugger.IsAttached Then
                             MsgBox(
-                            heading:=$"{typeValue} Is unknown banner message!",
-                            text:="",
-                            buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                            title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
+                                heading:=$"{typeValue} Is unknown banner message!",
+                                text:="",
+                                buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                                title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
                         End If
                 End Select
                 Form1.PumpBannerStateLabel.ForeColor = GetContrastingColor(baseColor:=Form1.PumpBannerStateLabel.BackColor)

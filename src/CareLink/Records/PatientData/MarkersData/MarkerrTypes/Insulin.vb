@@ -7,28 +7,24 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Text.Json.Serialization
 
 Public Class Insulin
-    Private _programmedFastAmount As Single
 
     Public Sub New(markerEntry As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
         Me.Type = markerEntry.Type
         Me.Kind = "Marker"
+        Me.ActivationType = markerEntry.GetStringValueFromJson(NameOf(ActivationType))
         Me.TimestampAsString = markerEntry.TimestampAsString
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
         Me.ProgrammedFastAmount = markerEntry.GetSingleValueFromJson(NameOf(ProgrammedFastAmount), decimalDigits:=3)
         Me.DeliveredFastAmount = markerEntry.GetSingleValueFromJson(NameOf(DeliveredFastAmount), decimalDigits:=3)
-        Me.ActivationType = markerEntry.GetStringValueFromJson(NameOf(ActivationType))
-        Me.completed = markerEntry.GetBooleanValueFromJson(NameOf(completed))
+        Me.Completed = markerEntry.GetBooleanValueFromJson(NameOf(Completed))
         Me.BolusType = markerEntry.GetStringValueFromJson(NameOf(BolusType))
-        Me.DeliveredExtendedAmount = markerEntry.GetSingleValueFromJson(NameOf(DeliveredExtendedAmount), decimalDigits:=3)
         Me.ProgrammedExtendedAmount = markerEntry.GetSingleValueFromJson(NameOf(ProgrammedExtendedAmount), decimalDigits:=3)
-        Me.ProgrammedFastAmount = markerEntry.GetSingleValueFromJson(NameOf(ProgrammedFastAmount), decimalDigits:=3)
-        Me.SafeMealReduction = markerEntry.GetSingleValueFromJson(NameOf(SafeMealReduction), decimalDigits:=3)
-        Me.UnknownIncompletedFlag = markerEntry.GetBooleanValueFromJson(NameOf(UnknownIncompletedFlag))
-        Me.EffectiveDuration = markerEntry.GetIntegerValueFromJson(NameOf(EffectiveDuration))
+        Me.DeliveredExtendedAmount = markerEntry.GetSingleValueFromJson(NameOf(DeliveredExtendedAmount), decimalDigits:=3)
         Me.ProgrammedDuration = markerEntry.GetIntegerValueFromJson(NameOf(ProgrammedDuration))
+        Me.EffectiveDuration = markerEntry.GetIntegerValueFromJson(NameOf(EffectiveDuration))
         Me.InsulinType = markerEntry.GetStringValueFromJson(NameOf(InsulinType))
-        If Me.InsulinType = "Unknown" Then
+        If Me.InsulinType.Equals("Unknown", StringComparison.InvariantCultureIgnoreCase) Then
             Me.InsulinType = CurrentUser.InsulinTypeName
         End If
     End Sub
@@ -73,74 +69,67 @@ Public Class Insulin
         End Get
     End Property
 
-    <DisplayName("Unknown Incompleted Flag")>
-    <Column(Order:=7, TypeName:=NameOf([Boolean]))>
-    Public Property UnknownIncompletedFlag As Boolean
-
     <DisplayName("OA Date Time")>
-    <Column(Order:=8, TypeName:=NameOf([Double]))>
+    <Column(Order:=7, TypeName:=NameOf([Double]))>
     Public ReadOnly Property OAdateTime As OADate
         Get
             Return New OADate(Me.Timestamp)
         End Get
     End Property
 
-    <DisplayName("Programmed Extended Amount")>
-    <Column(Order:=9, TypeName:=NameOf([Single]))>
-    Public Property ProgrammedExtendedAmount As Single
-
     <DisplayName("Activation Type")>
-    <Column(Order:=10, TypeName:="String", TypeName:=NameOf([String]))>
+    <Column(Order:=8, TypeName:="String", TypeName:=NameOf([String]))>
     Public Property ActivationType As String
 
-    <DisplayName("Delivered Extended Amount")>
-    <Column(Order:=11, TypeName:=NameOf([Single]))>
-    Public Property DeliveredExtendedAmount As Single
+    <DisplayName("Bolus Type")>
+    <Column(Order:=9, TypeName:=NameOf([String]))>
+    Public Property BolusType As String
 
-    <DisplayName("Programmed Fast Amount")>
+    <DisplayName("Programmed Extended Amount")>
+    <Column(Order:=10, TypeName:=NameOf([Single]))>
+    Public Property ProgrammedExtendedAmount As Single
+
+    <DisplayName("Delivered Extended Amount")>
     <Column(Order:=12, TypeName:=NameOf([Single]))>
-    Public Property ProgrammedFastAmount As Single
-        Get
-            Return _programmedFastAmount
-        End Get
-        Set
-            If {"RECOMMENDED", "UNDETERMINED"}.Contains(Me.ActivationType) Then
-                Dim meal As Meal = Nothing
-                If TryGetMealRecord(Me.RecordNumber, meal) Then
-                    Dim cRatio As Single = CurrentUser.GetCarbRatio(TimeOnly.FromDateTime(meal.Timestamp))
-                    Dim expectedBolus As Single = (meal.amount / cRatio).RoundTo025
-                    If expectedBolus > Value Then
-                        Me.SafeMealReduction = (expectedBolus - Value).RoundTo025
-                    End If
-                End If
-            End If
-            _programmedFastAmount = Value
-        End Set
-    End Property
+    Public Property DeliveredExtendedAmount As Single
 
     <DisplayName("Programmed Duration")>
     <Column(Order:=13, TypeName:=NameOf([Int32]))>
     Public Property ProgrammedDuration As Integer
 
-    <DisplayName("Delivered Fast Amount")>
-    <Column(Order:=14, TypeName:=NameOf([Single]))>
-    Public Property DeliveredFastAmount As Single
-
     <DisplayName("Effective Duration")>
-    <Column(Order:=15, TypeName:=NameOf([Int32]))>
+    <Column(Order:=14, TypeName:=NameOf([Int32]))>
     Public Property EffectiveDuration As Integer
 
-    <DisplayName("Safe Meal Reduction")>
+    <DisplayName("Programmed Fast Amount")>
+    <Column(Order:=15, TypeName:=NameOf([Single]))>
+    Public Property ProgrammedFastAmount As Single
+
+    <DisplayName("Delivered Fast Amount")>
     <Column(Order:=16, TypeName:=NameOf([Single]))>
-    Public Property SafeMealReduction As Single
+    Public Property DeliveredFastAmount As Single
+
+    <DisplayName("Safe Meal Reduction")>
+    <Column(Order:=17, TypeName:=NameOf([Single]))>
+    Public ReadOnly Property SafeMealReduction As Single
+        Get
+            If {"RECOMMENDED", "UNDETERMINED"}.Contains(Me.ActivationType) Then
+                Dim meal As Meal = Nothing
+                If TryGetMealRecord(Me.Timestamp, meal) Then
+                    Dim cRatio As Single = CurrentUser.GetCarbRatio(TimeOnly.FromDateTime(meal.Timestamp))
+                    Dim expectedBolus As Single = meal.amount / cRatio
+                    If expectedBolus - 0.025 > Me.ProgrammedFastAmount Then
+                        Return (expectedBolus - Me.ProgrammedFastAmount).RoundTo025
+                    End If
+                End If
+            End If
+            Return 0
+        End Get
+    End Property
 
     <DisplayName("Completed")>
-    <Column(Order:=17, TypeName:=NameOf([Boolean]))>
-    Public Property completed As Boolean
-
-    <DisplayName("Bolus Type")>
-    <Column(Order:=18, TypeName:=NameOf([String]))>
-    Public Property BolusType As String
+    <Column(Order:=18, TypeName:=NameOf([Boolean]))>
+    Public Property Completed As Boolean
 
     <DisplayName("Insulin Type")>
     <Column(Order:=19, TypeName:=NameOf([String]))>

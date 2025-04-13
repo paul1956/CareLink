@@ -30,9 +30,24 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-04/04/2025
+04/13/2025
 
 ## What's New
+
+ New in 5.0.1.1
+ - Many fixes in formatting
+    - Add some Usings
+    - Autosize Rows in DgvSGs
+    - Improve Wrap support of last column
+    - Remove old code from ColumnAdded handlers
+    - Revamp DarkMode handling
+    - Improve empty DGV display
+    - Improve Meal Record matching
+    - Add support for message 113
+    - Reorganize and improve Insulin display
+    - Fix lowLimit variable names
+    - Fix GetCarbRatio
+
  New in 5.0.1.0
  - Suspend Layout while creating Notification Tables
 

@@ -81,7 +81,7 @@ Friend Module UserMessageConstants
         {"107", "Missed Meal Bolus Reminder"}, _ ' From Java
         {"109", "Set change reminder(triggeredDateTime). (lastSetChange) days since last set change. Time to change the infusion set."},
         {"110", "Silenced Sensor Alert. Check Alarm History"},
-        {"113", "Reservoir empty reminder, change reservoir."},
+        {"113", "Reservoir estimate at (unitsRemaining) U(triggeredDateTime). To ensure insulin delivery, change reservoir."},
         {"117", "Active Insulin Cleared"},
         {"130", "Rewind Required(triggeredDateTime). Delivery stopped. Rewind was required due to pump error. Select OK to continue."},
         {"140", "Delivery Suspended. Connect Infusion Set"}, _ ' From Java

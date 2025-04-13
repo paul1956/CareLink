@@ -784,7 +784,8 @@ Partial Class Form1
         DgvMeal.TabIndex = 0
         ' 
         ' DgvSGs
-        ' 
+        '
+        DgvSGs.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         DgvSGs.Dock = DockStyle.Fill
         DgvSGs.Location = New Point(6, 52)
         DgvSGs.Name = "DgvSGs"
@@ -2739,6 +2740,7 @@ Partial Class Form1
         ' TableLayoutPanelTimeChange
         ' 
         TableLayoutPanelTimeChange.AutoScroll = True
+        TableLayoutPanelTimeChange.AutoSize = True
         TableLayoutPanelTimeChange.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TableLayoutPanelTimeChange.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TableLayoutPanelTimeChange.ColumnCount = 1

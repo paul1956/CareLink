@@ -180,7 +180,11 @@ Public Class CareLinkUserDataList
                     End If
                     rowIndex += 1
                 Catch ex As FileIO.MalformedLineException
-                    MsgBox("Malformed Line Exception", $"Line {ex.Message} is invalid.  Skipping", MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation, "Load User Records")
+                    MsgBox(
+                        heading:="Malformed Line Exception",
+                        text:=$"Line {ex.Message} is invalid.  Skipping",
+                        buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                        title:="Load User Records")
                 End Try
             End While
         End Using
