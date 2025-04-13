@@ -53,14 +53,15 @@ Friend Module BrowserUtilities
     End Function
 
     Friend Sub OpenUrlInBrowser(webAddress As String)
+        Dim mainForm As Form1 = My.Forms.Form1
         Try
-            Form1.Cursor = Cursors.AppStarting
+            mainForm.Cursor = Cursors.AppStarting
             Application.DoEvents()
             LaunchBrowser(webAddress)
         Catch ex As Exception
             Throw
         Finally
-            Form1.Cursor = Cursors.AppStarting
+            mainForm.Cursor = Cursors.Default
             Application.DoEvents()
         End Try
     End Sub

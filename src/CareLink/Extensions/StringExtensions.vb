@@ -9,7 +9,7 @@ Imports System.Text.RegularExpressions
 
 Public Module StringExtensions
 
-    Private ReadOnly s_commaOrPeriod As Char() = {"."c, ","c}
+    Private ReadOnly s_commaOrPeriod As Char() = {ServerDecimalSeparator, ","c}
 
     ''' <summary>
     '''  Replace multiple spaces with 1 and trim the ends
@@ -61,7 +61,7 @@ Public Module StringExtensions
     ''' <returns></returns>
     <Extension>
     Public Function ParseDoubleInvariant(value As String) As Double
-        Return Double.Parse(value.Replace(",", "."), CultureInfo.InvariantCulture)
+        Return Double.Parse(value.Replace(",", ServerDecimalSeparator), CultureInfo.InvariantCulture)
     End Function
 
     ''' <summary>
@@ -71,7 +71,7 @@ Public Module StringExtensions
     ''' <returns></returns>
     <Extension>
     Public Function ParseSingleInvariant(value As String) As Single
-        Return Single.Parse(value.Replace(",", "."), CultureInfo.InvariantCulture)
+        Return Single.Parse(value.Replace(",", ServerDecimalSeparator), CultureInfo.InvariantCulture)
     End Function
 
     ''' <summary>

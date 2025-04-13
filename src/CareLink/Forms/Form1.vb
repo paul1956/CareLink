@@ -16,7 +16,6 @@ Imports TableLayputPanelTop
 
 Public Class Form1
 
-    Private Shared s_webViewCacheDirectory As String
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _processName As String = Process.GetCurrentProcess().ProcessName
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
@@ -34,12 +33,6 @@ Public Class Form1
     Private _updating As Boolean
     Private _webViewProcessId As Integer = -1
 
-    Public Shared ReadOnly Property WebViewCacheDirectory As String
-        Get
-            Return s_webViewCacheDirectory
-        End Get
-    End Property
-
     Public WriteOnly Property WebViewProcessId As Integer
         Set
             _webViewProcessId = Value
@@ -48,10 +41,10 @@ Public Class Form1
 
     Public Shared Property Client As Client2
         Get
-            Return Form1LoginHelpers.LoginDialog?.Client
+            Return LoginHelpers.LoginDialog?.Client
         End Get
         Set(value As Client2)
-            Form1LoginHelpers.LoginDialog.Client = value
+            LoginHelpers.LoginDialog.Client = value
         End Set
     End Property
 
@@ -884,7 +877,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         For i As Integer = e.RowIndex To e.RowIndex + (e.RowCount - 1)
             Dim disableButtonCell As DataGridViewDisableButtonCell = CType(dgv.Rows(i).Cells("DgvCareLinkUsersDeleteRow"), DataGridViewDisableButtonCell)
-            disableButtonCell.Enabled = s_allUserSettingsData(i).CareLinkUserName <> Form1LoginHelpers.LoginDialog.LoggedOnUser.CareLinkUserName
+            disableButtonCell.Enabled = s_allUserSettingsData(i).CareLinkUserName <> LoginHelpers.LoginDialog.LoggedOnUser.CareLinkUserName
         Next
     End Sub
 
@@ -1526,9 +1519,9 @@ Public Class Form1
             webViewProcess.Kill()
             webViewProcess.WaitForExit(3_000)
 
-            If Directory.Exists(WebViewCacheDirectory) Then
+            If Directory.Exists(WebViewCacheDirectory()) Then
                 Try
-                    Directory.Delete(WebViewCacheDirectory, True)
+                    Directory.Delete(WebViewCacheDirectory(), True)
                 Catch
                     ' Ignore errors here
                 End Try
@@ -1576,9 +1569,9 @@ Public Class Form1
         End If
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
-        If String.IsNullOrWhiteSpace(WebViewCacheDirectory) Then
+        If String.IsNullOrWhiteSpace(WebViewCacheDirectory()) Then
             s_webViewCacheDirectory = Path.Join(s_projectWebCache, Guid.NewGuid().ToString)
-            Directory.CreateDirectory(WebViewCacheDirectory)
+            Directory.CreateDirectory(WebViewCacheDirectory())
         End If
     End Sub
 
@@ -2035,7 +2028,7 @@ Public Class Form1
         End If
         If e.SettingName = "CareLinkUserName" Then
             If s_allUserSettingsData?.ContainsKey(e.NewValue.ToString) Then
-                Form1LoginHelpers.LoginDialog.LoggedOnUser = s_allUserSettingsData(e.NewValue.ToString)
+                LoginHelpers.LoginDialog.LoggedOnUser = s_allUserSettingsData(e.NewValue.ToString)
                 Exit Sub
             Else
                 Dim userSettings As New CareLinkUserDataRecord(s_allUserSettingsData)
@@ -2043,7 +2036,7 @@ Public Class Form1
                 s_allUserSettingsData.Add(userSettings)
             End If
         End If
-        s_allUserSettingsData.SaveAllUserRecords(Form1LoginHelpers.LoginDialog.LoggedOnUser, e.SettingName, (e.NewValue?.ToString))
+        s_allUserSettingsData.SaveAllUserRecords(LoginHelpers.LoginDialog.LoggedOnUser, e.SettingName, (e.NewValue?.ToString))
     End Sub
 
 #End Region ' Settings Events
@@ -2203,7 +2196,7 @@ Public Class Form1
                     If Client Is Nothing Then
                         Do While True
                             LoginDialog.LoginSourceAutomatic = FileToLoadOptions.Login
-                            Dim result As DialogResult = LoginDialog.ShowDialog(My.Forms.Form1)
+                            Dim result As DialogResult = LoginDialog.ShowDialog(Me)
                             Select Case result
                                 Case DialogResult.OK
                                     Exit Do
@@ -2931,7 +2924,7 @@ Public Class Form1
                 _sgMiniDisplay.SetCurrentSgString(sgString, s_lastSg.sg)
                 Me.SensorMessageLabel.Visible = False
                 If s_sensorMessages.TryGetValue(s_sensorState, message) Then
-                    Dim splitMessage As String = message.Split(".")(0)
+                    Dim splitMessage As String = message.Split(SentenceSeparator)(0)
                     message = If(message.Contains("..."), $"{splitMessage}...", splitMessage)
                 End If
             Else
@@ -2941,7 +2934,7 @@ Public Class Form1
                 Me.SensorMessageLabel.Visible = True
                 Me.SensorMessageLabel.BackColor = Color.Transparent
                 If s_sensorMessages.TryGetValue(s_sensorState, message) Then
-                    Dim splitMessage As String = message.Split(".")(0)
+                    Dim splitMessage As String = message.Split(SentenceSeparator)(0)
                     message = If(message.Contains("..."), $"{splitMessage}...", splitMessage)
                 Else
                     If Debugger.IsAttached Then
@@ -3446,7 +3439,7 @@ Public Class Form1
 
             Me.Cursor = Cursors.WaitCursor
             Application.DoEvents()
-            UpdateDataTables()
+            UpdateDataTables(mainForm:=Me)
             Application.DoEvents()
             Me.Cursor = Cursors.Default
             _updating = False
@@ -3474,8 +3467,7 @@ Public Class Form1
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:={s_lastSg}.ToList),
-            className:=NameOf(LastSG),
-            rowIndex:=ServerDataIndexes.lastSG,
+            className:=NameOf(LastSG), rowIndex:=ServerDataIndexes.lastSG,
             hideRecordNumberColumn:=True)
 
         UpdateSummaryTab(
@@ -3485,8 +3477,7 @@ Public Class Form1
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:={s_activeInsulin}.ToList),
-            className:=NameOf(ActiveInsulin),
-            rowIndex:=ServerDataIndexes.activeInsulin,
+            className:=NameOf(ActiveInsulin), rowIndex:=ServerDataIndexes.activeInsulin,
             hideRecordNumberColumn:=True)
 
         Dim keySelector As Func(Of SG, Integer) = Function(x) x.RecordNumber
@@ -3494,12 +3485,12 @@ Public Class Form1
             table:=ClassCollectionToDataTable(listOfClass:=s_listOfSgRecords.OrderByDescending(keySelector).ToList()),
             dGV:=Me.DgvSGs,
             rowIndex:=ServerDataIndexes.sgs)
+        Me.DgvSGs.AutoSize = True
         Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
         Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:=s_listOfLimitRecords),
-            className:=NameOf(Limit),
-            rowIndex:=ServerDataIndexes.limits)
+            className:=NameOf(Limit), rowIndex:=ServerDataIndexes.limits)
 
         UpdateSummaryTab(
             dgv:=Me.DgvTherapyAlgorithmState,
@@ -3509,15 +3500,14 @@ Public Class Form1
 
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(s_basalList.Value),
-            className:=NameOf(Basal),
-            rowIndex:=ServerDataIndexes.basal,
+            className:=NameOf(Basal), rowIndex:=ServerDataIndexes.basal,
             hideRecordNumberColumn:=True)
 
-        UpdateMarkerTabs()
+        UpdateMarkerTabs(mainForm:=Me)
 
-        UpdateNotificationTabs()
+        UpdateNotificationTabs(mainForm:=Me)
 
-        UpdatePumpBannerStateTab()
+        UpdatePumpBannerStateTab(mainForm:=Me)
 
         Me.MenuStartHere.Enabled = True
         ProgramInitialized = True

@@ -95,7 +95,7 @@ Friend Module Form1UpdateHelpers
         Return RecentData Is Nothing OrElse RecentData.Count = 0
     End Function
 
-    Friend Sub UpdateDataTables()
+    Friend Sub UpdateDataTables(mainForm As Form1)
 
         If RecentDataEmpty() Then
             DebugPrint($"exiting, {NameOf(RecentData)} has no data!")
@@ -130,7 +130,7 @@ Friend Module Form1UpdateHelpers
             JsonToLisOfSgs(value),
             New List(Of SG))
 
-        My.Forms.Form1.MaxBasalPerHourLabel.Text =
+        mainForm.MaxBasalPerHourLabel.Text =
             If(RecentData.TryGetValue(key:="markers", value),
                 CollectMarkers(),
                 String.Empty)
@@ -172,7 +172,7 @@ Friend Module Form1UpdateHelpers
                                 Case DialogResult.Yes
                                     My.Settings.UseLocalTimeZone = True
                                 Case DialogResult.Cancel
-                                    Form1.Close()
+                                    mainForm.Close()
                             End Select
                         End If
                     End If
@@ -215,7 +215,7 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.medicalDeviceInformation)
                     HandleComplexItems(row, recordNumber, "medicalDeviceInformation", s_listOfSummaryRecords)
                     s_modelNumber = PatientData.MedicalDeviceInformation.ModelNumber
-                    Form1.SerialNumberButton.Text = $"{ PatientData.MedicalDeviceInformation.DeviceSerialNumber} Details..."
+                    mainForm.SerialNumberButton.Text = $"{ PatientData.MedicalDeviceInformation.DeviceSerialNumber} Details..."
 
                 Case NameOf(ServerDataIndexes.medicalDeviceTime)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, row.Value.Epoch2DateTimeString))
@@ -275,7 +275,7 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.pumpBannerState)
                     s_pumpBannerStateValue = JsonToLisOfDictionary(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
-                    Form1.PumpBannerStateLabel.Visible = s_pumpBannerStateValue.Count > 0
+                    mainForm.PumpBannerStateLabel.Visible = s_pumpBannerStateValue.Count > 0
 
                 Case NameOf(ServerDataIndexes.therapyAlgorithmState)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
@@ -406,113 +406,105 @@ Friend Module Form1UpdateHelpers
 
     End Sub
 
-    Friend Sub UpdateMarkerTabs()
-        With Form1
+    Friend Sub UpdateMarkerTabs(mainForm As Form1)
+        With mainForm
             .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfAutoBasalDeliveryMarkers),
-                className:=NameOf(AutoBasalDelivery),
-                rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(AutoBasalDelivery), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfAutoModeStatusMarkers),
-                className:=NameOf(AutoModeStatus),
-                rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(AutoModeStatus), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfBgReadingMarkers),
-                className:=NameOf(BgReading),
-                rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(BgReading), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfInsulinMarkers),
-                className:=NameOf(Insulin),
-                rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(Insulin), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfMealMarkers),
-                className:=NameOf(Meal),
-                rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(Meal), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelCalibration.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfCalibrationMarkers),
-                className:=NameOf(Calibration),
-                rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(Calibration), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfLowGlucoseSuspendedMarkers),
-                className:=NameOf(LowGlucoseSuspended),
-                rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(LowGlucoseSuspended), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfTimeChangeMarkers),
-                className:=NameOf(TimeChange),
-                rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(TimeChange), rowIndex:=ServerDataIndexes.markers)
 
             DisplayDataTableInDGV(
                 realPanel:=Nothing,
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfBasalPerHour),
-                dGV:=Form1.DgvBasalPerHour,
+                dGV:=mainForm.DgvBasalPerHour,
                 rowIndex:=0)
-
+            mainForm.DgvBasalPerHour.AutoSize = True
         End With
 
     End Sub
 
-    Friend Sub UpdatePumpBannerStateTab()
+    Friend Sub UpdatePumpBannerStateTab(mainForm As Form1)
         Dim listOfBannerState As New List(Of BannerState)
         For Each dic As Dictionary(Of String, String) In s_pumpBannerStateValue
             Dim typeValue As String = ""
             If dic.TryGetValue(key:="type", value:=typeValue) Then
                 Dim bannerStateRecord1 As BannerState = DictionaryToClass(Of BannerState)(dic, listOfBannerState.Count + 1)
                 listOfBannerState.Add(bannerStateRecord1)
-                Form1.PumpBannerStateLabel.Font = New Font(familyName:="Segoe UI", emSize:=8.25F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point)
+                mainForm.PumpBannerStateLabel.Font = New Font(familyName:="Segoe UI", emSize:=8.25F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point)
                 Select Case typeValue
                     Case "TEMP_TARGET"
                         Dim minutes As Integer = bannerStateRecord1.TimeRemaining
-                        Form1.PumpBannerStateLabel.BackColor = Color.Lime
-                        Form1.PumpBannerStateLabel.ForeColor = Form1.PumpBannerStateLabel.BackColor.GetContrastingColor
-                        Form1.PumpBannerStateLabel.Text = $"Target {If(NativeMmolL, "8.3", "150")}  {minutes.ToHours} hr"
-                        Form1.PumpBannerStateLabel.Visible = True
-                        Form1.PumpBannerStateLabel.Dock = DockStyle.Top
+                        mainForm.PumpBannerStateLabel.BackColor = Color.Lime
+                        mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.GetContrastingColor
+                        mainForm.PumpBannerStateLabel.Text = $"Target {If(NativeMmolL, "8.3", "150")}  {minutes.ToHours} hr"
+                        mainForm.PumpBannerStateLabel.Visible = True
+                        mainForm.PumpBannerStateLabel.Dock = DockStyle.Top
                     Case "BG_REQUIRED"
-                        Form1.PumpBannerStateLabel.BackColor = Color.CadetBlue
-                        Form1.PumpBannerStateLabel.ForeColor = Form1.PumpBannerStateLabel.BackColor.GetContrastingColor
+                        mainForm.PumpBannerStateLabel.BackColor = Color.CadetBlue
+                        mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.GetContrastingColor
 
-                        Form1.PumpBannerStateLabel.Text = "Enter BG Now"
-                        Form1.PumpBannerStateLabel.Visible = True
-                        Form1.PumpBannerStateLabel.Dock = DockStyle.Top
+                        mainForm.PumpBannerStateLabel.Text = "Enter BG Now"
+                        mainForm.PumpBannerStateLabel.Visible = True
+                        mainForm.PumpBannerStateLabel.Dock = DockStyle.Top
                     Case "DELIVERY_SUSPEND"
-                        Form1.PumpBannerStateLabel.BackColor = Color.IndianRed
-                        Form1.PumpBannerStateLabel.ForeColor = Form1.PumpBannerStateLabel.BackColor.GetContrastingColor
-                        Form1.PumpBannerStateLabel.Text = "Delivery Suspended"
-                        Form1.PumpBannerStateLabel.Visible = True
-                        Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
+                        mainForm.PumpBannerStateLabel.BackColor = Color.IndianRed
+                        mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.GetContrastingColor
+                        mainForm.PumpBannerStateLabel.Text = "Delivery Suspended"
+                        mainForm.PumpBannerStateLabel.Visible = True
+                        mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
                     Case "LOAD_RESERVOIR"
-                        Form1.PumpBannerStateLabel.BackColor = Color.Yellow
-                        Form1.PumpBannerStateLabel.ForeColor = Form1.PumpBannerStateLabel.BackColor.GetContrastingColor
-                        Form1.PumpBannerStateLabel.Text = "Load Reservoir"
-                        Form1.PumpBannerStateLabel.Visible = True
-                        Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
+                        mainForm.PumpBannerStateLabel.BackColor = Color.Yellow
+                        mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.GetContrastingColor
+                        mainForm.PumpBannerStateLabel.Text = "Load Reservoir"
+                        mainForm.PumpBannerStateLabel.Visible = True
+                        mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
                     Case "PROCESSING_BG"
                         Stop
                     Case "SUSPENDED_BEFORE_LOW", "SUSPENDED_ON_LOW"
-                        Form1.PumpBannerStateLabel.BackColor = Color.IndianRed
-                        Form1.PumpBannerStateLabel.ForeColor = Form1.PumpBannerStateLabel.BackColor.GetContrastingColor
-                        Form1.PumpBannerStateLabel.Text = typeValue.ToTitle()
-                        Form1.PumpBannerStateLabel.Visible = True
-                        Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
-                        Form1.PumpBannerStateLabel.Font = New Font(
+                        mainForm.PumpBannerStateLabel.BackColor = Color.IndianRed
+                        mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.GetContrastingColor
+                        mainForm.PumpBannerStateLabel.Text = typeValue.ToTitle()
+                        mainForm.PumpBannerStateLabel.Visible = True
+                        mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
+                        mainForm.PumpBannerStateLabel.Font = New Font(
                         familyName:="Segoe UI",
                         emSize:=7.0F,
                         style:=FontStyle.Bold,
                         unit:=GraphicsUnit.Point)
                     Case "TEMP_BASAL"
-                        Form1.PumpBannerStateLabel.BackColor = Color.Lime
-                        Form1.PumpBannerStateLabel.ForeColor = Form1.PumpBannerStateLabel.BackColor.GetContrastingColor
-                        Form1.PumpBannerStateLabel.Text = $"Temp Basal {PatientData.PumpBannerState(0).TimeRemaining.ToHours} hr"
-                        Form1.PumpBannerStateLabel.Visible = True
-                        Form1.PumpBannerStateLabel.Dock = DockStyle.Bottom
-                        Form1.PumpBannerStateLabel.Font = New Font(
+                        mainForm.PumpBannerStateLabel.BackColor = Color.Lime
+                        mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.GetContrastingColor
+                        mainForm.PumpBannerStateLabel.Text = $"Temp Basal {PatientData.PumpBannerState(0).TimeRemaining.ToHours} hr"
+                        mainForm.PumpBannerStateLabel.Visible = True
+                        mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
+                        mainForm.PumpBannerStateLabel.Font = New Font(
                         familyName:="Segoe UI",
                         emSize:=7.0F,
                         style:=FontStyle.Bold,
@@ -528,7 +520,7 @@ Friend Module Form1UpdateHelpers
                                 title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
                         End If
                 End Select
-                Form1.PumpBannerStateLabel.ForeColor = GetContrastingColor(baseColor:=Form1.PumpBannerStateLabel.BackColor)
+                mainForm.PumpBannerStateLabel.ForeColor = GetContrastingColor(baseColor:=mainForm.PumpBannerStateLabel.BackColor)
             Else
                 Stop
             End If
@@ -538,14 +530,13 @@ Friend Module Form1UpdateHelpers
         If s_therapyAlgorithmStateValue?.TryGetValue(NameOf(TherapyAlgorithmState.SafeBasalDuration), safeBasalDurationStr) Then
             Dim safeBasalDuration As UInteger = CUInt(safeBasalDurationStr)
             If safeBasalDuration > 0 Then
-                Form1.LastSgOrExitTimeLabel.Text = $"Exit In { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan("hr")}"
-                Form1.LastSgOrExitTimeLabel.Visible = True
+                mainForm.LastSgOrExitTimeLabel.Text = $"Exit In { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan("hr")}"
+                mainForm.LastSgOrExitTimeLabel.Visible = True
             End If
         End If
-        Form1.TableLayoutPanelBannerState.DisplayDataTableInDGV(
+        mainForm.TableLayoutPanelBannerState.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:=listOfBannerState),
-            className:=NameOf(BannerState),
-            rowIndex:=ServerDataIndexes.pumpBannerState)
+            className:=NameOf(BannerState), rowIndex:=ServerDataIndexes.pumpBannerState)
     End Sub
 
     ''' <summary>

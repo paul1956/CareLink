@@ -33,6 +33,10 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 04/13/2025
 
 ## What's New
+ New in 5.0.1.2
+ - Exclude Login Code that is not currently used
+ - Pass Form1 as a Function parameter wherever possible, when not possible use My.Forms.Form1
+ - Update NuGet packages
 
  New in 5.0.1.1
  - Many fixes in formatting

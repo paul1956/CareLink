@@ -55,13 +55,13 @@ Friend Module MathExtensions
         If valueString Is Nothing Then
             Return Single.NaN
         End If
-        If valueString.Contains(","c) AndAlso valueString.Contains("."c) Then
+        If valueString.Contains(","c) AndAlso valueString.Contains(ServerDecimalSeparator) Then
             Throw New ArgumentException($"{NameOf(valueString)} = {valueString}, contains both a comma and period.", NameOf(valueString))
         End If
-        valueString = valueString.Replace(",", ".")
+        valueString = valueString.Replace(",", ServerDecimalSeparator)
         Dim returnSingle As Single
         If decimalDigits = -1 Then
-            Dim index As Integer = valueString.IndexOf("."c)
+            Dim index As Integer = valueString.IndexOf(ServerDecimalSeparator)
             decimalDigits = If(index = -1,
                                0,
                                valueString.Substring(index).Length
@@ -103,11 +103,11 @@ Friend Module MathExtensions
 
     <Extension>
     Public Function TryParseSingle(valueString As String, ByRef result As Single, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Boolean
-        If valueString.Contains(","c) AndAlso valueString.Contains("."c) Then
+        If valueString.Contains(","c) AndAlso valueString.Contains(ServerDecimalSeparator) Then
             Throw New Exception($"{NameOf(valueString)} = {valueString}, and contains both comma and period in Line {sourceLineNumber} in {memberName}.")
         End If
 
-        If Single.TryParse(valueString.Replace(",", "."), NumberStyles.Number, usDataCulture, result) Then
+        If Single.TryParse(valueString.Replace(",", ServerDecimalSeparator), NumberStyles.Number, usDataCulture, result) Then
             result = result.RoundSingle(10, False)
             Return True
         End If

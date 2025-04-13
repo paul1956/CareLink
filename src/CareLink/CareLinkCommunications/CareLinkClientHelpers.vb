@@ -38,6 +38,17 @@ Public Module CareLinkClientHelpers
         End If
     End Function
 
+    Private Function DoLoginWithCaptcha(captchaUrl As String, redirectUri As String) As (captchaCode As String, captchaSsoState As String)
+        Dim captchaWindow As New Captcha(s_countryCode, s_password, s_userName)
+        Dim t As Task = captchaWindow.Captcha_Load()
+        While t.IsCompleted = False
+            Task.Delay(10).Wait()
+            Application.DoEvents()
+        End While
+        t.Wait()
+        Return captchaWindow.Execute(captchaUrl, redirectUri)
+    End Function
+
     <Extension>
     Private Function ExtractResponseData(responseBody As String, startStr As String, endStr As String) As String
         If String.IsNullOrWhiteSpace(responseBody) Then
@@ -56,56 +67,43 @@ Public Module CareLinkClientHelpers
                  )
     End Function
 
-    Public Function GetAuthorizeUrlData(httpClient As HttpClient, SsoConfig As SsoConfig, ApiBaseUrl As String) As (String, clientInitResponse As ClientInitData)
-        ' Step 1: Initialize
-        Dim data As New Dictionary(Of String, String) From {
-            {"client_id", SsoConfig.OAuth.Client.ClientIds(0).ClientId},
-            {"nonce", RandomUuid()}
-        }
+    Private Async Function GetTokenDataAsync(
+        httpClient As HttpClient,
+        apiBaseUrl As String,
+        ssoConfig As SsoConfig,
+        regReq As HttpResponseMessage,
+        clientInitResponse As ClientInitData,
+        userName As String) As Task(Of TokenData)
 
-        Dim clientInitUrl As String = $"{ApiBaseUrl}{SsoConfig.Mag.SystemEndpoints.ClientCredentialInitEndpointPath}"
-
-        ' Add headers to the HttpClient
-
-        ' Create the content for the POST request
-        Dim content As New FormUrlEncodedContent(data)
-        content.Headers.Add("device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(RandomDeviceId())))
-        ' Send the POST request
-        Dim response As HttpResponseMessage = httpClient.PostAsync(clientInitUrl, content).Result
-        ' Read the response content
-        Dim responseContent As String = response.Content.ReadAsStringAsync().Result
-
-        ' Step 2: Authorize
-        ' Generate client_code_verifier
-        s_clientCodeVerifier = GenerateRandomBase64String(40)
-        s_clientCodeVerifier = Regex.Replace(s_clientCodeVerifier, "[^a-zA-Z0-9]+", "")
-        ' Generate client_code_challenge
-        Dim challengeBytes As Byte() = SHA256.HashData(Encoding.UTF8.GetBytes(s_clientCodeVerifier))
-        Dim clientCodeChallenge As String = Convert.ToBase64String(challengeBytes).Replace("+", "-").Replace("/", "_").TrimEnd("="c)
-        Dim clientState As String = GenerateRandomBase64String(22)
-        ' Deserialize the JSON response
-        Dim clientInitResponse As ClientInitData = JsonSerializer.Deserialize(Of ClientInitData)(responseContent)
-        Dim authParams As New Dictionary(Of String, String) From {
+        Dim tokenReqUrl As String = $"{apiBaseUrl}{ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath}"
+        Dim tokenReqData As New Dictionary(Of String, String) From {
+            {"assertion", regReq.Headers.GetValues("id-token").FirstOrDefault()},
             {"client_id", clientInitResponse.client_id},
-            {"response_type", "code"},
-            {"display", "social_login"},
-            {"scope", SsoConfig.OAuth.Client.ClientIds(0).Scope},
-            {"redirect_uri", SsoConfig.OAuth.Client.ClientIds(0).RedirectUri},
-            {"code_challenge", clientCodeChallenge},
-            {"code_challenge_method", "S256"},
-            {"state", clientState}
+            {"client_secret", clientInitResponse.client_secret},
+            {"scope", ssoConfig.OAuth.Client.ClientIds(0).Scope},
+            {"grant_type", regReq.Headers.GetValues("id-token-type").FirstOrDefault()}
         }
 
-        Dim authorizeUrl As String = $"{ApiBaseUrl}{SsoConfig.OAuth.SystemEndpoints.AuthorizationEndpointPath}"
-        Dim providersResponse As JsonElement = httpClient.GetRequestAsync(authorizeUrl, authParams).Result
-        Dim authorize As Authorize = JsonSerializer.Deserialize(Of Authorize)(providersResponse)
-        Dim captchaUrl As String = authorize.Providers(0).Provider.AuthUrl
+        Dim tokenReq As New HttpRequestMessage(HttpMethod.Post, tokenReqUrl)
+        tokenReq.Headers.Add("mag-identifier", regReq.Headers.GetValues("mag-identifier").FirstOrDefault())
+        tokenReq.Content = New FormUrlEncodedContent(tokenReqData)
 
-        Debug.WriteLine($"captcha url: {captchaUrl}")
-        Return (captchaUrl, clientInitResponse)
+        Dim tokenResp As HttpResponseMessage = Await httpClient.SendAsync(tokenReq)
+
+        If Not tokenResp.IsSuccessStatusCode Then
+            'Debug.WriteLine($"{Environment.NewLine}{Environment.NewLine}{ToCurl(tokenReq)}")
+            Throw New Exception("Could not get token data")
+        End If
+
+        Dim tokenDataStr As String = Await tokenResp.Content.ReadAsStringAsync()
+        'Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(tokenDataStr)
+        Debug.WriteLine("got token data from server")
+
+        Dim tokenDataToSave As TokenData = JsonSerializer.Deserialize(Of TokenData)(tokenDataStr)
+
+        WriteTokenDataFile(tokenDataToSave, userName)
+        Return tokenDataToSave
     End Function
-
-#If False Then
 
     Friend Sub DoLogin(httpClient As HttpClient, userName As String, isUsRegion As Boolean)
         Dim tokenData As TokenData = ReadTokenDataFile(userName)
@@ -201,59 +199,54 @@ Public Module CareLinkClientHelpers
 
         Return
     End Sub
-#End If
 
-    Private Function DoLoginWithCaptcha(captchaUrl As String, redirectUri As String) As (captchaCode As String, captchaSsoState As String)
-        Dim captchaWindow As New Captcha(s_countryCode, s_password, s_userName)
-        Dim t As Task = captchaWindow.Captcha_Load()
-        While t.IsCompleted = False
-            Task.Delay(10).Wait()
-            Application.DoEvents()
-        End While
-        t.Wait()
-        Return captchaWindow.Execute(captchaUrl, redirectUri)
-    End Function
-
-    Private Async Function GetTokenDataAsync(
-        httpClient As HttpClient,
-        apiBaseUrl As String,
-        ssoConfig As SsoConfig,
-        regReq As HttpResponseMessage,
-        clientInitResponse As ClientInitData,
-        userName As String) As Task(Of TokenData)
-
-        Dim tokenReqUrl As String = $"{apiBaseUrl}{ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath}"
-        Dim tokenReqData As New Dictionary(Of String, String) From {
-            {"assertion", regReq.Headers.GetValues("id-token").FirstOrDefault()},
-            {"client_id", clientInitResponse.client_id},
-            {"client_secret", clientInitResponse.client_secret},
-            {"scope", ssoConfig.OAuth.Client.ClientIds(0).Scope},
-            {"grant_type", regReq.Headers.GetValues("id-token-type").FirstOrDefault()}
+    Public Function GetAuthorizeUrlData(httpClient As HttpClient, SsoConfig As SsoConfig, ApiBaseUrl As String) As (String, clientInitResponse As ClientInitData)
+        ' Step 1: Initialize
+        Dim data As New Dictionary(Of String, String) From {
+            {"client_id", SsoConfig.OAuth.Client.ClientIds(0).ClientId},
+            {"nonce", RandomUuid()}
         }
 
-        Dim tokenReq As New HttpRequestMessage(HttpMethod.Post, tokenReqUrl)
-        tokenReq.Headers.Add("mag-identifier", regReq.Headers.GetValues("mag-identifier").FirstOrDefault())
-        tokenReq.Content = New FormUrlEncodedContent(tokenReqData)
+        Dim clientInitUrl As String = $"{ApiBaseUrl}{SsoConfig.Mag.SystemEndpoints.ClientCredentialInitEndpointPath}"
 
-        Dim tokenResp As HttpResponseMessage = Await httpClient.SendAsync(tokenReq)
+        ' Add headers to the HttpClient
 
-        If Not tokenResp.IsSuccessStatusCode Then
-            'Debug.WriteLine($"{Environment.NewLine}{Environment.NewLine}{ToCurl(tokenReq)}")
-            Throw New Exception("Could not get token data")
-        End If
+        ' Create the content for the POST request
+        Dim content As New FormUrlEncodedContent(data)
+        content.Headers.Add("device-id", Convert.ToBase64String(Encoding.UTF8.GetBytes(RandomDeviceId())))
+        ' Send the POST request
+        Dim response As HttpResponseMessage = httpClient.PostAsync(clientInitUrl, content).Result
+        ' Read the response content
+        Dim responseContent As String = response.Content.ReadAsStringAsync().Result
 
-        Dim tokenDataStr As String = Await tokenResp.Content.ReadAsStringAsync()
-        'Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(tokenDataStr)
-        Debug.WriteLine("got token data from server")
+        ' Step 2: Authorize
+        ' Generate client_code_verifier
+        s_clientCodeVerifier = GenerateRandomBase64String(40)
+        s_clientCodeVerifier = Regex.Replace(s_clientCodeVerifier, "[^a-zA-Z0-9]+", "")
+        ' Generate client_code_challenge
+        Dim challengeBytes As Byte() = SHA256.HashData(Encoding.UTF8.GetBytes(s_clientCodeVerifier))
+        Dim clientCodeChallenge As String = Convert.ToBase64String(challengeBytes).Replace("+", "-").Replace("/", "_").TrimEnd("="c)
+        Dim clientState As String = GenerateRandomBase64String(22)
+        ' Deserialize the JSON response
+        Dim clientInitResponse As ClientInitData = JsonSerializer.Deserialize(Of ClientInitData)(responseContent)
+        Dim authParams As New Dictionary(Of String, String) From {
+            {"client_id", clientInitResponse.client_id},
+            {"response_type", "code"},
+            {"display", "social_login"},
+            {"scope", SsoConfig.OAuth.Client.ClientIds(0).Scope},
+            {"redirect_uri", SsoConfig.OAuth.Client.ClientIds(0).RedirectUri},
+            {"code_challenge", clientCodeChallenge},
+            {"code_challenge_method", "S256"},
+            {"state", clientState}
+        }
 
-        Dim tokenDataToSave As TokenData = JsonSerializer.Deserialize(Of TokenData)(tokenDataStr)
+        Dim authorizeUrl As String = $"{ApiBaseUrl}{SsoConfig.OAuth.SystemEndpoints.AuthorizationEndpointPath}"
+        Dim providersResponse As JsonElement = httpClient.GetRequestAsync(authorizeUrl, authParams).Result
+        Dim authorize As Authorize = JsonSerializer.Deserialize(Of Authorize)(providersResponse)
+        Dim captchaUrl As String = authorize.Providers(0).Provider.AuthUrl
 
-        WriteTokenDataFile(tokenDataToSave, userName)
-        Return tokenDataToSave
-    End Function
-
-    Friend Function NetworkUnavailable() As Boolean
-        Return Not My.Computer.Network.IsAvailable
+        Debug.WriteLine($"captcha url: {captchaUrl}")
+        Return (captchaUrl, clientInitResponse)
     End Function
 
     Public Function ResolveEndpointConfigAsync(httpClient As HttpClient, discoveryUrl As String, isUsRegion As Boolean) As (SsoConfig As SsoConfig, ApiBaseUrl As String)

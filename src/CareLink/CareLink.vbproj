@@ -21,9 +21,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>5.0.1.1</Version>
-    <AssemblyVersion>5.0.1.1</AssemblyVersion>
-    <FileVersion>5.0.1.1</FileVersion>
+    <Version>5.0.1.2</Version>
+    <AssemblyVersion>5.0.1.2</AssemblyVersion>
+    <FileVersion>5.0.1.2</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
@@ -55,11 +55,18 @@
   <ItemGroup>
     <Compile Remove="CareLinkCommunications\CareLinkClient.vb" />
     <Compile Remove="CareLinkCommunications\CareLinkClient1.vb" />
+    <Compile Remove="CareLinkCommunications\CareLinkClientHelpers.vb" />
+    <Compile Remove="Dialogs\Captcha.Designer.vb" />
+    <Compile Remove="Dialogs\Captcha.vb" />
     <Compile Remove="Records\CommunicationRecords\SessionMonitorDataRecord.vb" />
     <Compile Remove="Records\CommunicationRecords\SessionProfile.vb" />
     <Compile Remove="Records\CommunicationRecords\UserInfo1.vb" />
     <Compile Remove="Records\PatientData\ActiveNotificationRecord.vb" />
     <Compile Remove="Records\PatientData\BasalList.vb" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Dialogs\Captcha.resx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -69,20 +76,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.104.2" />
+    <PackageReference Include="ClosedXML" Version="0.105.0-rc" />
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.8" />
     <PackageReference Include="FreeSpire.PDF" Version="10.2.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3124.44" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3230-prerelease" />
     <PackageReference Include="Octokit" Version="14.0.0" />
-    <PackageReference Include="System.Formats.Asn1" Version="9.0.3" />
-    <PackageReference Include="System.IO.Packaging" Version="9.0.3" />
+    <PackageReference Include="System.Formats.Asn1" Version="10.0.0-preview.3.25171.5" />
+    <PackageReference Include="System.IO.Packaging" Version="10.0.0-preview.3.25171.5" />
     <PackageReference Include="System.Security.Cryptography.OpenSsl" Version="5.0.0" />
     <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.2" />
-    <PackageReference Include="System.Speech" Version="9.0.3" />
-    <PackageReference Include="System.Text.Json" Version="9.0.3" />
+    <PackageReference Include="System.Speech" Version="10.0.0-preview.3.25171.5" />
+    <PackageReference Include="System.Text.Json" Version="10.0.0-preview.3.25171.5" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.3" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.8" />
-    <PackageReference Include="WebView2.DevTools.Dom" Version="4.0.1" />
+    <PackageReference Include="WebView2.DevTools.Dom" Version="5.0.0" />
     <PackageReference Include="WinForms.DataVisualization" Version="1.10.0" />
   </ItemGroup>
 

@@ -18,9 +18,8 @@ Friend Module DisplayDataTableInDgvHelpers
         realPanel?.SetTableName(rowIndex, isClearedNotifications:=False)
         dGV.InitializeDgv()
         dGV.DataSource = table
-        dGV.AutoSize = True
         dGV.RowHeadersVisible = False
-        Form1.Refresh()
+        realPanel?.Refresh()
     End Sub
 
     <Extension>
@@ -52,7 +51,7 @@ Friend Module DisplayDataTableInDgvHelpers
         Else
             DisplayEmptyDGV(realPanel, className)
         End If
-        Form1.Refresh()
+        realPanel.Refresh()
     End Sub
 
 End Module

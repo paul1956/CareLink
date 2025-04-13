@@ -15,9 +15,9 @@ Public Enum FileToLoadOptions As Integer
     TestData = 4
 End Enum
 
-Friend Module Form1LoginHelpers
-    Public ReadOnly Property LoginDialog As New LoginDialog
+Friend Module LoginHelpers
     Public Property CurrentPdf As PdfSettingsRecord
+    Public ReadOnly Property LoginDialog As New LoginDialog
 
     Friend Sub DeserializePatientElement()
         Try
@@ -162,6 +162,10 @@ Friend Module Form1LoginHelpers
         mainForm.InitializeActiveInsulinTabChart()
         mainForm.InitializeTimeInRangeArea()
     End Sub
+
+    Friend Function NetworkUnavailable() As Boolean
+        Return Not My.Computer.Network.IsAvailable
+    End Function
 
     <Extension>
     Friend Sub SetLastUpdateTime(form1 As Form1, msg As String, suffixMessage As String, highLight As Boolean, isDaylightSavingTime? As Boolean)

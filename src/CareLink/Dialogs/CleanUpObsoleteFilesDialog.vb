@@ -87,7 +87,7 @@ Public Class CleanupStaleFilesDialog
             For Each fi As String In fileList
                 Dim webCacheFileName As String = fi.Split("\").Last
                 .Nodes(1).Nodes.Add(webCacheFileName)
-                .Nodes(1).LastNode.Checked = Not Form1.WebViewCacheDirectory.EndsWith(webCacheFileName)
+                .Nodes(1).LastNode.Checked = Not WebViewCacheDirectory().EndsWith(webCacheFileName)
             Next
             .ExpandAll()
             .EndUpdate()

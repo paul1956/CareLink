@@ -22,7 +22,7 @@ Friend Module ExceptionHelpers
             Dim innerExMessage As String = ex.InnerException.Message
             errorMsg = If(innerExMessage.Contains(InnerExceptionMessage),
                           DecodeException(ex.InnerException),
-                          $"{errorMsg.Replace(InnerExceptionMessage, ".")}{vbCrLf}{innerExMessage}"
+                          $"{errorMsg.Replace(InnerExceptionMessage, SentenceSeparator)}{vbCrLf}{innerExMessage}"
                          )
         End If
 

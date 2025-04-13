@@ -14,7 +14,7 @@ Public Module DataGridViewExtensions
             .AllowUserToResizeColumns = False
             .AllowUserToResizeRows = False
             .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {
-                .BackColor = Color.Silver}
+                .BackColor = Color.LightGray}
             .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
                 .Alignment = DataGridViewContentAlignment.MiddleCenter,
                 .Font = New Font(familyName:="Segoe UI", emSize:=9.0!, style:=FontStyle.Regular, unit:=GraphicsUnit.Point),
@@ -26,7 +26,6 @@ Public Module DataGridViewExtensions
             .Rows.Clear()
             .RowTemplate.Height = 24
             .TabIndex = 0
-            .Refresh()
         End With
     End Sub
 

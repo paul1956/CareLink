@@ -15,19 +15,33 @@ Friend Module SystemVariables
 #End Region ' Used for painting
 
     Friend s_allUserSettingsData As New CareLinkUserDataList
+    Friend s_countryCode As String = ""
     Friend s_currentSummaryRow As Integer = 0
     Friend s_formLoaded As Boolean = False
-    Friend s_useLocalTimeZone As Boolean
-    Friend s_countryCode As String = ""
     Friend s_password As String = ""
+    Friend s_useLocalTimeZone As Boolean
     Friend s_userName As String = My.Settings.CareLinkUserName
+    Friend s_webViewCacheDirectory As String
     Friend Property CurrentUser As CurrentUserRecord
-    Friend Property DecimalSeparator As String = "."
-
     Friend Property MaxBasalPerDose As Double
-
     Friend Property NativeMmolL As Boolean = False
+    Friend Property SentenceSeparator As Char = "."c
+    Friend Property ServerDecimalSeparator As Char = "."c
     Friend Property TreatmentInsulinRow As Single
+
+    Friend Function GetAboveHyperLimit() As (Uint As UInteger, Str As String)
+        Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.GetRoundedValue(decimalDigits:=1)
+        Return If(aboveHyperLimit >= 0,
+                  (CUInt(aboveHyperLimit), aboveHyperLimit.ToString),
+                  (CUInt(0), "??? "))
+    End Function
+
+    Friend Function GetBelowHypoLimit() As (Uint As UInteger, Str As String)
+        Dim belowHyperLimit As Single = PatientData.BelowHypoLimit.GetRoundedValue(decimalDigits:=1)
+        Return If(belowHyperLimit >= 0,
+                  (CUInt(belowHyperLimit), belowHyperLimit.ToString),
+                  (CUInt(0), "??? "))
+    End Function
 
     Friend Function GetInsulinYValue() As Single
         Dim maxYScaled As Single = s_listOfSgRecords.Max(Of Single)(Function(sgR As SG) sgR.sg) + 2
@@ -53,20 +67,6 @@ Friend Module SystemVariables
                      MmolLItemsPeriod.Last.Value,
                      MgDlItems.Last.Value)
                     )
-    End Function
-
-    Friend Function GetAboveHyperLimit() As (Uint As UInteger, Str As String)
-        Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.GetRoundedValue(decimalDigits:=1)
-        Return If(aboveHyperLimit >= 0,
-                  (CUInt(aboveHyperLimit), aboveHyperLimit.ToString),
-                  (CUInt(0), "??? "))
-    End Function
-
-    Friend Function GetBelowHypoLimit() As (Uint As UInteger, Str As String)
-        Dim belowHyperLimit As Single = PatientData.BelowHypoLimit.GetRoundedValue(decimalDigits:=1)
-        Return If(belowHyperLimit >= 0,
-                  (CUInt(belowHyperLimit), belowHyperLimit.ToString),
-                  (CUInt(0), "??? "))
     End Function
 
     Friend Function GetTIR() As (Uint As UInteger, Str As String)
@@ -96,7 +96,11 @@ Friend Module SystemVariables
     End Function
 
     Friend Function TirLowLimitAsString(asMmolL As Boolean) As String
-        Return If(asMmolL, "3.9", "70").Replace(".", Provider.NumberFormat.NumberDecimalSeparator)
+        Return If(asMmolL, "3.9", "70").Replace(ServerDecimalSeparator, Provider.NumberFormat.NumberDecimalSeparator)
+    End Function
+
+    Public Function WebViewCacheDirectory() As String
+        Return s_webViewCacheDirectory
     End Function
 
 End Module

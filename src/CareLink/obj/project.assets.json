@@ -2,13 +2,13 @@
   "version": 3,
   "targets": {
     "net9.0-windows10.0.17763": {
-      "ClosedXML/0.104.2": {
+      "ClosedXML/0.105.0-rc": {
         "type": "package",
         "dependencies": {
-          "ClosedXML.Parser": "[1.2.0, 2.0.0)",
+          "ClosedXML.Parser": "2.0.0-preview1",
           "DocumentFormat.OpenXml": "[3.1.1, 4.0.0)",
           "ExcelNumberFormat": "1.1.0",
-          "RBush": "4.0.0",
+          "RBush.Signed": "4.0.0",
           "SixLabors.Fonts": "1.0.0"
         },
         "compile": {
@@ -22,7 +22,7 @@
           }
         }
       },
-      "ClosedXML.Parser/1.2.0": {
+      "ClosedXML.Parser/2.0.0-preview1": {
         "type": "package",
         "compile": {
           "lib/netstandard2.1/ClosedXML.Parser.dll": {
@@ -273,7 +273,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "Microsoft.Web.WebView2/1.0.3124.44": {
+      "Microsoft.Web.WebView2/1.0.3230-prerelease": {
         "type": "package",
         "build": {
           "buildTransitive/Microsoft.Web.WebView2.targets": {}
@@ -293,7 +293,7 @@
           }
         }
       },
-      "Microsoft.Web.WebView2.DevToolsProtocolExtension/1.0.2271": {
+      "Microsoft.Web.WebView2.DevToolsProtocolExtension/1.0.2901": {
         "type": "package",
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
@@ -324,7 +324,7 @@
           }
         }
       },
-      "RBush/4.0.0": {
+      "RBush.Signed/4.0.0": {
         "type": "package",
         "compile": {
           "lib/net8.0/RBush.dll": {
@@ -614,7 +614,7 @@
           }
         }
       },
-      "System.Formats.Asn1/9.0.3": {
+      "System.Formats.Asn1/10.0.0-preview.3.25171.5": {
         "type": "package",
         "compile": {
           "lib/net9.0/System.Formats.Asn1.dll": {
@@ -704,7 +704,7 @@
           "lib/netstandard1.3/System.IO.FileSystem.Primitives.dll": {}
         }
       },
-      "System.IO.Packaging/9.0.3": {
+      "System.IO.Packaging/10.0.0-preview.3.25171.5": {
         "type": "package",
         "compile": {
           "lib/net9.0/System.IO.Packaging.dll": {
@@ -713,6 +713,22 @@
         },
         "runtime": {
           "lib/net9.0/System.IO.Packaging.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
+      "System.IO.Pipelines/10.0.0-preview.3.25171.5": {
+        "type": "package",
+        "compile": {
+          "lib/net9.0/System.IO.Pipelines.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/System.IO.Pipelines.dll": {
             "related": ".xml"
           }
         },
@@ -1083,7 +1099,7 @@
           }
         }
       },
-      "System.Speech/9.0.3": {
+      "System.Speech/10.0.0-preview.3.25171.5": {
         "type": "package",
         "compile": {
           "lib/net9.0/System.Speech.dll": {
@@ -1139,8 +1155,38 @@
           }
         }
       },
-      "System.Text.Json/9.0.3": {
+      "System.Text.Encodings.Web/10.0.0-preview.3.25171.5": {
         "type": "package",
+        "compile": {
+          "lib/net9.0/System.Text.Encodings.Web.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/System.Text.Encodings.Web.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        },
+        "runtimeTargets": {
+          "runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll": {
+            "assetType": "runtime",
+            "rid": "browser"
+          },
+          "runtimes/win/lib/net9.0/System.Text.Encodings.Web.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
+        }
+      },
+      "System.Text.Json/10.0.0-preview.3.25171.5": {
+        "type": "package",
+        "dependencies": {
+          "System.IO.Pipelines": "10.0.0-preview.3.25171.5",
+          "System.Text.Encodings.Web": "10.0.0-preview.3.25171.5"
+        },
         "compile": {
           "lib/net9.0/System.Text.Json.dll": {
             "related": ".xml"
@@ -1221,11 +1267,11 @@
           }
         }
       },
-      "WebView2.DevTools.Dom/4.0.1": {
+      "WebView2.DevTools.Dom/5.0.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Logging": "2.1.1",
-          "Microsoft.Web.WebView2.DevToolsProtocolExtension": "1.0.2271"
+          "Microsoft.Web.WebView2.DevToolsProtocolExtension": "1.0.2901"
         },
         "compile": {
           "lib/netcoreapp3.1/WebView2.DevTools.Dom.dll": {
@@ -1260,14 +1306,14 @@
     }
   },
   "libraries": {
-    "ClosedXML/0.104.2": {
-      "sha512": "gOkSjQ152MhpKmw70cBkJV+FnaZAWzDwM36luRf/7FlWYnNeH++9XYdGTd0Y4KQlVPkKVxy948M5MMsnsGC4GQ==",
+    "ClosedXML/0.105.0-rc": {
+      "sha512": "yY/T5acNTUEUikO0FMmIcYY5RJtAyeK7ect27pyVyDg8baeNsj+nL74LUz0nOzrOZ5OdywaxSv6aWns31UjUuQ==",
       "type": "package",
-      "path": "closedxml/0.104.2",
+      "path": "closedxml/0.105.0-rc",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "closedxml.0.104.2.nupkg.sha512",
+        "closedxml.0.105.0-rc.nupkg.sha512",
         "closedxml.nuspec",
         "lib/netstandard2.0/ClosedXML.dll",
         "lib/netstandard2.0/ClosedXML.pdb",
@@ -1278,15 +1324,15 @@
         "nuget-logo.png"
       ]
     },
-    "ClosedXML.Parser/1.2.0": {
-      "sha512": "w+/0tsxABS3lkSH8EUlA7IGme+mq5T/Puf3DbOiTckmSuUpAUO2LK29oXYByCcWkBv6wcRHxgWlQb1lxkwI0Tw==",
+    "ClosedXML.Parser/2.0.0-preview1": {
+      "sha512": "ZsLGza+Ek89ygM/tixMb9YVRrT/fAz3mvevhHvESnZrmGiUODGc+aYxAt+854SdgkFHK/nfSlCui+df38wLjUQ==",
       "type": "package",
-      "path": "closedxml.parser/1.2.0",
+      "path": "closedxml.parser/2.0.0-preview1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "README.md",
-        "closedxml.parser.1.2.0.nupkg.sha512",
+        "closedxml.parser.2.0.0-preview1.nupkg.sha512",
         "closedxml.parser.nuspec",
         "lib/netstandard2.0/ClosedXML.Parser.dll",
         "lib/netstandard2.0/ClosedXML.Parser.xml",
@@ -1598,10 +1644,10 @@
         "runtime.json"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.3124.44": {
-      "sha512": "sQb+ACD3ILvHxztxqCWLbhYmFNf5dH0HPhVKFYg020rpeQPkadH0nkVOSsgfSyBDMLypI9iMBeD6uVcVxsKLkg==",
+    "Microsoft.Web.WebView2/1.0.3230-prerelease": {
+      "sha512": "LiYwIBh9mY4qJUUqPK2U04PtGCrkXAGin00pnePZmwbtcps5MzlxOGqoSHyW7uVRtxUuICi5dzdvy62zstfr9w==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.3124.44",
+      "path": "microsoft.web.webview2/1.0.3230-prerelease",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -1610,6 +1656,8 @@
         "NOTICE.txt",
         "WebView2.idl",
         "WebView2.tlb",
+        "WebView2Experimental.idl",
+        "WebView2Experimental.tlb",
         "build/Common.targets",
         "build/Microsoft.Web.WebView2.targets",
         "build/WebView2Rules.Project.xml",
@@ -1622,6 +1670,8 @@
         "build/native/include-winrt/WebView2Interop.tlb",
         "build/native/include/WebView2.h",
         "build/native/include/WebView2EnvironmentOptions.h",
+        "build/native/include/WebView2Experimental.h",
+        "build/native/include/WebView2ExperimentalEnvironmentOptions.h",
         "build/native/x64/WebView2Loader.dll",
         "build/native/x64/WebView2Loader.dll.lib",
         "build/native/x64/WebView2LoaderStatic.lib",
@@ -1647,7 +1697,7 @@
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.3124.44.nupkg.sha512",
+        "microsoft.web.webview2.1.0.3230-prerelease.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -1695,10 +1745,10 @@
         "tools/wv2winrt/zh-Hant/System.CommandLine.resources.dll"
       ]
     },
-    "Microsoft.Web.WebView2.DevToolsProtocolExtension/1.0.2271": {
-      "sha512": "d3HP+cKpmm3Nze+Uj09aqxRtYN17UQ2P6xpyL65N63fgodx5BiBvQvNPKQo9NK+x+S3DL/AL2K6M4N1gvLl1rA==",
+    "Microsoft.Web.WebView2.DevToolsProtocolExtension/1.0.2901": {
+      "sha512": "DO2lwrgm92LlzxNgkGjUi3Sb3bT74ke0frVWEkfPII4+woCj9MXcyilRGVmh7mENp3A44nDgkcbAgCSK+4KaYA==",
       "type": "package",
-      "path": "microsoft.web.webview2.devtoolsprotocolextension/1.0.2271",
+      "path": "microsoft.web.webview2.devtoolsprotocolextension/1.0.2901",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1707,7 +1757,7 @@
         "lib/net462/Microsoft.Web.WebView2.DevToolsProtocolExtension.xml",
         "lib/netcoreapp3.1/Microsoft.Web.WebView2.DevToolsProtocolExtension.dll",
         "lib/netcoreapp3.1/Microsoft.Web.WebView2.DevToolsProtocolExtension.xml",
-        "microsoft.web.webview2.devtoolsprotocolextension.1.0.2271.nupkg.sha512",
+        "microsoft.web.webview2.devtoolsprotocolextension.1.0.2901.nupkg.sha512",
         "microsoft.web.webview2.devtoolsprotocolextension.nuspec"
       ]
     },
@@ -1725,10 +1775,10 @@
         "octokit.png"
       ]
     },
-    "RBush/4.0.0": {
-      "sha512": "j3GeRxxLUQdc+UrZnvythdQxi3bd8ayn87VDjfGXrvfodF550n9wR6SgQvpo+YiAv3GJezsu6lK0l47rRqnbdg==",
+    "RBush.Signed/4.0.0": {
+      "sha512": "aP5KQxL5RnFNGW1f0euYVBfCatkLw5iEzMRJcXKq8LWWP4Cp3+qoSq1tDDL2vvJ2rM0ychmVMa2VaEKLS6uX4w==",
       "type": "package",
-      "path": "rbush/4.0.0",
+      "path": "rbush.signed/4.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1738,8 +1788,8 @@
         "lib/net8.0/RBush.xml",
         "lib/netstandard2.0/RBush.dll",
         "lib/netstandard2.0/RBush.xml",
-        "rbush.4.0.0.nupkg.sha512",
-        "rbush.nuspec",
+        "rbush.signed.4.0.0.nupkg.sha512",
+        "rbush.signed.nuspec",
         "readme.md"
       ]
     },
@@ -2333,10 +2383,10 @@
         "system.diagnostics.tracing.nuspec"
       ]
     },
-    "System.Formats.Asn1/9.0.3": {
-      "sha512": "UzVZ0mGzqvpe5fbG6RKA0pEOuLsELtc5OzSqmCS/lE5sqAyLKm2IiozCHbJRoA5+EO9Wq/bGFuroYQZsbAu/bA==",
+    "System.Formats.Asn1/10.0.0-preview.3.25171.5": {
+      "sha512": "9YlVtfug+s18DuRLqMn39OLv9Ezxvc9rbJ+t+ljHDNHlPCB3HAYz4SKcLCnW1VlHDz64L06G/bX1HVRMmPFD/w==",
       "type": "package",
-      "path": "system.formats.asn1/9.0.3",
+      "path": "system.formats.asn1/10.0.0-preview.3.25171.5",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2348,6 +2398,8 @@
         "buildTransitive/net462/_._",
         "buildTransitive/net8.0/_._",
         "buildTransitive/netcoreapp2.0/System.Formats.Asn1.targets",
+        "lib/net10.0/System.Formats.Asn1.dll",
+        "lib/net10.0/System.Formats.Asn1.xml",
         "lib/net462/System.Formats.Asn1.dll",
         "lib/net462/System.Formats.Asn1.xml",
         "lib/net8.0/System.Formats.Asn1.dll",
@@ -2356,7 +2408,7 @@
         "lib/net9.0/System.Formats.Asn1.xml",
         "lib/netstandard2.0/System.Formats.Asn1.dll",
         "lib/netstandard2.0/System.Formats.Asn1.xml",
-        "system.formats.asn1.9.0.3.nupkg.sha512",
+        "system.formats.asn1.10.0.0-preview.3.25171.5.nupkg.sha512",
         "system.formats.asn1.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -2625,10 +2677,10 @@
         "system.io.filesystem.primitives.nuspec"
       ]
     },
-    "System.IO.Packaging/9.0.3": {
-      "sha512": "xNTWjkHdvSZ7pqf0UwfH+h8EIHk98ezjDkoDG6Ahkt9f0Aene/01svcBfWUMBxM9ss4LeLvCQXbXidOODq9CDA==",
+    "System.IO.Packaging/10.0.0-preview.3.25171.5": {
+      "sha512": "M/VOcwEySYwgtBiylgHG0P7LxKbbV5uXom1ARm6Rk1wND2xHDzNsGMtZMhCdMAzVyuKF/a7hpWVXUCWL0DKbOw==",
       "type": "package",
-      "path": "system.io.packaging/9.0.3",
+      "path": "system.io.packaging/10.0.0-preview.3.25171.5",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2639,6 +2691,8 @@
         "buildTransitive/net462/_._",
         "buildTransitive/net8.0/_._",
         "buildTransitive/netcoreapp2.0/System.IO.Packaging.targets",
+        "lib/net10.0/System.IO.Packaging.dll",
+        "lib/net10.0/System.IO.Packaging.xml",
         "lib/net462/System.IO.Packaging.dll",
         "lib/net462/System.IO.Packaging.xml",
         "lib/net8.0/System.IO.Packaging.dll",
@@ -2647,8 +2701,38 @@
         "lib/net9.0/System.IO.Packaging.xml",
         "lib/netstandard2.0/System.IO.Packaging.dll",
         "lib/netstandard2.0/System.IO.Packaging.xml",
-        "system.io.packaging.9.0.3.nupkg.sha512",
+        "system.io.packaging.10.0.0-preview.3.25171.5.nupkg.sha512",
         "system.io.packaging.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "System.IO.Pipelines/10.0.0-preview.3.25171.5": {
+      "sha512": "IsB1ZmnYDbXmlHLqF903monA1j21+dVdky2wfPaB04wXMOj1sRhPfGexWvAk1dTy892+mSqfE4W9XNYK0dtwmw==",
+      "type": "package",
+      "path": "system.io.pipelines/10.0.0-preview.3.25171.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.IO.Pipelines.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/System.IO.Pipelines.targets",
+        "lib/net10.0/System.IO.Pipelines.dll",
+        "lib/net10.0/System.IO.Pipelines.xml",
+        "lib/net462/System.IO.Pipelines.dll",
+        "lib/net462/System.IO.Pipelines.xml",
+        "lib/net8.0/System.IO.Pipelines.dll",
+        "lib/net8.0/System.IO.Pipelines.xml",
+        "lib/net9.0/System.IO.Pipelines.dll",
+        "lib/net9.0/System.IO.Pipelines.xml",
+        "lib/netstandard2.0/System.IO.Pipelines.dll",
+        "lib/netstandard2.0/System.IO.Pipelines.xml",
+        "system.io.pipelines.10.0.0-preview.3.25171.5.nupkg.sha512",
+        "system.io.pipelines.nuspec",
         "useSharedDesignerContext.txt"
       ]
     },
@@ -3574,10 +3658,10 @@
         "system.security.cryptography.x509certificates.nuspec"
       ]
     },
-    "System.Speech/9.0.3": {
-      "sha512": "u75jktAY5Ee6DA1pXBRkWBaMpUGn+iunXt+qhqhreWjBRIcVjaSLpgxpYqA49eFBRWIfscbMvcHPLJMLyzTr6A==",
+    "System.Speech/10.0.0-preview.3.25171.5": {
+      "sha512": "Xar+owhB50Ej587DTv6oAOjInrO9ueAEOaCdp3TwAh+fO7JIhJr5xwkG2bZ3OVBf05TiejUVrvFnW//sYUnOOg==",
       "type": "package",
-      "path": "system.speech/9.0.3",
+      "path": "system.speech/10.0.0-preview.3.25171.5",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3587,6 +3671,8 @@
         "THIRD-PARTY-NOTICES.TXT",
         "buildTransitive/net8.0/_._",
         "buildTransitive/netcoreapp2.0/System.Speech.targets",
+        "lib/net10.0/System.Speech.dll",
+        "lib/net10.0/System.Speech.xml",
         "lib/net462/_._",
         "lib/net8.0/System.Speech.dll",
         "lib/net8.0/System.Speech.xml",
@@ -3594,11 +3680,13 @@
         "lib/net9.0/System.Speech.xml",
         "lib/netstandard2.0/System.Speech.dll",
         "lib/netstandard2.0/System.Speech.xml",
+        "runtimes/win/lib/net10.0/System.Speech.dll",
+        "runtimes/win/lib/net10.0/System.Speech.xml",
         "runtimes/win/lib/net8.0/System.Speech.dll",
         "runtimes/win/lib/net8.0/System.Speech.xml",
         "runtimes/win/lib/net9.0/System.Speech.dll",
         "runtimes/win/lib/net9.0/System.Speech.xml",
-        "system.speech.9.0.3.nupkg.sha512",
+        "system.speech.10.0.0-preview.3.25171.5.nupkg.sha512",
         "system.speech.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -3719,10 +3807,48 @@
         "version.txt"
       ]
     },
-    "System.Text.Json/9.0.3": {
-      "sha512": "r2JRkLjsYrq5Dpo7+y3Wa73OfirZPdVhxiTJWwZ+oJM7FOAe0LkM3GlH+pgkNRdd1G1kwUbmRCdmh4uoaWwu1g==",
+    "System.Text.Encodings.Web/10.0.0-preview.3.25171.5": {
+      "sha512": "NUjLF0b9nlu6bYO21SQwkd+olJJArGy/71LNs5KAXjbE8aYywTxIuhzVyRikR6M9mHQrRhtvQaWTCo3frnBZMw==",
       "type": "package",
-      "path": "system.text.json/9.0.3",
+      "path": "system.text.encodings.web/10.0.0-preview.3.25171.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.Text.Encodings.Web.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/System.Text.Encodings.Web.targets",
+        "lib/net10.0/System.Text.Encodings.Web.dll",
+        "lib/net10.0/System.Text.Encodings.Web.xml",
+        "lib/net462/System.Text.Encodings.Web.dll",
+        "lib/net462/System.Text.Encodings.Web.xml",
+        "lib/net8.0/System.Text.Encodings.Web.dll",
+        "lib/net8.0/System.Text.Encodings.Web.xml",
+        "lib/net9.0/System.Text.Encodings.Web.dll",
+        "lib/net9.0/System.Text.Encodings.Web.xml",
+        "lib/netstandard2.0/System.Text.Encodings.Web.dll",
+        "lib/netstandard2.0/System.Text.Encodings.Web.xml",
+        "runtimes/browser/lib/net10.0/System.Text.Encodings.Web.dll",
+        "runtimes/browser/lib/net10.0/System.Text.Encodings.Web.xml",
+        "runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll",
+        "runtimes/browser/lib/net8.0/System.Text.Encodings.Web.xml",
+        "runtimes/wasi/lib/net10.0/System.Text.Encodings.Web.dll",
+        "runtimes/wasi/lib/net10.0/System.Text.Encodings.Web.xml",
+        "runtimes/win/lib/net9.0/System.Text.Encodings.Web.dll",
+        "runtimes/win/lib/net9.0/System.Text.Encodings.Web.xml",
+        "system.text.encodings.web.10.0.0-preview.3.25171.5.nupkg.sha512",
+        "system.text.encodings.web.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "System.Text.Json/10.0.0-preview.3.25171.5": {
+      "sha512": "c3nnICP57xotpRgKYwRAWtpvY1mEZ98aaBsSntt0TxrgOvwLndaJoN08XtnUqJKmgJFYW272tXsu2g2SHmHUmg==",
+      "type": "package",
+      "path": "system.text.json/10.0.0-preview.3.25171.5",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3777,6 +3903,8 @@
         "buildTransitive/net8.0/System.Text.Json.targets",
         "buildTransitive/netcoreapp2.0/System.Text.Json.targets",
         "buildTransitive/netstandard2.0/System.Text.Json.targets",
+        "lib/net10.0/System.Text.Json.dll",
+        "lib/net10.0/System.Text.Json.xml",
         "lib/net462/System.Text.Json.dll",
         "lib/net462/System.Text.Json.xml",
         "lib/net8.0/System.Text.Json.dll",
@@ -3785,7 +3913,7 @@
         "lib/net9.0/System.Text.Json.xml",
         "lib/netstandard2.0/System.Text.Json.dll",
         "lib/netstandard2.0/System.Text.Json.xml",
-        "system.text.json.9.0.3.nupkg.sha512",
+        "system.text.json.10.0.0-preview.3.25171.5.nupkg.sha512",
         "system.text.json.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -3963,10 +4091,10 @@
         "toolstripcomboboxex.nuspec"
       ]
     },
-    "WebView2.DevTools.Dom/4.0.1": {
-      "sha512": "94azvGb+eNUKeKhCg4EN5/PE8o+PstEFyGgoCZfdtYgpc9BjUcImTIwfCmPjVMu+Ln3LT6fOpdjtpkXujUbLUA==",
+    "WebView2.DevTools.Dom/5.0.0": {
+      "sha512": "3ALtdbKd+jM+75Lv4buoAsb79YZOXHySy/MPBF+bWsjkMuTqxFEX+pkh/TCtmLbYCyvyFvVjQEjcZOa6eboT2Q==",
       "type": "package",
-      "path": "webview2.devtools.dom/4.0.1",
+      "path": "webview2.devtools.dom/5.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3977,7 +4105,7 @@
         "lib/net462/WebView2.DevTools.Dom.xml",
         "lib/netcoreapp3.1/WebView2.DevTools.Dom.dll",
         "lib/netcoreapp3.1/WebView2.DevTools.Dom.xml",
-        "webview2.devtools.dom.4.0.1.nupkg.sha512",
+        "webview2.devtools.dom.5.0.0.nupkg.sha512",
         "webview2.devtools.dom.nuspec"
       ]
     },
@@ -4021,20 +4149,20 @@
   },
   "projectFileDependencyGroups": {
     "net9.0-windows10.0.17763": [
-      "ClosedXML >= 0.104.2",
+      "ClosedXML >= 0.105.0-rc",
       "DataGridViewDisableButtonColumnEx >= 1.0.8",
       "FreeSpire.PDF >= 10.2.0",
-      "Microsoft.Web.WebView2 >= 1.0.3124.44",
+      "Microsoft.Web.WebView2 >= 1.0.3230-prerelease",
       "Octokit >= 14.0.0",
-      "System.Formats.Asn1 >= 9.0.3",
-      "System.IO.Packaging >= 9.0.3",
+      "System.Formats.Asn1 >= 10.0.0-preview.3.25171.5",
+      "System.IO.Packaging >= 10.0.0-preview.3.25171.5",
       "System.Security.Cryptography.OpenSsl >= 5.0.0",
       "System.Security.Cryptography.X509Certificates >= 4.3.2",
-      "System.Speech >= 9.0.3",
-      "System.Text.Json >= 9.0.3",
+      "System.Speech >= 10.0.0-preview.3.25171.5",
+      "System.Text.Json >= 10.0.0-preview.3.25171.5",
       "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.8",
-      "WebView2.DevTools.Dom >= 4.0.1",
+      "WebView2.DevTools.Dom >= 5.0.0",
       "WinForms.DataVisualization >= 1.10.0"
     ]
   },
@@ -4044,7 +4172,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "5.0.1.1",
+    "version": "5.0.1.2",
     "restore": {
       "projectUniqueName": "C:\\Repos\\CareLink\\src\\CareLink\\CareLink.vbproj",
       "projectName": "CareLink",
@@ -4088,7 +4216,7 @@
         "dependencies": {
           "ClosedXML": {
             "target": "Package",
-            "version": "[0.104.2, )"
+            "version": "[0.105.0-rc, )"
           },
           "DataGridViewDisableButtonColumnEx": {
             "target": "Package",
@@ -4100,7 +4228,7 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.3124.44, )"
+            "version": "[1.0.3230-prerelease, )"
           },
           "Octokit": {
             "target": "Package",
@@ -4108,11 +4236,11 @@
           },
           "System.Formats.Asn1": {
             "target": "Package",
-            "version": "[9.0.3, )"
+            "version": "[10.0.0-preview.3.25171.5, )"
           },
           "System.IO.Packaging": {
             "target": "Package",
-            "version": "[9.0.3, )"
+            "version": "[10.0.0-preview.3.25171.5, )"
           },
           "System.Security.Cryptography.OpenSsl": {
             "target": "Package",
@@ -4124,11 +4252,11 @@
           },
           "System.Speech": {
             "target": "Package",
-            "version": "[9.0.3, )"
+            "version": "[10.0.0-preview.3.25171.5, )"
           },
           "System.Text.Json": {
             "target": "Package",
-            "version": "[9.0.3, )"
+            "version": "[10.0.0-preview.3.25171.5, )"
           },
           "TableLayputPanelTop": {
             "target": "Package",
@@ -4140,7 +4268,7 @@
           },
           "WebView2.DevTools.Dom": {
             "target": "Package",
-            "version": "[4.0.1, )"
+            "version": "[5.0.0, )"
           },
           "WinForms.DataVisualization": {
             "target": "Package",

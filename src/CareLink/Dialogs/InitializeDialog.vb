@@ -174,7 +174,7 @@ Public Class InitializeDialog
         Me.CurrentUser.CurrentTarget = GetSgTarget()
         With Me.TargetSgComboBox
             .DataSource = If(NativeMmolL,
-                             If(Provider.NumberFormat.NumberDecimalSeparator = ".",
+                             If(Provider.NumberFormat.NumberDecimalSeparator = ServerDecimalSeparator,
                                 New BindingSource(MmolLItemsPeriod, Nothing),
                                 New BindingSource(MmolLItemsComma, Nothing)
                                ),

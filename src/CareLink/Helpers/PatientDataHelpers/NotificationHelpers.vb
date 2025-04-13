@@ -12,40 +12,40 @@ Friend Module NotificationHelpers
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
-    Private Sub CreateNotificationTables(notificationDictionary As Dictionary(Of String, String))
+    Private Sub CreateNotificationTables(mainForm As Form1, notificationDictionary As Dictionary(Of String, String))
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In notificationDictionary.WithIndex()
             Dim notificationType As KeyValuePair(Of String, String) = c.Value
             Dim innerJson As List(Of Dictionary(Of String, String)) = JsonToLisOfDictionary(notificationType.Value)
             If notificationType.Key = "clearedNotifications" Then
                 If innerJson.Count > 0 Then
                     innerJson.Reverse()
-                    Form1.TableLayoutPanelNotificationsCleared.SuspendLayout()
+                    mainForm.TableLayoutPanelNotificationsCleared.SuspendLayout()
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         DisplayNotificationDataTableInDGV(
-                            realPanel:=Form1.TableLayoutPanelNotificationsCleared,
+                            realPanel:=mainForm.TableLayoutPanelNotificationsCleared,
                             table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
                             attachHandlers:=AddressOf NotificationHelpers.AttachHandlers,
                             row:=innerDictionary.Index + 1)
                     Next
-                    Form1.TableLayoutPanelNotificationsCleared.ResumeLayout()
+                    mainForm.TableLayoutPanelNotificationsCleared.ResumeLayout()
                 Else
-                    Form1.TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
-                    Form1.TableLayoutPanelNotificationsCleared.DisplayEmptyDGV(className:="clearedNotifications")
+                    mainForm.TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
+                    mainForm.TableLayoutPanelNotificationsCleared.DisplayEmptyDGV(className:="clearedNotifications")
                 End If
             Else
                 If innerJson.Count > 0 Then
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         DisplayNotificationDataTableInDGV(
-                            realPanel:=Form1.TableLayoutPanelNotificationActive,
+                            realPanel:=mainForm.TableLayoutPanelNotificationActive,
                             table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
                             attachHandlers:=AddressOf NotificationHelpers.AttachHandlers,
                             row:=innerDictionary.Index + 1)
                     Next
                 Else
-                    Form1.TableLayoutPanelNotificationActive.AutoSizeMode = AutoSizeMode.GrowOnly
-                    Form1.TableLayoutPanelNotificationActive.DisplayEmptyDGV(className:="activeNotification")
+                    mainForm.TableLayoutPanelNotificationActive.AutoSizeMode = AutoSizeMode.GrowAndShrink
+                    mainForm.TableLayoutPanelNotificationActive.DisplayEmptyDGV(className:="activeNotification")
                 End If
             End If
             Application.DoEvents()
@@ -56,7 +56,7 @@ Friend Module NotificationHelpers
         sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs)
 
         If e.RowIndex >= 0 AndAlso CType(sender, DataGridView).SelectedCells.Count > 0 Then
-            e.ContextMenuStrip = Form1.DgvCopyWithoutExcelMenuStrip
+            e.ContextMenuStrip = My.Forms.Form1.DgvCopyWithoutExcelMenuStrip
         End If
     End Sub
 
@@ -130,7 +130,6 @@ Friend Module NotificationHelpers
             .Name = $"DataGridView{className}",
             .RowHeadersVisible = False}
         realPanel.AutoSize = True
-        realPanel.AutoSizeMode = AutoSizeMode.GrowOnly
         realPanel.Controls.Add(control:=dGV, column:=0, row)
 
         dGV.InitializeDgv()
@@ -157,23 +156,23 @@ Friend Module NotificationHelpers
         Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
     End Function
 
-    Friend Sub UpdateNotificationTabs()
+    Friend Sub UpdateNotificationTabs(mainForm As Form1)
         Try
-            Form1.TableLayoutPanelNotificationActive.AutoScroll = True
-            Form1.TableLayoutPanelNotificationActive.SetTableName(ServerDataIndexes.notificationHistory, isClearedNotifications:=False)
-            For i As Integer = Form1.TableLayoutPanelNotificationActive.Controls.Count - 1 To 1 Step -1
-                Form1.TableLayoutPanelNotificationActive.Controls.RemoveAt(i)
+            mainForm.TableLayoutPanelNotificationActive.AutoScroll = True
+            mainForm.TableLayoutPanelNotificationActive.SetTableName(ServerDataIndexes.notificationHistory, isClearedNotifications:=False)
+            For i As Integer = mainForm.TableLayoutPanelNotificationActive.Controls.Count - 1 To 1 Step -1
+                mainForm.TableLayoutPanelNotificationActive.Controls.RemoveAt(i)
             Next
 
-            Form1.TableLayoutPanelNotificationsCleared.SetTableName(ServerDataIndexes.notificationHistory, isClearedNotifications:=True)
-            For i As Integer = Form1.TableLayoutPanelNotificationsCleared.Controls.Count - 1 To 1 Step -1
-                Form1.TableLayoutPanelNotificationsCleared.Controls.RemoveAt(i)
+            mainForm.TableLayoutPanelNotificationsCleared.SetTableName(ServerDataIndexes.notificationHistory, isClearedNotifications:=True)
+            For i As Integer = mainForm.TableLayoutPanelNotificationsCleared.Controls.Count - 1 To 1 Step -1
+                mainForm.TableLayoutPanelNotificationsCleared.Controls.RemoveAt(i)
             Next
-            CreateNotificationTables(notificationDictionary:=s_notificationHistoryValue)
-            Form1.TableLayoutPanelNotificationsCleared.AutoScroll = True
+            CreateNotificationTables(mainForm:=mainForm, notificationDictionary:=s_notificationHistoryValue)
+            mainForm.TableLayoutPanelNotificationsCleared.AutoScroll = True
         Catch ex As Exception
             Stop
-            '       Throw
+            Throw
         End Try
     End Sub
 

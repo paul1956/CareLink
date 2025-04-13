@@ -155,7 +155,7 @@ Friend Module SummaryHelpers
                         ' handled elsewhere
                                 Case "unitsRemaining"
                                     If Not additionalInfo.TryGetValue(key, unitsRemaining) Then
-                                        Stop
+                                        unitsRemaining = "0"
                                     End If
                             End Select
                         End If
