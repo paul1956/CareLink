@@ -60,12 +60,8 @@ Public Class AutoBasalDelivery
     <Column(Order:=6, TypeName:=NameOf([Single]))>
     Public Property bolusAmount As Single
 
-    <DisplayName("Basal Rate")>
-    <Column(Order:=7, TypeName:=NameOf([Single]))>
-    Public Property basalRate As Single
-
     <DisplayName("Max Auto Basal Rate")>
-    <Column(Order:=8, TypeName:=NameOf([Single]))>
+    <Column(Order:=7, TypeName:=NameOf([Single]))>
     Public Property maxAutoBasalRate As Single
 
 End Class
