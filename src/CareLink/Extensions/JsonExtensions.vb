@@ -25,7 +25,7 @@ Public Module JsonExtensions
             With sGs.Last
                 If .Timestamp.Equals(New DateTime) Then
                     .TimestampAsString = If(i = 0,
-                        (s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime - New TimeSpan(23, 55, 0)).RoundDownToMinute().ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture),
+                        (PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - New TimeSpan(23, 55, 0)).RoundDownToMinute().ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture),
                         (sGs(0).Timestamp + (s_05MinuteSpan * i)).ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
                 End If
             End With

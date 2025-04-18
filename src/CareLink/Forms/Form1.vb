@@ -2050,8 +2050,8 @@ Public Class Form1
     End Sub
 
     Private Sub SensorDaysLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
-        If s_sensorDurationHours < 24 Then
-            _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {s_sensorDurationHours} hours")
+        If PatientData.SensorDurationHours < 24 Then
+            _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {PatientData.SensorDurationHours} hours")
         End If
     End Sub
 
@@ -2786,7 +2786,7 @@ Public Class Form1
                                 timeOrderedMarkers.Add(markerOADateTime, bolusAmount)
                             End If
                         Case "LOW_GLUCOSE_SUSPENDED"
-                            If s_pumpInRangeOfTransmitter AndAlso CurrentPdf?.IsValid AndAlso Not InAutoMode Then
+                            If PatientData.ConduitSensorInRange AndAlso CurrentPdf?.IsValid AndAlso Not InAutoMode Then
                                 For Each kvp As KeyValuePair(Of OADate, Single) In GetManualBasalValues(markerWithIndex)
                                     If timeOrderedMarkers.ContainsKey(kvp.Key) Then
                                         timeOrderedMarkers(kvp.Key) += kvp.Value
@@ -2887,7 +2887,7 @@ Public Class Form1
             Me.ShieldUnitsLabel.Text = BgUnitsNativeString
 
             If InAutoMode Then
-                Select Case s_sensorState
+                Select Case PatientData.SensorState
                     Case "CALIBRATING"
                         Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
                     Case "CALIBRATION_REQUIRED"
@@ -2904,7 +2904,7 @@ Public Class Form1
                 Me.LastSgOrExitTimeLabel.Visible = True
             Else
                 Me.SmartGuardShieldPictureBox.Image = Nothing
-                Me.ShieldUnitsLabel.Visible = s_sensorState = "NO_ERROR_MESSAGE"
+                Me.ShieldUnitsLabel.Visible = PatientData.SensorState = "NO_ERROR_MESSAGE"
                 Me.LastSgOrExitTimeLabel.Visible = False
             End If
 
@@ -2914,16 +2914,16 @@ Public Class Form1
                 Dim sgString As String
                 If s_autoModeReadinessState?.Value = "CALIBRATING" Then
                     ' TODO
-                    sgString = s_lastSg.ToString
+                    sgString = New SG(PatientData.LastSG).ToString
                     Me.CurrentSgLabel.Text = sgString
                 Else
-                    sgString = s_lastSg.ToString
+                    sgString = New SG(PatientData.LastSG).ToString
                     Me.CurrentSgLabel.Text = sgString
                 End If
                 Me.UpdateNotifyIcon(sgString)
                 _sgMiniDisplay.SetCurrentSgString(sgString, s_lastSg.sg)
                 Me.SensorMessageLabel.Visible = False
-                If s_sensorMessages.TryGetValue(s_sensorState, message) Then
+                If s_sensorMessages.TryGetValue(PatientData.SensorState, message) Then
                     Dim splitMessage As String = message.Split(SentenceSeparator)(0)
                     message = If(message.Contains("..."), $"{splitMessage}...", splitMessage)
                 End If
@@ -2933,14 +2933,14 @@ Public Class Form1
                 Me.LastSgOrExitTimeLabel.Visible = False
                 Me.SensorMessageLabel.Visible = True
                 Me.SensorMessageLabel.BackColor = Color.Transparent
-                If s_sensorMessages.TryGetValue(s_sensorState, message) Then
+                If s_sensorMessages.TryGetValue(PatientData.SensorState, message) Then
                     Dim splitMessage As String = message.Split(SentenceSeparator)(0)
                     message = If(message.Contains("..."), $"{splitMessage}...", splitMessage)
                 Else
                     If Debugger.IsAttached Then
                         Stop
                         MsgBox(
-                            heading:=$"{s_sensorState} is unknown sensor message",
+                            heading:=$"{PatientData.SensorState} is unknown sensor message",
                             text:="",
                             buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                             title:=GetTitleFromStack(New StackFrame(0, needFileInfo:=True)))
@@ -2949,7 +2949,7 @@ Public Class Form1
                     message = message.ToTitle
                 End If
 
-                Select Case s_sensorState
+                Select Case PatientData.SensorState
                     Case "UNKNOWN"
                         Me.SensorMessageLabel.Text = message
                     Case "WARM_UP"
@@ -2986,10 +2986,10 @@ Public Class Form1
     Private Sub UpdateCalibrationTimeRemaining()
         Try
             If PatientData.ConduitInRange Then
-                If s_timeToNextCalibrationHours >= Byte.MaxValue Then
+                If PatientData.TimeToNextCalibHours >= Byte.MaxValue Then
                     Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(720)
-                ElseIf s_timeToNextCalibrationHours = 0 Then
-                    Me.CalibrationDueImage.Image = If(s_systemStatusMessage = "WAIT_TO_CALIBRATE" OrElse s_sensorState = "WARM_UP" OrElse s_sensorState = "CHANGE_SENSOR",
+                ElseIf PatientData.TimeToNextCalibHours = 0 Then
+                    Me.CalibrationDueImage.Image = If(PatientData.SystemStatusMessage = "WAIT_TO_CALIBRATE" OrElse PatientData.SensorState = "WARM_UP" OrElse PatientData.SensorState = "CHANGE_SENSOR",
                     My.Resources.CalibrationNotReady,
                     My.Resources.CalibrationDotRed.DrawCenteredArc(s_timeToNextCalibrationMinutes))
                 ElseIf s_timeToNextCalibrationMinutes = -1 Then
@@ -3119,7 +3119,7 @@ Public Class Form1
             Me.RemainingInsulinUnits.Text = "???U"
         Else
             Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ServerDataIndexes.reservoirRemainingUnits)).ParseSingle(decimalDigits:=1):N1} U"
-            Select Case s_reservoirLevelPercent
+            Select Case PatientData.ReservoirLevelPercent
                 Case >= 85
                     Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=7)
                 Case >= 71
@@ -3174,7 +3174,7 @@ Public Class Form1
     Private Sub UpdateSensorLife()
         If PatientData.ConduitInRange Then
 
-            Select Case s_sensorDurationHours
+            Select Case PatientData.SensorDurationHours
                 Case Is >= 255
                     Me.SensorDaysLeftLabel.Text = ""
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
@@ -3185,13 +3185,13 @@ Public Class Form1
                     Me.SensorTimeLeftLabel.Text = "7 Days"
 
                 Case Is >= 24
-                    Me.SensorDaysLeftLabel.Text = Math.Ceiling(s_sensorDurationHours / 24).ToString()
+                    Me.SensorDaysLeftLabel.Text = Math.Ceiling(PatientData.SensorDurationHours / 24).ToString()
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
                     Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
                 Case > 0
-                    Me.SensorDaysLeftLabel.Text = $"<{Math.Ceiling(s_sensorDurationHours / 24)}"
+                    Me.SensorDaysLeftLabel.Text = $"<{Math.Ceiling(PatientData.SensorDurationHours / 24)}"
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
-                    Me.SensorTimeLeftLabel.Text = $"{s_sensorDurationHours} Hours"
+                    Me.SensorTimeLeftLabel.Text = $"{PatientData.SensorDurationHours} Hours"
                 Case 0
                     Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(NameOf(ServerDataIndexes.sensorDurationMinutes), False, -1)
                     Select Case sensorDurationMinutes
@@ -3459,9 +3459,9 @@ Public Class Form1
         Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
 
-        Me.FullNameLabel.Text = $"{s_firstName} {RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.lastName))}"
-        Me.ModelLabel.Text = $"{s_modelNumber} HW Version = {s_pumpHardwareRevision}"
-        Me.PumpNameLabel.Text = GetPumpName(s_modelNumber)
+        Me.FullNameLabel.Text = $"{PatientData.FirstName} {RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.lastName))}"
+        Me.ModelLabel.Text = $"{PatientData.MedicalDeviceInformation.ModelNumber} HW Version = {PatientData.MedicalDeviceInformation.HardwareRevision}"
+        Me.PumpNameLabel.Text = GetPumpName(PatientData.MedicalDeviceInformation.ModelNumber)
         Dim nonZeroRecords As IEnumerable(Of SG) = s_listOfSgRecords.Where(Function(entry As SG) Not Single.IsNaN(entry.sg))
         Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/288 SG Readings"
 

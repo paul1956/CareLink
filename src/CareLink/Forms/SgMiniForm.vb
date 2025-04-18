@@ -24,10 +24,9 @@ Public Class SgMiniForm
     End Sub
 
     Private Shared Function GetLastUpdateMessage() As String
-        Return If(s_lastMedicalDeviceDataUpdateServerEpoch = 0,
-                  $"{s_firstName}'s Last Update Unknown",
-                  $"{s_firstName}'s Updated {CInt((PumpNow() - s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime).TotalMinutes)} minutes ago"
-                 )
+        Return If(PatientData?.LastConduitUpdateServerDateTime > 0,
+            $"{PatientData.FirstName}'s Updated {CInt((PumpNow() - PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime).TotalMinutes)} minutes ago",
+            If(PatientData Is Nothing, "Last Update Unknown", $"{PatientData?.FirstName}'s Last Update Unknown"))
     End Function
 
     Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs) Handles ActiveInsulinTextBox.GotFocus
@@ -110,7 +109,7 @@ Public Class SgMiniForm
                 Me.SgTextBox.BackColor = Color.Red.GetContrastingColor()
                 Me.SgTextBox.ForeColor = Color.Red
                 If Not _alarmPlayedLow Then
-                    PlayText($"Low Alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
+                    PlayText($"Low Alarm for {PatientData.FirstName}, current sensor glucose {_currentSgValue}")
                     _alarmPlayedLow = True
                     _alarmPlayedHigh = False
                 End If
@@ -123,7 +122,7 @@ Public Class SgMiniForm
                 Me.SgTextBox.BackColor = Color.Yellow.GetContrastingColor()
                 Me.SgTextBox.ForeColor = Color.Yellow
                 If Not _alarmPlayedHigh Then
-                    PlayText($"High alarm for {s_firstName}, current sensor glucose {_currentSgValue}")
+                    PlayText($"High alarm for {PatientData.FirstName}, current sensor glucose {_currentSgValue}")
                     _alarmPlayedLow = False
                     _alarmPlayedHigh = True
                 End If

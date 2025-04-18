@@ -132,7 +132,7 @@ Friend Module Form1CollectMarkersHelper
 
         SortAndFilterListOfLowGlucoseSuspendedMarkers()
         Dim endOADate As OADate = If(basalDictionary.Count = 0,
-                                     New OADate(s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime),
+                                     New OADate(PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime),
                                      basalDictionary.Last.Key
                                     )
 

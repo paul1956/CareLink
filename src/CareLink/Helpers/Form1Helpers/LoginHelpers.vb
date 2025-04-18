@@ -26,9 +26,8 @@ Friend Module LoginHelpers
             Stop
         End Try
         RecentData = PatientDataElement.ConvertJsonElementToStringDictionary()
-        s_timeFormat = PatientData.TimeFormat
-        s_timeWithMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
-        s_timeWithoutMinuteFormat = If(s_timeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
+        s_timeWithMinuteFormat = If(PatientData.TimeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
+        s_timeWithoutMinuteFormat = If(PatientData.TimeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
     End Sub
 
     Friend Function DoOptionalLoginAndUpdateData(mainForm As Form1, updateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean

@@ -37,9 +37,9 @@ Friend Module SpeechSupport
         Dim currentSgStr As String = Form1.CurrentSgLabel.Text
         If IsNumeric(currentSgStr) Then
             Dim sgMessage As String = $"current {sgName} is {currentSgStr}"
-            PlayText($"{s_firstName}'s {sgMessage}{GetTrendText()}")
+            PlayText($"{PatientData.FirstName}'s {sgMessage}{GetTrendText()}")
         Else
-            PlayText($"{s_firstName}'s current {sgName} and trend are Unknown")
+            PlayText($"{PatientData.FirstName}'s current {sgName} and trend are Unknown")
         End If
     End Sub
 
@@ -156,7 +156,7 @@ Friend Module SpeechSupport
                     AnnounceSG(recognizedTextLower)
 
                 Case recognizedTextLower.StartsWith("tell me", StringComparison.CurrentCultureIgnoreCase)
-                    If Not recognizedTextLower.Contains(s_firstName, StringComparison.CurrentCultureIgnoreCase) Then
+                    If Not recognizedTextLower.Contains(PatientData.FirstName, StringComparison.CurrentCultureIgnoreCase) Then
                         Return
                     End If
                     Form1.StatusStripSpeech.Text = message
@@ -223,7 +223,7 @@ Friend Module SpeechSupport
 
     Friend Sub InitializeSpeechRecognition()
         Dim oldUserName As String = s_speechUserName
-        If s_speechUserName = s_firstName AndAlso s_sre IsNot Nothing Then
+        If s_speechUserName = PatientData.FirstName AndAlso s_sre IsNot Nothing Then
             Exit Sub
         End If
         CancelSpeechRecognition()
@@ -251,7 +251,7 @@ Friend Module SpeechSupport
 
             Dim gb_tellMe As New GrammarBuilder With {.Culture = culture}
             gb_tellMe.Append("Tell me")
-            gb_tellMe.Append($"{s_firstName}'s")
+            gb_tellMe.Append($"{PatientData.FirstName}'s")
             gb_tellMe.Append(New Choices("SG", "BG", "Blood Sugar", "Blood Glucose"))
             s_sre.LoadGrammarAsync(New Grammar(gb_tellMe))
 
@@ -272,7 +272,7 @@ Friend Module SpeechSupport
             Application.DoEvents()
             If String.IsNullOrWhiteSpace(s_speechUserName) Then
                 Dim msg As String = ""
-                msg = $"Speech recognition enabled for {s_firstName}"
+                msg = $"Speech recognition enabled for {PatientData.FirstName}"
 
                 If String.IsNullOrWhiteSpace(oldUserName) Then
                     msg &= " for a list of commands say, CareLink what can I say"
@@ -280,7 +280,7 @@ Friend Module SpeechSupport
 
                 PlayText(msg)
             End If
-            s_speechUserName = s_firstName
+            s_speechUserName = PatientData.FirstName
             Form1.StatusStripSpeech.Text = "Listening"
             s_sre.RecognizeAsync(RecognizeMode.Multiple)
             AddHandler s_sre.SpeechRecognized, AddressOf SpeechRecognized

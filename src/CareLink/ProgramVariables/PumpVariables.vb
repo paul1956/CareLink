@@ -21,32 +21,21 @@ Public Module PumpVariables
     Friend s_autoModeReadinessState As SummaryRecord
     Friend s_basalList As New List(Of Basal) From {New Basal}
     Friend s_filterJsonData As Boolean = True
-    Friend s_firstName As String = ""
     Friend s_lastAlarmValue As Dictionary(Of String, String)
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
-    Friend s_lastSg As SG
-    Friend s_lastSgValue As Single = 0
+    Friend s_lastSg As SG  ' Do not replace this, it is used in the UI
+    Friend s_lastSgValue As Single = 0 ' Do not replace this, it is used in the UI
     Friend s_listOfLimitRecords As New List(Of Limit)
     Friend s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspended)
     Friend s_listOfSgRecords As New List(Of SG)
     Friend s_listOfTimeChangeMarkers As New List(Of TimeChange)
     Friend s_markers As New List(Of Marker)
-    Friend s_modelNumber As String
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
     Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
-    Friend s_pumpHardwareRevision As String
-    Friend s_pumpInRangeOfTransmitter As Boolean
-    Friend s_reservoirLevelPercent As Integer
-    Friend s_sensorDurationHours As Integer
-    Friend s_sensorState As String
     Friend s_suspendedSince As String = "???"
-    Friend s_systemStatusMessage As String
     Friend s_systemStatusTimeRemaining As TimeSpan
     Friend s_therapyAlgorithmStateValue As Dictionary(Of String, String)
-    Friend s_timeFormat As String
-    Friend s_timeInRange As Integer
-    Friend s_timeToNextCalibrationHours As Short
-    Friend s_timeToNextCalibrationMinutes As Short
+    Friend s_timeToNextCalibrationMinutes As Short ' Do not replace this, it is used in the UI
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
     Friend s_totalAutoCorrection As Single

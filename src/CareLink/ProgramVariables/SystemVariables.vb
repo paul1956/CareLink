@@ -70,8 +70,9 @@ Friend Module SystemVariables
     End Function
 
     Friend Function GetTIR() As (Uint As UInteger, Str As String)
-        Return If(s_timeInRange >= 0,
-                  (CUInt(s_timeInRange), s_timeInRange.ToString),
+        Dim timeInRange As Integer = PatientData.TimeInRange
+        Return If(timeInRange > 0,
+                  (CUInt(timeInRange), timeInRange.ToString),
                   (CUInt(0), "??? "))
     End Function
 

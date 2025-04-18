@@ -85,9 +85,6 @@ Friend Module Form1UpdateHelpers
                 value:=strings(1).Trim,
                 message)
             listOfSummaryRecords.Add(item)
-            If item.Key.EndsWith("hardwareRevision") Then
-                s_pumpHardwareRevision = item.Value
-            End If
         Next
     End Sub
 
@@ -113,13 +110,10 @@ Friend Module Form1UpdateHelpers
         Dim bgUnits As String = String.Empty
         If RecentData.TryGetValue("bgUnits", bgUnitsNative) AndAlso
             UnitsStrings.TryGetValue(bgUnitsNative, bgUnits) Then
-
             NativeMmolL = bgUnits.Equals("mmol/L")
         Else
             Stop
         End If
-
-        s_lastMedicalDeviceDataUpdateServerEpoch = PatientData.LastConduitUpdateServerDateTime
 
         If RecentData.TryGetValue("therapyAlgorithmState", value) Then
             s_therapyAlgorithmStateValue = LoadIndexedItems(value)
@@ -182,8 +176,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.firstName)
-                    s_firstName = row.Value
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, s_firstName))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, PatientData.FirstName))
 
                 Case NameOf(ServerDataIndexes.appModelType)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
@@ -214,7 +207,6 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.medicalDeviceInformation)
                     HandleComplexItems(row, recordNumber, "medicalDeviceInformation", s_listOfSummaryRecords)
-                    s_modelNumber = PatientData.MedicalDeviceInformation.ModelNumber
                     mainForm.SerialNumberButton.Text = $"{ PatientData.MedicalDeviceInformation.DeviceSerialNumber} Details..."
 
                 Case NameOf(ServerDataIndexes.medicalDeviceTime)
@@ -246,7 +238,6 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.timeToNextCalibHours)
-                    s_timeToNextCalibrationHours = Short.Parse(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.finalCalibration)
@@ -259,7 +250,6 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(ServerDataIndexes.sensorDurationMinutes, "-1", "No data from pump"))
 
                 Case NameOf(ServerDataIndexes.sensorDurationHours)
-                    s_sensorDurationHours = CInt(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.transmitterPairedTime)
@@ -281,8 +271,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.reservoirLevelPercent)
-                    s_reservoirLevelPercent = PatientData.ReservoirLevelPercent
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Reservoir is {s_reservoirLevelPercent}%"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Reservoir is {PatientData.ReservoirLevelPercent}%"))
 
                 Case NameOf(ServerDataIndexes.reservoirAmount)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Full reservoir holds {PatientData.ReservoirAmount}U"))
@@ -303,15 +292,12 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Pump {If(CBool(row.Value), "is", "is not")} in range of phone"))
 
                 Case NameOf(ServerDataIndexes.conduitSensorInRange)
-                    s_pumpInRangeOfTransmitter = CBool(row.Value)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Transmitter {If(s_pumpInRangeOfTransmitter, "is", "is not")} in range of pump"))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Transmitter {If(PatientData.ConduitSensorInRange, "is", "is not")} in range of pump"))
 
                 Case NameOf(ServerDataIndexes.systemStatusMessage)
-                    s_systemStatusMessage = row.Value
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, s_sensorMessages, NameOf(s_sensorMessages)))
 
                 Case NameOf(ServerDataIndexes.sensorState)
-                    s_sensorState = row.Value
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, s_sensorMessages, NameOf(s_sensorMessages)))
 
                 Case NameOf(ServerDataIndexes.gstCommunicationState)
@@ -369,7 +355,6 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Time above limit = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
 
                 Case NameOf(ServerDataIndexes.timeInRange)
-                    s_timeInRange = CInt(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, $"Time in range = {ConvertPercent24HoursToDisplayValueString(row.Value)}"))
 
                 Case NameOf(ServerDataIndexes.averageSGFloat)
