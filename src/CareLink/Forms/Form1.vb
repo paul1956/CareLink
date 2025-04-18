@@ -3426,9 +3426,6 @@ Public Class Form1
 
         SyncLock _updatingLock
             _updating = True ' prevent paint
-            _summaryChartAbsoluteRectangle = RectangleF.Empty
-            _activeInsulinChartAbsoluteRectangle = RectangleF.Empty
-            _treatmentMarkerAbsoluteRectangle = RectangleF.Empty
             Me.MenuStartHere.Enabled = False
             If fromFile Then
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
