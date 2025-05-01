@@ -53,7 +53,7 @@ Friend Module GetManualBasalPoints
                 Dim basalRecord As BasalRateRecord = e.Value
                 Dim startTime As TimeOnly = basalRecord.Time
                 Dim endTime As TimeOnly = If(e.IsLast,
-                                             s_eleven59.AddMinutes(1),
+                                             Eleven59.AddMinutes(1),
                                              basalRateRecords(e.Index + 1).Time
                                             )
                 If TimeOnly.FromDateTime(Date.FromOADate(currentMarkerTime)).IsBetween(startTime, endTime) Then

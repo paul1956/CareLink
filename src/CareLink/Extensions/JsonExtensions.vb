@@ -26,7 +26,7 @@ Public Module JsonExtensions
                 If .Timestamp.Equals(New DateTime) Then
                     .TimestampAsString = If(i = 0,
                         (PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - New TimeSpan(23, 55, 0)).RoundDownToMinute().ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture),
-                        (sGs(0).Timestamp + (s_05MinuteSpan * i)).ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
+                        (sGs(0).Timestamp + (FiveMinuteSpan * i)).ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
                 End If
             End With
         Next

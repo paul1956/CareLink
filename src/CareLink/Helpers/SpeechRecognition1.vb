@@ -299,7 +299,7 @@ Friend Module SpeechSupport
         If Not My.Settings.SystemAudioAlertsEnabled Then
             Form1.StatusStripSpeech.Text = ""
         End If
-        If s_lastSpokenMessage = text AndAlso DateDiff(DateInterval.Minute, Now, s_timeOfLastAlert) < s_30SecondInMilliseconds Then
+        If s_lastSpokenMessage = text AndAlso DateDiff(DateInterval.Minute, Now, s_timeOfLastAlert) < ThirtySecondInMilliseconds Then
             Form1.StatusStripSpeech.Text = $"Rejected: '{text}' too soon, Listening"
             s_statusStripSpeechText = text
         End If

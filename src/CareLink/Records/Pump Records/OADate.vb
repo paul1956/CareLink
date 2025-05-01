@@ -82,7 +82,7 @@ Public Class OADate
 
     Public Function Within6Minutes(currentOADate As OADate) As Boolean
 
-        Return ((Me + s_06MinuteOADate) <= currentOADate) OrElse currentOADate < Me
+        Return ((Me + SixMinuteOADate) <= currentOADate) OrElse currentOADate < Me
     End Function
 
 End Class

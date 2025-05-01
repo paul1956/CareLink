@@ -63,7 +63,7 @@ Friend Module LoginHelpers
                 Loop
 
                 If Form1.Client Is Nothing OrElse Not Form1.Client.LoggedIn Then
-                    StartOrStopServerUpdateTimer(True, s_5MinutesInMilliseconds)
+                    StartOrStopServerUpdateTimer(True, FiveMinutesInMilliseconds)
 
                     If NetworkUnavailable() Then
                         ReportLoginStatus(mainForm.LoginStatus, hasErrors:=True, lastErrorMessage:="Network Unavailable")
@@ -80,7 +80,7 @@ Friend Module LoginHelpers
                 Dim lastErrorMessage As String = LoginDialog.Client.GetRecentData()
 
                 SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, forceUI:=False)
-                StartOrStopServerUpdateTimer(True, s_1MinutesInMilliseconds)
+                StartOrStopServerUpdateTimer(True, OneMinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
                     ReportLoginStatus(mainForm.LoginStatus)

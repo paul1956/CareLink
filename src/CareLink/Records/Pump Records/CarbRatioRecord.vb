@@ -21,7 +21,7 @@ Public Class CarbRatioRecord
             Return _endTime
         End Get
         Set
-            _endTime = If(Value = s_midnight, s_eleven59, Value)
+            _endTime = If(Value = Midnight, Eleven59, Value)
         End Set
     End Property
 

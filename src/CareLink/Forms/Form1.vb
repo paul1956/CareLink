@@ -187,7 +187,7 @@ Public Class Form1
             Exit Sub
         End If
 
-        Me.CursorTimer.Interval = s_30SecondInMilliseconds
+        Me.CursorTimer.Interval = ThirtySecondInMilliseconds
         Me.CursorTimer.Start()
     End Sub
 
@@ -1651,7 +1651,7 @@ Public Class Form1
 
     Private Sub MenuStartHereManuallyImportDeviceSettings_Click(sender As Object, e As EventArgs) Handles MenuStartHereManuallyImportDeviceSettings.Click
         Dim downloadsPath As String = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) & "\Downloads\"
-        Using openFileDialog1 As New OpenFileDialog With {
+        Using openFileDialog1 As New System.Windows.Forms.OpenFileDialog With {
             .AddExtension = True,
             .AddToRecent = False,
             .CheckFileExists = True,
@@ -1718,7 +1718,7 @@ Public Class Form1
 
     Private Sub MenuStartHereUseExceptionReport_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseExceptionReport.Click
         Dim fileList As String() = Directory.GetFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
-        Using openFileDialog1 As New OpenFileDialog With {
+        Using openFileDialog1 As New System.Windows.Forms.OpenFileDialog With {
             .AddExtension = True,
             .AddToRecent = False,
             .CheckFileExists = True,
@@ -2177,7 +2177,7 @@ Public Class Form1
             Case PowerModes.Resume
                 Me.SetLastUpdateTime("System Awake", "", True, Nothing)
                 s_shuttingDown = False
-                StartOrStopServerUpdateTimer(True, s_30SecondInMilliseconds \ 3)
+                StartOrStopServerUpdateTimer(True, ThirtySecondInMilliseconds \ 3)
                 DebugPrint($"restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
         End Select
 
@@ -2226,7 +2226,7 @@ Public Class Form1
                     value:=lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     Dim epochAsLocalDate As Date = lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
-                    If epochAsLocalDate + s_05MinuteSpan < Now() Then
+                    If epochAsLocalDate + FiveMinuteSpan < Now() Then
                         Me.SetLastUpdateTime(
                             msg:=Nothing,
                             suffixMessage:="",
@@ -2251,7 +2251,7 @@ Public Class Form1
             ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMessage)
             _sgMiniDisplay.SetCurrentSgString(sgString:="---", sgValue:=0)
         End If
-        StartOrStopServerUpdateTimer(Start:=True, interval:=s_1MinutesInMilliseconds)
+        StartOrStopServerUpdateTimer(Start:=True, interval:=OneMinutesInMilliseconds)
     End Sub
 
 #End Region ' Timer Events
@@ -2809,7 +2809,7 @@ Public Class Form1
 
                 For i As Integer = 0 To 287
                     Dim initialBolus As Single = 0
-                    Dim firstNotSkippedOaTime As New OADate((s_listOfSgRecords(0).Timestamp + (s_05MinuteSpan * i)).RoundDownToMinute())
+                    Dim firstNotSkippedOaTime As New OADate((s_listOfSgRecords(0).Timestamp + (FiveMinuteSpan * i)).RoundDownToMinute())
                     While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= firstNotSkippedOaTime
                         initialBolus += timeOrderedMarkers.Values(currentMarker)
                         currentMarker += 1
@@ -3264,7 +3264,7 @@ Public Class Form1
             Try
                 ' need to figure out %
                 Dim autoModeStartTime As New Date
-                Dim timeInAutoMode As TimeSpan = s_0TicksSpan
+                Dim timeInAutoMode As TimeSpan = ZeroTickSpan
                 For Each r As IndexClass(Of AutoModeStatus) In s_listOfAutoModeStatusMarkers.WithIndex
                     If r.IsFirst Then
                         If r.Value.AutoModeOn Then
@@ -3285,9 +3285,9 @@ Public Class Form1
                         End If
                     End If
                 Next
-                Me.SmartGuardLabel.Text = If(timeInAutoMode >= s_01DaySpan,
+                Me.SmartGuardLabel.Text = If(timeInAutoMode >= OneDaySpan,
                                              "SmartGuard 100%",
-                                             $"SmartGuard {CInt(timeInAutoMode / s_01DaySpan * 100)}%"
+                                             $"SmartGuard {CInt(timeInAutoMode / OneDaySpan * 100)}%"
                                             )
             Catch ex As Exception
                 Me.SmartGuardLabel.Text = "SmartGuard ???%"

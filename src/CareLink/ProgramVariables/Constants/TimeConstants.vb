@@ -4,28 +4,27 @@
 
 Friend Module TimeConstants
 
-    Friend ReadOnly s_eleven59 As TimeOnly = TimeOnly.FromTimeSpan(New TimeSpan(23, 59, 59))
-    Friend ReadOnly s_eleven59Str As String = TimeOnly.FromTimeSpan(New TimeSpan(23, 59, 59)).ToHoursMinutes
-    Friend ReadOnly s_midnight As New TimeOnly(0, 0)
-    Friend ReadOnly s_midnightStr As String = s_midnight.ToHoursMinutes()
+    Friend ReadOnly Property Eleven59 As TimeOnly = TimeOnly.FromTimeSpan(New TimeSpan(23, 59, 59))
+    Friend ReadOnly Property Eleven59Str As String = TimeOnly.FromTimeSpan(New TimeSpan(23, 59, 59)).ToHoursMinutes
+    Friend ReadOnly Property Midnight As New TimeOnly(0, 0)
+    Friend ReadOnly Property MidnightStr As String = Midnight.ToHoursMinutes()
 
 #Region "TimeSpan Constants"
 
-    Public ReadOnly s_0TicksSpan As New TimeSpan(0)
-    Public ReadOnly s_minus1TickSpan As New TimeSpan(-1)
+    Public ReadOnly Property ZeroTickSpan As New TimeSpan(0)
 
 #Region "Minute Spans"
 
-    Public ReadOnly s_01MinuteSpan As New TimeSpan(0, 1, 0)
-    Public ReadOnly s_05MinuteSpan As New TimeSpan(0, 5, 0)
-    Public ReadOnly s_30MinuteSpan As New TimeSpan(0, 30, 0)
+    Public ReadOnly Property OneMinuteSpan As New TimeSpan(0, 1, 0)
+    Public ReadOnly Property FiveMinuteSpan As New TimeSpan(0, 5, 0)
+    Public ReadOnly Property ThirtyMinuteSpan As New TimeSpan(0, 30, 0)
 
 #End Region
 
 #Region "Day Spans"
 
-    Public ReadOnly s_01DaySpan As New TimeSpan(1, 0, 0, 0)
-    Public ReadOnly s_30DaysSpan As New TimeSpan(30, 0, 0, 0)
+    Public ReadOnly Property OneDaySpan As New TimeSpan(1, 0, 0, 0)
+    Public ReadOnly Property ThirtyDaysSpan As New TimeSpan(30, 0, 0, 0)
 
 #End Region
 
@@ -33,9 +32,9 @@ Friend Module TimeConstants
 
 #Region "Millisecond Constants"
 
-    Public ReadOnly s_1MinutesInMilliseconds As Integer = CInt(s_01MinuteSpan.TotalMilliseconds)
-    Public ReadOnly s_30SecondInMilliseconds As Integer = CInt(s_01MinuteSpan.TotalMilliseconds / 2)
-    Public ReadOnly s_5MinutesInMilliseconds As Integer = CInt(s_05MinuteSpan.TotalMilliseconds)
+    Public ReadOnly Property OneMinutesInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds)
+    Public ReadOnly Property ThirtySecondInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds / 2)
+    Public ReadOnly Property FiveMinutesInMilliseconds As Integer = CInt(FiveMinuteSpan.TotalMilliseconds)
 
 #End Region ' Millisecond Constants
 

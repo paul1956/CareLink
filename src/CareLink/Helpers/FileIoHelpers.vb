@@ -77,7 +77,7 @@ Friend Module FileIoHelpers
     ''' <param name="userSettingsFileWithPath"></param>
     ''' <returns>True if Stale</returns>
     Friend Function IsFileStale(userSettingsFileWithPath As String) As Boolean
-        Return File.GetLastWriteTime(userSettingsFileWithPath) < Now - s_30DaysSpan
+        Return File.GetLastWriteTime(userSettingsFileWithPath) < Now - ThirtyDaysSpan
     End Function
 
     Friend Sub MoveFiles(previousDirectory As String, currentDirectory As String, searchPattern As String)

@@ -36,14 +36,14 @@ Friend Module PlotSeriesBasal
                                     )
 
         If DrawFromBottom Then
-            startX = markerOADateTime + s_02Minutes30SecondsOADate
+            startX = markerOADateTime + TwoMinutes30SecondsOADate
             startY = amount.RoundTo025
             basalSeries.AddBasalPoint(startX, 0, lineColor, tag)
             basalSeries.AddBasalPoint(startX, startY, lineColor, tag)
             basalSeries.AddBasalPoint(startX, 0, lineColor, tag)
             basalSeries.AddBasalPoint(startX, Double.NaN, Color.Transparent, tag)
         Else
-            startX = markerOADateTime + s_02Minutes30SecondsOADate
+            startX = markerOADateTime + TwoMinutes30SecondsOADate
             startY = bolusRow - ((bolusRow - insulinRow) * (amount / MaxBasalPerDose))
             basalSeries.AddBasalPoint(startX, bolusRow, lineColor, tag)
             basalSeries.AddBasalPoint(startX, startY, lineColor, tag)

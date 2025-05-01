@@ -19,7 +19,7 @@ Public Class LowAlertsRecord
             End If
             Dim item As New LowAlertRecord(s, valueUnits) With {
                 .End = If(e.IsLast OrElse String.IsNullOrWhiteSpace(sTable.Rows(e.Index + 1).Columns(0)),
-                          s_midnight,
+                          Midnight,
                           TimeOnly.Parse(sTable.Rows(e.Index + 1).Columns(0).Split(" ", StringSplitOptions.RemoveEmptyEntries)(0))
                          )
             }
