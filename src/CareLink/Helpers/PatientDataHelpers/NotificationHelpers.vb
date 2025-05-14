@@ -29,6 +29,7 @@ Friend Module NotificationHelpers
                             row:=innerDictionary.Index + 1)
                     Next
                     mainForm.TableLayoutPanelNotificationsCleared.ResumeLayout()
+                    ResizePanelToFitContents(mainForm.TableLayoutPanelNotificationsCleared)
                 Else
                     mainForm.TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
                     mainForm.TableLayoutPanelNotificationsCleared.DisplayEmptyDGV(className:="clearedNotifications")
@@ -146,11 +147,33 @@ Friend Module NotificationHelpers
             rowIndex += 1
             dgvRow.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         Next
+        dGV.Width = dGV.PreferredSize.Width
+        dGV.Height = dGV.PreferredSize.Height
     End Sub
 
     Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Return ClassPropertiesToColumnAlignment(Of SummaryRecord)(s_alignmentTable, columnName)
     End Function
+
+    Private Sub ResizePanelToFitContents(panel As Panel)
+        Dim maxWidth As Integer = 0
+        Dim maxHeight As Integer = 0
+
+        ' Iterate through each control in the panel to find the maximum width and height
+        For Each ctrl As Control In panel.Controls
+            If ctrl.Right > maxWidth Then
+                maxWidth = ctrl.Right
+            End If
+
+            Dim height As Integer = Math.Abs(ctrl.Bottom)
+            If height > maxHeight Then
+                maxHeight = height
+            End If
+        Next
+
+        ' Set the panel size to fit all controls
+        panel.Size = New Size(maxWidth + panel.Padding.Right, maxHeight + panel.Padding.Bottom)
+    End Sub
 
     Friend Function HideColumn(columnName As String) As Boolean
         Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)

@@ -30,9 +30,12 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-04/13/2025
+05/14/2025
 
 ## What's New
+ New in 5.0.1.4
+ - Fixed sizing of TableLayoutPanelNotificationsCleared
+
  New in 5.0.1.2
  - Exclude Login Code that is not currently used
  - Pass Form1 as a Function parameter wherever possible, when not possible use My.Forms.Form1
