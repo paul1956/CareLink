@@ -33,6 +33,9 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 05/14/2025
 
 ## What's New
+ New in 5.0.1.5
+ - Offer to delete stale login file
+
  New in 5.0.1.4
  - Fixed sizing of TableLayoutPanelNotificationsCleared
 

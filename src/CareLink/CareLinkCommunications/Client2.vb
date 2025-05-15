@@ -87,17 +87,23 @@ Public Class Client2
 
             If response.StatusCode <> Net.HttpStatusCode.OK Then
                 If MsgBox(
-                heading:=$"ERROR: failed to refresh token, status {_lastApiStatus}",
-                "Do you want to try logging in again?",
-                buttonStyle:=MsgBoxStyle.YesNo, "failed to refresh token") <> MsgBoxResult.Yes Then
-                    Throw New Exception("ERROR: failed to refresh token")
+                    heading:=$"ERROR: Failed to refresh token, status {_lastApiStatus}",
+                    text:="Do you want to try logging in again?",
+                    buttonStyle:=MsgBoxStyle.YesNo,
+                    title:="New Login Required") <> MsgBoxResult.Yes Then
+
+                    Throw New Exception("ERROR: Failed to refresh token!")
                 Else
                     Dim fileWithPath As String = GetLoginDataFileName(s_userName, TokenBaseFileName)
+                    If File.Exists(fileWithPath) Then
+                        File.Delete(fileWithPath)
+                    End If
                     If Not DoOptionalLoginAndUpdateData(
                         mainForm:=My.Forms.Form1,
                         updateAllTabs:=False,
                         fileToLoad:=FileToLoadOptions.Login) Then
-                        Throw New Exception("ERROR: failed to refresh token")
+
+                        Throw New Exception("ERROR: Failed to refresh token!")
                     End If
                 End If
             End If
@@ -310,7 +316,7 @@ Public Class Client2
             If Auth_Error_Codes.Contains(CInt(_lastApiStatus)) Then
                 Try
                     _tokenDataElement = Me.DoRefresh(jsonConfigElement.ConvertJsonElementToDictionary, _tokenDataElement).Result
-                    If _tokenDataElement.ValueKind <> JsonValueKind.Null Then
+                    If Not (_tokenDataElement.ValueKind = JsonValueKind.Undefined OrElse _tokenDataElement.ValueKind = JsonValueKind.Null) Then
                         _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
                         WriteTokenFile(_tokenDataElement, s_userName)
                     End If
