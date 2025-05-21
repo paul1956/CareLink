@@ -121,6 +121,8 @@ Public Class Insulin
                     If expectedBolus - 0.025 > Me.ProgrammedFastAmount Then
                         Return (expectedBolus - Me.ProgrammedFastAmount).RoundTo025
                     End If
+                Else
+                    Stop
                 End If
             End If
             Return 0

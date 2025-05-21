@@ -7,6 +7,16 @@ Imports System.Text.Json
 
 Friend Module Form1CollectMarkersHelper
 
+    Private Sub AddAmountToBasalPerHour(basalDeliveryMarker As AutoBasalDelivery)
+        Dim hour As Integer = basalDeliveryMarker.DisplayTime.Hour
+        Dim basalIndex As Integer = hour \ 2
+        If (hour Mod 2) = 0 Then
+            s_listOfBasalPerHour(basalIndex).BasalRate += basalDeliveryMarker.bolusAmount
+        Else
+            s_listOfBasalPerHour(basalIndex).BasalRate2 += basalDeliveryMarker.bolusAmount
+        End If
+    End Sub
+
     <Extension>
     Private Function ScaleMarker(marker As Marker) As Marker
         Dim newMarker As Marker = marker
@@ -72,16 +82,11 @@ Friend Module Form1CollectMarkersHelper
             Select Case markerEntry.Type
                 Case "AUTO_BASAL_DELIVERY"
                     s_markers.Add(markerEntry)
-                    Dim item As New AutoBasalDelivery(markerEntry, recordNumber:=s_listOfAutoBasalDeliveryMarkers.Count + 1)
-                    s_listOfAutoBasalDeliveryMarkers.Add(item)
-                    Dim index As Integer = item.DisplayTime.Hour
-                    If (index And 1) = 0 Then
-                        s_listOfBasalPerHour(index \ 2).BasalRate += item.bolusAmount
-                    Else
-                        s_listOfBasalPerHour(index \ 2).BasalRate2 += item.bolusAmount
-                    End If
-                    If Not basalDictionary.TryAdd(item.OAdateTime, item.bolusAmount) Then
-                        basalDictionary(item.OAdateTime) += item.bolusAmount
+                    Dim basalDeliveryMarker As New AutoBasalDelivery(markerEntry, recordNumber:=s_listOfAutoBasalDeliveryMarkers.Count + 1)
+                    AddAmountToBasalPerHour(basalDeliveryMarker)
+                    s_listOfAutoBasalDeliveryMarkers.Add(basalDeliveryMarker)
+                    If Not basalDictionary.TryAdd(basalDeliveryMarker.OAdateTime, basalDeliveryMarker.bolusAmount) Then
+                        basalDictionary(basalDeliveryMarker.OAdateTime) += basalDeliveryMarker.bolusAmount
                     End If
                     s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
                 Case "AUTO_MODE_STATUS"

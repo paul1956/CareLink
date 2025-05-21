@@ -20,11 +20,12 @@ Friend Module MealHelpers
 
     Public Function TryGetMealRecord(timestamp As Date, ByRef meal As Meal) As Boolean
         For Each m As Meal In s_listOfMealMarkers
-            If Math.Abs((timestamp - m.Timestamp).TotalMinutes) <= 2 Then
+            If timestamp = m.Timestamp Then
                 meal = m
                 Return True
             End If
         Next
+        Stop
         Return False
     End Function
 
