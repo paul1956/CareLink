@@ -7,16 +7,6 @@ Imports System.Text.Json
 
 Friend Module Form1CollectMarkersHelper
 
-    Private Sub AddBasalAmountToBasalPerHour(basalDeliveryMarker As AutoBasalDelivery)
-        Dim hour As Integer = basalDeliveryMarker.DisplayTime.Hour
-        Dim basalIndex As Integer = hour \ 2
-        If (hour Mod 2) = 0 Then
-            s_listOfBasalPerHour(basalIndex).BasalRate += basalDeliveryMarker.bolusAmount
-        Else
-            s_listOfBasalPerHour(basalIndex).BasalRate2 += basalDeliveryMarker.bolusAmount
-        End If
-    End Sub
-
     <Extension>
     Private Function ScaleMarker(marker As Marker) As Marker
         Dim newMarker As Marker = marker
@@ -83,7 +73,7 @@ Friend Module Form1CollectMarkersHelper
                 Case "AUTO_BASAL_DELIVERY"
                     s_markers.Add(markerEntry)
                     Dim basalDeliveryMarker As New AutoBasalDelivery(markerEntry, recordNumber:=s_listOfAutoBasalDeliveryMarkers.Count + 1)
-                    AddBasalAmountToBasalPerHour(basalDeliveryMarker)
+                    BasalPerHour.AddBasalAmountToBasalPerHour(basalDeliveryMarker)
                     s_listOfAutoBasalDeliveryMarkers.Add(basalDeliveryMarker)
                     If Not basalDictionary.TryAdd(basalDeliveryMarker.OAdateTime, basalDeliveryMarker.bolusAmount) Then
                         basalDictionary(basalDeliveryMarker.OAdateTime) += basalDeliveryMarker.bolusAmount
