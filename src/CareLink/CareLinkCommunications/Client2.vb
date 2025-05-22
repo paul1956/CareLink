@@ -278,7 +278,7 @@ Public Class Client2
     '''  and sets up the configuration and user information.
     ''' </summary>
     ''' <returns><see langword="True"/> if initialization is successful, <see langword="False"/> otherwise.</returns>
-    Private Function _init() As Boolean
+    Private Function internalInit() As Boolean
         _tokenDataElement = ReadTokenFile(userName:=s_userName, tokenBaseFileName:=_tokenBaseFileName)
         If _tokenDataElement.ValueKind.IsNullOrUndefined Then
             Me.LoggedIn = False
@@ -512,9 +512,9 @@ Public Class Client2
 
     Public Function Init() As Boolean
         ' First try
-        If Not Me._init() Then
+        If Not Me.internalInit() Then
             ' Second try (after token refresh)
-            If Not Me._init() Then
+            If Not Me.internalInit() Then
                 ' Failed permanently
                 'Log.Error("ERROR: unable to initialize")
                 Return False
