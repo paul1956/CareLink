@@ -20,7 +20,7 @@ Public Class AutoBasalDelivery
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
 
-    <DisplayName("Timestamp")>
+    <DisplayName("Timestamp From Pump")>
     <Column(Order:=1, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
@@ -34,7 +34,7 @@ Public Class AutoBasalDelivery
         End Get
     End Property
 
-    <DisplayName("Display Time")>
+    <DisplayName("Display Time From Pump")>
     <Column(Order:=3, TypeName:="String")>
     <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String

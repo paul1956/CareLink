@@ -21,23 +21,32 @@ Public Class ActiveInsulin
         End Set
     End Property
 
-    <DisplayName("Date Time")>
-    <Column(Order:=1, TypeName:="Date")>
+    <DisplayName("Date with Time From Pump")>
+    <Column(Order:=1, TypeName:="String")>
     <JsonPropertyName("datetime")>
-    Public Property datetime As Date
+    Public Property datetimeAsString As String
+
+    <DisplayName("Date with Time As Date")>
+    <Column(Order:=2, TypeName:="Date")>
+    <JsonPropertyName("timestampAsDate")>
+    Public ReadOnly Property DateTime As Date
+        Get
+            Return TryParseDateStr(Me.datetimeAsString)
+        End Get
+    End Property
 
     <DisplayName("Kind")>
-    <Column(Order:=2, TypeName:=NameOf([String]))>
+    <Column(Order:=3, TypeName:=NameOf([String]))>
     <JsonPropertyName("kind")>
     Public Property kind As String
 
     <DisplayName("Precision")>
-    <Column(Order:=3, TypeName:=NameOf([String]))>
+    <Column(Order:=4, TypeName:=NameOf([String]))>
     <JsonPropertyName("precision")>
     Public Property Precision As String
 
     <DisplayName("Version")>
-    <Column(Order:=4, TypeName:=NameOf([Int32]))>
+    <Column(Order:=5, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("version")>
     Public Property Version As Integer
 
