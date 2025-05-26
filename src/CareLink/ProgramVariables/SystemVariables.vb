@@ -76,16 +76,16 @@ Friend Module SystemVariables
                   (CUInt(0), "??? "))
     End Function
 
-    Friend Function GetYMaxValue(asMmolL As Boolean) As Single
-        Return If(asMmolL, ParseSingle(22.2, decimalDigits:=1), 400)
+    Friend Function GetYMaxValue() As Single
+        Return If(NativeMmolL, ParseSingle(22.2, decimalDigits:=1), 400)
     End Function
 
-    Friend Function GetYMinValue(asMmolL As Boolean) As Single
-        Return If(asMmolL, ParseSingle(2.8, decimalDigits:=1), 50)
+    Friend Function GetYMinValue() As Single
+        Return If(NativeMmolL, ParseSingle(2.8, decimalDigits:=1), 50)
     End Function
 
-    Friend Function TirHighLimit(asMmolL As Boolean) As Single
-        Return If(asMmolL, 10, 180)
+    Friend Function TirHighLimit() As Single
+        Return If(NativeMmolL, 10, 180)
     End Function
 
     Friend Function TirHighLimitAsString(asMmolL As Boolean) As String

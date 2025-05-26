@@ -83,7 +83,7 @@ Public Module DgvHelpers
                     e.Value = If(NativeMmolL, sensorValue.ToString("F2", Provider), sensorValue.ToString)
                     If sensorValue < TirLowLimit(NativeMmolL) Then
                         CellFormattingApplyColor(dgv, e, Color.Red, isUri:=False)
-                    ElseIf sensorValue > TirHighLimit(NativeMmolL) Then
+                    ElseIf sensorValue > TirHighLimit() Then
                         CellFormattingApplyColor(dgv, e, Color.Yellow, isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
@@ -92,7 +92,7 @@ Public Module DgvHelpers
                     e.Value = e.Value.ToString
                     If sensorValue < TirLowLimit(False) Then
                         CellFormattingApplyColor(dgv, e, Color.Red, isUri:=False)
-                    ElseIf sensorValue > TirHighLimit(False) Then
+                    ElseIf sensorValue > TirHighLimit() Then
                         CellFormattingApplyColor(dgv, e, Color.Yellow, isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
@@ -101,7 +101,7 @@ Public Module DgvHelpers
                     e.Value = sensorValue.ToString("F2", Provider)
                     If sensorValue.RoundSingle(1, False) < TirLowLimit(True) Then
                         CellFormattingApplyColor(dgv, e, Color.Red, isUri:=False)
-                    ElseIf sensorValue > TirHighLimit(True) Then
+                    ElseIf sensorValue > TirHighLimit() Then
                         CellFormattingApplyColor(dgv, e, Color.Yellow, isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)

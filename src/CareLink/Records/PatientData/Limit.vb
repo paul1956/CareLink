@@ -9,7 +9,7 @@ Imports System.Text.Json.Serialization
 Public Class Limit
 
     <DisplayName("Index")>
-    <Column(Order:=0, TypeName:=NameOf([Int32]))>
+    <Column(Order:=0, TypeName:="RecordNumber")>
     Public Property Index As Integer
 
     <DisplayName("High Limit")>
@@ -76,7 +76,7 @@ Public Class Limit
     <JsonPropertyName("version")>
     Public Property Version As Integer
 
-    <DisplayName("Timestamp")>
+    <DisplayName("Timestamp From Pump")>
     <Column(Order:=9, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String

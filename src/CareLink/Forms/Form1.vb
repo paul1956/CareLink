@@ -48,10 +48,10 @@ Public Class Form1
         End Set
     End Property
 
-    '' <summary>
-    '' Overloaded System Windows Handler.
-    '' </summary>
-    '' <param name="m">Message <see cref="Message"/> structure</param>
+    ''' <summary>
+    '''  Overloaded System Windows Handler.
+    ''' </summary>
+    ''' <param name="m">Message <see cref="Message"/> structure</param>
     <DebuggerNonUserCode()>
     Protected Overrides Sub WndProc(ByRef m As Message)
         Select Case m.Msg
@@ -542,11 +542,20 @@ Public Class Form1
         DgvTimeChange.DataBindingComplete
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
+        dgv.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
         If dgv.ColumnCount > 0 Then
-            Dim dataGridViewLastColumn As DataGridViewColumn = dgv.Columns(dgv.ColumnCount - 1)
-            If dataGridViewLastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
-                dataGridViewLastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
-            End If
+            Dim lastColumnIndex As Integer = dgv.ColumnCount - 1
+            For Each column As DataGridViewColumn In dgv.Columns
+                If column.Index = lastColumnIndex Then
+                    column.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                    If column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
+                        column.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                    End If
+                Else
+                    column.HeaderCell.Style.WrapMode = DataGridViewTriState.False
+                    column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                End If
+            Next
         End If
         dgv.ClearSelection()
     End Sub
@@ -595,12 +604,9 @@ Public Class Form1
     Private Sub DgvActiveInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvActiveInsulin.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If ActiveInsulinHelpers.HideColumn(.Name) Then
-                .Visible = False
-            End If
+            .Visible = Not DataGridViewHelpers.HideColumn(Of ActiveInsulin)(.Name)
             e.DgvColumnAdded(
-                cellStyle:=ActiveInsulinHelpers.GetCellStyle(columnName:= .Name),
-                wrapHeader:=True,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of ActiveInsulin)(columnName:= .Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -634,12 +640,11 @@ Public Class Form1
     Private Sub DgvAutoBasalDelivery_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoBasalDelivery.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If AutoBasalDeliveryHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of AutoBasalDelivery)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=AutoBasalDeliveryHelpers.GetCellStyle(columnName:= .Name),
-                wrapHeader:=True,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of AutoBasalDelivery)(columnName:= .Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -662,12 +667,11 @@ Public Class Form1
     Private Sub DgvAutoModeStatus_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoModeStatus.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If AutoModeStatusHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of AutoModeStatus)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=AutoModeStatusHelpers.GetCellStyle(columnName:= .Name),
-                wrapHeader:=True,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of AutoModeStatus)(columnName:= .Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -692,12 +696,11 @@ Public Class Form1
     Private Sub DgvBannerState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBannerState.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If BannerStateHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of BannerState)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=BannerStateHelpers.GetCellStyle(columnName:= .Name),
-                wrapHeader:=True,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of BannerState)(columnName:= .Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -715,12 +718,11 @@ Public Class Form1
     Private Sub DgvBasal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBasal.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If BasalHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of Basal)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=BasalHelpers.GetCellStyle(columnName:= .Name),
-                wrapHeader:=False,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of Basal)(columnName:= .Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -733,7 +735,7 @@ Public Class Form1
     Friend Sub DgvBasalPerHour_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvBasalPerHour.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(BasalPerHour.Hour), NameOf(BasalPerHour.Hour2)
+            Case NameOf(InsulinPerHour.Hour), NameOf(InsulinPerHour.Hour2)
                 Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
                 Dim time As New DateTime(1, 1, 1, hour, 0, 0)
                 e.Value = time.ToString(s_timeWithoutMinuteFormat)
@@ -747,8 +749,7 @@ Public Class Form1
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             e.DgvColumnAdded(
-                cellStyle:=BasalPerHourHelpers.GetCellStyle(columnName:= .Name),
-                wrapHeader:=True,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of InsulinPerHour)(columnName:= .Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -778,12 +779,11 @@ Public Class Form1
     Private Sub DgvCalibration_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCalibration.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If CalibrationHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of Calibration)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=CalibrationHelpers.GetCellStyle(columnName:= .Name),
-                wrapHeader:=False,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of Calibration)(columnName:= .Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -859,16 +859,15 @@ Public Class Form1
                 End If
             End If
             Dim forceReadOnly As Boolean
-            If CareLinkUserDataRecordHelpers.HideColumn(.DataPropertyName) Then
+            If DataGridViewHelpers.HideColumn(Of CareLinkUserDataRecord)(.DataPropertyName) Then
                 .Visible = False
             Else
                 forceReadOnly = True
             End If
             e.DgvColumnAdded(
                 cellStyle:=CareLinkUserDataRecordHelpers.GetCellStyle(.DataPropertyName),
-                wrapHeader:=False,
-                forceReadOnly,
-                caption)
+                forceReadOnly:=forceReadOnly,
+                caption:=caption)
         End With
     End Sub
 
@@ -943,11 +942,11 @@ Public Class Form1
             .Width = 86}
 
         Dim dgvCareLinkPatientUserID As New DataGridViewTextBoxColumn With {
-                .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
-                .DataPropertyName = "CareLinkPatientUserID",
-                .HeaderText = $"CareLink™ Patient UserID",
-                .Name = NameOf(dgvCareLinkPatientUserID),
-                .Width = 97}
+            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .DataPropertyName = "CareLinkPatientUserID",
+            .HeaderText = $"CareLink™ Patient UserID",
+            .Name = NameOf(dgvCareLinkPatientUserID),
+            .Width = 97}
 
         dgv.Columns.AddRange(New DataGridViewColumn() {dgvCareLinkUsersID, dgvCareLinkUsersDeleteRow, dgvCareLinkUsersCareLinkUserName, dgvCareLinkUsersCareLinkPassword, dgvCareLinkUsersCountryCode, dgvCareLinkUsersUseLocalTimeZone, dgvCareLinkUsersAutoLogin, dgvCareLinkUsersCareLinkPartner, dgvCareLinkPatientUserID})
         dgv.DataSource = Me.CareLinkUserDataRecordBindingSource
@@ -966,7 +965,6 @@ Public Class Form1
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
         e.DgvColumnAdded(
             cellStyle:=New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
-            wrapHeader:=False,
             forceReadOnly:=True,
             caption:=Nothing)
     End Sub
@@ -999,6 +997,7 @@ Public Class Form1
                         dgv.CellFormattingSetForegroundColor(e)
                 End Select
             Case NameOf(Insulin.BolusType)
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                 dgv.CellFormattingToTitle(e)
             Case Else
                 If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
@@ -1012,12 +1011,11 @@ Public Class Form1
     Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If InsulinHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of Insulin)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=InsulinHelpers.GetCellStyle(.Name),
-                wrapHeader:=True,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of Insulin)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1051,12 +1049,11 @@ Public Class Form1
     Friend Sub DgvLastAlarm_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastAlarm.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If LastAlarmHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of LastAlarm)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=LastAlarmHelpers.GetCellStyle(columnName:= .Name),
-                wrapHeader:=True,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of LastAlarm)(columnName:= .Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1074,12 +1071,11 @@ Public Class Form1
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLimits.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If LimitsHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of Limit)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=LimitsHelpers.GetCellStyle(.Name),
-                wrapHeader:=True,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of Limit)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1102,12 +1098,11 @@ Public Class Form1
     Friend Sub DgvLowGlucoseSuspended_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLowGlucoseSuspended.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If LowGlucoseSuspendedHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of LowGlucoseSuspended)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=LowGlucoseSuspendedHelpers.GetCellStyle(columnName:= .Name),
-                wrapHeader:=True,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of LowGlucoseSuspended)(columnName:= .Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1122,7 +1117,7 @@ Public Class Form1
         Select Case CType(sender, DataGridView).Columns(e.ColumnIndex).Name
             Case NameOf(Meal.Timestamp)
                 dgv.CellFormattingDateTime(e)
-            Case NameOf(Meal.amount)
+            Case NameOf(Meal.Amount)
                 dgv.CellFormattingInteger(e, GetCarbDefaultUnit)
             Case Else
                 dgv.CellFormattingSetForegroundColor(e)
@@ -1132,12 +1127,11 @@ Public Class Form1
     Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvMeal.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If MealHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of Meal)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=MealHelpers.GetCellStyle(.Name),
-                wrapHeader:=False,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of Meal)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1159,12 +1153,11 @@ Public Class Form1
     Friend Sub DgvSensorBgReadings_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSensorBgReadings.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If SensorBgReadings.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of BgReading)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=SensorBgReadings.GetCellStyle(columnName:= .Name),
-                wrapHeader:=True,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of BgReading)(columnName:= .Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1212,14 +1205,13 @@ Public Class Form1
                 DataGridViewAutoSizeColumnMode.Fill,
                 DataGridViewAutoSizeColumnMode.AllCells)
 
-            If SgHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of SG)(.Name) Then
                 .SortMode = DataGridViewColumnSortMode.NotSortable
                 .Visible = False
             End If
             Dim dgv As DataGridView = CType(sender, DataGridView)
             e.DgvColumnAdded(
-                cellStyle:=SgHelpers.GetCellStyle(.Name),
-                wrapHeader:=False,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of SG)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
             Select Case .Index
@@ -1417,10 +1409,9 @@ Public Class Form1
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             e.DgvColumnAdded(
-                cellStyle:=SummaryHelpers.GetCellStyle(.Name),
-                wrapHeader:=False,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of SummaryRecord)(.Name),
                 forceReadOnly:=True,
-                CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+                caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -1461,14 +1452,13 @@ Public Class Form1
         With e.Column
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If TherapyAlgorithmStateHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of TherapyAlgorithmState)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=SensorBgReadings.GetCellStyle(columnName:= .Name),
-                wrapHeader:=True,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of BgReading)(columnName:= .Name),
                 forceReadOnly:=True,
-                CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+                caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -1489,12 +1479,11 @@ Public Class Form1
     Friend Sub DgvTimeChange_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvTimeChange.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If TimeChangeHelpers.HideColumn(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of TimeChange)(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=TimeChangeHelpers.GetCellStyle(columnName:= .Name),
-                wrapHeader:=True,
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of TimeChange)(columnName:= .Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1535,7 +1524,7 @@ Public Class Form1
             My.Settings.UpgradeRequired = False
             My.Settings.Save()
         End If
-
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)
         Dim currentAllUserLoginFile As String = GetUsersLoginInfoFileWithPath()
         If Not Directory.Exists(DirectoryForProjectData) Then
             Dim lastError As String = $"Can't create required project directories!"
@@ -1642,7 +1631,9 @@ Public Class Form1
     End Sub
 
     Private Sub MenuStartHereCleanUpObsoleteFiles_Click(sender As Object, e As EventArgs) Handles MenuStartHereCleanUpObsoleteFiles.Click
-        CleanupStaleFilesDialog.ShowDialog()
+        Using dialog As New CleanupStaleFilesDialog With {.Text = $"Cleanup Obsolete Files"}
+            dialog.ShowDialog()
+        End Using
     End Sub
 
     Private Sub MenuStartHereExit_Click(sender As Object, e As EventArgs) Handles MenuStartHereExit.Click
@@ -1842,25 +1833,25 @@ Public Class Form1
 
     Private Sub MenuOptionsFilterRawJSONData_Click(sender As Object, e As EventArgs) Handles MenuOptionsFilterRawJSONData.Click
         s_filterJsonData = Me.MenuOptionsFilterRawJSONData.Checked
-        HideDataGridViewColumnsByName(dgv:=Me.DgvActiveInsulin, hideColumnFunction:=Function(dataPropertyName) ActiveInsulinHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvAutoBasalDelivery, hideColumnFunction:=Function(dataPropertyName) AutoBasalDeliveryHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvAutoModeStatus, hideColumnFunction:=Function(dataPropertyName) AutoModeStatusHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvBannerState, hideColumnFunction:=Function(dataPropertyName) BannerStateHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvBasal, hideColumnFunction:=Function(dataPropertyName) BasalHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvBasalPerHour, hideColumnFunction:=Function(dataPropertyName) BasalPerHourHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvCalibration, hideColumnFunction:=Function(dataPropertyName) CalibrationHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvCareLinkUsers, hideColumnFunction:=Function(dataPropertyName) CurrentUserHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvCurrentUser, hideColumnFunction:=Function(dataPropertyName) CareLinkUserDataRecordHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvInsulin, hideColumnFunction:=Function(dataPropertyName) InsulinHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvLastAlarm, hideColumnFunction:=Function(dataPropertyName) LastAlarmHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvLastSensorGlucose, hideColumnFunction:=Function(dataPropertyName) LastSensorGlucoseHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvLimits, hideColumnFunction:=Function(dataPropertyName) LimitsHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvLowGlucoseSuspended, hideColumnFunction:=Function(dataPropertyName) LowGlucoseSuspendedHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvMeal, hideColumnFunction:=Function(dataPropertyName) MealHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvSensorBgReadings, hideColumnFunction:=Function(dataPropertyName) SensorBgReadings.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvSGs, hideColumnFunction:=Function(dataPropertyName) SgHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvTherapyAlgorithmState, hideColumnFunction:=Function(dataPropertyName) TherapyAlgorithmStateHelpers.HideColumn(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvTimeChange, hideColumnFunction:=Function(dataPropertyName) TimeChangeHelpers.HideColumn(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvActiveInsulin, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of ActiveInsulin)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvAutoBasalDelivery, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of AutoBasalDelivery)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvAutoModeStatus, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of AutoModeStatus)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvBannerState, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of BannerState)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvBasal, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of Basal)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvBasalPerHour, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of InsulinPerHour)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvCalibration, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of Calibration)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvCareLinkUsers, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of CurrentUserRecord)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvCurrentUser, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of CareLinkUserDataRecord)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvInsulin, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of Insulin)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvLastAlarm, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of LastAlarm)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvLastSensorGlucose, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of LastSG)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvLimits, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of Limit)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvLowGlucoseSuspended, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of LowGlucoseSuspended)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvMeal, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of Meal)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvSensorBgReadings, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of BgReading)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvSGs, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of SG)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvTherapyAlgorithmState, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of TherapyAlgorithmState)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvTimeChange, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of TimeChange)(dataPropertyName))
     End Sub
 
     Private Sub MenuOptionsShowChartLegends_Click(sender As Object, e As EventArgs) Handles MenuOptionsShowChartLegends.Click
@@ -2072,7 +2063,7 @@ Public Class Form1
                 Me.DgvCareLinkUsers.InitializeDgv
 
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
-                    c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
+                    c.Visible = Not DataGridViewHelpers.HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
                 Next
                 Me.TabControlPage2.SelectedIndex = If(_lastMarkerTabIndex.page = 0,
                                                       0,
@@ -2096,7 +2087,7 @@ Public Class Form1
             Case NameOf(TabPageAllUsers)
                 Me.DgvCareLinkUsers.DataSource = s_allUserSettingsData
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
-                    c.Visible = Not CareLinkUserDataRecordHelpers.HideColumn(c.DataPropertyName)
+                    c.Visible = Not DataGridViewHelpers.HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
                 Next
             Case Else
                 If e.TabPageIndex < Me.TabControlPage2.TabPages.Count - 2 Then
@@ -2603,7 +2594,7 @@ Public Class Form1
                                     tipIcon:=Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
-                        Case <= TirHighLimit(asMmolL:=NativeMmolL)
+                        Case <= TirHighLimit()
                             backColor = Color.Green
                             _showBalloonTip = True
                         Case Else
@@ -2817,7 +2808,7 @@ Public Class Form1
                     remainingInsulinList.Add(New RunningActiveInsulin(firstNotSkippedOaTime, initialBolus, CurrentUser))
                 Next
 
-                .ChartAreas(NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValue(asMmolL:=NativeMmolL)
+                .ChartAreas(NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValue()
                 ' walk all markers, adjust active insulin and then add new markerWithIndex
                 Dim maxActiveInsulin As Double = 0
                 For i As Integer = 0 To remainingInsulinList.Count - 1
@@ -2844,7 +2835,7 @@ Public Class Form1
                     timeChangeSeries:=Me.ActiveInsulinTimeChangeSeries,
                     markerInsulinDictionary:=s_activeInsulinMarkerInsulinDictionary,
                     markerMealDictionary:=Nothing)
-                .PlotSgSeries(GetYMinValue(asMmolL:=NativeMmolL))
+                .PlotSgSeries(GetYMinValue())
                 .PlotHighLowLimitsAndTargetSg(targetSsOnly:=True)
             End With
             Application.DoEvents()
@@ -2868,7 +2859,7 @@ Public Class Form1
                     timeChangeSeries:=Me.SummaryTimeChangeSeries,
                     markerInsulinDictionary:=s_summaryMarkerInsulinDictionary,
                     markerMealDictionary:=s_summaryMarkerMealDictionary)
-                .PlotSgSeries(GetYMinValue(asMmolL:=NativeMmolL))
+                .PlotSgSeries(GetYMinValue())
                 .PlotHighLowLimitsAndTargetSg(False)
                 Application.DoEvents()
             End With
@@ -3300,7 +3291,7 @@ Public Class Form1
         Dim lowCount As Integer = 0
         Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
-        Dim highScale As Single = (GetYMaxValue(asMmolL:=False) - TirHighLimit(asMmolL:=False)) / (TirLowLimit(asMmolL:=False) - GetYMinValue(asMmolL:=False))
+        Dim highScale As Single = (GetYMaxValue() - TirHighLimit()) / (TirLowLimit(asMmolL:=False) - GetYMinValue())
         For Each sg As SG In s_listOfSgRecords.Where(Function(entry As SG) Not entry.sg.IsSgInvalid)
             elements += 1
             If sg.sgMgdL < 70 Then
@@ -3313,9 +3304,9 @@ Public Class Form1
             ElseIf sg.sgMgdL > 180 Then
                 highCount += 1
                 If NativeMmolL Then
-                    highDeviations += ((sg.sgMmolL - TirHighLimit(asMmolL:=True)) * MmolLUnitsDivisor) ^ 2
+                    highDeviations += ((sg.sgMmolL - TirHighLimit()) * MmolLUnitsDivisor) ^ 2
                 Else
-                    highDeviations += (sg.sgMgdL - TirHighLimit(asMmolL:=False)) ^ 2
+                    highDeviations += (sg.sgMgdL - TirHighLimit()) ^ 2
                 End If
             End If
         Next
@@ -3378,7 +3369,7 @@ Public Class Form1
             Me.TreatmentMarkersChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
             Me.TreatmentMarkersChart.PlotSuspendArea(Me.TreatmentMarkerSuspendSeries)
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
-            Me.TreatmentMarkersChart.PlotSgSeries(GetYMinValue(asMmolL:=NativeMmolL))
+            Me.TreatmentMarkersChart.PlotSgSeries(GetYMinValue())
             Me.TreatmentMarkersChart.PlotHighLowLimitsAndTargetSg(True)
         Catch ex As Exception
             Stop

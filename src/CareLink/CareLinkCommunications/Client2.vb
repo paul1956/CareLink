@@ -48,7 +48,7 @@ Public Class Client2
         _country = Nothing
 
         ' API status
-        _lastApiStatus = Nothing
+        _lastApiStatus = 0
 
         _httpClient = New HttpClient
         _httpClient.SetDefaultRequestHeaders()
@@ -77,9 +77,7 @@ Public Class Client2
             _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
         Next
 
-        Dim response As New HttpResponseMessage With {
-            .StatusCode = Net.HttpStatusCode.GatewayTimeout
-        }
+        Dim response As New HttpResponseMessage With {.StatusCode = Net.HttpStatusCode.GatewayTimeout}
         Try
             response = _httpClient.PostAsync(tokenUrl, content).Result
             _lastApiStatus = response.StatusCode
@@ -313,7 +311,7 @@ Public Class Client2
         Catch ex As Exception
             Debug.WriteLine(ex.ToString())
 
-            If Auth_Error_Codes.Contains(CInt(_lastApiStatus)) Then
+            If Auth_Error_Codes.Contains(_lastApiStatus) Then
                 Try
                     _tokenDataElement = Me.DoRefresh(jsonConfigElement.ConvertJsonElementToDictionary, _tokenDataElement).Result
                     If Not (_tokenDataElement.ValueKind = JsonValueKind.Undefined OrElse _tokenDataElement.ValueKind = JsonValueKind.Null) Then
@@ -358,7 +356,7 @@ Public Class Client2
             value("role") = "patient"
         End If
 
-        _lastApiStatus = Nothing
+        _lastApiStatus = 0
 
         Dim headers As New Dictionary(Of String, String)
         headers("mag-identifier") = tokenData("mag-identifier")
@@ -372,7 +370,7 @@ Public Class Client2
             encoding:=Encoding.UTF8,
             mediaType:="application/json")
             Using response As HttpResponseMessage = _httpClient.PostAsync(requestUri, content).Result
-                _lastApiStatus = CInt(response.StatusCode)
+                _lastApiStatus = response.StatusCode
                 Debug.WriteLine($"   status: {_lastApiStatus}")
 
                 If response.IsSuccessStatusCode Then
@@ -397,9 +395,9 @@ Public Class Client2
             _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
         Next
 
-        _lastApiStatus = Nothing
+        _lastApiStatus = 0
         Using response As HttpResponseMessage = Await _httpClient.GetAsync(url)
-            _lastApiStatus = CInt(response.StatusCode)
+            _lastApiStatus = response.StatusCode
             Debug.WriteLine($"   status: {_lastApiStatus}")
 
             If response.IsSuccessStatusCode Then
@@ -429,7 +427,7 @@ Public Class Client2
 
         ' Send the request
         Dim response As HttpResponseMessage = _httpClient.SendAsync(request).Result
-        _lastApiStatus = CInt(response.StatusCode)
+        _lastApiStatus = response.StatusCode
         Debug.WriteLine($"   status: {_lastApiStatus}")
 
         Return If(response.IsSuccessStatusCode,
@@ -438,7 +436,7 @@ Public Class Client2
     End Function
 
     ''' <summary>
-    ''' Get last API response code
+    '''  Get last API response code
     ''' </summary>
     Public Function GetLastResponseCode() As Integer
         Return _lastApiStatus

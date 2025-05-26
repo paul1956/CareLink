@@ -6,7 +6,14 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module CalloutHelpers
-
+    ''' <summary>
+    '''  Add or update an annotation for the last data point in the treatment chart.
+    '''  If an annotation already exists for the last data point, it updates the text and position.
+    '''  If no annotation exists, it creates a new CalloutAnnotation with the specified tag text.
+    ''' </summary>
+    ''' <param name="treatmentChart"></param>
+    ''' <param name="lastDataPoint"></param>
+    ''' <param name="tagText"></param>
     <Extension>
     Private Sub AddOrUpdateAnnotation(treatmentChart As Chart, lastDataPoint As DataPoint, tagText As String)
         Dim annotation As CalloutAnnotation = treatmentChart.FindAnnotation(lastDataPoint)
@@ -33,6 +40,11 @@ Friend Module CalloutHelpers
         treatmentChart.Annotations.Add(item)
     End Sub
 
+    ''' <summary>
+    ''' Get the annotation text based on the marker tag array.
+    ''' </summary>
+    ''' <param name="markerTag">Array of strings representing the marker tags.</param>
+    ''' <returns>Formatted annotation text.</returns>
     Private Function GetAnnotationText(markerTag() As String) As String
         Dim annotationText As String = ""
         Select Case markerTag.Length
@@ -49,6 +61,15 @@ Friend Module CalloutHelpers
         Return annotationText
     End Function
 
+    ''' <summary>`
+    '''  Create a callout annotation for the last data point in the treatment chart.
+    '''  This method sets the color, marker size, and style for the last data point,
+    '''  and adds or updates an annotation with the specified tag text.
+    ''' </summary>
+    ''' <param name="treatmentChart"></param>
+    ''' <param name="lastDataPoint"></param>
+    ''' <param name="markerBorderColor"></param>
+    ''' <param name="tagText"></param>
     <Extension>
     Friend Sub CreateCallout(treatmentChart As Chart, lastDataPoint As DataPoint, markerBorderColor As Color, tagText As String)
         lastDataPoint.Color = markerBorderColor
@@ -60,6 +81,13 @@ Friend Module CalloutHelpers
         treatmentChart.AddOrUpdateAnnotation(lastDataPoint, tagText)
     End Sub
 
+    ''' <summary>
+    '''  Finds the CalloutAnnotation associated with the last data point in the treatment chart.
+    '''  If no annotation exists for the last data point, it returns Nothing.
+    ''' </summary>
+    ''' <param name="treatmentChart"></param>
+    ''' <param name="lastDataPoint"></param>
+    ''' <returns>A CalloutAnnotation if found; otherwise, Nothing.</returns>
     <Extension>
     Friend Function FindAnnotation(treatmentChart As Chart, lastDataPoint As DataPoint) As CalloutAnnotation
         For Each e As IndexClass(Of Annotation) In treatmentChart.Annotations.ToList.WithIndex
@@ -72,6 +100,13 @@ Friend Module CalloutHelpers
         Return Nothing
     End Function
 
+    ''' <summary>
+    '''  Dictionary to hold callout annotations for different charts.
+    ''' </summary
+    ''' </summary>
+    ''' <param name="chart1"></param>
+    ''' <param name="currentDataPoint"></param>
+    ''' <param name="annotationText"></param>
     <Extension>
     Friend Sub SetupCallout(chart1 As Chart, currentDataPoint As DataPoint, annotationText As String)
 
@@ -89,6 +124,13 @@ Friend Module CalloutHelpers
         End With
     End Sub
 
+    ''' <summary>
+    '''  Sets up a callout annotation for the current data point in the chart.
+    '''  This method retrieves the annotation text based on the provided marker tag and applies it to the chart.
+    ''' </summary>
+    ''' <param name="chart1"></param>
+    ''' <param name="currentDataPoint"></param>
+    ''' <param name="markerTag"></param>
     <Extension>
     Friend Sub SetUpCallout(chart1 As Chart, currentDataPoint As DataPoint, markerTag() As String)
         Dim annotationText As String = GetAnnotationText(markerTag)

@@ -41,7 +41,7 @@ Public Class Insulin
     <Column(Order:=2, TypeName:=NameOf([String]))>
     Public ReadOnly Property Kind As String
 
-    <DisplayName("Timestamp")>
+    <DisplayName("Timestamp From Pump")>
     <Column(Order:=3, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
@@ -55,7 +55,7 @@ Public Class Insulin
         End Get
     End Property
 
-    <DisplayName("Display Time")>
+    <DisplayName("Display Time From Pump")>
     <Column(Order:=5, TypeName:="String")>
     <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String
@@ -69,7 +69,7 @@ Public Class Insulin
         End Get
     End Property
 
-    <DisplayName("OA Date Time")>
+    <DisplayName("OA Timestamp")>
     <Column(Order:=7, TypeName:=NameOf([Double]))>
     Public ReadOnly Property OAdateTime As OADate
         Get
@@ -115,9 +115,9 @@ Public Class Insulin
         Get
             If {"RECOMMENDED", "UNDETERMINED"}.Contains(Me.ActivationType) Then
                 Dim meal As Meal = Nothing
-                If TryGetMealRecord(Me.Timestamp, meal) Then
+                If Meal.TryGetMealRecord(Me.Timestamp, meal) Then
                     Dim cRatio As Single = CurrentUser.GetCarbRatio(TimeOnly.FromDateTime(meal.Timestamp))
-                    Dim expectedBolus As Single = meal.amount / cRatio
+                    Dim expectedBolus As Single = meal.Amount / cRatio
                     If expectedBolus - 0.025 > Me.ProgrammedFastAmount Then
                         Return (expectedBolus - Me.ProgrammedFastAmount).RoundTo025
                     End If

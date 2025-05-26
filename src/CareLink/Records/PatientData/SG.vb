@@ -91,17 +91,8 @@ Public Class SG
         End Get
     End Property
 
-    <DisplayName("Timestamp")>
+    <DisplayName("Timestamp From Pump")>
     <Column(Order:=6, TypeName:="Date")>
-    <JsonPropertyName("timestampAsDate")>
-    Public ReadOnly Property Timestamp As Date
-        Get
-            Return TryParseDateStr(Me.TimestampAsString)
-        End Get
-    End Property
-
-    <DisplayName("Timestamp")>
-    <Column(Order:=7, TypeName:="Date")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
         Get
@@ -111,6 +102,16 @@ Public Class SG
             _timestampAsString = Value
         End Set
     End Property
+
+    <DisplayName("Timestamp As Date")>
+    <Column(Order:=7, TypeName:="Date")>
+    <JsonPropertyName("timestampAsDate")>
+    Public ReadOnly Property Timestamp As Date
+        Get
+            Return TryParseDateStr(Me.TimestampAsString)
+        End Get
+    End Property
+
 
     <DisplayName("OA Date Time")>
     <Column(Order:=8, TypeName:=NameOf([Double]))>

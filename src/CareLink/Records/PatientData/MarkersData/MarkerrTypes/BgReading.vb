@@ -30,7 +30,7 @@ Public Class BgReading
     <Column(Order:=3, TypeName:=NameOf([String]))>
     Public ReadOnly Property Kind As String
 
-    <DisplayName("Timestamp")>
+    <DisplayName("Timestamp From Pump")>
     <Column(Order:=4, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
@@ -44,7 +44,7 @@ Public Class BgReading
         End Get
     End Property
 
-    <DisplayName("Display Time")>
+    <DisplayName("Display Time From Pump")>
     <Column(Order:=6, TypeName:="String")>
     <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String

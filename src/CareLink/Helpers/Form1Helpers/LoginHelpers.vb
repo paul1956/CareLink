@@ -258,12 +258,13 @@ Friend Module LoginHelpers
             End If
         End If
         If currentUserUpdateNeeded OrElse forceUI Then
-            Dim f As New InitializeDialog(CurrentUser, ait, currentTarget, carbRatios)
-            Dim result As DialogResult = f.ShowDialog(My.Forms.Form1)
-            If result = DialogResult.OK Then
-                currentUserUpdateNeeded = currentUserUpdateNeeded OrElse Not CurrentUser.Equals(f.CurrentUser)
-                CurrentUser = f.CurrentUser.Clone
-            End If
+            Using f As New InitializeDialog(CurrentUser, ait, currentTarget, carbRatios)
+                Dim result As DialogResult = f.ShowDialog(My.Forms.Form1)
+                If result = DialogResult.OK Then
+                    currentUserUpdateNeeded = currentUserUpdateNeeded OrElse Not CurrentUser.Equals(f.CurrentUser)
+                    CurrentUser = f.CurrentUser.Clone
+                End If
+            End Using
         End If
         If currentUserUpdateNeeded Then
             File.WriteAllTextAsync(

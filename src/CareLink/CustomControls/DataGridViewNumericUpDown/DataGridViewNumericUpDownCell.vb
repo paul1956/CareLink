@@ -66,7 +66,7 @@ Public Class DataGridViewNumericUpDownCell
     Private _thousandsSeparator As Boolean ' Caches the value of the ThousandsSeparator property
 
     ''' <summary>
-    ''' Constructor for the DataGridViewNumericUpDownCell cell type
+    '''  Constructor for the DataGridViewNumericUpDownCell cell type
     ''' </summary>
     Public Sub New()
         ' Create a thread specific bitmap used for the painting of the non-edited cells

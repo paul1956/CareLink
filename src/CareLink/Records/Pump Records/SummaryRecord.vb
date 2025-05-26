@@ -33,7 +33,7 @@ Public Class SummaryRecord
             End If
         End If
 
-        Me.Message = message
+        Me.Message = message.Replace(vbCrLf, " ")
     End Sub
 
     ''' <summary>

@@ -27,12 +27,12 @@ Friend Module PlotSeriesBasal
     End Sub
 
     <Extension>
-    Friend Sub PlotBasalSeries(ByRef basalSeries As Series, markerOADateTime As OADate, amount As Single, bolusRow As Double, insulinRow As Double, seriesName As String, DrawFromBottom As Boolean, tag As String)
+    Friend Sub PlotBasalSeries(ByRef basalSeries As Series, markerOADateTime As OADate, amount As Single, bolusRow As Double, insulinRow As Double, legendText As String, DrawFromBottom As Boolean, tag As String)
         Dim startX As OADate
         Dim startY As Double
         Dim lineColor As Color = If(amount.IsMinBasal(),
                                      GetGraphLineColor("Min Basal"),
-                                     GetGraphLineColor(seriesName)
+                                     GetGraphLineColor(legendText)
                                     )
 
         If DrawFromBottom Then

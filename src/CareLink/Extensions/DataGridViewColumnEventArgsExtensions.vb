@@ -8,9 +8,13 @@ Imports System.Text
 Friend Module DataGridViewColumnEventArgsExtensions
 
     <Extension>
-    Public Sub DgvColumnAdded(ByRef e As DataGridViewColumnEventArgs, cellStyle As DataGridViewCellStyle, wrapHeader As Boolean, forceReadOnly As Boolean, caption As String)
+    Public Sub DgvColumnAdded(ByRef e As DataGridViewColumnEventArgs, cellStyle As DataGridViewCellStyle, forceReadOnly As Boolean, caption As String)
         With e.Column
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            If (e.Column.Index = 0 AndAlso e.Column.DataPropertyName <> "Hour") OrElse
+               (e.Column.DataGridView.Name = "DgvLastSensorGlucose" AndAlso e.Column.HeaderText = "Sensor Glucose (sg)") Then
+                e.Column.MinimumWidth = 150
+            End If
             Dim idHeaderName As Boolean = .DataPropertyName = "ID"
             .ReadOnly = forceReadOnly OrElse idHeaderName
             .Resizable = DataGridViewTriState.False
@@ -22,22 +26,11 @@ Friend Module DataGridViewColumnEventArgsExtensions
                 titleInTitleCase = If(.DataPropertyName.Length < 4, .Name, .Name.ToTitleCase())
             End If
 
-            If wrapHeader Then
-                Dim titleSplit As String() = titleInTitleCase.Replace("A I T", "AIT").Split(" "c)
-                For Each s As String In titleSplit
-                    If s.Length < 5 Then
-                        title.Append(s)
-                    Else
-                        title.AppendLine(s)
-                    End If
-                Next
+            If titleInTitleCase.Contains("™"c) Then
+                title.Append(titleInTitleCase)
             Else
-                If titleInTitleCase.Contains("™"c) Then
-                    title.Append(titleInTitleCase)
-                Else
-                    title.Append(titleInTitleCase.Replace("Care Link", $"CareLink™"))
+                title.Append(titleInTitleCase.Replace("Care Link", $"CareLink™"))
                 End If
-            End If
             .HeaderText = title.TrimEnd(vbCrLf).ToString
             .DefaultCellStyle = cellStyle
             If .HeaderText <> "Record Number" Then

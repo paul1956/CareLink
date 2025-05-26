@@ -12,9 +12,6 @@ Friend Module SummaryHelpers
         {"INITIAL_ALERT_MEDIUM", "60 minutes"},
         {"INITIAL_ALERT_LONG", "90 minutes"}}
 
-    'Private ReadOnly s_variablesUsedInMessages As New HashSet(Of String)
-    Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
-
     Private s_wordsInParentheses As Dictionary(Of String, List(Of String))
 
     Private Function CAnyType(Of T)(UTO As Object) As T
@@ -200,10 +197,6 @@ Friend Module SummaryHelpers
             Stop
         End Try
         Return originalMessage
-    End Function
-
-    Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of SummaryRecord)(s_alignmentTable, columnName)
     End Function
 
     Friend Function GetSensorUpdateTime(key As String) As String

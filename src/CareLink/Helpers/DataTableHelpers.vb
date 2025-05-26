@@ -13,10 +13,14 @@ Imports System.Runtime.CompilerServices
 Friend Module DataTableHelpers
 
     ''' <summary>
-    '''  Adds a DataRow to a DataTable from the public properties of a class.
+    '''  Adds a <see cref="DataRow"/> to a <see cref="DataTable"/> from the public properties of a class.
     ''' </summary>
-    ''' <param propertyName="Table">A reference to the DataTable to insert the DataRow into.</param>
-    ''' <param propertyName="ClassObject">The class containing the data to fill the DataRow from.</param>
+    ''' <param name="Table">
+    '''  A reference to the DataTable to insert the DataRow into.
+    ''' </param>
+    ''' <param name="ClassObject">
+    '''  The class containing the data to fill the DataRow from.
+    ''' </param>
     <Extension>
     Private Sub Add(Of T As Class)(ByRef Table As DataTable, ClassObject As T)
         If ClassObject Is Nothing Then
@@ -35,44 +39,64 @@ Friend Module DataTableHelpers
     End Sub
 
     ''' <summary>
-    ''' Creates a DataTable from a class type's public properties. The DataColumns of the table will match the propertyName and type of the public properties.
+    '''  Creates a <see cref="DataTable"/> from a class type's public properties.
+    '''  The DataColumns of the table will match the name and type of the public properties.
     ''' </summary>
-    ''' <typeparam propertyName="T">The type of the class to create a DataTable from.</typeparam>
-    ''' <returns>A DataTable who's DataColumns match the propertyName and type of each class T's public properties.</returns>
+    ''' <typeparam name="T">The type of the class to create a DataTable from.</typeparam>
+    ''' <returns>
+    '''  A DataTable who's DataColumns match the name and type of each class T's public properties.
+    ''' </returns>
     Private Function ClassToDataTable(Of T As Class)() As DataTable
         Dim classType As Type = GetType(T)
         Dim result As New DataTable(classType.UnderlyingSystemType.Name)
         Dim propertyOrder As New SortedDictionary(Of Integer, PropertyInfo)
+        Dim fallbackOrder As Integer = 1000
+
         For Each [property] As PropertyInfo In classType.GetProperties()
             Dim colAttribute As ColumnAttribute = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault()
-            propertyOrder.Add(colAttribute.Order, [property])
+            Dim order As Integer = If(colAttribute IsNot Nothing, colAttribute.Order, fallbackOrder)
+            While propertyOrder.ContainsKey(order)
+                order += 1 ' Avoid duplicate keys
+            End While
+            propertyOrder.Add(order, [property])
+            If colAttribute Is Nothing Then fallbackOrder += 1
         Next
+
         For Each [property] As PropertyInfo In propertyOrder.Values
             Dim propertyType As Type = [property].PropertyType
             If propertyType = GetType(Boolean) Then
                 propertyType = GetType(String)
+            ElseIf propertyType.IsEnum Then
+                propertyType = GetType(String) ' Or propertyType = [property].PropertyType
             End If
             Dim column As New DataColumn With {
-                                .ColumnName = [property].Name,
-                                .Caption = GetColumnDisplayName([property]),
-                                .DataType = propertyType
-                            }
-            If IsNullableType(column.DataType) AndAlso column.DataType.IsGenericType Then
-                ' If Nullable<>, this is how we get the underlying Type...
-                column.DataType = column.DataType.GenericTypeArguments.FirstOrDefault()
-            Else ' True by default, so set it false
-                'column.AllowDBNull = False
-            End If
-
-            ' Add column
+                .ColumnName = [property].Name,
+                .Caption = GetColumnDisplayName([property]),
+                .DataType = If(IsNullableType(propertyType) AndAlso propertyType.IsGenericType,
+                               propertyType.GenericTypeArguments.FirstOrDefault(),
+                               propertyType)
+            }
             result.Columns.Add(column)
-        Next [property]
+        Next
+
         Return result
     End Function
 
     Private Function GetColumnDisplayName([property] As PropertyInfo) As String
-        Dim displayNameAttribute As DisplayNameAttribute = [property].GetCustomAttributes(GetType(DisplayNameAttribute), True).Cast(Of DisplayNameAttribute)().SingleOrDefault()
-        Return If(displayNameAttribute Is Nothing, [property].Name, displayNameAttribute.DisplayName)
+        Dim displayNameAttribute As DisplayNameAttribute = [property].GetCustomAttributes(
+            attributeType:=GetType(DisplayNameAttribute),
+            inherit:=True).Cast(Of DisplayNameAttribute)().SingleOrDefault()
+        If displayNameAttribute Is Nothing Then
+            Return [property].Name
+        Else
+
+            ' Non-breaking space for better display
+            Dim displayName As String = displayNameAttribute.DisplayName
+            If displayName.Contains("From Pump") OrElse displayName.Contains("As Date") Then
+                displayName = displayName.Replace(" ", ChrW(CharCode:=160))
+            End If
+            Return displayName
+        End If
     End Function
 
     ''' <summary>
@@ -91,8 +115,9 @@ Friend Module DataTableHelpers
     End Function
 
     ''' <summary>
-    ''' Creates a DataTable from a class type's public properties and adds a new DataRow to the table for each class passed as a parameter.
-    ''' The DataColumns of the table will match the name and type of the public properties.
+    '''  Creates a <see cref="DataTable"/> from a class type's public properties and
+    '''  adds a new <see cref="DataRow"/> to the table for each class passed as a parameter.
+    '''  The DataColumns of the table will match the name and type of the public properties.
     ''' </summary>
     ''' <param name="listOfClass">A List(Of class) to fill the DataTable with.</param>
     ''' <returns>A DataTable who's DataColumns match the name and type of each class T's public properties.</returns>
@@ -112,7 +137,7 @@ Friend Module DataTableHelpers
     End Function
 
     ''' <summary>
-    ''' Created a Dictionary that maps Class Property Name to Column Alignment
+    '''  Created a <see cref="Dictionary"/> that maps <see langword="Class"/> Property Name to Column Alignment
     ''' </summary>
     ''' <typeparam name="T"></typeparam>
     ''' <returns>Dictionary</returns>
@@ -122,16 +147,16 @@ Friend Module DataTableHelpers
         If alignmentTable.Count = 0 Then
             For Each [property] As PropertyInfo In classType.GetProperties()
                 cellStyle = New DataGridViewCellStyle
-                Dim typeName As String = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault().TypeName
+                Dim typeName As String = [property].GetCustomAttributes(GetType(ColumnAttribute), inherit:=True).Cast(Of ColumnAttribute)().SingleOrDefault()?.TypeName
                 Select Case typeName
-                    Case "Date", "DateTime", NameOf(OADate), NameOf([String]), NameOf(SummaryRecord.RecordNumber)
-                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
+                    Case "additionalInfo", "Date", "DateTime", NameOf(OADate), "RecordNumber", NameOf([String]), "Version"
+                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(all:=1))
                     Case NameOf([Decimal]), NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
-                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(0, 1, 1, 1))
-                    Case NameOf([Boolean])
-                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
-                    Case "additionalInfo", "RecordNumber", "Version"
-                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
+                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                    Case NameOf([Boolean]), "DeleteRow"
+                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(all:=0))
+                    Case "CustomProperty"
+                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(left:=0, top:=2, right:=2, bottom:=2))
                     Case Else
                         Throw UnreachableException([property].PropertyType.Name)
                 End Select
@@ -139,10 +164,11 @@ Friend Module DataTableHelpers
             Next
         End If
         If Not alignmentTable.TryGetValue(columnName, cellStyle) Then
-            cellStyle = If(columnName = NameOf(SummaryRecord.RecordNumber),
-                           (New DataGridViewCellStyle).SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0)),
-                           (New DataGridViewCellStyle).SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
+            cellStyle = If(columnName = NameOf(SummaryRecord.RecordNumber) OrElse columnName = NameOf(Limit.Index),
+                           (New DataGridViewCellStyle).SetCellStyle(alignment:=DataGridViewContentAlignment.MiddleCenter, padding:=New Padding(all:=0)),
+                           (New DataGridViewCellStyle).SetCellStyle(alignment:=DataGridViewContentAlignment.MiddleLeft, padding:=New Padding(all:=1))
                           )
+            alignmentTable.Add(columnName, cellStyle)
         End If
         Return cellStyle
     End Function

@@ -9,7 +9,7 @@ Imports System.Text.Json.Serialization
 Public Class ClearedNotifications
 
     <DisplayName("Record Number")>
-    <Column(Order:=0, TypeName:=NameOf([Int32]))>
+    <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
 
     <DisplayName("Fault Id")>

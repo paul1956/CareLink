@@ -2,14 +2,26 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+''' <summary>
+'''  Provides helper methods for extracting manual basal values from marker data.
+''' </summary>
 Friend Module GetManualBasalPoints
 
+    ''' <summary>
+    '''  Calculates the manual basal values for a given marker, returning a sorted dictionary of OADate to basal rate.
+    ''' </summary>
+    ''' <param name="markerWithIndex">
+    '''  The <see cref="IndexClass(Of Marker)"/> containing the marker and its index in the marker list.
+    ''' </param>
+    ''' <returns>
+    '''  A <see cref="SortedDictionary(Of OADate, Single)"/> mapping OADate timestamps to basal rates.
+    '''  Returns an empty dictionary if the marker is not valid for manual basal calculation.
+    ''' </returns>
     Friend Function GetManualBasalValues(markerWithIndex As IndexClass(Of Marker)) As SortedDictionary(Of OADate, Single)
         Debug.Assert(CurrentPdf.IsValid)
-        Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
         Dim markerEntry As Marker = markerWithIndex.Value
         If markerEntry.GetBooleanValueFromJson(NameOf(LowGlucoseSuspended.deliverySuspended)) Then
-            Return timeOrderedMarkers
+            Return New SortedDictionary(Of OADate, Single)
         End If
         Dim nextPumpSuspendTime As OADate
         Dim markerDateTime? As Date
@@ -18,7 +30,7 @@ Friend Module GetManualBasalPoints
             If activationType = "MANUAL" Then
                 markerDateTime = s_markers.Last().GetMarkerTimestamp
                 If markerDateTime Is Nothing Then
-                    Return timeOrderedMarkers
+                    Return New SortedDictionary(Of OADate, Single)
                 End If
                 nextPumpSuspendTime = New OADate(markerDateTime.Value)
             Else
@@ -27,27 +39,27 @@ Friend Module GetManualBasalPoints
         Else
             markerDateTime = s_markers(markerWithIndex.Index + 1).GetMarkerTimestamp
             If markerDateTime Is Nothing Then
-                Return timeOrderedMarkers
+                Return New SortedDictionary(Of OADate, Single)
             End If
             nextPumpSuspendTime = New OADate(markerDateTime.Value)
         End If
 
         Dim lowGlucoseSuspend As New LowGlucoseSuspended(s_markers.Last(), s_markers.Count)
         If lowGlucoseSuspend.deliverySuspended Then
-            Return timeOrderedMarkers
+            Return New SortedDictionary(Of OADate, Single)
         End If
 
         Dim basalRateRecords As List(Of BasalRateRecord) = GetActiveBasalRateRecords()
         If basalRateRecords.Count = 0 Then
-            Return timeOrderedMarkers
+            Return New SortedDictionary(Of OADate, Single)
         End If
 
         markerDateTime = markerEntry.GetMarkerTimestamp
         If markerDateTime Is Nothing Then
-            Return timeOrderedMarkers
+            Return New SortedDictionary(Of OADate, Single)
         End If
         Dim currentMarkerTime As New OADate(markerDateTime.Value)
-
+        Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
         While nextPumpSuspendTime > currentMarkerTime
             For Each e As IndexClass(Of BasalRateRecord) In basalRateRecords.WithIndex
                 Dim basalRecord As BasalRateRecord = e.Value

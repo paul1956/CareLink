@@ -15,7 +15,7 @@ Public Class Marker
     <JsonPropertyName("type")>
     Public Property Type As String
 
-    <DisplayName("Timestamp")>
+    <DisplayName("Timestamp From Pump")>
     <Column(Order:=1, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
@@ -29,7 +29,7 @@ Public Class Marker
         End Get
     End Property
 
-    <DisplayName("Display Time")>
+    <DisplayName("Display Time From Pump")>
     <Column(Order:=3, TypeName:="String")>
     <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String

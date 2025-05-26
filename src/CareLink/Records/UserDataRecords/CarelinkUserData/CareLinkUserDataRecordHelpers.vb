@@ -6,10 +6,6 @@ Imports System.IO
 
 Public Module CareLinkUserDataRecordHelpers
 
-    Private ReadOnly s_columnsToHide As New List(Of String) From {
-            NameOf(CareLinkUserDataRecord.ID),
-            NameOf(CareLinkUserDataRecord.CareLinkPassword)}
-
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle
 
@@ -32,13 +28,6 @@ Public Module CareLinkUserDataRecordHelpers
                 'Throw UnreachableException($"{NameOf(CareLinkUserDataRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
         End Select
         Return cellStyle
-    End Function
-
-    Friend Function HideColumn(dataPropertyName As String) As Boolean
-        Return Not String.IsNullOrWhiteSpace(dataPropertyName) AndAlso
-               Not (Debugger.IsAttached AndAlso
-               Not s_filterJsonData) AndAlso
-               s_columnsToHide.Contains(dataPropertyName)
     End Function
 
     Public Function AllUserLoginInfoFileExists() As Boolean

@@ -29,17 +29,9 @@ Public Class LastSG
     <JsonPropertyName("sensorState")>
     Public Property SensorState As String
 
-    <DisplayName("Timestamp")>
-    <Column(Order:=5, TypeName:="Date")>
-    <JsonPropertyName("timestampAsDate")>
-    Public ReadOnly Property Timestamp As Date
-        Get
-            Return TryParseDateStr(Me.TimestampAsString)
-        End Get
-    End Property
 
-    <DisplayName("Timestamp")>
-    <Column(Order:=6, TypeName:="Date")>
+    <DisplayName("Timestamp From Pump")>
+    <Column(Order:=5, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
         Get
@@ -48,6 +40,15 @@ Public Class LastSG
         Set
             _timestampAsString = Value
         End Set
+    End Property
+
+    <DisplayName("Timestamp As Date")>
+    <Column(Order:=6, TypeName:="Date")>
+    <JsonPropertyName("timestampAsDate")>
+    Public ReadOnly Property Timestamp As Date
+        Get
+            Return TryParseDateStr(Me.TimestampAsString)
+        End Get
     End Property
 
     Public Overrides Function ToString() As String

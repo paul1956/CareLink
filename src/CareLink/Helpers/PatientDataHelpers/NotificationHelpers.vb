@@ -78,7 +78,6 @@ Friend Module NotificationHelpers
             End If
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(.Name),
-                wrapHeader:=False,
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             If e.Column.Index = 0 Then

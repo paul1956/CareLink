@@ -29,7 +29,7 @@ Public Class LowGlucoseSuspended
     <Column(Order:=2, TypeName:=NameOf([String]))>
     Public Property Kind As String
 
-    <DisplayName("Timestamp")>
+    <DisplayName("Timestamp From Pump")>
     <Column(Order:=3, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
@@ -43,7 +43,7 @@ Public Class LowGlucoseSuspended
         End Get
     End Property
 
-    <DisplayName("Display Time")>
+    <DisplayName("Display Time From Pump")>
     <Column(Order:=5, TypeName:="String")>
     <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String

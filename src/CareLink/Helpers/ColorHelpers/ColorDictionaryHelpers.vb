@@ -8,16 +8,16 @@ Imports System.Runtime.CompilerServices
 Friend Module ColorDictionaryHelpers
 
     Friend Property GraphColorDictionary As New Dictionary(Of String, KnownColor) From {
-                                {"Active Insulin", KnownColor.Lime},
-                                {"Auto Correction", KnownColor.Aqua},
-                                {"Basal Series", KnownColor.HotPink},
-                                {"High Limit", KnownColor.Yellow},
-                                {"Low Limit", KnownColor.Red},
-                                {"Min Basal", KnownColor.LightYellow},
-                                {"SG Series", KnownColor.White},
-                                {"SG Target", KnownColor.Blue},
-                                {"Suspend", KnownColor.Red},
-                                {"Time Change", KnownColor.White}}
+        {"Active Insulin", KnownColor.Lime},
+        {"Auto Correction", KnownColor.Aqua},
+        {"Basal Series", KnownColor.HotPink},
+        {"High Limit", KnownColor.Yellow},
+        {"Low Limit", KnownColor.Red},
+        {"Min Basal", KnownColor.LightYellow},
+        {"SG Series", KnownColor.White},
+        {"SG Target", KnownColor.Blue},
+        {"Suspend", KnownColor.Red},
+        {"Time Change", KnownColor.White}}
     Friend Function GetGraphLineColor(legendText As String) As Color
         Dim toColor As Color = GraphColorDictionary(legendText).ToColor
         Return If(legendText = "Suspend",
