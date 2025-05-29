@@ -70,7 +70,6 @@ Public Class Meal
                 Return True
             End If
         Next
-        Stop
         Return False
     End Function
 
