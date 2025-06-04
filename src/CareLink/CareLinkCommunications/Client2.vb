@@ -12,7 +12,6 @@ Public Class Client2
 
     ' Constants
     Private Const TokenBaseFileName As String = "logindata.json"
-
     Private ReadOnly _tokenBaseFileName As String
     Private _accessTokenPayload As Dictionary(Of String, Object)
     Private _config As Dictionary(Of String, Object)
@@ -56,6 +55,15 @@ Public Class Client2
 
     Public Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
 
+    ''' <summary>
+    '''  Reads the token file and returns the token data as a <see cref="JsonElement"/>.
+    ''' </summary>
+    ''' <param name="config"></param>
+    ''' <param name="tokenDataElement"></param>
+    ''' <returns>
+    '''  A <see cref="JsonElement"/> containing the token data.
+    '''  If the file does not exist or is empty, returns an empty <see cref="JsonElement"/>.
+    ''' </returns>
     Private Function DoRefresh(config As Dictionary(Of String, Object), tokenDataElement As JsonElement) As Task(Of JsonElement)
         Debug.WriteLine(NameOf(DoRefresh))
         _httpClient.SetDefaultRequestHeaders()
@@ -118,6 +126,12 @@ Public Class Client2
         Return Task.FromResult(New JsonElement)
     End Function
 
+    ''' <summary>
+    '''  Reads the token file and returns the token data as a <see cref="JsonElement"/>.
+    ''' </summary>
+    ''' <param name="userName">The username for which to read the token file.</param>
+    ''' <param name="tokenBaseFileName">The base filename for the token file.</param>
+    ''' <returns>A <see cref="JsonElement"/> containing the token data.</returns>
     Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, Object)
         Debug.WriteLine(NameOf(GetAccessTokenPayload))
         Try
@@ -338,8 +352,6 @@ Public Class Client2
     ''' <param name="username"></param>
     ''' <param name="role"></param>
     ''' <param name="patientId"></param>
-    '''
-    '''
     ''' <returns><see cref="Dictionary"/> containing the retrieved data.</returns>
     Private Function GetData(username As String, role As String, patientId As String) As Dictionary(Of String, Object)
         Debug.WriteLine(NameOf(GetData))
@@ -436,19 +448,25 @@ Public Class Client2
     End Function
 
     ''' <summary>
-    '''  Get last API response code
+    '''  Gets the last HTTP response status code received from the API.
     ''' </summary>
+    ''' <returns>
+    '''  An <see langword="Integer"/> representing the last API response status code.
+    ''' </returns>
+
     Public Function GetLastResponseCode() As Integer
         Return _lastApiStatus
     End Function
 
     ''' <summary>
-    '''  Get recent data from the API
-    '''  This function checks if the access token is valid, refreshes it if necessary,
-    '''  and retrieves the recent data from the API.
-    '''  It returns a string indicating the status of the operation.
+    '''  Retrieves the most recent data from the API.
+    '''  This function checks if the access token is valid, attempts to refresh it if necessary,
+    '''  and then sends a request to the API to obtain the latest patient data.
+    '''  If the access token cannot be refreshed or the API call fails, an error message is returned.
     ''' </summary>
-    ''' <returns></returns>
+    ''' <returns>
+    '''  A <see cref="String"/> indicating the status of the operation, or an error message if the operation fails.
+    ''' </returns>
     Public Function GetRecentData() As String
         ' Check if access token is valid
         Dim lastErrorMessage As String = Nothing

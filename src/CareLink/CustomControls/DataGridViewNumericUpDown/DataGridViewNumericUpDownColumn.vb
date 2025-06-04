@@ -7,28 +7,22 @@ Imports System.Globalization
 Imports System.Text
 
 ''' <summary>
-''' Custom column type dedicated to the DataGridViewNumericUpDownCell cell type.
+'''  Custom column type dedicated to the <see cref="DataGridViewNumericUpDownCell"/> cell type.
 ''' </summary>
 Public Class DataGridViewNumericUpDownColumn
     Inherits DataGridViewColumn
 
     ''' <summary>
-    ''' Constructor for the DataGridViewNumericUpDownColumn class.
+    ''' Constructor for the <see cref="DataGridViewNumericUpDownColumn"/> class.
     ''' </summary>
     Public Sub New()
         MyBase.New(New DataGridViewNumericUpDownCell)
     End Sub
 
     ''' <summary>
-    ''' Represents the implicit cell that gets cloned when adding rows to the grid.
+    '''  Represents the implicit cell that gets cloned when adding rows to the grid.
     ''' </summary>
-    ''' <summary>
-    ''' Represents the implicit cell that gets cloned when adding rows to the grid.
-    ''' </summary>
-    <
-    Browsable(False),
-        DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)
-    >
+    <Browsable(False), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Overrides Property CellTemplate As DataGridViewCell
         Get
             Return MyBase.CellTemplate
@@ -45,16 +39,11 @@ Public Class DataGridViewNumericUpDownColumn
     End Property
 
     ''' <summary>
-    ''' Replicates the DecimalPlaces property of the DataGridViewNumericUpDownCell cell type.
+    '''  Replicates the DecimalPlaces property of the DataGridViewNumericUpDownCell cell type.
     ''' </summary>
-    ''' <summary>
-    ''' Replicates the DecimalPlaces property of the DataGridViewNumericUpDownCell cell type.
-    ''' </summary>
-    <
-    Category("Appearance"),
+    <Category("Appearance"),
         DefaultValue(DataGridViewNumericUpDownCell.DATAGRIDVIEWNUMERICUPDOWNCELL_defaultDecimalPlaces),
-        Description("Indicates the number of decimal places to display.")
-    >
+        Description("Indicates the number of decimal places to display.")>
     Public Property DecimalPlaces As Integer
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then
@@ -92,10 +81,7 @@ Public Class DataGridViewNumericUpDownColumn
     End Property
 
     ''' <summary>
-    ''' Replicates the Increment property of the DataGridViewNumericUpDownCell cell type.
-    ''' </summary>
-    ''' <summary>
-    ''' Replicates the Increment property of the DataGridViewNumericUpDownCell cell type.
+    '''  Replicates the Increment property of the DataGridViewNumericUpDownCell cell type.
     ''' </summary>
     <Category("Data"), Description("Indicates the amount to increment or decrement on each button click.")>
     Public Property Increment As Decimal
@@ -125,16 +111,15 @@ Public Class DataGridViewNumericUpDownColumn
         End Set
     End Property
 
-    ''' Indicates whether the Increment property should be persisted.
+    ''' <summary>
+    '''  Indicates whether the Increment property should be persisted.
+    '''  </summary>
     Private Function ShouldSerializeIncrement() As Boolean
         Return Not Me.Increment.Equals(DataGridViewNumericUpDownCell.DATAGRIDVIEWNUMERICUPDOWNCELL_defaultIncrement)
     End Function
 
     ''' <summary>
-    ''' Replicates the Maximum property of the DataGridViewNumericUpDownCell cell type.
-    ''' </summary>
-    ''' <summary>
-    ''' Replicates the Maximum property of the DataGridViewNumericUpDownCell cell type.
+    '''  Replicates the Maximum property of the DataGridViewNumericUpDownCell cell type.
     ''' </summary>
     <Category("Data"), Description("Indicates the maximum value for the numeric up-down cells."), RefreshProperties(RefreshProperties.All)>
     Public Property Maximum As Decimal
@@ -169,18 +154,19 @@ Public Class DataGridViewNumericUpDownColumn
         End Set
     End Property
 
-    ''' Indicates whether the Maximum property should be persisted.
+    ''' <summary>
+    '''  Indicates whether the Maximum property should be persisted.
+    ''' </summary>
     Private Function ShouldSerializeMaximum() As Boolean
         Return Not Me.Maximum.Equals(DataGridViewNumericUpDownCell.DATAGRIDVIEWNUMERICUPDOWNCELL_defaultMaximum)
     End Function
 
     ''' <summary>
-    ''' Replicates the Minimum property of the DataGridViewNumericUpDownCell cell type.
+    '''  Replicates the Minimum property of the DataGridViewNumericUpDownCell cell type.
     ''' </summary>
-    ''' <summary>
-    ''' Replicates the Minimum property of the DataGridViewNumericUpDownCell cell type.
-    ''' </summary>
-    <Category("Data"), Description("Indicates the minimum value for the numeric up-down cells."), RefreshProperties(RefreshProperties.All)>
+    <Category("Data"),
+        Description("Indicates the minimum value for the numeric up-down cells."),
+        RefreshProperties(RefreshProperties.All)>
     Public Property Minimum As Decimal
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then
@@ -213,18 +199,19 @@ Public Class DataGridViewNumericUpDownColumn
         End Set
     End Property
 
-    ''' Indicates whether the Maximum property should be persisted.
+    ''' <summary>
+    '''  Indicates whether the Maximum property should be persisted.
+    ''' </summary>
     Private Function ShouldSerializeMinimum() As Boolean
         Return Not Me.Minimum.Equals(DataGridViewNumericUpDownCell.DATAGRIDVIEWNUMERICUPDOWNCELL_defaultMinimum)
     End Function
 
     ''' <summary>
-    ''' Replicates the ThousandsSeparator property of the DataGridViewNumericUpDownCell cell type.
+    '''  Replicates the ThousandsSeparator property of the <see cref="DataGridViewNumericUpDownCell"/> cell type.
     ''' </summary>
-    ''' <summary>
-    ''' Replicates the ThousandsSeparator property of the DataGridViewNumericUpDownCell cell type.
-    ''' </summary>
-    <Category("Data"), DefaultValue(DataGridViewNumericUpDownCell.DATAGRIDVIEWNUMERICUPDOWNCELL_defaultThousandsSeparator), Description("Indicates whether the thousands separator will be inserted between every three decimal digits.")>
+    <Category("Data"),
+        DefaultValue(DataGridViewNumericUpDownCell.DATAGRIDVIEWNUMERICUPDOWNCELL_defaultThousandsSeparator),
+        Description("Indicates whether the thousands separator will be inserted between every three decimal digits.")>
     Public Property ThousandsSeparator As Boolean
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then
@@ -258,7 +245,7 @@ Public Class DataGridViewNumericUpDownColumn
     End Property
 
     ''' <summary>
-    ''' Small utility function that returns the template cell as a DataGridViewNumericUpDownCell
+    '''  Small utility function that returns the template cell as a <see cref="DataGridViewNumericUpDownCell"/>
     ''' </summary>
     Private ReadOnly Property NumericUpDownCellTemplate As DataGridViewNumericUpDownCell
         Get
@@ -267,7 +254,7 @@ Public Class DataGridViewNumericUpDownColumn
     End Property
 
     ''' <summary>
-    ''' Returns a standard compact string representation of the column.
+    '''  Returns a standard compact string representation of the column.
     ''' </summary>
     Public Overrides Function ToString() As String
         Dim sb As New StringBuilder(100)

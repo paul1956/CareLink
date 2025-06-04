@@ -535,13 +535,12 @@ Friend Module Form1UpdateHelpers
     ''' <param Name="cultureName">A valid Culture Name in the form of language-CountryCode</param>
     ''' <param Name="extension">The extension for the file</param>
     ''' <param name="MustBeUnique">True if the file name must be unique</param>
-    ''' <example>
-    '''  GetUniqueDataFileName("MyFile", "en-US", "txt", True)
-    ''' </example>
     ''' <returns>
     '''  A unique file name valid in <see cref="DirectoryForProjectData"/> folder or an empty file name on error.
     ''' </returns>
-    ''' <param Name="MustBeUnique"></param>
+    ''' <example>
+    '''  GetUniqueDataFileName("MyFile", "en-US", "txt", True)
+    ''' </example>
     Public Function GetUniqueDataFileName(baseName As String, cultureName As String, extension As String, MustBeUnique As Boolean) As FileNameStruct
         If String.IsNullOrWhiteSpace(baseName) Then
             Throw New ArgumentException($"'{NameOf(baseName)}' cannot be null or whitespace.", NameOf(baseName))

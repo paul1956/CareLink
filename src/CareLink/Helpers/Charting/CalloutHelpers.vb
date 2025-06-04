@@ -41,7 +41,7 @@ Friend Module CalloutHelpers
     End Sub
 
     ''' <summary>
-    ''' Get the annotation text based on the marker tag array.
+    '''  Get the annotation text based on the marker tag array.
     ''' </summary>
     ''' <param name="markerTag">Array of strings representing the marker tags.</param>
     ''' <returns>Formatted annotation text.</returns>
@@ -103,7 +103,6 @@ Friend Module CalloutHelpers
     ''' <summary>
     '''  Dictionary to hold callout annotations for different charts.
     ''' </summary
-    ''' </summary>
     ''' <param name="chart1"></param>
     ''' <param name="currentDataPoint"></param>
     ''' <param name="annotationText"></param>
