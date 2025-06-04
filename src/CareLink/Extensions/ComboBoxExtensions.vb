@@ -2,20 +2,23 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+''' <summary>
+'''  Provides extension methods for ComboBox.ObjectCollection to search for keys and values.
+''' </summary>
 Imports System.Runtime.CompilerServices
 
 Public Module ComboBoxExtensions
 
-    <Extension>
-    Public Function GetKey(Of Tk, Tv)(kvp As KeyValuePair(Of Tk, Tv)) As Tk
-        Return kvp.Key
-    End Function
-
-    <Extension>
-    Public Function GetValue(Of Tk, Tv)(kvp As KeyValuePair(Of Tk, Tv)) As Tv
-        Return kvp.Value
-    End Function
-
+    ''' <summary>
+    '''  Returns the index of the first occurrence of the specified key in the ComboBox.ObjectCollection.
+    ''' </summary>
+    ''' <typeparam name="Tk">The type of the key.</typeparam>
+    ''' <typeparam name="Tv">The type of the value.</typeparam>
+    ''' <param name="objectCollection">The ComboBox.ObjectCollection to search.</param>
+    ''' <param name="key">The key to locate in the collection.</param>
+    ''' <returns>
+    '''  The zero-based index of the first occurrence of the key within the collection, or -1 if not found.
+    ''' </returns>
     <Extension>
     Public Function IndexOfKey(Of Tk, Tv)(objectCollection As ComboBox.ObjectCollection, key As Tk) As Integer
         If String.IsNullOrWhiteSpace(key?.ToString) Then
@@ -31,6 +34,16 @@ Public Module ComboBoxExtensions
         Return -1
     End Function
 
+    ''' <summary>
+    '''  Returns the index of the first occurrence of the specified value in the ComboBox.ObjectCollection.
+    ''' </summary>
+    ''' <typeparam name="Tk">The type of the key.</typeparam>
+    ''' <typeparam name="Tv">The type of the value.</typeparam>
+    ''' <param name="objectCollection">The ComboBox.ObjectCollection to search.</param>
+    ''' <param name="value">The value to locate in the collection.</param>
+    ''' <returns>
+    '''  The zero-based index of the first occurrence of the value within the collection, or -1 if not found.
+    ''' </returns>
     <Extension>
     Public Function IndexOfValue(Of Tk, Tv)(objectCollection As ComboBox.ObjectCollection, value As Tv) As Integer
         If String.IsNullOrWhiteSpace(value?.ToString) Then

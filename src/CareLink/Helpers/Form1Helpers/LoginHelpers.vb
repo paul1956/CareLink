@@ -276,7 +276,7 @@ Friend Module LoginHelpers
     End Sub
 
     ''' <summary>
-    '''Starts or stops ServerUpdateTimer
+    '''  Starts or stops ServerUpdateTimer
     ''' </summary>
     ''' <param name="Start"></param>
     ''' <param name="interval">Timer interval in milliseconds</param>

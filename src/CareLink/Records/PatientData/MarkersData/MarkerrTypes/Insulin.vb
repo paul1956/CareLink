@@ -6,8 +6,16 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Text.Json.Serialization
 
+''' <summary>
+'''  Represents an insulin marker record, containing details about insulin delivery events such as bolus, extended bolus, and related metadata.
+''' </summary>
 Public Class Insulin
 
+    ''' <summary>
+    '''  Initializes a new instance of the <see cref="Insulin"/> class using a marker entry and record number.
+    ''' </summary>
+    ''' <param name="markerEntry">The marker entry containing insulin event data.</param>
+    ''' <param name="recordNumber">The record number for this insulin entry.</param>
     Public Sub New(markerEntry As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
         Me.Type = markerEntry.Type
@@ -29,23 +37,38 @@ Public Class Insulin
         End If
     End Sub
 
+    ''' <summary>
+    '''  Gets or sets the record number for this insulin entry.
+    ''' </summary>
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer
 
+    ''' <summary>
+    '''  Gets or sets the type of the marker.
+    ''' </summary>
     <DisplayName("Type")>
     <Column(Order:=1, TypeName:=NameOf([Int32]))>
     Public Property Type As String
 
+    ''' <summary>
+    '''  Gets the kind of the record, always "Marker".
+    ''' </summary>
     <DisplayName("Kind")>
     <Column(Order:=2, TypeName:=NameOf([String]))>
     Public ReadOnly Property Kind As String
 
+    ''' <summary>
+    '''  Gets or sets the timestamp as a string from the pump.
+    ''' </summary>
     <DisplayName("Timestamp From Pump")>
     <Column(Order:=3, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
 
+    ''' <summary>
+    '''  Gets the timestamp as a <see cref="Date"/> object, parsed from <see cref="TimestampAsString"/>.
+    ''' </summary>
     <DisplayName("Timestamp As Date")>
     <Column(Order:=4, TypeName:="Date")>
     <JsonPropertyName("timestampAsDate")>
@@ -55,11 +78,17 @@ Public Class Insulin
         End Get
     End Property
 
+    ''' <summary>
+    '''  Gets or sets the display time as a string from the pump.
+    ''' </summary>
     <DisplayName("Display Time From Pump")>
     <Column(Order:=5, TypeName:="String")>
     <JsonPropertyName("displayTime")>
     Public Property DisplayTimeAsString As String
 
+    ''' <summary>
+    '''  Gets the display time as a <see cref="Date"/> object, parsed from <see cref="DisplayTimeAsString"/>.
+    ''' </summary>
     <DisplayName("Display Time As Date")>
     <Column(Order:=6, TypeName:="Date")>
     <JsonPropertyName("displayTimeAsDate")>
@@ -69,6 +98,9 @@ Public Class Insulin
         End Get
     End Property
 
+    ''' <summary>
+    '''  Gets the OA date/time representation of the timestamp.
+    ''' </summary>
     <DisplayName("OA Timestamp")>
     <Column(Order:=7, TypeName:=NameOf([Double]))>
     Public ReadOnly Property OAdateTime As OADate
@@ -77,38 +109,65 @@ Public Class Insulin
         End Get
     End Property
 
+    ''' <summary>
+    '''  Gets or sets the activation type for the insulin event.
+    ''' </summary>
     <DisplayName("Activation Type")>
     <Column(Order:=8, TypeName:="String", TypeName:=NameOf([String]))>
     Public Property ActivationType As String
 
+    ''' <summary>
+    '''  Gets or sets the bolus type for the insulin event.
+    ''' </summary>
     <DisplayName("Bolus Type")>
     <Column(Order:=9, TypeName:=NameOf([String]))>
     Public Property BolusType As String
 
+    ''' <summary>
+    '''  Gets or sets the programmed extended amount of insulin (units).
+    ''' </summary>
     <DisplayName("Programmed Extended Amount")>
     <Column(Order:=10, TypeName:=NameOf([Single]))>
     Public Property ProgrammedExtendedAmount As Single
 
+    ''' <summary>
+    '''  Gets or sets the delivered extended amount of insulin (units).
+    ''' </summary>
     <DisplayName("Delivered Extended Amount")>
     <Column(Order:=12, TypeName:=NameOf([Single]))>
     Public Property DeliveredExtendedAmount As Single
 
+    ''' <summary>
+    '''  Gets or sets the programmed duration for the extended bolus (minutes).
+    ''' </summary>
     <DisplayName("Programmed Duration")>
     <Column(Order:=13, TypeName:=NameOf([Int32]))>
     Public Property ProgrammedDuration As Integer
 
+    ''' <summary>
+    '''  Gets or sets the effective duration for the extended bolus (minutes).
+    ''' </summary>
     <DisplayName("Effective Duration")>
     <Column(Order:=14, TypeName:=NameOf([Int32]))>
     Public Property EffectiveDuration As Integer
 
+    ''' <summary>
+    '''  Gets or sets the programmed fast (immediate) amount of insulin (units).
+    ''' </summary>
     <DisplayName("Programmed Fast Amount")>
     <Column(Order:=15, TypeName:=NameOf([Single]))>
     Public Property ProgrammedFastAmount As Single
 
+    ''' <summary>
+    '''  Gets or sets the delivered fast (immediate) amount of insulin (units).
+    ''' </summary>
     <DisplayName("Delivered Fast Amount")>
     <Column(Order:=16, TypeName:=NameOf([Single]))>
     Public Property DeliveredFastAmount As Single
 
+    ''' <summary>
+    '''  Gets the safe meal reduction value, representing the difference between expected and programmed bolus if applicable.
+    ''' </summary>
     <DisplayName("Safe Meal Reduction")>
     <Column(Order:=17, TypeName:=NameOf([Single]))>
     Public ReadOnly Property SafeMealReduction As Single
@@ -127,10 +186,16 @@ Public Class Insulin
         End Get
     End Property
 
+    ''' <summary>
+    '''  Gets or sets a value indicating whether the insulin delivery was completed.
+    ''' </summary>
     <DisplayName("Completed")>
     <Column(Order:=18, TypeName:=NameOf([Boolean]))>
     Public Property Completed As Boolean
 
+    ''' <summary>
+    '''  Gets or sets the type of insulin used for this event.
+    ''' </summary>
     <DisplayName("Insulin Type")>
     <Column(Order:=19, TypeName:=NameOf([String]))>
     Public Property InsulinType As String

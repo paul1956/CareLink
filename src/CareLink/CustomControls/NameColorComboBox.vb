@@ -2,17 +2,28 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+''' <summary>
+'''  Represents a ComboBox control that displays a list of color names and their associated <see cref="KnownColor"/> values.
+'''  Provides strongly-typed access to the selected color item and custom drawing for color visualization.
+''' </summary>
 Public Class NameColorComboBox
     Inherits ComboBox
 
+    ''' <summary>
+    '''  Initializes a new instance of the <see cref="NameColorComboBox"/> class.
+    ''' </summary>
     Public Sub New()
         MyBase.New
     End Sub
 
     ''' <summary>
-    ''' Returns the selected KeyValuePair(Of String, KnownColor)
+    '''  Gets or sets the currently selected item as a <see cref="KeyValuePair(Of String, KnownColor)"/>.
+    '''  The key represents the display name, and the value is the associated <see cref="KnownColor"/>.
     ''' </summary>
-    ''' <returns></returns>
+    ''' <remarks>
+    '''  This property shadows the base <see cref="ComboBox.SelectedItem"/> property to provide
+    '''  strongly-typed access to the selected color item.
+    ''' </remarks>
     Public Shadows Property SelectedItem() As KeyValuePair(Of String, KnownColor)
         Get
             Return CType(MyBase.SelectedItem, KeyValuePair(Of String, KnownColor))
@@ -22,12 +33,18 @@ Public Class NameColorComboBox
         End Set
     End Property
 
+    ''' <summary>
+    '''  Gets the display name of the currently selected color item.
+    ''' </summary>
     Public Shadows ReadOnly Property SelectedText() As String
         Get
             Return Me.SelectedItem.Key
         End Get
     End Property
 
+    ''' <summary>
+    '''  Gets or sets the <see cref="KnownColor"/> value of the currently selected item.
+    ''' </summary>
     Public Shadows Property SelectedValue() As KnownColor
         Get
             Return Me.SelectedItem.Value
@@ -37,6 +54,9 @@ Public Class NameColorComboBox
         End Set
     End Property
 
+    ''' <summary>
+    '''  Initializes the layout of the control, populating the ComboBox with color items and configuring drawing settings.
+    ''' </summary>
     Protected Overrides Sub InitLayout()
         MyBase.InitLayout()
         If Me.DesignMode Then Exit Sub
@@ -49,6 +69,10 @@ Public Class NameColorComboBox
         Next
     End Sub
 
+    ''' <summary>
+    '''  Handles the drawing of each item in the ComboBox, displaying the color name and a color swatch.
+    ''' </summary>
+    ''' <param name="e">A <see cref="DrawItemEventArgs"/> that contains the event data.</param>
     Protected Overrides Sub OnDrawItem(e As DrawItemEventArgs)
         MyBase.OnDrawItem(e)
         If e.Index = -1 Then Exit Sub

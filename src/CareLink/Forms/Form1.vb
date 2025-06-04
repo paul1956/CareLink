@@ -475,11 +475,11 @@ Public Class Form1
     '''  This event is raised when a context menu is needed for a cell.
     '''  The context menu is set to the DgvCopyWithExcelMenuStrip if the row index is valid.
     ''' </summary>
-    ''' <remarks>
-    '''  This event is used to provide a context menu for copying data from the DataGridView.
-    ''' </summary>
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to provide a context menu for copying data from the DataGridView.
+    ''' </remarks>
     Public Sub DgvCellContextMenuStripNeededWithExcel(sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
         DgvActiveInsulin.CellContextMenuStripNeeded,
         DgvAutoBasalDelivery.CellContextMenuStripNeeded,
@@ -2684,6 +2684,14 @@ Public Class Form1
 
 #Region "Update Home Tab"
 
+    ''' <summary>
+    '''  Returns a subtitle string for the summary chart based on the current AutoMode state and basal pattern.
+    '''  If in AutoMode, the subtitle reflects the automode state and remaining time if in Safe Basal.
+    '''  Otherwise, it returns the active basal pattern and rate.
+    ''' </summary>
+    ''' <returns>
+    '''  A string representing the current subtitle for the summary chart.
+    ''' </returns>
     Private Function GetSubTitle() As String
         Dim title As String = ""
         If InAutoMode Then

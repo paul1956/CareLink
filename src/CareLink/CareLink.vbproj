@@ -61,6 +61,7 @@
     <Compile Remove="CareLinkCommunications\CareLinkClientHelpers.vb" />
     <Compile Remove="Dialogs\Captcha.Designer.vb" />
     <Compile Remove="Dialogs\Captcha.vb" />
+    <Compile Remove="Records\CommunicationRecords\RaceRecord.vb" />
     <Compile Remove="Records\CommunicationRecords\SessionProfile.vb" />
   </ItemGroup>
 

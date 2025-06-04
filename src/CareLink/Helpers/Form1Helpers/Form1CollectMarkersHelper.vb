@@ -42,7 +42,7 @@ Friend Module Form1CollectMarkersHelper
     End Sub
 
     ''' <summary>
-    ''' Collect up markers
+    '''  Collect up markers
     ''' </summary>
     ''' <param name="jsonRow">JSON Marker Row</param>
     ''' <returns>Max Basal/Hr</returns>

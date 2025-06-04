@@ -21,8 +21,9 @@ If generally asked for XML comments, note they need to have a structure:
  * In <remarks/> sections, please always use <para> tags.
  * Always make sure, you use XML compatible character encoding.
  * Always use the <c> tag for code snippets, and <paramref name="$..."/> for parameters.
+ * Always use the <see langword="$..."/> tag for language keywords like True, False and Nothing, and <paramref name="$..."/> for parameters.
  * True and False should be used in the XML comments, not true or false.
- * The XML code must use indentations of 1 space (see example below) and use triple-quote-style for the Text Lines not a single ':
+ * The XML code must use 1-space indentation (see example below) and use triple-quote-style for the Text Lines not a single ':
    ''' <Summary>
    '''  Summary text.
    ''' </Summary>

@@ -37,12 +37,19 @@ Friend Module CreateChartItems
     End Function
 
     ''' <summary>
-    '''  Finds the index of a label in a collection of custom legend items.
-    '''  This method is used to locate the index of a specific legend item by its name.
+    '''  Finds the index of a legend item with the specified name in a collection of custom legend items.
+    '''  This method iterates through the collection and returns the index of the first item whose <c>Name</c> property
+    '''  matches <paramref name="legendString"/>. If no matching item is found, the method returns -1.
     ''' </summary>
-    ''' <param name="customItems"></param>
-    ''' <param name="legendString"></param>
-    ''' <returns>The index of the legend item, or -1 if not found.</returns>
+    ''' <param name="customItems">
+    '''  The <see cref="LegendItemsCollection"/> to search for the legend item.
+    ''' </param>
+    ''' <param name="legendString">
+    '''  The name of the legend item to find.
+    ''' </param>
+    ''' <returns>
+    '''  The zero-based index of the legend item if found; otherwise, -1.
+    ''' </returns>
     <Extension>
     Private Function IndexOfLabel(customItems As LegendItemsCollection, legendString As String) As Integer
         For Each item As IndexClass(Of LegendItem) In customItems.WithIndex
@@ -78,15 +85,19 @@ Friend Module CreateChartItems
 
     ''' <summary>
     '''  Creates a new chart with specified properties.
-    '''  This method is used to initialize a chart for displaying data with a specific name and appearance.
+    '''  This method initializes a <see cref="Chart"/> control for displaying data, setting its appearance, docking, and annotations.
     ''' </summary>
-    ''' <param name="chartName">The name of the chart.</param>
-    ''' <returns>A Chart object configured with the specified properties.</returns>
+    ''' <param name="chartName">
+    '''  The name to assign to the chart instance.
+    ''' </param>
+    ''' <returns>
+    '''  A <see cref="Chart"/> object configured with the specified name and default visual properties.
+    ''' </returns>
     Friend Function CreateChart(chartName As String) As Chart
         Dim chart As New Chart With {
             .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
             .BackColor = Color.Black,
-            .BorderlineColor = Color.MidnightBlue,
+            .BorderlineColor = Color.Black,
             .BorderlineDashStyle = ChartDashStyle.Solid,
             .BorderlineWidth = 2,
             .Dock = DockStyle.Fill,
@@ -98,13 +109,15 @@ Friend Module CreateChartItems
 
     ''' <summary>
     '''  Creates a chart area with specific properties for displaying data in a chart.
-    '''  This method is used to define the appearance and behavior of the chart area, including axes and grid lines.
+    '''  This method configures the appearance and behavior of the chart area, including axes, grid lines, labels, and colors.
+    '''  It sets up both primary and secondary Y-axes, custom labels for mmol/L and mg/dL, and X-axis formatting for time.
     ''' </summary>
-    ''' <param name="containingChart">The chart that contains this chart area.</param>
-    ''' <returns>A ChartArea object configured with the specified properties.
-    ''' </summary>
-    ''' <param name="containingChart"></param>
-    ''' <returns></returns>
+    ''' <param name="containingChart">
+    '''  The chart that will contain this chart area. Used to determine contrasting colors and font settings.
+    ''' </param>
+    ''' <returns>
+    '''  A <see cref="ChartArea"/> object configured with the specified properties for use in charting.
+    ''' </returns>
     Friend Function CreateChartArea(containingChart As Chart) As ChartArea
         Dim tmpChartArea As New ChartArea(NameOf(ChartArea)) With {
             .BackColor = Color.FromArgb(red:=90, green:=107, blue:=87),
@@ -341,14 +354,16 @@ Friend Module CreateChartItems
     End Function
 
     ''' <summary>
-    '''  Creates a series for displaying sensor glucose (SG) values in a chart with a specific name.
-    '''  This method is used to initialize a series specifically for sensor glucose data with a custom name.
+    '''  Creates a series for displaying "Suspend" events in a chart.
+    '''  This method initializes a <see cref="Series"/> specifically for representing insulin suspension data,
+    '''  configures its appearance, and adds a corresponding legend item to the provided <paramref name="basalLegend"/>.
     ''' </summary>
-    ''' <param name="sgLegend">The legend associated with the sensor glucose series.</param>
-    ''' <param name="seriesName">The name of the series.</param>
-    ''' <returns>A Series object configured for sensor glucose values.</returns>
-    ''' <param name="basalLegend"></param>
-    ''' <returns></returns>
+    ''' <param name="basalLegend">
+    '''  The <see cref="Legend"/> to which the "Suspend" legend item will be added.
+    ''' </param>
+    ''' <returns>
+    '''  A <see cref="Series"/> object configured for displaying suspend events in the chart.
+    ''' </returns>
     Friend Function CreateSeriesSuspend(basalLegend As Legend) As Series
         Const legendText As String = "Suspend"
         Dim s As Series = CreateSeriesBase(SuspendSeriesName, legendText, 1, AxisType.Primary)
