@@ -11,9 +11,12 @@ Public Module JsonDownloader
     '''  Downloads JSON content from the specified URL.
     '''  This method uses HttpClient to perform the GET request and returns the JSON content as a string.
     ''' </summary>
-    ''' <param name="url"></param>
+    ''' <param name="url">The URL from which to download the JSON content.</param>
     ''' <returns>A string containing the JSON content.</returns>
+    ''' <remarks>This method is synchronous and blocks until the request completes.</remarks>
     ''' <exception cref="HttpRequestException">Thrown when the request fails.</exception>
+    ''' <exception cref="TaskCanceledException">Thrown if the request times out.</exception>
+    ''' <exception cref="JsonException">Thrown if the response is not valid JSON.</exception>
     Private Function DownloadJson(url As String) As String
         Using client As New HttpClient()
             Return client.GetStringAsync(url).Result
@@ -27,12 +30,9 @@ Public Module JsonDownloader
     ''' <typeparam name="T">The type to which the JSON content will be deserialized.</typeparam>
     ''' <param name="url">The URL from which to download the JSON content.</param>
     ''' <returns>An object of type T containing the deserialized JSON data.</returns>
+    ''' <remarks>This method uses the static s_jsonDeserializerOptions for deserialization.</remarks>
     ''' <exception cref="HttpRequestException">Thrown when the request fails.</exception>
     ''' <exception cref="JsonException">Thrown when deserialization fails.</exception
-    ''' </summary>
-    ''' <typeparam name="T"></typeparam>
-    ''' <param name="url"></param>
-    ''' <returns></returns>
     Public Function DownloadAndDecodeJson(Of T)(url As String) As T
 
         Dim jsonContent As String = DownloadJson(url)

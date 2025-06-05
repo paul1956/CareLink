@@ -6,14 +6,41 @@ Imports System.Runtime.CompilerServices
 
 Friend Module RunningActiveInsulinHelpers
 
+    ''' <summary>
+    '''  Adjusts the insulin levels in a list of RunningActiveInsulin objects.
+    '''  This method iterates through the specified range of indices in the list and adjusts each
+    '''  RunningActiveInsulin object by calling its Adjust method.
+    ''' </summary>
+    ''' <param name="myList">The list of RunningActiveInsulin objects to adjust.</param>
+    ''' <param name="startIndex">The starting index in the list from which to begin adjustments.</param>
+    ''' <param name="count">The number of RunningActiveInsulin objects to adjust starting from startIndex.</param>
+    ''' <remarks>
+    '''  This method modifies the RunningActiveInsulin objects in place.
+    ''' </remarks>
     <Extension>
     Friend Sub AdjustList(myList As List(Of RunningActiveInsulin), startIndex As Integer, count As Integer)
-        For i As Integer = startIndex To startIndex + count
-            If i >= myList.Count Then Exit Sub
+        ArgumentNullException.ThrowIfNull(myList)
+        If startIndex < 0 OrElse count < 0 Then Throw New ArgumentOutOfRangeException(NameOf(startIndex), "startIndex and count must be non-negative.")
+        If startIndex >= myList.Count Then Exit Sub
+
+        ' Ensure we do not go out of bounds
+        Dim endIndex As Integer = Math.Min(startIndex + count, myList.Count)
+        For i As Integer = startIndex To endIndex - 1
             myList(i) = myList(i).Adjust()
         Next
     End Sub
 
+    ''' <summary>
+    '''  Calculates the conditional sum of the CurrentInsulinLevel property for a specified range in a list
+    '''  of RunningActiveInsulin objects. This method sums the CurrentInsulinLevel values from
+    '''  the specified start index to the specified length, ensuring that it does not exceed the bounds of the list.
+    '''  If the sum is negative, it returns 0 instead. This is useful for calculating the total
+    '''  active insulin over a specific period without exceeding the list boundaries.
+    ''' </summary>
+    ''' <param name="myList">The list of RunningActiveInsulin objects to sum.</param>
+    ''' <param name="start">The starting index from which to sum.</param>
+    ''' <param name="length">The number of elements to sum.</param>
+    ''' <returns>The conditional sum of CurrentInsulinLevel.</returns>
     <Extension>
     Friend Function ConditionalSum(myList As List(Of RunningActiveInsulin), start As Integer, length As Integer) As Double
         If start + length > myList.Count Then

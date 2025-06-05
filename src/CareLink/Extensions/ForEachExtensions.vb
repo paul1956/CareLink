@@ -18,7 +18,7 @@ Public Module ForEachExtensions
     ''' <returns>
     '''  An <see cref="IEnumerable(Of IndexClass(Of T))"/> that yields each element with its index and enumeration context.
     ''' </returns>
-    ''' <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is <c>Nothing</c>.</exception>
+    ''' <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is <see langword="Nothing"/>.</exception>
     <Extension>
     Public Iterator Function WithIndex(Of T)(source As IEnumerable(Of T)) As IEnumerable(Of IndexClass(Of T))
         ArgumentNullException.ThrowIfNull(source)

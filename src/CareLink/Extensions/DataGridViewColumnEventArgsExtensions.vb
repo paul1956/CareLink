@@ -20,7 +20,7 @@ Friend Module DataGridViewColumnEventArgsExtensions
     '''  The <see cref="DataGridViewCellStyle"/> to apply to the column's default cell style.
     ''' </param>
     ''' <param name="forceReadOnly">
-    '''  If set to <c>true</c>, the column will be set as read-only.
+    '''  If set to <see langword="True"/>, the column will be set as read-only.
     ''' </param>
     ''' <param name="caption">
     '''  The caption to use for the column header. If empty or whitespace, the default header text is used.

@@ -46,15 +46,13 @@ Friend Module UpdateChecker
     ''' <summary>
     '''  Compare version of executable with ReadMe.MkDir from GitHub
     ''' </summary>
-    ''' <param name="gitHubVersions"></param>
-    ''' <param name="appVersion"></param>
-    ''' <param name="converterVersion"></param>
-    ''' <returns>True if application version or converter version is different</returns>
-    ''' <remarks>Uses equality is comparison to allow testing before upload to GitHub</remarks>
+    ''' <param name="gitHubVersions">String containing version from GitHub</param>
+    ''' <param name="appVersion">Current application version</param>
+    ''' <returns><see langword="True"/> if application version or converter version is different</returns>
     Private Function IsNewerVersion(gitHubVersions As String, appVersion As Version) As Boolean
         Return gitHubVersions IsNot Nothing AndAlso
-               Not String.IsNullOrWhiteSpace(gitHubVersions) AndAlso
-               Version.Parse(gitHubVersions) > Version.Parse(appVersion.ToString())
+            Not String.IsNullOrWhiteSpace(gitHubVersions) AndAlso
+            Version.Parse(gitHubVersions) > Version.Parse(appVersion.ToString())
     End Function
 
     ''' <summary>

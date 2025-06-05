@@ -44,12 +44,8 @@ Friend Module CreateChartItems
     ''' <param name="customItems">
     '''  The <see cref="LegendItemsCollection"/> to search for the legend item.
     ''' </param>
-    ''' <param name="legendString">
-    '''  The name of the legend item to find.
-    ''' </param>
-    ''' <returns>
-    '''  The zero-based index of the legend item if found; otherwise, -1.
-    ''' </returns>
+    ''' <param name="legendString">The name of the legend item to find.</param>
+    ''' <returns>The zero-based index of the legend item if found; otherwise, <see langword="-1"/>.</returns>
     <Extension>
     Private Function IndexOfLabel(customItems As LegendItemsCollection, legendString As String) As Integer
         For Each item As IndexClass(Of LegendItem) In customItems.WithIndex
@@ -65,11 +61,21 @@ Friend Module CreateChartItems
     '''  Shows or hides a legend item in the active insulin chart, home chart, and treatment markers chart.
     '''  This method updates the visibility of a specific legend item based on the provided parameters.
     ''' </summary>
-    ''' <param name="showLegend"></param>
-    ''' <param name="legendString"></param>
-    ''' <param name="activeInsulinChartLegend"></param>
-    ''' <param name="homeChartLegend"></param>
-    ''' <param name="treatmentMarkersChartLegend"></param>
+    ''' <param name="showLegend">
+    '''  A boolean indicating whether to show (<see langword="True"/>) or hide (<see langword="False"/>) the legend item.
+    ''' </param>
+    ''' <param name="legendString">
+    '''  The name of the legend item to show or hide.
+    ''' </param>
+    ''' <param name="activeInsulinChartLegend">
+    '''  The legend of the active insulin chart where the item will be shown or hidden.
+    ''' </param>
+    ''' <param name="homeChartLegend">
+    '''  The legend of the home chart where the item will be shown or hidden.
+    ''' </param>
+    ''' <param name="treatmentMarkersChartLegend">
+    '''  The legend of the treatment markers chart where the item will be shown or hidden.
+    ''' </param>
     Friend Sub ShowHideLegendItem(showLegend As Boolean, legendString As String, activeInsulinChartLegend As Legend, homeChartLegend As Legend, treatmentMarkersChartLegend As Legend)
         Dim i As Integer = activeInsulinChartLegend.CustomItems.IndexOfLabel(legendString)
         If i < 0 Then
@@ -87,9 +93,7 @@ Friend Module CreateChartItems
     '''  Creates a new chart with specified properties.
     '''  This method initializes a <see cref="Chart"/> control for displaying data, setting its appearance, docking, and annotations.
     ''' </summary>
-    ''' <param name="chartName">
-    '''  The name to assign to the chart instance.
-    ''' </param>
+    ''' <param name="chartName">The name to assign to the chart instance.</param>
     ''' <returns>
     '''  A <see cref="Chart"/> object configured with the specified name and default visual properties.
     ''' </returns>
@@ -281,15 +285,15 @@ Friend Module CreateChartItems
 
     ''' <summary>
     '''  Creates a series for displaying basal insulin values in a chart.
-    '''  This method is used to initialize a series specifically for basal insulin data.
+    '''  This method is used to initialize a <see cref="Series"/> specifically for basal insulin data.
     ''' </summary>
-    ''' <param name="SeriesName"></param>
-    ''' <param name="basalLegend"></param>
-    ''' <param name="legendText"></param>
-    ''' <param name="YAxisType"></param>
-    ''' <returns>A Series object configured for basal insulin values.</returns>
-    Friend Function CreateSeriesBasal(SeriesName As String, basalLegend As Legend, legendText As String, YAxisType As AxisType) As Series
-        Dim s As Series = CreateSeriesBase(SeriesName, legendText, 2, YAxisType)
+    ''' <param name="seriesName">The name of the <see cref="Series"/>.</param>
+    ''' <param name="basalLegend">The legend associated with the basal insulin series.</param>
+    ''' <param name="legendText">The text displayed in the legend for this series.</param>
+    ''' <param name="yAxisType">The Y-axis type for the series.</param>
+    ''' <returns>A <see cref="Series"/> object configured for basal insulin values.</returns>
+    Friend Function CreateSeriesBasal(seriesName As String, basalLegend As Legend, legendText As String, yAxisType As AxisType) As Series
+        Dim s As Series = CreateSeriesBase(seriesName, legendText, 2, yAxisType)
         s.IsVisibleInLegend = False
         Dim lineColor As Color = GetGraphLineColor(legendText)
         Select Case legendText

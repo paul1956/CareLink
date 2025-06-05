@@ -194,8 +194,10 @@ Public Class LoginDialog
 
             Dim exitCode As Integer = process.ExitCode
             If exitCode = 0 Then
-                Dim destFileName As String = GetLoginDataFileName(s_userName, DEFAULT_FILENAME)
-                File.Delete(destFileName)
+                Dim destFileName As String = GetLoginDataFileName(s_userName)
+                If File.Exists(destFileName) Then
+                    File.Delete(destFileName)
+                End If
                 File.Move(sourceFileName, destFileName)
             End If
             File.Delete(exePath)

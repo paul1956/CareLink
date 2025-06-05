@@ -43,7 +43,6 @@ Public Class SummaryRecord
     ''' <param name="recordNumber"></param>
     ''' <param name="row"></param>
     ''' <param name="message"></param>
-    ''' <remarks>Handles messages that are not in the message table</remarks>
     Protected Friend Sub New(recordNumber As Single, row As KeyValuePair(Of String, String), Optional message As String = "")
         Me.New(recordNumber, row.Key, row.Value, message)
     End Sub
@@ -62,14 +61,15 @@ Public Class SummaryRecord
     '''  Summary record where record number is key
     ''' </summary>
     ''' <param name="recordNumber"></param>
-    ''' <param name="Key"></param>
-    ''' <param name="Value"></param>
+    ''' <param name="key"></param>
+    ''' <remarks>Used there we will provide a Button to click for details on another <see cref="TabPage"/>.</remarks>
     Protected Friend Sub New(recordNumber As Single, key As String)
         Me.New(recordNumber, key, ClickToShowDetails, "")
     End Sub
 
     ''' <summary>
-    '''  Summary record where record number is key and we have a message
+    '''  Summary record where record number converted to a <see cref="ServerDataIndexes"/> and then using ToString
+    '''  on an <see langword="Enum"/> to get the key <see langword="String"/> and we have a message.
     ''' </summary>
     ''' <param name="recordNumber"></param>
     ''' <param name="value"></param>
@@ -79,11 +79,12 @@ Public Class SummaryRecord
     End Sub
 
     ''' <summary>
-    '''  Handles No Message Case
+    '''  Summary record where record number is key and we have a message
     ''' </summary>
     ''' <param name="recordNumber"></param>
     ''' <param name="key"></param>
     ''' <param name="value"></param>
+    ''' <param name="message"></param>
     Protected Friend Sub New(recordNumber As Single, key As String, value As String, message As String)
         Me.RecordNumber = recordNumber + 1
         Me.Key = key

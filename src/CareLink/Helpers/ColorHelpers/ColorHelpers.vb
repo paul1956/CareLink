@@ -57,7 +57,9 @@ Public Module ColorHelpers
     '''  Determines if the row's background color is dark.
     ''' </summary>
     ''' <param name="row">The <see cref="DataGridViewRow"/> to evaluate.</param>
-    ''' <returns><see langword="True"/> if the row's background color is dark; otherwise, <see langword="False"/>.</returns>
+    ''' <returns>
+    '''  <see langword="True"/> if the row's background color is dark; otherwise, <see langword="False"/>.
+    ''' </returns>
     <Extension>
     Public Function InvertColor(myColor As Color) As Color
         Return Color.FromArgb(myColor.ToArgb() Xor &HFFFFFF)

@@ -80,15 +80,9 @@ Friend Module DataGridViewHelpers
     ''' <summary>
     '''  Sets the alignment for a specific column in a DataGridView.
     ''' </summary>
-    ''' <typeparam name="T">
-    '''  The data record type.
-    ''' </typeparam>
-    ''' <param name="columnName">
-    '''  The name of the column to set the alignment for.
-    ''' </param>
-    ''' <param name="alignment">
-    '''  The desired alignment for the column.
-    ''' </param>
+    ''' <typeparam name="T">The data record type.</typeparam>
+    ''' <param name="columnName">The name of the column to set the alignment for.</param>
+    ''' <param name="alignment">The desired alignment for the column.</param>
     Friend Function HideColumn(Of T)(dataPropertyName As String) As Boolean
         Return s_filterJsonData AndAlso
             Not String.IsNullOrWhiteSpace(dataPropertyName) AndAlso
