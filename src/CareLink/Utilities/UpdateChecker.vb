@@ -44,24 +44,22 @@ Friend Module UpdateChecker
     End Function
 
     ''' <summary>
-    ''' Compare version of executable with ReadMe.MkDir from GitHub
+    '''  Compare version of executable with ReadMe.MkDir from GitHub
     ''' </summary>
-    ''' <param name="gitHubVersions"></param>
-    ''' <param name="appVersion"></param>
-    ''' <param name="converterVersion"></param>
-    ''' <returns>True if application version or converter version is different</returns>
-    ''' <remarks>Uses equality is comparison to allow testing before upload to GitHub</remarks>
+    ''' <param name="gitHubVersions">String containing version from GitHub</param>
+    ''' <param name="appVersion">Current application version</param>
+    ''' <returns><see langword="True"/> if application version or converter version is different</returns>
     Private Function IsNewerVersion(gitHubVersions As String, appVersion As Version) As Boolean
         Return gitHubVersions IsNot Nothing AndAlso
-               Not String.IsNullOrWhiteSpace(gitHubVersions) AndAlso
-               Version.Parse(gitHubVersions) > Version.Parse(appVersion.ToString)
+            Not String.IsNullOrWhiteSpace(gitHubVersions) AndAlso
+            Version.Parse(gitHubVersions) > Version.Parse(appVersion.ToString())
     End Function
 
     ''' <summary>
-    ''' Find version string in HTML page
-    ''' https://GitHub.com/Paul1956/CareLink/releases
-    ''' Then look for version
-    ''' <a href="/Paul1956/CareLink/releases/tag/3.4.0.3" data-view-component="true" class="Link--primary">CareLink Display 3.4.0.3 x64</a>
+    '''  Find version string in HTML page
+    '''  https://GitHub.com/Paul1956/CareLink/releases
+    '''  Then look for version
+    '''  <a href="/Paul1956/CareLink/releases/tag/3.4.0.3" data-view-component="true" class="Link--primary">CareLink Display 3.4.0.3 x64</a>
     ''' </summary>
     ''' <param name="reportSuccessfulResult">Always report result when true</param>
     Friend Async Sub CheckForUpdatesAsync(reportSuccessfulResult As Boolean)

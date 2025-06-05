@@ -44,16 +44,16 @@ Friend Module UserMessageConstants
         {"DUENOW", "Due now"},
         {"LESS_THAN_THREE_HRS", "Less then 3 hours"},
         {"LESS_THAN_SIX_HRS", "Less then 6 hours"},
-        {"LESS_THAN_NINE_HRS", "Less then 9 hours"},
+        {"LESS_THAN_NINE_HRS", "Less than 9 hours"},
         {"LESS_THAN_TWELVE_HRS", "Less than twelve hours"},
         {"UNKNOWN", "Unknown"}}
 
     ''' <summary>
-    ''' These message have parameters in (), (units) will be replace by localized units.
+    '''  These messages have parameters in (), (units) will be replaced by localized units.
     ''' </summary>
     Friend ReadOnly s_notificationMessages As New Dictionary(Of String, String) From {
         {"2", "Pump Error. Delivery Stopped"},
-        {"3", "Battery out limit"},
+        {"3", "Battery out of limit"},
         {"4", "Delivery stopped. Check BG"},
         {"5", "Pump battery depleted. Insulin delivery stopped"},
         {"6", "Insert battery(triggeredDateTime). Delivery stopped. Insert a new battery now."},
@@ -140,44 +140,44 @@ Friend Module UserMessageConstants
         {"870", "Recharge transmitter within 24 hours(triggeredDateTime)."}}
 
     Friend ReadOnly s_plgmLgsMessages As New Dictionary(Of String, String) From {
-            {"FEATURE_OFF", "Feature Off"},
-            {"MONITORING", "Monitoring"},
-            {"REFRACTORY_PERIOD", "Refractory Period"},
-            {"SUSPEND_FIRED_LGS", "Suspend Fired due to low-glucose management"},
-            {"SUSPEND_FIRED_PLGM", "Suspend Fired due to predictive low-glucose management"}}
+        {"FEATURE_OFF", "Feature Off"},
+        {"MONITORING", "Monitoring"},
+        {"REFRACTORY_PERIOD", "Refractory Period"},
+        {"SUSPEND_FIRED_LGS", "Suspend Fired due to low-glucose management"},
+        {"SUSPEND_FIRED_PLGM", "Suspend Fired due to predictive low-glucose management"}}
 
     Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
-            {"BG_RECOMMENDED", $"BG{vbCrLf}Recommended"},
-            {"BG_REQUIRED", $"BG{vbCrLf}Required"},
-            {"CALIBRATING", "Calibrating..."},
-            {"CALIBRATION_REQUIRED", $"Calibration{vbCrLf}Required"},
-            {"CHANGE_SENSOR", $"Change{vbCrLf}Sensor"},
-            {"DELIVERY_SUSPEND", $"Delivery{vbCrLf}Suspended"},
-            {"DO_NOT_CALIBRATE", $"Do Not{vbCrLf}Calibrate"},
-            {"DUAL_BOLUS", $"Dual{vbCrLf}Bolus"},
-            {"LOAD_RESERVOIR", $"Load{vbCrLf}Reservoir"},
-            {"NO_ACTION_REQUIRED", $"No Action{vbCrLf}Required"},
-            {"NO_DATA_FROM_PUMP", $"No Data{vbCrLf}From Pump"},
-            {"NO_DELIVERY", $"No{vbCrLf}Delivery"},
-            {"NO_ERROR_MESSAGE", "---"},
-            {"NO_SENSOR_SIGNAL", "Lost Sensor Signal... Move pump closer to transmitter. May take 15 minutes to find signal"},
-            {"PROCESSING_BG", $"Processing{vbCrLf}BG"},
-            {"PUMP_PAIRING_LOST", "Pump Pairing Lost"},
-            {"RECONNECTING_TO_PUMP", $"Reconnecting{vbCrLf}To Pump"},
-            {"SEARCHING_FOR_SENSOR_SIGNAL", $"Searching For{vbCrLf}Sensor Signal"},
-            {"SENSOR_DISCONNECTED", $"Sensor{vbCrLf}Disconnected"},
-            {"SENSOR_OFF", $"Sensor{vbCrLf}Off"},
-            {"SG_ABOVE_400_MGDL", $"SG Above{vbCrLf}400 mg/dL"},
-            {"SG_BELOW_40_MGDL", $"SG Below{vbCrLf}50 mg/dL"},
-            {"SQUARE_BOLUS", $"Square{vbCrLf}Bolus"},
-            {"SUSPENDED_BEFORE_LOW", $"Suspended{vbCrLf}Before Low"},
-            {"SUSPENDED_ON_LOW", $"Suspended{vbCrLf}On Low"},
-            {"TEMP_BASAL", $"Temp{vbCrLf}Basal"},
-            {"TEMP_TARGET", $"Temp{vbCrLf}Target"},
-            {"UNKNOWN", "Unknown"},
-            {"UPDATING", $"Sensor{vbCrLf}Updating"},
-            {"WAIT_TO_CALIBRATE", $"Wait To{vbCrLf}Calibrate..."},
-            {"WAIT_TO_ENTER_BG", $"Wait To{vbCrLf}Enter BG..."},
-            {"WARM_UP", $"Sensor{vbCrLf}Warm Up... Warm-up takes up to 2 hours. You will be notifies {If(CInt(PatientData.MedicalDeviceInformation.ModelNumber.Replace("MMT-", "")) < 1884, "when", "if")} calibration Is needed."}}
+        {"BG_RECOMMENDED", $"BG{vbCrLf}Recommended"},
+        {"BG_REQUIRED", $"BG{vbCrLf}Required"},
+        {"CALIBRATING", "Calibrating..."},
+        {"CALIBRATION_REQUIRED", $"Calibration{vbCrLf}Required"},
+        {"CHANGE_SENSOR", $"Change{vbCrLf}Sensor"},
+        {"DELIVERY_SUSPEND", $"Delivery{vbCrLf}Suspended"},
+        {"DO_NOT_CALIBRATE", $"Do Not{vbCrLf}Calibrate"},
+        {"DUAL_BOLUS", $"Dual{vbCrLf}Bolus"},
+        {"LOAD_RESERVOIR", $"Load{vbCrLf}Reservoir"},
+        {"NO_ACTION_REQUIRED", $"No Action{vbCrLf}Required"},
+        {"NO_DATA_FROM_PUMP", $"No Data{vbCrLf}From Pump"},
+        {"NO_DELIVERY", $"No{vbCrLf}Delivery"},
+        {"NO_ERROR_MESSAGE", "---"},
+        {"NO_SENSOR_SIGNAL", "Lost Sensor Signal... Move pump closer to transmitter. May take 15 minutes to find signal"},
+        {"PROCESSING_BG", $"Processing{vbCrLf}BG"},
+        {"PUMP_PAIRING_LOST", "Pump Pairing Lost"},
+        {"RECONNECTING_TO_PUMP", $"Reconnecting{vbCrLf}To Pump"},
+        {"SEARCHING_FOR_SENSOR_SIGNAL", $"Searching For{vbCrLf}Sensor Signal"},
+        {"SENSOR_DISCONNECTED", $"Sensor{vbCrLf}Disconnected"},
+        {"SENSOR_OFF", $"Sensor{vbCrLf}Off"},
+        {"SG_ABOVE_400_MGDL", $"SG Above{vbCrLf}400 mg/dL"},
+        {"SG_BELOW_40_MGDL", $"SG Below{vbCrLf}50 mg/dL"},
+        {"SQUARE_BOLUS", $"Square{vbCrLf}Bolus"},
+        {"SUSPENDED_BEFORE_LOW", $"Suspended{vbCrLf}Before Low"},
+        {"SUSPENDED_ON_LOW", $"Suspended{vbCrLf}On Low"},
+        {"TEMP_BASAL", $"Temp{vbCrLf}Basal"},
+        {"TEMP_TARGET", $"Temp{vbCrLf}Target"},
+        {"UNKNOWN", "Unknown"},
+        {"UPDATING", $"Sensor{vbCrLf}Updating"},
+        {"WAIT_TO_CALIBRATE", $"Wait To{vbCrLf}Calibrate..."},
+        {"WAIT_TO_ENTER_BG", $"Wait To{vbCrLf}Enter BG..."},
+        {"WARM_UP", $"Sensor{vbCrLf}Warm Up... Warm-up takes up to 2 hours. You will be notifies {If(CInt(PatientData.MedicalDeviceInformation.ModelNumber.Replace("MMT-", "")) < 1884, "when", "if")} calibration Is needed."}}
 
 End Module

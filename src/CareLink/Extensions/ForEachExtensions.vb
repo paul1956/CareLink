@@ -5,7 +5,7 @@
 Imports System.Runtime.CompilerServices
 
 ''' <summary>
-''' Provides extension methods for iterating over collections with additional context.
+'''  Provides extension methods for iterating over collections with additional context.
 ''' </summary>
 Public Module ForEachExtensions
 
@@ -18,7 +18,7 @@ Public Module ForEachExtensions
     ''' <returns>
     '''  An <see cref="IEnumerable(Of IndexClass(Of T))"/> that yields each element with its index and enumeration context.
     ''' </returns>
-    ''' <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is <c>Nothing</c>.</exception>
+    ''' <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is <see langword="Nothing"/>.</exception>
     <Extension>
     Public Iterator Function WithIndex(Of T)(source As IEnumerable(Of T)) As IEnumerable(Of IndexClass(Of T))
         ArgumentNullException.ThrowIfNull(source)
@@ -35,5 +35,4 @@ Public Module ForEachExtensions
             End While
         End Using
     End Function
-
 End Module

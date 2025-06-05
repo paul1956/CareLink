@@ -12,6 +12,26 @@ Friend Module NotificationHelpers
 
     Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
 
+    ''' <summary>
+    '''  Attaches the handlers to the DataGridView for notifications.
+    '''  This is used to set up the DataGridView for displaying notifications.
+    '''  It includes handlers for context menu, cell formatting, column addition,
+    '''  data binding completion, and layout events.
+    ''' </summary>
+    ''' <param name="dgv">The <see cref="DataGridView"/> to which the handlers will be attached.</param>
+    Private Sub AttachHandlers(dgv As DataGridView)
+        RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
+        RemoveHandler dgv.CellFormatting, AddressOf DgvNotification_CellFormatting
+        RemoveHandler dgv.ColumnAdded, AddressOf DgvNotification_ColumnAdded
+        RemoveHandler dgv.DataBindingComplete, AddressOf DgvNotification_DataBindingComplete
+        RemoveHandler dgv.Layout, AddressOf DgvNotification_Layout
+        AddHandler dgv.CellContextMenuStripNeeded, AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
+        AddHandler dgv.CellFormatting, AddressOf DgvNotification_CellFormatting
+        AddHandler dgv.ColumnAdded, AddressOf DgvNotification_ColumnAdded
+        AddHandler dgv.DataBindingComplete, AddressOf DgvNotification_DataBindingComplete
+        AddHandler dgv.Layout, AddressOf DgvNotification_Layout
+    End Sub
+
     Private Sub CreateNotificationTables(mainForm As Form1, notificationDictionary As Dictionary(Of String, String))
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In notificationDictionary.WithIndex()
             Dim notificationType As KeyValuePair(Of String, String) = c.Value
@@ -73,11 +93,11 @@ Friend Module NotificationHelpers
     Private Sub DgvNotification_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If HideColumn(.Name) Then
+            If s_filterJsonData AndAlso s_columnsToHide.Contains(.Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(.Name),
+                cellStyle:=ClassPropertiesToColumnAlignment(Of SummaryRecord)(s_alignmentTable, .Name),
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             If e.Column.Index = 0 Then
@@ -150,10 +170,12 @@ Friend Module NotificationHelpers
         dGV.Height = dGV.PreferredSize.Height
     End Sub
 
-    Private Function GetCellStyle(columnName As String) As DataGridViewCellStyle
-        Return ClassPropertiesToColumnAlignment(Of SummaryRecord)(s_alignmentTable, columnName)
-    End Function
-
+    ''' <summary>
+    '''  Resizes the specified panel to fit its contents.
+    '''  This method calculates the maximum width and height of the controls within the panel
+    '''  and adjusts the panel's size accordingly.
+    ''' </summary>
+    ''' <param name="panel">The panel to resize.</param>
     Private Sub ResizePanelToFitContents(panel As Panel)
         Dim maxWidth As Integer = 0
         Dim maxHeight As Integer = 0
@@ -174,10 +196,6 @@ Friend Module NotificationHelpers
         panel.Size = New Size(maxWidth + panel.Padding.Right, maxHeight + panel.Padding.Bottom)
     End Sub
 
-    Friend Function HideColumn(columnName As String) As Boolean
-        Return s_filterJsonData AndAlso s_columnsToHide.Contains(columnName)
-    End Function
-
     Friend Sub UpdateNotificationTabs(mainForm As Form1)
         Try
             mainForm.TableLayoutPanelNotificationActive.AutoScroll = True
@@ -196,26 +214,6 @@ Friend Module NotificationHelpers
             Stop
             Throw
         End Try
-    End Sub
-
-    ''' <summary>
-    '''  Attaches the handlers to the DataGridView for notifications.
-    '''  This is used to set up the DataGridView for displaying notifications.
-    '''  It includes handlers for context menu, cell formatting, column addition,
-    '''  data binding completion, and layout events.
-    ''' </summary>
-    ''' <param name="dgv"></param>
-    Public Sub AttachHandlers(dgv As DataGridView)
-        RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
-        RemoveHandler dgv.CellFormatting, AddressOf DgvNotification_CellFormatting
-        RemoveHandler dgv.ColumnAdded, AddressOf DgvNotification_ColumnAdded
-        RemoveHandler dgv.DataBindingComplete, AddressOf DgvNotification_DataBindingComplete
-        RemoveHandler dgv.Layout, AddressOf DgvNotification_Layout
-        AddHandler dgv.CellContextMenuStripNeeded, AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
-        AddHandler dgv.CellFormatting, AddressOf DgvNotification_CellFormatting
-        AddHandler dgv.ColumnAdded, AddressOf DgvNotification_ColumnAdded
-        AddHandler dgv.DataBindingComplete, AddressOf DgvNotification_DataBindingComplete
-        AddHandler dgv.Layout, AddressOf DgvNotification_Layout
     End Sub
 
 End Module

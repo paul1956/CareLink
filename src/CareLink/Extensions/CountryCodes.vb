@@ -7,6 +7,7 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 
 Public Module RegionCountryLists
+
     ' <summary>
     '  A dictionary mapping country names to their ISO 2-letter country codes.
     ' </summary>
@@ -256,7 +257,6 @@ Public Module RegionCountryLists
         {"Venezuela", "South America"},
         {"Vietnam", "Asia"}}
 
-
     ' <summary>
     '  A dictionary mapping region names to themselves for region validation and lookup.
     ' </summary>
@@ -277,7 +277,7 @@ Public Module RegionCountryLists
     '''  If <see langword="True"/>, allows the '(' to appear after the fixed part, not necessarily immediately after.
     ''' </param>
     ''' <returns>
-    '''  The <see cref="CultureInfo"/> extracted from the file name, or <c>Nothing</c> if extraction fails.
+    '''  The <see cref="CultureInfo"/> extracted from the file name, or <see langword="Nothing"/> if extraction fails.
     '''  If the culture name is invalid, returns <see cref="CultureInfo.CurrentCulture"/>.
     ''' </returns>
     <Extension>
@@ -364,9 +364,7 @@ Public Module RegionCountryLists
     '''  Gets the country name corresponding to a given ISO 2-letter country code.
     ''' </summary>
     ''' <param name="countryCode">The ISO 2-letter country code.</param>
-    ''' <returns>
-    '''  The country name if found; otherwise, <c>Nothing</c>.
-    ''' </returns>
+    ''' <returns>The country name if found; otherwise, <see langword="Nothing"/></returns>
 
     <Extension>
     Public Function GetCountryFromCode(countryCode As String) As String

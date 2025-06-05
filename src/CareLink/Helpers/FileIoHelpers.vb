@@ -72,7 +72,7 @@ Friend Module FileIoHelpers
     End Function
 
     ''' <summary>
-    ''' File hasn't been touched for at least 30 days
+    '''  File hasn't been touched for at least 30 days
     ''' </summary>
     ''' <param name="userSettingsFileWithPath"></param>
     ''' <returns>True if Stale</returns>

@@ -402,7 +402,6 @@ Public Class Client2
         headers("mag-identifier") = CStr(token_data.ConvertJsonElementToDictionary("mag-identifier"))
         headers("Authorization") = $"Bearer {CStr(token_data.ConvertJsonElementToDictionary("access_token"))}"
 
-
         For Each header As KeyValuePair(Of String, String) In headers
             _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
         Next

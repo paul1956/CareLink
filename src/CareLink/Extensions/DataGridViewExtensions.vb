@@ -4,8 +4,17 @@
 
 Imports System.Runtime.CompilerServices
 
+''' <summary>
+'''  Provides extension methods for <see cref="DataGridView"/> to simplify initialization and configuration.
+''' </summary>
 Public Module DataGridViewExtensions
 
+    ''' <summary>
+    '''  Initializes the specified <see cref="DataGridView"/> with default settings for appearance and behavior.
+    ''' </summary>
+    ''' <param name="dGV">
+    '''  The <see cref="DataGridView"/> to initialize.
+    ''' </param>
     <Extension>
     Friend Sub InitializeDgv(dGV As DataGridView)
         With dGV
@@ -13,8 +22,7 @@ Public Module DataGridViewExtensions
             .AllowUserToDeleteRows = False
             .AllowUserToResizeColumns = False
             .AllowUserToResizeRows = False
-            .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {
-                .BackColor = Color.LightGray}
+            .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {.BackColor = Color.LightGray}
             .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
                 .Alignment = DataGridViewContentAlignment.MiddleCenter,
                 .Font = New Font(familyName:="Segoe UI", emSize:=9.0!, style:=FontStyle.Regular, unit:=GraphicsUnit.Point),

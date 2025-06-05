@@ -3,7 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.IO
-Imports System.Runtime.CompilerServices
 
 Friend Module ColorDictionaryHelpers
 

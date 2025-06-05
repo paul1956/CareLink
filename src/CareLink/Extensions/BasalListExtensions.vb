@@ -14,7 +14,7 @@ Public Module BasalListExtensions
     ''' </summary>
     ''' <param name="basalList">The list of <see cref="Basal"/> objects to check.</param>
     ''' <returns>
-    '''  <c>True</c> if the list is empty or the first element is a default <see cref="Basal"/>; otherwise, <c>False</c>.
+    '''  <see langword="True"/> if the list is empty or the first element is a default <see cref="Basal"/>; otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
     Private Function IsEmpty(basalList As List(Of Basal)) As Boolean

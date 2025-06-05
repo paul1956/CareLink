@@ -7,22 +7,34 @@ Imports System.Runtime.CompilerServices
 Friend Module RichTextBoxExtensions
 
     ''' <summary>
-    ''' Appends NewLine to current text of a text box.
+    '''  Appends line break to current text of a <see cref="RichTextBox"/>.
     ''' </summary>
     ''' <param name="rtb"></param>
     <Extension>
-    Public Sub AppendLine(rtb As RichTextBox)
-        rtb.AppendText(Environment.NewLine)
+    Public Sub AppendNewLine(rtb As RichTextBox)
+        rtb.AppendText(vbCrLf)
     End Sub
 
     ''' <summary>
-    ''' Appends text to current text of a text box. Followed by a Environment.NewLine
+    '''  Appends text to current text in a <see cref="RichTextBox"/> with an option to append a line break.
+    '''  The text is formatted with a specified font,
+    '''  and optionally highlights a specific substring with a different font and color.
     ''' </summary>
     ''' <param name="rtb"></param>
     ''' <param name="text"></param>
     ''' <param name="newFont"></param>
+    ''' <param name="highlightText"></param>
+    ''' <param name="highlightFont"></param>
+    ''' <param name="includeNewLine"></param>
     <Extension>
-    Public Sub AppendLine(rtb As RichTextBox, text As String, newFont As Font, Optional highlightText As String = "", Optional highlightFont As Font = Nothing, Optional includeNewLine As Boolean = True)
+    Public Sub AppendLine(
+        rtb As RichTextBox,
+        text As String,
+        newFont As Font,
+        Optional highlightText As String = "",
+        Optional highlightFont As Font = Nothing,
+        Optional includeNewLine As Boolean = True)
+
         Dim splitText() As String = text.Split(highlightText)
         rtb.AppendText(splitText(0), newFont)
         If splitText.Length > 1 Then
@@ -37,12 +49,12 @@ Friend Module RichTextBoxExtensions
             rtb.AppendText(splitText(1), newFont)
         End If
         If includeNewLine Then
-            rtb.AppendText(Environment.NewLine)
+            rtb.AppendNewLine
         End If
     End Sub
 
     ''' <summary>
-    ''' Appends text to current text of a text box.
+    '''  Appends a <see cref="vbTab"/> to current text in a <see cref="RichTextBox"/>.
     ''' </summary>
     ''' <param name="rtb"></param>
     <Extension>
@@ -56,7 +68,7 @@ Friend Module RichTextBoxExtensions
     End Sub
 
     ''' <summary>
-    ''' Appends text to current text of a text box.
+    '''  Appends text to current text of a text box.
     ''' </summary>
     ''' <param name="rtb"></param>
     ''' <param name="text"></param>
@@ -69,6 +81,14 @@ Friend Module RichTextBoxExtensions
         rtb.SelectionFont = newFont
     End Sub
 
+    ''' <summary>
+    '''  Appends text to current text of a text box with a specified font and color and optional line break.
+    ''' </summary>
+    ''' <param name="rtb"></param>
+    ''' <param name="text"></param>
+    ''' <param name="newFont">New Font</param>
+    ''' <param name="newColor">New Color</param>
+    ''' <param name="appendNewLine">If true, appends a new line after the text.</param>
     <Extension>
     Public Sub AppendTextWithFontAndColor(rtb As RichTextBox, text As String, newFont As Font, Optional newColor? As Color = Nothing, Optional appendNewLine As Boolean = True)
         Dim bufferLength As Integer = rtb.TextLength

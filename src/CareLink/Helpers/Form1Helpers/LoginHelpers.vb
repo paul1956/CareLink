@@ -229,7 +229,7 @@ Friend Module LoginHelpers
                 End If
             End If
         Else
-            CurrentUser = New CurrentUserRecord(s_userName, If(Not Is700Series(), CheckState.Checked, CheckState.Indeterminate))
+            CurrentUser = New CurrentUserRecord(s_userName, If(Not Form1UpdateHelpers.Is700Series(), CheckState.Checked, CheckState.Indeterminate))
             currentUserUpdateNeeded = True
         End If
 

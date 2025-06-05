@@ -16,24 +16,23 @@ By default, if asked for XML comments for an entire class:
   * public methods, events and protected virtual members, but never fields.
 
 If generally asked for XML comments, note they need to have a structure:
- * Always try to include <see cref="..."/> tags, where it makes sense.
- * Always wrap after 100 characters.
+ * Always try to include <see cref="..."/> tags, and <see langword="..."/> tags, where it makes sense.
+ * Try to wrap after 100 characters, always wrap after 120 characters.
  * In <remarks/> sections, please always use <para> tags.
  * Always make sure, you use XML compatible character encoding.
- * Always use the <c> tag for code snippets, and <paramref name="$..."/> for parameters.
- * Always use the <see langword="$..."/> tag for language keywords like True, False and Nothing, and <paramref name="$..."/> for parameters.
- * True and False should be used in the XML comments, not true or false.
+ * Always use the <see langword="$..."/> tag for language keywords like <see langword="True"/>, <see langword="False"/> and <see langword="Nothing"/>, and <paramref name="$..."/> for parameters.
+ * Use the <c> tag for code snippets that are not langword, and <paramref name="$..."/> for parameters.
+ * <see langword="True"/> and <see langword="False"/> should be used in the XML comments, not <see langword="true"/> or <see langword="false"/>.
  * The XML code must use 1-space indentation (see example below) and use triple-quote-style for the Text Lines not a single ':
    ''' <Summary>
    '''  Summary text.
    ''' </Summary>
    ''' <Remarks>
+   '''  <Para>This is a sample to guide an LLM to the structuring of short docu-tags.</Para>
+   '''  <Para>This paragraph summarizes how to create effective documentation for code comments.</Para>
+   '''  <Para>It is important to keep comments clear and concise for better code readability.</Para>
    '''  <Para>
-   '''   This is a sample paragraph to guide an LLM to the structuring of docu-tags.
-   '''  </Para>
-   '''  <Para>
-   '''   It also handles the processing of paragraphs within a conversation,
-   '''   identifying and managing code listings.
+   '''   It supports formatting for structured documentation and aids in clear communication.
    '''  </Para>
    ''' </Remarks>
 

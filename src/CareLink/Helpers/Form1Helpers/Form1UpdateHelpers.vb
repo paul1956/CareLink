@@ -5,32 +5,11 @@
 Imports System.IO
 Imports System.Runtime.CompilerServices
 
-Friend Structure FileNameStruct
-    Public withPath As String
-    Public withoutPath As String
-
-    Public Sub New(withPath As String, withoutPath As String)
-        Me.withPath = withPath
-        Me.withoutPath = withoutPath
-    End Sub
-
-    Public Overrides Function Equals(obj As Object) As Boolean
-        If Not (TypeOf obj Is FileNameStruct) Then
-            Return False
-        End If
-
-        Dim other As FileNameStruct = DirectCast(obj, FileNameStruct)
-        Return withPath = other.withPath AndAlso
-               withoutPath = other.withoutPath
-    End Function
-
-    Public Overrides Function GetHashCode() As Integer
-        Return HashCode.Combine(withPath, withoutPath)
-    End Function
-
-End Structure
-
 Friend Module Form1UpdateHelpers
+
+    Private ReadOnly s_700Models As New List(Of String) From {
+        "MMT-1812",
+        "MMT-1880"}
 
     <Extension>
     Private Function CDateOrDefault(dateAsString As String, key As String, provider As IFormatProvider) As String
@@ -68,6 +47,59 @@ Friend Module Form1UpdateHelpers
         End Select
     End Function
 
+    ''' <summary>
+    '''  Possibility unique file name of the form baseName(<paramref name="cultureName"/>)<see cref="s_userName"/>.<paramref name="extension"/>
+    '''  given an <paramref name="baseName"/> and culture as a seed.
+    '''  If <paramref name="MustBeUnique"/> is true, a unique file name is created by appending a number to the file name.
+    '''  The file name is created in the <see cref="DirectoryForProjectData"/>
+    '''  If <paramref name="MustBeUnique"/> is false, the file name may not be unique.
+    ''' </summary>
+    ''' <param Name="baseName">The first part of the file name</param>
+    ''' <param Name="cultureName">A valid Culture Name in the form of language-CountryCode</param>
+    ''' <param Name="extension">The extension for the file</param>
+    ''' <param name="MustBeUnique">True if the file name must be unique</param>
+    ''' <returns>
+    '''  A unique file name valid in <see cref="DirectoryForProjectData"/> folder or an empty file name on error.
+    ''' </returns>
+    ''' <example>
+    '''  GetUniqueDataFileName("MyFile", "en-US", "txt", True)
+    ''' </example>
+    Friend Function GetUniqueDataFileName(baseName As String, cultureName As String, extension As String, MustBeUnique As Boolean) As FileNameStruct
+        If String.IsNullOrWhiteSpace(baseName) Then
+            Throw New ArgumentException($"'{NameOf(baseName)}' cannot be null or whitespace.", NameOf(baseName))
+        End If
+
+        If String.IsNullOrWhiteSpace(cultureName) Then
+            Throw New ArgumentException($"'{NameOf(cultureName)}' cannot be null or whitespace.", NameOf(cultureName))
+        End If
+
+        If String.IsNullOrWhiteSpace(extension) Then
+            Throw New ArgumentException($"'{NameOf(extension)}' cannot be null or whitespace.", NameOf(extension))
+        End If
+
+        Try
+            Dim filenameWithoutExtension As String = $"{baseName}({cultureName}){s_userName}"
+            Dim filenameWithExtension As String = $"{filenameWithoutExtension}.{extension}"
+            Dim filenameFullPath As String = Path.Join(DirectoryForProjectData, filenameWithExtension)
+
+            If MustBeUnique AndAlso File.Exists(filenameFullPath) Then
+                'Get unique file name
+                Dim count As Long
+                Do
+                    count += 1
+                    filenameFullPath = Path.Join(DirectoryForProjectData, $"{filenameWithoutExtension}{count}.{extension}")
+                    filenameWithExtension = Path.GetFileName(filenameFullPath)
+                Loop While File.Exists(filenameFullPath)
+            End If
+
+            Return New FileNameStruct(filenameFullPath, filenameWithExtension)
+        Catch ex As Exception
+            Stop
+        End Try
+        Return New FileNameStruct
+
+    End Function
+
     Friend Sub HandleComplexItems(row As KeyValuePair(Of String, String), rowIndex As Integer, key As String, listOfSummaryRecords As List(Of SummaryRecord))
         Dim valueList As String() = GetValueList(row.Value)
         For Each e As IndexClass(Of String) In valueList.WithIndex
@@ -88,6 +120,25 @@ Friend Module Form1UpdateHelpers
         Next
     End Sub
 
+    ''' <summary>
+    '''  Checks if the <see cref="PatientData.MedicalDeviceInformation.ModelNumber"/> is a 700 series model.
+    ''' </summary>
+    ''' <returns>
+    '''  <see langword="True"/> if the model number is a 700 series model; otherwise,
+    '''  <see langword="False"/>.
+    ''' </returns>
+    Friend Function Is700Series() As Boolean
+        If RecentDataEmpty() Then Return False
+        Return s_700Models.Contains(PatientData.MedicalDeviceInformation.ModelNumber)
+    End Function
+
+    ''' <summary>
+    '''  Checks if the <see cref="RecentData"/> is empty or not.
+    ''' </summary>
+    ''' <returns>
+    '''  <see langword="True"/> if the <see cref="RecentData"/> is empty; otherwise,
+    '''  <see langword="False"/>.
+    ''' </returns>
     Friend Function RecentDataEmpty() As Boolean
         Return RecentData Is Nothing OrElse RecentData.Count = 0
     End Function
@@ -523,58 +574,5 @@ Friend Module Form1UpdateHelpers
             table:=ClassCollectionToDataTable(listOfClass:=listOfBannerState),
             className:=NameOf(BannerState), rowIndex:=ServerDataIndexes.pumpBannerState)
     End Sub
-
-    ''' <summary>
-    '''  Possibility unique file name of the form baseName(<paramref name="cultureName"/>)<see cref="s_userName"/>.<paramref name="extension"/>
-    '''  given an <paramref name="baseName"/> and culture as a seed.
-    '''  If <paramref name="MustBeUnique"/> is true, a unique file name is created by appending a number to the file name.
-    '''  The file name is created in the <see cref="DirectoryForProjectData"/>
-    '''  If <paramref name="MustBeUnique"/> is false, the file name may not be unique.
-    ''' </summary>
-    ''' <param Name="baseName">The first part of the file name</param>
-    ''' <param Name="cultureName">A valid Culture Name in the form of language-CountryCode</param>
-    ''' <param Name="extension">The extension for the file</param>
-    ''' <param name="MustBeUnique">True if the file name must be unique</param>
-    ''' <returns>
-    '''  A unique file name valid in <see cref="DirectoryForProjectData"/> folder or an empty file name on error.
-    ''' </returns>
-    ''' <example>
-    '''  GetUniqueDataFileName("MyFile", "en-US", "txt", True)
-    ''' </example>
-    Public Function GetUniqueDataFileName(baseName As String, cultureName As String, extension As String, MustBeUnique As Boolean) As FileNameStruct
-        If String.IsNullOrWhiteSpace(baseName) Then
-            Throw New ArgumentException($"'{NameOf(baseName)}' cannot be null or whitespace.", NameOf(baseName))
-        End If
-
-        If String.IsNullOrWhiteSpace(cultureName) Then
-            Throw New ArgumentException($"'{NameOf(cultureName)}' cannot be null or whitespace.", NameOf(cultureName))
-        End If
-
-        If String.IsNullOrWhiteSpace(extension) Then
-            Throw New ArgumentException($"'{NameOf(extension)}' cannot be null or whitespace.", NameOf(extension))
-        End If
-
-        Try
-            Dim filenameWithoutExtension As String = $"{baseName}({cultureName}){s_userName}"
-            Dim filenameWithExtension As String = $"{filenameWithoutExtension}.{extension}"
-            Dim filenameFullPath As String = Path.Join(DirectoryForProjectData, filenameWithExtension)
-
-            If MustBeUnique AndAlso File.Exists(filenameFullPath) Then
-                'Get unique file name
-                Dim count As Long
-                Do
-                    count += 1
-                    filenameFullPath = Path.Join(DirectoryForProjectData, $"{filenameWithoutExtension}{count}.{extension}")
-                    filenameWithExtension = Path.GetFileName(filenameFullPath)
-                Loop While File.Exists(filenameFullPath)
-            End If
-
-            Return New FileNameStruct(filenameFullPath, filenameWithExtension)
-        Catch ex As Exception
-            Stop
-        End Try
-        Return New FileNameStruct
-
-    End Function
 
 End Module

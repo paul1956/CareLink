@@ -5,6 +5,7 @@
 Imports System.Runtime.CompilerServices
 
 Friend Module ChartingHelpers
+
     ''' <summary>
     '''  Check if the amount is the minimum basal rate
     ''' </summary>

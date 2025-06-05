@@ -5,8 +5,26 @@
 Imports System.Runtime.CompilerServices
 Imports System.Text
 
+''' <summary>
+'''  Provides extension methods for <see cref="DataGridViewColumnEventArgs"/> to configure DataGridView columns.
+''' </summary>
 Friend Module DataGridViewColumnEventArgsExtensions
 
+    ''' <summary>
+    '''  Configures a <see cref="DataGridViewColumn"/> when it is added to a <see cref="DataGridView"/>.
+    ''' </summary>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewColumnEventArgs"/> containing the column to configure.
+    ''' </param>
+    ''' <param name="cellStyle">
+    '''  The <see cref="DataGridViewCellStyle"/> to apply to the column's default cell style.
+    ''' </param>
+    ''' <param name="forceReadOnly">
+    '''  If set to <see langword="True"/>, the column will be set as read-only.
+    ''' </param>
+    ''' <param name="caption">
+    '''  The caption to use for the column header. If empty or whitespace, the default header text is used.
+    ''' </param>
     <Extension>
     Public Sub DgvColumnAdded(ByRef e As DataGridViewColumnEventArgs, cellStyle As DataGridViewCellStyle, forceReadOnly As Boolean, caption As String)
         With e.Column
@@ -30,7 +48,7 @@ Friend Module DataGridViewColumnEventArgsExtensions
                 title.Append(titleInTitleCase)
             Else
                 title.Append(titleInTitleCase.Replace("Care Link", $"CareLink™"))
-                End If
+            End If
             .HeaderText = title.TrimEnd(vbCrLf).ToString
             .DefaultCellStyle = cellStyle
             If .HeaderText <> "Record Number" Then

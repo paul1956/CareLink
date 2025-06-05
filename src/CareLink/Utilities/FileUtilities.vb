@@ -5,8 +5,19 @@
 Imports System.IO
 Imports System.Text.Json
 
+''' <summary>
+'''  Provides utility methods for file operations related to token data management.
+''' </summary>
 Friend Module FileUtilities
 
+    ''' <summary>
+    ''' The default filename for login data files.
+    ''' </summary>
+    Private Const DEFAULT_FILENAME As String = "logindata.json"
+
+    ''' <summary>
+    '''  The list of required fields for token data validation.
+    ''' </summary>
     Private ReadOnly s_requiredFields() As String = {
         "access_token",
         "refresh_token",
@@ -14,10 +25,12 @@ Friend Module FileUtilities
         "client_id",
         "client_secret",
         "mag-identifier"}
-
-    Public Const DEFAULT_FILENAME As String = "logindata.json"
-
-    Public Sub ByteArrayToFile(fileName As String, byteArray() As Byte)
+    ''' <summary>
+    '''  Writes a byte array to a file.
+    ''' </summary>
+    ''' <param name="fileName">The name of the file to write to.</param>
+    ''' <param name="byteArray">The byte array to write.</param>
+    Friend Sub ByteArrayToFile(fileName As String, byteArray() As Byte)
         Try
             Using fs As New FileStream(fileName, FileMode.Create, FileAccess.Write)
                 fs.Write(byteArray, 0, byteArray.Length)
@@ -27,7 +40,16 @@ Friend Module FileUtilities
         End Try
     End Sub
 
-    Public Function GetLoginDataFileName(userName As String, tokenBaseFileName As String) As String
+    ''' <summary>
+    '''  Gets the full path for the login data file based on the user name and base file name.
+    ''' </summary>
+    ''' <param name="userName">The user name.</param>
+    ''' <param name="tokenBaseFileName">The base file name for the token data file.</param>
+    ''' <returns>The full path to the login data file.</returns>
+    ''' <exception cref="ArgumentException">
+    '''  Thrown if <paramref name="tokenBaseFileName"/> is null or whitespace.
+    ''' </exception>
+    Friend Function GetLoginDataFileName(userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME) As String
         If String.IsNullOrWhiteSpace(tokenBaseFileName) Then
             Throw New ArgumentException($"'{NameOf(tokenBaseFileName)}' cannot be null or whitespace.", NameOf(tokenBaseFileName))
         End If
@@ -37,7 +59,17 @@ Friend Module FileUtilities
             tokenBaseFileName)
     End Function
 
-    Public Function ReadTokenDataFile(userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME) As TokenData
+    ''' <summary>
+    '''  Reads and validates the token data file for a user and returns a <see cref="TokenData"/> object.
+    ''' </summary>
+    ''' <param name="userName">The user name.</param>
+    ''' <param name="tokenBaseFileName">
+    '''  The base file name for the token data file. Defaults to <see cref="DEFAULT_FILENAME"/>.
+    ''' </param>
+    ''' <returns>
+    '''  A <see cref="TokenData"/> object if the file exists and is valid; otherwise, <see langword="Nothing"/>.
+    ''' </returns>
+    Friend Function ReadTokenDataFile(userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME) As TokenData
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
         If File.Exists(fileWithPath) Then
             Try
@@ -57,7 +89,17 @@ Friend Module FileUtilities
         Return Nothing
     End Function
 
-    Public Function ReadTokenFile(userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME) As JsonElement
+    ''' <summary>
+    '''  Reads and validates the token file for a user and returns a <see cref="JsonElement"/>.
+    ''' </summary>
+    ''' <param name="userName">The user name.</param>
+    ''' <param name="tokenBaseFileName">
+    '''  The base file name for the token data file. Defaults to <see cref="DEFAULT_FILENAME"/>.
+    ''' </param>
+    ''' <returns>
+    '''  A <see cref="JsonElement"/> if the file exists and is valid; otherwise, <see langword="Nothing"/>.
+    ''' </returns>
+    Friend Function ReadTokenFile(userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME) As JsonElement
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
         Debug.WriteLine(NameOf(fileWithPath))
         If File.Exists(fileWithPath) Then
@@ -80,13 +122,34 @@ Friend Module FileUtilities
         Return Nothing
     End Function
 
-    Public Sub WriteTokenDataFile(tokenData As TokenData, userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME)
+    ''' <summary>
+    ''' Writes the specified <see cref="TokenData"/> to a file for the given user.
+    ''' </summary>
+    ''' <param name="tokenData">The token data to write.</param>
+    ''' <param name="userName">The user name.</param>
+    ''' <param name="tokenBaseFileName">
+    '''  The base file name for the token data file. Defaults to <see cref="DEFAULT_FILENAME"/>.
+    ''' </param>
+    Public Sub WriteTokenDataFile(
+            tokenData As TokenData,
+            userName As String,
+            Optional tokenBaseFileName As String = DEFAULT_FILENAME)
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
         Debug.WriteLine("Wrote data file")
         File.WriteAllText(fileWithPath, JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions))
     End Sub
 
-    Public Sub WriteTokenFile(tokenData As JsonElement, userName As String, Optional tokenBaseFileName As String = DEFAULT_FILENAME)
+    ''' <summary>
+    '''  Writes the specified <see cref="JsonElement"/> token data to a file for the given user.
+    ''' </summary>
+    ''' <param name="tokenData">The token data to write.</param>
+    ''' <param name="userName">The user name.</param>
+    ''' <param name="tokenBaseFileName">
+    '''  The base file name for the token data file. Defaults to <see cref="DEFAULT_FILENAME"/>.
+    ''' </param>
+    Public Sub WriteTokenFile(tokenData As JsonElement,
+            userName As String,
+            Optional tokenBaseFileName As String = DEFAULT_FILENAME)
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
         Debug.WriteLine(NameOf(WriteTokenFile))
         Dim serializedTokenData As String = JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions)

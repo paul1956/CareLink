@@ -8,14 +8,14 @@ Imports System.Text
 Public Module DataRowExtensions
 
     ''' <summary>
-    ''' Returns a new string in which all occurrences of the single quote character in the current instance are replaced with a back-tick character.
+    '''  Returns a new string in which all occurrences of the single quote character in the current instance are replaced with a back-tick character.
     ''' </summary>
     Private Function EscapeSingleQuotes(Input As String) As String
         Return Input.Replace("'"c, "`"c) ' Replace with back-tick
     End Function
 
     ''' <summary>
-    ''' Enumerates a collection as delimited collection of strings.
+    '''  Enumerates a collection as delimited collection of strings.
     ''' </summary>
     ''' <typeparam name="T">The Type of the collection.</typeparam>
     ''' <param name="Collection">An Enumerator to a collection to populate the string.</param>
@@ -47,8 +47,8 @@ Public Module DataRowExtensions
     End Function
 
     ''' <summary>
-    ''' Returns all the column names of the specified DataRow in a string delimited like an SQL INSERT INTO statement.
-    ''' Example: ([FullName], [Gender], [BirthDate])
+    '''  Returns all the column names of the specified DataRow in a string delimited like an SQL INSERT INTO statement.
+    '''  Example: ([FullName], [Gender], [BirthDate])
     ''' </summary>
     ''' <returns>A string formatted like the columns specified in an SQL 'INSERT INTO' statement.</returns>
     <Extension>
@@ -58,8 +58,8 @@ Public Module DataRowExtensions
     End Function
 
     ''' <summary>
-    ''' Returns all the values the specified DataRow in as a string delimited like and SQL INSERT INTO statement.
-    ''' Example: ('John Doe', 'M', '10/3/1981'')
+    '''  Returns all the values the specified DataRow in as a string delimited like and SQL INSERT INTO statement.
+    '''  Example: ('John Doe', 'M', '10/3/1981'')
     ''' </summary>
     ''' <returns>A string formatted like the values specified in an SQL 'INSERT INTO' statement.</returns>
     <Extension>

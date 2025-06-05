@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class UserInfo
+
     <JsonPropertyName("loginDateUTC")>
     Public Property LoginDateUTC As String
 
@@ -46,4 +47,5 @@ Public Class UserInfo
 
     <JsonPropertyName("username")>
     Public Property Username As String
+
 End Class

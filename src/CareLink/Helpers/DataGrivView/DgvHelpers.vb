@@ -173,7 +173,7 @@ Public Module DgvHelpers
     End Sub
 
     ''' <summary>
-    ''' Hide column based on column name matching name returned by <paramref name="hideColumnFunction"/>
+    '''  Hide column based on column name matching name returned by <paramref name="hideColumnFunction"/>
     ''' </summary>
     ''' <param name="dgv"></param>
     ''' <param name="hideColumnFunction"></param>

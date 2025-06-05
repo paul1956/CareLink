@@ -471,12 +471,14 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the DataGridView's CellContextMenuStripNeeded event.
+    '''  Handles the <see cref="DataGridView"/> CellContextMenuStripNeeded event.
     '''  This event is raised when a context menu is needed for a cell.
     '''  The context menu is set to the DgvCopyWithExcelMenuStrip if the row index is valid.
     ''' </summary>
     ''' <param name="sender"></param>
-    ''' <param name="e"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellContextMenuStripNeededEventArgs containing the row index and context menu strip.
+    ''' </param>
     ''' <remarks>
     '''  This event is used to provide a context menu for copying data from the DataGridView.
     ''' </remarks>
@@ -519,7 +521,12 @@ Public Class Form1
     '''  It clears the selection of all DataGridViews to ensure no cells are selected after data binding.
     ''' </summary>
     ''' <param name="sender"></param>
-    ''' <param name="e"></param>
+    ''' <param name="e">
+    '''  The DataGridViewBindingCompleteEventArgs containing the event data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of DataGridViews after data binding is complete.
+    ''' </remarks>
     Public Sub DgvDataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles _
         DgvActiveInsulin.DataBindingComplete,
         DgvAutoBasalDelivery.DataBindingComplete,
@@ -591,7 +598,7 @@ Public Class Form1
     Private Sub DgvActiveInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvActiveInsulin.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(ActiveInsulin.datetime)
+            Case NameOf(ActiveInsulin.DateTime)
                 dgv.CellFormattingDateTime(e)
             Case NameOf(ActiveInsulin.amount)
                 dgv.CellFormattingSingleValue(e, digits:=3)
@@ -1027,7 +1034,12 @@ Public Class Form1
     '''  It clears the selection of all DataGridViews to ensure no cells are selected after data binding.
     ''' </summary>
     ''' <param name="sender"></param>
-    ''' <param name="e"></param>
+    ''' <param name="e">
+    '''  The DataGridViewBindingCompleteEventArgs containing the event data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of DataGridViews after data binding is complete.
+    ''' </remarks>
     Public Sub DgvInsulinDataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles DgvInsulin.DataBindingComplete
         Dim dgv As DataGridView = CType(sender, DataGridView)
         HideUnneededColumns(dgv:=Me.DgvInsulin, NameOf(Insulin.DeliveredExtendedAmount), "NaN")
@@ -2266,20 +2278,20 @@ Public Class Form1
         _summaryChartLegend = CreateChartLegend(NameOf(_summaryChartLegend))
 
         Me.SummaryAutoCorrectionSeries = CreateSeriesBasal(
-            SeriesName:=AutoCorrectionSeriesName,
+            seriesName:=AutoCorrectionSeriesName,
             basalLegend:=_summaryChartLegend,
             legendText:="Auto Correction",
-            YAxisType:=AxisType.Secondary)
+            yAxisType:=AxisType.Secondary)
         Me.SummaryBasalSeries = CreateSeriesBasal(
-            SeriesName:=BasalSeriesName,
+            seriesName:=BasalSeriesName,
             basalLegend:=_summaryChartLegend,
             legendText:="Basal Series",
-            YAxisType:=AxisType.Secondary)
+            yAxisType:=AxisType.Secondary)
         Me.SummaryMinBasalSeries = CreateSeriesBasal(
-            SeriesName:=MinBasalSeriesName,
+            seriesName:=MinBasalSeriesName,
             basalLegend:=_summaryChartLegend,
             legendText:="Min Basal",
-            YAxisType:=AxisType.Secondary)
+            yAxisType:=AxisType.Secondary)
         Me.SummaryHighLimitSeries = CreateSeriesLimitsAndTarget(
             limitsLegend:=_summaryChartLegend,
             seriesName:=HighLimitSeriesName)
@@ -2513,20 +2525,20 @@ Public Class Form1
             limitsLegend:=_treatmentMarkersChartLegend,
             seriesName:=TargetSgSeriesName)
         Me.TreatmentMarkerAutoCorrectionSeries = CreateSeriesBasal(
-            SeriesName:=AutoCorrectionSeriesName,
+            seriesName:=AutoCorrectionSeriesName,
             basalLegend:=_treatmentMarkersChartLegend,
             legendText:="Auto Correction",
-            YAxisType:=AxisType.Primary)
+            yAxisType:=AxisType.Primary)
         Me.TreatmentMarkerBasalSeries = CreateSeriesBasal(
-            SeriesName:=BasalSeriesName,
+            seriesName:=BasalSeriesName,
             basalLegend:=_treatmentMarkersChartLegend,
             legendText:="Basal Series",
-            YAxisType:=AxisType.Primary)
+            yAxisType:=AxisType.Primary)
         Me.TreatmentMarkerMinBasalSeries = CreateSeriesBasal(
-            SeriesName:=MinBasalSeriesName,
+            seriesName:=MinBasalSeriesName,
             basalLegend:=_treatmentMarkersChartLegend,
             legendText:="Min Basal",
-            YAxisType:=AxisType.Primary)
+            yAxisType:=AxisType.Primary)
 
         Me.TreatmentMarkerSgSeries = CreateSeriesSg(sgLegend:=_treatmentMarkersChartLegend)
         Me.TreatmentMarkerMarkersSeries = CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Primary)

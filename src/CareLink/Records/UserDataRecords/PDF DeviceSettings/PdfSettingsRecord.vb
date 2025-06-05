@@ -171,8 +171,7 @@ Public Class PdfSettingsRecord
     End Sub
 
     ''' <summary>
-    ''' Extract integer index from itemKey in the form of
-    ''' "24 Hour Total({index})"
+    '''  Extract <see langword="Integer"/> index from itemKey in the form of "24 Hour Total({index})"
     ''' </summary>
     ''' <param name="itemKey"></param>
     ''' <returns>index</returns>

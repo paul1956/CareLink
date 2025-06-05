@@ -14,21 +14,23 @@ Friend Module SummaryHelpers
 
     Private s_wordsInParentheses As Dictionary(Of String, List(Of String))
 
+    ''' <summary>
+    '''  Converts an object to a specified type.
+    '''  This is a helper function to avoid casting issues and ensure type safety.
+    ''' </summary>
+    ''' <typeparam name="T">The type to convert the object to.</typeparam>
+    ''' <param name="UTO">The object to convert.</param>
+    ''' <returns>The converted object of type T.</returns>
     Private Function CAnyType(Of T)(UTO As Object) As T
         Return CType(UTO, T)
     End Function
 
-    Private Sub DataGridView_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
-
     ''' <summary>
-    '''  Extracts a dictionary(of String, List(of String) from the input:
+    '''  Extracts a dictionary(Of String, List(Of String)) from the input:
     '''  where the variable names are in parentheses, and are associated with
-    '''  with the Key of the error message
+    '''  the Key of the error message
     ''' </summary>
-    ''' <Result>A dictionary(of String, List(of String)</Result>
+    ''' <returns>A dictionary(Of String, List(Of String))</returns>
     Private Sub ExtractErrorMessageVariables()
         If s_wordsInParentheses IsNot Nothing Then
             Return
@@ -53,6 +55,13 @@ Friend Module SummaryHelpers
         Next
     End Sub
 
+    ''' <summary>
+    '''  Translates the notification message ID to a user-friendly message.
+    '''  It replaces variables in parentheses with their corresponding values from the JSON dictionary.
+    ''' </summary>
+    ''' <param name="jsonDictionary">A dictionary containing additional information for the notification.</param>
+    ''' <param name="faultId">The fault ID to translate.</param>
+    ''' <returns>A translated notification message.</returns>
     Private Function TranslateNotificationMessageId(jsonDictionary As Dictionary(Of String, String), faultId As String) As String
         ExtractErrorMessageVariables()
         Dim originalMessage As String = String.Empty

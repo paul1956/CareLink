@@ -47,47 +47,47 @@ Public Class PumpSetupDialog
             .ReadOnly = False
 
             .AppendLine($"Delivery Settings", headingBoldFont)
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Bolus Wizard Setup", subheadingFont, ChrW(&H2699), subheadingBoldtFont)
             .AppendLine($"{vbTab}Bolus Wizard: {_pdf.Bolus.BolusWizard.BolusWizard}", defaultFont)
-            .AppendLine
+            .AppendNewLine
 
             Dim optionalS As String = If(_pdf.Bolus.DeviceCarbohydrateRatios.Count > 1, "s", "")
             .AppendLine($"Carb Ratio{optionalS}:", defaultBoldFont)
             For Each item As CarbRatioRecord In _pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
                 .AppendLine($"{vbTab}{StandardTimeOnlyWidth(item.StartTime)}{vbTab}-{vbTab}{StandardTimeOnlyWidth(item.EndTime)}{vbTab}{item.CarbRatio} g/U", defaultFont)
             Next
-            .AppendLine
+            .AppendNewLine
 
             optionalS = If(_pdf.Bolus.InsulinSensitivity.Count > 1, "s", "")
             .AppendLine($"Insulin Sensitivity Factor{optionalS}:", defaultBoldFont)
             For Each e As IndexClass(Of InsulinSensitivityRecord) In _pdf.Bolus.InsulinSensitivity.WithIndex
                 Dim item As InsulinSensitivityRecord = e.Value
                 If Not item.IsValid Then
-                    .AppendLine
+                    .AppendNewLine
                     Exit For
                 End If
                 Dim endTime As String = If(e.IsLast, MidnightStr, StandardTimeOnlyWidth(_pdf.Bolus.InsulinSensitivity(e.Index + 1).Time))
                 .AppendLine($"{vbTab}{StandardTimeOnlyWidth(item.Time)}{vbTab}-{vbTab}{endTime}{vbTab}{item.Sensitivity.RoundTo025:F1} {_pdf.Bolus.BolusWizard.Units.CarbUnits}/U", defaultFont)
             Next
-            .AppendLine
+            .AppendNewLine
 
             optionalS = If(_pdf.Bolus.BloodGlucoseTarget.Count > 1, "s", "")
             .AppendLine($"BG Target{optionalS}:", defaultBoldFont)
             For Each e As IndexClass(Of BloodGlucoseTargetRecord) In _pdf.Bolus.BloodGlucoseTarget.WithIndex
                 Dim item As BloodGlucoseTargetRecord = e.Value
                 If Not item.IsValid Then
-                    .AppendLine
+                    .AppendNewLine
                     Exit For
                 End If
                 Dim endTime As String = If(e.IsLast, Eleven59Str, StandardTimeOnlyWidth(_pdf.Bolus.BloodGlucoseTarget(e.Index + 1).Time))
                 .AppendLine($"{vbTab}{StandardTimeOnlyWidth(item.Time)}{vbTab}-{vbTab}{endTime}{vbTab}{item.Low}-{item.High} {_pdf.Bolus.BolusWizard.Units.BgUnits}", defaultFont)
             Next
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Active Insulin Time: {_pdf.Bolus.BolusWizard.ActiveInsulinTime} hr", defaultBoldFont)
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Basal Pattern(s) Setup", subheadingFont, ChrW(&H2699), subheadingBoldtFont)
             For Each item As KeyValuePair(Of String, NamedBasalRecord) In _pdf.Basal.NamedBasal
@@ -95,15 +95,15 @@ Public Class PumpSetupDialog
                 For Each e As IndexClass(Of BasalRateRecord) In item.Value.basalRates.WithIndex
                     Dim basalRate As BasalRateRecord = e.Value
                     If Not basalRate.IsValid Then
-                        .AppendLine
+                        .AppendNewLine
                         Exit For
                     End If
                     Dim endTime As String = If(e.IsLast, Eleven59Str, StandardTimeOnlyWidth(item.Value.basalRates(e.Index + 1).Time))
                     .AppendLine($"{vbTab}{StandardTimeOnlyWidth(basalRate.Time)}{vbTab}-{vbTab}{endTime,9}{vbTab}{basalRate.UnitsPerHr:F3} U/hr", defaultFont)
                 Next
-                .AppendLine
+                .AppendNewLine
             Next
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Preset Temp Setup", subheadingFont, ChrW(&H2699), subheadingBoldtFont)
 
@@ -115,15 +115,15 @@ Public Class PumpSetupDialog
                     .AppendLine($"{vbTab}{presetTempRecord.PresetAmount}", defaultFont)
                     .AppendLine($"{vbTab}Duration:{vbTab}{presetTempRecord.Duration.ToFormattedTimeSpan("U/hr").Trim}", defaultFont)
                 Else
-                    .AppendLine
+                    .AppendNewLine
                 End If
             Next
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Dual/Square Wave", subheadingFont, ChrW(&H2699), subheadingBoldtFont)
             .AppendLine($"{vbTab}Dual:  {vbTab}{_pdf.Bolus.EasyBolus.DualSquare.Dual,2}", defaultFont)
             .AppendLine($"{vbTab}Square:{vbTab}{_pdf.Bolus.EasyBolus.DualSquare.Square,2}", defaultFont)
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Preset Bolus Setup", subheadingFont, ChrW(&H2699), subheadingBoldtFont)
             For Each item As KeyValuePair(Of String, PresetBolusRecord) In _pdf.PresetBolus
@@ -135,7 +135,7 @@ Public Class PumpSetupDialog
                         .AppendLine($"{vbTab}Duration: {presetBolus.Duration} hr", defaultFont)
                     End If
                 End If
-                .AppendLine
+                .AppendNewLine
             Next
             .ReadOnly = True
             .SelectionStart = 0
@@ -143,44 +143,44 @@ Public Class PumpSetupDialog
 
         With Me.RtbMainRight
             .AppendLine($"Delivery Settings, Device Settings, SmartGuard", headingBoldFont)
-            .AppendLine
+            .AppendNewLine
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Bolus Increment", subheadingFont, ChrW(&H2699), subheadingBoldtFont)
             .AppendLine($"{vbTab}Bolus Increment: {_pdf.Bolus.EasyBolus.BolusIncrement:F3}", defaultFont)
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Max Basal/Bolus", subheadingFont, ChrW(&H2699), subheadingBoldtFont)
             .AppendLine($"{vbTab}Max Basal:  {_pdf.Basal.MaximumBasalRate} U/hr", defaultFont)
             .AppendLine($"{vbTab}Max Bolus: {_pdf.Bolus.BolusWizard.MaximumBolus} U", defaultFont)
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Bolus Speed", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont)
             .AppendLine($"{vbTab}Bolus Speed: {_pdf.Bolus.EasyBolus.BolusSpeed}", defaultFont)
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Easy Bolus", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont)
             .AppendLine($"{vbTab}Easy Bolus: {_pdf.Bolus.EasyBolus.EasyBolus}", defaultFont)
             .AppendLine($"{vbTab}Step Size:   {_pdf.Bolus.EasyBolus.BolusIncrement} U", defaultFont)
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Auto Suspend", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont)
             .AppendLine($"{vbTab}Alarm: {_pdf.Utilities.AutoSuspend.Alarm}", defaultFont)
             If _pdf.Utilities.AutoSuspend.Alarm <> "Off" Then
                 .AppendLine($"Time: {_pdf.Utilities.AutoSuspend.Time.ToFormattedTimeSpan("hr")}", defaultFont)
             End If
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Sensor", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont)
             .AppendLine($"{vbTab}Sensor: {_pdf.Sensor.SensorOn}", defaultFont)
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > Display Options", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont)
             .AppendLine($"{vbTab}Brightness: {_pdf.Utilities.Brightness}", defaultFont)
             .AppendLine($"{vbTab}Backlight:  {_pdf.Utilities.BackLightTimeout.ToFormattedTimeSpan("min").TrimStart("0"c)}", defaultFont)
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)}", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont)
             .AppendLine($"{vbTab}SmartGuard: {_pdf.SmartGuard.SmartGuard}", defaultFont)
-            .AppendLine
+            .AppendNewLine
 
             .AppendLine($"Menu > {ChrW(&H2699)} > Delivery Settings > SmartGuard Settings", defaultBoldFont, ChrW(&H2699), subheadingBoldtFont)
             .AppendLine($"{vbTab}Target: {_pdf.SmartGuard.Target}", defaultFont)

@@ -8,6 +8,7 @@ Imports System.Runtime.CompilerServices
 '''  Provides helper methods for working with known colors in the application.
 ''' </summary>
 Friend Module KnownColors
+
     ''' <summary>
     '''  Stores all known colors in a sorted dictionary, keyed by color name.
     ''' </summary>
