@@ -24,7 +24,7 @@ Friend Module PlotSeriesLimits
     End Function
 
     ''' <summary>
-    ''' Plot Sg and optionally High and Low Limits
+    '''  Plot Sg and optionally High and Low Limits
     ''' </summary>
     ''' <param name="chart">The Chart to plot onto</param>
     ''' <param name="targetSsOnly">Only plot Limits if True</param>

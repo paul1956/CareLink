@@ -7,7 +7,7 @@ Imports System.Runtime.CompilerServices
 Friend Module DataTableExtensions
 
     ''' <summary>
-    ''' Returns an enumerator, which supports a simple iteration over a collection of all the DataColumns in a specified DataTable.
+    '''  Returns an enumerator, which supports a simple iteration over a collection of all the DataColumns in a specified DataTable.
     ''' </summary>
     <Extension>
     Public Function GetColumns(Input As DataTable) As IEnumerable(Of DataColumn)
@@ -17,7 +17,7 @@ Friend Module DataTableExtensions
     End Function
 
     ''' <summary>
-    ''' Returns an list, which supports a simple iteration over a collection of all the DataRows in a specified DataTable.
+    '''  Returns an list, which supports a simple iteration over a collection of all the DataRows in a specified DataTable.
     ''' </summary>
     <Extension>
     Public Function GetRows(table As DataTable) As IEnumerable(Of DataRow)

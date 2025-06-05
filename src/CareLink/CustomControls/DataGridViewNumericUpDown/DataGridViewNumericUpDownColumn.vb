@@ -13,7 +13,7 @@ Public Class DataGridViewNumericUpDownColumn
     Inherits DataGridViewColumn
 
     ''' <summary>
-    ''' Constructor for the <see cref="DataGridViewNumericUpDownColumn"/> class.
+    '''  Constructor for the <see cref="DataGridViewNumericUpDownColumn"/> class.
     ''' </summary>
     Public Sub New()
         MyBase.New(New DataGridViewNumericUpDownCell)

@@ -8,10 +8,6 @@ Imports System.Text
 
 Public Module DictionaryExtensions
 
-    Private ReadOnly s_700Models As New List(Of String) From {
-        "MMT-1812",
-        "MMT-1880"}
-
     Private Sub SetDateProperty(Of T As {Class, New})(classObject As T, row As KeyValuePair(Of String, String), [property] As PropertyInfo)
         Try
             Dim propertyInfo As PropertyInfo = classObject.GetType.GetProperty($"{[property].Name}AsString")
@@ -25,21 +21,6 @@ Public Module DictionaryExtensions
     End Sub
 
     <Extension>
-    Friend Function GetBooleanValue(item As Dictionary(Of String, String), key As String) As Boolean
-        Dim ret As String = ""
-        Return item.TryGetValue(key, ret) AndAlso Boolean.Parse(ret)
-    End Function
-
-    <Extension>
-    Friend Function GetSingleValue(item As Dictionary(Of String, String), key As String) As Single
-        Dim value As String = ""
-        Return If(item.TryGetValue(key, value),
-                  value.ParseSingle(decimalDigits:=3),
-                  Single.NaN
-                 )
-    End Function
-
-    <Extension>
     Friend Function GetStringValueOrEmpty(item As Dictionary(Of String, String), Key As String) As String
         If item Is Nothing Then
             Return ""
@@ -51,18 +32,28 @@ Public Module DictionaryExtensions
                  )
     End Function
 
+    ''' <summary>
+    '''  Clones a <see cref="Dictionary"/> of type Dictionary(Of String, T) to a new instance.
+    '''  This is useful when you want to create a copy of the dictionary without modifying the original.
+    ''' </summary>
+    ''' <typeparam name="T"></typeparam>
+    ''' <param name="dic"></param>
+    ''' <returns>A new instance of Dictionary(Of String, T) with the same key-value pairs.</returns>
     <Extension>
     Public Function Clone(Of T)(dic As Dictionary(Of String, T)) As Dictionary(Of String, T)
         Return (From x In dic Select x).ToDictionary(Function(p) p.Key, Function(p) p.Value)
     End Function
 
     ''' <summary>
-    ''' Fills properties of a class from a row of a Dictionary where the propertyName of the property matches the Key from that dictionary.
-    ''' It does this for each row in the Dictionary, returning a class.
+    '''  Fills properties of a class from a row of a Dictionary where the propertyName of the property matches the Key from that dictionary.
+    '''  It does this for each row in the Dictionary, returning a class.
     ''' </summary>
     ''' <typeparam propertyName="T">The class type that is to be returned.</typeparam>
     ''' <param propertyName="Dictionary">Dictionary to fill from.</param>
-    ''' <returns>A list of ClassType with its properties set to the data from the matching columns from the DataTable.</returns>
+    ''' <returns>
+    '''  A list of <see langword="Class"/> types with its properties set to the data
+    '''  from the matching columns from the <see cref="DataTable"/>.
+    ''' </returns>
     Public Function DictionaryToClass(Of T As {Class, New})(dic As Dictionary(Of String, String), recordNumber As Integer) As T
         If dic Is Nothing OrElse dic.Count = 0 Then
             Return New T
@@ -124,6 +115,11 @@ Public Module DictionaryExtensions
         Return classObject
     End Function
 
+    ''' <summary>
+    '''  Converts a JSON string to a Dictionary.
+    ''' </summary>
+    ''' <param name="jsonString">The JSON string to convert.</param>
+    ''' <returns>A Dictionary with the key-value pairs from the JSON string.</returns>
     Public Function GetAdditionalInformation(jsonString As String) As Dictionary(Of String, String)
         Dim valueList() As String = GetValueList(jsonString)
         Dim dic As New Dictionary(Of String, String)
@@ -134,6 +130,11 @@ Public Module DictionaryExtensions
         Return dic
     End Function
 
+    ''' <summary>
+    '''  Converts a JSON string to a Dictionary.
+    ''' </summary>
+    ''' <param name="jsonString">The JSON string to convert.</param>
+    ''' <returns>A Dictionary with the key-value pairs from the JSON string.
     Public Function GetValueList(jsonString As String) As String()
         Dim valueList As String() = JsonToDictionary(jsonString).ToCsv _
             .Replace("{", "").Trim _
@@ -142,16 +143,24 @@ Public Module DictionaryExtensions
         Return valueList.Select(Function(s) s.Trim()).ToArray
     End Function
 
+    ''' <summary>
+    '''  Returns the index of the value in the SortedDictionary.
+    ''' </summary>
+    ''' <param name="dic">The SortedDictionary to search.</param>
+    ''' <param name="item">The KnownColor to find.</param>
+    ''' <returns>The index of the item in the SortedDictionary, or -1 if not found.</returns>
     <Extension>
     Public Function IndexOfValue(dic As SortedDictionary(Of String, KnownColor), item As KnownColor) As Integer
         Return dic.Values.ToList.IndexOf(item)
     End Function
 
-    Public Function Is700Series() As Boolean
-        If RecentDataEmpty() Then Return False
-        Return s_700Models.Contains(PatientData.MedicalDeviceInformation.ModelNumber)
-    End Function
-
+    ''' <summary>
+    '''  Sorts a Dictionary(Of String, T) by its keys and returns a new <see cref="Dictionary"/>.
+    '''  This is useful when you want to ensure the keys are in sorted order.
+    ''' </summary>
+    ''' <typeparam name="T"></typeparam>
+    ''' <param name="dic"></param>
+    ''' <returns>A new Dictionary sorted by keys.</returns>
     <Extension>
     Public Function Sort(Of T)(dic As Dictionary(Of String, T)) As Dictionary(Of String, T)
         Dim sortDic As New SortedDictionary(Of String, T)
@@ -161,6 +170,12 @@ Public Module DictionaryExtensions
         Return (From x In sortDic Select x).ToDictionary(Function(p) p.Key, Function(p) p.Value)
     End Function
 
+    ''' <summary>
+    '''  Converts a Dictionary(Of String, T) to a CSV string representation.
+    ''' </summary>
+    ''' <typeparam name="T">The type of the values in the dictionary.</typeparam>
+    ''' <param name="dic">The dictionary to convert.</param>
+    ''' <returns>A CSV string representation of the dictionary.</returns>
     <Extension>
     Public Function ToCsv(Of T)(dic As Dictionary(Of String, T)) As String
         If dic Is Nothing Then
@@ -175,6 +190,11 @@ Public Module DictionaryExtensions
         Return $"{{{result}}}"
     End Function
 
+    ''' <summary>
+    '''  Converts a Dictionary(Of String, Object) to a List(Of KeyValuePair(Of String, String)).
+    ''' </summary>
+    ''' <param name="dic">The dictionary to convert.</param>
+    ''' <returns>A list of key-value pairs where the value is converted to a string.</returns>
     <Extension>
     Public Function ToDataSource(dic As Dictionary(Of String, Object)) As List(Of KeyValuePair(Of String, String))
         Dim dataSource As New List(Of KeyValuePair(Of String, String))

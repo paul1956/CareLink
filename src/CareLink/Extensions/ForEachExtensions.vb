@@ -5,7 +5,7 @@
 Imports System.Runtime.CompilerServices
 
 ''' <summary>
-''' Provides extension methods for iterating over collections with additional context.
+'''  Provides extension methods for iterating over collections with additional context.
 ''' </summary>
 Public Module ForEachExtensions
 
@@ -35,5 +35,4 @@ Public Module ForEachExtensions
             End While
         End Using
     End Function
-
 End Module

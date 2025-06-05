@@ -3,7 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 ''' <summary>
-''' Defines the editing control for the DataGridViewNumericUpDownCell custom cell type.
+'''  Defines the editing control for the DataGridViewNumericUpDownCell custom cell type.
 ''' </summary>
 Friend Class DataGridViewNumericUpDownEditingControl
     Inherits NumericUpDown
@@ -24,7 +24,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
     Private _rowIndex As Integer
 
     ''' <summary>
-    ''' Constructor of the editing control class
+    '''  Constructor of the editing control class
     ''' </summary>
     Public Sub New()
         ' The editing control must not be part of the tabbing loop
@@ -33,7 +33,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
 
     ' Beginning of the IDataGridViewEditingControl interface implementation
     ''' <summary>
-    ''' Property which caches the grid that uses this editing control
+    '''  Property which caches the grid that uses this editing control
     ''' </summary>
     Public Overridable Property EditingControlDataGridView As DataGridView Implements IDataGridViewEditingControl.EditingControlDataGridView
         Get
@@ -46,7 +46,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Property
 
     ''' <summary>
-    ''' Property which represents the current formatted value of the editing control
+    '''  Property which represents the current formatted value of the editing control
     ''' </summary>
     Public Overridable Property EditingControlFormattedValue As Object Implements IDataGridViewEditingControl.EditingControlFormattedValue
         Get
@@ -59,9 +59,9 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Property
 
     ''' <summary>
-    ''' Property which represents the row in which the editing control resides
+    '''  Property which represents the row in which the editing control resides
     ''' </summary>
-    Public Overridable Property EditingControl_rowIndex As Integer Implements IDataGridViewEditingControl.EditingControlRowIndex
+    Public Overridable Property EditingControl_RowIndex As Integer Implements IDataGridViewEditingControl.EditingControlRowIndex
         Get
             Return _rowIndex
         End Get
@@ -72,9 +72,9 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Property
 
     ''' <summary>
-    ''' Property which indicates whether the value of the editing control has changed or not
+    '''  Property which indicates whether the value of the editing control has changed or not
     ''' </summary>
-    Public Overridable Property EditingControl_valueChanged As Boolean Implements IDataGridViewEditingControl.EditingControlValueChanged
+    Public Overridable Property EditingControl_ValueChanged As Boolean Implements IDataGridViewEditingControl.EditingControlValueChanged
         Get
             Return _valueChanged
         End Get
@@ -85,8 +85,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Property
 
     ''' <summary>
-    ''' Property which determines which cursor must be used for the editing panel,
-    ''' i.e. the parent of the editing control.
+    '''  Property which determines which cursor must be used for the editing panel,
+    '''  i.e. the parent of the editing control.
     ''' </summary>
     Public Overridable ReadOnly Property EditingPanelCursor As Cursor Implements IDataGridViewEditingControl.EditingPanelCursor
         Get
@@ -95,8 +95,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Property
 
     ''' <summary>
-    ''' Property which indicates whether the editing control needs to be repositioned
-    ''' when its value changes.
+    '''  Property which indicates whether the editing control needs to be repositioned
+    '''  when its value changes.
     ''' </summary>
     Public Overridable ReadOnly Property RepositionEditingControlOnValueChange As Boolean Implements IDataGridViewEditingControl.RepositionEditingControlOnValueChange
         Get
@@ -105,8 +105,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Property
 
     ''' <summary>
-    ''' Method called by the grid before the editing control is shown so it can adapt to the
-    ''' provided cell style.
+    '''  Method called by the grid before the editing control is shown so it can adapt to the
+    '''  provided cell style.
     ''' </summary>
     Public Overridable Sub ApplyCellStyleToEditingControl(dataGridViewCellStyle As DataGridViewCellStyle) Implements IDataGridViewEditingControl.ApplyCellStyleToEditingControl
         Me.Font = dataGridViewCellStyle.Font
@@ -123,8 +123,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Sub
 
     ''' <summary>
-    ''' Method called by the grid on keystrokes to determine if the editing control is
-    ''' interested in the key or not.
+    '''  Method called by the grid on keystrokes to determine if the editing control is
+    '''  interested in the key or not.
     ''' </summary>
     Public Overridable Function EditingControlWantsInputKey(keyData As Keys, dataGridViewWantsInputKey As Boolean) As Boolean Implements IDataGridViewEditingControl.EditingControlWantsInputKey
         Select Case keyData And Keys.KeyCode
@@ -192,7 +192,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Function
 
     ''' <summary>
-    ''' Returns the current value of the editing control.
+    '''  Returns the current value of the editing control.
     ''' </summary>
     Public Overridable Function GetEditingControlFormattedValue(context As DataGridViewDataErrorContexts) As Object Implements IDataGridViewEditingControl.GetEditingControlFormattedValue
         Dim userEdit As Boolean = Me.UserEdit
@@ -206,8 +206,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Function
 
     ''' <summary>
-    ''' Called by the grid to give the editing control a chance to prepare itself for
-    ''' the editing session.
+    '''  Called by the grid to give the editing control a chance to prepare itself for
+    '''  the editing session.
     ''' </summary>
     Public Overridable Sub PrepareEditingControlForEdit(selectAll As Boolean) Implements IDataGridViewEditingControl.PrepareEditingControlForEdit
         Dim textBox As TextBox = TryCast(Me.Controls(1), TextBox)
@@ -221,11 +221,11 @@ Friend Class DataGridViewNumericUpDownEditingControl
             End If
         End If
     End Sub
-
     ' End of the IDataGridViewEditingControl interface implementation
+
     ''' <summary>
-    ''' Small utility function that updates the local dirty state and
-    ''' notifies the grid of the value change.
+    '''  Small utility function that updates the local dirty state and
+    '''  notifies the grid of the value change.
     ''' </summary>
     Private Sub NotifyDataGridViewOfValueChange()
         If Not _valueChanged Then
@@ -235,8 +235,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Sub
 
     ''' <summary>
-    ''' Listen to the KeyPress notification to know when the value changed, and
-    ''' notify the grid of the change.
+    '''  Listen to the KeyPress notification to know when the value changed, and
+    '''  notify the grid of the change.
     ''' </summary>
     Protected Overrides Sub OnKeyPress(e As KeyPressEventArgs)
         MyBase.OnKeyPress(e)
@@ -269,7 +269,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Sub
 
     '''' <summary>
-    '''' Listen to the _valueChanged notification to forward the change to the grid.
+    ''''  Listen to the _valueChanged notification to forward the change to the grid.
     '''' </summary>
     Protected Overrides Sub OnValueChanged(e As EventArgs)
         MyBase.OnValueChanged(e)
@@ -280,8 +280,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Sub
 
     ''' <summary>
-    ''' A few keyboard messages need to be forwarded to the inner textbox of the
-    ''' NumericUpDown control so that the first character pressed appears in it.
+    '''  A few keyboard messages need to be forwarded to the inner <see cref="TextBox"/> of the
+    '''  <see cref="NumericUpDown"/> control so that the first character pressed appears in it.
     ''' </summary>
     Protected Overrides Function ProcessKeyEventArgs(ByRef m As Message) As Boolean
         Dim textBox As TextBox = TryCast(Me.Controls(1), TextBox)

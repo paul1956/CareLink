@@ -10,12 +10,13 @@ Public Class SummaryRecord
     Implements IComparable
 
     ''' <summary>
-    ''' Used where message needs to be translated
+    '''  Used where message needs to be translated
     ''' </summary>
     ''' <param name="recordNumber"></param>
     ''' <param name="row"></param>
     ''' <param name="messages"></param>
     ''' <param name="messageTableName"></param>
+    ''' <remarks>Handles messages that are not in the message table</remarks>
     Protected Friend Sub New(recordNumber As Single, row As KeyValuePair(Of String, String), messages As Dictionary(Of String, String), messageTableName As String)
         Me.New(recordNumber, row)
         Dim message As String = ""
@@ -37,17 +38,18 @@ Public Class SummaryRecord
     End Sub
 
     ''' <summary>
-    ''' Create new summary record form KVP
+    '''  Create new summary record form KVP
     ''' </summary>
     ''' <param name="recordNumber"></param>
     ''' <param name="row"></param>
     ''' <param name="message"></param>
+    ''' <remarks>Handles messages that are not in the message table</remarks>
     Protected Friend Sub New(recordNumber As Single, row As KeyValuePair(Of String, String), Optional message As String = "")
         Me.New(recordNumber, row.Key, row.Value, message)
     End Sub
 
     ''' <summary>
-    ''' Summary record where record number is key
+    '''  Summary record where record number is key
     ''' </summary>
     ''' <param name="recordNumber"></param>
     ''' <param name="key"></param>
@@ -57,7 +59,7 @@ Public Class SummaryRecord
     End Sub
 
     ''' <summary>
-    ''' Summary record where record number is key
+    '''  Summary record where record number is key
     ''' </summary>
     ''' <param name="recordNumber"></param>
     ''' <param name="Key"></param>
@@ -67,7 +69,7 @@ Public Class SummaryRecord
     End Sub
 
     ''' <summary>
-    ''' Summary record where record number is key and we have a message
+    '''  Summary record where record number is key and we have a message
     ''' </summary>
     ''' <param name="recordNumber"></param>
     ''' <param name="value"></param>
@@ -77,7 +79,7 @@ Public Class SummaryRecord
     End Sub
 
     ''' <summary>
-    ''' Handles No Message Case
+    '''  Handles No Message Case
     ''' </summary>
     ''' <param name="recordNumber"></param>
     ''' <param name="key"></param>
@@ -107,7 +109,7 @@ Public Class SummaryRecord
     Public ReadOnly Property Message As String = ""
 
     ''' <summary>
-    ''' Do not delete this function. It is used to implement IComparable
+    '''  Do not delete this function. It is used to implement IComparable
     ''' </summary>
     Public Function CompareTo(obj As Object) As Integer Implements IComparable.CompareTo
         Dim bom As SummaryRecord = CType(obj, SummaryRecord)

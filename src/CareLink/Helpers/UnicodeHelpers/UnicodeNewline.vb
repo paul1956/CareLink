@@ -9,7 +9,7 @@ Imports System.Text
 Public Module UnicodeNewline
 
     ''' <summary>
-    ''' Determines if a char is a new line delimiter.
+    '''  Determines if a char is a new line delimiter.
     ''' </summary>
     ''' <returns>0 == no new line, otherwise it returns either 1 or 2 depending of the length of the delimiter.</returns>
     ''' <param name="curChar">The current character.</param>
@@ -25,7 +25,7 @@ Public Module UnicodeNewline
     End Function
 
     ''' <summary>
-    ''' Determines if a char is a new line delimiter.
+    '''  Determines if a char is a new line delimiter.
     ''' </summary>
     ''' <returns>0 == no new line, otherwise it returns either 1 or 2 depending of the length of the delimiter.</returns>
     ''' <param name="curChar">The current character.</param>
@@ -77,10 +77,11 @@ Public Module UnicodeNewline
     End Function
 
     ''' <summary>
-    ''' Determines if a string is a new line delimiter.
-    '''
-    ''' Note that the only 2 char wide new line is CR LF
+    '''  Determines if a string is a new line delimiter.
     ''' </summary>
+    ''' <remarks>
+    '''  Note that the only 2 character wide new line is CR LF
+    ''' </remarks>
     <Extension>
     Friend Function IsNewLine(str As String) As Boolean
         If String.IsNullOrEmpty(str) Then
@@ -97,6 +98,9 @@ Public Module UnicodeNewline
         End Select
     End Function
 
+    ''' <summary>
+    '''  Determines if a string is a new line delimiter.
+    ''' </summary>
     <Extension>
     Public Function SplitLines(text As String, Optional Trim As Boolean = False) As List(Of String)
         Dim result As New List(Of String)()
@@ -135,20 +139,32 @@ Public Module UnicodeNewline
         Return result
     End Function
 
+    ''' <Summary>
+    '''  Joins an array of strings into a single string with the specified delimiter.
+    ''' </summary>
+    ''' <param name="lines">Array of strings to join.</param>
+    ''' <param name="delimiter">Delimiter to use between each string.</param>
+    ''' <returns>A single string with all elements joined by the specified delimiter.</returns>
     <Extension>
     Friend Function JoinLines(lines As String(), delimiter As String) As String
         Return String.Join(separator:=delimiter, lines)
     End Function
 
+    ''' <Summary>
+    '''  Normalizes line endings in a string to a specified delimiter (default is vbCrLf).
+    ''' </Summary>
+    ''' <param name="lines">String containing lines to normalize.</param>
+    ''' <param name="delimiter">Delimiter to use for normalization (default is vbCrLf).</param>
+    ''' <returns>A string with normalized line endings.</returns>
     <Extension>
     Friend Function NormalizeLineEndings(lines As String, Optional delimiter As String = vbCrLf) As String
         Return lines.SplitLines.ToArray.JoinLines(delimiter)
     End Function
 
     ''' <summary>
-    ''' Replace Unicode NewLines with ControlChars.NullChar or Specified Character
+    '''  Replace Unicode NewLines with ControlChars.NullChar or Specified Character
     ''' </summary>
-    ''' <param name="text">Source Test</param>
+    ''' <param name="text">Source Text</param>
     ''' <param name="substituteChar">Default is vbNullChar</param>
     ''' <returns>String with Unicode NewLines replaced with SubstituteChar</returns>
     <Extension>

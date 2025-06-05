@@ -7,11 +7,21 @@ Imports System.Text.Json
 
 Friend Module KeyValuePairExtensions
 
+    ''' <summary>
+    '''  Converts a KeyValuePair to a Single value, extracting the value from a JsonElement.
+    ''' </summary>
+    ''' <param name="item">The KeyValuePair to convert.</param>
+    ''' <returns>A Single value extracted from the JsonElement.
     <Extension>
     Private Function JsonToSingle(item As KeyValuePair(Of String, Object)) As Single
         Return CType(item.Value, JsonElement).ToString.ParseSingle(decimalDigits:=2)
     End Function
 
+    ''' <summary>
+    '''  Converts a Single value to a string representation, scaled according to the NativeMmolL setting.
+    ''' </summary>
+    ''' <param name="value">The Single value to convert.</param>
+    ''' <returns>A string representation of the scaled value.</returns>
     <Extension>
     Private Function ScaleSgToString(value As Single) As String
         Return If(NativeMmolL,
@@ -23,11 +33,8 @@ Friend Module KeyValuePairExtensions
     ''' <summary>
     '''  Converts a KeyValuePair to a string representation of the value, scaled according to the NativeMmolL setting.
     ''' </summary>
-    ''' <param name="item"></param>
-    ''' <returns></returns>
-    ''' </summary>
-    ''' <param name="item"></param>
-    ''' <returns></returns>
+    ''' <param name="item">The KeyValuePair to convert.</param>
+    ''' <returns>A string representation of the scaled value.</returns>
     <Extension>
     Public Function ScaleSgToString(item As KeyValuePair(Of String, Object)) As String
         Dim jsonToSingle As Single = item.JsonToSingle
@@ -35,10 +42,10 @@ Friend Module KeyValuePairExtensions
     End Function
 
     ''' <summary>
-    ''' Converts a JsonElement to a string representation of the value, scaled according to the NativeMmolL setting.
+    '''  Converts a JsonElement to a string representation of the value, scaled according to the NativeMmolL setting.
     ''' </summary>
-    ''' <param name="item"></param>
-    ''' <returns></returns>
+    ''' <param name="item">The JsonElement to convert.</param>
+    ''' <returns>A string representation of the scaled value.</returns>
     <Extension>
     Public Function ScaleSgToString(item As JsonElement) As String
         Dim itemAsSingle As Single
@@ -61,10 +68,11 @@ Friend Module KeyValuePairExtensions
     End Function
 
     ''' <summary>
-    ''' Converts a string representation of a value to a string representation of the value, scaled according to the NativeMmolL setting.
+    '''  Converts a String representation of a value to a
+    '''  string representation of the value, scaled according to the <see cref="NativeMmolL"/> setting.
     ''' </summary>
-    ''' <param name="value"></param>
-    ''' <returns></returns>
+    ''' <param name="value">The string representation of the value to convert.</param>
+    ''' <returns>A <see langword="String"/> representation of the scaled value.</returns>
     <Extension>
     Public Function ScaleSgToString(value As String) As String
         Return value.ParseSingle(decimalDigits:=If(NativeMmolL, 2, 0)).ScaleSgToString()

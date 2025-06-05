@@ -32,6 +32,10 @@ End Structure
 
 Friend Module Form1UpdateHelpers
 
+    Private ReadOnly s_700Models As New List(Of String) From {
+        "MMT-1812",
+        "MMT-1880"}
+
     <Extension>
     Private Function CDateOrDefault(dateAsString As String, key As String, provider As IFormatProvider) As String
         Dim resultDate As Date
@@ -87,6 +91,11 @@ Friend Module Form1UpdateHelpers
             listOfSummaryRecords.Add(item)
         Next
     End Sub
+
+    Public Function Is700Series() As Boolean
+        If RecentDataEmpty() Then Return False
+        Return s_700Models.Contains(PatientData.MedicalDeviceInformation.ModelNumber)
+    End Function
 
     Friend Function RecentDataEmpty() As Boolean
         Return RecentData Is Nothing OrElse RecentData.Count = 0

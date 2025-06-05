@@ -25,9 +25,9 @@ Public Module StringExtensions
     ''' <summary>
     '''  Count the number of times a character appears in a string
     ''' </summary>
-    ''' <param name="s"></param>
-    ''' <param name="c"></param>
-    ''' <returns></returns>
+    ''' <param name="s">String</param>
+    ''' <param name="c">Character to count</param>
+    ''' <returns>Number of occurrences of the character in the string</returns>
     <Extension()>
     Public Function Count(s As String, c As Char) As Integer
         Return s.Count(Function(c1 As Char) c1 = c)
@@ -57,18 +57,18 @@ Public Module StringExtensions
     ''' <summary>
     '''  Converts a <see langword="String"/> to a <see langword="Double"/> using <see cref="CultureInfo.InvariantCulture"/>
     ''' </summary>
-    ''' <param name="value"></param>
-    ''' <returns></returns>
+    ''' <param name="value">The string to convert to a Double.</param>
+    ''' <returns>The converted <see langword="Double"/> value.</returns>
     <Extension>
     Public Function ParseDoubleInvariant(value As String) As Double
         Return Double.Parse(value.Replace(",", ServerDecimalSeparator), CultureInfo.InvariantCulture)
     End Function
 
     ''' <summary>
-    '''  Converts a <see langword="String"/> to a <see langword="Single"/> using <see cref="CultureInfo.InvariantCulture"/>
+    '''  Converts a <see langword="String"/> to a <see cref="Single"/> using <see cref="CultureInfo.InvariantCulture"/>
     ''' </summary>
-    ''' <param name="value"></param>
-    ''' <returns></returns>
+    ''' <param name="value">The string to convert to a Single.</param>
+    ''' <returns>The converted <see langword="Single"/> value.</returns>
     <Extension>
     Public Function ParseSingleInvariant(value As String) As Single
         Return Single.Parse(value.Replace(",", ServerDecimalSeparator), CultureInfo.InvariantCulture)
@@ -77,8 +77,10 @@ Public Module StringExtensions
     ''' <summary>
     '''  Converts a string where the first letter of the string is not capitalized
     ''' </summary>
-    ''' <param name="inStr">A string like THIS_IS A TITLE</param>
-    ''' <returns>doNotCapitalizedFirstLetterString</returns>
+    ''' <param name="inStr">A <see langword="String"/> like THIS_IS A TITLE</param>
+    ''' <returns>A <see langword="String"/> where the first character is lower case</returns>
+    ''' <remarks>Used for converting strings that are not capitalized at the start</remarks>
+    ''' <example>doNotCapitalizedFirstLetterString</example>
     <Extension()>
     Public Function ToLowerCamelCase(inStr As String) As String
         If String.IsNullOrWhiteSpace(inStr) Then
@@ -165,9 +167,10 @@ Public Module StringExtensions
     ''' <summary>
     '''  Truncates a string that represents a <see langword="Single"/> to a specified number of decimal digits
     ''' </summary>
-    ''' <param name="s"></param>
-    ''' <param name="decimalDigits"></param>
-    ''' <returns></returns>
+    ''' <param name="s">String</param>
+    ''' <param name="decimalDigits">Number of decimal digits to keep</param>
+    ''' <returns>A truncated string representation of the <see langword="Single"/> value</returns>
+    ''' <remarks>Used for truncating values to a specific number of decimal places</remarks>
     <Extension>
     Public Function TruncateSingleString(s As String, decimalDigits As Integer) As String
         Dim i As Integer = s.IndexOfAny(s_commaOrPeriod)
