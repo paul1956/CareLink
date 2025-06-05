@@ -591,7 +591,7 @@ Public Class Form1
     Private Sub DgvActiveInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvActiveInsulin.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(ActiveInsulin.datetime)
+            Case NameOf(ActiveInsulin.DateTime)
                 dgv.CellFormattingDateTime(e)
             Case NameOf(ActiveInsulin.amount)
                 dgv.CellFormattingSingleValue(e, digits:=3)

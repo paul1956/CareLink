@@ -5,6 +5,7 @@
 Imports System.Text.Json
 
 Public Module PatientDataHelpers
+
     Private ReadOnly s_keyDictionary As New Dictionary(Of String, String) From {
         {$"""{NameOf(ServerDataIndexes.firstName)}"": ", """First"""},
         {$"""{NameOf(ServerDataIndexes.lastName)}"": ", """Last"""},

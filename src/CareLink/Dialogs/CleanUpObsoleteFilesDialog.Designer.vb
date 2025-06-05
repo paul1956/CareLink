@@ -116,5 +116,4 @@ Partial Class CleanupStaleFilesDialog
     Friend WithEvents OkDoNotConfirm_Button As System.Windows.Forms.Button
     Friend WithEvents Cancel_Button As System.Windows.Forms.Button
     Friend WithEvents TreeView1 As TreeView
-
 End Class

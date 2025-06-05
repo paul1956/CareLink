@@ -10,6 +10,7 @@ Imports System.Threading
 ''' </summary>
 ''' <typeparam name="T">The type of the value being enumerated.</typeparam>
 Public Class IndexClass(Of T)
+
     ''' <summary>
     '''  Gets or sets the value of the current element in the sequence.
     ''' </summary>

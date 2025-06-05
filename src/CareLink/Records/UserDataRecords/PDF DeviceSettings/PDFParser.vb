@@ -192,5 +192,4 @@ Public Module PDFParser
     '    Return textExtractor.ExtractText(extractOptions)
 
     'End Function
-
 End Module

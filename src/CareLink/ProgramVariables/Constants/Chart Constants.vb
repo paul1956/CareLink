@@ -24,5 +24,4 @@ Friend Module Chart_Constants
     Friend Const TargetSgSeriesName As String = NameOf(TargetSgSeriesName)
 
     Friend Const TimeChangeSeriesName As String = NameOf(TimeChangeSeriesName)
-
 End Module

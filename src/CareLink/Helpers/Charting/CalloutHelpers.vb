@@ -6,6 +6,7 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module CalloutHelpers
+
     ''' <summary>
     '''  Add or update an annotation for the last data point in the treatment chart.
     '''  If an annotation already exists for the last data point, it updates the text and position.

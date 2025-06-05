@@ -52,8 +52,8 @@ Partial Class AboutBox1
         ' 
         TableLayoutPanel.AutoSize = True
         TableLayoutPanel.ColumnCount = 2
-        TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33F))
-        TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 67F))
+        TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 33.0F))
+        TableLayoutPanel.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 67.0F))
         TableLayoutPanel.Controls.Add(LogoPictureBox, 0, 0)
         TableLayoutPanel.Controls.Add(LabelProductName, 1, 0)
         TableLayoutPanel.Controls.Add(LabelVersion, 1, 1)
@@ -66,12 +66,12 @@ Partial Class AboutBox1
         TableLayoutPanel.Margin = New Padding(4, 3, 4, 3)
         TableLayoutPanel.Name = "TableLayoutPanel"
         TableLayoutPanel.RowCount = 6
-        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 15F))
-        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 5F))
-        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10F))
-        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10F))
-        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
-        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10F))
+        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 15.0F))
+        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 5.0F))
+        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10.0F))
+        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10.0F))
+        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
+        TableLayoutPanel.RowStyles.Add(New RowStyle(SizeType.Percent, 10.0F))
         TableLayoutPanel.Size = New Size(562, 311)
         TableLayoutPanel.TabIndex = 0
         ' 
@@ -165,7 +165,7 @@ Partial Class AboutBox1
         ' 
         ' AboutBox1
         ' 
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = OKButton
         Me.ClientSize = New Size(582, 331)
@@ -185,5 +185,4 @@ Partial Class AboutBox1
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
-
 End Class

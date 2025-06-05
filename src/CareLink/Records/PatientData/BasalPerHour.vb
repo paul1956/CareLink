@@ -40,4 +40,5 @@ Friend Class BasalPerHour
             s_listOfBasalPerHour(index).BasalRate2 += basalDeliveryMarker.bolusAmount
         End If
     End Sub
+
 End Class

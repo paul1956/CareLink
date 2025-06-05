@@ -29,7 +29,6 @@ Public Class LastSG
     <JsonPropertyName("sensorState")>
     Public Property SensorState As String
 
-
     <DisplayName("Timestamp From Pump")>
     <Column(Order:=5, TypeName:="String")>
     <JsonPropertyName("timestamp")>

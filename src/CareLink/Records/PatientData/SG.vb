@@ -112,7 +112,6 @@ Public Class SG
         End Get
     End Property
 
-
     <DisplayName("OA Date Time")>
     <Column(Order:=8, TypeName:=NameOf([Double]))>
     Public ReadOnly Property OaDateTime As OADate

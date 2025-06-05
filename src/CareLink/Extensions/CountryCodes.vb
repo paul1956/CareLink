@@ -7,6 +7,7 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 
 Public Module RegionCountryLists
+
     ' <summary>
     '  A dictionary mapping country names to their ISO 2-letter country codes.
     ' </summary>
@@ -255,7 +256,6 @@ Public Module RegionCountryLists
         {"Uzbekistan", "Asia"},
         {"Venezuela", "South America"},
         {"Vietnam", "Asia"}}
-
 
     ' <summary>
     '  A dictionary mapping region names to themselves for region validation and lookup.
