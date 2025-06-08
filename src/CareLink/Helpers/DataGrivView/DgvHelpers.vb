@@ -6,15 +6,35 @@ Imports System.Runtime.CompilerServices
 
 Public Module DgvHelpers
 
+    ''' <summary>
+    '''  Sets the cell value to <see cref="String.Empty"/> if the value is <see langword="Nothing"/> or "0".
+    '''  This is used to avoid displaying "0" in cells where it is not meaningful, such as in a duration column.
+    ''' </summary>
+    ''' <param name="e"></param>
     Public Sub CellFormatting0Value(ByRef e As DataGridViewCellFormattingEventArgs)
-        If e.Value Is Nothing OrElse e.Value.ToString = "0" Then
-            e.Value = ""
+        Dim value As String = Convert.ToString(e.Value)
+        If value = String.Empty OrElse value = "0" Then
+            e.Value = String.Empty
             e.FormattingApplied = True
         End If
     End Sub
 
-    Public Sub CellFormattingApplyColor(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, highlightColor As Color, isUri As Boolean)
-        e.Value = e.Value.ToString
+    ''' <summary>
+    '''  Applies a <see cref="Color"/> to the cell based on whether it is a URI or not.
+    '''  If it is a URI, it applies a purple color; otherwise, it applies the specified highlight color.
+    ''' </summary>
+    ''' <param name="dgv"></param>
+    ''' <param name="e"></param>
+    ''' <param name="highlightColor"></param>
+    ''' <param name="isUri"></param>
+    <Extension>
+    Public Sub CellFormattingApplyColor(
+        dgv As DataGridView,
+        ByRef e As DataGridViewCellFormattingEventArgs,
+        highlightColor As Color,
+        isUri As Boolean)
+
+        e.Value = Convert.ToString(e.Value)
         With e.CellStyle
             If isUri Then
                 Dim foregroundColor As Color = dgv.Rows(e.RowIndex).GetTextColor(Color.Purple)
@@ -33,25 +53,23 @@ Public Module DgvHelpers
         e.FormattingApplied = True
     End Sub
 
+    ''' <summary>
+    '''  Formats the cell value as a date time string.
+    '''  If the value is not a valid date, it will leave the value unchanged.
+    '''  It also sets the foreground color based on the row's text color.
+    ''' </summary>
+    ''' <param name="dgv"></param>
+    ''' <param name="e"></param>
     <Extension>
     Public Sub CellFormattingDateTime(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
-        If e.Value Is Nothing Then
-            e.Value = ""
-        Else
+        Dim value As String = Convert.ToString(e.Value)
+        If value <> String.Empty Then
             Try
-                Dim dateValue As Date
-                dateValue = e.Value.ToString.ParseDate("")
-                e.Value = dateValue.ToShortDateTimeString
+                e.Value = value.ParseDate("").ToShortDateTimeString
             Catch ex As Exception
-                e.Value = e.Value.ToString
+                e.Value = value
             End Try
         End If
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
-
-    <Extension>
-    Public Sub CellFormattingDuration(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
-        e.Value = $"{e.Value:h\:mm} left."
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
@@ -62,47 +80,37 @@ Public Module DgvHelpers
     End Sub
 
     <Extension>
-    Public Sub CellFormattingSetForegroundColor(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
-        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
-        If col IsNot Nothing Then
-            e.Value = $"{e.Value}"
-            e.CellStyle.ForeColor = dgv.Rows(e.RowIndex).GetTextColor(Color.White)
-            e.FormattingApplied = True
-        End If
-    End Sub
-
-    <Extension>
     Public Sub CellFormattingSgValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, partialKey As String)
         Dim sgColumnName As String = dgv.Columns(e.ColumnIndex).Name
         Dim sensorValue As Single = ParseSingle(e.Value, decimalDigits:=2)
         If Single.IsNaN(sensorValue) Then
-            CellFormattingApplyColor(dgv, e, highlightColor:=Color.Red, isUri:=False)
+            dgv.CellFormattingApplyColor(e, highlightColor:=Color.Red, isUri:=False)
         Else
             Select Case sgColumnName
                 Case partialKey
                     e.Value = If(NativeMmolL, sensorValue.ToString("F2", Provider), sensorValue.ToString)
                     If sensorValue < TirLowLimit(NativeMmolL) Then
-                        CellFormattingApplyColor(dgv, e, Color.Red, isUri:=False)
+                        dgv.CellFormattingApplyColor(e, highlightColor:=Color.Red, isUri:=False)
                     ElseIf sensorValue > TirHighLimit() Then
-                        CellFormattingApplyColor(dgv, e, Color.Yellow, isUri:=False)
+                        dgv.CellFormattingApplyColor(e, highlightColor:=Color.Yellow, isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case $"{partialKey}MgdL"
-                    e.Value = e.Value.ToString
-                    If sensorValue < TirLowLimit(False) Then
-                        CellFormattingApplyColor(dgv, e, Color.Red, isUri:=False)
+                    e.Value = Convert.ToString(e.Value)
+                    If sensorValue < TirLowLimit(asMmolL:=False) Then
+                        dgv.CellFormattingApplyColor(e, highlightColor:=Color.Red, isUri:=False)
                     ElseIf sensorValue > TirHighLimit() Then
-                        CellFormattingApplyColor(dgv, e, Color.Yellow, isUri:=False)
+                        dgv.CellFormattingApplyColor(e, highlightColor:=Color.Yellow, isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case $"{partialKey}MmolL"
                     e.Value = sensorValue.ToString("F2", Provider)
-                    If sensorValue.RoundSingle(1, False) < TirLowLimit(True) Then
-                        CellFormattingApplyColor(dgv, e, Color.Red, isUri:=False)
+                    If sensorValue.RoundSingle(decimalDigits:=1, considerValue:=False) < TirLowLimit(asMmolL:=True) Then
+                        dgv.CellFormattingApplyColor(e, highlightColor:=Color.Red, isUri:=False)
                     ElseIf sensorValue > TirHighLimit() Then
-                        CellFormattingApplyColor(dgv, e, Color.Yellow, isUri:=False)
+                        dgv.CellFormattingApplyColor(e, highlightColor:=Color.Yellow, isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
@@ -122,17 +130,17 @@ Public Module DgvHelpers
 
     <Extension>
     Public Sub CellFormattingToTitle(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
-        e.Value = e.Value.ToString.Replace(vbCrLf, " ").ToTitle
+        e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ").ToTitle
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     <Extension>
     Public Sub CellFormattingUrl(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
-        e.Value = e.Value.ToString
+        e.Value = Convert.ToString(e.Value)
         If dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Equals(dgv.CurrentCell) Then
-            CellFormattingApplyColor(dgv, e, Color.Purple, isUri:=True)
+            dgv.CellFormattingApplyColor(e, highlightColor:=Color.Purple, isUri:=True)
         Else
-            CellFormattingApplyColor(dgv, e, Color.FromArgb(&H0, &H66, &HCC), isUri:=True)
+            dgv.CellFormattingApplyColor(e, highlightColor:=Color.FromArgb(red:=&H0, green:=&H66, blue:=&HCC), isUri:=True)
         End If
         e.FormattingApplied = True
     End Sub
@@ -220,4 +228,13 @@ Public Module DgvHelpers
         Return backColor.IsDarkColor()
     End Function
 
+    <Extension>
+    Public Sub CellFormattingSetForegroundColor(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
+        If col IsNot Nothing Then
+            e.Value = $"{e.Value}"
+            e.CellStyle.ForeColor = dgv.Rows(e.RowIndex).GetTextColor(Color.White)
+            e.FormattingApplied = True
+        End If
+    End Sub
 End Module

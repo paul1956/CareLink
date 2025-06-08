@@ -595,6 +595,17 @@ Public Class Form1
 
 #Region "Dgv Active Insulin Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvActiveInsulin DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvActiveInsulin DataGridView.
+    ''' </remarks>
     Private Sub DgvActiveInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvActiveInsulin.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
@@ -608,6 +619,13 @@ Public Class Form1
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvActiveInsulin DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Private Sub DgvActiveInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvActiveInsulin.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -623,6 +641,17 @@ Public Class Form1
 
 #Region "Dgv Auto Basal Delivery (Basal) Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvAutoBasalDelivery DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvAutoBasalDelivery DataGridView.
+    ''' </remarks>
     Private Sub DgvAutoBasalDelivery_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvAutoBasalDelivery.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If e.Value Is Nothing Then
@@ -631,9 +660,9 @@ Public Class Form1
         ' Set the background to red for negative values in the Balance column.
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(AutoBasalDelivery.bolusAmount)
-                dgv.CellFormattingSingleValue(e, 3)
-                If dgv.CellFormattingSingleValue(e, 3).IsMinBasal Then
-                    CellFormattingApplyColor(dgv, e, Color.DarkRed, isUri:=False)
+                dgv.CellFormattingSingleValue(e, digits:=3)
+                If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
+                    dgv.CellFormattingApplyColor(e, highlightColor:=Color.DarkRed, isUri:=False)
                 Else
                     dgv.CellFormattingSetForegroundColor(e)
                 End If
@@ -644,6 +673,13 @@ Public Class Form1
         End Select
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvAutoBasalDelivery DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Private Sub DgvAutoBasalDelivery_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoBasalDelivery.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -661,6 +697,17 @@ Public Class Form1
 
 #Region "Dgv AutoMode Status Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvAutoModeStatus DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvAutoModeStatus DataGridView.
+    ''' </remarks>
     Private Sub DgvAutomodeStatus_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvAutoModeStatus.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
@@ -671,6 +718,16 @@ Public Class Form1
         End Select
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvAutoModeStatus DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvAutoModeStatus DataGridView.
+    ''' </remarks>
     Private Sub DgvAutoModeStatus_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoModeStatus.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -688,6 +745,17 @@ Public Class Form1
 
 #Region "Dgv Banner State Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvBannerState DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvBannerState DataGridView.
+    ''' </remarks>
     Friend Sub DgvBannerState_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvBannerState.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
@@ -700,6 +768,16 @@ Public Class Form1
         End Select
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvBannerState DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvBannerState DataGridView.
+    ''' </remarks>
     Private Sub DgvBannerState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBannerState.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -717,11 +795,32 @@ Public Class Form1
 
 #Region "Dgv Basal Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvBasal DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvBasal DataGridView.
+    ''' </remarks>
     Friend Sub DgvBasal_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvBasal.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvBasal DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvBasal DataGridView.
+    ''' </remarks>
     Private Sub DgvBasal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBasal.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -739,6 +838,17 @@ Public Class Form1
 
 #Region "Dgv Basal Per Hour Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvBasalPerHour DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvBasalPerHour DataGridView.
+    ''' </remarks>
     Friend Sub DgvBasalPerHour_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvBasalPerHour.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
@@ -752,6 +862,16 @@ Public Class Form1
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvBasalPerHour DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvBasalPerHour DataGridView.
+    ''' </remarks>
     Friend Sub DgvBasalPerHour_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBasalPerHour.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -766,23 +886,34 @@ Public Class Form1
 
 #Region "Dgv Calibration Events"
 
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView"/> CellFormatting event for the DgvCalibration DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted before it is displayed.
+    '''  It formats the bgUnits column to display the appropriate unit string and sets the cell style alignment.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Friend Sub DgvCalibration_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCalibration.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.Columns(e.ColumnIndex).Name = NameOf(Calibration.bgUnits) Then
-            If e.Value Is Nothing Then
-                e.Value = ""
-            Else
-                Try
-                    e.Value = UnitsStrings(e.Value.ToString)
-                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-                Catch ex As Exception
-                    e.Value = e.Value.ToString
-                End Try
-            End If
+            Dim key As String = Convert.ToString(e.Value)
+            Try
+                e.Value = UnitsStrings(key)
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            Catch ex As Exception
+                e.Value = key ' Key becomes value if its unknown
+            End Try
         End If
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView"/> ColumnAdded event for the DgvCalibration DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the column properties such as SortMode, visibility, cell style, and caption.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Private Sub DgvCalibration_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCalibration.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -800,6 +931,17 @@ Public Class Form1
 
 #Region "Dgv CareLink Users Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvCareLinkUsers DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvCareLinkUsers DataGridView.
+    ''' </remarks>
     Private Sub DgvCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DgvCareLinkUsers.CellBeginEdit
         Dim dgv As DataGridView = CType(sender, DataGridView)
         'Here we save a current value of cell to some variable, that later we can compare with a new value
@@ -810,6 +952,17 @@ Public Class Form1
 
     End Sub
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvCareLinkUsers DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvCareLinkUsers DataGridView.
+    ''' </remarks>
     Private Sub DgvCareLinkUsers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCareLinkUsers.CellContentClick
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim dataGridViewDisableButtonCell As DataGridViewDisableButtonCell = TryCast(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex), DataGridViewDisableButtonCell)
@@ -963,11 +1116,31 @@ Public Class Form1
 
 #Region "Dgv Current User Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvCurrentUser DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvCurrentUser DataGridView.
+    ''' </remarks>
     Private Sub DgvCurrentUser_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCurrentUser.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
+    ''' <summary>
+    '''  Handles the DataGridView's DataBindingComplete event.
+    '''  This event is raised when the data binding operation is complete.
+    '''  It clears the selection of all DataGridViews to ensure no cells are selected after data binding.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewBindingCompleteEventArgs containing the event data.
+    ''' </param>
     Private Sub DgvCurrentUser_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCurrentUser.ColumnAdded
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
         e.DgvColumnAdded(
@@ -980,6 +1153,17 @@ Public Class Form1
 
 #Region "Dgv Insulin Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvInsulin DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvInsulin DataGridView.
+    ''' </remarks>
     Private Sub DgvInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvInsulin.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
@@ -987,17 +1171,16 @@ Public Class Form1
                 dgv.CellFormattingDateTime(e)
             Case NameOf(Insulin.SafeMealReduction)
                 If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
-                    CellFormattingApplyColor(dgv, e, highlightColor:=Color.OrangeRed, isUri:=False)
+                    dgv.CellFormattingApplyColor(e, highlightColor:=Color.OrangeRed, isUri:=False)
                 Else
                     e.Value = ""
                     dgv.CellFormattingSetForegroundColor(e)
                 End If
             Case NameOf(Insulin.ActivationType)
-                Dim value As String = e.Value.ToString
-                Select Case value
+                Select Case Convert.ToString(e.Value)
                     Case "AUTOCORRECTION"
                         e.Value = "Auto Correction"
-                        CellFormattingApplyColor(dgv, e, GetGraphLineColor("Auto Correction"), isUri:=False)
+                        dgv.CellFormattingApplyColor(e, highlightColor:=GetGraphLineColor("Auto Correction"), isUri:=False)
                     Case "FAST", "RECOMMENDED", "UNDETERMINED"
                         dgv.CellFormattingToTitle(e)
                     Case Else
@@ -1015,6 +1198,16 @@ Public Class Form1
         End Select
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvInsulin DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvInsulin DataGridView.
+    ''' </remarks>
     Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -1053,11 +1246,32 @@ Public Class Form1
 
 #Region "Dgv Last Alarm Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvLastAlarm DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvLastAlarm DataGridView.
+    ''' </remarks>
     Friend Sub DgvLastAlarm_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvLastAlarm.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvLastAlarm DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvLastAlarm DataGridView.
+    ''' </remarks>
     Friend Sub DgvLastAlarm_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastAlarm.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -1075,11 +1289,32 @@ Public Class Form1
 
 #Region "Dgv Limits Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvLimits DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvLimits DataGridView.
+    ''' </remarks>
     Private Sub DgvLimits_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvLimits.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvLimits DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvLimits DataGridView.
+    ''' </remarks>
     Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLimits.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -1097,6 +1332,17 @@ Public Class Form1
 
 #Region "Dgv  Low Glucose Suspended Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvLowGlucoseSuspended DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvLowGlucoseSuspended DataGridView.
+    ''' </remarks>
     Friend Sub DgvLowGlucoseSuspended_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvLowGlucoseSuspended.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
@@ -1107,6 +1353,16 @@ Public Class Form1
         End Select
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvLowGlucoseSuspended DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvLowGlucoseSuspended DataGridView.
+    ''' </remarks>
     Friend Sub DgvLowGlucoseSuspended_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLowGlucoseSuspended.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -1124,6 +1380,17 @@ Public Class Form1
 
 #Region "Dgv Meal Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvMeal DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvMeal DataGridView.
+    ''' </remarks>
     Private Sub DgvMeal_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvMeal.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case CType(sender, DataGridView).Columns(e.ColumnIndex).Name
@@ -1136,6 +1403,16 @@ Public Class Form1
         End Select
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvMeal DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvMeal DataGridView.
+    ''' </remarks>
     Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvMeal.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -1157,11 +1434,32 @@ Public Class Form1
 
 #Region "Dgv Sensor Bg Readings Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvSensorBgReadings DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvSensorBgReadings DataGridView.
+    ''' </remarks>
     Friend Sub DgvSensorBgReadings_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSensorBgReadings.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvSensorBgReadings DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvSensorBgReadings DataGridView.
+    ''' </remarks>
     Friend Sub DgvSensorBgReadings_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSensorBgReadings.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -1179,6 +1477,17 @@ Public Class Form1
 
 #Region "Dgv SGs Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvSGs DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvSGs DataGridView.
+    ''' </remarks>
     Private Sub DgvSGs_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles _
         DgvSGs.CellFormatting,
         DgvLastSensorGlucose.CellFormatting
@@ -1190,12 +1499,12 @@ Public Class Form1
         Dim alternateIndex As Integer = If(dgv.Rows(0).Cells(0).Value.ToString <> "0", 0, 1)
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(SG.Message)
-                e.Value = e.Value.ToString.Replace(vbCrLf, " ")
+                e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ")
                 dgv.CellFormattingSetForegroundColor(e)
             Case NameOf(SG.sensorState)
                 ' Set the background to red for negative values in the Balance column.
                 If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    CellFormattingApplyColor(dgv, e, Color.Red, isUri:=False)
+                    dgv.CellFormattingApplyColor(e, highlightColor:=Color.Red, isUri:=False)
                 End If
                 dgv.CellFormattingToTitle(e)
             Case NameOf(SG.Timestamp)
@@ -1207,6 +1516,16 @@ Public Class Form1
         End Select
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvSGs DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvSGs DataGridView.
+    ''' </remarks>
     Private Sub DgvSGs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
         DgvLastSensorGlucose.ColumnAdded,
         DgvSGs.ColumnAdded
@@ -1239,6 +1558,15 @@ Public Class Form1
         End With
     End Sub
 
+    ''' <summary>
+    '''  Handles the DataGridView's DataBindingComplete event.
+    '''  This event is raised when the data binding operation is complete.
+    '''  It clears the selection of all DataGridViews to ensure no cells are selected after data binding.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewBindingCompleteEventArgs containing the event data.
+    ''' </param>
     Private Sub DgvSGs_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSGs.ColumnHeaderMouseClick
         If e.ColumnIndex <> 0 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -1278,19 +1606,32 @@ Public Class Form1
 
 #Region "Dgv Summary Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvSummary DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvSummary DataGridView.
+    ''' </remarks>
     Private Sub DgvSummary_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSummary.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
+        Dim eValue As String = Convert.ToString(e.Value)
+
         Select Case e.ColumnIndex
             Case 0
-                Dim singleValue As Single = e.Value.ToString.ParseSingleInvariant
+                Dim singleValue As Single = eValue.ParseSingleInvariant
                 If singleValue.IsSingleEqualToInteger(integerValue:=CInt(e.Value)) Then
                     dgv.CellFormattingSingleValue(e, 0)
                 Else
                     dgv.CellFormattingSingleValue(e, 1)
                 End If
             Case 1
-                e.Value = e.Value.ToString.Replace(":", " : ")
+                e.Value = eValue.Replace(":", " : ")
             Case 2
                 If e.Value IsNot Nothing Then
                     Select Case GetItemIndex(key)
@@ -1341,7 +1682,7 @@ Public Class Form1
                                 padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
 
                         Case ServerDataIndexes.appModelNumber, ServerDataIndexes.transmitterPairedTime
-                            If e.Value.ToString = "NA" Then
+                            If eValue = "NA" Then
                                 e.CellStyle = e.CellStyle.SetCellStyle(
                                     alignment:=DataGridViewContentAlignment.MiddleLeft,
                                     padding:=New Padding(all:=1))
@@ -1365,6 +1706,15 @@ Public Class Form1
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
+    ''' <summary>
+    '''  Handles the DataGridView's DataBindingComplete event.
+    '''  This event is raised when the data binding operation is complete.
+    '''  It clears the selection of all DataGridViews to ensure no cells are selected after data binding.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewBindingCompleteEventArgs containing the event data.
+    ''' </param>
     Private Sub DgvSummary_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSummary.CellMouseClick
         If e.RowIndex < 0 OrElse _updating Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -1417,6 +1767,16 @@ Public Class Form1
         End If
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvSummary DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvSummary DataGridView.
+    ''' </remarks>
     Private Sub DgvSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSummary.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -1431,6 +1791,17 @@ Public Class Form1
 
 #Region "Dgv Therapy Algorithm State Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvTherapyAlgorithmState DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvTherapyAlgorithmState DataGridView.
+    ''' </remarks>
     Private Sub DgvTherapyAlgorithmState_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvTherapyAlgorithmState.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If e.Value IsNot Nothing AndAlso e.ColumnIndex = 2 Then
@@ -1460,6 +1831,16 @@ Public Class Form1
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvTherapyAlgorithmState DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvTherapyAlgorithmState DataGridView.
+    ''' </remarks>
     Friend Sub DgvTherapyAlgorithmState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvTherapyAlgorithmState.ColumnAdded
         With e.Column
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1478,6 +1859,17 @@ Public Class Form1
 
 #Region "Dgv Time Change Events"
 
+    ''' <summary>
+    '''  Handles the CellFormatting event for the DgvTimeChange DataGridView.
+    '''  This event is raised when a cell's value needs to be formatted for display.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The DataGridViewCellFormattingEventArgs containing the cell formatting data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of cells in the DgvTimeChange DataGridView.
+    ''' </remarks>
     Friend Sub DgvTimeChange_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvTimeChange.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Select Case dgv.Columns(e.ColumnIndex).Name
@@ -1488,6 +1880,16 @@ Public Class Form1
         End Select
     End Sub
 
+    ''' <summary>
+    '''  Handles the ColumnAdded event for the DgvTimeChange DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks>
+    '''  This event is used to customize the appearance of columns in the DgvTimeChange DataGridView.
+    ''' </remarks>
     Friend Sub DgvTimeChange_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvTimeChange.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -1507,10 +1909,33 @@ Public Class Form1
 
 #Region "Form Events"
 
+    ''' <summary>
+    '''  Handles the Paint event for the ActiveInsulinValue control.
+    '''  This event is raised when the control needs to be repainted.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The PaintEventArgs containing the event data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to draw a border around the ActiveInsulinValue control.
+    ''' </remarks>
     Private Sub ActiveInsulinValue_Paint(sender As Object, e As PaintEventArgs) Handles ActiveInsulinValue.Paint
         ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.LimeGreen, ButtonBorderStyle.Solid)
     End Sub
 
+    ''' <summary>
+    '''  Handles the FormClosing event for the main form.
+    '''  This event is raised when the form is about to close.
+    '''  It performs cleanup tasks such as disposing of the notification icon and killing the WebView2 process.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The FormClosingEventArgs containing the event data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to ensure proper cleanup before the application exits.
+    ''' </remarks>
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Me.CleanUpNotificationIcon()
         If _webViewProcessId > 0 Then
@@ -1576,7 +2001,19 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub Form1_Reseize(sender As Object, e As EventArgs) Handles MyBase.Resize
+    ''' <summary>
+    '''  Handles the Resize event for the main form.
+    '''  This event is raised when the form is resized.
+    '''  It checks if the form is minimized and shows a notification icon if it is.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e">
+    '''  The EventArgs containing the event data.
+    ''' </param>
+    ''' <remarks>
+    '''  This event is used to manage the visibility of the notification icon when the form is minimized.
+    ''' </remarks>
+    Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
         If Me.WindowState = FormWindowState.Minimized Then
             Me.NotifyIcon1.Visible = True
             If Me.NotifyIcon1.BalloonTipText.Length > 0 Then
@@ -2622,9 +3059,9 @@ Public Class Form1
                     End Select
 
                     Me.NotifyIcon1.Icon = CreateTextIcon(lastSgString.PadRight(totalWidth:=3).Substring(startIndex:=0, length:=3).Trim.PadLeft(totalWidth:=3), backColor)
-                    Dim notStr As New StringBuilder(100)
-                    notStr.AppendLine(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
-                    notStr.AppendLine($"Last SG {lastSgString} {BgUnitsNativeString}")
+                    Dim strBuilder As New StringBuilder(100)
+                    strBuilder.AppendLine(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
+                    strBuilder.AppendLine($"Last SG {lastSgString} {BgUnitsNativeString}")
                     If PatientData.ConduitInRange Then
                         If s_lastSgValue.IsSgInvalid Then
                             Me.LabelTrendValue.Text = ""
@@ -2638,14 +3075,14 @@ Public Class Form1
                                                         )
                             _sgMiniDisplay.SetCurrentDeltaValue(Me.LabelTrendValue.Text, diffSg)
                             Me.LabelTrendValue.ForeColor = backColor
-                            notStr.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(withSign:=True), CultureInfo.InvariantCulture)}")
+                            strBuilder.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(withSign:=True), CultureInfo.InvariantCulture)}")
                             Me.LabelTrendValue.Visible = True
                         End If
                     Else
                         Me.LabelTrendValue.Visible = False
                     End If
-                    notStr.Append($"Active ins. {PatientData.ActiveInsulin.amount:N3} U")
-                    Me.NotifyIcon1.Text = notStr.ToString
+                    strBuilder.Append($"Active ins. {PatientData.ActiveInsulin.amount:N3} U")
+                    Me.NotifyIcon1.Text = strBuilder.ToString
                     Me.NotifyIcon1.Visible = True
                     s_lastSgValue = sg
                 End Using
