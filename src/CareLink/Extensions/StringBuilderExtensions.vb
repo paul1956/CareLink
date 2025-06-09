@@ -9,19 +9,21 @@ Friend Module StringBuilderExtensions
 
     <Extension>
     Public Function TrimEnd(sb As StringBuilder, trimString As String) As StringBuilder
-        Dim value As String = sb.ToString
-        If value.EndsWith(trimString) Then
-            value = value.Substring(0, value.Length - trimString.Length)
+        If sb Is Nothing OrElse sb.Length = 0 OrElse String.IsNullOrEmpty(trimString) Then Return sb
+        Dim endIndex As Integer = sb.Length - trimString.Length
+        If endIndex >= 0 AndAlso sb.ToString(startIndex:=endIndex, trimString.Length) = trimString Then
+            sb.Remove(startIndex:=endIndex, trimString.Length)
         End If
-        sb.Clear()
-        Return sb.Append(value)
+        Return sb
     End Function
 
     <Extension>
-    Public Function TrimEnd(sb As StringBuilder, trimString As Char) As StringBuilder
-        Dim value As String = sb.ToString.TrimEnd(trimString)
-        sb.Clear()
-        Return sb.Append(value)
+    Public Function TrimEnd(sb As StringBuilder, charToTrim As Char) As StringBuilder
+        ' Check if the last character is the one to trim
+        If sb.Length > 0 AndAlso sb(sb.Length - 1) = charToTrim Then
+            sb.Remove(startIndex:=sb.Length - 1, length:=1)
+        End If
+        Return sb
     End Function
 
 End Module

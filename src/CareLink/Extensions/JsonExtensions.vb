@@ -33,6 +33,12 @@ Public Module JsonExtensions
         Return sGs
     End Function
 
+    ''' <summary>
+    '''  Converts a <paramref name="JsonElement"/> array to a <see cref="List"/> of objects,
+    '''  recursively handling nested arrays and objects.
+    ''' </summary>
+    ''' <param name="jsonElement">The JsonElement representing a JSON array.</param>
+    ''' <returns>A list of objects representing the array elements.</returns>
     <Extension>
     Public Function ConvertJsonArrayToList(jsonElement As JsonElement) As List(Of Object)
         Dim result As New List(Of Object)()
@@ -50,6 +56,12 @@ Public Module JsonExtensions
         Return result
     End Function
 
+    ''' <summary>
+    '''  Converts a <paramref name="JsonElement"/> object to a <see cref="Dictionary(Of String, Object)"/>,
+    '''  recursively handling nested objects and arrays.
+    ''' </summary>
+    ''' <param name="jsonElement">The JsonElement representing a JSON object.</param>
+    ''' <returns>A dictionary representing the JSON object.</returns>
     <Extension>
     Public Function ConvertJsonElementToDictionary(jsonElement As JsonElement) As Dictionary(Of String, Object)
         Dim result As New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase)

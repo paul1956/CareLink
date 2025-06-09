@@ -19,6 +19,20 @@ Friend Module LoginHelpers
     Public Property CurrentPdf As PdfSettingsRecord
     Public ReadOnly Property LoginDialog As New LoginDialog
 
+    ''' <summary>
+    '''  Converts a Dictionary(Of String, Object) to a List(Of KeyValuePair(Of String, String)).
+    ''' </summary>
+    ''' <param name="dic">The dictionary to convert.</param>
+    ''' <returns>A list of key-value pairs where the value is converted to a string.</returns>
+    <Extension>
+    Private Function ToDataSource(dic As Dictionary(Of String, Object)) As List(Of KeyValuePair(Of String, String))
+        Dim dataSource As New List(Of KeyValuePair(Of String, String))
+        For Each kvp As KeyValuePair(Of String, Object) In dic
+            dataSource.Add(KeyValuePair.Create(kvp.Key, CType(kvp.Value, String)))
+        Next
+        Return dataSource
+    End Function
+
     Friend Sub DeserializePatientElement()
         Try
             PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(PatientDataElement, s_jsonDeserializerOptions)
@@ -153,7 +167,6 @@ Friend Module LoginHelpers
         mainForm.UpdateAllTabPages(fromFile)
         Return True
     End Function
-
     Friend Sub FinishInitialization(mainForm As Form1)
         mainForm.Cursor = Cursors.Default
         Application.DoEvents()

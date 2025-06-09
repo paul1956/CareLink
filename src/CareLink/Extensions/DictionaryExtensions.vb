@@ -20,32 +20,62 @@ Public Module DictionaryExtensions
         End Try
     End Sub
 
+    ''' <summary>
+    '''  Converts a Dictionary(Of String, T) to a CSV string representation.
+    ''' </summary>
+    ''' <typeparam name="T">The type of the values in the dictionary.</typeparam>
+    ''' <param name="dic">The dictionary to convert.</param>
+    ''' <returns>A CSV string representation of the dictionary.</returns>
+    <Extension>
+    Private Function ToCsv(Of T)(dic As Dictionary(Of String, T)) As String
+        If dic Is Nothing Then
+            Return "{}"
+        End If
+
+        Dim result As New StringBuilder
+        For Each kvp As KeyValuePair(Of String, T) In dic
+            result.Append($"{kvp.Key} = {kvp.Value}, ")
+        Next
+        result.TrimEnd(trimString:=", ")
+        Return $"{{{result}}}"
+    End Function
+
+    ''' <summary>
+    '''  Gets the value for a key from a <see cref="Dictionary(Of String, String)"/>,
+    '''  or returns an empty string if not found.
+    ''' </summary>
+    ''' <param name="item">The dictionary to search.</param>
+    ''' <param name="Key">The key to look up.</param>
+    ''' <returns>
+    '''  The value for the key, or a <see cref="String.Empty"/> if not found.
+    ''' </returns>
     <Extension>
     Friend Function GetStringValueOrEmpty(item As Dictionary(Of String, String), Key As String) As String
         If item Is Nothing Then
             Return ""
         End If
-        Dim returnString As String = ""
+        Dim returnString As String = String.Empty
         Return If(item.TryGetValue(Key, returnString),
                   returnString,
-                  ""
+                  String.Empty
                  )
     End Function
 
     ''' <summary>
-    '''  Clones a <see cref="Dictionary"/> of type Dictionary(Of String, T) to a new instance.
+    '''  Clones a <see cref="Dictionary(Of String, T)"/> to a new instance.
     '''  This is useful when you want to create a copy of the dictionary without modifying the original.
     ''' </summary>
     ''' <typeparam name="T"></typeparam>
     ''' <param name="dic"></param>
-    ''' <returns>A new instance of Dictionary(Of String, T) with the same key-value pairs.</returns>
+    ''' <returns>A new instance of <see cref="Dictionary(Of String, T)"/> with the same key-value pairs.</returns>
     <Extension>
     Public Function Clone(Of T)(dic As Dictionary(Of String, T)) As Dictionary(Of String, T)
         Return (From x In dic Select x).ToDictionary(Function(p) p.Key, Function(p) p.Value)
     End Function
 
     ''' <summary>
-    '''  Fills properties of a class from a row of a Dictionary where the propertyName of the property matches the Key from that dictionary.
+    '''  Fills properties of a class from a row of a <see cref="Dictionary(Of String, String)"/> where the propertyName
+    '''  of the property matches the Key from that dictionary.
     '''  It does this for each row in the Dictionary, returning a class.
     ''' </summary>
     ''' <typeparam propertyName="T">The class type that is to be returned.</typeparam>
@@ -116,7 +146,7 @@ Public Module DictionaryExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a JSON string to a Dictionary.
+    '''  Converts a JSON string to a <see cref="Dictionary(Of String, String)"/>.
     ''' </summary>
     ''' <param name="jsonString">The JSON string to convert.</param>
     ''' <returns>A Dictionary with the key-value pairs from the JSON string.</returns>
@@ -148,19 +178,19 @@ Public Module DictionaryExtensions
     ''' </summary>
     ''' <param name="dic">The SortedDictionary to search.</param>
     ''' <param name="item">The KnownColor to find.</param>
-    ''' <returns>The index of the item in the SortedDictionary, or -1 if not found.</returns>
+    ''' <returns>The index of the item in the <see cref="SortedDictionary"/>, or -1 if not found.</returns>
     <Extension>
     Public Function IndexOfValue(dic As SortedDictionary(Of String, KnownColor), item As KnownColor) As Integer
         Return dic.Values.ToList.IndexOf(item)
     End Function
 
     ''' <summary>
-    '''  Sorts a Dictionary(Of String, T) by its keys and returns a new <see cref="Dictionary"/>.
+    '''  Sorts a <see cref="Dictionary(Of String, T)"/> by its keys.
     '''  This is useful when you want to ensure the keys are in sorted order.
     ''' </summary>
     ''' <typeparam name="T"></typeparam>
     ''' <param name="dic"></param>
-    ''' <returns>A new Dictionary sorted by keys.</returns>
+    ''' <returns>A <see cref="Dictionary(Of String, T)"/> sorted by keys.</returns>
     <Extension>
     Public Function Sort(Of T)(dic As Dictionary(Of String, T)) As Dictionary(Of String, T)
         Dim sortDic As New SortedDictionary(Of String, T)
@@ -168,40 +198,6 @@ Public Module DictionaryExtensions
             sortDic.Add(kvp.Key, kvp.Value)
         Next
         Return (From x In sortDic Select x).ToDictionary(Function(p) p.Key, Function(p) p.Value)
-    End Function
-
-    ''' <summary>
-    '''  Converts a Dictionary(Of String, T) to a CSV string representation.
-    ''' </summary>
-    ''' <typeparam name="T">The type of the values in the dictionary.</typeparam>
-    ''' <param name="dic">The dictionary to convert.</param>
-    ''' <returns>A CSV string representation of the dictionary.</returns>
-    <Extension>
-    Public Function ToCsv(Of T)(dic As Dictionary(Of String, T)) As String
-        If dic Is Nothing Then
-            Return "{}"
-        End If
-
-        Dim result As New StringBuilder
-        For Each kvp As KeyValuePair(Of String, T) In dic
-            result.Append($"{kvp.Key} = {kvp.Value}, ")
-        Next
-        result.TrimEnd(", ")
-        Return $"{{{result}}}"
-    End Function
-
-    ''' <summary>
-    '''  Converts a Dictionary(Of String, Object) to a List(Of KeyValuePair(Of String, String)).
-    ''' </summary>
-    ''' <param name="dic">The dictionary to convert.</param>
-    ''' <returns>A list of key-value pairs where the value is converted to a string.</returns>
-    <Extension>
-    Public Function ToDataSource(dic As Dictionary(Of String, Object)) As List(Of KeyValuePair(Of String, String))
-        Dim dataSource As New List(Of KeyValuePair(Of String, String))
-        For Each kvp As KeyValuePair(Of String, Object) In dic
-            dataSource.Add(KeyValuePair.Create(kvp.Key, CType(kvp.Value, String)))
-        Next
-        Return dataSource
     End Function
 
 End Module

@@ -18,6 +18,12 @@ Friend Module HttpClientExtensions
         Return providers
     End Function
 
+    ''' <summary>
+    '''  Sets the default request headers for the specified <see cref="HttpClient"/> instance using
+    '''  the common headers defined in <c>s_common_Headers</c>.
+    ''' </summary>
+    ''' <param name="httpClient">The <see cref="HttpClient"/> instance to configure.</param>
+
     <Extension>
     Friend Sub SetDefaultRequestHeaders(ByRef httpClient As HttpClient)
         httpClient.DefaultRequestHeaders.Clear()
