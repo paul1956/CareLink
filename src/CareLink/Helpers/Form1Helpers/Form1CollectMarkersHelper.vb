@@ -7,6 +7,12 @@ Imports System.Text.Json
 
 Friend Module Form1CollectMarkersHelper
 
+    ''' <summary>
+    '''  Scales the "unitValue" in the marker's data, converting it to a string representation if necessary.
+    ''' </summary>
+    ''' <param name="marker">The marker to scale.</param>
+    ''' <returns>A new marker with the scaled "unitValue".</returns>
+
     <Extension>
     Private Function ScaleMarker(marker As Marker) As Marker
         Dim newMarker As Marker = marker
@@ -24,6 +30,10 @@ Friend Module Form1CollectMarkersHelper
         Return newMarker
     End Function
 
+    ''' <summary>
+    '''  Sorts and filters the list of low glucose suspended markers.
+    '''  Ensures correct ordering and updates record numbers.
+    ''' </summary>
     Private Sub SortAndFilterListOfLowGlucoseSuspendedMarkers()
         s_listOfLowGlucoseSuspendedMarkers.Sort(Function(x, y) x.DisplayTime.CompareTo(y.DisplayTime))
         Dim tmpList As New List(Of LowGlucoseSuspended)

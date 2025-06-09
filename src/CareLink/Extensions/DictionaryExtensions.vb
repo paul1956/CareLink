@@ -36,7 +36,7 @@ Public Module DictionaryExtensions
         For Each kvp As KeyValuePair(Of String, T) In dic
             result.Append($"{kvp.Key} = {kvp.Value}, ")
         Next
-        result.TrimEnd(", ")
+        result.TrimEnd(trimString:=", ")
         Return $"{{{result}}}"
     End Function
 

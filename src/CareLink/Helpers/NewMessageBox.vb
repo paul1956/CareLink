@@ -17,10 +17,10 @@ Friend Module NewMessageBox
         page.Text = GetPrompt(text, autoCloseTimeOutSeconds, remainingTenthSeconds)
         If Not String.IsNullOrWhiteSpace(checkBoxPrompt) Then
             page.Verification = New TaskDialogVerificationCheckBox() With
-            {
-                .Text = checkBoxPrompt,
-                .Checked = True
-            }
+                {
+                    .Text = checkBoxPrompt,
+                    .Checked = True
+                }
         End If
 
         If autoCloseTimeOutSeconds > -1 Then

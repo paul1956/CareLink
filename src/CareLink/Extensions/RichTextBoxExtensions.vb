@@ -54,20 +54,6 @@ Friend Module RichTextBoxExtensions
     End Sub
 
     ''' <summary>
-    '''  Appends a <see cref="vbTab"/> to current text in a <see cref="RichTextBox"/>.
-    ''' </summary>
-    ''' <param name="rtb"></param>
-    <Extension>
-    Public Sub AppendTab(rtb As RichTextBox, tabColor As Color)
-        Dim bufferLength As Integer = rtb.TextLength
-        rtb.AppendText(vbTab)
-        rtb.Select(bufferLength, vbTab.Length)
-        rtb.SelectionBackColor = tabColor
-        rtb.Select(rtb.TextLength, 0)
-        rtb.SelectionBackColor = SystemColors.Window
-    End Sub
-
-    ''' <summary>
     '''  Appends text to current text of a text box.
     ''' </summary>
     ''' <param name="rtb"></param>

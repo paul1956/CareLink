@@ -660,12 +660,13 @@ Public Class Form1
         ' Set the background to red for negative values in the Balance column.
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(AutoBasalDelivery.bolusAmount)
-                dgv.CellFormattingSingleValue(e, digits:=3)
                 If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
                     dgv.CellFormattingApplyColor(e, highlightColor:=Color.DarkRed, isUri:=False)
                 Else
                     dgv.CellFormattingSetForegroundColor(e)
                 End If
+            Case NameOf(AutoBasalDelivery.maxAutoBasalRate)
+                dgv.CellFormattingSingleValue(e, digits:=2)
             Case NameOf(AutoBasalDelivery.DisplayTime), NameOf(AutoBasalDelivery.Timestamp)
                 dgv.CellFormattingDateTime(e)
             Case Else
@@ -854,7 +855,7 @@ Public Class Form1
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(InsulinPerHour.Hour), NameOf(InsulinPerHour.Hour2)
                 Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
-                Dim time As New DateTime(1, 1, 1, hour, 0, 0)
+                Dim time As New DateTime(year:=1, month:=1, day:=1, hour:=hour, minute:=0, second:=0)
                 e.Value = time.ToString(s_timeWithoutMinuteFormat)
             Case Else
                 dgv.CellFormattingSingleValue(e, 3)
@@ -1144,7 +1145,7 @@ Public Class Form1
     Private Sub DgvCurrentUser_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCurrentUser.ColumnAdded
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
         e.DgvColumnAdded(
-            cellStyle:=New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1)),
+            cellStyle:=New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, padding:=New Padding(all:=1)),
             forceReadOnly:=True,
             caption:=Nothing)
     End Sub
@@ -1570,17 +1571,17 @@ Public Class Form1
     Private Sub DgvSGs_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSGs.ColumnHeaderMouseClick
         If e.ColumnIndex <> 0 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim col As DataGridViewColumn = dgv.Columns(e.ColumnIndex)
-        Dim dir As ListSortDirection
+        Dim dataGridViewColumn As DataGridViewColumn = dgv.Columns(e.ColumnIndex)
+        Dim direction As ListSortDirection
 
-        Select Case col.HeaderCell.SortGlyphDirection
+        Select Case dataGridViewColumn.HeaderCell.SortGlyphDirection
             Case SortOrder.None, SortOrder.Ascending
-                dir = ListSortDirection.Descending
+                direction = ListSortDirection.Descending
             Case SortOrder.Descending
-                dir = ListSortDirection.Ascending
+                direction = ListSortDirection.Ascending
         End Select
 
-        dgv.Sort(col, dir)
+        dgv.Sort(dataGridViewColumn, direction)
     End Sub
 
     Private Sub DgvSGs_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles DgvSGs.DataBindingComplete
@@ -1592,11 +1593,7 @@ Public Class Form1
         Dim order As SortOrder = SortOrder.None
         If dgv.RowCount > 0 Then
             Dim value As String = dgv.Rows(0).Cells(0).Value.ToString
-            If value = "288" Then
-                order = SortOrder.Descending
-            ElseIf value = "1" Then
-                order = SortOrder.Ascending
-            End If
+            order = If(value = "1", SortOrder.Ascending, SortOrder.Descending)
         End If
         dgv.Columns(0).HeaderCell.SortGlyphDirection = order
         dgv.Columns(dgv.ColumnCount - 1).DefaultCellStyle.WrapMode = DataGridViewTriState.True
@@ -2437,7 +2434,7 @@ Public Class Form1
     End Sub
 
     Private Sub MenuHelpCheckForUpdates_Click(sender As Object, e As EventArgs) Handles MenuHelpCheckForUpdates.Click
-        CheckForUpdatesAsync(True)
+        CheckForUpdatesAsync(reportSuccessfulResult:=True)
     End Sub
 
     Private Sub MenuHelpReportAnIssue_Click(sender As Object, e As EventArgs) Handles MenuHelpReportAnIssue.Click
@@ -3892,7 +3889,7 @@ Public Class Form1
 
         FinishInitialization(Me)
         Me.UpdateTrendArrows()
-        UpdateSummaryTab(Me.DgvSummary, classCollection:=s_listOfSummaryRecords, sort:=True)
+        UpdateSummaryTab(dgv:=Me.DgvSummary, classCollection:=s_listOfSummaryRecords, sort:=True)
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()
@@ -3908,17 +3905,15 @@ Public Class Form1
         Me.ModelLabel.Text = $"{PatientData.MedicalDeviceInformation.ModelNumber} HW Version = {PatientData.MedicalDeviceInformation.HardwareRevision}"
         Me.PumpNameLabel.Text = GetPumpName(PatientData.MedicalDeviceInformation.ModelNumber)
         Dim nonZeroRecords As IEnumerable(Of SG) = s_listOfSgRecords.Where(Function(entry As SG) Not Single.IsNaN(entry.sg))
-        Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/288 SG Readings"
+        Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/{288} SG Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:={s_lastSg}.ToList),
             className:=NameOf(LastSG), rowIndex:=ServerDataIndexes.lastSG,
             hideRecordNumberColumn:=True)
 
-        UpdateSummaryTab(
-            dgv:=Me.DgvLastAlarm,
-            classCollection:=GetSummaryRecords(s_lastAlarmValue),
-            sort:=True)
+        Dim classCollection As List(Of SummaryRecord) = GetSummaryRecords(s_lastAlarmValue)
+        UpdateSummaryTab(dgv:=Me.DgvLastAlarm, classCollection, sort:=True)
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:={s_activeInsulin}.ToList),
@@ -3937,10 +3932,7 @@ Public Class Form1
             table:=ClassCollectionToDataTable(listOfClass:=s_listOfLimitRecords),
             className:=NameOf(Limit), rowIndex:=ServerDataIndexes.limits)
 
-        UpdateSummaryTab(
-            dgv:=Me.DgvTherapyAlgorithmState,
-            classCollection:=GetSummaryRecords(s_therapyAlgorithmStateValue),
-            sort:=False)
+        UpdateSummaryTab(dgv:=Me.DgvTherapyAlgorithmState, classCollection:=GetSummaryRecords(s_therapyAlgorithmStateValue), sort:=False)
         Me.DgvTherapyAlgorithmState.Columns(0).Visible = False
 
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(

@@ -2,11 +2,11 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module SystemConstants
     Friend Const RsaKeySize As Integer = 2048
-
     Friend Const BaseNameSavedErrorReport As String = "CareLinkErrorReport"
     Friend Const BaseNameSavedLastDownload As String = "CareLinkLastDownload"
     Friend Const BaseNameSavedSnapshot As String = "CareLinkSnapshot"
@@ -18,6 +18,12 @@ Public Module SystemConstants
     Friend Const RegisteredTrademark As String = ChrW(&HAE)
     Friend Const StackTraceStartingStr As String = "--- Start of stack trace ---"
     Friend Const StackTraceTerminatingStr As String = "--- End of stack trace from previous location ---"
+    Friend Const Target100mgDl As Single = 100.0
+    Friend Const Target110mgDl As Single = 110.0
+    Friend Const Target120mgDl As Single = 120.0
+    Friend Const Target56mmol As Single = 5.6
+    Friend Const Target61mmol As Single = 6.1
+    Friend Const Target67mmol As Single = 6.7
     Friend Const TimeFormatMilitaryWithMinutes As String = "HH:mm"
     Friend Const TimeFormatMilitaryWithoutMinutes As String = "HH"
     Friend Const TimeFormatTwelveHourWithMinutes As String = " h:mm tt"
@@ -93,29 +99,35 @@ Public Module SystemConstants
 #Region "BG Constant Lists"
 
     Friend ReadOnly Property MgDlItems As New Dictionary(Of String, Single) From {
-            {"100 mg/dL", 100.0},
-            {"110 mg/dL", 110.0},
-            {"120 mg/dL", 120.0}
-        }
+        {$"{Target100mgDl} mg/dL", Target100mgDl},
+        {$"{Target110mgDl} mg/dL", Target110mgDl},
+        {$"{Target120mgDl} mg/dL", Target120mgDl}}
 
     Friend ReadOnly Property MmolLItemsComma As New Dictionary(Of String, Single) From {
-            {"5,6 mmol/L", 5.6},
-            {"6,1 mmol/L", 6.1},
-            {"6,7 mmol/L", 6.7}
-        }
+        {$"{Target56mmol.ToCommaDelimited} mmol/L", Target56mmol},
+        {$"{Target61mmol.ToCommaDelimited} mmol/L", Target61mmol},
+        {$"{Target67mmol.ToCommaDelimited} mmol/L", Target67mmol}}
 
     Friend ReadOnly Property MmolLItemsPeriod As New Dictionary(Of String, Single) From {
-            {"5.6 mmol/L", 5.6},
-            {"6.1 mmol/L", 6.1},
-            {"6.7 mmol/L", 6.7}
-        }
+        {$"{Target56mmol.ToPeriodDelimited} mmol/L", Target56mmol},
+        {$"{Target61mmol.ToPeriodDelimited} mmol/L", Target61mmol},
+        {$"{Target67mmol.ToPeriodDelimited} mmol/L", Target67mmol}}
 
     Friend ReadOnly Property UnitsStrings As New Dictionary(Of String, String) From {
-            {"MG_DL", "mg/dL"},
-            {"MGDL", "mg/dL"},
-            {"MMOL_L", "mmol/L"},
-            {"MMOLL", "mmol/L"}
-       }
+        {"MG_DL", "mg/dL"},
+        {"MGDL", "mg/dL"},
+        {"MMOL_L", "mmol/L"},
+        {"MMOLL", "mmol/L"}}
+
+    <Extension>
+    Private Function ToCommaDelimited(s As Single) As String
+        Return s.ToString.Replace(".", ",")
+    End Function
+
+    <Extension>
+    Private Function ToPeriodDelimited(s As Single) As String
+        Return s.ToString.Replace(",", ".")
+    End Function
 
 #End Region
 
