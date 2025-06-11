@@ -4,13 +4,42 @@
 
 Friend Module NewMessageBox
 
+    ''' <summary>
+    '''  Returns the prompt text, appending a countdown if auto-close is enabled.
+    ''' </summary>
+    ''' <param name="prompt">The main prompt text.</param>
+    ''' <param name="autoCloseTimeOut">The auto-close timeout in seconds. If negative, no countdown is shown.</param>
+    ''' <param name="remainingTenthSeconds">The remaining time in tenths of a second.</param>
+    ''' <returns>The prompt text with countdown if applicable.</returns>
     Private Function GetPrompt(prompt As String, autoCloseTimeOut As Integer, remainingTenthSeconds As Integer) As String
         If autoCloseTimeOut < 0 Then Return prompt
         Return $"{prompt}{vbCrLf}Closing in { (remainingTenthSeconds + 9) \ 10} seconds..."
     End Function
 
+    ''' <summary>
+    '''  Shows a message box with the specified options, supporting auto-close, custom buttons, icons,
+    '''  and an optional checkbox.
+    ''' </summary>
+    ''' <param name="heading">The heading text of the message box.</param>
+    ''' <param name="text">The main message text.</param>
+    ''' <param name="buttonStyle">The style and combination of buttons and icons to display.</param>
+    ''' <param name="title">The window title of the message box.</param>
+    ''' <param name="autoCloseTimeOutSeconds">
+    '''  The number of seconds before the dialog auto-closes. Set to -1 to disable auto-close.
+    ''' </param>
+    ''' <param name="page">The <see cref="TaskDialogPage"/> to configure and display.</param>
+    ''' <param name="checkBoxPrompt">Optional checkbox prompt text. If not empty, a checkbox is shown.</param>
+    ''' <returns>The <see cref="MsgBoxResult"/> indicating which button was pressed or selected by auto-close.</returns>
     <DebuggerNonUserCode>
-    Private Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String, autoCloseTimeOutSeconds As Integer, page As TaskDialogPage, checkBoxPrompt As String) As MsgBoxResult
+    Private Function MsgBox(
+        heading As String,
+        text As String,
+        buttonStyle As MsgBoxStyle,
+        title As String,
+        autoCloseTimeOutSeconds As Integer,
+        page As TaskDialogPage,
+        checkBoxPrompt As String) As MsgBoxResult
+
         Dim remainingTenthSeconds As Integer = autoCloseTimeOutSeconds * 10
         page.Caption = title
         page.Heading = heading
@@ -129,8 +158,27 @@ Friend Module NewMessageBox
         End Using
     End Function
 
+    ''' <summary>
+    '''  Shows a <see cref="MsgBox"/> with the specified options and a default checkbox prompt ("Do not show again").
+    ''' </summary>
+    ''' <param name="heading">The heading text of the message box.</param>
+    ''' <param name="text">The main message text.</param>
+    ''' <param name="buttonStyle">The style and combination of buttons and icons to display.</param>
+    ''' <param name="title">The window title of the message box.</param>
+    ''' <param name="autoCloseTimeOutSeconds">
+    '''  The number of seconds before the dialog auto-closes. Set to -1 to disable auto-close.
+    ''' </param>
+    ''' <param name="page">The <see cref="TaskDialogPage"/> to configure and display.</param>
+    ''' <returns><see cref="MsgBoxResult"/> indicating which button was pressed or selected by auto-close.</returns>
     <DebuggerNonUserCode()>
-    Public Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String, autoCloseTimeOutSeconds As Integer, page As TaskDialogPage) As MsgBoxResult
+    Public Function MsgBox(
+        heading As String,
+        text As String,
+        buttonStyle As MsgBoxStyle,
+        title As String,
+        autoCloseTimeOutSeconds As Integer,
+        page As TaskDialogPage) As MsgBoxResult
+
         Return MsgBox(
             heading,
             text,
@@ -141,6 +189,14 @@ Friend Module NewMessageBox
             checkBoxPrompt:="Do not show again")
     End Function
 
+    ''' <summary>
+    '''  Shows a <see cref="MsgBox"/> with the specified options and no checkbox or auto-close.
+    ''' </summary>
+    ''' <param name="heading">The heading text of the message box.</param>
+    ''' <param name="text">The main message text.</param>
+    ''' <param name="buttonStyle">The style and combination of buttons and icons to display.</param>
+    ''' <param name="title">The window title of the message box.</param>
+    ''' <returns>The <see cref="MsgBoxResult"/> indicating which button was pressed.</returns>
     <DebuggerNonUserCode()>
     Public Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String) As MsgBoxResult
         Return MsgBox(

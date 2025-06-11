@@ -7,8 +7,19 @@ Imports System.Runtime.CompilerServices
 Imports System.Text
 Imports ClosedXML.Excel
 
+''' <summary>
+'''  Provides extension methods for exporting and copying data from a <see cref="DataGridView"/>.
+''' </summary>
 Friend Module ExportDataGridView
 
+    ''' <summary>
+    '''  Determines whether any cell is selected in the specified column of the <see cref="DataGridView"/>.
+    ''' </summary>
+    ''' <param name="dgv">The <see cref="DataGridView"/> to check.</param>
+    ''' <param name="col">The column index to check for selected cells.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if any cell is selected in the specified column; otherwise, <see langword="False"/>.
+    ''' </returns>
     <Extension>
     Private Function AnyCellSelected(dgv As DataGridView, col As Integer) As Boolean
         Dim anySelected As Boolean = False
@@ -22,6 +33,13 @@ Friend Module ExportDataGridView
         Return anySelected
     End Function
 
+    ''' <summary>
+    '''  Copies the selected cells or all cells from the <see cref="DataGridView"/> to the <see cref="Clipboard"/>,
+    '''  with optional headers.
+    ''' </summary>
+    ''' <param name="dgv">The <see cref="DataGridView"/> to copy from.</param>
+    ''' <param name="copyHeaders">Specifies whether to include headers in the copied data.</param>
+    ''' <param name="copyAll">If <see langword="True"/>, copies all cells; otherwise, only selected cells.</param>
     <Extension>
     Private Sub CopyToClipboard(dgv As DataGridView, copyHeaders As DataGridViewClipboardCopyMode, copyAll As Boolean)
         If copyAll OrElse dgv.GetCellCount(DataGridViewElementStates.Selected) > 0 Then
@@ -49,6 +67,10 @@ Friend Module ExportDataGridView
         End If
     End Sub
 
+    ''' <summary>
+    '''  Exports the contents of the <see cref="DataGridView"/> to an Excel file with formatting.
+    ''' </summary>
+    ''' <param name="dgv">The <see cref="DataGridView"/> to export.</param>
     <Extension>
     Private Sub ExportToExcelWithFormatting(dgv As DataGridView)
         Dim baseFileName As String = dgv.Name.Replace("dgv", "", StringComparison.CurrentCultureIgnoreCase)
@@ -195,27 +217,57 @@ Friend Module ExportDataGridView
         End If
     End Sub
 
+    ''' <summary>
+    '''  Retrieves the <see cref="DataGridView"/> associated with the sender of a <see cref="ToolStripMenuItem"/> event.
+    ''' </summary>
+    ''' <param name="sender">The sender object from the event.</param>
+    ''' <returns>The <see cref="DataGridView"/> associated with the context menu.</returns>
     Private Function GetDgvFromToolStripMenuItem(sender As Object) As DataGridView
         Dim contextStrip As ContextMenuStrip = CType(CType(sender, ToolStripMenuItem).GetCurrentParent, ContextMenuStrip)
         Return CType(contextStrip.SourceControl, DataGridView)
     End Function
 
+    ''' <summary>
+    '''  Copies the selected cells of a <see cref="DataGridView"/> to the <see cref="Clipboard"/>, including headers.
+    ''' </summary>
+    ''' <param name="sender">The sender object from the event.</param>
+    ''' <param name="e">The event arguments.</param>
     Public Sub DgvCopySelectedCellsToClipBoardWithHeaders(sender As Object, e As EventArgs)
         GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText, False)
     End Sub
 
+    ''' <summary>
+    '''  Copies the selected cells of a <see cref="DataGridView"/> to the <see cref="Clipboard"/>, without headers.
+    ''' </summary>
+    ''' <param name="sender">The sender object from the event.</param>
+    ''' <param name="e">The event arguments.</param>
     Public Sub DgvCopySelectedCellsToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
         GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableWithoutHeaderText, False)
     End Sub
 
+    ''' <summary>
+    '''  Copies all cells of a <see cref="DataGridView"/> to the <see cref="Clipboard"/>, including headers.
+    ''' </summary>
+    ''' <param name="sender">The sender object from the event.</param>
+    ''' <param name="e">The event arguments.</param>
     Public Sub DgvExportToClipBoardWithHeaders(sender As Object, e As EventArgs)
         GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText, True)
     End Sub
 
+    ''' <summary>
+    '''  Copies all cells of a <see cref="DataGridView"/> to the <see cref="Clipboard"/>, without headers.
+    ''' </summary>
+    ''' <param name="sender">The sender object from the event.</param>
+    ''' <param name="e">The event arguments.</param>
     Public Sub DgvExportToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
         GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableWithoutHeaderText, False)
     End Sub
 
+    ''' <summary>
+    '''  Exports the contents of a <see cref="DataGridView"/> to an Excel file.
+    ''' </summary>
+    ''' <param name="sender">The sender object from the event.</param>
+    ''' <param name="e">The event arguments.</param>
     Public Sub DgvExportToExcel(sender As Object, e As EventArgs)
         GetDgvFromToolStripMenuItem(sender).ExportToExcelWithFormatting()
     End Sub

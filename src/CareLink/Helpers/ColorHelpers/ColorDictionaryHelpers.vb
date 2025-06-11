@@ -18,6 +18,11 @@ Friend Module ColorDictionaryHelpers
         {"Suspend", KnownColor.Red},
         {"Time Change", KnownColor.White}}
 
+    ''' <summary>
+    '''  Gets the <see cref="Color"/> for a given legend text, applying transparency for "Suspend".
+    ''' </summary>
+    ''' <param name="legendText">The legend text key.</param>
+    ''' <returns>The corresponding <see cref="Color"/>.</returns>
     Friend Function GetGraphLineColor(legendText As String) As Color
         Dim toColor As Color = GraphColorDictionary(legendText).ToColor
         Return If(legendText = "Suspend",
@@ -26,10 +31,17 @@ Friend Module ColorDictionaryHelpers
                  )
     End Function
 
+    ''' <summary>
+    '''  Gets a <see cref="BindingSource"/> for the color dictionary, suitable for data binding.
+    ''' </summary>
+    ''' <returns>A <see cref="BindingSource"/> bound to <see cref="GraphColorDictionary"/>.</returns>
     Public Function GetColorDictionaryBindingSource() As BindingSource
         Return New BindingSource(GraphColorDictionary, Nothing)
     End Function
 
+    ''' <summary>
+    '''  Loads the color dictionary from a file, updating <see cref="KnownColor"/> for existing keys.
+    ''' </summary>
     Public Sub GetColorDictionaryFromFile()
 
         Using fileStream As FileStream = File.OpenRead(GetGraphColorsFileNameWithPath())
@@ -53,10 +65,18 @@ Friend Module ColorDictionaryHelpers
         End Using
     End Sub
 
+    ''' <summary>
+    '''  Updates the color dictionary with a new <see cref="KnownColor"/> for the specified key.
+    ''' </summary>
+    ''' <param name="key">The legend text key.</param>
+    ''' <param name="item">The <see cref="KnownColor"/> to assign.</param>
     Public Sub UpdateColorDictionary(key As String, item As KnownColor)
         GraphColorDictionary(key) = item
     End Sub
 
+    ''' <summary>
+    '''  Writes the current color dictionary to a file, including contrasting background colors.
+    ''' </summary>
     Public Sub WriteColorDictionaryToFile()
         Using fileStream As FileStream = File.OpenWrite(GetGraphColorsFileNameWithPath())
             Using sw As New StreamWriter(fileStream)

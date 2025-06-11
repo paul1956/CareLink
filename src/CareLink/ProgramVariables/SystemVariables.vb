@@ -22,11 +22,11 @@ Friend Module SystemVariables
     Friend s_useLocalTimeZone As Boolean
     Friend s_userName As String = My.Settings.CareLinkUserName
     Friend s_webViewCacheDirectory As String
+    Friend Property CareLinkDecimalSeparator As Char = "."c
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property MaxBasalPerDose As Double
     Friend Property NativeMmolL As Boolean = False
     Friend Property SentenceSeparator As Char = "."c
-    Friend Property ServerDecimalSeparator As Char = "."c
     Friend Property TreatmentInsulinRow As Single
 
     Friend Function GetAboveHyperLimit() As (Uint As UInteger, Str As String)
@@ -97,7 +97,7 @@ Friend Module SystemVariables
     End Function
 
     Friend Function TirLowLimitAsString(asMmolL As Boolean) As String
-        Return If(asMmolL, "3.9", "70").Replace(ServerDecimalSeparator, Provider.NumberFormat.NumberDecimalSeparator)
+        Return If(asMmolL, "3.9", "70").Replace(CareLinkDecimalSeparator, Provider.NumberFormat.NumberDecimalSeparator)
     End Function
 
     Public Function WebViewCacheDirectory() As String

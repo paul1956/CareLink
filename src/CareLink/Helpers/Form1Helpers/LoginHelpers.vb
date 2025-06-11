@@ -7,6 +7,9 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
+''' <summary>
+'''  Specifies the options for which file to load during login or data initialization.
+''' </summary>
 Public Enum FileToLoadOptions As Integer
     LastSaved = 0
     Login = 1
@@ -20,10 +23,12 @@ Friend Module LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginDialog
 
     ''' <summary>
-    '''  Converts a Dictionary(Of String, Object) to a List(Of KeyValuePair(Of String, String)).
+    '''  Converts a <see cref="Dictionary(Of String, Object)"/> to a <see cref="List(Of KeyValuePair(Of String, String))"/>.
     ''' </summary>
-    ''' <param name="dic">The dictionary to convert.</param>
-    ''' <returns>A list of key-value pairs where the value is converted to a string.</returns>
+    ''' <param name="dic">The <see cref="Dictionary(Of String, Object)"/> to convert.</param>
+    ''' <returns>
+    '''  A list of key-value pairs where the value is converted to a <see langword="String"/>.
+    ''' </returns>
     <Extension>
     Private Function ToDataSource(dic As Dictionary(Of String, Object)) As List(Of KeyValuePair(Of String, String))
         Dim dataSource As New List(Of KeyValuePair(Of String, String))
@@ -33,6 +38,9 @@ Friend Module LoginHelpers
         Return dataSource
     End Function
 
+    ''' <summary>
+    '''  Deserializes the patient data element and updates related global variables.
+    ''' </summary>
     Friend Sub DeserializePatientElement()
         Try
             PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(PatientDataElement, s_jsonDeserializerOptions)
@@ -44,6 +52,17 @@ Friend Module LoginHelpers
         s_timeWithoutMinuteFormat = If(PatientData.TimeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
     End Sub
 
+    ''' <summary>
+    '''  Handles optional login and updates user data based on the specified file load option.
+    ''' </summary>
+    ''' <param name="mainForm">The main application form.</param>
+    ''' <param name="updateAllTabs">
+    '''  <see langword="True"/> to update all tabs after login; otherwise, <see langword="False"/>.
+    ''' </param>
+    ''' <param name="fileToLoad">The file load option to use.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if login and data update succeeded; otherwise, <see langword="False"/>.
+    ''' </returns>
     Friend Function DoOptionalLoginAndUpdateData(mainForm As Form1, updateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
         Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(False)
         s_listOfAutoBasalDeliveryMarkers.Clear()
@@ -167,6 +186,11 @@ Friend Module LoginHelpers
         mainForm.UpdateAllTabPages(fromFile)
         Return True
     End Function
+
+    ''' <summary>
+    '''  Completes initialization of the <paramref name="mainForm"/> after login and data loading.
+    ''' </summary>
+    ''' <param name="mainForm">The main application form.</param>
     Friend Sub FinishInitialization(mainForm As Form1)
         mainForm.Cursor = Cursors.Default
         Application.DoEvents()
@@ -175,10 +199,28 @@ Friend Module LoginHelpers
         mainForm.InitializeTimeInRangeArea()
     End Sub
 
+    ''' <summary>
+    '''  Determines whether the network is unavailable.
+    ''' </summary>
+    ''' <returns>
+    '''  <see langword="True"/> if the network is unavailable; otherwise, <see langword="False"/>.
+    ''' </returns>
     Friend Function NetworkUnavailable() As Boolean
         Return Not My.Computer.Network.IsAvailable
     End Function
 
+    ''' <summary>
+    '''  Sets the last update time and time zone information on the main form's status bar.
+    ''' </summary>
+    ''' <param name="form1">The main application form.</param>
+    ''' <param name="msg">The message to display for the last update time.</param>
+    ''' <param name="suffixMessage">The suffix message for the time zone label.</param>
+    ''' <param name="highLight">
+    '''  <see langword="True"/> to highlight the status label; otherwise, <see langword="False"/>.
+    ''' </param>
+    ''' <param name="isDaylightSavingTime">
+    '''  <see langword="Nothing"/> if unknown; otherwise, <see langword="True"/> or <see langword="False"/>.
+    ''' </param>
     <Extension>
     Friend Sub SetLastUpdateTime(form1 As Form1, msg As String, suffixMessage As String, highLight As Boolean, isDaylightSavingTime? As Boolean)
 
@@ -212,11 +254,22 @@ Friend Module LoginHelpers
 
     End Sub
 
+    ''' <summary>
+    '''  Loads and deserializes the user settings from the specified JSON file.
+    ''' </summary>
+    ''' <param name="userSettingsFileWithPath">The path to the user settings JSON file.</param>
     Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String)
         Dim userSettingsJson As String = File.ReadAllText(userSettingsFileWithPath)
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(userSettingsJson, s_jsonDeserializerOptions)
     End Sub
 
+    ''' <summary>
+    '''  Loads and optionally updates the user settings, prompting the user if necessary.
+    ''' </summary>
+    ''' <param name="userSettingsFile">The path to the user settings JSON file.</param>
+    ''' <param name="forceUI">
+    '''  <see langword="True"/> to force the user interface for updating settings; otherwise, <see langword="False"/>.
+    ''' </param>
     Friend Sub SetUpCareLinkUser(userSettingsFile As String, forceUI As Boolean)
         Dim currentUserUpdateNeeded As Boolean = False
         Dim pdfNewerThanUserSettings As Boolean = False
@@ -289,13 +342,17 @@ Friend Module LoginHelpers
     End Sub
 
     ''' <summary>
-    '''  Starts or stops ServerUpdateTimer
+    '''  Starts or stops the server update timer.
     ''' </summary>
-    ''' <param name="Start"></param>
-    ''' <param name="interval">Timer interval in milliseconds</param>
-    ''' <param name="memberName"></param>
-    ''' <param name="sourceLineNumber"></param>
-    ''' <returns>State of Timer before function was called</returns>
+    ''' <param name="Start">
+    '''  <see langword="True"/> to start the timer; <see langword="False"/> to stop it.
+    ''' </param>
+    ''' <param name="interval">The timer interval in milliseconds. Default is -1 (no change).</param>
+    ''' <param name="memberName">The name of the calling member. Optional.</param>
+    ''' <param name="sourceLineNumber">The source line number of the call. Optional.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the timer was running before the call; otherwise, <see langword="False"/>.
+    ''' </returns>
     Friend Function StartOrStopServerUpdateTimer(Start As Boolean, Optional interval As Integer = -1) As Boolean
         If Start Then
             If interval > -1 Then

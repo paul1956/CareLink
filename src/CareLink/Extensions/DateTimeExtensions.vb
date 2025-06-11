@@ -290,7 +290,7 @@ Friend Module DateTimeExtensions
     ''' <param name="dateAsString">The date string to parse.</param>
     ''' <returns>Parsed Date or Nothing if parsing fails.</returns>
     ''' <remarks>
-    '''  This method is an extension method for the <see cref="String"/> class.
+    '''  This method is an extension method for the <see langword="String"/> class.
     '''  It uses the invariant culture to ensure consistent parsing regardless of the current culture settings.
     ''' </remarks>
     <Extension>

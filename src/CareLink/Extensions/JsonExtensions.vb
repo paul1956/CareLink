@@ -9,14 +9,28 @@ Imports System.Text.Json.Serialization
 
 Public Module JsonExtensions
 
+    ''' <summary>
+    '''  Default <see cref="JsonSerializerOptions"/> for deserialization. Ignores null values,
+    '''  writes numbers as strings, uses case-insensitive property names, and disallows unmapped members.
+    ''' </summary>
+
     Public ReadOnly s_jsonDeserializerOptions As New JsonSerializerOptions() With {
         .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         .NumberHandling = JsonNumberHandling.WriteAsString,
         .PropertyNameCaseInsensitive = True,
         .UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow}
 
+    ''' <summary>
+    '''  Default <see cref="JsonSerializerOptions"/> for serialization with indented output.
+    ''' </summary>
     Public ReadOnly s_jsonSerializerOptions As New JsonSerializerOptions With {.WriteIndented = True}
 
+
+    ''' <summary>
+    '''  Converts a list of dictionaries representing JSON objects to a list of <see cref="SG"/> objects.
+    ''' </summary>
+    ''' <param name="innerJson">The list of dictionaries to convert.</param>
+    ''' <returns>A list of <see cref="SG"/> objects.</returns>
     <Extension>
     Private Function ToSgList(innerJson As List(Of Dictionary(Of String, String))) As List(Of SG)
         Dim sGs As New List(Of SG)
@@ -82,6 +96,12 @@ Public Module JsonExtensions
         Return result
     End Function
 
+    ''' <summary>
+    '''  Converts a <see cref="JsonElement"/> object to a <see cref="Dictionary(Of String, Object)"/>,
+    '''  recursively handling nested objects and arrays.
+    ''' </summary>
+    ''' <param name="jsonElement">The <see cref="JsonElement"/> representing a JSON object.</param>
+    ''' <returns>A <see cref="Dictionary(Of String, String)"/> representing the JSON object.</returns>
     <Extension>
     Public Function ConvertJsonElementToStringDictionary(jsonElement As JsonElement) As Dictionary(Of String, String)
         Dim result As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
@@ -115,6 +135,11 @@ Public Module JsonExtensions
         Return result
     End Function
 
+    ''' <summary>
+    '''  Converts a <see cref="JsonElement"/> to a .NET object based on its value kind.
+    ''' </summary>
+    ''' <param name="jsonElement">The <see cref="JsonElement"/> to convert.</param>
+    ''' <returns>The corresponding .NET object.</returns>
     <Extension>
     Public Function ConvertJsonValue(jsonElement As JsonElement) As Object
         Select Case jsonElement.ValueKind
@@ -133,6 +158,12 @@ Public Module JsonExtensions
         End Select
     End Function
 
+    ''' <summary>
+    '''  Retrieves a <see langword="Boolean"/> value from a <see cref="Marker"/> entry's JSON data by field name.
+    ''' </summary>
+    ''' <param name="markerEntry">The marker entry containing JSON data.</param>
+    ''' <param name="fieldName">The field name to retrieve.</param>
+    ''' <returns>The <see langword="Boolean"/> value if found; otherwise, <see langword="Nothing"/>.</returns>
     <Extension>
     Public Function GetBooleanValueFromJson(markerEntry As Marker, fieldName As String) As Boolean
         Dim obj As Object = Nothing
@@ -154,6 +185,12 @@ Public Module JsonExtensions
         Return value
     End Function
 
+    ''' <summary>
+    '''  Retrieves a <see langword="Double"/> value from a <see cref="Marker"/> entry's JSON data by field name.
+    ''' </summary>
+    ''' <param name="markerEntry">The marker entry containing JSON data.</param>
+    ''' <param name="fieldName">The field name to retrieve.</param>
+    ''' <returns>The <see langword="Double"/> value if found; otherwise, <see cref="Double.NaN"/>.</returns>
     <Extension>
     Public Function GetDoubleValueFromJson(markerEntry As Marker, fieldName As String) As Double
         Dim obj As Object = Nothing
@@ -175,6 +212,12 @@ Public Module JsonExtensions
         Return value
     End Function
 
+    ''' <summary>
+    '''  Retrieves an <see langword="Integer"/> value from a <see cref="Marker"/> entry's JSON data by field name.
+    ''' </summary>
+    ''' <param name="markerEntry">The marker entry containing JSON data.</param>
+    ''' <param name="fieldName">The field name to retrieve.</param>
+    ''' <returns>The <see langword="Integer"/> value if found; otherwise, <see langword="Nothing"/>.</returns>
     <Extension>
     Public Function GetIntegerValueFromJson(markerEntry As Marker, fieldName As String) As Integer
         Dim obj As Object = Nothing
@@ -196,6 +239,15 @@ Public Module JsonExtensions
         Return value
     End Function
 
+    ''' <summary>
+    '''  Retrieves a <see langword="Single"/> value from a <see cref="Marker"/> entry's JSON data by field name.
+    '''  Optionally rounds the value to a specified number of <paramref name="decimalDigits"/>.
+    ''' </summary>
+    ''' <param name="markerEntry">The marker entry containing JSON data.</param>
+    ''' <param name="fieldName">The field name to retrieve.</param>
+    ''' <param name="decimalDigits">The number of decimal digits to round to. Use -1 for no rounding.</param>
+    ''' <param name="considerValue">Whether to consider the value when rounding.</param>
+    ''' <returns>The <see langword="Single"/> value if found; otherwise, <see cref="Single.NaN"/>.</returns>
     <Extension>
     Public Function GetSingleValueFromJson(markerEntry As Marker, fieldName As String, Optional decimalDigits As Integer = -1, Optional considerValue As Boolean = False) As Single
         Dim obj As Object = Nothing
@@ -227,6 +279,12 @@ Public Module JsonExtensions
         End If
     End Function
 
+    ''' <summary>
+    '''  Retrieves a <see langword="String"/> value from a <see cref="Marker"/> entry's JSON data by field name.
+    ''' </summary>
+    ''' <param name="markerEntry">The marker entry containing JSON data.</param>
+    ''' <param name="fieldName">The field name to retrieve.</param>
+    ''' <returns>The <see langword="String"/> value if found; otherwise, <see cref="String.Empty"/>.</returns>
     <Extension>
     Public Function GetStringValueFromJson(markerEntry As Marker, fieldName As String) As String
         Dim obj As Object = Nothing
@@ -258,11 +316,22 @@ Public Module JsonExtensions
         Return String.Empty
     End Function
 
+    ''' <summary>
+    '''  Determines whether a <see cref="JsonValueKind"/> is <see cref="JsonValueKind.Null"/> or
+    '''  <see cref="JsonValueKind.Undefined"/>.
+    ''' </summary>
+    ''' <param name="kind">The <see cref="JsonValueKind"/> to check.</param>
+    ''' <returns><see langword="True"/> if the kind is Null or Undefined; otherwise, <see langword="False"/>.</returns>
     <Extension>
     Public Function IsNullOrUndefined(kind As JsonValueKind) As Boolean
         Return kind = JsonValueKind.Null OrElse kind = JsonValueKind.Undefined
     End Function
 
+    ''' <summary>
+    '''  Converts a JSON item (key-value pair) to its <see langword="String"/> representation.
+    ''' </summary>
+    ''' <param name="item">The key-value pair to convert.</param>
+    ''' <returns>The <see langword="String"/> representation of the item's value.</returns>
     <Extension>
     Public Function jsonItemAsString(item As KeyValuePair(Of String, Object)) As String
         Dim itemValue As JsonElement = CType(item.Value, JsonElement)
@@ -281,6 +350,11 @@ Public Module JsonExtensions
         Return valueAsString
     End Function
 
+    ''' <summary>
+    '''  Converts a JSON string to a <see cref="Dictionary(Of String, String)"/>.
+    ''' </summary>
+    ''' <param name="jsonString">The JSON string to convert.</param>
+    ''' <returns>A <see cref="Dictionary"/> with string values representing the JSON object.</returns>
     Public Function JsonToDictionary(jsonString As String) As Dictionary(Of String, String)
         Dim resultDictionary As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
         If String.IsNullOrWhiteSpace(jsonString) Then
@@ -299,6 +373,11 @@ Public Module JsonExtensions
         Return resultDictionary
     End Function
 
+    ''' <summary>
+    '''  Converts a JSON string representing an array of objects to a <see cref="List(Of Dictionary(Of String, String)"/>.
+    ''' </summary>
+    ''' <param name="value">The JSON string to convert.</param>
+    ''' <returns>A <see cref="List(Of Dictionary(Of String, String)"/> representing the JSON objects.</returns>
     Public Function JsonToLisOfDictionary(value As String) As List(Of Dictionary(Of String, String))
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         If String.IsNullOrWhiteSpace(value) Then
@@ -338,6 +417,11 @@ Public Module JsonExtensions
         Return resultDictionaryArray
     End Function
 
+    ''' <summary>
+    '''  Converts a JSON string representing an array of objects to a <see cref="List(Of SG)"/>.
+    ''' </summary>
+    ''' <param name="value">The JSON string to convert.</param>
+    ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
     Public Function JsonToLisOfSgs(value As String) As List(Of SG)
         Dim jsonList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, s_jsonDeserializerOptions)
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
@@ -358,6 +442,14 @@ Public Module JsonExtensions
         Return resultDictionaryArray.ToSgList()
     End Function
 
+    ''' <summary>
+    '''  Loads indexed items from a JSON string into a <see cref="Dictionary(Of String, String)"/>.
+    '''  Handles special cases for certain keys and manages time zone information.
+    ''' </summary>
+    ''' <param name="jsonString">The JSON string to load.</param>
+    ''' <returns>
+    '''  A <see cref="Dictionary(Of String, String)"/> with <see langword="String"/> values representing the indexed items.
+    ''' </returns>
     Public Function LoadIndexedItems(jsonString As String) As Dictionary(Of String, String)
         Dim resultDictionary As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
         If String.IsNullOrWhiteSpace(jsonString) Then

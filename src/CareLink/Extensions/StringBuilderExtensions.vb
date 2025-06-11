@@ -7,6 +7,19 @@ Imports System.Text
 
 Friend Module StringBuilderExtensions
 
+    ''' <summary>
+    '''  Removes the specified string <paramref name="trimString"/> from
+    '''  the end of the <see cref="StringBuilder"/> instance if it exists.
+    ''' </summary>
+    ''' <param name="sb">
+    '''  The StringBuilder instance to trim.
+    ''' </param>
+    ''' <param name="trimString">
+    '''  The string to remove from the end of the StringBuilder.
+    ''' </param>
+    ''' <returns>
+    '''  The modified <see cref="StringBuilder"/> instance with the specified string removed from the end, if present.
+    ''' </returns>
     <Extension>
     Public Function TrimEnd(sb As StringBuilder, trimString As String) As StringBuilder
         If sb Is Nothing OrElse sb.Length = 0 OrElse String.IsNullOrEmpty(trimString) Then Return sb
@@ -17,6 +30,18 @@ Friend Module StringBuilderExtensions
         Return sb
     End Function
 
+    ''' <summary>
+    '''  Removes the specified character from the end of the <see cref="StringBuilder"/> instance if it exists.
+    ''' </summary>
+    ''' <param name="sb">
+    '''  The StringBuilder instance to trim.
+    ''' </param>
+    ''' <param name="charToTrim">
+    '''  The character to remove from the end of the StringBuilder.
+    ''' </param>
+    ''' <returns>
+    '''  The modified StringBuilder instance with the specified character removed from the end, if present.
+    ''' </returns>
     <Extension>
     Public Function TrimEnd(sb As StringBuilder, charToTrim As Char) As StringBuilder
         ' Check if the last character is the one to trim

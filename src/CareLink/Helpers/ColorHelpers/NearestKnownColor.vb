@@ -2,8 +2,19 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+''' <summary>
+'''  Provides helper methods for finding the nearest <see cref="KnownColor"/> to a given <see cref="Color"/>.
+''' </summary>
 Public Module NearestKnownColor
 
+    ''' <summary>
+    '''  Calculates the difference between two colors in HSB (Hue, Saturation, Brightness) space.
+    ''' </summary>
+    ''' <param name="color1">The first color to compare.</param>
+    ''' <param name="color2">The second color to compare.</param>
+    ''' <returns>
+    '''  The sum of the absolute differences of hue, saturation, and brightness between the two colors.
+    ''' </returns>
     Private Function HsbDifference(color1 As Color, color2 As Color) As Single
         Dim h, s, b As Single
         h = Math.Abs(color1.GetHue - color2.GetHue)
@@ -12,6 +23,14 @@ Public Module NearestKnownColor
         Return h + s + b
     End Function
 
+    ''' <summary>
+    '''  Calculates the squared difference between two colors in RGB space.
+    ''' </summary>
+    ''' <param name="color1">The first color to compare.</param>
+    ''' <param name="color2">The second color to compare.</param>
+    ''' <returns>
+    '''  The sum of the squares of the differences of the red, green, and blue components.
+    ''' </returns>
     Private Function RgbDifference(color1 As Color, color2 As Color) As Integer
         Dim red As Integer = Math.Abs(color1.R - CInt(color2.R))
         Dim green As Integer = Math.Abs(color1.G - CInt(color2.G))
@@ -19,10 +38,32 @@ Public Module NearestKnownColor
         Return CInt((red ^ 2) + (green ^ 2) + (blue ^ 2))
     End Function
 
+    ''' <summary>
+    '''  Finds the nearest <see cref="KnownColor"/> to the specified RGB values.
+    ''' </summary>
+    ''' <param name="red">The red component (0-255).</param>
+    ''' <param name="green">The green component (0-255).</param>
+    ''' <param name="blue">The blue component (0-255).</param>
+    ''' <param name="excludeSystemColors">
+    '''  If <see langword="True"/>, system colors are excluded from the search. Default is <see langword="True"/>.
+    ''' </param>
+    ''' <returns>
+    '''  The <see cref="KnownColor"/> that is closest to the specified RGB values.
+    ''' </returns>
     Public Function GetNearestKnownColor(red As Integer, green As Integer, blue As Integer, Optional excludeSystemColors As Boolean = True) As KnownColor
         Return GetNearestKnownColor(Color.FromArgb(red, green, blue), excludeSystemColors)
     End Function
 
+    ''' <summary>
+    '''  Finds the nearest <see cref="KnownColor"/> to the specified <see cref="Color"/>.
+    ''' </summary>
+    ''' <param name="col">The color to match.</param>
+    ''' <param name="excludeSystemColors">
+    '''  If <see langword="True"/>, system colors are excluded from the search. Default is <see langword="True"/>.
+    ''' </param>
+    ''' <returns>
+    '''  The <see cref="KnownColor"/> that is closest to the specified <see cref="Color"/>.
+    ''' </returns>
     Public Function GetNearestKnownColor(col As Color, Optional excludeSystemColors As Boolean = True) As KnownColor
         Dim rgbList As New SortedList(Of Long, KnownColor)
         Dim rgb As Integer, hsb As Single, kColor As Color

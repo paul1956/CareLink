@@ -12,18 +12,20 @@ Use `NameOf` instead of string literals for member names.
 Always have the last return statement of a method on its own line.
 By default, if asked for XML comments for an entire class:
   * Add XML comments for all public members of the class.
-  * Include comments for the class, the constructor, all public properties,
-  * public methods, events and protected virtual members, but never fields.
+  * Include comments for the class, the constructor, all Public properties,
+  * Public methods, events and protected virtual members, but never fields.
+  * Never modify file_header unless it does not match file_header_template in .editorconfig
 
 If generally asked for XML comments, note they need to have a structure:
  * Always try to include <see cref="..."/> tags, and <see langword="..."/> tags, where it makes sense.
- * Try to wrap after 100 characters, always wrap after 120 characters.
- * In <remarks/> sections, please always use <para> tags.
+ * Prefer <see langword="..."/> tags over <see cref="..."/> tags where both can be used
+ * In <remarks/> sections, please always use <para> tags if total line lenght would exceed 119 characters.
  * Always make sure, you use XML compatible character encoding.
  * Always use the <see langword="$..."/> tag for language keywords like <see langword="True"/>, <see langword="False"/> and <see langword="Nothing"/>, and <paramref name="$..."/> for parameters.
- * Use the <c> tag for code snippets that are not langword, and <paramref name="$..."/> for parameters.
- * <see langword="True"/> and <see langword="False"/> should be used in the XML comments, not <see langword="true"/> or <see langword="false"/>.
- * The XML code must use 1-space indentation (see example below) and use triple-quote-style for the Text Lines not a single ':
+ * Use the <c/> tag for code snippets that are not <see langword="$..."/>, and <paramref name="$..."/> for parameters.
+ * In the XML comments <see langword="True"/> and <see langword="False"/> should be used, not <see langword="true"/> or <see langword="false"/>.
+ * Try to wrap after 100 characters, always wrap after 120 characters, except <param name="..."/> sections which should never be wrapped.
+ * Only for XML Comments use 1-space indentation (see example below) and use triple-quote-style for the Text Lines not a single-quote:
    ''' <Summary>
    '''  Summary text.
    ''' </Summary>
@@ -36,5 +38,5 @@ If generally asked for XML comments, note they need to have a structure:
    '''  </Para>
    ''' </Remarks>
 
- * Always use the <see cref="..."/> tag for references to other members,
+ * Always use the <see cref="..."/> tag for references to other members.
  * All Boolean values passed to Subs or Functions should use argument name := True or := False.
