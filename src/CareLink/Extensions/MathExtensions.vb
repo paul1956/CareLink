@@ -115,13 +115,13 @@ Friend Module MathExtensions
         If valueString Is Nothing Then
             Return Single.NaN
         End If
-        If valueString.Contains(","c) AndAlso valueString.Contains(ServerDecimalSeparator) Then
+        If valueString.Contains(","c) AndAlso valueString.Contains(CareLinkDecimalSeparator) Then
             Throw New ArgumentException($"{NameOf(valueString)} = {valueString}, contains both a comma and period.", NameOf(valueString))
         End If
-        valueString = valueString.Replace(",", ServerDecimalSeparator)
+        valueString = valueString.Replace(",", CareLinkDecimalSeparator)
         Dim returnSingle As Single
         If decimalDigits = -1 Then
-            Dim index As Integer = valueString.IndexOf(ServerDecimalSeparator)
+            Dim index As Integer = valueString.IndexOf(CareLinkDecimalSeparator)
             decimalDigits = If(index = -1,
                                0,
                                valueString.Substring(index).Length

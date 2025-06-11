@@ -5,12 +5,31 @@
 Imports System.IO
 Imports System.Runtime.CompilerServices
 
+''' <summary>
+'''  Module containing helper methods for updating and processing data in <see cref="Form1"/>.
+''' </summary>
+''' <remarks>
+'''  <para>
+'''   Provides utility functions for data transformation, file name generation, and summary record handling
+'''   related to pump and sensor data in the application.
+'''  </para>
+''' </remarks>
 Friend Module Form1UpdateHelpers
 
     Private ReadOnly s_700Models As New List(Of String) From {
         "MMT-1812",
         "MMT-1880"}
 
+    ''' <summary>
+    '''  Converts a date string to a formatted date string using the specified provider,
+    '''  or returns an empty string if parsing fails.
+    ''' </summary>
+    ''' <param name="dateAsString">The date string to parse.</param>
+    ''' <param name="key">The key associated with the date value.</param>
+    ''' <param name="provider">The format provider to use for formatting the date.</param>
+    ''' <returns>
+    '''  The formatted date string if parsing succeeds; otherwise, an empty string.
+    ''' </returns>
     <Extension>
     Private Function CDateOrDefault(dateAsString As String, key As String, provider As IFormatProvider) As String
         Dim resultDate As Date
@@ -20,6 +39,14 @@ Friend Module Form1UpdateHelpers
                  )
     End Function
 
+    ''' <summary>
+    '''  Converts a percentage value (as a string) representing time out of 24 hours
+    '''  to a display string in hours and minutes.
+    ''' </summary>
+    ''' <param name="rowValue">The percentage value as a string.</param>
+    ''' <returns>
+    '''  A string describing the time in hours and minutes out of the last 24 hours.
+    ''' </returns>
     Private Function ConvertPercent24HoursToDisplayValueString(rowValue As String) As String
         Dim val As Decimal = CDec(Convert.ToInt32(rowValue) * 0.24)
         Dim hours As Integer = Convert.ToInt32(val)
@@ -30,6 +57,13 @@ Friend Module Form1UpdateHelpers
                  )
     End Function
 
+    ''' <summary>
+    '''  Gets the display name of a pump model based on its model number.
+    ''' </summary>
+    ''' <param name="value">The model number of the pump.</param>
+    ''' <returns>
+    '''  The display name of the pump if recognized; otherwise, "Unknown".
+    ''' </returns>
     Friend Function GetPumpName(value As String) As String
         Select Case value
             Case "MMT-1812"
@@ -48,18 +82,14 @@ Friend Module Form1UpdateHelpers
     End Function
 
     ''' <summary>
-    '''  Possibility unique file name of the form baseName(<paramref name="cultureName"/>)<see cref="s_userName"/>.<paramref name="extension"/>
-    '''  given an <paramref name="baseName"/> and culture as a seed.
-    '''  If <paramref name="MustBeUnique"/> is true, a unique file name is created by appending a number to the file name.
-    '''  The file name is created in the <see cref="DirectoryForProjectData"/>
-    '''  If <paramref name="MustBeUnique"/> is false, the file name may not be unique.
+    '''  Generates a possibly unique file name for data export, based on the specified base name, culture, and extension.
     ''' </summary>
-    ''' <param Name="baseName">The first part of the file name</param>
-    ''' <param Name="cultureName">A valid Culture Name in the form of language-CountryCode</param>
-    ''' <param Name="extension">The extension for the file</param>
-    ''' <param name="MustBeUnique">True if the file name must be unique</param>
+    ''' <param name="baseName">The first part of the file name.</param>
+    ''' <param name="cultureName">A valid culture name in the form of language-CountryCode.</param>
+    ''' <param name="extension">The extension for the file.</param>
+    ''' <param name="MustBeUnique">If <see langword="True"/>, ensures the file name is unique.</param>
     ''' <returns>
-    '''  A unique file name valid in <see cref="DirectoryForProjectData"/> folder or an empty file name on error.
+    '''  A <see cref="FileNameStruct"/> containing the full and short file name, or an empty struct on error.
     ''' </returns>
     ''' <example>
     '''  GetUniqueDataFileName("MyFile", "en-US", "txt", True)
@@ -100,6 +130,13 @@ Friend Module Form1UpdateHelpers
 
     End Function
 
+    ''' <summary>
+    '''  Handles complex items in a key-value row, splitting and processing values for summary records.
+    ''' </summary>
+    ''' <param name="row">The key-value pair row to process.</param>
+    ''' <param name="rowIndex">The index of the row.</param>
+    ''' <param name="key">The key for the summary record.</param>
+    ''' <param name="listOfSummaryRecords">The list to which summary records are added.</param>
     Friend Sub HandleComplexItems(row As KeyValuePair(Of String, String), rowIndex As Integer, key As String, listOfSummaryRecords As List(Of SummaryRecord))
         Dim valueList As String() = GetValueList(row.Value)
         For Each e As IndexClass(Of String) In valueList.WithIndex
@@ -124,8 +161,7 @@ Friend Module Form1UpdateHelpers
     '''  Checks if the <see cref="PatientData.MedicalDeviceInformation.ModelNumber"/> is a 700 series model.
     ''' </summary>
     ''' <returns>
-    '''  <see langword="True"/> if the model number is a 700 series model; otherwise,
-    '''  <see langword="False"/>.
+    '''  <see langword="True"/> if the model number is a 700 series model; otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function Is700Series() As Boolean
         If RecentDataEmpty() Then Return False
@@ -136,13 +172,16 @@ Friend Module Form1UpdateHelpers
     '''  Checks if the <see cref="RecentData"/> is empty or not.
     ''' </summary>
     ''' <returns>
-    '''  <see langword="True"/> if the <see cref="RecentData"/> is empty; otherwise,
-    '''  <see langword="False"/>.
+    '''  <see langword="True"/> if <see cref="RecentData"/> is empty; otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function RecentDataEmpty() As Boolean
         Return RecentData Is Nothing OrElse RecentData.Count = 0
     End Function
 
+    ''' <summary>
+    '''  Updates the data tables and summary records in the <paramref name="mainForm"/> based on the most recent data.
+    ''' </summary>
+    ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdateDataTables(mainForm As Form1)
 
         If RecentDataEmpty() Then
@@ -442,6 +481,10 @@ Friend Module Form1UpdateHelpers
 
     End Sub
 
+    ''' <summary>
+    '''  Updates the marker tabs in the <paramref name="mainForm"/> with the latest marker data.
+    ''' </summary>
+    ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdateMarkerTabs(mainForm As Form1)
         With mainForm
             .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
@@ -486,6 +529,10 @@ Friend Module Form1UpdateHelpers
 
     End Sub
 
+    ''' <summary>
+    '''  Updates the pump banner state tab in the <paramref name="mainForm"/> with the latest banner state data.
+    ''' </summary>
+    ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdatePumpBannerStateTab(mainForm As Form1)
         Dim listOfBannerState As New List(Of BannerState)
         For Each dic As Dictionary(Of String, String) In s_pumpBannerStateValue

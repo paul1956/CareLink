@@ -464,7 +464,7 @@ Public Class Client2
     '''  If the access token cannot be refreshed or the API call fails, an error message is returned.
     ''' </summary>
     ''' <returns>
-    '''  A <see cref="String"/> indicating the status of the operation, or an error message if the operation fails.
+    '''  A <see langword="String"/> indicating the status of the operation, or an error message if the operation fails.
     ''' </returns>
     Public Function GetRecentData() As String
         ' Check if access token is valid

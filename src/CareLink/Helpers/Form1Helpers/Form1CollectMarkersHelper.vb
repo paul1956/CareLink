@@ -11,7 +11,7 @@ Friend Module Form1CollectMarkersHelper
     '''  Scales the "unitValue" in the marker's data, converting it to a string representation if necessary.
     ''' </summary>
     ''' <param name="marker">The marker to scale.</param>
-    ''' <returns>A new marker with the scaled "unitValue".</returns>
+    ''' <returns>A new <cref name="Marker"/> with the scaled "unitValue".</returns>
 
     <Extension>
     Private Function ScaleMarker(marker As Marker) As Marker

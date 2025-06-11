@@ -2,6 +2,9 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+''' <summary>
+'''  Provides extension methods and helpers for working with time zones in the application.
+''' </summary>
 Friend Module TimeZoneExtensions
 
 #Region "Time Zone Helper"
@@ -33,8 +36,19 @@ Friend Module TimeZoneExtensions
             {"Mitteleuropäische Zeit", "W. Europe Standard Time"}
         }
 
+    ''' <summary>
+    '''  Cached list of system time zones.
+    ''' </summary>
     Private s_systemTimeZones As List(Of TimeZoneInfo)
 
+    ''' <summary>
+    '''  Attempts to resolve a time zone by name, using known mappings and system time zones.
+    ''' </summary>
+    ''' <param name="Name">The name or ID of the time zone to resolve.</param>
+    ''' <returns>
+    '''  The resolved <see cref="TimeZoneInfo"/> if found; otherwise, <see cref="TimeZoneInfo.Local"/>.
+    '''  Returns <see langword="Nothing"/> if the input is null or whitespace.
+    ''' </returns>
     Friend Function CalculateTimeZone(Name As String) As TimeZoneInfo
         If String.IsNullOrWhiteSpace(Name) Then
             Return Nothing
@@ -65,30 +79,37 @@ Friend Module TimeZoneExtensions
         End If
 
         If id.Contains("Daylight") Then
-            possibleTimeZone = s_systemTimeZones.Where(Function(t As TimeZoneInfo)
-                                                           Return t.DaylightName = id
-                                                       End Function).FirstOrDefault
+            possibleTimeZone = s_systemTimeZones.Where(
+                Function(t As TimeZoneInfo)
+                    Return t.DaylightName = id
+                End Function).FirstOrDefault
             If possibleTimeZone IsNot Nothing Then
                 Return possibleTimeZone
             End If
         End If
-        possibleTimeZone = s_systemTimeZones.Where(Function(t As TimeZoneInfo)
-                                                       Return t.StandardName = id
-                                                   End Function).FirstOrDefault
+        possibleTimeZone = s_systemTimeZones.Where(
+            Function(t As TimeZoneInfo)
+                Return t.StandardName = id
+            End Function).FirstOrDefault
         If possibleTimeZone IsNot Nothing Then
             Return possibleTimeZone
         End If
 
-        possibleTimeZone = s_systemTimeZones.Where(Function(t As TimeZoneInfo)
-                                                       Return t.Id = id
-                                                   End Function).FirstOrDefault
+        possibleTimeZone = s_systemTimeZones.Where(
+            Function(t As TimeZoneInfo)
+                Return t.Id = id
+            End Function).FirstOrDefault
         Return If(possibleTimeZone,
                   TimeZoneInfo.Local
                  )
     End Function
 
+    ''' <summary>
+    '''  Gets the local date and time from the pump's configured time zone.
+    ''' </summary>
+    ''' <returns>The pumps current <see cref="Date"/> in the applications local time.</returns>
     Public Function PumpNow() As Date
-        Return TimeZoneInfo.ConvertTime(Now, PumpTimeZoneInfo)
+        Return TimeZoneInfo.ConvertTime(dateTime:=Now, destinationTimeZone:=PumpTimeZoneInfo)
     End Function
 
 End Module

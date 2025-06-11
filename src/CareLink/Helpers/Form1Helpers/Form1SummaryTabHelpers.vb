@@ -9,10 +9,10 @@ Friend Module Form1SummaryTabHelpers
     ''' <summary>
     '''  Updates the Summary tab <see cref="DataGridView"/> with the provided
     '''  <paramref name="classCollection"/> of summary records.
-    '''  Optionally sorts the records, initializes the DataGridView, sets the DataSource,
+    '''  Optionally sorts the records, initializes the <see cref="DataGridView"/>, sets the DataSource,
     '''  manages the current cell selection, and resizes columns.
     ''' </summary>
-    ''' <param name="dgv">The DataGridView to update.</param>
+    ''' <param name="dgv">The <see cref="DataGridView"/> to update.</param>
     ''' <param name="classCollection">The list of <see cref="SummaryRecord"/> objects to display.</param>
     ''' <param name="sort">If set to <see langword="True"/> sorts the summary records before displaying.</param>
     <Extension>

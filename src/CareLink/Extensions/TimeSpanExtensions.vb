@@ -6,6 +6,17 @@ Imports System.Runtime.CompilerServices
 
 Friend Module TimeSpanExtensions
 
+    ''' <summary>
+    '''  Formats a <see cref="TimeSpan"/> into a human-readable string, optionally using specified units.
+    ''' </summary>
+    ''' <param name="tSpan">The <see cref="TimeSpan"/> to format.</param>
+    ''' <param name="units">
+    '''  Optional. The <paramref name="units"/> to use in the formatted string (e.g., "hr", "min", "sec").
+    '''  If not specified, the method will infer appropriate units based on the <see cref="TimeSpan"/> value.
+    ''' </param>
+    ''' <returns>
+    '''  A formatted string representing the <see cref="TimeSpan"/>, including appropriate units.
+    ''' </returns>
     <Extension>
     Public Function ToFormattedTimeSpan(tSpan As TimeSpan, Optional units As String = "") As String
         Dim r As String = ""

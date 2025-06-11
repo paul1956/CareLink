@@ -35,6 +35,11 @@ Friend Module TableLayoutPanelExtensions
         NameOf(Form1.TableLayoutPanelSgsTop),
         NameOf(Form1.TableLayoutPanelTimeChangeTop)}
 
+    ''' <summary>
+    '''  Sets the display name of a table, including help text for export/copy options if supported.
+    ''' </summary>
+    ''' <param name="innerTable">The <see cref="TableLayoutPanel"/> whose name is to be set.</param>
+    ''' <param name="tableName">The base name to display for the table.</param>
     Private Sub SetTableName(ByRef innerTable As TableLayoutPanel, tableName As String)
         Select Case True
             Case TypeOf innerTable.Controls(0) Is Button
@@ -55,6 +60,13 @@ Friend Module TableLayoutPanelExtensions
         End Select
     End Sub
 
+    ''' <summary>
+    '''  Extension method to set the table name for a <see cref="TableLayoutPanel"/> based on the specified row index
+    '''  and notification state.
+    ''' </summary>
+    ''' <param name="table">The <see cref="TableLayoutPanel"/> to update.</param>
+    ''' <param name="rowIndex">The <see cref="ServerDataIndexes"/> value representing the table's data type.</param>
+    ''' <param name="isClearedNotifications">Indicates if the table represents cleared notifications.</param>
     <Extension>
     Friend Sub SetTableName(table As TableLayoutPanel, rowIndex As ServerDataIndexes, isClearedNotifications As Boolean)
         Dim tableName As String = rowIndex.ToString.ToTitleCase
@@ -74,7 +86,6 @@ Friend Module TableLayoutPanelExtensions
             Case Else
                 Stop
         End Select
-
     End Sub
 
 End Module
