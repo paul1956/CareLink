@@ -345,7 +345,7 @@
           }
         }
       },
-      "System.Speech/10.0.0-preview.4.25258.110": {
+      "System.Speech/10.0.0-preview.5.25277.114": {
         "type": "package",
         "compile": {
           "lib/net9.0/System.Speech.dll": {
@@ -896,10 +896,10 @@
         "xamarin.interactive/SkiaSharp.Workbooks.dll"
       ]
     },
-    "System.Speech/10.0.0-preview.4.25258.110": {
-      "sha512": "QJHG0F2ZORkj9RsA9/gLZaCZODH+7WCMExFP9uYj8klQ76YIrvrYvVj7bI0H2dpJnAOGUMyZFGXffhMIh7ndyQ==",
+    "System.Speech/10.0.0-preview.5.25277.114": {
+      "sha512": "RC6WcWH1z1+fuvCOO/ylCtfB9ClyelS91CG/uVT2Jd4omPmHHtwxwee/uhVfR2dC8n2Px6XxtsUXqq8agcIdOw==",
       "type": "package",
-      "path": "system.speech/10.0.0-preview.4.25258.110",
+      "path": "system.speech/10.0.0-preview.5.25277.114",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -924,7 +924,7 @@
         "runtimes/win/lib/net8.0/System.Speech.xml",
         "runtimes/win/lib/net9.0/System.Speech.dll",
         "runtimes/win/lib/net9.0/System.Speech.xml",
-        "system.speech.10.0.0-preview.4.25258.110.nupkg.sha512",
+        "system.speech.10.0.0-preview.5.25277.114.nupkg.sha512",
         "system.speech.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -1026,7 +1026,7 @@
       "FreeSpire.PDF >= 10.2.0",
       "Microsoft.Web.WebView2 >= 1.0.3344-prerelease",
       "Octokit >= 14.0.0",
-      "System.Speech >= 10.0.0-preview.4.25258.110",
+      "System.Speech >= 10.0.0-preview.5.25277.114",
       "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.8",
       "WebView2.DevTools.Dom >= 5.0.0",
@@ -1103,7 +1103,7 @@
           },
           "System.Speech": {
             "target": "Package",
-            "version": "[10.0.0-preview.4.25258.110, )"
+            "version": "[10.0.0-preview.5.25277.114, )"
           },
           "TableLayputPanelTop": {
             "target": "Package",
