@@ -66,7 +66,6 @@ Friend Module Form1CollectMarkersHelper
         s_listOfBgReadingMarkers.Clear()
         s_listOfCalibrationMarkers.Clear()
         s_listOfInsulinMarkers.Clear()
-        s_listOfLimitRecords.Clear()
         s_listOfLowGlucoseSuspendedMarkers.Clear()
         s_listOfMealMarkers.Clear()
         s_listOfTimeChangeMarkers.Clear()
