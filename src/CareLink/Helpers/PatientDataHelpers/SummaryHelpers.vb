@@ -187,7 +187,7 @@ Friend Module SummaryHelpers
                     .Replace("(suspendedSince)", s_suspendedSince) _
                     .Replace("(sg)", sg) _
                     .Replace("(triggeredDateTime)", triggeredDateTime) _
-                    .Replace("(units)", BgUnitsNativeString) _
+                    .Replace("(units)", GetBgUnitsString()) _
                     .Replace("(unitsRemaining)", unitsRemaining) _
                     .Replace("(vbCrLf)", vbCrLf)
             Else

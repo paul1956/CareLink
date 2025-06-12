@@ -6,8 +6,6 @@ Imports System.Text.Json
 
 Public Module PumpVariables
 
-    ' Manually computed
-
     Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
     Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatus)
     Friend ReadOnly s_listOfBasalPerHour As New List(Of BasalPerHour)
@@ -16,7 +14,6 @@ Public Module PumpVariables
     Friend ReadOnly s_listOfInsulinMarkers As New List(Of Insulin)
     Friend ReadOnly s_listOfMealMarkers As New List(Of Meal)
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
-    Friend ReadOnly s_listOfUserSummaryRecord As New List(Of SummaryRecord)
     Friend s_activeInsulin As ActiveInsulin
     Friend s_autoModeReadinessState As SummaryRecord
     Friend s_basalList As New List(Of Basal) From {New Basal}
@@ -38,23 +35,30 @@ Public Module PumpVariables
     Friend s_timeToNextCalibrationMinutes As Short ' Do not replace this, it is used in the UI
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
+
+#Region "Manually Computed"
+
     Friend s_totalAutoCorrection As Single
     Friend s_totalBasal As Single
     Friend s_totalCarbs As Single
     Friend s_totalDailyDose As Single
     Friend s_totalManualBolus As Single
 
-    Friend ReadOnly Property BgUnitsNativeString As String
-        Get
-            Return If(NativeMmolL, "Mmol/l", "mg/dL")
-        End Get
-    End Property
+#End Region ' Manually computed
 
     Friend Property InAutoMode As Boolean
+
     Public Property PatientData As PatientDataInfo
+
     Public Property PatientDataElement As JsonElement
+
     Public Property ProgramInitialized As Boolean = False
+
     Public Property RecentData As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
+
+    Friend Function GetBgUnitsString() As String
+        Return If(NativeMmolL, "Mmol/l", "mg/dL")
+    End Function
 
     Public Function GetCarbDefaultUnit() As String
         Return "Grams"

@@ -18,12 +18,6 @@ Public Module SystemConstants
     Friend Const RegisteredTrademark As String = ChrW(&HAE)
     Friend Const StackTraceStartingStr As String = "--- Start of stack trace ---"
     Friend Const StackTraceTerminatingStr As String = "--- End of stack trace from previous location ---"
-    Friend Const Target100mgDl As Single = 100.0
-    Friend Const Target110mgDl As Single = 110.0
-    Friend Const Target120mgDl As Single = 120.0
-    Friend Const Target56mmol As Single = 5.6
-    Friend Const Target61mmol As Single = 6.1
-    Friend Const Target67mmol As Single = 6.7
     Friend Const TimeFormatMilitaryWithMinutes As String = "HH:mm"
     Friend Const TimeFormatMilitaryWithoutMinutes As String = "HH"
     Friend Const TimeFormatTwelveHourWithMinutes As String = " h:mm tt"
@@ -98,20 +92,34 @@ Public Module SystemConstants
 
 #Region "BG Constant Lists"
 
+    Friend Const MaxMmDl400 As Integer = 400
+    Friend Const MaxMmolL22_2 As Single = 22.2
+    Friend Const MinMmDl50 As Integer = 50
+    Friend Const MinMmolL2_8 As Single = 2.8
+    Friend Const Target100mgDl As Single = 100.0
+    Friend Const Target110mgDl As Single = 110.0
+    Friend Const Target120mgDl As Single = 120.0
+    Friend Const Target5_6mmol As Single = 5.6
+    Friend Const Target6_1mmol As Single = 6.1
+    Friend Const Target6_7mmol As Single = 6.7
+    Friend Const TirHighMmol10 As Single = 10.0
+    Friend Const TirHighMmDl180 As Single = 180.0
+    Friend Const TirLowMmol70 As Single = 70.0
+    Friend Const TirLowMmDl3_9 As Single = 3.9
     Friend ReadOnly Property MgDlItems As New Dictionary(Of String, Single) From {
         {$"{Target100mgDl} mg/dL", Target100mgDl},
         {$"{Target110mgDl} mg/dL", Target110mgDl},
         {$"{Target120mgDl} mg/dL", Target120mgDl}}
 
     Friend ReadOnly Property MmolLItemsComma As New Dictionary(Of String, Single) From {
-        {$"{Target56mmol.ToCommaDelimited} mmol/L", Target56mmol},
-        {$"{Target61mmol.ToCommaDelimited} mmol/L", Target61mmol},
-        {$"{Target67mmol.ToCommaDelimited} mmol/L", Target67mmol}}
+        {$"{Target5_6mmol.ToCommaDelimited} mmol/L", Target5_6mmol},
+        {$"{Target6_1mmol.ToCommaDelimited} mmol/L", Target6_1mmol},
+        {$"{Target6_7mmol.ToCommaDelimited} mmol/L", Target6_7mmol}}
 
     Friend ReadOnly Property MmolLItemsPeriod As New Dictionary(Of String, Single) From {
-        {$"{Target56mmol.ToPeriodDelimited} mmol/L", Target56mmol},
-        {$"{Target61mmol.ToPeriodDelimited} mmol/L", Target61mmol},
-        {$"{Target67mmol.ToPeriodDelimited} mmol/L", Target67mmol}}
+        {$"{Target5_6mmol.ToPeriodDelimited} mmol/L", Target5_6mmol},
+        {$"{Target6_1mmol.ToPeriodDelimited} mmol/L", Target6_1mmol},
+        {$"{Target6_7mmol.ToPeriodDelimited} mmol/L", Target6_7mmol}}
 
     Friend ReadOnly Property UnitsStrings As New Dictionary(Of String, String) From {
         {"MG_DL", "mg/dL"},

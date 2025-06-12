@@ -22,7 +22,7 @@ Friend Module PlotSuspend
                     suspended = True
                     .AddXY(suspendRecord.Timestamp, 0)
                     .Last.Color = lineColor
-                    .AddXY(suspendRecord.Timestamp, GetYMaxValue())
+                    .AddXY(suspendRecord.Timestamp, GetYMaxValueFromNativeMmolL())
                     Dim stopTimeSpan As TimeSpan =
                                       If(Not e.IsLast,
                                          s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).Timestamp - suspendRecord.Timestamp,
@@ -32,7 +32,7 @@ Friend Module PlotSuspend
                     For i As Long = 1 To CInt(Math.Ceiling(stopTimeSpan.TotalMinutes / 5)) - 1
                         .AddXY(suspendRecord.Timestamp.AddMinutes(i * 5), 0)
                         .Last.Color = lineColor
-                        .AddXY(suspendRecord.Timestamp.AddMinutes(i * 5), GetYMaxValue())
+                        .AddXY(suspendRecord.Timestamp.AddMinutes(i * 5), GetYMaxValueFromNativeMmolL())
                         .Last.Color = lineColor
                     Next
 

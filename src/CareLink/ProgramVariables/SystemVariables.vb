@@ -45,13 +45,15 @@ Friend Module SystemVariables
 
     Friend Function GetInsulinYValue() As Single
         Dim maxYScaled As Single = s_listOfSgRecords.Max(Of Single)(Function(sgR As SG) sgR.sg) + 2
+        Const mmDlInsulinYValue As Integer = 330
+        Const mmoLInsulinYValue As Single = mmDlInsulinYValue / MmolLUnitsDivisor
         Return If(Single.IsNaN(maxYScaled),
-            If(NativeMmolL, 330 / MmolLUnitsDivisor, 330),
+            If(NativeMmolL, mmoLInsulinYValue, mmDlInsulinYValue),
             If(NativeMmolL,
-                If(s_listOfSgRecords.Count = 0 OrElse maxYScaled > (330 / MmolLUnitsDivisor),
+                If(s_listOfSgRecords.Count = 0 OrElse maxYScaled > mmoLInsulinYValue,
                     342 / MmolLUnitsDivisor,
                     Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)),
-                If(s_listOfSgRecords.Count = 0 OrElse maxYScaled > 330, 342, Math.Max(maxYScaled, 260))))
+                If(s_listOfSgRecords.Count = 0 OrElse maxYScaled > mmDlInsulinYValue, 342, Math.Max(maxYScaled, 260))))
     End Function
 
     Friend Function GetSgFormat(withSign As Boolean) As String
@@ -76,31 +78,39 @@ Friend Module SystemVariables
                   (CUInt(0), "??? "))
     End Function
 
-    Friend Function GetYMaxValue() As Single
-        Return If(NativeMmolL, ParseSingle(22.2, decimalDigits:=1), 400)
+    Friend Function GetTirHighLimit(Optional asMmolL As Boolean = Nothing) As Single
+        If asMmolL = Nothing Then
+            asMmolL = NativeMmolL
+        End If
+        Return If(asMmolL, TirHighMmol10, TirHighMmDl180)
     End Function
 
-    Friend Function GetYMinValue() As Single
-        Return If(NativeMmolL, ParseSingle(2.8, decimalDigits:=1), 50)
+    Friend Function GetTirHighLimitWithUnits() As String
+        Return $"{GetTirHighLimit()} {GetBgUnitsString()}".
+            Replace(CareLinkDecimalSeparator, Provider.NumberFormat.NumberDecimalSeparator)
     End Function
 
-    Friend Function TirHighLimit() As Single
-        Return If(NativeMmolL, 10, 180)
+    Friend Function GetTirLowLimit(Optional asMmolL As Boolean = Nothing) As Single
+        If asMmolL = Nothing Then
+            asMmolL = NativeMmolL
+        End If
+        Return If(asMmolL, TirLowMmDl3_9, TirLowMmol70)
     End Function
 
-    Friend Function TirHighLimitAsString(asMmolL As Boolean) As String
-        Return If(asMmolL, "10", "180")
+    Friend Function GetTirLowLimitWithUnits() As String
+        Return $"{GetTirLowLimit()} {GetBgUnitsString()}".
+            Replace(CareLinkDecimalSeparator, Provider.NumberFormat.NumberDecimalSeparator)
     End Function
 
-    Friend Function TirLowLimit(asMmolL As Boolean) As Single
-        Return If(asMmolL, ParseSingle(3.9, decimalDigits:=1), 70)
+    Friend Function GetYMaxValueFromNativeMmolL() As Single
+        Return If(NativeMmolL, MaxMmolL22_2, MaxMmDl400)
     End Function
 
-    Friend Function TirLowLimitAsString(asMmolL As Boolean) As String
-        Return If(asMmolL, "3.9", "70").Replace(CareLinkDecimalSeparator, Provider.NumberFormat.NumberDecimalSeparator)
+    Friend Function GetYMinValueFromNativeMmolL() As Single
+        Return If(NativeMmolL, MinMmolL2_8, MinMmDl50)
     End Function
 
-    Public Function WebViewCacheDirectory() As String
+    Public Function GetWebViewCacheDirectory() As String
         Return s_webViewCacheDirectory
     End Function
 

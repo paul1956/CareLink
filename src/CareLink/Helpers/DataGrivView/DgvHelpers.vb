@@ -89,27 +89,27 @@ Public Module DgvHelpers
             Select Case sgColumnName
                 Case partialKey
                     e.Value = If(NativeMmolL, sensorValue.ToString("F2", Provider), sensorValue.ToString)
-                    If sensorValue < TirLowLimit(NativeMmolL) Then
+                    If sensorValue < GetTirLowLimit() Then
                         dgv.CellFormattingApplyColor(e, highlightColor:=Color.Red, isUri:=False)
-                    ElseIf sensorValue > TirHighLimit() Then
+                    ElseIf sensorValue > GetTirHighLimit() Then
                         dgv.CellFormattingApplyColor(e, highlightColor:=Color.Yellow, isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case $"{partialKey}MgdL"
                     e.Value = Convert.ToString(e.Value)
-                    If sensorValue < TirLowLimit(asMmolL:=False) Then
+                    If sensorValue < GetTirLowLimit(asMmolL:=False) Then
                         dgv.CellFormattingApplyColor(e, highlightColor:=Color.Red, isUri:=False)
-                    ElseIf sensorValue > TirHighLimit() Then
+                    ElseIf sensorValue > GetTirHighLimit(asMmolL:=False) Then
                         dgv.CellFormattingApplyColor(e, highlightColor:=Color.Yellow, isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case $"{partialKey}MmolL"
                     e.Value = sensorValue.ToString("F2", Provider)
-                    If sensorValue.RoundSingle(decimalDigits:=1, considerValue:=False) < TirLowLimit(asMmolL:=True) Then
+                    If sensorValue.RoundSingle(decimalDigits:=1, considerValue:=False) < GetTirLowLimit(asMmolL:=True) Then
                         dgv.CellFormattingApplyColor(e, highlightColor:=Color.Red, isUri:=False)
-                    ElseIf sensorValue > TirHighLimit() Then
+                    ElseIf sensorValue > GetTirHighLimit(asMmolL:=True) Then
                         dgv.CellFormattingApplyColor(e, highlightColor:=Color.Yellow, isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)

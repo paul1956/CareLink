@@ -190,7 +190,6 @@ Friend Module Form1UpdateHelpers
         End If
 
         s_listOfSummaryRecords.Clear()
-        s_listOfUserSummaryRecord.Clear()
 
         Dim value As String = ""
         If RecentData.TryGetValue("clientTimeZoneName", value) Then
@@ -399,7 +398,7 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.timeFormat)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
                 Case NameOf(ServerDataIndexes.bgUnits)
-                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, BgUnitsNativeString))
+                    s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row, GetBgUnitsString()))
 
                 Case NameOf(ServerDataIndexes.maxAutoBasalRate)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
