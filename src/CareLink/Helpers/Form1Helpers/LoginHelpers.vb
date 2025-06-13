@@ -210,6 +210,21 @@ Friend Module LoginHelpers
     End Function
 
     ''' <summary>
+    '''  Converts a PNG <see cref="Bitmap"/> to an <see cref="Icon"/> object (with 32x32 size).
+    ''' </summary>
+    ''' <param name="bmp">The <see cref="Bitmap"/> to convert.</param>
+    ''' <returns>
+    '''  An <see cref="Icon"/> object created from the bitmap.
+    ''' </returns>
+    Public Function PngBitmapToIcon(bmp As Bitmap) As Icon
+        ' Optionally resize to 32x32 for best icon compatibility
+        Using resizedBmp As New Bitmap(bmp, New Size(32, 32))
+            Dim hIcon As IntPtr = resizedBmp.GetHicon()
+            Return Icon.FromHandle(hIcon)
+        End Using
+    End Function
+
+    ''' <summary>
     '''  Sets the last update time and time zone information on the main form's status bar.
     ''' </summary>
     ''' <param name="form1">The main application form.</param>

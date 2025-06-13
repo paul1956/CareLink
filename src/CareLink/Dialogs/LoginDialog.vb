@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.IO
+Imports System.Net
 Imports System.Net.Http
 
 Public Class LoginDialog
@@ -26,8 +27,20 @@ Public Class LoginDialog
         End Set
     End Property
 
-    Private Shared Sub ReportLoginStatus(loginStatus As TextBox, hasErrors As Boolean, Optional lastErrorMessage As String = Nothing, Optional LastResponseCode As Integer = 0)
-        If Client2.Auth_Error_Codes.Contains(LastResponseCode) Then
+    ''' <summary>
+    '''  Updates the login status UI based on the result of the login attempt.
+    ''' </summary>
+    ''' <param name="loginStatus">The <see cref="TextBox"/> to display status.</param>
+    ''' <param name="hasErrors">Indicates if errors occurred.</param>
+    ''' <param name="lastErrorMessage">The last error message, if any.</param>
+    ''' <param name="lastHttpStatusCode">The last HttpStatusCode code.</param>
+    Private Shared Sub ReportLoginStatus(
+        loginStatus As TextBox,
+        hasErrors As Boolean,
+        Optional lastErrorMessage As String = Nothing,
+        Optional lastHttpStatusCode As Integer = HttpStatusCode.OK)
+
+        If Client2.Auth_Error_Codes.Contains(lastHttpStatusCode) Then
             loginStatus.ForeColor = Color.Red
             loginStatus.Text = "Invalid Login Credentials"
             My.Settings.AutoLogin = False
@@ -67,6 +80,11 @@ Public Class LoginDialog
     End Sub
 
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+#Disable Warning WFO5001 ' Type is for evaluation purposes only and is subject to change or removal in future updates.
+        Me.Icon = If(Application.IsDarkModeEnabled,
+            PngBitmapToIcon(My.Resources.LoginLight),
+            PngBitmapToIcon(My.Resources.LoginDark))
+#Enable Warning WFO5001 ' Type is for evaluation purposes only and is subject to change or removal in future updates.
         _httpClient = New HttpClient()
         _httpClient.SetDefaultRequestHeaders()
         If _initialHeight = 0 Then
@@ -227,8 +245,8 @@ Public Class LoginDialog
             Me.DialogResult = DialogResult.OK
             Me.Hide()
         Else
-            ReportLoginStatus(Me.LoginStatus, True, lastErrorMessage, Me.Client.GetLastResponseCode)
-            If Client2.Auth_Error_Codes.Contains(Me.Client.GetLastResponseCode) Then
+            ReportLoginStatus(Me.LoginStatus, True, lastErrorMessage, Me.Client.GetHttpStatusCode)
+            If Client2.Auth_Error_Codes.Contains(Me.Client.GetHttpStatusCode) Then
                 Me.PasswordTextBox.Text = ""
                 Dim userRecord As CareLinkUserDataRecord = Nothing
                 If s_allUserSettingsData.TryGetValue(s_userName, userRecord) Then
@@ -236,7 +254,7 @@ Public Class LoginDialog
                 End If
             End If
 
-            Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"Response Code = {Me.Client.GetLastResponseCode}")
+            Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"Response Code = {Me.Client.GetHttpStatusCode}")
             Select Case MsgBox(
                     heading:=$"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!",
                     text:=networkDownMessage,
