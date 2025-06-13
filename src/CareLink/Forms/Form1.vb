@@ -1994,8 +1994,8 @@ Public Class Form1
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
         If String.IsNullOrWhiteSpace(GetWebViewCacheDirectory()) Then
-            s_webViewCacheDirectory = Path.Join(s_projectWebCache, Guid.NewGuid().ToString)
-            Directory.CreateDirectory(s_webViewCacheDirectory)
+            s_webView2CacheDirectory = Path.Join(s_projectWebCache, Guid.NewGuid().ToString)
+            Directory.CreateDirectory(s_webView2CacheDirectory)
         End If
     End Sub
 

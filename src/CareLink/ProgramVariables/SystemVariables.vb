@@ -21,7 +21,7 @@ Friend Module SystemVariables
     Friend s_password As String = ""
     Friend s_useLocalTimeZone As Boolean
     Friend s_userName As String = My.Settings.CareLinkUserName
-    Friend s_webViewCacheDirectory As String
+    Friend s_webView2CacheDirectory As String
     Friend Property CareLinkDecimalSeparator As Char = "."c
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property MaxBasalPerDose As Double
@@ -29,6 +29,12 @@ Friend Module SystemVariables
     Friend Property SentenceSeparator As Char = "."c
     Friend Property TreatmentInsulinRow As Single
 
+    ''' <summary>
+    '''  Gets the above hyperglycemia limit as a tuple of unsigned integer and string.
+    ''' </summary>
+    ''' <returns>
+    '''  A tuple containing the above hyper limit as an unsigned integer and its string representation.
+    ''' </returns>
     Friend Function GetAboveHyperLimit() As (Uint As UInteger, Str As String)
         Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.GetRoundedValue(decimalDigits:=1)
         Return If(aboveHyperLimit >= 0,
@@ -36,6 +42,12 @@ Friend Module SystemVariables
                   (CUInt(0), "??? "))
     End Function
 
+    ''' <summary>
+    '''  Gets the below hypoglycemia limit as a tuple of unsigned integer and string.
+    ''' </summary>
+    ''' <returns>
+    '''  A tuple containing the below hypo limit as an unsigned integer and its string representation.
+    ''' </returns>
     Friend Function GetBelowHypoLimit() As (Uint As UInteger, Str As String)
         Dim belowHyperLimit As Single = PatientData.BelowHypoLimit.GetRoundedValue(decimalDigits:=1)
         Return If(belowHyperLimit >= 0,
@@ -43,6 +55,12 @@ Friend Module SystemVariables
                   (CUInt(0), "??? "))
     End Function
 
+    ''' <summary>
+    '''  Gets the Y value for insulin plotting based on current SG records and units.
+    ''' </summary>
+    ''' <returns>
+    '''  The Y value for insulin plotting.
+    ''' </returns>
     Friend Function GetInsulinYValue() As Single
         Dim maxYScaled As Single = s_listOfSgRecords.Max(Of Single)(Function(sgR As SG) sgR.sg) + 2
         Const mmDlInsulinYValue As Integer = 330
@@ -56,12 +74,25 @@ Friend Module SystemVariables
                 If(s_listOfSgRecords.Count = 0 OrElse maxYScaled > mmDlInsulinYValue, 342, Math.Max(maxYScaled, 260))))
     End Function
 
+    ''' <summary>
+    '''  Gets the format string for SG values, optionally with sign.
+    ''' </summary>
+    ''' <param name="withSign">Whether to include a sign in the format.</param>
+    ''' <returns>
+    '''  The format string for SG values.
+    ''' </returns>
     Friend Function GetSgFormat(withSign As Boolean) As String
         Return If(withSign,
             If(NativeMmolL, $"+0{Provider.NumberFormat.NumberDecimalSeparator}0;-#{Provider.NumberFormat.NumberDecimalSeparator}0", "+0;-#"),
             If(NativeMmolL, $"0{Provider.NumberFormat.NumberDecimalSeparator}0", "0"))
     End Function
 
+    ''' <summary>
+    '''  Gets the current SG target value.
+    ''' </summary>
+    ''' <returns>
+    '''  The current SG target value.
+    ''' </returns>
     Friend Function GetSgTarget() As Single
         Return If(CurrentUser.CurrentTarget <> 0,
                   CurrentUser.CurrentTarget,
@@ -71,6 +102,12 @@ Friend Module SystemVariables
                     )
     End Function
 
+    ''' <summary>
+    '''  Gets the Time In Range (TIR) as a tuple of unsigned integer and string.
+    ''' </summary>
+    ''' <returns>
+    '''  A <see cref="tuple"/> containing the TIR as an unsigned integer and its string representation.
+    ''' </returns>
     Friend Function GetTIR() As (Uint As UInteger, Str As String)
         Dim timeInRange As Integer = PatientData.TimeInRange
         Return If(timeInRange > 0,
@@ -78,6 +115,17 @@ Friend Module SystemVariables
                   (CUInt(0), "??? "))
     End Function
 
+    ''' <summary>
+    '''  Gets the high limit for Time In Range (TIR), based on <see cref="NativeMmolL"/>,
+    '''  optionally user can control units by specifying <paramref name="asMmolL"/>
+    ''' </summary>
+    ''' <param name="asMmolL">
+    '''  Optional. If <see langword="True"/>, returns value as mmol/L; otherwise, as mg/dL.
+    '''  If not specified, uses <see cref="NativeMmolL"/>.
+    ''' </param>
+    ''' <returns>
+    '''  The high limit for TIR.
+    ''' </returns>
     Friend Function GetTirHighLimit(Optional asMmolL As Boolean = Nothing) As Single
         If asMmolL = Nothing Then
             asMmolL = NativeMmolL
@@ -85,11 +133,27 @@ Friend Module SystemVariables
         Return If(asMmolL, TirHighMmol10, TirHighMmDl180)
     End Function
 
+    ''' <summary>
+    '''  Gets the high limit for TIR with units as a formatted string.
+    ''' </summary>
+    ''' <returns>
+    '''  The high limit for TIR in the selected units.
+    ''' </returns>
     Friend Function GetTirHighLimitWithUnits() As String
         Return $"{GetTirHighLimit()} {GetBgUnitsString()}".
             Replace(CareLinkDecimalSeparator, Provider.NumberFormat.NumberDecimalSeparator)
     End Function
 
+    ''' <summary>
+    '''  Gets the low limit for Time In Range (TIR), optionally as mmol/L.
+    ''' </summary>
+    ''' <param name="asMmolL">
+    '''  Optional. If <see langword="True"/>, returns value as mmol/L; otherwise, as mg/dL.
+    '''  If not specified, uses <see cref="NativeMmolL"/>.
+    ''' </param>
+    ''' <returns>
+    '''  The low limit for TIR.
+    ''' </returns>
     Friend Function GetTirLowLimit(Optional asMmolL As Boolean = Nothing) As Single
         If asMmolL = Nothing Then
             asMmolL = NativeMmolL
@@ -97,21 +161,45 @@ Friend Module SystemVariables
         Return If(asMmolL, TirLowMmDl3_9, TirLowMmol70)
     End Function
 
+    ''' <summary>
+    '''  Gets the low limit for TIR with units as a formatted string.
+    ''' </summary>
+    ''' <returns>
+    '''  The low limit for TIR with units.
+    ''' </returns>
     Friend Function GetTirLowLimitWithUnits() As String
         Return $"{GetTirLowLimit()} {GetBgUnitsString()}".
             Replace(CareLinkDecimalSeparator, Provider.NumberFormat.NumberDecimalSeparator)
     End Function
 
+    ''' <summary>
+    '''  Gets the maximum Y value for plotting, based on <see cref="NativeMmolL"/> setting.
+    ''' </summary>
+    ''' <returns>
+    '''  The maximum Y value for plotting.
+    ''' </returns>
     Friend Function GetYMaxValueFromNativeMmolL() As Single
         Return If(NativeMmolL, MaxMmolL22_2, MaxMmDl400)
     End Function
 
+    ''' <summary>
+    '''  Gets the minimum Y value for plotting, based on <see cref="NativeMmolL"/> setting.
+    ''' </summary>
+    ''' <returns>
+    '''  The minimum Y value for plotting in the selected units.
+    ''' </returns>
     Friend Function GetYMinValueFromNativeMmolL() As Single
         Return If(NativeMmolL, MinMmolL2_8, MinMmDl50)
     End Function
 
+    ''' <summary>
+    '''  Gets the directory path for the WebView2 cache.
+    ''' </summary>
+    ''' <returns>
+    '''  The WebView2 cache directory path as a string.
+    ''' </returns>
     Public Function GetWebViewCacheDirectory() As String
-        Return s_webViewCacheDirectory
+        Return s_webView2CacheDirectory
     End Function
 
 End Module
