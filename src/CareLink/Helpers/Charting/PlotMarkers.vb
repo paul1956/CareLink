@@ -11,14 +11,14 @@ Friend Module PlotMarkers
     Private Sub AddSgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, sgValueString As String, sgValue As Single)
         AddMarkerPoint(markerSeriesPoints, markerOADateTime, sgValue, Color.DarkOrange)
         If Not Single.IsNaN(sgValue) Then
-            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {sgValueString} {BgUnitsNativeString}"
+            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {sgValueString} {GetBgUnitsString()}"
         End If
     End Sub
 
     <Extension>
     Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, sgValue As Single, entry As Marker)
         AddMarkerPoint(markerSeriesPoints, markerOADateTime, sgValue, Color.Red)
-        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {If(CBool(entry.GetStringValueFromJson("calibrationSuccess")), "accepted", "not accepted")}: {entry.GetSingleValueFromJson("unitValue")} {BgUnitsNativeString}"
+        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {If(CBool(entry.GetStringValueFromJson("calibrationSuccess")), "accepted", "not accepted")}: {entry.GetSingleValueFromJson("unitValue")} {GetBgUnitsString()}"
     End Sub
 
     Private Sub AddMarkerPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, sgValue As Single, markerColor As Color)
@@ -74,8 +74,8 @@ Friend Module PlotMarkers
                 sgValue = markerEntry.GetSingleValueFromJson("unitValue")
 
                 If Not Single.IsNaN(sgValue) Then
-                    sgValue = Math.Min(GetYMaxValue(), sgValue)
-                    sgValue = Math.Max(GetYMinValue(), sgValue)
+                    sgValue = Math.Min(GetYMaxValueFromNativeMmolL(), sgValue)
+                    sgValue = Math.Max(GetYMinValueFromNativeMmolL(), sgValue)
                 End If
                 Dim markerSeriesPoints As DataPointCollection = pageChart.Series(MarkerSeriesName).Points
                 Select Case markerEntry.Type
@@ -91,7 +91,7 @@ Friend Module PlotMarkers
                             .PlotBasalSeries(
                                 markerOADatetime,
                                 amount,
-                                bolusRow:=GetYMaxValue(),
+                                bolusRow:=GetYMaxValueFromNativeMmolL(),
                                 insulinRow:=GetInsulinYValue(),
                                 legendText:="Basal Series",
                                 DrawFromBottom:=False,
@@ -103,7 +103,7 @@ Friend Module PlotMarkers
                             .PlotBasalSeries(
                                 markerOADatetime,
                                 amount,
-                                bolusRow:=GetYMaxValue(),
+                                bolusRow:=GetYMaxValueFromNativeMmolL(),
                                 insulinRow:=GetInsulinYValue(),
                                 legendText:="Basal Series",
                                 DrawFromBottom:=False,
@@ -117,7 +117,7 @@ Friend Module PlotMarkers
                                     .PlotBasalSeries(
                                         markerOADatetime,
                                         amount:=autoCorrection,
-                                        bolusRow:=GetYMaxValue(),
+                                        bolusRow:=GetYMaxValueFromNativeMmolL(),
                                         insulinRow:=GetInsulinYValue(),
                                         legendText:="Auto Correction",
                                         DrawFromBottom:=False,
@@ -146,8 +146,8 @@ Friend Module PlotMarkers
                         End Select
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then Continue For
-                        If markerMealDictionary.TryAdd(markerOADatetime, GetYMinValue()) Then
-                            markerSeriesPoints.AddXY(markerOADatetime, GetYMinValue() + If(NativeMmolL, s_mealImage.Height / 2 / MmolLUnitsDivisor, s_mealImage.Height / 2))
+                        If markerMealDictionary.TryAdd(markerOADatetime, GetYMinValueFromNativeMmolL()) Then
+                            markerSeriesPoints.AddXY(markerOADatetime, GetYMinValueFromNativeMmolL() + If(NativeMmolL, s_mealImage.Height / 2 / MmolLUnitsDivisor, s_mealImage.Height / 2))
                             markerSeriesPoints.Last.Color = Color.FromArgb(10, Color.Yellow)
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
                             markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(10, Color.Yellow)
@@ -160,7 +160,7 @@ Friend Module PlotMarkers
                             lastTimeChangeRecord = New TimeChange(markerEntry, recordNumber:=1)
                             markerOADatetime = New OADate(lastTimeChangeRecord.Timestamp)
                             .AddXY(markerOADatetime, 0)
-                            .AddXY(markerOADatetime, GetYMaxValue())
+                            .AddXY(markerOADatetime, GetYMaxValueFromNativeMmolL())
                             .AddXY(markerOADatetime, Double.NaN)
                         End With
                     Case "LOW_GLUCOSE_SUSPENDED"
@@ -171,7 +171,7 @@ Friend Module PlotMarkers
                                     .PlotBasalSeries(
                                         markerOADateTime:=kvp.Key,
                                         amount:=kvp.Value,
-                                        bolusRow:=GetYMaxValue(),
+                                        bolusRow:=GetYMaxValueFromNativeMmolL(),
                                         insulinRow:=GetInsulinYValue(),
                                         legendText:="Basal Series",
                                         DrawFromBottom:=False,

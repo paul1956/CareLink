@@ -6,10 +6,9 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module CreateChartItems
+    Private ReadOnly s_mgdLValues As New List(Of Single) From {MinMmDl50, 100, 150, 200, 250, 300, 350, MaxMmDl400}
 
-    Private ReadOnly s_mgdLValues As New List(Of Single) From {50, 100, 150, 200, 250, 300, 350, 400}
-
-    Private ReadOnly s_mmolLValues As New List(Of Single) From {2.8, 5, 8, 11, 14, 17, 20, 22.2}
+    Private ReadOnly s_mmolLValues As New List(Of Single) From {MinMmolL2_8, 5, 8, 11, 14, 17, 20, MaxMmolL22_2}
 
     ''' <summary>
     '''  Creates a base series with common properties for charting.
@@ -211,7 +210,7 @@ Friend Module CreateChartItems
                 End With
 
                 For i As Integer = 0 To s_mmolLValues.Count - 1
-                    Dim yMin As Single = GetYMinValue()
+                    Dim yMin As Single = GetYMinValueFromNativeMmolL()
                     .CustomLabels.Add(
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,

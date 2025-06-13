@@ -7,6 +7,16 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module PlotSuspend
 
+    ''' <summary>
+    '''  Plots the area on the <see cref="Chart"/> where insulin delivery was suspended due to low glucose events.
+    ''' </summary>
+    ''' <param name="pageChart">The <see cref="Chart"/> control to plot onto.</param>
+    ''' <param name="SuspendSeries">The <see cref="Series"/> object representing the suspend area.</param>
+    ''' <remarks>
+    '''  This method iterates through the list of low glucose suspension markers and plots the corresponding
+    '''  area on the chart, using a specific color for the suspend period. If a suspension is detected,
+    '''  it fills the area between the suspension start and end times, handling multiple suspension events.
+    ''' </remarks>
     <Extension>
     Friend Sub PlotSuspendArea(pageChart As Chart, SuspendSeries As Series)
         If s_listOfLowGlucoseSuspendedMarkers.Count = 1 AndAlso s_listOfLowGlucoseSuspendedMarkers(0).deliverySuspended = False Then
@@ -22,7 +32,7 @@ Friend Module PlotSuspend
                     suspended = True
                     .AddXY(suspendRecord.Timestamp, 0)
                     .Last.Color = lineColor
-                    .AddXY(suspendRecord.Timestamp, GetYMaxValue())
+                    .AddXY(suspendRecord.Timestamp, GetYMaxValueFromNativeMmolL())
                     Dim stopTimeSpan As TimeSpan =
                                       If(Not e.IsLast,
                                          s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).Timestamp - suspendRecord.Timestamp,
@@ -32,7 +42,7 @@ Friend Module PlotSuspend
                     For i As Long = 1 To CInt(Math.Ceiling(stopTimeSpan.TotalMinutes / 5)) - 1
                         .AddXY(suspendRecord.Timestamp.AddMinutes(i * 5), 0)
                         .Last.Color = lineColor
-                        .AddXY(suspendRecord.Timestamp.AddMinutes(i * 5), GetYMaxValue())
+                        .AddXY(suspendRecord.Timestamp.AddMinutes(i * 5), GetYMaxValueFromNativeMmolL())
                         .Last.Color = lineColor
                     Next
 

@@ -33,6 +33,18 @@ Public Class Client2
         End Set
     End Property
 
+    ''' <summary>
+    '''  Initializes a new instance of the <see cref="Client2"/> class.
+    ''' </summary>
+    ''' <param name="tokenFile">
+    '''  Optional. The token file name to use for authentication. Defaults to <c>logindata.json</c>.
+    ''' </param>
+    ''' <remarks>
+    '''  <para>
+    '''   The constructor sets up the <see cref="HttpClient"/>, initializes configuration and token fields,
+    '''   and prepares the client for authentication and API communication.
+    '''  </para>
+    ''' </remarks>
     Public Sub New(Optional tokenFile As String = TokenBaseFileName)
         ' Authorization
         _tokenBaseFileName = tokenFile
@@ -56,14 +68,18 @@ Public Class Client2
     Public Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
 
     ''' <summary>
-    '''  Reads the token file and returns the token data as a <see cref="JsonElement"/>.
+    '''  Refreshes the authentication token using the provided configuration and token data.
     ''' </summary>
-    ''' <param name="config"></param>
-    ''' <param name="tokenDataElement"></param>
+    ''' <param name="config">The API configuration as a <see cref="Dictionary(Of String, Object)"/>.</param>
+    ''' <param name="tokenDataElement">The current token data as a <see cref="JsonElement"/>.</param>
     ''' <returns>
-    '''  A <see cref="JsonElement"/> containing the token data.
-    '''  If the file does not exist or is empty, returns an empty <see cref="JsonElement"/>.
+    '''  A <see cref="Task(Of JsonElement)"/> containing the refreshed token data.
     ''' </returns>
+    ''' <remarks>
+    '''  <para>
+    '''   This method attempts to refresh the access token using the refresh token. If the refresh fails,
+    '''   the user may be prompted to log in again.
+    '''  </para>
     Private Function DoRefresh(config As Dictionary(Of String, Object), tokenDataElement As JsonElement) As Task(Of JsonElement)
         Debug.WriteLine(NameOf(DoRefresh))
         _httpClient.SetDefaultRequestHeaders()
@@ -127,11 +143,13 @@ Public Class Client2
     End Function
 
     ''' <summary>
-    '''  Reads the token file and returns the token data as a <see cref="JsonElement"/>.
+    '''  Extracts the access token payload from the given token data.
     ''' </summary>
-    ''' <param name="userName">The username for which to read the token file.</param>
-    ''' <param name="tokenBaseFileName">The base filename for the token file.</param>
-    ''' <returns>A <see cref="JsonElement"/> containing the token data.</returns>
+    ''' <param name="token_data">The token data as a <see cref="JsonElement"/>.</param>
+    ''' <returns>
+    '''  A <see cref="Dictionary(Of String, Object)"/> containing the access token payload,
+    '''  or <see langword="Nothing"/> if extraction fails.
+    ''' </returns>
     Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, Object)
         Debug.WriteLine(NameOf(GetAccessTokenPayload))
         Try
@@ -151,6 +169,18 @@ Public Class Client2
         End Try
     End Function
 
+    ''' <summary>
+    '''  Attempts to download the device settings PDF file for the current user.
+    ''' </summary>
+    ''' <param name="pdfFileName">The file name to save the PDF as.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the PDF was successfully downloaded; otherwise, <see langword="False"/>.
+    ''' </returns>
+    ''' <remarks>
+    '''  <para>
+    '''   This method is not implemented for CareLink Partners and will always return <see langword="False"/>.
+    '''  </para>
+    ''' </remarks>
     Friend Function TryGetDeviceSettingsPdfFile(pdfFileName As String) As Boolean
         Dim authToken As String = ""
 
@@ -254,6 +284,15 @@ Public Class Client2
         Return False
     End Function
 
+    ''' <summary>
+    '''  Determines whether the provided access token payload is valid and not expired.
+    ''' </summary>
+    ''' <param name="access_token_payload">
+    '''  The access token payload as a <see cref="Dictionary(Of String, Object)"/>.
+    ''' </param>
+    ''' <returns>
+    '''  <see langword="True"/> if the token is valid; otherwise, <see langword="False"/>.
+    ''' </returns>
     Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, Object)) As Boolean
         Debug.WriteLine(NameOf(IsTokenValid))
         Try
@@ -285,11 +324,18 @@ Public Class Client2
     End Function
 
     ''' <summary>
-    '''  Initialize the client
-    '''  This function reads the token file, retrieves the access token payload,
-    '''  and sets up the configuration and user information.
+    '''  Initializes the client by reading the token file and setting up configuration and user data.
     ''' </summary>
-    ''' <returns><see langword="True"/> if initialization is successful, <see langword="False"/> otherwise.</returns>
+    ''' <returns>
+    '''  <see langword="True"/> if initialization is successful; otherwise, <see langword="False"/>.
+    ''' </returns>
+    ''' <remarks>
+    '''  <para>
+    '''   This method reads the token file, retrieves the access token payload, and sets up the API
+    '''   configuration and user information. If the token is invalid or expired, it attempts to refresh
+    '''   the token.
+    '''  </para>
+    ''' </remarks>
     Private Function internalInit() As Boolean
         _tokenDataElement = ReadTokenFile(userName:=s_userName, tokenBaseFileName:=_tokenBaseFileName)
         If _tokenDataElement.ValueKind.IsNullOrUndefined Then
@@ -346,13 +392,15 @@ Public Class Client2
     End Function
 
     ''' <summary>
-    '''  Get data from the API
-    '''  This function sends a request to the API to retrieve data based on the provided parameters.
+    '''  Sends a request to the API to retrieve data for the specified user and role.
     ''' </summary>
-    ''' <param name="username"></param>
-    ''' <param name="role"></param>
-    ''' <param name="patientId"></param>
-    ''' <returns><see cref="Dictionary"/> containing the retrieved data.</returns>
+    ''' <param name="username">The username for which to retrieve data.</param>
+    ''' <param name="role">The role of the user (e.g., "patient" or "carepartner").</param>
+    ''' <param name="patientId">The patient ID, if applicable.</param>
+    ''' <returns>
+    '''  A <see cref="Dictionary(Of String, Object)"/> containing the retrieved data,
+    '''  or <see langword="Nothing"/> if the request fails.
+    ''' </returns>
     Private Function GetData(username As String, role As String, patientId As String) As Dictionary(Of String, Object)
         Debug.WriteLine(NameOf(GetData))
         _httpClient.SetDefaultRequestHeaders()
@@ -395,6 +443,15 @@ Public Class Client2
         Return Nothing
     End Function
 
+    ''' <summary>
+    '''  Retrieves the patient information for the current user asynchronously.
+    ''' </summary>
+    ''' <param name="config">The API configuration as a <see cref="JsonElement"/>.</param>
+    ''' <param name="token_data">The token data as a <see cref="JsonElement"/>.</param>
+    ''' <returns>
+    '''  A <see cref="Task(Of Dictionary(Of String, String))"/> containing the patient information,
+    '''  or <see langword="Nothing"/> if not found.
+    ''' </returns>
     Private Async Function GetPatient(config As JsonElement, token_data As JsonElement) As Task(Of Dictionary(Of String, String))
         Debug.WriteLine(NameOf(GetPatient))
         Dim url As String = $"{CStr(config.ConvertJsonElementToDictionary("baseUrlCareLink"))}/links/patients"
@@ -423,6 +480,15 @@ Public Class Client2
         Return Nothing
     End Function
 
+    ''' <summary>
+    '''  Retrieves the user information string from the API.
+    ''' </summary>
+    ''' <param name="config">The API configuration as a <see cref="JsonElement"/>.</param>
+    ''' <param name="tokenData">The token data as a <see cref="JsonElement"/>.</param>
+    ''' <returns>
+    '''  A <see langword="String"/> containing the user information in JSON format,
+    '''  or <see langword="Nothing"/> if the request fails.
+    ''' </returns>
     Private Function GetUserString(config As JsonElement, tokenData As JsonElement) As String
         Debug.WriteLine(NameOf(GetUserString))
         Dim url As String = $"{config.GetProperty("baseUrlCareLink").GetString()}/users/me"
@@ -464,7 +530,11 @@ Public Class Client2
     '''  If the access token cannot be refreshed or the API call fails, an error message is returned.
     ''' </summary>
     ''' <returns>
-    '''  A <see langword="String"/> indicating the status of the operation, or an error message if the operation fails.
+    '''  <para>
+    '''   This function checks if the access token is valid, attempts to refresh it if necessary, and then
+    '''   sends a request to the API to obtain the latest patient data. If the access token cannot be
+    '''   refreshed or the API call fails, an error message is returned.
+    '''  </para>
     ''' </returns>
     Public Function GetRecentData() As String
         ' Check if access token is valid
@@ -525,6 +595,18 @@ Public Class Client2
         Return lastErrorMessage
     End Function
 
+    ''' <summary>
+    '''  Initializes the client and attempts to authenticate and set up user data.
+    ''' </summary>
+    ''' <returns>
+    '''  <see langword="True"/> if initialization is successful; otherwise, <see langword="False"/>.
+    ''' </returns>
+    ''' <remarks>
+    '''  <para>
+    '''   This method attempts to initialize the client twice, refreshing the token if necessary. If both
+    '''   attempts fail, it returns <see langword="False"/>.
+    '''  </para>
+    ''' </remarks>
     Public Function Init() As Boolean
         ' First try
         If Not Me.internalInit() Then

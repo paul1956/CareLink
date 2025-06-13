@@ -139,7 +139,7 @@ Public Module UnicodeNewline
         Return result
     End Function
 
-    ''' <Summary>
+    ''' <summary>
     '''  Joins an array of strings into a single string with the specified delimiter.
     ''' </summary>
     ''' <param name="lines">Array of strings to join.</param>
@@ -150,9 +150,9 @@ Public Module UnicodeNewline
         Return String.Join(separator:=delimiter, lines)
     End Function
 
-    ''' <Summary>
+    ''' <summary>
     '''  Normalizes line endings in a string to a specified delimiter (default is vbCrLf).
-    ''' </Summary>
+    ''' </summary>
     ''' <param name="lines">String containing lines to normalize.</param>
     ''' <param name="delimiter">Delimiter to use for normalization (default is vbCrLf).</param>
     ''' <returns>A string with normalized line endings.</returns>
