@@ -7,6 +7,20 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module PlotSeriesSg
 
+    ''' <summary>
+    '''  Plots the SG <see cref="Series"/> on the specified <paramref name="Chart"/>,
+    '''  handling missing or out-of-range values and coloring points based on TIR (Time In Range) limits.
+    ''' </summary>
+    ''' <param name="chart">The <paramref name="Chart"/> control to plot onto.</param>
+    ''' <param name="HomePageMealRow">The Y-value to use for missing or invalid SG data points.</param>
+    ''' <remarks>
+    '''  This method iterates through the global list of SG records, plotting each value on the chart.
+    '''  Points are colored based on their value relative to TIR limits:
+    '''  - Yellow if above the high limit
+    '''  - Red if below the low limit
+    '''  - White if within range
+    ''' Missing or invalid values are plotted as transparent and marked as empty.
+    ''' </remarks>
     <Extension>
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
         For Each sgRecordWithIndex As IndexClass(Of SG) In s_listOfSgRecords.WithIndex()

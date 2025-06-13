@@ -26,17 +26,18 @@ If generally asked for XML comments, note they need to have a structure:
  * In the XML comments <see langword="True"/> and <see langword="False"/> should be used, not <see langword="true"/> or <see langword="false"/>.
  * Try to wrap after 100 characters, always wrap after 120 characters, except <param name="..."/> sections which should never be wrapped.
  * Only for XML Comments use 1-space indentation (see example below) and use triple-quote-style for the Text Lines not a single-quote:
-   ''' <Summary>
+   ''' <summary>
    '''  Summary text.
-   ''' </Summary>
-   ''' <Remarks>
-   '''  <Para>This is a sample to guide an LLM to the structuring of short docu-tags.</Para>
-   '''  <Para>This paragraph summarizes how to create effective documentation for code comments.</Para>
-   '''  <Para>It is important to keep comments clear and concise for better code readability.</Para>
-   '''  <Para>
+   ''' </summary>
+   ''' <param name="SomeName">This is a sample of a parameter, is is never wrapped.</param>
+   ''' <remarks>
+   '''  <para>This is a sample to guide an LLM to the structuring of short docu-tags.</para>
+   '''  <para>This paragraph summarizes how to create effective documentation for code comments.</para>
+   '''  <para>It is important to keep comments clear and concise for better code readability.</Para>
+   '''  <para>
    '''   It supports formatting for structured documentation and aids in clear communication.
-   '''  </Para>
-   ''' </Remarks>
+   '''  </para>
+   ''' </remarks>
 
  * Always use the <see cref="..."/> tag for references to other members.
  * All Boolean values passed to Subs or Functions should use argument name := True or := False.

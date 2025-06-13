@@ -7,6 +7,14 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module PlotSeriesLimits
 
+    ''' <summary>
+    '''  Generates an array mapping each <see cref="SG"/> record index to the corresponding limit record index.
+    ''' </summary>
+    ''' <param name="count">The number of SG records minus one.</param>
+    ''' <returns>
+    '''  An array of integers where each element represents the index of the limit record
+    '''  to be used for the corresponding SG record.
+    ''' </returns>
     Private Function GetLimitsList(count As Integer) As Integer()
         Dim limitsIndexList(count) As Integer
         Dim limitsIndex As Integer = 0
