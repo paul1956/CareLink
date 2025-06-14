@@ -121,7 +121,13 @@ Friend Module HttpClientExtensions
     '''  The <see cref="HttpResponseMessage"/> returned by the POST request.
     ''' </returns>
     <Extension>
-    Public Function Post(httpClient As HttpClient, url As StringBuilder, Optional headers As Dictionary(Of String, String) = Nothing, Optional params As Dictionary(Of String, String) = Nothing, Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
+    Public Function Post(
+        httpClient As HttpClient,
+        url As StringBuilder,
+        Optional headers As Dictionary(Of String, String) = Nothing,
+        Optional params As Dictionary(Of String, String) = Nothing,
+        Optional data As Dictionary(Of String, String) = Nothing) As HttpResponseMessage
+
         If params IsNot Nothing Then
             url.Append("?"c)
             For Each header As KeyValuePair(Of String, String) In params

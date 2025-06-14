@@ -3,34 +3,72 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class PumpSetupDialog
+
+    ''' <summary>
+    '''  Backing field for the <see cref="Pdf"/> property.
+    ''' </summary>
     Private _pdf As PdfSettingsRecord
 
+    ''' <summary>
+    '''  Sets the PDF settings record used to populate the dialog.
+    ''' </summary>
+    ''' <value>The <see cref="PdfSettingsRecord"/> containing pump configuration data.</value>
     Public WriteOnly Property Pdf As PdfSettingsRecord
         Set
             _pdf = Value
         End Set
     End Property
 
+    ''' <summary>
+    '''  Returns a string representation of a <see cref="TimeOnly"/> value, padded to a standard width if necessary.
+    ''' </summary>
+    ''' <param name="tOnly">The <see cref="TimeOnly"/> value to format.</param>
+    ''' <returns>A string representation of the time, padded to a standard width.</returns>
     Private Shared Function StandardTimeOnlyWidth(tOnly As TimeOnly) As String
         Dim tAsString As String = tOnly.ToString
         If tAsString.Length < 7 Then Return tAsString
         Return tAsString.PadLeft(9)
     End Function
 
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.Paint"/> event for high and low alert DataGridViews.
+    '''  Paints a message if no records are found.
+    ''' </summary>
+    ''' <param name="sender">The event sender.</param>
+    ''' <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
     Private Sub DataGridView_Paint(sender As Object, e As PaintEventArgs) Handles DataGridViewHighAlert.Paint, DataGridViewLowAlert.Paint
         DgvPaintNoRecordsFound(sender, e)
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.SelectionChanged"/> event for high and low alert DataGridViews.
+    '''  Clears the selection to prevent user selection.
+    ''' </summary>
+    ''' <param name="sender">The event sender.</param>
+    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     Private Sub DataGridViewHighAlert_SelectionChanged(sender As Object, e As EventArgs) Handles DataGridViewHighAlert.SelectionChanged, DataGridViewLowAlert.SelectionChanged
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.ClearSelection()
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="OK_Button"/> click event.
+    '''  Sets the dialog result to OK and closes the dialog.
+    ''' </summary>
+    ''' <param name="sender">The event sender.</param>
+    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
         Me.DialogResult = DialogResult.OK
         Me.Close()
     End Sub
 
+    ''' <summary>
+    '''  Handles the dialog's <see cref="Form.Shown"/> event.
+    '''  Populates all UI controls with data from the <see cref="_pdf"/> settings record.
+    ''' </summary>
+    ''' <param name="sender">The event sender.</param>
+    ''' <param name="e1">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <exception cref="NullReferenceException">Thrown if <see cref="_pdf"/> is not set.</exception>
     Private Sub PumpSetupDialog_Shown(sender As Object, e1 As EventArgs) Handles MyBase.Shown
         If _pdf Is Nothing Then
             Throw New NullReferenceException(NameOf(_pdf))

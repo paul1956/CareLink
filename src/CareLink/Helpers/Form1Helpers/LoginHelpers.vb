@@ -87,8 +87,12 @@ Friend Module LoginHelpers
                     Dim result As DialogResult = LoginDialog.ShowDialog(mainForm)
                     Select Case result
                         Case DialogResult.OK
+                            mainForm.TabControlPage1.Visible = True
+                            mainForm.TabControlPage2.Visible = True
                             Exit Do
                         Case DialogResult.Cancel
+                            mainForm.TabControlPage1.Visible = False
+                            mainForm.TabControlPage2.Visible = False
                             StartOrStopServerUpdateTimer(serverTimerEnabled)
                             Return False
                         Case DialogResult.Retry
@@ -207,6 +211,21 @@ Friend Module LoginHelpers
     ''' </returns>
     Friend Function NetworkUnavailable() As Boolean
         Return Not My.Computer.Network.IsAvailable
+    End Function
+
+    ''' <summary>
+    '''  Converts a PNG <see cref="Bitmap"/> to an <see cref="Icon"/> object (with 32x32 size).
+    ''' </summary>
+    ''' <param name="bmp">The <see cref="Bitmap"/> to convert.</param>
+    ''' <returns>
+    '''  An <see cref="Icon"/> object created from the bitmap.
+    ''' </returns>
+    Public Function PngBitmapToIcon(bmp As Bitmap) As Icon
+        ' Optionally resize to 32x32 for best icon compatibility
+        Using resizedBmp As New Bitmap(bmp, New Size(32, 32))
+            Dim hIcon As IntPtr = resizedBmp.GetHicon()
+            Return Icon.FromHandle(hIcon)
+        End Using
     End Function
 
     ''' <summary>

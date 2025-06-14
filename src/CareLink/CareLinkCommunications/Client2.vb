@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.IO
+Imports System.Net
 Imports System.Net.Http
 Imports System.Net.Http.Headers
 Imports System.Text
@@ -17,7 +18,7 @@ Public Class Client2
     Private _config As Dictionary(Of String, Object)
     Private _country As String
     Private ReadOnly _httpClient As HttpClient
-    Private _lastApiStatus As Integer
+    Private _lastHttpStatusCode As HttpStatusCode
     Private _patientElement As Dictionary(Of String, String)
     Private _tokenDataElement As JsonElement
     Private _userElementDictionary As Dictionary(Of String, Object)
@@ -59,7 +60,7 @@ Public Class Client2
         _country = Nothing
 
         ' API status
-        _lastApiStatus = 0
+        _lastHttpStatusCode = 0
 
         _httpClient = New HttpClient
         _httpClient.SetDefaultRequestHeaders()
@@ -104,12 +105,12 @@ Public Class Client2
         Dim response As New HttpResponseMessage With {.StatusCode = Net.HttpStatusCode.GatewayTimeout}
         Try
             response = _httpClient.PostAsync(tokenUrl, content).Result
-            _lastApiStatus = response.StatusCode
-            Debug.WriteLine($"   status: {_lastApiStatus}")
+            _lastHttpStatusCode = response.StatusCode
+            Debug.WriteLine($"   status: {_lastHttpStatusCode}")
 
             If response.StatusCode <> Net.HttpStatusCode.OK Then
                 If MsgBox(
-                    heading:=$"ERROR: Failed to refresh token, status {_lastApiStatus}",
+                    heading:=$"ERROR: Failed to refresh token, status {_lastHttpStatusCode}",
                     text:="Do you want to try logging in again?",
                     buttonStyle:=MsgBoxStyle.YesNo,
                     title:="New Login Required") <> MsgBoxResult.Yes Then
@@ -371,7 +372,7 @@ Public Class Client2
         Catch ex As Exception
             Debug.WriteLine(ex.ToString())
 
-            If Auth_Error_Codes.Contains(_lastApiStatus) Then
+            If Auth_Error_Codes.Contains(_lastHttpStatusCode) Then
                 Try
                     _tokenDataElement = Me.DoRefresh(jsonConfigElement.ConvertJsonElementToDictionary, _tokenDataElement).Result
                     If Not (_tokenDataElement.ValueKind = JsonValueKind.Undefined OrElse _tokenDataElement.ValueKind = JsonValueKind.Null) Then
@@ -416,7 +417,7 @@ Public Class Client2
             value("role") = "patient"
         End If
 
-        _lastApiStatus = 0
+        _lastHttpStatusCode = 0
 
         Dim headers As New Dictionary(Of String, String)
         headers("mag-identifier") = tokenData("mag-identifier")
@@ -430,8 +431,8 @@ Public Class Client2
             encoding:=Encoding.UTF8,
             mediaType:="application/json")
             Using response As HttpResponseMessage = _httpClient.PostAsync(requestUri, content).Result
-                _lastApiStatus = response.StatusCode
-                Debug.WriteLine($"   status: {_lastApiStatus}")
+                _lastHttpStatusCode = response.StatusCode
+                Debug.WriteLine($"   status: {_lastHttpStatusCode}")
 
                 If response.IsSuccessStatusCode Then
                     Dim json As String = response.Content.ReadAsStringAsync().Result
@@ -463,10 +464,10 @@ Public Class Client2
             _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
         Next
 
-        _lastApiStatus = 0
+        _lastHttpStatusCode = 0
         Using response As HttpResponseMessage = Await _httpClient.GetAsync(url)
-            _lastApiStatus = response.StatusCode
-            Debug.WriteLine($"   status: {_lastApiStatus}")
+            _lastHttpStatusCode = response.StatusCode
+            Debug.WriteLine($"   status: {_lastHttpStatusCode}")
 
             If response.IsSuccessStatusCode Then
                 Dim content As String = Await response.Content.ReadAsStringAsync()
@@ -504,8 +505,8 @@ Public Class Client2
 
         ' Send the request
         Dim response As HttpResponseMessage = _httpClient.SendAsync(request).Result
-        _lastApiStatus = response.StatusCode
-        Debug.WriteLine($"   status: {_lastApiStatus}")
+        _lastHttpStatusCode = response.StatusCode
+        Debug.WriteLine($"   status: {_lastHttpStatusCode}")
 
         Return If(response.IsSuccessStatusCode,
             response.Content.ReadAsStringAsync().Result,
@@ -513,14 +514,14 @@ Public Class Client2
     End Function
 
     ''' <summary>
-    '''  Gets the last HTTP response status code received from the API.
+    '''  Gets the last <see cref="HttpStatusCode"/> received from the API.
     ''' </summary>
     ''' <returns>
     '''  An <see langword="Integer"/> representing the last API response status code.
     ''' </returns>
 
-    Public Function GetLastResponseCode() As Integer
-        Return _lastApiStatus
+    Public Function GetHttpStatusCode() As HttpStatusCode
+        Return _lastHttpStatusCode
     End Function
 
     ''' <summary>
@@ -566,7 +567,7 @@ Public Class Client2
         End Try
 
         ' Check API response
-        If Auth_Error_Codes.Contains(_lastApiStatus) Then
+        If Auth_Error_Codes.Contains(_lastHttpStatusCode) Then
             ' Try to refresh token
             _tokenDataElement = Me.DoRefresh(_config, _tokenDataElement).Result
             _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
