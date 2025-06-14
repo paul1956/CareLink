@@ -12,6 +12,8 @@ Imports System.Text
 Public Class DataGridViewNumericUpDownColumn
     Inherits DataGridViewColumn
 
+    Private Const Browsable As Boolean = False
+
     ''' <summary>
     '''  Constructor for the <see cref="DataGridViewNumericUpDownColumn"/> class.
     ''' </summary>
@@ -22,7 +24,7 @@ Public Class DataGridViewNumericUpDownColumn
     ''' <summary>
     '''  Represents the implicit cell that gets cloned when adding rows to the grid.
     ''' </summary>
-    <Browsable(False), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
+    <Browsable(Browsable), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Overrides Property CellTemplate As DataGridViewCell
         Get
             Return MyBase.CellTemplate

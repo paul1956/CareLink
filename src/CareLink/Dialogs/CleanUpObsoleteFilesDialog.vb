@@ -106,12 +106,12 @@ Public Class CleanupStaleFilesDialog
     End Sub
 
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
-        Me.DialogResult = Me.OptionalConfirmFileDelete(True)
+        Me.DialogResult = Me.OptionalConfirmFileDelete(confirm:=True)
         Me.Close()
     End Sub
 
     Private Sub OkDoNotConfirm_Button_Click(sender As Object, e As EventArgs) Handles OkDoNotConfirm_Button.Click
-        Me.DialogResult = Me.OptionalConfirmFileDelete(False)
+        Me.DialogResult = Me.OptionalConfirmFileDelete(confirm:=False)
         Me.Close()
     End Sub
 

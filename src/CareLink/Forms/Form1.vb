@@ -1917,7 +1917,7 @@ Public Class Form1
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
-        CheckForUpdatesAsync(False)
+        CheckForUpdatesAsync(reportSuccessfulResult:=False)
 
         Dim caption As String = $"TIR Compliance, value in (){vbCrLf}Values<2 is Excellent and not shown{vbCrLf}CareLink<4 are considered OK, it is possible to improve{vbCrLf}Values>4 implies improvement needed{vbCrLf}"
         Me.ToolTip1.SetToolTip(Me.LowTirComplianceLabel, caption)
@@ -2051,7 +2051,7 @@ Public Class Form1
         If File.Exists(userSettingsPdfFile) Then
             If CurrentPdf.IsValid Then
                 Using dialog As New PumpSetupDialog
-                    StartOrStopServerUpdateTimer(False)
+                    StartOrStopServerUpdateTimer(Start:=False)
                     dialog.Pdf = CurrentPdf
                     dialog.ShowDialog(Me)
                 End Using
@@ -2070,7 +2070,7 @@ Public Class Form1
                 buttonStyle:=MsgBoxStyle.OkOnly,
                 title:="Missing Settings PDF File")
         End If
-        StartOrStopServerUpdateTimer(True)
+        StartOrStopServerUpdateTimer(Start:=True)
     End Sub
 
     ''' <summary>
@@ -2123,11 +2123,11 @@ Public Class Form1
             If openFileDialog1.ShowDialog(Me) = DialogResult.OK Then
                 Try
                     Dim fileNameWithPath As String = openFileDialog1.FileName
-                    StartOrStopServerUpdateTimer(False)
+                    StartOrStopServerUpdateTimer(Start:=False)
                     If File.Exists(fileNameWithPath) Then
                         RecentData = New Dictionary(Of String, String)
                         ExceptionHandlerDialog.ReportFileNameWithPath = fileNameWithPath
-                        If ExceptionHandlerDialog.ShowDialog(Me) = DialogResult.OK Then
+                        If ExceptionHandlerDialog.ShowDialog(owner:=Me) = DialogResult.OK Then
                             ExceptionHandlerDialog.ReportFileNameWithPath = ""
                             Try
                                 RecentData = LoadIndexedItems(ExceptionHandlerDialog.LocalRawData)
@@ -2142,12 +2142,12 @@ Public Class Form1
                             SetUpCareLinkUser(TestSettingsFileNameWithPath)
 
                             Try
-                                FinishInitialization(Me)
+                                FinishInitialization(mainForm:=Me)
                             Catch ex As Exception
                                 MessageBox.Show($"Error in {NameOf(FinishInitialization)}. Original error: {ex.Message}")
                             End Try
                             Try
-                                Me.UpdateAllTabPages(True)
+                                Me.UpdateAllTabPages(fromFile:=True)
                             Catch ex As Exception
                                 MessageBox.Show($"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
                             End Try
@@ -2801,13 +2801,13 @@ Public Class Form1
         Debug.WriteLine($"PowerModeChange {e.Mode}")
         Select Case e.Mode
             Case PowerModes.Suspend
-                StartOrStopServerUpdateTimer(False)
+                StartOrStopServerUpdateTimer(Start:=False)
                 s_shuttingDown = True
-                Me.SetLastUpdateTime("System Sleeping", "", True, Nothing)
+                Me.SetLastUpdateTime(msg:="System Sleeping", suffixMessage:="", highLight:=True, isDaylightSavingTime:=Nothing)
             Case PowerModes.Resume
-                Me.SetLastUpdateTime("System Awake", "", True, Nothing)
+                Me.SetLastUpdateTime(msg:="System Awake", suffixMessage:="", highLight:=True, isDaylightSavingTime:=Nothing)
                 s_shuttingDown = False
-                StartOrStopServerUpdateTimer(True, ThirtySecondInMilliseconds \ 3)
+                StartOrStopServerUpdateTimer(Start:=True, interval:=ThirtySecondInMilliseconds \ 3)
                 DebugPrint($"restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
         End Select
 
@@ -2823,7 +2823,7 @@ Public Class Form1
     '''  The method checks if updates are in progress, retrieves recent data, and updates the UI accordingly.
     ''' </remarks>
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
-        StartOrStopServerUpdateTimer(False)
+        StartOrStopServerUpdateTimer(Start:=False)
         Dim lastErrorMessage As String = String.Empty
         SyncLock _updatingLock
             If _updating Then
@@ -2840,7 +2840,7 @@ Public Class Form1
                                 Case DialogResult.OK
                                     Exit Do
                                 Case DialogResult.Cancel
-                                    StartOrStopServerUpdateTimer(False)
+                                    StartOrStopServerUpdateTimer(Start:=False)
                                     Return
                                 Case DialogResult.Retry
                             End Select
@@ -3597,7 +3597,7 @@ Public Class Form1
                     markerInsulinDictionary:=s_summaryMarkerInsulinDictionary,
                     markerMealDictionary:=s_summaryMarkerMealDictionary)
                 .PlotSgSeries(GetYMinValueFromNativeMmolL())
-                .PlotHighLowLimitsAndTargetSg(False)
+                .PlotHighLowLimitsAndTargetSg(targetSsOnly:=False)
                 Application.DoEvents()
             End With
         Catch ex As Exception
@@ -4161,7 +4161,7 @@ Public Class Form1
             Me.TreatmentMarkersChart.PlotSuspendArea(Me.TreatmentMarkerSuspendSeries)
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
             Me.TreatmentMarkersChart.PlotSgSeries(GetYMinValueFromNativeMmolL())
-            Me.TreatmentMarkersChart.PlotHighLowLimitsAndTargetSg(True)
+            Me.TreatmentMarkersChart.PlotHighLowLimitsAndTargetSg(targetSsOnly:=True)
         Catch ex As Exception
             Stop
             Throw New Exception($"{ex.DecodeException()} exception in {NameOf(InitializeTreatmentMarkersChart)}")
@@ -4219,7 +4219,7 @@ Public Class Form1
             Stop
         End If
 
-        CheckForUpdatesAsync(False)
+        CheckForUpdatesAsync(reportSuccessfulResult:=False)
 
         SyncLock _updatingLock
             _updating = True ' prevent paint

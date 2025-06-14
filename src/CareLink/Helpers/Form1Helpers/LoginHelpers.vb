@@ -64,7 +64,7 @@ Friend Module LoginHelpers
     '''  <see langword="True"/> if login and data update succeeded; otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function DoOptionalLoginAndUpdateData(mainForm As Form1, updateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
-        Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(False)
+        Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(Start:=False)
         s_listOfAutoBasalDeliveryMarkers.Clear()
         ProgramInitialized = False
         Dim fromFile As Boolean
@@ -100,7 +100,7 @@ Friend Module LoginHelpers
                 Loop
 
                 If Form1.Client Is Nothing OrElse Not Form1.Client.LoggedIn Then
-                    StartOrStopServerUpdateTimer(True, FiveMinutesInMilliseconds)
+                    StartOrStopServerUpdateTimer(Start:=True, interval:=FiveMinutesInMilliseconds)
 
                     If NetworkUnavailable() Then
                         ReportLoginStatus(mainForm.LoginStatus, hasErrors:=True, lastErrorMessage:="Network Unavailable")
@@ -117,7 +117,7 @@ Friend Module LoginHelpers
                 Dim lastErrorMessage As String = LoginDialog.Client.GetRecentData()
 
                 SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, forceUI:=False)
-                StartOrStopServerUpdateTimer(True, OneMinutesInMilliseconds)
+                StartOrStopServerUpdateTimer(Start:=True, interval:=OneMinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
                     ReportLoginStatus(mainForm.LoginStatus)
@@ -187,7 +187,9 @@ Friend Module LoginHelpers
 
         mainForm.PumpAITLabel.Text = CurrentUser.GetPumpAitString
         mainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
-        mainForm.UpdateAllTabPages(fromFile)
+        If updateAllTabs Then
+            mainForm.UpdateAllTabPages(fromFile)
+        End If
         Return True
     End Function
 

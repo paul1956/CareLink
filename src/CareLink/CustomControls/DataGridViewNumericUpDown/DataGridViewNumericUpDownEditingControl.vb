@@ -230,7 +230,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
     Private Sub NotifyDataGridViewOfValueChange()
         If Not _valueChanged Then
             _valueChanged = True
-            _dataGridView.NotifyCurrentCellDirty(True)
+            _dataGridView.NotifyCurrentCellDirty(dirty:=True)
         End If
     End Sub
 

@@ -43,14 +43,14 @@ Public Class OptionsDialog
             GraphColorDictionary = Me.SaveGraphColorDictionary.Clone
         End If
 
-        StartOrStopServerUpdateTimer(True)
+        StartOrStopServerUpdateTimer(Start:=True)
         Me.Cursor = Cursors.Default
         Application.DoEvents()
         Me.Close()
     End Sub
 
     Private Sub OptionsDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        StartOrStopServerUpdateTimer(False)
+        StartOrStopServerUpdateTimer(Start:=False)
         Me.SaveGraphColorDictionary = GraphColorDictionary.Clone
         Me.ItemNameComboBox.DataSource = GetColorDictionaryBindingSource()
         Me.ItemNameComboBox.DisplayMember = "Key"
