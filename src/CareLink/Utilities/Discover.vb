@@ -5,8 +5,22 @@
 Imports System.Net.Http
 Imports System.Text.Json
 
+''' <summary>
+'''  Provides methods for discovering and retrieving configuration data for supported countries and regions.
+''' </summary>
 Public Module Discover
 
+    ''' <summary>
+    '''  Retrieves the configuration JSON element for a specific country from the provided JSON data.
+    ''' </summary>
+    ''' <param name="country">The country code to look up.</param>
+    ''' <param name="jsonElementData">The root JSON element containing supported countries and configuration data.</param>
+    ''' <returns>
+    '''  The <see cref="JsonElement"/> representing the configuration for the specified country.
+    ''' </returns>
+    ''' <exception cref="Exception">
+    '''  Thrown if the country code is not supported or if the configuration cannot be found.
+    ''' </exception>
     Private Function GetConfigJson(country As String, jsonElementData As JsonElement) As JsonElement
         Dim config As JsonElement
         Dim region As JsonElement
@@ -38,6 +52,18 @@ Public Module Discover
         Return config
     End Function
 
+    ''' <summary>
+    '''  Retrieves the configuration element for a given country using the provided <see cref="HttpClient"/>.
+    ''' </summary>
+    ''' <param name="httpClient">The <see cref="HttpClient"/> used to fetch configuration data.</param>
+    ''' <param name="country">The country code to retrieve configuration for.</param>
+    ''' <returns>
+    '''  A <see cref="JsonElement"/> containing the configuration for the specified country,
+    '''  including a computed token URL.
+    ''' </returns>
+    ''' <exception cref="Exception">
+    '''  Thrown if the country code is not supported or if configuration data cannot be retrieved.
+    ''' </exception>
     Public Function GetConfigElement(httpClient As HttpClient, country As String) As JsonElement
         Debug.WriteLine(NameOf(GetConfigElement))
         Dim isUsRegion As Boolean = country.Equals("US", StringComparison.InvariantCultureIgnoreCase)
@@ -57,6 +83,14 @@ Public Module Discover
         Return JsonSerializer.Deserialize(Of JsonElement)(JsonSerializer.Serialize(mutableConfig, s_jsonSerializerOptions))
     End Function
 
+    ''' <summary>
+    '''  Downloads and decodes the discovery configuration data for a given country.
+    ''' </summary>
+    ''' <param name="country">The country code to retrieve discovery data for.</param>
+    ''' <returns>
+    '''  A <see cref="ConfigRecord"/> containing the configuration data for the specified country,
+    '''  or <see langword="Nothing"/> if an error occurs.
+    ''' </returns>
     Public Function GetDiscoveryData(country As String) As ConfigRecord
         Try
             Dim region As String = If(country.Equals("US", StringComparison.InvariantCultureIgnoreCase), "US", "EU")

@@ -5,11 +5,22 @@
 Imports System.Net.Http
 Imports System.Threading
 
+''' <summary>
+'''  Provides functionality to check for application updates by comparing the current version
+'''  with the latest release version available on GitHub.
+''' </summary>
 Friend Module UpdateChecker
     Private ReadOnly s_versionSearchKey As String = $"<a hRef=""/{GitOwnerName}/CareLink/releases/tag/"
     Private s_inCheckForUpdate As Integer = 0
     Private s_updateSleepCount As Integer = 0
 
+    ''' <summary>
+    '''  Retrieves the latest version string from the GitHub releases page.
+    ''' </summary>
+    ''' <returns>
+    '''  A <see cref="Task(Of String)"/> representing the asynchronous operation. The result contains the version string,
+    '''  or "0.0.0.0" if the version could not be determined.
+    ''' </returns>
     Private Async Function GetVersionString() As Task(Of String)
         Dim versionStr As String = "0.0.0.0"
         Dim responseBody As String
@@ -44,10 +55,10 @@ Friend Module UpdateChecker
     End Function
 
     ''' <summary>
-    '''  Compare version of executable with ReadMe.MkDir from GitHub
+    '''  Compares the GitHub version string with the current application version.
     ''' </summary>
-    ''' <param name="gitHubVersions">String containing version from GitHub</param>
-    ''' <param name="appVersion">Current application version</param>
+    ''' <param name="gitHubVersions">The version string retrieved from GitHub.</param>
+    ''' <param name="appVersion">The current application version.</param>
     ''' <returns><see langword="True"/> if application version or converter version is different</returns>
     Private Function IsNewerVersion(gitHubVersions As String, appVersion As Version) As Boolean
         Return gitHubVersions IsNot Nothing AndAlso
@@ -56,12 +67,12 @@ Friend Module UpdateChecker
     End Function
 
     ''' <summary>
-    '''  Find version string in HTML page
-    '''  https://GitHub.com/Paul1956/CareLink/releases
-    '''  Then look for version
-    '''  <a href="/Paul1956/CareLink/releases/tag/3.4.0.3" data-view-component="true" class="Link--primary">CareLink Display 3.4.0.3 x64</a>
+    '''  Checks for updates by comparing the current application version with the latest version available on GitHub.
+    '''  If a newer version is found, notifies the user and optionally prompts to install the update.
     ''' </summary>
-    ''' <param name="reportSuccessfulResult">Always report result when true</param>
+    ''' <param name="reportSuccessfulResult">
+    '''  If <see langword="True"/>, always reports the result to the user, even if no update is available.
+    ''' </param>
     Friend Async Sub CheckForUpdatesAsync(reportSuccessfulResult As Boolean)
         Try
             If reportSuccessfulResult Then

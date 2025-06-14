@@ -8,9 +8,9 @@ Imports System.Runtime.CompilerServices
 
 Public Module RegionCountryLists
 
-    ' <summary>
-    '  A dictionary mapping country names to their ISO 2-letter country codes.
-    ' </summary>
+    ''' <summary>
+    '''  A dictionary mapping country names to their ISO 2-letter country codes.
+    ''' </summary>
     Public ReadOnly s_countryCodeList As New Dictionary(Of String, String) From {
         {"United States", "US"},
         {"Albania", "AL"},
@@ -257,9 +257,9 @@ Public Module RegionCountryLists
         {"Venezuela", "South America"},
         {"Vietnam", "Asia"}}
 
-    ' <summary>
-    '  A dictionary mapping region names to themselves for region validation and lookup.
-    ' </summary>
+    ''' <summary>
+    '''  A dictionary mapping region names to themselves for region validation and lookup.
+    ''' </summary>
     Public ReadOnly s_regionList As New Dictionary(Of String, String) From {
         {"North America", "North America"},
         {"Africa", "Africa"},

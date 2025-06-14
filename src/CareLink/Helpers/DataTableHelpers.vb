@@ -15,12 +15,9 @@ Friend Module DataTableHelpers
     ''' <summary>
     '''  Adds a <see cref="DataRow"/> to a <see cref="DataTable"/> from the public properties of a class.
     ''' </summary>
-    ''' <param name="Table">
-    '''  A reference to the DataTable to insert the DataRow into.
-    ''' </param>
-    ''' <param name="ClassObject">
-    '''  The class containing the data to fill the DataRow from.
-    ''' </param>
+    ''' <typeparam name="T">The type of the class to add as a row.</typeparam>
+    ''' <param name="Table">A reference to the DataTable to insert the DataRow into.</param>
+    ''' <param name="ClassObject">The class containing the data to fill the DataRow from.</param>
     <Extension>
     Private Sub Add(Of T As Class)(ByRef Table As DataTable, ClassObject As T)
         If ClassObject Is Nothing Then
@@ -82,6 +79,12 @@ Friend Module DataTableHelpers
         Return result
     End Function
 
+    ''' <summary>
+    '''  Gets the display name for a property, using the <see cref="DisplayNameAttribute"/> if present.
+    '''  Replaces spaces with non-breaking spaces for certain display names.
+    ''' </summary>
+    ''' <param name="property">The property to get the display name for.</param>
+    ''' <returns>The display name for the property.</returns>
     Private Function GetColumnDisplayName([property] As PropertyInfo) As String
         Dim displayNameAttribute As DisplayNameAttribute = [property].GetCustomAttributes(
             attributeType:=GetType(DisplayNameAttribute),
@@ -137,10 +140,13 @@ Friend Module DataTableHelpers
     End Function
 
     ''' <summary>
-    '''  Created a <see cref="Dictionary"/> that maps <see langword="Class"/> Property Name to Column Alignment
+    '''  Creates a <see cref="Dictionary"/> that maps class property names to <see cref="DataGridViewCellStyle"/> for column alignment.
+    '''  Determines alignment and padding based on the <see cref="ColumnAttribute"/> type name.
     ''' </summary>
-    ''' <typeparam name="T"></typeparam>
-    ''' <returns>Dictionary</returns>
+    ''' <typeparam name="T">The type of the class whose properties are mapped.</typeparam>
+    ''' <param name="alignmentTable">A dictionary to populate with property name to cell style mappings.</param>
+    ''' <param name="columnName">The column name to retrieve or add alignment for.</param>
+    ''' <returns>The <see cref="DataGridViewCellStyle"/> for the specified column.</returns>
     Public Function ClassPropertiesToColumnAlignment(Of T As Class)(ByRef alignmentTable As Dictionary(Of String, DataGridViewCellStyle), columnName As String) As DataGridViewCellStyle
         Dim classType As Type = GetType(T)
         Dim cellStyle As New DataGridViewCellStyle

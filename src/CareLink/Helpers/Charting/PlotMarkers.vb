@@ -5,8 +5,18 @@
 Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
+''' <summary>
+'''  Provides extension methods and helpers for plotting marker data points and treatment markers on charts.
+''' </summary>
 Friend Module PlotMarkers
 
+    ''' <summary>
+    '''  Adds a sensor glucose (SG) reading point to the marker series.
+    ''' </summary>
+    ''' <param name="markerSeriesPoints">The collection of data points to add to.</param>
+    ''' <param name="markerOADateTime">The OADate timestamp for the marker.</param>
+    ''' <param name="sgValueString">The string representation of the SG value.</param>
+    ''' <param name="sgValue">The numeric SG value.</param>
     <Extension>
     Private Sub AddSgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, sgValueString As String, sgValue As Single)
         AddMarkerPoint(markerSeriesPoints, markerOADateTime, sgValue, Color.DarkOrange)
@@ -15,12 +25,26 @@ Friend Module PlotMarkers
         End If
     End Sub
 
+    ''' <summary>
+    '''  Adds a calibration point to the marker series.
+    ''' </summary>
+    ''' <param name="markerSeriesPoints">The collection of data points to add to.</param>
+    ''' <param name="markerOADateTime">The OADate timestamp for the marker.</param>
+    ''' <param name="sgValue">The numeric SG value.</param>
+    ''' <param name="entry">The marker entry containing calibration data.</param>
     <Extension>
     Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, sgValue As Single, entry As Marker)
         AddMarkerPoint(markerSeriesPoints, markerOADateTime, sgValue, Color.Red)
         markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {If(CBool(entry.GetStringValueFromJson("calibrationSuccess")), "accepted", "not accepted")}: {entry.GetSingleValueFromJson("unitValue")} {GetBgUnitsString()}"
     End Sub
 
+    ''' <summary>
+    '''  Adds a generic marker point to the marker series with the specified color and formatting.
+    ''' </summary>
+    ''' <param name="markerSeriesPoints">The collection of data points to add to.</param>
+    ''' <param name="markerOADateTime">The OADate timestamp for the marker.</param>
+    ''' <param name="sgValue">The numeric value for the marker.</param>
+    ''' <param name="markerColor">The color to use for the marker.</param>
     Private Sub AddMarkerPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, sgValue As Single, markerColor As Color)
         markerSeriesPoints.AddXY(markerOADateTime, sgValue)
         markerSeriesPoints.Last.BorderColor = markerColor
@@ -30,6 +54,11 @@ Friend Module PlotMarkers
         markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Circle
     End Sub
 
+    ''' <summary>
+    '''  Adjusts the X-axis start time based on the last time change record.
+    ''' </summary>
+    ''' <param name="axisX">The X-axis to adjust.</param>
+    ''' <param name="lastTimeChangeRecord">The last time change record to use for adjustment.</param>
     <Extension>
     Private Sub AdjustXAxisStartTime(ByRef axisX As Axis, lastTimeChangeRecord As TimeChange)
         Dim latestTime As Date = If(lastTimeChangeRecord.DisplayTime > lastTimeChangeRecord.Timestamp, lastTimeChangeRecord.DisplayTime, lastTimeChangeRecord.Timestamp)
@@ -38,6 +67,12 @@ Friend Module PlotMarkers
         axisX.IntervalOffsetType = DateTimeIntervalType.Minutes
     End Sub
 
+    ''' <summary>
+    '''  Returns a tooltip string for a given basal delivery type and amount.
+    ''' </summary>
+    ''' <param name="type">The type of basal delivery.</param>
+    ''' <param name="amount">The amount delivered.</param>
+    ''' <returns>A formatted tooltip string.</returns>
     Private Function GetToolTip(type As String, amount As Single) As String
         Dim minBasalMsg As String = ""
         If amount.IsMinBasal() Then
@@ -55,6 +90,13 @@ Friend Module PlotMarkers
         End Select
     End Function
 
+    ''' <summary>
+    '''  Plots all markers on the specified chart, including insulin, meal, and time change markers.
+    ''' </summary>
+    ''' <param name="pageChart">The chart to plot markers on.</param>
+    ''' <param name="timeChangeSeries">The series used for time change markers.</param>
+    ''' <param name="markerInsulinDictionary">Dictionary to store insulin marker positions.</param>
+    ''' <param name="markerMealDictionary">Dictionary to store meal marker positions.</param>
     <Extension>
     Friend Sub PlotMarkers(
         pageChart As Chart,
@@ -198,6 +240,11 @@ Friend Module PlotMarkers
         End If
     End Sub
 
+    ''' <summary>
+    '''  Plots treatment markers on the specified treatment chart, including insulin and meal markers.
+    ''' </summary>
+    ''' <param name="treatmentChart">The chart to plot treatment markers on.</param>
+    ''' <param name="treatmentMarkerTimeChangeSeries">The series used for time change markers in the treatment chart.</param>
     <Extension>
     Friend Sub PlotTreatmentMarkers(treatmentChart As Chart, treatmentMarkerTimeChangeSeries As Series)
         Dim lastTimeChangeRecord As TimeChange = Nothing
