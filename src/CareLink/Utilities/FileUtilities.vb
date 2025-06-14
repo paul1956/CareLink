@@ -25,6 +25,7 @@ Friend Module FileUtilities
         "client_id",
         "client_secret",
         "mag-identifier"}
+
     ''' <summary>
     '''  Writes a byte array to a file.
     ''' </summary>

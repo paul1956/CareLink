@@ -3,11 +3,25 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.IO
-
 Imports Microsoft.Win32
 
+''' <summary>
+'''  Provides utility methods for launching the user's default web browser.
+''' </summary>
 Friend Module BrowserUtilities
 
+    ''' <summary>
+    '''  Attempts to launch the default web browser with the specified URL.
+    ''' </summary>
+    ''' <param name="url">The URL to open in the browser.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the browser was successfully launched or a message was shown to the user;
+    '''  <see langword="False"/> if the default browser could not be determined.
+    ''' </returns>
+    ''' <remarks>
+    '''  This method determines the default browser by reading the Windows registry and attempts to launch it.
+    '''  If the browser cannot be found, a message box is shown to the user.
+    ''' </remarks>
     Private Function LaunchBrowser(url As String) As Boolean
         Using userChoiceKey As RegistryKey = Registry.CurrentUser.OpenSubKey("Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice")
             If userChoiceKey Is Nothing Then
@@ -52,6 +66,14 @@ Friend Module BrowserUtilities
         Return True
     End Function
 
+    ''' <summary>
+    '''  Opens the specified web address in the user's default browser,
+    '''  updating the main form's cursor during the operation.
+    ''' </summary>
+    ''' <param name="webAddress">The web address (URL) to open.</param>
+    ''' <remarks>
+    '''  This method sets the cursor to AppStarting while attempting to open the browser, and resets it afterward.
+    ''' </remarks>
     Friend Sub OpenUrlInBrowser(webAddress As String)
         Dim mainForm As Form1 = My.Forms.Form1
         Try

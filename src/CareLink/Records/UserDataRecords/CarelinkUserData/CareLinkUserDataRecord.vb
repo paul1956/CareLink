@@ -5,6 +5,10 @@
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
+''' <summary>
+'''  Represents a user data record for CareLink, encapsulating user credentials and settings.
+'''  Supports editing operations and notifies the parent list of changes.
+''' </summary>
 Public Class CareLinkUserDataRecord
     Implements IEditableObject
     Private _backupData As CareLinkUserData
@@ -13,6 +17,11 @@ Public Class CareLinkUserDataRecord
 
     Private _userData As CareLinkUserData
 
+    ''' <summary>
+    '''  Initializes a new instance of the <see cref="CareLinkUserDataRecord"/> class with the specified parent list.
+    '''  Populates user data from application settings.
+    ''' </summary>
+    ''' <param name="parent">The parent <see cref="CareLinkUserDataList"/>.</param>
     Public Sub New(parent As CareLinkUserDataList)
         Me.Parent = parent
         _userData = New CareLinkUserData With {
@@ -27,6 +36,12 @@ Public Class CareLinkUserDataRecord
         }
     End Sub
 
+    ''' <summary>
+    '''  Initializes a new instance of the <see cref="CareLinkUserDataRecord"/> class from a CSV row.
+    ''' </summary>
+    ''' <param name="parent">The parent <see cref="CareLinkUserDataList"/>.</param>
+    ''' <param name="headerRow">The header row of the CSV file.</param>
+    ''' <param name="currentRow">The current data row from the CSV file.</param>
     Public Sub New(parent As CareLinkUserDataList, headerRow As String(), currentRow As String())
         _userData = New CareLinkUserData With {
             ._iD = parent.Count
@@ -135,16 +150,26 @@ Public Class CareLinkUserDataRecord
 
     Public Property Parent As CareLinkUserDataList
 
+    ''' <summary>
+    '''  Notifies the parent list that the user data has changed, unless in a transaction.
+    ''' </summary>
     Private Sub OnCareLinkUserChanged()
         If Not _inTxn And (Me.Parent IsNot Nothing) Then
             Me.Parent.CareLinkUserChanged(Me)
         End If
     End Sub
 
+    ''' <summary>
+    '''  Returns a CSV string representation of the user data record.
+    ''' </summary>
+    ''' <returns>A CSV string of the user data fields.</returns>
     Friend Function ToCsvString() As String
         Return $"{Me.CareLinkUserName},{Me.CareLinkPassword},{Me.CountryCode},{Me.UseLocalTimeZone},{Me.AutoLogin},{Me.CareLinkPartner},{Me.CareLinkPatientUserID}"
     End Function
 
+    ''' <summary>
+    '''  Updates the application settings with the current user data values.
+    ''' </summary>
     Friend Sub UpdateSettings()
         My.Settings.CareLinkUserName = _userData._careLinkUserName
         My.Settings.CareLinkPassword = _userData._careLinkPassword
@@ -156,10 +181,10 @@ Public Class CareLinkUserDataRecord
     End Sub
 
     ''' <summary>
-    '''  Replace the value of entryName with Value
+    '''  Replace the value of entryName with Value.
     ''' </summary>
-    ''' <param name="key"></param>
-    ''' <param name="value"></param>
+    ''' <param name="key">The property name to update.</param>
+    ''' <param name="value">The new value as a string.</param>
     Friend Sub UpdateValue(key As String, value As String)
         Select Case key
             Case NameOf(CareLinkUserName)
@@ -181,6 +206,9 @@ Public Class CareLinkUserDataRecord
         End Select
     End Sub
 
+    ''' <summary>
+    '''  Internal structure to hold user data fields.
+    ''' </summary>
     Private Structure CareLinkUserData
         Friend _autoLogin As Boolean
         Friend _careLinkPartner As Boolean

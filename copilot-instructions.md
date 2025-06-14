@@ -21,7 +21,7 @@ If generally asked for XML comments, note they need to have a structure:
  * Prefer <see langword="..."/> tags over <see cref="..."/> tags where both can be used
  * In <remarks/> sections, please always use <para> tags if total line lenght would exceed 119 characters.
  * Always make sure, you use XML compatible character encoding.
- * Always use the <see langword="$..."/> tag for language keywords like <see langword="True"/>, <see langword="False"/> and <see langword="Nothing"/>, and <paramref name="$..."/> for parameters.
+ * Always use the <see langword="$..."/> tag for language keywords like <see langword="True"/> for True, <see langword="False"/> for False and <see langword="Nothing"/> for Nothing, and <paramref name="$..."/> for parameters.
  * Use the <c/> tag for code snippets that are not <see langword="$..."/>, and <paramref name="$..."/> for parameters.
  * In the XML comments <see langword="True"/> and <see langword="False"/> should be used, not <see langword="true"/> or <see langword="false"/>.
  * Try to wrap after 100 characters, always wrap after 120 characters, except <param name="..."/> sections which should never be wrapped.
@@ -33,7 +33,7 @@ If generally asked for XML comments, note they need to have a structure:
    ''' <remarks>
    '''  <para>This is a sample to guide an LLM to the structuring of short docu-tags.</para>
    '''  <para>This paragraph summarizes how to create effective documentation for code comments.</para>
-   '''  <para>It is important to keep comments clear and concise for better code readability.</Para>
+   '''  <para>It is important to keep comments clear and concise for better code readability.</para>
    '''  <para>
    '''   It supports formatting for structured documentation and aids in clear communication.
    '''  </para>

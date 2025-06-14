@@ -13,12 +13,8 @@ Public Module RandomFunctions
     ''' <summary>
     '''  Generates a random Base64-encoded string of the specified length.
     ''' </summary>
-    ''' <param name="length">
-    '''  The desired length of the resulting Base64 string.
-    ''' </param>
-    ''' <returns>
-    '''  A random Base64-encoded string of the specified length.
-    ''' </returns>
+    ''' <param name="length">The desired length of the resulting Base64 string.</param>
+    ''' <returns>A random Base64-encoded string of the specified length.</returns>
     Public Function GenerateRandomBase64String(length As Integer) As String
         Dim random As New Random()
         Dim chars As String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
@@ -29,9 +25,7 @@ Public Module RandomFunctions
     ''' <summary>
     '''  Generates a new random UUID (Universally Unique Identifier).
     ''' </summary>
-    ''' <returns>
-    '''  A string representation of a new UUID.
-    ''' </returns>
+    ''' <returns>A string representation of a new UUID.</returns>
     Public Function RandomUuid() As String
         Return Guid.NewGuid().ToString()
     End Function
@@ -39,9 +33,7 @@ Public Module RandomFunctions
     ''' <summary>
     '''  Returns a random Android device model from a predefined list.
     ''' </summary>
-    ''' <returns>
-    '''  A string representing a random Android device model.
-    ''' </returns>
+    ''' <returns>A string representing a random Android device model.</returns>
     Public Function RandomAndroidModel() As String
         Dim models() As String = {"SM-G973F", "SM-G988U1", "SM-G981W", "SM-G9600"}
         Return models(New Random().Next(models.Length))
@@ -50,9 +42,7 @@ Public Module RandomFunctions
     ''' <summary>
     '''  Generates a random device ID as a lowercase hexadecimal string.
     ''' </summary>
-    ''' <returns>
-    '''  A random device ID in lowercase hexadecimal format.
-    ''' </returns>
+    ''' <returns>A random device ID in lowercase hexadecimal format.</returns>
     Public Function RandomDeviceId() As String
         Dim randomBytes(39) As Byte
         Using rng As RandomNumberGenerator = RandomNumberGenerator.Create()

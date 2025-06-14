@@ -87,8 +87,12 @@ Friend Module LoginHelpers
                     Dim result As DialogResult = LoginDialog.ShowDialog(mainForm)
                     Select Case result
                         Case DialogResult.OK
+                            mainForm.TabControlPage1.Visible = True
+                            mainForm.TabControlPage2.Visible = True
                             Exit Do
                         Case DialogResult.Cancel
+                            mainForm.TabControlPage1.Visible = False
+                            mainForm.TabControlPage2.Visible = False
                             StartOrStopServerUpdateTimer(serverTimerEnabled)
                             Return False
                         Case DialogResult.Retry
