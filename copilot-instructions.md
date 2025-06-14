@@ -33,7 +33,7 @@ If generally asked for XML comments, note they need to have a structure:
    ''' <remarks>
    '''  <para>This is a sample to guide an LLM to the structuring of short docu-tags.</para>
    '''  <para>This paragraph summarizes how to create effective documentation for code comments.</para>
-   '''  <para>It is important to keep comments clear and concise for better code readability.</Para>
+   '''  <para>It is important to keep comments clear and concise for better code readability.</para>
    '''  <para>
    '''   It supports formatting for structured documentation and aids in clear communication.
    '''  </para>

@@ -1781,31 +1781,25 @@ Public Class Form1
 #Region "Form Events"
 
     ''' <summary>
-    '''  Handles the Paint event for the ActiveInsulinValue control.
-    '''  This event is raised when the control needs to be repainted.
+    '''  Handles the <see cref="Label.Paint"/> event for the <see cref="ActiveInsulinValue"/> control.
+    '''  Draws a solid lime green border around the ActiveInsulinValue label.
     ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e">
-    '''  The PaintEventArgs containing the event data.
-    ''' </param>
-    ''' <remarks>
-    '''  This event is used to draw a border around the ActiveInsulinValue control.
-    ''' </remarks>
+    ''' <param name="sender">The source of the event, the ActiveInsulinValue label.</param>
+    ''' <param name="e">A <see cref="PaintEventArgs"/> that contains the event data.</param>
     Private Sub ActiveInsulinValue_Paint(sender As Object, e As PaintEventArgs) Handles ActiveInsulinValue.Paint
         ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.LimeGreen, ButtonBorderStyle.Solid)
     End Sub
 
     ''' <summary>
-    '''  Handles the FormClosing event for the main form.
-    '''  This event is raised when the form is about to close.
-    '''  It performs cleanup tasks such as disposing of the notification icon and killing the WebView2 process.
+    '''  Handles the <see cref="Form.FormClosing"/> event for the main form.
+    '''  Performs cleanup tasks such as disposing of the notification icon, terminating the <see cref="WebView2"/> process,
+    '''  and deleting the WebView2 cache directory when the form is closing.
     ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e">
-    '''  The FormClosingEventArgs containing the event data.
-    ''' </param>
+    ''' <param name="sender">The source of the event, <see cref="Form"/>.</param>
+    ''' <param name="e">A <see cref="FormClosingEventArgs"/> that contains the event data.</param>
     ''' <remarks>
-    '''  This event is used to ensure proper cleanup before the application exits.
+    '''  Ensures proper resource cleanup before the application exits, including killing the WebView2 process
+    '''  and removing its cache directory if present.
     ''' </remarks>
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Me.CleanUpNotificationIcon()
@@ -1828,14 +1822,14 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the Load event for the main form.
-    '''  This event is raised when the form is loaded.
-    '''  It performs initialization tasks such as loading settings, creating directories, and setting up DataGridViews.
+    '''  Main form for the CareLink application.
+    '''  Handles initialization, event wiring, chart setup, DataGridView formatting, and user interaction logic.
     ''' </summary>
-    ''' <param name="sender"></param>
+    ''' <param name="sender">The source of the event, <see cref="Form"/>.</param>
     ''' <param name="e">The EventArgs containing the event data.</param>
     ''' <remarks>
-    '''  This event is used to prepare the form for user interaction after it has been loaded.
+    '''  This form manages the primary UI, including charts, data grids, user settings, and notification icons.
+    '''  It coordinates loading and saving user data, updating UI elements, and responding to user and system events.
     ''' </remarks>
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If My.Settings.UpgradeRequired Then
@@ -1888,7 +1882,7 @@ Public Class Form1
     '''  This event is raised when the form is resized.
     '''  It checks if the form is minimized and shows a notification icon if it is.
     ''' </summary>
-    ''' <param name="sender"></param>
+    ''' <param name="sender">The source of the event, <see cref="Form"/>.</param>
     ''' <param name="e">The EventArgs containing the event data.</param>
     ''' <remarks>
     '''  This event is used to manage the visibility of the notification icon when the form is minimized.
@@ -1907,7 +1901,7 @@ Public Class Form1
     '''  This event is raised when the form is first shown.
     '''  It performs additional initialization tasks such as setting up labels, checking for updates, and loading data.
     ''' </summary>
-    ''' <param name="sender"></param>
+    ''' <param name="sender">The source of the event, <see cref="Form"/>.</param>
     ''' <param name="e">The EventArgs containing the event data.</param>
     ''' <remarks>
     '''  This event is used to finalize the setup of the form after it has been displayed to the user.
@@ -1941,11 +1935,11 @@ Public Class Form1
 
     ''' <summary>
     '''  Handles the <see cref="Button.Click"/> event for the <see cref="SerialNumberButton"/> control.
-    '''  This event is raised when the button is clicked.
     '''  It switches to the Serial Number tab and scrolls to the last row in the DataGridView.
+    '''  Highlights the row containing "medicalDeviceInformation" in the second column.
     ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
+    ''' <param name="sender">The source of the event, typically the SerialNumberButton.</param>
+    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     ''' <remarks>
     '''  This event is used to navigate to the Serial Number tab and focus on the relevant data.
     ''' </remarks>
