@@ -91,9 +91,9 @@ Public Module Discover
     '''  A <see cref="ConfigRecord"/> containing the configuration data for the specified country,
     '''  or <see langword="Nothing"/> if an error occurs.
     ''' </returns>
-    Public Function GetDiscoveryData(country As String) As ConfigRecord
+    Public Function GetDiscoveryData() As ConfigRecord
         Try
-            Dim region As String = If(country.Equals("US", StringComparison.InvariantCultureIgnoreCase), "US", "EU")
+            Dim region As String = If(s_countryCode.Equals("US", StringComparison.InvariantCultureIgnoreCase), "US", "EU")
             Return DownloadAndDecodeJson(Of ConfigRecord)(s_discoverUrl(region))
         Catch ex As HttpRequestException
             Debug.WriteLine($"Error downloading JSON: {ex.Message}")

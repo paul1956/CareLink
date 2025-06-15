@@ -146,7 +146,7 @@ Public Class LoginDialog
                                         )
         End With
 
-        Me.RegionComboBox.DataSource = New BindingSource(s_regionList, Nothing)
+        Me.RegionComboBox.DataSource = New BindingSource(dataSource:=s_regionList, dataMember:=Nothing)
         Me.RegionComboBox.DisplayMember = "Key"
         Me.RegionComboBox.ValueMember = "Value"
         If String.IsNullOrEmpty(My.Settings.CountryCode) Then
@@ -169,7 +169,7 @@ Public Class LoginDialog
         Me.Height = _initialHeight
         Me.Visible = True
         If Me.LoginSourceAutomatic = FileToLoadOptions.Login Then
-            Me.OK_Button_Click(Nothing, Nothing)
+            Me.OK_Button_Click(sender:=Nothing, e:=Nothing)
         End If
     End Sub
 
@@ -190,7 +190,7 @@ Public Class LoginDialog
         s_password = Me.PasswordTextBox.Text
         s_countryCode = Me.CountryComboBox.SelectedValue.ToString
 
-        Me.ClientDiscover = Discover.GetDiscoveryData(s_countryCode)
+        Me.ClientDiscover = Discover.GetDiscoveryData()
         Me.Ok_Button.Enabled = False
 
         Dim tokenData As TokenData = ReadTokenDataFile(s_userName)
@@ -246,7 +246,7 @@ Public Class LoginDialog
         Dim lastErrorMessage As String = Me.Client.GetRecentData()
         If String.IsNullOrWhiteSpace(lastErrorMessage) Then
             s_lastMedicalDeviceDataUpdateServerEpoch = 0
-            ReportLoginStatus(Me.LoginStatus, False, lastErrorMessage)
+            ReportLoginStatus(Me.LoginStatus, hasErrors:=False, lastErrorMessage)
 
             Me.Ok_Button.Enabled = True
             Me.Cancel_Button.Enabled = True
@@ -258,12 +258,14 @@ Public Class LoginDialog
             My.Settings.CareLinkPartner = Me.CarePartnerCheckBox.Checked OrElse Not String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text)
             My.Settings.Save()
             If Not s_allUserSettingsData.TryGetValue(s_userName, Me.LoggedOnUser) Then
-                s_allUserSettingsData.SaveAllUserRecords(New CareLinkUserDataRecord(s_allUserSettingsData), NameOf(CareLinkUserDataRecord.CareLinkUserName), s_userName)
+                s_allUserSettingsData.SaveAllUserRecords(
+                    loggedOnUser:=New CareLinkUserDataRecord(s_allUserSettingsData),
+                    Key:=NameOf(CareLinkUserDataRecord.CareLinkUserName), Value:=s_userName)
             End If
             Me.DialogResult = DialogResult.OK
             Me.Hide()
         Else
-            ReportLoginStatus(Me.LoginStatus, True, lastErrorMessage, Me.Client.GetHttpStatusCode)
+            ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMessage, lastHttpStatusCode:=Me.Client.GetHttpStatusCode)
             If Client2.Auth_Error_Codes.Contains(Me.Client.GetHttpStatusCode) Then
                 Me.PasswordTextBox.Text = ""
                 Dim userRecord As CareLinkUserDataRecord = Nothing
@@ -320,7 +322,7 @@ Public Class LoginDialog
             End If
         Next
         If countriesInRegion.Count > 0 Then
-            Me.CountryComboBox.DataSource = New BindingSource(countriesInRegion, Nothing)
+            Me.CountryComboBox.DataSource = New BindingSource(dataSource:=countriesInRegion, dataMember:=Nothing)
             Me.CountryComboBox.DisplayMember = "Key"
             Me.CountryComboBox.ValueMember = "Value"
             Me.CountryComboBox.Enabled = True
@@ -340,7 +342,7 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    ''' Handles the <see cref="UsernameComboBox"/> leave event, loads user settings for the entered username.
+    '''  Handles the <see cref="UsernameComboBox"/> leave event, loads user settings for the entered username.
     ''' </summary>
     Private Sub UsernameComboBox_Leave(sender As Object, e As EventArgs) Handles UsernameComboBox.Leave
         Try
@@ -393,7 +395,7 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    ''' Handles the <see cref="UsernameComboBox"/> validating event, ensures username is not empty.
+    '''  Handles the <see cref="UsernameComboBox"/> validating event, ensures username is not empty.
     ''' </summary>
     Private Sub UsernameComboBox_Validating(sender As Object, e As CancelEventArgs) Handles UsernameComboBox.Validating
         If String.IsNullOrWhiteSpace(Me.UsernameComboBox.Text) Then

@@ -79,6 +79,8 @@ Friend Module TableLayoutPanelExtensions
         Select Case True
             Case TypeOf table.Parent Is SplitterPanel
                 SetTableName(CType(CType(table.Parent.Parent, SplitContainer).Panel1.Controls(0), TableLayoutPanel), tableName)
+            Case TypeOf table.Parent Is TabPage
+                SetTableName(CType(table.Controls(0).Parent, TableLayoutPanel), tableName)
             Case TypeOf table.Controls(0) Is TableLayoutPanel
                 SetTableName(CType(table.Controls(0), TableLayoutPanel), tableName)
             Case TypeOf table.Controls(0) Is Label

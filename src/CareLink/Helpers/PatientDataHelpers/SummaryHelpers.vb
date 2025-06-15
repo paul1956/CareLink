@@ -5,13 +5,24 @@
 Imports System.Runtime.CompilerServices
 Imports System.Text.RegularExpressions
 
+''' <summary>
+'''  Provides helper methods for summarizing and translating patient data notifications,
+'''  extracting variables from messages, and generating summary records.
+''' </summary>
 Friend Module SummaryHelpers
 
+    ''' <summary>
+    '''  Maps sensor update time keys to their corresponding human-readable time strings.
+    ''' </summary>
     Friend ReadOnly s_sensorUpdateTimes As New Dictionary(Of String, String) From {
         {"INITIAL_ALERT_SHORT", "30 minutes"},
         {"INITIAL_ALERT_MEDIUM", "60 minutes"},
         {"INITIAL_ALERT_LONG", "90 minutes"}}
 
+    ''' <summary>
+    '''  Stores extracted variable names (words in parentheses) from notification messages,
+    '''  keyed by the message key.
+    ''' </summary>
     Private s_wordsInParentheses As Dictionary(Of String, List(Of String))
 
     ''' <summary>
@@ -26,11 +37,13 @@ Friend Module SummaryHelpers
     End Function
 
     ''' <summary>
-    '''  Extracts a dictionary(Of String, List(Of String)) from the input:
+    '''  Extracts a <see cref="Dictionary(Of String, List(Of String))"/> from the input:
     '''  where the variable names are in parentheses, and are associated with
-    '''  the Key of the error message
+    '''  the Key of the error message.
     ''' </summary>
-    ''' <returns>A dictionary(Of String, List(Of String))</returns>
+    ''' <remarks>
+    '''  Populates <c>s_wordsInParentheses</c> with variable names found in parentheses for each notification message.
+    ''' </remarks>
     Private Sub ExtractErrorMessageVariables()
         If s_wordsInParentheses IsNot Nothing Then
             Return
@@ -208,6 +221,11 @@ Friend Module SummaryHelpers
         Return originalMessage
     End Function
 
+    ''' <summary>
+    '''  Gets the human-readable sensor update time string for a given key.
+    ''' </summary>
+    ''' <param name="key">The key representing the sensor update time.</param>
+    ''' <returns>The corresponding sensor update time string, or an error message if not found.</returns>
     Friend Function GetSensorUpdateTime(key As String) As String
         Dim sensorUpdateTime As String = String.Empty
         If s_sensorUpdateTimes.TryGetValue(key, sensorUpdateTime) Then
@@ -217,6 +235,13 @@ Friend Module SummaryHelpers
         Return $"Unknown key {key}"
     End Function
 
+    ''' <summary>
+    '''  Generates a list of <see cref="SummaryRecord"/> objects from a dictionary of key-value pairs.
+    '''  Optionally hides specified rows.
+    ''' </summary>
+    ''' <param name="dic">The dictionary containing summary data.</param>
+    ''' <param name="rowsToHide">An optional list of row keys to hide.</param>
+    ''' <returns>A list of <see cref="SummaryRecord"/> objects representing the summary.</returns>
     Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
         Dim summaryList As New List(Of SummaryRecord)
         If dic IsNot Nothing Then
@@ -277,10 +302,25 @@ Friend Module SummaryHelpers
 
     End Function
 
+    ''' <summary>
+    '''  Gets the tab index from a tab page name.
+    ''' </summary>
+    ''' <param name="tabPageName">The name of the tab page.</param>
+    ''' <returns>The zero-based tab index.</returns>
     Friend Function GetTabIndexFromName(tabPageName As String) As Integer
         Return CInt(tabPageName.Replace(NameOf(TabPage), String.Empty).Substring(0, 2)) - 1
     End Function
 
+    ''' <summary>
+    '''  Gets the value of a specified key from a list of <see cref="SummaryRecord"/> objects.
+    '''  Returns a default value or throws an exception if not found, based on parameters.
+    ''' </summary>
+    ''' <typeparam name="T">The expected type of the value.</typeparam>
+    ''' <param name="l">The list of <see cref="SummaryRecord"/> objects.</param>
+    ''' <param name="Key">The key to search for.</param>
+    ''' <param name="throwError">Whether to throw an exception if the key is not found.</param>
+    ''' <param name="defaultValue">The default value to return if the key is not found and <paramref name="throwError"/> is false.</param>
+    ''' <returns>The value associated with the key, or the default value.</returns>
     <Extension>
     Friend Function GetValue(Of T)(l As List(Of SummaryRecord), Key As String, throwError As Boolean, Optional defaultValue As T = Nothing) As T
 
@@ -325,6 +365,15 @@ Friend Module SummaryHelpers
 
     End Function
 
+    ''' <summary>
+    '''  Gets the value of a specified key from a list of <see cref="SummaryRecord"/> objects.
+    '''  Throws an exception if the key is not found.
+    ''' </summary>
+    ''' <typeparam name="T">The expected type of the value.</typeparam>
+    ''' <param name="l">The list of <see cref="SummaryRecord"/> objects.</param>
+    ''' <param name="Key">The key to search for.</param>
+    ''' <returns>The value associated with the key.</returns>
+    ''' <exception cref="ArgumentException">Thrown if the key is not found.</exception>
     <Extension>
     Friend Function GetValue(Of T)(l As List(Of SummaryRecord), Key As String) As T
         For Each s As SummaryRecord In l

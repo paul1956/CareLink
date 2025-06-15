@@ -11,21 +11,21 @@ Imports DataGridViewColumnControls
 Public Class InitializeDialog
     Private ReadOnly _fromPdf As Boolean
 
-    Private ReadOnly _insulinTypesBindingSource As New BindingSource(s_insulinTypes, Nothing)
+    Private ReadOnly _insulinTypesBindingSource As New BindingSource(dataSource:=s_insulinTypes, dataMember:=Nothing)
 
     Private _currentUserBackup As CurrentUserRecord = Nothing
 
-    Public Sub New(currentUser As CurrentUserRecord)
+    Public Sub New()
         MyBase.New
         Me.InitializeComponent()
-        _CurrentUser = currentUser
+        Me.CurrentUser = SystemVariables.CurrentUser
         _fromPdf = False
     End Sub
 
-    Public Sub New(currentUser As CurrentUserRecord, ait As Single, currentTarget As Single, CarbRatios As List(Of CarbRatioRecord))
+    Public Sub New(ait As Single, currentTarget As Single, CarbRatios As List(Of CarbRatioRecord))
         MyBase.New
         Me.InitializeComponent()
-        Me.CurrentUser = currentUser
+        Me.CurrentUser = SystemVariables.CurrentUser
         Me.CurrentUser.PumpAit = ait
         Me.CurrentUser.CarbRatios = CarbRatios
         Me.CurrentUser.CurrentTarget = currentTarget
@@ -175,10 +175,10 @@ Public Class InitializeDialog
         With Me.TargetSgComboBox
             .DataSource = If(NativeMmolL,
                              If(Provider.NumberFormat.NumberDecimalSeparator = CareLinkDecimalSeparator,
-                                New BindingSource(MmolLItemsPeriod, Nothing),
-                                New BindingSource(MmolLItemsComma, Nothing)
+                                New BindingSource(dataSource:=MmolLItemsPeriod, dataMember:=Nothing),
+                                New BindingSource(dataSource:=MmolLItemsComma, dataMember:=Nothing)
                                ),
-                             New BindingSource(MgDlItems, Nothing)
+                             New BindingSource(dataSource:=MgDlItems, dataMember:=Nothing)
                             )
 
             .DisplayMember = "Key"
@@ -190,7 +190,7 @@ Public Class InitializeDialog
         Me.Text = $"Initialize CareLink™ For {Me.CurrentUser.UserName}"
 
         With Me.PumpAitComboBox
-            .DataSource = New BindingSource(s_aitLengths, Nothing)
+            .DataSource = New BindingSource(dataSource:=s_aitLengths, dataMember:=Nothing)
             .DisplayMember = "Key"
             .ValueMember = "Value"
             If Me.CurrentUser.PumpAit = 0 Then

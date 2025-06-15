@@ -19,7 +19,7 @@ Friend Module PlotSeriesSg
     '''  - Yellow if above the high limit
     '''  - Red if below the low limit
     '''  - White if within range
-    ''' Missing or invalid values are plotted as transparent and marked as empty.
+    '''  Missing or invalid values are plotted as transparent and marked as empty.
     ''' </remarks>
     <Extension>
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)

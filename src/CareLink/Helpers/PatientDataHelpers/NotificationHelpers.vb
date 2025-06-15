@@ -42,6 +42,11 @@ Friend Module NotificationHelpers
     ''' <param name="mainForm">The main form containing notification panels.</param>
     ''' <param name="notificationDictionary">Dictionary of notification types and their JSON data.</param>
     Private Sub CreateNotificationTables(mainForm As Form1, notificationDictionary As Dictionary(Of String, String))
+        mainForm.TableLayoutPanelNotificationsCleared.Controls.Clear()
+        For i As Integer = mainForm.TableLayoutPanelNotificationActive.Controls.Count - 1 To 1 Step -1
+            mainForm.TableLayoutPanelNotificationActive.Controls.RemoveAt(i)
+        Next
+        mainForm.TableLayoutPanelNotificationActive.Controls.Clear()
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In notificationDictionary.WithIndex()
             Dim notificationType As KeyValuePair(Of String, String) = c.Value
             Dim innerJson As List(Of Dictionary(Of String, String)) = JsonToLisOfDictionary(notificationType.Value)
@@ -55,7 +60,7 @@ Friend Module NotificationHelpers
                             table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
                             attachHandlers:=AddressOf NotificationHelpers.AttachHandlers,
-                            row:=innerDictionary.Index + 1)
+                            row:=innerDictionary.Index)
                     Next
                     mainForm.TableLayoutPanelNotificationsCleared.ResumeLayout()
                     ResizePanelToFitContents(mainForm.TableLayoutPanelNotificationsCleared)
@@ -247,12 +252,12 @@ Friend Module NotificationHelpers
     Friend Sub UpdateNotificationTabs(mainForm As Form1)
         Try
             mainForm.TableLayoutPanelNotificationActive.AutoScroll = True
-            mainForm.TableLayoutPanelNotificationActive.SetTableName(ServerDataIndexes.notificationHistory, isClearedNotifications:=False)
+            mainForm.TableLayoutPanelNotificationActive.SetTableName(rowIndex:=ServerDataIndexes.notificationHistory, isClearedNotifications:=False)
             For i As Integer = mainForm.TableLayoutPanelNotificationActive.Controls.Count - 1 To 1 Step -1
                 mainForm.TableLayoutPanelNotificationActive.Controls.RemoveAt(i)
             Next
 
-            mainForm.TableLayoutPanelNotificationsCleared.SetTableName(ServerDataIndexes.notificationHistory, isClearedNotifications:=True)
+            mainForm.TableLayoutPanelNotificationsCleared.SetTableName(rowIndex:=ServerDataIndexes.notificationHistory, isClearedNotifications:=True)
             For i As Integer = mainForm.TableLayoutPanelNotificationsCleared.Controls.Count - 1 To 1 Step -1
                 mainForm.TableLayoutPanelNotificationsCleared.Controls.RemoveAt(i)
             Next

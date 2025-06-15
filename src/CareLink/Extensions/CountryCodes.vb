@@ -365,7 +365,6 @@ Public Module RegionCountryLists
     ''' </summary>
     ''' <param name="countryCode">The ISO 2-letter country code.</param>
     ''' <returns>The country name if found; otherwise, <see langword="Nothing"/></returns>
-
     <Extension>
     Public Function GetCountryFromCode(countryCode As String) As String
         Debug.Assert(countryCode.Length = 2)

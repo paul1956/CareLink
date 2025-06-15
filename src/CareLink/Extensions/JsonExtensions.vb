@@ -13,7 +13,6 @@ Public Module JsonExtensions
     '''  Default <see cref="JsonSerializerOptions"/> for deserialization. Ignores null values,
     '''  writes numbers as strings, uses case-insensitive property names, and disallows unmapped members.
     ''' </summary>
-
     Public ReadOnly s_jsonDeserializerOptions As New JsonSerializerOptions() With {
         .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         .NumberHandling = JsonNumberHandling.WriteAsString,

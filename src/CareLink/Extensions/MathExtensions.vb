@@ -39,7 +39,6 @@ Friend Module MathExtensions
     ''' <param name="doubleValue">The Double value to round.</param>
     ''' <param name="decimalDigits">The number of decimal digits to round to.</param>
     ''' <returns>The rounded value as Single.</returns>
-
     <Extension>
     Friend Function RoundToSingle(doubleValue As Double, decimalDigits As Integer) As Single
 
@@ -54,7 +53,6 @@ Friend Module MathExtensions
     '''  <see langword="True"/> if the value is almost zero; otherwise,
     '''  <see langword="False"/>.
     ''' </returns>
-
     <Extension>
     Public Function AlmostZero(single1 As Single) As Boolean
         Return single1 >= 0 - Single.Epsilon And single1 <= 0 + Single.Epsilon

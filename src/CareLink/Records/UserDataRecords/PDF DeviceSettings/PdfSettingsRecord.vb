@@ -30,7 +30,7 @@ Public Class PdfSettingsRecord
         Try
             Dim tables As Dictionary(Of String, PdfTable) = GetTableList(filename, 0, 1)
             Dim allText As String = ExtractTextFromPage(filename, 0, 1)
-            Dim listOfAllTextLines As List(Of String) = allText.SplitLines(True)
+            Dim listOfAllTextLines As List(Of String) = allText.SplitLines(Trim:=True)
 
             ' Get Sensor and Basal 4 Line to determine Active Basal later
             Dim basal4Line As String

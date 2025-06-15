@@ -5,8 +5,18 @@
 Imports System.Runtime.CompilerServices
 Imports System.Text.RegularExpressions
 
+''' <summary>
+'''  Provides debugging support methods for printing debug information and formatted URLs.
+''' </summary>
 Friend Module DebugSupport
 
+    ''' <summary>
+    '''  Prints a debug message to the output window, including the calling member name and line number.
+    '''  If the message starts with '(', only the member name is prepended.
+    ''' </summary>
+    ''' <param name="message">The message to print.</param>
+    ''' <param name="memberName">The name of the calling member. Automatically supplied by the compiler.</param>
+    ''' <param name="sourceLineNumber">The line number in the source file at which the method is called. Automatically supplied by the compiler.</param>
     Public Sub DebugPrint(message As String, <CallerMemberName> Optional memberName As String = "", <CallerLineNumber> Optional sourceLineNumber As Integer = 0)
         If message.StartsWith("("c) Then
             Debug.Print($"{memberName}{message}")
@@ -15,13 +25,20 @@ Friend Module DebugSupport
         End If
     End Sub
 
+    ''' <summary>
+    '''  Prints a URL and its query parameters in a formatted way to the debug output.
+    '''  Long parameter values are split into multiple lines for readability.
+    ''' </summary>
+    ''' <param name="label">A label to prefix the URL output.</param>
+    ''' <param name="s">The URL string to print.</param>
+    ''' <param name="width">The maximum width for splitting long parameter values.</param>
     Public Sub DebugPrintUrl(label As String, s As String, width As Integer)
-        Dim lines() As String = s.Split("?"(0))
+        Dim lines() As String = s.Split("?"c)
         Debug.Print($"{label} = {lines(0)}?")
         If lines.Length > 1 Then
-            Dim params() As String = lines(1).Split("&")
+            Dim params() As String = lines(1).Split("&"c)
             For Each l As String In params
-                lines = l.Split("=")
+                lines = l.Split("="c)
                 If lines(1).Length < 100 Then
                     Debug.Print($"{Space(label.Length + 8)}{lines(0)} = {lines(1)}")
                 Else

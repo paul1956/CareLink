@@ -4,10 +4,26 @@
 
 Imports System.Runtime.CompilerServices
 
+''' <summary>
+'''  Provides extension methods and delegates for displaying <see cref="DataTable"/> objects in <see cref="DataGridView"/> controls
+'''  within a <see cref="TableLayoutPanel"/>. Handles initialization, data binding, and optional column visibility.
+''' </summary>
 Friend Module DisplayDataTableInDgvHelpers
 
+    ''' <summary>
+    '''  Delegate for attaching event handlers to a <see cref="DataGridView"/>.
+    ''' </summary>
+    ''' <param name="dgv">The <see cref="DataGridView"/> to attach handlers to.</param>
     Friend Delegate Sub attachHandlers(dgv As DataGridView)
 
+    ''' <summary>
+    '''  Displays a <see cref="DataTable"/> in a <see cref="DataGridView"/> within a <see cref="TableLayoutPanel"/>.
+    '''  Initializes the <see cref="DataGridView"/>, sets its data source, and refreshes the panel.
+    ''' </summary>
+    ''' <param name="realPanel">The <see cref="TableLayoutPanel"/> containing the <see cref="DataGridView"/>.</param>
+    ''' <param name="table">The <see cref="DataTable"/> to display.</param>
+    ''' <param name="dGV">The <see cref="DataGridView"/> to display the data in.</param>
+    ''' <param name="rowIndex">The row index in the panel, typically of type <see cref="ServerDataIndexes"/>.</param>
     <Extension>
     Friend Sub DisplayDataTableInDGV(
         realPanel As TableLayoutPanel,
@@ -22,6 +38,16 @@ Friend Module DisplayDataTableInDgvHelpers
         realPanel?.Refresh()
     End Sub
 
+    ''' <summary>
+    '''  Displays a <see cref="DataTable"/> in a <see cref="DataGridView"/> within a <see cref="TableLayoutPanel"/>,
+    '''  using the class name and row index to identify the context. Optionally hides the "RecordNumber" column.
+    '''  If the table is empty, displays an empty <see cref="DataGridView"/>.
+    ''' </summary>
+    ''' <param name="realPanel">The <see cref="TableLayoutPanel"/> containing the <see cref="DataGridView"/>.</param>
+    ''' <param name="table">The <see cref="DataTable"/> to display.</param>
+    ''' <param name="className">The class name context for the data.</param>
+    ''' <param name="rowIndex">The row index in the panel, typically of type <see cref="ServerDataIndexes"/>.</param>
+    ''' <param name="hideRecordNumberColumn">If true, hides the "RecordNumber" column if present.</param>
     <Extension>
     Friend Sub DisplayDataTableInDGV(
         realPanel As TableLayoutPanel,

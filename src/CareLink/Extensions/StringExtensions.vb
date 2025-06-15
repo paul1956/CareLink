@@ -8,7 +8,7 @@ Imports System.Text
 Imports System.Text.RegularExpressions
 
 ''' <summary>
-''' Provides extension methods for <see langword="String"/> manipulation and conversion.
+'''  Provides extension methods for <see langword="String"/> manipulation and conversion.
 ''' </summary>
 Public Module StringExtensions
 
