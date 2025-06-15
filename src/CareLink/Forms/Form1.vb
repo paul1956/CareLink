@@ -59,35 +59,35 @@ Public Class Form1
                 Select Case m.WParam.ToInt32()
                     'value passed when system is going on standby / suspended
                     Case PBT_APMQUERYSUSPEND
-                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Suspend))
+                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Suspend))
 
                         'value passed when system is resumed after suspension.
                     Case PBT_APMRESUMESUSPEND
-                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
 
                     'value passed when system Suspend Failed
                     Case PBT_APMQUERYSUSPENDFAILED
-                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
 
                     'value passed when system is suspended
                     Case PBT_APMSUSPEND
-                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Suspend))
+                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Suspend))
 
                     'value passed when system is in standby
                     Case PBT_APMSTANDBY
-                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Suspend))
+                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Suspend))
 
                         'value passed when system resumes from standby
                     Case PBT_APMRESUMESTANDBY
-                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
 
                         'value passed when system resumes from suspend
                     Case PBT_APMRESUMESUSPEND
-                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
 
                     'value passed when system is resumed automatically
                     Case PBT_APMRESUMEAUTOMATIC
-                        Me.PowerModeChanged(Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
 
                     'value passed when system is resumed from critical
                     'suspension possibly due to battery failure
@@ -117,10 +117,14 @@ Public Class Form1
 
 #Region "Chart Objects"
 
+#Region "Chart"
+
     Private WithEvents ActiveInsulinChart As Chart
     Private WithEvents SummaryChart As Chart
     Private WithEvents TimeInRangeChart As Chart
     Private WithEvents TreatmentMarkersChart As Chart
+
+#End Region
 
 #Region "Legends"
 
@@ -141,7 +145,6 @@ Public Class Form1
     Private Property ActiveInsulinSuspendSeries As Series
     Private Property ActiveInsulinTargetSeries As Series
     Private Property ActiveInsulinTimeChangeSeries As Series
-
     Private Property SummaryAutoCorrectionSeries As Series
     Private Property SummaryBasalSeries As Series
     Private Property SummaryHighLimitSeries As Series
@@ -152,9 +155,7 @@ Public Class Form1
     Private Property SummarySuspendSeries As Series
     Private Property SummaryTargetSgSeries As Series
     Private Property SummaryTimeChangeSeries As Series
-
     Private Property TimeInRangeSeries As New Series
-
     Private Property TreatmentMarkerAutoCorrectionSeries As Series
     Private Property TreatmentMarkerBasalSeries As Series
     Private Property TreatmentMarkerMarkersSeries As Series
@@ -179,6 +180,13 @@ Public Class Form1
 
 #Region "Chart Events"
 
+    ''' <summary>
+    '''  Handles the <see cref="Chart.CursorPositionChanging"/> event for
+    '''  the <see cref="ActiveInsulinChart"/> and <see cref="SummaryChart"/>.
+    '''  Starts the cursor timer when the cursor position is changing, if the program is initialized.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="Chart"/> control.</param>
+    ''' <param name="e">A <see cref="CursorEventArgs"/> that contains the event data.</param>
     Private Sub Chart_CursorPositionChanging(sender As Object, e As CursorEventArgs) Handles _
         ActiveInsulinChart.CursorPositionChanging,
         SummaryChart.CursorPositionChanging
@@ -191,6 +199,13 @@ Public Class Form1
         Me.CursorTimer.Start()
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="Chart.MouseLeave"/> event for
+    '''  the <see cref="ActiveInsulinChart"/>, <see cref="SummaryChart"/>, and <see cref="TreatmentMarkersChart"/>.
+    '''  Hides the callout annotation when the mouse leaves the chart area.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="Chart"/> control.</param>
+    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub Chart_MouseLeave(sender As Object, e As EventArgs) Handles _
         ActiveInsulinChart.MouseLeave,
         SummaryChart.MouseLeave,
@@ -203,6 +218,14 @@ Public Class Form1
         End With
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="Chart.MouseMove"/> event for
+    '''  the <see cref="ActiveInsulinChart"/>, <see cref="SummaryChart"/>, and <see cref="TreatmentMarkersChart"/>.
+    '''  Displays context-sensitive information in a panel or callout when the mouse moves over a data point.
+    '''  Shows details such as marker type, value, and time, or sensor glucose information, depending on the series.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="Chart"/> control.</param>
+    ''' <param name="e">A <see cref="MouseEventArgs"/> that contains the event data.</param>
     Private Sub Chart_MouseMove(sender As Object, e As MouseEventArgs) Handles _
         ActiveInsulinChart.MouseMove,
         SummaryChart.MouseMove,
@@ -350,16 +373,15 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles TemporaryUseAdvanceAITDecayCheckBox.CheckedChanged
-        Me.TemporaryUseAdvanceAITDecayCheckBox.Text = If(Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked,
-            $"Advanced Decay, AIT will decay over {CurrentUser.InsulinRealAit} hours while using {CurrentUser.InsulinTypeName}",
-            $"AIT will decay over {CurrentUser.PumpAit.ToHoursMinutes} while using {CurrentUser.InsulinTypeName}")
-        CurrentUser.UseAdvancedAitDecay = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
-        Me.UpdateActiveInsulinChart()
-    End Sub
-
 #Region "Post Paint Events"
 
+    ''' <summary>
+    '''  Handles the <see cref="Chart.PostPaint"/> event for the <see cref="ActiveInsulinChart"/>.
+    '''  Draws additional graphics or overlays after the chart is painted, such as insulin and meal markers.
+    '''  Skips painting if a mouse move is in progress, the chart is updating, or the program is not initialized.
+    ''' </summary>
+    ''' <param name="sender">The source chart control.</param>
+    ''' <param name="e">A <see cref="ChartPaintEventArgs"/> containing event data.</param>
     <DebuggerNonUserCode()>
     Private Sub ActiveInsulinChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles ActiveInsulinChart.PostPaint
         If _inMouseMove Then
@@ -382,6 +404,13 @@ Public Class Form1
         End SyncLock
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="Chart.PostPaint"/> event for the <see cref="SummaryChart"/>.
+    '''  Draws overlays such as insulin and meal markers after the summary chart is painted.
+    '''  Skips painting if a mouse move is in progress, the chart is updating, or the program is not initialized.
+    ''' </summary>
+    ''' <param name="sender">The source chart control.</param>
+    ''' <param name="e">A <see cref="ChartPaintEventArgs"/> containing event data.</param>
     <DebuggerNonUserCode()>
     Private Sub SummaryChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles SummaryChart.PostPaint
         If _inMouseMove Then
@@ -404,6 +433,13 @@ Public Class Form1
         End SyncLock
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="Chart.PostPaint"/> event for the <see cref="TreatmentMarkersChart"/>.
+    '''  Draws overlays such as insulin and meal markers after the treatment markers chart is painted.
+    '''  Skips painting if a mouse move is in progress, the chart is updating, or the program is not initialized.
+    ''' </summary>
+    ''' <param name="sender">The source chart control.</param>
+    ''' <param name="e">A <see cref="ChartPaintEventArgs"/> containing event data.</param>
     <DebuggerNonUserCode()>
     Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles TreatmentMarkersChart.PostPaint
         If _inMouseMove Then
@@ -430,15 +466,22 @@ Public Class Form1
 
 #End Region ' Chart Events
 
+
+#Region "DGV Events"
+
+#Region "DGV Global Event Helper"
+
 #Region "ContextMenuStrip Menu Events"
 
     Private WithEvents DgvCopyWithExcelMenuStrip As New ContextMenuStrip
     Friend WithEvents DgvCopyWithoutExcelMenuStrip As New ContextMenuStrip
 
-
     ''' <summary>
-    '''  Handles the Opening event for the copy-with-Excel context menu.
+    '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event for the copy-with-Excel context menu.
+    '''  Populates the context menu with options to copy data with or without headers, or save to Excel.
     ''' </summary>
+    ''' <param name="sender">The context menu strip.</param>
+    ''' <param name="e">A <see cref="CancelEventArgs"/> containing event data.</param>
     Private Sub DgvCopyWithExcelMenuStrip_Opening(sender As Object, e As CancelEventArgs) Handles DgvCopyWithExcelMenuStrip.Opening
         ' Acquire references to the owning control and item.
         Dim mnuStrip As ContextMenuStrip = CType(sender, ContextMenuStrip)
@@ -458,8 +501,11 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the Opening event for the copy-without-Excel context menu.
+    '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event for the copy-without-Excel context menu.
+    '''  Populates the context menu with options to copy selected cells with or without headers.
     ''' </summary>
+    ''' <param name="sender">The context menu strip.</param>
+    ''' <param name="e">A <see cref="CancelEventArgs"/> containing event data.</param>
     Private Sub DgvCopyWithoutExcelMenuStrip_Opening(sender As Object, e As CancelEventArgs) Handles DgvCopyWithoutExcelMenuStrip.Opening
         ' Acquire references to the owning control and item.
         Dim mnuStrip As ContextMenuStrip = CType(sender, ContextMenuStrip)
@@ -478,12 +524,11 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellContextMenuStripNeeded"/> event.
-    '''  This event is raised when a context menu is needed for a cell.
-    '''  The context menu is set to the DgvCopyWithExcelMenuStrip if the row index is valid.
+    '''  Handles the <see cref="DataGridView.CellContextMenuStripNeeded"/> event for multiple <see cref="DataGridView"/>.
+    '''  Assigns the context menu for copying data if the row index is valid.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">The <see cref="DataGridViewCellContextMenuStripNeededEventArgs"/> containing the event data.</param>
+    ''' <param name="sender">The DataGridView control.</param>
+    ''' <param name="e">A <see cref="DataGridViewCellContextMenuStripNeededEventArgs"/> containing event data.</param>
     ''' <remarks>
     '''  Sets the context menu for copying data.
     ''' </remarks>
@@ -516,10 +561,6 @@ Public Class Form1
 
 #End Region 'ContextMenuStrip Events
 
-#Region "DGV Events"
-
-#Region "DGV Global Event Helper"
-
     ''' <summary>
     '''  Handles the <see cref="DataGridView.DataBindingComplete"/> event.
     '''  This event is raised when the data binding operation is complete.
@@ -530,7 +571,7 @@ Public Class Form1
     ''' <remarks>
     '''  This event is used to customize the appearance of DataGridViews after data binding is complete.
     ''' </remarks>
-    Public Sub DgvDataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles _
+    Public Sub Dgv_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles _
         DgvActiveInsulin.DataBindingComplete,
         DgvAutoBasalDelivery.DataBindingComplete,
         DgvAutoModeStatus.DataBindingComplete,
@@ -571,9 +612,16 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles DataError events for all DataGridViews.
+    '''  Handles the <see cref="DataGridView.DataError"/> event for all DataGridViews in the form.
+    '''  This event is raised when an exception occurs during data operations such as formatting, parsing, or committing a cell value.
+    '''  The handler currently stops execution for debugging purposes.
     ''' </summary>
-    Private Sub DgvActiveInsulin_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles _
+    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
+    ''' <param name="e">A <see cref="DataGridViewDataErrorEventArgs"/> that contains the event data, including the exception and context.</param>
+    ''' <remarks>
+    '''  This method is intended for debugging and should be updated to provide user-friendly error handling in production.
+    ''' </remarks>
+    Private Sub Dgv_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles _
         DgvActiveInsulin.DataError,
         DgvAutoBasalDelivery.DataError,
         DgvAutoModeStatus.DataError,
@@ -594,6 +642,20 @@ Public Class Form1
         DgvSummary.DataError,
         DgvTherapyAlgorithmState.DataError,
         DgvTimeChange.DataError
+
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        ' Log the error (to file, event log, etc.)
+        Debug.WriteLine($"DataError in {dgv.Name}: {e.Exception.Message}")
+
+        ' Show a user-friendly message
+        Dim text As String = $"An error {e.Exception.Message} occurred while processing " &
+            $"{dgv.Name.Replace("dgv", String.Empty)}. Please check your data and try again."
+        MessageBox.Show(text, caption:="Input Error", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)
+
+        Debug.WriteLine($"Context: {e.Context}")
+
+        ' Prevent the exception from being thrown again
+        e.ThrowException = False
         Stop
     End Sub
 
@@ -937,6 +999,13 @@ Public Class Form1
 
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.CellEndEdit"/> event for the <see cref="DgvCareLinkUsers"/> DataGridView.
+    '''  This event is raised after a cell edit is completed.
+    '''  Intended for post-edit logic, such as validation or saving changes.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
+    ''' <param name="e">A <see cref="DataGridViewCellEventArgs"/> that contains the event data.</param>
     Private Sub DgvCareLinkUsers_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCareLinkUsers.CellEndEdit
         'after you've filled your dataSet, on event above try something like this
         Try
@@ -944,9 +1013,14 @@ Public Class Form1
         Catch ex As Exception
             MessageBox.Show(ex.DecodeException())
         End Try
-
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvCareLinkUsers"/> DataGridView.
+    '''  Applies custom formatting to cells, such as setting foreground color for text box columns.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
+    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
     Private Sub DgvCareLinkUsers_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCareLinkUsers.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
@@ -955,12 +1029,25 @@ Public Class Form1
         End If
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.CellValidating"/> event for the <see cref="DgvCareLinkUsers"/> DataGridView.
+    '''  Used to validate cell values before committing changes.
+    '''  Currently skips validation for the first column (index 0).
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
+    ''' <param name="e">A <see cref="DataGridViewCellValidatingEventArgs"/> that contains the event data.</param>
     Private Sub DgvCareLinkUsers_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles DgvCareLinkUsers.CellValidating
         If e.ColumnIndex = 0 Then
             Exit Sub
         End If
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvCareLinkUsers"/> DataGridView.
+    '''  Configures new columns, including sort mode, visibility, cell style, and caption.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
+    ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
     Private Sub DgvCareLinkUsers_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCareLinkUsers.ColumnAdded
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -988,6 +1075,12 @@ Public Class Form1
         End With
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.RowsAdded"/> event for the <see cref="DgvCareLinkUsers"/> DataGridView.
+    '''  Enables or disables the delete button cell based on whether the row belongs to the logged-on user.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
+    ''' <param name="e">A <see cref="DataGridViewRowsAddedEventArgs"/> that contains the event data.</param>
     Private Sub DgvCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles DgvCareLinkUsers.RowsAdded
         If s_allUserSettingsData.Count = 0 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -997,8 +1090,12 @@ Public Class Form1
         Next
     End Sub
 
+    ''' <summary>
+    '''  Initializes the <see cref="DgvCareLinkUsers"/> DataGridView with columns and sets its data source.
+    '''  Adds columns for user ID, delete row button, username, password, country code, time zone, auto login, partner, and patient user ID.
+    ''' </summary>
+    ''' <param name="dgv">The <see cref="DataGridView"/> to initialize.</param>
     Private Sub InitializeDgvCareLinkUsers(dgv As DataGridView)
-
         Dim dgvCareLinkUsersID As New DataGridViewTextBoxColumn With {
             .DataPropertyName = "ID",
             .HeaderText = "ID",
@@ -1256,7 +1353,7 @@ Public Class Form1
 
 #End Region ' Dgv Limits Events
 
-#Region "Dgv  Low Glucose Suspended Events"
+#Region "Dgv Low Glucose Suspended Events"
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.CellFormatting"/> event for <see cref="DgvLowGlucoseSuspended"/> DataGridView.
@@ -1781,16 +1878,6 @@ Public Class Form1
 #Region "Form Events"
 
     ''' <summary>
-    '''  Handles the <see cref="Label.Paint"/> event for the <see cref="ActiveInsulinValue"/> control.
-    '''  Draws a solid lime green border around the ActiveInsulinValue label.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, the ActiveInsulinValue label.</param>
-    ''' <param name="e">A <see cref="PaintEventArgs"/> that contains the event data.</param>
-    Private Sub ActiveInsulinValue_Paint(sender As Object, e As PaintEventArgs) Handles ActiveInsulinValue.Paint
-        ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.LimeGreen, ButtonBorderStyle.Solid)
-    End Sub
-
-    ''' <summary>
     '''  Handles the <see cref="Form.FormClosing"/> event for the main form.
     '''  Performs cleanup tasks such as disposing of the notification icon, terminating the <see cref="WebView2"/> process,
     '''  and deleting the WebView2 cache directory when the form is closing.
@@ -1802,7 +1889,7 @@ Public Class Form1
     '''  and removing its cache directory if present.
     ''' </remarks>
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        Me.CleanUpNotificationIcon()
+        Me.NotifyIcon1?.Dispose()
         If _webView2ProcessId > 0 Then
             Dim webViewProcess As Process = Process.GetProcessById(_webView2ProcessId)
             ' TODO: dispose of the WebView2 control
@@ -1917,7 +2004,7 @@ Public Class Form1
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
-        CheckForUpdatesAsync(False)
+        CheckForUpdatesAsync(reportSuccessfulResult:=False)
 
         Dim caption As String = $"TIR Compliance, value in (){vbCrLf}Values<2 is Excellent and not shown{vbCrLf}CareLink<4 are considered OK, it is possible to improve{vbCrLf}Values>4 implies improvement needed{vbCrLf}"
         Me.ToolTip1.SetToolTip(Me.LowTirComplianceLabel, caption)
@@ -2051,7 +2138,7 @@ Public Class Form1
         If File.Exists(userSettingsPdfFile) Then
             If CurrentPdf.IsValid Then
                 Using dialog As New PumpSetupDialog
-                    StartOrStopServerUpdateTimer(False)
+                    StartOrStopServerUpdateTimer(Start:=False)
                     dialog.Pdf = CurrentPdf
                     dialog.ShowDialog(Me)
                 End Using
@@ -2070,7 +2157,7 @@ Public Class Form1
                 buttonStyle:=MsgBoxStyle.OkOnly,
                 title:="Missing Settings PDF File")
         End If
-        StartOrStopServerUpdateTimer(True)
+        StartOrStopServerUpdateTimer(Start:=True)
     End Sub
 
     ''' <summary>
@@ -2123,11 +2210,11 @@ Public Class Form1
             If openFileDialog1.ShowDialog(Me) = DialogResult.OK Then
                 Try
                     Dim fileNameWithPath As String = openFileDialog1.FileName
-                    StartOrStopServerUpdateTimer(False)
+                    StartOrStopServerUpdateTimer(Start:=False)
                     If File.Exists(fileNameWithPath) Then
                         RecentData = New Dictionary(Of String, String)
                         ExceptionHandlerDialog.ReportFileNameWithPath = fileNameWithPath
-                        If ExceptionHandlerDialog.ShowDialog(Me) = DialogResult.OK Then
+                        If ExceptionHandlerDialog.ShowDialog(owner:=Me) = DialogResult.OK Then
                             ExceptionHandlerDialog.ReportFileNameWithPath = ""
                             Try
                                 RecentData = LoadIndexedItems(ExceptionHandlerDialog.LocalRawData)
@@ -2139,15 +2226,15 @@ Public Class Form1
                             Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                             Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
                             Me.SetLastUpdateTime(msg:=epochDateTime.ToShortDateTimeString, suffixMessage:="from file", highLight:=False, isDaylightSavingTime:=epochDateTime.IsDaylightSavingTime)
-                            SetUpCareLinkUser(TestSettingsFileNameWithPath)
+                            SetUpCareLinkUser()
 
                             Try
-                                FinishInitialization(Me)
+                                FinishInitialization(mainForm:=Me)
                             Catch ex As Exception
                                 MessageBox.Show($"Error in {NameOf(FinishInitialization)}. Original error: {ex.Message}")
                             End Try
                             Try
-                                Me.UpdateAllTabPages(True)
+                                Me.UpdateAllTabPages(fromFile:=True)
                             Catch ex As Exception
                                 MessageBox.Show($"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
                             End Try
@@ -2221,7 +2308,7 @@ Public Class Form1
 
 #End Region ' Start Here Menu Events
 
-#Region "Option Menus"
+#Region "Menus Options"
 
     ''' <summary>
     '''  Gets the selected speech recognition minimum confidence value from the menu.
@@ -2285,13 +2372,24 @@ Public Class Form1
     End Sub
 
     ''' <summary>
+    '''  Handles the <see cref="MenuOptions.DropDownOpening"/> event for the <see cref="MenuOptions"/> menu.
+    '''  Enables or disables the Edit Pump Settings menu item based on debugger state or user name.
+    ''' </summary>
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">The event data.</param>
+    <DebuggerNonUserCode()>
+    Private Sub MenuOptions_DropDownOpening(sender As Object, e As EventArgs) Handles MenuOptions.DropDownOpening
+        Me.MenuOptionsEditPumpSettings.Enabled = Debugger.IsAttached OrElse Not String.IsNullOrWhiteSpace(CurrentUser?.UserName)
+    End Sub
+
+    ''' <summary>
     '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for the <see cref="MenuOptionsEditPumpSettings"/> menu item.
     '''  Loads and deserializes the current user's pump settings from JSON.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) Handles MenuOptionsEditPumpSettings.Click
-        SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, True)
+        SetUpCareLinkUser(forceUI:=True)
         Dim contents As String = File.ReadAllText(GetUserSettingsJsonFileNameWithPath)
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, s_jsonSerializerOptions)
     End Sub
@@ -2353,7 +2451,6 @@ Public Class Form1
         My.Settings.SystemSpeechHelpShown = Me.MenuOptionsSpeechHelpShown.Checked
         My.Settings.Save()
     End Sub
-
 
     ''' <summary>
     '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for the <see cref="MenuOptionsSpeechRecognition80"/> menu item.
@@ -2502,10 +2599,9 @@ Public Class Form1
         Me.MenuOptionsSpeechRecognitionEnabled.Checked = Me.MenuOptionsSpeechRecognitionDisabled.Checked = False
     End Sub
 
-#End Region ' Option Menus
+#End Region ' Menus Options
 
 #Region "View Menu Events"
-
 
     ''' <summary>
     '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for the <see cref="MenuShowMiniDisplay"/> menu item.
@@ -2551,9 +2647,40 @@ Public Class Form1
     Private Sub MenuHelpReportAnIssue_Click(sender As Object, e As EventArgs) Handles MenuHelpReportAnIssue.Click
         OpenUrlInBrowser($"{GitHubCareLinkUrl}issues")
     End Sub
+
 #End Region ' Help Menu Events
 
 #End Region 'Form Menu Events
+
+#Region "Form Misc Events"
+
+    ''' <summary>
+    '''  Handles the <see cref="Label.Paint"/> event for the <see cref="ActiveInsulinValue"/> control.
+    '''  Draws a solid lime green border around the ActiveInsulinValue label.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, the ActiveInsulinValue label.</param>
+    ''' <param name="e">A <see cref="PaintEventArgs"/> that contains the event data.</param>
+    Private Sub ActiveInsulinValue_Paint(sender As Object, e As PaintEventArgs) Handles ActiveInsulinValue.Paint
+        ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.LimeGreen, ButtonBorderStyle.Solid)
+    End Sub
+
+    ''' <summary>
+    '''  Handles the <see cref="CheckBox.CheckedChanged"/> event for
+    '''  the <see cref="TemporaryUseAdvanceAITDecayCheckBox"/>.
+    '''  Updates the checkbox text and the <see cref="CurrentUser.UseAdvancedAitDecay"/> property,
+    '''  then updates the active insulin chart.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="CheckBox"/> control.</param>
+    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles TemporaryUseAdvanceAITDecayCheckBox.CheckedChanged
+        Me.TemporaryUseAdvanceAITDecayCheckBox.Text = If(Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked,
+            $"Advanced Decay, AIT will decay over {CurrentUser.InsulinRealAit} hours while using {CurrentUser.InsulinTypeName}",
+            $"AIT will decay over {CurrentUser.PumpAit.ToHoursMinutes} while using {CurrentUser.InsulinTypeName}")
+        CurrentUser.UseAdvancedAitDecay = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
+        Me.UpdateActiveInsulinChart()
+    End Sub
+
+#End Region ' Form Misc Events
 
 #Region "NotifyIcon Events"
 
@@ -2568,7 +2695,7 @@ Public Class Form1
         Me.WindowState = FormWindowState.Normal
     End Sub
 
-#End Region
+#End Region ' NotifyIcon Events
 
 #Region "Settings Events"
 
@@ -2801,13 +2928,13 @@ Public Class Form1
         Debug.WriteLine($"PowerModeChange {e.Mode}")
         Select Case e.Mode
             Case PowerModes.Suspend
-                StartOrStopServerUpdateTimer(False)
+                StartOrStopServerUpdateTimer(Start:=False)
                 s_shuttingDown = True
-                Me.SetLastUpdateTime("System Sleeping", "", True, Nothing)
+                Me.SetLastUpdateTime(msg:="System Sleeping", suffixMessage:="", highLight:=True, isDaylightSavingTime:=Nothing)
             Case PowerModes.Resume
-                Me.SetLastUpdateTime("System Awake", "", True, Nothing)
+                Me.SetLastUpdateTime(msg:="System Awake", suffixMessage:="", highLight:=True, isDaylightSavingTime:=Nothing)
                 s_shuttingDown = False
-                StartOrStopServerUpdateTimer(True, ThirtySecondInMilliseconds \ 3)
+                StartOrStopServerUpdateTimer(Start:=True, interval:=ThirtySecondInMilliseconds \ 3)
                 DebugPrint($"restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}")
         End Select
 
@@ -2823,7 +2950,7 @@ Public Class Form1
     '''  The method checks if updates are in progress, retrieves recent data, and updates the UI accordingly.
     ''' </remarks>
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
-        StartOrStopServerUpdateTimer(False)
+        StartOrStopServerUpdateTimer(Start:=False)
         Dim lastErrorMessage As String = String.Empty
         SyncLock _updatingLock
             If _updating Then
@@ -2840,7 +2967,7 @@ Public Class Form1
                                 Case DialogResult.OK
                                     Exit Do
                                 Case DialogResult.Cancel
-                                    StartOrStopServerUpdateTimer(False)
+                                    StartOrStopServerUpdateTimer(Start:=False)
                                     Return
                                 Case DialogResult.Retry
                             End Select
@@ -3247,25 +3374,6 @@ Public Class Form1
 #Region "NotifyIcon Support"
 
     ''' <summary>
-    '''  Disposes the notification icon if it exists.
-    ''' </summary>
-    Private Sub CleanUpNotificationIcon()
-        Me.NotifyIcon1?.Dispose()
-    End Sub
-
-
-    ''' <summary>
-    '''  Handles the <see cref="MenuOptions.DropDownOpening"/> event for the <see cref="MenuOptions"/> menu.
-    '''  Enables or disables the Edit Pump Settings menu item based on debugger state or user name.
-    ''' </summary>
-    ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">The event data.</param>
-    <DebuggerNonUserCode()>
-    Private Sub MenuOptions_DropDownOpening(sender As Object, e As EventArgs) Handles MenuOptions.DropDownOpening
-        Me.MenuOptionsEditPumpSettings.Enabled = Debugger.IsAttached OrElse Not String.IsNullOrWhiteSpace(CurrentUser?.UserName)
-    End Sub
-
-    ''' <summary>
     '''  Updates the notification icon with the latest sensor glucose value and displays a balloon tip if necessary.
     '''  This method is called to refresh the notification icon based on the latest sensor glucose reading.
     ''' </summary>
@@ -3432,12 +3540,9 @@ Public Class Form1
     Private Sub UpdateActiveInsulin()
         Try
             If PatientData.ActiveInsulin IsNot Nothing AndAlso PatientData.ActiveInsulin.amount >= 0 Then
-                Dim activeInsulinStr As String = $"{PatientData.ActiveInsulin.amount:N3}"
-                If activeInsulinStr.ToCharArray.Last = "0" Then
-                    activeInsulinStr = $"{PatientData.ActiveInsulin.amount:N2}"
-                End If
-                Me.ActiveInsulinValue.Text = $"Active Insulin {activeInsulinStr} U"
-                _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin {activeInsulinStr} U"
+                Dim activeInsulinStr As String = $"Active Insulin {$"{PatientData.ActiveInsulin.amount:N3}"} U"
+                Me.ActiveInsulinValue.Text = activeInsulinStr
+                _sgMiniDisplay.ActiveInsulinTextBox.Text = activeInsulinStr
             Else
                 Me.ActiveInsulinValue.Text = $"Active Insulin Unknown"
                 _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin --- U"
@@ -3597,7 +3702,7 @@ Public Class Form1
                     markerInsulinDictionary:=s_summaryMarkerInsulinDictionary,
                     markerMealDictionary:=s_summaryMarkerMealDictionary)
                 .PlotSgSeries(GetYMinValueFromNativeMmolL())
-                .PlotHighLowLimitsAndTargetSg(False)
+                .PlotHighLowLimitsAndTargetSg(targetSsOnly:=False)
                 Application.DoEvents()
             End With
         Catch ex As Exception
@@ -4161,7 +4266,7 @@ Public Class Form1
             Me.TreatmentMarkersChart.PlotSuspendArea(Me.TreatmentMarkerSuspendSeries)
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
             Me.TreatmentMarkersChart.PlotSgSeries(GetYMinValueFromNativeMmolL())
-            Me.TreatmentMarkersChart.PlotHighLowLimitsAndTargetSg(True)
+            Me.TreatmentMarkersChart.PlotHighLowLimitsAndTargetSg(targetSsOnly:=True)
         Catch ex As Exception
             Stop
             Throw New Exception($"{ex.DecodeException()} exception in {NameOf(InitializeTreatmentMarkersChart)}")
@@ -4212,6 +4317,8 @@ Public Class Form1
         If RecentData.TryGetValue(NameOf(ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime), lastMedicalDeviceDataUpdateServerTimeEpoch) Then
             If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                 Exit Sub
+            Else
+                s_lastMedicalDeviceDataUpdateServerEpoch = CLng(lastMedicalDeviceDataUpdateServerTimeEpoch)
             End If
         End If
 
@@ -4219,7 +4326,7 @@ Public Class Form1
             Stop
         End If
 
-        CheckForUpdatesAsync(False)
+        CheckForUpdatesAsync(reportSuccessfulResult:=False)
 
         SyncLock _updatingLock
             _updating = True ' prevent paint

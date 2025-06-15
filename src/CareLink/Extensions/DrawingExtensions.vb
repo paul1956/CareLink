@@ -7,7 +7,7 @@ Imports System.Runtime.CompilerServices
 Friend Module DrawingExtensions
 
     ''' <summary>
-    '''  Gets a color based on the time remaining until the next calibration.
+    '''  Gets a <see cref="Color"/> based on the time remaining until the next calibration.
     '''  The color will be red if less than 2 hours, yellow if between 2 and 4 hours,
     '''  and lime if more than 4 hours.
     ''' </summary>

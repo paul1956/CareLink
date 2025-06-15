@@ -348,15 +348,15 @@ Public Class Client2
         If _accessTokenPayload Is Nothing Then
             Return False
         End If
-        Dim jsonConfigElement As JsonElement
+        Dim configJsonElement As JsonElement
         Try
             Dim element As JsonElement = CType(_accessTokenPayload("token_details"), JsonElement)
             Application.DoEvents()
             Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, s_jsonDeserializerOptions)
             _country = payload.Country
-            jsonConfigElement = GetConfigElement(_httpClient, payload.Country)
-            _config = jsonConfigElement.ConvertJsonElementToDictionary()
-            Dim userString As String = Me.GetUserString(jsonConfigElement, _tokenDataElement)
+            configJsonElement = GetConfigElement(_httpClient, payload.Country)
+            _config = configJsonElement.ConvertJsonElementToDictionary()
+            Dim userString As String = Me.GetUserString(configJsonElement, _tokenDataElement)
             If String.IsNullOrWhiteSpace(userString) Then
                 Throw New UnauthorizedAccessException
             End If
@@ -367,17 +367,17 @@ Public Class Client2
 
             Dim role As String = _PatientPersonalData.role
             If role.Contains("Partner", StringComparison.InvariantCultureIgnoreCase) Then
-                _patientElement = Me.GetPatient(jsonConfigElement, _tokenDataElement).Result
+                _patientElement = Me.GetPatient(configJsonElement, _tokenDataElement).Result
             End If
         Catch ex As Exception
             Debug.WriteLine(ex.ToString())
 
             If Auth_Error_Codes.Contains(_lastHttpStatusCode) Then
                 Try
-                    _tokenDataElement = Me.DoRefresh(jsonConfigElement.ConvertJsonElementToDictionary, _tokenDataElement).Result
+                    _tokenDataElement = Me.DoRefresh(configJsonElement.ConvertJsonElementToDictionary, _tokenDataElement).Result
                     If Not (_tokenDataElement.ValueKind = JsonValueKind.Undefined OrElse _tokenDataElement.ValueKind = JsonValueKind.Null) Then
                         _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
-                        WriteTokenFile(_tokenDataElement, s_userName)
+                        WriteTokenFile(value:=_tokenDataElement, userName:=s_userName)
                     End If
                 Catch refreshEx As Exception
                     Debug.WriteLine(refreshEx.ToString())
@@ -447,15 +447,15 @@ Public Class Client2
     ''' <summary>
     '''  Retrieves the patient information for the current user asynchronously.
     ''' </summary>
-    ''' <param name="config">The API configuration as a <see cref="JsonElement"/>.</param>
+    ''' <param name="configJsonElement">The API configuration as a <see cref="JsonElement"/>.</param>
     ''' <param name="token_data">The token data as a <see cref="JsonElement"/>.</param>
     ''' <returns>
     '''  A <see cref="Task(Of Dictionary(Of String, String))"/> containing the patient information,
     '''  or <see langword="Nothing"/> if not found.
     ''' </returns>
-    Private Async Function GetPatient(config As JsonElement, token_data As JsonElement) As Task(Of Dictionary(Of String, String))
+    Private Async Function GetPatient(configJsonElement As JsonElement, token_data As JsonElement) As Task(Of Dictionary(Of String, String))
         Debug.WriteLine(NameOf(GetPatient))
-        Dim url As String = $"{CStr(config.ConvertJsonElementToDictionary("baseUrlCareLink"))}/links/patients"
+        Dim url As String = $"{CStr(configJsonElement.ConvertJsonElementToDictionary("baseUrlCareLink"))}/links/patients"
         Dim headers As New Dictionary(Of String, String)(s_common_Headers)
         headers("mag-identifier") = CStr(token_data.ConvertJsonElementToDictionary("mag-identifier"))
         headers("Authorization") = $"Bearer {CStr(token_data.ConvertJsonElementToDictionary("access_token"))}"
@@ -519,7 +519,6 @@ Public Class Client2
     ''' <returns>
     '''  An <see langword="Integer"/> representing the last API response status code.
     ''' </returns>
-
     Public Function GetHttpStatusCode() As HttpStatusCode
         Return _lastHttpStatusCode
     End Function

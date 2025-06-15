@@ -12,7 +12,6 @@ Friend Module Form1CollectMarkersHelper
     ''' </summary>
     ''' <param name="marker">The marker to scale.</param>
     ''' <returns>A new <cref name="Marker"/> with the scaled "unitValue".</returns>
-
     <Extension>
     Private Function ScaleMarker(marker As Marker) As Marker
         Dim newMarker As Marker = marker

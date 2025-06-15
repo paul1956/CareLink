@@ -36,7 +36,7 @@ Friend Module ColorDictionaryHelpers
     ''' </summary>
     ''' <returns>A <see cref="BindingSource"/> bound to <see cref="GraphColorDictionary"/>.</returns>
     Public Function GetColorDictionaryBindingSource() As BindingSource
-        Return New BindingSource(GraphColorDictionary, Nothing)
+        Return New BindingSource(dataSource:=GraphColorDictionary, dataMember:=Nothing)
     End Function
 
     ''' <summary>

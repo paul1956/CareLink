@@ -16,23 +16,23 @@ Friend Module DataTableHelpers
     '''  Adds a <see cref="DataRow"/> to a <see cref="DataTable"/> from the public properties of a class.
     ''' </summary>
     ''' <typeparam name="T">The type of the class to add as a row.</typeparam>
-    ''' <param name="Table">A reference to the DataTable to insert the DataRow into.</param>
-    ''' <param name="ClassObject">The class containing the data to fill the DataRow from.</param>
+    ''' <param name="table">A reference to the DataTable to insert the DataRow into.</param>
+    ''' <param name="obj">The class containing the data to fill the DataRow from.</param>
     <Extension>
-    Private Sub Add(Of T As Class)(ByRef Table As DataTable, ClassObject As T)
-        If ClassObject Is Nothing Then
-            Table = Nothing
+    Private Sub Add(Of T As Class)(ByRef table As DataTable, obj As T)
+        If obj Is Nothing Then
+            table = Nothing
             Return
         End If
-        Dim row As DataRow = Table.NewRow()
+        Dim row As DataRow = table.NewRow()
         For Each [property] As PropertyInfo In GetType(T).GetProperties()
-            If Table.Columns.Contains([property].Name) Then
-                If Table.Columns([property].Name) IsNot Nothing Then
-                    row([property].Name) = [property].GetValue(ClassObject, Nothing)
+            If table.Columns.Contains([property].Name) Then
+                If table.Columns([property].Name) IsNot Nothing Then
+                    row(columnName:=[property].Name) = [property].GetValue(obj, index:=Nothing)
                 End If
             End If
         Next [property]
-        Table.Rows.Add(row)
+        table.Rows.Add(row)
     End Sub
 
     ''' <summary>

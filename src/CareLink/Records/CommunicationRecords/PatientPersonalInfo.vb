@@ -104,7 +104,7 @@ Public Class PatientPersonalInfo
     End Function
 
     Public Sub SetInsulinType(insulinType As String)
-        _profileDictionary(NameOf(insulinType).ToTitleCase(False)) = insulinType
+        _profileDictionary(NameOf(insulinType).ToTitleCase(separateNumbers:=False)) = insulinType
     End Sub
 
 End Class

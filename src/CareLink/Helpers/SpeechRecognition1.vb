@@ -7,18 +7,65 @@ Imports System.Speech.Recognition
 Imports System.Speech.Synthesis
 Imports System.Text
 
+''' <summary>
+'''  Provides speech recognition and synthesis support for CareLink.
+'''  Handles initialization, recognition events, audio alerts, and user feedback.
+''' </summary>
 Friend Module SpeechSupport
+    ''' <summary>
+    '''  Stores the last message spoken by the synthesizer.
+    ''' </summary>
     Private s_lastSpokenMessage As String
+
+    ''' <summary>
+    '''  Represents the current speech prompt being spoken asynchronously.
+    ''' </summary>
     Private s_promptBusy As Prompt = Nothing
+
+    ''' <summary>
+    '''  Indicates whether a speech error has been reported to the user.
+    ''' </summary>
     Private s_speechErrorReported As Boolean = False
+
+    ''' <summary>
+    '''  Stores the name of the user for whom speech recognition is enabled.
+    ''' </summary>
     Private s_speechUserName As String = ""
+
+    ''' <summary>
+    '''  Indicates whether the speech wake word has been detected.
+    ''' </summary>
     Private s_speechWakeWordFound As Boolean = False
+
+    ''' <summary>
+    '''  The speech recognition engine instance.
+    ''' </summary>
     Private s_sre As SpeechRecognitionEngine
+
+    ''' <summary>
+    '''  The speech synthesizer instance.
+    ''' </summary>
     Private s_ss As SpeechSynthesizer
+
+    ''' <summary>
+    '''  Stores the current status text for the speech status strip.
+    ''' </summary>
     Private s_statusStripSpeechText As String = ""
+
+    ''' <summary>
+    '''  Stores the time of the last alert spoken.
+    ''' </summary>
     Private s_timeOfLastAlert As Date
+
+    ''' <summary>
+    '''  Indicates whether the application is shutting down.
+    ''' </summary>
     Friend s_shuttingDown As Boolean = False
 
+    ''' <summary>
+    '''  Announces the current sensor glucose (SG) value using speech synthesis.
+    ''' </summary>
+    ''' <param name="recognizedText">The recognized speech text to determine which value to announce.</param>
     Private Sub AnnounceSG(recognizedText As String)
         Dim sgName As String
         Select Case True
@@ -43,6 +90,12 @@ Friend Module SpeechSupport
         End If
     End Sub
 
+    ''' <summary>
+    '''  Handles audio signal problems detected by the speech recognition engine.
+    '''  Provides user feedback and error reporting.
+    ''' </summary>
+    ''' <param name="sender">The event sender.</param>
+    ''' <param name="e">Event arguments containing audio signal problem details.</param>
     <DebuggerStepThrough()>
     Private Sub AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
         If s_shuttingDown OrElse s_speechErrorReported Or s_sre Is Nothing Then Exit Sub
@@ -87,6 +140,10 @@ Friend Module SpeechSupport
 
     End Sub
 
+    ''' <summary>
+    '''  Gets a description of the current trend based on the trend arrows.
+    ''' </summary>
+    ''' <returns>A string describing the trend direction and arrow count.</returns>
     Private Function GetTrendText() As String
         Dim arrows As String = Form1.LabelTrendArrows.Text
         Dim arrowCount As Integer
@@ -102,6 +159,11 @@ Friend Module SpeechSupport
         End Select
     End Function
 
+    ''' <summary>
+    '''  Handles the SpeechRecognized event, processes recognized speech, and triggers appropriate actions.
+    ''' </summary>
+    ''' <param name="sender">The event sender.</param>
+    ''' <param name="e">Event arguments containing recognition results.</param>
     Private Sub SpeechRecognized(sender As Object, e As SpeechRecognizedEventArgs)
         If My.Settings.SystemSpeechRecognitionThreshold >= 1 Then
             Form1.StatusStripSpeech.Text = ""
@@ -200,6 +262,9 @@ Friend Module SpeechSupport
         End If
     End Sub
 
+    ''' <summary>
+    '''  Cancels and disposes the current speech recognition engine, removes event handlers, and updates UI state.
+    ''' </summary>
     Friend Sub CancelSpeechRecognition()
         If s_sre IsNot Nothing Then
             RemoveHandler s_sre.AudioSignalProblemOccurred, AddressOf AudioSignalProblemOccurred
@@ -213,6 +278,9 @@ Friend Module SpeechSupport
         End If
     End Sub
 
+    ''' <summary>
+    '''  Initializes the speech synthesizer for audio alerts.
+    ''' </summary>
     Friend Sub InitializeAudioAlerts()
         If s_ss Is Nothing Then
             s_ss = New SpeechSynthesizer()
@@ -221,6 +289,9 @@ Friend Module SpeechSupport
 
     End Sub
 
+    ''' <summary>
+    '''  Initializes and configures the speech recognition engine, loads grammars, and starts recognition.
+    ''' </summary>
     Friend Sub InitializeSpeechRecognition()
         Dim oldUserName As String = s_speechUserName
         If s_speechUserName = PatientData.FirstName AndAlso s_sre IsNot Nothing Then
@@ -295,6 +366,10 @@ Friend Module SpeechSupport
 
     End Sub
 
+    ''' <summary>
+    '''  Speaks the specified text using the speech synthesizer, with duplicate and timing checks.
+    ''' </summary>
+    ''' <param name="text">The text to be spoken.</param>
     Friend Sub PlayText(text As String)
         If Not My.Settings.SystemAudioAlertsEnabled Then
             Form1.StatusStripSpeech.Text = ""

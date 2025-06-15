@@ -64,7 +64,7 @@ Friend Module LoginHelpers
     '''  <see langword="True"/> if login and data update succeeded; otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function DoOptionalLoginAndUpdateData(mainForm As Form1, updateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
-        Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(False)
+        Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(Start:=False)
         s_listOfAutoBasalDeliveryMarkers.Clear()
         ProgramInitialized = False
         Dim fromFile As Boolean
@@ -78,7 +78,7 @@ Friend Module LoginHelpers
                 mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(TestDataFileNameWithPath)
                 mainForm.SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(TestSettingsFileNameWithPath)
+                SetUpCareLinkUser()
                 fromFile = True
             Case FileToLoadOptions.Login, FileToLoadOptions.NewUser
                 mainForm.Text = SavedTitle
@@ -100,7 +100,7 @@ Friend Module LoginHelpers
                 Loop
 
                 If Form1.Client Is Nothing OrElse Not Form1.Client.LoggedIn Then
-                    StartOrStopServerUpdateTimer(True, FiveMinutesInMilliseconds)
+                    StartOrStopServerUpdateTimer(Start:=True, interval:=FiveMinutesInMilliseconds)
 
                     If NetworkUnavailable() Then
                         ReportLoginStatus(mainForm.LoginStatus, hasErrors:=True, lastErrorMessage:="Network Unavailable")
@@ -116,8 +116,8 @@ Friend Module LoginHelpers
                 End If
                 Dim lastErrorMessage As String = LoginDialog.Client.GetRecentData()
 
-                SetUpCareLinkUser(GetUserSettingsJsonFileNameWithPath, forceUI:=False)
-                StartOrStopServerUpdateTimer(True, OneMinutesInMilliseconds)
+                SetUpCareLinkUser(forceUI:=False)
+                StartOrStopServerUpdateTimer(Start:=True, interval:=OneMinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
                     ReportLoginStatus(mainForm.LoginStatus)
@@ -174,7 +174,7 @@ Friend Module LoginHelpers
                 mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(lastDownloadFileWithPath)
                 mainForm.SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
-                SetUpCareLinkUser(TestSettingsFileNameWithPath)
+                SetUpCareLinkUser()
                 fromFile = True
         End Select
         If Form1.Client IsNot Nothing Then
@@ -187,7 +187,9 @@ Friend Module LoginHelpers
 
         mainForm.PumpAITLabel.Text = CurrentUser.GetPumpAitString
         mainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
-        mainForm.UpdateAllTabPages(fromFile)
+        If updateAllTabs Then
+            mainForm.UpdateAllTabPages(fromFile)
+        End If
         Return True
     End Function
 
@@ -274,22 +276,23 @@ Friend Module LoginHelpers
     End Sub
 
     ''' <summary>
-    '''  Loads and deserializes the user settings from the specified JSON file.
+    '''  Loads and deserializes the user settings from JSON file.
     ''' </summary>
-    ''' <param name="userSettingsFileWithPath">The path to the user settings JSON file.</param>
-    Friend Sub SetUpCareLinkUser(userSettingsFileWithPath As String)
-        Dim userSettingsJson As String = File.ReadAllText(userSettingsFileWithPath)
-        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(userSettingsJson, s_jsonDeserializerOptions)
+    Friend Sub SetUpCareLinkUser()
+        Dim path As String = GetUserSettingsJsonFileNameWithPath()
+        Dim json As String = File.ReadAllText(path)
+        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, s_jsonDeserializerOptions)
     End Sub
 
     ''' <summary>
     '''  Loads and optionally updates the user settings, prompting the user if necessary.
     ''' </summary>
-    ''' <param name="userSettingsFile">The path to the user settings JSON file.</param>
     ''' <param name="forceUI">
     '''  <see langword="True"/> to force the user interface for updating settings; otherwise, <see langword="False"/>.
     ''' </param>
-    Friend Sub SetUpCareLinkUser(userSettingsFile As String, forceUI As Boolean)
+    '''
+    Friend Sub SetUpCareLinkUser(forceUI As Boolean)
+        Dim path As String = GetUserSettingsJsonFileNameWithPath()
         Dim currentUserUpdateNeeded As Boolean = False
         Dim pdfNewerThanUserSettings As Boolean = False
         Dim pdfFileNameWithPath As String = GetUserSettingsPdfFileNameWithPath()
@@ -343,7 +346,7 @@ Friend Module LoginHelpers
             End If
         End If
         If currentUserUpdateNeeded OrElse forceUI Then
-            Using f As New InitializeDialog(CurrentUser, ait, currentTarget, carbRatios)
+            Using f As New InitializeDialog(ait, currentTarget, carbRatios)
                 Dim result As DialogResult = f.ShowDialog(My.Forms.Form1)
                 If result = DialogResult.OK Then
                     currentUserUpdateNeeded = currentUserUpdateNeeded OrElse Not CurrentUser.Equals(f.CurrentUser)

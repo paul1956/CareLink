@@ -8,20 +8,28 @@ Imports System.Text
 
 Public Module DictionaryExtensions
 
-    Private Sub SetDateProperty(Of T As {Class, New})(classObject As T, row As KeyValuePair(Of String, String), [property] As PropertyInfo)
+    ''' <summary>
+    '''  Sets a <see cref="Date"/> property on an object by assigning the string value
+    '''  to a corresponding property with an "AsString" suffix.
+    ''' </summary>
+    ''' <typeparam name="T">The type of the object, which must be a class with a parameterless constructor.</typeparam>
+    ''' <param name="obj">The object whose property will be set.</param>
+    ''' <param name="row">The key-value pair containing the property name and value.</param>
+    ''' <param name="[property]">The <see cref="PropertyInfo"/> of the property to set.</param>
+    Private Sub SetDateProperty(Of T As {Class, New})(obj As T, row As KeyValuePair(Of String, String), [property] As PropertyInfo)
         Try
-            Dim propertyInfo As PropertyInfo = classObject.GetType.GetProperty($"{[property].Name}AsString")
+            Dim propertyInfo As PropertyInfo = obj.GetType.GetProperty($"{[property].Name}AsString")
             If propertyInfo Is Nothing Then
                 Stop
             End If
-            propertyInfo.SetValue(classObject, row.Value, Nothing)
+            propertyInfo.SetValue(obj, row.Value, index:=Nothing)
         Catch ex As Exception
             Stop
         End Try
     End Sub
 
     ''' <summary>
-    '''  Converts a Dictionary(Of String, T) to a CSV string representation.
+    '''  Converts a <see cref="Dictionary(Of String, T)"/> to a CSV string representation.
     ''' </summary>
     ''' <typeparam name="T">The type of the values in the dictionary.</typeparam>
     ''' <param name="dic">The dictionary to convert.</param>
@@ -54,9 +62,9 @@ Public Module DictionaryExtensions
         If item Is Nothing Then
             Return ""
         End If
-        Dim returnString As String = String.Empty
-        Return If(item.TryGetValue(Key, returnString),
-                  returnString,
+        Dim value As String = String.Empty
+        Return If(item.TryGetValue(Key, value),
+                  value,
                   String.Empty
                  )
     End Function
@@ -70,7 +78,7 @@ Public Module DictionaryExtensions
     ''' <returns>A new instance of <see cref="Dictionary(Of String, T)"/> with the same key-value pairs.</returns>
     <Extension>
     Public Function Clone(Of T)(dic As Dictionary(Of String, T)) As Dictionary(Of String, T)
-        Return (From x In dic Select x).ToDictionary(Function(p) p.Key, Function(p) p.Value)
+        Return (From x In dic Select x).ToDictionary(keySelector:=Function(p) p.Key, elementSelector:=Function(p) p.Value)
     End Function
 
     ''' <summary>
@@ -98,35 +106,37 @@ Public Module DictionaryExtensions
         End If
 
         Dim columnNames As List(Of String) = dic.Keys.ToList()
-        Dim classObject As New T
+        Dim obj As New T
         For Each row As KeyValuePair(Of String, String) In dic
-            Dim [property] As PropertyInfo = classType.GetProperty(row.Key, BindingFlags.Public Or BindingFlags.Instance Or BindingFlags.IgnoreCase)
+            Dim [property] As PropertyInfo = classType.GetProperty(
+                name:=row.Key,
+                bindingAttr:=BindingFlags.Public Or BindingFlags.Instance Or BindingFlags.IgnoreCase)
+
             If [property] IsNot Nothing Then
                 If [property].CanWrite Then ' Make sure property isn't read only
-
                     Try
-                        Dim propertyValue As Object = Nothing
+                        Dim value As Object = Nothing
                         Select Case [property].PropertyType.Name
                             Case "DateTime"
-                                SetDateProperty(classObject, row, [property])
+                                SetDateProperty(obj, row, [property])
                                 Continue For
                             Case NameOf([Single])
-                                propertyValue = row.Value.ParseSingle(decimalDigits:=10)
+                                value = row.Value.ParseSingle(decimalDigits:=10)
                             Case NameOf([Double])
-                                propertyValue = CDbl(row.Value.ParseSingle(decimalDigits:=10))
+                                value = CDbl(row.Value.ParseSingle(decimalDigits:=10))
                             Case NameOf([Decimal])
-                                propertyValue = CDec(row.Value.ParseSingle(decimalDigits:=3))
+                                value = CDec(row.Value.ParseSingle(decimalDigits:=3))
                             Case NameOf([Boolean]),
                                  NameOf([Int32]),
                                  NameOf([String])
-                                propertyValue = Convert.ChangeType(row.Value, [property].PropertyType)
+                                value = Convert.ChangeType(row.Value, conversionType:=[property].PropertyType)
                             Case "MarkerData"
                                 Stop
                             Case Else
-                                Throw UnreachableException([property].PropertyType.Name)
+                                Throw UnreachableException(propertyName:=[property].PropertyType.Name)
                         End Select
 
-                        classObject.GetType.GetProperty([property].Name).SetValue(classObject, propertyValue, Nothing)
+                        obj.GetType.GetProperty([property].Name).SetValue(obj, value, index:=Nothing)
                     Catch ex As Exception
                         Return New T
                     End Try
@@ -141,8 +151,8 @@ Public Module DictionaryExtensions
             End If
         Next row
 
-        classObject.GetType.GetProperty("RecordNumber")?.SetValue(classObject, recordNumber, Nothing)
-        Return classObject
+        obj.GetType.GetProperty("RecordNumber")?.SetValue(obj, value:=recordNumber, index:=Nothing)
+        Return obj
     End Function
 
     ''' <summary>
@@ -174,10 +184,10 @@ Public Module DictionaryExtensions
     End Function
 
     ''' <summary>
-    '''  Returns the index of the value in the SortedDictionary.
+    '''  Returns the index of the value in the <see cref="SortedDictionary"/>.
     ''' </summary>
     ''' <param name="dic">The SortedDictionary to search.</param>
-    ''' <param name="item">The KnownColor to find.</param>
+    ''' <param name="item">The <see cref="KnownColor"/> to find.</param>
     ''' <returns>The index of the item in the <see cref="SortedDictionary"/>, or -1 if not found.</returns>
     <Extension>
     Public Function IndexOfValue(dic As SortedDictionary(Of String, KnownColor), item As KnownColor) As Integer
@@ -197,7 +207,9 @@ Public Module DictionaryExtensions
         For Each kvp As KeyValuePair(Of String, T) In dic
             sortDic.Add(kvp.Key, kvp.Value)
         Next
-        Return (From x In sortDic Select x).ToDictionary(Function(p) p.Key, Function(p) p.Value)
+        Return (From x In sortDic Select x).ToDictionary(
+            keySelector:=Function(p) p.Key,
+            elementSelector:=Function(p) p.Value)
     End Function
 
 End Module
