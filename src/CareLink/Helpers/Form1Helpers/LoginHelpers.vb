@@ -87,8 +87,6 @@ Friend Module LoginHelpers
                     Dim result As DialogResult = LoginDialog.ShowDialog(mainForm)
                     Select Case result
                         Case DialogResult.OK
-                            mainForm.TabControlPage1.Visible = True
-                            mainForm.TabControlPage2.Visible = True
                             Exit Do
                         Case DialogResult.Cancel
                             mainForm.TabControlPage1.Visible = False
@@ -167,6 +165,8 @@ Friend Module LoginHelpers
                         End Using
                     Case FileToLoadOptions.Snapshot
                 End Select
+                mainForm.TabControlPage1.Visible = True
+                mainForm.TabControlPage2.Visible = True
                 CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(fixedPart, fuzzy:=True)
                 Dim json As String = File.ReadAllText(lastDownloadFileWithPath)
                 PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
