@@ -483,8 +483,10 @@ Public Class DataGridViewNumericUpDownCell
         End If
 
         ' First paint the borders and background of the cell.
-        MyBase.Paint(graphics, clipBounds, cellBounds, rowIndex, cellState, value, formattedValue, errorText, cellStyle, advancedBorderStyle,
-                   paintParts And Not (DataGridViewPaintParts.ErrorIcon Or DataGridViewPaintParts.ContentForeground))
+        MyBase.Paint(
+            graphics, clipBounds, cellBounds, rowIndex, cellState,
+            value, formattedValue, errorText, cellStyle, advancedBorderStyle,
+            paintParts:=paintParts And Not (DataGridViewPaintParts.ErrorIcon Or DataGridViewPaintParts.ContentForeground))
 
         Dim ptCurrentCell As Point = Me.DataGridView.CurrentCellAddress
         Dim cellCurrent As Boolean = ptCurrentCell.X = Me.ColumnIndex AndAlso ptCurrentCell.Y = rowIndex
@@ -552,14 +554,18 @@ Public Class DataGridViewNumericUpDownCell
                 Dim srcRect As New Rectangle(0, 0, valBounds.Width, valBounds.Height)
                 If srcRect.Width > 0 AndAlso srcRect.Height > 0 Then
                     s_paintingNumericUpDown.DrawToBitmap(s_renderingBitmap, srcRect)
-                    graphics.DrawImage(s_renderingBitmap, New Rectangle(valBounds.Location, valBounds.Size),
-                                       srcRect, GraphicsUnit.Pixel)
+                    graphics.DrawImage(
+                        image:=s_renderingBitmap,
+                        destRect:=New Rectangle(valBounds.Location, valBounds.Size),
+                        srcRect,
+                        srcUnit:=GraphicsUnit.Pixel)
                 End If
             End If
             If (paintParts And DataGridViewPaintParts.ErrorIcon) <> 0 Then
                 ' Paint the potential error icon on top of the NumericUpDown control
-                MyBase.Paint(graphics, clipBounds, cellBounds, rowIndex, cellState, value, formattedValue, errorText,
-                           cellStyle, advancedBorderStyle, DataGridViewPaintParts.ErrorIcon)
+                MyBase.Paint(
+                    graphics, clipBounds, cellBounds, rowIndex, cellState, value, formattedValue, errorText,
+                    cellStyle, advancedBorderStyle, paintParts:=DataGridViewPaintParts.ErrorIcon)
             End If
         End If
     End Sub

@@ -41,23 +41,30 @@ Friend Module TableLayoutPanelExtensions
     ''' <param name="innerTable">The <see cref="TableLayoutPanel"/> whose name is to be set.</param>
     ''' <param name="tableName">The base name to display for the table.</param>
     Private Sub SetTableName(ByRef innerTable As TableLayoutPanel, tableName As String)
-        Select Case True
-            Case TypeOf innerTable.Controls(0) Is Button
-                Dim helpString As String
-                If s_tablesSupportingExportToExcel.Contains(innerTable.Name) Then
-                    helpString = ": Right Click on Table for Export Options including Excel"
-                ElseIf s_tablesSupportingCopyToClipboard.Contains(innerTable.Name) Then
-                    helpString = ": Right Click on Table for cell(s) Export Options"
-                Else
-                    helpString = ""
-                End If
-                If tableName = "Markers" Then
-                    tableName = $"{CType(innerTable.Parent.Parent, TabPage).Text} Markers"
-                End If
-                innerTable.Controls(1).Text = $"{tableName}{helpString}"
-            Case TypeOf CType(innerTable.Controls(0), TableLayoutPanel).Controls(0) Is Label
-                CType(innerTable.Controls(0), TableLayoutPanel).Controls(0).Text = tableName
-        End Select
+        Try
+            Select Case True
+                Case TypeOf innerTable.Controls(0) Is Button
+                    Dim helpString As String
+                    If s_tablesSupportingExportToExcel.Contains(innerTable.Name) Then
+                        helpString = ": Right Click on Table for Export Options including Excel"
+                    ElseIf s_tablesSupportingCopyToClipboard.Contains(innerTable.Name) Then
+                        helpString = ": Right Click on Table for cell(s) Export Options"
+                    Else
+                        helpString = ""
+                    End If
+                    If tableName = "Markers" Then
+                        tableName = $"{CType(innerTable.Parent.Parent, TabPage).Text} Markers"
+                    End If
+                    innerTable.Controls(1).Text = $"{tableName}{helpString}"
+                Case TypeOf innerTable.Controls(0) Is DataGridView
+                    CType(innerTable.Controls(0), DataGridView).Parent.Controls(0).Text = tableName
+                Case TypeOf CType(innerTable.Controls(0), TableLayoutPanel).Controls(0) Is Label
+                    CType(innerTable.Controls(0), TableLayoutPanel).Controls(0).Text = tableName
+            End Select
+        Catch ex As Exception
+            Stop
+            ' Handle any exceptions that may occur during the setting of the table name.
+        End Try
     End Sub
 
     ''' <summary>

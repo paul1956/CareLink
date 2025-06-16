@@ -203,7 +203,7 @@ Public Module DgvHelpers
                 dc:=e.Graphics,
                 text:="No records found.",
                 font:=New Font(family:=dgv.Font.FontFamily, emSize:=20),
-                bounds:=dgv.ClientRectangle,
+                bounds:=dgv.DisplayRectangle,
                 foreColor:=dgv.ForeColor,
                 backColor:=dgv.BackgroundColor,
                 flags:=TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
