@@ -2063,7 +2063,9 @@ Public Class Form1
 
         Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(s_userName) OrElse Not AnyMatchingFiles(SettingsDirectory, $"{s_userName}Settings.pdf"))
         Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists
-        ' Me.MenuStartHereManuallyImportDeviceSettings.Enabled = Not userPdfExists
+        Me.MenuStartHereManuallyImportDeviceSettings.Enabled = Not userPdfExists
+        ' The menu item For cleaning up obsolete files (MenuStartHereCleanUpObsoleteFiles) Is only enabled,
+        ' when the application Is the only instance running, as a safety precaution.
         Me.MenuStartHereCleanUpObsoleteFiles.Enabled = Process.GetProcessesByName(_processName).Length = 1
     End Sub
 

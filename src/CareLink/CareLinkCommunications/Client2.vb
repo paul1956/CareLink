@@ -366,7 +366,7 @@ Public Class Client2
             _PatientPersonalData = JsonSerializer.Deserialize(Of PatientPersonalInfo)(userString)
 
             Dim role As String = _PatientPersonalData.role
-            If role.Contains("Partner", StringComparison.InvariantCultureIgnoreCase) Then
+            If role.Contains("Partner", StringComparison.OrdinalIgnoreCase) Then
                 _patientElement = Me.GetPatient(configJsonElement, _tokenDataElement).Result
             End If
         Catch ex As Exception
@@ -410,7 +410,7 @@ Public Class Client2
 
         Dim value As New Dictionary(Of String, Object) From {{"username", username}}
 
-        If role.Contains("Partner", StringComparison.InvariantCultureIgnoreCase) Then
+        If role.Contains("Partner", StringComparison.OrdinalIgnoreCase) Then
             value("role") = "carepartner"
             value("patientId") = patientId
         Else

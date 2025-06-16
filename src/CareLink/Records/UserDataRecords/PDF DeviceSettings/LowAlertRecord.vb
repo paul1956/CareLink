@@ -30,7 +30,7 @@ Public Class LowAlertRecord
 
         Me.LowLimit = s1(1).ParseSingleInvariant
         Me.Suspend = s.Columns(1)
-        Me.SuspendOnLow = Me.Suspend.Contains("On", StringComparison.InvariantCultureIgnoreCase)
+        Me.SuspendOnLow = Me.Suspend.Contains("On", StringComparison.OrdinalIgnoreCase)
         Me.AlertOnLow = s.Columns(2) = "x"
         Me.AlertBeforeLow = s.Columns(3) = "x"
         Me.ResumeBasalAlert = s.Columns(4) = "x"
