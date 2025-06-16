@@ -6,10 +6,10 @@ Imports System.Security.Cryptography
 Imports System.Security.Cryptography.X509Certificates
 Imports System.Text
 
-Public Module CSR
+Public Module CertificateSigningRequest
 
     ''' <summary>
-    '''  Creates a Certificate Signing Request (CSR) in PEM format using the specified RSA key pair and subject details.
+    '''  Creates a Certificate Signing Request in PEM format using the specified RSA key pair and subject details.
     ''' </summary>
     ''' <param name="keypair">The RSA key pair to use for signing the CSR.</param>
     ''' <param name="cn">The Common Name (CN) for the subject.</param>
@@ -19,12 +19,12 @@ Public Module CSR
     ''' <returns>
     '''  A string containing the CSR in PEM format, including header and footer.
     ''' </returns>
-    Public Function CreateCSR(keypair As RSA, cn As String, ou As String, dc As String, o As String) As String
+    Public Function CreateCertificateSigningRequest(keypair As RSA, cn As String, ou As String, dc As String, o As String) As String
         Dim subject As New X500DistinguishedName($"CN={cn}, OU={ou}, DC={dc}, O={o}")
         Dim request As New CertificateRequest(subject, keypair, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
         Dim csr As Byte() = request.CreateSigningRequest()
 
-        ' Convert the CSR to PEM format
+        ' Convert the Certificate Signing Request to PEM format
         Dim pem As New StringBuilder()
         pem.AppendLine("-----BEGIN CERTIFICATE REQUEST-----")
         pem.AppendLine(Convert.ToBase64String(csr, Base64FormattingOptions.InsertLineBreaks))
@@ -34,11 +34,11 @@ Public Module CSR
     End Function
 
     ''' <summary>
-    '''  Reformats a PEM-encoded CSR by removing the header and footer, and re-encodes it using URL-safe base64 encoding.
+    '''  Reformats a PEM-encoded Certificate Signing Request by removing the header and footer, and re-encodes it using URL-safe base64 encoding.
     ''' </summary>
-    ''' <param name="csr">The CSR string in PEM format.</param>
-    ''' <returns>A URL-safe base64 encoded string representing the raw CSR data.</returns>
-    Public Function ReformatCsr(csr As String) As String
+    ''' <param name="csr">The Certificate Signing Request string in PEM format.</param>
+    ''' <returns>A URL-safe base64 encoded string representing the raw Certificate Signing Request data.</returns>
+    Public Function ReformatCertificateSigningRequest(csr As String) As String
         ' Remove footer & header, re-encode with URL-safe base64
         csr = csr.Replace(vbCrLf, "")
         csr = csr.Replace("-----BEGIN CERTIFICATE REQUEST-----", "")

@@ -148,7 +148,7 @@ Public Module StringExtensions
         If String.IsNullOrWhiteSpace(inStr) Then
             Return ""
         End If
-        If inStr.Contains("MmolL", StringComparison.InvariantCultureIgnoreCase) Then
+        If inStr.Contains("MmolL", StringComparison.OrdinalIgnoreCase) Then
             Return inStr
         End If
         Dim result As New StringBuilder(Char.ToUpperInvariant(inStr(0)))

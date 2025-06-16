@@ -55,7 +55,7 @@ Friend Module FileUtilities
             Throw New ArgumentException($"'{NameOf(tokenBaseFileName)}' cannot be null or whitespace.", NameOf(tokenBaseFileName))
         End If
 
-        Return If(tokenBaseFileName.Equals(DEFAULT_FILENAME, StringComparison.InvariantCultureIgnoreCase),
+        Return If(tokenBaseFileName.Equals(DEFAULT_FILENAME, StringComparison.OrdinalIgnoreCase),
             Path.Join(Directory.GetParent(SettingsDirectory).FullName, $"{userName}{DEFAULT_FILENAME.Substring(0, 1).ToUpper}{DEFAULT_FILENAME.Substring(1)}"),
             tokenBaseFileName)
     End Function

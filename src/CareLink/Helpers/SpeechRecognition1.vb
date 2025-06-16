@@ -12,6 +12,7 @@ Imports System.Text
 '''  Handles initialization, recognition events, audio alerts, and user feedback.
 ''' </summary>
 Friend Module SpeechSupport
+
     ''' <summary>
     '''  Stores the last message spoken by the synthesizer.
     ''' </summary>
@@ -28,6 +29,16 @@ Friend Module SpeechSupport
     Private s_speechErrorReported As Boolean = False
 
     ''' <summary>
+    '''  The speech recognition engine instance.
+    ''' </summary>
+    Private s_speechRecognitionEngine As SpeechRecognitionEngine
+
+    ''' <summary>
+    '''  The speech synthesizer instance.
+    ''' </summary>
+    Private s_speechSynthesizer As SpeechSynthesizer
+
+    ''' <summary>
     '''  Stores the name of the user for whom speech recognition is enabled.
     ''' </summary>
     Private s_speechUserName As String = ""
@@ -36,16 +47,6 @@ Friend Module SpeechSupport
     '''  Indicates whether the speech wake word has been detected.
     ''' </summary>
     Private s_speechWakeWordFound As Boolean = False
-
-    ''' <summary>
-    '''  The speech recognition engine instance.
-    ''' </summary>
-    Private s_sre As SpeechRecognitionEngine
-
-    ''' <summary>
-    '''  The speech synthesizer instance.
-    ''' </summary>
-    Private s_ss As SpeechSynthesizer
 
     ''' <summary>
     '''  Stores the current status text for the speech status strip.
@@ -98,7 +99,7 @@ Friend Module SpeechSupport
     ''' <param name="e">Event arguments containing audio signal problem details.</param>
     <DebuggerStepThrough()>
     Private Sub AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
-        If s_shuttingDown OrElse s_speechErrorReported Or s_sre Is Nothing Then Exit Sub
+        If s_shuttingDown OrElse s_speechErrorReported OrElse s_speechRecognitionEngine Is Nothing Then Exit Sub
         Dim errorMsg As String = "Listening"
         Select Case e.AudioSignalProblem
             Case AudioSignalProblem.NoSignal
@@ -266,12 +267,12 @@ Friend Module SpeechSupport
     '''  Cancels and disposes the current speech recognition engine, removes event handlers, and updates UI state.
     ''' </summary>
     Friend Sub CancelSpeechRecognition()
-        If s_sre IsNot Nothing Then
-            RemoveHandler s_sre.AudioSignalProblemOccurred, AddressOf AudioSignalProblemOccurred
-            RemoveHandler s_sre.SpeechRecognized, AddressOf SpeechRecognized
-            s_sre.RecognizeAsyncCancel()
-            s_sre.Dispose()
-            s_sre = Nothing
+        If s_speechRecognitionEngine IsNot Nothing Then
+            RemoveHandler s_speechRecognitionEngine.AudioSignalProblemOccurred, AddressOf AudioSignalProblemOccurred
+            RemoveHandler s_speechRecognitionEngine.SpeechRecognized, AddressOf SpeechRecognized
+            s_speechRecognitionEngine.RecognizeAsyncCancel()
+            s_speechRecognitionEngine.Dispose()
+            s_speechRecognitionEngine = Nothing
             s_speechUserName = ""
             Form1.StatusStripSpeech.Text = ""
             Form1.MenuOptionsSpeechRecognitionEnabled.Checked = False
@@ -282,9 +283,9 @@ Friend Module SpeechSupport
     '''  Initializes the speech synthesizer for audio alerts.
     ''' </summary>
     Friend Sub InitializeAudioAlerts()
-        If s_ss Is Nothing Then
-            s_ss = New SpeechSynthesizer()
-            s_ss.SetOutputToDefaultAudioDevice()
+        If s_speechSynthesizer Is Nothing Then
+            s_speechSynthesizer = New SpeechSynthesizer()
+            s_speechSynthesizer.SetOutputToDefaultAudioDevice()
         End If
 
     End Sub
@@ -294,7 +295,7 @@ Friend Module SpeechSupport
     ''' </summary>
     Friend Sub InitializeSpeechRecognition()
         Dim oldUserName As String = s_speechUserName
-        If s_speechUserName = PatientData.FirstName AndAlso s_sre IsNot Nothing Then
+        If s_speechUserName = PatientData.FirstName AndAlso s_speechRecognitionEngine IsNot Nothing Then
             Exit Sub
         End If
         CancelSpeechRecognition()
@@ -303,12 +304,12 @@ Friend Module SpeechSupport
             s_speechWakeWordFound = False
 
             Dim culture As New CultureInfo("en-us")
-            s_sre = New SpeechRecognitionEngine(culture)
-            s_sre.SetInputToDefaultAudioDevice()
+            s_speechRecognitionEngine = New SpeechRecognitionEngine(culture)
+            s_speechRecognitionEngine.SetInputToDefaultAudioDevice()
 
             Dim gb_Attention As New GrammarBuilder With {.Culture = culture}
             gb_Attention.Append("carelink")
-            s_sre.LoadGrammarAsync(New Grammar(gb_Attention))
+            s_speechRecognitionEngine.LoadGrammarAsync(New Grammar(gb_Attention))
 
             'Dim gb_StartStop As New GrammarBuilder With {.Culture = culture}
             'gb_StartStop.Append("alerts")
@@ -318,13 +319,13 @@ Friend Module SpeechSupport
             Dim gb_what As New GrammarBuilder With {.Culture = culture}
             gb_what.Append("What")
             gb_what.Append(New Choices("can I say", "is my SG", "is my BG", "is my Blood Sugar", "is my Blood Glucose"))
-            s_sre.LoadGrammarAsync(New Grammar(gb_what))
+            s_speechRecognitionEngine.LoadGrammarAsync(New Grammar(gb_what))
 
             Dim gb_tellMe As New GrammarBuilder With {.Culture = culture}
             gb_tellMe.Append("Tell me")
             gb_tellMe.Append($"{PatientData.FirstName}'s")
             gb_tellMe.Append(New Choices("SG", "BG", "Blood Sugar", "Blood Glucose"))
-            s_sre.LoadGrammarAsync(New Grammar(gb_tellMe))
+            s_speechRecognitionEngine.LoadGrammarAsync(New Grammar(gb_tellMe))
 
             'Dim gb_showTab As New GrammarBuilder()
             'gb_showTab.Append("Show")
@@ -353,11 +354,11 @@ Friend Module SpeechSupport
             End If
             s_speechUserName = PatientData.FirstName
             Form1.StatusStripSpeech.Text = "Listening"
-            s_sre.RecognizeAsync(RecognizeMode.Multiple)
-            AddHandler s_sre.SpeechRecognized, AddressOf SpeechRecognized
+            s_speechRecognitionEngine.RecognizeAsync(RecognizeMode.Multiple)
+            AddHandler s_speechRecognitionEngine.SpeechRecognized, AddressOf SpeechRecognized
 
             Form1.Cursor = Cursors.Default
-            AddHandler s_sre.AudioSignalProblemOccurred, AddressOf AudioSignalProblemOccurred
+            AddHandler s_speechRecognitionEngine.AudioSignalProblemOccurred, AddressOf AudioSignalProblemOccurred
             Form1.MenuOptionsSpeechRecognitionEnabled.Checked = True
         Catch ex As Exception
             Debug.WriteLine(ex.Message)
@@ -384,14 +385,14 @@ Friend Module SpeechSupport
         s_timeOfLastAlert = Now
         s_lastSpokenMessage = text
         If Not s_speechErrorReported Then
-            If s_ss Is Nothing Then
+            If s_speechSynthesizer Is Nothing Then
                 InitializeAudioAlerts()
             End If
         End If
         While s_promptBusy IsNot Nothing AndAlso Not s_promptBusy.IsCompleted
             Threading.Thread.Sleep(10)
         End While
-        s_promptBusy = s_ss.SpeakAsync(text)
+        s_promptBusy = s_speechSynthesizer.SpeakAsync(text)
     End Sub
 
 End Module

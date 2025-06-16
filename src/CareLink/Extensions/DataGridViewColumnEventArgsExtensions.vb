@@ -40,7 +40,7 @@ Friend Module DataGridViewColumnEventArgsExtensions
             Dim titleInTitleCase As String = .Name
             If .Name.Contains("DeleteRow") Then
                 titleInTitleCase = ""
-            ElseIf Not .Name.Contains("OADateTime", StringComparison.InvariantCultureIgnoreCase) Then
+            ElseIf Not .Name.Contains("OADateTime", StringComparison.OrdinalIgnoreCase) Then
                 titleInTitleCase = If(.DataPropertyName.Length < 4, .Name, .Name.ToTitleCase())
             End If
 

@@ -35,17 +35,17 @@ Public Module Discover
         End If
         Debug.WriteLine($"   region: {region}")
         Dim countryInfo As CountryInfo = JsonSerializer.Deserialize(Of CountryInfo)(JsonSerializer.Serialize(region))
-        Try
-            For Each c As JsonElement In jsonElementData.GetProperty("CP").EnumerateArray
+        For Each c As JsonElement In jsonElementData.GetProperty("CP").EnumerateArray
+            Try
                 Dim cpInfo As CPInfo = JsonSerializer.Deserialize(Of CPInfo)(JsonSerializer.Serialize(c))
                 If countryInfo.Region = cpInfo.Region Then
                     config = c
                     Exit For
                 End If
-            Next
-        Catch ex As Exception
-            Stop
-        End Try
+            Catch ex As Exception
+                ' ignore here error will be handled outside the loop
+            End Try
+        Next
         If config.ValueKind.IsNullOrUndefined Then
             Throw New Exception($"ERROR: failed to get config base URLs for region {region}")
         End If
@@ -58,15 +58,14 @@ Public Module Discover
     ''' <param name="httpClient">The <see cref="HttpClient"/> used to fetch configuration data.</param>
     ''' <param name="country">The country code to retrieve configuration for.</param>
     ''' <returns>
-    '''  A <see cref="JsonElement"/> containing the configuration for the specified country,
-    '''  including a computed token URL.
+    '''  A <see cref="JsonElement"/> containing the configuration for the specified country, including a computed token URL.
     ''' </returns>
     ''' <exception cref="Exception">
     '''  Thrown if the country code is not supported or if configuration data cannot be retrieved.
     ''' </exception>
     Public Function GetConfigElement(httpClient As HttpClient, country As String) As JsonElement
         Debug.WriteLine(NameOf(GetConfigElement))
-        Dim isUsRegion As Boolean = country.Equals("US", StringComparison.InvariantCultureIgnoreCase)
+        Dim isUsRegion As Boolean = country.Equals("US", StringComparison.OrdinalIgnoreCase)
         Dim discoveryUrl As String = If(isUsRegion, s_discoverUrl("US"), s_discoverUrl("EU"))
         Dim response As String = httpClient.GetStringAsync(discoveryUrl).Result
         Dim jsonElementData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(response)
@@ -93,7 +92,9 @@ Public Module Discover
     ''' </returns>
     Public Function GetDiscoveryData() As ConfigRecord
         Try
-            Dim region As String = If(s_countryCode.Equals("US", StringComparison.InvariantCultureIgnoreCase), "US", "EU")
+            Dim region As String = If(s_countryCode.Equals("US", StringComparison.OrdinalIgnoreCase),
+                                      "US",
+                                      "EU")
             Return DownloadAndDecodeJson(Of ConfigRecord)(s_discoverUrl(region))
         Catch ex As HttpRequestException
             Debug.WriteLine($"Error downloading JSON: {ex.Message}")

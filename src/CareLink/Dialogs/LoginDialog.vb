@@ -109,10 +109,10 @@ Public Class LoginDialog
             Dim userRecord As CareLinkUserDataRecord = Nothing
             Dim param As String = commandLineArguments(1)
             Select Case True
-                Case param.StartsWith("/Safe", StringComparison.InvariantCultureIgnoreCase)
+                Case param.StartsWith("/Safe", StringComparison.OrdinalIgnoreCase)
                     My.Settings.AutoLogin = False
                     My.Settings.Save()
-                Case param.StartsWith("UserName", StringComparison.InvariantCultureIgnoreCase) ' username=name
+                Case param.StartsWith("UserName", StringComparison.OrdinalIgnoreCase) ' username=name
                     Dim arg As String() = param.Split("=")
                     If arg.Length = 2 AndAlso s_allUserSettingsData.TryGetValue(arg(1), userRecord) Then
                         userRecord.UpdateSettings()
