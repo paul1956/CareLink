@@ -24,7 +24,6 @@ Public Module JsonExtensions
     ''' </summary>
     Public ReadOnly s_jsonSerializerOptions As New JsonSerializerOptions With {.WriteIndented = True}
 
-
     ''' <summary>
     '''  Converts a list of dictionaries representing JSON objects to a list of <see cref="SG"/> objects.
     ''' </summary>

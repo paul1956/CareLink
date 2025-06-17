@@ -6,6 +6,7 @@
 '''  Represents a file name with both its full path and its name without the path.
 ''' </summary>
 Friend Structure FileNameStruct
+
     ''' <summary>
     '''  Gets or sets the file name including its full path.
     ''' </summary>

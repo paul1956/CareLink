@@ -35,4 +35,5 @@ Public Module ForEachExtensions
             End While
         End Using
     End Function
+
 End Module

@@ -242,7 +242,6 @@ Friend Class DataGridViewNumericUpDownEditingControl
             End If
         End If
     End Sub
-    ' End of the IDataGridViewEditingControl interface implementation
 
     ''' <summary>
     '''  Updates the local dirty state and notifies the grid of the value change.
