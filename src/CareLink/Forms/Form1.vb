@@ -15,6 +15,7 @@ Imports Microsoft.Win32
 Imports TableLayputPanelTop
 
 Public Class Form1
+
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _processName As String = Process.GetCurrentProcess().ProcessName
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
