@@ -2,9 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Text
-
 Friend Module UserMessageConstants
+
     Friend Const CheckComplianceValues As String = "Ensure to check the compliance values for accuracy" & vbCrLf &
         "Check TIR compliance regularly for optimal management."
 
