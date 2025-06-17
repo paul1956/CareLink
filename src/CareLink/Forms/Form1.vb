@@ -297,7 +297,8 @@ Public Class Form1
                                 Me.CursorMessage1Label.Visible = True
                                 Me.CursorMessage2Label.Text = markerTag(1).Trim
                                 Me.CursorMessage2Label.Visible = True
-                                Me.CursorMessage3Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
+                                Me.CursorMessage3Label.Text =
+                                    Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
                                 Me.CursorMessage3Label.Visible = True
                                 Me.CursorMessage4Label.Visible = False
                                 Select Case markerTag(0)
@@ -326,7 +327,11 @@ Public Class Form1
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
                                     Case "Not used for calibration"
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDot
-                                        Me.CursorMessage2Label.Font = New Font(familyName:="Segoe UI", emSize:=11.0F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point)
+                                        Me.CursorMessage2Label.Font = New Font(
+                                            familyName:="Segoe UI",
+                                            emSize:=11.0F,
+                                            style:=FontStyle.Bold,
+                                            unit:=GraphicsUnit.Point)
                                     Case Else
                                         Stop
                                 End Select
@@ -337,7 +342,9 @@ Public Class Form1
                                 Dim sgValue As Single = markerTag(2).Trim.Split(separator:=" ")(0).Trim.ParseSingle(decimalDigits:=2)
                                 Me.CursorMessage3Label.Text = markerTag(2).Trim
                                 Me.CursorMessage3Label.Visible = True
-                                Me.CursorMessage4Label.Text = If(NativeMmolL, $"{CInt(sgValue * MmolLUnitsDivisor)} mg/dL", $"{sgValue / MmolLUnitsDivisor:F1} mmol/L")
+                                Me.CursorMessage4Label.Text = If(NativeMmolL,
+                                                                 $"{CInt(sgValue * MmolLUnitsDivisor)} mg/dL",
+                                                                 $"{sgValue / MmolLUnitsDivisor:F1} mmol/L")
                                 Me.CursorMessage4Label.Visible = True
                                 Me.CursorPanel.Visible = True
                             Case Else
@@ -350,9 +357,11 @@ Public Class Form1
                 Case SgSeriesName
                     Me.CursorMessage1Label.Text = "Sensor Glucose"
                     Me.CursorMessage1Label.Visible = True
-                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(3)} {GetBgUnitsString()}"
+                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(decimalDigits:=3)} {GetBgUnitsString()}"
                     Me.CursorMessage2Label.Visible = True
-                    Me.CursorMessage3Label.Text = If(NativeMmolL, $"{CInt(currentDataPoint.YValues(0) * MmolLUnitsDivisor)} mg/dL", $"{currentDataPoint.YValues(0) / MmolLUnitsDivisor:F1} mmol/L")
+                    Me.CursorMessage3Label.Text = If(NativeMmolL,
+                                                     $"{CInt(currentDataPoint.YValues(0) * MmolLUnitsDivisor)} mg/dL",
+                                                     $"{currentDataPoint.YValues(0) / MmolLUnitsDivisor:F1} mmol/L")
                     Me.CursorMessage3Label.Visible = True
                     Me.CursorMessage4Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(s_timeWithMinuteFormat)
                     Me.CursorMessage4Label.Visible = True
@@ -514,8 +523,14 @@ Public Class Form1
         mnuStrip.Items.Clear()
 
         ' Populate the ContextMenuStrip control with its default items.
-        mnuStrip.Items.Add("Copy Selected Cells with Header", My.Resources.Copy, AddressOf DgvCopySelectedCellsToClipBoardWithHeaders)
-        mnuStrip.Items.Add("Copy Selected Cells without headers", My.Resources.Copy, AddressOf DgvCopySelectedCellsToClipBoardWithoutHeaders)
+        mnuStrip.Items.Add(
+            text:="Copy Selected Cells with Header",
+            image:=My.Resources.Copy,
+            onClick:=AddressOf DgvCopySelectedCellsToClipBoardWithHeaders)
+        mnuStrip.Items.Add(
+            text:="Copy Selected Cells without headers",
+            image:=My.Resources.Copy,
+            onClick:=AddressOf DgvCopySelectedCellsToClipBoardWithoutHeaders)
 
         ' Set Cancel to false.
         ' It is optimized to true based on empty entry.
@@ -3203,21 +3218,36 @@ Public Class Form1
         End With
         Me.ActiveInsulinChart.ChartAreas.Add(activeInsulinChartArea)
         _activeInsulinChartLegend = CreateChartLegend(legendName:=NameOf(_activeInsulinChartLegend))
-        Me.ActiveInsulinChartTitle = CreateTitle($"Running Insulin On Board (IOB)",
-                                                 NameOf(ActiveInsulinChartTitle),
-                                                 GetGraphLineColor("Active Insulin"))
+        Me.ActiveInsulinChartTitle = CreateTitle(
+            chartTitle:=$"Running Insulin On Board (IOB)",
+            name:=NameOf(ActiveInsulinChartTitle),
+            foreColor:=GetGraphLineColor("Active Insulin"))
         Me.ActiveInsulinActiveInsulinSeries = CreateSeriesActiveInsulin()
-        Me.ActiveInsulinTargetSeries = CreateSeriesLimitsAndTarget(_activeInsulinChartLegend, TargetSgSeriesName)
+        Me.ActiveInsulinTargetSeries = CreateSeriesLimitsAndTarget(
+            limitsLegend:=_activeInsulinChartLegend,
+            seriesName:=TargetSgSeriesName)
 
-        Me.ActiveInsulinAutoCorrectionSeries = CreateSeriesBasal(AutoCorrectionSeriesName, _activeInsulinChartLegend, "Auto Correction", AxisType.Secondary)
-        Me.ActiveInsulinBasalSeries = CreateSeriesBasal(BasalSeriesName, _activeInsulinChartLegend, "Basal Series", AxisType.Secondary)
-        Me.ActiveInsulinMinBasalSeries = CreateSeriesBasal(MinBasalSeriesName, _activeInsulinChartLegend, "Min Basal", AxisType.Secondary)
+        Me.ActiveInsulinAutoCorrectionSeries = CreateSeriesBasal(
+            seriesName:=AutoCorrectionSeriesName,
+            basalLegend:=_activeInsulinChartLegend,
+            legendText:="Auto Correction",
+            yAxisType:=AxisType.Secondary)
+        Me.ActiveInsulinBasalSeries = CreateSeriesBasal(
+            seriesName:=BasalSeriesName,
+            basalLegend:=_activeInsulinChartLegend,
+            legendText:="Basal Series",
+            yAxisType:=AxisType.Secondary)
+        Me.ActiveInsulinMinBasalSeries = CreateSeriesBasal(
+            seriesName:=MinBasalSeriesName,
+            basalLegend:=_activeInsulinChartLegend,
+            legendText:="Min Basal",
+            yAxisType:=AxisType.Secondary)
 
-        Me.ActiveInsulinSuspendSeries = CreateSeriesSuspend(_activeInsulinChartLegend)
+        Me.ActiveInsulinSuspendSeries = CreateSeriesSuspend(basalLegend:=_activeInsulinChartLegend)
 
-        Me.ActiveInsulinSgSeries = CreateSeriesSg(_activeInsulinChartLegend)
-        Me.ActiveInsulinMarkerSeries = CreateSeriesWithoutVisibleLegend(AxisType.Secondary)
-        Me.ActiveInsulinTimeChangeSeries = CreateSeriesTimeChange(_activeInsulinChartLegend)
+        Me.ActiveInsulinSgSeries = CreateSeriesSg(sgLegend:=_activeInsulinChartLegend)
+        Me.ActiveInsulinMarkerSeries = CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Secondary)
+        Me.ActiveInsulinTimeChangeSeries = CreateSeriesTimeChange(basalLegend:=_activeInsulinChartLegend)
 
         With Me.ActiveInsulinChart
             With .Series
@@ -3253,14 +3283,23 @@ Public Class Form1
 
     ''' <summary>
     '''  Initializes the Treatment Markers tab chart, including chart area, axes, series, and legend.
-    '''  This method sets up the chart for displaying treatment details such as insulin delivery and sensor glucose readings.
+    '''  This method sets up the chart for displaying treatment details
+    '''  such as insulin delivery and sensor glucose readings.
     ''' </summary>
     ''' <remarks>
-    ''' - Clears any existing controls from the treatment details tab page.
-    ''' - Creates and configures the chart and its area, including axis labels, intervals, and colors.
-    ''' - Adds all required series for displaying treatment markers, auto correction, basal series, min basal, suspend, sensor glucose, markers, and time change.
-    ''' - Adds the chart legend and title.
-    ''' - Adds the chart to the treatment details tab page and processes UI events.
+    '''  <list type="bullet">
+    '''   <item>Clears any existing controls from the treatment details tab page.</item>
+    '''   <item>Creates and configures the chart and its area, including axis labels, intervals, and colors.</item>
+    '''   <item>Sets the maximum insulin delivery row based on the maximum basal per dose.
+    '''     Adjusts the interval and label style for the Y-axis to display insulin delivery values.
+    '''   </item>
+    '''   <item>Adds all required series for displaying treatment markers.
+    '''     This includes target sensor glucose, auto correction, basal series, min basal, suspend,
+    '''     sensor glucose, markers, and time change.
+    '''   </item>
+    '''   <item>Sets the legend and title for the chart.</item>
+    '''   <item>Adds the chart to the treatment details tab page and processes UI events.</item>
+    '''  </list>
     ''' </remarks>
     Private Sub InitializeTreatmentMarkersChart()
         Me.TabPage03TreatmentDetails.Controls.Clear()
@@ -3411,9 +3450,15 @@ Public Class Form1
                             _showBalloonTip = False
                     End Select
 
-                    Me.NotifyIcon1.Icon = CreateTextIcon(lastSgString.PadRight(totalWidth:=3).Substring(startIndex:=0, length:=3).Trim.PadLeft(totalWidth:=3), backColor)
+                    Dim s As String = lastSgString.PadRight(totalWidth:=3) _
+                                                  .Substring(startIndex:=0, length:=3).Trim _
+                                                  .PadLeft(totalWidth:=3)
+                    Me.NotifyIcon1.Icon = CreateTextIcon(s, backColor)
                     Dim strBuilder As New StringBuilder(100)
-                    strBuilder.AppendLine(Date.Now().ToShortDateTimeString.Replace($"{CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator}{Now.Year}", ""))
+                    Dim dateSeparator As String = CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator
+                    strBuilder.AppendLine(
+                        value:=Date.Now().ToShortDateTimeString _
+                             .Replace($"{dateSeparator}{Now.Year}", ""))
                     strBuilder.AppendLine($"Last SG {lastSgString} {GetBgUnitsString()}")
                     If PatientData.ConduitInRange Then
                         If s_lastSgValue.IsSgInvalid Then
