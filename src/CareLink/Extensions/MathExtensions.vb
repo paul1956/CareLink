@@ -113,8 +113,10 @@ Friend Module MathExtensions
         If valueString Is Nothing Then
             Return Single.NaN
         End If
+        valueString = valueString.Trim
         If valueString.Contains(","c) AndAlso valueString.Contains(CareLinkDecimalSeparator) Then
-            Throw New ArgumentException($"{NameOf(valueString)} = {valueString}, contains both a comma and period.", NameOf(valueString))
+            Dim message As String = $"{NameOf(valueString)} = {valueString}, contains both a comma and period."
+            Throw New ArgumentException(message, NameOf(valueString))
         End If
         valueString = valueString.Replace(",", CareLinkDecimalSeparator)
         Dim returnSingle As Single
@@ -125,7 +127,7 @@ Friend Module MathExtensions
                                valueString.Substring(index).Length
                               )
         End If
-        If Single.TryParse(valueString, NumberStyles.Number, usDataCulture, returnSingle) Then
+        If Single.TryParse(s:=valueString, style:=NumberStyles.Number, provider:=usDataCulture, result:=returnSingle) Then
         Else
             Return Single.NaN
         End If
