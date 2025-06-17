@@ -835,7 +835,7 @@ Partial Class Form1
         HighTirComplianceLabel.Name = "HighTirComplianceLabel"
         HighTirComplianceLabel.Size = New Size(112, 57)
         HighTirComplianceLabel.TabIndex = 37
-        HighTirComplianceLabel.Text = "High" & vbCrLf & "Excellent"
+        HighTirComplianceLabel.Text = "High" & vbCrLf & "Excellent²"
         HighTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' ImageList1
@@ -1163,7 +1163,7 @@ Partial Class Form1
         LowTirComplianceLabel.Name = "LowTirComplianceLabel"
         LowTirComplianceLabel.Size = New Size(112, 57)
         LowTirComplianceLabel.TabIndex = 36
-        LowTirComplianceLabel.Text = "(6.3) Low" & vbCrLf & "Needs Improvement"
+        LowTirComplianceLabel.Text = "(6.3) Low" & vbCrLf & "Needs Improvement²"
         LowTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' MaxBasalPerHourLabel
@@ -1821,7 +1821,7 @@ Partial Class Form1
         TirComplianceLabel.Name = "TirComplianceLabel"
         TirComplianceLabel.Size = New Size(226, 25)
         TirComplianceLabel.TabIndex = 35
-        TirComplianceLabel.Text = "TIR Compliance"
+        TirComplianceLabel.Text = "TIR Compliance¹"
         TirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' StatusStrip1

@@ -5,16 +5,13 @@
 Imports System.Text
 
 Friend Module UserMessageConstants
+    Friend Const CheckComplianceValues As String = "Ensure to check the compliance values for accuracy" & vbCrLf &
+        "Check TIR compliance regularly for optimal management."
 
-    Public Function CreateDictionarySortedByValue(myDictionary As Dictionary(Of String, String)) As String
-        Dim strBuilder As New StringBuilder
-        strBuilder.AppendLine("Dim sortedDict As New Dictionary(Of String, String) With {")
-        For Each kvp As KeyValuePair(Of String, String) In myDictionary.OrderBy(Function(x) x.Value)
-            strBuilder.AppendLine($"    {{""{kvp.Key}"", ""{kvp.Value}""}},")
-        Next
-        strBuilder.AppendLine("}")
-        Return strBuilder.ToString
-    End Function
+    Friend Const TirToolTip As String = "Estimated TIR Compliance shown in parentheses" & vbCrLf &
+        "Values < 2 is Excellent and not shown" & vbCrLf &
+        "Values between 2 and 4 are considered acceptable, but it is possible to improve" & vbCrLf &
+        "Values > 4 suggests improvement is needed"
 
     Friend ReadOnly s_autoModeShieldMessages As New Dictionary(Of String, String) From {
         {"AUTO_BASAL", "Auto Basal"},
