@@ -8,6 +8,7 @@ Imports System.Globalization
 '''  Provides helper properties and methods for working with culture and localization settings.
 ''' </summary>
 Friend Module CultureHelpers
+
     ''' <summary>
     '''  Backing field for the <see cref="CurrentDateCulture"/> property.
     ''' </summary>
@@ -48,4 +49,5 @@ Friend Module CultureHelpers
     '''  Gets the US English culture ("en-US").
     ''' </summary>
     Public ReadOnly Property usDataCulture As New CultureInfo("en-US")
+
 End Module

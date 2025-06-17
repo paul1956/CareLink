@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module Chart_Constants
+
     Friend Const ActiveInsulinSeriesName As String = NameOf(ActiveInsulinSeriesName)
 
     Friend Const AutoCorrectionSeriesName As String = NameOf(AutoCorrectionSeriesName)
@@ -24,4 +25,5 @@ Friend Module Chart_Constants
     Friend Const TargetSgSeriesName As String = NameOf(TargetSgSeriesName)
 
     Friend Const TimeChangeSeriesName As String = NameOf(TimeChangeSeriesName)
+
 End Module

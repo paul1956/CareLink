@@ -6,6 +6,7 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module SystemConstants
+
     Friend Const RsaKeySize As Integer = 2048
     Friend Const BaseNameSavedErrorReport As String = "CareLinkErrorReport"
     Friend Const BaseNameSavedLastDownload As String = "CareLinkLastDownload"
@@ -106,6 +107,7 @@ Public Module SystemConstants
     Friend Const TirHighMmDl180 As Single = 180.0
     Friend Const TirLowMmol70 As Single = 70.0
     Friend Const TirLowMmDl3_9 As Single = 3.9
+
     Friend ReadOnly Property MgDlItems As New Dictionary(Of String, Single) From {
         {$"{Target100mgDl} mg/dL", Target100mgDl},
         {$"{Target110mgDl} mg/dL", Target110mgDl},

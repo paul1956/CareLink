@@ -9,6 +9,7 @@ Imports System.IO
 '''  Provides helper methods and properties for file and directory I/O operations within the CareLink project.
 ''' </summary>
 Friend Module FileIoHelpers
+
     ''' <summary>
     '''  The file name for storing all users' login information.
     ''' </summary>

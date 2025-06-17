@@ -7,6 +7,7 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Text.Json.Serialization
 
 Public Class ActiveInsulin
+
     Private _amount As Single
 
     <Column(Order:=0, TypeName:=NameOf([Single]))>
