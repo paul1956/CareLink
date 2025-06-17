@@ -5,13 +5,14 @@
 Imports System.Text
 
 Friend Module UserMessageConstants
+
     Friend Const CheckComplianceValues As String = "Ensure to check the compliance values for accuracy" & vbCrLf &
-                "Check TIR compliance regularly for optimal management."
+        "Check TIR compliance regularly for optimal management."
 
     Friend Const TirToolTip As String = "Estimated TIR Compliance shown in parentheses" & vbCrLf &
-            "Values < 2 is Excellent and not shown" & vbCrLf &
-            "Values between 2 and 4 are considered acceptable, but it is possible to improve" & vbCrLf &
-            "Values > 4 suggests improvement is needed"
+        "Values < 2 is Excellent and not shown" & vbCrLf &
+        "Values between 2 and 4 are considered acceptable, but it is possible to improve" & vbCrLf &
+        "Values > 4 suggests improvement is needed"
 
     Friend ReadOnly s_autoModeShieldMessages As New Dictionary(Of String, String) From {
         {"AUTO_BASAL", "Auto Basal"},
