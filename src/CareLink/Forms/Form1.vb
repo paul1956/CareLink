@@ -2006,8 +2006,8 @@ Public Class Form1
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(reportSuccessfulResult:=False)
 
-        Dim additionalCaption As String = "Ensure to check the compliance values for accuracy."
-        Dim observationCaption As String = "TIR Compliance metrics can affect treatment decisions."
+        Const additionalCaption As String = "Ensure to check the compliance values for accuracy."
+        Const observationCaption As String = "TIR Compliance metrics can affect treatment decisions."
         Dim caption As String = $"Estimated TIR Compliance shown in parentheses{vbCrLf}" &
             $"Values < 2 is Excellent and not shown{vbCrLf}" &
             $"Values < 4 are considered acceptable, but it is possible to improve{vbCrLf}" &
