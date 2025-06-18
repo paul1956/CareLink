@@ -52,10 +52,24 @@ Public Class Basal
         Return EqualityComparer(Of Basal).Default.Equals(left, right)
     End Operator
 
+    ''' <summary>
+    '''  Determines whether the current instance is equal to another object.
+    ''' </summary>
+    ''' <param name="obj">The object to compare with the current instance.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the current instance is equal to the specified object; otherwise,
+    '''  <see langword="False"/>.
+    ''' </returns>
     Public Overrides Function Equals(obj As Object) As Boolean
         Return Me.Equals(TryCast(obj, Basal))
     End Function
 
+    ''' <summary>
+    '''  Gets the basal rate per hour based on the active basal pattern and temporary basal settings.
+    ''' </summary>
+    ''' <returns>
+    '''  The basal rate per hour, or NaN if no active basal pattern is set.
+    ''' </returns>
     Public Function GetBasalPerHour() As Double
         If Me.ActiveBasalPattern Is Nothing Then
             Return Double.NaN
@@ -71,6 +85,12 @@ Public Class Basal
         End Select
     End Function
 
+    ''' <summary>
+    '''  Gets the type of basal delivery based on the active basal pattern and temporary basal settings.
+    ''' </summary>
+    ''' <returns>
+    '''  A string representing the type of basal delivery.
+    ''' </returns>
     Public Function GetBasalType() As String
         Select Case True
             Case Not String.IsNullOrWhiteSpace(Me.ActiveBasalPattern)
@@ -84,10 +104,24 @@ Public Class Basal
         End Select
     End Function
 
+    ''' <summary>
+    '''  Gets the hash code for the current instance.
+    ''' </summary>
+    ''' <returns>
+    '''  An integer representing the hash code of the current instance.
+    ''' </returns>
     Public Overrides Function GetHashCode() As Integer
         Return HashCode.Combine(Me.ActiveBasalPattern, Me.BasalRate, Me.presetTempName, Me.tempBasalDurationRemaining, Me.tempBasalPercentage, Me.TempBasalRate, Me.tempBasalType)
     End Function
 
+    ''' <summary>
+    '''  Determines whether the current instance is equal to another instance of the same type.
+    ''' </summary>
+    ''' <param name="other">The other instance to compare with.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the current instance is equal to the other instance; otherwise,
+    '''  <see langword="False"/>.
+    ''' </returns>
     Public Overloads Function Equals(other As Basal) As Boolean Implements IEquatable(Of Basal).Equals
         Return other IsNot Nothing AndAlso
                Me.ActiveBasalPattern = other.ActiveBasalPattern AndAlso
