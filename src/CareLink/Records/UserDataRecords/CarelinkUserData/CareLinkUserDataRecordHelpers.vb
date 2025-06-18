@@ -6,6 +6,15 @@ Imports System.IO
 
 Public Module CareLinkUserDataRecordHelpers
 
+
+    ''' <summary>
+    '''  Returns a <see cref="DataGridViewCellStyle"/> configured for the specified column name.
+    ''' </summary>
+    ''' <param name="columnName">The name of the column for which to get the cell style.</param>
+    ''' <returns>
+    '''  A <see cref="DataGridViewCellStyle"/> instance with alignment and padding set
+    '''  according to the column's expected content.
+    ''' </returns>
     Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle
 
@@ -30,10 +39,23 @@ Public Module CareLinkUserDataRecordHelpers
         Return cellStyle
     End Function
 
+    ''' <summary>
+    '''  Determines whether the file containing all user login information exists.
+    ''' </summary>
+    ''' <returns>
+    '''  <see langword="True"/> if the user login info file exists; otherwise, <see langword="False"/>.
+    ''' </returns>
     Public Function AllUserLoginInfoFileExists() As Boolean
         Return SavedUsersFileExists(GetUsersLoginInfoFileWithPath())
     End Function
 
+    ''' <summary>
+    '''  Determines whether the specified user settings CSV file exists.
+    ''' </summary>
+    ''' <param name="userSettingsCsvFileWithPath">The full path to the user settings CSV file.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the file exists at the specified path; otherwise, <see langword="False"/>.
+    ''' </returns>
     Public Function SavedUsersFileExists(userSettingsCsvFileWithPath As String) As Boolean
         Return File.Exists(userSettingsCsvFileWithPath)
     End Function

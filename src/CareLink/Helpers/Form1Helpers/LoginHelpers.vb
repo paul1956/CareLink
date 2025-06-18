@@ -63,7 +63,11 @@ Friend Module LoginHelpers
     ''' <returns>
     '''  <see langword="True"/> if login and data update succeeded; otherwise, <see langword="False"/>.
     ''' </returns>
-    Friend Function DoOptionalLoginAndUpdateData(mainForm As Form1, updateAllTabs As Boolean, fileToLoad As FileToLoadOptions) As Boolean
+    Friend Function DoOptionalLoginAndUpdateData(
+        mainForm As Form1,
+        updateAllTabs As Boolean,
+        fileToLoad As FileToLoadOptions) As Boolean
+
         Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(Start:=False)
         s_listOfAutoBasalDeliveryMarkers.Clear()
         ProgramInitialized = False
@@ -370,8 +374,6 @@ Friend Module LoginHelpers
     '''  <see langword="True"/> to start the timer; <see langword="False"/> to stop it.
     ''' </param>
     ''' <param name="interval">The timer interval in milliseconds. Default is -1 (no change).</param>
-    ''' <param name="memberName">The name of the calling member. Optional.</param>
-    ''' <param name="sourceLineNumber">The source line number of the call. Optional.</param>
     ''' <returns>
     '''  <see langword="True"/> if the timer was running before the call; otherwise, <see langword="False"/>.
     ''' </returns>
