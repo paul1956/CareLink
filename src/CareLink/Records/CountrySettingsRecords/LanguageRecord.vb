@@ -7,7 +7,9 @@ Public Class LanguageRecord
 
     Public Sub New(values As Dictionary(Of String, String))
         If values.Count <> 2 Then
-            Throw New Exception($"{NameOf(LanguageRecord)}({values}) contains {values.Count} entries.")
+            Throw New ApplicationException(
+                message:=$"{NameOf(LanguageRecord)}({values}) contains {values.Count} entries.",
+                innerException:=New ApplicationException("Invalid Language record structure."))
         End If
         Me.name = values(NameOf(name))
         Me.code = values(NameOf(code))

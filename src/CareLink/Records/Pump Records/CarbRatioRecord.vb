@@ -35,10 +35,10 @@ Public Class CarbRatioRecord
 
     Public Overloads Function Equals(other As CarbRatioRecord) As Boolean Implements IEquatable(Of CarbRatioRecord).Equals
         Return other IsNot Nothing AndAlso
-               Me.CarbRatio = other.CarbRatio AndAlso
-               Me.StartTime.Equals(other.StartTime) AndAlso
-               ((other.EndTime - other.EndTime).Duration > New TimeSpan(23, 30, 0) OrElse
-               (other.EndTime - other.EndTime).Duration < New TimeSpan(0, 30, 0))
+            Me.CarbRatio = other.CarbRatio AndAlso
+            Me.StartTime.Equals(other.StartTime) AndAlso
+            ((other.EndTime - other.EndTime).Duration > New TimeSpan(23, 30, 0) OrElse
+            (other.EndTime - other.EndTime).Duration < New TimeSpan(0, 30, 0))
     End Function
 
     Public Overrides Function GetHashCode() As Integer

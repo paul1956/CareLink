@@ -11,7 +11,9 @@ Public Class PostalRecord
     Public Sub New(<StringSyntax(StringSyntaxAttribute.Json)> jsonData As String)
         _asList = JsonToDictionary(jsonData)
         If _asList.Keys.Count <> 2 Then
-            Throw New Exception($"{NameOf(PostalRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries, 2 expected.")
+            Throw New ApplicationException(
+                message:=$"{NameOf(PostalRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries, 2 expected.",
+                innerException:=New ApplicationException("Invalid postal record structure."))
         End If
 
         Me.postalFormat = _asList(NameOf(postalFormat))

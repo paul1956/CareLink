@@ -41,10 +41,8 @@ Public Class Client2
     '''  Optional. The token file name to use for authentication. Defaults to <c>logindata.json</c>.
     ''' </param>
     ''' <remarks>
-    '''  <para>
-    '''   The constructor sets up the <see cref="HttpClient"/>, initializes configuration and token fields,
-    '''   and prepares the client for authentication and API communication.
-    '''  </para>
+    '''  The constructor sets up the <see cref="HttpClient"/>, initializes configuration and token fields,
+    '''  and prepares the client for authentication and API communication.
     ''' </remarks>
     Public Sub New(Optional tokenFile As String = TokenBaseFileName)
         ' Authorization
@@ -77,10 +75,12 @@ Public Class Client2
     '''  A <see cref="Task(Of JsonElement)"/> containing the refreshed token data.
     ''' </returns>
     ''' <remarks>
-    '''  <para>
-    '''   This method attempts to refresh the access token using the refresh token. If the refresh fails,
-    '''   the user may be prompted to log in again.
-    '''  </para>
+    '''  This method attempts to refresh the access token using the refresh token. If the refresh fails,
+    '''  the user may be prompted to log in again.
+    ''' </remarks>
+    ''' <exception cref="ApplicationException">
+    '''  Thrown if the refresh token operation fails and the user does not choose to log in again.
+    ''' </exception>
     Private Function DoRefresh(config As Dictionary(Of String, Object), tokenDataElement As JsonElement) As Task(Of JsonElement)
         Debug.WriteLine(NameOf(DoRefresh))
         _httpClient.SetDefaultRequestHeaders()
@@ -115,7 +115,9 @@ Public Class Client2
                     buttonStyle:=MsgBoxStyle.YesNo,
                     title:="New Login Required") <> MsgBoxResult.Yes Then
 
-                    Throw New Exception("ERROR: Failed to refresh token!")
+                    Throw New ApplicationException(
+                        message:="ERROR: Failed to refresh token!",
+                        innerException:=New Exception("Refresh token operation failed."))
                 Else
                     Dim fileWithPath As String = GetLoginDataFileName(s_userName, TokenBaseFileName)
                     If File.Exists(fileWithPath) Then
@@ -126,7 +128,9 @@ Public Class Client2
                         updateAllTabs:=False,
                         fileToLoad:=FileToLoadOptions.Login) Then
 
-                        Throw New Exception("ERROR: Failed to refresh token!")
+                        Throw New ApplicationException(
+                            message:="ERROR: Failed to refresh token!",
+                            innerException:=New Exception("Refresh token operation failed."))
                     End If
                 End If
             End If
@@ -137,6 +141,8 @@ Public Class Client2
             Dim modifiedJsonString As String = JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions)
             Return Task.FromResult(JsonSerializer.Deserialize(Of JsonElement)(modifiedJsonString))
         Catch ex As Exception
+            Debug.WriteLine($"ERROR: {ex.DecodeException()} in {NameOf(DoRefresh)}")
+            Stop
         Finally
             response.Dispose()
         End Try
@@ -165,7 +171,8 @@ Public Class Client2
             Dim payload As String = Encoding.UTF8.GetString(payload_bytes)
             Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(payload)
         Catch ex As Exception
-            Debug.WriteLine("   no access token found or malformed access token")
+            Debug.WriteLine($"No access token found or malformed access token: {ex.DecodeException()} in {NameOf(GetAccessTokenPayload)}")
+            Stop
             Return Nothing
         End Try
     End Function
@@ -305,21 +312,22 @@ Public Class Client2
             Dim tDiff As Long = unixTimeToValidate - unixCurrentTime
 
             If tDiff < 0 Then
-                Debug.WriteLine($"   access token has expired {Math.Abs(tDiff)}s ago")
+                Debug.WriteLine($"In {NameOf(IsTokenValid)} access token has expired {Math.Abs(tDiff)}s ago")
                 Return False
             End If
 
             If tDiff < 600 Then
-                Debug.WriteLine($"   access token is about to expire in {tDiff}s")
+                Debug.WriteLine($"In {NameOf(IsTokenValid)} access token is about to expire in {tDiff}s")
                 Return False
             End If
 
             ' Token is valid
-            Dim authTokenValidTo As String = DateTimeOffset.FromUnixTimeSeconds(unixTimeToValidate).ToString("ddd MMM dd HH:mm:ss UTC yyyy")
-            Debug.WriteLine($"   access token expires in {tDiff}s ({authTokenValidTo})")
+            Dim authTokenValidTo As String = DateTimeOffset.FromUnixTimeSeconds(unixTimeToValidate) _
+                                                           .ToString("ddd MMM dd HH:mm:ss UTC yyyy")
+            Debug.WriteLine($"In {NameOf(IsTokenValid)} access token expires in {tDiff}s ({authTokenValidTo})")
             Return True
         Catch ex As Exception
-            Debug.WriteLine("   missing data in access token")
+            Debug.WriteLine($"In {NameOf(IsTokenValid)} missing data in access token. {ex.DecodeException()}")
             Return False
         End Try
     End Function

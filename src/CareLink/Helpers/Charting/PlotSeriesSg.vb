@@ -8,10 +8,10 @@ Imports System.Windows.Forms.DataVisualization.Charting
 Friend Module PlotSeriesSg
 
     ''' <summary>
-    '''  Plots the SG <see cref="Series"/> on the specified <paramref name="Chart"/>,
+    '''  Plots the SG <see cref="Series"/> on the specified <paramref name="chart"/>,
     '''  handling missing or out-of-range values and coloring points based on TIR (Time In Range) limits.
     ''' </summary>
-    ''' <param name="chart">The <paramref name="Chart"/> control to plot onto.</param>
+    ''' <param name="chart">The <see cref="Chart"/> control to plot onto.</param>
     ''' <param name="HomePageMealRow">The Y-value to use for missing or invalid SG data points.</param>
     ''' <remarks>
     '''  This method iterates through the global list of SG records, plotting each value on the chart.
@@ -20,6 +20,8 @@ Friend Module PlotSeriesSg
     '''  - Red if below the low limit
     '''  - White if within range
     '''  Missing or invalid values are plotted as transparent and marked as empty.
+    '''  If two consecutive valid points are within 6 minutes, a gap is inserted.
+    '''  Exceptions are caught, stopped for debugging, and rethrown as <see cref="ApplicationException"/>.
     ''' </remarks>
     <Extension>
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
@@ -50,9 +52,11 @@ Friend Module PlotSeriesSg
 
                     End If
                 End With
-            Catch ex As Exception
+            Catch innerException As Exception
                 Stop
-                Throw New Exception($"{ex.DecodeException()} exception in {NameOf(PlotSgSeries)}")
+                Throw New ApplicationException(
+                    message:=$"{innerException.DecodeException()} exception in {NameOf(PlotSgSeries)}",
+                    innerException)
             End Try
         Next
     End Sub

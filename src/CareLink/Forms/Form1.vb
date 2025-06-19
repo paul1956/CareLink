@@ -3583,6 +3583,12 @@ Public Class Form1
     '''  If the active insulin value is available and non-negative, it is formatted and displayed.
     '''  Otherwise, "Unknown" or "---" is shown.
     ''' </remarks>
+    ''' <exception cref="ArithmeticException">
+    '''  Thrown if an arithmetic error occurs while updating the active insulin value.
+    ''' </exception>
+    ''' <exception cref="ApplicationException">
+    '''  Thrown if a general error occurs while updating the active insulin value.
+    ''' </exception>
     Private Sub UpdateActiveInsulin()
         Try
             If PatientData.ActiveInsulin IsNot Nothing AndAlso PatientData.ActiveInsulin.amount >= 0 Then
@@ -3595,10 +3601,12 @@ Public Class Form1
             End If
         Catch ex As ArithmeticException
             Stop
-            Throw New ArithmeticException($"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulin)}")
-        Catch ex1 As Exception
+            Throw New ArithmeticException(message:=$"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulin)}")
+        Catch innerException As Exception
             Stop
-            Throw New Exception($"{ex1.DecodeException()} exception in {NameOf(UpdateActiveInsulin)}")
+            Throw New ApplicationException(
+                message:=$"{innerException.DecodeException()} exception in {NameOf(UpdateActiveInsulin)}",
+                innerException)
         End Try
     End Sub
 
@@ -3607,7 +3615,13 @@ Public Class Form1
     ''' </summary>
     ''' <remarks>
     '''  Clears and repopulates the chart series with new data points based on the current markers and user settings.
+    '''  Calculates active insulin on board (IOB) for each 5-minute interval, using all relevant markers.
+    '''  Handles auto basal, manual basal, insulin, and low glucose suspended markers.
+    '''  Updates the chart's Y axis maximum, plots suspend areas, markers, sensor glucose series, and high/low/target limits.
     ''' </remarks>
+    ''' <exception cref="ApplicationException">
+    '''  Thrown if an error occurs while updating the chart.
+    ''' </exception>
     Private Sub UpdateActiveInsulinChart()
         If Not ProgramInitialized Then
             Exit Sub
@@ -3721,18 +3735,30 @@ Public Class Form1
                 .PlotHighLowLimitsAndTargetSg(targetSsOnly:=True)
             End With
             Application.DoEvents()
-        Catch ex As Exception
+        Catch innerException As Exception
             Stop
-            Throw New Exception($"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulinChart)}")
+            Throw New ApplicationException(
+                message:=$"{innerException.DecodeException()} exception in {NameOf(UpdateActiveInsulinChart)}",
+                innerException)
         End Try
     End Sub
 
     ''' <summary>
-    '''  Updates the summary chart with the latest data and settings.
+    '''  Updates all summary chart series with the latest data and settings.
     ''' </summary>
     ''' <remarks>
-    '''  Clears and repopulates the chart series with new data points based on the current markers and user settings.
+    '''  <para>
+    '''   Clears and repopulates the chart series for the summary chart,
+    '''   including suspend areas, markers, sensor glucose series, and high/low/target limits.
+    ''' </para>
+    ''' <para>
+    '''  The chart title is updated with the current subtitle.
+    '''  This method should be called after data changes to refresh the summary chart display.
+    ''' </para>
     ''' </remarks>
+    ''' <exception cref="ApplicationException">
+    '''  Thrown if an error occurs while plotting markers in the summary chart.
+    ''' </exception>
     Private Sub UpdateAllSummarySeries()
         Try
             With Me.SummaryChart
@@ -3751,9 +3777,11 @@ Public Class Form1
                 .PlotHighLowLimitsAndTargetSg(targetSsOnly:=False)
                 Application.DoEvents()
             End With
-        Catch ex As Exception
+        Catch innerException As Exception
             Stop
-            Throw New Exception($"{ex.DecodeException()} exception while plotting Markers in {NameOf(UpdateAllSummarySeries)}")
+            Throw New ApplicationException(
+                message:=$"{innerException.DecodeException()} exception while plotting Markers in {NameOf(UpdateAllSummarySeries)}",
+                innerException)
         End Try
 
     End Sub
@@ -3862,9 +3890,11 @@ Public Class Form1
                 Me.ShieldUnitsLabel.Visible = False
                 Application.DoEvents()
             End If
-        Catch ex As Exception
+        Catch innerException As Exception
             Stop
-            Throw New Exception($"{ex.DecodeException()} exception in {NameOf(UpdateAutoModeShield)}")
+            Throw New ApplicationException(
+                message:=$"{innerException.DecodeException()} exception in {NameOf(UpdateAutoModeShield)}",
+                innerException)
         End Try
         Application.DoEvents()
     End Sub
@@ -3875,6 +3905,12 @@ Public Class Form1
     ''' </summary>
     ''' <remarks>
     '''  The calibration due image is set based on the time remaining for calibration and the sensor state.
+    '''  If the sensor is in range, the image is updated to reflect the calibration status:
+    '''  - If the time to next calibration is unknown (>= Byte.MaxValue), a default arc is shown.
+    '''  - If calibration is due now (0 hours), the image reflects whether calibration is not ready or required.
+    '''  - If the time to next calibration is -1, the image is cleared.
+    '''  - Otherwise, the image shows a progress arc for the remaining minutes.
+    '''  The image is only visible if the sensor is in range.
     ''' </remarks>
     Private Sub UpdateCalibrationTimeRemaining()
         Try
@@ -3892,9 +3928,11 @@ Public Class Form1
                 End If
             End If
             Me.CalibrationDueImage.Visible = PatientData.ConduitInRange
-        Catch ex As Exception
+        Catch innerException As Exception
             Stop
-            Throw New Exception($"{ex.DecodeException()} exception in {NameOf(UpdateCalibrationTimeRemaining)}")
+            Throw New ApplicationException(
+                message:=$"{innerException.DecodeException()} exception in {NameOf(UpdateCalibrationTimeRemaining)}",
+                innerException)
         End Try
 
         Application.DoEvents()
@@ -4296,10 +4334,13 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Updates the treatment markers chart with the latest data and settings.
+    '''  Updates the Treatment Markers chart with the latest data and settings.
     ''' </summary>
     ''' <remarks>
-    '''  Clears and repopulates the chart series with new treatment markers and settings.
+    '''  This method reinitializes the Treatment Markers chart, updates its title, axes, and series.
+    '''  It plots suspend areas, treatment markers, sensor glucose series, and high/low/target limits.
+    '''  If the program is not initialized, the method exits without making changes.
+    '''  Any exceptions encountered during the update are caught, the debugger is stopped, and an <see cref="ApplicationException"/> is thrown.
     ''' </remarks>
     Private Sub UpdateTreatmentChart()
         If Not ProgramInitialized Then
@@ -4313,9 +4354,11 @@ Public Class Form1
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
             Me.TreatmentMarkersChart.PlotSgSeries(GetYMinValueFromNativeMmolL())
             Me.TreatmentMarkersChart.PlotHighLowLimitsAndTargetSg(targetSsOnly:=True)
-        Catch ex As Exception
+        Catch innerException As Exception
             Stop
-            Throw New Exception($"{ex.DecodeException()} exception in {NameOf(InitializeTreatmentMarkersChart)}")
+            Throw New ApplicationException(
+                message:=$"{innerException.DecodeException()} exception in {NameOf(UpdateTreatmentChart)}",
+                innerException)
         End Try
         Application.DoEvents()
     End Sub

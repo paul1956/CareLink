@@ -21,7 +21,11 @@ Friend Module ExceptionHelpers
     '''  An <see cref="ArgumentOutOfRangeException"/> describing the unreachable code location.
     ''' </returns>
     <ExcludeFromCodeCoverage>
-    Public ReadOnly Property UnreachableException(propertyName As String, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Exception
+    Public ReadOnly Property UnreachableException(
+        propertyName As String,
+        <CallerMemberName> Optional memberName As String = Nothing,
+        <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Exception
+
         Get
             Return New ArgumentOutOfRangeException(propertyName, $"The program location {memberName} line {sourceLineNumber} is thought to be unreachable.")
         End Get

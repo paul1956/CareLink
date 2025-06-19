@@ -140,10 +140,17 @@ Friend Module DateTimeExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a Unix Milliseconds TimeSpan to UTC Date
+    '''  Gets the timestamp of a marker, rounded down to the nearest minute.
     ''' </summary>
-    ''' <param name="unixTime" kind="String">In Milliseconds As String</param>
-    ''' <returns>UTC Date</returns>
+    ''' <param name="marker">The <see cref="Marker"/> object whose timestamp is to be retrieved.</param>
+    ''' <returns>
+    '''  The <see langword="Date"/> value of the marker's timestamp, rounded down to the nearest minute.
+    '''  Returns <see langword="Nothing"/> if an exception occurs.
+    ''' </returns>
+    ''' <remarks>
+    '''  This method attempts to round down the marker's timestamp to the nearest minute.
+    '''  If an exception occurs, execution is stopped for debugging and <see langword="Nothing"/> is returned.
+    ''' </remarks>
     <Extension>
     Friend Function GetMarkerTimestamp(marker As Marker) As Date
         Try
@@ -163,6 +170,9 @@ Friend Module DateTimeExtensions
     ''' <param name="memberName">The name of the member calling this method, used for debugging.</param>
     ''' <param name="sourceLineNumber">The line number in the source code where this method is called, used for debugging.</param>
     ''' <returns>A <see langword="Date"/> object if parsing is successful.</returns>
+    ''' <exception cref="FormatException">
+    '''  Thrown when the input string cannot be parsed as a valid <see langword="Date"/> in any supported culture.
+    ''' </exception>
     <Extension>
     Public Function ParseDate(
         dateAsString As String,

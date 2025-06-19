@@ -31,7 +31,7 @@ Public Module Discover
         Next
 
         If region.ValueKind.IsNullOrUndefined Then
-            Throw New Exception($"ERROR: country code {country} is not supported")
+            Throw New ApplicationException($"ERROR: country code {country} is not supported")
         End If
         Debug.WriteLine($"   region: {region}")
         Dim countryInfo As CountryInfo = JsonSerializer.Deserialize(Of CountryInfo)(JsonSerializer.Serialize(region))
@@ -47,7 +47,7 @@ Public Module Discover
             End Try
         Next
         If config.ValueKind.IsNullOrUndefined Then
-            Throw New Exception($"ERROR: failed to get config base URLs for region {region}")
+            Throw New ApplicationException($"ERROR: failed to get config base URLs for region {region}")
         End If
         Return config
     End Function

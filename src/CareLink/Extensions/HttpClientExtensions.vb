@@ -74,15 +74,22 @@ Friend Module HttpClientExtensions
     '''  Optional. The name of the calling member. Automatically supplied by the compiler.
     ''' </param>
     ''' <param name="sourceLineNumber">
-    '''  Optional. The line number in the source file at which the method is called. Automatically supplied
-    '''  by the compiler.
+    '''  Optional. The line number in the source file at which the method is called.
+    '''  Automatically supplied by the compiler.
     ''' </param>
     ''' <returns>
     '''  The <see cref="HttpResponseMessage"/> returned by the request, or a response with status
     '''  <c>NotImplemented</c> if an error occurs.
     ''' </returns>
     <Extension>
-    Public Function [Get](httpClient As HttpClient, requestUri As StringBuilder, ByRef lastError As String, Optional queryParams As Dictionary(Of String, String) = Nothing, <CallerMemberName> Optional memberName As String = Nothing, <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
+    Public Function [Get](
+        httpClient As HttpClient,
+        requestUri As StringBuilder,
+        ByRef lastError As String,
+        Optional queryParams As Dictionary(Of String, String) = Nothing,
+        <CallerMemberName> Optional memberName As String = Nothing,
+        <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
+
         httpClient.SetDefaultRequestHeaders()
         If queryParams IsNot Nothing Then
             requestUri.Append("?"c)

@@ -11,12 +11,14 @@ Public Class SupportedReportRecord
 
     Public Sub New(Values As Dictionary(Of String, String), recordNumber As Integer)
         If Values.Count <> 3 Then
-            Throw New Exception($"{NameOf(SupportedReportRecord)}({Values}) contains {Values.Count} entries, 3 expected.")
+            Throw New ApplicationException(
+                message:=$"{NameOf(SupportedReportRecord)}({Values}) contains {Values.Count} entries, 3 expected.",
+                innerException:=New ApplicationException("Invalid supported report record structure."))
         End If
         Me.recordNumber = recordNumber
         Me.report = Values(NameOf(report))
-        Me.onlyFor = kvpToString(JsonToLisOfDictionary(Values(NameOf(onlyFor)))).ToString.TrimStart(" "c).TrimEnd(","c)
-        Me.notFor = kvpToString(JsonToLisOfDictionary(Values(NameOf(notFor)))).ToString.TrimStart(" "c).TrimEnd(","c)
+        Me.onlyFor = kvpToString(JsonToDictionaryList(Values(NameOf(onlyFor)))).ToString.TrimStart(" "c).TrimEnd(","c)
+        Me.notFor = kvpToString(JsonToDictionaryList(Values(NameOf(notFor)))).ToString.TrimStart(" "c).TrimEnd(","c)
 
     End Sub
 

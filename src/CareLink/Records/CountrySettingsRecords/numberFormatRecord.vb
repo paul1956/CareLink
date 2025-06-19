@@ -9,7 +9,9 @@ Public Class NumberFormatRecord
     Public Sub New(jsonData As String)
         _asList = JsonToDictionary(jsonData)
         If _asList.Count <> 2 Then
-            Throw New Exception($"{NameOf(NumberFormatRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries.")
+            Throw New ApplicationException(
+                message:=$"{NameOf(NumberFormatRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries.",
+                innerException:=New ApplicationException("Invalid number format record structure."))
         End If
         Me.decimalSeparator = _asList(NameOf(decimalSeparator))
         Me.groupsSeparator = _asList(NameOf(groupsSeparator))
