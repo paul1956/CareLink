@@ -213,7 +213,7 @@ Friend Module NotificationHelpers
 
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In s_notificationHistoryValue.WithIndex()
             Dim notificationType As KeyValuePair(Of String, String) = c.Value
-            Dim innerJson As List(Of Dictionary(Of String, String)) = JsonToLisOfDictionary(notificationType.Value)
+            Dim innerJson As List(Of Dictionary(Of String, String)) = JsonToDictionaryList(notificationType.Value)
             If notificationType.Key = "clearedNotifications" Then
                 If innerJson.Count > 0 Then
                     innerJson.Reverse()

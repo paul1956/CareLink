@@ -376,7 +376,7 @@ Public Module JsonExtensions
     ''' </summary>
     ''' <param name="value">The JSON string to convert.</param>
     ''' <returns>A <see cref="List(Of Dictionary(Of String, String)"/> representing the JSON objects.</returns>
-    Public Function JsonToLisOfDictionary(value As String) As List(Of Dictionary(Of String, String))
+    Public Function JsonToDictionaryList(value As String) As List(Of Dictionary(Of String, String))
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         If String.IsNullOrWhiteSpace(value) Then
             Return resultDictionaryArray

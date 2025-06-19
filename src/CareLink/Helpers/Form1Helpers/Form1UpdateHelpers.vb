@@ -352,7 +352,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, row))
 
                 Case NameOf(ServerDataIndexes.pumpBannerState)
-                    s_pumpBannerStateValue = JsonToLisOfDictionary(row.Value)
+                    s_pumpBannerStateValue = JsonToDictionaryList(row.Value)
                     s_listOfSummaryRecords.Add(New SummaryRecord(recordNumber, recordNumber, ClickToShowDetails))
                     mainForm.PumpBannerStateLabel.Visible = s_pumpBannerStateValue.Count > 0
 

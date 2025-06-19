@@ -97,12 +97,21 @@ Friend Module PlotMarkers
     ''' <param name="timeChangeSeries">The series used for time change markers.</param>
     ''' <param name="markerInsulinDictionary">Dictionary to store insulin marker positions.</param>
     ''' <param name="markerMealDictionary">Dictionary to store meal marker positions.</param>
+    ''' <param name="memberName">
+    '''  Optional. The name of the calling member, automatically supplied by the compiler.
+    ''' </param>
+    ''' <param name="sourceLineNumber">
+    '''  Optional. The line number in the source file at which the method is called, automatically supplied
+    '''  by the compiler.
+    ''' </param>
     <Extension>
     Friend Sub PlotMarkers(
         pageChart As Chart,
         timeChangeSeries As Series,
         markerInsulinDictionary As Dictionary(Of OADate, Single),
-        markerMealDictionary As Dictionary(Of OADate, Single))
+        markerMealDictionary As Dictionary(Of OADate, Single),
+        <CallerMemberName> Optional memberName As String = Nothing,
+        <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
 
         Dim lastTimeChangeRecord As TimeChange = Nothing
         markerInsulinDictionary.Clear()
@@ -225,9 +234,11 @@ Friend Module PlotMarkers
                     Case Else
                         Stop
                 End Select
-            Catch ex As Exception
+            Catch innerException As Exception
                 Stop
-                '      Throw New Exception($"{ex.DecodeException()} exception in {memberName} at {sourceLineNumber}")
+                Throw New ApplicationException(
+                    message:=$"{innerException.DecodeException()} exception in {memberName} at {sourceLineNumber}",
+                    innerException)
             End Try
         Next
         If s_listOfTimeChangeMarkers.Count > 0 Then
@@ -245,8 +256,20 @@ Friend Module PlotMarkers
     ''' </summary>
     ''' <param name="treatmentChart">The chart to plot treatment markers on.</param>
     ''' <param name="treatmentMarkerTimeChangeSeries">The series used for time change markers in the treatment chart.</param>
+    ''' <param name="memberName">
+    '''  Optional. The name of the calling member, automatically supplied by the compiler.
+    ''' </param>
+    ''' <param name="sourceLineNumber">
+    '''  Optional. The line number in the source file at which the method is called, automatically supplied
+    '''  by the compiler.
+    ''' </param>
     <Extension>
-    Friend Sub PlotTreatmentMarkers(treatmentChart As Chart, treatmentMarkerTimeChangeSeries As Series)
+    Friend Sub PlotTreatmentMarkers(
+        treatmentChart As Chart,
+        treatmentMarkerTimeChangeSeries As Series,
+        <CallerMemberName> Optional memberName As String = Nothing,
+        <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+
         Dim lastTimeChangeRecord As TimeChange = Nothing
         s_treatmentMarkerInsulinDictionary.Clear()
         s_treatmentMarkerMealDictionary.Clear()
@@ -358,8 +381,11 @@ Friend Module PlotMarkers
                     Case Else
                         Stop
                 End Select
-            Catch ex As Exception
+            Catch innerException As Exception
                 Stop
+                Throw New ApplicationException(
+                    message:=$"{innerException.DecodeException()} exception in {NameOf(PlotTreatmentMarkers)} at {memberName} line {sourceLineNumber}",
+                    innerException:=innerException)
             End Try
         Next
         treatmentChart.Annotations.Last.BringToFront()

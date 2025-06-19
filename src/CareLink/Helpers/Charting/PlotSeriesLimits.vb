@@ -32,10 +32,18 @@ Friend Module PlotSeriesLimits
     End Function
 
     ''' <summary>
-    '''  Plot Sg and optionally High and Low Limits
+    '''  Plots the SG (sensor glucose) target line and, optionally, the high and low limit lines on the specified chart.
     ''' </summary>
-    ''' <param name="chart">The Chart to plot onto</param>
-    ''' <param name="targetSsOnly">Only plot Limits if True</param>
+    ''' <param name="chart">The <see cref="Chart"/> control to plot onto.</param>
+    ''' <param name="targetSsOnly">
+    '''  If <c>True</c>, only the target SG line is plotted; if <c>False</c>, high and low limits are also plotted.
+    ''' </param>
+    ''' <remarks>
+    '''  This method uses the global lists <see cref="s_listOfSgRecords"/> and <see cref="s_listOfLimitRecords"/> to
+    '''  determine the data points for plotting. It adds points to the chart's series for target SG, high limit,
+    '''  and low limit.
+    '''  If an exception occurs while plotting, an <see cref="ApplicationException"/> is thrown with details.
+    ''' </remarks>
     <Extension>
     Friend Sub PlotHighLowLimitsAndTargetSg(chart As Chart, targetSsOnly As Boolean)
         If s_listOfLimitRecords.Count = 0 Then Exit Sub
@@ -57,9 +65,11 @@ Friend Module PlotSeriesLimits
                 If limitsLowValue <> 0 Then
                     chart.Series(LowLimitSeriesName).Points.AddXY(sgOADateTime, limitsLowValue)
                 End If
-            Catch ex As Exception
+            Catch innerException As Exception
                 Stop
-                Throw New Exception($"{ex.DecodeException()} exception while plotting Limits in {NameOf(PlotHighLowLimitsAndTargetSg)}")
+                Throw New ApplicationException(
+                    message:=$"{innerException.DecodeException()} exception while plotting Limits in {NameOf(PlotHighLowLimitsAndTargetSg)}",
+                    innerException)
             End Try
         Next
     End Sub
