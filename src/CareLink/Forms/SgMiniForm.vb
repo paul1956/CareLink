@@ -139,7 +139,7 @@ Public Class SgMiniForm
     End Sub
 
     Public Sub SetCurrentSgString(sgString As String, sgValue As Single)
-        Me.SgTextBox.Text = If(Single.IsNaN(sgValue),
+        Me.SgTextBox.Text = If(String.IsNullOrWhiteSpace(sgString) OrElse Single.IsNaN(sgValue),
                                "---",
                                sgString
                               )

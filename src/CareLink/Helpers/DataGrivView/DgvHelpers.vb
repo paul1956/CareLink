@@ -134,7 +134,7 @@ Public Module DgvHelpers
                     End If
                 Case $"{partialKey}MmolL"
                     e.Value = sensorValue.ToString("F2", Provider)
-                    If sensorValue.RoundSingle(decimalDigits:=1, considerValue:=False) < GetTirLowLimit(asMmolL:=True) Then
+                    If sensorValue.RoundSingle(digits:=1, considerValue:=False) < GetTirLowLimit(asMmolL:=True) Then
                         dgv.CellFormattingApplyColor(e, highlightColor:=Color.Red, isUri:=False)
                     ElseIf sensorValue > GetTirHighLimit(asMmolL:=True) Then
                         dgv.CellFormattingApplyColor(e, highlightColor:=Color.Yellow, isUri:=False)

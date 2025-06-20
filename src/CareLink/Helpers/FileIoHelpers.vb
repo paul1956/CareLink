@@ -67,7 +67,7 @@ Friend Module FileIoHelpers
             baseName:=BaseNameSavedLastDownload,
             cultureName:=CultureInfo.CurrentUICulture.Name,
             extension:="json",
-            MustBeUnique:=False).withPath
+            mustBeUnique:=False).withPath
     End Function
 
     ''' <summary>

@@ -25,7 +25,7 @@ Friend Module KeyValuePairExtensions
     <Extension>
     Private Function ScaleSgToString(value As Single) As String
         Return If(NativeMmolL,
-                  (value / MmolLUnitsDivisor).RoundSingle(decimalDigits:=If(NativeMmolL, 2, 0), considerValue:=False).ToString(Provider),
+                  (value / MmolLUnitsDivisor).RoundSingle(digits:=If(NativeMmolL, 2, 0), considerValue:=False).ToString(Provider),
                   value.ToString(Provider)
                  )
     End Function
@@ -62,9 +62,11 @@ Friend Module KeyValuePairExtensions
                 Stop
         End Select
 
-        Return If(NativeMmolL,
-                  (itemAsSingle / MmolLUnitsDivisor).RoundSingle(If(NativeMmolL, 2, 0), False).ToString(Provider),
-                  itemAsSingle.ToString(Provider))
+        Dim s As Single = If(
+            NativeMmolL,
+            (itemAsSingle / MmolLUnitsDivisor).RoundSingle(digits:=If(NativeMmolL, 2, 0), considerValue:=False),
+            itemAsSingle)
+        Return s.ToString(Provider)
     End Function
 
     ''' <summary>

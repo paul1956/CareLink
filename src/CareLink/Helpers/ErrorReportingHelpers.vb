@@ -12,7 +12,7 @@ Friend Module ErrorReportingHelpers
     ''' </summary>
     ''' <param name="loginStatus">The <see cref="ToolStripStatusLabel"/> to update.</param>
     Friend Sub ReportLoginStatus(loginStatus As ToolStripStatusLabel)
-        ReportLoginStatus(loginStatus, True, "Login Status: No Internet Connection!")
+        ReportLoginStatus(loginStatus, hasErrors:=True, lastErrorMessage:="Login Status: No Internet Connection!")
     End Sub
 
     ''' <summary>
@@ -23,10 +23,10 @@ Friend Module ErrorReportingHelpers
     ''' <param name="lastErrorMessage">The last error message to display. Defaults to empty string.</param>
     Friend Sub ReportLoginStatus(loginStatus As ToolStripStatusLabel, hasErrors As Boolean, Optional lastErrorMessage As String = "")
         If hasErrors Then
-            loginStatus.ForeColor = If(lastErrorMessage = "OK", Color.Black, Color.Red)
+            loginStatus.ForeColor = If(lastErrorMessage = "OK", Form1.MenuStrip1.ForeColor, Color.Red)
             loginStatus.Text = $"Login Status: {lastErrorMessage}"
         Else
-            loginStatus.ForeColor = Color.Black
+            loginStatus.ForeColor = Form1.MenuStrip1.ForeColor
             loginStatus.Text = "Login Status: OK"
         End If
     End Sub

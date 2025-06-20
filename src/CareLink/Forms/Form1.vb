@@ -357,7 +357,7 @@ Public Class Form1
                 Case SgSeriesName
                     Me.CursorMessage1Label.Text = "Sensor Glucose"
                     Me.CursorMessage1Label.Visible = True
-                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(decimalDigits:=3)} {GetBgUnitsString()}"
+                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(digits:=3)} {GetBgUnitsString()}"
                     Me.CursorMessage2Label.Visible = True
                     Me.CursorMessage3Label.Text = If(NativeMmolL,
                                                      $"{CInt(currentDataPoint.YValues(0) * MmolLUnitsDivisor)} mg/dL",
@@ -1914,7 +1914,7 @@ Public Class Form1
 
         If Directory.Exists(GetWebViewCacheDirectory()) Then
             Try
-                Directory.Delete(GetWebViewCacheDirectory(), True)
+                Directory.Delete(GetWebViewCacheDirectory(), recursive:=True)
             Catch
                 Stop
                 ' Ignore errors here
@@ -2029,7 +2029,7 @@ Public Class Form1
         Me.NotifyIcon1.Visible = False
         Application.DoEvents()
 
-        If DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=False, fileToLoad:=FileToLoadOptions.NewUser) Then
+        If DoOptionalLoginAndUpdateData(owner:=Me, updateAllTabs:=False, fileToLoad:=FileToLoadOptions.NewUser) Then
             Me.UpdateAllTabPages(fromFile:=False)
         End If
     End Sub
@@ -2190,7 +2190,7 @@ Public Class Form1
         If RecentDataEmpty() Then Exit Sub
 
         File.WriteAllTextAsync(
-            path:=GetUniqueDataFileName(baseName:=BaseNameSavedSnapshot, cultureName:=CurrentDateCulture.Name, extension:="json", MustBeUnique:=True).withPath,
+            path:=GetUniqueDataFileName(baseName:=BaseNameSavedSnapshot, cultureName:=CurrentDateCulture.Name, extension:="json", mustBeUnique:=True).withPath,
             contents:=CleanPatientData())
     End Sub
 
@@ -2237,7 +2237,7 @@ Public Class Form1
                             Catch ex As Exception
                                 MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
                             End Try
-                            CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"CareLink", True)
+                            CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"CareLink", fuzzy:=True)
                             Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                             Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                             Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
@@ -2274,7 +2274,7 @@ Public Class Form1
     '''  The last saved file will be loaded and processed to update the application state.
     ''' </remarks>
     Private Sub MenuStartHereUseLastSavedFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseLastSavedFile.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.LastSaved)
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(owner:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.LastSaved)
         Me.MenuStartHereSaveSnapshotFile.Enabled = Not success
     End Sub
 
@@ -2289,7 +2289,7 @@ Public Class Form1
     '''  The user will be prompted to log in, and their data will be updated based on their account information.
     ''' </remarks>
     Private Sub MenuStartHereUserLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereUserLogin.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.NewUser)
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(owner:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.NewUser)
     End Sub
 
     ''' <summary>
@@ -2303,7 +2303,7 @@ Public Class Form1
     '''  The user can select a saved data file to load and process.
     ''' </remarks>
     Private Sub MenuStartHereUseSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereLoadSavedDataFile.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.Snapshot)
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(owner:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.Snapshot)
         Me.MenuStartHereLoadSavedDataFile.Enabled = Not success
     End Sub
 
@@ -2318,7 +2318,7 @@ Public Class Form1
     '''  The test data will be loaded and processed to simulate a CareLink™ environment.
     ''' </remarks>
     Private Sub MenuStartHereUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseTestData.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(mainForm:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(owner:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
         Me.MenuStartHereSaveSnapshotFile.Enabled = Not success
     End Sub
 
@@ -2993,7 +2993,7 @@ Public Class Form1
                     End If
                     lastErrorMessage = Client.GetRecentData()
                 End If
-                ReportLoginStatus(Me.LoginStatus, RecentDataEmpty, lastErrorMessage)
+                ReportLoginStatus(Me.LoginStatus, hasErrors:=RecentDataEmpty, lastErrorMessage)
 
                 Me.Cursor = Cursors.Default
                 Application.DoEvents()
@@ -3324,7 +3324,7 @@ Public Class Form1
         Dim labelFont As New Font(familyName:="Segoe UI", emSize:=12.0F, style:=FontStyle.Bold)
 
         With treatmentMarkersChartArea.AxisY
-            Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(3, False)
+            Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(digits:=3, considerValue:=False)
             .Interval = interval
             .IsInterlaced = False
             .IsMarginVisible = False
@@ -3479,7 +3479,7 @@ Public Class Form1
                     Else
                         Me.LabelTrendValue.Visible = False
                     End If
-                    strBuilder.Append($"Active ins. {PatientData.ActiveInsulin.amount:N3} U")
+                    strBuilder.Append($"Active ins. {PatientData.ActiveInsulin?.amount:N3} U")
                     Me.NotifyIcon1.Text = strBuilder.ToString
                     Me.NotifyIcon1.Visible = True
                     s_lastSgValue = sg
@@ -4147,18 +4147,22 @@ Public Class Form1
                     Me.SensorDaysLeftLabel.Text = Math.Ceiling(PatientData.SensorDurationHours / 24).ToString()
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
                     Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
-                Case > 0
+                Case Is > 0
                     Me.SensorDaysLeftLabel.Text = $"<{Math.Ceiling(PatientData.SensorDurationHours / 24)}"
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                     Me.SensorTimeLeftLabel.Text = $"{PatientData.SensorDurationHours} Hours"
-                Case 0
-                    Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(NameOf(ServerDataIndexes.sensorDurationMinutes), False, -1)
+                Case Is = 0
+                    Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(
+                        Key:=NameOf(ServerDataIndexes.sensorDurationMinutes),
+                        throwError:=False,
+                        defaultValue:=-1)
+
                     Select Case sensorDurationMinutes
-                        Case > 0
+                        Case Is > 0
                             Me.SensorDaysLeftLabel.Text = "0"
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                             Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
-                        Case 0
+                        Case Is = 0
                             Me.SensorDaysLeftLabel.Text = ""
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
                             Me.SensorTimeLeftLabel.Text = "Expired"
@@ -4290,7 +4294,7 @@ Public Class Form1
             Me.LowTirComplianceLabel.Text = ""
             Me.HighTirComplianceLabel.Text = ""
         Else
-            Dim lowDeviation As Single = CSng(Math.Sqrt(lowDeviations / (elements - highCount))).RoundSingle(1, False)
+            Dim lowDeviation As Single = Math.Sqrt(lowDeviations / (elements - highCount)).RoundToSingle(digits:=1, considerValue:=False)
             Select Case True
                 Case lowDeviation <= 2
                     Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}Excellent¹"
@@ -4303,7 +4307,7 @@ Public Class Form1
                     Me.LowTirComplianceLabel.ForeColor = Color.Red
             End Select
 
-            Dim highDeviation As Single = CSng(Math.Sqrt(highDeviations / (elements - lowCount))).RoundSingle(1, False)
+            Dim highDeviation As Single = Math.Sqrt(highDeviations / (elements - lowCount)).RoundToSingle(digits:=1, considerValue:=False)
             Select Case True
                 Case highDeviation <= 2
                     Me.HighTirComplianceLabel.Text = $"High{vbCrLf}Excellent¹"
@@ -4423,7 +4427,11 @@ Public Class Form1
             If fromFile Then
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
             Else
-                Me.SetLastUpdateTime($"Last Update Time: {PumpNow.ToShortDateTimeString}", "", False, PumpNow.IsDaylightSavingTime)
+                Me.SetLastUpdateTime(
+                    msg:=$"Last Update Time: {PumpNow.ToShortDateTimeString}",
+                    suffixMessage:="",
+                    highLight:=False,
+                    isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)
             End If
             Me.CursorPanel.Visible = False
 
@@ -4450,9 +4458,15 @@ Public Class Form1
         Me.UpdateDosingAndCarbs()
 
         Me.FullNameLabel.Text = $"{PatientData.FirstName} {RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.lastName))}"
-        Me.ModelLabel.Text = $"{PatientData.MedicalDeviceInformation.ModelNumber} HW Version = {PatientData.MedicalDeviceInformation.HardwareRevision}"
-        Me.PumpNameLabel.Text = GetPumpName(PatientData.MedicalDeviceInformation.ModelNumber)
-        Dim nonZeroRecords As IEnumerable(Of SG) = s_listOfSgRecords.Where(Function(entry As SG) Not Single.IsNaN(entry.sg))
+
+        Dim mdi As MedicalDeviceInformation = PatientData.MedicalDeviceInformation
+        Me.ModelLabel.Text = $"{mdi.ModelNumber} HW Version = {mdi.HardwareRevision}"
+        Me.PumpNameLabel.Text = GetPumpName(mdi.ModelNumber)
+
+        Dim nonZeroRecords As IEnumerable(Of SG) = s_listOfSgRecords.Where(
+            predicate:=Function(entry As SG)
+                           Return Not Single.IsNaN(entry.sg)
+                       End Function)
         Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/{288} SG Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
