@@ -2026,6 +2026,7 @@ Public Class Form1
         Me.ToolTip1.SetToolTip(Me.HighTirComplianceLabel, UserMessageConstants.TirToolTip)
 
 #If Not FullDarkModeSupport Then
+
 #Region "Status Strip Colors"
 
         Me.StatusStrip1.BackColor = Me.MenuStrip1.BackColor
@@ -2050,10 +2051,13 @@ Public Class Form1
 #End Region ' Status Strip Colors
 
 #Region "Tab Page Colors"
+
         Me.TabControlPage1.DrawMode = TabDrawMode.OwnerDrawFixed
         Me.TabControlPage2.DrawMode = TabDrawMode.OwnerDrawFixed
-#End Region
-#End If
+
+#End Region ' Tab Page Colors
+
+#End If ' Not FullDarkModeSupport
 
         Me.NotifyIcon1.Visible = True
         Application.DoEvents()
