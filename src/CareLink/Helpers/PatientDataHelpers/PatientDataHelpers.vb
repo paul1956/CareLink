@@ -18,23 +18,21 @@ Public Module PatientDataHelpers
     ''' </summary>
     ''' <returns>String without any personal information</returns>
     Public Function CleanPatientData() As String
-        Dim str As String = JsonSerializer.Serialize(value:=PatientDataElement, options:=s_jsonSerializerOptions)
-        If String.IsNullOrWhiteSpace(str) Then
-            Return str
+        Dim value As String = JsonSerializer.Serialize(value:=PatientDataElement, options:=s_jsonSerializerOptions)
+        If String.IsNullOrWhiteSpace(value) Then
+            Return value
         End If
         Dim charList As New List(Of Char) From {","c, CChar(vbCr)}
         For Each kvp As KeyValuePair(Of String, String) In s_keyDictionary
-            Dim startIndex As Integer = str.IndexOf(
-                value:=kvp.Key,
-                comparisonType:=StringComparison.OrdinalIgnoreCase) + Len(kvp.Key)
+            Dim startIndex As Integer = value.IndexOfIgnoreCase(value:=kvp.Key)
             If startIndex = -1 Then
                 Continue For
             End If
-            Dim endPos As Integer = FindIndexOfAnyChar(str, charList, startIndex)
+            Dim endPos As Integer = FindIndexOfAnyChar(inputString:=value, chars:=charList, startIndex)
             Dim length As Integer = endPos - startIndex
-            str = str.Replace(str.Substring(startIndex, length), kvp.Value)
+            value = value.Replace(value.Substring(startIndex, length), kvp.Value)
         Next
-        Return str
+        Return value
     End Function
 
 End Module

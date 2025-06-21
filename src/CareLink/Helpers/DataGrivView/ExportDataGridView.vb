@@ -90,7 +90,7 @@ Friend Module ExportDataGridView
             For j As Integer = 0 To dgv.Columns.Count - 1
                 Dim dgvColumn As DataGridViewColumn = dgv.Columns(j)
                 If dgvColumn.Visible Then
-                    If dgvColumn.Name.Equals("dateTime", StringComparison.OrdinalIgnoreCase) Then
+                    If dgvColumn.Name.EqualsIgnoreCase("dateTime") Then
                         worksheet.Cell(1, excelColumn).Value = "Date"
                         worksheet.Cell(1, excelColumn).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center
                         excelColumn += 1
@@ -125,7 +125,7 @@ Friend Module ExportDataGridView
                         With worksheet.Cell(i + 2, excelColumn)
                             Select Case dgvCell.ValueType.Name
                                 Case NameOf([Int32])
-                                    align = If(dgv.Columns(j).Name.Equals("RecordNumber", StringComparison.OrdinalIgnoreCase),
+                                    align = If(dgv.Columns(j).Name.EqualsIgnoreCase("RecordNumber"),
                                                     XLAlignmentHorizontalValues.Center,
                                                     XLAlignmentHorizontalValues.Right)
                                     .Value = CInt(value)
@@ -145,7 +145,7 @@ Friend Module ExportDataGridView
                                         align = XLAlignmentHorizontalValues.Center
                                     Else
                                         .Value = valueASingle
-                                        .Style.NumberFormat.Format = If(dgv.Columns(j).Name.Equals("sg", StringComparison.OrdinalIgnoreCase),
+                                        .Style.NumberFormat.Format = If(dgv.Columns(j).Name.EqualsIgnoreCase("sg"),
                                                                         GetSgFormat(withSign:=False),
                                                                         $"0{Provider.NumberFormat.NumberDecimalSeparator}000"
                                                                        )

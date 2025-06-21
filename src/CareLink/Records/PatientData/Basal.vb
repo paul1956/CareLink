@@ -57,8 +57,8 @@ Public Class Basal
     ''' </summary>
     ''' <param name="obj">The object to compare with the current instance.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the current instance is equal to the specified object; otherwise,
-    '''  <see langword="False"/>.
+    '''  <see langword="True"/> if the current instance is equal to the specified object;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Public Overrides Function Equals(obj As Object) As Boolean
         Return Me.Equals(TryCast(obj, Basal))
@@ -119,8 +119,8 @@ Public Class Basal
     ''' </summary>
     ''' <param name="other">The other instance to compare with.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the current instance is equal to the other instance; otherwise,
-    '''  <see langword="False"/>.
+    '''  <see langword="True"/> if the current instance is equal to the other instance;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Public Overloads Function Equals(other As Basal) As Boolean Implements IEquatable(Of Basal).Equals
         Return other IsNot Nothing AndAlso

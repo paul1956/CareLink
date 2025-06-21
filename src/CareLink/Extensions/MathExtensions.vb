@@ -51,12 +51,11 @@ Friend Module MathExtensions
     ''' </summary>
     ''' <param name="single1">The Single value to check.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the value is almost zero; otherwise,
-    '''  <see langword="False"/>.
+    '''  <see langword="True"/> if the value is almost zero; otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
     Public Function AlmostZero(single1 As Single) As Boolean
-        Return single1 >= 0 - Single.Epsilon And single1 <= 0 + Single.Epsilon
+        Return single1 >= 0 - Single.Epsilon AndAlso single1 <= 0 + Single.Epsilon
     End Function
 
     ''' <summary>
@@ -66,8 +65,7 @@ Friend Module MathExtensions
     ''' <param name="singleValue">The Single value to compare.</param>
     ''' <param name="integerValue">The Integer value to compare.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the values are almost equal; otherwise,
-    '''  <see langword="False"/>.
+    '''  <see langword="True"/> if the values are almost equal; otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
     Public Function IsSingleEqualToInteger(singleValue As Single, integerValue As Integer) As Boolean
@@ -81,8 +79,7 @@ Friend Module MathExtensions
     '''  Determines whether a Single value is a valid sensor glucose (SG) value.
     ''' </summary>
     ''' <param name="number">The Single value to check.</param>
-    '''  <see langword="True"/> if the value is valid; otherwise,
-    '''  <see langword="False"/>.
+    '''  <see langword="True"/> if the value is valid; otherwise, <see langword="False"/>.
     <Extension>
     Public Function IsSgValid(number As Single) As Boolean
         Return Not number.IsSgInvalid
@@ -92,8 +89,9 @@ Friend Module MathExtensions
     '''  Determines whether a Single value is an invalid sensor glucose (SG) value.
     ''' </summary>
     ''' <param name="number">The Single value to check.</param>
-    '''  <see langword="True"/> if the value is invalid; otherwise,
-    '''  <see langword="False"/>.
+    ''' <returns>
+    '''  <see langword="True"/> if the value is invalid; otherwise, <see langword="False"/>.
+    ''' </returns>
     <Extension>
     Public Function IsSgInvalid(number As Single) As Boolean
         Return Single.IsNaN(number) OrElse

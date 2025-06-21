@@ -38,14 +38,14 @@ Friend Module BrowserUtilities
             Dim programFiles As String = Environment.ExpandEnvironmentVariables("%ProgramW6432%")
             Dim programFilesX86 As String = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%")
             Dim browserPath As String = Nothing
-            If progIdValue.Contains("chrome", StringComparison.OrdinalIgnoreCase) Then
+            If progIdValue.ContainsIgnoreCase("chrome") Then
                 browserPath = If(File.Exists($"{programFiles}\Google\Chrome\Application\chrome.exe"),
                                  $"{programFiles}\Google\Chrome\Application\chrome.exe",
                                  $"{programFilesX86}\Google\Chrome\Application\chrome.exe"
                                 )
-            ElseIf progIdValue.Contains("Firefox", StringComparison.OrdinalIgnoreCase) Then
+            ElseIf progIdValue.ContainsIgnoreCase("Firefox") Then
                 browserPath = $"{programFiles}\Mozilla Firefox\Firefox.exe"
-            ElseIf progIdValue.Contains("msEdgeHtm", StringComparison.OrdinalIgnoreCase) Then
+            ElseIf progIdValue.ContainsIgnoreCase("msEdgeHtm") Then
                 browserPath = If(File.Exists($"{programFiles}\Microsoft\Edge\Application\msEdge.exe"),
                                  $"{programFiles}\Microsoft\Edge\Application\msEdge.exe",
                                  $"{programFilesX86}\Microsoft\Edge\Application\msEdge.exe"

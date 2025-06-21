@@ -86,8 +86,8 @@ Public Class CleanupStaleFilesDialog
             fileList = Directory.GetDirectories(Path.Join(DirectoryForProjectData, "WebCache"))
             For Each fi As String In fileList
                 Dim webCacheFileName As String = fi.Split("\").Last
-                .Nodes(1).Nodes.Add(webCacheFileName)
-                .Nodes(1).LastNode.Checked = Not GetWebViewCacheDirectory().EndsWith(webCacheFileName)
+                .Nodes(index:=1).Nodes.Add(webCacheFileName)
+                .Nodes(index:=1).LastNode.Checked = Not GetWebViewCacheDirectory().EndsWithIgnoreCase(webCacheFileName)
             Next
             .ExpandAll()
             .EndUpdate()

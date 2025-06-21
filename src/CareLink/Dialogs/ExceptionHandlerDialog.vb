@@ -37,7 +37,7 @@ Public Class ExceptionHandlerDialog
         Dim index As Integer = stackTrace.IndexOf(StackTraceTerminatingStr)
         Return If(index < 0,
                   stackTrace,
-                  stackTrace.Substring(0, index - 1)
+                  stackTrace.Substring(startIndex:=0, length:=index - 1)
                  )
     End Function
 

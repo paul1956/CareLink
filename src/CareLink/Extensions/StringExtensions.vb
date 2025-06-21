@@ -80,7 +80,7 @@ Public Module StringExtensions
     ''' <exception cref="FormatException">Thrown if the string is not a valid single.</exception>
     <Extension>
     Public Function ParseSingleInvariant(value As String) As Single
-        Return Single.Parse(value.Replace(",", CareLinkDecimalSeparator), CultureInfo.InvariantCulture)
+        Return Single.Parse(value.Replace(",", CareLinkDecimalSeparator), provider:=CultureInfo.InvariantCulture)
     End Function
 
     ''' <summary>
@@ -148,7 +148,7 @@ Public Module StringExtensions
         If String.IsNullOrWhiteSpace(inStr) Then
             Return ""
         End If
-        If inStr.Contains("MmolL", StringComparison.OrdinalIgnoreCase) Then
+        If inStr.ContainsIgnoreCase("MmolL") Then
             Return inStr
         End If
         Dim result As New StringBuilder(Char.ToUpperInvariant(inStr(0)))
@@ -193,5 +193,88 @@ Public Module StringExtensions
         s &= New String("0"c, decimalDigits + 1)
         Return s.Substring(0, i + decimalDigits + 1)
     End Function
+
+#Region "IgnoreCase String Comparisons"
+
+    ''' <summary>
+    '''  Checks if a string contains another string, ignoring case.
+    ''' </summary>
+    ''' <param name="s1">The string to search in.</param>
+    ''' <param name="value">The string to search for.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if <paramref name="s1"/> contains <paramref name="value"/>;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    <Extension()>
+    Public Function ContainsIgnoreCase(s1 As String, value As String) As Boolean
+        If s1 Is Nothing OrElse value Is Nothing Then Return False
+        Return s1.Contains(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
+    End Function
+
+    ''' <summary>
+    '''  Checks if a string ends with another string, ignoring case.
+    ''' </summary>
+    ''' <param name="s">The string to search in.</param>
+    ''' <param name="value">The string to search for.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if <paramref name="s"/> ends with <paramref name="value"/>;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    ''' <remarks>Used for case-insensitive substring checks.</remarks>
+    <Extension()>
+    Public Function EndsWithIgnoreCase(s As String, value As String) As Boolean
+        If s Is Nothing OrElse value Is Nothing Then Return False
+        Return s.EndsWith(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
+    End Function
+
+    ''' <summary>
+    '''  Checks if two strings are equal, ignoring case.
+    ''' </summary>
+    ''' <param name="a">The first string to compare.</param>
+    ''' <param name="b">The second string to compare.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the strings are equal, ignoring case;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    ''' <remarks>Used for case-insensitive string comparisons.</remarks>
+    <Extension()>
+    Public Function EqualsIgnoreCase(a As String, b As String) As Boolean
+        If a Is Nothing OrElse b Is Nothing Then Return False
+        Return String.Equals(a, b, comparisonType:=StringComparison.OrdinalIgnoreCase)
+    End Function
+
+    ''' <summary>
+    '''  Finds the index of the first occurrence of a string within another string, ignoring case.
+    ''' </summary>
+    ''' <param name="s1">The string to search in.</param>
+    ''' <param name="value">The string to search for.</param>
+    ''' <returns>
+    '''  The zero-based index of the first occurrence of <paramref name="value"/> in <paramref name="s1"/>;
+    '''  or -1 if not found.
+    ''' </returns>
+    ''' <remarks>Used for case-insensitive substring searches.</remarks>
+    <Extension()>
+    Public Function IndexOfIgnoreCase(s1 As String, value As String) As Integer
+        If s1 Is Nothing OrElse value Is Nothing Then Return -1
+        Return s1.IndexOf(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
+    End Function
+
+    ''' <summary>
+    '''  Checks if a string starts with another string, ignoring case.
+    ''' </summary>
+    ''' <param name="s">The string to search in.</param>
+    ''' <param name="value">The string to search for.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if <paramref name="s"/> starts with <paramref name="value"/>;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    ''' <remarks>Used for case-insensitive substring checks.</remarks>
+    <Extension()>
+    Public Function StartsWithIgnoreCase(s As String, value As String) As Boolean
+        If s Is Nothing OrElse value Is Nothing Then Return False
+        Return s.StartsWith(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
+    End Function
+
+#End Region ' IgnoreCase String Comparisons
 
 End Module
