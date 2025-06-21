@@ -197,29 +197,29 @@ Public Class LoginDialog
 
         If tokenData Is Nothing Then
             ' Get the embedded EXE as a byte array
-            Dim exeBytes() As Byte = My.Resources.carelink_carepartner_api_login
+            Dim buffer() As Byte = My.Resources.carelink_carepartner_api_login
             ' Write the EXE to the temporary file
             ' Create a temporary file for the EXE
             Dim exePath As String = $"{Path.GetTempFileName()}.exe"
             Using fs As New FileStream(exePath, FileMode.Create)
-                fs.Write(exeBytes, 0, exeBytes.Length)
+                fs.Write(buffer, offset:=0, count:=buffer.Length)
+                fs.Flush()
             End Using
 
             Dim isUsRegion As Boolean = Me.RegionComboBox.SelectedValue.ToString = "North America"
             Dim isUsRegionStr As String = If(isUsRegion, "--us", "")
             Dim tempPath As String = Path.GetDirectoryName(exePath)
-            Dim sourceFileName As String = $"{Path.GetTempFileName()}.json"
+            Dim jsonFileName As String = $"{Path.GetTempFileName()}.json"
 
             ' Format the arguments
-            Dim arguments As String = $"{If(isUsRegion, "--us ", "")} --output {sourceFileName}"
+            Dim arguments As String = $"{If(isUsRegion, "--us ", "")} --output {jsonFileName}"
 
             Dim startInfo As New ProcessStartInfo With {
                 .FileName = exePath,
                 .Arguments = arguments,
                 .RedirectStandardOutput = True,
                 .RedirectStandardError = True,
-                .UseShellExecute = False
-            }
+                .UseShellExecute = False}
 
             Dim process As New Process With {.StartInfo = startInfo}
             process.Start()
@@ -234,7 +234,7 @@ Public Class LoginDialog
                 If File.Exists(destFileName) Then
                     File.Delete(destFileName)
                 End If
-                File.Move(sourceFileName, destFileName)
+                File.Move(jsonFileName, destFileName)
             End If
             File.Delete(exePath)
         End If
