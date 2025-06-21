@@ -343,14 +343,14 @@ Friend Module PlotMarkers
                                 Stop
                         End Select
                     Case "MEAL"
-                        Dim value As Single = CSng(TreatmentInsulinRow * 0.95).RoundSingle(3, False)
+                        Dim value As Single = CSng(TreatmentInsulinRow * 0.95).RoundSingle(digits:=3, considerValue:=False)
                         If s_treatmentMarkerMealDictionary.TryAdd(key:=markerOADateTimestamp, value) Then
                             markerSeriesPoints.AddXY(xValue:=markerOADateTimestamp, yValue:=value)
                             CreateCallout(
                                 treatmentChart,
                                 lastDataPoint:=markerSeriesPoints.Last,
                                 markerBorderColor:=Color.FromArgb(10, Color.Yellow),
-                                tagText:=$"Meal {markerEntry.GetSingleValueFromJson("amount", 0)} grams")
+                                tagText:=$"Meal {markerEntry.GetSingleValueFromJson(fieldName:="amount", decimalDigits:=0)} grams")
                         End If
                     Case "BG_READING"
                     Case "CALIBRATION"

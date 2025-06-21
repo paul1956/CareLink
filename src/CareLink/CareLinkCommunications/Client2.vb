@@ -124,7 +124,7 @@ Public Class Client2
                         File.Delete(fileWithPath)
                     End If
                     If Not DoOptionalLoginAndUpdateData(
-                        mainForm:=My.Forms.Form1,
+                        owner:=My.Forms.Form1,
                         updateAllTabs:=False,
                         fileToLoad:=FileToLoadOptions.Login) Then
 

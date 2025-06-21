@@ -103,7 +103,7 @@ Friend Module UpdateChecker
                 Form1.UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
                 Form1.UpdateAvailableStatusStripLabel.Text = $"Current version {My.Application.Info.Version}"
                 Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
-                Form1.UpdateAvailableStatusStripLabel.ForeColor = Color.Black
+                Form1.UpdateAvailableStatusStripLabel.ForeColor = Form1.MenuStrip1.ForeColor
                 If reportSuccessfulResult Then
                     MsgBox("You are running latest version", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "No Updates Available")
                 End If

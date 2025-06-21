@@ -1138,7 +1138,7 @@ Partial Class Form1
         Last24TotalsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' LastUpdateTimeToolStripStatusLabel
-        ' 
+        '
         LastUpdateTimeToolStripStatusLabel.BorderSides = ToolStripStatusLabelBorderSides.Left
         LastUpdateTimeToolStripStatusLabel.BorderStyle = Border3DStyle.RaisedOuter
         LastUpdateTimeToolStripStatusLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
@@ -1147,7 +1147,7 @@ Partial Class Form1
         LastUpdateTimeToolStripStatusLabel.Text = "Last Update Time: Unknown"
         ' 
         ' LoginStatus
-        ' 
+        '
         LoginStatus.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
         LoginStatus.BorderStyle = Border3DStyle.RaisedOuter
         LoginStatus.DisplayStyle = ToolStripItemDisplayStyle.Text
@@ -1838,14 +1838,13 @@ Partial Class Form1
         StatusStripSpeech.BorderSides = ToolStripStatusLabelBorderSides.Left
         StatusStripSpeech.BorderStyle = Border3DStyle.RaisedOuter
         StatusStripSpeech.DisplayStyle = ToolStripItemDisplayStyle.Text
-        StatusStripSpeech.ForeColor = Color.Black
         StatusStripSpeech.Name = "StatusStripSpeech"
         StatusStripSpeech.Size = New Size(403, 20)
         StatusStripSpeech.Spring = True
         StatusStripSpeech.Text = " "
         ' 
         ' TimeZoneToolStripStatusLabel
-        ' 
+        '
         TimeZoneToolStripStatusLabel.BorderSides = ToolStripStatusLabelBorderSides.Left
         TimeZoneToolStripStatusLabel.BorderStyle = Border3DStyle.RaisedOuter
         TimeZoneToolStripStatusLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
@@ -1854,7 +1853,7 @@ Partial Class Form1
         TimeZoneToolStripStatusLabel.Text = "TimeZone Unknown"
         ' 
         ' StatusStripSpacerRight
-        ' 
+        '
         StatusStripSpacerRight.BorderSides = ToolStripStatusLabelBorderSides.Right
         StatusStripSpacerRight.BorderStyle = Border3DStyle.RaisedOuter
         StatusStripSpacerRight.Name = "StatusStripSpacerRight"
@@ -1863,10 +1862,9 @@ Partial Class Form1
         StatusStripSpacerRight.Text = " "
         ' 
         ' UpdateAvailableStatusStripLabel
-        ' 
+        '
         UpdateAvailableStatusStripLabel.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
         UpdateAvailableStatusStripLabel.BorderStyle = Border3DStyle.RaisedOuter
-        UpdateAvailableStatusStripLabel.ForeColor = Color.Red
         UpdateAvailableStatusStripLabel.Image = My.Resources.Resources.NotificationAlertRed_16x
         UpdateAvailableStatusStripLabel.Name = "UpdateAvailableStatusStripLabel"
         UpdateAvailableStatusStripLabel.Size = New Size(154, 20)
@@ -1908,6 +1906,7 @@ Partial Class Form1
         TabPage01HomePage.Size = New Size(1376, 661)
         TabPage01HomePage.TabIndex = 7
         TabPage01HomePage.Text = "Summary"
+        TabPage01HomePage.UseVisualStyleBackColor = True
         ' 
         ' TabPage02RunningIOB
         ' 
@@ -2420,13 +2419,13 @@ Partial Class Form1
         ' 
         ' TabPage15More
         ' 
-        TabPage15More.BackColor = SystemColors.MenuHighlight
         TabPage15More.Location = New Point(4, 27)
         TabPage15More.Name = "TabPage15More"
         TabPage15More.Padding = New Padding(3)
         TabPage15More.Size = New Size(1376, 661)
         TabPage15More.TabIndex = 24
         TabPage15More.Text = "More..."
+        TabPage15More.UseVisualStyleBackColor = True
         ' 
         ' TabControlPage2
         ' 
@@ -2921,13 +2920,13 @@ Partial Class Form1
         ' 
         ' TabPageBackToHomePage
         ' 
-        TabPageBackToHomePage.BackColor = SystemColors.MenuHighlight
         TabPageBackToHomePage.Location = New Point(4, 27)
         TabPageBackToHomePage.Name = "TabPageBackToHomePage"
         TabPageBackToHomePage.Padding = New Padding(3)
         TabPageBackToHomePage.Size = New Size(1376, 661)
         TabPageBackToHomePage.TabIndex = 8
         TabPageBackToHomePage.Text = "Back.."
+        TabPageBackToHomePage.UseVisualStyleBackColor = True
         ' 
         ' WebView
         ' 

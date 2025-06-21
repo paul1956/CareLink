@@ -9,6 +9,7 @@ Imports System.Windows.Forms.DataVisualization.Charting
 '''  Provides extension methods for painting markers and post-painting support on chart controls.
 ''' </summary>
 Friend Module PaintMarkerExtensions
+    Private Const ChartAreaName As String = NameOf(ChartArea)
 
     ''' <summary>
     '''  Paints markers on the chart using the specified image and dictionary of markers.
@@ -28,10 +29,10 @@ Friend Module PaintMarkerExtensions
         Dim halfWidth As Single = CSng(markerImage.Width / 2)
         For Each markerKvp As KeyValuePair(Of OADate, Single) In markerDictionary
             Dim imagePosition As RectangleF = RectangleF.Empty
-            imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, markerKvp.Key))
+            imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, axis:=AxisName.X, axisValue:=markerKvp.Key))
             imagePosition.Y = If(paintOnY2,
-                                 CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, markerKvp.Value)),
-                                 CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y, markerKvp.Value))
+                                 CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, axis:=AxisName.Y2, axisValue:=markerKvp.Value)),
+                                 CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, axis:=AxisName.Y, axisValue:=markerKvp.Value))
                                 )
             imagePosition.Width = markerImage.Width
             imagePosition.Height = markerImage.Height
@@ -65,34 +66,83 @@ Friend Module PaintMarkerExtensions
     ''' </param>
     <DebuggerNonUserCode()>
     <Extension>
-    Friend Sub PostPaintSupport(e As ChartPaintEventArgs, ByRef chartRelativePosition As RectangleF, insulinDictionary As Dictionary(Of OADate, Single), mealDictionary As Dictionary(Of OADate, Single), offsetInsulinImage As Boolean, paintOnY2 As Boolean)
+    Friend Sub PostPaintSupport(
+        e As ChartPaintEventArgs,
+        ByRef chartRelativePosition As RectangleF,
+        insulinDictionary As Dictionary(Of OADate, Single),
+        mealDictionary As Dictionary(Of OADate, Single),
+        offsetInsulinImage As Boolean,
+        paintOnY2 As Boolean)
+
         If s_listOfSgRecords.Count = 0 OrElse Not ProgramInitialized Then
             Exit Sub
         End If
 
         If chartRelativePosition.IsEmpty Then
-            chartRelativePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_listOfSgRecords(0).OaDateTime))
-            chartRelativePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, GetYMaxValueFromNativeMmolL()))
-            chartRelativePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, GetTirHighLimit())))) - chartRelativePosition.Y
-            chartRelativePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.X, s_listOfSgRecords.Last.OaDateTime)) - chartRelativePosition.X
+            chartRelativePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(
+                ChartAreaName,
+                axis:=AxisName.X,
+                axisValue:=s_listOfSgRecords(0).OaDateTime))
+            chartRelativePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(
+                ChartAreaName,
+                axis:=AxisName.Y2,
+                axisValue:=GetYMaxValueFromNativeMmolL()))
+            chartRelativePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(
+                ChartAreaName,
+                axis:=AxisName.Y2,
+                axisValue:=CSng(e.ChartGraphics.GetPositionFromAxis(
+                    ChartAreaName,
+                    axis:=AxisName.Y2,
+                    axisValue:=GetTirHighLimit())))) - chartRelativePosition.Y
+            chartRelativePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(
+                ChartAreaName,
+                axis:=AxisName.X,
+                axisValue:=s_listOfSgRecords.Last.OaDateTime)) - chartRelativePosition.X
         End If
 
-        Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, GetTirHighLimit()))
-        Dim lowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, GetTirLowLimit()))
-        Dim criticalLowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(NameOf(ChartArea), AxisName.Y2, GetYMinValueFromNativeMmolL()))
-        Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelativePosition.X, chartRelativePosition.Y, chartRelativePosition.Width, highLimitY - chartRelativePosition.Y))
-        Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(New RectangleF(chartRelativePosition.X, lowLimitY, chartRelativePosition.Width, criticalLowLimitY - lowLimitY))
+        Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(
+            ChartAreaName,
+            axis:=AxisName.Y2,
+            axisValue:=GetTirHighLimit()))
+        Dim lowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(
+            ChartAreaName,
+            axis:=AxisName.Y2,
+            axisValue:=GetTirLowLimit()))
+        Dim criticalLowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(
+            ChartAreaName,
+            axis:=AxisName.Y2,
+            axisValue:=GetYMinValueFromNativeMmolL()))
+        Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(
+                rectangle:=New RectangleF(
+                    chartRelativePosition.X,
+                    chartRelativePosition.Y,
+                    chartRelativePosition.Width,
+                    height:=highLimitY - chartRelativePosition.Y))
+        Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(
+                rectangle:=New RectangleF(
+                    chartRelativePosition.X,
+                    y:=lowLimitY,
+                    width:=chartRelativePosition.Width,
+                    height:=criticalLowLimitY - lowLimitY))
 
-        Using b As New SolidBrush(Color.FromArgb(5, Color.Black))
-            e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteHighRectangle)
-            e.ChartGraphics.Graphics.FillRectangle(b, chartAbsoluteLowRectangle)
+        Using brush As New SolidBrush(Color.FromArgb(alpha:=5, baseColor:=Color.Black))
+            e.ChartGraphics.Graphics.FillRectangle(brush, rect:=chartAbsoluteHighRectangle)
+            e.ChartGraphics.Graphics.FillRectangle(brush, rect:=chartAbsoluteLowRectangle)
         End Using
 
         If insulinDictionary IsNot Nothing Then
-            e.PaintMarker(s_insulinImage, insulinDictionary, offsetInsulinImage, paintOnY2)
+            e.PaintMarker(
+                markerImage:=s_insulinImage,
+                markerDictionary:=insulinDictionary,
+                noImageOffset:=offsetInsulinImage,
+                paintOnY2)
         End If
         If mealDictionary IsNot Nothing Then
-            e.PaintMarker(s_mealImage, mealDictionary, False, paintOnY2)
+            e.PaintMarker(
+                markerImage:=s_mealImage,
+                markerDictionary:=mealDictionary,
+                noImageOffset:=False,
+                paintOnY2)
         End If
     End Sub
 

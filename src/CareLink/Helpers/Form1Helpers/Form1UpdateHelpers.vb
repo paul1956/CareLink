@@ -87,24 +87,29 @@ Friend Module Form1UpdateHelpers
     ''' <param name="baseName">The first part of the file name.</param>
     ''' <param name="cultureName">A valid culture name in the form of language-CountryCode.</param>
     ''' <param name="extension">The extension for the file.</param>
-    ''' <param name="MustBeUnique">If <see langword="True"/>, ensures the file name is unique.</param>
+    ''' <param name="mustBeUnique">If <see langword="True"/>, ensures the file name is unique.</param>
     ''' <returns>
     '''  A <see cref="FileNameStruct"/> containing the full and short file name, or an empty struct on error.
     ''' </returns>
     ''' <example>
-    '''  GetUniqueDataFileName("MyFile", "en-US", "txt", True)
+    '''  GetUniqueDataFileName("MyFile", "en-US", "txt", mustBeUnique:=True)
     ''' </example>
-    Friend Function GetUniqueDataFileName(baseName As String, cultureName As String, extension As String, MustBeUnique As Boolean) As FileNameStruct
+    Friend Function GetUniqueDataFileName(
+        baseName As String,
+        cultureName As String,
+        extension As String,
+        mustBeUnique As Boolean) As FileNameStruct
+
         If String.IsNullOrWhiteSpace(baseName) Then
-            Throw New ArgumentException($"'{NameOf(baseName)}' cannot be null or whitespace.", NameOf(baseName))
+            Throw New ArgumentException($"'{NameOf(baseName)}' cannot be null or whitespace.", paramName:=NameOf(baseName))
         End If
 
         If String.IsNullOrWhiteSpace(cultureName) Then
-            Throw New ArgumentException($"'{NameOf(cultureName)}' cannot be null or whitespace.", NameOf(cultureName))
+            Throw New ArgumentException($"'{NameOf(cultureName)}' cannot be null or whitespace.", paramName:=NameOf(cultureName))
         End If
 
         If String.IsNullOrWhiteSpace(extension) Then
-            Throw New ArgumentException($"'{NameOf(extension)}' cannot be null or whitespace.", NameOf(extension))
+            Throw New ArgumentException($"'{NameOf(extension)}' cannot be null or whitespace.", paramName:=NameOf(extension))
         End If
 
         Try
@@ -112,7 +117,7 @@ Friend Module Form1UpdateHelpers
             Dim filenameWithExtension As String = $"{filenameWithoutExtension}.{extension}"
             Dim filenameFullPath As String = Path.Join(DirectoryForProjectData, filenameWithExtension)
 
-            If MustBeUnique AndAlso File.Exists(filenameFullPath) Then
+            If mustBeUnique AndAlso File.Exists(filenameFullPath) Then
                 'Get unique file name
                 Dim count As Long
                 Do

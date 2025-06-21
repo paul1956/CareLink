@@ -82,8 +82,7 @@ Public Class Calibration
             If Me.UnitValue.IsSgInvalid Then Return Me.UnitValue
             Return If(NativeMmolL,
                       Me.UnitValue,
-                      RoundSingle(Me.UnitValue / MmolLUnitsDivisor, 2, False)
-                     )
+                      RoundSingle(value:=Me.UnitValue / MmolLUnitsDivisor, digits:=2, considerValue:=False))
         End Get
     End Property
 

@@ -233,7 +233,9 @@ Friend Module ExportDataGridView
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
     Public Sub DgvCopySelectedCellsToClipBoardWithHeaders(sender As Object, e As EventArgs)
-        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText, False)
+        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(
+            copyHeaders:=DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText,
+            copyAll:=False)
     End Sub
 
     ''' <summary>
@@ -242,7 +244,9 @@ Friend Module ExportDataGridView
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
     Public Sub DgvCopySelectedCellsToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
-        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableWithoutHeaderText, False)
+        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(
+            copyHeaders:=DataGridViewClipboardCopyMode.EnableWithoutHeaderText,
+            copyAll:=False)
     End Sub
 
     ''' <summary>
@@ -251,7 +255,9 @@ Friend Module ExportDataGridView
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
     Public Sub DgvExportToClipBoardWithHeaders(sender As Object, e As EventArgs)
-        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText, True)
+        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(
+            copyHeaders:=DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText,
+            copyAll:=True)
     End Sub
 
     ''' <summary>
@@ -260,7 +266,9 @@ Friend Module ExportDataGridView
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
     Public Sub DgvExportToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
-        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(DataGridViewClipboardCopyMode.EnableWithoutHeaderText, False)
+        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(
+            copyHeaders:=DataGridViewClipboardCopyMode.EnableWithoutHeaderText,
+            copyAll:=False)
     End Sub
 
     ''' <summary>

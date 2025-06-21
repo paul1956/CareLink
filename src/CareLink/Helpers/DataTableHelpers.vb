@@ -50,7 +50,9 @@ Friend Module DataTableHelpers
         Dim fallbackOrder As Integer = 1000
 
         For Each [property] As PropertyInfo In classType.GetProperties()
-            Dim colAttribute As ColumnAttribute = [property].GetCustomAttributes(GetType(ColumnAttribute), True).Cast(Of ColumnAttribute)().SingleOrDefault()
+            Dim colAttribute As ColumnAttribute = [property].GetCustomAttributes(
+                attributeType:=GetType(ColumnAttribute),
+                inherit:=True).Cast(Of ColumnAttribute)().SingleOrDefault()
             Dim order As Integer = If(colAttribute IsNot Nothing, colAttribute.Order, fallbackOrder)
             While propertyOrder.ContainsKey(order)
                 order += 1 ' Avoid duplicate keys

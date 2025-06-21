@@ -16,33 +16,34 @@ Friend Module MathExtensions
     ''' <returns>The rounded Single value.</returns>
     <Extension>
     Friend Function GetRoundedValue(value As Single, decimalDigits As Integer) As Single
-        Return If(decimalDigits = 3, value.RoundTo025, value.RoundSingle(decimalDigits, False))
+        Return If(decimalDigits = 3, value.RoundTo025, value.RoundSingle(digits:=decimalDigits, considerValue:=False))
     End Function
 
     ''' <summary>
-    '''  Rounds a <see langword="Single"/> value to the specified number of <paramref name="decimalDigits"/>.
+    '''  Rounds a <see langword="Single"/> value to the specified number of <paramref name="digits"/>.
     '''  If <paramref name="considerValue"/> is True and the value is less than 10, rounds to 2 decimal digits.
     ''' </summary>
-    ''' <param name="singleValue">The Single value to round.</param>
-    ''' <param name="decimalDigits">The number of decimal digits to round to.</param>
+    ''' <param name="value">The Single value to round.</param>
+    ''' <param name="digits">The number of decimal digits to round to.</param>
     ''' <param name="considerValue">Whether to consider the value for special rounding.</param>
     ''' <returns>The rounded Single value.</returns>
     <Extension>
-    Friend Function RoundSingle(singleValue As Single, decimalDigits As Integer, considerValue As Boolean) As Single
+    Friend Function RoundSingle(value As Single, digits As Integer, considerValue As Boolean) As Single
 
-        Return CSng(Math.Round(singleValue, If(considerValue AndAlso singleValue < 10, 2, decimalDigits)))
+        Return CSng(Math.Round(value, digits:=If(considerValue AndAlso value < 10, 2, digits)))
     End Function
 
     ''' <summary>
-    '''  Rounds a Double value to the specified number of <paramref name="decimalDigits"/> and returns as Single.
+    '''  Rounds a Double value to the specified number of <paramref name="digits"/> and returns as Single.
     ''' </summary>
-    ''' <param name="doubleValue">The Double value to round.</param>
-    ''' <param name="decimalDigits">The number of decimal digits to round to.</param>
+    ''' <param name="value">The Double value to round.</param>
+    ''' <param name="digits">The number of decimal digits to round to.</param>
     ''' <returns>The rounded value as Single.</returns>
+    ''' <param name="considerValue"></param>
     <Extension>
-    Friend Function RoundToSingle(doubleValue As Double, decimalDigits As Integer) As Single
+    Friend Function RoundToSingle(value As Double, digits As Integer, Optional considerValue As Boolean = False) As Single
 
-        Return CSng(Math.Round(doubleValue, decimalDigits))
+        Return CSng(Math.Round(value, digits:=If(considerValue AndAlso value < 10, 2, digits)))
     End Function
 
     ''' <summary>
@@ -70,7 +71,8 @@ Friend Module MathExtensions
     ''' </returns>
     <Extension>
     Public Function IsSingleEqualToInteger(singleValue As Single, integerValue As Integer) As Boolean
-        Return Math.Abs(singleValue - integerValue) < Single.Epsilon AndAlso
+        Dim value As Single = singleValue - integerValue
+        Return Math.Abs(value) < Single.Epsilon AndAlso
            singleValue > Integer.MinValue AndAlso
            singleValue < Integer.MaxValue
     End Function

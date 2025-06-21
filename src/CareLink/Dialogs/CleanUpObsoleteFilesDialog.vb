@@ -52,7 +52,7 @@ Public Class CleanupStaleFilesDialog
             For Each node As TreeNode In .Nodes(1).Nodes
                 If node.Checked Then
                     Try
-                        Directory.Delete(Path.Join(DirectoryForProjectData, "WebCache", node.Text), True)
+                        Directory.Delete(Path.Join(DirectoryForProjectData, "WebCache", node.Text), recursive:=True)
                     Catch ex As Exception
                         Stop
                         ' Ignore ones I can't delete

@@ -55,7 +55,7 @@ Friend Module LoginHelpers
     ''' <summary>
     '''  Handles optional login and updates user data based on the specified file load option.
     ''' </summary>
-    ''' <param name="mainForm">The main application form.</param>
+    ''' <param name="owner">The main application form.</param>
     ''' <param name="updateAllTabs">
     '''  <see langword="True"/> to update all tabs after login; otherwise, <see langword="False"/>.
     ''' </param>
@@ -64,7 +64,7 @@ Friend Module LoginHelpers
     '''  <see langword="True"/> if login and data update succeeded; otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function DoOptionalLoginAndUpdateData(
-        mainForm As Form1,
+        owner As Form1,
         updateAllTabs As Boolean,
         fileToLoad As FileToLoadOptions) As Boolean
 
@@ -74,27 +74,31 @@ Friend Module LoginHelpers
         Dim fromFile As Boolean
         Select Case fileToLoad
             Case FileToLoadOptions.TestData
-                mainForm.Text = $"{SavedTitle} Using Test Data from 'SampleUserV2Data.json'"
+                owner.Text = $"{SavedTitle} Using Test Data from 'SampleUserV2Data.json'"
                 CurrentDateCulture = New CultureInfo("en-US")
                 Dim json As String = File.ReadAllText(TestDataFileNameWithPath)
                 PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
                 DeserializePatientElement()
-                mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
+                owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(TestDataFileNameWithPath)
-                mainForm.SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
+                owner.SetLastUpdateTime(
+                    msg:=fileDate.ToShortDateTimeString,
+                    suffixMessage:="from file",
+                    highLight:=False,
+                    isDaylightSavingTime:=fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser()
                 fromFile = True
             Case FileToLoadOptions.Login, FileToLoadOptions.NewUser
-                mainForm.Text = SavedTitle
+                owner.Text = SavedTitle
                 Do While True
                     LoginDialog.LoginSourceAutomatic = fileToLoad
-                    Dim result As DialogResult = LoginDialog.ShowDialog(mainForm)
+                    Dim result As DialogResult = LoginDialog.ShowDialog(owner)
                     Select Case result
                         Case DialogResult.OK
                             Exit Do
                         Case DialogResult.Cancel
-                            mainForm.TabControlPage1.Visible = False
-                            mainForm.TabControlPage2.Visible = False
+                            owner.TabControlPage1.Visible = False
+                            owner.TabControlPage2.Visible = False
                             StartOrStopServerUpdateTimer(serverTimerEnabled)
                             Return False
                         Case DialogResult.Retry
@@ -105,11 +109,11 @@ Friend Module LoginHelpers
                     StartOrStopServerUpdateTimer(Start:=True, interval:=FiveMinutesInMilliseconds)
 
                     If NetworkUnavailable() Then
-                        ReportLoginStatus(mainForm.LoginStatus, hasErrors:=True, lastErrorMessage:="Network Unavailable")
+                        ReportLoginStatus(owner.LoginStatus, hasErrors:=True, lastErrorMessage:="Network Unavailable")
                         Return False
                     End If
 
-                    mainForm.SetLastUpdateTime(
+                    owner.SetLastUpdateTime(
                         msg:="Last Update time is unknown!",
                         suffixMessage:=String.Empty,
                         highLight:=True,
@@ -122,11 +126,11 @@ Friend Module LoginHelpers
                 StartOrStopServerUpdateTimer(Start:=True, interval:=OneMinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
-                    ReportLoginStatus(mainForm.LoginStatus)
+                    ReportLoginStatus(owner.LoginStatus)
                     Return False
                 End If
-                ErrorReportingHelpers.ReportLoginStatus(mainForm.LoginStatus, RecentDataEmpty, lastErrorMessage)
-                mainForm.MenuShowMiniDisplay.Visible = True
+                ErrorReportingHelpers.ReportLoginStatus(owner.LoginStatus, hasErrors:=RecentDataEmpty, lastErrorMessage)
+                owner.MenuShowMiniDisplay.Visible = True
                 fromFile = False
             Case FileToLoadOptions.LastSaved, FileToLoadOptions.Snapshot
                 Dim lastDownloadFileWithPath As String = String.Empty
@@ -134,14 +138,18 @@ Friend Module LoginHelpers
 
                 Select Case fileToLoad
                     Case FileToLoadOptions.LastSaved
-                        mainForm.Text = $"{SavedTitle} Using Last Saved Data"
+                        owner.Text = $"{SavedTitle} Using Last Saved Data"
                         fixedPart = BaseNameSavedLastDownload
                         lastDownloadFileWithPath = GetLastDownloadFileWithPath()
                     Case FileToLoadOptions.Snapshot
                         fixedPart = "CareLink"
-                        mainForm.Text = $"{SavedTitle} Using Snapshot Data"
+                        owner.Text = $"{SavedTitle} Using Snapshot Data"
                         Dim di As New DirectoryInfo(DirectoryForProjectData)
-                        Dim fileList As String() = New DirectoryInfo(DirectoryForProjectData).EnumerateFiles($"CareLinkSnapshot*.json").OrderBy(Function(f As FileInfo) f.LastWriteTime).Select(Function(f As FileInfo) f.Name).ToArray
+                        Dim fileList As String() = New DirectoryInfo(path:=DirectoryForProjectData) _
+                            .EnumerateFiles(searchPattern:=$"CareLinkSnapshot*.json") _
+                            .OrderBy(Function(f As FileInfo) f.LastWriteTime) _
+                            .Select(Function(f As FileInfo) f.Name).ToArray
+
                         Using openFileDialog1 As New OpenFileDialog With {
                             .AddExtension = True,
                             .AddToRecent = False,
@@ -158,7 +166,7 @@ Friend Module LoginHelpers
                             .Title = $"Select CareLink™ saved snapshot to load",
                             .ValidateNames = True}
 
-                            If openFileDialog1.ShowDialog(mainForm) = DialogResult.OK Then
+                            If openFileDialog1.ShowDialog(owner) = DialogResult.OK Then
                                 lastDownloadFileWithPath = openFileDialog1.FileName
                                 If Not File.Exists(lastDownloadFileWithPath) Then
                                     Return False
@@ -169,30 +177,34 @@ Friend Module LoginHelpers
                         End Using
                     Case FileToLoadOptions.Snapshot
                 End Select
-                mainForm.TabControlPage1.Visible = True
-                mainForm.TabControlPage2.Visible = True
+                owner.TabControlPage1.Visible = True
+                owner.TabControlPage2.Visible = True
                 CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(fixedPart, fuzzy:=True)
                 Dim json As String = File.ReadAllText(lastDownloadFileWithPath)
                 PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
                 DeserializePatientElement()
-                mainForm.MenuShowMiniDisplay.Visible = Debugger.IsAttached
+                owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(lastDownloadFileWithPath)
-                mainForm.SetLastUpdateTime(fileDate.ToShortDateTimeString, "from file", False, fileDate.IsDaylightSavingTime)
+                owner.SetLastUpdateTime(
+                    msg:=fileDate.ToShortDateTimeString,
+                    suffixMessage:="from file",
+                    highLight:=False,
+                    isDaylightSavingTime:=fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser()
                 fromFile = True
         End Select
         If Form1.Client IsNot Nothing Then
             Form1.Client.PatientPersonalData.InsulinType = CurrentUser.InsulinTypeName
-            With mainForm.DgvCurrentUser
+            With owner.DgvCurrentUser
                 .InitializeDgv()
                 .DataSource = Form1.Client.UserElementDictionary.ToDataSource
             End With
         End If
 
-        mainForm.PumpAITLabel.Text = CurrentUser.GetPumpAitString
-        mainForm.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
+        owner.PumpAITLabel.Text = CurrentUser.GetPumpAitString
+        owner.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
         If updateAllTabs Then
-            mainForm.UpdateAllTabPages(fromFile)
+            owner.UpdateAllTabPages(fromFile)
         End If
         Return True
     End Function
@@ -247,7 +259,12 @@ Friend Module LoginHelpers
     '''  <see langword="Nothing"/> if unknown; otherwise, <see langword="True"/> or <see langword="False"/>.
     ''' </param>
     <Extension>
-    Friend Sub SetLastUpdateTime(form1 As Form1, msg As String, suffixMessage As String, highLight As Boolean, isDaylightSavingTime? As Boolean)
+    Friend Sub SetLastUpdateTime(
+        form1 As Form1,
+        msg As String,
+        suffixMessage As String,
+        highLight As Boolean,
+        isDaylightSavingTime? As Boolean)
 
         With form1.LastUpdateTimeToolStripStatusLabel
             If Not String.IsNullOrWhiteSpace(msg) Then
@@ -257,8 +274,8 @@ Friend Module LoginHelpers
                 .ForeColor = GetGraphLineColor("High Limit")
                 .BackColor = .ForeColor.GetContrastingColor()
             Else
-                .BackColor = form1.UpdateAvailableStatusStripLabel.BackColor
-                .ForeColor = Color.Black
+                .BackColor = form1.MenuStrip1.BackColor
+                .ForeColor = form1.MenuStrip1.ForeColor
             End If
         End With
 
@@ -274,7 +291,7 @@ Friend Module LoginHelpers
                     .Text = ""
                 End If
             End If
-            .ForeColor = Color.Black
+            .ForeColor = form1.MenuStrip1.ForeColor
         End With
 
     End Sub
