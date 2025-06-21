@@ -32,7 +32,7 @@ Public Class Insulin
         Me.ProgrammedDuration = markerEntry.GetIntegerValueFromJson(NameOf(ProgrammedDuration))
         Me.EffectiveDuration = markerEntry.GetIntegerValueFromJson(NameOf(EffectiveDuration))
         Me.InsulinType = markerEntry.GetStringValueFromJson(NameOf(InsulinType))
-        If Me.InsulinType.Equals("Unknown", StringComparison.OrdinalIgnoreCase) Then
+        If Me.InsulinType.EqualsIgnoreCase("Unknown") Then
             Me.InsulinType = CurrentUser.InsulinTypeName
         End If
     End Sub

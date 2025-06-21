@@ -319,7 +319,9 @@ Public Module JsonExtensions
     '''  <see cref="JsonValueKind.Undefined"/>.
     ''' </summary>
     ''' <param name="kind">The <see cref="JsonValueKind"/> to check.</param>
-    ''' <returns><see langword="True"/> if the kind is Null or Undefined; otherwise, <see langword="False"/>.</returns>
+    ''' <returns>
+    '''  <see langword="True"/> if the kind is Null or Undefined; otherwise, <see langword="False"/>.
+    ''' </returns>
     <Extension>
     Public Function IsNullOrUndefined(kind As JsonValueKind) As Boolean
         Return kind = JsonValueKind.Null OrElse kind = JsonValueKind.Undefined

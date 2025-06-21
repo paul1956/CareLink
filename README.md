@@ -30,11 +30,16 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-05/26/2025
+06/22/2025
 
 ## What's New
+ New in 5.0.2.1
+ - Added support if .Net 9.0 with DarkMode Tabs and StatusStrip.
+ - Fixed error where login was failing because Python Login Client could not be found
+
  New in 5.0.2.0
  - Cleanup and address many formatting issues where titles were cut off
+ - Improved handling of edge cases in title formats.
 
  New in 5.0.1.5
  - Offer to delete stale login file

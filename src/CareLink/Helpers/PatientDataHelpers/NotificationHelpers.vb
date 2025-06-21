@@ -58,7 +58,7 @@ Friend Module NotificationHelpers
     Private Sub DgvNotification_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
 
-        If e.Value.ToString().StartsWith("additionalInfo", StringComparison.OrdinalIgnoreCase) Then
+        If e.Value.ToString().StartsWithIgnoreCase("additionalInfo") Then
             e.Value = e.Value.ToString.Replace(":", " : ")
         End If
         dgv.CellFormattingSetForegroundColor(e)

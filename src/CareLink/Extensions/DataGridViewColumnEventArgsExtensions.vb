@@ -40,7 +40,7 @@ Friend Module DataGridViewColumnEventArgsExtensions
             Dim titleInTitleCase As String = .Name
             If .Name.Contains("DeleteRow") Then
                 titleInTitleCase = ""
-            ElseIf Not .Name.Contains("OADateTime", StringComparison.OrdinalIgnoreCase) Then
+            ElseIf Not .Name.ContainsIgnoreCase("OADateTime") Then
                 titleInTitleCase = If(.DataPropertyName.Length < 4, .Name, .Name.ToTitleCase())
             End If
 
@@ -56,9 +56,9 @@ Friend Module DataGridViewColumnEventArgsExtensions
             End If
             If String.IsNullOrWhiteSpace(caption) Then Return
             .HeaderText = caption.Replace("_", "")
-            If .DataPropertyName.Contains("message", StringComparison.OrdinalIgnoreCase) Then
+            If .DataPropertyName.ContainsIgnoreCase("message") Then
                 .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-            ElseIf .DataPropertyName.Equals("RecordNumber", StringComparison.OrdinalIgnoreCase) Then
+            ElseIf .DataPropertyName.EqualsIgnoreCase("RecordNumber") Then
                 .SortMode = DataGridViewColumnSortMode.Automatic
                 .HeaderCell.SortGlyphDirection = SortOrder.Ascending
             End If

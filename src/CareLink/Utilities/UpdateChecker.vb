@@ -37,8 +37,8 @@ Friend Module UpdateChecker
         Dim index As Integer
         For Each e As IndexClass(Of String) In responseBody.SplitLines().WithIndex()
             Dim line As String = e.Value
-            If line.Contains(s_versionSearchKey, StringComparison.OrdinalIgnoreCase) Then
-                index = line.IndexOf(s_versionSearchKey, StringComparison.OrdinalIgnoreCase) + s_versionSearchKey.Length
+            If line.ContainsIgnoreCase(s_versionSearchKey) Then
+                index = line.IndexOf(s_versionSearchKey, comparisonType:=StringComparison.OrdinalIgnoreCase) + s_versionSearchKey.Length
                 If index < 0 Then
                     Exit For
                 End If

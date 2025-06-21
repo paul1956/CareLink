@@ -108,7 +108,7 @@ Public Class CareLinkUserDataList
             Try
                 For i As Integer = 0 To Me.List.Count - 1
                     Dim entry As CareLinkUserDataRecord = CType(Me.List(i), CareLinkUserDataRecord)
-                    If entry?.CareLinkUserName.Equals(itemName, StringComparison.OrdinalIgnoreCase) Then
+                    If entry?.CareLinkUserName.EqualsIgnoreCase(itemName) Then
                         Return CType(Me.List(i), CareLinkUserDataRecord)
                     End If
                 Next
@@ -215,7 +215,7 @@ Public Class CareLinkUserDataList
 
         If Me.List Is Nothing Then Return False
         For Each entry As CareLinkUserDataRecord In Me
-            If entry?.CareLinkUserName?.Equals(key, StringComparison.OrdinalIgnoreCase) Then
+            If entry?.CareLinkUserName?.Equals(key, comparisonType:=StringComparison.OrdinalIgnoreCase) Then
                 Return True
             End If
         Next
@@ -279,7 +279,7 @@ Public Class CareLinkUserDataList
     ''' <param name="Key">The key to update.</param>
     ''' <param name="Value">The value to set.</param>
     Friend Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, Key As String, Value As String)
-        If Not Key.Equals(NameOf(My.Settings.CareLinkUserName), StringComparison.OrdinalIgnoreCase) Then
+        If Not Key.EqualsIgnoreCase(NameOf(My.Settings.CareLinkUserName)) Then
             ' We are changing something other than the user name
             ' Update logged on user and the saved file
             loggedOnUser.UpdateValue(Key, Value)

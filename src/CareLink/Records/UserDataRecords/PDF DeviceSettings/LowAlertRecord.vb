@@ -29,11 +29,11 @@ Public Class LowAlertRecord
         End If
 
         Me.LowLimit = s1(1).ParseSingleInvariant
-        Me.Suspend = s.Columns(1)
-        Me.SuspendOnLow = Me.Suspend.Contains("On", StringComparison.OrdinalIgnoreCase)
-        Me.AlertOnLow = s.Columns(2) = "x"
-        Me.AlertBeforeLow = s.Columns(3) = "x"
-        Me.ResumeBasalAlert = s.Columns(4) = "x"
+        Me.Suspend = s.Columns(index:=1)
+        Me.SuspendOnLow = Me.Suspend.ContainsIgnoreCase("On")
+        Me.AlertOnLow = s.Columns(index:=2) = "x"
+        Me.AlertBeforeLow = s.Columns(index:=3) = "x"
+        Me.ResumeBasalAlert = s.Columns(index:=4) = "x"
         Me.IsValid = True
     End Sub
 

@@ -109,10 +109,12 @@ Public Class LoginDialog
             Dim userRecord As CareLinkUserDataRecord = Nothing
             Dim param As String = commandLineArguments(1)
             Select Case True
-                Case param.StartsWith("/Safe", StringComparison.OrdinalIgnoreCase)
+                Case param.StartsWithIgnoreCase("/Safe")
                     My.Settings.AutoLogin = False
                     My.Settings.Save()
-                Case param.StartsWith("UserName", StringComparison.OrdinalIgnoreCase) ' username=name
+
+                     ' username=name
+                Case param.StartsWithIgnoreCase("UserName")
                     Dim arg As String() = param.Split("=")
                     If arg.Length = 2 AndAlso s_allUserSettingsData.TryGetValue(arg(1), userRecord) Then
                         userRecord.UpdateSettings()
@@ -190,7 +192,7 @@ Public Class LoginDialog
         s_password = Me.PasswordTextBox.Text
         s_countryCode = Me.CountryComboBox.SelectedValue.ToString
 
-        Me.ClientDiscover = Discover.GetDiscoveryData()
+        Me.ClientDiscover = GetDiscoveryData()
         Me.Ok_Button.Enabled = False
 
         Dim tokenData As TokenData = ReadTokenDataFile(s_userName)
@@ -198,25 +200,22 @@ Public Class LoginDialog
         If tokenData Is Nothing Then
             ' Get the embedded EXE as a byte array
             Dim buffer() As Byte = My.Resources.carelink_carepartner_api_login
-            ' Write the EXE to the temporary file
             ' Create a temporary file for the EXE
             Dim exePath As String = $"{Path.GetTempFileName()}.exe"
-            Using fs As New FileStream(exePath, FileMode.Create)
+            ' Write the EXE to the temporary file
+            Using fs As New FileStream(path:=exePath, mode:=FileMode.Create)
                 fs.Write(buffer, offset:=0, count:=buffer.Length)
                 fs.Flush()
             End Using
 
             Dim isUsRegion As Boolean = Me.RegionComboBox.SelectedValue.ToString = "North America"
             Dim isUsRegionStr As String = If(isUsRegion, "--us", "")
-            Dim tempPath As String = Path.GetDirectoryName(exePath)
-            Dim jsonFileName As String = $"{Path.GetTempFileName()}.json"
 
-            ' Format the arguments
-            Dim arguments As String = $"{If(isUsRegion, "--us ", "")} --output {jsonFileName}"
-
+            ' Create a temporary file for the JSON output
+            Dim sourceFileName As String = $"{Path.GetTempFileName()}.json"
             Dim startInfo As New ProcessStartInfo With {
                 .FileName = exePath,
-                .Arguments = arguments,
+                .Arguments = $"{If(isUsRegion, "--us ", "")} --output {sourceFileName}",
                 .RedirectStandardOutput = True,
                 .RedirectStandardError = True,
                 .UseShellExecute = False}
@@ -228,15 +227,14 @@ Public Class LoginDialog
             Dim standardError As String = process.StandardError.ReadToEnd()
             process.WaitForExit()
 
-            Dim exitCode As Integer = process.ExitCode
-            If exitCode = 0 Then
+            If process.ExitCode = 0 Then
                 Dim destFileName As String = GetLoginDataFileName(s_userName)
-                If File.Exists(destFileName) Then
-                    File.Delete(destFileName)
+                If File.Exists(path:=destFileName) Then
+                    File.Delete(path:=destFileName)
                 End If
-                File.Move(jsonFileName, destFileName)
+                File.Move(sourceFileName, destFileName)
             End If
-            File.Delete(exePath)
+            File.Delete($"{Path.GetTempFileName()}.exe")
         End If
 
         'DoLogin(_httpClient, s_userName, isUsRegion)
@@ -347,17 +345,17 @@ Public Class LoginDialog
     Private Sub UsernameComboBox_Leave(sender As Object, e As EventArgs) Handles UsernameComboBox.Leave
         Try
 
-            Dim userSettings As CareLinkUserDataRecord = Nothing
-            If s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.Text, userSettings) Then
-                If userSettings.CareLinkUserName.Equals(Me.UsernameComboBox.Text, StringComparison.OrdinalIgnoreCase) Then
-                    Me.UsernameComboBox.Text = userSettings.CareLinkUserName
+            Dim userRecord As CareLinkUserDataRecord = Nothing
+            If s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.Text, userRecord) Then
+                If userRecord.CareLinkUserName.EqualsIgnoreCase(Me.UsernameComboBox.Text) Then
+                    Me.UsernameComboBox.Text = userRecord.CareLinkUserName
                 End If
                 s_userName = Me.UsernameComboBox.Text
-                Me.PasswordTextBox.Text = userSettings.CareLinkPassword
-                Me.RegionComboBox.SelectedValue = userSettings.CountryCode.GetRegionFromCode
-                Me.PatientUserIDTextBox.Text = userSettings.CareLinkPatientUserID
-                Me.CountryComboBox.Text = userSettings.CountryCode.GetCountryFromCode
-                Me.CarePartnerCheckBox.Checked = userSettings.CareLinkPartner
+                Me.PasswordTextBox.Text = userRecord.CareLinkPassword
+                Me.RegionComboBox.SelectedValue = userRecord.CountryCode.GetRegionFromCode
+                Me.PatientUserIDTextBox.Text = userRecord.CareLinkPatientUserID
+                Me.CountryComboBox.Text = userRecord.CountryCode.GetCountryFromCode
+                Me.CarePartnerCheckBox.Checked = userRecord.CareLinkPartner
             Else
                 Me.PasswordTextBox.Text = ""
                 Me.RegionComboBox.SelectedIndex = 0
@@ -381,7 +379,7 @@ Public Class LoginDialog
         If Me.UsernameComboBox.SelectedValue IsNot Nothing AndAlso
            s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.SelectedValue.ToString, userRecord) Then
 
-            If Not userRecord.CareLinkUserName.Equals(Me.UsernameComboBox.Text, StringComparison.OrdinalIgnoreCase) Then
+            If Not userRecord.CareLinkUserName.EqualsIgnoreCase(Me.UsernameComboBox.Text) Then
                 Me.UsernameComboBox.Text = userRecord.CareLinkUserName
             End If
             My.Settings.CareLinkUserName = Me.UsernameComboBox.Text

@@ -1069,7 +1069,7 @@ Public Class Form1
             If String.IsNullOrWhiteSpace(caption) Then
                 caption = .DataPropertyName.Replace("DgvCareLinkUsers", "")
             End If
-            If caption.Contains("DeleteRow", StringComparison.OrdinalIgnoreCase) Then
+            If caption.ContainsIgnoreCase("DeleteRow") Then
                 caption = ""
             Else
                 If .Index > 0 AndAlso String.IsNullOrWhiteSpace(.DataPropertyName) AndAlso String.IsNullOrWhiteSpace(caption) Then
@@ -2974,7 +2974,7 @@ Public Class Form1
             Dim row As DataGridViewRow = dgv.Rows(index)
             Dim cellValue As String = row.Cells(1).FormattedValue.ToString
             Debug.WriteLine(cellValue)
-            If cellValue.Equals(tabName, StringComparison.OrdinalIgnoreCase) Then
+            If cellValue.EqualsIgnoreCase(tabName) Then
                 Me.TabControlPage1.SelectedIndex = 3
                 dgv.CurrentCell = dgv.Rows(index).Cells(2)
                 s_currentSummaryRow = index
