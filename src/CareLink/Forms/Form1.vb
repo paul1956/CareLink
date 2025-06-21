@@ -1976,6 +1976,7 @@ Public Class Form1
             s_webView2CacheDirectory = Path.Join(s_projectWebCache, Guid.NewGuid().ToString)
             Directory.CreateDirectory(s_webView2CacheDirectory)
         End If
+
     End Sub
 
     ''' <summary>
@@ -2023,6 +2024,36 @@ Public Class Form1
         Me.ToolTip1.SetToolTip(Me.TirComplianceLabel, UserMessageConstants.CheckComplianceValues)
         Me.ToolTip1.SetToolTip(Me.LowTirComplianceLabel, UserMessageConstants.TirToolTip)
         Me.ToolTip1.SetToolTip(Me.HighTirComplianceLabel, UserMessageConstants.TirToolTip)
+
+#If Not FullDarkModeSupport Then
+#Region "Status Strip Colors"
+
+        Me.StatusStrip1.BackColor = Me.MenuStrip1.BackColor
+
+        Me.LastUpdateTimeToolStripStatusLabel.BackColor = Me.MenuStrip1.BackColor
+        Me.LastUpdateTimeToolStripStatusLabel.ForeColor = Me.MenuStrip1.ForeColor
+
+        Me.LoginStatus.BackColor = Me.MenuStrip1.BackColor
+        Me.LoginStatus.ForeColor = Me.MenuStrip1.ForeColor
+
+        Me.StatusStripSpacerRight.BackColor = Me.MenuStrip1.BackColor
+
+        Me.StatusStripSpeech.BackColor = Me.MenuStrip1.BackColor
+        Me.StatusStripSpeech.ForeColor = Me.MenuStrip1.ForeColor
+
+        Me.TimeZoneToolStripStatusLabel.BackColor = Me.MenuStrip1.BackColor
+        Me.TimeZoneToolStripStatusLabel.ForeColor = Me.MenuStrip1.ForeColor
+
+        Me.UpdateAvailableStatusStripLabel.BackColor = Me.MenuStrip1.BackColor
+        Me.UpdateAvailableStatusStripLabel.ForeColor = Color.Red
+
+#End Region ' Status Strip Colors
+
+#Region "Tab Page Colors"
+        Me.TabControlPage1.DrawMode = TabDrawMode.OwnerDrawFixed
+        Me.TabControlPage2.DrawMode = TabDrawMode.OwnerDrawFixed
+#End Region
+#End If
 
         Me.NotifyIcon1.Visible = True
         Application.DoEvents()
@@ -2776,6 +2807,45 @@ Public Class Form1
 #End Region ' Summary Events
 
 #Region "Tab Events"
+
+#If Not FullDarkModeSupport Then
+
+    ''' <summary>
+    '''  Handles the <see cref="TabControl.DrawItem"/> event for the main and secondary tab controls.
+    '''  Customizes the drawing of the tab pages to highlight the selected tab with a different background and foreground color.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, typically a TabControl control.</param>
+    ''' <param name="e"> A <see cref="DrawItemEventArgs"/> that contains the event data, including the index of the tab page being drawn.</param>
+    ''' <remarks>
+    '''  This method is used to provide a custom appearance for the tab pages in the application.
+    '''  It fills the background with a solid color and draws the tab text centered within the tab rectangle.
+    ''' </remarks>
+    Private Sub TabControl_DrawItem(sender As Object, e As DrawItemEventArgs) Handles _
+        TabControlPage1.DrawItem, TabControlPage2.DrawItem
+
+        Dim tabControlN As TabControl = CType(sender, TabControl)
+        Dim rect As Rectangle = tabControlN.GetTabRect(e.Index)
+        Dim format As New StringFormat With {
+            .Alignment = StringAlignment.Center,
+            .LineAlignment = StringAlignment.Center}
+
+        ' Highlight selected tab
+        Dim isSelected As Boolean = tabControlN.SelectedIndex = e.Index
+        Dim tabColor As Color = If(isSelected,
+                                   Color.Black,
+                                   SystemColors.ControlDarkDark)
+        Dim textColor As Color = If(isSelected, Color.White, Color.LightGray)
+
+        Using brush As New SolidBrush(color:=tabColor), textBrush As New SolidBrush(color:=textColor)
+            Using g As Graphics = e.Graphics
+                g.FillRectangle(brush, rect)
+                Dim s As String = tabControlN.TabPages(e.Index).Text
+                g.DrawString(s, tabControlN.Font, brush:=textBrush, layoutRectangle:=rect, format)
+            End Using
+        End Using
+    End Sub
+
+#End If ' FullDarkModeSupport
 
     ''' <summary>
     '''  Handles the <see cref="TabControl.Selecting"/> event for the main tab control.
