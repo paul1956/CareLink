@@ -215,7 +215,7 @@ Public Class CareLinkUserDataList
 
         If Me.List Is Nothing Then Return False
         For Each entry As CareLinkUserDataRecord In Me
-            If entry?.CareLinkUserName?.Equals(key, comparisonType:=StringComparison.OrdinalIgnoreCase) Then
+            If EqualsIgnoreCase(entry?.CareLinkUserName, key) Then
                 Return True
             End If
         Next

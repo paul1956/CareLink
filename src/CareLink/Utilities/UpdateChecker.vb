@@ -38,16 +38,16 @@ Friend Module UpdateChecker
         For Each e As IndexClass(Of String) In responseBody.SplitLines().WithIndex()
             Dim line As String = e.Value
             If line.ContainsIgnoreCase(s_versionSearchKey) Then
-                index = line.IndexOf(s_versionSearchKey, comparisonType:=StringComparison.OrdinalIgnoreCase) + s_versionSearchKey.Length
+                index = line.IndexOfIgnoreCase(s_versionSearchKey) + s_versionSearchKey.Length
                 If index < 0 Then
                     Exit For
                 End If
-                Dim versionLength As Integer = line.IndexOf(""""c, index) - index
-                versionStr = line.Substring(index, versionLength)
+                Dim versionLength As Integer = line.IndexOf(value:=""""c, startIndex:=index) - index
+                versionStr = line.Substring(startIndex:=index, length:=versionLength)
                 If versionStr.Contains("-"c) Then
                     Continue For
                 End If
-                Exit For
+                Return versionStr
             End If
         Next
 
@@ -89,8 +89,13 @@ Friend Module UpdateChecker
                     Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
                     Form1.UpdateAvailableStatusStripLabel.ForeColor = Color.Red
                     If reportSuccessfulResult Then
-                        If Interlocked.Exchange(s_inCheckForUpdate, 1) = 0 Then
-                            If MsgBox($"There is a newer version available, do you want to install now?", $"Current version {My.Application.Info.Version}{vbCrLf}New version {gitHubVersion}", MsgBoxStyle.YesNo Or MsgBoxStyle.Question, "Updates Available") = MsgBoxResult.Yes Then
+                        If Interlocked.Exchange(location1:=s_inCheckForUpdate, 1) = 0 Then
+                            If MsgBox(
+                                heading:=$"There is a newer version available, do you want to install now?",
+                                text:=$"Current version {My.Application.Info.Version}{vbCrLf}New version {gitHubVersion}",
+                                buttonStyle:=MsgBoxStyle.YesNo Or MsgBoxStyle.Question,
+                                title:="Updates Available") = MsgBoxResult.Yes Then
+
                                 OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
                                 End
                             End If
@@ -105,12 +110,20 @@ Friend Module UpdateChecker
                 Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
                 Form1.UpdateAvailableStatusStripLabel.ForeColor = Form1.MenuStrip1.ForeColor
                 If reportSuccessfulResult Then
-                    MsgBox("You are running latest version", "", MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "No Updates Available")
+                    MsgBox(
+                        heading:="You are running the latest version",
+                        text:="",
+                        buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Information,
+                        title:="No Updates Available")
                 End If
             End If
         Catch ex As Exception
             If reportSuccessfulResult Then
-                MsgBox("Connection failed while checking for new version", ex.DecodeException(), MsgBoxStyle.OkOnly Or MsgBoxStyle.Information, "Version Check Failed")
+                MsgBox(
+                    heading:="Connection failed while checking for new version",
+                    text:=ex.DecodeException(),
+                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Information,
+                    title:="Version Check Failed")
             End If
         End Try
 
