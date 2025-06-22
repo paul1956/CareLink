@@ -708,7 +708,7 @@ Partial Class Form1
         DgvCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         DgvCareLinkUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = SystemColors.Window
+        DataGridViewCellStyle2.BackColor = SystemColors.Control
         DataGridViewCellStyle2.Font = New Font("Segoe UI", 9.0F)
         DataGridViewCellStyle2.ForeColor = SystemColors.ControlText
         DataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight

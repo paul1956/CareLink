@@ -10,24 +10,20 @@ Friend Module UnicodeConstants
     Public Const Cr As Char = ChrW(&HD)
 
     ''' <summary>
-    '''  Line Feed, U+000A
-    ''' </summary>
-    Public Const Lf As Char = ChrW(&HA)
-
-    ''' <summary>
-    '''  Next Line, U+0085
-    ''' </summary>
-    Public Const Nel As Char = ChrW(&H85)
-
-    ''' <summary>
-    '''  Vertical Tab, U+000B
-    ''' </summary>
-    Public Const Vt As Char = ChrW(&HB)
-
-    ''' <summary>
     '''  Form Feed, U+000C
     ''' </summary>
     Public Const Ff As Char = ChrW(&HC)
+
+    ''' <summary>
+    '''  Gear, U+2699
+    '''  Represents a gear symbol, often used to indicate settings or configuration options.
+    ''' </summary>
+    Public Const Gear As String = ChrW(CharCode:=&H2699)
+
+    ''' <summary>
+    '''  Line Feed, U+000A
+    ''' </summary>
+    Public Const Lf As Char = ChrW(&HA)
 
     ''' <summary>
     '''  Line Separator, U+2028
@@ -35,8 +31,18 @@ Friend Module UnicodeConstants
     Public Const Ls As Char = ChrW(&H2028)
 
     ''' <summary>
+    '''  Next Line, U+0085
+    ''' </summary>
+    Public Const Nel As Char = ChrW(&H85)
+
+    ''' <summary>
     '''  Paragraph Separator, U+2029
     ''' </summary>
     Public Const Ps As Char = ChrW(&H2029)
+
+    ''' <summary>
+    '''  Vertical Tab, U+000B
+    ''' </summary>
+    Public Const Vt As Char = ChrW(&HB)
 
 End Module

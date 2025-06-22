@@ -24,9 +24,14 @@ Public Class SgMiniForm
     End Sub
 
     Private Shared Function GetLastUpdateMessage() As String
-        Return If(PatientData?.LastConduitUpdateServerDateTime > 0,
-            $"{PatientData.FirstName}'s Updated {CInt((PumpNow() - PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime).TotalMinutes)} minutes ago",
-            If(PatientData Is Nothing, "Last Update Unknown", $"{PatientData?.FirstName}'s Last Update Unknown"))
+        If PatientData Is Nothing Then
+            Return "Last Update Unknown"
+        End If
+        Dim firstName As String = PatientData.FirstName
+        Dim epoch2PumpDateTime As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime
+        Return If(PatientData.LastConduitUpdateServerDateTime > 0,
+            $"{firstName}'s Updated {CInt((PumpNow() - epoch2PumpDateTime).TotalMinutes)} minutes ago",
+            $"{firstName}'s Last Update Unknown")
     End Function
 
     Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs) Handles ActiveInsulinTextBox.GotFocus
@@ -34,11 +39,7 @@ Public Class SgMiniForm
     End Sub
 
     Private Sub ChkTopMost_CheckedChanged(sender As Object, e As EventArgs) Handles ChkTopMost.CheckedChanged
-        If Me.ChkTopMost.Checked Then
-            Me.TopMost = True
-        ElseIf Not Me.ChkTopMost.Checked Then
-            Me.TopMost = False
-        End If
+        Me.TopMost = Me.ChkTopMost.Checked
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
@@ -49,21 +50,15 @@ Public Class SgMiniForm
     Private Sub DeltaTextBox_TextChanged(sender As Object, e As EventArgs) Handles DeltaTextBox.TextChanged
         Select Case True
             Case Me.DeltaTextBox.Text = ""
-                Me.DeltaTextBox.ForeColor = SystemColors.Window
-                Me.DeltaTextBox.BackColor = SystemColors.Window
 
             Case Math.Abs(_currentDelta) < 0.001
                 Me.DeltaTextBox.Text = ""
-                Me.DeltaTextBox.ForeColor = SystemColors.Window
-                Me.DeltaTextBox.BackColor = SystemColors.Window
 
             Case _currentDelta > 0
                 Me.DeltaTextBox.ForeColor = Color.Blue
-                Me.DeltaTextBox.BackColor = Color.Blue.GetContrastingColor()
 
             Case Else
                 Me.DeltaTextBox.ForeColor = Color.Orange
-                Me.DeltaTextBox.BackColor = Color.Orange.GetContrastingColor()
 
         End Select
     End Sub
@@ -103,10 +98,8 @@ Public Class SgMiniForm
     Private Sub SgTextBox_TextChanged(sender As Object, e As EventArgs) Handles SgTextBox.TextChanged
         Select Case True
             Case Single.IsNaN(_normalizedSg), _normalizedSg = 0
-                Me.SgTextBox.BackColor = Color.Black.GetContrastingColor()
-                Me.SgTextBox.ForeColor = Color.Black
+                Me.SgTextBox.ForeColor = SystemColors.ControlText
             Case _normalizedSg < 70
-                Me.SgTextBox.BackColor = Color.Red.GetContrastingColor()
                 Me.SgTextBox.ForeColor = Color.Red
                 If Not _alarmPlayedLow Then
                     PlayText($"Low Alarm for {PatientData.FirstName}, current sensor glucose {_currentSgValue}")
@@ -114,12 +107,10 @@ Public Class SgMiniForm
                     _alarmPlayedHigh = False
                 End If
             Case _normalizedSg <= 180
-                Me.SgTextBox.BackColor = Color.Green.GetContrastingColor()
                 Me.SgTextBox.ForeColor = Color.Green
                 _alarmPlayedLow = False
                 _alarmPlayedHigh = False
             Case Else
-                Me.SgTextBox.BackColor = Color.Yellow.GetContrastingColor()
                 Me.SgTextBox.ForeColor = Color.Yellow
                 If Not _alarmPlayedHigh Then
                     PlayText($"High alarm for {PatientData.FirstName}, current sensor glucose {_currentSgValue}")
@@ -133,16 +124,14 @@ Public Class SgMiniForm
     Public Sub SetCurrentDeltaValue(deltaString As String, delta As Single)
         Me.DeltaTextBox.Text = If(Math.Abs(delta) < 0.001,
                                   "",
-                                  deltaString
-                                 )
+                                  deltaString)
         _currentDelta = delta
     End Sub
 
     Public Sub SetCurrentSgString(sgString As String, sgValue As Single)
         Me.SgTextBox.Text = If(String.IsNullOrWhiteSpace(sgString) OrElse Single.IsNaN(sgValue),
                                "---",
-                               sgString
-                              )
+                               sgString)
         _currentSgValue = sgValue
         _normalizedSg = sgValue
         If NativeMmolL Then
