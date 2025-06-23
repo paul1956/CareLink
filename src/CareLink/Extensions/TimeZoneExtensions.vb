@@ -97,26 +97,30 @@ Friend Module TimeZoneExtensions
         End If
 
         If id.Contains("Daylight") Then
-            possibleTimeZone = s_systemTimeZones.Where(predicate:=Function(t As TimeZoneInfo)
-                                                                      Return t.DaylightName = id
-                                                                  End Function).FirstOrDefault
+            possibleTimeZone = s_systemTimeZones.Where(
+                predicate:=Function(t As TimeZoneInfo)
+                               Return t.DaylightName = id
+                           End Function).FirstOrDefault
             If possibleTimeZone IsNot Nothing Then
                 s_timeZoneMap.Add(id, possibleTimeZone)
                 Return possibleTimeZone
             End If
         End If
 
-        possibleTimeZone = s_systemTimeZones.Where(predicate:=Function(t As TimeZoneInfo)
-                                                                  Return t.StandardName = id
-                                                              End Function).FirstOrDefault
+        possibleTimeZone = s_systemTimeZones.Where(
+                predicate:=Function(t As TimeZoneInfo)
+                               Return t.StandardName = id
+                           End Function).FirstOrDefault
         If possibleTimeZone IsNot Nothing Then
             s_timeZoneMap.Add(id, possibleTimeZone)
             Return possibleTimeZone
         End If
 
-        possibleTimeZone = s_systemTimeZones.Where(predicate:=Function(t As TimeZoneInfo)
-                                                                  Return t.Id = id
-                                                              End Function).FirstOrDefault
+        possibleTimeZone = s_systemTimeZones.Where(
+            predicate:=Function(t As TimeZoneInfo)
+                           Return t.Id = id
+                       End Function).FirstOrDefault
+
         possibleTimeZone = If(possibleTimeZone, TimeZoneInfo.Local)
         s_timeZoneMap.Add(id, possibleTimeZone)
 
