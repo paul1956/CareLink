@@ -37,7 +37,7 @@ Friend Module TimeZoneExtensions
     ''' <remarks>
     '''  This is used to map common names to their official time zone IDs.
     ''' </remarks>
-    Private s_specialKnownTimeZones As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase) From {
+    Private ReadOnly s_specialKnownTimeZones As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase) From {
             {"Amazon Standard Time", "Central Brazilian Standard Time"},
             {"Argentina Standard Time", "Argentina Standard Time"},
             {"Bolivia Time", "SA Western Standard Time"},
