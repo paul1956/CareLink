@@ -12,12 +12,12 @@ Public Module DataGridViewExtensions
     ''' <summary>
     '''  Initializes the specified <see cref="DataGridView"/> with default settings for appearance and behavior.
     ''' </summary>
-    ''' <param name="dGV">
+    ''' <param name="dgv">
     '''  The <see cref="DataGridView"/> to initialize.
     ''' </param>
     <Extension>
-    Friend Sub InitializeDgv(dGV As DataGridView)
-        With dGV
+    Friend Sub InitializeDgv(dgv As DataGridView)
+        With dgv
             .AllowUserToAddRows = False
             .AllowUserToDeleteRows = False
             .AllowUserToResizeColumns = False

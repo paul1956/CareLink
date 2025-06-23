@@ -217,23 +217,23 @@ Public Module DgvHelpers
     ''' <param name="className">The class name to use for naming the DataGridView.</param>
     <Extension>
     Public Sub DisplayEmptyDGV(realPanel As TableLayoutPanel, className As String)
-        Dim dGVIndex As Integer = realPanel.Controls.Count - 1
-        Dim dGV As DataGridView = Nothing
-        If dGVIndex >= 0 Then
-            dGV = TryCast(realPanel.Controls(dGVIndex), DataGridView)
+        Dim dgvIndex As Integer = realPanel.Controls.Count - 1
+        Dim dgv As DataGridView = Nothing
+        If dgvIndex >= 0 Then
+            dgv = TryCast(realPanel.Controls(dgvIndex), DataGridView)
         End If
-        If dGV Is Nothing Then
-            dGV = New DataGridView With {
+        If dgv Is Nothing Then
+            dgv = New DataGridView With {
                 .AutoSize = True,
                 .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
                 .ColumnHeadersVisible = False,
                 .Dock = DockStyle.Fill,
                 .Name = $"DataGridView{className}",
                 .RowHeadersVisible = False}
-            realPanel.Controls.Add(control:=dGV, column:=0, row:=1)
+            realPanel.Controls.Add(control:=dgv, column:=0, row:=1)
         End If
-        RemoveHandler dGV.Paint, AddressOf DgvPaintNoRecordsFound
-        AddHandler dGV.Paint, AddressOf DgvPaintNoRecordsFound
+        RemoveHandler dgv.Paint, AddressOf DgvPaintNoRecordsFound
+        AddHandler dgv.Paint, AddressOf DgvPaintNoRecordsFound
     End Sub
 
     ''' <summary>

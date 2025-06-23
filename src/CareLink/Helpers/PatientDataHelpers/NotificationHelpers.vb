@@ -140,7 +140,7 @@ Friend Module NotificationHelpers
     ''' <param name="attachHandlers">Delegate to attach event handlers to the DataGridView.</param>
     ''' <param name="row">The row index in the panel to add the DataGridView.</param>
     Private Sub DisplayNotificationDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, row As Integer)
-        Dim dGV As New DataGridView With {
+        Dim dgv As New DataGridView With {
             .AutoSize = False,
             .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders,
             .ColumnHeadersVisible = False,
@@ -148,24 +148,24 @@ Friend Module NotificationHelpers
             .Name = $"DataGridView{className}",
             .RowHeadersVisible = False}
         realPanel.AutoSize = True
-        realPanel.Controls.Add(control:=dGV, column:=0, row)
+        realPanel.Controls.Add(control:=dgv, column:=0, row)
 
-        dGV.InitializeDgv()
-        dGV.DefaultCellStyle.WrapMode = DataGridViewTriState.False
-        attachHandlers?(dGV)
-        For Each column As DataGridViewColumn In dGV.Columns
+        dgv.InitializeDgv()
+        dgv.DefaultCellStyle.WrapMode = DataGridViewTriState.False
+        attachHandlers?(dgv)
+        For Each column As DataGridViewColumn In dgv.Columns
             column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             column.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         Next
         Dim rowIndex As Integer = 0
-        dGV.DataSource = table
-        For Each dgvRow As DataGridViewRow In dGV.Rows
-            dGV.AutoResizeRow(rowIndex, autoSizeRowMode:=DataGridViewAutoSizeRowMode.AllCellsExceptHeader)
+        dgv.DataSource = table
+        For Each dgvRow As DataGridViewRow In dgv.Rows
+            dgv.AutoResizeRow(rowIndex, autoSizeRowMode:=DataGridViewAutoSizeRowMode.AllCellsExceptHeader)
             rowIndex += 1
             dgvRow.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         Next
-        dGV.Width = dGV.PreferredSize.Width
-        dGV.Height = dGV.PreferredSize.Height
+        dgv.Width = dgv.PreferredSize.Width
+        dgv.Height = dgv.PreferredSize.Height
     End Sub
 
     ''' <summary>

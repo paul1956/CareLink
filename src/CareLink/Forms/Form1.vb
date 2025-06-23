@@ -612,8 +612,12 @@ Public Class Form1
         Debug.WriteLine($"DataError in {dgv.Name}: {e.Exception.Message}")
 
         ' Show a user-friendly message
-        Dim text As String = $"An error {e.Exception.Message} occurred while processing " &
-            $"{dgv.Name.Replace("dgv", String.Empty)}. Please check your data and try again."
+        Dim dgvName As String = dgv.Name.Replace(
+            oldValue:="dgv",
+            newValue:=String.Empty,
+            comparisonType:=StringComparison.InvariantCulture)
+        Dim text As String = $"An error {e.Exception.Message} occurred while processing {dgvName}. " &
+            $"Please check your data and try again."
         MessageBox.Show(text, caption:="Input Error", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)
 
         Debug.WriteLine($"Context: {e.Context}")
@@ -688,7 +692,7 @@ Public Class Form1
         Select Case dgv.Columns(e.ColumnIndex).Name
             Case NameOf(ActiveInsulin.DateTime)
                 dgv.CellFormattingDateTime(e)
-            Case NameOf(ActiveInsulin.amount)
+            Case NameOf(ActiveInsulin.Amount)
                 dgv.CellFormattingSingleValue(e, digits:=3)
             Case NameOf(ActiveInsulin.Precision)
                 dgv.CellFormattingToTitle(e)
@@ -1035,7 +1039,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvCareLinkUsers_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCareLinkUsers.CellFormatting
+    Private Sub DgvCareLinkUsers_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles _
+        DgvCareLinkUsers.CellFormatting
+
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
         If col IsNot Nothing Then
@@ -3580,7 +3586,7 @@ Public Class Form1
                     Else
                         Me.LabelTrendValue.Visible = False
                     End If
-                    strBuilder.Append($"Active ins. {PatientData.ActiveInsulin?.amount:N3} U")
+                    strBuilder.Append($"Active ins. {PatientData.ActiveInsulin?.Amount:N3} U")
                     Me.NotifyIcon1.Text = strBuilder.ToString
                     Me.NotifyIcon1.Visible = True
                     s_lastSgValue = sg
@@ -3692,8 +3698,8 @@ Public Class Form1
     ''' </exception>
     Private Sub UpdateActiveInsulin()
         Try
-            If PatientData.ActiveInsulin IsNot Nothing AndAlso PatientData.ActiveInsulin.amount >= 0 Then
-                Dim activeInsulinStr As String = $"Active Insulin {$"{PatientData.ActiveInsulin.amount:N3}"} U"
+            If PatientData.ActiveInsulin IsNot Nothing AndAlso PatientData.ActiveInsulin.Amount >= 0 Then
+                Dim activeInsulinStr As String = $"Active Insulin {$"{PatientData.ActiveInsulin.Amount:N3}"} U"
                 Me.ActiveInsulinValue.Text = activeInsulinStr
                 _sgMiniDisplay.ActiveInsulinTextBox.Text = activeInsulinStr
             Else
@@ -4586,7 +4592,7 @@ Public Class Form1
         Dim keySelector As Func(Of SG, Integer) = Function(x) x.RecordNumber
         Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:=s_listOfSgRecords.OrderByDescending(keySelector).ToList()),
-            dGV:=Me.DgvSGs,
+            dgv:=Me.DgvSGs,
             rowIndex:=ServerDataIndexes.sgs)
         Me.DgvSGs.AutoSize = True
         Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
