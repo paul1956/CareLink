@@ -26,7 +26,12 @@ Friend Module DataGridViewColumnEventArgsExtensions
     '''  The caption to use for the column header. If empty or whitespace, the default header text is used.
     ''' </param>
     <Extension>
-    Public Sub DgvColumnAdded(ByRef e As DataGridViewColumnEventArgs, cellStyle As DataGridViewCellStyle, forceReadOnly As Boolean, caption As String)
+    Public Sub DgvColumnAdded(
+        ByRef e As DataGridViewColumnEventArgs,
+        cellStyle As DataGridViewCellStyle,
+        forceReadOnly As Boolean,
+        caption As String)
+
         With e.Column
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             If (e.Column.Index = 0 AndAlso e.Column.DataPropertyName <> "Hour") OrElse

@@ -2027,9 +2027,9 @@ Public Class Form1
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(reportSuccessfulResult:=False)
 
-        Me.ToolTip1.SetToolTip(Me.TirComplianceLabel, UserMessageConstants.CheckComplianceValues)
-        Me.ToolTip1.SetToolTip(Me.LowTirComplianceLabel, UserMessageConstants.TirToolTip)
-        Me.ToolTip1.SetToolTip(Me.HighTirComplianceLabel, UserMessageConstants.TirToolTip)
+        Me.ToolTip1.SetToolTip(control:=Me.TirComplianceLabel, caption:=UserMessageConstants.CheckComplianceValues)
+        Me.ToolTip1.SetToolTip(control:=Me.LowTirComplianceLabel, caption:=UserMessageConstants.TirToolTip)
+        Me.ToolTip1.SetToolTip(control:=Me.HighTirComplianceLabel, caption:=UserMessageConstants.TirToolTip)
 
 #If Not FullDarkModeSupport Then
 
@@ -2073,6 +2073,7 @@ Public Class Form1
         If DoOptionalLoginAndUpdateData(owner:=Me, updateAllTabs:=False, fileToLoad:=FileToLoadOptions.NewUser) Then
             Me.UpdateAllTabPages(fromFile:=False)
         End If
+
     End Sub
 
     ''' <summary>
