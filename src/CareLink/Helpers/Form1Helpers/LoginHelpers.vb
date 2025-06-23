@@ -44,10 +44,15 @@ Friend Module LoginHelpers
     Friend Sub DeserializePatientElement()
         Try
             PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(PatientDataElement, s_jsonDeserializerOptions)
+            RecentData = PatientDataElement.ConvertJsonElementToStringDictionary()
         Catch ex As Exception
+            MessageBox.Show(
+                text:=$"Error deserializing patient data: {ex.Message}",
+                caption:="Deserialization Error",
+                buttons:=MessageBoxButtons.OK,
+                icon:=MessageBoxIcon.Error)
             Stop
         End Try
-        RecentData = PatientDataElement.ConvertJsonElementToStringDictionary()
         s_timeWithMinuteFormat = If(PatientData.TimeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
         s_timeWithoutMinuteFormat = If(PatientData.TimeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
     End Sub
@@ -280,15 +285,12 @@ Friend Module LoginHelpers
         End With
 
         With form1.TimeZoneToolStripStatusLabel
-            If isDaylightSavingTime Is Nothing Then
-                .Text = ""
-            Else
+            .Text = ""
+            If isDaylightSavingTime IsNot Nothing Then
                 Dim timeZoneName As String = Nothing
                 If RecentData?.TryGetValue(NameOf(ServerDataIndexes.clientTimeZoneName), timeZoneName) Then
                     Dim timeZoneInfo As TimeZoneInfo = CalculateTimeZone(timeZoneName)
                     .Text = $"{If(isDaylightSavingTime, timeZoneInfo.DaylightName, timeZoneInfo.StandardName)} {suffixMessage}".Trim
-                Else
-                    .Text = ""
                 End If
             End If
             .ForeColor = form1.MenuStrip1.ForeColor

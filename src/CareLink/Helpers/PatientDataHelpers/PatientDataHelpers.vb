@@ -24,7 +24,7 @@ Public Module PatientDataHelpers
         End If
         Dim charList As New List(Of Char) From {","c, CChar(vbCr)}
         For Each kvp As KeyValuePair(Of String, String) In s_keyDictionary
-            Dim startIndex As Integer = value.IndexOfIgnoreCase(value:=kvp.Key)
+            Dim startIndex As Integer = value.IndexOfIgnoreCase(value:=kvp.Key) + kvp.Key.Length
             If startIndex = -1 Then
                 Continue For
             End If

@@ -2268,31 +2268,41 @@ Public Class Form1
                         If ExceptionHandlerDialog.ShowDialog(owner:=Me) = DialogResult.OK Then
                             ExceptionHandlerDialog.ReportFileNameWithPath = ""
                             Try
-                                RecentData = LoadIndexedItems(ExceptionHandlerDialog.LocalRawData)
+                                PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(
+                                    json:=ExceptionHandlerDialog.LocalRawData)
+                                DeserializePatientElement()
+                                Me.TabControlPage2.Visible = True
+                                Me.TabControlPage1.Visible = True
                             Catch ex As Exception
-                                MessageBox.Show($"Error reading date file. Original error: {ex.DecodeException()}")
+                                MessageBox.Show($"Error reading data file. Original error: {ex.DecodeException()}")
                             End Try
-                            CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName($"CareLink", fuzzy:=True)
+                            CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName(
+                                FixedPart:="CareLink",
+                                fuzzy:=True)
                             Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                             Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
                             Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
-                            Me.SetLastUpdateTime(msg:=epochDateTime.ToShortDateTimeString, suffixMessage:="from file", highLight:=False, isDaylightSavingTime:=epochDateTime.IsDaylightSavingTime)
+                            Me.SetLastUpdateTime(
+                                msg:=epochDateTime.ToShortDateTimeString,
+                                suffixMessage:="from file",
+                                highLight:=False,
+                                isDaylightSavingTime:=epochDateTime.IsDaylightSavingTime)
                             SetUpCareLinkUser()
 
                             Try
-                                FinishInitialization(mainForm:=Me)
+                                Me.UpdateAllTabPages(fromFile:=True)
                             Catch ex As Exception
-                                MessageBox.Show($"Error in {NameOf(FinishInitialization)}. Original error: {ex.Message}")
+                                MessageBox.Show(text:=$"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
                             End Try
                             Try
                                 Me.UpdateAllTabPages(fromFile:=True)
                             Catch ex As Exception
-                                MessageBox.Show($"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
+                                MessageBox.Show(text:=$"Error in {NameOf(UpdateAllTabPages)}. Original error: {ex.Message}")
                             End Try
                         End If
                     End If
                 Catch ex As Exception
-                    MessageBox.Show($"Cannot read file from disk. Original error: {ex.DecodeException()}")
+                    MessageBox.Show(text:=$"Cannot read file from disk. Original error: {ex.DecodeException()}")
                 End Try
             End If
         End Using
@@ -2309,7 +2319,10 @@ Public Class Form1
     '''  The last saved file will be loaded and processed to update the application state.
     ''' </remarks>
     Private Sub MenuStartHereUseLastSavedFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseLastSavedFile.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(owner:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.LastSaved)
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(
+            owner:=Me,
+            updateAllTabs:=True,
+            fileToLoad:=FileToLoadOptions.LastSaved)
         Me.MenuStartHereSaveSnapshotFile.Enabled = Not success
     End Sub
 
@@ -2323,8 +2336,13 @@ Public Class Form1
     ''' <remarks>
     '''  The user will be prompted to log in, and their data will be updated based on their account information.
     ''' </remarks>
-    Private Sub MenuStartHereUserLogin_Click(sender As Object, e As EventArgs) Handles MenuStartHereUserLogin.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(owner:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.NewUser)
+    Private Sub MenuStartHereUserLogin_Click(sender As Object, e As EventArgs) Handles _
+        MenuStartHereUserLogin.Click
+
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(
+            owner:=Me,
+            updateAllTabs:=True,
+            fileToLoad:=FileToLoadOptions.NewUser)
     End Sub
 
     ''' <summary>
@@ -2337,8 +2355,13 @@ Public Class Form1
     ''' <remarks>
     '''  The user can select a saved data file to load and process.
     ''' </remarks>
-    Private Sub MenuStartHereUseSavedDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereLoadSavedDataFile.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(owner:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.Snapshot)
+    Private Sub MenuStartHereUseSavedDataFile_Click(sender As Object, e As EventArgs) Handles _
+        MenuStartHereLoadSavedDataFile.Click
+
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(
+            owner:=Me,
+            updateAllTabs:=True,
+            fileToLoad:=FileToLoadOptions.Snapshot)
         Me.MenuStartHereLoadSavedDataFile.Enabled = Not success
     End Sub
 
@@ -2353,7 +2376,10 @@ Public Class Form1
     '''  The test data will be loaded and processed to simulate a CareLink™ environment.
     ''' </remarks>
     Private Sub MenuStartHereUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseTestData.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(owner:=Me, updateAllTabs:=True, fileToLoad:=FileToLoadOptions.TestData)
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(
+            owner:=Me,
+            updateAllTabs:=True,
+            fileToLoad:=FileToLoadOptions.TestData)
         Me.MenuStartHereSaveSnapshotFile.Enabled = Not success
     End Sub
 
@@ -2365,7 +2391,8 @@ Public Class Form1
     '''  Gets the selected speech recognition minimum confidence value from the menu.
     ''' </summary>
     ''' <returns>
-    '''  The selected confidence value as a <see cref="Double"/>. Returns 100 if no item is checked or no numeric value is found.
+    '''  The selected confidence value as a <see cref="Double"/>.
+    '''  Returns 100 if no item is checked or no numeric value is found.
     ''' </returns>
     Private Function GetSpeechConfidenceValue() As Double
         For Each item As ToolStripMenuItem In Me.MenuOptionsSpeechRecognitionEnabled.DropDownItems

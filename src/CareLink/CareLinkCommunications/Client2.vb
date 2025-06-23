@@ -538,11 +538,9 @@ Public Class Client2
     '''  If the access token cannot be refreshed or the API call fails, an error message is returned.
     ''' </summary>
     ''' <returns>
-    '''  <para>
-    '''   This function checks if the access token is valid, attempts to refresh it if necessary, and then
-    '''   sends a request to the API to obtain the latest patient data. If the access token cannot be
-    '''   refreshed or the API call fails, an error message is returned.
-    '''  </para>
+    '''  This function checks if the access token is valid, attempts to refresh it if necessary, and then
+    '''  sends a request to the API to obtain the latest patient data. If the access token cannot be
+    '''  refreshed or the API call fails, an error message is returned.
     ''' </returns>
     Public Function GetRecentData() As String
         ' Check if access token is valid
@@ -589,15 +587,16 @@ Public Class Client2
             Case Else
                 lastErrorMessage = "No Data Found for " & String.Join(", ", data.Keys)
         End Select
-        Dim metaData As JsonElement = CType(data.Values(0), JsonElement)
-        PatientDataElement = CType(data.Values(1), JsonElement)
+        Dim unusedMetaData As JsonElement = CType(data.Values(index:=0), JsonElement)
         Try
+            PatientDataElement = CType(data.Values(1), JsonElement)
+            DeserializePatientElement()
             File.WriteAllTextAsync(
                 path:=GetLastDownloadFileWithPath(),
-                contents:=JsonSerializer.Serialize(PatientDataElement, s_jsonSerializerOptions))
-            DeserializePatientElement()
+                contents:=JsonSerializer.Serialize(value:=PatientDataElement, options:=s_jsonSerializerOptions))
         Catch ex As Exception
             Stop
+            Return ex.DecodeException()
         End Try
 
         Return lastErrorMessage
