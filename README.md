@@ -33,6 +33,9 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 06/22/2025
 
 ## What's New
+ New in 5.0.2.3
+ - Fixed creation of CareLinkErrorReportFile and loading of it caused by incorrect removal of personal information.
+
  New in 5.0.2.1
  - Added support if .Net 9.0 with DarkMode Tabs and StatusStrip.
  - Fixed error where login was failing because Python Login Client could not be found

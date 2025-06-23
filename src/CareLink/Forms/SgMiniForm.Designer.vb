@@ -37,11 +37,11 @@ Partial Class SgMiniForm
         ' SgTextBox
         ' 
         SgTextBox.BorderStyle = BorderStyle.None
-        SgTextBox.Font = New Font("Segoe UI", 36F)
-        SgTextBox.Location = New Point(1, 29)
+        SgTextBox.Font = New Font("Segoe UI", 36.0F)
+        SgTextBox.Location = New Point(4, 29)
         SgTextBox.Margin = New Padding(0)
         SgTextBox.Name = "SgTextBox"
-        SgTextBox.Size = New Size(134, 64)
+        SgTextBox.Size = New Size(114, 64)
         SgTextBox.TabIndex = 1
         SgTextBox.Text = "---"
         SgTextBox.TextAlign = HorizontalAlignment.Center
@@ -69,11 +69,11 @@ Partial Class SgMiniForm
         ' 
         DeltaTextBox.Anchor = AnchorStyles.Top Or AnchorStyles.Right
         DeltaTextBox.BorderStyle = BorderStyle.None
-        DeltaTextBox.Font = New Font("Segoe UI", 36F)
-        DeltaTextBox.Location = New Point(135, 40)
+        DeltaTextBox.Font = New Font("Segoe UI", 36.0F)
+        DeltaTextBox.Location = New Point(126, 29)
         DeltaTextBox.Margin = New Padding(0)
         DeltaTextBox.Name = "DeltaTextBox"
-        DeltaTextBox.Size = New Size(121, 64)
+        DeltaTextBox.Size = New Size(133, 64)
         DeltaTextBox.TabIndex = 2
         DeltaTextBox.Text = "+10.0"
         DeltaTextBox.TextAlign = HorizontalAlignment.Center
@@ -95,7 +95,7 @@ Partial Class SgMiniForm
         ChkTopMost.CheckState = CheckState.Checked
         ChkTopMost.Location = New Point(4, 103)
         ChkTopMost.Name = "ChkTopMost"
-        ChkTopMost.Size = New Size(72, 19)
+        ChkTopMost.Size = New Size(73, 19)
         ChkTopMost.TabIndex = 4
         ChkTopMost.Text = "Topmost"
         ChkTopMost.UseVisualStyleBackColor = True
@@ -104,7 +104,7 @@ Partial Class SgMiniForm
         ' 
         Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
-        Me.BackColor = SystemColors.Window
+        Me.BackColor = SystemColors.Control
         Me.ClientSize = New Size(264, 123)
         Me.ControlBox = False
         Me.Controls.Add(ChkTopMost)
