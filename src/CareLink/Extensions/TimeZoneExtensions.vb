@@ -22,8 +22,22 @@ Friend Module TimeZoneExtensions
 
 #End Region
 
-    Private ReadOnly s_specialKnownTimeZones As New Dictionary(Of String, String) _
-        (StringComparer.OrdinalIgnoreCase) From {
+    ''' <summary>
+    '''  Cached dictionary of time zones, mapping IDs to <see cref="TimeZoneInfo"/> instances.
+    ''' </summary>
+    ''' <remarks>
+    '''  This is used to avoid repeated lookups for the same time zone ID.
+    ''' </remarks>
+    Private ReadOnly s_timeZoneMap As New Dictionary(Of String, TimeZoneInfo) _
+            (StringComparer.OrdinalIgnoreCase)
+
+    ''' <summary>
+    '''  Special known time zones with their corresponding standard time zone IDs.
+    ''' </summary>
+    ''' <remarks>
+    '''  This is used to map common names to their official time zone IDs.
+    ''' </remarks>
+    Private s_specialKnownTimeZones As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase) From {
             {"Amazon Standard Time", "Central Brazilian Standard Time"},
             {"Argentina Standard Time", "Argentina Standard Time"},
             {"Bolivia Time", "SA Western Standard Time"},
@@ -33,8 +47,7 @@ Friend Module TimeZoneExtensions
             {"Eastern European Summer Time", "E. Europe Daylight Time"},
             {"Eastern European Standard Time", "E. Europe Standard Time"},
             {"Irish Standard Time", "GMT Daylight Time"},
-            {"Mitteleuropäische Zeit", "W. Europe Standard Time"}
-        }
+            {"Mitteleuropäische Zeit", "W. Europe Standard Time"}}
 
     ''' <summary>
     '''  Cached list of system time zones.
@@ -63,10 +76,15 @@ Friend Module TimeZoneExtensions
             id = timeZoneName
         End If
 
-        Dim possibleTimeZone As TimeZoneInfo
+        Dim possibleTimeZone As TimeZoneInfo = Nothing
+        If s_timeZoneMap.TryGetValue(id, possibleTimeZone) Then
+            Return possibleTimeZone
+        End If
+
         Try
             possibleTimeZone = TimeZoneInfo.FindSystemTimeZoneById(id)
             If possibleTimeZone IsNot Nothing Then
+                s_timeZoneMap.Add(id, possibleTimeZone)
                 Return possibleTimeZone
             End If
         Catch ex As TimeZoneNotFoundException
@@ -83,20 +101,26 @@ Friend Module TimeZoneExtensions
                                                                       Return t.DaylightName = id
                                                                   End Function).FirstOrDefault
             If possibleTimeZone IsNot Nothing Then
+                s_timeZoneMap.Add(id, possibleTimeZone)
                 Return possibleTimeZone
             End If
         End If
+
         possibleTimeZone = s_systemTimeZones.Where(predicate:=Function(t As TimeZoneInfo)
                                                                   Return t.StandardName = id
                                                               End Function).FirstOrDefault
         If possibleTimeZone IsNot Nothing Then
+            s_timeZoneMap.Add(id, possibleTimeZone)
             Return possibleTimeZone
         End If
 
         possibleTimeZone = s_systemTimeZones.Where(predicate:=Function(t As TimeZoneInfo)
                                                                   Return t.Id = id
                                                               End Function).FirstOrDefault
-        Return If(possibleTimeZone, TimeZoneInfo.Local)
+        possibleTimeZone = If(possibleTimeZone, TimeZoneInfo.Local)
+        s_timeZoneMap.Add(id, possibleTimeZone)
+
+        Return possibleTimeZone
     End Function
 
     ''' <summary>
