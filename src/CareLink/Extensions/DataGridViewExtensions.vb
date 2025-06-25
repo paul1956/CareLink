@@ -22,16 +22,30 @@ Public Module DataGridViewExtensions
             .AllowUserToDeleteRows = False
             .AllowUserToResizeColumns = False
             .AllowUserToResizeRows = False
-            .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {.BackColor = Color.LightGray}
+            .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {
+                .BackColor = Color.FromArgb(red:=30, green:=30, blue:=30),
+                .ForeColor = Color.White,
+                .SelectionBackColor = Color.FromArgb(red:=51, green:=153, blue:=255),
+                .SelectionForeColor = Color.White}
             .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
                 .Alignment = DataGridViewContentAlignment.MiddleCenter,
-                .Font = New Font(familyName:="Segoe UI", emSize:=9.0!, style:=FontStyle.Regular, unit:=GraphicsUnit.Point),
+                .BackColor = Color.Black,
+                .Font = New Font(
+                    familyName:="Segoe UI",
+                    emSize:=10.0!,
+                    style:=FontStyle.Bold,
+                    unit:=GraphicsUnit.Point),
                 .WrapMode = DataGridViewTriState.True}
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .DataSource = Nothing
-            .Location = New Point(0, 0)
+            .Location = New Point(x:=0, y:=0)
             .ReadOnly = True
             .Rows.Clear()
+            .RowsDefaultCellStyle = New DataGridViewCellStyle With {
+                .BackColor = Color.FromArgb(red:=180, green:=180, blue:=180),
+                .ForeColor = Color.Black,
+                .SelectionBackColor = Color.FromArgb(red:=51, green:=153, blue:=255),
+                .SelectionForeColor = Color.White}
             .RowTemplate.Height = 24
             .TabIndex = 0
         End With

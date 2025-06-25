@@ -40,17 +40,17 @@ Public Module ColorHelpers
 
     ''' <summary>
     '''  Returns a text color based on the row's background color.
-    '''  If the row is dark, it returns the specified text color; otherwise, it inverts the text color.
+    '''  If the text color and the row's background are both dark or both light, the text color is inverted for contrast.
+    '''  Otherwise, the original text color is returned.
     ''' </summary>
     ''' <param name="row">The <see cref="DataGridViewRow"/> to evaluate.</param>
-    ''' <param name="textColor">The base text color to use.</param>
-    ''' <returns>The appropriate text color for the row.</returns>
+    ''' <param name="textColor">The base <see cref="Color"/> to use for text.</param>
+    ''' <returns>
+    '''  The appropriate <see cref="Color"/> for text to ensure readability against the row's background.
+    ''' </returns>
     <Extension>
     Public Function GetTextColor(row As DataGridViewRow, textColor As Color) As Color
-        If textColor.IsDarkColor() Then
-            textColor = textColor.InvertColor
-        End If
-        Return If(row.IsDarkRow(), textColor, textColor.InvertColor)
+        Return If(textColor.IsDarkColor() = row.IsDarkRow(), textColor.InvertColor, textColor)
     End Function
 
     ''' <summary>

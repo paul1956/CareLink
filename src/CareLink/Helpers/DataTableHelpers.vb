@@ -98,7 +98,7 @@ Friend Module DataTableHelpers
             ' Non-breaking space for better display
             Dim displayName As String = displayNameAttribute.DisplayName
             If displayName.Contains("From Pump") OrElse displayName.Contains("As Date") Then
-                displayName = displayName.Replace(" ", ChrW(CharCode:=160))
+                displayName = displayName.Replace(" ", NonBreakingSpace)
             End If
             Return displayName
         End If

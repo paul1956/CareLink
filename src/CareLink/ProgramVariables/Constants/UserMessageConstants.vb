@@ -174,6 +174,6 @@ Friend Module UserMessageConstants
         {"UPDATING", $"Sensor{vbCrLf}Updating"},
         {"WAIT_TO_CALIBRATE", $"Wait To{vbCrLf}Calibrate..."},
         {"WAIT_TO_ENTER_BG", $"Wait To{vbCrLf}Enter BG..."},
-        {"WARM_UP", $"Sensor{vbCrLf}Warm Up... Warm-up takes up to 2 hours. You will be notifies {If(CInt(PatientData.MedicalDeviceInformation.ModelNumber.Replace("MMT-", "")) < 1884, "when", "if")} calibration Is needed."}}
+        {"WARM_UP", $"Sensor{vbCrLf}Warm Up... Warm-up takes up to 2 hours. You will be notified {If(CInt(PatientData.MedicalDeviceInformation.ModelNumber.Replace("MMT-", "")) < 1884, "when", "if")} calibration is needed."}}
 
 End Module

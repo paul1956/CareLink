@@ -7,12 +7,12 @@ Friend Module UnicodeConstants
     ''' <summary>
     '''  Carriage Return, U+000D
     ''' </summary>
-    Public Const Cr As Char = ChrW(&HD)
+    Public Const Cr As Char = ChrW(CharCode:=&HD)
 
     ''' <summary>
     '''  Form Feed, U+000C
     ''' </summary>
-    Public Const Ff As Char = ChrW(&HC)
+    Public Const Ff As Char = ChrW(CharCode:=&HC)
 
     ''' <summary>
     '''  Gear, U+2699
@@ -23,26 +23,36 @@ Friend Module UnicodeConstants
     ''' <summary>
     '''  Line Feed, U+000A
     ''' </summary>
-    Public Const Lf As Char = ChrW(&HA)
+    Public Const Lf As Char = ChrW(CharCode:=&HA)
 
     ''' <summary>
     '''  Line Separator, U+2028
     ''' </summary>
-    Public Const Ls As Char = ChrW(&H2028)
+    Public Const Ls As Char = ChrW(CharCode:=&H2028)
 
     ''' <summary>
     '''  Next Line, U+0085
     ''' </summary>
-    Public Const Nel As Char = ChrW(&H85)
+    Public Const Nel As Char = ChrW(CharCode:=&H85)
+
+    ''' <summary>
+    '''  Non-Breaking Space, U+00A0
+    ''' </summary>
+    Public Const NonBreakingSpace As Char = ChrW(CharCode:=&HA0)
 
     ''' <summary>
     '''  Paragraph Separator, U+2029
     ''' </summary>
-    Public Const Ps As Char = ChrW(&H2029)
+    Public Const Ps As Char = ChrW(CharCode:=&H2029)
+
+    ''' <summary>
+    '''  Registered Trademark, U+00AE
+    ''' </summary>
+    Public Const RegisteredTrademark As Char = ChrW(CharCode:=&HAE)
 
     ''' <summary>
     '''  Vertical Tab, U+000B
     ''' </summary>
-    Public Const Vt As Char = ChrW(&HB)
+    Public Const Vt As Char = ChrW(CharCode:=&HB)
 
 End Module

@@ -29,7 +29,7 @@ Public Class SG
         Try
             If innerJson(NameOf(sg)) <> "0" OrElse innerJson.Count = 5 Then
                 _timestampAsString = innerJson(NameOf(Me.Timestamp))
-                Me.sensorState = innerJson(NameOf(sensorState))
+                Me.SensorState = innerJson(NameOf(SensorState))
                 Me.sg = innerJson(NameOf(sg)).ParseSingle(decimalDigits:=2)
                 Dim value As String = "False"
                 Me.timeChange = innerJson.TryGetValue(NameOf(timeChange), value) AndAlso Boolean.Parse(innerJson(NameOf(timeChange)))
@@ -127,7 +127,7 @@ Public Class SG
     <DisplayName("Sensor State")>
     <Column(Order:=10, TypeName:=NameOf([String]))>
     <JsonPropertyName("sensorState")>
-    Public Property sensorState As String
+    Public Property SensorState As String
         Get
             Return _sensorState
         End Get

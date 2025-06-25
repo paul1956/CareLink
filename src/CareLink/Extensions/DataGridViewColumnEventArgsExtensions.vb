@@ -6,9 +6,33 @@ Imports System.Runtime.CompilerServices
 Imports System.Text
 
 ''' <summary>
-'''  Provides extension methods for <see cref="DataGridViewColumnEventArgs"/> to configure DataGridView columns.
+'''  Provides extension methods for <see cref="DataGridViewColumnEventArgs"/> to configure DataGridView columns
+'''  and for string prefix matching in lists.
 ''' </summary>
 Friend Module DataGridViewColumnEventArgsExtensions
+
+    ''' <summary>
+    '''  Tries to find a string in the list that <paramref name="headerText"/> starts with, ignoring case.
+    ''' </summary>
+    ''' <param name="list">The list of strings to search.</param>
+    ''' <param name="headerText">The header string to check against the list.</param>
+    ''' <param name="result">
+    '''  When this method returns, contains the matching string if found;
+    '''  otherwise, result is unmodified.
+    ''' </param>
+    ''' <returns>
+    '''  <see langword="True"/> if a matching string is found; otherwise, <see langword="False"/>.
+    ''' </returns>
+    <Extension>
+    Friend Function TryGetPrefixMatch(list As List(Of String), headerText As String, ByRef result As String) As Boolean
+        For Each value As String In list
+            If headerText.StartsWith(value, comparisonType:=StringComparison.OrdinalIgnoreCase) Then
+                result = value
+                Return True
+            End If
+        Next
+        Return False
+    End Function
 
     ''' <summary>
     '''  Configures a <see cref="DataGridViewColumn"/> when it is added to a <see cref="DataGridView"/>.
@@ -34,8 +58,7 @@ Friend Module DataGridViewColumnEventArgsExtensions
 
         With e.Column
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-            If (e.Column.Index = 0 AndAlso e.Column.DataPropertyName <> "Hour") OrElse
-               (e.Column.DataGridView.Name = "DgvLastSensorGlucose" AndAlso e.Column.HeaderText = "Sensor Glucose (sg)") Then
+            If e.Column.Index = 0 AndAlso e.Column.DataPropertyName <> "Hour" Then
                 e.Column.MinimumWidth = 150
             End If
             Dim idHeaderName As Boolean = .DataPropertyName = "ID"
@@ -54,6 +77,7 @@ Friend Module DataGridViewColumnEventArgsExtensions
             Else
                 title.Append(titleInTitleCase.Replace("Care Link", $"CareLink™"))
             End If
+
             .HeaderText = title.TrimEnd(vbCrLf).ToString
             .DefaultCellStyle = cellStyle
             If .HeaderText <> "Record Number" Then
