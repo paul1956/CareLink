@@ -30,11 +30,18 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-06/22/2025
+06/25/2025
 
 ## What's New
+ New in 5.0.2.4
+ - Improved user interface for settings management.
+ - Enhanced data visualization options for better user experience.
+
  New in 5.0.2.3
  - Fixed creation of CareLinkErrorReportFile and loading of it caused by incorrect removal of personal information.
+
+ New in 5.0.2.2
+ - Optimized data loading speed for improved performance.
 
  New in 5.0.2.1
  - Added support if .Net 9.0 with DarkMode Tabs and StatusStrip.

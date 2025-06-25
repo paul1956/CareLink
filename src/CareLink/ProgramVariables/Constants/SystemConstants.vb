@@ -16,7 +16,6 @@ Public Module SystemConstants
     Friend Const ExceptionTerminatingString As String = "--- End of Exception ---"
     Friend Const GitOwnerName As String = "Paul1956"
     Friend Const MmolLUnitsDivisor As Single = 18
-    Friend Const RegisteredTrademark As String = ChrW(&HAE)
     Friend Const StackTraceStartingStr As String = "--- Start of stack trace ---"
     Friend Const StackTraceTerminatingStr As String = "--- End of stack trace from previous location ---"
     Friend Const TimeFormatMilitaryWithMinutes As String = "HH:mm"

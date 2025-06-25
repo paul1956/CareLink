@@ -24,7 +24,8 @@ Public Class BannerState
 
     <DisplayName("Message")>
     <Column(Order:=4, TypeName:=NameOf([String]))>
-    Public ReadOnly Property message As String
+    <JsonPropertyName("message")>
+    Public ReadOnly Property Message As String
         Get
             Dim formattedMessage As String = Nothing
             If s_sensorMessages.TryGetValue(Me.Type, formattedMessage) Then

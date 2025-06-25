@@ -36,7 +36,7 @@ Public Class PumpSetupDialog
     ''' </summary>
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
-    Private Sub DataGridView_Paint(sender As Object, e As PaintEventArgs) Handles DataGridViewHighAlert.Paint, DataGridViewLowAlert.Paint
+    Private Sub DataGridView_Paint(sender As Object, e As PaintEventArgs) Handles DgvHighAlert.Paint, DgvLowAlert.Paint
         DgvPaintNoRecordsFound(sender, e)
     End Sub
 
@@ -47,7 +47,7 @@ Public Class PumpSetupDialog
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     Private Sub DataGridViewHighAlert_SelectionChanged(sender As Object, e As EventArgs) Handles _
-        DataGridViewHighAlert.SelectionChanged, DataGridViewLowAlert.SelectionChanged
+        DgvHighAlert.SelectionChanged, DgvLowAlert.SelectionChanged
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.ClearSelection()
@@ -330,8 +330,7 @@ Public Class PumpSetupDialog
             .SelectionStart = 0
         End With
 
-        With Me.DataGridViewHighAlert
-            .ColumnHeadersDefaultCellStyle.Font = New Font(prototype:= .Font, newStyle:=FontStyle.Bold)
+        With Me.DgvHighAlert
             .Rows.Clear()
             For Each c As DataGridViewColumn In .Columns
                 c.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
@@ -360,9 +359,8 @@ Public Class PumpSetupDialog
             .SelectionStart = 0
         End With
 
-        With Me.DataGridViewLowAlert
+        With Me.DgvLowAlert
             .Rows.Clear()
-            .ColumnHeadersDefaultCellStyle.Font = New Font(prototype:= .Font, newStyle:=FontStyle.Bold)
             For Each c As DataGridViewColumn In .Columns
                 c.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
 

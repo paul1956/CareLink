@@ -13,7 +13,7 @@ Public Class ActiveInsulin
     <Column(Order:=0, TypeName:=NameOf([Single]))>
     <DisplayName("Amount")>
     <JsonPropertyName("amount")>
-    Public Property amount As Single
+    Public Property Amount As Single
         Get
             Return _amount
         End Get

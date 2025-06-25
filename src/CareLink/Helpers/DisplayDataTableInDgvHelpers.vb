@@ -22,19 +22,19 @@ Friend Module DisplayDataTableInDgvHelpers
     ''' </summary>
     ''' <param name="realPanel">The <see cref="TableLayoutPanel"/> containing the <see cref="DataGridView"/>.</param>
     ''' <param name="table">The <see cref="DataTable"/> to display.</param>
-    ''' <param name="dGV">The <see cref="DataGridView"/> to display the data in.</param>
+    ''' <param name="dgv">The <see cref="DataGridView"/> to display the data in.</param>
     ''' <param name="rowIndex">The row index in the panel, typically of type <see cref="ServerDataIndexes"/>.</param>
     <Extension>
     Friend Sub DisplayDataTableInDGV(
         realPanel As TableLayoutPanel,
         table As DataTable,
-        dGV As DataGridView,
+        dgv As DataGridView,
         rowIndex As ServerDataIndexes)
 
         realPanel?.SetTableName(rowIndex, isClearedNotifications:=False)
-        dGV.InitializeDgv()
-        dGV.DataSource = table
-        dGV.RowHeadersVisible = False
+        dgv.InitializeDgv()
+        dgv.DataSource = table
+        dgv.RowHeadersVisible = False
         realPanel?.Refresh()
     End Sub
 
@@ -58,21 +58,21 @@ Friend Module DisplayDataTableInDgvHelpers
 
         realPanel.SetTableName(rowIndex, isClearedNotifications:=False)
         If table?.Rows.Count > 0 Then
-            Dim dGVIndex As Integer = realPanel.Controls.Count - 1
-            Dim dGV As DataGridView = TryCast(realPanel.Controls(dGVIndex), DataGridView)
+            Dim dgvIndex As Integer = realPanel.Controls.Count - 1
+            Dim dgv As DataGridView = TryCast(realPanel.Controls(dgvIndex), DataGridView)
 
-            If dGV Is Nothing Then
+            If dgv Is Nothing Then
                 Stop
             Else
-                dGV.InitializeDgv()
-                dGV.AutoSize = True
+                dgv.InitializeDgv()
+                dgv.AutoSize = True
             End If
-            dGV.Dock = DockStyle.Fill
-            dGV.DataSource = Nothing
-            dGV.DataSource = table
-            dGV.RowHeadersVisible = False
-            If hideRecordNumberColumn AndAlso dGV.Columns(0).Name = "RecordNumber" Then
-                dGV.Columns("RecordNumber").Visible = False
+            dgv.Dock = DockStyle.Fill
+            dgv.DataSource = Nothing
+            dgv.DataSource = table
+            dgv.RowHeadersVisible = False
+            If hideRecordNumberColumn AndAlso dgv.Columns(0).Name = "RecordNumber" Then
+                dgv.Columns("RecordNumber").Visible = False
             End If
         Else
             DisplayEmptyDGV(realPanel, className)

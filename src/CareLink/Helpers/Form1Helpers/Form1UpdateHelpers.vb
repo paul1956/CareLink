@@ -526,7 +526,7 @@ Friend Module Form1UpdateHelpers
             DisplayDataTableInDGV(
                 realPanel:=Nothing,
                 table:=ClassCollectionToDataTable(listOfClass:=s_listOfBasalPerHour),
-                dGV:=mainForm.DgvBasalPerHour,
+                dgv:=mainForm.DgvBasalPerHour,
                 rowIndex:=0)
             mainForm.DgvBasalPerHour.AutoSize = True
         End With

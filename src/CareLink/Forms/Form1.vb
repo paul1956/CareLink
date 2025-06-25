@@ -21,6 +21,34 @@ Public Class Form1
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _sgMiniDisplay As New SgMiniForm(Me)
     Private ReadOnly _updatingLock As New Object
+
+    Private ReadOnly _wrappedDataGridView As New List(Of String) From
+        {NameOf(Form1.DgvCalibration),
+        NameOf(Form1.DgvInsulin),
+        NameOf(Form1.DgvLastSensorGlucose),
+        NameOf(Form1.DgvSGs)}
+
+    Private ReadOnly _wrappedStrings As New List(Of String) From
+        {
+         "Delivered ",
+         "Display Time ",
+         "Programmed ",
+         "Safe Meal ",
+         "Sensor Glucose ",
+         "Timestamp ",
+         "Unit Value ",
+         $"Delivered{NonBreakingSpace}",
+         $"Display Time{NonBreakingSpace}",
+         $"Display{NonBreakingSpace}Time{NonBreakingSpace}",
+         $"Programmed{NonBreakingSpace}",
+         $"Safe Meal{NonBreakingSpace}",
+         $"Safe{NonBreakingSpace}Meal{NonBreakingSpace}",
+         $"Sensor Glucose{NonBreakingSpace}",
+         $"Sensor{NonBreakingSpace}Glucose{NonBreakingSpace}",
+         $"Timestamp{NonBreakingSpace}",
+         $"Unit Value{NonBreakingSpace}",
+         $"Unit{NonBreakingSpace}Value{NonBreakingSpace}"}
+
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
     Private _formScale As New SizeF(1.0F, 1.0F)
     Private _inMouseMove As Boolean = False
@@ -392,7 +420,9 @@ Public Class Form1
     ''' <param name="sender">The source chart control.</param>
     ''' <param name="e">A <see cref="ChartPaintEventArgs"/> containing event data.</param>
     <DebuggerNonUserCode()>
-    Private Sub ActiveInsulinChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles ActiveInsulinChart.PostPaint
+    Private Sub ActiveInsulinChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles _
+        ActiveInsulinChart.PostPaint
+
         If _inMouseMove Then
             Exit Sub
         End If
@@ -450,7 +480,9 @@ Public Class Form1
     ''' <param name="sender">The source chart control.</param>
     ''' <param name="e">A <see cref="ChartPaintEventArgs"/> containing event data.</param>
     <DebuggerNonUserCode()>
-    Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles TreatmentMarkersChart.PostPaint
+    Private Sub TreatmentMarkersChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles _
+        TreatmentMarkersChart.PostPaint
+
         If _inMouseMove Then
             Exit Sub
         End If
@@ -478,64 +510,6 @@ Public Class Form1
 #Region "DGV Events"
 
 #Region "DGV Global Event Helper"
-
-#Region "ContextMenuStrip Menu Events"
-
-    Private WithEvents DgvCopyWithExcelMenuStrip As New ContextMenuStrip
-    Friend WithEvents DgvCopyWithoutExcelMenuStrip As New ContextMenuStrip
-
-    ''' <summary>
-    '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event for the copy-with-Excel context menu.
-    '''  Populates the context menu with options to copy data with or without headers, or save to Excel.
-    ''' </summary>
-    ''' <param name="sender">The context menu strip.</param>
-    ''' <param name="e">A <see cref="CancelEventArgs"/> containing event data.</param>
-    Private Sub DgvCopyWithExcelMenuStrip_Opening(sender As Object, e As CancelEventArgs) Handles DgvCopyWithExcelMenuStrip.Opening
-        ' Acquire references to the owning control and item.
-        Dim mnuStrip As ContextMenuStrip = CType(sender, ContextMenuStrip)
-        mnuStrip.Tag = CType(mnuStrip.SourceControl, DataGridView)
-
-        ' Clear the ContextMenuStrip control's Items collection.
-        mnuStrip.Items.Clear()
-
-        ' Populate the ContextMenuStrip control with its default items.
-        mnuStrip.Items.Add("Copy with Header", My.Resources.Copy, AddressOf DgvExportToClipBoardWithHeaders)
-        mnuStrip.Items.Add("Copy without Header", My.Resources.Copy, AddressOf DgvExportToClipBoardWithoutHeaders)
-        mnuStrip.Items.Add("Save To Excel", My.Resources.ExportData, AddressOf DgvExportToExcel)
-
-        ' Set Cancel to false.
-        ' It is optimized to true based on empty entry.
-        e.Cancel = False
-    End Sub
-
-    ''' <summary>
-    '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event for the copy-without-Excel context menu.
-    '''  Populates the context menu with options to copy selected cells with or without headers.
-    ''' </summary>
-    ''' <param name="sender">The context menu strip.</param>
-    ''' <param name="e">A <see cref="CancelEventArgs"/> containing event data.</param>
-    Private Sub DgvCopyWithoutExcelMenuStrip_Opening(sender As Object, e As CancelEventArgs) Handles DgvCopyWithoutExcelMenuStrip.Opening
-        ' Acquire references to the owning control and item.
-        Dim mnuStrip As ContextMenuStrip = CType(sender, ContextMenuStrip)
-        mnuStrip.Tag = CType(Me.DgvCopyWithExcelMenuStrip.SourceControl, DataGridView)
-
-        ' Clear the ContextMenuStrip control's Items collection.
-        mnuStrip.Items.Clear()
-
-        ' Populate the ContextMenuStrip control with its default items.
-        mnuStrip.Items.Add(
-            text:="Copy Selected Cells with Header",
-            image:=My.Resources.Copy,
-            onClick:=AddressOf DgvCopySelectedCellsToClipBoardWithHeaders)
-        mnuStrip.Items.Add(
-            text:="Copy Selected Cells without headers",
-            image:=My.Resources.Copy,
-            onClick:=AddressOf DgvCopySelectedCellsToClipBoardWithoutHeaders)
-
-        ' Set Cancel to false.
-        ' It is optimized to true based on empty entry.
-        e.Cancel = False
-    End Sub
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.CellContextMenuStripNeeded"/> event for multiple <see cref="DataGridView"/>.
@@ -573,7 +547,142 @@ Public Class Form1
         End If
     End Sub
 
-#End Region 'ContextMenuStrip Events
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for multiple <see cref="DataGridView"/>.
+    '''  Formats the cell values based on their type and applies specific styles.
+    ''' </summary>
+    ''' <param name="sender">The DataGridView control.</param>
+    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> containing event data.</param>
+    ''' <remarks>
+    '''  Applies formatting to cells based on their data type and content.
+    ''' </remarks>
+    Private Sub Dgv_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles _
+        DgvActiveInsulin.CellFormatting,
+        DgvAutoBasalDelivery.CellFormatting,
+        DgvAutoModeStatus.CellFormatting,
+        DgvBannerState.CellFormatting,
+        DgvBasal.CellFormatting,
+        DgvBasalPerHour.CellFormatting,
+        DgvCalibration.CellFormatting,
+        DgvCareLinkUsers.CellFormatting,
+        DgvCurrentUser.CellFormatting,
+        DgvInsulin.CellFormatting,
+        DgvLastAlarm.CellFormatting,
+        DgvLastSensorGlucose.CellFormatting,
+        DgvLimits.CellFormatting,
+        DgvLowGlucoseSuspended.CellFormatting,
+        DgvMeal.CellFormatting,
+        DgvSensorBgReadings.CellFormatting,
+        DgvSGs.CellFormatting,
+        DgvTimeChange.CellFormatting
+
+        If e.Value Is Nothing OrElse e.Value Is DBNull.Value Then
+            e.Value = String.Empty
+        End If
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        Select Case dgv.Columns(e.ColumnIndex).Name
+            Case NameOf(Insulin.ActivationType)
+                Select Case Convert.ToString(e.Value)
+                    Case "AUTOCORRECTION"
+                        e.Value = "Auto Correction"
+                        Dim highlightColor As Color = GetGraphLineColor("Auto Correction")
+                        If e.RowIndex Mod 2 = 0 Then
+                            dgv.CellFormattingApplyColor(e, highlightColor.InvertColor, isUri:=False)
+                        Else
+                            dgv.CellFormattingApplyColor(e, highlightColor, isUri:=False)
+                        End If
+                    Case "FAST", "RECOMMENDED", "UNDETERMINED"
+                        dgv.CellFormattingToTitle(e)
+                    Case Else
+                        dgv.CellFormattingSetForegroundColor(e)
+                End Select
+            Case "Amount"
+                Select Case dgv.Name
+                    Case NameOf(DgvActiveInsulin)
+                        e.Value = $"{dgv.CellFormattingSingleValue(e, digits:=3)} U"
+                    Case NameOf(DgvMeal)
+                        dgv.CellFormattingInteger(e, GetCarbDefaultUnit)
+                End Select
+            Case NameOf(BasalPerHour.BasalRate), NameOf(BasalPerHour.BasalRate2)
+                If dgv.Name = NameOf(DgvBasalPerHour) Then
+                    e.Value = $"{dgv.CellFormattingSingleValue(e, digits:=3)} U/h"
+                End If
+            Case NameOf(Calibration.bgUnits)
+                Dim key As String = Convert.ToString(e.Value)
+                Try
+                    e.Value = UnitsStrings(key)
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                Catch ex As Exception
+                    e.Value = key ' Key becomes value if its unknown
+                End Try
+                dgv.CellFormattingSetForegroundColor(e)
+            Case NameOf(Insulin.BolusType)
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                dgv.CellFormattingToTitle(e)
+            Case NameOf(ActiveInsulin.DateTime),
+                 NameOf(AutoModeStatus.DisplayTime),
+                 NameOf(AutoModeStatus.Timestamp)
+                dgv.CellFormattingDateTime(e)
+            Case NameOf(InsulinPerHour.Hour), NameOf(InsulinPerHour.Hour2)
+                Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
+                Dim time As New DateTime(year:=1, month:=1, day:=1, hour:=hour, minute:=0, second:=0)
+                e.Value = time.ToString(s_timeWithoutMinuteFormat)
+            Case NameOf(BannerState.Message)
+                Select Case dgv.Name
+                    Case NameOf(DgvBannerState)
+                        dgv.CellFormattingToTitle(e)
+                    Case NameOf(DgvSGs)
+                        e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ")
+                        dgv.CellFormattingSetForegroundColor(e)
+                    Case Else
+                        e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ")
+                        dgv.CellFormattingToTitle(e)
+                End Select
+            Case NameOf(ActiveInsulin.Precision)
+                dgv.CellFormattingToTitle(e)
+            Case NameOf(Insulin.SafeMealReduction)
+                If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
+                    Dim highlightColor As Color = Color.OrangeRed
+                    If e.RowIndex Mod 2 = 0 Then
+                        dgv.CellFormattingApplyColor(e, highlightColor.InvertColor, isUri:=False)
+                    Else
+                        dgv.CellFormattingApplyColor(e, highlightColor, isUri:=False)
+                    End If
+                Else
+                    e.Value = ""
+                    dgv.CellFormattingSetForegroundColor(e)
+                End If
+            Case NameOf(SG.SensorState)
+                ' Set the background to red for negative values in the Balance column.
+                If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
+                    dgv.CellFormattingApplyColor(e, textColor:=Color.Red, isUri:=False)
+                End If
+                dgv.CellFormattingToTitle(e)
+            Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
+                dgv.CellFormattingSgValue(e, NameOf(SG.sg))
+            Case NameOf(BannerState.TimeRemaining)
+                CellFormatting0Value(e)
+            Case NameOf(SG.SensorState)
+                ' Set the background to red for negative values in the Balance column.
+                If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
+                    dgv.CellFormattingApplyColor(e, textColor:=Color.Red, isUri:=False)
+                End If
+                dgv.CellFormattingToTitle(e)
+            Case NameOf(SG.Timestamp)
+                dgv.CellFormattingDateTime(e)
+            Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
+                dgv.CellFormattingSgValue(e, partialKey:=NameOf(SG.sg))
+
+            Case Else
+                If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
+                    dgv.CellFormattingSingleValue(e, digits:=3)
+                ElseIf dgv.Columns(e.ColumnIndex).ValueType = GetType(String) Then
+                    dgv.CellFormattingSingleWord(e)
+                Else
+                    dgv.CellFormattingSetForegroundColor(e)
+                End If
+        End Select
+    End Sub
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.DataError"/> event for all DataGridViews in the form.
@@ -612,8 +721,12 @@ Public Class Form1
         Debug.WriteLine($"DataError in {dgv.Name}: {e.Exception.Message}")
 
         ' Show a user-friendly message
-        Dim text As String = $"An error {e.Exception.Message} occurred while processing " &
-            $"{dgv.Name.Replace("dgv", String.Empty)}. Please check your data and try again."
+        Dim dgvName As String = dgv.Name.Replace(
+            oldValue:="dgv",
+            newValue:=String.Empty,
+            comparisonType:=StringComparison.InvariantCulture)
+        Dim text As String = $"An error {e.Exception.Message} occurred while processing {dgvName}. " &
+            $"Please check your data and try again."
         MessageBox.Show(text, caption:="Input Error", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)
 
         Debug.WriteLine($"Context: {e.Context}")
@@ -655,46 +768,107 @@ Public Class Form1
         DgvTimeChange.DataBindingComplete
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
         If dgv.ColumnCount > 0 Then
             Dim lastColumnIndex As Integer = dgv.ColumnCount - 1
             For Each column As DataGridViewColumn In dgv.Columns
-                If column.Index = lastColumnIndex Then
-                    column.DefaultCellStyle.WrapMode = DataGridViewTriState.True
-                    If column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
-                        column.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                With CType(sender, DataGridView).Columns(column.Index)
+                    If .Index = lastColumnIndex Then
+                        CType(sender, DataGridView).ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
+                        .DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                        If .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
+                            .DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                        End If
+                    Else
+                        If _wrappedDataGridView.Contains(CType(sender, DataGridView).Name) Then
+                            Dim result As String = String.Empty
+                            If _wrappedStrings.TryGetPrefixMatch(.HeaderText, result) Then
+                                .HeaderText = .HeaderText.Replace(
+                                oldValue:=result,
+                                newValue:=$"{result.TrimEnd(" "c, NonBreakingSpace)}{vbCrLf}")
+                                .HeaderCell.Style.WrapMode = DataGridViewTriState.True
+                                .DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                                If result.StartsWith(value:="Timestamp", comparisonType:=StringComparison.OrdinalIgnoreCase) Then
+                                    .MinimumWidth = 130
+                                End If
+                            Else
+                                column.HeaderCell.Style.WrapMode = DataGridViewTriState.False
+                                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                            End If
+                        End If
                     End If
-                Else
-                    column.HeaderCell.Style.WrapMode = DataGridViewTriState.False
-                    column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-                End If
+                End With
             Next
         End If
-        dgv.ClearSelection()
+        CType(sender, DataGridView).ClearSelection()
     End Sub
+
+#Region "ContextMenuStrip Menu Events"
+
+    Private WithEvents DgvCopyWithExcelMenuStrip As New ContextMenuStrip
+    Friend WithEvents DgvCopyWithoutExcelMenuStrip As New ContextMenuStrip
+
+    ''' <summary>
+    '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event for the copy-with-Excel context menu.
+    '''  Populates the context menu with options to copy data with or without headers, or save to Excel.
+    ''' </summary>
+    ''' <param name="sender">The context menu strip.</param>
+    ''' <param name="e">A <see cref="CancelEventArgs"/> containing event data.</param>
+    Private Sub DgvCopyWithExcelMenuStrip_Opening(sender As Object, e As CancelEventArgs) Handles _
+        DgvCopyWithExcelMenuStrip.Opening
+
+        ' Acquire references to the owning control and item.
+        Dim mnuStrip As ContextMenuStrip = CType(sender, ContextMenuStrip)
+        mnuStrip.Tag = CType(mnuStrip.SourceControl, DataGridView)
+
+        ' Clear the ContextMenuStrip control's Items collection.
+        mnuStrip.Items.Clear()
+
+        ' Populate the ContextMenuStrip control with its default items.
+        mnuStrip.Items.Add("Copy with Header", My.Resources.Copy, AddressOf DgvExportToClipBoardWithHeaders)
+        mnuStrip.Items.Add("Copy without Header", My.Resources.Copy, AddressOf DgvExportToClipBoardWithoutHeaders)
+        mnuStrip.Items.Add("Save To Excel", My.Resources.ExportData, AddressOf DgvExportToExcel)
+
+        ' Set Cancel to false.
+        ' It is optimized to true based on empty entry.
+        e.Cancel = False
+    End Sub
+
+    ''' <summary>
+    '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event for the copy-without-Excel context menu.
+    '''  Populates the context menu with options to copy selected cells with or without headers.
+    ''' </summary>
+    ''' <param name="sender">The context menu strip.</param>
+    ''' <param name="e">A <see cref="CancelEventArgs"/> containing event data.</param>
+    Private Sub DgvCopyWithoutExcelMenuStrip_Opening(sender As Object, e As CancelEventArgs) Handles _
+        DgvCopyWithoutExcelMenuStrip.Opening
+
+        ' Acquire references to the owning control and item.
+        Dim mnuStrip As ContextMenuStrip = CType(sender, ContextMenuStrip)
+        mnuStrip.Tag = CType(Me.DgvCopyWithExcelMenuStrip.SourceControl, DataGridView)
+
+        ' Clear the ContextMenuStrip control's Items collection.
+        mnuStrip.Items.Clear()
+
+        ' Populate the ContextMenuStrip control with its default items.
+        mnuStrip.Items.Add(
+            text:="Copy Selected Cells with Header",
+            image:=My.Resources.Copy,
+            onClick:=AddressOf DgvCopySelectedCellsToClipBoardWithHeaders)
+        mnuStrip.Items.Add(
+            text:="Copy Selected Cells without headers",
+            image:=My.Resources.Copy,
+            onClick:=AddressOf DgvCopySelectedCellsToClipBoardWithoutHeaders)
+
+        ' Set Cancel to false.
+        ' It is optimized to true based on empty entry.
+        e.Cancel = False
+    End Sub
+
+#End Region 'ContextMenuStrip Events
 
 #End Region ' DGV Global Event Helper
 
 #Region "Dgv Active Insulin Events"
-
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvActiveInsulin"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvActiveInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvActiveInsulin.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(ActiveInsulin.DateTime)
-                dgv.CellFormattingDateTime(e)
-            Case NameOf(ActiveInsulin.amount)
-                dgv.CellFormattingSingleValue(e, digits:=3)
-            Case NameOf(ActiveInsulin.Precision)
-                dgv.CellFormattingToTitle(e)
-        End Select
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvActiveInsulin"/> DataGridView.
@@ -703,7 +877,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e"> A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
-    Private Sub DgvActiveInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvActiveInsulin.ColumnAdded
+    Private Sub DgvActiveInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvActiveInsulin.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             .Visible = Not DataGridViewHelpers.HideColumn(Of ActiveInsulin)(.Name)
@@ -719,43 +895,15 @@ Public Class Form1
 #Region "Dgv Auto Basal Delivery (Basal) Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvAutoBasalDelivery"/> DataGridView.
-    '''  This event is triggered when a cell's value in the DgvAutoBasalDelivery grid needs to be formatted for display.
-    '''  It applies custom formatting for specific columns, such as highlighting negative values, formatting numbers,
-    '''  and setting date/time display. All other cells have their foreground color set according to the application's style.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.
-    Private Sub DgvAutoBasalDelivery_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvAutoBasalDelivery.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        If e.Value Is Nothing Then
-            e.Value = String.Empty
-        End If
-        ' Set the background to red for negative values in the Balance column.
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(AutoBasalDelivery.bolusAmount)
-                If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
-                    dgv.CellFormattingApplyColor(e, highlightColor:=Color.DarkRed, isUri:=False)
-                Else
-                    dgv.CellFormattingSetForegroundColor(e)
-                End If
-            Case NameOf(AutoBasalDelivery.maxAutoBasalRate)
-                dgv.CellFormattingSingleValue(e, digits:=2)
-            Case NameOf(AutoBasalDelivery.DisplayTime), NameOf(AutoBasalDelivery.Timestamp)
-                dgv.CellFormattingDateTime(e)
-            Case Else
-                dgv.CellFormattingSetForegroundColor(e)
-        End Select
-    End Sub
-
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvAutoBasalDelivery"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvAutoBasalDelivery"/>.
     '''  This event is raised when a new column is added to the DataGridView.
     '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Private Sub DgvAutoBasalDelivery_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoBasalDelivery.ColumnAdded
+    Private Sub DgvAutoBasalDelivery_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvAutoBasalDelivery.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of AutoBasalDelivery)(.Name) Then
@@ -773,29 +921,15 @@ Public Class Form1
 #Region "Dgv AutoMode Status Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvAutoModeStatus"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.<para/>
-    Private Sub DgvAutomodeStatus_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvAutoModeStatus.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(AutoModeStatus.DisplayTime), NameOf(AutoModeStatus.Timestamp)
-                dgv.CellFormattingDateTime(e)
-            Case Else
-                dgv.CellFormattingSetForegroundColor(e)
-        End Select
-    End Sub
-
-    ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvAutoModeStatus"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
     '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Private Sub DgvAutoModeStatus_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvAutoModeStatus.ColumnAdded
+    Private Sub DgvAutoModeStatus_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvAutoModeStatus.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of AutoModeStatus)(.Name) Then
@@ -819,7 +953,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Private Sub DgvBannerState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBannerState.ColumnAdded
+    Private Sub DgvBannerState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvBannerState.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of BannerState)(.Name) Then
@@ -830,24 +966,6 @@ Public Class Form1
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
-    End Sub
-
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvBannerState"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.
-    Friend Sub DgvBannerState_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvBannerState.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(BannerState.TimeRemaining)
-                CellFormatting0Value(e)
-            Case NameOf(BannerState.message)
-                dgv.CellFormattingToTitle(e)
-            Case Else
-                dgv.CellFormattingSetForegroundColor(e)
-        End Select
     End Sub
 
 #End Region ' Dgv Banner State Events
@@ -861,7 +979,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Private Sub DgvBasal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBasal.ColumnAdded
+    Private Sub DgvBasal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvBasal.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of Basal)(.Name) Then
@@ -874,39 +994,9 @@ Public Class Form1
         End With
     End Sub
 
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvBasal"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvBasal_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvBasal.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
-
 #End Region ' Dgv Basal Events
 
 #Region "Dgv Basal Per Hour Events"
-
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvBasalPerHour"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvBasalPerHour_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvBasalPerHour.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(InsulinPerHour.Hour), NameOf(InsulinPerHour.Hour2)
-                Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
-                Dim time As New DateTime(year:=1, month:=1, day:=1, hour:=hour, minute:=0, second:=0)
-                e.Value = time.ToString(s_timeWithoutMinuteFormat)
-            Case Else
-                dgv.CellFormattingSingleValue(e, 3)
-        End Select
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvBasalPerHour"/> DataGridView.
@@ -915,7 +1005,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvBasalPerHour_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvBasalPerHour.ColumnAdded
+    Friend Sub DgvBasalPerHour_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvBasalPerHour.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             e.DgvColumnAdded(
@@ -936,7 +1028,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Private Sub DgvCalibration_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCalibration.ColumnAdded
+    Private Sub DgvCalibration_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvCalibration.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of Calibration)(.Name) Then
@@ -949,38 +1043,20 @@ Public Class Form1
         End With
     End Sub
 
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvCalibration"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted before it is displayed.
-    '''  It formats the bgUnits column to display the appropriate unit string and sets the cell style alignment.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvCalibration_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCalibration.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        If dgv.Columns(e.ColumnIndex).Name = NameOf(Calibration.bgUnits) Then
-            Dim key As String = Convert.ToString(e.Value)
-            Try
-                e.Value = UnitsStrings(key)
-                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            Catch ex As Exception
-                e.Value = key ' Key becomes value if its unknown
-            End Try
-        End If
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
-
 #End Region ' Dgv CalibrationHelpers Events
 
 #Region "Dgv CareLink Users Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvCareLinkUsers"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
+    '''  Handles the <see cref="DataGridView.CellBeginEdit"/> event for the <see cref="DgvCareLinkUsers"/> DataGridView.
+    '''  Saves the current value of the cell being edited to the DataGridView's <see cref="DataGridView.Tag"/> property.
+    '''  This allows comparison with the new value after editing is complete, for change detection or validation.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles DgvCareLinkUsers.CellBeginEdit
+    ''' <param name="e">A <see cref="DataGridViewCellCancelEventArgs"/> that contains the event data.</param>
+    Private Sub DgvCareLinkUsers_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles _
+        DgvCareLinkUsers.CellBeginEdit
+
         Dim dgv As DataGridView = CType(sender, DataGridView)
         'Here we save a current value of cell to some variable, that later we can compare with a new value
         'For example using of dgv.Tag property
@@ -991,12 +1067,15 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvCareLinkUsers"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
+    '''  Handles the <see cref="DataGridView.CellContentClick"/> event for the <see cref="DgvCareLinkUsers"/> DataGridView.
+    '''  This event is raised when a cell's content is clicked, specifically for delete button cells.
+    '''  It removes the corresponding user record from the data source and updates the DataGridView.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvCareLinkUsers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCareLinkUsers.CellContentClick
+    ''' <param name="e">A <see cref="DataGridViewCellEventArgs"/> that contains the event data.</param>
+    Private Sub DgvCareLinkUsers_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles _
+        DgvCareLinkUsers.CellContentClick
+
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim dataGridViewDisableButtonCell As DataGridViewDisableButtonCell = TryCast(dgv.Rows(e.RowIndex).Cells(e.ColumnIndex), DataGridViewDisableButtonCell)
         If dataGridViewDisableButtonCell IsNot Nothing Then
@@ -1020,27 +1099,35 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewCellEventArgs"/> that contains the event data.</param>
-    Private Sub DgvCareLinkUsers_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles DgvCareLinkUsers.CellEndEdit
-        'after you've filled your dataSet, on event above try something like this
+    Private Sub DgvCareLinkUsers_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles _
+        DgvCareLinkUsers.CellEndEdit
+
         Try
-            '
+            Dim dgv As DataGridView = CType(sender, DataGridView)
+            If e.RowIndex < 0 OrElse e.ColumnIndex <= 0 Then
+                Exit Sub
+            End If
+            Dim currentValue As String = dgv.CurrentCell.Value.ToString
+            If currentValue = dgv.Tag.ToString Then
+                Exit Sub ' No change, exit early
+            End If
+            Dim userRecord As CareLinkUserDataRecord = s_allUserSettingsData(e.RowIndex)
+            Select Case dgv.Columns(e.ColumnIndex).Name
+                Case NameOf(CareLinkUserDataRecord.CareLinkUserName)
+                    userRecord.CareLinkUserName = currentValue
+                Case NameOf(CareLinkUserDataRecord.CareLinkPassword)
+                    userRecord.CareLinkPassword = currentValue
+                Case NameOf(CareLinkUserDataRecord.CountryCode)
+                    userRecord.CountryCode = currentValue
+                Case NameOf(CareLinkUserDataRecord.UseLocalTimeZone)
+                    userRecord.UseLocalTimeZone = CBool(currentValue)
+                Case Else
+                    Exit Sub ' Unsupported column, exit early
+            End Select
+            s_allUserSettingsData.SaveAllUserRecords()
         Catch ex As Exception
             MessageBox.Show(ex.DecodeException())
         End Try
-    End Sub
-
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvCareLinkUsers"/> DataGridView.
-    '''  Applies custom formatting to cells, such as setting foreground color for text box columns.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvCareLinkUsers_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCareLinkUsers.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
-        If col IsNot Nothing Then
-            dgv.CellFormattingSetForegroundColor(e)
-        End If
     End Sub
 
     ''' <summary>
@@ -1050,7 +1137,8 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewCellValidatingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvCareLinkUsers_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles DgvCareLinkUsers.CellValidating
+    Private Sub DgvCareLinkUsers_CellValidating(sender As Object, e As DataGridViewCellValidatingEventArgs) Handles _
+        DgvCareLinkUsers.CellValidating
         If e.ColumnIndex = 0 Then
             Exit Sub
         End If
@@ -1062,7 +1150,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Private Sub DgvCareLinkUsers_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCareLinkUsers.ColumnAdded
+    Private Sub DgvCareLinkUsers_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvCareLinkUsers.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             Dim caption As String = CType(sender, DataGridView).Columns(.Index).HeaderText
@@ -1095,7 +1185,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewRowsAddedEventArgs"/> that contains the event data.</param>
-    Private Sub DgvCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles DgvCareLinkUsers.RowsAdded
+    Private Sub DgvCareLinkUsers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles _
+        DgvCareLinkUsers.RowsAdded
+
         If s_allUserSettingsData.Count = 0 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
         For i As Integer = e.RowIndex To e.RowIndex + (e.RowCount - 1)
@@ -1176,7 +1268,17 @@ Public Class Form1
             .Name = NameOf(dgvCareLinkPatientUserID),
             .Width = 97}
 
-        dgv.Columns.AddRange(New DataGridViewColumn() {dgvCareLinkUsersID, dgvCareLinkUsersDeleteRow, dgvCareLinkUsersCareLinkUserName, dgvCareLinkUsersCareLinkPassword, dgvCareLinkUsersCountryCode, dgvCareLinkUsersUseLocalTimeZone, dgvCareLinkUsersAutoLogin, dgvCareLinkUsersCareLinkPartner, dgvCareLinkPatientUserID})
+        Dim dataGridViewColumns As DataGridViewColumn() = New DataGridViewColumn() {
+            dgvCareLinkUsersID,
+            dgvCareLinkUsersDeleteRow,
+            dgvCareLinkUsersCareLinkUserName,
+            dgvCareLinkUsersCareLinkPassword,
+            dgvCareLinkUsersCountryCode,
+            dgvCareLinkUsersUseLocalTimeZone,
+            dgvCareLinkUsersAutoLogin,
+            dgvCareLinkUsersCareLinkPartner,
+            dgvCareLinkPatientUserID}
+        dgv.Columns.AddRange(dataGridViewColumns)
         dgv.DataSource = Me.CareLinkUserDataRecordBindingSource
     End Sub
 
@@ -1185,27 +1287,19 @@ Public Class Form1
 #Region "Dgv Current User Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvCurrentUser"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvCurrentUser_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvCurrentUser.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
-
-    ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/>  event for <see cref="DgvCurrentUser"/> DataGridView.
     '''  This event is raised when the data binding operation is complete.
     '''  It clears the selection of all DataGridViews to ensure no cells are selected after data binding.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Private Sub DgvCurrentUser_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvCurrentUser.ColumnAdded
+    Private Sub DgvCurrentUser_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvCurrentUser.ColumnAdded
+
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
         e.DgvColumnAdded(
-            cellStyle:=New DataGridViewCellStyle().SetCellStyle(DataGridViewContentAlignment.MiddleLeft, padding:=New Padding(all:=1)),
+            cellStyle:=New DataGridViewCellStyle().SetCellStyle(
+                alignment:=DataGridViewContentAlignment.MiddleLeft, padding:=New Padding(all:=1)),
             forceReadOnly:=True,
             caption:=Nothing)
     End Sub
@@ -1215,53 +1309,15 @@ Public Class Form1
 #Region "Dgv Insulin Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvInsulin"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvInsulin_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvInsulin.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(Insulin.Timestamp)
-                dgv.CellFormattingDateTime(e)
-            Case NameOf(Insulin.SafeMealReduction)
-                If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
-                    dgv.CellFormattingApplyColor(e, highlightColor:=Color.OrangeRed, isUri:=False)
-                Else
-                    e.Value = ""
-                    dgv.CellFormattingSetForegroundColor(e)
-                End If
-            Case NameOf(Insulin.ActivationType)
-                Select Case Convert.ToString(e.Value)
-                    Case "AUTOCORRECTION"
-                        e.Value = "Auto Correction"
-                        dgv.CellFormattingApplyColor(e, highlightColor:=GetGraphLineColor("Auto Correction"), isUri:=False)
-                    Case "FAST", "RECOMMENDED", "UNDETERMINED"
-                        dgv.CellFormattingToTitle(e)
-                    Case Else
-                        dgv.CellFormattingSetForegroundColor(e)
-                End Select
-            Case NameOf(Insulin.BolusType)
-                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-                dgv.CellFormattingToTitle(e)
-            Case Else
-                If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
-                    dgv.CellFormattingSingleValue(e, 3)
-                Else
-                    dgv.CellFormattingSetForegroundColor(e)
-                End If
-        End Select
-    End Sub
-
-    ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvInsulin"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
     '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvInsulin.ColumnAdded
+    Private Sub DgvInsulin_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvInsulin.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of Insulin)(.Name) Then
@@ -1286,29 +1342,21 @@ Public Class Form1
     ''' <remarks>
     '''  This event is used to customize the appearance of DataGridViews after data binding is complete.
     ''' </remarks>
-    Public Sub DgvInsulinDataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles DgvInsulin.DataBindingComplete
+    Public Sub DgvInsulinDataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles _
+        DgvInsulin.DataBindingComplete
+
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        HideUnneededColumns(dgv:=Me.DgvInsulin, NameOf(Insulin.DeliveredExtendedAmount), "NaN")
-        HideUnneededColumns(dgv:=Me.DgvInsulin, NameOf(Insulin.ProgrammedExtendedAmount), "NaN")
-        HideUnneededColumns(dgv:=Me.DgvInsulin, NameOf(Insulin.ProgrammedDuration), "0")
-        HideUnneededColumns(dgv:=Me.DgvInsulin, NameOf(Insulin.EffectiveDuration), "0")
+        HideUnneededColumns(dgv:=Me.DgvInsulin, columnName:=NameOf(Insulin.DeliveredExtendedAmount), value:="NaN")
+        HideUnneededColumns(dgv:=Me.DgvInsulin, columnName:=NameOf(Insulin.ProgrammedExtendedAmount), value:="NaN")
+        HideUnneededColumns(dgv:=Me.DgvInsulin, columnName:=NameOf(Insulin.ProgrammedDuration), value:="0")
+        HideUnneededColumns(dgv:=Me.DgvInsulin, columnName:=NameOf(Insulin.EffectiveDuration), value:="0")
         dgv.ClearSelection()
+        Me.Dgv_DataBindingComplete(sender, e)
     End Sub
 
 #End Region ' Dgv Insulin Events
 
 #Region "Dgv Last Alarm Events"
-
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvLastAlarm"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvLastAlarm_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvLastAlarm.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvLastAlarm"/> DataGridView.
@@ -1317,7 +1365,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvLastAlarm_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLastAlarm.ColumnAdded
+    Friend Sub DgvLastAlarm_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvLastAlarm.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of LastAlarm)(.Name) Then
@@ -1341,7 +1391,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLimits.ColumnAdded
+    Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvLimits.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of Limit)(.Name) Then
@@ -1354,36 +1406,9 @@ Public Class Form1
         End With
     End Sub
 
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvLimits"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvLimits_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvLimits.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
-
 #End Region ' Dgv Limits Events
 
 #Region "Dgv Low Glucose Suspended Events"
-
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for <see cref="DgvLowGlucoseSuspended"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvLowGlucoseSuspended_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvLowGlucoseSuspended.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(LowGlucoseSuspended.Timestamp)
-                dgv.CellFormattingDateTime(e)
-            Case Else
-                dgv.CellFormattingSetForegroundColor(e)
-        End Select
-    End Sub
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvLowGlucoseSuspended"/> DataGridView.
@@ -1392,7 +1417,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvLowGlucoseSuspended_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvLowGlucoseSuspended.ColumnAdded
+    Friend Sub DgvLowGlucoseSuspended_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvLowGlucoseSuspended.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of LowGlucoseSuspended)(.Name) Then
@@ -1410,31 +1437,15 @@ Public Class Form1
 #Region "Dgv Meal Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvMeal"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvMeal_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvMeal.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case CType(sender, DataGridView).Columns(e.ColumnIndex).Name
-            Case NameOf(Meal.Timestamp)
-                dgv.CellFormattingDateTime(e)
-            Case NameOf(Meal.Amount)
-                dgv.CellFormattingInteger(e, GetCarbDefaultUnit)
-            Case Else
-                dgv.CellFormattingSetForegroundColor(e)
-        End Select
-    End Sub
-
-    ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvMeal"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
     '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvMeal.ColumnAdded
+    Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvMeal.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of Meal)(.Name) Then
@@ -1447,24 +1458,9 @@ Public Class Form1
         End With
     End Sub
 
-    Private Sub DgvMeal_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles DgvMeal.DataError
-        Stop
-    End Sub
-
 #End Region ' Dgv Meal Events
 
 #Region "Dgv Sensor Bg Readings Events"
-
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvSensorBgReadings"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvSensorBgReadings_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSensorBgReadings.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvSensorBgReadings"/> DataGridView.
@@ -1473,7 +1469,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvSensorBgReadings_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSensorBgReadings.ColumnAdded
+    Friend Sub DgvSensorBgReadings_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvSensorBgReadings.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of BgReading)(.Name) Then
@@ -1489,40 +1487,6 @@ Public Class Form1
 #End Region ' Dgv Sensor Bg Readings Events
 
 #Region "Dgv SGs Events"
-
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvSGs"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvSGs_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles _
-        DgvSGs.CellFormatting,
-        DgvLastSensorGlucose.CellFormatting
-
-        If e.Value Is Nothing Then
-            Return
-        End If
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim alternateIndex As Integer = If(dgv.Rows(0).Cells(0).Value.ToString <> "0", 0, 1)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(SG.Message)
-                e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ")
-                dgv.CellFormattingSetForegroundColor(e)
-            Case NameOf(SG.sensorState)
-                ' Set the background to red for negative values in the Balance column.
-                If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    dgv.CellFormattingApplyColor(e, highlightColor:=Color.Red, isUri:=False)
-                End If
-                dgv.CellFormattingToTitle(e)
-            Case NameOf(SG.Timestamp)
-                dgv.CellFormattingDateTime(e)
-            Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
-                dgv.CellFormattingSgValue(e, NameOf(SG.sg))
-            Case Else
-                dgv.CellFormattingSetForegroundColor(e)
-        End Select
-    End Sub
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvSGs"/> DataGridView.
@@ -1570,11 +1534,13 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewCellMouseEventArgs"/> that contains the event data.</param>
-    Private Sub DgvSGs_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSGs.ColumnHeaderMouseClick
+    Private Sub DgvSGs_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) _
+        Handles DgvSGs.ColumnHeaderMouseClick
+
         If e.ColumnIndex <> 0 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim dataGridViewColumn As DataGridViewColumn = dgv.Columns(e.ColumnIndex)
-        Dim direction As ListSortDirection
+        Dim direction As ListSortDirection = ListSortDirection.Ascending
 
         Select Case dataGridViewColumn.HeaderCell.SortGlyphDirection
             Case SortOrder.None, SortOrder.Ascending
@@ -1593,7 +1559,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewBindingCompleteEventArgs"/> that contains the event data.</param>
-    Private Sub DgvSGs_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles DgvSGs.DataBindingComplete
+    Private Sub DgvSGs_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles _
+        DgvSGs.DataBindingComplete
+
         Dim dgv As DataGridView = CType(sender, DataGridView)
         For Each column As DataGridViewColumn In dgv.Columns
             column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -1618,7 +1586,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvSummary_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvSummary.CellFormatting
+    Private Sub DgvSummary_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles _
+        DgvSummary.CellFormatting
+
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
         Dim eValue As String = Convert.ToString(e.Value)
@@ -1716,7 +1686,9 @@ Public Class Form1
     ''' <param name="e">
     '''  The DataGridViewBindingCompleteEventArgs containing the event data.
     ''' </param>
-    Private Sub DgvSummary_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles DgvSummary.CellMouseClick
+    Private Sub DgvSummary_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles _
+        DgvSummary.CellMouseClick
+
         If e.RowIndex < 0 OrElse _updating Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim value As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString
@@ -1775,7 +1747,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Private Sub DgvSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvSummary.ColumnAdded
+    Private Sub DgvSummary_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvSummary.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             e.DgvColumnAdded(
@@ -1795,7 +1769,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Private Sub DgvTherapyAlgorithmState_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvTherapyAlgorithmState.CellFormatting
+    Private Sub DgvTherapyAlgorithmState_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles _
+        DgvTherapyAlgorithmState.CellFormatting
+
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If e.Value IsNot Nothing AndAlso e.ColumnIndex = 2 Then
             Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
@@ -1808,7 +1784,8 @@ Public Class Form1
                         alignment:=DataGridViewContentAlignment.MiddleLeft,
                         padding:=New Padding(1))
 
-                Case NameOf(TherapyAlgorithmState.SafeBasalDuration), NameOf(TherapyAlgorithmState.WaitToCalibrateDuration)
+                Case NameOf(TherapyAlgorithmState.SafeBasalDuration),
+                     NameOf(TherapyAlgorithmState.WaitToCalibrateDuration)
                     Dim totalMinutes As Integer = CInt(e.Value)
                     Dim hours As Integer = totalMinutes \ 60
                     Dim minutes As Integer = totalMinutes Mod 60
@@ -1831,7 +1808,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvTherapyAlgorithmState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvTherapyAlgorithmState.ColumnAdded
+    Friend Sub DgvTherapyAlgorithmState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvTherapyAlgorithmState.ColumnAdded
+
         With e.Column
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -1850,29 +1829,15 @@ Public Class Form1
 #Region "Dgv Time Change Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvTimeChange"/> DataGridView.
-    '''  This event is raised when a cell's value needs to be formatted for display.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvTimeChange_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) Handles DgvTimeChange.CellFormatting
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
-            Case NameOf(TimeChange.DisplayTime), NameOf(TimeChange.Timestamp)
-                dgv.CellFormattingDateTime(e)
-            Case Else
-                dgv.CellFormattingSetForegroundColor(e)
-        End Select
-    End Sub
-
-    ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvTimeChange"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
     '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Friend Sub DgvTimeChange_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvTimeChange.ColumnAdded
+    Friend Sub DgvTimeChange_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
+        DgvTimeChange.ColumnAdded
+
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of TimeChange)(.Name) Then
@@ -2021,9 +1986,30 @@ Public Class Form1
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(reportSuccessfulResult:=False)
 
-        Me.ToolTip1.SetToolTip(Me.TirComplianceLabel, UserMessageConstants.CheckComplianceValues)
-        Me.ToolTip1.SetToolTip(Me.LowTirComplianceLabel, UserMessageConstants.TirToolTip)
-        Me.ToolTip1.SetToolTip(Me.HighTirComplianceLabel, UserMessageConstants.TirToolTip)
+        Me.ToolTip1.SetToolTip(control:=Me.TirComplianceLabel, caption:=UserMessageConstants.CheckComplianceValues)
+        Me.ToolTip1.SetToolTip(control:=Me.LowTirComplianceLabel, caption:=UserMessageConstants.TirToolTip)
+        Me.ToolTip1.SetToolTip(control:=Me.HighTirComplianceLabel, caption:=UserMessageConstants.TirToolTip)
+
+        Me.DgvActiveInsulin.ApplyDarkModeToColumnHeaders
+        Me.DgvAutoBasalDelivery.ApplyDarkModeToColumnHeaders
+        Me.DgvAutoModeStatus.ApplyDarkModeToColumnHeaders
+        Me.DgvBannerState.ApplyDarkModeToColumnHeaders
+        Me.DgvBasal.ApplyDarkModeToColumnHeaders
+        Me.DgvBasalPerHour.ApplyDarkModeToColumnHeaders
+        Me.DgvCalibration.ApplyDarkModeToColumnHeaders
+        Me.DgvCareLinkUsers.ApplyDarkModeToColumnHeaders
+        Me.DgvCurrentUser.ApplyDarkModeToColumnHeaders
+        Me.DgvInsulin.ApplyDarkModeToColumnHeaders
+        Me.DgvLastAlarm.ApplyDarkModeToColumnHeaders
+        Me.DgvLastSensorGlucose.ApplyDarkModeToColumnHeaders
+        Me.DgvLimits.ApplyDarkModeToColumnHeaders
+        Me.DgvLowGlucoseSuspended.ApplyDarkModeToColumnHeaders
+        Me.DgvMeal.ApplyDarkModeToColumnHeaders
+        Me.DgvSensorBgReadings.ApplyDarkModeToColumnHeaders
+        Me.DgvSGs.ApplyDarkModeToColumnHeaders
+        Me.DgvSummary.ApplyDarkModeToColumnHeaders
+        Me.DgvTherapyAlgorithmState.ApplyDarkModeToColumnHeaders
+        Me.DgvTimeChange.ApplyDarkModeToColumnHeaders
 
 #If Not FullDarkModeSupport Then
 
@@ -2067,6 +2053,7 @@ Public Class Form1
         If DoOptionalLoginAndUpdateData(owner:=Me, updateAllTabs:=False, fileToLoad:=FileToLoadOptions.NewUser) Then
             Me.UpdateAllTabPages(fromFile:=False)
         End If
+
     End Sub
 
     ''' <summary>
@@ -2106,16 +2093,22 @@ Public Class Form1
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
-        Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles(DirectoryForProjectData, $"CareLink*.json")
+        Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles(
+            path:=DirectoryForProjectData,
+            matchPattern:=$"CareLink*.json")
         Me.MenuStartHereSaveSnapshotFile.Enabled = Not RecentDataEmpty()
-        Me.MenuStartHereUseExceptionReport.Visible = AnyMatchingFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
+        Me.MenuStartHereUseExceptionReport.Visible = AnyMatchingFiles(
+            path:=DirectoryForProjectData,
+            matchPattern:=$"{BaseNameSavedErrorReport}*.txt")
 
-        Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(s_userName) OrElse Not AnyMatchingFiles(SettingsDirectory, $"{s_userName}Settings.pdf"))
+        Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(s_userName) OrElse
+            Not AnyMatchingFiles(path:=SettingsDirectory, matchPattern:=$"{s_userName}Settings.pdf"))
+
         Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists
         Me.MenuStartHereManuallyImportDeviceSettings.Enabled = Not userPdfExists
         ' The menu item For cleaning up obsolete files (MenuStartHereCleanUpObsoleteFiles) Is only enabled,
         ' when the application Is the only instance running, as a safety precaution.
-        Me.MenuStartHereCleanUpObsoleteFiles.Enabled = Process.GetProcessesByName(_processName).Length = 1
+        Me.MenuStartHereCleanUpObsoleteFiles.Enabled = Process.GetProcessesByName(processName:=_processName).Length = 1
     End Sub
 
     ''' <summary>
@@ -2125,7 +2118,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
-    Private Sub MenuStartHereCleanUpObsoleteFiles_Click(sender As Object, e As EventArgs) Handles MenuStartHereCleanUpObsoleteFiles.Click
+    Private Sub MenuStartHereCleanUpObsoleteFiles_Click(sender As Object, e As EventArgs) Handles _
+        MenuStartHereCleanUpObsoleteFiles.Click
+        ' Opens a dialog to clean up obsolete files.
         Using dialog As New CleanupStaleFilesDialog With {.Text = $"Cleanup Obsolete Files"}
             dialog.ShowDialog()
         End Using
@@ -2144,9 +2139,12 @@ Public Class Form1
 
     ''' <summary>
     '''  Handles the <see cref="Form.Click"/> event for the Manually Import Device Settings menu item.
-    '''  This event is
-    Private Sub MenuStartHereManuallyImportDeviceSettings_Click(sender As Object, e As EventArgs) Handles MenuStartHereManuallyImportDeviceSettings.Click
-        Dim downloadsPath As String = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) & "\Downloads\"
+    '''  This event is used to prompt the user to select a settings PDF file for import.
+    Private Sub MenuStartHereManuallyImportDeviceSettings_Click(sender As Object, e As EventArgs) Handles _
+        MenuStartHereManuallyImportDeviceSettings.Click
+
+        Dim folder As String = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
+        Dim initialDirectory As String = $"{folder}\Downloads\"
         Using openFileDialog1 As New System.Windows.Forms.OpenFileDialog With {
             .AddExtension = True,
             .AddToRecent = False,
@@ -2154,7 +2152,7 @@ Public Class Form1
             .CheckPathExists = True,
             .DefaultExt = "pdf",
             .Filter = $"Settings file (*.pdf)|*.pdf",
-            .InitialDirectory = downloadsPath,
+            .InitialDirectory = initialDirectory,
             .Multiselect = False,
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
@@ -2183,9 +2181,10 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
-    Private Sub MenuStartHereShowPumpSetup_Click(sender As Object, e As EventArgs) Handles MenuStartHereShowPumpSetup.Click
-        Dim userSettingsPdfFile As String = GetUserSettingsPdfFileNameWithPath()
+    Private Sub MenuStartHereShowPumpSetup_Click(sender As Object, e As EventArgs) Handles _
+        MenuStartHereShowPumpSetup.Click
 
+        Dim userSettingsPdfFile As String = GetUserSettingsPdfFileNameWithPath()
         If File.Exists(userSettingsPdfFile) Then
             If CurrentPdf.IsValid Then
                 Using dialog As New PumpSetupDialog
@@ -2196,14 +2195,14 @@ Public Class Form1
             End If
             If Not CurrentPdf.IsValid Then
                 MsgBox(
-                    heading:=$"Device Setting PDF file is invalid",
+                    heading:=$"Device Setting PDF file Is invalid",
                     text:=userSettingsPdfFile,
                     buttonStyle:=MsgBoxStyle.OkOnly,
                     title:="Invalid Settings PDF File")
             End If
         Else
             MsgBox(
-                heading:=$"Device Setting PDF file is missing!",
+                heading:=$"Device Setting PDF file Is missing!",
                 text:=userSettingsPdfFile,
                 buttonStyle:=MsgBoxStyle.OkOnly,
                 title:="Missing Settings PDF File")
@@ -2221,7 +2220,9 @@ Public Class Form1
     ''' <remarks>
     '''  The saved file will have a unique name based on the current date and time.
     ''' </remarks>
-    Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles MenuStartHereSaveSnapshotFile.Click
+    Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) Handles _
+        MenuStartHereSaveSnapshotFile.Click
+
         If RecentDataEmpty() Then Exit Sub
 
         File.WriteAllTextAsync(
@@ -2239,8 +2240,12 @@ Public Class Form1
     ''' <remarks>
     '''  The user can select an error report file to load and process.
     ''' </remarks>
-    Private Sub MenuStartHereUseExceptionReport_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseExceptionReport.Click
-        Dim fileList As String() = Directory.GetFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
+    Private Sub MenuStartHereUseExceptionReport_Click(sender As Object, e As EventArgs) Handles _
+        MenuStartHereUseExceptionReport.Click
+
+        Dim fileList As String() = Directory.GetFiles(
+            path:=DirectoryForProjectData,
+            searchPattern:=$"{BaseNameSavedErrorReport}*.txt")
         Using openFileDialog1 As New System.Windows.Forms.OpenFileDialog With {
             .AddExtension = True,
             .AddToRecent = False,
@@ -2318,7 +2323,9 @@ Public Class Form1
     ''' <remarks>
     '''  The last saved file will be loaded and processed to update the application state.
     ''' </remarks>
-    Private Sub MenuStartHereUseLastSavedFile_Click(sender As Object, e As EventArgs) Handles MenuStartHereUseLastSavedFile.Click
+    Private Sub MenuStartHereUseLastSavedFile_Click(sender As Object, e As EventArgs) Handles _
+        MenuStartHereUseLastSavedFile.Click
+
         Dim success As Boolean = DoOptionalLoginAndUpdateData(
             owner:=Me,
             updateAllTabs:=True,
@@ -2411,7 +2418,8 @@ Public Class Form1
     ''' <param name="e">The event data.</param>
     <DebuggerNonUserCode()>
     Private Sub MenuOptions_DropDownOpening(sender As Object, e As EventArgs) Handles MenuOptions.DropDownOpening
-        Me.MenuOptionsEditPumpSettings.Enabled = Debugger.IsAttached OrElse Not String.IsNullOrWhiteSpace(CurrentUser?.UserName)
+        Me.MenuOptionsEditPumpSettings.Enabled = Debugger.IsAttached OrElse
+            Not String.IsNullOrWhiteSpace(CurrentUser?.UserName)
     End Sub
 
     ''' <summary>
@@ -2444,7 +2452,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="CheckBox"/> control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuOptionsAutoLogin_CheckedChanged(sender As Object, e As EventArgs) Handles MenuOptionsAutoLogin.CheckedChanged
+    Private Sub MenuOptionsAutoLogin_CheckedChanged(sender As Object, e As EventArgs) Handles _
+        MenuOptionsAutoLogin.CheckedChanged
+
         My.Settings.AutoLogin = Me.MenuOptionsAutoLogin.Checked
     End Sub
 
@@ -2466,7 +2476,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) Handles MenuOptionsEditPumpSettings.Click
+    Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) Handles _
+        MenuOptionsEditPumpSettings.Click
+
         SetUpCareLinkUser(forceUI:=True)
         Dim contents As String = File.ReadAllText(GetUserSettingsJsonFileNameWithPath)
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, s_jsonSerializerOptions)
@@ -2507,7 +2519,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuOptionsShowChartLegends_Click(sender As Object, e As EventArgs) Handles MenuOptionsShowChartLegends.Click
+    Private Sub MenuOptionsShowChartLegends_Click(sender As Object, e As EventArgs) Handles _
+        MenuOptionsShowChartLegends.Click
+
         Dim showLegend As Boolean = Me.MenuOptionsShowChartLegends.Checked
         _activeInsulinChartLegend.Enabled = showLegend
         _summaryChartLegend.Enabled = showLegend
@@ -2522,10 +2536,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuOptionsSpeechHelpShown_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechHelpShown.Click
-        If Me.MenuOptionsSpeechHelpShown.Checked Then
+    Private Sub MenuOptionsSpeechHelpShown_Click(sender As Object, e As EventArgs) Handles _
+        MenuOptionsSpeechHelpShown.Click
 
-        End If
         My.Settings.SystemSpeechHelpShown = Me.MenuOptionsSpeechHelpShown.Checked
         My.Settings.Save()
     End Sub
@@ -2536,77 +2549,27 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuOptionsSpeechRecognition80_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognition80.Click
-        My.Settings.SystemSpeechRecognitionThreshold = 0.8
-        Me.SetSpeechRecognitionConfidenceThreshold()
-        If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
-            InitializeSpeechRecognition()
-        Else
-            CancelSpeechRecognition()
-        End If
-    End Sub
+    Private Sub MenuOptionsSpeechRecognition80_Click(sender As Object, e As EventArgs) Handles _
+        MenuOptionsSpeechRecognition80.Click,
+        MenuOptionsSpeechRecognition85.Click,
+        MenuOptionsSpeechRecognition90.Click,
+        MenuOptionsSpeechRecognition95.Click,
+        MenuOptionsSpeechRecognitionDisabled.Click
 
-    ''' <summary>
-    '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for
-    '''  the <see cref="MenuOptionsSpeechRecognition85"/> menu item.
-    '''  Sets the speech recognition confidence threshold to 0.85 and updates the UI and speech recognition state.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
-    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuOptionsSpeechRecognition85_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognition85.Click
-        My.Settings.SystemSpeechRecognitionThreshold = 0.85
-        Me.SetSpeechRecognitionConfidenceThreshold()
-        If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
-            InitializeSpeechRecognition()
-        Else
-            CancelSpeechRecognition()
-        End If
-    End Sub
+        Dim menuItem As ToolStripMenuItem = CType(sender, ToolStripMenuItem)
+        Select Case menuItem.Name
+            Case "MenuOptionsSpeechRecognition80"
+                My.Settings.SystemSpeechRecognitionThreshold = 0.8
+            Case "MenuOptionsSpeechRecognition85"
+                My.Settings.SystemSpeechRecognitionThreshold = 0.85
+            Case "MenuOptionsSpeechRecognition90"
+                My.Settings.SystemSpeechRecognitionThreshold = 0.9
+            Case "MenuOptionsSpeechRecognition95"
+                My.Settings.SystemSpeechRecognitionThreshold = 0.95
+            Case "MenuOptionsSpeechRecognitionDisabled"
+                My.Settings.SystemSpeechRecognitionThreshold = 1.0
+        End Select
 
-    ''' <summary>
-    '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for
-    '''  the <see cref="MenuOptionsSpeechRecognition90"/> menu item.
-    '''  Sets the speech recognition confidence threshold to 0.9 and updates the UI and speech recognition state.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
-    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuOptionsSpeechRecognition90_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognition90.Click
-        My.Settings.SystemSpeechRecognitionThreshold = 0.9
-        Me.SetSpeechRecognitionConfidenceThreshold()
-        If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
-            InitializeSpeechRecognition()
-        Else
-            CancelSpeechRecognition()
-        End If
-    End Sub
-
-    ''' <summary>
-    '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for
-    '''  the <see cref="MenuOptionsSpeechRecognition95"/> menu item.
-    '''  Sets the speech recognition confidence threshold to 0.95 and updates the UI and speech recognition state.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
-    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuOptionsSpeechRecognition95_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognition95.Click
-        My.Settings.SystemSpeechRecognitionThreshold = 0.95
-        Me.SetSpeechRecognitionConfidenceThreshold()
-        If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
-            InitializeSpeechRecognition()
-        Else
-            CancelSpeechRecognition()
-        End If
-    End Sub
-
-    ''' <summary>
-    '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for
-    '''  the <see cref="MenuOptionsSpeechRecognitionDisabled"/> menu item.
-    '''  Disables speech recognition by setting the threshold to 1,
-    '''  saves the setting, and updates the UI and speech recognition state.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
-    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuOptionsSpeechRecognitionDisabled_Click(sender As Object, e As EventArgs) Handles MenuOptionsSpeechRecognitionDisabled.Click
-        My.Settings.SystemSpeechRecognitionThreshold = 1
         My.Settings.Save()
         Me.SetSpeechRecognitionConfidenceThreshold()
         If Me.MenuOptionsSpeechRecognitionEnabled.Checked Then
@@ -2624,7 +2587,10 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuOptionsUseLocalTimeZone_Click(sender As Object, e As EventArgs) Handles MenuOptionsUseLocalTimeZone.Click
+    Private Sub MenuOptionsUseLocalTimeZone_Click(sender As Object, e As EventArgs) Handles _
+        MenuOptionsUseLocalTimeZone.Click
+
+        ' Toggle the UseLocalTimeZone setting and update the PumpTimeZoneInfo accordingly.
         Dim saveRequired As Boolean = Me.MenuOptionsUseLocalTimeZone.Checked <> My.Settings.UseLocalTimeZone
         If Me.MenuOptionsUseLocalTimeZone.Checked Then
             PumpTimeZoneInfo = TimeZoneInfo.Local
@@ -2750,11 +2716,17 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="CheckBox"/> control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles TemporaryUseAdvanceAITDecayCheckBox.CheckedChanged
-        Me.TemporaryUseAdvanceAITDecayCheckBox.Text = If(Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked,
-            $"Advanced Decay, AIT will decay over {CurrentUser.InsulinRealAit} hours while using {CurrentUser.InsulinTypeName}",
-            $"AIT will decay over {CurrentUser.PumpAit.ToHoursMinutes} while using {CurrentUser.InsulinTypeName}")
-        CurrentUser.UseAdvancedAitDecay = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
+    Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles _
+        TemporaryUseAdvanceAITDecayCheckBox.CheckedChanged
+
+        ' Update the checkbox text based on the current state and insulin type.
+        With CurrentUser
+            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = If(
+                Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked,
+                $"Advanced Decay, AIT will decay over { .InsulinRealAit} hours while using { .InsulinTypeName}",
+                $"AIT will decay over { .PumpAit.ToHoursMinutes} while using { .InsulinTypeName}")
+            CurrentUser.UseAdvancedAitDecay = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
+        End With
         Me.UpdateActiveInsulinChart()
     End Sub
 
@@ -3580,7 +3552,7 @@ Public Class Form1
                     Else
                         Me.LabelTrendValue.Visible = False
                     End If
-                    strBuilder.Append($"Active ins. {PatientData.ActiveInsulin?.amount:N3} U")
+                    strBuilder.Append($"Active ins. {PatientData.ActiveInsulin?.Amount:N3} U")
                     Me.NotifyIcon1.Text = strBuilder.ToString
                     Me.NotifyIcon1.Visible = True
                     s_lastSgValue = sg
@@ -3692,8 +3664,8 @@ Public Class Form1
     ''' </exception>
     Private Sub UpdateActiveInsulin()
         Try
-            If PatientData.ActiveInsulin IsNot Nothing AndAlso PatientData.ActiveInsulin.amount >= 0 Then
-                Dim activeInsulinStr As String = $"Active Insulin {$"{PatientData.ActiveInsulin.amount:N3}"} U"
+            If PatientData.ActiveInsulin IsNot Nothing AndAlso PatientData.ActiveInsulin.Amount >= 0 Then
+                Dim activeInsulinStr As String = $"Active Insulin {$"{PatientData.ActiveInsulin.Amount:N3}"} U"
                 Me.ActiveInsulinValue.Text = activeInsulinStr
                 _sgMiniDisplay.ActiveInsulinTextBox.Text = activeInsulinStr
             Else
@@ -4586,7 +4558,7 @@ Public Class Form1
         Dim keySelector As Func(Of SG, Integer) = Function(x) x.RecordNumber
         Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(listOfClass:=s_listOfSgRecords.OrderByDescending(keySelector).ToList()),
-            dGV:=Me.DgvSGs,
+            dgv:=Me.DgvSGs,
             rowIndex:=ServerDataIndexes.sgs)
         Me.DgvSGs.AutoSize = True
         Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
