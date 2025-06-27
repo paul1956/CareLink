@@ -33,10 +33,12 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 06/25/2025
 
 ## What's New
+ New in 5.0.3.0
+ - Fix IsMinBasal algorithm
+ - Cleanup formatting for all the tables, including update function names to better reflect what they do
+ 
  New in 5.0.2.6
  - All Table columns are not sortable except the RecordNumber column on Sensor Glucose Table
-
-
 
 New in 5.0.2.5
  - Code cleanup and refactoring
