@@ -9,14 +9,14 @@ Friend Module MathExtensions
 
     ''' <summary>
     '''  Rounds a Single value to the specified number of decimal digits.
-    '''  If <paramref name="decimalDigits"/> is 3, rounds to the nearest 0.025 increment.
+    '''  If <paramref name="digits"/> is 3, rounds to the nearest 0.025 increment.
     ''' </summary>
     ''' <param name="value">The Single value to round.</param>
-    ''' <param name="decimalDigits">The number of decimal digits to round to.</param>
+    ''' <param name="digits">The number of decimal digits to round to.</param>
     ''' <returns>The rounded Single value.</returns>
     <Extension>
-    Friend Function GetRoundedValue(value As Single, decimalDigits As Integer) As Single
-        Return If(decimalDigits = 3, value.RoundTo025, value.RoundSingle(digits:=decimalDigits, considerValue:=False))
+    Friend Function GetRoundedValue(value As Single, digits As Integer) As Single
+        Return If(digits = 3, value.RoundTo025, value.RoundSingle(digits, considerValue:=False))
     End Function
 
     ''' <summary>
@@ -103,13 +103,13 @@ Friend Module MathExtensions
 
     ''' <summary>
     '''  Parses <paramref name="valueString"/> to a Single value,
-    '''  optionally rounding to the specified number of <paramref name="decimalDigits"/>.
+    '''  optionally rounding to the specified number of <paramref name="digits"/>.
     ''' </summary>
     ''' <param name="valueString">The string to parse.</param>
-    ''' <param name="decimalDigits">The number of decimal digits to round to. If -1, determines from the string.</param>
+    ''' <param name="digits">The number of decimal digits to round to. If -1, determines from the string.</param>
     ''' <returns>The parsed and rounded Single value, or <see cref="Single.NaN"/> if parsing fails.</returns>
     <Extension>
-    Public Function ParseSingle(valueString As String, Optional decimalDigits As Integer = -1) As Single
+    Public Function ParseSingle(valueString As String, Optional digits As Integer = -1) As Single
         If valueString Is Nothing Then
             Return Single.NaN
         End If
@@ -118,29 +118,24 @@ Friend Module MathExtensions
             Dim message As String = $"{NameOf(valueString)} = {valueString}, contains both a comma and period."
             Throw New ArgumentException(message, NameOf(valueString))
         End If
-        valueString = valueString.Replace(",", CareLinkDecimalSeparator)
-        Dim returnSingle As Single
-        If decimalDigits = -1 Then
-            Dim index As Integer = valueString.IndexOf(CareLinkDecimalSeparator)
-            decimalDigits = If(index = -1,
-                               0,
-                               valueString.Substring(index).Length
-                              )
+        valueString = valueString.Replace(","c, CareLinkDecimalSeparator)
+        Dim value As Single
+        If digits = -1 Then
+            Dim startIndex As Integer = valueString.IndexOf(CareLinkDecimalSeparator)
+            digits = If(startIndex = -1, 0, valueString.Substring(startIndex).Length)
         End If
-        If Single.TryParse(s:=valueString, style:=NumberStyles.Number, provider:=usDataCulture, result:=returnSingle) Then
-        Else
-            Return Single.NaN
-        End If
-        Return GetRoundedValue(returnSingle, decimalDigits)
+        Return If(Single.TryParse(s:=valueString, style:=NumberStyles.Number, provider:=usDataCulture, result:=value),
+            GetRoundedValue(value, digits),
+            Single.NaN)
     End Function
 
     ''' <summary>
-    '''  Parses an object to a Single value, rounding to the specified number of <paramref name="decimalDigits"/>.
+    '''  Parses an object to a Single value, rounding to the specified number of <paramref name="digits"/>.
     ''' </summary>
     ''' <param name="valueObject">The object to parse (String, Single, Double, or Decimal).</param>
-    ''' <param name="decimalDigits">The number of decimal digits to round to.</param>
+    ''' <param name="digits">The number of decimal digits to round to.</param>
     ''' <returns>The parsed and rounded Single value, or <see cref="Single.NaN"/> if parsing fails.</returns>
-    Public Function ParseSingle(valueObject As Object, decimalDigits As Integer) As Single
+    Public Function ParseSingle(valueObject As Object, digits As Integer) As Single
         If valueObject Is Nothing Then
             Return Single.NaN
         End If
@@ -148,7 +143,7 @@ Friend Module MathExtensions
         Dim returnSingle As Single
         Select Case True
             Case TypeOf valueObject Is String
-                Return CStr(valueObject).ParseSingle(decimalDigits)
+                Return CStr(valueObject).ParseSingle(digits)
             Case TypeOf valueObject Is Single
                 returnSingle = CSng(valueObject)
             Case TypeOf valueObject Is Double
@@ -159,7 +154,7 @@ Friend Module MathExtensions
                 Throw UnreachableException(valueObject.GetType.Name)
         End Select
 
-        Return GetRoundedValue(returnSingle, decimalDigits)
+        Return GetRoundedValue(returnSingle, digits)
     End Function
 
     ''' <summary>

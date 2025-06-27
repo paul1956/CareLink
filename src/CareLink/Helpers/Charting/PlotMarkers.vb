@@ -282,7 +282,7 @@ Friend Module PlotMarkers
                 Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(MarkerSeriesName).Points
                 Select Case markerEntry.Type
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim amount As Single = markerEntry.GetSingleValueFromJson(NameOf(AutoBasalDelivery.bolusAmount), 3)
+                        Dim amount As Single = markerEntry.GetSingleValueFromJson(NameOf(AutoBasalDelivery.BolusAmount), 3)
                         With treatmentChart.Series(BasalSeriesName)
                             .PlotBasalSeries(
                                 markerOADateTime:=markerOADateTimestamp,
@@ -295,7 +295,7 @@ Friend Module PlotMarkers
 
                         End With
                     Case "MANUAL_BASAL_DELIVERY"
-                        Dim amount As Single = markerEntry.GetSingleValueFromJson(NameOf(AutoBasalDelivery.bolusAmount), decimalDigits:=3)
+                        Dim amount As Single = markerEntry.GetSingleValueFromJson(NameOf(AutoBasalDelivery.BolusAmount), digits:=3)
                         With treatmentChart.Series(BasalSeriesName)
                             .PlotBasalSeries(
                                 markerOADateTime:=markerOADateTimestamp,
@@ -310,7 +310,7 @@ Friend Module PlotMarkers
                     Case "INSULIN"
                         Select Case markerEntry.GetStringValueFromJson(NameOf(Insulin.ActivationType))
                             Case "AUTOCORRECTION"
-                                Dim amount As Single = markerEntry.GetSingleValueFromJson(NameOf(Insulin.DeliveredFastAmount), decimalDigits:=3)
+                                Dim amount As Single = markerEntry.GetSingleValueFromJson(NameOf(Insulin.DeliveredFastAmount), digits:=3)
                                 With treatmentChart.Series(BasalSeriesName)
                                     .PlotBasalSeries(
                                         markerOADateTimestamp,
@@ -350,7 +350,7 @@ Friend Module PlotMarkers
                                 treatmentChart,
                                 lastDataPoint:=markerSeriesPoints.Last,
                                 markerBorderColor:=Color.FromArgb(10, Color.Yellow),
-                                tagText:=$"Meal {markerEntry.GetSingleValueFromJson(fieldName:="amount", decimalDigits:=0)} grams")
+                                tagText:=$"Meal {markerEntry.GetSingleValueFromJson(fieldName:="amount", digits:=0)} grams")
                         End If
                     Case "BG_READING"
                     Case "CALIBRATION"

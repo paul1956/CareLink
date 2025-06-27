@@ -83,8 +83,8 @@ Friend Module Form1CollectMarkersHelper
                     Dim basalDeliveryMarker As New AutoBasalDelivery(markerEntry, recordNumber:=s_listOfAutoBasalDeliveryMarkers.Count + 1)
                     InsulinPerHour.AddBasalAmountToInsulinPerHour(basalDeliveryMarker)
                     s_listOfAutoBasalDeliveryMarkers.Add(basalDeliveryMarker)
-                    If Not basalDictionary.TryAdd(basalDeliveryMarker.OAdateTime, basalDeliveryMarker.bolusAmount) Then
-                        basalDictionary(basalDeliveryMarker.OAdateTime) += basalDeliveryMarker.bolusAmount
+                    If Not basalDictionary.TryAdd(basalDeliveryMarker.OAdateTime, basalDeliveryMarker.BolusAmount) Then
+                        basalDictionary(basalDeliveryMarker.OAdateTime) += basalDeliveryMarker.BolusAmount
                     End If
                     s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
                 Case "AUTO_MODE_STATUS"

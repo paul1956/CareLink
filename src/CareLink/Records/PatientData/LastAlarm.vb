@@ -35,60 +35,74 @@ Public Class LastAlarm
 
     <DisplayName("Code")>
     <Column(Order:=6, TypeName:=NameOf([String]))>
-    Public Property code As String = Nothing
+    <JsonPropertyName("code")>
+    Public Property Code As String = Nothing
 
     <DisplayName("Flash")>
     <Column(Order:=7, TypeName:=NameOf([Boolean]))>
-    Public Property flash As Boolean = Nothing
+    <JsonPropertyName("flash")>
+    Public Property Flash As Boolean = Nothing
 
     <DisplayName("Message Id")>
     <Column(Order:=8, TypeName:=NameOf([String]))>
-    Public Property messageId As String
+    <JsonPropertyName("messageId")>
+    Public Property MessageId As String
 
-    <DisplayName("last Set Change")>
+    <DisplayName("Last Set Change")>
     <Column(Order:=9, TypeName:=NameOf([Int32]))>
-    Public Property lastSetChange As Integer = Nothing
+    <JsonPropertyName("lastSetChange")>
+    Public Property LastSetChange As Integer = Nothing
 
     <DisplayName("Units Remaining")>
     <Column(Order:=10, TypeName:=NameOf([Single]))>
-    Public Property unitsRemaining As Single = Nothing
+    <JsonPropertyName("unitsRemaining")>
+    Public Property UnitsRemaining As Single = Nothing
 
     <DisplayName("Pump Delivery Suspend State")>
     <Column(Order:=11, TypeName:=NameOf([Boolean]))>
-    Public Property pumpDeliverySuspendState As Boolean = Nothing
+    <JsonPropertyName("pumpDeliverySuspendState")>
+    Public Property PumpDeliverySuspendState As Boolean = Nothing
 
     <DisplayName("Reference GUID")>
     <Column(Order:=12, TypeName:=NameOf([String]))>
-    Public Property referenceGUID As String
+    <JsonPropertyName("referenceGUID")>
+    Public Property ReferenceGUID As String
 
     <DisplayName("Kind")>
     <Column(Order:=13, TypeName:=NameOf([String]))>
-    Public Property kind As String = Nothing
+    <JsonPropertyName("kind")>
+    Public Property Kind As String = Nothing
 
     <DisplayName("Basal Name")>
     <Column(Order:=14, TypeName:=NameOf([String]))>
-    Public Property basalName As String = Nothing
+    <JsonPropertyName("basalName")>
+    Public Property BasalName As String = Nothing
 
     <DisplayName("Triggered DateTime")>
     <Column(Order:=15, TypeName:="Date")>
-    Public Property triggeredDateTime As Date = Nothing
+    <JsonPropertyName("triggeredDateTime")>
+    Public Property TriggeredDateTime As Date = Nothing
 
     ' DO NOT RENAME
     <DisplayName("bgValue")>
     <Column(Order:=16, TypeName:=NameOf([Single]))>
-    Public Property bgValue As Single = Nothing
+    <JsonPropertyName("bgValue")>
+    Public Property BgValue As Single = Nothing
 
     <DisplayName("Reminder Name")>
     <Column(Order:=17, TypeName:=NameOf([String]))>
-    Public Property reminderName As String = Nothing
+    <JsonPropertyName("reminderName")>
+    Public Property ReminderName As String = Nothing
 
     <DisplayName("Secondary Time")>
     <Column(Order:=18, TypeName:="Date")>
-    Public Property secondaryTime As Date = Nothing
+    <JsonPropertyName("secondaryTime")>
+    Public Property SecondaryTime As Date = Nothing
 
     <DisplayName("Sensor Glucose")>
     <Column(Order:=19, TypeName:=NameOf([Single]))>
-    Public Property sg As Single
+    <JsonPropertyName("sg")>
+    Public Property Sg As Single
 
     <DisplayName("Additional Info")>
     <Column(Order:=20, TypeName:=NameOf(AdditionalInfo))>

@@ -139,7 +139,7 @@ Friend Module ExportDataGridView
                                         .Value = $"'{valueAsString}"
                                     End If
                                 Case NameOf([Decimal]), NameOf([Double]), NameOf([Single])
-                                    Dim valueASingle As Single = ParseSingle(value, decimalDigits:=3)
+                                    Dim valueASingle As Single = ParseSingle(value, digits:=3)
                                     If Single.IsNaN(valueASingle) Then
                                         .Value = "'Infinity"
                                         align = XLAlignmentHorizontalValues.Center

@@ -33,6 +33,9 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 06/25/2025
 
 ## What's New
+ New in 5.0.2.5
+ - Code cleanup and refactoring only
+
  New in 5.0.2.4
  - Improved user interface for settings management.
  - Enhanced data visualization options for better user experience.

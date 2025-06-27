@@ -23,12 +23,12 @@ Public Class Insulin
         Me.ActivationType = markerEntry.GetStringValueFromJson(NameOf(ActivationType))
         Me.TimestampAsString = markerEntry.TimestampAsString
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
-        Me.ProgrammedFastAmount = markerEntry.GetSingleValueFromJson(NameOf(ProgrammedFastAmount), decimalDigits:=3)
-        Me.DeliveredFastAmount = markerEntry.GetSingleValueFromJson(NameOf(DeliveredFastAmount), decimalDigits:=3)
+        Me.ProgrammedFastAmount = markerEntry.GetSingleValueFromJson(NameOf(ProgrammedFastAmount), digits:=3)
+        Me.DeliveredFastAmount = markerEntry.GetSingleValueFromJson(NameOf(DeliveredFastAmount), digits:=3)
         Me.Completed = markerEntry.GetBooleanValueFromJson(NameOf(Completed))
         Me.BolusType = markerEntry.GetStringValueFromJson(NameOf(BolusType))
-        Me.ProgrammedExtendedAmount = markerEntry.GetSingleValueFromJson(NameOf(ProgrammedExtendedAmount), decimalDigits:=3)
-        Me.DeliveredExtendedAmount = markerEntry.GetSingleValueFromJson(NameOf(DeliveredExtendedAmount), decimalDigits:=3)
+        Me.ProgrammedExtendedAmount = markerEntry.GetSingleValueFromJson(NameOf(ProgrammedExtendedAmount), digits:=3)
+        Me.DeliveredExtendedAmount = markerEntry.GetSingleValueFromJson(NameOf(DeliveredExtendedAmount), digits:=3)
         Me.ProgrammedDuration = markerEntry.GetIntegerValueFromJson(NameOf(ProgrammedDuration))
         Me.EffectiveDuration = markerEntry.GetIntegerValueFromJson(NameOf(EffectiveDuration))
         Me.InsulinType = markerEntry.GetStringValueFromJson(NameOf(InsulinType))

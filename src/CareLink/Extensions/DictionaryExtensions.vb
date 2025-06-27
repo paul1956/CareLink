@@ -121,11 +121,11 @@ Public Module DictionaryExtensions
                                 SetDateProperty(obj, row, [property])
                                 Continue For
                             Case NameOf([Single])
-                                value = row.Value.ParseSingle(decimalDigits:=10)
+                                value = row.Value.ParseSingle(digits:=10)
                             Case NameOf([Double])
-                                value = CDbl(row.Value.ParseSingle(decimalDigits:=10))
+                                value = CDbl(row.Value.ParseSingle(digits:=10))
                             Case NameOf([Decimal])
-                                value = CDec(row.Value.ParseSingle(decimalDigits:=3))
+                                value = CDec(row.Value.ParseSingle(digits:=3))
                             Case NameOf([Boolean]),
                                  NameOf([Int32]),
                                  NameOf([String])

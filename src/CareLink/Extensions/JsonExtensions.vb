@@ -239,15 +239,15 @@ Public Module JsonExtensions
 
     ''' <summary>
     '''  Retrieves a <see langword="Single"/> value from a <see cref="Marker"/> entry's JSON data by field name.
-    '''  Optionally rounds the value to a specified number of <paramref name="decimalDigits"/>.
+    '''  Optionally rounds the value to a specified number of <paramref name="digits"/>.
     ''' </summary>
     ''' <param name="markerEntry">The marker entry containing JSON data.</param>
     ''' <param name="fieldName">The field name to retrieve.</param>
-    ''' <param name="decimalDigits">The number of decimal digits to round to. Use -1 for no rounding.</param>
+    ''' <param name="digits">The number of decimal digits to round to. Use -1 for no rounding.</param>
     ''' <param name="considerValue">Whether to consider the value when rounding.</param>
     ''' <returns>The <see langword="Single"/> value if found; otherwise, <see cref="Single.NaN"/>.</returns>
     <Extension>
-    Public Function GetSingleValueFromJson(markerEntry As Marker, fieldName As String, Optional decimalDigits As Integer = -1, Optional considerValue As Boolean = False) As Single
+    Public Function GetSingleValueFromJson(markerEntry As Marker, fieldName As String, Optional digits As Integer = -1, Optional considerValue As Boolean = False) As Single
         Dim obj As Object = Nothing
         Dim value As Single = Single.NaN
         fieldName = fieldName.ToLowerCamelCase
@@ -270,8 +270,8 @@ Public Module JsonExtensions
                     Stop
             End Select
 
-            If decimalDigits = -1 Then Return value
-            Return If(decimalDigits = 3, value.RoundTo025, value.RoundSingle(decimalDigits, considerValue))
+            If digits = -1 Then Return value
+            Return If(digits = 3, value.RoundTo025, value.RoundSingle(digits, considerValue))
         Else
             Return Single.NaN
         End If

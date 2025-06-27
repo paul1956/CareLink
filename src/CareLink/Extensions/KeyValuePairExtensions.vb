@@ -14,7 +14,7 @@ Friend Module KeyValuePairExtensions
     ''' <returns>A Single value extracted from the JsonElement.
     <Extension>
     Private Function JsonToSingle(item As KeyValuePair(Of String, Object)) As Single
-        Return CType(item.Value, JsonElement).ToString.ParseSingle(decimalDigits:=2)
+        Return CType(item.Value, JsonElement).ToString.ParseSingle(digits:=2)
     End Function
 
     ''' <summary>
@@ -77,7 +77,7 @@ Friend Module KeyValuePairExtensions
     ''' <returns>A <see langword="String"/> representation of the scaled value.</returns>
     <Extension>
     Public Function ScaleSgToString(value As String) As String
-        Return value.ParseSingle(decimalDigits:=If(NativeMmolL, 2, 0)).ScaleSgToString()
+        Return value.ParseSingle(digits:=If(NativeMmolL, 2, 0)).ScaleSgToString()
     End Function
 
 End Module

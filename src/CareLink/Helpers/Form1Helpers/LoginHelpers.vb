@@ -137,6 +137,8 @@ Friend Module LoginHelpers
                 ErrorReportingHelpers.ReportLoginStatus(owner.LoginStatus, hasErrors:=RecentDataEmpty, lastErrorMessage)
                 owner.MenuShowMiniDisplay.Visible = True
                 fromFile = False
+                owner.TabControlPage1.Visible = True
+                owner.TabControlPage2.Visible = True
             Case FileToLoadOptions.LastSaved, FileToLoadOptions.Snapshot
                 Dim lastDownloadFileWithPath As String = String.Empty
                 Dim fixedPart As String = String.Empty

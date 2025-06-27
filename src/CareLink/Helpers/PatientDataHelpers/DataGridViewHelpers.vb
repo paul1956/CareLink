@@ -8,33 +8,29 @@ Friend Module DataGridViewHelpers
     Private ReadOnly s_columnsToHide As New Dictionary(Of Type, List(Of String)) From {
         {GetType(ActiveInsulin), New List(Of String) From {
             NameOf(ActiveInsulin.kind),
-            NameOf(ActiveInsulin.Version)}
-        },
-        {GetType(AutoBasalDelivery), New List(Of String) From {NameOf(AutoBasalDelivery.OAdateTime)}},
+            NameOf(ActiveInsulin.Version)}},
+        {GetType(AutoBasalDelivery), New List(Of String) From {
+            NameOf(AutoBasalDelivery.OAdateTime)}},
         {GetType(AutoModeStatus), New List(Of String) From {
             NameOf(AutoModeStatus.Kind),
-            NameOf(AutoModeStatus.Type)}
-        },
+            NameOf(AutoModeStatus.Type)}},
         {GetType(BannerState), New List(Of String) From {}},
         {GetType(Basal), New List(Of String) From {}},
         {GetType(BgReading), New List(Of String) From {
             NameOf(BgReading.Kind),
-            NameOf(BgReading.Type)}
-        },
+            NameOf(BgReading.Type)}},
         {GetType(Calibration), New List(Of String) From {
             NameOf(Calibration.Kind),
-            NameOf(Calibration.Type)}
-        },
+            NameOf(Calibration.Type)}},
         {GetType(CareLinkUserDataRecord), New List(Of String) From {
             NameOf(CareLinkUserDataRecord.ID),
-            NameOf(CareLinkUserDataRecord.CareLinkPassword)}
-        },
+            NameOf(CareLinkUserDataRecord.CareLinkPassword)}},
         {GetType(Insulin), New List(Of String) From {
             NameOf(Insulin.Kind),
             NameOf(Insulin.OAdateTime),
-            NameOf(Insulin.Type)}
-        },
+            NameOf(Insulin.Type)}},
         {GetType(CurrentUserRecord), New List(Of String) From {}},
+        {GetType(LastAlarm), New List(Of String) From {}},
         {GetType(LastSG), New List(Of String) From {
             "RecordNumber",
             NameOf(LastSG.Kind),

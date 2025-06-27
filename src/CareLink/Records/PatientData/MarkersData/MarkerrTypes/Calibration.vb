@@ -15,7 +15,7 @@ Public Class Calibration
         Me.TimestampAsString = markerEntry.TimestampAsString
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
         Me.CalibrationSuccess = markerEntry.GetBooleanValueFromJson(NameOf(CalibrationSuccess))
-        Me.UnitValue = markerEntry.GetSingleValueFromJson(NameOf(UnitValue), decimalDigits:=0, considerValue:=True)
+        Me.UnitValue = markerEntry.GetSingleValueFromJson(NameOf(UnitValue), digits:=0, considerValue:=True)
         Me.bgUnits = markerEntry.GetStringValueFromJson(NameOf(bgUnits))
     End Sub
 
