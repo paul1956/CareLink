@@ -33,8 +33,16 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 06/25/2025
 
 ## What's New
- New in 5.0.2.5
- - Code cleanup and refactoring only
+ New in 5.0.2.6
+ - All Table columns are not sortable except the RecordNumber column on Sensor Glucose Table
+
+
+
+New in 5.0.2.5
+ - Code cleanup and refactoring
+ - Rename decimalDigits to digits in arguments
+ - Rename listOfClass to classCollection
+ - After cancelled login attempt and then successfully logging in make TabControlPages Visible
 
  New in 5.0.2.4
  - Improved user interface for settings management.

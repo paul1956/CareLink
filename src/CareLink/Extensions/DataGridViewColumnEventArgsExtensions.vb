@@ -58,11 +58,7 @@ Friend Module DataGridViewColumnEventArgsExtensions
 
         With e.Column
             .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-            If e.Column.Index = 0 AndAlso e.Column.DataPropertyName <> "Hour" Then
-                e.Column.MinimumWidth = 150
-            End If
-            Dim idHeaderName As Boolean = .DataPropertyName = "ID"
-            .ReadOnly = forceReadOnly OrElse idHeaderName
+            .ReadOnly = forceReadOnly OrElse .DataPropertyName = "ID"
             .Resizable = DataGridViewTriState.False
             Dim title As New StringBuilder
             Dim titleInTitleCase As String = .Name
@@ -80,16 +76,12 @@ Friend Module DataGridViewColumnEventArgsExtensions
 
             .HeaderText = title.TrimEnd(vbCrLf).ToString
             .DefaultCellStyle = cellStyle
-            If .HeaderText <> "Record Number" Then
-                .SortMode = DataGridViewColumnSortMode.NotSortable
-            End If
             If String.IsNullOrWhiteSpace(caption) Then Return
             .HeaderText = caption.Replace("_", "")
             If .DataPropertyName.ContainsIgnoreCase("message") Then
                 .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-            ElseIf .DataPropertyName.EqualsIgnoreCase("RecordNumber") Then
-                .SortMode = DataGridViewColumnSortMode.Automatic
-                .HeaderCell.SortGlyphDirection = SortOrder.Ascending
+            Else
+                .SortMode = DataGridViewColumnSortMode.NotSortable
             End If
         End With
 
