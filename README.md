@@ -33,6 +33,9 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 06/28/2025
 
 ## What's New
+ New in 5.0.3.2
+ - Fix handling of DataGridView Controls, where once a control had a row it would not display the empty message.
+
  New in 5.0.3.1
  - Update table names and other logic so that "Return to Summary Page" works correctly
 

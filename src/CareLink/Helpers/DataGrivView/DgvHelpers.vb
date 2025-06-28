@@ -281,9 +281,17 @@ Public Module DgvHelpers
                 .Name = $"DataGridView{className}",
                 .RowHeadersVisible = False}
             realPanel.Controls.Add(control:=dgv, column:=0, row:=1)
+        Else
+            If dgv.DataSource IsNot Nothing Then
+                dgv.DataSource = Nothing
+            Else
+                dgv.Rows.Clear()
+                dgv.Columns.Clear()
+            End If
         End If
         RemoveHandler dgv.Paint, AddressOf DgvPaintNoRecordsFound
         AddHandler dgv.Paint, AddressOf DgvPaintNoRecordsFound
+        dgv.Refresh()
     End Sub
 
     ''' <summary>
