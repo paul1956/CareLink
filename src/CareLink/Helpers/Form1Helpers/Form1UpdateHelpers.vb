@@ -621,7 +621,7 @@ Friend Module Form1UpdateHelpers
                 mainForm.LastSgOrExitTimeLabel.Visible = True
             End If
         End If
-        mainForm.TableLayoutPanelBannerState.DisplayDataTableInDGV(
+        mainForm.TableLayoutPanelPumpBannerState.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:=listOfBannerState),
             className:=NameOf(BannerState), rowIndex:=ServerDataIndexes.pumpBannerState)
     End Sub

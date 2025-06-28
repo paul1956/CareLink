@@ -525,7 +525,7 @@ Public Class Form1
         DgvActiveInsulin.CellContextMenuStripNeeded,
         DgvAutoBasalDelivery.CellContextMenuStripNeeded,
         DgvAutoModeStatus.CellContextMenuStripNeeded,
-        DgvBannerState.CellContextMenuStripNeeded,
+        DgvPumpBannerState.CellContextMenuStripNeeded,
         DgvBasal.CellContextMenuStripNeeded,
         DgvBasalPerHour.CellContextMenuStripNeeded,
         DgvCalibration.CellContextMenuStripNeeded,
@@ -561,7 +561,7 @@ Public Class Form1
         DgvActiveInsulin.CellFormatting,
         DgvAutoBasalDelivery.CellFormatting,
         DgvAutoModeStatus.CellFormatting,
-        DgvBannerState.CellFormatting,
+        DgvPumpBannerState.CellFormatting,
         DgvBasal.CellFormatting,
         DgvBasalPerHour.CellFormatting,
         DgvCalibration.CellFormatting,
@@ -645,7 +645,7 @@ Public Class Form1
                 e.Value = time.ToString(s_timeWithoutMinuteFormat)
             Case NameOf(BannerState.Message)
                 Select Case dgv.Name
-                    Case NameOf(DgvBannerState)
+                    Case NameOf(DgvPumpBannerState)
                         dgv.CellFormattingToTitle(e, bold:=False)
                     Case NameOf(DgvSGs)
                         e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ")
@@ -721,7 +721,7 @@ Public Class Form1
         DgvActiveInsulin.DataError,
         DgvAutoBasalDelivery.DataError,
         DgvAutoModeStatus.DataError,
-        DgvBannerState.DataError,
+        DgvPumpBannerState.DataError,
         DgvBasal.DataError,
         DgvBasalPerHour.DataError,
         DgvCalibration.DataError,
@@ -773,7 +773,7 @@ Public Class Form1
         DgvActiveInsulin.DataBindingComplete,
         DgvAutoBasalDelivery.DataBindingComplete,
         DgvAutoModeStatus.DataBindingComplete,
-        DgvBannerState.DataBindingComplete,
+        DgvPumpBannerState.DataBindingComplete,
         DgvBasal.DataBindingComplete,
         DgvBasalPerHour.DataBindingComplete,
         DgvCalibration.DataBindingComplete,
@@ -967,21 +967,21 @@ Public Class Form1
 
 #End Region ' Dgv AutoMode Status Events
 
-#Region "Dgv Banner State Events"
+#Region "Dgv Pump Banner State Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvBannerState"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvPumpBannerState"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
     '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
     Private Sub DgvBannerState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
-        DgvBannerState.ColumnAdded
+        DgvPumpBannerState.ColumnAdded
 
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If DataGridViewHelpers.HideColumn(Of BannerState)(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of BannerState)(dataPropertyName:= .Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
@@ -1797,7 +1797,7 @@ Public Class Form1
                     Case ServerDataIndexes.therapyAlgorithmState
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage10TherapyAlgorithmState))
                     Case ServerDataIndexes.pumpBannerState
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage11BannerState))
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage11PumpBannerState))
                     Case ServerDataIndexes.basal
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage12Basal))
                 End Select
@@ -2058,7 +2058,7 @@ Public Class Form1
         Me.DgvActiveInsulin.ApplyDarkModeToColumnHeaders
         Me.DgvAutoBasalDelivery.ApplyDarkModeToColumnHeaders
         Me.DgvAutoModeStatus.ApplyDarkModeToColumnHeaders
-        Me.DgvBannerState.ApplyDarkModeToColumnHeaders
+        Me.DgvPumpBannerState.ApplyDarkModeToColumnHeaders
         Me.DgvBasal.ApplyDarkModeToColumnHeaders
         Me.DgvBasalPerHour.ApplyDarkModeToColumnHeaders
         Me.DgvCalibration.ApplyDarkModeToColumnHeaders
@@ -2560,7 +2560,7 @@ Public Class Form1
         HideDataGridViewColumnsByName(dgv:=Me.DgvActiveInsulin, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of ActiveInsulin)(dataPropertyName))
         HideDataGridViewColumnsByName(dgv:=Me.DgvAutoBasalDelivery, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of AutoBasalDelivery)(dataPropertyName))
         HideDataGridViewColumnsByName(dgv:=Me.DgvAutoModeStatus, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of AutoModeStatus)(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvBannerState, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of BannerState)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvPumpBannerState, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of BannerState)(dataPropertyName))
         HideDataGridViewColumnsByName(dgv:=Me.DgvBasal, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of Basal)(dataPropertyName))
         HideDataGridViewColumnsByName(dgv:=Me.DgvBasalPerHour, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of InsulinPerHour)(dataPropertyName))
         HideDataGridViewColumnsByName(dgv:=Me.DgvCalibration, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of Calibration)(dataPropertyName))
@@ -3005,7 +3005,7 @@ Public Class Form1
         TableLayoutPanelActiveInsulinTop.ButtonClick,
         TableLayoutPanelAutoBasalDeliveryTop.ButtonClick,
         TableLayoutPanelAutoModeStatusTop.ButtonClick,
-        TableLayoutPanelBannerStateTop.ButtonClick,
+        TableLayoutPanelPumpBannerStateTop.ButtonClick,
         TableLayoutPanelBasalTop.ButtonClick,
         TableLayoutPanelBgReadingsTop.ButtonClick,
         TableLayoutPanelCalibrationTop.ButtonClick,
@@ -3023,9 +3023,8 @@ Public Class Form1
 
         Me.TabControlPage1.Visible = True
         Dim topTable As TableLayoutPanelTopEx = CType(CType(sender, Button).Parent, TableLayoutPanelTopEx)
-        Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(3).Controls(0), DataGridView)
         Dim tabName As String = topTable.LabelText.Split(":")(0).Replace(" ", "")
-        If tabName.Contains("Markers") Then
+        If tabName.Contains("Marker") Then
             tabName = "Markers"
         ElseIf tabName = "NotificationHistory" Then
             tabName = If(topTable.Name.Contains("Active"), NameOf(ActiveNotification), NameOf(ClearedNotifications))
@@ -3034,6 +3033,7 @@ Public Class Form1
         ElseIf tabName = "SensorGlucoseValues" Then
             tabName = "Sgs"
         End If
+        Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(3).Controls(0), DataGridView)
         For index As Integer = 0 To dgv.RowCount - 1
             Dim row As DataGridViewRow = dgv.Rows(index)
             Dim cellValue As String = row.Cells(1).FormattedValue.ToString

@@ -57,7 +57,7 @@ Partial Class Form1
         CursorTimer = New Timer(components)
         DgvActiveInsulin = New DataGridView()
         DgvAutoBasalDelivery = New DataGridView()
-        DgvBannerState = New DataGridView()
+        DgvPumpBannerState = New DataGridView()
         DgvBasal = New DataGridView()
         DgvCareLinkUsers = New DataGridView()
         DgvCurrentUser = New DataGridView()
@@ -196,9 +196,9 @@ Partial Class Form1
         TabPage10TherapyAlgorithmState = New TabPage()
         TableLayoutPanelTherapyAlgorithmState = New TableLayoutPanel()
         TableLayoutPanelTherapyAlgorithmStateTop = New TableLayoutPanelTopEx()
-        TabPage11BannerState = New TabPage()
-        TableLayoutPanelBannerState = New TableLayoutPanel()
-        TableLayoutPanelBannerStateTop = New TableLayoutPanelTopEx()
+        TabPage11PumpBannerState = New TabPage()
+        TableLayoutPanelPumpBannerState = New TableLayoutPanel()
+        TableLayoutPanelPumpBannerStateTop = New TableLayoutPanelTopEx()
         TabPage12Basal = New TabPage()
         TableLayoutPanelBasal = New TableLayoutPanel()
         TableLayoutPanelBasalTop = New TableLayoutPanelTopEx()
@@ -255,7 +255,7 @@ Partial Class Form1
         CType(CursorPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvActiveInsulin, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).BeginInit()
-        CType(DgvBannerState, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvPumpBannerState, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvBasal, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvCareLinkUsers, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).BeginInit()
@@ -301,8 +301,8 @@ Partial Class Form1
         TableLayoutPanelLimits.SuspendLayout()
         TabPage10TherapyAlgorithmState.SuspendLayout()
         TableLayoutPanelTherapyAlgorithmState.SuspendLayout()
-        TabPage11BannerState.SuspendLayout()
-        TableLayoutPanelBannerState.SuspendLayout()
+        TabPage11PumpBannerState.SuspendLayout()
+        TableLayoutPanelPumpBannerState.SuspendLayout()
         TabPage12Basal.SuspendLayout()
         TableLayoutPanelBasal.SuspendLayout()
         TabPage13NotificationActive.SuspendLayout()
@@ -675,15 +675,15 @@ Partial Class Form1
         DgvAutoBasalDelivery.Size = New Size(1358, 597)
         DgvAutoBasalDelivery.TabIndex = 0
         ' 
-        ' DgvBannerState
+        ' DgvPumpBannerState
         ' 
-        DgvBannerState.Dock = DockStyle.Fill
-        DgvBannerState.Location = New Point(6, 52)
-        DgvBannerState.Name = "DgvBannerState"
-        DgvBannerState.ReadOnly = True
-        DgvBannerState.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvBannerState.Size = New Size(1358, 597)
-        DgvBannerState.TabIndex = 0
+        DgvPumpBannerState.Dock = DockStyle.Fill
+        DgvPumpBannerState.Location = New Point(6, 52)
+        DgvPumpBannerState.Name = "DgvPumpBannerState"
+        DgvPumpBannerState.ReadOnly = True
+        DgvPumpBannerState.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvPumpBannerState.Size = New Size(1358, 597)
+        DgvPumpBannerState.TabIndex = 0
         ' 
         ' DgvBasal
         ' 
@@ -1882,7 +1882,7 @@ Partial Class Form1
         TabControlPage1.Controls.Add(TabPage08SensorGlucose)
         TabControlPage1.Controls.Add(TabPage09Limits)
         TabControlPage1.Controls.Add(TabPage10TherapyAlgorithmState)
-        TabControlPage1.Controls.Add(TabPage11BannerState)
+        TabControlPage1.Controls.Add(TabPage11PumpBannerState)
         TabControlPage1.Controls.Add(TabPage12Basal)
         TabControlPage1.Controls.Add(TabPage13NotificationActive)
         TabControlPage1.Controls.Add(TabPage14NotificationsCleared)
@@ -1978,7 +1978,7 @@ Partial Class Form1
         TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelInsulinTop.Dock = DockStyle.Fill
-        TableLayoutPanelInsulinTop.LabelText = "Insulin"
+        TableLayoutPanelInsulinTop.LabelText = "Marker : Insulin"
         TableLayoutPanelInsulinTop.Location = New Point(6, 6)
         TableLayoutPanelInsulinTop.Name = "TableLayoutPanelInsulinTop"
         TableLayoutPanelInsulinTop.RowCount = 1
@@ -2025,7 +2025,7 @@ Partial Class Form1
         TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelMealTop.Dock = DockStyle.Fill
-        TableLayoutPanelMealTop.LabelText = "Meal"
+        TableLayoutPanelMealTop.LabelText = "Marker : Meal"
         TableLayoutPanelMealTop.Location = New Point(6, 6)
         TableLayoutPanelMealTop.Name = "TableLayoutPanelMealTop"
         TableLayoutPanelMealTop.RowCount = 1
@@ -2215,52 +2215,52 @@ Partial Class Form1
         TableLayoutPanelTherapyAlgorithmStateTop.Size = New Size(1358, 37)
         TableLayoutPanelTherapyAlgorithmStateTop.TabIndex = 1
         ' 
-        ' TabPage11BannerState
+        ' TabPage11PumpBannerState
         ' 
-        TabPage11BannerState.Controls.Add(TableLayoutPanelBannerState)
-        TabPage11BannerState.Location = New Point(4, 27)
-        TabPage11BannerState.Name = "TabPage11BannerState"
-        TabPage11BannerState.Padding = New Padding(3)
-        TabPage11BannerState.Size = New Size(1376, 661)
-        TabPage11BannerState.TabIndex = 22
-        TabPage11BannerState.Text = "Banner State"
-        TabPage11BannerState.UseVisualStyleBackColor = True
+        TabPage11PumpBannerState.Controls.Add(TableLayoutPanelPumpBannerState)
+        TabPage11PumpBannerState.Location = New Point(4, 27)
+        TabPage11PumpBannerState.Name = "TabPage11PumpBannerState"
+        TabPage11PumpBannerState.Padding = New Padding(3)
+        TabPage11PumpBannerState.Size = New Size(1376, 661)
+        TabPage11PumpBannerState.TabIndex = 22
+        TabPage11PumpBannerState.Text = "Pump Banner State"
+        TabPage11PumpBannerState.UseVisualStyleBackColor = True
         ' 
         ' TableLayoutPanelBannerState
         ' 
-        TableLayoutPanelBannerState.AutoSize = True
-        TableLayoutPanelBannerState.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelBannerState.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelBannerState.ColumnCount = 1
-        TableLayoutPanelBannerState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBannerState.Controls.Add(TableLayoutPanelBannerStateTop, 0, 0)
-        TableLayoutPanelBannerState.Controls.Add(DgvBannerState, 0, 1)
-        TableLayoutPanelBannerState.Dock = DockStyle.Fill
-        TableLayoutPanelBannerState.Location = New Point(3, 3)
-        TableLayoutPanelBannerState.Margin = New Padding(0)
-        TableLayoutPanelBannerState.Name = "TableLayoutPanelBannerState"
-        TableLayoutPanelBannerState.RowCount = 2
-        TableLayoutPanelBannerState.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBannerState.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBannerState.Size = New Size(1370, 655)
-        TableLayoutPanelBannerState.TabIndex = 0
+        TableLayoutPanelPumpBannerState.AutoSize = True
+        TableLayoutPanelPumpBannerState.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelPumpBannerState.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TableLayoutPanelPumpBannerState.ColumnCount = 1
+        TableLayoutPanelPumpBannerState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelPumpBannerState.Controls.Add(TableLayoutPanelPumpBannerStateTop, 0, 0)
+        TableLayoutPanelPumpBannerState.Controls.Add(DgvPumpBannerState, 0, 1)
+        TableLayoutPanelPumpBannerState.Dock = DockStyle.Fill
+        TableLayoutPanelPumpBannerState.Location = New Point(3, 3)
+        TableLayoutPanelPumpBannerState.Margin = New Padding(0)
+        TableLayoutPanelPumpBannerState.Name = "TableLayoutPanelPumpBannerState"
+        TableLayoutPanelPumpBannerState.RowCount = 2
+        TableLayoutPanelPumpBannerState.RowStyles.Add(New RowStyle())
+        TableLayoutPanelPumpBannerState.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelPumpBannerState.Size = New Size(1370, 655)
+        TableLayoutPanelPumpBannerState.TabIndex = 0
         ' 
-        ' TableLayoutPanelBannerStateTop
+        ' TableLayoutPanelPumpBannerStateTop
         ' 
-        TableLayoutPanelBannerStateTop.AutoSize = True
-        TableLayoutPanelBannerStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelBannerStateTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelBannerStateTop.ColumnCount = 2
-        TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBannerStateTop.Dock = DockStyle.Fill
-        TableLayoutPanelBannerStateTop.LabelText = "Banner State"
-        TableLayoutPanelBannerStateTop.Location = New Point(6, 6)
-        TableLayoutPanelBannerStateTop.Name = "TableLayoutPanelBannerStateTop"
-        TableLayoutPanelBannerStateTop.RowCount = 1
-        TableLayoutPanelBannerStateTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBannerStateTop.Size = New Size(1358, 37)
-        TableLayoutPanelBannerStateTop.TabIndex = 1
+        TableLayoutPanelPumpBannerStateTop.AutoSize = True
+        TableLayoutPanelPumpBannerStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TableLayoutPanelPumpBannerStateTop.ButtonText = "Return To 'Summary Data' Tab"
+        TableLayoutPanelPumpBannerStateTop.ColumnCount = 2
+        TableLayoutPanelPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelPumpBannerStateTop.Dock = DockStyle.Fill
+        TableLayoutPanelPumpBannerStateTop.LabelText = "Pump Banner State"
+        TableLayoutPanelPumpBannerStateTop.Location = New Point(6, 6)
+        TableLayoutPanelPumpBannerStateTop.Name = "TableLayoutPanelPumpBannerStateTop"
+        TableLayoutPanelPumpBannerStateTop.RowCount = 1
+        TableLayoutPanelPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelPumpBannerStateTop.Size = New Size(1358, 37)
+        TableLayoutPanelPumpBannerStateTop.TabIndex = 1
         ' 
         ' TabPage12Basal
         ' 
@@ -2487,7 +2487,7 @@ Partial Class Form1
         TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelAutoBasalDeliveryTop.Dock = DockStyle.Fill
-        TableLayoutPanelAutoBasalDeliveryTop.LabelText = "Auto Basal Delivery"
+        TableLayoutPanelAutoBasalDeliveryTop.LabelText = "Marker : Auto Basal Delivery"
         TableLayoutPanelAutoBasalDeliveryTop.Location = New Point(6, 6)
         TableLayoutPanelAutoBasalDeliveryTop.Name = "TableLayoutPanelAutoBasalDeliveryTop"
         TableLayoutPanelAutoBasalDeliveryTop.RowCount = 1
@@ -2533,7 +2533,7 @@ Partial Class Form1
         TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelAutoModeStatusTop.Dock = DockStyle.Fill
-        TableLayoutPanelAutoModeStatusTop.LabelText = "Auto Mode Status"
+        TableLayoutPanelAutoModeStatusTop.LabelText = "Marker : Auto Mode Status"
         TableLayoutPanelAutoModeStatusTop.Location = New Point(6, 6)
         TableLayoutPanelAutoModeStatusTop.Name = "TableLayoutPanelAutoModeStatusTop"
         TableLayoutPanelAutoModeStatusTop.RowCount = 1
@@ -2591,7 +2591,7 @@ Partial Class Form1
         TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelBgReadingsTop.Dock = DockStyle.Fill
-        TableLayoutPanelBgReadingsTop.LabelText = "Blood Glucose Readings"
+        TableLayoutPanelBgReadingsTop.LabelText = "Marker : Blood Glucose Readings"
         TableLayoutPanelBgReadingsTop.Location = New Point(6, 6)
         TableLayoutPanelBgReadingsTop.Name = "TableLayoutPanelBgReadingsTop"
         TableLayoutPanelBgReadingsTop.RowCount = 1
@@ -2648,7 +2648,7 @@ Partial Class Form1
         TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelCalibrationTop.Dock = DockStyle.Fill
-        TableLayoutPanelCalibrationTop.LabelText = "Calibration"
+        TableLayoutPanelCalibrationTop.LabelText = "Marker : Calibration"
         TableLayoutPanelCalibrationTop.Location = New Point(6, 6)
         TableLayoutPanelCalibrationTop.Name = "TableLayoutPanelCalibrationTop"
         TableLayoutPanelCalibrationTop.RowCount = 1
@@ -2706,7 +2706,7 @@ Partial Class Form1
         TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelLowGlucoseSuspendedTop.Dock = DockStyle.Fill
-        TableLayoutPanelLowGlucoseSuspendedTop.LabelText = "Low Glucose Suspended"
+        TableLayoutPanelLowGlucoseSuspendedTop.LabelText = "Marker : Low Glucose Suspended"
         TableLayoutPanelLowGlucoseSuspendedTop.Location = New Point(6, 6)
         TableLayoutPanelLowGlucoseSuspendedTop.Name = "TableLayoutPanelLowGlucoseSuspendedTop"
         TableLayoutPanelLowGlucoseSuspendedTop.RowCount = 1
@@ -2763,7 +2763,7 @@ Partial Class Form1
         TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelTimeChangeTop.Dock = DockStyle.Fill
-        TableLayoutPanelTimeChangeTop.LabelText = "Time Change"
+        TableLayoutPanelTimeChangeTop.LabelText = "Marker : Time Change"
         TableLayoutPanelTimeChangeTop.Location = New Point(6, 6)
         TableLayoutPanelTimeChangeTop.Name = "TableLayoutPanelTimeChangeTop"
         TableLayoutPanelTimeChangeTop.RowCount = 1
@@ -2965,7 +2965,7 @@ Partial Class Form1
         CType(CursorPictureBox, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvActiveInsulin, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).EndInit()
-        CType(DgvBannerState, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvPumpBannerState, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvBasal, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCareLinkUsers, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).EndInit()
@@ -3028,10 +3028,10 @@ Partial Class Form1
         TabPage10TherapyAlgorithmState.PerformLayout()
         TableLayoutPanelTherapyAlgorithmState.ResumeLayout(False)
         TableLayoutPanelTherapyAlgorithmState.PerformLayout()
-        TabPage11BannerState.ResumeLayout(False)
-        TabPage11BannerState.PerformLayout()
-        TableLayoutPanelBannerState.ResumeLayout(False)
-        TableLayoutPanelBannerState.PerformLayout()
+        TabPage11PumpBannerState.ResumeLayout(False)
+        TabPage11PumpBannerState.PerformLayout()
+        TableLayoutPanelPumpBannerState.ResumeLayout(False)
+        TableLayoutPanelPumpBannerState.PerformLayout()
         TabPage12Basal.ResumeLayout(False)
         TabPage12Basal.PerformLayout()
         TableLayoutPanelBasal.ResumeLayout(False)
@@ -3118,7 +3118,6 @@ Partial Class Form1
     Friend WithEvents DgvActiveInsulin As DataGridView
     Friend WithEvents DgvAutoBasalDelivery As DataGridView
     Friend WithEvents DgvAutoModeStatus As DataGridView
-    Friend WithEvents DgvBannerState As DataGridView
     Friend WithEvents DgvBasal As DataGridView
     Friend WithEvents DgvBasalPerHour As DataGridView
     Friend WithEvents DgvCalibration As DataGridView
@@ -3131,6 +3130,7 @@ Partial Class Form1
     Friend WithEvents DgvLimits As DataGridView
     Friend WithEvents DgvLowGlucoseSuspended As DataGridView
     Friend WithEvents DgvMeal As DataGridView
+    Friend WithEvents DgvPumpBannerState As DataGridView
     Friend WithEvents DgvSensorBgReadings As DataGridView
     Friend WithEvents DgvSGs As DataGridView
     Friend WithEvents DgvSummary As DataGridView
@@ -3237,8 +3237,8 @@ Partial Class Form1
     Friend WithEvents TableLayoutPanelAutoBasalDeliveryTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelAutoModeStatus As TableLayoutPanel
     Friend WithEvents TableLayoutPanelAutoModeStatusTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelBannerState As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelBannerStateTop As TableLayoutPanelTopEx
+    Friend WithEvents TableLayoutPanelPumpBannerState As TableLayoutPanel
+    Friend WithEvents TableLayoutPanelPumpBannerStateTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBasal As TableLayoutPanel
     Friend WithEvents TableLayoutPanelBasalTop As TableLayoutPanelTopEx
     Friend WithEvents TableLayoutPanelBgReadings As TableLayoutPanel
@@ -3277,7 +3277,7 @@ Partial Class Form1
     Friend WithEvents TabPage08SensorGlucose As TabPage
     Friend WithEvents TabPage09Limits As TabPage
     Friend WithEvents TabPage10TherapyAlgorithmState As TabPage
-    Friend WithEvents TabPage11BannerState As TabPage
+    Friend WithEvents TabPage11PumpBannerState As TabPage
     Friend WithEvents TabPage12Basal As TabPage
     Friend WithEvents TabPage13NotificationActive As TabPage
     Friend WithEvents TabPage14NotificationsCleared As TabPage

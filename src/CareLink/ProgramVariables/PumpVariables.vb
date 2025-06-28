@@ -6,14 +6,21 @@ Imports System.Text.Json
 
 Public Module PumpVariables
 
+#Region "Markers"
+
     Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
     Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatus)
-    Friend ReadOnly s_listOfBasalPerHour As New List(Of BasalPerHour)
     Friend ReadOnly s_listOfBgReadingMarkers As New List(Of BgReading)
     Friend ReadOnly s_listOfCalibrationMarkers As New List(Of Calibration)
     Friend ReadOnly s_listOfInsulinMarkers As New List(Of Insulin)
     Friend ReadOnly s_listOfMealMarkers As New List(Of Meal)
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
+    Friend s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspended)
+    Friend s_listOfTimeChangeMarkers As New List(Of TimeChange)
+
+#End Region
+
+    Friend ReadOnly s_listOfBasalPerHour As New List(Of BasalPerHour)
     Friend s_activeInsulin As ActiveInsulin
     Friend s_autoModeReadinessState As SummaryRecord
     Friend s_basalList As New List(Of Basal) From {New Basal}
@@ -23,9 +30,7 @@ Public Module PumpVariables
     Friend s_lastSg As SG  ' Do not replace this, it is used in the UI
     Friend s_lastSgValue As Single = 0 ' Do not replace this, it is used in the UI
     Friend s_listOfLimitRecords As New List(Of Limit)
-    Friend s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspended)
     Friend s_listOfSgRecords As New List(Of SG)
-    Friend s_listOfTimeChangeMarkers As New List(Of TimeChange)
     Friend s_markers As New List(Of Marker)
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
     Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
