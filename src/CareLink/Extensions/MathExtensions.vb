@@ -35,11 +35,12 @@ Friend Module MathExtensions
 
     ''' <summary>
     '''  Rounds a Double value to the specified number of <paramref name="digits"/> and returns as Single.
+    '''  If <paramref name="considerValue"/> is True and the value is less than 10, rounds to 2 decimal digits.
     ''' </summary>
     ''' <param name="value">The Double value to round.</param>
     ''' <param name="digits">The number of decimal digits to round to.</param>
+    ''' <param name="considerValue">Whether to consider the value for special rounding (optional).</param>
     ''' <returns>The rounded value as Single.</returns>
-    ''' <param name="considerValue"></param>
     <Extension>
     Friend Function RoundToSingle(value As Double, digits As Integer, Optional considerValue As Boolean = False) As Single
 

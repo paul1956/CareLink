@@ -11,7 +11,11 @@ Friend Module KeyValuePairExtensions
     '''  Converts a KeyValuePair to a Single value, extracting the value from a JsonElement.
     ''' </summary>
     ''' <param name="item">The KeyValuePair to convert.</param>
-    ''' <returns>A Single value extracted from the JsonElement.
+    ''' <returns>A Single value extracted from the JsonElement.</returns>
+    ''' <remarks>
+    '''  This function is used to convert a KeyValuePair where the value is a JsonElement
+    '''  representing a numeric value, typically in the context of glucose readings.
+    ''' </remarks>
     <Extension>
     Private Function JsonToSingle(item As KeyValuePair(Of String, Object)) As Single
         Return CType(item.Value, JsonElement).ToString.ParseSingle(digits:=2)

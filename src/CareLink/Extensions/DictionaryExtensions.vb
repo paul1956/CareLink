@@ -73,8 +73,8 @@ Public Module DictionaryExtensions
     '''  Clones a <see cref="Dictionary(Of String, T)"/> to a new instance.
     '''  This is useful when you want to create a copy of the dictionary without modifying the original.
     ''' </summary>
-    ''' <typeparam name="T"></typeparam>
-    ''' <param name="dic"></param>
+    ''' <typeparam name="T">The type of the values in the dictionary.</typeparam>
+    ''' <param name="dic">The dictionary to clone.</param>
     ''' <returns>A new instance of <see cref="Dictionary(Of String, T)"/> with the same key-value pairs.</returns>
     <Extension>
     Public Function Clone(Of T)(dic As Dictionary(Of String, T)) As Dictionary(Of String, T)
@@ -198,8 +198,8 @@ Public Module DictionaryExtensions
     '''  Sorts a <see cref="Dictionary(Of String, T)"/> by its keys.
     '''  This is useful when you want to ensure the keys are in sorted order.
     ''' </summary>
-    ''' <typeparam name="T"></typeparam>
-    ''' <param name="dic"></param>
+    ''' <typeparam name="T">The type of the values in the dictionary.</typeparam>
+    ''' <param name="dic">The dictionary to sort.</param>
     ''' <returns>A <see cref="Dictionary(Of String, T)"/> sorted by keys.</returns>
     <Extension>
     Public Function Sort(Of T)(dic As Dictionary(Of String, T)) As Dictionary(Of String, T)

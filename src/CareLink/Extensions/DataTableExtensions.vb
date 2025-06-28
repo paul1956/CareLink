@@ -7,8 +7,13 @@ Imports System.Runtime.CompilerServices
 Friend Module DataTableExtensions
 
     ''' <summary>
-    '''  Returns an enumerator, which supports a simple iteration over a collection of all the DataColumns in a specified DataTable.
+    '''  Returns an enumerable collection of all <see cref="DataColumn"/> objects in the specified <see cref="DataTable"/>.
     ''' </summary>
+    ''' <param name="Input">The <see cref="DataTable"/> whose columns are to be enumerated.</param>
+    ''' <returns>
+    '''  An <see cref="IEnumerable(Of DataColumn)"/> containing all columns in the <paramref name="Input"/> table,
+    '''  or an empty list if the table is not valid.
+    ''' </returns>
     <Extension>
     Public Function GetColumns(Input As DataTable) As IEnumerable(Of DataColumn)
         Return If(IsValidDataTable(Input),
@@ -17,8 +22,13 @@ Friend Module DataTableExtensions
     End Function
 
     ''' <summary>
-    '''  Returns an list, which supports a simple iteration over a collection of all the DataRows in a specified DataTable.
+    '''  Returns an enumerable collection of all <see cref="DataRow"/> objects in the specified <see cref="DataTable"/>.
     ''' </summary>
+    ''' <param name="table">The <see cref="DataTable"/> whose rows are to be enumerated.</param>
+    ''' <returns>
+    '''  An <see cref="IEnumerable(Of DataRow)"/> containing all rows in the <paramref name="table"/>,
+    '''  or an empty list if the table is not valid.
+    ''' </returns>
     <Extension>
     Public Function GetRows(table As DataTable) As IEnumerable(Of DataRow)
         Return If(Not IsValidDataTable(table),
