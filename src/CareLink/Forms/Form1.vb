@@ -2073,8 +2073,6 @@ Public Class Form1
         Me.DgvTherapyAlgorithmState.ApplyDarkModeToColumnHeaders
         Me.DgvTimeChange.ApplyDarkModeToColumnHeaders
 
-#If Not FullDarkModeSupport Then
-
 #Region "Status Strip Colors"
 
         Me.StatusStrip1.BackColor = Me.MenuStrip1.BackColor
@@ -2097,6 +2095,8 @@ Public Class Form1
         Me.UpdateAvailableStatusStripLabel.ForeColor = Color.Red
 
 #End Region ' Status Strip Colors
+
+#If Not FullDarkModeSupport Then
 
 #Region "Tab Page Colors"
 
