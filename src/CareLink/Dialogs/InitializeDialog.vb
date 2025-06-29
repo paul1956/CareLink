@@ -232,6 +232,10 @@ Public Class InitializeDialog
         With Me.InitializeDataGridView
             .Rows.Clear()
             .Enabled = Not _fromPdf
+            For Each col As DataGridViewColumn In .Columns
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+                col.SortMode = DataGridViewColumnSortMode.NotSortable
+            Next
             If Me.CurrentUser.CarbRatios.Count > 0 Then
                 For Each i As IndexClass(Of CarbRatioRecord) In Me.CurrentUser.CarbRatios.WithIndex
                     Dim value As CarbRatioRecord = i.Value
@@ -276,10 +280,6 @@ Public Class InitializeDialog
                 End With
                 Me.InitializeDataGridView.Enabled = False
             End If
-            For Each col As DataGridViewColumn In .Columns
-                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
-                col.SortMode = DataGridViewColumnSortMode.NotSortable
-            Next
         End With
 
         Me.OK_Button.Enabled = _fromPdf AndAlso Me.InsulinTypeComboBox.SelectedIndex >= 0
@@ -325,7 +325,7 @@ Public Class InitializeDialog
         cell.ErrorText = ""
         Me.DialogResult = DialogResult.OK
 
-        Me.CurrentUser.PumpAit = ParseSingle(Me.PumpAitComboBox.SelectedValue, decimalDigits:=2)
+        Me.CurrentUser.PumpAit = ParseSingle(Me.PumpAitComboBox.SelectedValue, digits:=2)
 
         Me.CurrentUser.InsulinTypeName = Me.InsulinTypeComboBox.Text
         Me.CurrentUser.InsulinRealAit = CType(Me.InsulinTypeComboBox.SelectedValue, InsulinActivationRecord).AitHours
@@ -344,7 +344,7 @@ Public Class InitializeDialog
             cell = row.Cells(NameOf(ColumnEnd))
             carbRecord.EndTime = TimeOnly.Parse(cell.Value.ToString, CurrentDateCulture)
             Dim numericCell As DataGridViewNumericUpDownCell = CType(row.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
-            carbRecord.CarbRatio = ParseSingle(numericCell.Value, decimalDigits:=1)
+            carbRecord.CarbRatio = ParseSingle(numericCell.Value, digits:=1)
             Me.CurrentUser.CarbRatios.Add(carbRecord)
         Next
 

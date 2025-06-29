@@ -221,7 +221,7 @@ Friend Module NotificationHelpers
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         DisplayNotificationDataTableInDGV(
                             realPanel:=mainForm.TableLayoutPanelNotificationsCleared,
-                            table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
+                            table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
                             attachHandlers:=AddressOf NotificationHelpers.AttachHandlers,
                             row:=innerDictionary.Index)
@@ -237,7 +237,7 @@ Friend Module NotificationHelpers
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
                         DisplayNotificationDataTableInDGV(
                             realPanel:=mainForm.TableLayoutPanelNotificationActive,
-                            table:=ClassCollectionToDataTable(listOfClass:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
+                            table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
                             className:=NameOf(SummaryRecord),
                             attachHandlers:=AddressOf NotificationHelpers.AttachHandlers,
                             row:=innerDictionary.Index + 1)

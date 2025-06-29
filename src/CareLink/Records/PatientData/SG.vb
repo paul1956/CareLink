@@ -30,7 +30,7 @@ Public Class SG
             If innerJson(NameOf(sg)) <> "0" OrElse innerJson.Count = 5 Then
                 _timestampAsString = innerJson(NameOf(Me.Timestamp))
                 Me.SensorState = innerJson(NameOf(SensorState))
-                Me.sg = innerJson(NameOf(sg)).ParseSingle(decimalDigits:=2)
+                Me.sg = innerJson(NameOf(sg)).ParseSingle(digits:=2)
                 Dim value As String = "False"
                 Me.timeChange = innerJson.TryGetValue(NameOf(timeChange), value) AndAlso Boolean.Parse(innerJson(NameOf(timeChange)))
             Else

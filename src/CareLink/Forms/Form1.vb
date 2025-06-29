@@ -33,6 +33,7 @@ Public Class Form1
          "Delivered ",
          "Display Time ",
          "Programmed ",
+         "Record ",
          "Safe Meal ",
          "Sensor Glucose ",
          "Timestamp ",
@@ -367,7 +368,7 @@ Public Class Form1
                                 Me.CursorMessage1Label.Visible = True
                                 Me.CursorMessage2Label.Text = markerTag(1).Replace("Calibration not", "Cal. not").Trim
                                 Me.CursorMessage2Label.Visible = True
-                                Dim sgValue As Single = markerTag(2).Trim.Split(separator:=" ")(0).Trim.ParseSingle(decimalDigits:=2)
+                                Dim sgValue As Single = markerTag(2).Trim.Split(separator:=" ")(0).Trim.ParseSingle(digits:=2)
                                 Me.CursorMessage3Label.Text = markerTag(2).Trim
                                 Me.CursorMessage3Label.Visible = True
                                 Me.CursorMessage4Label.Text = If(NativeMmolL,
@@ -524,7 +525,7 @@ Public Class Form1
         DgvActiveInsulin.CellContextMenuStripNeeded,
         DgvAutoBasalDelivery.CellContextMenuStripNeeded,
         DgvAutoModeStatus.CellContextMenuStripNeeded,
-        DgvBannerState.CellContextMenuStripNeeded,
+        DgvPumpBannerState.CellContextMenuStripNeeded,
         DgvBasal.CellContextMenuStripNeeded,
         DgvBasalPerHour.CellContextMenuStripNeeded,
         DgvCalibration.CellContextMenuStripNeeded,
@@ -560,7 +561,7 @@ Public Class Form1
         DgvActiveInsulin.CellFormatting,
         DgvAutoBasalDelivery.CellFormatting,
         DgvAutoModeStatus.CellFormatting,
-        DgvBannerState.CellFormatting,
+        DgvPumpBannerState.CellFormatting,
         DgvBasal.CellFormatting,
         DgvBasalPerHour.CellFormatting,
         DgvCalibration.CellFormatting,
@@ -585,16 +586,16 @@ Public Class Form1
                 Select Case Convert.ToString(e.Value)
                     Case "AUTOCORRECTION"
                         e.Value = "Auto Correction"
-                        Dim highlightColor As Color = GetGraphLineColor("Auto Correction")
+                        Dim textColor As Color = GetGraphLineColor("Auto Correction")
                         If e.RowIndex Mod 2 = 0 Then
-                            dgv.CellFormattingApplyColor(e, highlightColor.InvertColor, isUri:=False)
+                            dgv.CellFormattingApplyBoldColor(e, textColor:=textColor.InvertColor, isUri:=False)
                         Else
-                            dgv.CellFormattingApplyColor(e, highlightColor, isUri:=False)
+                            dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=False)
                         End If
                     Case "FAST", "RECOMMENDED", "UNDETERMINED"
-                        dgv.CellFormattingToTitle(e)
+                        dgv.CellFormattingToTitle(e, bold:=True)
                     Case Else
-                        dgv.CellFormattingSetForegroundColor(e)
+                        dgv.CellFormattingSetForegroundColor(e, bold:=True)
                 End Select
             Case "Amount"
                 Select Case dgv.Name
@@ -616,67 +617,89 @@ Public Class Form1
                     e.Value = key ' Key becomes value if its unknown
                 End Try
                 dgv.CellFormattingSetForegroundColor(e)
+            Case NameOf(AutoBasalDelivery.BolusAmount)
+                If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
+                    Dim textColor As Color = Color.Red
+                    If e.RowIndex Mod 2 = 1 Then
+                        dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=False)
+                    Else
+                        dgv.CellFormattingApplyBoldColor(e, textColor.InvertColor, isUri:=False)
+                    End If
+                Else
+                    dgv.CellFormattingSetForegroundColor(e)
+                End If
             Case NameOf(Insulin.BolusType)
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-                dgv.CellFormattingToTitle(e)
+                dgv.CellFormattingToTitle(e, bold:=False)
             Case NameOf(ActiveInsulin.DateTime),
                  NameOf(AutoModeStatus.DisplayTime),
                  NameOf(AutoModeStatus.Timestamp)
                 dgv.CellFormattingDateTime(e)
+            Case NameOf(Limit.HighLimit), NameOf(Limit.HighLimitMgdL), NameOf(Limit.HighLimitMmolL)
+                dgv.CellFormattingSgValue(e, partialKey:=NameOf(Limit.HighLimit))
+            Case NameOf(Limit.LowLimit), NameOf(Limit.lowLimitMgdL), NameOf(Limit.lowLimitMmolL)
+                dgv.CellFormattingSgValue(e, partialKey:=NameOf(Limit.LowLimit))
             Case NameOf(InsulinPerHour.Hour), NameOf(InsulinPerHour.Hour2)
                 Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
                 Dim time As New DateTime(year:=1, month:=1, day:=1, hour:=hour, minute:=0, second:=0)
                 e.Value = time.ToString(s_timeWithoutMinuteFormat)
             Case NameOf(BannerState.Message)
                 Select Case dgv.Name
-                    Case NameOf(DgvBannerState)
-                        dgv.CellFormattingToTitle(e)
+                    Case NameOf(DgvPumpBannerState)
+                        dgv.CellFormattingToTitle(e, bold:=False)
                     Case NameOf(DgvSGs)
                         e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ")
                         dgv.CellFormattingSetForegroundColor(e)
                     Case Else
                         e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ")
-                        dgv.CellFormattingToTitle(e)
+                        dgv.CellFormattingToTitle(e, bold:=False)
                 End Select
             Case NameOf(ActiveInsulin.Precision)
-                dgv.CellFormattingToTitle(e)
+                dgv.CellFormattingToTitle(e, bold:=False)
             Case NameOf(Insulin.SafeMealReduction)
                 If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
-                    Dim highlightColor As Color = Color.OrangeRed
-                    If e.RowIndex Mod 2 = 0 Then
-                        dgv.CellFormattingApplyColor(e, highlightColor.InvertColor, isUri:=False)
+                    Dim textColor As Color = Color.OrangeRed
+                    If e.RowIndex Mod 2 = 1 Then
+                        dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=False)
                     Else
-                        dgv.CellFormattingApplyColor(e, highlightColor, isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor.InvertColor, isUri:=False)
                     End If
                 Else
                     e.Value = ""
                     dgv.CellFormattingSetForegroundColor(e)
                 End If
             Case NameOf(SG.SensorState)
-                ' Set the background to red for negative values in the Balance column.
-                If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    dgv.CellFormattingApplyColor(e, textColor:=Color.Red, isUri:=False)
+                If e.Value.Equals("NO_ERROR_MESSAGE") Then
+                    dgv.CellFormattingToTitle(e, bold:=False)
+                Else
+                    ' Set the background to red when there are errors.
+                    dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+                    dgv.CellFormattingToTitle(e, bold:=True)
                 End If
-                dgv.CellFormattingToTitle(e)
             Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
-                dgv.CellFormattingSgValue(e, NameOf(SG.sg))
+                dgv.CellFormattingSgValue(e, partialKey:=NameOf(SG.sg))
             Case NameOf(BannerState.TimeRemaining)
                 CellFormatting0Value(e)
             Case NameOf(SG.SensorState)
-                ' Set the background to red for negative values in the Balance column.
                 If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    dgv.CellFormattingApplyColor(e, textColor:=Color.Red, isUri:=False)
+                    dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+                Else
+                    dgv.CellFormattingToTitle(e, bold:=False)
                 End If
-                dgv.CellFormattingToTitle(e)
             Case NameOf(SG.Timestamp)
                 dgv.CellFormattingDateTime(e)
             Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
                 dgv.CellFormattingSgValue(e, partialKey:=NameOf(SG.sg))
-
+            Case NameOf(Calibration.UnitValue), NameOf(Calibration.UnitValueMgdL), NameOf(Calibration.UnitValueMmolL)
+                dgv.CellFormattingSgValue(e, partialKey:=NameOf(Calibration.UnitValue))
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+                dgv.CellFormattingSetForegroundColor(e)
             Case Else
                 If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
                     dgv.CellFormattingSingleValue(e, digits:=3)
-                ElseIf dgv.Columns(e.ColumnIndex).ValueType = GetType(String) Then
+                ElseIf dgv.Columns(e.ColumnIndex).ValueType = GetType(String) AndAlso
+                    dgv.Name <> NameOf(DgvLastAlarm) Then
+
                     dgv.CellFormattingSingleWord(e)
                 Else
                     dgv.CellFormattingSetForegroundColor(e)
@@ -698,7 +721,7 @@ Public Class Form1
         DgvActiveInsulin.DataError,
         DgvAutoBasalDelivery.DataError,
         DgvAutoModeStatus.DataError,
-        DgvBannerState.DataError,
+        DgvPumpBannerState.DataError,
         DgvBasal.DataError,
         DgvBasalPerHour.DataError,
         DgvCalibration.DataError,
@@ -750,7 +773,7 @@ Public Class Form1
         DgvActiveInsulin.DataBindingComplete,
         DgvAutoBasalDelivery.DataBindingComplete,
         DgvAutoModeStatus.DataBindingComplete,
-        DgvBannerState.DataBindingComplete,
+        DgvPumpBannerState.DataBindingComplete,
         DgvBasal.DataBindingComplete,
         DgvBasalPerHour.DataBindingComplete,
         DgvCalibration.DataBindingComplete,
@@ -783,8 +806,8 @@ Public Class Form1
                             Dim result As String = String.Empty
                             If _wrappedStrings.TryGetPrefixMatch(.HeaderText, result) Then
                                 .HeaderText = .HeaderText.Replace(
-                                oldValue:=result,
-                                newValue:=$"{result.TrimEnd(" "c, NonBreakingSpace)}{vbCrLf}")
+                                    oldValue:=result,
+                                    newValue:=$"{result.TrimEnd(" "c, NonBreakingSpace)}{vbCrLf}")
                                 .HeaderCell.Style.WrapMode = DataGridViewTriState.True
                                 .DefaultCellStyle.WrapMode = DataGridViewTriState.True
                                 If result.StartsWith(value:="Timestamp", comparisonType:=StringComparison.OrdinalIgnoreCase) Then
@@ -944,21 +967,21 @@ Public Class Form1
 
 #End Region ' Dgv AutoMode Status Events
 
-#Region "Dgv Banner State Events"
+#Region "Dgv Pump Banner State Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvBannerState"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvPumpBannerState"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
     '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
     ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
     Private Sub DgvBannerState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
-        DgvBannerState.ColumnAdded
+        DgvPumpBannerState.ColumnAdded
 
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If DataGridViewHelpers.HideColumn(Of BannerState)(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of BannerState)(dataPropertyName:= .Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
@@ -1297,9 +1320,9 @@ Public Class Form1
         DgvCurrentUser.ColumnAdded
 
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
+        Dim alignment As DataGridViewContentAlignment = DataGridViewContentAlignment.MiddleLeft
         e.DgvColumnAdded(
-            cellStyle:=New DataGridViewCellStyle().SetCellStyle(
-                alignment:=DataGridViewContentAlignment.MiddleLeft, padding:=New Padding(all:=1)),
+            cellStyle:=New DataGridViewCellStyle().SetCellStyle(alignment, padding:=New Padding(all:=1)),
             forceReadOnly:=True,
             caption:=Nothing)
     End Sub
@@ -1319,7 +1342,6 @@ Public Class Form1
         DgvInsulin.ColumnAdded
 
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
             If DataGridViewHelpers.HideColumn(Of Insulin)(.Name) Then
                 .Visible = False
             End If
@@ -1350,8 +1372,8 @@ Public Class Form1
         HideUnneededColumns(dgv:=Me.DgvInsulin, columnName:=NameOf(Insulin.ProgrammedExtendedAmount), value:="NaN")
         HideUnneededColumns(dgv:=Me.DgvInsulin, columnName:=NameOf(Insulin.ProgrammedDuration), value:="0")
         HideUnneededColumns(dgv:=Me.DgvInsulin, columnName:=NameOf(Insulin.EffectiveDuration), value:="0")
-        dgv.ClearSelection()
         Me.Dgv_DataBindingComplete(sender, e)
+        dgv.ClearSelection()
     End Sub
 
 #End Region ' Dgv Insulin Events
@@ -1370,7 +1392,7 @@ Public Class Form1
 
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If DataGridViewHelpers.HideColumn(Of LastAlarm)(.Name) Then
+            If DataGridViewHelpers.HideColumn(Of LastAlarm)(dataPropertyName:= .Name) Then
                 .Visible = False
             End If
             e.DgvColumnAdded(
@@ -1488,6 +1510,51 @@ Public Class Form1
 
 #Region "Dgv SGs Events"
 
+    '''' <summary>
+    ''''  Handles the <see cref="DataGridView.CellPainting"/> event for the <see cref="DgvSGs"/> DataGridView.
+    ''''  This event is raised when a cell is painted, allowing custom rendering of the cell's content.
+    ''''  Specifically, it draws a custom sort glyph in the header cells of sortable columns.
+    '''' </summary>
+    '''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
+    '''' <param name="e">A <see cref="DataGridViewCellPaintingEventArgs"/> that contains the event data.
+    'Private Sub DgvSGs_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles _
+    '        DgvSGs.CellPainting
+
+    '    Dim dgv As DataGridView = CType(sender, DataGridView)
+    '    ' Only handle header cells
+    '    If e.RowIndex = -1 AndAlso e.ColumnIndex >= 0 Then
+    '        Dim col As DataGridViewColumn = dgv.Columns(index:=e.ColumnIndex)
+    '        ' Only for sortable columns
+    '        If col.SortMode <> DataGridViewColumnSortMode.NotSortable Then
+    '            e.PaintBackground(e.ClipBounds, cellsPaintSelectionBackground:=True)
+    '            e.PaintContent(e.ClipBounds)
+
+    '            ' Determine if this column is sorted and which direction
+    '            Dim glyphDir As SortOrder = col.HeaderCell.SortGlyphDirection
+    '            If glyphDir <> SortOrder.None Then
+    '                Dim glyphColor As Color = Color.White
+    '                Dim x As Integer = e.CellBounds.Right - 18
+    '                Dim y As Integer = e.CellBounds.Top + (e.CellBounds.Height \ 2) - 4
+
+    '                Using g As Graphics = e.Graphics
+    '                    Dim points() As Point = If(glyphDir = SortOrder.Ascending,
+    '                        {New Point(x, y:=y + 6),
+    '                         New Point(x:=x + 8, y:=y + 6),
+    '                         New Point(x:=x + 4, y)},
+    '                        {New Point(x, y),
+    '                         New Point(x:=x + 8, y),
+    '                         New Point(x:=x + 4, y:=y + 6)})
+
+    '                    Using b As New SolidBrush(glyphColor)
+    '                        g.FillPolygon(b, points)
+    '                    End Using
+    '                End Using
+    '            End If
+    '            e.Handled = True
+    '        End If
+    '    End If
+    'End Sub
+
     ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvSGs"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
@@ -1504,9 +1571,7 @@ Public Class Form1
                 e.Column.Name = "Message",
                 DataGridViewAutoSizeColumnMode.Fill,
                 DataGridViewAutoSizeColumnMode.AllCells)
-
             If DataGridViewHelpers.HideColumn(Of SG)(.Name) Then
-                .SortMode = DataGridViewColumnSortMode.NotSortable
                 .Visible = False
             End If
             Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -1563,17 +1628,18 @@ Public Class Form1
         DgvSGs.DataBindingComplete
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        For Each column As DataGridViewColumn In dgv.Columns
-            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-        Next
         dgv.Columns(dgv.Columns.Count - 1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
         Dim order As SortOrder = SortOrder.None
         If dgv.RowCount > 0 Then
             Dim value As String = dgv.Rows(0).Cells(0).Value.ToString
             order = If(value = "1", SortOrder.Ascending, SortOrder.Descending)
         End If
-        dgv.Columns(0).HeaderCell.SortGlyphDirection = order
-        dgv.Columns(dgv.ColumnCount - 1).DefaultCellStyle.WrapMode = DataGridViewTriState.True
+        dgv.Columns(index:=0).HeaderCell.SortGlyphDirection = order
+        dgv.Columns(index:=dgv.ColumnCount - 1).DefaultCellStyle.WrapMode = DataGridViewTriState.True
+        For Each col As DataGridViewColumn In CType(sender, DataGridView).Columns
+            col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+        Next
+        dgv.ClearSelection()
     End Sub
 
 #End Region ' Dgv SGs Events
@@ -1678,14 +1744,13 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the DataGridView's DataBindingComplete event.
-    '''  This event is raised when the data binding operation is complete.
-    '''  It clears the selection of all DataGridViews to ensure no cells are selected after data binding.
+    '''  Handles the <see cref="DataGridView.CellMouseClick"/> event for the <see cref="DgvSummary"/> DataGridView.
+    '''  When a cell is clicked, checks if the value starts with <c>ClickToShowDetails</c>.
+    '''  If so, navigates to the appropriate tab or page in the UI based on the key in the clicked row.
+    '''  This allows users to quickly jump to detailed views for items such as last sensor glucose, alarms, insulin, sensor glucose values, limits, markers, notification history, therapy algorithm state, pump banner state, or basal.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">
-    '''  The DataGridViewBindingCompleteEventArgs containing the event data.
-    ''' </param>
+    ''' <param name="sender">The source of the event, typically the <see cref="DgvSummary"/> control.</param>
+    ''' <param name="e">A <see cref="DataGridViewCellMouseEventArgs"/> that contains the event data, including the row and column indices.</param>
     Private Sub DgvSummary_CellMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles _
         DgvSummary.CellMouseClick
 
@@ -1732,7 +1797,7 @@ Public Class Form1
                     Case ServerDataIndexes.therapyAlgorithmState
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage10TherapyAlgorithmState))
                     Case ServerDataIndexes.pumpBannerState
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage11BannerState))
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage11PumpBannerState))
                     Case ServerDataIndexes.basal
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage12Basal))
                 End Select
@@ -1993,7 +2058,7 @@ Public Class Form1
         Me.DgvActiveInsulin.ApplyDarkModeToColumnHeaders
         Me.DgvAutoBasalDelivery.ApplyDarkModeToColumnHeaders
         Me.DgvAutoModeStatus.ApplyDarkModeToColumnHeaders
-        Me.DgvBannerState.ApplyDarkModeToColumnHeaders
+        Me.DgvPumpBannerState.ApplyDarkModeToColumnHeaders
         Me.DgvBasal.ApplyDarkModeToColumnHeaders
         Me.DgvBasalPerHour.ApplyDarkModeToColumnHeaders
         Me.DgvCalibration.ApplyDarkModeToColumnHeaders
@@ -2495,7 +2560,7 @@ Public Class Form1
         HideDataGridViewColumnsByName(dgv:=Me.DgvActiveInsulin, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of ActiveInsulin)(dataPropertyName))
         HideDataGridViewColumnsByName(dgv:=Me.DgvAutoBasalDelivery, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of AutoBasalDelivery)(dataPropertyName))
         HideDataGridViewColumnsByName(dgv:=Me.DgvAutoModeStatus, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of AutoModeStatus)(dataPropertyName))
-        HideDataGridViewColumnsByName(dgv:=Me.DgvBannerState, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of BannerState)(dataPropertyName))
+        HideDataGridViewColumnsByName(dgv:=Me.DgvPumpBannerState, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of BannerState)(dataPropertyName))
         HideDataGridViewColumnsByName(dgv:=Me.DgvBasal, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of Basal)(dataPropertyName))
         HideDataGridViewColumnsByName(dgv:=Me.DgvBasalPerHour, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of InsulinPerHour)(dataPropertyName))
         HideDataGridViewColumnsByName(dgv:=Me.DgvCalibration, hideColumnFunction:=Function(dataPropertyName) DataGridViewHelpers.HideColumn(Of Calibration)(dataPropertyName))
@@ -2940,7 +3005,7 @@ Public Class Form1
         TableLayoutPanelActiveInsulinTop.ButtonClick,
         TableLayoutPanelAutoBasalDeliveryTop.ButtonClick,
         TableLayoutPanelAutoModeStatusTop.ButtonClick,
-        TableLayoutPanelBannerStateTop.ButtonClick,
+        TableLayoutPanelPumpBannerStateTop.ButtonClick,
         TableLayoutPanelBasalTop.ButtonClick,
         TableLayoutPanelBgReadingsTop.ButtonClick,
         TableLayoutPanelCalibrationTop.ButtonClick,
@@ -2958,9 +3023,8 @@ Public Class Form1
 
         Me.TabControlPage1.Visible = True
         Dim topTable As TableLayoutPanelTopEx = CType(CType(sender, Button).Parent, TableLayoutPanelTopEx)
-        Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(3).Controls(0), DataGridView)
         Dim tabName As String = topTable.LabelText.Split(":")(0).Replace(" ", "")
-        If tabName.Contains("Markers") Then
+        If tabName.Contains("Marker") Then
             tabName = "Markers"
         ElseIf tabName = "NotificationHistory" Then
             tabName = If(topTable.Name.Contains("Active"), NameOf(ActiveNotification), NameOf(ClearedNotifications))
@@ -2969,6 +3033,7 @@ Public Class Form1
         ElseIf tabName = "SensorGlucoseValues" Then
             tabName = "Sgs"
         End If
+        Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(3).Controls(0), DataGridView)
         For index As Integer = 0 To dgv.RowCount - 1
             Dim row As DataGridViewRow = dgv.Rows(index)
             Dim cellValue As String = row.Cells(1).FormattedValue.ToString
@@ -3725,14 +3790,14 @@ Public Class Form1
                     Dim markerOADateTime As New OADate(markerEntry.GetMarkerTimestamp)
                     Select Case markerEntry.Type
                         Case "AUTO_BASAL_DELIVERY"
-                            Dim bolusAmount As Single = markerEntry.GetSingleValueFromJson(NameOf(AutoBasalDelivery.bolusAmount))
+                            Dim bolusAmount As Single = markerEntry.GetSingleValueFromJson(NameOf(AutoBasalDelivery.BolusAmount))
                             If timeOrderedMarkers.ContainsKey(markerOADateTime) Then
                                 timeOrderedMarkers(markerOADateTime) += bolusAmount
                             Else
                                 timeOrderedMarkers.Add(markerOADateTime, bolusAmount)
                             End If
                         Case "MANUAL_BASAL_DELIVERY"
-                            Dim bolusAmount As Single = markerEntry.GetSingleValueFromJson(NameOf(AutoBasalDelivery.bolusAmount))
+                            Dim bolusAmount As Single = markerEntry.GetSingleValueFromJson(NameOf(AutoBasalDelivery.BolusAmount))
                             If timeOrderedMarkers.ContainsKey(markerOADateTime) Then
                                 timeOrderedMarkers(markerOADateTime) += bolusAmount
                             Else
@@ -4029,21 +4094,26 @@ Public Class Form1
             Dim marker As Marker = markerWithIndex.Value
             Select Case marker.Type
                 Case "INSULIN"
-                    Dim deliveredAmount As String = marker.GetSingleValueFromJson(NameOf(Insulin.DeliveredFastAmount)).ToString
-                    s_totalDailyDose += deliveredAmount.ParseSingle(decimalDigits:=3)
-                    Select Case marker.GetStringValueFromJson(NameOf(Insulin.ActivationType))
+                    Dim deliveredAmount As String = marker.GetSingleValueFromJson(
+                        fieldName:=NameOf(Insulin.DeliveredFastAmount)).ToString
+                    s_totalDailyDose += deliveredAmount.ParseSingle(digits:=3)
+                    Select Case marker.GetStringValueFromJson(fieldName:=NameOf(Insulin.ActivationType))
                         Case "AUTOCORRECTION"
-                            s_totalAutoCorrection += deliveredAmount.ParseSingle(decimalDigits:=3)
+                            s_totalAutoCorrection += deliveredAmount.ParseSingle(digits:=3)
                         Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                            s_totalManualBolus += deliveredAmount.ParseSingle(decimalDigits:=3)
+                            s_totalManualBolus += deliveredAmount.ParseSingle(digits:=3)
                     End Select
 
                 Case "AUTO_BASAL_DELIVERY"
-                    Dim amount As Single = marker.GetSingleValueFromJson(NameOf(AutoBasalDelivery.bolusAmount), decimalDigits:=3)
+                    Dim amount As Single = marker.GetSingleValueFromJson(
+                        fieldName:=NameOf(AutoBasalDelivery.BolusAmount),
+                        digits:=3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MANUAL_BASAL_DELIVERY"
-                    Dim amount As Single = marker.GetSingleValueFromJson(NameOf(AutoBasalDelivery.bolusAmount), decimalDigits:=3)
+                    Dim amount As Single = marker.GetSingleValueFromJson(
+                        fieldName:=NameOf(AutoBasalDelivery.BolusAmount),
+                        digits:=3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MEAL"
@@ -4068,28 +4138,26 @@ Public Class Form1
                 Dim startTime As TimeOnly
                 Dim endTime As TimeOnly
                 If activeBasalRecords.Count = 1 Then
-                    s_totalBasal = activeBasalRecords(0).UnitsPerHr * 24
+                    s_totalBasal = activeBasalRecords(index:=0).UnitsPerHr * 24
                     s_totalDailyDose += s_totalBasal
                 Else
                     For Each e As IndexClass(Of BasalRateRecord) In activeBasalRecords.WithIndex
                         Dim basalRate As BasalRateRecord = e.Value
                         startTime = basalRate.Time
                         endTime = If(e.IsLast,
-                                     New TimeOnly(23, 59, 59, 999),
-                                     activeBasalRecords(e.Index + 1).Time
+                                     New TimeOnly(hour:=23, minute:=59, second:=59, millisecond:=999),
+                                     activeBasalRecords(index:=e.Index + 1).Time
                                     )
                         Dim theTimeSpan As TimeSpan = endTime - startTime
-                        s_totalBasal += CSng((theTimeSpan.Hours + (theTimeSpan.Minutes / 60) + (theTimeSpan.Seconds / 3600)) * basalRate.UnitsPerHr)
+                        Dim periodInHours As Double = theTimeSpan.Hours + (theTimeSpan.Minutes / 60) + (theTimeSpan.Seconds / 3600)
+                        s_totalBasal += CSng(periodInHours * basalRate.UnitsPerHr)
                     Next
                     s_totalDailyDose += s_totalBasal
                 End If
             End If
         End If
 
-        Dim totalPercent As String = If(s_totalDailyDose = 0,
-                                        "???",
-                                        $"{CInt(s_totalBasal / s_totalDailyDose * 100)}"
-                                       )
+        Dim totalPercent As String = If(s_totalDailyDose = 0, "???", $"{CInt(s_totalBasal / s_totalDailyDose * 100)}")
         Me.Last24BasalUnitsLabel.Text = String.Format(Provider, $"{s_totalBasal:F1} U")
         Me.Last24BasalPercentLabel.Text = $"{totalPercent}%"
 
@@ -4136,7 +4204,7 @@ Public Class Form1
             Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=8)
             Me.RemainingInsulinUnits.Text = "???U"
         Else
-            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ServerDataIndexes.reservoirRemainingUnits)).ParseSingle(decimalDigits:=1):N1} U"
+            Me.RemainingInsulinUnits.Text = $"{s_listOfSummaryRecords.GetValue(Of String)(NameOf(ServerDataIndexes.reservoirRemainingUnits)).ParseSingle(digits:=1):N1} U"
             Select Case PatientData.ReservoirLevelPercent
                 Case >= 85
                     Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=7)
@@ -4271,11 +4339,11 @@ Public Class Form1
         With Me.TimeInRangeChart
             With .Series(NameOf(TimeInRangeSeries)).Points
                 .Clear()
-                .AddXY($"{GetBelowHypoLimit.Str}% Below {GetTirLowLimitWithUnits()}", PatientData.BelowHypoLimit.GetRoundedValue(decimalDigits:=1) / 100)
+                .AddXY($"{GetBelowHypoLimit.Str}% Below {GetTirLowLimitWithUnits()}", PatientData.BelowHypoLimit.GetRoundedValue(digits:=1) / 100)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{GetAboveHyperLimit.Str}% Above {GetTirHighLimitWithUnits()}", PatientData.AboveHyperLimit.GetRoundedValue(decimalDigits:=1) / 100)
+                .AddXY($"{GetAboveHyperLimit.Str}% Above {GetTirHighLimitWithUnits()}", PatientData.AboveHyperLimit.GetRoundedValue(digits:=1) / 100)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
@@ -4543,33 +4611,40 @@ Public Class Form1
         Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/{288} SG Readings"
 
         Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(listOfClass:={s_lastSg}.ToList),
+            table:=ClassCollectionToDataTable(classCollection:={s_lastSg}.ToList),
             className:=NameOf(LastSG), rowIndex:=ServerDataIndexes.lastSG,
             hideRecordNumberColumn:=True)
 
-        Dim classCollection As List(Of SummaryRecord) = GetSummaryRecords(s_lastAlarmValue)
-        UpdateSummaryTab(dgv:=Me.DgvLastAlarm, classCollection, sort:=True)
+        UpdateSummaryTab(
+            dgv:=Me.DgvLastAlarm,
+            classCollection:=GetSummaryRecords(s_lastAlarmValue),
+            sort:=True)
+        Me.DgvLastAlarm.Columns(index:=0).Visible = False
 
         Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(listOfClass:={s_activeInsulin}.ToList),
+            table:=ClassCollectionToDataTable(classCollection:={s_activeInsulin}.ToList),
             className:=NameOf(ActiveInsulin), rowIndex:=ServerDataIndexes.activeInsulin,
             hideRecordNumberColumn:=True)
 
         Dim keySelector As Func(Of SG, Integer) = Function(x) x.RecordNumber
         Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(listOfClass:=s_listOfSgRecords.OrderByDescending(keySelector).ToList()),
+            table:=ClassCollectionToDataTable(classCollection:=s_listOfSgRecords.OrderByDescending(keySelector).ToList()),
             dgv:=Me.DgvSGs,
             rowIndex:=ServerDataIndexes.sgs)
         Me.DgvSGs.AutoSize = True
         Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
         Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(listOfClass:=s_listOfLimitRecords),
+            table:=ClassCollectionToDataTable(classCollection:=s_listOfLimitRecords),
             className:=NameOf(Limit), rowIndex:=ServerDataIndexes.limits)
 
-        UpdateSummaryTab(dgv:=Me.DgvTherapyAlgorithmState, classCollection:=GetSummaryRecords(s_therapyAlgorithmStateValue), sort:=False)
-        Me.DgvTherapyAlgorithmState.Columns(0).Visible = False
+        UpdateSummaryTab(
+            dgv:=Me.DgvTherapyAlgorithmState,
+            classCollection:=GetSummaryRecords(s_therapyAlgorithmStateValue),
+            sort:=False)
+        Me.DgvTherapyAlgorithmState.Columns(index:=0).Visible = False
 
+        Me.DgvLastAlarm.Columns(index:=0).Visible = False
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(s_basalList.Value),
             className:=NameOf(Basal), rowIndex:=ServerDataIndexes.basal,

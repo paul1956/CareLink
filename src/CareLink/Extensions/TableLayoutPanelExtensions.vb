@@ -10,7 +10,7 @@ Friend Module TableLayoutPanelExtensions
         NameOf(Form1.TableLayoutPanelActiveInsulinTop),
         NameOf(Form1.TableLayoutPanelAutoBasalDeliveryTop),
         NameOf(Form1.TableLayoutPanelBgReadingsTop),
-        NameOf(Form1.TableLayoutPanelBannerStateTop),
+        NameOf(Form1.TableLayoutPanelPumpBannerStateTop),
         NameOf(Form1.TableLayoutPanelBasalTop),
         NameOf(Form1.TableLayoutPanelCalibrationTop),
         NameOf(Form1.TableLayoutPanelLastAlarmTop),

@@ -26,9 +26,10 @@ Friend Module DataTableHelpers
         End If
         Dim row As DataRow = table.NewRow()
         For Each [property] As PropertyInfo In GetType(T).GetProperties()
-            If table.Columns.Contains([property].Name) Then
-                If table.Columns([property].Name) IsNot Nothing Then
-                    row(columnName:=[property].Name) = [property].GetValue(obj, index:=Nothing)
+            Dim name As String = [property].Name
+            If table.Columns.Contains(name) Then
+                If table.Columns(name) IsNot Nothing Then
+                    row(columnName:=name) = [property].GetValue(obj, index:=Nothing)
                 End If
             End If
         Next [property]
@@ -124,16 +125,16 @@ Friend Module DataTableHelpers
     '''  adds a new <see cref="DataRow"/> to the table for each class passed as a parameter.
     '''  The DataColumns of the table will match the name and type of the public properties.
     ''' </summary>
-    ''' <param name="listOfClass">A List(Of class) to fill the DataTable with.</param>
+    ''' <param name="classCollection">A List(Of class) to fill the DataTable with.</param>
     ''' <returns>A DataTable who's DataColumns match the name and type of each class T's public properties.</returns>
-    Public Function ClassCollectionToDataTable(Of T As Class)(listOfClass As List(Of T)) As DataTable
+    Public Function ClassCollectionToDataTable(Of T As Class)(classCollection As List(Of T)) As DataTable
         Dim result As DataTable = ClassToDataTable(Of T)()
 
         If Not IsValidDataTable(result, IgnoreRows:=True) Then
             Return New DataTable()
         End If
-        If listOfClass?.Count > 0 Then
-            For Each classObject As T In listOfClass
+        If classCollection?.Count > 0 Then
+            For Each classObject As T In classCollection
                 result.Add(classObject)
             Next classObject
         End If
@@ -158,13 +159,21 @@ Friend Module DataTableHelpers
                 Dim typeName As String = [property].GetCustomAttributes(GetType(ColumnAttribute), inherit:=True).Cast(Of ColumnAttribute)().SingleOrDefault()?.TypeName
                 Select Case typeName
                     Case "additionalInfo", "Date", "DateTime", NameOf(OADate), "RecordNumber", NameOf([String]), "Version"
-                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(all:=1))
+                        cellStyle = cellStyle.SetCellStyle(
+                            alignment:=DataGridViewContentAlignment.MiddleLeft,
+                            padding:=New Padding(all:=1))
                     Case NameOf([Decimal]), NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
-                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                        cellStyle = cellStyle.SetCellStyle(
+                            alignment:=DataGridViewContentAlignment.MiddleRight,
+                            padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
                     Case NameOf([Boolean]), "DeleteRow"
-                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(all:=0))
+                        cellStyle = cellStyle.SetCellStyle(
+                            alignment:=DataGridViewContentAlignment.MiddleCenter,
+                            padding:=New Padding(all:=0))
                     Case "CustomProperty"
-                        cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(left:=0, top:=2, right:=2, bottom:=2))
+                        cellStyle = cellStyle.SetCellStyle(
+                            alignment:=DataGridViewContentAlignment.MiddleRight,
+                            padding:=New Padding(left:=0, top:=2, right:=2, bottom:=2))
                     Case Else
                         Throw UnreachableException([property].PropertyType.Name)
                 End Select

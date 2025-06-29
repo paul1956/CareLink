@@ -11,7 +11,7 @@ Friend Module DrawingExtensions
     '''  The color will be red if less than 2 hours, yellow if between 2 and 4 hours,
     '''  and lime if more than 4 hours.
     ''' </summary>
-    ''' <param name="hoursToNextCalibration"></param>
+    ''' <param name="hoursToNextCalibration">The time in hours until the next calibration.</param>
     ''' <remarks>
     '''  This function is used to determine the color for a calibration indicator.
     ''' </remarks>
@@ -45,10 +45,11 @@ Friend Module DrawingExtensions
         Dim targetImage As Bitmap = backImage
         Dim myGraphics As Graphics = Graphics.FromImage(targetImage)
         myGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-        Dim pen As New Pen(GetColorFromTimeToNextCalib(minutesToNextCalibration / 60), 4)
-        Dim rect As New Rectangle(4, 2, backImage.Width - 6, backImage.Height - 6)
+        Dim hoursToNextCalibration As Double = minutesToNextCalibration / 60
+        Dim pen As New Pen(GetColorFromTimeToNextCalib(hoursToNextCalibration), width:=4)
+        Dim rect As New Rectangle(x:=4, y:=2, width:=backImage.Width - 6, height:=backImage.Height - 6)
         Dim sweepAngle As Integer = CInt(30 + (Math.Min(minutesToNextCalibration, 720) / 720.0 * (360 - 30)))
-        myGraphics.DrawArc(pen, rect, startAngle:=-90, -sweepAngle)
+        myGraphics.DrawArc(pen, rect, startAngle:=-90, sweepAngle:=-sweepAngle)
         myGraphics.Dispose()
         Return targetImage
     End Function
@@ -62,11 +63,13 @@ Friend Module DrawingExtensions
     Public Function CreateTextIcon(s As String, backColor As Color) As Icon
         Dim fontToUse As New Font(familyName:="Segoe UI", emSize:=10, style:=FontStyle.Regular, unit:=GraphicsUnit.Pixel)
         Dim brushToUse As Brush = New SolidBrush(backColor.GetContrastingColor())
-        Dim bitmapText As New Bitmap(16, 16)
-        Dim g As Graphics = Graphics.FromImage(bitmapText)
-        g.Clear(backColor)
-        g.TextRenderingHint = Text.TextRenderingHint.SingleBitPerPixelGridFit
-        g.DrawString(s, font:=fontToUse, brush:=brushToUse, x:=-2, y:=0)
+        Dim bitmapText As New Bitmap(width:=16, height:=16)
+        Using g As Graphics = Graphics.FromImage(bitmapText)
+            g.Clear(backColor)
+            g.TextRenderingHint = Text.TextRenderingHint.SingleBitPerPixelGridFit
+            g.DrawString(s, font:=fontToUse, brush:=brushToUse, x:=-2, y:=0)
+        End Using
+
         Return Icon.FromHandle(bitmapText.GetHicon())
     End Function
 

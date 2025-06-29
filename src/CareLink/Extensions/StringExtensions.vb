@@ -69,7 +69,7 @@ Public Module StringExtensions
     ''' <exception cref="FormatException">Thrown if the string is not a valid double.</exception>
     <Extension>
     Public Function ParseDoubleInvariant(value As String) As Double
-        Return Double.Parse(value.Replace(",", CareLinkDecimalSeparator), CultureInfo.InvariantCulture)
+        Return Double.Parse(value.Replace(","c, CareLinkDecimalSeparator), provider:=CultureInfo.InvariantCulture)
     End Function
 
     ''' <summary>
@@ -80,7 +80,7 @@ Public Module StringExtensions
     ''' <exception cref="FormatException">Thrown if the string is not a valid single.</exception>
     <Extension>
     Public Function ParseSingleInvariant(value As String) As Single
-        Return Single.Parse(value.Replace(",", CareLinkDecimalSeparator), provider:=CultureInfo.InvariantCulture)
+        Return Single.Parse(value.Replace(","c, CareLinkDecimalSeparator), provider:=CultureInfo.InvariantCulture)
     End Function
 
     ''' <summary>
@@ -177,11 +177,11 @@ Public Module StringExtensions
     '''  Truncates a string that represents a <see langword="Single"/> to a specified number of decimal digits.
     ''' </summary>
     ''' <param name="s">The string to truncate.</param>
-    ''' <param name="decimalDigits">The number of decimal digits to keep.</param>
+    ''' <param name="digits">The number of decimal digits to keep.</param>
     ''' <returns>A truncated string representation of the <see langword="Single"/> value.</returns>
     ''' <remarks>Used for truncating values to a specific number of decimal places.</remarks>
     <Extension>
-    Public Function TruncateSingleString(s As String, decimalDigits As Integer) As String
+    Public Function TruncateSingleString(s As String, digits As Integer) As String
         Dim i As Integer = s.IndexOfAny(s_commaOrPeriod)
         If i < 0 Then
             If Not IsNumeric(s) Then
@@ -190,8 +190,8 @@ Public Module StringExtensions
             i = s.Length
             s &= Provider.NumberFormat.NumberDecimalSeparator
         End If
-        s &= New String("0"c, decimalDigits + 1)
-        Return s.Substring(0, i + decimalDigits + 1)
+        s &= New String("0"c, count:=digits + 1)
+        Return s.Substring(startIndex:=0, length:=i + digits + 1)
     End Function
 
 #Region "IgnoreCase String Comparisons"

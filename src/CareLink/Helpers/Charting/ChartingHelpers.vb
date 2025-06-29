@@ -7,14 +7,19 @@ Imports System.Runtime.CompilerServices
 Friend Module ChartingHelpers
 
     ''' <summary>
-    '''  Check if the amount is the minimum basal rate
+    '''  Check if the amount is the minimum basal rate or 0
+    '''  (0.025 units per hour) considering floating-point precision.
+    '''  This is used to determine if the basal rate is effectively zero for charting purposes.
     ''' </summary>
     ''' <param name="amount">The amount to check.</param>
     ''' <returns>
     '''  <see langword="True"/> if the amount is the minimum basal rate; otherwise, <see langword="False"/>.</returns>
     <Extension>
     Friend Function IsMinBasal(amount As Single) As Boolean
-        Return Math.Abs(amount - 0.025!) < 0.005
+        If amount < 0.025 OrElse Math.Abs(amount - 0.025) < 0.0005 Then
+            Return True  ' amount is <= 0.025, considering floating-point precision
+        End If
+        Return False
     End Function
 
 End Module

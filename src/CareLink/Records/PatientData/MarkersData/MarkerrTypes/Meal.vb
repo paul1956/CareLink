@@ -27,7 +27,7 @@ Public Class Meal
         Me.Kind = "Marker"
         Me.TimestampAsString = markerEntry.TimestampAsString
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
-        Me.Amount = CInt(markerEntry.GetSingleValueFromJson("amount", decimalDigits:=0))
+        Me.Amount = CInt(markerEntry.GetSingleValueFromJson("amount", digits:=0))
     End Sub
 
     ''' <summary>

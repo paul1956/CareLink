@@ -5,15 +5,29 @@
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
+''' <summary>
+'''  Represents a carbohydrate ratio record, including start and end times and the carb ratio value.
+'''  Used for configuring insulin pump carbohydrate ratio schedules.
+''' </summary>
 Public Class CarbRatioRecord
     Implements IEquatable(Of CarbRatioRecord)
 
+    ''' <summary>
+    '''  Backing field for the <see cref="EndTime"/> property.
+    ''' </summary>
     Private _endTime As TimeOnly
 
+    ''' <summary>
+    '''  Gets or sets the start time for this carb ratio period.
+    ''' </summary>
     <DisplayName("Start Time")>
     <Column(Order:=0, TypeName:=NameOf(TimeOnly))>
     Public Property StartTime As TimeOnly
 
+    ''' <summary>
+    '''  Gets or sets the end time for this carb ratio period.
+    '''  If set to <c>Midnight</c>, it is replaced with <c>Eleven59</c>.
+    ''' </summary>
     <DisplayName("End Time")>
     <Column(Order:=1, TypeName:=NameOf(TimeOnly))>
     Public Property EndTime As TimeOnly
@@ -25,14 +39,27 @@ Public Class CarbRatioRecord
         End Set
     End Property
 
+    ''' <summary>
+    '''  Gets or sets the carbohydrate ratio for this period.
+    ''' </summary>
     <DisplayName("Carb Ratio")>
     <Column(Order:=2, TypeName:=NameOf([Single]))>
     Public Property CarbRatio As Single
 
+    ''' <summary>
+    '''  Determines whether the specified object is equal to the current <see cref="CarbRatioRecord"/>.
+    ''' </summary>
+    ''' <param name="obj">The object to compare with the current object.</param>
+    ''' <returns><c>True</c> if the objects are equal; otherwise, <c>False</c>.</returns>
     Public Overrides Function Equals(obj As Object) As Boolean
         Return Me.Equals(TryCast(obj, CarbRatioRecord))
     End Function
 
+    ''' <summary>
+    '''  Determines whether the specified <see cref="CarbRatioRecord"/> is equal to the current <see cref="CarbRatioRecord"/>.
+    ''' </summary>
+    ''' <param name="other">The <see cref="CarbRatioRecord"/> to compare with the current object.</param>
+    ''' <returns><c>True</c> if the records are equal; otherwise, <c>False</c>.</returns>
     Public Overloads Function Equals(other As CarbRatioRecord) As Boolean Implements IEquatable(Of CarbRatioRecord).Equals
         Return other IsNot Nothing AndAlso
             Me.CarbRatio = other.CarbRatio AndAlso
@@ -41,6 +68,10 @@ Public Class CarbRatioRecord
             (other.EndTime - other.EndTime).Duration < New TimeSpan(0, 30, 0))
     End Function
 
+    ''' <summary>
+    '''  Returns a hash code for the current <see cref="CarbRatioRecord"/>.
+    ''' </summary>
+    ''' <returns>A hash code for the current object.</returns>
     Public Overrides Function GetHashCode() As Integer
         Return HashCode.Combine(Me.StartTime, Me.EndTime, Me.CarbRatio)
     End Function

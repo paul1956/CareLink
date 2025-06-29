@@ -12,8 +12,8 @@ Public Class AutoBasalDelivery
         Me.RecordNumber = recordNumber
         Me.TimestampAsString = markerEntry.TimestampAsString
         Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
-        Me.bolusAmount = markerEntry.Data.DataValues(NameOf(bolusAmount)).ToString.ParseSingle(decimalDigits:=10)
-        Me.maxAutoBasalRate = markerEntry.Data.DataValues(NameOf(maxAutoBasalRate)).ToString.ParseSingle(decimalDigits:=10)
+        Me.BolusAmount = markerEntry.Data.DataValues(NameOf(BolusAmount).ToLowerCamelCase).ToString.ParseSingle(digits:=10)
+        Me.MaxAutoBasalRate = markerEntry.Data.DataValues(NameOf(MaxAutoBasalRate).ToLowerCamelCase).ToString.ParseSingle(digits:=10)
     End Sub
 
     <DisplayName("Record Number")>
@@ -58,10 +58,12 @@ Public Class AutoBasalDelivery
 
     <DisplayName("Bolus Amount")>
     <Column(Order:=6, TypeName:=NameOf([Single]))>
-    Public Property bolusAmount As Single
+    <JsonPropertyName("bolusAmount")>
+    Public Property BolusAmount As Single
 
     <DisplayName("Max Auto Basal Rate")>
     <Column(Order:=7, TypeName:=NameOf([Single]))>
-    Public Property maxAutoBasalRate As Single
+    <JsonPropertyName("maxAutoBasalRate")>
+    Public Property MaxAutoBasalRate As Single
 
 End Class

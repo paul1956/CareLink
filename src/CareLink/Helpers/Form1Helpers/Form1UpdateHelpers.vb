@@ -492,40 +492,40 @@ Friend Module Form1UpdateHelpers
     Friend Sub UpdateMarkerTabs(mainForm As Form1)
         With mainForm
             .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(listOfClass:=s_listOfAutoBasalDeliveryMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfAutoBasalDeliveryMarkers),
                 className:=NameOf(AutoBasalDelivery), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(listOfClass:=s_listOfAutoModeStatusMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfAutoModeStatusMarkers),
                 className:=NameOf(AutoModeStatus), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(listOfClass:=s_listOfBgReadingMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfBgReadingMarkers),
                 className:=NameOf(BgReading), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(listOfClass:=s_listOfInsulinMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfInsulinMarkers),
                 className:=NameOf(Insulin), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(listOfClass:=s_listOfMealMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfMealMarkers),
                 className:=NameOf(Meal), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelCalibration.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(listOfClass:=s_listOfCalibrationMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfCalibrationMarkers),
                 className:=NameOf(Calibration), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(listOfClass:=s_listOfLowGlucoseSuspendedMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfLowGlucoseSuspendedMarkers),
                 className:=NameOf(LowGlucoseSuspended), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(listOfClass:=s_listOfTimeChangeMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfTimeChangeMarkers),
                 className:=NameOf(TimeChange), rowIndex:=ServerDataIndexes.markers)
 
             DisplayDataTableInDGV(
                 realPanel:=Nothing,
-                table:=ClassCollectionToDataTable(listOfClass:=s_listOfBasalPerHour),
+                table:=ClassCollectionToDataTable(classCollection:=s_listOfBasalPerHour),
                 dgv:=mainForm.DgvBasalPerHour,
                 rowIndex:=0)
             mainForm.DgvBasalPerHour.AutoSize = True
@@ -621,8 +621,8 @@ Friend Module Form1UpdateHelpers
                 mainForm.LastSgOrExitTimeLabel.Visible = True
             End If
         End If
-        mainForm.TableLayoutPanelBannerState.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(listOfClass:=listOfBannerState),
+        mainForm.TableLayoutPanelPumpBannerState.DisplayDataTableInDGV(
+            table:=ClassCollectionToDataTable(classCollection:=listOfBannerState),
             className:=NameOf(BannerState), rowIndex:=ServerDataIndexes.pumpBannerState)
     End Sub
 
