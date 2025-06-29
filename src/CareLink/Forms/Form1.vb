@@ -1784,10 +1784,7 @@ Public Class Form1
                             End If
                             Me.TabControlPage1.SelectedIndex = _lastMarkerTabIndex.tab
                         Else
-                            Me.TabControlPage2.SelectedIndex = If(5 < tab,
-                                                                  0,
-                                                                  _lastMarkerTabIndex.tab
-                                                                 )
+                            Me.TabControlPage2.SelectedIndex = If(5 < tab, 0, _lastMarkerTabIndex.tab)
                             .Visible = False
                         End If
                     Case ServerDataIndexes.notificationHistory
