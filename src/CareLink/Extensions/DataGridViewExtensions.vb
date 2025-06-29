@@ -23,7 +23,7 @@ Public Module DataGridViewExtensions
             .AllowUserToResizeColumns = False
             .AllowUserToResizeRows = False
             .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {
-                .BackColor = Color.FromArgb(red:=30, green:=30, blue:=30),
+                .BackColor = Color.FromArgb(red:=45, green:=45, blue:=45),
                 .ForeColor = Color.White,
                 .SelectionBackColor = Color.FromArgb(red:=51, green:=153, blue:=255),
                 .SelectionForeColor = Color.White}

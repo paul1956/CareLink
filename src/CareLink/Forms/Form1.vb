@@ -2895,13 +2895,11 @@ Public Class Form1
             .LineAlignment = StringAlignment.Center}
 
         ' Highlight selected tab
-        Dim isSelected As Boolean = tabControlN.SelectedIndex = e.Index
-        Dim tabColor As Color = If(isSelected,
+        Dim tabColor As Color = If(tabControlN.SelectedIndex = e.Index,
                                    Color.Black,
-                                   SystemColors.ControlDarkDark)
-        Dim textColor As Color = If(isSelected, Color.White, Color.LightGray)
+                                   SystemColors.ControlDark)
 
-        Using brush As New SolidBrush(color:=tabColor), textBrush As New SolidBrush(color:=textColor)
+        Using brush As New SolidBrush(color:=tabColor), textBrush As New SolidBrush(color:=Color.White)
             Using g As Graphics = e.Graphics
                 g.FillRectangle(brush, rect)
                 Dim s As String = tabControlN.TabPages(e.Index).Text
