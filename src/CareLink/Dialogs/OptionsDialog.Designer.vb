@@ -22,17 +22,18 @@ Partial Class OptionsDialog
     'Do not modify it using the code editor.
     <Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim resources As ComponentModel.ComponentResourceManager = New ComponentModel.ComponentResourceManager(GetType(OptionsDialog))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(OptionsDialog))
         TableLayoutPanel1 = New TableLayoutPanel()
         OK_Button = New Button()
         Cancel_Button = New Button()
-        Me.ItemNameComboBox = New NameColorComboBox()
-        UpdateForeground_Button = New Button()
-        Me.KnownColorsComboBox1 = New KnownColorComboBox()
+        UpdateForegroundButton = New Button()
+        ItemNameComboBox = New NameColorComboBox()
+        KnownColorsComboBox1 = New KnownColorComboBox()
+        TableLayoutPanel2 = New TableLayoutPanel()
         TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         ' 
-        ' TableLayoutPanel2
+        ' TableLayoutPanel1
         ' 
         TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         TableLayoutPanel1.ColumnCount = 2
@@ -41,9 +42,9 @@ Partial Class OptionsDialog
         TableLayoutPanel1.Controls.Add(OK_Button, 0, 0)
         TableLayoutPanel1.Controls.Add(Cancel_Button, 1, 0)
         TableLayoutPanel1.Location = New Point(303, 99)
-        TableLayoutPanel1.Name = "TableLayoutPanel2"
+        TableLayoutPanel1.Name = "TableLayoutPanel1"
         TableLayoutPanel1.RowCount = 1
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
         TableLayoutPanel1.Size = New Size(170, 33)
         TableLayoutPanel1.TabIndex = 0
         ' 
@@ -68,53 +69,64 @@ Partial Class OptionsDialog
         ' 
         ' ItemNameComboBox
         ' 
-        Me.ItemNameComboBox.DrawMode = DrawMode.OwnerDrawFixed
-        Me.ItemNameComboBox.DropDownHeight = 400
-        Me.ItemNameComboBox.DropDownStyle = ComboBoxStyle.DropDownList
-        Me.ItemNameComboBox.DropDownWidth = 300
-        Me.ItemNameComboBox.FormattingEnabled = True
-        Me.ItemNameComboBox.IntegralHeight = False
-        Me.ItemNameComboBox.Location = New Point(10, 56)
-        Me.ItemNameComboBox.MaxDropDownItems = 20
-        Me.ItemNameComboBox.Name = "ItemNameComboBox"
-        Me.ItemNameComboBox.SelectedItem = CType(resources.GetObject("ItemNameComboBox.SelectedItem"), KeyValuePair(Of String, KnownColor))
-        Me.ItemNameComboBox.Size = New Size(287, 24)
-        Me.ItemNameComboBox.TabIndex = 3
+        ItemNameComboBox.DropDownHeight = 400
+        ItemNameComboBox.DropDownStyle = ComboBoxStyle.DropDownList
+        ItemNameComboBox.DropDownWidth = 300
+        ItemNameComboBox.FormattingEnabled = True
+        ItemNameComboBox.IntegralHeight = False
+        ItemNameComboBox.Location = New Point(10, 56)
+        ItemNameComboBox.MaxDropDownItems = 20
+        ItemNameComboBox.Name = "ItemNameComboBox"
+        ItemNameComboBox.SelectedItem = CType(resources.GetObject("ItemNameComboBox.SelectedItem"), KeyValuePair(Of String, KnownColor))
+        ItemNameComboBox.Size = New Size(287, 23)
+        ItemNameComboBox.TabIndex = 3
+        '
+        ' UpdateForegroundButton
         ' 
-        ' UpdateForeground_Button
+        UpdateForegroundButton.Location = New Point(3, 3)
+        UpdateForegroundButton.Name = "UpdateForegroundButton"
+        UpdateForegroundButton.Size = New Size(159, 27)
+        UpdateForegroundButton.TabIndex = 5
+        UpdateForegroundButton.Text = "Update Foreground Color"
         ' 
-        UpdateForeground_Button.Location = New Point(314, 12)
-        UpdateForeground_Button.Name = "UpdateForeground_Button"
-        UpdateForeground_Button.Size = New Size(159, 27)
-        UpdateForeground_Button.TabIndex = 5
-        UpdateForeground_Button.Text = "Update Foreground Color"
-        UpdateForeground_Button.UseVisualStyleBackColor = True
         ' 
         ' KnownColorsComboBox1
         ' 
-        Me.KnownColorsComboBox1.DrawMode = DrawMode.OwnerDrawFixed
-        Me.KnownColorsComboBox1.DropDownHeight = 120
-        Me.KnownColorsComboBox1.DropDownStyle = ComboBoxStyle.DropDownList
-        Me.KnownColorsComboBox1.FormattingEnabled = True
-        Me.KnownColorsComboBox1.IntegralHeight = False
-        Me.KnownColorsComboBox1.Location = New Point(303, 56)
-        Me.KnownColorsComboBox1.Name = "KnownColorsComboBox1"
-        Me.KnownColorsComboBox1.SelectedItem = CType(resources.GetObject("KnownColorsComboBox1.SelectedItem"), KeyValuePair(Of String, KnownColor))
-        Me.KnownColorsComboBox1.Size = New Size(169, 24)
-        Me.KnownColorsComboBox1.TabIndex = 6
+        KnownColorsComboBox1.DropDownHeight = 120
+        KnownColorsComboBox1.DropDownStyle = ComboBoxStyle.DropDownList
+        KnownColorsComboBox1.FormattingEnabled = True
+        KnownColorsComboBox1.IntegralHeight = False
+        KnownColorsComboBox1.Location = New Point(303, 56)
+        KnownColorsComboBox1.Name = "KnownColorsComboBox1"
+        KnownColorsComboBox1.SelectedItem = CType(resources.GetObject("KnownColorsComboBox1.SelectedItem"), KeyValuePair(Of String, KnownColor))
+        KnownColorsComboBox1.Size = New Size(169, 23)
+        KnownColorsComboBox1.TabIndex = 6
+        ' 
+        ' TableLayoutPanel2
+        ' 
+        TableLayoutPanel2.Controls.Add(UpdateForegroundButton, 0, 0)
+        TableLayoutPanel2.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
+        TableLayoutPanel2.ColumnCount = 1
+        TableLayoutPanel2.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanel2.Location = New Point(303, 7)
+        TableLayoutPanel2.Name = "TableLayoutPanel2"
+        TableLayoutPanel2.RowCount = 1
+        TableLayoutPanel2.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanel2.Size = New Size(180, 32)
+        TableLayoutPanel2.TabIndex = 7
         ' 
         ' OptionsDialog
         ' 
         Me.AcceptButton = OK_Button
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = Cancel_Button
         Me.ClientSize = New Size(486, 143)
-        Me.Controls.Add(Me.KnownColorsComboBox1)
-        Me.Controls.Add(UpdateForeground_Button)
-        Me.Controls.Add(Me.ItemNameComboBox)
+        Me.Controls.Add(KnownColorsComboBox1)
+        Me.Controls.Add(ItemNameComboBox)
         Me.Controls.Add(TableLayoutPanel1)
-        Me.Font = New Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point)
+        Me.Controls.Add(TableLayoutPanel2)
+        Me.Font = New Font("Segoe UI", 9.0F)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.MaximizeBox = False
         Me.MinimizeBox = False
@@ -129,7 +141,8 @@ Partial Class OptionsDialog
     Friend WithEvents OK_Button As Button
     Friend WithEvents Cancel_Button As Button
     Friend WithEvents ItemNameComboBox As NameColorComboBox
-    Friend WithEvents UpdateForeground_Button As Button
+    Friend WithEvents UpdateForegroundButton As Button
     Friend WithEvents OptionsBindingSource As BindingSource
     Friend WithEvents KnownColorsComboBox1 As KnownColorComboBox
+    Friend WithEvents TableLayoutPanel2 As TableLayoutPanel
 End Class

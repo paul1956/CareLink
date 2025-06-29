@@ -236,7 +236,7 @@ Public Module DgvHelpers
         If dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Equals(dgv.CurrentCell) Then
             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Purple, isUri:=True)
         Else
-            dgv.CellFormattingApplyBoldColor(e, textColor:=Color.FromArgb(red:=&H0, green:=&H66, blue:=&HCC), isUri:=True)
+            dgv.CellFormattingApplyBoldColor(e, textColor:=Color.FromArgb(red:=0, green:=160, blue:=204), isUri:=True)
         End If
         e.FormattingApplied = True
     End Sub
