@@ -144,8 +144,7 @@ Public Class LoginDialog
             End If
             Me.PasswordTextBox.Text = If(s_allUserSettingsData?.ContainsKey(.Text),
                                          s_allUserSettingsData(.Text).CareLinkPassword,
-                                         ""
-                                        )
+                                         "")
         End With
 
         Me.RegionComboBox.DataSource = New BindingSource(dataSource:=s_regionList, dataMember:=Nothing)

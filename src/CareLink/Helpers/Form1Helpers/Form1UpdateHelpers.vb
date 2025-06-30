@@ -146,16 +146,16 @@ Friend Module Form1UpdateHelpers
         Dim valueList As String() = GetValueList(row.Value)
         For Each e As IndexClass(Of String) In valueList.WithIndex
             Dim message As String = String.Empty
-            Dim strings As String() = e.Value.Split(" = ")
-            If row.Key = "additionalInfo" Then
-                Dim additionalInfo As Dictionary(Of String, String) = GetAdditionalInformation(row.Value)
-                If strings(0) = "sensorUpdateTime" Then
-                    message = GetSensorUpdateTime(strings(1))
+            Dim strings As String() = e.Value.Split(separator:=" = ")
+            If row.Key.EqualsIgnoreCase("AdditionalInfo") Then
+                Dim additionalInfo As Dictionary(Of String, String) = GetAdditionalInformation(jsonString:=row.Value)
+                If strings(0).EqualsIgnoreCase("sensorUpdateTime") Then
+                    message = GetSensorUpdateTime(key:=strings(1))
                 End If
             End If
             Dim item As New SummaryRecord(
                 recordNumber:=CSng(CSng(rowIndex) + ((e.Index + 1) / 10)),
-                $"{key}:{strings(0).Trim}",
+                key:=$"{key}:{strings(0).Trim}",
                 value:=strings(1).Trim,
                 message)
             listOfSummaryRecords.Add(item)

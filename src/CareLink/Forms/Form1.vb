@@ -1970,11 +1970,11 @@ Public Class Form1
         If Not Directory.Exists(DirectoryForProjectData) Then
             Dim lastError As String = $"Can't create required project directories!"
             Directory.CreateDirectory(DirectoryForProjectData)
-            Directory.CreateDirectory(SettingsDirectory)
+            Directory.CreateDirectory(GetSettingsDirectory())
         End If
 
-        If Not Directory.Exists(SettingsDirectory) Then
-            Directory.CreateDirectory(SettingsDirectory)
+        If Not Directory.Exists(GetSettingsDirectory()) Then
+            Directory.CreateDirectory(GetSettingsDirectory())
         End If
 
         If File.Exists(currentAllUserLoginFile) Then
@@ -1992,7 +1992,7 @@ Public Class Form1
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
-        If File.Exists(GetGraphColorsFileNameWithPath()) Then
+        If File.Exists(GraphColorsFileNameWithPath) Then
             GetColorDictionaryFromFile()
         Else
             WriteColorDictionaryToFile()
@@ -2000,7 +2000,7 @@ Public Class Form1
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
         If String.IsNullOrWhiteSpace(GetWebViewCacheDirectory()) Then
-            s_webView2CacheDirectory = Path.Join(s_projectWebCache, Guid.NewGuid().ToString)
+            s_webView2CacheDirectory = Path.Join(ProjectWebCache, Guid.NewGuid().ToString())
             Directory.CreateDirectory(s_webView2CacheDirectory)
         End If
 
@@ -2157,14 +2157,14 @@ Public Class Form1
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
         Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles(
             path:=DirectoryForProjectData,
-            matchPattern:=$"CareLink*.json")
+            searchPattern:=$"CareLink*.json")
         Me.MenuStartHereSaveSnapshotFile.Enabled = Not RecentDataEmpty()
         Me.MenuStartHereUseExceptionReport.Visible = AnyMatchingFiles(
             path:=DirectoryForProjectData,
-            matchPattern:=$"{BaseNameSavedErrorReport}*.txt")
+            searchPattern:=$"{BaseNameSavedErrorReport}*.txt")
 
         Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(s_userName) OrElse
-            Not AnyMatchingFiles(path:=SettingsDirectory, matchPattern:=$"{s_userName}Settings.pdf"))
+            Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern:=$"{s_userName}Settings.pdf"))
 
         Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists
         Me.MenuStartHereManuallyImportDeviceSettings.Enabled = Not userPdfExists
@@ -2225,11 +2225,11 @@ Public Class Form1
 
             If openFileDialog1.ShowDialog(Me) = DialogResult.OK Then
                 Dim directory As String = Path.GetDirectoryName(openFileDialog1.FileName)
-                Dim destinationPath As String = Path.Combine(directory, GetUserSettingsPdfFileNameWithPath())
+                Dim destinationPath As String = Path.Combine(directory, UserSettingsPdfFileWithPath)
                 File.Move(openFileDialog1.FileName, destinationPath)
                 My.Computer.FileSystem.MoveFile(
                     sourceFileName:=destinationPath,
-                    destinationFileName:=GetUserSettingsPdfFileNameWithPath(),
+                    destinationFileName:=UserSettingsPdfFileWithPath,
                     showUI:=FileIO.UIOption.AllDialogs,
                     onUserCancel:=FileIO.UICancelOption.DoNothing)
             End If
@@ -2246,8 +2246,7 @@ Public Class Form1
     Private Sub MenuStartHereShowPumpSetup_Click(sender As Object, e As EventArgs) Handles _
         MenuStartHereShowPumpSetup.Click
 
-        Dim userSettingsPdfFile As String = GetUserSettingsPdfFileNameWithPath()
-        If File.Exists(userSettingsPdfFile) Then
+        If File.Exists(UserSettingsPdfFileWithPath) Then
             If CurrentPdf.IsValid Then
                 Using dialog As New PumpSetupDialog
                     StartOrStopServerUpdateTimer(Start:=False)
@@ -2255,17 +2254,19 @@ Public Class Form1
                     dialog.ShowDialog(Me)
                 End Using
             End If
+
+            ' If the PDF file is not valid after setup, show a message box to the user.
             If Not CurrentPdf.IsValid Then
                 MsgBox(
                     heading:=$"Device Setting PDF file Is invalid",
-                    text:=userSettingsPdfFile,
+                    text:=UserSettingsPdfFileWithPath,
                     buttonStyle:=MsgBoxStyle.OkOnly,
                     title:="Invalid Settings PDF File")
             End If
         Else
             MsgBox(
                 heading:=$"Device Setting PDF file Is missing!",
-                text:=userSettingsPdfFile,
+                text:=UserSettingsPdfFileWithPath,
                 buttonStyle:=MsgBoxStyle.OkOnly,
                 title:="Missing Settings PDF File")
         End If
@@ -2542,7 +2543,7 @@ Public Class Form1
         MenuOptionsEditPumpSettings.Click
 
         SetUpCareLinkUser(forceUI:=True)
-        Dim contents As String = File.ReadAllText(GetUserSettingsJsonFileNameWithPath)
+        Dim contents As String = File.ReadAllText(UserSettingsFileWithPath)
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, s_jsonSerializerOptions)
     End Sub
 
@@ -4170,8 +4171,8 @@ Public Class Form1
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
-            Me.Last24ManualBolusPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24MealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
+            Me.Last24MealBolusPercentLabel.Text = $"{totalPercent}%"
         Else
             Me.Last24AutoCorrectionLabel.Visible = False
             Me.Last24AutoCorrectionUnitsLabel.Visible = False
@@ -4179,8 +4180,8 @@ Public Class Form1
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
-            Me.Last24ManualBolusPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24MealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
+            Me.Last24MealBolusPercentLabel.Text = $"{totalPercent}%"
         End If
         Me.Last24CarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}"
     End Sub

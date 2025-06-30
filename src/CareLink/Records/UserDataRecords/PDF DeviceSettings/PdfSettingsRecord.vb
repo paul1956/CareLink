@@ -26,10 +26,12 @@ Public Class PdfSettingsRecord
     Private Const SmartGuardHeader As String = "SmartGuard"
     Private Const UtilitiesHeader As String = "Block Mode"
 
-    Public Sub New(filename As String)
+    Public Sub New(pdfFileNameWithPath As String)
         Try
-            Dim tables As Dictionary(Of String, PdfTable) = GetTableList(filename, 0, 1)
-            Dim allText As String = ExtractTextFromPage(filename, 0, 1)
+            Form1.Cursor = Cursors.WaitCursor
+            Application.DoEvents()
+            Dim tables As Dictionary(Of String, PdfTable) = GetTableList(pdfFileNameWithPath, 0, 1)
+            Dim allText As String = ExtractTextFromPage(pdfFileNameWithPath, 0, 1)
             Dim listOfAllTextLines As List(Of String) = allText.SplitLines(Trim:=True)
 
             ' Get Sensor and Basal 4 Line to determine Active Basal later
@@ -167,6 +169,9 @@ Public Class PdfSettingsRecord
             Next
         Catch ex As Exception
             Stop
+        Finally
+            Form1.Cursor = Cursors.Default
+            Application.DoEvents()
         End Try
     End Sub
 

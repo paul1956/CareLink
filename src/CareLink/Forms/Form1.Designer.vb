@@ -90,9 +90,9 @@ Partial Class Form1
         Last24HoursGraphLabel = New Label()
         Last24HTotalsPanel = New Panel()
         Last24TotalInsulinUnitsLabel = New Label()
-        Last24ManualBolusUnitsLabel = New Label()
+        Last24MealBolusUnitsLabel = New Label()
         Last24TotalInsulinLabel = New Label()
-        Last24ManualBolusPercentLabel = New Label()
+        Last24MealBolusPercentLabel = New Label()
         Last24MealBolusLabel = New Label()
         Last24TotalsLabel = New Label()
         LastUpdateTimeToolStripStatusLabel = New ToolStripStatusLabel()
@@ -935,100 +935,195 @@ Partial Class Form1
         LabelTrendValue.Text = "+ 5"
         LabelTrendValue.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' Last24AutoCorrectionLabel
+        ' Last24HTotalsPanel
         ' 
-        Last24AutoCorrectionLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24AutoCorrectionLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24AutoCorrectionLabel.ForeColor = Color.White
-        Last24AutoCorrectionLabel.Location = New Point(0, 86)
-        Last24AutoCorrectionLabel.Name = "Last24AutoCorrectionLabel"
-        Last24AutoCorrectionLabel.Size = New Size(131, 21)
-        Last24AutoCorrectionLabel.TabIndex = 64
-        Last24AutoCorrectionLabel.Text = "Auto Correction"
-        Last24AutoCorrectionLabel.TextAlign = ContentAlignment.MiddleLeft
+        Last24HTotalsPanel.BorderStyle = BorderStyle.FixedSingle
+        Last24HTotalsPanel.Controls.Add(Last24BasalLabel)
+        Last24HTotalsPanel.Controls.Add(Last24BasalUnitsLabel)
+        Last24HTotalsPanel.Controls.Add(Last24BasalPercentLabel)
+        Last24HTotalsPanel.Controls.Add(Last24AutoCorrectionLabel)
+        Last24HTotalsPanel.Controls.Add(Last24AutoCorrectionUnitsLabel)
+        Last24HTotalsPanel.Controls.Add(Last24AutoCorrectionPercentLabel)
+        Last24HTotalsPanel.Controls.Add(Last24MealBolusLabel)
+        Last24HTotalsPanel.Controls.Add(Last24MealBolusUnitsLabel)
+        Last24HTotalsPanel.Controls.Add(Last24MealBolusPercentLabel)
+        Last24HTotalsPanel.Controls.Add(Last24TotalInsulinLabel)
+        Last24HTotalsPanel.Controls.Add(Last24TotalInsulinUnitsLabel)
+        Last24HTotalsPanel.Controls.Add(Last24TotalsLabel)
+        Last24HTotalsPanel.Controls.Add(Last24CarbsLabel)
+        Last24HTotalsPanel.Controls.Add(Last24CarbsValueLabel)
+        Last24HTotalsPanel.Location = New Point(724, 0)
+        Last24HTotalsPanel.Name = "Last24HTotalsPanel"
+        Last24HTotalsPanel.Size = New Size(253, 129)
+        Last24HTotalsPanel.TabIndex = 66
         ' 
-        ' Last24AutoCorrectionPercentLabel
+        ' Last24TotalsLabel
         ' 
-        Last24AutoCorrectionPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24AutoCorrectionPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24AutoCorrectionPercentLabel.ForeColor = Color.White
-        Last24AutoCorrectionPercentLabel.Location = New Point(200, 86)
-        Last24AutoCorrectionPercentLabel.Name = "Last24AutoCorrectionPercentLabel"
-        Last24AutoCorrectionPercentLabel.Size = New Size(46, 21)
-        Last24AutoCorrectionPercentLabel.TabIndex = 73
-        Last24AutoCorrectionPercentLabel.Text = "20%"
-        Last24AutoCorrectionPercentLabel.TextAlign = ContentAlignment.MiddleRight
-        ' 
-        ' Last24AutoCorrectionUnitsLabel
-        ' 
-        Last24AutoCorrectionUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24AutoCorrectionUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24AutoCorrectionUnitsLabel.ForeColor = Color.White
-        Last24AutoCorrectionUnitsLabel.Location = New Point(131, 86)
-        Last24AutoCorrectionUnitsLabel.Name = "Last24AutoCorrectionUnitsLabel"
-        Last24AutoCorrectionUnitsLabel.Size = New Size(70, 21)
-        Last24AutoCorrectionUnitsLabel.TabIndex = 72
-        Last24AutoCorrectionUnitsLabel.Text = "20.0U"
-        Last24AutoCorrectionUnitsLabel.TextAlign = ContentAlignment.MiddleRight
+        Last24TotalsLabel.BackColor = Color.DimGray
+        Last24TotalsLabel.Dock = DockStyle.Top
+        Last24TotalsLabel.Font = New Font("Segoe UI", 11.0F, FontStyle.Bold)
+        Last24TotalsLabel.ForeColor = Color.Black
+        Last24TotalsLabel.Location = New Point(0, 0)
+        Last24TotalsLabel.Name = "Last24TotalsLabel"
+        Last24TotalsLabel.Size = New Size(249, 23)
+        Last24TotalsLabel.TabIndex = 65
+        Last24TotalsLabel.Text = "Last 24 Hr Totals"
+        Last24TotalsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' Last24BasalLabel
         ' 
         Last24BasalLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24BasalLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24BasalLabel.ForeColor = Color.White
-        Last24BasalLabel.Location = New Point(0, 45)
+        Last24BasalLabel.Location = New Point(0, 23)
         Last24BasalLabel.Name = "Last24BasalLabel"
-        Last24BasalLabel.Size = New Size(131, 21)
+        Last24BasalLabel.Size = New Size(110, 21)
         Last24BasalLabel.TabIndex = 62
-        Last24BasalLabel.Text = "Basal"
+        Last24BasalLabel.Text = "Basal:"
         Last24BasalLabel.TextAlign = ContentAlignment.MiddleLeft
-        ' 
-        ' Last24BasalPercentLabel
-        ' 
-        Last24BasalPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24BasalPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24BasalPercentLabel.ForeColor = Color.White
-        Last24BasalPercentLabel.Location = New Point(200, 45)
-        Last24BasalPercentLabel.Name = "Last24BasalPercentLabel"
-        Last24BasalPercentLabel.Size = New Size(46, 21)
-        Last24BasalPercentLabel.TabIndex = 69
-        Last24BasalPercentLabel.Text = "50%"
-        Last24BasalPercentLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' Last24BasalUnitsLabel
         ' 
         Last24BasalUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24BasalUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24BasalUnitsLabel.ForeColor = Color.White
-        Last24BasalUnitsLabel.Location = New Point(131, 45)
+        Last24BasalUnitsLabel.Location = New Point(131, 23)
         Last24BasalUnitsLabel.Name = "Last24BasalUnitsLabel"
         Last24BasalUnitsLabel.Size = New Size(70, 21)
         Last24BasalUnitsLabel.TabIndex = 68
         Last24BasalUnitsLabel.Text = "50.0U"
         Last24BasalUnitsLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
+        ' Last24BasalPercentLabel
+        ' 
+        Last24BasalPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24BasalPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Last24BasalPercentLabel.ForeColor = Color.White
+        Last24BasalPercentLabel.Location = New Point(200, 23)
+        Last24BasalPercentLabel.Name = "Last24BasalPercentLabel"
+        Last24BasalPercentLabel.Size = New Size(46, 21)
+        Last24BasalPercentLabel.TabIndex = 69
+        Last24BasalPercentLabel.Text = "50%"
+        Last24BasalPercentLabel.TextAlign = ContentAlignment.MiddleRight
+        ' 
+        ' Last24AutoCorrectionLabel
+        ' 
+        Last24AutoCorrectionLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24AutoCorrectionLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Last24AutoCorrectionLabel.ForeColor = Color.White
+        Last24AutoCorrectionLabel.Location = New Point(0, 43)
+        Last24AutoCorrectionLabel.Name = "Last24AutoCorrectionLabel"
+        Last24AutoCorrectionLabel.Size = New Size(145, 21)
+        Last24AutoCorrectionLabel.TabIndex = 64
+        Last24AutoCorrectionLabel.Text = "Auto Correction:"
+        Last24AutoCorrectionLabel.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' Last24AutoCorrectionUnitsLabel
+        ' 
+        Last24AutoCorrectionUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24AutoCorrectionUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Last24AutoCorrectionUnitsLabel.ForeColor = Color.White
+        Last24AutoCorrectionUnitsLabel.Location = New Point(131, 43)
+        Last24AutoCorrectionUnitsLabel.Name = "Last24AutoCorrectionUnitsLabel"
+        Last24AutoCorrectionUnitsLabel.Size = New Size(70, 21)
+        Last24AutoCorrectionUnitsLabel.TabIndex = 72
+        Last24AutoCorrectionUnitsLabel.Text = "20.0U"
+        Last24AutoCorrectionUnitsLabel.TextAlign = ContentAlignment.MiddleRight
+        ' 
+        ' Last24AutoCorrectionPercentLabel
+        ' 
+        Last24AutoCorrectionPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24AutoCorrectionPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Last24AutoCorrectionPercentLabel.ForeColor = Color.White
+        Last24AutoCorrectionPercentLabel.Location = New Point(200, 43)
+        Last24AutoCorrectionPercentLabel.Name = "Last24AutoCorrectionPercentLabel"
+        Last24AutoCorrectionPercentLabel.Size = New Size(46, 21)
+        Last24AutoCorrectionPercentLabel.TabIndex = 73
+        Last24AutoCorrectionPercentLabel.Text = "20%"
+        Last24AutoCorrectionPercentLabel.TextAlign = ContentAlignment.MiddleRight
+        ' 
+        ' Last24MealBolusLabel
+        ' 
+        Last24MealBolusLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24MealBolusLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Last24MealBolusLabel.ForeColor = Color.White
+        Last24MealBolusLabel.Location = New Point(0, 64)
+        Last24MealBolusLabel.Name = "Last24MealBolusLabel"
+        Last24MealBolusLabel.Size = New Size(110, 21)
+        Last24MealBolusLabel.TabIndex = 63
+        Last24MealBolusLabel.Text = "Meal Bolus:"
+        Last24MealBolusLabel.TextAlign = ContentAlignment.MiddleLeft
+        ' 
+        ' Last24MealBolusUnitsLabel
+        ' 
+        Last24MealBolusUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24MealBolusUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Last24MealBolusUnitsLabel.ForeColor = Color.White
+        Last24MealBolusUnitsLabel.Location = New Point(131, 64)
+        Last24MealBolusUnitsLabel.Name = "Last24MealBolusUnitsLabel"
+        Last24MealBolusUnitsLabel.Size = New Size(70, 21)
+        Last24MealBolusUnitsLabel.TabIndex = 70
+        Last24MealBolusUnitsLabel.Text = "30.0U"
+        Last24MealBolusUnitsLabel.TextAlign = ContentAlignment.MiddleRight
+        ' 
+        ' Last24MealBolusPercentLabel
+        ' 
+        Last24MealBolusPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24MealBolusPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Last24MealBolusPercentLabel.ForeColor = Color.White
+        Last24MealBolusPercentLabel.Location = New Point(200, 64)
+        Last24MealBolusPercentLabel.Name = "Last24MealBolusPercentLabel"
+        Last24MealBolusPercentLabel.Size = New Size(46, 21)
+        Last24MealBolusPercentLabel.TabIndex = 71
+        Last24MealBolusPercentLabel.Text = "30%"
+        Last24MealBolusPercentLabel.TextAlign = ContentAlignment.MiddleRight
+        ' 
+        ' Last24TotalInsulinLabel
+        ' 
+        Last24TotalInsulinLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24TotalInsulinLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Last24TotalInsulinLabel.ForeColor = Color.White
+        Last24TotalInsulinLabel.Location = New Point(0, 85)
+        Last24TotalInsulinLabel.Name = "Last24TotalInsulinLabel"
+        Last24TotalInsulinLabel.Size = New Size(110, 21)
+        Last24TotalInsulinLabel.TabIndex = 61
+        Last24TotalInsulinLabel.Text = "Total Insulin:"
+        Last24TotalInsulinLabel.TextAlign = ContentAlignment.MiddleLeft
+        '
+        ' Last24TotalInsulinUnitsLabel
+        ' 
+        Last24TotalInsulinUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        Last24TotalInsulinUnitsLabel.ForeColor = Color.White
+        Last24TotalInsulinUnitsLabel.Location = New Point(131, 85)
+        Last24TotalInsulinUnitsLabel.Name = "Last24TotalInsulinUnitsLabel"
+        Last24TotalInsulinUnitsLabel.Size = New Size(70, 21)
+        Last24TotalInsulinUnitsLabel.TabIndex = 67
+        Last24TotalInsulinUnitsLabel.Text = " 100.0U"
+        Last24TotalInsulinUnitsLabel.TextAlign = ContentAlignment.MiddleRight
+        ' 
         ' Last24CarbsLabel
         ' 
         Last24CarbsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24CarbsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24CarbsLabel.ForeColor = Color.White
-        Last24CarbsLabel.Location = New Point(0, 21)
+        Last24CarbsLabel.Location = New Point(0, 103)
         Last24CarbsLabel.Name = "Last24CarbsLabel"
-        Last24CarbsLabel.Size = New Size(70, 21)
+        Last24CarbsLabel.Size = New Size(110, 21)
         Last24CarbsLabel.TabIndex = 66
-        Last24CarbsLabel.Text = "Carbs"
+        Last24CarbsLabel.Text = "Total Carbs:"
         Last24CarbsLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Last24CarbsValueLabel
-        ' 
+        '
+        Last24CarbsValueLabel.Dock = DockStyle.Bottom
         Last24CarbsValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24CarbsValueLabel.ForeColor = Color.White
-        Last24CarbsValueLabel.Location = New Point(0, 21)
+        Last24CarbsValueLabel.Location = New Point(160, 103)
         Last24CarbsValueLabel.Name = "Last24CarbsValueLabel"
-        Last24CarbsValueLabel.Size = New Size(249, 21)
+        Last24CarbsValueLabel.Size = New Size(90, 21)
         Last24CarbsValueLabel.TabIndex = 74
-        Last24CarbsValueLabel.Text = " 100 Grams"
-        Last24CarbsValueLabel.TextAlign = ContentAlignment.MiddleCenter
+        Last24CarbsValueLabel.Text = "100 Grams"
+        Last24CarbsValueLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' Last24HoursGraphLabel
         ' 
@@ -1041,100 +1136,6 @@ Partial Class Form1
         Last24HoursGraphLabel.TabIndex = 34
         Last24HoursGraphLabel.Text = "Last 24 hours"
         Last24HoursGraphLabel.TextAlign = ContentAlignment.MiddleCenter
-        ' 
-        ' Last24HTotalsPanel
-        ' 
-        Last24HTotalsPanel.BorderStyle = BorderStyle.Fixed3D
-        Last24HTotalsPanel.Controls.Add(Last24TotalInsulinUnitsLabel)
-        Last24HTotalsPanel.Controls.Add(Last24AutoCorrectionUnitsLabel)
-        Last24HTotalsPanel.Controls.Add(Last24ManualBolusUnitsLabel)
-        Last24HTotalsPanel.Controls.Add(Last24BasalUnitsLabel)
-        Last24HTotalsPanel.Controls.Add(Last24TotalInsulinLabel)
-        Last24HTotalsPanel.Controls.Add(Last24CarbsLabel)
-        Last24HTotalsPanel.Controls.Add(Last24CarbsValueLabel)
-        Last24HTotalsPanel.Controls.Add(Last24AutoCorrectionPercentLabel)
-        Last24HTotalsPanel.Controls.Add(Last24AutoCorrectionLabel)
-        Last24HTotalsPanel.Controls.Add(Last24ManualBolusPercentLabel)
-        Last24HTotalsPanel.Controls.Add(Last24MealBolusLabel)
-        Last24HTotalsPanel.Controls.Add(Last24BasalPercentLabel)
-        Last24HTotalsPanel.Controls.Add(Last24BasalLabel)
-        Last24HTotalsPanel.Controls.Add(Last24TotalsLabel)
-        Last24HTotalsPanel.Location = New Point(724, 0)
-        Last24HTotalsPanel.Name = "Last24HTotalsPanel"
-        Last24HTotalsPanel.Size = New Size(253, 129)
-        Last24HTotalsPanel.TabIndex = 66
-        ' 
-        ' Last24TotalInsulinUnitsLabel
-        ' 
-        Last24TotalInsulinUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24TotalInsulinUnitsLabel.ForeColor = Color.White
-        Last24TotalInsulinUnitsLabel.Location = New Point(131, 103)
-        Last24TotalInsulinUnitsLabel.Name = "Last24TotalInsulinUnitsLabel"
-        Last24TotalInsulinUnitsLabel.Size = New Size(70, 21)
-        Last24TotalInsulinUnitsLabel.TabIndex = 67
-        Last24TotalInsulinUnitsLabel.Text = " 100.0U"
-        Last24TotalInsulinUnitsLabel.TextAlign = ContentAlignment.MiddleRight
-        ' 
-        ' Last24ManualBolusUnitsLabel
-        ' 
-        Last24ManualBolusUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24ManualBolusUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24ManualBolusUnitsLabel.ForeColor = Color.White
-        Last24ManualBolusUnitsLabel.Location = New Point(131, 66)
-        Last24ManualBolusUnitsLabel.Name = "Last24ManualBolusUnitsLabel"
-        Last24ManualBolusUnitsLabel.Size = New Size(70, 21)
-        Last24ManualBolusUnitsLabel.TabIndex = 70
-        Last24ManualBolusUnitsLabel.Text = "30.0U"
-        Last24ManualBolusUnitsLabel.TextAlign = ContentAlignment.MiddleRight
-        ' 
-        ' Last24TotalInsulinLabel
-        ' 
-        Last24TotalInsulinLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24TotalInsulinLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24TotalInsulinLabel.ForeColor = Color.White
-        Last24TotalInsulinLabel.Location = New Point(0, 103)
-        Last24TotalInsulinLabel.Name = "Last24TotalInsulinLabel"
-        Last24TotalInsulinLabel.Size = New Size(131, 21)
-        Last24TotalInsulinLabel.TabIndex = 61
-        Last24TotalInsulinLabel.Text = "Total Insulin"
-        Last24TotalInsulinLabel.TextAlign = ContentAlignment.MiddleLeft
-        ' 
-        ' Last24ManualBolusPercentLabel
-        ' 
-        Last24ManualBolusPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24ManualBolusPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24ManualBolusPercentLabel.ForeColor = Color.White
-        Last24ManualBolusPercentLabel.Location = New Point(200, 66)
-        Last24ManualBolusPercentLabel.Name = "Last24ManualBolusPercentLabel"
-        Last24ManualBolusPercentLabel.Size = New Size(46, 21)
-        Last24ManualBolusPercentLabel.TabIndex = 71
-        Last24ManualBolusPercentLabel.Text = "30%"
-        Last24ManualBolusPercentLabel.TextAlign = ContentAlignment.MiddleRight
-        ' 
-        ' Last24MealBolusLabel
-        ' 
-        Last24MealBolusLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
-        Last24MealBolusLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24MealBolusLabel.ForeColor = Color.White
-        Last24MealBolusLabel.Location = New Point(0, 66)
-        Last24MealBolusLabel.Name = "Last24MealBolusLabel"
-        Last24MealBolusLabel.Size = New Size(131, 21)
-        Last24MealBolusLabel.TabIndex = 63
-        Last24MealBolusLabel.Text = "Meal Bolus"
-        Last24MealBolusLabel.TextAlign = ContentAlignment.MiddleLeft
-        ' 
-        ' Last24TotalsLabel
-        ' 
-        Last24TotalsLabel.BackColor = Color.White
-        Last24TotalsLabel.Dock = DockStyle.Top
-        Last24TotalsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24TotalsLabel.ForeColor = Color.Black
-        Last24TotalsLabel.Location = New Point(0, 0)
-        Last24TotalsLabel.Name = "Last24TotalsLabel"
-        Last24TotalsLabel.Size = New Size(249, 23)
-        Last24TotalsLabel.TabIndex = 65
-        Last24TotalsLabel.Text = "Last 24 Hr Totals"
-        Last24TotalsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' LastUpdateTimeToolStripStatusLabel
         '
@@ -3156,8 +3157,8 @@ Partial Class Form1
     Friend WithEvents Last24CarbsValueLabel As Label
     Friend WithEvents Last24HoursGraphLabel As Label
     Friend WithEvents Last24HTotalsPanel As Panel
-    Friend WithEvents Last24ManualBolusPercentLabel As Label
-    Friend WithEvents Last24ManualBolusUnitsLabel As Label
+    Friend WithEvents Last24MealBolusPercentLabel As Label
+    Friend WithEvents Last24MealBolusUnitsLabel As Label
     Friend WithEvents Last24MealBolusLabel As Label
     Friend WithEvents Last24TotalInsulinLabel As Label
     Friend WithEvents Last24TotalInsulinUnitsLabel As Label

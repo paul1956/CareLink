@@ -288,14 +288,17 @@ Friend Module LoginHelpers
 
         With form1.TimeZoneToolStripStatusLabel
             .Text = ""
+            .ForeColor = form1.MenuStrip1.ForeColor
             If isDaylightSavingTime IsNot Nothing Then
                 Dim timeZoneName As String = Nothing
                 If RecentData?.TryGetValue(NameOf(ServerDataIndexes.clientTimeZoneName), timeZoneName) Then
                     Dim timeZoneInfo As TimeZoneInfo = CalculateTimeZone(timeZoneName)
-                    .Text = $"{If(isDaylightSavingTime, timeZoneInfo.DaylightName, timeZoneInfo.StandardName)} {suffixMessage}".Trim
+                    Dim dst As String = If(isDaylightSavingTime,
+                                           timeZoneInfo.DaylightName,
+                                           timeZoneInfo.StandardName)
+                    .Text = $"{dst} {suffixMessage}".Trim
                 End If
             End If
-            .ForeColor = form1.MenuStrip1.ForeColor
         End With
 
     End Sub
@@ -304,9 +307,9 @@ Friend Module LoginHelpers
     '''  Loads and deserializes the user settings from JSON file.
     ''' </summary>
     Friend Sub SetUpCareLinkUser()
-        Dim path As String = GetUserSettingsJsonFileNameWithPath()
+        Dim path As String = UserSettingsFileWithPath()
         Dim json As String = File.ReadAllText(path)
-        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, s_jsonDeserializerOptions)
+        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonDeserializerOptions)
     End Sub
 
     ''' <summary>
@@ -317,32 +320,39 @@ Friend Module LoginHelpers
     ''' </param>
     '''
     Friend Sub SetUpCareLinkUser(forceUI As Boolean)
-        Dim path As String = GetUserSettingsJsonFileNameWithPath()
         Dim currentUserUpdateNeeded As Boolean = False
         Dim pdfNewerThanUserSettings As Boolean = False
-        Dim pdfFileNameWithPath As String = GetUserSettingsPdfFileNameWithPath()
+        Dim pdfFileNameWithPath As String = UserSettingsPdfFileWithPath
 
-        If File.Exists(GetUserSettingsJsonFileNameWithPath) Then
-            Dim userSettingsJson As String = File.ReadAllText(GetUserSettingsJsonFileNameWithPath)
-            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(userSettingsJson, s_jsonSerializerOptions)
+        Dim path As String = UserSettingsFileWithPath()
+
+        If File.Exists(path) Then
+            Dim userSettingsJson As String = File.ReadAllText(path)
+            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(
+                json:=userSettingsJson,
+                options:=s_jsonSerializerOptions)
 
             If CurrentUser.InsulinRealAit = 0 Then
-                CurrentUser.InsulinRealAit = s_insulinTypes.Values(0).AitHours
+                CurrentUser.InsulinRealAit = s_insulinTypes.Values(index:=0).AitHours
             End If
             If String.IsNullOrEmpty(CurrentUser.InsulinTypeName) Then
-                CurrentUser.InsulinTypeName = s_insulinTypes.Keys(0)
+                CurrentUser.InsulinTypeName = s_insulinTypes.Keys(index:=0)
             End If
 
-            pdfNewerThanUserSettings = (File.Exists(pdfFileNameWithPath) AndAlso File.GetLastWriteTime(pdfFileNameWithPath) > File.GetLastWriteTime(GetUserSettingsJsonFileNameWithPath)) OrElse IsFileReadOnly(pdfFileNameWithPath)
+            If File.Exists(path:=pdfFileNameWithPath) Then
+                pdfNewerThanUserSettings = Not IsFileReadOnly(path) AndAlso
+                                           File.GetLastWriteTime(path:=pdfFileNameWithPath) > File.GetLastWriteTime(path)
+            End If
 
             If Not forceUI Then
-                If Not (pdfNewerThanUserSettings AndAlso IsFileStale(GetUserSettingsJsonFileNameWithPath)) Then
+                If Not (pdfNewerThanUserSettings AndAlso IsFileStale(path)) Then
                     CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
                     Exit Sub
                 End If
             End If
         Else
-            CurrentUser = New CurrentUserRecord(s_userName, If(Not Form1UpdateHelpers.Is700Series(), CheckState.Checked, CheckState.Indeterminate))
+            Dim useAdvancedAitDecay As CheckState = If(Is700Series(), CheckState.Indeterminate, CheckState.Checked)
+            CurrentUser = New CurrentUserRecord(userName:=s_userName, useAdvancedAitDecay)
             currentUserUpdateNeeded = True
         End If
 
@@ -353,7 +363,10 @@ Friend Module LoginHelpers
         Dim carbRatios As New List(Of CarbRatioRecord)
         Dim currentTarget As Single = 120
 
-        If Form1.Client?.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse pdfNewerThanUserSettings OrElse File.Exists(pdfFileNameWithPath) Then
+        If Form1.Client?.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse
+           pdfNewerThanUserSettings OrElse
+           File.Exists(pdfFileNameWithPath) Then
+
             CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
             If CurrentPdf.IsValid Then
                 If CurrentUser.PumpAit <> CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime Then
@@ -372,7 +385,7 @@ Friend Module LoginHelpers
         End If
         If currentUserUpdateNeeded OrElse forceUI Then
             Using f As New InitializeDialog(ait, currentTarget, carbRatios)
-                Dim result As DialogResult = f.ShowDialog(My.Forms.Form1)
+                Dim result As DialogResult = f.ShowDialog(owner:=My.Forms.Form1)
                 If result = DialogResult.OK Then
                     currentUserUpdateNeeded = currentUserUpdateNeeded OrElse Not CurrentUser.Equals(f.CurrentUser)
                     CurrentUser = f.CurrentUser.Clone
@@ -381,8 +394,10 @@ Friend Module LoginHelpers
         End If
         If currentUserUpdateNeeded Then
             File.WriteAllTextAsync(
-                path:=GetUserSettingsJsonFileNameWithPath,
-                contents:=JsonSerializer.Serialize(CurrentUser, s_jsonSerializerOptions))
+                path,
+                contents:=JsonSerializer.Serialize(value:=CurrentUser, options:=s_jsonSerializerOptions))
+        Else
+            TouchFile(path)
         End If
         Form1.Cursor = Cursors.Default
         Application.DoEvents()

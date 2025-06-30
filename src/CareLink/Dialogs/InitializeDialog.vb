@@ -349,7 +349,7 @@ Public Class InitializeDialog
         Next
 
         File.WriteAllTextAsync(
-            path:=GetUserSettingsJsonFileNameWithPath,
+            path:=UserSettingsFileWithPath,
             contents:=JsonSerializer.Serialize(Me.CurrentUser, s_jsonSerializerOptions))
         Me.Close()
     End Sub

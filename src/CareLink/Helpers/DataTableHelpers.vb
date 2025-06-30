@@ -162,6 +162,10 @@ Friend Module DataTableHelpers
                         cellStyle = cellStyle.SetCellStyle(
                             alignment:=DataGridViewContentAlignment.MiddleLeft,
                             padding:=New Padding(all:=1))
+                    Case "AdditionalInfo"
+                        cellStyle = cellStyle.SetCellStyle(
+                            alignment:=DataGridViewContentAlignment.MiddleLeft,
+                            padding:=New Padding(all:=1))
                     Case NameOf([Decimal]), NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
                         cellStyle = cellStyle.SetCellStyle(
                             alignment:=DataGridViewContentAlignment.MiddleRight,
