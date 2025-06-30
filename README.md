@@ -30,19 +30,25 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-06/28/2025
+06/30/2025
 
 ## What's New
+ New in 5.0.3.3
+ - Reorganize "Last 24 Hour Totals".
+ - Improve responsiveness of the application while loading data.
+
  New in 5.0.3.2
  - Fix handling of DataGridView Controls, where once a control had a row it would not display the empty message.
 
  New in 5.0.3.1
  - Update table names and other logic so that "Return to Summary Page" works correctly
+ - Fix display of user notifications after data loading.
 
  New in 5.0.3.0
  - Fix IsMinBasal algorithm
  - Cleanup formatting for all the tables, including update function names to better reflect what they do
- 
+ - Enhanced feature for better user experience in DataGrid view.
+
  New in 5.0.2.6
  - All Table columns are not sortable except the RecordNumber column on Sensor Glucose Table
 
