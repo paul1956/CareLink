@@ -315,11 +315,7 @@ Public Class Form1
                         Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
                         Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                         Me.CursorPictureBox.Visible = True
-                        Me.CursorMessage2Label.Font = New Font(
-                            familyName:="Segoe UI",
-                            emSize:=12.0F,
-                            style:=FontStyle.Bold,
-                            unit:=GraphicsUnit.Point)
+                        Me.CursorMessage2Label.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
                         Select Case markerTag.Length
                             Case 2
                                 Me.CursorMessage1Label.Text = markerTag(0)
@@ -356,17 +352,17 @@ Public Class Form1
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
                                     Case "Not used for calibration"
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDot
-                                        Me.CursorMessage2Label.Font = New Font(
-                                            familyName:="Segoe UI",
-                                            emSize:=11.0F,
-                                            style:=FontStyle.Bold,
-                                            unit:=GraphicsUnit.Point)
+                                        Dim style As FontStyle = FontStyle.Bold
+                                        Me.CursorMessage2Label.Font = New Font(FamilyName, emSize:=11.0F, style)
                                     Case Else
                                         Stop
                                 End Select
-                                Me.CursorMessage1Label.Text = $"{markerTag(0)}@{xValue.ToString(s_timeWithMinuteFormat)}"
+                                Me.CursorMessage1Label.Text =
+                                    $"{markerTag(0)}@{xValue.ToString(format:=s_timeWithMinuteFormat)}"
                                 Me.CursorMessage1Label.Visible = True
-                                Me.CursorMessage2Label.Text = markerTag(1).Replace("Calibration not", "Cal. not").Trim
+                                Me.CursorMessage2Label.Text = markerTag(1).Replace(
+                                    oldValue:="Calibration not",
+                                    newValue:="Cal. not").Trim
                                 Me.CursorMessage2Label.Visible = True
                                 Dim sgValue As Single = markerTag(2).Trim.Split(separator:=" ")(0).Trim.ParseSingle(digits:=2)
                                 Me.CursorMessage3Label.Text = markerTag(2).Trim
@@ -607,6 +603,7 @@ Public Class Form1
             Case NameOf(BasalPerHour.BasalRate), NameOf(BasalPerHour.BasalRate2)
                 If dgv.Name = NameOf(DgvBasalPerHour) Then
                     e.Value = $"{dgv.CellFormattingSingleValue(e, digits:=3)} U/h"
+                    e.CellStyle.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
                 End If
             Case NameOf(Calibration.bgUnits)
                 Dim key As String = Convert.ToString(e.Value)
@@ -2004,6 +2001,14 @@ Public Class Form1
             Directory.CreateDirectory(s_webView2CacheDirectory)
         End If
 
+        Dim style As FontStyle = FontStyle.Bold
+        Dim emSize As Single = 12.0F
+        Me.DgvBasalPerHour.Font = New Font(FamilyName, emSize, style)
+        Dim currentHeaderStyle As DataGridViewCellStyle = Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle.Clone
+        currentHeaderStyle.Font = New Font(FamilyName, emSize, style)
+        Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle = currentHeaderStyle
+        Me.DgvBasalPerHour.DefaultCellStyle = New DataGridViewCellStyle With {
+            .Font = New Font(FamilyName, emSize, style)}
     End Sub
 
     ''' <summary>
@@ -3188,7 +3193,7 @@ Public Class Form1
         Dim summaryTitle As Title = CreateTitle(
             chartTitle:="Summary",
             name:=NameOf(summaryTitle),
-            foreColor:=Me.SummaryChart.BackColor.GetContrastingColor())
+            foreColor:=Me.SummaryChart.BackColor.ContrastingColor())
 
         Dim summaryChartArea As ChartArea = CreateChartArea(Me.SummaryChart)
         Me.SummaryChart.ChartAreas.Add(summaryChartArea)
@@ -3329,8 +3334,8 @@ Public Class Form1
         Me.SplitContainer1.Panel2.Controls.Clear()
         Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
         Dim activeInsulinChartArea As ChartArea = CreateChartArea(containingChart:=Me.ActiveInsulinChart)
-        Dim labelColor As Color = Me.ActiveInsulinChart.BackColor.GetContrastingColor()
-        Dim labelFont As New Font(familyName:="Segoe UI", emSize:=12.0F, style:=FontStyle.Bold)
+        Dim labelColor As Color = Me.ActiveInsulinChart.BackColor.ContrastingColor()
+        Dim labelFont As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
 
         With activeInsulinChartArea.AxisY
             .Interval = 2
@@ -3454,8 +3459,8 @@ Public Class Form1
                 TreatmentInsulinRow = (MaxBasalPerDose + 0.025!).RoundTo025
         End Select
 
-        Dim baseColor As Color = Me.TreatmentMarkersChart.BackColor.GetContrastingColor()
-        Dim labelFont As New Font(familyName:="Segoe UI", emSize:=12.0F, style:=FontStyle.Bold)
+        Dim baseColor As Color = Me.TreatmentMarkersChart.BackColor.ContrastingColor()
+        Dim labelFont As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
 
         With treatmentMarkersChartArea.AxisY
             Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(digits:=3, considerValue:=False)
@@ -3487,7 +3492,7 @@ Public Class Form1
         Me.TreatmentMarkersChartTitle = CreateTitle(
             chartTitle:="Treatment Details",
             name:=NameOf(TreatmentMarkersChartTitle),
-            foreColor:=Me.TreatmentMarkersChart.BackColor.GetContrastingColor())
+            foreColor:=Me.TreatmentMarkersChart.BackColor.ContrastingColor())
         Me.TreatmentTargetSeries = CreateSeriesLimitsAndTarget(
             limitsLegend:=_treatmentMarkersChartLegend,
             seriesName:=TargetSgSeriesName)
@@ -4517,11 +4522,11 @@ Public Class Form1
             Dim arrows As String = Nothing
             If s_trends.TryGetValue(rowValue, arrows) Then
                 Me.LabelTrendArrows.Font = If(rowValue = "NONE",
-                    New Font(familyName:="Segoe UI", emSize:=18.0F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point),
-                    New Font(familyName:="Segoe UI", emSize:=14.25F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point))
+                    New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold),
+                    New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold))
                 Me.LabelTrendArrows.Text = s_trends(rowValue)
             Else
-                Me.LabelTrendArrows.Font = New Font(familyName:="Segoe UI", emSize:=14.25F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point)
+                Me.LabelTrendArrows.Font = New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold)
                 Me.LabelTrendArrows.Text = rowValue
             End If
         End If

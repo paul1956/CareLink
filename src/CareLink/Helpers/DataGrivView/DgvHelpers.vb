@@ -52,11 +52,11 @@ Public Module DgvHelpers
             If isUri Then
                 Dim foregroundColor As Color = dgv.Rows(e.RowIndex).GetTextColor(textColor:=Color.Purple)
                 If dgv.Rows(index:=e.RowIndex).IsDarkRow() Then
-                    .SelectionBackColor = foregroundColor.GetContrastingColor()
+                    .SelectionBackColor = foregroundColor.ContrastingColor()
                     .SelectionForeColor = foregroundColor
                 Else
                     .SelectionBackColor = foregroundColor
-                    .SelectionForeColor = foregroundColor.GetContrastingColor()
+                    .SelectionForeColor = foregroundColor.ContrastingColor()
                 End If
             Else
                 .ForeColor = dgv.Rows(e.RowIndex).GetTextColor(textColor)

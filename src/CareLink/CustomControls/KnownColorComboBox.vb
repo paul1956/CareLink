@@ -33,13 +33,13 @@ Public Class KnownColorComboBox
     Public Sub New()
         MyBase.New
         Dim kColor As Color
-        For Each known As KnownColor In [Enum].GetValues(Of KnownColor)()
-            If known = KnownColor.Transparent Then Continue For
-            kColor = Color.FromKnownColor(known)
-            If kColor.IsSystemColor OrElse _allKnownColors.ContainsValue(known) Then
+        For Each value As KnownColor In [Enum].GetValues(Of KnownColor)()
+            If value = KnownColor.Transparent Then Continue For
+            kColor = Color.FromKnownColor(color:=value)
+            If kColor.IsSystemColor OrElse _allKnownColors.ContainsValue(value) Then
                 Continue For
             End If
-            _allKnownColors.Add(kColor.Name, known)
+            _allKnownColors.Add(key:=kColor.Name, value)
         Next
     End Sub
 
@@ -96,8 +96,8 @@ Public Class KnownColorComboBox
         Get
             Return Me.SelectedItem.Value
         End Get
-        Set(value As KnownColor)
-            Me.SelectedItem = KeyValuePair.Create(GetNameFromKnownColor(value), value)
+        Set(known As KnownColor)
+            Me.SelectedItem = KeyValuePair.Create(GetNameFromKnownColor(known), value:=known)
         End Set
     End Property
 
@@ -137,13 +137,18 @@ Public Class KnownColorComboBox
         If e.Index = -1 Then Exit Sub
 
         Dim item As KeyValuePair(Of String, KnownColor) = CType(Me.Items(e.Index), KeyValuePair(Of String, KnownColor))
-        Dim key As String = item.Key
-        Dim backColor As Color = Color.FromKnownColor(item.Value)
+        Dim backColor As Color = Color.FromKnownColor(color:=item.Value)
         Dim eBounds As Rectangle = e.Bounds
-        Using b As Brush = New SolidBrush(backColor)
-            Dim pt As New Point(eBounds.X, eBounds.Top)
-            e.Graphics.FillRectangle(b, eBounds.X, eBounds.Y, eBounds.Width, eBounds.Height)
-            TextRenderer.DrawText(e.Graphics, key, Me.Font, pt, backColor.GetContrastingColor(), backColor)
+        Using b As Brush = New SolidBrush(color:=backColor)
+            Dim pt As New Point(x:=eBounds.X, y:=eBounds.Top)
+            e.Graphics.FillRectangle(brush:=b, eBounds.X, eBounds.Y, eBounds.Width, eBounds.Height)
+            TextRenderer.DrawText(
+                dc:=e.Graphics,
+                text:=item.Key,
+                Me.Font,
+                pt,
+                foreColor:=backColor.ContrastingColor(),
+                backColor)
         End Using
         e.DrawFocusRectangle()
     End Sub

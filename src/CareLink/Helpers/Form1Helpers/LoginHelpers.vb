@@ -279,7 +279,7 @@ Friend Module LoginHelpers
             End If
             If highLight Then
                 .ForeColor = GetGraphLineColor("High Limit")
-                .BackColor = .ForeColor.GetContrastingColor()
+                .BackColor = .ForeColor.ContrastingColor()
             Else
                 .BackColor = form1.MenuStrip1.BackColor
                 .ForeColor = form1.MenuStrip1.ForeColor

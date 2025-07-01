@@ -61,8 +61,8 @@ Friend Module DrawingExtensions
     ''' <param name="backColor">The background color of the icon.</param>
     ''' <returns>An <see cref="Icon"/> containing the text.</returns>
     Public Function CreateTextIcon(s As String, backColor As Color) As Icon
-        Dim fontToUse As New Font(familyName:="Segoe UI", emSize:=10, style:=FontStyle.Regular, unit:=GraphicsUnit.Pixel)
-        Dim brushToUse As Brush = New SolidBrush(backColor.GetContrastingColor())
+        Dim fontToUse As New Font(FamilyName, emSize:=10, style:=FontStyle.Regular, unit:=GraphicsUnit.Pixel)
+        Dim brushToUse As Brush = New SolidBrush(backColor.ContrastingColor())
         Dim bitmapText As New Bitmap(width:=16, height:=16)
         Using g As Graphics = Graphics.FromImage(bitmapText)
             g.Clear(backColor)

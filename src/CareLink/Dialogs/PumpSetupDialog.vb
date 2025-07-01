@@ -76,13 +76,11 @@ Public Class PumpSetupDialog
             Throw New NullReferenceException(NameOf(_pdf))
         End If
 
-
         Dim defaultBoldFont As New Font(family:=Me.RtbMainLeft.Font.FontFamily, emSize:=14, style:=FontStyle.Bold)
         Dim defaultFont As New Font(family:=Me.RtbMainLeft.Font.FontFamily, emSize:=14, style:=FontStyle.Regular)
         Dim headingBoldFont As New Font(familyName:="Tahoma", emSize:=18, style:=FontStyle.Bold)
         Me.RtbMainLeft.Clear()
         Me.RtbMainRight.Clear()
-
 
         Const gear As Char = ChrW(CharCode:=&H2699)
         Const tab As String = vbTab

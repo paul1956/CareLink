@@ -14,6 +14,7 @@ Public Module SystemConstants
     Friend Const ClickToShowDetails As String = "Click To Show Details"
     Friend Const ExceptionStartingString As String = "--- Start of Exception ---"
     Friend Const ExceptionTerminatingString As String = "--- End of Exception ---"
+    Friend Const FamilyName As String = "Segoe UI"
     Friend Const GitOwnerName As String = "Paul1956"
     Friend Const MmolLUnitsDivisor As Single = 18
     Friend Const StackTraceStartingStr As String = "--- Start of stack trace ---"

@@ -29,7 +29,7 @@ Friend Module CreateChartItems
             .Color = lineColor,
             .IsValueShownAsLabel = False,
             .LegendText = legendText,
-            .ShadowColor = lineColor.GetContrastingColor(),
+            .ShadowColor = lineColor.ContrastingColor(),
             .XValueType = ChartValueType.DateTime,
             .YAxisType = yAxisType}
         Return tmpSeries
@@ -128,8 +128,8 @@ Friend Module CreateChartItems
             .BorderDashStyle = ChartDashStyle.Solid,
             .ShadowColor = Color.Transparent}
         With tmpChartArea
-            Dim baseColor As Color = containingChart.BackColor.GetContrastingColor()
-            Dim labelFont As New Font(familyName:="Segoe UI", emSize:=12.0F, style:=FontStyle.Bold)
+            Dim baseColor As Color = containingChart.BackColor.ContrastingColor()
+            Dim labelFont As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
 
             With .AxisX
                 .Interval = 2
@@ -264,8 +264,8 @@ Friend Module CreateChartItems
             .BorderWidth = 0,
             .Docking = Docking.Bottom,
             .Enabled = Form1.MenuOptionsShowChartLegends.Checked,
-            .Font = New Font(familyName:="Segoe UI", emSize:=20.0F, style:=FontStyle.Bold),
-            .ForeColor = .BackColor.GetContrastingColor(),
+            .Font = New Font(FamilyName, emSize:=20.0F, style:=FontStyle.Bold),
+            .ForeColor = .BackColor.ContrastingColor(),
             .IsTextAutoFit = True}
     End Function
 
@@ -438,8 +438,8 @@ Friend Module CreateChartItems
     ''' <returns>A Title object configured with the specified properties.</returns>
     Friend Function CreateTitle(chartTitle As String, name As String, foreColor As Color) As Title
         Return New Title With {
-            .BackColor = foreColor.GetContrastingColor(),
-            .Font = New Font(familyName:="Segoe UI", emSize:=14.0F, style:=FontStyle.Bold),
+            .BackColor = foreColor.ContrastingColor(),
+            .Font = New Font(FamilyName, emSize:=14.0F, style:=FontStyle.Bold),
             .ForeColor = foreColor,
             .Name = name,
             .ShadowColor = Color.FromArgb(alpha:=32, baseColor:=Color.Black),
