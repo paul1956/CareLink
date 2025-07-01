@@ -30,9 +30,12 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-06/30/2025
+07/01/2025
 
 ## What's New
+ New in 5.0.3.4
+ - Make Basal Per Hour table easier to read.
+
  New in 5.0.3.3
  - Reorganize "Last 24 Hour Totals".
  - Improve responsiveness of the application while loading data.
