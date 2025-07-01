@@ -315,11 +315,7 @@ Public Class Form1
                         Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
                         Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                         Me.CursorPictureBox.Visible = True
-                        Me.CursorMessage2Label.Font = New Font(
-                            familyName:="Segoe UI",
-                            emSize:=12.0F,
-                            style:=FontStyle.Bold,
-                            unit:=GraphicsUnit.Point)
+                        Me.CursorMessage2Label.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
                         Select Case markerTag.Length
                             Case 2
                                 Me.CursorMessage1Label.Text = markerTag(0)
@@ -356,17 +352,17 @@ Public Class Form1
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
                                     Case "Not used for calibration"
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDot
-                                        Me.CursorMessage2Label.Font = New Font(
-                                            familyName:="Segoe UI",
-                                            emSize:=11.0F,
-                                            style:=FontStyle.Bold,
-                                            unit:=GraphicsUnit.Point)
+                                        Dim style As FontStyle = FontStyle.Bold
+                                        Me.CursorMessage2Label.Font = New Font(FamilyName, emSize:=11.0F, style)
                                     Case Else
                                         Stop
                                 End Select
-                                Me.CursorMessage1Label.Text = $"{markerTag(0)}@{xValue.ToString(s_timeWithMinuteFormat)}"
+                                Me.CursorMessage1Label.Text =
+                                    $"{markerTag(0)}@{xValue.ToString(format:=s_timeWithMinuteFormat)}"
                                 Me.CursorMessage1Label.Visible = True
-                                Me.CursorMessage2Label.Text = markerTag(1).Replace("Calibration not", "Cal. not").Trim
+                                Me.CursorMessage2Label.Text = markerTag(1).Replace(
+                                    oldValue:="Calibration not",
+                                    newValue:="Cal. not").Trim
                                 Me.CursorMessage2Label.Visible = True
                                 Dim sgValue As Single = markerTag(2).Trim.Split(separator:=" ")(0).Trim.ParseSingle(digits:=2)
                                 Me.CursorMessage3Label.Text = markerTag(2).Trim
@@ -607,6 +603,7 @@ Public Class Form1
             Case NameOf(BasalPerHour.BasalRate), NameOf(BasalPerHour.BasalRate2)
                 If dgv.Name = NameOf(DgvBasalPerHour) Then
                     e.Value = $"{dgv.CellFormattingSingleValue(e, digits:=3)} U/h"
+                    e.CellStyle.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
                 End If
             Case NameOf(Calibration.bgUnits)
                 Dim key As String = Convert.ToString(e.Value)
@@ -1970,11 +1967,11 @@ Public Class Form1
         If Not Directory.Exists(DirectoryForProjectData) Then
             Dim lastError As String = $"Can't create required project directories!"
             Directory.CreateDirectory(DirectoryForProjectData)
-            Directory.CreateDirectory(SettingsDirectory)
+            Directory.CreateDirectory(GetSettingsDirectory())
         End If
 
-        If Not Directory.Exists(SettingsDirectory) Then
-            Directory.CreateDirectory(SettingsDirectory)
+        If Not Directory.Exists(GetSettingsDirectory()) Then
+            Directory.CreateDirectory(GetSettingsDirectory())
         End If
 
         If File.Exists(currentAllUserLoginFile) Then
@@ -1992,7 +1989,7 @@ Public Class Form1
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
-        If File.Exists(GetGraphColorsFileNameWithPath()) Then
+        If File.Exists(GraphColorsFileNameWithPath) Then
             GetColorDictionaryFromFile()
         Else
             WriteColorDictionaryToFile()
@@ -2000,10 +1997,18 @@ Public Class Form1
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
         If String.IsNullOrWhiteSpace(GetWebViewCacheDirectory()) Then
-            s_webView2CacheDirectory = Path.Join(s_projectWebCache, Guid.NewGuid().ToString)
+            s_webView2CacheDirectory = Path.Join(ProjectWebCache, Guid.NewGuid().ToString())
             Directory.CreateDirectory(s_webView2CacheDirectory)
         End If
 
+        Dim style As FontStyle = FontStyle.Bold
+        Dim emSize As Single = 12.0F
+        Me.DgvBasalPerHour.Font = New Font(FamilyName, emSize, style)
+        Dim currentHeaderStyle As DataGridViewCellStyle = Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle.Clone
+        currentHeaderStyle.Font = New Font(FamilyName, emSize, style)
+        Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle = currentHeaderStyle
+        Me.DgvBasalPerHour.DefaultCellStyle = New DataGridViewCellStyle With {
+            .Font = New Font(FamilyName, emSize, style)}
     End Sub
 
     ''' <summary>
@@ -2157,14 +2162,14 @@ Public Class Form1
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
         Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles(
             path:=DirectoryForProjectData,
-            matchPattern:=$"CareLink*.json")
+            searchPattern:=$"CareLink*.json")
         Me.MenuStartHereSaveSnapshotFile.Enabled = Not RecentDataEmpty()
         Me.MenuStartHereUseExceptionReport.Visible = AnyMatchingFiles(
             path:=DirectoryForProjectData,
-            matchPattern:=$"{BaseNameSavedErrorReport}*.txt")
+            searchPattern:=$"{BaseNameSavedErrorReport}*.txt")
 
         Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(s_userName) OrElse
-            Not AnyMatchingFiles(path:=SettingsDirectory, matchPattern:=$"{s_userName}Settings.pdf"))
+            Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern:=$"{s_userName}Settings.pdf"))
 
         Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists
         Me.MenuStartHereManuallyImportDeviceSettings.Enabled = Not userPdfExists
@@ -2225,11 +2230,11 @@ Public Class Form1
 
             If openFileDialog1.ShowDialog(Me) = DialogResult.OK Then
                 Dim directory As String = Path.GetDirectoryName(openFileDialog1.FileName)
-                Dim destinationPath As String = Path.Combine(directory, GetUserSettingsPdfFileNameWithPath())
+                Dim destinationPath As String = Path.Combine(directory, UserSettingsPdfFileWithPath)
                 File.Move(openFileDialog1.FileName, destinationPath)
                 My.Computer.FileSystem.MoveFile(
                     sourceFileName:=destinationPath,
-                    destinationFileName:=GetUserSettingsPdfFileNameWithPath(),
+                    destinationFileName:=UserSettingsPdfFileWithPath,
                     showUI:=FileIO.UIOption.AllDialogs,
                     onUserCancel:=FileIO.UICancelOption.DoNothing)
             End If
@@ -2246,8 +2251,7 @@ Public Class Form1
     Private Sub MenuStartHereShowPumpSetup_Click(sender As Object, e As EventArgs) Handles _
         MenuStartHereShowPumpSetup.Click
 
-        Dim userSettingsPdfFile As String = GetUserSettingsPdfFileNameWithPath()
-        If File.Exists(userSettingsPdfFile) Then
+        If File.Exists(UserSettingsPdfFileWithPath) Then
             If CurrentPdf.IsValid Then
                 Using dialog As New PumpSetupDialog
                     StartOrStopServerUpdateTimer(Start:=False)
@@ -2255,17 +2259,19 @@ Public Class Form1
                     dialog.ShowDialog(Me)
                 End Using
             End If
+
+            ' If the PDF file is not valid after setup, show a message box to the user.
             If Not CurrentPdf.IsValid Then
                 MsgBox(
                     heading:=$"Device Setting PDF file Is invalid",
-                    text:=userSettingsPdfFile,
+                    text:=UserSettingsPdfFileWithPath,
                     buttonStyle:=MsgBoxStyle.OkOnly,
                     title:="Invalid Settings PDF File")
             End If
         Else
             MsgBox(
                 heading:=$"Device Setting PDF file Is missing!",
-                text:=userSettingsPdfFile,
+                text:=UserSettingsPdfFileWithPath,
                 buttonStyle:=MsgBoxStyle.OkOnly,
                 title:="Missing Settings PDF File")
         End If
@@ -2542,7 +2548,7 @@ Public Class Form1
         MenuOptionsEditPumpSettings.Click
 
         SetUpCareLinkUser(forceUI:=True)
-        Dim contents As String = File.ReadAllText(GetUserSettingsJsonFileNameWithPath)
+        Dim contents As String = File.ReadAllText(UserSettingsFileWithPath)
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(contents, s_jsonSerializerOptions)
     End Sub
 
@@ -3187,7 +3193,7 @@ Public Class Form1
         Dim summaryTitle As Title = CreateTitle(
             chartTitle:="Summary",
             name:=NameOf(summaryTitle),
-            foreColor:=Me.SummaryChart.BackColor.GetContrastingColor())
+            foreColor:=Me.SummaryChart.BackColor.ContrastingColor())
 
         Dim summaryChartArea As ChartArea = CreateChartArea(Me.SummaryChart)
         Me.SummaryChart.ChartAreas.Add(summaryChartArea)
@@ -3328,8 +3334,8 @@ Public Class Form1
         Me.SplitContainer1.Panel2.Controls.Clear()
         Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
         Dim activeInsulinChartArea As ChartArea = CreateChartArea(containingChart:=Me.ActiveInsulinChart)
-        Dim labelColor As Color = Me.ActiveInsulinChart.BackColor.GetContrastingColor()
-        Dim labelFont As New Font(familyName:="Segoe UI", emSize:=12.0F, style:=FontStyle.Bold)
+        Dim labelColor As Color = Me.ActiveInsulinChart.BackColor.ContrastingColor()
+        Dim labelFont As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
 
         With activeInsulinChartArea.AxisY
             .Interval = 2
@@ -3453,8 +3459,8 @@ Public Class Form1
                 TreatmentInsulinRow = (MaxBasalPerDose + 0.025!).RoundTo025
         End Select
 
-        Dim baseColor As Color = Me.TreatmentMarkersChart.BackColor.GetContrastingColor()
-        Dim labelFont As New Font(familyName:="Segoe UI", emSize:=12.0F, style:=FontStyle.Bold)
+        Dim baseColor As Color = Me.TreatmentMarkersChart.BackColor.ContrastingColor()
+        Dim labelFont As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
 
         With treatmentMarkersChartArea.AxisY
             Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(digits:=3, considerValue:=False)
@@ -3486,7 +3492,7 @@ Public Class Form1
         Me.TreatmentMarkersChartTitle = CreateTitle(
             chartTitle:="Treatment Details",
             name:=NameOf(TreatmentMarkersChartTitle),
-            foreColor:=Me.TreatmentMarkersChart.BackColor.GetContrastingColor())
+            foreColor:=Me.TreatmentMarkersChart.BackColor.ContrastingColor())
         Me.TreatmentTargetSeries = CreateSeriesLimitsAndTarget(
             limitsLegend:=_treatmentMarkersChartLegend,
             seriesName:=TargetSgSeriesName)
@@ -4170,8 +4176,8 @@ Public Class Form1
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
-            Me.Last24ManualBolusPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24MealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
+            Me.Last24MealBolusPercentLabel.Text = $"{totalPercent}%"
         Else
             Me.Last24AutoCorrectionLabel.Visible = False
             Me.Last24AutoCorrectionUnitsLabel.Visible = False
@@ -4179,8 +4185,8 @@ Public Class Form1
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24ManualBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
-            Me.Last24ManualBolusPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24MealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
+            Me.Last24MealBolusPercentLabel.Text = $"{totalPercent}%"
         End If
         Me.Last24CarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}"
     End Sub
@@ -4516,11 +4522,11 @@ Public Class Form1
             Dim arrows As String = Nothing
             If s_trends.TryGetValue(rowValue, arrows) Then
                 Me.LabelTrendArrows.Font = If(rowValue = "NONE",
-                    New Font(familyName:="Segoe UI", emSize:=18.0F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point),
-                    New Font(familyName:="Segoe UI", emSize:=14.25F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point))
+                    New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold),
+                    New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold))
                 Me.LabelTrendArrows.Text = s_trends(rowValue)
             Else
-                Me.LabelTrendArrows.Font = New Font(familyName:="Segoe UI", emSize:=14.25F, style:=FontStyle.Bold, unit:=GraphicsUnit.Point)
+                Me.LabelTrendArrows.Font = New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold)
                 Me.LabelTrendArrows.Text = rowValue
             End If
         End If

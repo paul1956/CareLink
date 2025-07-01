@@ -15,47 +15,79 @@ Friend Module FileIoHelpers
     ''' </summary>
     Private Const AllUsersLoginInfoFileName As String = "CareLink.Csv"
 
+    Private ReadOnly s_myDocuments As String = Environment.GetFolderPath(folder:=Environment.SpecialFolder.MyDocuments)
+
     ''' <summary>
-    '''  The path to the project's web cache directory in the user's Documents folder.
+    '''  The base name for the last download file, used to store the last downloaded data.
     ''' </summary>
-    Friend ReadOnly s_projectWebCache As String = Path.Join(GetMyDocuments(), "CareLink", "WebCache")
+    ''' <value>
+    '''  The base name for the last download file, which is "SavedLastDownload".
+    ''' </value>
+    Private ReadOnly s_settingsDirectory As String = Path.Join(s_myDocuments, "CareLink", "Settings")
+
+    Friend ReadOnly Property ProjectWebCache As String = Path.Join(s_myDocuments, "CareLink", "WebCache")
 
     ''' <summary>
     '''  Gets the path to the directory where project data is stored in the user's Documents folder.
     ''' </summary>
-    Friend ReadOnly Property DirectoryForProjectData As String = Path.Join(GetMyDocuments(), "CareLink")
+    Friend ReadOnly Property DirectoryForProjectData As String = Path.Join(s_myDocuments, "CareLink")
+
+    ''' <summary>
+    '''  Gets the full path to the graph colors CSV file.
+    ''' </summary>
+    ''' <value>The full path to "GraphColors.Csv" in the project data directory.</value>
+    Friend ReadOnly Property GraphColorsFileNameWithPath As String = Path.Join(
+        DirectoryForProjectData,
+        "GraphColors.Csv")
 
     ''' <summary>
     '''  Gets the full path to the sample user data JSON file for testing.
     ''' </summary>
-    Friend ReadOnly Property TestDataFileNameWithPath As String = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "SampleUserV2Data.json")
+    ''' <value>The full path to "SampleUserV2Data.json" in the application's base directory.</value>
+    Friend ReadOnly Property TestDataFileNameWithPath As String = Path.Join(
+        AppDomain.CurrentDomain.BaseDirectory,
+        "SampleUserV2Data.json")
 
     ''' <summary>
     '''  Gets the full path to the test settings JSON file.
     ''' </summary>
-    Friend ReadOnly Property TestSettingsFileNameWithPath As String = Path.Join(AppDomain.CurrentDomain.BaseDirectory, "TestFileSettings.json")
+    ''' <value>The full path to "TestFileSettings.json" in the application's base directory.</value>
+    Friend ReadOnly Property TestSettingsFileNameWithPath As String = Path.Join(
+        AppDomain.CurrentDomain.BaseDirectory,
+        "TestFileSettings.json")
 
     ''' <summary>
-    '''  Gets the path to the settings directory in the user's Documents folder.
+    '''  Gets the full path to the current user's settings JSON file.
     ''' </summary>
-    Public ReadOnly Property SettingsDirectory As String = Path.Join(GetMyDocuments(), "CareLink", "Settings")
+    ''' <value>The full path to the user's settings JSON file.</value>
+    Friend ReadOnly Property UserSettingsFileWithPath As String = Path.Join(
+        s_settingsDirectory,
+        $"{s_userName}Settings.json")
+
+    ''' <summary>
+    '''  Gets the full path to the current user's settings PDF file.
+    ''' </summary>
+    ''' <value>The full path to the user's settings PDF file.</value>
+    Friend ReadOnly Property UserSettingsPdfFileWithPath As String = Path.Join(
+        s_settingsDirectory,
+        $"{s_userName}Settings.pdf")
 
     ''' <summary>
     '''  Determines whether any files matching the specified pattern exist in the given directory.
     ''' </summary>
     ''' <param name="path">The directory to search.</param>
-    ''' <param name="matchPattern">The search pattern (e.g., "*.json").</param>
+    ''' <param name="searchPattern">The search pattern (e.g., "*.json").</param>
     ''' <returns>True if any matching files are found; otherwise, false.</returns>
-    Friend Function AnyMatchingFiles(path As String, matchPattern As String) As Boolean
-        Return Directory.GetFiles(path, matchPattern).Length > 0
-    End Function
-
-    ''' <summary>
-    '''  Gets the full path to the graph colors CSV file.
-    ''' </summary>
-    ''' <returns>The full path to "GraphColors.Csv" in the project data directory.</returns>
-    Friend Function GetGraphColorsFileNameWithPath() As String
-        Return Path.Join(DirectoryForProjectData, "GraphColors.Csv")
+    ''' <exception cref="ArgumentNullException">Thrown if the path is null or whitespace.</exception>
+    ''' <remarks>
+    '''  This method checks for files matching the specified pattern in the given directory.
+    '''  It returns true if at least one file matches the pattern, otherwise false.
+    ''' </remarks>
+    Friend Function AnyMatchingFiles(path As String, searchPattern As String) As Boolean
+        If String.IsNullOrWhiteSpace(path) Then
+            Throw New ArgumentNullException(paramName:=NameOf(path), message:="Path cannot be null.")
+        End If
+        Return Directory.GetFiles(path, searchPattern).Length > 0
     End Function
 
     ''' <summary>
@@ -71,19 +103,14 @@ Friend Module FileIoHelpers
     End Function
 
     ''' <summary>
-    '''  Gets the full path to the current user's settings JSON file.
+    '''  Gets the path to the settings directory in the user's Documents folder.
     ''' </summary>
-    ''' <returns>The full path to the user's settings JSON file.</returns>
-    Friend Function GetUserSettingsJsonFileNameWithPath() As String
-        Return Path.Join(SettingsDirectory, $"{s_userName}Settings.json")
-    End Function
-
-    ''' <summary>
-    '''  Gets the full path to the current user's settings PDF file.
-    ''' </summary>
-    ''' <returns>The full path to the user's settings PDF file.</returns>
-    Friend Function GetUserSettingsPdfFileNameWithPath() As String
-        Return Path.Join(SettingsDirectory, $"{s_userName}Settings.pdf")
+    ''' <returns>The path to the settings directory.</returns>
+    ''' <remarks>
+    '''  This directory is used to store user-specific settings files.
+    ''' </remarks>
+    Friend Function GetSettingsDirectory() As String
+        Return s_settingsDirectory
     End Function
 
     ''' <summary>
@@ -97,52 +124,69 @@ Friend Module FileIoHelpers
     ''' <summary>
     '''  Determines whether the specified file has not been modified for at least 30 days.
     ''' </summary>
-    ''' <param name="userSettingsFileWithPath">The full path to the user settings file.</param>
+    ''' <param name="path">The full path to the user settings file.</param>
     ''' <returns><see langword="True"/> if the file is stale; otherwise, <see langword="False"/>.</returns>
-    Friend Function IsFileStale(userSettingsFileWithPath As String) As Boolean
-        Return File.GetLastWriteTime(userSettingsFileWithPath) < Now - ThirtyDaysSpan
+    ''' <exception cref="ArgumentNullException">Thrown if the path is null or whitespace.</exception>
+    ''' <remarks>
+    '''  A file is considered stale if it has not been modified in the last 30 days.
+    ''' </remarks>
+    Friend Function IsFileStale(path As String) As Boolean
+        If String.IsNullOrWhiteSpace(path) Then
+            Throw New ArgumentNullException(
+                paramName:=NameOf(path),
+                message:="Path cannot be null or whitespace.")
+        End If
+        Return File.GetLastWriteTime(path) < Now - ThirtyDaysSpan
     End Function
 
     ''' <summary>
     '''  Moves all files matching the specified pattern from one directory to another.
     ''' </summary>
-    ''' <param name="previousDirectory">The source directory.</param>
+    ''' <param name="path">The source directory.</param>
     ''' <param name="currentDirectory">The destination directory.</param>
     ''' <param name="searchPattern">The search pattern for files to move.</param>
-    Friend Sub MoveFiles(previousDirectory As String, currentDirectory As String, searchPattern As String)
-        For Each f As String In Directory.EnumerateFiles(previousDirectory, searchPattern)
-            Dim fileName As String = Path.GetFileName(f)
-            File.Move(f, Path.Join(currentDirectory, fileName))
+    ''' <exception cref="ArgumentNullException">Thrown if the path or current directory is null or whitespace.</exception>
+    ''' <remarks>
+    '''  This method moves all files matching the specified search pattern from the source directory
+    '''  to the destination directory, which is typically the current working directory.
+    ''' </remarks>"
+    Friend Sub MoveFiles(path As String, currentDirectory As String, searchPattern As String)
+        If String.IsNullOrWhiteSpace(path) Then
+            Throw New ArgumentNullException(
+                paramName:=NameOf(path),
+                message:="Path cannot be null or whitespace.")
+        End If
+        If String.IsNullOrWhiteSpace(currentDirectory) Then
+            Throw New ArgumentNullException(
+                paramName:=NameOf(currentDirectory),
+                message:="Current directory cannot be null or whitespace.")
+        End If
+        For Each sourceFileName As String In Directory.EnumerateFiles(path, searchPattern)
+            Dim fileName As String = IO.Path.GetFileName(sourceFileName)
+            File.Move(sourceFileName, destFileName:=IO.Path.Join(currentDirectory, fileName))
         Next
     End Sub
 
     ''' <summary>
-    '''  Gets the path to the user's "My Documents" folder.
-    ''' </summary>
-    ''' <returns>The full path to the "My Documents" folder.</returns>
-    Public Function GetMyDocuments() As String
-        Return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
-    End Function
-
-    ''' <summary>
     '''  Determines whether the specified file is read-only.
     ''' </summary>
-    ''' <param name="fileNameWithPath">The full path to the file.</param>
+    ''' <param name="path">The full path to the file.</param>
     ''' <returns><see langword="True"/> if the file is read-only; otherwise, <see langword="False"/>.</returns>
     ''' <exception cref="ArgumentException">Thrown if the file name is null or whitespace.</exception>
-    Public Function IsFileReadOnly(fileNameWithPath As String) As Boolean
-        If String.IsNullOrWhiteSpace(fileNameWithPath) Then
-            Throw New ArgumentException($"'{NameOf(fileNameWithPath)}' cannot be null or whitespace.", NameOf(fileNameWithPath))
+    Public Function IsFileReadOnly(path As String) As Boolean
+        If String.IsNullOrWhiteSpace(path) Then
+            Throw New ArgumentException(
+                message:=$"'{NameOf(path)}' cannot be null or whitespace.",
+                paramName:=NameOf(path))
         End If
 
         Try
-            If File.Exists(fileNameWithPath) Then
-                Dim attributes As FileAttributes = File.GetAttributes(fileNameWithPath)
-                Return attributes.HasFlag(FileAttributes.ReadOnly)
+            If File.Exists(path) Then
+                Return File.GetAttributes(path).HasFlag(flag:=FileAttributes.ReadOnly)
             End If
         Catch e As Exception
             Stop
-            Debug.WriteLine("Error: {0}", e.Message)
+            Debug.WriteLine(message:="Error: {0}", category:=e.Message)
         End Try
         Return False
     End Function
@@ -150,17 +194,27 @@ Friend Module FileIoHelpers
     ''' <summary>
     '''  Updates the last write time of the specified file to the current UTC time.
     ''' </summary>
-    ''' <param name="fileNameWithPath">The full path to the file.</param>
+    ''' <param name="path">The full path to the file.</param>
     ''' <exception cref="ArgumentException">Thrown if the file name is null or whitespace.</exception>
-    Public Sub TouchFile(fileNameWithPath As String)
-        If String.IsNullOrWhiteSpace(fileNameWithPath) Then
-            Throw New ArgumentException($"'{NameOf(fileNameWithPath)}' cannot be null or whitespace.", NameOf(fileNameWithPath))
+    Public Sub TouchFile(path As String)
+        If String.IsNullOrWhiteSpace(path) Then
+            Throw New ArgumentException(
+                message:=$"'{NameOf(path)}' cannot be null or whitespace.",
+                paramName:=NameOf(path))
         End If
-        If File.Exists(fileNameWithPath) Then
-            Dim myFileStream As FileStream = File.Open(fileNameWithPath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite)
-            myFileStream.Close()
-            myFileStream.Dispose()
-            File.SetLastWriteTimeUtc(fileNameWithPath, lastWriteTimeUtc:=Date.UtcNow)
+        If File.Exists(path) Then
+            Using myFileStream As FileStream = File.Open(
+                path,
+                mode:=FileMode.OpenOrCreate,
+                access:=FileAccess.ReadWrite,
+                share:=FileShare.ReadWrite)
+
+            End Using
+            File.SetLastWriteTimeUtc(path, lastWriteTimeUtc:=Date.UtcNow)
+        Else
+            Throw New FileNotFoundException(
+                message:="The specified file does not exist.",
+                fileName:=path)
         End If
     End Sub
 

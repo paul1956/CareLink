@@ -17,6 +17,7 @@ Public Module DataGridViewExtensions
     ''' </param>
     <Extension>
     Friend Sub InitializeDgv(dgv As DataGridView)
+        Dim emSize As Single = If(dgv.Name = NameOf(Form1.DgvBasalPerHour), 12.0!, 10.0!)
         With dgv
             .AllowUserToAddRows = False
             .AllowUserToDeleteRows = False
@@ -31,10 +32,9 @@ Public Module DataGridViewExtensions
                 .Alignment = DataGridViewContentAlignment.MiddleCenter,
                 .BackColor = Color.Black,
                 .Font = New Font(
-                    familyName:="Segoe UI",
-                    emSize:=10.0!,
-                    style:=FontStyle.Bold,
-                    unit:=GraphicsUnit.Point),
+                    FamilyName,
+                    emSize,
+                    style:=FontStyle.Bold),
                 .WrapMode = DataGridViewTriState.True}
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .DataSource = Nothing
