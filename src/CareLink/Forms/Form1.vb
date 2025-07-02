@@ -3601,22 +3601,22 @@ Public Class Form1
                     strBuilder.AppendLine($"Last SG {lastSgString} {GetBgUnitsString()}")
                     If PatientData.ConduitInRange Then
                         If s_lastSgValue.IsSgInvalid Then
-                            Me.LabelTrendValue.Text = ""
-                            Me.LabelTrendValue.Visible = False
+                            Me.TrendValueLabel.Text = ""
+                            Me.TrendValueLabel.Visible = False
                             _sgMiniDisplay.SetCurrentDeltaValue(deltaString:="", delta:=0)
                         Else
                             Dim diffSg As Single = sg - s_lastSgValue
-                            Me.LabelTrendValue.Text = If(Math.Abs(diffSg) < 0.001,
+                            Me.TrendValueLabel.Text = If(Math.Abs(diffSg) < 0.001,
                                                          "0",
                                                          diffSg.ToString(GetSgFormat(withSign:=True), CultureInfo.InvariantCulture)
                                                         )
-                            _sgMiniDisplay.SetCurrentDeltaValue(Me.LabelTrendValue.Text, diffSg)
-                            Me.LabelTrendValue.ForeColor = backColor
+                            _sgMiniDisplay.SetCurrentDeltaValue(Me.TrendValueLabel.Text, diffSg)
+                            Me.TrendValueLabel.ForeColor = backColor
                             strBuilder.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(withSign:=True), CultureInfo.InvariantCulture)}")
-                            Me.LabelTrendValue.Visible = True
+                            Me.TrendValueLabel.Visible = True
                         End If
                     Else
-                        Me.LabelTrendValue.Visible = False
+                        Me.TrendValueLabel.Visible = False
                     End If
                     strBuilder.Append($"Active ins. {PatientData.ActiveInsulin?.Amount:N3} U")
                     Me.NotifyIcon1.Text = strBuilder.ToString
@@ -4159,36 +4159,36 @@ Public Class Form1
         End If
 
         Dim totalPercent As String = If(s_totalDailyDose = 0, "???", $"{CInt(s_totalBasal / s_totalDailyDose * 100)}")
-        Me.Last24BasalUnitsLabel.Text = String.Format(Provider, $"{s_totalBasal:F1} U")
-        Me.Last24BasalPercentLabel.Text = $"{totalPercent}%"
+        Me.Last24HrBasalUnitsLabel.Text = String.Format(Provider, $"{s_totalBasal:F1} U")
+        Me.Last24HrBasalPercentLabel.Text = $"{totalPercent}%"
 
-        Me.Last24TotalInsulinUnitsLabel.Text = String.Format(Provider, $"{s_totalDailyDose:F1} U")
+        Me.Last24HrTotalInsulinUnitsLabel.Text = String.Format(Provider, $"{s_totalDailyDose:F1} U")
 
         If s_totalAutoCorrection > 0 Then
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24AutoCorrectionLabel.Visible = True
-            Me.Last24AutoCorrectionUnitsLabel.Text = String.Format(Provider, $"{s_totalAutoCorrection:F1} U")
-            Me.Last24AutoCorrectionUnitsLabel.Visible = True
-            Me.Last24AutoCorrectionPercentLabel.Text = $"{totalPercent}%"
-            Me.Last24AutoCorrectionPercentLabel.Visible = True
+            Me.Last24HrAutoCorrectionLabel.Visible = True
+            Me.Last24HrAutoCorrectionUnitsLabel.Text = String.Format(Provider, $"{s_totalAutoCorrection:F1} U")
+            Me.Last24HrAutoCorrectionUnitsLabel.Visible = True
+            Me.Last24HrAutoCorrectionPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24HrAutoCorrectionPercentLabel.Visible = True
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24MealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
-            Me.Last24MealBolusPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24HrMealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
+            Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         Else
-            Me.Last24AutoCorrectionLabel.Visible = False
-            Me.Last24AutoCorrectionUnitsLabel.Visible = False
-            Me.Last24AutoCorrectionPercentLabel.Visible = False
+            Me.Last24HrAutoCorrectionLabel.Visible = False
+            Me.Last24HrAutoCorrectionUnitsLabel.Visible = False
+            Me.Last24HrAutoCorrectionPercentLabel.Visible = False
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24MealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
-            Me.Last24MealBolusPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24HrMealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
+            Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         End If
-        Me.Last24CarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}"
+        Me.Last24HrCarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}"
     End Sub
 
     ''' <summary>
@@ -4521,18 +4521,18 @@ Public Class Form1
         If PatientData.ConduitInRange Then
             Dim arrows As String = Nothing
             If s_trends.TryGetValue(rowValue, arrows) Then
-                Me.LabelTrendArrows.Font = If(rowValue = "NONE",
+                Me.TrendArrowsLabel.Font = If(rowValue = "NONE",
                     New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold),
                     New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold))
-                Me.LabelTrendArrows.Text = s_trends(rowValue)
+                Me.TrendArrowsLabel.Text = s_trends(rowValue)
             Else
-                Me.LabelTrendArrows.Font = New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold)
-                Me.LabelTrendArrows.Text = rowValue
+                Me.TrendArrowsLabel.Font = New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold)
+                Me.TrendArrowsLabel.Text = rowValue
             End If
         End If
-        Me.LabelSgTrend.Visible = PatientData.ConduitInRange
-        Me.LabelTrendValue.Visible = PatientData.ConduitInRange
-        Me.LabelTrendArrows.Visible = PatientData.ConduitInRange
+        Me.SgTrendLabel.Visible = PatientData.ConduitInRange
+        Me.TrendValueLabel.Visible = PatientData.ConduitInRange
+        Me.TrendArrowsLabel.Visible = PatientData.ConduitInRange
     End Sub
 
     ''' <summary>
