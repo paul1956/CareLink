@@ -91,7 +91,7 @@ Partial Class Form1
         Last24HrTotalInsulinLabel = New Label()
         Last24HrTotalInsulinUnitsLabel = New Label()
         Last24HrTotalInsulinUnitsLabel = New Label()
-        Last24HrTotalsLabel = New Label()
+        Last24HrSummaryLabel = New Label()
         Last24HrTotalsPanel = New Panel()
         LastSgOrExitTimeLabel = New Label()
         LastUpdateTimeToolStripStatusLabel = New ToolStripStatusLabel()
@@ -962,26 +962,26 @@ Partial Class Form1
         Last24HrTotalsPanel.Controls.Add(Last24HrMealBolusLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrMealBolusPercentLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrMealBolusUnitsLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrTotalInsulinUnitsLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrTotalsLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrTotalInsulinLabel)
+        Last24HrTotalsPanel.Controls.Add(Last24HrTotalInsulinUnitsLabel)
+        Last24HrTotalsPanel.Controls.Add(Last24HrSummaryLabel)
         Last24HrTotalsPanel.Location = New Point(724, 0)
         Last24HrTotalsPanel.Name = "Last24HTotalsPanel"
         Last24HrTotalsPanel.Size = New Size(253, 129)
         Last24HrTotalsPanel.TabIndex = 66
         ' 
-        ' Last24HrTotalsLabel
+        ' Last24HrSummaryLabel
         ' 
-        Last24HrTotalsLabel.BackColor = Color.DimGray
-        Last24HrTotalsLabel.Dock = DockStyle.Top
-        Last24HrTotalsLabel.Font = New Font("Segoe UI", 11.0F, FontStyle.Bold)
-        Last24HrTotalsLabel.ForeColor = Color.Black
-        Last24HrTotalsLabel.Location = New Point(0, 0)
-        Last24HrTotalsLabel.Name = "Last24HrTotalsLabel"
-        Last24HrTotalsLabel.Size = New Size(249, 23)
-        Last24HrTotalsLabel.TabIndex = 65
-        Last24HrTotalsLabel.Text = "Last 24 Hr Totals"
-        Last24HrTotalsLabel.TextAlign = ContentAlignment.MiddleCenter
+        Last24HrSummaryLabel.BackColor = Color.DimGray
+        Last24HrSummaryLabel.Dock = DockStyle.Top
+        Last24HrSummaryLabel.Font = New Font("Segoe UI", 11.0F, FontStyle.Bold)
+        Last24HrSummaryLabel.ForeColor = Color.Black
+        Last24HrSummaryLabel.Location = New Point(0, 0)
+        Last24HrSummaryLabel.Name = "Last24HrSummaryLabel"
+        Last24HrSummaryLabel.Size = New Size(249, 23)
+        Last24HrSummaryLabel.TabIndex = 65
+        Last24HrSummaryLabel.Text = "Last 24 Hr Summary"
+        Last24HrSummaryLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' Last24HrBasalLabel
         ' 
@@ -3156,9 +3156,9 @@ Partial Class Form1
     Friend WithEvents Last24HrMealBolusLabel As Label
     Friend WithEvents Last24HrMealBolusPercentLabel As Label
     Friend WithEvents Last24HrMealBolusUnitsLabel As Label
+    Friend WithEvents Last24HrSummaryLabel As Label
     Friend WithEvents Last24HrTotalInsulinLabel As Label
     Friend WithEvents Last24HrTotalInsulinUnitsLabel As Label
-    Friend WithEvents Last24HrTotalsLabel As Label
     Friend WithEvents Last24HrTotalsPanel As Panel
     Friend WithEvents LastSgOrExitTimeLabel As Label
     Friend WithEvents LastUpdateTimeToolStripStatusLabel As ToolStripStatusLabel
