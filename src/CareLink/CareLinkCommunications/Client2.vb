@@ -13,6 +13,7 @@ Public Class Client2
 
     ' Constants
     Private Const TokenBaseFileName As String = "logindata.json"
+
     Private ReadOnly _tokenBaseFileName As String
     Private _accessTokenPayload As Dictionary(Of String, Object)
     Private _config As Dictionary(Of String, Object)

@@ -1849,7 +1849,6 @@ Public Class Form1
         End If
     End Sub
 
-
 #End Region ' Dgv Summary Events
 
 #Region "Dgv Therapy Algorithm State Events"
