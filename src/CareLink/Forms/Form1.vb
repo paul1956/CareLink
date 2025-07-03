@@ -51,6 +51,8 @@ Public Class Form1
          $"Unit{NonBreakingSpace}Value{NonBreakingSpace}"}
 
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
+    Private _dgvSummaryPrevRowIndex As Integer = -1
+    Private _dgvSummaryPrevColIndex As Integer = -1
     Private _formScale As New SizeF(1.0F, 1.0F)
     Private _inMouseMove As Boolean = False
     Private _lastMarkerTabIndex As (page As Integer, tab As Integer) = (0, 0)
@@ -819,7 +821,19 @@ Public Class Form1
                 End With
             Next
         End If
-        CType(sender, DataGridView).ClearSelection()
+
+        If dgv.Name = NameOf(DgvSummary) AndAlso
+            _dgvSummaryPrevRowIndex > 0 AndAlso _dgvSummaryPrevRowIndex < dgv.RowCount AndAlso
+            _dgvSummaryPrevColIndex > 0 AndAlso _dgvSummaryPrevColIndex < dgv.ColumnCount Then
+
+            ' Restore the previous selection in the Summary DataGridView if its not empty or Row(0).Cell(0).
+            dgv.CurrentCell = dgv.Rows(_dgvSummaryPrevRowIndex).Cells(_dgvSummaryPrevColIndex)
+            dgv.Rows(_dgvSummaryPrevRowIndex).Selected = True
+            dgv.FirstDisplayedScrollingRowIndex = _dgvSummaryPrevRowIndex
+        Else
+            ' Clear the selection of all DataGridViews except Summary DataGridView.
+            CType(sender, DataGridView).ClearSelection()
+        End If
     End Sub
 
 #Region "ContextMenuStrip Menu Events"
@@ -1818,6 +1832,24 @@ Public Class Form1
         End With
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.SelectionChanged"/> event for the <see cref="DgvSummary"/> DataGridView.
+    '''  This event is raised when the selection in the DataGridView changes.
+    '''  It updates the previous row and column indices to track the last selected cell.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
+    ''' <param name="e">A <see cref="EventArgs"/> that contains the event data.</param>
+    Private Sub DgvSummary_SelectionChanged(sender As Object, e As EventArgs) Handles DgvSummary.SelectionChanged
+        Dim dgv As DataGridView = DirectCast(sender, DataGridView)
+        If dgv.CurrentCell IsNot Nothing AndAlso
+            dgv.CurrentCell.RowIndex >= 0 AndAlso
+            dgv.CurrentCell.ColumnIndex > 0 Then
+            _dgvSummaryPrevRowIndex = dgv.CurrentCell.RowIndex
+            _dgvSummaryPrevColIndex = dgv.CurrentCell.ColumnIndex
+        End If
+    End Sub
+
+
 #End Region ' Dgv Summary Events
 
 #Region "Dgv Therapy Algorithm State Events"
@@ -2137,10 +2169,13 @@ Public Class Form1
         Me.TabControlPage1.SelectedIndex = 3
         Me.TabControlPage1.Visible = True
         Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(3).Controls(0), DataGridView)
-        dgv.FirstDisplayedScrollingRowIndex = dgv.RowCount - 1
         For Each row As DataGridViewRow In dgv.Rows
-            If row.Cells(1).FormattedValue.ToString = "medicalDeviceInformation" Then
-                dgv.CurrentCell = dgv.Rows(row.Index).Cells(2)
+            If row.Cells(1).FormattedValue.ToString.StartsWith("medicalDeviceInformation") Then
+                dgv.CurrentCell = dgv.Rows(row.Index).Cells(1)
+                _dgvSummaryPrevRowIndex = dgv.CurrentCell.RowIndex
+                _dgvSummaryPrevColIndex = dgv.CurrentCell.ColumnIndex
+                dgv.Rows(row.Index).Selected = True
+                dgv.FirstDisplayedScrollingRowIndex = row.Index
                 Exit For
             End If
         Next
