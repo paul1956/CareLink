@@ -195,7 +195,7 @@ Friend Module DateTimeExtensions
     ''' <returns>A new <see cref="Date"/> with seconds set to zero.</returns>
     <Extension>
     Public Function RoundDownToMinute(d As Date) As Date
-        Return New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, 0)
+        Return New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, second:=0)
     End Function
 
     ''' <summary>
@@ -205,8 +205,8 @@ Friend Module DateTimeExtensions
     ''' <param name="minutes">The number of minutes to convert.</param>
     ''' <returns>A <see langword="String"/> representing the time in "HH:mm" format.</returns>
     <Extension>
-    Public Function ToHours(minutes As Integer) As String
-        Return New TimeSpan(0, minutes \ 60, minutes Mod 60).ToString.Substring(4)
+    Public Function ToHoursMinutes(minutes As Integer) As String
+        Return New TimeSpan(hours:=0, minutes:=minutes \ 60, seconds:=minutes Mod 60).ToString.Substring(startIndex:=4)
     End Function
 
     ''' <summary>
@@ -218,7 +218,7 @@ Friend Module DateTimeExtensions
     <Extension>
     Public Function ToHoursMinutes(timeInHours As Single) As String
         Dim hours As Integer = CInt(timeInHours)
-        Return $"{New TimeSpan(hours, CInt((timeInHours - hours) * 60), 0):h\:mm}"
+        Return New TimeSpan(hours, minutes:=CInt((timeInHours - hours) * 60), seconds:=0).ToString.Substring(startIndex:=4)
 
     End Function
 

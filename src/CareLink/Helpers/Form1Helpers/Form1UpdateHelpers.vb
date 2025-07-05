@@ -378,17 +378,15 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.timeToNextCalibHours)
                     Dim timeToNextCalibrationHours As Byte = Byte.Parse(kvp.Value)
                     If timeToNextCalibrationHours = Byte.MaxValue Then
-                        s_timeToNextCalibrationMinutes = -1
                         s_listOfSummaryRecords.Add(item:=New SummaryRecord(
                                                             recordNumber,
                                                             kvp,
                                                             message:="Calibration Free Sensor"))
                     Else
-                        s_timeToNextCalibrationMinutes = timeToNextCalibrationHours
                         s_listOfSummaryRecords.Add(item:=New SummaryRecord(
                                                             recordNumber,
                                                             kvp,
-                                                            message:=$"{CInt(timeToNextCalibrationHours).ToHours}"))
+                                                            message:=$"{CInt(timeToNextCalibrationHours).ToHoursMinutes}"))
                     End If
 
                 Case NameOf(ServerDataIndexes.finalCalibration)
@@ -658,7 +656,7 @@ Friend Module Form1UpdateHelpers
                         Dim minutes As Integer = bannerStateRecord1.TimeRemaining
                         mainForm.PumpBannerStateLabel.BackColor = Color.Lime
                         mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
-                        mainForm.PumpBannerStateLabel.Text = $"Target {If(NativeMmolL, "8.3", "150")}  {minutes.ToHours} hr"
+                        mainForm.PumpBannerStateLabel.Text = $"Target {If(NativeMmolL, "8.3", "150")}  {minutes.ToHoursMinutes} hr"
                         mainForm.PumpBannerStateLabel.Visible = True
                         mainForm.PumpBannerStateLabel.Dock = DockStyle.Top
                     Case "BG_REQUIRED"
@@ -692,7 +690,7 @@ Friend Module Form1UpdateHelpers
                     Case "TEMP_BASAL"
                         mainForm.PumpBannerStateLabel.BackColor = Color.Lime
                         mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
-                        Dim hours As String = PatientData.PumpBannerState(index:=0).TimeRemaining.ToHours
+                        Dim hours As String = PatientData.PumpBannerState(index:=0).TimeRemaining.ToHoursMinutes
                         mainForm.PumpBannerStateLabel.Text = $"Temp Basal {hours} hr"
                         mainForm.PumpBannerStateLabel.Visible = True
                         mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
