@@ -19,24 +19,24 @@ Public Class SummaryRecord
     '''  and a message lookup table. Used where the message needs to be translated.
     ''' </summary>
     ''' <param name="recordNumber">The record number associated with this summary record.</param>
-    ''' <param name="row">A key-value pair representing the data row.</param>
+    ''' <param name="kvp">A key-value pair representing the data row.</param>
     ''' <param name="messages">A dictionary containing message translations.</param>
     ''' <param name="messageTableName">The name of the message table for error reporting.</param>
     ''' <remarks>Handles messages that are not in the message table.</remarks>
-    Protected Friend Sub New(recordNumber As Single, row As KeyValuePair(Of String, String), messages As Dictionary(Of String, String), messageTableName As String)
-        Me.New(recordNumber, row)
+    Protected Friend Sub New(recordNumber As Single, kvp As KeyValuePair(Of String, String), messages As Dictionary(Of String, String), messageTableName As String)
+        Me.New(recordNumber, kvp)
         Dim message As String = ""
-        If Not String.IsNullOrWhiteSpace(row.Value) Then
-            If Not messages.TryGetValue(row.Value, message) Then
+        If Not String.IsNullOrWhiteSpace(kvp.Value) Then
+            If Not messages.TryGetValue(kvp.Value, message) Then
                 If Debugger.IsAttached Then
                     Stop
                     MsgBox(
-                        heading:=$"{row.Value} is unknown message for {messageTableName}!",
+                        heading:=$"{kvp.Value} is unknown message for {messageTableName}!",
                         text:="",
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                         title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
                 End If
-                message = row.Value.ToTitle
+                message = kvp.Value.ToTitle
             End If
         End If
 

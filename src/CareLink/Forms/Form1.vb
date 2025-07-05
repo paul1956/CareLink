@@ -579,116 +579,121 @@ Public Class Form1
             e.Value = String.Empty
         End If
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(index:=e.ColumnIndex).Name
-            Case NameOf(Insulin.ActivationType)
-                Select Case Convert.ToString(e.Value)
-                    Case "AUTOCORRECTION"
-                        e.Value = "Auto Correction"
-                        Dim textColor As Color = GetGraphLineColor(legendText:="Auto Correction")
-                        dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=False)
-                    Case "FAST", "RECOMMENDED", "UNDETERMINED"
-                        dgv.CellFormattingToTitle(e, bold:=True)
-                    Case Else
-                        dgv.CellFormattingSetForegroundColor(e, bold:=True)
-                End Select
-            Case "Amount"
-                Select Case dgv.Name
-                    Case NameOf(DgvActiveInsulin)
-                        e.Value = $"{dgv.CellFormattingSingleValue(e, digits:=3)} U"
-                    Case NameOf(DgvMeal)
-                        dgv.CellFormattingInteger(e, GetCarbDefaultUnit)
-                End Select
-            Case NameOf(BasalPerHour.BasalRate), NameOf(BasalPerHour.BasalRate2)
-                If dgv.Name = NameOf(DgvBasalPerHour) Then
-                    e.Value = $"{dgv.CellFormattingSingleValue(e, digits:=3)} U/h"
-                    e.CellStyle.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
-                End If
-            Case NameOf(Calibration.bgUnits)
-                Dim key As String = Convert.ToString(e.Value)
-                Try
-                    e.Value = UnitsStrings(key)
-                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-                Catch ex As Exception
-                    e.Value = key ' Key becomes value if its unknown
-                End Try
-                dgv.CellFormattingSetForegroundColor(e)
-            Case NameOf(AutoBasalDelivery.BolusAmount)
-                If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
-                    dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
-                Else
+        Dim columnName As String = dgv.Columns(index:=e.ColumnIndex).Name
+        Try
+            Select Case columnName
+                Case NameOf(Insulin.ActivationType)
+                    Select Case Convert.ToString(e.Value)
+                        Case "AUTOCORRECTION"
+                            e.Value = "Auto Correction"
+                            Dim textColor As Color = GetGraphLineColor(legendText:="Auto Correction")
+                            dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=False)
+                        Case "FAST", "RECOMMENDED", "UNDETERMINED"
+                            dgv.CellFormattingToTitle(e, bold:=True)
+                        Case Else
+                            dgv.CellFormattingSetForegroundColor(e, bold:=True)
+                    End Select
+                Case "Amount"
+                    Select Case dgv.Name
+                        Case NameOf(DgvActiveInsulin)
+                            e.Value = $"{dgv.CellFormattingSingleValue(e, digits:=3)} U"
+                        Case NameOf(DgvMeal)
+                            dgv.CellFormattingInteger(e, GetCarbDefaultUnit)
+                    End Select
+                Case NameOf(BasalPerHour.BasalRate), NameOf(BasalPerHour.BasalRate2)
+                    If dgv.Name = NameOf(DgvBasalPerHour) Then
+                        e.Value = $"{dgv.CellFormattingSingleValue(e, digits:=3)} U/h"
+                        e.CellStyle.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
+                    End If
+                Case NameOf(Calibration.bgUnits)
+                    Dim key As String = Convert.ToString(e.Value)
+                    Try
+                        e.Value = UnitsStrings(key)
+                        e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                    Catch ex As Exception
+                        e.Value = key ' Key becomes value if its unknown
+                    End Try
                     dgv.CellFormattingSetForegroundColor(e)
-                End If
-            Case NameOf(Insulin.BolusType)
-                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-                dgv.CellFormattingToTitle(e, bold:=False)
-            Case NameOf(ActiveInsulin.DateTime),
+                Case NameOf(AutoBasalDelivery.BolusAmount)
+                    If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+                    Else
+                        dgv.CellFormattingSetForegroundColor(e)
+                    End If
+                Case NameOf(Insulin.BolusType)
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                    dgv.CellFormattingToTitle(e, bold:=False)
+                Case NameOf(ActiveInsulin.DateTime),
                  NameOf(AutoModeStatus.DisplayTime),
                  NameOf(AutoModeStatus.Timestamp)
-                dgv.CellFormattingDateTime(e)
-            Case NameOf(Limit.HighLimit), NameOf(Limit.HighLimitMgdL), NameOf(Limit.HighLimitMmolL)
-                dgv.CellFormattingSgValue(e, partialKey:=NameOf(Limit.HighLimit))
-            Case NameOf(Limit.LowLimit), NameOf(Limit.lowLimitMgdL), NameOf(Limit.lowLimitMmolL)
-                dgv.CellFormattingSgValue(e, partialKey:=NameOf(Limit.LowLimit))
-            Case NameOf(InsulinPerHour.Hour), NameOf(InsulinPerHour.Hour2)
-                Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
-                Dim time As New DateTime(year:=1, month:=1, day:=1, hour:=hour, minute:=0, second:=0)
-                e.Value = time.ToString(s_timeWithoutMinuteFormat)
-            Case NameOf(BannerState.Message)
-                Select Case dgv.Name
-                    Case NameOf(DgvPumpBannerState)
-                        dgv.CellFormattingToTitle(e, bold:=False)
-                    Case NameOf(DgvSGs)
-                        e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ")
+                    dgv.CellFormattingDateTime(e)
+                Case NameOf(Limit.HighLimit), NameOf(Limit.HighLimitMgdL), NameOf(Limit.HighLimitMmolL)
+                    dgv.CellFormattingSgValue(e, partialKey:=NameOf(Limit.HighLimit))
+                Case NameOf(Limit.LowLimit), NameOf(Limit.lowLimitMgdL), NameOf(Limit.lowLimitMmolL)
+                    dgv.CellFormattingSgValue(e, partialKey:=NameOf(Limit.LowLimit))
+                Case NameOf(InsulinPerHour.Hour), NameOf(InsulinPerHour.Hour2)
+                    Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
+                    Dim time As New DateTime(year:=1, month:=1, day:=1, hour:=hour, minute:=0, second:=0)
+                    e.Value = time.ToString(s_timeWithoutMinuteFormat)
+                Case NameOf(BannerState.Message)
+                    Select Case dgv.Name
+                        Case NameOf(DgvPumpBannerState)
+                            dgv.CellFormattingToTitle(e, bold:=False)
+                        Case NameOf(DgvSGs)
+                            e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ")
+                            dgv.CellFormattingSetForegroundColor(e)
+                        Case Else
+                            e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ")
+                            dgv.CellFormattingToTitle(e, bold:=False)
+                    End Select
+                Case NameOf(ActiveInsulin.Precision)
+                    dgv.CellFormattingToTitle(e, bold:=False)
+                Case NameOf(Insulin.SafeMealReduction)
+                    If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.OrangeRed, isUri:=False)
+                    Else
+                        e.Value = ""
                         dgv.CellFormattingSetForegroundColor(e)
-                    Case Else
-                        e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ")
+                    End If
+                Case NameOf(SG.SensorState)
+                    If e.Value.Equals("NO_ERROR_MESSAGE") Then
                         dgv.CellFormattingToTitle(e, bold:=False)
-                End Select
-            Case NameOf(ActiveInsulin.Precision)
-                dgv.CellFormattingToTitle(e, bold:=False)
-            Case NameOf(Insulin.SafeMealReduction)
-                If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
-                    dgv.CellFormattingApplyBoldColor(e, textColor:=Color.OrangeRed, isUri:=False)
-                Else
-                    e.Value = ""
+                    Else
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+                        dgv.CellFormattingToTitle(e, bold:=True)
+                    End If
+                Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
+                    dgv.CellFormattingSgValue(e, partialKey:=NameOf(SG.sg))
+                Case NameOf(BannerState.TimeRemaining)
+                    CellFormatting0Value(e)
+                Case NameOf(SG.SensorState)
+                    If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+                    Else
+                        dgv.CellFormattingToTitle(e, bold:=False)
+                    End If
+                Case NameOf(SG.Timestamp)
+                    dgv.CellFormattingDateTime(e)
+                Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
+                    dgv.CellFormattingSgValue(e, partialKey:=NameOf(SG.sg))
+                Case NameOf(Calibration.UnitValue), NameOf(Calibration.UnitValueMgdL), NameOf(Calibration.UnitValueMmolL)
+                    dgv.CellFormattingSgValue(e, partialKey:=NameOf(Calibration.UnitValue))
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
                     dgv.CellFormattingSetForegroundColor(e)
-                End If
-            Case NameOf(SG.SensorState)
-                If e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    dgv.CellFormattingToTitle(e, bold:=False)
-                Else
-                    dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
-                    dgv.CellFormattingToTitle(e, bold:=True)
-                End If
-            Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
-                dgv.CellFormattingSgValue(e, partialKey:=NameOf(SG.sg))
-            Case NameOf(BannerState.TimeRemaining)
-                CellFormatting0Value(e)
-            Case NameOf(SG.SensorState)
-                If Not e.Value.Equals("NO_ERROR_MESSAGE") Then
-                    dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
-                Else
-                    dgv.CellFormattingToTitle(e, bold:=False)
-                End If
-            Case NameOf(SG.Timestamp)
-                dgv.CellFormattingDateTime(e)
-            Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
-                dgv.CellFormattingSgValue(e, partialKey:=NameOf(SG.sg))
-            Case NameOf(Calibration.UnitValue), NameOf(Calibration.UnitValueMgdL), NameOf(Calibration.UnitValueMmolL)
-                dgv.CellFormattingSgValue(e, partialKey:=NameOf(Calibration.UnitValue))
-                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-                dgv.CellFormattingSetForegroundColor(e)
-            Case Else
-                If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
-                    dgv.CellFormattingSingleValue(e, digits:=3)
-                ElseIf dgv.Columns(e.ColumnIndex).ValueType = GetType(String) AndAlso
+                Case Else
+                    If dgv.Columns(e.ColumnIndex).ValueType = GetType(Single) Then
+                        dgv.CellFormattingSingleValue(e, digits:=3)
+                    ElseIf dgv.Columns(e.ColumnIndex).ValueType = GetType(String) AndAlso
                     dgv.Name <> NameOf(DgvLastAlarm) Then
 
-                    dgv.CellFormattingSingleWord(e)
-                Else
-                    dgv.CellFormattingSetForegroundColor(e)
-                End If
-        End Select
+                        dgv.CellFormattingSingleWord(e)
+                    Else
+                        dgv.CellFormattingSetForegroundColor(e)
+                    End If
+            End Select
+        Catch ex As Exception
+            Stop
+        End Try
     End Sub
 
     ''' <summary>
