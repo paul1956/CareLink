@@ -243,20 +243,20 @@ Friend Module SummaryHelpers
     ''' <param name="rowsToHide">An optional list of row keys to hide.</param>
     ''' <returns>A list of <see cref="SummaryRecord"/> objects representing the summary.</returns>
     Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
-        Dim summaryList As New List(Of SummaryRecord)
+        Dim listOfSummaryRecords As New List(Of SummaryRecord)
         If dic IsNot Nothing Then
-            For Each row As KeyValuePair(Of String, String) In dic
-                If row.Value Is Nothing OrElse
-                   (rowsToHide IsNot Nothing AndAlso rowsToHide.Contains(row.Key, StringComparer.OrdinalIgnoreCase)) Then
+            For Each kvp As KeyValuePair(Of String, String) In dic
+                If kvp.Value Is Nothing OrElse
+                   (rowsToHide IsNot Nothing AndAlso rowsToHide.Contains(kvp.Key, StringComparer.OrdinalIgnoreCase)) Then
                     Continue For
                 End If
 
-                Select Case row.Key
+                Select Case kvp.Key
                     Case "faultId"
                         Dim message As String = String.Empty
-                        If s_notificationMessages.TryGetValue(row.Value, message) Then
-                            message = TranslateNotificationMessageId(dic, row.Value)
-                            If row.Value = "811" Then
+                        If s_notificationMessages.TryGetValue(kvp.Value, message) Then
+                            message = TranslateNotificationMessageId(dic, kvp.Value)
+                            If kvp.Value = "811" Then
                                 If dic.TryGetValue(NameOf(ActiveNotification.triggeredDateTime), s_suspendedSince) Then
                                     Dim resultDate As Date = Nothing
                                     s_suspendedSince = If(TryParseDate(s_suspendedSince, resultDate, NameOf(ActiveNotification.triggeredDateTime)),
@@ -264,7 +264,7 @@ Friend Module SummaryHelpers
                                         "???")
                                 End If
                             End If
-                            If row.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
+                            If kvp.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
                                 If dic("deliveredAmount").StartsWith("3"c) Then
                                     message &= "Did you see drops at the end of the tubing?"
                                 Else
@@ -272,33 +272,33 @@ Friend Module SummaryHelpers
                                 End If
                             End If
                         Else
-                            If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(row.Value) Then
+                            If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(kvp.Value) Then
                                 MsgBox(
-                                    heading:=$"{row.Value} is unknown Notification Messages",
+                                    heading:=$"{kvp.Value} is unknown Notification Messages",
                                     text:=String.Empty,
                                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                                     title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
                             End If
-                            message = row.Value.ToTitle
+                            message = kvp.Value.ToTitle
                         End If
-                        summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, message))
+                        listOfSummaryRecords.Add(New SummaryRecord(recordNumber:=listOfSummaryRecords.Count, kvp, message))
                     Case "autoModeReadinessState"
-                        s_autoModeReadinessState = New SummaryRecord(recordNumber:=summaryList.Count, row, messages:=s_sensorMessages, messageTableName:=NameOf(s_sensorMessages))
-                        summaryList.Add(s_autoModeReadinessState)
+                        s_autoModeReadinessState = New SummaryRecord(recordNumber:=listOfSummaryRecords.Count, kvp, messages:=s_sensorMessages, messageTableName:=NameOf(s_sensorMessages))
+                        listOfSummaryRecords.Add(s_autoModeReadinessState)
                     Case "autoModeShieldState"
-                        summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, messages:=s_autoModeShieldMessages, messageTableName:=NameOf(s_autoModeShieldMessages)))
+                        listOfSummaryRecords.Add(New SummaryRecord(recordNumber:=listOfSummaryRecords.Count, kvp, messages:=s_autoModeShieldMessages, messageTableName:=NameOf(s_autoModeShieldMessages)))
                     Case "plgmLgsState"
-                        summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, messages:=s_plgmLgsMessages, messageTableName:=NameOf(s_plgmLgsMessages)))
+                        listOfSummaryRecords.Add(New SummaryRecord(recordNumber:=listOfSummaryRecords.Count, kvp, messages:=s_plgmLgsMessages, messageTableName:=NameOf(s_plgmLgsMessages)))
                     Case NameOf(ClearedNotifications.dateTime)
-                        summaryList.Add(New SummaryRecord(recordNumber:=summaryList.Count, row, message:=row.Value.ParseDate(key:=NameOf(ClearedNotifications.dateTime)).ToShortDateTimeString))
+                        listOfSummaryRecords.Add(New SummaryRecord(recordNumber:=listOfSummaryRecords.Count, kvp, message:=kvp.Value.ParseDate(key:=NameOf(ClearedNotifications.dateTime)).ToShortDateTimeString))
                     Case "additionalInfo"
-                        HandleComplexItems(row, rowIndex:=CType(summaryList.Count, ServerDataIndexes), key:="additionalInfo", listOfSummaryRecords:=summaryList)
+                        HandleComplexItems(kvp, recordNumber:=CType(listOfSummaryRecords.Count, ServerDataIndexes), key:="additionalInfo", listOfSummaryRecords)
                     Case Else
-                        summaryList.Add(New SummaryRecord(summaryList.Count, row))
+                        listOfSummaryRecords.Add(New SummaryRecord(listOfSummaryRecords.Count, kvp))
                 End Select
             Next
         End If
-        Return summaryList
+        Return listOfSummaryRecords
 
     End Function
 

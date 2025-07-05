@@ -48,10 +48,10 @@ Public Class SummaryRecord
     '''  and an optional message.
     ''' </summary>
     ''' <param name="recordNumber">The record number associated with this summary record.</param>
-    ''' <param name="row">A key-value pair representing the data row.</param>
+    ''' <param name="kvp">A key-value pair representing the data row.</param>
     ''' <param name="message">An optional message for the record.</param>
-    Protected Friend Sub New(recordNumber As Single, row As KeyValuePair(Of String, String), Optional message As String = "")
-        Me.New(recordNumber, row.Key, row.Value, message)
+    Protected Friend Sub New(recordNumber As Single, kvp As KeyValuePair(Of String, String), Optional message As String = "")
+        Me.New(recordNumber, kvp.Key, kvp.Value, message)
     End Sub
 
     ''' <summary>
@@ -75,18 +75,17 @@ Public Class SummaryRecord
     '''  Used where we will provide a Button to click for details on another <see cref="TabPage"/>.
     ''' </remarks>
     Protected Friend Sub New(recordNumber As Single, key As String)
-        Me.New(recordNumber, key, ClickToShowDetails, "")
+        Me.New(recordNumber, key, value:=ClickToShowDetails, message:="")
     End Sub
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="SummaryRecord"/> class using a record number, value, and message.
-    '''  The record number is converted to a <see cref="ServerDataIndexes"/> and used as the key.
+    '''  Initializes a new instance of the <see cref="SummaryRecord"/> class using a record number, key, value, and message.
     ''' </summary>
     ''' <param name="recordNumber">The record number associated with this summary record.</param>
-    ''' <param name="value">The value associated with the record.</param>
+    ''' <param name="value">The value associated with the key.</param>
     ''' <param name="message">The message for the record.</param>
     Protected Friend Sub New(recordNumber As Single, value As String, message As String)
-        Me.New(recordNumber, CType(recordNumber, ServerDataIndexes).ToString, value, message)
+        Me.New(recordNumber, key:=CType(recordNumber, ServerDataIndexes).ToString, value, message)
     End Sub
 
     ''' <summary>
