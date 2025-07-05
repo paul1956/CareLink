@@ -6,7 +6,6 @@ Imports System.IO
 
 Public Module CareLinkUserDataRecordHelpers
 
-
     ''' <summary>
     '''  Returns a <see cref="DataGridViewCellStyle"/> configured for the specified column name.
     ''' </summary>

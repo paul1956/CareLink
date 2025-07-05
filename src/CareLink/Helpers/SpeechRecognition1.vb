@@ -146,7 +146,7 @@ Friend Module SpeechSupport
     ''' </summary>
     ''' <returns>A string describing the trend direction and arrow count.</returns>
     Private Function GetTrendText() As String
-        Dim arrows As String = Form1.LabelTrendArrows.Text
+        Dim arrows As String = Form1.TrendArrowsLabel.Text
         Dim arrowCount As Integer
         Select Case True
             Case arrows.Contains("↓"c)

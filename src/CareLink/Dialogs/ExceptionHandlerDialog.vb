@@ -12,6 +12,7 @@ Imports Octokit
 '''  Dialog for handling unhandled exceptions, generating error reports, and guiding users to report issues.
 ''' </summary>
 Public Class ExceptionHandlerDialog
+
     ''' <summary>
     '''  The GitHub client used for issue reporting.
     ''' </summary>

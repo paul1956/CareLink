@@ -30,9 +30,13 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-07/01/2025
+07/05/2025
 
 ## What's New
+ New in 5.0.3.5
+ - Use NET9_0 test instead of Not Full FullDarkModeSupport to support Dark Mode in .NET 9.0
+ - Improve Summary Page formatting
+
  New in 5.0.3.4
  - Make Basal Per Hour table easier to read.
 

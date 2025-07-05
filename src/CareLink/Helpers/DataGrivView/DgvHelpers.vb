@@ -40,14 +40,26 @@ Public Module DgvHelpers
     ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
     ''' <param name="textColor">The color to use for highlighting.</param>
     ''' <param name="isUri">Indicates if the cell value is a URI.</param>
+    ''' <param name="emIncrease"></param>
     <Extension>
     Public Sub CellFormattingApplyBoldColor(
         dgv As DataGridView,
         ByRef e As DataGridViewCellFormattingEventArgs,
         textColor As Color,
-        isUri As Boolean)
+        isUri As Boolean,
+        Optional emIncrease As Integer = 0)
 
-        e.Value = Convert.ToString(e.Value)
+        Dim value As String = Convert.ToString(e.Value)
+        If String.IsNullOrEmpty(value) Then
+            e.Value = String.Empty
+            e.FormattingApplied = True
+            Return
+        End If
+        If value = ClickToShowDetails Then
+            e.Value = value
+            Dim row As DataGridViewRow = dgv.Rows(index:=e.RowIndex)
+            row.Cells(index:=e.ColumnIndex).ToolTipText = $"{ClickToShowDetails} for {row.Cells(index:=1).Value}."
+        End If
         With e.CellStyle
             If isUri Then
                 Dim foregroundColor As Color = dgv.Rows(e.RowIndex).GetTextColor(textColor:=Color.Purple)
@@ -61,7 +73,7 @@ Public Module DgvHelpers
             Else
                 .ForeColor = dgv.Rows(e.RowIndex).GetTextColor(textColor)
             End If
-            .Font = New Font(prototype:= .Font, newStyle:=FontStyle.Bold)
+            .Font = New Font(family:= .Font.FontFamily, emSize:= .Font.Size + emIncrease, style:=FontStyle.Bold)
         End With
         e.FormattingApplied = True
     End Sub

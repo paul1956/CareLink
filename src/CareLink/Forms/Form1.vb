@@ -51,9 +51,11 @@ Public Class Form1
          $"Unit{NonBreakingSpace}Value{NonBreakingSpace}"}
 
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
-    Private _formScale As New SizeF(1.0F, 1.0F)
+    Private _dgvSummaryPrevRowIndex As Integer = -1
+    Private _dgvSummaryPrevColIndex As Integer = -1
+    Private _formScale As New SizeF(width:=1.0F, height:=1.0F)
     Private _inMouseMove As Boolean = False
-    Private _lastMarkerTabIndex As (page As Integer, tab As Integer) = (0, 0)
+    Private _lastMarkerTabLocation As (page As Integer, tab As Integer) = (0, 0)
     Private _lastSummaryTabIndex As Integer = 0
     Private _previousLoc As Point
     Private _showBalloonTip As Boolean = True
@@ -577,17 +579,13 @@ Public Class Form1
             e.Value = String.Empty
         End If
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Select Case dgv.Columns(e.ColumnIndex).Name
+        Select Case dgv.Columns(index:=e.ColumnIndex).Name
             Case NameOf(Insulin.ActivationType)
                 Select Case Convert.ToString(e.Value)
                     Case "AUTOCORRECTION"
                         e.Value = "Auto Correction"
-                        Dim textColor As Color = GetGraphLineColor("Auto Correction")
-                        If e.RowIndex Mod 2 = 0 Then
-                            dgv.CellFormattingApplyBoldColor(e, textColor:=textColor.InvertColor, isUri:=False)
-                        Else
-                            dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=False)
-                        End If
+                        Dim textColor As Color = GetGraphLineColor(legendText:="Auto Correction")
+                        dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=False)
                     Case "FAST", "RECOMMENDED", "UNDETERMINED"
                         dgv.CellFormattingToTitle(e, bold:=True)
                     Case Else
@@ -616,12 +614,7 @@ Public Class Form1
                 dgv.CellFormattingSetForegroundColor(e)
             Case NameOf(AutoBasalDelivery.BolusAmount)
                 If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
-                    Dim textColor As Color = Color.Red
-                    If e.RowIndex Mod 2 = 1 Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=False)
-                    Else
-                        dgv.CellFormattingApplyBoldColor(e, textColor.InvertColor, isUri:=False)
-                    End If
+                    dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
                 Else
                     dgv.CellFormattingSetForegroundColor(e)
                 End If
@@ -655,12 +648,7 @@ Public Class Form1
                 dgv.CellFormattingToTitle(e, bold:=False)
             Case NameOf(Insulin.SafeMealReduction)
                 If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
-                    Dim textColor As Color = Color.OrangeRed
-                    If e.RowIndex Mod 2 = 1 Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=False)
-                    Else
-                        dgv.CellFormattingApplyBoldColor(e, textColor.InvertColor, isUri:=False)
-                    End If
+                    dgv.CellFormattingApplyBoldColor(e, textColor:=Color.OrangeRed, isUri:=False)
                 Else
                     e.Value = ""
                     dgv.CellFormattingSetForegroundColor(e)
@@ -669,7 +657,6 @@ Public Class Form1
                 If e.Value.Equals("NO_ERROR_MESSAGE") Then
                     dgv.CellFormattingToTitle(e, bold:=False)
                 Else
-                    ' Set the background to red when there are errors.
                     dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
                     dgv.CellFormattingToTitle(e, bold:=True)
                 End If
@@ -782,7 +769,6 @@ Public Class Form1
         DgvLowGlucoseSuspended.DataBindingComplete,
         DgvMeal.DataBindingComplete,
         DgvSensorBgReadings.DataBindingComplete,
-        DgvSGs.DataBindingComplete,
         DgvSummary.DataBindingComplete,
         DgvTherapyAlgorithmState.DataBindingComplete,
         DgvTimeChange.DataBindingComplete
@@ -819,7 +805,19 @@ Public Class Form1
                 End With
             Next
         End If
-        CType(sender, DataGridView).ClearSelection()
+
+        If dgv.Name = NameOf(DgvSummary) AndAlso
+            _dgvSummaryPrevRowIndex > 0 AndAlso _dgvSummaryPrevRowIndex < dgv.RowCount AndAlso
+            _dgvSummaryPrevColIndex > 0 AndAlso _dgvSummaryPrevColIndex < dgv.ColumnCount Then
+
+            ' Restore the previous selection in the Summary DataGridView if its not empty or Row(0).Cell(0).
+            dgv.CurrentCell = dgv.Rows(_dgvSummaryPrevRowIndex).Cells(_dgvSummaryPrevColIndex)
+            dgv.Rows(_dgvSummaryPrevRowIndex).Selected = True
+            dgv.FirstDisplayedScrollingRowIndex = _dgvSummaryPrevRowIndex
+        Else
+            ' Clear the selection of all DataGridViews except Summary DataGridView.
+            CType(sender, DataGridView).ClearSelection()
+        End If
     End Sub
 
 #Region "ContextMenuStrip Menu Events"
@@ -1507,50 +1505,47 @@ Public Class Form1
 
 #Region "Dgv SGs Events"
 
-    '''' <summary>
-    ''''  Handles the <see cref="DataGridView.CellPainting"/> event for the <see cref="DgvSGs"/> DataGridView.
-    ''''  This event is raised when a cell is painted, allowing custom rendering of the cell's content.
-    ''''  Specifically, it draws a custom sort glyph in the header cells of sortable columns.
-    '''' </summary>
-    '''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    '''' <param name="e">A <see cref="DataGridViewCellPaintingEventArgs"/> that contains the event data.
-    'Private Sub DgvSGs_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles _
-    '        DgvSGs.CellPainting
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.CellPainting"/> event for the <see cref="DgvSGs"/> DataGridView.
+    '''  This event is raised when a cell is painted, allowing custom rendering of the cell's content.
+    '''  Specifically, it draws a custom sort glyph in the header cells of sortable columns.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
+    ''' <param name="e">A <see cref="DataGridViewCellPaintingEventArgs"/> that contains the event data.
+    Private Sub DgvSGs_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles _
+        DgvSGs.CellPainting
 
-    '    Dim dgv As DataGridView = CType(sender, DataGridView)
-    '    ' Only handle header cells
-    '    If e.RowIndex = -1 AndAlso e.ColumnIndex >= 0 Then
-    '        Dim col As DataGridViewColumn = dgv.Columns(index:=e.ColumnIndex)
-    '        ' Only for sortable columns
-    '        If col.SortMode <> DataGridViewColumnSortMode.NotSortable Then
-    '            e.PaintBackground(e.ClipBounds, cellsPaintSelectionBackground:=True)
-    '            e.PaintContent(e.ClipBounds)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        ' Only handle header cell 0
+        If e.RowIndex = -1 AndAlso e.ColumnIndex = 0 Then
+            Dim col As DataGridViewColumn = dgv.Columns(index:=e.ColumnIndex)
+            ' Only for sortable columns
+            If col.SortMode <> DataGridViewColumnSortMode.NotSortable Then
+                e.PaintBackground(e.ClipBounds, cellsPaintSelectionBackground:=True)
+                e.PaintContent(e.ClipBounds)
 
-    '            ' Determine if this column is sorted and which direction
-    '            Dim glyphDir As SortOrder = col.HeaderCell.SortGlyphDirection
-    '            If glyphDir <> SortOrder.None Then
-    '                Dim glyphColor As Color = Color.White
-    '                Dim x As Integer = e.CellBounds.Right - 18
-    '                Dim y As Integer = e.CellBounds.Top + (e.CellBounds.Height \ 2) - 4
+                ' Determine if this column is sorted and which direction
+                Dim glyphDir As SortOrder = col.HeaderCell.SortGlyphDirection
+                If glyphDir <> SortOrder.None Then
+                    Dim glyphColor As Color = Color.White
+                    Dim x As Integer = e.CellBounds.Right - 18
+                    Dim y As Integer = e.CellBounds.Top + (e.CellBounds.Height \ 2) - 4
 
-    '                Using g As Graphics = e.Graphics
-    '                    Dim points() As Point = If(glyphDir = SortOrder.Ascending,
-    '                        {New Point(x, y:=y + 6),
-    '                         New Point(x:=x + 8, y:=y + 6),
-    '                         New Point(x:=x + 4, y)},
-    '                        {New Point(x, y),
-    '                         New Point(x:=x + 8, y),
-    '                         New Point(x:=x + 4, y:=y + 6)})
+                    Dim points() As Point = If(glyphDir = Global.System.Windows.Forms.SortOrder.Ascending,
+                        {New Point(x, y:=y + 6),
+                         New Point(x:=x + 8, y:=y + 6),
+                         New Point(x:=x + 4, y)},
+                        {New Point(x, y),
+                         New Point(x:=x + 8, y),
+                         New Point(x:=x + 4, y:=y + 6)})
 
-    '                    Using b As New SolidBrush(glyphColor)
-    '                        g.FillPolygon(b, points)
-    '                    End Using
-    '                End Using
-    '            End If
-    '            e.Handled = True
-    '        End If
-    '    End If
-    'End Sub
+                    Dim g As Graphics = e.Graphics
+                    g.FillPolygon(New SolidBrush(glyphColor), points)
+                End If
+                e.Handled = True
+            End If
+        End If
+    End Sub
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvSGs"/> DataGridView.
@@ -1624,18 +1619,15 @@ Public Class Form1
     Private Sub DgvSGs_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) Handles _
         DgvSGs.DataBindingComplete
 
+        Me.Dgv_DataBindingComplete(sender, e)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.Columns(dgv.Columns.Count - 1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        Dim order As SortOrder = SortOrder.None
-        If dgv.RowCount > 0 Then
-            Dim value As String = dgv.Rows(0).Cells(0).Value.ToString
-            order = If(value = "1", SortOrder.Ascending, SortOrder.Descending)
-        End If
-        dgv.Columns(index:=0).HeaderCell.SortGlyphDirection = order
-        dgv.Columns(index:=dgv.ColumnCount - 1).DefaultCellStyle.WrapMode = DataGridViewTriState.True
-        For Each col As DataGridViewColumn In CType(sender, DataGridView).Columns
-            col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
-        Next
+        Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
+        dgv.Columns(index:=lastColumnIndex).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        dgv.Columns(index:=lastColumnIndex).DefaultCellStyle.WrapMode = DataGridViewTriState.True
+        dgv.Columns(index:=0).HeaderCell.SortGlyphDirection =
+            If(dgv.RowCount > 0,
+               If(dgv.Rows(index:=0).Cells(index:=0).Value.ToString() = "1", SortOrder.Ascending, SortOrder.Descending),
+               SortOrder.None)
         dgv.ClearSelection()
     End Sub
 
@@ -1653,72 +1645,53 @@ Public Class Form1
         DgvSummary.CellFormatting
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
+        Dim key As String = dgv.Rows(index:=e.RowIndex).Cells("key").Value.ToString
         Dim eValue As String = Convert.ToString(e.Value)
 
         Select Case e.ColumnIndex
             Case 0
-                Dim singleValue As Single = eValue.ParseSingleInvariant
+                Dim singleValue As Single = eValue.ParseSingleInvariant()
                 If singleValue.IsSingleEqualToInteger(integerValue:=CInt(e.Value)) Then
-                    dgv.CellFormattingSingleValue(e, 0)
+                    dgv.CellFormattingSingleValue(e, digits:=0)
                 Else
-                    dgv.CellFormattingSingleValue(e, 1)
+                    dgv.CellFormattingSingleValue(e, digits:=1)
                 End If
             Case 1
-                e.Value = eValue.Replace(":", " : ")
+                e.Value = eValue.Replace(oldValue:=":", newValue:=" : ")
             Case 2
                 If e.Value IsNot Nothing Then
                     Select Case GetItemIndex(key)
-                        Case ServerDataIndexes.clientTimeZoneName, ServerDataIndexes.lastName,
-                            ServerDataIndexes.firstName, ServerDataIndexes.appModelType,
-                            ServerDataIndexes.currentServerTime, ServerDataIndexes.conduitSerialNumber,
-                            ServerDataIndexes.conduitBatteryStatus, ServerDataIndexes.lastConduitDateTime,
-                            ServerDataIndexes.medicalDeviceFamily, ServerDataIndexes.medicalDeviceInformation,
-                            ServerDataIndexes.medicalDeviceTime, ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime,
-                            ServerDataIndexes.cgmInfo, ServerDataIndexes.calibStatus,
-                            ServerDataIndexes.calibrationIconId, ServerDataIndexes.systemStatusMessage,
-                            ServerDataIndexes.sensorState, ServerDataIndexes.timeFormat,
-                            ServerDataIndexes.bgUnits, ServerDataIndexes.lastSensorTime,
-                            ServerDataIndexes.lastSGTrend, ServerDataIndexes.sensorLifeText,
-                            ServerDataIndexes.sensorLifeIcon
+                        ' Not Clickable Cells - Left
+                        Case ServerDataIndexes.conduitSerialNumber, ServerDataIndexes.lastConduitDateTime,
+                             ServerDataIndexes.systemStatusMessage,
+                             ServerDataIndexes.sensorState, ServerDataIndexes.timeFormat,
+                             ServerDataIndexes.bgUnits,
+                             ServerDataIndexes.lastSGTrend, ServerDataIndexes.sensorLifeText,
+                             ServerDataIndexes.sensorLifeIcon
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleLeft,
-                                padding:=New Padding(1))
+                                padding:=New Padding(all:=1))
 
-                        Case ServerDataIndexes.calFreeSensor, ServerDataIndexes.finalCalibration,
-                            ServerDataIndexes.pumpBannerState, ServerDataIndexes.therapyAlgorithmState,
-                            ServerDataIndexes.pumpSuspended, ServerDataIndexes.conduitInRange,
-                            ServerDataIndexes.conduitMedicalDeviceInRange, ServerDataIndexes.conduitSensorInRange,
-                            ServerDataIndexes.gstCommunicationState, ServerDataIndexes.pumpCommunicationState,
-                            ServerDataIndexes.lastAlarm, ServerDataIndexes.activeInsulin,
-                            ServerDataIndexes.basal, ServerDataIndexes.limits,
-                            ServerDataIndexes.markers, ServerDataIndexes.sgs,
-                            ServerDataIndexes.notificationHistory
+                        ' Not Clickable Cells - Center
+                        Case ServerDataIndexes.clientTimeZoneName, ServerDataIndexes.lastName,
+                             ServerDataIndexes.firstName, ServerDataIndexes.appModelType,
+                             ServerDataIndexes.conduitBatteryStatus, ServerDataIndexes.medicalDeviceFamily,
+                             ServerDataIndexes.medicalDeviceInformation, ServerDataIndexes.cgmInfo,
+                             ServerDataIndexes.approvedForTreatment, ServerDataIndexes.calibStatus,
+                             ServerDataIndexes.calFreeSensor, ServerDataIndexes.calibrationIconId,
+                             ServerDataIndexes.finalCalibration,
+                             ServerDataIndexes.pumpSuspended, ServerDataIndexes.conduitInRange,
+                             ServerDataIndexes.conduitMedicalDeviceInRange, ServerDataIndexes.conduitSensorInRange,
+                             ServerDataIndexes.gstCommunicationState, ServerDataIndexes.pumpCommunicationState
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleCenter,
                                 padding:=New Padding(all:=1))
 
-                        Case ServerDataIndexes.conduitBatteryLevel, ServerDataIndexes.lastConduitUpdateServerDateTime,
-                            ServerDataIndexes.timeToNextEarlyCalibrationMinutes,
-                            ServerDataIndexes.timeToNextCalibrationMinutes, ServerDataIndexes.timeToNextCalibrationRecommendedMinutes,
-                            ServerDataIndexes.timeToNextCalibHours, ServerDataIndexes.sensorDurationMinutes,
-                            ServerDataIndexes.sensorDurationHours, ServerDataIndexes.systemStatusTimeRemaining,
-                            ServerDataIndexes.gstBatteryLevel, ServerDataIndexes.reservoirLevelPercent,
-                            ServerDataIndexes.reservoirAmount, ServerDataIndexes.pumpBatteryLevelPercent,
-                            ServerDataIndexes.reservoirRemainingUnits,
-                            ServerDataIndexes.maxAutoBasalRate, ServerDataIndexes.maxBolusAmount,
-                            ServerDataIndexes.sgBelowLimit, ServerDataIndexes.approvedForTreatment,
-                            ServerDataIndexes.belowHypoLimit, ServerDataIndexes.aboveHyperLimit,
-                            ServerDataIndexes.timeInRange, ServerDataIndexes.averageSGFloat,
-                            ServerDataIndexes.averageSG
-                            e.CellStyle = e.CellStyle.SetCellStyle(
-                                alignment:=DataGridViewContentAlignment.MiddleRight,
-                                padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
-
+                        ' Not Clickable - Data Dependent
                         Case ServerDataIndexes.appModelNumber, ServerDataIndexes.transmitterPairedTime
                             If eValue = "NA" Then
                                 e.CellStyle = e.CellStyle.SetCellStyle(
-                                    alignment:=DataGridViewContentAlignment.MiddleLeft,
+                                    alignment:=DataGridViewContentAlignment.MiddleCenter,
                                     padding:=New Padding(all:=1))
                                 e.Value = "N/A"
                             Else
@@ -1727,10 +1700,42 @@ Public Class Form1
                                     padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
                             End If
 
-                        Case ServerDataIndexes.lastSG
+                        ' Not Clickable Cells - Right
+                        Case ServerDataIndexes.currentServerTime, ServerDataIndexes.conduitBatteryLevel,
+                             ServerDataIndexes.lastConduitUpdateServerDateTime, ServerDataIndexes.medicalDeviceTime,
+                             ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime,
+                             ServerDataIndexes.timeToNextCalibrationMinutes, ServerDataIndexes.timeToNextCalibrationRecommendedMinutes,
+                             ServerDataIndexes.timeToNextCalibHours,
+                             ServerDataIndexes.sensorDurationHours, ServerDataIndexes.systemStatusTimeRemaining,
+                             ServerDataIndexes.gstBatteryLevel, ServerDataIndexes.reservoirLevelPercent,
+                             ServerDataIndexes.reservoirAmount, ServerDataIndexes.pumpBatteryLevelPercent,
+                             ServerDataIndexes.reservoirRemainingUnits,
+                             ServerDataIndexes.maxAutoBasalRate, ServerDataIndexes.maxBolusAmount,
+                             ServerDataIndexes.sgBelowLimit, ServerDataIndexes.lastSensorTime,
+                             ServerDataIndexes.averageSGFloat, ServerDataIndexes.averageSG,
+                             ServerDataIndexes.belowHypoLimit, ServerDataIndexes.aboveHyperLimit,
+                             ServerDataIndexes.timeInRange
+                            e.CellStyle = e.CellStyle.SetCellStyle(
+                                alignment:=DataGridViewContentAlignment.MiddleRight,
+                                padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+
+                         ' Not Clickable Cells - Integer with comma, align Right
+                        Case ServerDataIndexes.timeToNextEarlyCalibrationMinutes, ServerDataIndexes.sensorDurationMinutes
+                            e.Value = $"{CInt(e.Value):N0}"
+                            e.CellStyle = e.CellStyle.SetCellStyle(
+                                alignment:=DataGridViewContentAlignment.MiddleRight,
+                                padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+
+                            ' Clickable Cells - Center
+                        Case ServerDataIndexes.pumpBannerState, ServerDataIndexes.therapyAlgorithmState,
+                             ServerDataIndexes.lastAlarm, ServerDataIndexes.activeInsulin,
+                             ServerDataIndexes.basal, ServerDataIndexes.lastSG,
+                             ServerDataIndexes.limits, ServerDataIndexes.markers,
+                             ServerDataIndexes.sgs, ServerDataIndexes.notificationHistory
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleCenter,
                                 padding:=New Padding(all:=1))
+                            dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Black, isUri:=False, emIncrease:=2)
                         Case Else
                             Stop
                     End Select
@@ -1760,11 +1765,11 @@ Public Class Form1
                 Select Case key.GetItemIndex()
                     Case ServerDataIndexes.lastSG
                         Me.TabControlPage2.SelectedIndex = 6
-                        _lastMarkerTabIndex = (1, 6)
+                        _lastMarkerTabLocation = New TabLocation(page:=1, tab:=6)
                         .Visible = False
                     Case ServerDataIndexes.lastAlarm
                         Me.TabControlPage2.SelectedIndex = 7
-                        _lastMarkerTabIndex = (1, 7)
+                        _lastMarkerTabLocation = New TabLocation(page:=1, tab:=7)
                         .Visible = False
                     Case ServerDataIndexes.activeInsulin
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage07ActiveInsulin))
@@ -1773,15 +1778,15 @@ Public Class Form1
                     Case ServerDataIndexes.limits
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage09Limits))
                     Case ServerDataIndexes.markers
-                        Dim page As Integer = _lastMarkerTabIndex.page
-                        Dim tab As Integer = _lastMarkerTabIndex.tab
+                        Dim page As Integer = _lastMarkerTabLocation.page
+                        Dim tab As Integer = _lastMarkerTabLocation.tab
                         If page = 0 Then
                             If tab = 0 Then
-                                _lastMarkerTabIndex = (0, 4)
+                                _lastMarkerTabLocation = New TabLocation(page:=0, tab:=4)
                             End If
-                            Me.TabControlPage1.SelectedIndex = _lastMarkerTabIndex.tab
+                            Me.TabControlPage1.SelectedIndex = _lastMarkerTabLocation.tab
                         Else
-                            Me.TabControlPage2.SelectedIndex = If(5 < tab, 0, _lastMarkerTabIndex.tab)
+                            Me.TabControlPage2.SelectedIndex = If(5 < tab, 0, _lastMarkerTabLocation.tab)
                             .Visible = False
                         End If
                     Case ServerDataIndexes.notificationHistory
@@ -1816,6 +1821,23 @@ Public Class Form1
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
         End With
+    End Sub
+
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.SelectionChanged"/> event for the <see cref="DgvSummary"/> DataGridView.
+    '''  This event is raised when the selection in the DataGridView changes.
+    '''  It updates the previous row and column indices to track the last selected cell.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
+    ''' <param name="e">A <see cref="EventArgs"/> that contains the event data.</param>
+    Private Sub DgvSummary_SelectionChanged(sender As Object, e As EventArgs) Handles DgvSummary.SelectionChanged
+        Dim dgv As DataGridView = DirectCast(sender, DataGridView)
+        If dgv.CurrentCell IsNot Nothing AndAlso
+            dgv.CurrentCell.RowIndex >= 0 AndAlso
+            dgv.CurrentCell.ColumnIndex > 0 Then
+            _dgvSummaryPrevRowIndex = dgv.CurrentCell.RowIndex
+            _dgvSummaryPrevColIndex = dgv.CurrentCell.ColumnIndex
+        End If
     End Sub
 
 #End Region ' Dgv Summary Events
@@ -2101,7 +2123,7 @@ Public Class Form1
 
 #End Region ' Status Strip Colors
 
-#If Not FullDarkModeSupport Then
+#If NET9_0 Then
 
 #Region "Tab Page Colors"
 
@@ -2110,7 +2132,7 @@ Public Class Form1
 
 #End Region ' Tab Page Colors
 
-#End If ' Not FullDarkModeSupport
+#End If ' NET9_0
 
         Me.NotifyIcon1.Visible = True
         Application.DoEvents()
@@ -2137,10 +2159,13 @@ Public Class Form1
         Me.TabControlPage1.SelectedIndex = 3
         Me.TabControlPage1.Visible = True
         Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(3).Controls(0), DataGridView)
-        dgv.FirstDisplayedScrollingRowIndex = dgv.RowCount - 1
         For Each row As DataGridViewRow In dgv.Rows
-            If row.Cells(1).FormattedValue.ToString = "medicalDeviceInformation" Then
-                dgv.CurrentCell = dgv.Rows(row.Index).Cells(2)
+            If row.Cells(1).FormattedValue.ToString.StartsWith("medicalDeviceInformation") Then
+                dgv.CurrentCell = dgv.Rows(row.Index).Cells(1)
+                _dgvSummaryPrevRowIndex = dgv.CurrentCell.RowIndex
+                _dgvSummaryPrevColIndex = dgv.CurrentCell.ColumnIndex
+                dgv.Rows(row.Index).Selected = True
+                dgv.FirstDisplayedScrollingRowIndex = row.Index
                 Exit For
             End If
         Next
@@ -2859,7 +2884,9 @@ Public Class Form1
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
         If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
-            _calibrationToolTip.SetToolTip(Me.CalibrationDueImage, $"Calibration Due {PumpNow.AddMinutes(s_timeToNextCalibrationMinutes).ToShortTimeString}")
+            _calibrationToolTip.SetToolTip(
+                control:=Me.CalibrationDueImage,
+                caption:=$"Calibration Due {PumpNow.AddMinutes(s_timeToNextCalibrationMinutes).ToShortTimeString}")
         End If
     End Sub
 
@@ -2871,7 +2898,9 @@ Public Class Form1
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub SensorDaysLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
         If PatientData.SensorDurationHours < 24 Then
-            _sensorLifeToolTip.SetToolTip(Me.CalibrationDueImage, $"Sensor will expire in {PatientData.SensorDurationHours} hours")
+            _sensorLifeToolTip.SetToolTip(
+                control:=Me.SensorDaysLeftLabel,
+                caption:=$"Sensor will expire in {PatientData.SensorDurationHours} hours")
         End If
     End Sub
 
@@ -2879,7 +2908,7 @@ Public Class Form1
 
 #Region "Tab Events"
 
-#If Not FullDarkModeSupport Then
+#If NET9_0 Then
 
     ''' <summary>
     '''  Handles the <see cref="TabControl.DrawItem"/> event for the main and secondary tab controls.
@@ -2914,7 +2943,7 @@ Public Class Form1
         End Using
     End Sub
 
-#End If ' FullDarkModeSupport
+#End If ' NET9_0
 
     ''' <summary>
     '''  Handles the <see cref="TabControl.Selecting"/> event for the main tab control.
@@ -2925,7 +2954,7 @@ Public Class Form1
     ''' <remarks>
     '''  This method is used to manage cursor visibility and last selected tab index for navigation.
     ''' </remarks>
-    Private Sub TabControlPage_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage1.Selecting
+    Private Sub TabControlPage1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage1.Selecting
         Select Case e.TabPage.Name
             Case NameOf(TabPage05Insulin), NameOf(TabPage08SensorGlucose)
                 Me.Cursor = Cursors.WaitCursor
@@ -2935,15 +2964,15 @@ Public Class Form1
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not DataGridViewHelpers.HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
                 Next
-                Me.TabControlPage2.SelectedIndex = If(_lastMarkerTabIndex.page = 0,
+                Me.TabControlPage2.SelectedIndex = If(_lastMarkerTabLocation.page = 0,
                                                       0,
-                                                      _lastMarkerTabIndex.tab)
+                                                      _lastMarkerTabLocation.tab)
                 Me.TabControlPage1.Visible = False
                 Exit Sub
             Case NameOf(TabPage05Insulin)
-                _lastMarkerTabIndex = (0, e.TabPageIndex)
+                _lastMarkerTabLocation = (page:=0, tab:=e.TabPageIndex)
             Case NameOf(TabPage06Meal)
-                _lastMarkerTabIndex = (0, e.TabPageIndex)
+                _lastMarkerTabLocation = (page:=0, tab:=e.TabPageIndex)
         End Select
         _lastSummaryTabIndex = e.TabPageIndex
     End Sub
@@ -2970,7 +2999,7 @@ Public Class Form1
                 Next
             Case Else
                 If e.TabPageIndex < Me.TabControlPage2.TabPages.Count - 2 Then
-                    _lastMarkerTabIndex = (1, e.TabPageIndex)
+                    _lastMarkerTabLocation = (page:=1, tab:=e.TabPageIndex)
                 End If
         End Select
     End Sub
@@ -2984,7 +3013,9 @@ Public Class Form1
     ''' <remarks>
     '''  This method is used to ensure that the cursor is reset after rendering the tab content.
     ''' </remarks>
-    Private Sub TabPage_Paint(sender As Object, e As PaintEventArgs) Handles TabPage05Insulin.Paint, TabPage08SensorGlucose.Paint
+    Private Sub TabPage_Paint(sender As Object, e As PaintEventArgs) Handles _
+        TabPage05Insulin.Paint, TabPage08SensorGlucose.Paint
+
         ' Reset the cursor to default once the tab is rendered
         Me.Cursor = Cursors.Default
     End Sub
@@ -3601,22 +3632,22 @@ Public Class Form1
                     strBuilder.AppendLine($"Last SG {lastSgString} {GetBgUnitsString()}")
                     If PatientData.ConduitInRange Then
                         If s_lastSgValue.IsSgInvalid Then
-                            Me.LabelTrendValue.Text = ""
-                            Me.LabelTrendValue.Visible = False
+                            Me.TrendValueLabel.Text = ""
+                            Me.TrendValueLabel.Visible = False
                             _sgMiniDisplay.SetCurrentDeltaValue(deltaString:="", delta:=0)
                         Else
                             Dim diffSg As Single = sg - s_lastSgValue
-                            Me.LabelTrendValue.Text = If(Math.Abs(diffSg) < 0.001,
+                            Me.TrendValueLabel.Text = If(Math.Abs(diffSg) < 0.001,
                                                          "0",
                                                          diffSg.ToString(GetSgFormat(withSign:=True), CultureInfo.InvariantCulture)
                                                         )
-                            _sgMiniDisplay.SetCurrentDeltaValue(Me.LabelTrendValue.Text, diffSg)
-                            Me.LabelTrendValue.ForeColor = backColor
+                            _sgMiniDisplay.SetCurrentDeltaValue(Me.TrendValueLabel.Text, diffSg)
+                            Me.TrendValueLabel.ForeColor = backColor
                             strBuilder.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(withSign:=True), CultureInfo.InvariantCulture)}")
-                            Me.LabelTrendValue.Visible = True
+                            Me.TrendValueLabel.Visible = True
                         End If
                     Else
-                        Me.LabelTrendValue.Visible = False
+                        Me.TrendValueLabel.Visible = False
                     End If
                     strBuilder.Append($"Active ins. {PatientData.ActiveInsulin?.Amount:N3} U")
                     Me.NotifyIcon1.Text = strBuilder.ToString
@@ -4159,36 +4190,36 @@ Public Class Form1
         End If
 
         Dim totalPercent As String = If(s_totalDailyDose = 0, "???", $"{CInt(s_totalBasal / s_totalDailyDose * 100)}")
-        Me.Last24BasalUnitsLabel.Text = String.Format(Provider, $"{s_totalBasal:F1} U")
-        Me.Last24BasalPercentLabel.Text = $"{totalPercent}%"
+        Me.Last24HrBasalUnitsLabel.Text = String.Format(Provider, $"{s_totalBasal:F1} U")
+        Me.Last24HrBasalPercentLabel.Text = $"{totalPercent}%"
 
-        Me.Last24TotalInsulinUnitsLabel.Text = String.Format(Provider, $"{s_totalDailyDose:F1} U")
+        Me.Last24HrTotalInsulinUnitsLabel.Text = String.Format(Provider, $"{s_totalDailyDose:F1} U")
 
         If s_totalAutoCorrection > 0 Then
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24AutoCorrectionLabel.Visible = True
-            Me.Last24AutoCorrectionUnitsLabel.Text = String.Format(Provider, $"{s_totalAutoCorrection:F1} U")
-            Me.Last24AutoCorrectionUnitsLabel.Visible = True
-            Me.Last24AutoCorrectionPercentLabel.Text = $"{totalPercent}%"
-            Me.Last24AutoCorrectionPercentLabel.Visible = True
+            Me.Last24HrAutoCorrectionLabel.Visible = True
+            Me.Last24HrAutoCorrectionUnitsLabel.Text = String.Format(Provider, $"{s_totalAutoCorrection:F1} U")
+            Me.Last24HrAutoCorrectionUnitsLabel.Visible = True
+            Me.Last24HrAutoCorrectionPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24HrAutoCorrectionPercentLabel.Visible = True
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24MealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
-            Me.Last24MealBolusPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24HrMealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
+            Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         Else
-            Me.Last24AutoCorrectionLabel.Visible = False
-            Me.Last24AutoCorrectionUnitsLabel.Visible = False
-            Me.Last24AutoCorrectionPercentLabel.Visible = False
+            Me.Last24HrAutoCorrectionLabel.Visible = False
+            Me.Last24HrAutoCorrectionUnitsLabel.Visible = False
+            Me.Last24HrAutoCorrectionPercentLabel.Visible = False
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24MealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
-            Me.Last24MealBolusPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24HrMealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
+            Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         End If
-        Me.Last24CarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}"
+        Me.Last24HrCarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}"
     End Sub
 
     ''' <summary>
@@ -4521,18 +4552,18 @@ Public Class Form1
         If PatientData.ConduitInRange Then
             Dim arrows As String = Nothing
             If s_trends.TryGetValue(rowValue, arrows) Then
-                Me.LabelTrendArrows.Font = If(rowValue = "NONE",
+                Me.TrendArrowsLabel.Font = If(rowValue = "NONE",
                     New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold),
                     New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold))
-                Me.LabelTrendArrows.Text = s_trends(rowValue)
+                Me.TrendArrowsLabel.Text = s_trends(rowValue)
             Else
-                Me.LabelTrendArrows.Font = New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold)
-                Me.LabelTrendArrows.Text = rowValue
+                Me.TrendArrowsLabel.Font = New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold)
+                Me.TrendArrowsLabel.Text = rowValue
             End If
         End If
-        Me.LabelSgTrend.Visible = PatientData.ConduitInRange
-        Me.LabelTrendValue.Visible = PatientData.ConduitInRange
-        Me.LabelTrendArrows.Visible = PatientData.ConduitInRange
+        Me.SgTrendLabel.Visible = PatientData.ConduitInRange
+        Me.TrendValueLabel.Visible = PatientData.ConduitInRange
+        Me.TrendArrowsLabel.Visible = PatientData.ConduitInRange
     End Sub
 
     ''' <summary>
@@ -4689,3 +4720,41 @@ Public Class Form1
 #End Region ' Update Home Tab
 
 End Class
+
+Friend Structure TabLocation
+    Public page As Integer
+    Public tab As Integer
+
+    Public Sub New(page As Integer, tab As Integer)
+        Me.page = page
+        Me.tab = tab
+    End Sub
+
+    Public Overrides Function Equals(obj As Object) As Boolean
+        If Not (TypeOf obj Is TabLocation) Then
+            Return False
+        End If
+
+        Dim other As TabLocation = DirectCast(obj, TabLocation)
+        Return page = other.page AndAlso
+               tab = other.tab
+    End Function
+
+    Public Overrides Function GetHashCode() As Integer
+        Return HashCode.Combine(page, tab)
+    End Function
+
+    Public Sub Deconstruct(ByRef page As Integer, ByRef tab As Integer)
+        page = Me.page
+        tab = Me.tab
+    End Sub
+
+    Public Shared Widening Operator CType(value As TabLocation) As (page As Integer, tab As Integer)
+        Return (value.page, value.tab)
+    End Operator
+
+    Public Shared Widening Operator CType(value As (page As Integer, tab As Integer)) As TabLocation
+        Return New TabLocation(value.page, value.tab)
+    End Operator
+
+End Structure

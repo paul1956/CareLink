@@ -455,12 +455,14 @@ Public Class CareLinkUserDataList
     Public Sub RemoveIndex(propertyDescriptor As PropertyDescriptor) Implements IBindingList.RemoveIndex
         ' No index support
     End Sub
+
     ''' <summary>
     '''  Not supported. Required by <see cref="IBindingList"/>.
     ''' </summary>
     Public Sub RemoveSort() Implements IBindingList.RemoveSort
         ' No sorting support
     End Sub
+
 #End Region ' IBindingList Minimal Implementations
 
 End Class
