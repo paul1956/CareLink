@@ -57,6 +57,48 @@ Friend Module Form1UpdateHelpers
                  )
     End Function
 
+    Private Sub SetupPumpTimeZoneInfo(mainForm As Form1, kvp As KeyValuePair(Of String, String))
+        If s_useLocalTimeZone Then
+            PumpTimeZoneInfo = TimeZoneInfo.Local
+        Else
+            PumpTimeZoneInfo = CalculateTimeZone(timeZoneName:=PatientData.ClientTimeZoneName)
+            Dim messageButtons As MessageBoxButtons
+            If PumpTimeZoneInfo Is Nothing Then
+                Dim text As String
+                If String.IsNullOrWhiteSpace(kvp.Value.ToString) Then
+                    text = $"Your pump appears To be off-line, " &
+                        "some values will be wrong do you want to continue? " &
+                        "If you select OK '{TimeZoneInfo.Local.Id}' will be used as you local time " &
+                        "and you will not be prompted further. Cancel will Exit."
+                    messageButtons = MessageBoxButtons.OKCancel
+                Else
+                    text = $"Your pump TimeZone '{kvp.Value}' is not recognized, do you want to exit? " &
+                        "If you select No permanently use '{TimeZoneInfo.Local.Id}''? " &
+                        "If you select Yes '{TimeZoneInfo.Local.Id}' will be used " &
+                        "and you will not be prompted further. " &
+                        "No will use '{TimeZoneInfo.Local.Id}' until you restart program. " &
+                        "Cancel will exit program. Please open an issue and provide the name '{kvp.Value}'. " &
+                        "After selecting 'Yes' you can change the behavior under the Options Menu."
+                    messageButtons = MessageBoxButtons.YesNoCancel
+                End If
+                Dim result As DialogResult = MessageBox.Show(
+                    text,
+                    caption:="TimeZone Unknown",
+                    buttons:=messageButtons,
+                    icon:=MessageBoxIcon.Question)
+
+                s_useLocalTimeZone = True
+                PumpTimeZoneInfo = TimeZoneInfo.Local
+                Select Case result
+                    Case DialogResult.Yes
+                        My.Settings.UseLocalTimeZone = True
+                    Case DialogResult.Cancel
+                        mainForm.Close()
+                End Select
+            End If
+        End If
+    End Sub
+
     ''' <summary>
     '''  Gets the display name of a pump model based on its model number.
     ''' </summary>
@@ -241,46 +283,8 @@ Friend Module Form1UpdateHelpers
             Dim message As String
             Select Case kvp.Key
                 Case NameOf(ServerDataIndexes.clientTimeZoneName)
-                    If s_useLocalTimeZone Then
-                        PumpTimeZoneInfo = TimeZoneInfo.Local
-                    Else
-                        PumpTimeZoneInfo = CalculateTimeZone(timeZoneName:=PatientData.ClientTimeZoneName)
-                        Dim messageButtons As MessageBoxButtons
-                        If PumpTimeZoneInfo Is Nothing Then
-                            If String.IsNullOrWhiteSpace(kvp.Value.ToString) Then
-                                message = $"Your pump appears To be off-line, " &
-                                    "some values will be wrong do you want to continue? " &
-                                    "If you select OK '{TimeZoneInfo.Local.Id}' will be used as you local time " &
-                                    "and you will not be prompted further. Cancel will Exit."
-                                messageButtons = MessageBoxButtons.OKCancel
-                            Else
-                                message = $"Your pump TimeZone '{kvp.Value}' is not recognized, do you want to exit? " &
-                                    "If you select No permanently use '{TimeZoneInfo.Local.Id}''? " &
-                                    "If you select Yes '{TimeZoneInfo.Local.Id}' will be used " &
-                                    "and you will not be prompted further. " &
-                                    "No will use '{TimeZoneInfo.Local.Id}' until you restart program. " &
-                                    "Cancel will exit program. Please open an issue and provide the name '{kvp.Value}'. " &
-                                    "After selecting 'Yes' you can change the behavior under the Options Menu."
-                                messageButtons = MessageBoxButtons.YesNoCancel
-                            End If
-                            Dim result As DialogResult = MessageBox.Show(
-                                text:=message,
-                                caption:="TimeZone Unknown",
-                                buttons:=messageButtons,
-                                icon:=MessageBoxIcon.Question)
-
-                            s_useLocalTimeZone = True
-                            PumpTimeZoneInfo = TimeZoneInfo.Local
-                            Select Case result
-                                Case DialogResult.Yes
-                                    My.Settings.UseLocalTimeZone = True
-                                Case DialogResult.Cancel
-                                    mainForm.Close()
-                            End Select
-                        End If
-                    End If
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, key, kvp.Value))
-
+                    SetupPumpTimeZoneInfo(mainForm, kvp)
                 Case NameOf(ServerDataIndexes.lastName)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
@@ -312,7 +316,8 @@ Friend Module Form1UpdateHelpers
                     kvp = New KeyValuePair(Of String, String)(
                         key:=NameOf(ServerDataIndexes.lastConduitDateTime),
                         value:=kvp.Value.CDateOrDefault(key:=NameOf(ServerDataIndexes.lastConduitDateTime), Provider))
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message:=$"Phone time is {kvp.Value}"))
+                    message = $"Phone time is {kvp.Value}"
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataIndexes.lastConduitUpdateServerDateTime)
                     message = kvp.Value.Epoch2DateTimeString
@@ -345,21 +350,17 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.calibStatus)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                        recordNumber,
-                                                        kvp,
-                                                        messages:=s_calibrationMessages,
-                                                        messageTableName:=NameOf(s_calibrationMessages)))
+                    Dim messageTableName As String = NameOf(s_calibrationMessages)
+                    s_listOfSummaryRecords.Add(
+                        item:=New SummaryRecord(recordNumber, kvp, messages:=s_calibrationMessages, messageTableName))
 
                 Case NameOf(ServerDataIndexes.calibrationIconId)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.timeToNextEarlyCalibrationMinutes)
                     If kvp.Value = "15555" Then
-                        s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                            recordNumber,
-                                                            kvp,
-                                                            message:="Calibration Free Sensor"))
+                        message = "Calibration Free Sensor"
+                        s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
                     Else
                         s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
                     End If
@@ -367,10 +368,8 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.timeToNextCalibrationMinutes),
                      NameOf(ServerDataIndexes.timeToNextCalibrationRecommendedMinutes)
                     If kvp.Value = "-1" Then
-                        s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                            recordNumber,
-                                                            kvp,
-                                                            message:="Calibration Free Sensor"))
+                        message = "Calibration Free Sensor"
+                        s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
                     Else
                         s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
                     End If
@@ -378,15 +377,11 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.timeToNextCalibHours)
                     Dim timeToNextCalibrationHours As Byte = Byte.Parse(kvp.Value)
                     If timeToNextCalibrationHours = Byte.MaxValue Then
-                        s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                            recordNumber,
-                                                            kvp,
-                                                            message:="Calibration Free Sensor"))
+                        message = "Calibration Free Sensor"
+                        s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
                     Else
-                        s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                            recordNumber,
-                                                            kvp,
-                                                            message:=$"{CInt(timeToNextCalibrationHours).ToHoursMinutes}"))
+                        message = $"{CInt(timeToNextCalibrationHours).ToHoursMinutes}"
+                        s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
                     End If
 
                 Case NameOf(ServerDataIndexes.finalCalibration)
@@ -397,17 +392,13 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.sensorDurationMinutes)
                     Dim sensorDurationMinutes As Integer = CInt(kvp.Value.ToString())
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                       recordNumber,
-                                                       kvp,
-                                                       message:=sensorDurationMinutes.MinutesToDaysHoursMinutes))
+                    message = sensorDurationMinutes.MinutesToDaysHoursMinutes
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataIndexes.sensorDurationHours)
                     Dim sensorDurationHours As Integer = CInt(kvp.Value.ToString())
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                            recordNumber,
-                                                            kvp,
-                                                            message:=sensorDurationHours.HoursToDaysAndHours))
+                    message = sensorDurationHours.HoursToDaysAndHours
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataIndexes.transmitterPairedTime)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -420,7 +411,8 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.gstBatteryLevel)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message:=$"Phone battery is at {kvp.Value}%."))
+                    message = $"Phone battery is at {kvp.Value}%."
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataIndexes.pumpBannerState)
                     s_pumpBannerStateValue = JsonToDictionaryList(kvp.Value)
@@ -431,22 +423,19 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, key, value:=ClickToShowDetails))
 
                 Case NameOf(ServerDataIndexes.reservoirLevelPercent)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                       recordNumber,
-                                                       kvp,
-                                                       message:=$"Reservoir is {PatientData.ReservoirLevelPercent}% full."))
+                    message = $"Reservoir is {PatientData.ReservoirLevelPercent}% full."
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataIndexes.reservoirAmount)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                       recordNumber,
-                                                       kvp,
-                                                       message:=$"Full reservoir holds {PatientData.ReservoirAmount}U."))
+                    message = $"Full reservoir holds {PatientData.ReservoirAmount}U."
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataIndexes.pumpSuspended)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.pumpBatteryLevelPercent)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message:=$"Pump battery is at {kvp.Value}%."))
+                    message = $"Pump battery is at {kvp.Value}%."
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataIndexes.reservoirRemainingUnits)
                     message = $"Reservoir has {PatientData.ReservoirRemainingUnits}U remaining."
@@ -465,11 +454,9 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataIndexes.systemStatusMessage)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                        recordNumber,
-                                                        kvp,
-                                                        messages:=s_sensorMessages,
-                                                        messageTableName:=NameOf(s_sensorMessages)))
+                    Dim messageTableName As String = NameOf(s_sensorMessages)
+                    s_listOfSummaryRecords.Add(
+                        item:=New SummaryRecord(recordNumber, kvp, messages:=s_sensorMessages, messageTableName))
 
                 Case NameOf(ServerDataIndexes.sensorState)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(
@@ -570,13 +557,11 @@ Friend Module Form1UpdateHelpers
                     End If
 
                 Case NameOf(ServerDataIndexes.notificationHistory)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                        recordNumber:=CSng(c.Index + 0.1),
-                                                        key:="activeNotification"))
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                        recordNumber:=CSng(c.Index + 0.2),
-                                                        key:="clearedNotifications"))
-                    s_notificationHistoryValue = LoadIndexedItems(kvp.Value)
+                    s_listOfSummaryRecords.Add(
+                        item:=New SummaryRecord(recordNumber:=CSng(c.Index + 0.1), key:="activeNotification"))
+                    s_listOfSummaryRecords.Add(
+                        item:=New SummaryRecord(recordNumber:=CSng(c.Index + 0.2), key:="clearedNotifications"))
+                    s_notificationHistoryValue = LoadIndexedItems(jsonString:=kvp.Value)
 
                 Case NameOf(ServerDataIndexes.sensorLifeText)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
