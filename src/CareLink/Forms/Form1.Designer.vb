@@ -1975,7 +1975,6 @@ Partial Class Form1
         ' 
         ' TabControlPage1
         ' 
-        TabControlPage1.Appearance = TabAppearance.Buttons
         TabControlPage1.Controls.Add(TabPage01HomePage)
         TabControlPage1.Controls.Add(TabPage02RunningIOB)
         TabControlPage1.Controls.Add(TabPage03TreatmentDetails)
@@ -2482,7 +2481,6 @@ Partial Class Form1
         ' 
         ' TabControlPage2
         ' 
-        TabControlPage2.Appearance = TabAppearance.Buttons
         TabControlPage2.Controls.Add(TabPageAutoBasalDelivery)
         TabControlPage2.Controls.Add(TabPageAutoModeStatus)
         TabControlPage2.Controls.Add(TabPageBgReadings)
