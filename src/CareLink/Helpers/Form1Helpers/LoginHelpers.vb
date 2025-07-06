@@ -93,6 +93,8 @@ Friend Module LoginHelpers
                     isDaylightSavingTime:=fileDate.IsDaylightSavingTime)
                 SetUpCareLinkUser()
                 fromFile = True
+                owner.TabControlPage1.Visible = True
+                owner.TabControlPage2.Visible = True
             Case FileToLoadOptions.Login, FileToLoadOptions.NewUser
                 owner.Text = SavedTitle
                 Do While True
