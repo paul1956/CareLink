@@ -235,7 +235,7 @@
           }
         }
       },
-      "Microsoft.Web.WebView2/1.0.3344-prerelease": {
+      "Microsoft.Web.WebView2/1.0.3351.48": {
         "type": "package",
         "build": {
           "buildTransitive/Microsoft.Web.WebView2.targets": {}
@@ -681,10 +681,10 @@
         "microsoft.extensions.primitives.nuspec"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.3344-prerelease": {
-      "sha512": "I1n0XLQuJcVOrTPLl0pYARi57q+AtVswrCHHHaB0ROvmxn3IvYQg+r++IYUpJnzucwEyDNWqn/ZLoxTeD6sjAA==",
+    "Microsoft.Web.WebView2/1.0.3351.48": {
+      "sha512": "UIzXdl3x3H2MX2es7+BHYT3pLkLoT7090omqla9S3MQQCma0slwiY+CXBM6x0LmdLTpksoQ6XUqOAXrtxjtklQ==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.3344-prerelease",
+      "path": "microsoft.web.webview2/1.0.3351.48",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -693,8 +693,6 @@
         "NOTICE.txt",
         "WebView2.idl",
         "WebView2.tlb",
-        "WebView2Experimental.idl",
-        "WebView2Experimental.tlb",
         "build/Common.targets",
         "build/Microsoft.Web.WebView2.targets",
         "build/WebView2Rules.Project.xml",
@@ -707,8 +705,6 @@
         "build/native/include-winrt/WebView2Interop.tlb",
         "build/native/include/WebView2.h",
         "build/native/include/WebView2EnvironmentOptions.h",
-        "build/native/include/WebView2Experimental.h",
-        "build/native/include/WebView2ExperimentalEnvironmentOptions.h",
         "build/native/x64/WebView2Loader.dll",
         "build/native/x64/WebView2Loader.dll.lib",
         "build/native/x64/WebView2LoaderStatic.lib",
@@ -734,7 +730,7 @@
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.3344-prerelease.nupkg.sha512",
+        "microsoft.web.webview2.1.0.3351.48.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -1024,7 +1020,7 @@
       "ClosedXML >= 0.105.0",
       "DataGridViewDisableButtonColumnEx >= 1.0.8",
       "FreeSpire.PDF >= 10.2.0",
-      "Microsoft.Web.WebView2 >= 1.0.3344-prerelease",
+      "Microsoft.Web.WebView2 >= 1.0.3351.48",
       "Octokit >= 14.0.0",
       "System.Speech >= 10.0.0-preview.5.25277.114",
       "TableLayputPanelTop >= 1.0.0.3",
@@ -1095,7 +1091,7 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.3344-prerelease, )"
+            "version": "[1.0.3351.48, )"
           },
           "Octokit": {
             "target": "Package",
