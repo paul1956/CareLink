@@ -1850,7 +1850,7 @@ Partial Class Form1
         TimeInRangeChartLabel.ForeColor = Color.White
         TimeInRangeChartLabel.Location = New Point(81, 74)
         TimeInRangeChartLabel.Name = "TimeInRangeChartLabel"
-        TimeInRangeChartLabel.Size = New Size(76, 47)
+        TimeInRangeChartLabel.Size = New Size(68, 40)
         TimeInRangeChartLabel.TabIndex = 2
         TimeInRangeChartLabel.Text = "100"
         TimeInRangeChartLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1902,7 +1902,7 @@ Partial Class Form1
         TirComplianceLabel.BackColor = Color.Transparent
         TirComplianceLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
         TirComplianceLabel.ForeColor = Color.White
-        TirComplianceLabel.Location = New Point(3, 438)
+        TirComplianceLabel.Location = New Point(2, 438)
         TirComplianceLabel.Name = "TirComplianceLabel"
         TirComplianceLabel.Size = New Size(226, 25)
         TirComplianceLabel.TabIndex = 35
