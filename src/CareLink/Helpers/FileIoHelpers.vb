@@ -25,7 +25,15 @@ Friend Module FileIoHelpers
     ''' </value>
     Private ReadOnly s_settingsDirectory As String = Path.Join(s_myDocuments, "CareLink", "Settings")
 
-    Friend ReadOnly Property ProjectWebCache As String = Path.Join(s_myDocuments, "CareLink", "WebCache")
+    ''' <summary>
+    '''  Gets the full path to the file containing all users' login information.
+    ''' </summary>
+    ''' <returns>The full path to the login info CSV file.</returns>
+    Friend ReadOnly Property UserSettingsCsvFileWithPath As String
+        Get
+            Return Path.Join(DirectoryForProjectData, AllUsersLoginInfoFileName)
+        End Get
+    End Property
 
     ''' <summary>
     '''  Gets the path to the directory where project data is stored in the user's Documents folder.
@@ -40,6 +48,7 @@ Friend Module FileIoHelpers
         DirectoryForProjectData,
         "GraphColors.Csv")
 
+    Friend ReadOnly Property ProjectWebCache As String = Path.Join(s_myDocuments, "CareLink", "WebCache")
     ''' <summary>
     '''  Gets the full path to the sample user data JSON file for testing.
     ''' </summary>
@@ -112,15 +121,6 @@ Friend Module FileIoHelpers
     Friend Function GetSettingsDirectory() As String
         Return s_settingsDirectory
     End Function
-
-    ''' <summary>
-    '''  Gets the full path to the file containing all users' login information.
-    ''' </summary>
-    ''' <returns>The full path to the login info CSV file.</returns>
-    Friend Function GetUsersLoginInfoFileWithPath() As String
-        Return Path.Join(DirectoryForProjectData, AllUsersLoginInfoFileName)
-    End Function
-
     ''' <summary>
     '''  Determines whether the specified file has not been modified for at least 30 days.
     ''' </summary>

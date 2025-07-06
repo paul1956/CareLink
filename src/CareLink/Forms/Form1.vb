@@ -61,6 +61,7 @@ Public Class Form1
     Private _showBalloonTip As Boolean = True
     Private _summaryChartAbsoluteRectangle As RectangleF
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
+    Private _timeInTightRange As (Uint As UInteger, Str As String)
     Private _updating As Boolean
     Private _webView2ProcessId As Integer = -1
 
@@ -1990,7 +1991,7 @@ Public Class Form1
             My.Settings.Save()
         End If
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)
-        Dim currentAllUserLoginFile As String = GetUsersLoginInfoFileWithPath()
+        Dim currentAllUserLoginFile As String = UserSettingsCsvFileWithPath
         If Not Directory.Exists(DirectoryForProjectData) Then
             Dim lastError As String = $"Can't create required project directories!"
             Directory.CreateDirectory(DirectoryForProjectData)
@@ -3299,22 +3300,11 @@ Public Class Form1
     '''  This method is called to prepare the Time in Range chart and labels for displaying compliance information.
     ''' </summary>
     Friend Sub InitializeTimeInRangeArea()
-        If Me.SplitContainer3.Panel2.Controls.Count > 16 Then
+        If Me.SplitContainer3.Panel2.Controls.Count > 18 Then
             Me.SplitContainer3.Panel2.Controls.RemoveAt(Me.SplitContainer3.Panel2.Controls.Count - 1)
         End If
+        Me.PositionControlsInSplitContainer3Panel2()
         Dim width1 As Integer = Me.SplitContainer3.Panel2.Width - 94
-        Dim splitPanelMidpoint As Integer = Me.SplitContainer3.Panel2.Width \ 2
-        For Each control1 As Control In Me.SplitContainer3.Panel2.Controls
-            Select Case control1.Name
-                Case NameOf(Me.LowTirComplianceLabel)
-                    Me.LowTirComplianceLabel.Left = splitPanelMidpoint - Me.LowTirComplianceLabel.Width
-                Case NameOf(Me.HighTirComplianceLabel)
-                    Me.HighTirComplianceLabel.Left = splitPanelMidpoint
-                Case Else
-                    DirectCast(control1, Label).AutoSize = True
-                    control1.Left = splitPanelMidpoint - (control1.Width \ 2)
-            End Select
-        Next
         Me.TimeInRangeChart = New Chart With {
             .Anchor = AnchorStyles.Top,
             .BackColor = Color.Transparent,
@@ -3322,9 +3312,7 @@ Public Class Form1
             .BackSecondaryColor = Color.Transparent,
             .BorderlineColor = Color.Transparent,
             .BorderlineWidth = 0,
-            .Size = New Size(width1,
-                             width1)
-                            }
+            .Size = New Size(width1, width1)}
 
         With Me.TimeInRangeChart
             .BorderSkin.BackSecondaryColor = Color.Transparent
@@ -4372,20 +4360,29 @@ Public Class Form1
             Exit Sub
         End If
 
-        Me.TimeInRangeChartLabel.Text = GetTIR.Str
+        _timeInTightRange = GetTIR(tight:=True)
+        Me.TimeInRangeChartLabel.Text = _timeInTightRange.Str
         With Me.TimeInRangeChart
-            With .Series(NameOf(TimeInRangeSeries)).Points
+            With .Series(name:=NameOf(TimeInRangeSeries)).Points
                 .Clear()
-                .AddXY($"{GetBelowHypoLimit.Str}% Below {GetTirLowLimitWithUnits()}", PatientData.BelowHypoLimit.GetRoundedValue(digits:=1) / 100)
+                .AddXY(
+                    $"{GetBelowHypoLimit.Str}% Below {GetTirLowLimitWithUnits()}",
+                    PatientData.BelowHypoLimit.GetRoundedValue(digits:=1) / 100)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{GetAboveHyperLimit.Str}% Above {GetTirHighLimitWithUnits()}", PatientData.AboveHyperLimit.GetRoundedValue(digits:=1) / 100)
+                .AddXY(
+                    $"{GetAboveHyperLimit.Str}% Above {GetTirHighLimitWithUnits()}",
+                    PatientData.AboveHyperLimit.GetRoundedValue(digits:=1) / 100)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{GetTIR.Str}% In Range", GetTIR.Uint / 100)
+                .AddXY($"{_timeInTightRange.Str}% In Tight Range", _timeInTightRange.Uint / 100)
                 .Last().Color = Color.LimeGreen
+                .Last().BorderColor = Color.Black
+                .Last().BorderWidth = 2
+                .AddXY($"{GetTIR.Str}% In Range", (GetTIR.Uint - _timeInTightRange.Uint) / 100)
+                .Last().Color = Color.Green
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
             End With
@@ -4393,13 +4390,14 @@ Public Class Form1
             .Series(NameOf(TimeInRangeSeries))("PieStartAngle") = "270"
         End With
 
-        Me.AboveHighLimitValueLabel.Text = $"{GetAboveHyperLimit.Str} %"
+        Me.AboveHighLimitValueLabel.Text = $"{GetAboveHyperLimit.Str}%"
         Me.AboveHighLimitMessageLabel.Text = $"Above {GetTirHighLimitWithUnits()} {GetBgUnitsString()}"
-        Me.TimeInRangeValueLabel.Text = $"{GetTIR.Str} %"
-        Me.BelowLowLimitValueLabel.Text = $"{GetBelowHypoLimit.Str} %"
+        Me.TimeInRangeValueLabel.Text = $"{GetTIR.Str,5}%"
+        Me.TimeInTightRangeValueLabel.Text = $"{_timeInTightRange.Str,3}%"
+        Me.BelowLowLimitValueLabel.Text = $"{GetBelowHypoLimit.Str}%"
         Me.BelowLowLimitMessageLabel.Text = $"Below {GetTirLowLimitWithUnits()} {GetBgUnitsString()}"
         Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.averageSG))
-        Me.AverageSGValueLabel.Text = If(NativeMmolL, averageSgStr.TruncateSingleString(2), averageSgStr)
+        Me.AverageSGValueLabel.Text = If(NativeMmolL, averageSgStr.TruncateSingleString(digits:=2), averageSgStr)
         Me.AverageSGMessageLabel.Text = $"Average SG in {GetBgUnitsString()}"
 
         ' Calculate Time in AutoMode
@@ -4499,17 +4497,33 @@ Public Class Form1
             End Select
         End If
 
-        Dim splitPanelMidpoint As Integer = Me.SplitContainer3.Panel2.Width \ 2
-        For Each control1 As Control In Me.SplitContainer3.Panel2.Controls
-            If TypeOf control1 Is Label Then
-                Select Case control1.Name
+        Me.PositionControlsInSplitContainer3Panel2()
+    End Sub
+
+    Private Sub PositionControlsInSplitContainer3Panel2()
+        For Each ctrl As Control In Me.SplitContainer3.Panel2.Controls
+            If TypeOf ctrl Is Label Then
+                Select Case ctrl.Name
                     Case NameOf(Me.LowTirComplianceLabel)
-                        Me.LowTirComplianceLabel.Left = splitPanelMidpoint - Me.LowTirComplianceLabel.Width
+                        GetCenteredLeft(ctrl, onLeftHalf:=True)
+
                     Case NameOf(Me.HighTirComplianceLabel)
-                        Me.HighTirComplianceLabel.Left = splitPanelMidpoint
+                        GetCenteredLeft(ctrl, onLeftHalf:=False)
+
+                    Case NameOf(Me.TimeInRangeMessageLabel)
+                        GetCenteredLeft(ctrl, onLeftHalf:=True)
+
+                    Case NameOf(Me.TimeInRangeValueLabel)
+                        GetCenteredLeft(ctrl, onLeftHalf:=True)
+
+                    Case NameOf(Me.TimeInTightRangeMessageLabel)
+                        GetCenteredLeft(ctrl, onLeftHalf:=False)
+
+                    Case NameOf(Me.TimeInTightRangeValueLabel)
+                        GetCenteredLeft(ctrl, onLeftHalf:=False)
+
                     Case Else
-                        DirectCast(control1, Label).AutoSize = True
-                        control1.Left = splitPanelMidpoint - (control1.Width \ 2)
+                        GetCenteredLeft(ctrl)
                 End Select
             End If
         Next
@@ -4630,8 +4644,8 @@ Public Class Form1
         Me.UpdateInsulinLevel()
         Me.UpdatePumpBattery()
         Me.UpdateSensorLife()
-        Me.UpdateTimeInRange()
         UpdateTransmitterBattery()
+        Me.UpdateTimeInRange()
         Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
 
