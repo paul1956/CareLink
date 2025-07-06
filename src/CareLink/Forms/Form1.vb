@@ -736,7 +736,7 @@ Public Class Form1
         Dim dgvName As String = dgv.Name.Replace(
             oldValue:="dgv",
             newValue:=String.Empty,
-            comparisonType:=StringComparison.InvariantCulture)
+            comparisonType:=StringComparison.InvariantCultureIgnoreCase)
         Dim text As String = $"An error {e.Exception.Message} occurred while processing {dgvName}. " &
             $"Please check your data and try again."
         MessageBox.Show(text, caption:="Input Error", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)

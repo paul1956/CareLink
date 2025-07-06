@@ -148,6 +148,7 @@ Public Module DgvHelpers
         Dim sgColumnName As String = dgv.Columns(e.ColumnIndex).Name
         Dim sensorValue As Single = ParseSingle(e.Value, digits:=1)
         If Single.IsNaN(sensorValue) Then
+            e.Value = "NaN"
             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
         Else
             Select Case sgColumnName

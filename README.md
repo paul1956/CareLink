@@ -36,6 +36,8 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
  New in 5.0.3.5
  - Use NET9_0 test instead of Not Full FullDarkModeSupport to support Dark Mode in .NET 9.0
  - Improve Summary Page formatting
+ - Fix crash when No Data From Pump
+ - Show UI when using TestData
 
  New in 5.0.3.4
  - Make Basal Per Hour table easier to read.
