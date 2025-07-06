@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Linq
+
 Friend Module SystemVariables
 
 #Region "Used for painting"
@@ -103,16 +105,37 @@ Friend Module SystemVariables
     End Function
 
     ''' <summary>
+    '''  Counts the number of SG.sg values in the specified range [70.0, 140.0], excluding Single.NaN.
+    ''' </summary>
+    ''' <param name="sgList">The list of SG records to evaluate.</param>
+    ''' <returns>
+    '''  The count of SG.sg values within the range and not NaN.
+    ''' </returns>
+    Friend Function CountSgInTightRange(sgList As IEnumerable(Of SG)) As Integer
+        Return sgList.Count(Function(sg) Not Single.IsNaN(sg.sg) AndAlso sg.sgMgdL >= 70.0 AndAlso sg.sgMgdL <= 140.0)
+    End Function
+
+    ''' <summary>
     '''  Gets the Time In Range (TIR) as a tuple of unsigned integer and string.
     ''' </summary>
     ''' <returns>
     '''  A <see cref="tuple"/> containing the TIR as an unsigned integer and its string representation.
     ''' </returns>
-    Friend Function GetTIR() As (Uint As UInteger, Str As String)
+    Friend Function GetTIR(Optional tight As Boolean = False) As (Uint As UInteger, Str As String)
+        If tight Then
+            If s_listOfSgRecords.Count > 0 Then
+                Dim inTightRangeCount As Integer = CountSgInTightRange(s_listOfSgRecords)
+                Dim timeInTightRange As UInteger = CUInt(inTightRangeCount / s_listOfSgRecords.Count * 100)
+                Return (timeInTightRange, timeInTightRange.ToString)
+            Else
+                Return (CUInt(0), "  ???")
+            End If
+        End If
+
         Dim timeInRange As Integer = PatientData.TimeInRange
         Return If(timeInRange > 0,
                   (CUInt(timeInRange), timeInRange.ToString),
-                  (CUInt(0), "??? "))
+                  (CUInt(0), "  ???"))
     End Function
 
     ''' <summary>

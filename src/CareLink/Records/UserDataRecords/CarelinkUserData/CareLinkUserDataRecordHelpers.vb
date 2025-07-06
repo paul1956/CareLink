@@ -45,7 +45,7 @@ Public Module CareLinkUserDataRecordHelpers
     '''  <see langword="True"/> if the user login info file exists; otherwise, <see langword="False"/>.
     ''' </returns>
     Public Function AllUserLoginInfoFileExists() As Boolean
-        Return SavedUsersFileExists(GetUsersLoginInfoFileWithPath())
+        Return SavedUsersFileExists(UserSettingsCsvFileWithPath)
     End Function
 
     ''' <summary>

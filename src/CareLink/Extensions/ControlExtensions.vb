@@ -30,4 +30,36 @@ Public Module ControlExtensions
         Return ctrl.Top + (ctrl.Height \ 2)
     End Function
 
+    ''' <summary>
+    '''  Returns the Left position to center a control on the left or right half or center of its parent container.
+    ''' </summary>
+    ''' <param name="ctrl">The control to be centered.</param>
+    ''' <param name="onLeftHalf">
+    '''  If <see langword="True"/>, center on the left half;
+    '''  if <see langword="False"/>, center on the right half;
+    '''  if <see langword="Nothing"/>, center in the middle of the parent control.
+    ''' </param>
+    ''' <returns>Integer Left position for the control.</returns>
+    Public Sub GetCenteredLeft(ByRef ctrl As Control, Optional onLeftHalf As Boolean? = Nothing)
+        Dim parentWidth As Integer = ctrl.Parent.Width
+        Dim controlWidth As Integer = ctrl.Width
+        Dim halfWidth As Integer = parentWidth \ 2
+        If CType(ctrl, Label).AutoSize Then
+            ' If the control is a Label with AutoSize, adjust the width to fit the text
+            controlWidth = CType(ctrl, Label).PreferredWidth
+        End If
+        If onLeftHalf.HasValue Then
+            If onLeftHalf.Value Then
+                ' Center on the left half
+                ctrl.Left = (halfWidth - controlWidth) \ 2
+            Else
+                ' Center on the right half
+                ctrl.Left = halfWidth + ((halfWidth - controlWidth) \ 2)
+            End If
+        Else
+            ' Center in the middle of the parent control
+            ctrl.Left = (parentWidth - controlWidth) \ 2
+        End If
+    End Sub
+
 End Module
