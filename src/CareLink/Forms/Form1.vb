@@ -4361,7 +4361,7 @@ Public Class Form1
         End If
 
         _timeInTightRange = GetTIR(tight:=True)
-        Me.TimeInRangeChartLabel.Text = _timeInTightRange.Str
+        Me.TimeInRangeChartLabel.Text = GetTIR.Str
         With Me.TimeInRangeChart
             With .Series(name:=NameOf(TimeInRangeSeries)).Points
                 .Clear()
