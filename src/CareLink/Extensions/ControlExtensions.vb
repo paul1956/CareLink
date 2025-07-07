@@ -43,12 +43,12 @@ Public Module ControlExtensions
     Public Sub GetCenteredLeft(ByRef ctrl As Control, Optional onLeftHalf As Boolean? = Nothing)
         Dim parentWidth As Integer = ctrl.Parent.Width
         Dim controlWidth As Integer = ctrl.Width
-        Dim halfWidth As Integer = parentWidth \ 2
         If CType(ctrl, Label).AutoSize Then
             ' If the control is a Label with AutoSize, adjust the width to fit the text
             controlWidth = CType(ctrl, Label).PreferredWidth
         End If
         If onLeftHalf.HasValue Then
+            Dim halfWidth As Integer = parentWidth \ 2
             If onLeftHalf.Value Then
                 ' Center on the left half
                 ctrl.Left = (halfWidth - controlWidth) \ 2

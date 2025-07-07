@@ -112,7 +112,10 @@ Friend Module SystemVariables
     '''  The count of SG.sg values within the range and not NaN.
     ''' </returns>
     Friend Function CountSgInTightRange(sgList As IEnumerable(Of SG)) As Integer
-        Return sgList.Count(Function(sg) Not Single.IsNaN(sg.sg) AndAlso sg.sgMgdL >= 70.0 AndAlso sg.sgMgdL <= 140.0)
+        Return sgList.Count(
+            predicate:=Function(sg)
+                           Return Not Single.IsNaN(sg.sg) AndAlso sg.sgMgdL >= 60.0 AndAlso sg.sgMgdL <= 140.0
+                       End Function)
     End Function
 
     ''' <summary>
