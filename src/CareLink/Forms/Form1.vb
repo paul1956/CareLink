@@ -4377,14 +4377,35 @@ Public Class Form1
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY($"{_timeInTightRange.Str}% In Tight Range", _timeInTightRange.Uint / 100)
-                .Last().Color = Color.LimeGreen
-                .Last().BorderColor = Color.Black
-                .Last().BorderWidth = 2
-                .AddXY($"{GetTIR.Str}% In Range", (GetTIR.Uint - _timeInTightRange.Uint) / 100)
-                .Last().Color = Color.Green
-                .Last().BorderColor = Color.Black
-                .Last().BorderWidth = 2
+                Dim tir As UInteger = GetTIR.Uint
+                If _timeInTightRange.Uint = tir Then
+                    .AddXY($"{_timeInTightRange.Str}% In Tight Range = TIR", _timeInTightRange.Uint / 100)
+                    .Last().Color = Color.LimeGreen
+                    .Last().BorderColor = Color.Black
+                    .Last().BorderWidth = 2
+                ElseIf _timeInTightRange.Uint < tir Then
+                    .AddXY($"{GetTIR.Str}% In Range", (tir - _timeInTightRange.Uint) / 100)
+                    .Last().Color = Color.Green
+                    .Last().BorderColor = Color.Black
+                    .Last().BorderWidth = 2
+
+                    .AddXY($"{_timeInTightRange.Str}% In Tight Range", _timeInTightRange.Uint / 100)
+                    .Last().Color = Color.LimeGreen
+                    .Last().BorderColor = Color.Black
+                    .Last().BorderWidth = 2
+                Else
+                    .AddXY($"{_timeInTightRange.Str}% In Tight Range", _timeInTightRange.Uint / 100)
+                    .Last().Color = Color.LimeGreen
+                    .Last().BorderColor = Color.Black
+                    .Last().BorderWidth = 2
+
+                    .AddXY($"{GetTIR.Str}% In Range", (_timeInTightRange.Uint - tir) / 100)
+                    .Last().Color = Color.Green
+                    .Last().BorderColor = Color.Black
+                    .Last().BorderWidth = 2
+
+
+                End If
             End With
             .Series(NameOf(TimeInRangeSeries))("PieLabelStyle") = "Disabled"
             .Series(NameOf(TimeInRangeSeries))("PieStartAngle") = "270"
