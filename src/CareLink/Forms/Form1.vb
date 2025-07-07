@@ -4378,10 +4378,6 @@ Public Class Form1
         End If
 
         _timeInTightRange = GetTIR(tight:=True)
-        Me.TimeInTightRangeValueLabel.ForeColor =
-            If(_timeInTightRange.Uint > OptionsConfigureTiTR.TreatmentTargetPercent,
-               Color.LimeGreen,
-               Color.Red)
 
         Me.TimeInRangeChartLabel.Text = GetTIR.Str
         With Me.TimeInRangeChart
@@ -4435,8 +4431,25 @@ Public Class Form1
 
         Me.AboveHighLimitValueLabel.Text = $"{GetAboveHyperLimit.Str}%"
         Me.AboveHighLimitMessageLabel.Text = $"Above {GetTirHighLimitWithUnits()} {GetBgUnitsString()}"
+
         Me.TimeInRangeValueLabel.Text = $"{GetTIR.Str}%"
+        If GetTIR.Uint >= 70 Then
+            Me.TimeInRangeMessageLabel.ForeColor = Color.DarkGreen
+            Me.TimeInRangeValueLabel.ForeColor = Color.DarkGreen
+        Else
+            Me.TimeInRangeMessageLabel.ForeColor = Color.Red
+            Me.TimeInRangeValueLabel.ForeColor = Color.Red
+        End If
+
         Me.TimeInTightRangeValueLabel.Text = $"{_timeInTightRange.Str}%"
+        If _timeInTightRange.Uint >= OptionsConfigureTiTR.TreatmentTargetPercent Then
+            Me.TimeInTightRangeMessageLabel.ForeColor = Color.LimeGreen
+            Me.TimeInTightRangeValueLabel.ForeColor = Color.LimeGreen
+        Else
+            Me.TimeInTightRangeMessageLabel.ForeColor = Color.Red
+            Me.TimeInTightRangeValueLabel.ForeColor = Color.Red
+        End If
+
         Me.BelowLowLimitValueLabel.Text = $"{GetBelowHypoLimit.Str}%"
         Me.BelowLowLimitMessageLabel.Text = $"Below {GetTirLowLimitWithUnits()} {GetBgUnitsString()}"
         Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.averageSG))

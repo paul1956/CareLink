@@ -938,7 +938,7 @@ Partial Class Form1
         TimeInRangeMessageLabel.AutoSize = True
         TimeInRangeMessageLabel.BackColor = Color.Transparent
         TimeInRangeMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        TimeInRangeMessageLabel.ForeColor = Color.Green
+        TimeInRangeMessageLabel.ForeColor = Color.DarkGreen
         TimeInRangeMessageLabel.Location = New Point(21, 270)
         TimeInRangeMessageLabel.Name = "TimeInRangeMessageLabel"
         TimeInRangeMessageLabel.Size = New Size(77, 21)
@@ -951,7 +951,7 @@ Partial Class Form1
         TimeInTightRangeMessageLabel.AutoSize = True
         TimeInTightRangeMessageLabel.BackColor = Color.Transparent
         TimeInTightRangeMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        TimeInTightRangeMessageLabel.ForeColor = Color.LimeGreen
+        TimeInTightRangeMessageLabel.ForeColor = Color.Red
         TimeInTightRangeMessageLabel.Location = New Point(125, 270)
         TimeInTightRangeMessageLabel.Name = "TimeInTightRangeMessageLabel"
         TimeInTightRangeMessageLabel.Size = New Size(102, 42)
@@ -1886,7 +1886,7 @@ Partial Class Form1
         TimeInRangeValueLabel.AutoSize = True
         TimeInRangeValueLabel.BackColor = Color.Black
         TimeInRangeValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
-        TimeInRangeValueLabel.ForeColor = Color.White
+        TimeInRangeValueLabel.ForeColor = Color.DarkGreen
         TimeInRangeValueLabel.Location = New Point(15, 234)
         TimeInRangeValueLabel.Name = "TimeInRangeValueLabel"
         TimeInRangeValueLabel.Size = New Size(84, 40)
@@ -1900,7 +1900,7 @@ Partial Class Form1
         TimeInTightRangeValueLabel.AutoSize = True
         TimeInTightRangeValueLabel.BackColor = Color.Black
         TimeInTightRangeValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
-        TimeInTightRangeValueLabel.ForeColor = Color.White
+        TimeInTightRangeValueLabel.ForeColor = Color.Red
         TimeInTightRangeValueLabel.Location = New Point(134, 234)
         TimeInTightRangeValueLabel.Name = "TimeInTightRangeValueLabel"
         TimeInTightRangeValueLabel.Size = New Size(84, 40)
