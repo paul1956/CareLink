@@ -4413,8 +4413,8 @@ Public Class Form1
 
         Me.AboveHighLimitValueLabel.Text = $"{GetAboveHyperLimit.Str}%"
         Me.AboveHighLimitMessageLabel.Text = $"Above {GetTirHighLimitWithUnits()} {GetBgUnitsString()}"
-        Me.TimeInRangeValueLabel.Text = $"{GetTIR.Str,5}%"
-        Me.TimeInTightRangeValueLabel.Text = $"{_timeInTightRange.Str,3}%"
+        Me.TimeInRangeValueLabel.Text = $"{GetTIR.Str}%"
+        Me.TimeInTightRangeValueLabel.Text = $"{_timeInTightRange.Str}%"
         Me.BelowLowLimitValueLabel.Text = $"{GetBelowHypoLimit.Str}%"
         Me.BelowLowLimitMessageLabel.Text = $"Below {GetTirLowLimitWithUnits()} {GetBgUnitsString()}"
         Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.averageSG))

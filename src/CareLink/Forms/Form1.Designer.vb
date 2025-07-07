@@ -350,7 +350,7 @@ Partial Class Form1
         AboveHighLimitMessageLabel.BackColor = Color.Transparent
         AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         AboveHighLimitMessageLabel.ForeColor = Color.Yellow
-        AboveHighLimitMessageLabel.Location = New Point(30, 208)
+        AboveHighLimitMessageLabel.Location = New Point(30, 211)
         AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
         AboveHighLimitMessageLabel.Size = New Size(170, 21)
         AboveHighLimitMessageLabel.TabIndex = 28
@@ -360,12 +360,13 @@ Partial Class Form1
         ' AboveHighLimitValueLabel
         ' 
         AboveHighLimitValueLabel.Anchor = AnchorStyles.Top
+        AboveHighLimitValueLabel.AutoSize = True
         AboveHighLimitValueLabel.BackColor = Color.Black
         AboveHighLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         AboveHighLimitValueLabel.ForeColor = Color.White
-        AboveHighLimitValueLabel.Location = New Point(55, 174)
+        AboveHighLimitValueLabel.Location = New Point(78, 169)
         AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
-        AboveHighLimitValueLabel.Size = New Size(120, 33)
+        AboveHighLimitValueLabel.Size = New Size(75, 40)
         AboveHighLimitValueLabel.TabIndex = 22
         AboveHighLimitValueLabel.Text = "  8%"
         AboveHighLimitValueLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -468,12 +469,13 @@ Partial Class Form1
         ' BelowLowLimitValueLabel
         ' 
         BelowLowLimitValueLabel.Anchor = AnchorStyles.Top
+        BelowLowLimitValueLabel.AutoSize = True
         BelowLowLimitValueLabel.BackColor = Color.Black
         BelowLowLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         BelowLowLimitValueLabel.ForeColor = Color.White
-        BelowLowLimitValueLabel.Location = New Point(55, 297)
+        BelowLowLimitValueLabel.Location = New Point(78, 291)
         BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
-        BelowLowLimitValueLabel.Size = New Size(120, 33)
+        BelowLowLimitValueLabel.Size = New Size(75, 40)
         BelowLowLimitValueLabel.TabIndex = 26
         BelowLowLimitValueLabel.Text = "  2%"
         BelowLowLimitValueLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -892,14 +894,14 @@ Partial Class Form1
         FullNameLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' GraphLast24HoursLabel
-        '
+        ' 
         GraphLast24HoursLabel.Anchor = AnchorStyles.Top
         GraphLast24HoursLabel.AutoSize = True
         GraphLast24HoursLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         GraphLast24HoursLabel.ForeColor = Color.White
         GraphLast24HoursLabel.Location = New Point(61, 26)
         GraphLast24HoursLabel.Name = "GraphLast24HoursLabel"
-        GraphLast24HoursLabel.Size = New Size(170, 21)
+        GraphLast24HoursLabel.Size = New Size(109, 21)
         GraphLast24HoursLabel.TabIndex = 34
         GraphLast24HoursLabel.Text = "Last 24 hours"
         GraphLast24HoursLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -936,7 +938,7 @@ Partial Class Form1
         TimeInRangeMessageLabel.BackColor = Color.Transparent
         TimeInRangeMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         TimeInRangeMessageLabel.ForeColor = Color.Green
-        TimeInRangeMessageLabel.Location = New Point(19, 270)
+        TimeInRangeMessageLabel.Location = New Point(21, 270)
         TimeInRangeMessageLabel.Name = "TimeInRangeMessageLabel"
         TimeInRangeMessageLabel.Size = New Size(77, 21)
         TimeInRangeMessageLabel.TabIndex = 30
@@ -954,7 +956,7 @@ Partial Class Form1
         TimeInTightRangeMessageLabel.Size = New Size(102, 21)
         TimeInTightRangeMessageLabel.TabIndex = 30
         TimeInTightRangeMessageLabel.Text = "Tight Range"
-        TimeInTightRangeMessageLabel.TextAlign = ContentAlignment.MiddleLeft
+        TimeInTightRangeMessageLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' InsulinLevelPictureBox
         ' 
@@ -1012,7 +1014,7 @@ Partial Class Form1
         Last24HrAutoCorrectionUnitsLabel.Name = "Last24HrAutoCorrectionUnitsLabel"
         Last24HrAutoCorrectionUnitsLabel.Size = New Size(70, 21)
         Last24HrAutoCorrectionUnitsLabel.TabIndex = 72
-        Last24HrAutoCorrectionUnitsLabel.Text = "20.0U"
+        Last24HrAutoCorrectionUnitsLabel.Text = " 20.0U"
         Last24HrAutoCorrectionUnitsLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' Last24HrBasalLabel
@@ -1036,7 +1038,7 @@ Partial Class Form1
         Last24HrBasalPercentLabel.Name = "Last24HrBasalPercentLabel"
         Last24HrBasalPercentLabel.Size = New Size(46, 21)
         Last24HrBasalPercentLabel.TabIndex = 69
-        Last24HrBasalPercentLabel.Text = " 50%"
+        Last24HrBasalPercentLabel.Text = "50%"
         Last24HrBasalPercentLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' Last24HrBasalUnitsLabel
@@ -1048,29 +1050,30 @@ Partial Class Form1
         Last24HrBasalUnitsLabel.Name = "Last24HrBasalUnitsLabel"
         Last24HrBasalUnitsLabel.Size = New Size(70, 21)
         Last24HrBasalUnitsLabel.TabIndex = 68
-        Last24HrBasalUnitsLabel.Text = "50.0U"
+        Last24HrBasalUnitsLabel.Text = " 50.0U"
         Last24HrBasalUnitsLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' Last24HrCarbsLabel
         ' 
         Last24HrCarbsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24HrCarbsLabel.AutoSize = True
         Last24HrCarbsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrCarbsLabel.ForeColor = Color.White
         Last24HrCarbsLabel.Location = New Point(0, 103)
         Last24HrCarbsLabel.Name = "Last24HrCarbsLabel"
-        Last24HrCarbsLabel.Size = New Size(110, 21)
+        Last24HrCarbsLabel.Size = New Size(98, 21)
         Last24HrCarbsLabel.TabIndex = 66
         Last24HrCarbsLabel.Text = "Total Carbs:"
         Last24HrCarbsLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Last24HrCarbsValueLabel
         ' 
-        Last24HrCarbsValueLabel.Dock = DockStyle.Bottom
+        Last24HrCarbsValueLabel.AutoSize = True
         Last24HrCarbsValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrCarbsValueLabel.ForeColor = Color.White
-        Last24HrCarbsValueLabel.Location = New Point(0, 106)
+        Last24HrCarbsValueLabel.Location = New Point(157, 103)
         Last24HrCarbsValueLabel.Name = "Last24HrCarbsValueLabel"
-        Last24HrCarbsValueLabel.Size = New Size(251, 21)
+        Last24HrCarbsValueLabel.Size = New Size(89, 21)
         Last24HrCarbsValueLabel.TabIndex = 74
         Last24HrCarbsValueLabel.Text = "100 Grams"
         Last24HrCarbsValueLabel.TextAlign = ContentAlignment.MiddleRight
@@ -1108,7 +1111,7 @@ Partial Class Form1
         Last24HrMealBolusUnitsLabel.Name = "Last24HrMealBolusUnitsLabel"
         Last24HrMealBolusUnitsLabel.Size = New Size(70, 21)
         Last24HrMealBolusUnitsLabel.TabIndex = 70
-        Last24HrMealBolusUnitsLabel.Text = "30.0U"
+        Last24HrMealBolusUnitsLabel.Text = " 30.0U"
         Last24HrMealBolusUnitsLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' Last24HrTotalInsulinLabel
@@ -1150,6 +1153,7 @@ Partial Class Form1
         ' Last24HrTotalsPanel
         ' 
         Last24HrTotalsPanel.BorderStyle = BorderStyle.FixedSingle
+        Last24HrTotalsPanel.Controls.Add(Last24HrCarbsValueLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrAutoCorrectionLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrAutoCorrectionPercentLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrAutoCorrectionUnitsLabel)
@@ -1157,7 +1161,6 @@ Partial Class Form1
         Last24HrTotalsPanel.Controls.Add(Last24HrBasalPercentLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrBasalUnitsLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrCarbsLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrCarbsValueLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrMealBolusLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrMealBolusPercentLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrMealBolusUnitsLabel)
@@ -1867,6 +1870,7 @@ Partial Class Form1
         TimeInRangeSummaryPercentCharLabel.Size = New Size(42, 40)
         TimeInRangeSummaryPercentCharLabel.TabIndex = 3
         TimeInRangeSummaryPercentCharLabel.Text = "%"
+        TimeInRangeSummaryPercentCharLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TimeInRangeValueLabel
         ' 
@@ -3026,6 +3030,7 @@ Partial Class Form1
         CType(DgvTimeChange, ComponentModel.ISupportInitialize).EndInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).EndInit()
         Last24HrTotalsPanel.ResumeLayout(False)
+        Last24HrTotalsPanel.PerformLayout()
         MenuStrip1.ResumeLayout(False)
         MenuStrip1.PerformLayout()
         CType(PumpBatteryPictureBox, ComponentModel.ISupportInitialize).EndInit()
