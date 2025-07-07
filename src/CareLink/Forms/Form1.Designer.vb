@@ -125,6 +125,7 @@ Partial Class Form1
         MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
         ToolStripSeparator7 = New ToolStripSeparator()
         MenuOptionsColorPicker = New ToolStripMenuItem()
+        MenuOptionsConfigureTiTR = New ToolStripMenuItem
         MenuOptionsEditPumpSettings = New ToolStripMenuItem()
         MenuShowMiniDisplay = New ToolStripMenuItem()
         MenuStartHere = New ToolStripMenuItem()
@@ -953,9 +954,9 @@ Partial Class Form1
         TimeInTightRangeMessageLabel.ForeColor = Color.LimeGreen
         TimeInTightRangeMessageLabel.Location = New Point(125, 270)
         TimeInTightRangeMessageLabel.Name = "TimeInTightRangeMessageLabel"
-        TimeInTightRangeMessageLabel.Size = New Size(102, 21)
+        TimeInTightRangeMessageLabel.Size = New Size(102, 42)
         TimeInTightRangeMessageLabel.TabIndex = 30
-        TimeInTightRangeMessageLabel.Text = "Tight Range"
+        TimeInTightRangeMessageLabel.Text = "Tight Range" & vbCrLf & "(70)"
         TimeInTightRangeMessageLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' InsulinLevelPictureBox
@@ -1244,7 +1245,7 @@ Partial Class Form1
         ' 
         ' MenuOptions
         ' 
-        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsAudioAlerts, MenuOptionsSpeechRecognitionEnabled, MenuOptionsShowChartLegends, MenuOptionsSpeechHelpShown, ToolStripSeparator5, MenuOptionsAutoLogin, ToolStripSeparator6, MenuOptionsAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator7, MenuOptionsColorPicker, MenuOptionsEditPumpSettings})
+        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsAudioAlerts, MenuOptionsSpeechRecognitionEnabled, MenuOptionsShowChartLegends, MenuOptionsSpeechHelpShown, ToolStripSeparator5, MenuOptionsAutoLogin, ToolStripSeparator6, MenuOptionsAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator7, MenuOptionsColorPicker, MenuOptionsConfigureTiTR, MenuOptionsEditPumpSettings})
         MenuOptions.Name = "MenuOptions"
         MenuOptions.Size = New Size(61, 20)
         MenuOptions.Text = "Options"
@@ -1383,6 +1384,13 @@ Partial Class Form1
         MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
         MenuOptionsColorPicker.Size = New Size(184, 22)
         MenuOptionsColorPicker.Text = "Color Picker..."
+        ' 
+        ' MenuOptionsConfigureTiTR
+        ' 
+        MenuOptionsConfigureTiTR.Image = CType(resources.GetObject("MenuOptionsConfigureTiTR.Image"), Image)
+        MenuOptionsConfigureTiTR.Name = "MenuOptionsConfigureTiTR"
+        MenuOptionsConfigureTiTR.Size = New Size(184, 22)
+        MenuOptionsConfigureTiTR.Text = "Configure TiTR (70)..."
         ' 
         ' MenuOptionsEditPumpSettings
         ' 
@@ -1818,7 +1826,6 @@ Partial Class Form1
         SplitContainer3.Panel2.Controls.Add(TimeInRangeValueLabel)
         SplitContainer3.Panel2.Controls.Add(TimeInTightRangeValueLabel)
         SplitContainer3.Panel2.Controls.Add(TimeInRangeMessageLabel)
-        SplitContainer3.Panel2.Controls.Add(TimeInTightRangeMessageLabel)
         SplitContainer3.Panel2.Controls.Add(BelowLowLimitValueLabel)
         SplitContainer3.Panel2.Controls.Add(BelowLowLimitMessageLabel)
         SplitContainer3.Panel2.Controls.Add(AverageSGValueLabel)
@@ -1827,6 +1834,7 @@ Partial Class Form1
         SplitContainer3.Panel2.Controls.Add(HighTirComplianceLabel)
         SplitContainer3.Panel2.Controls.Add(LowTirComplianceLabel)
         SplitContainer3.Panel2.Controls.Add(SmartGuardLabel)
+        SplitContainer3.Panel2.Controls.Add(TimeInTightRangeMessageLabel)
         SplitContainer3.Size = New Size(1370, 513)
         SplitContainer3.SplitterDistance = 1136
         SplitContainer3.TabIndex = 0
@@ -3219,6 +3227,7 @@ Partial Class Form1
     Friend WithEvents MenuOptionsAudioAlerts As ToolStripMenuItem
     Friend WithEvents MenuOptionsAutoLogin As ToolStripMenuItem
     Friend WithEvents MenuOptionsColorPicker As ToolStripMenuItem
+    Friend WithEvents MenuOptionsConfigureTiTR As ToolStripMenuItem
     Friend WithEvents MenuOptionsEditPumpSettings As ToolStripMenuItem
     Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
     Friend WithEvents MenuOptionsShowChartLegends As ToolStripMenuItem

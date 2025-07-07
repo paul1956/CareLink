@@ -2559,14 +2559,31 @@ Public Class Form1
 
     ''' <summary>
     '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for the <see cref="MenuOptionsColorPicker"/> menu item.
-    '''  Opens the <see cref="OptionsDialog"/> for color selection.
+    '''  Opens the <see cref="OptionsColorPickerDialog"/> for color selection.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub MenuOptionsColorPicker_Click(sender As Object, e As EventArgs) Handles MenuOptionsColorPicker.Click
-        Using o As New OptionsDialog()
+        Using o As New OptionsColorPickerDialog()
             o.ShowDialog(Me)
         End Using
+    End Sub
+
+    ''' <summary>
+    '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for the <see cref="MenuOptionsConfigureTiTR_Click"/> menu item.
+    '''  Opens the <see cref="OptionsConfigureTiTR"/> for configuration of Time in Tight Range (TiTR).
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
+    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    Private Sub MenuOptionsConfigureTiTR_Click(sender As Object, e As EventArgs) Handles MenuOptionsConfigureTiTR.Click
+        Dim result As DialogResult = OptionsConfigureTiTR.ShowDialog(owner:=Me)
+        If result = DialogResult.OK Then
+            Me.MenuOptionsConfigureTiTR.Text = $"Configure TiTR ({OptionsConfigureTiTR.LowThreshold})..."
+            Me.TimeInTightRangeMessageLabel.Text = "Tight Range" & vbCrLf & $"({OptionsConfigureTiTR.LowThreshold})"
+
+            ' Update the TiTR compliance values based on the user's configuration.
+            Me.UpdateTimeInRange()
+        End If
     End Sub
 
     ''' <summary>
@@ -2822,8 +2839,8 @@ Public Class Form1
         With CurrentUser
             Me.TemporaryUseAdvanceAITDecayCheckBox.Text = If(
                 Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked,
-                $"Advanced Decay, AIT will decay over { .InsulinRealAit} hours while using { .InsulinTypeName}",
-                $"AIT will decay over { .PumpAit.ToHoursMinutes} while using { .InsulinTypeName}")
+                $"Advanced Decay, AIT will decay over { .InsulinRealAit} hours While Using { .InsulinTypeName}",
+                $"AIT will decay over { .PumpAit.ToHoursMinutes} While Using { .InsulinTypeName}")
             CurrentUser.UseAdvancedAitDecay = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
         End With
         Me.UpdateActiveInsulinChart()
@@ -2906,7 +2923,7 @@ Public Class Form1
         If PatientData.SensorDurationHours < 24 Then
             _sensorLifeToolTip.SetToolTip(
                 control:=Me.SensorDaysLeftLabel,
-                caption:=$"Sensor will expire in {PatientData.SensorDurationHours} hours")
+                caption:=$"Sensor will expire In {PatientData.SensorDurationHours} hours")
         End If
     End Sub
 
@@ -4361,6 +4378,11 @@ Public Class Form1
         End If
 
         _timeInTightRange = GetTIR(tight:=True)
+        Me.TimeInTightRangeValueLabel.ForeColor =
+            If(_timeInTightRange.Uint > OptionsConfigureTiTR.TreatmentTargetPercent,
+               Color.LimeGreen,
+               Color.Red)
+
         Me.TimeInRangeChartLabel.Text = GetTIR.Str
         With Me.TimeInRangeChart
             With .Series(name:=NameOf(TimeInRangeSeries)).Points

@@ -105,7 +105,7 @@ Friend Module SystemVariables
     End Function
 
     ''' <summary>
-    '''  Counts the number of SG.sg values in the specified range [70.0, 140.0], excluding Single.NaN.
+    '''  Counts the number of SG.sg values in the specified range [OptionsConfigureTiTR.LowThreshold, 140], excluding Single.NaN.
     ''' </summary>
     ''' <param name="sgList">The list of SG records to evaluate.</param>
     ''' <returns>
@@ -114,7 +114,7 @@ Friend Module SystemVariables
     Friend Function CountSgInTightRange(sgList As IEnumerable(Of SG)) As Integer
         Return sgList.Count(
             predicate:=Function(sg)
-                           Return Not Single.IsNaN(sg.sg) AndAlso sg.sgMgdL >= 60.0 AndAlso sg.sgMgdL <= 140.0
+                           Return Not Single.IsNaN(sg.sg) AndAlso sg.sgMgdL >= OptionsConfigureTiTR.LowThreshold AndAlso sg.sgMgdL <= 140.0
                        End Function)
     End Function
 
