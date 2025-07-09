@@ -30,10 +30,13 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-07/08/2025
+07/09/2025
 
 ## What's New
- New in 5.0.3.7
+ New in 5.0.3.8
+- Fix issue with Speech to Text
+
+-  New in 5.0.3.7
  - Improved accuracy of TiTR results through session-specific adjustments the adjustments are made based on the specific session data.
 
  New in 5.0.3.6
