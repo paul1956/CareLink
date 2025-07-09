@@ -1,5 +1,5 @@
 ﻿<CompilerServices.DesignerGenerated()>
-Partial Class OptionsDialog
+Partial Class OptionsColorPickerDialog
     Inherits Form
 
     'Form overrides dispose to clean up the component list.
@@ -22,7 +22,7 @@ Partial Class OptionsDialog
     'Do not modify it using the code editor.
     <Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(OptionsDialog))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(OptionsColorPickerDialog))
         TableLayoutPanel1 = New TableLayoutPanel()
         OK_Button = New Button()
         Cancel_Button = New Button()

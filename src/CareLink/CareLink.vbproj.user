@@ -13,7 +13,13 @@
     <Compile Update="CustomControls\NameColorComboBox.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="CustomControls\PercentUpDown.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Update="Dialogs\CleanUpObsoleteFilesDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\OptionsConfigureTiTR.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Dialogs\ExceptionHandlerDialog.vb">
@@ -25,7 +31,7 @@
     <Compile Update="Dialogs\LoginDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Dialogs\OptionsDialog.vb">
+    <Compile Update="Dialogs\OptionsColorPickerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Dialogs\PumpSetupDialog.vb">
@@ -63,7 +69,7 @@
     <EmbeddedResource Update="Dialogs\LoginDialog.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Update="Dialogs\OptionsDialog.resx">
+    <EmbeddedResource Update="Dialogs\OptionsColorPickerDialog.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Update="My Project\Resources.resx">

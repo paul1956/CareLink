@@ -4,7 +4,7 @@
 
 Imports System.ComponentModel
 
-Public Class OptionsDialog
+Public Class OptionsColorPickerDialog
     Private Property SaveGraphColorDictionary As Dictionary(Of String, KnownColor)
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
@@ -55,7 +55,7 @@ Public Class OptionsDialog
     Private Sub OptionsDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         StartOrStopServerUpdateTimer(Start:=False)
         Me.ItemNameComboBox.DrawMode = DrawMode.OwnerDrawFixed
-        Dim resources As New ComponentResourceManager(GetType(OptionsDialog))
+        Dim resources As New ComponentResourceManager(GetType(OptionsColorPickerDialog))
         Me.KnownColorsComboBox1.SelectedItem = CType(
             resources.GetObject("KnownColorsComboBox1.SelectedItem"),
             KeyValuePair(Of String, KnownColor))
