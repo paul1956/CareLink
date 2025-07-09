@@ -4422,7 +4422,6 @@ Public Class Form1
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
 
-
                 End If
             End With
             .Series(NameOf(TimeInRangeSeries))("PieLabelStyle") = "Disabled"
