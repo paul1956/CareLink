@@ -96,35 +96,37 @@ Public Class SgMiniForm
     End Sub
 
     Private Sub SgTextBox_TextChanged(sender As Object, e As EventArgs) Handles SgTextBox.TextChanged
+        Dim firstName As String = If(PatientData?.FirstName, "Patient")
+        Dim textToSpeak As String = $"alarm for {firstName}, {CurrentSgMsg} {_currentSgValue}.{" Please check levels."}"
         Select Case True
             Case Single.IsNaN(_normalizedSg), _normalizedSg = 0
                 Me.SgTextBox.ForeColor = SystemColors.ControlText
             Case _normalizedSg < 70
                 Me.SgTextBox.ForeColor = Color.Red
                 If Not _alarmPlayedLow Then
-                    PlayText($"Low Alarm for {PatientData.FirstName}, current sensor glucose {_currentSgValue}")
+                    textToSpeak = $"Low {textToSpeak}"
+                    PlayText(textToSpeak)
                     _alarmPlayedLow = True
-                    _alarmPlayedHigh = False
                 End If
+                _alarmPlayedHigh = False
             Case _normalizedSg <= 180
                 Me.SgTextBox.ForeColor = Color.Green
-                _alarmPlayedLow = False
                 _alarmPlayedHigh = False
+                _alarmPlayedLow = False
             Case Else
                 Me.SgTextBox.ForeColor = Color.Yellow
                 If Not _alarmPlayedHigh Then
-                    PlayText($"High alarm for {PatientData.FirstName}, current sensor glucose {_currentSgValue}")
-                    _alarmPlayedLow = False
+                    textToSpeak = $"High {textToSpeak}"
+                    PlayText(textToSpeak)
                     _alarmPlayedHigh = True
                 End If
+                _alarmPlayedLow = False
         End Select
         Me.Text = GetLastUpdateMessage()
     End Sub
 
     Public Sub SetCurrentDeltaValue(deltaString As String, delta As Single)
-        Me.DeltaTextBox.Text = If(Math.Abs(delta) < 0.001,
-                                  "",
-                                  deltaString)
+        Me.DeltaTextBox.Text = If(Math.Abs(delta) < 0.001, "", deltaString)
         _currentDelta = delta
     End Sub
 

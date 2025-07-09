@@ -85,9 +85,9 @@ Friend Module SpeechSupport
         Dim currentSgStr As String = Form1.CurrentSgLabel.Text
         If IsNumeric(currentSgStr) Then
             Dim sgMessage As String = $"current {sgName} is {currentSgStr}"
-            PlayText($"{PatientData.FirstName}'s {sgMessage}{GetTrendText()}")
+            PlayText(textToSpeak:=$"{PatientData.FirstName}'s {sgMessage}{GetTrendText()}")
         Else
-            PlayText($"{PatientData.FirstName}'s current {sgName} and trend are Unknown")
+            PlayText(textToSpeak:=$"{PatientData.FirstName}'s current {sgName} and trend are Unknown")
         End If
     End Sub
 
@@ -239,7 +239,7 @@ Friend Module SpeechSupport
                     text.AppendLine("    This message will be displayed")
                     text.AppendLine()
                     text.AppendLine("What is my SG/BG/Blood Glucose/Blood Sugar:")
-                    text.AppendLine("    Your current Sensor Glucose will be spoken")
+                    text.AppendLine($"    Your {CurrentSgMsg} will be spoken")
                     text.AppendLine()
                     text.AppendLine("Tell me name's SG/BG/Blood Glucose/Blood Sugar:")
                     text.AppendLine("    Used when you support more than 1 user")
@@ -343,14 +343,14 @@ Friend Module SpeechSupport
             Form1.Cursor = Cursors.WaitCursor
             Application.DoEvents()
             If String.IsNullOrWhiteSpace(s_speechUserName) Then
-                Dim msg As String = ""
-                msg = $"Speech recognition enabled for {PatientData.FirstName}"
+                Dim textToSpeak As String
+                textToSpeak = $"Speech recognition enabled for {PatientData.FirstName}"
 
                 If String.IsNullOrWhiteSpace(oldUserName) Then
-                    msg &= " for a list of commands say, CareLink what can I say"
+                    textToSpeak &= " for a list of commands say, CareLink what can I say"
                 End If
 
-                PlayText(msg)
+                PlayText(textToSpeak)
             End If
             s_speechUserName = PatientData.FirstName
             Form1.StatusStripSpeech.Text = "Listening"
@@ -370,29 +370,30 @@ Friend Module SpeechSupport
     ''' <summary>
     '''  Speaks the specified text using the speech synthesizer, with duplicate and timing checks.
     ''' </summary>
-    ''' <param name="text">The text to be spoken.</param>
-    Friend Sub PlayText(text As String)
+    ''' <param name="textToSpeak">The text to be spoken.</param>
+    Friend Sub PlayText(textToSpeak As String)
         If Not My.Settings.SystemAudioAlertsEnabled Then
-            Form1.StatusStripSpeech.Text = ""
+            Form1.StatusStripSpeech.Text = "Audio Alerts Disabled"
+            Return
         End If
-        If s_lastSpokenMessage = text AndAlso DateDiff(DateInterval.Minute, Now, s_timeOfLastAlert) < ThirtySecondInMilliseconds Then
-            Form1.StatusStripSpeech.Text = $"Rejected: '{text}' too soon, Listening"
-            s_statusStripSpeechText = text
+        If s_lastSpokenMessage = textToSpeak AndAlso DateDiff(DateInterval.Minute, Now, s_timeOfLastAlert) < ThirtySecondInMilliseconds Then
+            Form1.StatusStripSpeech.Text = $"Rejected: '{textToSpeak}' too soon, Listening"
+            s_statusStripSpeechText = textToSpeak
         End If
         If Form1.StatusStripSpeech.Text.Contains("too soon") Then
             Form1.StatusStripSpeech.Text = "Listening"
         End If
         s_timeOfLastAlert = Now
-        s_lastSpokenMessage = text
+        s_lastSpokenMessage = textToSpeak
         If Not s_speechErrorReported Then
             If s_speechSynthesizer Is Nothing Then
                 InitializeAudioAlerts()
             End If
         End If
         While s_promptBusy IsNot Nothing AndAlso Not s_promptBusy.IsCompleted
-            Threading.Thread.Sleep(10)
+            Threading.Thread.Sleep(millisecondsTimeout:=10)
         End While
-        s_promptBusy = s_speechSynthesizer.SpeakAsync(text)
+        s_promptBusy = s_speechSynthesizer.SpeakAsync(textToSpeak)
     End Sub
 
 End Module
