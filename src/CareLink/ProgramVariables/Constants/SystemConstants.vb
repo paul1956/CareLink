@@ -12,6 +12,7 @@ Public Module SystemConstants
     Friend Const BaseNameSavedLastDownload As String = "CareLinkLastDownload"
     Friend Const BaseNameSavedSnapshot As String = "CareLinkSnapshot"
     Friend Const ClickToShowDetails As String = "Click To Show Details"
+    Friend Const CurrentSgMsg As String = "Current Sensor Glucose"
     Friend Const ExceptionStartingString As String = "--- Start of Exception ---"
     Friend Const ExceptionTerminatingString As String = "--- End of Exception ---"
     Friend Const FamilyName As String = "Segoe UI"
