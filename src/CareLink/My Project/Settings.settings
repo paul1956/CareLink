@@ -38,5 +38,11 @@
     <Setting Name="SystemSpeechHelpShown" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="TiTrLowThreshold" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">70</Value>
+    </Setting>
+    <Setting Name="TiTrTreatmentTargetPercent" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">70</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

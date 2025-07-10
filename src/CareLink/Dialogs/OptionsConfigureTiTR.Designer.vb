@@ -42,15 +42,15 @@ Partial Class OptionsConfigureTiTR
         ' 
         TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         TableLayoutPanel1.ColumnCount = 2
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
         TableLayoutPanel1.Controls.Add(OK_Button, 0, 0)
         TableLayoutPanel1.Controls.Add(Cancel_Button, 1, 0)
         TableLayoutPanel1.Location = New Point(121, 68)
         TableLayoutPanel1.Margin = New Padding(4, 3, 4, 3)
         TableLayoutPanel1.Name = "TableLayoutPanel1"
         TableLayoutPanel1.RowCount = 1
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
         TableLayoutPanel1.Size = New Size(170, 33)
         TableLayoutPanel1.TabIndex = 0
         ' 
@@ -105,13 +105,13 @@ Partial Class OptionsConfigureTiTR
         TreatmentTargetPercentLabel.TabIndex = 1
         TreatmentTargetPercentLabel.Text = " TITR Treatment Target: 40%-70%"
         ' 
-        ' TreatmentTargetNumericUpDown
+        ' TreatmentTargetPercentUpDown
         ' 
         TreatmentTargetPercentUpDown.Increment = New Decimal(New Integer() {5, 0, 0, 0})
         TreatmentTargetPercentUpDown.Location = New Point(246, 31)
         TreatmentTargetPercentUpDown.Maximum = New Decimal(New Integer() {70, 0, 0, 0})
         TreatmentTargetPercentUpDown.Minimum = New Decimal(New Integer() {45, 0, 0, 0})
-        TreatmentTargetPercentUpDown.Name = "TreatmentTargetNumericUpDown"
+        TreatmentTargetPercentUpDown.Name = "TreatmentTargetPercentUpDown"
         TreatmentTargetPercentUpDown.Size = New Size(45, 23)
         TreatmentTargetPercentUpDown.TabIndex = 2
         TreatmentTargetPercentUpDown.TextAlign = HorizontalAlignment.Right
@@ -121,7 +121,7 @@ Partial Class OptionsConfigureTiTR
         ' OptionsConfigureTiTR
         ' 
         Me.AcceptButton = OK_Button
-        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = Cancel_Button
         Me.ClientSize = New Size(305, 115)

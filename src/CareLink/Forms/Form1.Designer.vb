@@ -80,7 +80,8 @@ Partial Class Form1
         HighTirComplianceLabel = New Label()
         ImageList1 = New ImageList(components)
         TimeInRangeMessageLabel = New Label()
-        TimeInTightRangeMessageLabel = New Label()
+        TiTRMgsLabel = New Label()
+        TiTRMgsLabel2 = New Label()
         InsulinLevelPictureBox = New PictureBox()
         InsulinTypeLabel = New Label()
         Last24HrAutoCorrectionLabel = New Label()
@@ -125,7 +126,7 @@ Partial Class Form1
         MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
         ToolStripSeparator7 = New ToolStripSeparator()
         MenuOptionsColorPicker = New ToolStripMenuItem()
-        MenuOptionsConfigureTiTR = New ToolStripMenuItem
+        MenuOptionsConfigureTiTR = New ToolStripMenuItem()
         MenuOptionsEditPumpSettings = New ToolStripMenuItem()
         MenuShowMiniDisplay = New ToolStripMenuItem()
         MenuStartHere = New ToolStripMenuItem()
@@ -909,11 +910,12 @@ Partial Class Form1
         ' 
         ' HighTirComplianceLabel
         ' 
+        HighTirComplianceLabel.AutoSize = True
         HighTirComplianceLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
         HighTirComplianceLabel.ForeColor = Color.LimeGreen
-        HighTirComplianceLabel.Location = New Point(115, 460)
+        HighTirComplianceLabel.Location = New Point(142, 460)
         HighTirComplianceLabel.Name = "HighTirComplianceLabel"
-        HighTirComplianceLabel.Size = New Size(112, 57)
+        HighTirComplianceLabel.Size = New Size(68, 34)
         HighTirComplianceLabel.TabIndex = 37
         HighTirComplianceLabel.Text = "High" & vbCrLf & "Excellent²"
         HighTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -946,18 +948,31 @@ Partial Class Form1
         TimeInRangeMessageLabel.Text = "In Range"
         TimeInRangeMessageLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' TimeInTightRangeMessageLabel
+        ' TiTRMgsLabel
         ' 
-        TimeInTightRangeMessageLabel.AutoSize = True
-        TimeInTightRangeMessageLabel.BackColor = Color.Transparent
-        TimeInTightRangeMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        TimeInTightRangeMessageLabel.ForeColor = Color.Red
-        TimeInTightRangeMessageLabel.Location = New Point(125, 270)
-        TimeInTightRangeMessageLabel.Name = "TimeInTightRangeMessageLabel"
-        TimeInTightRangeMessageLabel.Size = New Size(102, 42)
-        TimeInTightRangeMessageLabel.TabIndex = 30
-        TimeInTightRangeMessageLabel.Text = "Tight Range" & vbCrLf & "(70)"
-        TimeInTightRangeMessageLabel.TextAlign = ContentAlignment.MiddleCenter
+        TiTRMgsLabel.AutoSize = True
+        TiTRMgsLabel.BackColor = Color.Transparent
+        TiTRMgsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        TiTRMgsLabel.ForeColor = Color.Red
+        TiTRMgsLabel.Location = New Point(125, 270)
+        TiTRMgsLabel.Name = "TiTRMgsLabel"
+        TiTRMgsLabel.Size = New Size(102, 21)
+        TiTRMgsLabel.TabIndex = 30
+        TiTRMgsLabel.Text = "Tight Range"
+        TiTRMgsLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' TiTRMgsLabel2
+        ' 
+        TiTRMgsLabel2.AutoSize = True
+        TiTRMgsLabel2.BackColor = Color.Transparent
+        TiTRMgsLabel2.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        TiTRMgsLabel2.ForeColor = Color.Red
+        TiTRMgsLabel2.Location = New Point(157, 291)
+        TiTRMgsLabel2.Name = "TiTRMgsLabel2"
+        TiTRMgsLabel2.Size = New Size(67, 21)
+        TiTRMgsLabel2.TabIndex = 30
+        TiTRMgsLabel2.Text = "70/50%"
+        TiTRMgsLabel2.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' InsulinLevelPictureBox
         ' 
@@ -1074,9 +1089,9 @@ Partial Class Form1
         Last24HrCarbsValueLabel.ForeColor = Color.White
         Last24HrCarbsValueLabel.Location = New Point(157, 103)
         Last24HrCarbsValueLabel.Name = "Last24HrCarbsValueLabel"
-        Last24HrCarbsValueLabel.Size = New Size(89, 21)
+        Last24HrCarbsValueLabel.Size = New Size(95, 21)
         Last24HrCarbsValueLabel.TabIndex = 74
-        Last24HrCarbsValueLabel.Text = "100 Grams"
+        Last24HrCarbsValueLabel.Text = "100 Grams³"
         Last24HrCarbsValueLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' Last24HrMealBolusLabel
@@ -1193,11 +1208,12 @@ Partial Class Form1
         ' 
         ' LowTirComplianceLabel
         ' 
+        LowTirComplianceLabel.AutoSize = True
         LowTirComplianceLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
         LowTirComplianceLabel.ForeColor = Color.Red
         LowTirComplianceLabel.Location = New Point(3, 460)
         LowTirComplianceLabel.Name = "LowTirComplianceLabel"
-        LowTirComplianceLabel.Size = New Size(112, 57)
+        LowTirComplianceLabel.Size = New Size(138, 34)
         LowTirComplianceLabel.TabIndex = 36
         LowTirComplianceLabel.Text = "(6.3) Low" & vbCrLf & "Needs Improvement²"
         LowTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1256,14 +1272,14 @@ Partial Class Form1
         MenuOptionsAudioAlerts.CheckOnClick = True
         MenuOptionsAudioAlerts.CheckState = CheckState.Checked
         MenuOptionsAudioAlerts.Name = "MenuOptionsAudioAlerts"
-        MenuOptionsAudioAlerts.Size = New Size(184, 22)
+        MenuOptionsAudioAlerts.Size = New Size(186, 22)
         MenuOptionsAudioAlerts.Text = "Audio Alerts Enabled"
         ' 
         ' MenuOptionsSpeechRecognitionEnabled
         ' 
         MenuOptionsSpeechRecognitionEnabled.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsSpeechRecognitionDisabled, MenuOptionsSpeechRecognitionConfidence, MenuOptionsSpeechRecognition95, MenuOptionsSpeechRecognition90, MenuOptionsSpeechRecognition85, MenuOptionsSpeechRecognition80})
         MenuOptionsSpeechRecognitionEnabled.Name = "MenuOptionsSpeechRecognitionEnabled"
-        MenuOptionsSpeechRecognitionEnabled.Size = New Size(184, 22)
+        MenuOptionsSpeechRecognitionEnabled.Size = New Size(186, 22)
         MenuOptionsSpeechRecognitionEnabled.Text = "Speech Recognition"
         MenuOptionsSpeechRecognitionEnabled.TextAlign = ContentAlignment.MiddleRight
         ' 
@@ -1319,7 +1335,7 @@ Partial Class Form1
         MenuOptionsShowChartLegends.CheckOnClick = True
         MenuOptionsShowChartLegends.CheckState = CheckState.Checked
         MenuOptionsShowChartLegends.Name = "MenuOptionsShowChartLegends"
-        MenuOptionsShowChartLegends.Size = New Size(184, 22)
+        MenuOptionsShowChartLegends.Size = New Size(186, 22)
         MenuOptionsShowChartLegends.Text = "Show Chart Legends"
         ' 
         ' MenuOptionsSpeechHelpShown
@@ -1328,31 +1344,31 @@ Partial Class Form1
         MenuOptionsSpeechHelpShown.CheckOnClick = True
         MenuOptionsSpeechHelpShown.CheckState = CheckState.Checked
         MenuOptionsSpeechHelpShown.Name = "MenuOptionsSpeechHelpShown"
-        MenuOptionsSpeechHelpShown.Size = New Size(184, 22)
+        MenuOptionsSpeechHelpShown.Size = New Size(186, 22)
         MenuOptionsSpeechHelpShown.Text = "Disable Speech Help"
         ' 
         ' ToolStripSeparator5
         ' 
         ToolStripSeparator5.Name = "ToolStripSeparator5"
-        ToolStripSeparator5.Size = New Size(181, 6)
+        ToolStripSeparator5.Size = New Size(183, 6)
         ' 
         ' MenuOptionsAutoLogin
         ' 
         MenuOptionsAutoLogin.CheckOnClick = True
         MenuOptionsAutoLogin.Name = "MenuOptionsAutoLogin"
-        MenuOptionsAutoLogin.Size = New Size(184, 22)
+        MenuOptionsAutoLogin.Size = New Size(186, 22)
         MenuOptionsAutoLogin.Text = "Auto Login"
         ' 
         ' ToolStripSeparator6
         ' 
         ToolStripSeparator6.Name = "ToolStripSeparator6"
-        ToolStripSeparator6.Size = New Size(181, 6)
+        ToolStripSeparator6.Size = New Size(183, 6)
         ' 
         ' MenuOptionsAdvancedOptions
         ' 
         MenuOptionsAdvancedOptions.Enabled = False
         MenuOptionsAdvancedOptions.Name = "MenuOptionsAdvancedOptions"
-        MenuOptionsAdvancedOptions.Size = New Size(184, 22)
+        MenuOptionsAdvancedOptions.Size = New Size(186, 22)
         MenuOptionsAdvancedOptions.Text = "Advanced Options"
         ' 
         ' MenuOptionsFilterRawJSONData
@@ -1361,7 +1377,7 @@ Partial Class Form1
         MenuOptionsFilterRawJSONData.CheckOnClick = True
         MenuOptionsFilterRawJSONData.CheckState = CheckState.Checked
         MenuOptionsFilterRawJSONData.Name = "MenuOptionsFilterRawJSONData"
-        MenuOptionsFilterRawJSONData.Size = New Size(184, 22)
+        MenuOptionsFilterRawJSONData.Size = New Size(186, 22)
         MenuOptionsFilterRawJSONData.Text = "Filter Raw JSON Data"
         ' 
         ' MenuOptionsUseLocalTimeZone
@@ -1370,32 +1386,31 @@ Partial Class Form1
         MenuOptionsUseLocalTimeZone.CheckOnClick = True
         MenuOptionsUseLocalTimeZone.CheckState = CheckState.Indeterminate
         MenuOptionsUseLocalTimeZone.Name = "MenuOptionsUseLocalTimeZone"
-        MenuOptionsUseLocalTimeZone.Size = New Size(184, 22)
+        MenuOptionsUseLocalTimeZone.Size = New Size(186, 22)
         MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone"
         ' 
         ' ToolStripSeparator7
         ' 
         ToolStripSeparator7.Name = "ToolStripSeparator7"
-        ToolStripSeparator7.Size = New Size(181, 6)
+        ToolStripSeparator7.Size = New Size(183, 6)
         ' 
         ' MenuOptionsColorPicker
         ' 
         MenuOptionsColorPicker.Image = CType(resources.GetObject("MenuOptionsColorPicker.Image"), Image)
         MenuOptionsColorPicker.Name = "MenuOptionsColorPicker"
-        MenuOptionsColorPicker.Size = New Size(184, 22)
+        MenuOptionsColorPicker.Size = New Size(186, 22)
         MenuOptionsColorPicker.Text = "Color Picker..."
         ' 
         ' MenuOptionsConfigureTiTR
         ' 
-        MenuOptionsConfigureTiTR.Image = CType(resources.GetObject("MenuOptionsConfigureTiTR.Image"), Image)
         MenuOptionsConfigureTiTR.Name = "MenuOptionsConfigureTiTR"
-        MenuOptionsConfigureTiTR.Size = New Size(184, 22)
+        MenuOptionsConfigureTiTR.Size = New Size(186, 22)
         MenuOptionsConfigureTiTR.Text = "Configure TiTR (70)..."
         ' 
         ' MenuOptionsEditPumpSettings
         ' 
         MenuOptionsEditPumpSettings.Name = "MenuOptionsEditPumpSettings"
-        MenuOptionsEditPumpSettings.Size = New Size(184, 22)
+        MenuOptionsEditPumpSettings.Size = New Size(186, 22)
         MenuOptionsEditPumpSettings.Text = "Edit Pump Settings..."
         ' 
         ' MenuShowMiniDisplay
@@ -1834,7 +1849,8 @@ Partial Class Form1
         SplitContainer3.Panel2.Controls.Add(HighTirComplianceLabel)
         SplitContainer3.Panel2.Controls.Add(LowTirComplianceLabel)
         SplitContainer3.Panel2.Controls.Add(SmartGuardLabel)
-        SplitContainer3.Panel2.Controls.Add(TimeInTightRangeMessageLabel)
+        SplitContainer3.Panel2.Controls.Add(TiTRMgsLabel)
+        SplitContainer3.Panel2.Controls.Add(TiTRMgsLabel2)
         SplitContainer3.Size = New Size(1370, 513)
         SplitContainer3.SplitterDistance = 1136
         SplitContainer3.TabIndex = 0
@@ -3354,7 +3370,8 @@ Partial Class Form1
     Friend WithEvents TimeInRangeSummaryPercentCharLabel As Label
     Friend WithEvents TimeInRangeValueLabel As Label
     Friend WithEvents TimeInTightRangeLabel As Label
-    Friend WithEvents TimeInTightRangeMessageLabel As Label
+    Friend WithEvents TiTRMgsLabel As Label
+    Friend WithEvents TiTRMgsLabel2 As Label
     Friend WithEvents TimeInTightRangeValueLabel As Label
     Friend WithEvents TimeZoneToolStripStatusLabel As ToolStripStatusLabel
     Friend WithEvents TirComplianceLabel As Label

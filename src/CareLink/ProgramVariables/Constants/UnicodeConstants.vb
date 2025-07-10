@@ -51,6 +51,25 @@ Friend Module UnicodeConstants
     Public Const RegisteredTrademark As Char = ChrW(CharCode:=&HAE)
 
     ''' <summary>
+    '''  Superscript1, U+B9
+    '''  Represents the superscript one character.
+    ''' </summary>
+    Public Const Superscript1 As Char = ChrW(CharCode:=&HB9)
+
+    ''' <summary>
+    '''  Superscript2, U+B2
+    '''  Represents the superscript two character, commonly used
+    '''  in mathematical expressions or to denote squared measurements.
+    ''' </summary>
+    Public Const Superscript2 As Char = ChrW(&HB2)
+
+    ''' <summary>
+    '''  Superscript3, U+B3
+    '''  Represents the superscript three character, commonly used
+    '''  in mathematical expressions or to denote cubic measurements.
+    ''' </summary>
+    Public Const Superscript3 As Char = ChrW(CharCode:=&HB3)
+
     '''  Vertical Tab, U+000B
     ''' </summary>
     Public Const Vt As Char = ChrW(CharCode:=&HB)

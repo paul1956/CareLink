@@ -3,18 +3,39 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class OptionsConfigureTiTR
-    Public Property LowThreshold As Integer = 70
-    Public Property TreatmentTargetPercent As Integer = 70
+    Private _lowThreshold As Integer
+    Private _treatmentTargetPercent As Integer
 
-    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
-        Me.LowThreshold = CInt(Me.ThresholdNumericUpDown.Value)
-        Me.TreatmentTargetPercent = CInt(Me.ThresholdNumericUpDown.Value)
-        Me.DialogResult = DialogResult.OK
-        Me.Close()
-    End Sub
+    Public Property LowThreshold As Integer
+        Get
+            Return _lowThreshold
+        End Get
+        Set
+            _lowThreshold = Value
+        End Set
+    End Property
+
+    Public Property TreatmentTargetPercent As Integer
+        Get
+            Return _treatmentTargetPercent
+        End Get
+        Set
+            _treatmentTargetPercent = Value
+        End Set
+    End Property
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         Me.DialogResult = DialogResult.Cancel
+        Me.Close()
+    End Sub
+
+    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
+        _lowThreshold = CInt(Me.ThresholdNumericUpDown.Value)
+        My.Settings.TiTrLowThreshold = _lowThreshold
+        _treatmentTargetPercent = CInt(Me.TreatmentTargetPercentUpDown.Value)
+        My.Settings.TiTrTreatmentTargetPercent = _treatmentTargetPercent
+        My.Settings.Save()
+        Me.DialogResult = DialogResult.OK
         Me.Close()
     End Sub
 
@@ -22,4 +43,9 @@ Public Class OptionsConfigureTiTR
         Me.ThresholdNumericUpDown.Value = Me.LowThreshold
         Me.TreatmentTargetPercentUpDown.Value = Me.TreatmentTargetPercent
     End Sub
+
+    Public Function GetTiTrMsg() As String
+        Return $"{_lowThreshold}/{_treatmentTargetPercent}%"
+    End Function
+
 End Class
