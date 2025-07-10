@@ -17,6 +17,7 @@ Imports TableLayputPanelTop
 Public Class Form1
 
     Private ReadOnly _calibrationToolTip As New ToolTip()
+    Private ReadOnly _carbRatio As New ToolTip()
     Private ReadOnly _processName As String = Process.GetCurrentProcess().ProcessName
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _sgMiniDisplay As New SgMiniForm(Me)
@@ -2008,13 +2009,16 @@ Public Class Form1
             My.Settings.AutoLogin = False
         End If
 
+        Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
+        Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
+        My.Forms.OptionsConfigureTiTR.TreatmentTargetPercent = My.Settings.TiTrTreatmentTargetPercent
+        My.Forms.OptionsConfigureTiTR.LowThreshold = My.Settings.TiTrLowThreshold
         Me.InitializeDgvCareLinkUsers(Me.DgvCareLinkUsers)
         s_formLoaded = True
         Me.MenuOptionsAudioAlerts.Checked = My.Settings.SystemAudioAlertsEnabled
         Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitionThreshold < 1
         Me.SetSpeechRecognitionConfidenceThreshold()
-        Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
-        Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
+        Me.MenuOptionsConfigureTiTR.Text = $"Configure TiTR ({My.Forms.OptionsConfigureTiTR.GetTiTrMsg()})..."
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
         If File.Exists(GraphColorsFileNameWithPath) Then
@@ -2578,8 +2582,8 @@ Public Class Form1
     Private Sub MenuOptionsConfigureTiTR_Click(sender As Object, e As EventArgs) Handles MenuOptionsConfigureTiTR.Click
         Dim result As DialogResult = OptionsConfigureTiTR.ShowDialog(owner:=Me)
         If result = DialogResult.OK Then
-            Me.MenuOptionsConfigureTiTR.Text = $"Configure TiTR ({OptionsConfigureTiTR.LowThreshold})..."
-            Me.TimeInTightRangeMessageLabel.Text = "Tight Range" & vbCrLf & $"({OptionsConfigureTiTR.LowThreshold})"
+            Me.MenuOptionsConfigureTiTR.Text = $"Configure TiTR ({OptionsConfigureTiTR.GetTiTrMsg()})..."
+            Me.TiTRMgsLabel2.Text = OptionsConfigureTiTR.GetTiTrMsg()
 
             ' Update the TiTR compliance values based on the user's configuration.
             Me.UpdateTimeInRange()
@@ -2911,6 +2915,19 @@ Public Class Form1
                 control:=Me.CalibrationDueImage,
                 caption:=$"Calibration Due {PumpNow.AddMinutes(s_timeToNextCalibrationMinutes).ToShortTimeString}")
         End If
+    End Sub
+
+    ''' <summary>
+    '''  Handles the <see cref="MouseHover"/> event for the SensorDaysLeftLabel control.
+    '''  Displays a tooltip with the remaining sensor duration in hours if it is less than 24 hours.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, typically the SensorDaysLeftLabel control.</param>
+    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    Private Sub Last24HrCarbLabel_MouseHover(sender As Object, e As EventArgs) Handles _
+        Last24HrCarbsLabel.MouseHover, Last24HrCarbsValueLabel.MouseHover
+        _carbRatio.SetToolTip(
+            control:=DirectCast(sender, Label),
+            caption:=$"Carb Ratio {CDbl(s_totalCarbs / s_totalManualBolus):N1}")
     End Sub
 
     ''' <summary>
@@ -3317,7 +3334,7 @@ Public Class Form1
     '''  This method is called to prepare the Time in Range chart and labels for displaying compliance information.
     ''' </summary>
     Friend Sub InitializeTimeInRangeArea()
-        If Me.SplitContainer3.Panel2.Controls.Count > 18 Then
+        If Me.SplitContainer3.Panel2.Controls.Count > 19 Then
             Me.SplitContainer3.Panel2.Controls.RemoveAt(Me.SplitContainer3.Panel2.Controls.Count - 1)
         End If
         Me.PositionControlsInSplitContainer3Panel2()
@@ -4229,7 +4246,7 @@ Public Class Form1
             Me.Last24HrMealBolusUnitsLabel.Text = String.Format(Provider, $"{s_totalManualBolus:F1} U")
             Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         End If
-        Me.Last24HrCarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}"
+        Me.Last24HrCarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}{Superscript3}"
     End Sub
 
     ''' <summary>
@@ -4441,11 +4458,14 @@ Public Class Form1
         End If
 
         Me.TimeInTightRangeValueLabel.Text = $"{_timeInTightRange.Str}%"
+        Me.TiTRMgsLabel2.Text = My.Forms.OptionsConfigureTiTR.GetTiTrMsg()
         If _timeInTightRange.Uint >= OptionsConfigureTiTR.TreatmentTargetPercent Then
-            Me.TimeInTightRangeMessageLabel.ForeColor = Color.LimeGreen
+            Me.TiTRMgsLabel.ForeColor = Color.LimeGreen
+            Me.TiTRMgsLabel2.ForeColor = Color.LimeGreen
             Me.TimeInTightRangeValueLabel.ForeColor = Color.LimeGreen
         Else
-            Me.TimeInTightRangeMessageLabel.ForeColor = Color.Red
+            Me.TiTRMgsLabel.ForeColor = Color.Red
+            Me.TiTRMgsLabel2.ForeColor = Color.Red
             Me.TimeInTightRangeValueLabel.ForeColor = Color.Red
         End If
 
@@ -4528,26 +4548,26 @@ Public Class Form1
             Dim lowDeviation As Single = Math.Sqrt(lowDeviations / (elements - highCount)).RoundToSingle(digits:=1, considerValue:=False)
             Select Case True
                 Case lowDeviation <= 2
-                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}Excellent¹"
+                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}Excellent{Superscript2}"
                     Me.LowTirComplianceLabel.ForeColor = Color.LimeGreen
                 Case lowDeviation <= 4
-                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}({lowDeviation}) OK¹"
+                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}({lowDeviation}) OK{Superscript2}"
                     Me.LowTirComplianceLabel.ForeColor = Color.Yellow
                 Case Else
-                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}({lowDeviation}) Needs{vbCrLf}Improvement¹"
+                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}({lowDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
                     Me.LowTirComplianceLabel.ForeColor = Color.Red
             End Select
 
             Dim highDeviation As Single = Math.Sqrt(highDeviations / (elements - lowCount)).RoundToSingle(digits:=1, considerValue:=False)
             Select Case True
                 Case highDeviation <= 2
-                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}Excellent¹"
+                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}Excellent{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.LimeGreen
                 Case highDeviation <= 4
-                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) OK¹"
+                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) OK{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.Yellow
                 Case Else
-                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) Needs{vbCrLf}Improvement¹"
+                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.Red
             End Select
         End If
@@ -4560,25 +4580,29 @@ Public Class Form1
             If TypeOf ctrl Is Label Then
                 Select Case ctrl.Name
                     Case NameOf(Me.LowTirComplianceLabel)
-                        GetCenteredLeft(ctrl, onLeftHalf:=True)
+                        ctrl.CenterLeft(onLeftHalf:=True)
 
                     Case NameOf(Me.HighTirComplianceLabel)
-                        GetCenteredLeft(ctrl, onLeftHalf:=False)
+                        ctrl.CenterLeft(onLeftHalf:=False)
 
                     Case NameOf(Me.TimeInRangeMessageLabel)
-                        GetCenteredLeft(ctrl, onLeftHalf:=True)
+                        ctrl.CenterLeft(onLeftHalf:=True)
 
                     Case NameOf(Me.TimeInRangeValueLabel)
-                        GetCenteredLeft(ctrl, onLeftHalf:=True)
+                        ctrl.CenterLeft(onLeftHalf:=True)
 
-                    Case NameOf(Me.TimeInTightRangeMessageLabel)
-                        GetCenteredLeft(ctrl, onLeftHalf:=False)
+                    Case NameOf(Me.TiTRMgsLabel)
+                        ctrl.CenterLeft(onLeftHalf:=False)
 
                     Case NameOf(Me.TimeInTightRangeValueLabel)
-                        GetCenteredLeft(ctrl, onLeftHalf:=False)
+                        ctrl.CenterLeft(onLeftHalf:=False)
 
+                    Case NameOf(Me.TiTRMgsLabel2)
+                        With Me.TiTRMgsLabel2
+                            .Left = ctrl.Parent.Width - .Width - .Margin.Right
+                        End With
                     Case Else
-                        GetCenteredLeft(ctrl)
+                        ctrl.CenterLeft()
                 End Select
             End If
         Next

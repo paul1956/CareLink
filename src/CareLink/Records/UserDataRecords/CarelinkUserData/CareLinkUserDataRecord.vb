@@ -201,6 +201,8 @@ Public Class CareLinkUserDataRecord
                 Me.CareLinkPartner = CBool(value)
             Case NameOf(CareLinkPatientUserID)
                 Me.CareLinkPatientUserID = value
+            Case NameOf(My.Settings.TiTrLowThreshold), NameOf(My.Settings.TiTrTreatmentTargetPercent)
+                ' Ignore as these are not user based settings
             Case Else
                 Stop
         End Select
