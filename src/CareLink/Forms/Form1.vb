@@ -2206,7 +2206,7 @@ Public Class Form1
         Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(s_userName) OrElse
             Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern:=$"{s_userName}Settings.pdf"))
 
-        Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists
+        Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists AndAlso CurrentPdf IsNot Nothing AndAlso CurrentPdf.IsValid
         Me.MenuStartHereManuallyImportDeviceSettings.Enabled = Not userPdfExists
         ' The menu item For cleaning up obsolete files (MenuStartHereCleanUpObsoleteFiles) Is only enabled,
         ' when the application Is the only instance running, as a safety precaution.
@@ -2288,15 +2288,17 @@ Public Class Form1
 
         If File.Exists(UserSettingsPdfFileWithPath) Then
             If CurrentPdf.IsValid Then
+                StartOrStopServerUpdateTimer(Start:=False)
                 Using dialog As New PumpSetupDialog
-                    StartOrStopServerUpdateTimer(Start:=False)
                     dialog.Pdf = CurrentPdf
                     dialog.ShowDialog(Me)
                 End Using
             End If
 
             ' If the PDF file is not valid after setup, show a message box to the user.
-            If Not CurrentPdf.IsValid Then
+            If CurrentPdf.IsValid Then
+                StartOrStopServerUpdateTimer(Start:=True)
+            Else
                 MsgBox(
                     heading:=$"Device Setting PDF file Is invalid",
                     text:=UserSettingsPdfFileWithPath,
@@ -2310,7 +2312,6 @@ Public Class Form1
                 buttonStyle:=MsgBoxStyle.OkOnly,
                 title:="Missing Settings PDF File")
         End If
-        StartOrStopServerUpdateTimer(Start:=True)
     End Sub
 
     ''' <summary>
@@ -3666,11 +3667,11 @@ Public Class Form1
                             Dim diffSg As Single = sg - s_lastSgValue
                             Me.TrendValueLabel.Text = If(Math.Abs(diffSg) < 0.001,
                                                          "0",
-                                                         diffSg.ToString(GetSgFormat(withSign:=True), CultureInfo.InvariantCulture)
+                                                         diffSg.ToString(GetSgFormat(withSign:=True), provider:=CultureInfo.InvariantCulture)
                                                         )
                             _sgMiniDisplay.SetCurrentDeltaValue(Me.TrendValueLabel.Text, diffSg)
                             Me.TrendValueLabel.ForeColor = backColor
-                            strBuilder.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(withSign:=True), CultureInfo.InvariantCulture)}")
+                            strBuilder.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(withSign:=True), provider:=CultureInfo.InvariantCulture)}")
                             Me.TrendValueLabel.Visible = True
                         End If
                     Else

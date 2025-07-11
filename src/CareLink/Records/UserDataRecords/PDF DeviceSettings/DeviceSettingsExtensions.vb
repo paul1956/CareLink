@@ -35,21 +35,21 @@ Friend Module DeviceSettingsExtensions
                 End If
                 If typeOfT Is GetType(TimeOnly) Then
                     Dim timeOnly As TimeOnly = Nothing
-                    Return If(TimeOnly.TryParse(value, timeOnly),
+                    Return If(TimeOnly.TryParse(value, result:=timeOnly),
                               CType(CObj(timeOnly), T),
                               CType(CObj(Eleven59), T)
                              )
                 End If
                 If typeOfT Is GetType(TimeSpan) Then
                     Dim timeSpan As TimeSpan = Nothing
-                    Return If(TimeSpan.TryParse(value, timeSpan),
+                    Return If(TimeSpan.TryParse(value, result:=timeSpan),
                               CType(CObj(timeSpan), T),
-                              CType(CObj(New TimeSpan(0)), T)
+                              CType(CObj(ZeroTickSpan), T)
                              )
                 End If
                 If typeOfT Is GetType(Boolean) Then
                     Dim bol As Boolean = Nothing
-                    Return If(Boolean.TryParse(value, bol),
+                    Return If(Boolean.TryParse(value, result:=bol),
                               CType(CObj(bol), T),
                               CType(CObj(False), T)
                              )

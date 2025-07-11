@@ -327,9 +327,9 @@ Friend Module CreateChartItems
         Dim borderWidth As Integer = 2
         Select Case seriesName
             Case HighLimitSeriesName
-                legendText = "High Limit"
+                legendText = "High Alert"
             Case LowLimitSeriesName
-                legendText = "Low Limit"
+                legendText = "Low Alert"
             Case Else
                 legendText = "SG Target"
                 borderWidth = 4

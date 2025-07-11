@@ -323,7 +323,7 @@ Friend Module LoginHelpers
     '''
     Friend Sub SetUpCareLinkUser(forceUI As Boolean)
         Dim currentUserUpdateNeeded As Boolean = False
-        Dim pdfNewerThanUserSettings As Boolean = False
+        Dim newPdfFile As Boolean = False
         Dim pdfFileNameWithPath As String = UserSettingsPdfFileWithPath
 
         Dim path As String = UserSettingsFileWithPath()
@@ -342,12 +342,13 @@ Friend Module LoginHelpers
             End If
 
             If File.Exists(path:=pdfFileNameWithPath) Then
-                pdfNewerThanUserSettings = Not IsFileReadOnly(path) AndAlso
-                                           File.GetLastWriteTime(path:=pdfFileNameWithPath) > File.GetLastWriteTime(path)
+                newPdfFile = Not IsFileReadOnly(path) AndAlso
+                    File.GetLastWriteTime(path:=pdfFileNameWithPath) > File.GetLastWriteTime(path)
             End If
 
             If Not forceUI Then
-                If Not (pdfNewerThanUserSettings AndAlso IsFileStale(path)) Then
+                If Not newPdfFile Then
+                    ' If the PDF file exists and is valid, load it without prompting the user.
                     CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
                     Exit Sub
                 End If
@@ -366,7 +367,7 @@ Friend Module LoginHelpers
         Dim currentTarget As Single = 120
 
         If Form1.Client?.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse
-           pdfNewerThanUserSettings OrElse
+           newPdfFile OrElse
            File.Exists(pdfFileNameWithPath) Then
 
             CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)

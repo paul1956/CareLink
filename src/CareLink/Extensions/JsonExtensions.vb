@@ -37,12 +37,23 @@ Public Module JsonExtensions
             With sGs.Last
                 If .Timestamp.Equals(New DateTime) Then
                     .TimestampAsString = If(i = 0,
-                        (PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - New TimeSpan(23, 55, 0)).RoundDownToMinute().ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture),
-                        (sGs(0).Timestamp + (FiveMinuteSpan * i)).ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
+                        (PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - Eleven55Span).RoundDownToMinute().ToStringExact(),
+                        (sGs(0).Timestamp + (FiveMinuteSpan * i)).ToStringExact())
                 End If
             End With
         Next
         Return sGs
+    End Function
+
+    ''' <summary>
+    '''  Converts a <see cref="Date"/> to a <see langword="String"/> with the specified format.
+    '''  Defaults to "yyyy-MM-ddTHH:mm:ss" if no format is provided.
+    ''' </summary>
+    ''' <param name="d">The date to convert.</param>
+    ''' <returns>The formatted date as a string.</returns>
+    <Extension>
+    Private Function ToStringExact(d As Date) As String
+        Return d.ToString("yyyy-MM-ddTHH:mm:ss", provider:=CultureInfo.InvariantCulture)
     End Function
 
     ''' <summary>
@@ -387,28 +398,29 @@ Public Module JsonExtensions
         Dim jsonList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, s_jsonDeserializerOptions)
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
             Dim resultDictionary As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
-            Dim defaultTime As Date = PumpNow() - New TimeSpan(23, 55, 0)
-            Dim recordIndex As Integer = -1
+            Dim defaultTime As Date = PumpNow() - Eleven55Span
+            Dim index As Integer = -1
             For Each e1 As IndexClass(Of KeyValuePair(Of String, Object)) In e.Value.WithIndex
                 Dim item As KeyValuePair(Of String, Object) = e1.Value
                 If item.Value Is Nothing Then
-                    resultDictionary.Add(item.Key, Nothing)
+                    resultDictionary.Add(item.Key, value:=Nothing)
                 ElseIf item.Key = "index" Then
-                    recordIndex = CInt(item.jsonItemAsString)
-                    resultDictionary.Add(item.Key, item.jsonItemAsString)
+                    index = CInt(item.jsonItemAsString)
+                    resultDictionary.Add(item.Key, value:=item.jsonItemAsString)
                 ElseIf item.Key = "sg" Then
-                    resultDictionary.Add(item.Key, item.ScaleSgToString)
+                    resultDictionary.Add(item.Key, value:=item.ScaleSgToString)
                 ElseIf item.Key = "dateTime" Then
                     Dim d As Date = CType(item.Value, JsonElement).GetDateTime()
 
                     ' Prevent Crash but not valid data
-                    If d.Year <= 2001 AndAlso recordIndex >= 0 Then
-                        resultDictionary.Add(item.Key, s_listOfSgRecords(recordIndex).Timestamp.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture))
+                    If d.Year <= 2001 AndAlso index >= 0 Then
+                        resultDictionary.Add(item.Key,
+                                             value:=s_listOfSgRecords(index).Timestamp.ToStringExact)
                     Else
-                        resultDictionary.Add(item.Key, d.ToShortDateTimeString)
+                        resultDictionary.Add(item.Key, value:=d.ToShortDateTimeString())
                     End If
                 Else
-                    resultDictionary.Add(item.Key, item.jsonItemAsString)
+                    resultDictionary.Add(item.Key, value:=item.jsonItemAsString())
                 End If
             Next
 

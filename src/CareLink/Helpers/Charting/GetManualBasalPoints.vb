@@ -70,23 +70,25 @@ Friend Module GetManualBasalPoints
                                             )
                 If TimeOnly.FromDateTime(Date.FromOADate(currentMarkerTime)).IsBetween(startTime, endTime) Then
                     Dim rate As Single = basalRecord.UnitsPerHr / 12
+                    Dim value As TimeSpan
                     If rate < 0.025 Then
-                        Dim increments As Integer = CInt(Math.Ceiling((basalRecord.UnitsPerHr / 0.025).RoundTo025))
-                        If timeOrderedMarkers.ContainsKey(currentMarkerTime) Then
-                            timeOrderedMarkers(currentMarkerTime) += 0.025!
+                        If timeOrderedMarkers.ContainsKey(key:=currentMarkerTime) Then
+                            timeOrderedMarkers(key:=currentMarkerTime) += 0.025!
                         Else
                             timeOrderedMarkers.Add(currentMarkerTime, 0.025)
                         End If
                         Dim oaBaseDate As Date = Date.FromOADate(currentMarkerTime)
-                        currentMarkerTime = New OADate(oaBaseDate.Add(New TimeSpan(0, 60 \ increments, 0)))
+                        Dim increments As Integer = CInt(Math.Ceiling((basalRecord.UnitsPerHr / 0.025).RoundTo025))
+                        value = New TimeSpan(hours:=0, minutes:=60 \ increments, seconds:=0)
+                        currentMarkerTime = New OADate(oaBaseDate.Add(value))
                     Else
-                        If timeOrderedMarkers.ContainsKey(currentMarkerTime) Then
-                            timeOrderedMarkers(currentMarkerTime) += rate
+                        If timeOrderedMarkers.ContainsKey(key:=currentMarkerTime) Then
+                            timeOrderedMarkers(key:=currentMarkerTime) += rate
                         Else
-                            timeOrderedMarkers.Add(currentMarkerTime, rate)
+                            timeOrderedMarkers.Add(key:=currentMarkerTime, value:=rate)
                         End If
                         Dim oaBaseDate As Date = Date.FromOADate(currentMarkerTime)
-                        currentMarkerTime = New OADate(oaBaseDate.Add(New TimeSpan(0, 5, 0)))
+                        currentMarkerTime = New OADate(oaBaseDate.Add(value:=FiveMinuteSpan))
                     End If
                     Exit For
                 End If
