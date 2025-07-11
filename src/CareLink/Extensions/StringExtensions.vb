@@ -170,7 +170,7 @@ Public Module StringExtensions
             resultString = resultString.Replace("CareLink", "CareLink™")
         End If
         resultString = resultString.Replace("S G", "Sensor Glucose", StringComparison.InvariantCulture)
-        Return resultString.Replace("time", " Time", False, Provider)
+        Return resultString.Replace("time", " Time", ignoreCase:=False, culture:=Provider)
     End Function
 
     ''' <summary>

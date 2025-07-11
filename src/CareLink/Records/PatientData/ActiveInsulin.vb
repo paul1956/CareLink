@@ -25,14 +25,14 @@ Public Class ActiveInsulin
     <DisplayName("Date with Time From Pump")>
     <Column(Order:=1, TypeName:="String")>
     <JsonPropertyName("datetime")>
-    Public Property datetimeAsString As String
+    Public Property DateTimeAsString As String
 
     <DisplayName("Date with Time As Date")>
     <Column(Order:=2, TypeName:="Date")>
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property DateTime As Date
         Get
-            Return TryParseDateStr(Me.datetimeAsString)
+            Return TryParseDateStr(Me.DateTimeAsString)
         End Get
     End Property
 

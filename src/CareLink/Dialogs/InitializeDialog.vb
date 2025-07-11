@@ -241,42 +241,50 @@ Public Class InitializeDialog
                     Dim value As CarbRatioRecord = i.Value
                     .Rows.Add()
                     With .Rows(i.Index)
-                        Dim buttonCell As DataGridViewDisableButtonCell = CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell)
-                        buttonCell.Enabled = i.IsLast
-                        Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnStart)), DataGridViewComboBoxCell)
-                        c.Items.Add(value.StartTime.ToHoursMinutes)
-                        c.Value = value.StartTime.ToHoursMinutes()
-                        c.ReadOnly = True
-                        c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                        InitializeComboList(c, CInt((New TimeSpan(value.StartTime.Hour, value.StartTime.Minute, 0) / ThirtyMinuteSpan) + 1))
+                        CType(.Cells(columnName:=NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = i.IsLast
+                        With CType(.Cells(NameOf(ColumnStart)), DataGridViewComboBoxCell)
+                            .Items.Add(value.StartTime.ToHoursMinutes)
+                            .Value = value.StartTime.ToHoursMinutes()
+                            .ReadOnly = True
+                        End With
+                        Dim timeSpan As New TimeSpan(hours:=value.StartTime.Hour,
+                                                     minutes:=value.StartTime.Minute,
+                                                     seconds:=0)
+                        InitializeComboList(
+                            comboBoxCell:=CType(.Cells(columnName:=NameOf(ColumnEnd)), DataGridViewComboBoxCell),
+                            start:=CInt((timeSpan / ThirtyMinuteSpan) + 1))
 
-                        c.Value = value.EndTime
-                        c.ReadOnly = i.Index >= 11 OrElse
-                                     (i.IsLast AndAlso Not i.IsFirst)
-                        Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
+                        With CType(.Cells(columnName:=NameOf(ColumnEnd)), DataGridViewComboBoxCell)
+                            .Value = value.EndTime
+                            .ReadOnly = i.Index >= 11 OrElse (i.IsLast AndAlso Not i.IsFirst)
+                        End With
+                        Dim numericCell As DataGridViewNumericUpDownCell =
+                        CType(.Cells(columnName:=NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
                         numericCell.Value = value.CarbRatio
                         numericCell.ReadOnly = False
-                        buttonCell = CType(.Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell)
-                        buttonCell.ReadOnly = False
-                        buttonCell.Enabled = i.IsLast
+                        With CType(.Cells(columnName:=NameOf(ColumnSave)), DataGridViewDisableButtonCell)
+                            .ReadOnly = False
+                            .Enabled = i.IsLast
+                        End With
                     End With
                 Next
                 Me.InitializeDataGridView.Enabled = Not _fromPdf
             Else
                 .Rows.Add()
-                With .Rows(0)
-                    Dim buttonCell As DataGridViewDisableButtonCell = CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell)
-                    buttonCell.Enabled = False
-                    Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnStart)), DataGridViewComboBoxCell)
-                    c.Items.Add(MidnightStr)
-                    c.Value = MidnightStr
-                    c.ReadOnly = True
+                With .Rows(index:=0)
+                    CType(.Cells(columnName:=NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = False
+                    With CType(.Cells(columnName:=NameOf(ColumnStart)), DataGridViewComboBoxCell)
+                        .Items.Add(MidnightStr)
+                        .Value = MidnightStr
+                        .ReadOnly = True
+                    End With
+                    Dim comboBoxCell As DataGridViewComboBoxCell =
+                        CType(.Cells(columnName:=NameOf(ColumnEnd)), DataGridViewComboBoxCell)
+                    InitializeComboList(comboBoxCell, start:=1)
 
-                    c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                    InitializeComboList(c, 1)
-                    c.Value = Eleven59
-                    Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell)
-                    numericCell.Value = 15.0
+                    CType(.Cells(columnName:=NameOf(ColumnEnd)), DataGridViewComboBoxCell).Value = Eleven59
+
+                    CType(.Cells(columnName:=NameOf(ColumnNumericUpDown)), DataGridViewNumericUpDownCell).Value = 15.0
                 End With
                 Me.InitializeDataGridView.Enabled = False
             End If

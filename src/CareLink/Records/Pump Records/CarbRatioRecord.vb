@@ -64,8 +64,8 @@ Public Class CarbRatioRecord
         Return other IsNot Nothing AndAlso
             Me.CarbRatio = other.CarbRatio AndAlso
             Me.StartTime.Equals(other.StartTime) AndAlso
-            ((other.EndTime - other.EndTime).Duration > New TimeSpan(23, 30, 0) OrElse
-            (other.EndTime - other.EndTime).Duration < New TimeSpan(0, 30, 0))
+            ((other.EndTime - Me.EndTime).Duration > Eleven30Span OrElse
+            (other.EndTime - Me.EndTime).Duration < ThirtyMinuteSpan)
     End Function
 
     ''' <summary>

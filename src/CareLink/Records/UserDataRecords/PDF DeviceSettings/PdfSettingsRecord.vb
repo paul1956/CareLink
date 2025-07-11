@@ -45,6 +45,7 @@ Public Class PdfSettingsRecord
             Dim presetTempKeyIndex As Integer = 0
             For Each kvp As KeyValuePair(Of String, PdfTable) In tables
                 Dim itemKey As String = kvp.Key
+                Debug.Print(kvp.Key)
                 Dim sTable As StringTable
                 Select Case True
                     Case itemKey.StartsWith(MaximumBasalRateHeader)
