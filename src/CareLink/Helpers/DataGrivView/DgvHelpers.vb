@@ -15,6 +15,7 @@ Public Module DgvHelpers
         dgv.EnableHeadersVisualStyles = False
         dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.Black
         dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White
+        dgv.Padding = New Padding(all:=0)
     End Sub
 
     ''' <summary>
