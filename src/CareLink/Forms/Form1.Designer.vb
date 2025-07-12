@@ -2564,6 +2564,7 @@ Partial Class Form1
         TabControlPage2.Dock = DockStyle.Fill
         TabControlPage2.Font = New Font("Segoe UI", 9.0F)
         TabControlPage2.Location = New Point(0, 24)
+        TabControlPage2.Padding = New Point(0)
         TabControlPage2.Name = "TabControlPage2"
         TabControlPage2.SelectedIndex = 0
         TabControlPage2.Size = New Size(1384, 692)
