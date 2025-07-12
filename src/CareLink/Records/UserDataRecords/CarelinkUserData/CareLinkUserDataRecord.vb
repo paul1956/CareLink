@@ -9,12 +9,11 @@ Imports System.ComponentModel.DataAnnotations.Schema
 '''  Represents a user data record for CareLink, encapsulating user credentials and settings.
 '''  Supports editing operations and notifies the parent list of changes.
 ''' </summary>
-Public Class CareLinkUserDataRecord
+Partial Public Class CareLinkUserDataRecord
     Implements IEditableObject
+
     Private _backupData As CareLinkUserData
-
     Private _inTxn As Boolean = False
-
     Private _userData As CareLinkUserData
 
     ''' <summary>
@@ -207,20 +206,6 @@ Public Class CareLinkUserDataRecord
                 Stop
         End Select
     End Sub
-
-    ''' <summary>
-    '''  Internal structure to hold user data fields.
-    ''' </summary>
-    Private Structure CareLinkUserData
-        Friend _autoLogin As Boolean
-        Friend _careLinkPartner As Boolean
-        Friend _careLinkPassword As String
-        Friend _careLinkPatientUserID As String
-        Friend _careLinkUserName As String
-        Friend _countryCode As String
-        Friend _iD As Integer
-        Friend _useLocalTimeZone As Boolean
-    End Structure
 
 #Region "Implements IEditableObject"
 
