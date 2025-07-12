@@ -2041,7 +2041,7 @@ Partial Class Form1
         UpdateAvailableStatusStripLabel.Text = "Update Status Unknown"
         ' 
         ' TabControlPage1
-        ' 
+        '
         TabControlPage1.Controls.Add(TabPage01HomePage)
         TabControlPage1.Controls.Add(TabPage02RunningIOB)
         TabControlPage1.Controls.Add(TabPage03TreatmentDetails)
@@ -2061,6 +2061,7 @@ Partial Class Form1
         TabControlPage1.Font = New Font("Segoe UI", 9.0F)
         TabControlPage1.Location = New Point(0, 24)
         TabControlPage1.Name = "TabControlPage1"
+        TabControlPage1.Padding = New Point(0)
         TabControlPage1.SelectedIndex = 0
         TabControlPage1.Size = New Size(1384, 692)
         TabControlPage1.TabIndex = 1
@@ -2071,7 +2072,7 @@ Partial Class Form1
         TabPage01HomePage.Controls.Add(SplitContainer2)
         TabPage01HomePage.Location = New Point(4, 24)
         TabPage01HomePage.Name = "TabPage01HomePage"
-        TabPage01HomePage.Padding = New Padding(3)
+        TabPage01HomePage.Padding = New Padding(0)
         TabPage01HomePage.Size = New Size(1376, 664)
         TabPage01HomePage.TabIndex = 7
         TabPage01HomePage.Text = "Summary"
@@ -2082,7 +2083,7 @@ Partial Class Form1
         TabPage02RunningIOB.Controls.Add(SplitContainer1)
         TabPage02RunningIOB.Location = New Point(4, 24)
         TabPage02RunningIOB.Name = "TabPage02RunningIOB"
-        TabPage02RunningIOB.Padding = New Padding(3)
+        TabPage02RunningIOB.Padding = New Padding(0)
         TabPage02RunningIOB.Size = New Size(1376, 664)
         TabPage02RunningIOB.TabIndex = 15
         TabPage02RunningIOB.Text = "Running IOB"
@@ -2092,7 +2093,7 @@ Partial Class Form1
         ' 
         TabPage03TreatmentDetails.Location = New Point(4, 24)
         TabPage03TreatmentDetails.Name = "TabPage03TreatmentDetails"
-        TabPage03TreatmentDetails.Padding = New Padding(3)
+        TabPage03TreatmentDetails.Padding = New Padding(0)
         TabPage03TreatmentDetails.Size = New Size(1376, 664)
         TabPage03TreatmentDetails.TabIndex = 8
         TabPage03TreatmentDetails.Text = "Treatment Details"
@@ -2103,7 +2104,7 @@ Partial Class Form1
         TabPage04SummaryData.Controls.Add(DgvSummary)
         TabPage04SummaryData.Location = New Point(4, 24)
         TabPage04SummaryData.Name = "TabPage04SummaryData"
-        TabPage04SummaryData.Padding = New Padding(3)
+        TabPage04SummaryData.Padding = New Padding(0)
         TabPage04SummaryData.Size = New Size(1376, 664)
         TabPage04SummaryData.TabIndex = 0
         TabPage04SummaryData.Text = "Summary Data As Table"
@@ -2114,7 +2115,7 @@ Partial Class Form1
         TabPage05Insulin.Controls.Add(TableLayoutPanelInsulin)
         TabPage05Insulin.Location = New Point(4, 24)
         TabPage05Insulin.Name = "TabPage05Insulin"
-        TabPage05Insulin.Padding = New Padding(3)
+        TabPage05Insulin.Padding = New Padding(0)
         TabPage05Insulin.Size = New Size(1376, 664)
         TabPage05Insulin.TabIndex = 4
         TabPage05Insulin.Text = "Insulin"
@@ -2161,7 +2162,7 @@ Partial Class Form1
         TabPage06Meal.Controls.Add(TableLayoutPanelMeal)
         TabPage06Meal.Location = New Point(4, 24)
         TabPage06Meal.Name = "TabPage06Meal"
-        TabPage06Meal.Padding = New Padding(3)
+        TabPage06Meal.Padding = New Padding(0)
         TabPage06Meal.Size = New Size(1376, 664)
         TabPage06Meal.TabIndex = 6
         TabPage06Meal.Text = "Meal"
@@ -2208,7 +2209,7 @@ Partial Class Form1
         TabPage07ActiveInsulin.Controls.Add(TableLayoutPanelActiveInsulin)
         TabPage07ActiveInsulin.Location = New Point(4, 24)
         TabPage07ActiveInsulin.Name = "TabPage07ActiveInsulin"
-        TabPage07ActiveInsulin.Padding = New Padding(3)
+        TabPage07ActiveInsulin.Padding = New Padding(0)
         TabPage07ActiveInsulin.Size = New Size(1376, 664)
         TabPage07ActiveInsulin.TabIndex = 18
         TabPage07ActiveInsulin.Text = "Active Insulin"
@@ -2253,7 +2254,7 @@ Partial Class Form1
         TabPage08SensorGlucose.Controls.Add(TableLayoutPanelSgs)
         TabPage08SensorGlucose.Location = New Point(4, 24)
         TabPage08SensorGlucose.Name = "TabPage08SensorGlucose"
-        TabPage08SensorGlucose.Padding = New Padding(3)
+        TabPage08SensorGlucose.Padding = New Padding(0)
         TabPage08SensorGlucose.Size = New Size(1376, 664)
         TabPage08SensorGlucose.TabIndex = 19
         TabPage08SensorGlucose.Text = "Sensor Glucose"
@@ -2299,7 +2300,7 @@ Partial Class Form1
         TabPage09Limits.Controls.Add(TableLayoutPanelLimits)
         TabPage09Limits.Location = New Point(4, 24)
         TabPage09Limits.Name = "TabPage09Limits"
-        TabPage09Limits.Padding = New Padding(3)
+        TabPage09Limits.Padding = New Padding(0)
         TabPage09Limits.Size = New Size(1376, 664)
         TabPage09Limits.TabIndex = 20
         TabPage09Limits.Text = "Limits"
@@ -2345,7 +2346,7 @@ Partial Class Form1
         TabPage10TherapyAlgorithmState.Controls.Add(TableLayoutPanelTherapyAlgorithmState)
         TabPage10TherapyAlgorithmState.Location = New Point(4, 24)
         TabPage10TherapyAlgorithmState.Name = "TabPage10TherapyAlgorithmState"
-        TabPage10TherapyAlgorithmState.Padding = New Padding(3)
+        TabPage10TherapyAlgorithmState.Padding = New Padding(0)
         TabPage10TherapyAlgorithmState.Size = New Size(1376, 664)
         TabPage10TherapyAlgorithmState.TabIndex = 21
         TabPage10TherapyAlgorithmState.Text = "Therapy Algorithm State"
@@ -2390,7 +2391,7 @@ Partial Class Form1
         TabPage11PumpBannerState.Controls.Add(TableLayoutPanelPumpBannerState)
         TabPage11PumpBannerState.Location = New Point(4, 24)
         TabPage11PumpBannerState.Name = "TabPage11PumpBannerState"
-        TabPage11PumpBannerState.Padding = New Padding(3)
+        TabPage11PumpBannerState.Padding = New Padding(0)
         TabPage11PumpBannerState.Size = New Size(1376, 664)
         TabPage11PumpBannerState.TabIndex = 22
         TabPage11PumpBannerState.Text = "Pump Banner State"
@@ -2437,7 +2438,7 @@ Partial Class Form1
         TabPage12Basal.Controls.Add(TableLayoutPanelBasal)
         TabPage12Basal.Location = New Point(4, 24)
         TabPage12Basal.Name = "TabPage12Basal"
-        TabPage12Basal.Padding = New Padding(3)
+        TabPage12Basal.Padding = New Padding(0)
         TabPage12Basal.Size = New Size(1376, 664)
         TabPage12Basal.TabIndex = 23
         TabPage12Basal.Text = "Basal"
@@ -2485,7 +2486,7 @@ Partial Class Form1
         TabPage13NotificationActive.Controls.Add(TableLayoutPanelNotificationActive)
         TabPage13NotificationActive.Location = New Point(4, 24)
         TabPage13NotificationActive.Name = "TabPage13NotificationActive"
-        TabPage13NotificationActive.Padding = New Padding(3)
+        TabPage13NotificationActive.Padding = New Padding(0)
         TabPage13NotificationActive.Size = New Size(1376, 664)
         TabPage13NotificationActive.TabIndex = 25
         TabPage13NotificationActive.Text = "Active Notification"
@@ -2530,7 +2531,7 @@ Partial Class Form1
         TabPage14NotificationsCleared.Controls.Add(SplitContainerNotificationsCleared)
         TabPage14NotificationsCleared.Location = New Point(4, 24)
         TabPage14NotificationsCleared.Name = "TabPage14NotificationsCleared"
-        TabPage14NotificationsCleared.Padding = New Padding(3)
+        TabPage14NotificationsCleared.Padding = New Padding(0)
         TabPage14NotificationsCleared.Size = New Size(1376, 664)
         TabPage14NotificationsCleared.TabIndex = 5
         TabPage14NotificationsCleared.Text = "Cleared Notifications"
@@ -2540,7 +2541,7 @@ Partial Class Form1
         ' 
         TabPage15More.Location = New Point(4, 24)
         TabPage15More.Name = "TabPage15More"
-        TabPage15More.Padding = New Padding(3)
+        TabPage15More.Padding = New Padding(0)
         TabPage15More.Size = New Size(1376, 664)
         TabPage15More.TabIndex = 24
         TabPage15More.Text = "More..."
@@ -2573,7 +2574,7 @@ Partial Class Form1
         TabPageAutoBasalDelivery.Controls.Add(TableLayoutPanelAutoBasalDelivery)
         TabPageAutoBasalDelivery.Location = New Point(4, 24)
         TabPageAutoBasalDelivery.Name = "TabPageAutoBasalDelivery"
-        TabPageAutoBasalDelivery.Padding = New Padding(3)
+        TabPageAutoBasalDelivery.Padding = New Padding(0)
         TabPageAutoBasalDelivery.Size = New Size(1376, 664)
         TabPageAutoBasalDelivery.TabIndex = 0
         TabPageAutoBasalDelivery.Text = "Auto Basal Delivery"
@@ -2619,7 +2620,7 @@ Partial Class Form1
         TabPageAutoModeStatus.Controls.Add(TableLayoutPanelAutoModeStatus)
         TabPageAutoModeStatus.Location = New Point(4, 24)
         TabPageAutoModeStatus.Name = "TabPageAutoModeStatus"
-        TabPageAutoModeStatus.Padding = New Padding(3)
+        TabPageAutoModeStatus.Padding = New Padding(0)
         TabPageAutoModeStatus.Size = New Size(1376, 664)
         TabPageAutoModeStatus.TabIndex = 0
         TabPageAutoModeStatus.Text = "Auto Mode Status"
@@ -2665,7 +2666,7 @@ Partial Class Form1
         TabPageBgReadings.Controls.Add(TableLayoutPanelBgReadings)
         TabPageBgReadings.Location = New Point(4, 24)
         TabPageBgReadings.Name = "TabPageBgReadings"
-        TabPageBgReadings.Padding = New Padding(3)
+        TabPageBgReadings.Padding = New Padding(0)
         TabPageBgReadings.Size = New Size(1376, 664)
         TabPageBgReadings.TabIndex = 2
         TabPageBgReadings.Text = "Bg Readings"
@@ -2712,7 +2713,7 @@ Partial Class Form1
         TabPageCalibration.Controls.Add(TableLayoutPanelCalibration)
         TabPageCalibration.Location = New Point(4, 24)
         TabPageCalibration.Name = "TabPageCalibration"
-        TabPageCalibration.Padding = New Padding(3)
+        TabPageCalibration.Padding = New Padding(0)
         TabPageCalibration.Size = New Size(1376, 664)
         TabPageCalibration.TabIndex = 3
         TabPageCalibration.Text = "Calibration"
@@ -2759,7 +2760,7 @@ Partial Class Form1
         TabPageLowGlucoseSuspended.Controls.Add(TableLayoutPanelLowGlucoseSuspended)
         TabPageLowGlucoseSuspended.Location = New Point(4, 24)
         TabPageLowGlucoseSuspended.Name = "TabPageLowGlucoseSuspended"
-        TabPageLowGlucoseSuspended.Padding = New Padding(3)
+        TabPageLowGlucoseSuspended.Padding = New Padding(0)
         TabPageLowGlucoseSuspended.Size = New Size(1376, 664)
         TabPageLowGlucoseSuspended.TabIndex = 5
         TabPageLowGlucoseSuspended.Text = "Low Glucose Suspended"
@@ -2806,7 +2807,7 @@ Partial Class Form1
         TabPageTimeChange.Controls.Add(TableLayoutPanelTimeChange)
         TabPageTimeChange.Location = New Point(4, 24)
         TabPageTimeChange.Name = "TabPageTimeChange"
-        TabPageTimeChange.Padding = New Padding(3)
+        TabPageTimeChange.Padding = New Padding(0)
         TabPageTimeChange.Size = New Size(1376, 664)
         TabPageTimeChange.TabIndex = 7
         TabPageTimeChange.Text = "Time Change"
@@ -2853,7 +2854,7 @@ Partial Class Form1
         TabPageLastSG.Controls.Add(TableLayoutPanelLastSG)
         TabPageLastSG.Location = New Point(4, 24)
         TabPageLastSG.Name = "TabPageLastSG"
-        TabPageLastSG.Padding = New Padding(3)
+        TabPageLastSG.Padding = New Padding(0)
         TabPageLastSG.Size = New Size(1376, 664)
         TabPageLastSG.TabIndex = 16
         TabPageLastSG.Text = "Last SG"
@@ -2899,7 +2900,7 @@ Partial Class Form1
         TabPageLastAlarm.Controls.Add(TableLayoutPanelLastAlarm)
         TabPageLastAlarm.Location = New Point(4, 24)
         TabPageLastAlarm.Name = "TabPageLastAlarm"
-        TabPageLastAlarm.Padding = New Padding(3)
+        TabPageLastAlarm.Padding = New Padding(0)
         TabPageLastAlarm.Size = New Size(1376, 664)
         TabPageLastAlarm.TabIndex = 17
         TabPageLastAlarm.Text = "Last Alarm"
@@ -2946,7 +2947,7 @@ Partial Class Form1
         TabPageBasalPerHour.Controls.Add(DgvBasalPerHour)
         TabPageBasalPerHour.Location = New Point(4, 24)
         TabPageBasalPerHour.Name = "TabPageBasalPerHour"
-        TabPageBasalPerHour.Padding = New Padding(3)
+        TabPageBasalPerHour.Padding = New Padding(0)
         TabPageBasalPerHour.Size = New Size(1376, 664)
         TabPageBasalPerHour.TabIndex = 18
         TabPageBasalPerHour.Text = "SmartGuard Basal Per Hour"
@@ -2957,7 +2958,7 @@ Partial Class Form1
         TabPageCurrentUser.Controls.Add(DgvCurrentUser)
         TabPageCurrentUser.Location = New Point(4, 24)
         TabPageCurrentUser.Name = "TabPageCurrentUser"
-        TabPageCurrentUser.Padding = New Padding(3)
+        TabPageCurrentUser.Padding = New Padding(0)
         TabPageCurrentUser.Size = New Size(1376, 664)
         TabPageCurrentUser.TabIndex = 13
         TabPageCurrentUser.Text = "Current User"
@@ -2968,7 +2969,7 @@ Partial Class Form1
         TabPageAllUsers.Controls.Add(DgvCareLinkUsers)
         TabPageAllUsers.Location = New Point(4, 24)
         TabPageAllUsers.Name = "TabPageAllUsers"
-        TabPageAllUsers.Padding = New Padding(3)
+        TabPageAllUsers.Padding = New Padding(0)
         TabPageAllUsers.Size = New Size(1376, 664)
         TabPageAllUsers.TabIndex = 14
         TabPageAllUsers.Text = "All Users"
@@ -2978,7 +2979,7 @@ Partial Class Form1
         ' 
         TabPageBackToHomePage.Location = New Point(4, 24)
         TabPageBackToHomePage.Name = "TabPageBackToHomePage"
-        TabPageBackToHomePage.Padding = New Padding(3)
+        TabPageBackToHomePage.Padding = New Padding(0)
         TabPageBackToHomePage.Size = New Size(1376, 664)
         TabPageBackToHomePage.TabIndex = 8
         TabPageBackToHomePage.Text = "Back.."
@@ -3019,7 +3020,7 @@ Partial Class Form1
         Me.Controls.Add(StatusStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), Icon)
         Me.MainMenuStrip = MenuStrip1
-        Me.Margin = New Padding(4, 3, 4, 3)
+        Me.Margin = New Padding(0, 3, 0, 3)
         Me.MaximumSize = New Size(1400, 960)
         Me.Name = "Form1"
         Me.SizeGripStyle = SizeGripStyle.Hide
