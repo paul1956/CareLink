@@ -11,11 +11,12 @@ Public Module DgvHelpers
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> to style.</param>
     <Extension>
-    Public Sub ApplyDarkModeToColumnHeaders(dgv As DataGridView)
+    Public Sub ApplyDarkModeFixes(dgv As DataGridView)
         dgv.EnableHeadersVisualStyles = False
         dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.Black
         dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White
         dgv.Padding = New Padding(all:=0)
+        dgv.BorderStyle = BorderStyle.None
     End Sub
 
     ''' <summary>
@@ -290,6 +291,7 @@ Public Module DgvHelpers
             dgv = New DataGridView With {
                 .AutoSize = True,
                 .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
+                .BorderStyle = BorderStyle.None,
                 .ColumnHeadersVisible = False,
                 .Dock = DockStyle.Fill,
                 .Name = $"DataGridView{className}",

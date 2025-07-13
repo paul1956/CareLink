@@ -2157,26 +2157,26 @@ Public Class Form1
         Me.ToolTip1.SetToolTip(control:=Me.LowTirComplianceLabel, caption:=UserMessageConstants.TirToolTip)
         Me.ToolTip1.SetToolTip(control:=Me.HighTirComplianceLabel, caption:=UserMessageConstants.TirToolTip)
 
-        Me.DgvActiveInsulin.ApplyDarkModeToColumnHeaders
-        Me.DgvAutoBasalDelivery.ApplyDarkModeToColumnHeaders
-        Me.DgvAutoModeStatus.ApplyDarkModeToColumnHeaders
-        Me.DgvPumpBannerState.ApplyDarkModeToColumnHeaders
-        Me.DgvBasal.ApplyDarkModeToColumnHeaders
-        Me.DgvBasalPerHour.ApplyDarkModeToColumnHeaders
-        Me.DgvCalibration.ApplyDarkModeToColumnHeaders
-        Me.DgvCareLinkUsers.ApplyDarkModeToColumnHeaders
-        Me.DgvCurrentUser.ApplyDarkModeToColumnHeaders
-        Me.DgvInsulin.ApplyDarkModeToColumnHeaders
-        Me.DgvLastAlarm.ApplyDarkModeToColumnHeaders
-        Me.DgvLastSensorGlucose.ApplyDarkModeToColumnHeaders
-        Me.DgvLimits.ApplyDarkModeToColumnHeaders
-        Me.DgvLowGlucoseSuspended.ApplyDarkModeToColumnHeaders
-        Me.DgvMeal.ApplyDarkModeToColumnHeaders
-        Me.DgvSensorBgReadings.ApplyDarkModeToColumnHeaders
-        Me.DgvSGs.ApplyDarkModeToColumnHeaders
-        Me.DgvSummary.ApplyDarkModeToColumnHeaders
-        Me.DgvTherapyAlgorithmState.ApplyDarkModeToColumnHeaders
-        Me.DgvTimeChange.ApplyDarkModeToColumnHeaders
+        Me.DgvActiveInsulin.ApplyDarkModeFixes
+        Me.DgvAutoBasalDelivery.ApplyDarkModeFixes
+        Me.DgvAutoModeStatus.ApplyDarkModeFixes
+        Me.DgvPumpBannerState.ApplyDarkModeFixes
+        Me.DgvBasal.ApplyDarkModeFixes
+        Me.DgvBasalPerHour.ApplyDarkModeFixes
+        Me.DgvCalibration.ApplyDarkModeFixes
+        Me.DgvCareLinkUsers.ApplyDarkModeFixes
+        Me.DgvCurrentUser.ApplyDarkModeFixes
+        Me.DgvInsulin.ApplyDarkModeFixes
+        Me.DgvLastAlarm.ApplyDarkModeFixes
+        Me.DgvLastSensorGlucose.ApplyDarkModeFixes
+        Me.DgvLimits.ApplyDarkModeFixes
+        Me.DgvLowGlucoseSuspended.ApplyDarkModeFixes
+        Me.DgvMeal.ApplyDarkModeFixes
+        Me.DgvSensorBgReadings.ApplyDarkModeFixes
+        Me.DgvSGs.ApplyDarkModeFixes
+        Me.DgvSummary.ApplyDarkModeFixes
+        Me.DgvTherapyAlgorithmState.ApplyDarkModeFixes
+        Me.DgvTimeChange.ApplyDarkModeFixes
 
 #Region "Status Strip Colors"
 
