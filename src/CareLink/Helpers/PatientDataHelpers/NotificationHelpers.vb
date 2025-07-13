@@ -139,10 +139,17 @@ Friend Module NotificationHelpers
     ''' <param name="className">The class name for naming the DataGridView.</param>
     ''' <param name="attachHandlers">Delegate to attach event handlers to the DataGridView.</param>
     ''' <param name="row">The row index in the panel to add the DataGridView.</param>
-    Private Sub DisplayNotificationDataTableInDGV(realPanel As TableLayoutPanel, table As DataTable, className As String, attachHandlers As attachHandlers, row As Integer)
+    Private Sub DisplayNotificationDataTableInDGV(
+            realPanel As TableLayoutPanel,
+            table As DataTable,
+            className As String,
+            attachHandlers As attachHandlers,
+            row As Integer)
+
         Dim dgv As New DataGridView With {
             .AutoSize = False,
             .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders,
+            .BorderStyle = BorderStyle.None,
             .ColumnHeadersVisible = False,
             .Dock = DockStyle.Top,
             .Name = $"DataGridView{className}",
@@ -191,7 +198,9 @@ Friend Module NotificationHelpers
         Next
 
         ' Set the panel size to fit all controls
-        panel.Size = New Size(maxWidth + panel.Padding.Right, maxHeight + panel.Padding.Bottom)
+        panel.Size = New Size(
+            width:=maxWidth + panel.Padding.Right,
+            height:=maxHeight + panel.Padding.Bottom)
     End Sub
 
     ''' <summary>
@@ -214,20 +223,22 @@ Friend Module NotificationHelpers
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In s_notificationHistoryValue.WithIndex()
             Dim notificationType As KeyValuePair(Of String, String) = c.Value
             Dim innerJson As List(Of Dictionary(Of String, String)) = JsonToDictionaryList(notificationType.Value)
+            Dim classCollection As List(Of SummaryRecord)
             If notificationType.Key = "clearedNotifications" Then
                 If innerJson.Count > 0 Then
                     innerJson.Reverse()
                     mainForm.TableLayoutPanelNotificationsCleared.SuspendLayout()
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
+                        classCollection = GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)
                         DisplayNotificationDataTableInDGV(
                             realPanel:=mainForm.TableLayoutPanelNotificationsCleared,
-                            table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
+                            table:=ClassCollectionToDataTable(classCollection),
                             className:=NameOf(SummaryRecord),
                             attachHandlers:=AddressOf NotificationHelpers.AttachHandlers,
                             row:=innerDictionary.Index)
                     Next
                     mainForm.TableLayoutPanelNotificationsCleared.ResumeLayout()
-                    ResizePanelToFitContents(mainForm.TableLayoutPanelNotificationsCleared)
+                    ResizePanelToFitContents(panel:=mainForm.TableLayoutPanelNotificationsCleared)
                 Else
                     mainForm.TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
                     mainForm.TableLayoutPanelNotificationsCleared.DisplayEmptyDGV(className:="clearedNotifications")
@@ -235,9 +246,10 @@ Friend Module NotificationHelpers
             Else
                 If innerJson.Count > 0 Then
                     For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
+                        classCollection = GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)
                         DisplayNotificationDataTableInDGV(
                             realPanel:=mainForm.TableLayoutPanelNotificationActive,
-                            table:=ClassCollectionToDataTable(classCollection:=GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)),
+                            table:=ClassCollectionToDataTable(classCollection),
                             className:=NameOf(SummaryRecord),
                             attachHandlers:=AddressOf NotificationHelpers.AttachHandlers,
                             row:=innerDictionary.Index + 1)
