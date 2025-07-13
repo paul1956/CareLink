@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.Configuration
 Imports System.Globalization
 Imports System.IO
+Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
@@ -81,6 +82,71 @@ Public Class Form1
         End Set
     End Property
 
+#Region "Overrides"
+
+    ''' <summary>
+    '''  Enables dark mode for the form and its controls.
+    '''  Sets the window attributes for immersive dark mode and border color.
+    ''' </summary>
+    ''' <remarks>
+    '''  This method uses the DWM API to enable dark mode and set the border color.
+    ''' </remarks>
+    Private Sub EnableDarkMode()
+        ' Enable immersive dark mode
+        Dim useDarkMode As Integer = 1
+        Dim result As Integer = DwmSetWindowAttribute(
+            hwnd:=Me.Handle,
+            attr:=DWMWA_USE_IMMERSIVE_DARK_MODE,
+            attrValue:=useDarkMode,
+            attrSize:=Marshal.SizeOf([structure]:=useDarkMode))
+
+        If result <> 0 Then
+            ' Handle error if dark mode could not be enabled
+            MessageBox.Show(
+                text:="Failed to enable dark mode.",
+                caption:="Error",
+                buttons:=MessageBoxButtons.OK,
+                icon:=MessageBoxIcon.Error)
+            Return
+        End If
+        ' Set border color (BGR format, e.g., &H202020 for dark gray)
+        Dim borderColor As Integer = &H202020
+        result = DwmSetWindowAttribute(
+            hwnd:=Me.Handle,
+            attr:=DWMWA_BORDER_COLOR,
+            attrValue:=borderColor,
+            attrSize:=Marshal.SizeOf([structure]:=borderColor))
+        If result <> 0 Then
+            MessageBox.Show(
+                text:="Failed to set border color.",
+                caption:="Error",
+                buttons:=MessageBoxButtons.OK,
+                icon:=MessageBoxIcon.Error)
+        End If
+    End Sub
+
+    ''' <summary>
+    '''  Handles the <see cref="Form.HandleCreated"/> event.
+    '''  Enables dark mode for the form and its controls.
+    ''' </summary>
+    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    Protected Overrides Sub OnHandleCreated(e As EventArgs)
+        MyBase.OnHandleCreated(e)
+        Me.EnableDarkMode()
+    End Sub
+
+    ''' <summary>
+    '''  Scales the control based on the <paramref name="factor"/> and <paramref name="specified"/> bounds.
+    '''  This method overrides the base method to adjust the form scale and fix SplitContainer controls.
+    ''' </summary>
+    ''' <param name="factor">The scaling factor.</param>
+    ''' <param name="specified">The bounds specified for scaling.</param>
+    Protected Overrides Sub ScaleControl(factor As SizeF, specified As BoundsSpecified)
+        _formScale = New SizeF(_formScale.Width * factor.Width, _formScale.Height * factor.Height)
+        MyBase.ScaleControl(factor, specified)
+    End Sub
+
+
     ''' <summary>
     '''  Overloaded System Windows Handler.
     ''' </summary>
@@ -147,6 +213,8 @@ Public Class Form1
         End Select
         MyBase.WndProc(m)
     End Sub
+
+#End Region 'Overrides
 
 #Region "Chart Objects"
 
@@ -3663,17 +3731,6 @@ Public Class Form1
             Dim cs As Integer = If(sp.Orientation = Orientation.Vertical, sp.Panel2.ClientSize.Width, sp.Panel2.ClientSize.Height)
             sp.SplitterDistance -= CInt(Math.Truncate(cs * sc)) - cs
         End If
-    End Sub
-
-    ''' <summary>
-    '''  Scales the control based on the <paramref name="factor"/> and <paramref name="specified"/> bounds.
-    '''  This method overrides the base method to adjust the form scale and fix SplitContainer controls.
-    ''' </summary>
-    ''' <param name="factor">The scaling factor.</param>
-    ''' <param name="specified">The bounds specified for scaling.</param>
-    Protected Overrides Sub ScaleControl(factor As SizeF, specified As BoundsSpecified)
-        _formScale = New SizeF(_formScale.Width * factor.Width, _formScale.Height * factor.Height)
-        MyBase.ScaleControl(factor, specified)
     End Sub
 
     ''' <summary>

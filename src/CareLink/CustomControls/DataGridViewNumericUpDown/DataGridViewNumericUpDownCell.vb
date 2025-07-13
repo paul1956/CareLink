@@ -11,11 +11,6 @@ Imports System.Globalization
 Public Class DataGridViewNumericUpDownCell
     Inherits DataGridViewTextBoxCell
 
-    ' Used in KeyEntersEditMode function
-    <Runtime.InteropServices.DllImport("USER32.DLL", CharSet:=Runtime.InteropServices.CharSet.Auto)>
-    Private Shared Function VkKeyScan(key As Char) As Short
-    End Function
-
     ' Used in TranslateAlignment function
     Private Shared ReadOnly s_anyRight As DataGridViewContentAlignment = DataGridViewContentAlignment.TopRight Or
                                                                     DataGridViewContentAlignment.MiddleRight Or
@@ -399,7 +394,7 @@ Public Class DataGridViewNumericUpDownCell
         Dim negativeSignKey As Keys = Keys.None
         Dim negativeSignStr As String = numberFormatInfo.NegativeSign
         If Not String.IsNullOrEmpty(negativeSignStr) AndAlso negativeSignStr.Length = 1 Then
-            negativeSignKey = CType(VkKeyScan(negativeSignStr(0)), Keys)
+            negativeSignKey = CType(VkKeyScan(negativeSignStr(index:=0)), Keys)
         End If
 
         Return (Char.IsDigit(ChrW(e.KeyCode)) OrElse
