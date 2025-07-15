@@ -1836,44 +1836,36 @@ Public Class Form1
         Dim value As String = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Value.ToString
         If value.StartsWith(ClickToShowDetails) Then
             With Me.TabControlPage1
-                Dim key As String = dgv.Rows(e.RowIndex).Cells("key").Value.ToString
+                Dim key As String = dgv.Rows(e.RowIndex).Cells(columnName:="key").Value.ToString
                 Select Case key.GetItemIndex()
-                    Case ServerDataIndexes.lastSG
-                        Me.TabControlPage2.SelectedIndex = 6
-                        _lastMarkerTabLocation = New TabLocation(page:=1, tab:=6)
-                        .Visible = False
-                    Case ServerDataIndexes.lastAlarm
-                        Me.TabControlPage2.SelectedIndex = 7
-                        _lastMarkerTabLocation = New TabLocation(page:=1, tab:=7)
-                        .Visible = False
                     Case ServerDataIndexes.activeInsulin
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage07ActiveInsulin))
-                    Case ServerDataIndexes.sgs
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage08SensorGlucose))
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage05ActiveInsulin))
+                    Case ServerDataIndexes.basal
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage06Basal))
+                    Case ServerDataIndexes.lastAlarm
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage07LastAlarm))
+                    Case ServerDataIndexes.lastSG
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage08LastSG))
                     Case ServerDataIndexes.limits
                         .SelectedIndex = GetTabIndexFromName(NameOf(TabPage09Limits))
+                    Case ServerDataIndexes.notificationHistory
+                        .SelectedIndex = If(key = "activeNotification",
+                            GetTabIndexFromName(NameOf(TabPage10NotificationActive)),
+                            GetTabIndexFromName(NameOf(TabPage11NotificationsCleared)))
+                    Case ServerDataIndexes.pumpBannerState
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage12PumpBannerState))
+                    Case ServerDataIndexes.sgs
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage13SensorGlucose))
+                    Case ServerDataIndexes.therapyAlgorithmState
+                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage14TherapyAlgorithmState))
                     Case ServerDataIndexes.markers
                         Dim page As Integer = _lastMarkerTabLocation.page
                         Dim tab As Integer = _lastMarkerTabLocation.tab
                         If page = 0 Then
-                            If tab = 0 Then
-                                _lastMarkerTabLocation = New TabLocation(page:=0, tab:=4)
-                            End If
-                            Me.TabControlPage1.SelectedIndex = _lastMarkerTabLocation.tab
-                        Else
-                            Me.TabControlPage2.SelectedIndex = If(5 < tab, 0, _lastMarkerTabLocation.tab)
-                            .Visible = False
+                            _lastMarkerTabLocation = New TabLocation(page:=1, tab:=0)
                         End If
-                    Case ServerDataIndexes.notificationHistory
-                        .SelectedIndex = If(key = "activeNotification",
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage13NotificationActive)),
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage14NotificationsCleared)))
-                    Case ServerDataIndexes.therapyAlgorithmState
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage10TherapyAlgorithmState))
-                    Case ServerDataIndexes.pumpBannerState
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage11PumpBannerState))
-                    Case ServerDataIndexes.basal
-                        .SelectedIndex = GetTabIndexFromName(NameOf(TabPage12Basal))
+                        Me.TabControlPage2.SelectedIndex = _lastMarkerTabLocation.tab
+                        .Visible = False
                 End Select
             End With
         End If
@@ -3046,7 +3038,7 @@ Public Class Form1
     ''' </remarks>
     Private Sub TabControlPage1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage1.Selecting
         Select Case e.TabPage.Name
-            Case NameOf(TabPage05Insulin), NameOf(TabPage08SensorGlucose)
+            Case NameOf(TabPage05Insulin), NameOf(TabPage13SensorGlucose)
                 Me.Cursor = Cursors.WaitCursor
             Case NameOf(TabPage15More)
                 Me.DgvCareLinkUsers.InitializeDgv
@@ -3059,10 +3051,6 @@ Public Class Form1
                                                       _lastMarkerTabLocation.tab)
                 Me.TabControlPage1.Visible = False
                 Exit Sub
-            Case NameOf(TabPage05Insulin)
-                _lastMarkerTabLocation = (page:=0, tab:=e.TabPageIndex)
-            Case NameOf(TabPage06Meal)
-                _lastMarkerTabLocation = (page:=0, tab:=e.TabPageIndex)
         End Select
         _lastSummaryTabIndex = e.TabPageIndex
     End Sub
@@ -3078,17 +3066,17 @@ Public Class Form1
     ''' </remarks>
     Private Sub TabControlPage2_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage2.Selecting
         Select Case e.TabPage.Name
-            Case NameOf(TabPageBackToHomePage)
+            Case NameOf(TabPage12BackToHomePage)
                 Me.TabControlPage1.SelectedIndex = _lastSummaryTabIndex
                 Me.TabControlPage1.Visible = True
                 Exit Sub
-            Case NameOf(TabPageAllUsers)
+            Case NameOf(TabPage11AllUsers)
                 Me.DgvCareLinkUsers.DataSource = s_allUserSettingsData
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not DataGridViewHelpers.HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
                 Next
             Case Else
-                If e.TabPageIndex < Me.TabControlPage2.TabPages.Count - 2 Then
+                If e.TabPageIndex <= GetTabIndexFromName(NameOf(TabPage09BasalPerHour)) Then
                     _lastMarkerTabLocation = (page:=1, tab:=e.TabPageIndex)
                 End If
         End Select
@@ -3104,7 +3092,7 @@ Public Class Form1
     '''  This method is used to ensure that the cursor is reset after rendering the tab content.
     ''' </remarks>
     Private Sub TabPage_Paint(sender As Object, e As PaintEventArgs) Handles _
-        TabPage05Insulin.Paint, TabPage08SensorGlucose.Paint
+        TabPage05Insulin.Paint, TabPage13SensorGlucose.Paint
 
         ' Reset the cursor to default once the tab is rendered
         Me.Cursor = Cursors.Default

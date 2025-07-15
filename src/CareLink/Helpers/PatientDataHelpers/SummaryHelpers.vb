@@ -308,7 +308,7 @@ Friend Module SummaryHelpers
     ''' <param name="tabPageName">The name of the tab page.</param>
     ''' <returns>The zero-based tab index.</returns>
     Friend Function GetTabIndexFromName(tabPageName As String) As Integer
-        Return CInt(tabPageName.Replace(NameOf(TabPage), String.Empty).Substring(0, 2)) - 1
+        Return CInt(tabPageName.Substring(startIndex:=NameOf(TabPage).Length, length:=2)) - 1
     End Function
 
     ''' <summary>
