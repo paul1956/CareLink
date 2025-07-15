@@ -28,6 +28,7 @@ Public Module DataGridViewExtensions
                 .ForeColor = Color.White,
                 .SelectionBackColor = Color.FromArgb(red:=51, green:=153, blue:=255),
                 .SelectionForeColor = Color.White}
+            .BorderStyle = BorderStyle.None
             .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
                 .Alignment = DataGridViewContentAlignment.MiddleCenter,
                 .BackColor = Color.Black,
@@ -39,6 +40,7 @@ Public Module DataGridViewExtensions
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .DataSource = Nothing
             .Location = New Point(x:=0, y:=0)
+            .Padding = New Padding(all:=0)
             .ReadOnly = True
             .Rows.Clear()
             .RowsDefaultCellStyle = New DataGridViewCellStyle With {

@@ -7,19 +7,6 @@ Imports System.Runtime.CompilerServices
 Public Module DgvHelpers
 
     ''' <summary>
-    '''  Applies dark mode styling to the DataGridView column headers.
-    ''' </summary>
-    ''' <param name="dgv">The <see cref="DataGridView"/> to style.</param>
-    <Extension>
-    Public Sub ApplyDarkModeFixes(dgv As DataGridView)
-        dgv.EnableHeadersVisualStyles = False
-        dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.Black
-        dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-        dgv.Padding = New Padding(all:=0)
-        dgv.BorderStyle = BorderStyle.None
-    End Sub
-
-    ''' <summary>
     '''  Sets the cell value to <see cref="String.Empty"/> if the value is <see langword="Nothing"/> or "0".
     '''  This is used to avoid displaying "0" in cells where it is not meaningful, such as in a duration column.
     ''' </summary>
@@ -269,7 +256,7 @@ Public Module DgvHelpers
                 text:="No records found.",
                 font:=New Font(family:=dgv.Font.FontFamily, emSize:=20),
                 bounds:=dgv.DisplayRectangle,
-                foreColor:=dgv.ForeColor,
+                dgv.ForeColor,
                 backColor:=dgv.BackgroundColor,
                 flags:=TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
         End If
@@ -295,6 +282,8 @@ Public Module DgvHelpers
                 .ColumnHeadersVisible = False,
                 .Dock = DockStyle.Fill,
                 .Name = $"DataGridView{className}",
+                .Margin = New Padding(all:=0),
+                .Padding = New Padding(all:=0),
                 .RowHeadersVisible = False}
             realPanel.Controls.Add(control:=dgv, column:=0, row:=1)
         Else
@@ -360,5 +349,27 @@ Public Module DgvHelpers
     Public Function IsDarkRow(row As DataGridViewRow) As Boolean
         Return row.Index Mod 2 = 1
     End Function
+
+    ''' <summary>
+    '''  Sets the <see cref="DataGridView.EnableHeadersVisualStyles"/> property to <see langword="False"/>
+    '''  for all <see cref="DataGridView"/> controls within the specified control.
+    '''  This is used to ensure consistent header styles across all DataGridViews.
+    ''' </summary>
+    ''' <param name="ctrl">The parent control containing the DataGridViews.</param>
+    <Extension>
+    Public Sub SetDgvCustomHeadersVisualStyles(ctrl As Control)
+        For Each c As Control In ctrl.Controls
+            If TypeOf c Is DataGridView Then
+                Dim dgv As DataGridView = CType(c, DataGridView)
+                dgv.EnableHeadersVisualStyles = False
+                dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.Black
+                dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White
+            End If
+            ' Recursively search child controls
+            If c.HasChildren Then
+                SetDgvCustomHeadersVisualStyles(ctrl:=c)
+            End If
+        Next
+    End Sub
 
 End Module

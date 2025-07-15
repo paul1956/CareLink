@@ -153,6 +153,7 @@ Friend Module NotificationHelpers
             .ColumnHeadersVisible = False,
             .Dock = DockStyle.Top,
             .Name = $"DataGridView{className}",
+            .Padding = New Padding(all:=0),
             .RowHeadersVisible = False}
         realPanel.AutoSize = True
         realPanel.Controls.Add(control:=dgv, column:=0, row)
