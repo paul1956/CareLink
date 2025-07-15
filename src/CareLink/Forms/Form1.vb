@@ -2157,26 +2157,7 @@ Public Class Form1
         Me.ToolTip1.SetToolTip(control:=Me.LowTirComplianceLabel, caption:=UserMessageConstants.TirToolTip)
         Me.ToolTip1.SetToolTip(control:=Me.HighTirComplianceLabel, caption:=UserMessageConstants.TirToolTip)
 
-        Me.DgvActiveInsulin.ApplyDarkModeFixes
-        Me.DgvAutoBasalDelivery.ApplyDarkModeFixes
-        Me.DgvAutoModeStatus.ApplyDarkModeFixes
-        Me.DgvPumpBannerState.ApplyDarkModeFixes
-        Me.DgvBasal.ApplyDarkModeFixes
-        Me.DgvBasalPerHour.ApplyDarkModeFixes
-        Me.DgvCalibration.ApplyDarkModeFixes
-        Me.DgvCareLinkUsers.ApplyDarkModeFixes
-        Me.DgvCurrentUser.ApplyDarkModeFixes
-        Me.DgvInsulin.ApplyDarkModeFixes
-        Me.DgvLastAlarm.ApplyDarkModeFixes
-        Me.DgvLastSensorGlucose.ApplyDarkModeFixes
-        Me.DgvLimits.ApplyDarkModeFixes
-        Me.DgvLowGlucoseSuspended.ApplyDarkModeFixes
-        Me.DgvMeal.ApplyDarkModeFixes
-        Me.DgvSensorBgReadings.ApplyDarkModeFixes
-        Me.DgvSGs.ApplyDarkModeFixes
-        Me.DgvSummary.ApplyDarkModeFixes
-        Me.DgvTherapyAlgorithmState.ApplyDarkModeFixes
-        Me.DgvTimeChange.ApplyDarkModeFixes
+        Me.SetDgvCustomHeadersVisualStyles()
 
 #Region "Status Strip Colors"
 
@@ -4834,7 +4815,7 @@ Public Class Form1
 
         Me.DgvLastAlarm.Columns(index:=0).Visible = False
         Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(s_basalList.Value),
+            table:=ClassCollectionToDataTable(s_basalList.ClassCollection),
             className:=NameOf(Basal), rowIndex:=ServerDataIndexes.basal,
             hideRecordNumberColumn:=True)
 

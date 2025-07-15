@@ -66,7 +66,7 @@ Public Module BasalListExtensions
     '''  The original list if not empty; otherwise, a new empty list.
     ''' </returns>
     <Extension>
-    Friend Function Value(basalList As List(Of Basal)) As List(Of Basal)
+    Friend Function ClassCollection(basalList As List(Of Basal)) As List(Of Basal)
         Return If(basalList.IsEmpty, New List(Of Basal), basalList)
     End Function
 
