@@ -278,12 +278,9 @@ Public Module DgvHelpers
             dgv = New DataGridView With {
                 .AutoSize = True,
                 .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells,
-                .BorderStyle = BorderStyle.None,
                 .ColumnHeadersVisible = False,
                 .Dock = DockStyle.Fill,
                 .Name = $"DataGridView{className}",
-                .Margin = New Padding(all:=0),
-                .Padding = New Padding(all:=0),
                 .RowHeadersVisible = False}
             realPanel.Controls.Add(control:=dgv, column:=0, row:=1)
         Else
@@ -294,6 +291,9 @@ Public Module DgvHelpers
                 dgv.Columns.Clear()
             End If
         End If
+        dgv.BorderStyle = BorderStyle.None
+        dgv.Margin = New Padding(all:=0)
+        dgv.Padding = New Padding(all:=0)
         RemoveHandler dgv.Paint, AddressOf DgvPaintNoRecordsFound
         AddHandler dgv.Paint, AddressOf DgvPaintNoRecordsFound
         dgv.Refresh()

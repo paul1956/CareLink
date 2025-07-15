@@ -40,7 +40,6 @@ Public Module DataGridViewExtensions
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .DataSource = Nothing
             .Location = New Point(x:=0, y:=0)
-            .BorderStyle = BorderStyle.None
             .Padding = New Padding(all:=0)
             .ReadOnly = True
             .Rows.Clear()
