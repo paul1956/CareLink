@@ -2305,7 +2305,7 @@ Partial Class Form1
         TabPage10NotificationActive.Name = "TabPage10NotificationActive"
         TabPage10NotificationActive.Size = New Size(1376, 664)
         TabPage10NotificationActive.TabIndex = 13
-        TabPage10NotificationActive.Text = "Active Notification"
+        TabPage10NotificationActive.Text = "Notification - Active"
         TabPage10NotificationActive.UseVisualStyleBackColor = True
         ' 
         ' TableLayoutPanelNotificationActive
@@ -2349,7 +2349,7 @@ Partial Class Form1
         TabPage11NotificationsCleared.Name = "TabPage11NotificationsCleared"
         TabPage11NotificationsCleared.Size = New Size(1376, 664)
         TabPage11NotificationsCleared.TabIndex = 5
-        TabPage11NotificationsCleared.Text = "Notifications Cleared"
+        TabPage11NotificationsCleared.Text = "Notifications - Cleared"
         TabPage11NotificationsCleared.UseVisualStyleBackColor = True
         ' 
         ' TabPage12PumpBannerState
