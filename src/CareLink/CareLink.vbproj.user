@@ -19,9 +19,6 @@
     <Compile Update="Dialogs\CleanUpObsoleteFilesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Dialogs\OptionsConfigureTiTR.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="Dialogs\ExceptionHandlerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -32,6 +29,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Dialogs\OptionsColorPickerDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Dialogs\OptionsConfigureTiTR.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Dialogs\PumpSetupDialog.vb">
