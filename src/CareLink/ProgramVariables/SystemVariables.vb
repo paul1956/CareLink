@@ -111,33 +111,57 @@ Friend Module SystemVariables
     ''' <returns>
     '''  The count of SG.sg values within the range and not NaN.
     ''' </returns>
-    Friend Function CountSgInTightRange(sgList As IEnumerable(Of SG)) As Integer
-        Return sgList.Count(
+    Friend Function CountSgInTightRange(sgList As IEnumerable(Of SG)) As UInteger
+        Return CUInt(sgList.Count(
             predicate:=Function(sg)
-                           Return Not Single.IsNaN(sg.sg) AndAlso sg.sgMgdL >= OptionsConfigureTiTR.LowThreshold AndAlso sg.sgMgdL <= 140.0
-                       End Function)
+                           Return Not Single.IsNaN(sg.sg) AndAlso
+                                  sg.sgMgdL >= OptionsConfigureTiTR.LowThreshold AndAlso
+                                  sg.sgMgdL <= 140.0
+                       End Function))
+    End Function
+
+    ''' <summary>
+    '''  Counts the number of valid SG records in the specified list.
+    '''  A valid SG record is one where sg is not NaN and sgMgdL is not zero.
+    ''' </summary>
+    ''' <param name="sgList">The list of SG records to evaluate.</param>
+    ''' <returns>
+    '''  The count of valid SG records.
+    ''' </returns>
+    Friend Function CountValidSg(sgList As IEnumerable(Of SG)) As UInteger
+        Return CUInt(sgList.Count(
+            predicate:=Function(sg)
+                           Return Not Single.IsNaN(sg.sg) AndAlso sg.sgMgdL <> 0.0
+                       End Function))
     End Function
 
     ''' <summary>
     '''  Gets the Time In Range (TIR) as a tuple of unsigned integer and string.
     ''' </summary>
+    ''' <param name="tight">
+    '''  Optional. If <see langword="True"/>, calculates TIR based on tight range; otherwise, uses the standard TIR.
+    ''' </param>
     ''' <returns>
     '''  A <see cref="tuple"/> containing the TIR as an unsigned integer and its string representation.
     ''' </returns>
-    Friend Function GetTIR(Optional tight As Boolean = False) As (Uint As UInteger, Str As String)
+    Friend Function GetTIR(Optional tight As Boolean = False) As (percent As UInteger, asString As String)
         If tight Then
-            If s_listOfSgRecords.Count > 0 Then
-                Dim inTightRangeCount As Integer = CountSgInTightRange(s_listOfSgRecords)
-                Dim timeInTightRange As UInteger = CUInt(inTightRangeCount / s_listOfSgRecords.Count * 100)
-                Return (timeInTightRange, timeInTightRange.ToString)
-            Else
-                Return (CUInt(0), "  ???")
+            If s_listOfSgRecords Is Nothing Then
+                Return (0, "  ???")
             End If
+
+            Dim validSgCount As UInteger = CountValidSg(s_listOfSgRecords)
+            If validSgCount = 0 Then
+                Return (0, "  ???")
+            End If
+            Dim inTightRangeCount As UInteger = CountSgInTightRange(s_listOfSgRecords)
+            Dim percentInTightRange As UInteger = CUInt(inTightRangeCount / validSgCount * 100)
+            Return (percentInTightRange, percentInTightRange.ToString())
         End If
 
         Dim timeInRange As Integer = PatientData.TimeInRange
         Return If(timeInRange > 0,
-                  (CUInt(timeInRange), timeInRange.ToString),
+                  (CUInt(timeInRange), timeInRange.ToString()),
                   (CUInt(0), "  ???"))
     End Function
 

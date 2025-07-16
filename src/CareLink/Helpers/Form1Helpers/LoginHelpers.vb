@@ -280,7 +280,7 @@ Friend Module LoginHelpers
                 .Text = $"{msg}"
             End If
             If highLight Then
-                .ForeColor = GetGraphLineColor("High Limit")
+                .ForeColor = GetGraphLineColor("High Alert")
                 .BackColor = .ForeColor.ContrastingColor()
             Else
                 .BackColor = form1.MenuStrip1.BackColor

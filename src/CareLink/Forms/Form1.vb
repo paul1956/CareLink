@@ -4423,7 +4423,7 @@ Public Class Form1
 
         _timeInTightRange = GetTIR(tight:=True)
 
-        Me.TimeInRangeChartLabel.Text = GetTIR.Str
+        Me.TimeInRangeChartLabel.Text = GetTIR.asString
         With Me.TimeInRangeChart
             With .Series(name:=NameOf(TimeInRangeSeries)).Points
                 .Clear()
@@ -4439,14 +4439,14 @@ Public Class Form1
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                Dim tir As UInteger = GetTIR.Uint
+                Dim tir As UInteger = GetTIR.percent
                 If _timeInTightRange.Uint = tir Then
                     .AddXY($"{_timeInTightRange.Str}% In Tight Range = TIR", _timeInTightRange.Uint / 100)
                     .Last().Color = Color.LimeGreen
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
                 ElseIf _timeInTightRange.Uint < tir Then
-                    .AddXY($"{GetTIR.Str}% In Range", (tir - _timeInTightRange.Uint) / 100)
+                    .AddXY($"{GetTIR.asString}% In Range", (tir - _timeInTightRange.Uint) / 100)
                     .Last().Color = Color.Green
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
@@ -4461,7 +4461,7 @@ Public Class Form1
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
 
-                    .AddXY($"{GetTIR.Str}% In Range", (_timeInTightRange.Uint - tir) / 100)
+                    .AddXY($"{GetTIR.asString}% In Range", (_timeInTightRange.Uint - tir) / 100)
                     .Last().Color = Color.Green
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
@@ -4475,8 +4475,8 @@ Public Class Form1
         Me.AboveHighLimitValueLabel.Text = $"{GetAboveHyperLimit.Str}%"
         Me.AboveHighLimitMessageLabel.Text = $"Above {GetTirHighLimitWithUnits()} {GetBgUnitsString()}"
 
-        Me.TimeInRangeValueLabel.Text = $"{GetTIR.Str}%"
-        If GetTIR.Uint >= 70 Then
+        Me.TimeInRangeValueLabel.Text = $"{GetTIR.asString}%"
+        If GetTIR.percent >= 70 Then
             Me.TimeInRangeMessageLabel.ForeColor = Color.DarkGreen
             Me.TimeInRangeValueLabel.ForeColor = Color.DarkGreen
         Else
