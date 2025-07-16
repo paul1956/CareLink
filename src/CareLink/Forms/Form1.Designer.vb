@@ -3360,8 +3360,6 @@ Partial Class Form1
     Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator7 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator8 As ToolStripSeparator
-    Friend WithEvents ToolStripSplitButton1 As ToolStripSplitButton
-    Friend WithEvents ToolStripSplitButton2 As ToolStripSplitButton
     Friend WithEvents ToolTip1 As ToolTip
     Friend WithEvents TransmitterBatteryPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
