@@ -1161,7 +1161,7 @@ Partial Class Form1
         ' 
         ' LoginStatus
         ' 
-        LoginStatus.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
+        LoginStatus.BorderSides = ToolStripStatusLabelBorderSides.Right
         LoginStatus.BorderStyle = Border3DStyle.RaisedOuter
         LoginStatus.DisplayStyle = ToolStripItemDisplayStyle.Text
         LoginStatus.Name = "LoginStatus"
@@ -2000,8 +2000,6 @@ Partial Class Form1
         ' 
         ' StatusStripSpeech
         ' 
-        StatusStripSpeech.BorderSides = ToolStripStatusLabelBorderSides.Left
-        StatusStripSpeech.BorderStyle = Border3DStyle.RaisedOuter
         StatusStripSpeech.DisplayStyle = ToolStripItemDisplayStyle.Text
         StatusStripSpeech.Name = "StatusStripSpeech"
         StatusStripSpeech.Size = New Size(401, 20)
@@ -2010,7 +2008,7 @@ Partial Class Form1
         ' 
         ' TimeZoneToolStripStatusLabel
         ' 
-        TimeZoneToolStripStatusLabel.BorderSides = ToolStripStatusLabelBorderSides.Left
+        TimeZoneToolStripStatusLabel.BorderSides = ToolStripStatusLabelBorderSides.Right
         TimeZoneToolStripStatusLabel.BorderStyle = Border3DStyle.RaisedOuter
         TimeZoneToolStripStatusLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
         TimeZoneToolStripStatusLabel.Name = "TimeZoneToolStripStatusLabel"
@@ -2019,8 +2017,6 @@ Partial Class Form1
         ' 
         ' StatusStripSpacerRight
         ' 
-        StatusStripSpacerRight.BorderSides = ToolStripStatusLabelBorderSides.Right
-        StatusStripSpacerRight.BorderStyle = Border3DStyle.RaisedOuter
         StatusStripSpacerRight.Name = "StatusStripSpacerRight"
         StatusStripSpacerRight.Size = New Size(401, 20)
         StatusStripSpacerRight.Spring = True
@@ -2028,7 +2024,7 @@ Partial Class Form1
         ' 
         ' UpdateAvailableStatusStripLabel
         ' 
-        UpdateAvailableStatusStripLabel.BorderSides = ToolStripStatusLabelBorderSides.Left Or ToolStripStatusLabelBorderSides.Right
+        UpdateAvailableStatusStripLabel.BorderSides = ToolStripStatusLabelBorderSides.Left
         UpdateAvailableStatusStripLabel.BorderStyle = Border3DStyle.RaisedOuter
         UpdateAvailableStatusStripLabel.Image = My.Resources.Resources.NotificationAlertRed_16x
         UpdateAvailableStatusStripLabel.Name = "UpdateAvailableStatusStripLabel"
