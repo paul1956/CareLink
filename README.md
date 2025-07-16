@@ -30,49 +30,52 @@ A directory MyDocuments/CareLink/Settings contains a Settings File which is init
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-07/10/2025
+07/16/2025
 
 ## What's New
- New in 5.0.3.9
+New in 5.0.4.0
+- Improve navigation and usability of the application.
+
+New in 5.0.3.9
 - Add support for Time in Tight Range (TiTR) thresholds in Settings file.
 - Display Carb Ratio in SummaryPage when mouse hovers over the Carb Ratio label.
 
- New in 5.0.3.8
+New in 5.0.3.8
 - Fix issue with Speech to Text
 
- New in 5.0.3.7
+New in 5.0.3.7
  - Improved accuracy of TiTR results through session-specific adjustments the adjustments are made based on the specific session data.
 
- New in 5.0.3.6
+New in 5.0.3.6
  - Enhance performance for Time in Range and TITR calculations.
  - Add support of Time In Tight Range (TITR) calculation
 
- New in 5.0.3.5
+New in 5.0.3.5
  - Use NET9_0 test instead of Not Full FullDarkModeSupport to support Dark Mode in .NET 9.0
  - Improve Summary Page formatting
  - Fix crash when No Data From Pump
  - Show UI when using TestData
 
- New in 5.0.3.4
+New in 5.0.3.4
  - Make Basal Per Hour table easier to read.
 
- New in 5.0.3.3
+New in 5.0.3.3
  - Reorganize "Last 24 Hour Totals".
  - Improve responsiveness of the application while loading data.
 
- New in 5.0.3.2
+New in 5.0.3.2
  - Fix handling of DataGridView Controls, where once a control had a row it would not display the empty message.
 
- New in 5.0.3.1
+New in 5.0.3.1
  - Update table names and other logic so that "Return to Summary Page" works correctly
  - Fix display of user notifications after data loading.
 
- New in 5.0.3.0
+New in 5.0.3.0
  - Fix IsMinBasal algorithm
  - Cleanup formatting for all the tables, including update function names to better reflect what they do
  - Enhanced feature for better user experience in DataGrid view.
 
- New in 5.0.2.6
+New in 5.0.2.6
  - All Table columns are not sortable except the RecordNumber column on Sensor Glucose Table
 
 New in 5.0.2.5
@@ -81,39 +84,39 @@ New in 5.0.2.5
  - Rename listOfClass to classCollection
  - After cancelled login attempt and then successfully logging in make TabControlPages Visible
 
- New in 5.0.2.4
+New in 5.0.2.4
  - Improved user interface for settings management.
  - Enhanced data visualization options for better user experience.
 
- New in 5.0.2.3
+New in 5.0.2.3
  - Fixed creation of CareLinkErrorReportFile and loading of it caused by incorrect removal of personal information.
 
- New in 5.0.2.2
+New in 5.0.2.2
  - Optimized data loading speed for improved performance.
 
- New in 5.0.2.1
+New in 5.0.2.1
  - Added support if .Net 9.0 with DarkMode Tabs and StatusStrip.
  - Fixed error where login was failing because Python Login Client could not be found
 
- New in 5.0.2.0
+New in 5.0.2.0
  - Cleanup and address many formatting issues where titles were cut off
  - Improved handling of edge cases in title formats.
 
- New in 5.0.1.5
+New in 5.0.1.5
  - Offer to delete stale login file
  - Update text in notificationMessages for 801
  - Update s_sensorUpdateTimes to correct times
  - Fix login error messages and support deleting LoginDataFile on errors
 
- New in 5.0.1.4
+New in 5.0.1.4
  - Fixed sizing of TableLayoutPanelNotificationsCleared
 
- New in 5.0.1.2
+New in 5.0.1.2
  - Exclude Login Code that is not currently used
  - Pass Form1 as a Function parameter wherever possible, when not possible use My.Forms.Form1
  - Update NuGet packages
 
- New in 5.0.1.1
+New in 5.0.1.1
  - Many fixes in formatting
     - Add some Usings
     - Autosize Rows in DgvSGs
@@ -127,10 +130,10 @@ New in 5.0.2.5
     - Fix lowLimit variable names
     - Fix GetCarbRatio
 
- New in 5.0.1.0
+New in 5.0.1.0
  - Suspend Layout while creating Notification Tables
 
- New in 5.0.0.11
+New in 5.0.0.11
  - Hide patient name and other personal information in Snapshots
  - Use PatientDataElement for all stored files and make it Global
  - Move CleanPatientData to new helper file
@@ -138,34 +141,34 @@ New in 5.0.2.5
  - Fix missing hardwareRevision string
 
 
- New in 5.0.0.10
+New in 5.0.0.10
  - Improve formatting of summary data
  - Fix and simplify Summary formatting
  - Fix DGV copy without header text.
 
- New in 5.0.0.9
+New in 5.0.0.9
  - Fix for crash in tab navigation
 
- New in 5.0.0.8
+New in 5.0.0.8
  - Fix Status Bar text color' this is a temporary fix until I can find a better way to handle
    Dark Mode with controls that don't support it like StatusStrip 
 
- New in 5.0.0.7
+New in 5.0.0.7
  - Parse Json data using CurrentCulture
  - Fix processing of export data
  - Add new fault codes
  - Fix TIR Calculation
 
- New in 5.0.0.5
+New in 5.0.0.5
  - Fixes handling of Manual Mode Suspend
 
- New in 5.0.0.3
+New in 5.0.0.3
  - Fixes plotting of TIR and other values
 
- New in 5.0.0.2
+New in 5.0.0.2
  - Supports new V11 Medtronic API
 
- New in 4.0.2.0
+New in 4.0.2.0
   - Limited dark mode support
 
 # Requires for running

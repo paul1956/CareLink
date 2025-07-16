@@ -411,7 +411,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.gstBatteryLevel)
-                    message = $"Phone battery is at {kvp.Value}%."
+                    message = $"Transmitter battery is at {kvp.Value}%."
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataIndexes.pumpBannerState)
