@@ -415,7 +415,7 @@ Public Module JsonExtensions
                     ' Prevent Crash but not valid data
                     If d.Year <= 2001 AndAlso index >= 0 Then
                         resultDictionary.Add(item.Key,
-                                             value:=s_listOfSgRecords(index).Timestamp.ToStringExact)
+                                             value:=s_sgRecords(index).Timestamp.ToStringExact)
                     Else
                         resultDictionary.Add(item.Key, value:=d.ToShortDateTimeString())
                     End If

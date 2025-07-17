@@ -113,7 +113,7 @@ Public Class Meal
     '''  <see langword="True"/> if a meal record with the specified timestamp is found; otherwise, <see langword="False"/>.
     ''' </returns>
     Public Shared Function TryGetMealRecord(timestamp As Date, ByRef meal As Meal) As Boolean
-        For Each m As Meal In s_listOfMealMarkers
+        For Each m As Meal In s_mealMarkers
             If timestamp = m.Timestamp Then
                 meal = m
                 Return True

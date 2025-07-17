@@ -19,14 +19,14 @@ Friend Module PlotSuspend
     ''' </remarks>
     <Extension>
     Friend Sub PlotSuspendArea(pageChart As Chart, SuspendSeries As Series)
-        If s_listOfLowGlucoseSuspendedMarkers.Count = 1 AndAlso s_listOfLowGlucoseSuspendedMarkers(0).deliverySuspended = False Then
+        If s_lowGlucoseSuspendedMarkers.Count = 1 AndAlso s_lowGlucoseSuspendedMarkers(0).deliverySuspended = False Then
             Exit Sub
         End If
 
         Dim lineColor As Color = GetGraphLineColor("Suspend")
         With pageChart.Series(SuspendSeriesName).Points
             Dim suspended As Boolean = False
-            For Each e As IndexClass(Of LowGlucoseSuspended) In s_listOfLowGlucoseSuspendedMarkers.WithIndex
+            For Each e As IndexClass(Of LowGlucoseSuspended) In s_lowGlucoseSuspendedMarkers.WithIndex
                 Dim suspendRecord As LowGlucoseSuspended = e.Value
                 If suspendRecord.deliverySuspended Then
                     suspended = True
@@ -35,7 +35,7 @@ Friend Module PlotSuspend
                     .AddXY(suspendRecord.Timestamp, GetYMaxValueFromNativeMmolL())
                     Dim stopTimeSpan As TimeSpan =
                                       If(Not e.IsLast,
-                                         s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).Timestamp - suspendRecord.Timestamp,
+                                         s_lowGlucoseSuspendedMarkers(e.Index + 1).Timestamp - suspendRecord.Timestamp,
                                          PumpNow() - suspendRecord.Timestamp
                                         )
 
@@ -47,7 +47,7 @@ Friend Module PlotSuspend
                     Next
 
                     If Not e.IsLast Then
-                        .AddXY(s_listOfLowGlucoseSuspendedMarkers(e.Index + 1).Timestamp, Double.NaN)
+                        .AddXY(s_lowGlucoseSuspendedMarkers(e.Index + 1).Timestamp, Double.NaN)
                     End If
                     .Last.Color = Color.Transparent
                 Else

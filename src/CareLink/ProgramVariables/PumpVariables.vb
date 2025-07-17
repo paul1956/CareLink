@@ -6,34 +6,39 @@ Imports System.Text.Json
 
 Public Module PumpVariables
 
+#Region "Lists"
+
+    Friend ReadOnly s_basalPerHour As New List(Of BasalPerHour)
+    Friend s_basalList As New List(Of Basal) From {New Basal}
+    Friend s_limitRecords As New List(Of Limit)
+    Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
+    Friend s_sgRecords As New List(Of SG)
+
 #Region "Markers"
 
-    Friend ReadOnly s_listOfAutoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
-    Friend ReadOnly s_listOfAutoModeStatusMarkers As New List(Of AutoModeStatus)
-    Friend ReadOnly s_listOfBgReadingMarkers As New List(Of BgReading)
-    Friend ReadOnly s_listOfCalibrationMarkers As New List(Of Calibration)
-    Friend ReadOnly s_listOfInsulinMarkers As New List(Of Insulin)
-    Friend ReadOnly s_listOfMealMarkers As New List(Of Meal)
+    Friend ReadOnly s_autoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
+    Friend ReadOnly s_autoModeStatusMarkers As New List(Of AutoModeStatus)
+    Friend ReadOnly s_bgReadingMarkers As New List(Of BgReading)
+    Friend ReadOnly s_calibrationMarkers As New List(Of Calibration)
+    Friend ReadOnly s_insulinMarkers As New List(Of Insulin)
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
-    Friend s_listOfLowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspended)
-    Friend s_listOfTimeChangeMarkers As New List(Of TimeChange)
+    Friend ReadOnly s_mealMarkers As New List(Of Meal)
+    Friend s_lowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspended)
+    Friend s_markers As New List(Of Marker)
+    Friend s_timeChangeMarkers As New List(Of TimeChange)
 
-#End Region
+#End Region ' Markers
 
-    Friend ReadOnly s_listOfBasalPerHour As New List(Of BasalPerHour)
+#End Region ' Lists
+
     Friend s_activeInsulin As ActiveInsulin
     Friend s_autoModeReadinessState As SummaryRecord
-    Friend s_basalList As New List(Of Basal) From {New Basal}
     Friend s_filterJsonData As Boolean = True
     Friend s_lastAlarmValue As Dictionary(Of String, String)
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
     Friend s_lastSg As SG  ' Do not replace this, it is used in the UI
     Friend s_lastSgValue As Single = 0 ' Do not replace this, it is used in the UI
-    Friend s_listOfLimitRecords As New List(Of Limit)
-    Friend s_listOfSgRecords As New List(Of SG)
-    Friend s_markers As New List(Of Marker)
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
-    Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
     Friend s_suspendedSince As String = "???"
     Friend s_systemStatusTimeRemaining As TimeSpan
     Friend s_therapyAlgorithmStateValue As Dictionary(Of String, String)
@@ -51,7 +56,7 @@ Public Module PumpVariables
 
 #End Region ' Manually computed
 
-    Friend Property InAutoMode As Boolean
+    Public Property InAutoMode As Boolean
 
     Public Property PatientData As PatientDataInfo
 

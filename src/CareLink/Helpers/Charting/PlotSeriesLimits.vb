@@ -18,12 +18,12 @@ Friend Module PlotSeriesLimits
     Private Function GetLimitsList(count As Integer) As Integer()
         Dim limitsIndexList(count) As Integer
         Dim limitsIndex As Integer = 0
-        For i As Integer = 0 To s_listOfLimitRecords.Count - 1
-            s_listOfLimitRecords(i).Index = i
+        For i As Integer = 0 To s_limitRecords.Count - 1
+            s_limitRecords(i).Index = i
         Next
 
         For i As Integer = 0 To limitsIndexList.GetUpperBound(0)
-            If limitsIndex + 1 < s_listOfLimitRecords.Count AndAlso s_listOfLimitRecords(limitsIndex + 1).Index < i Then
+            If limitsIndex + 1 < s_limitRecords.Count AndAlso s_limitRecords(limitsIndex + 1).Index < i Then
                 limitsIndex += 1
             End If
             limitsIndexList(i) = limitsIndex
@@ -39,26 +39,26 @@ Friend Module PlotSeriesLimits
     '''  If <c>True</c>, only the target SG line is plotted; if <c>False</c>, high and low limits are also plotted.
     ''' </param>
     ''' <remarks>
-    '''  This method uses the global lists <see cref="s_listOfSgRecords"/> and <see cref="s_listOfLimitRecords"/> to
+    '''  This method uses the global lists <see cref="s_sgRecords"/> and <see cref="s_limitRecords"/> to
     '''  determine the data points for plotting. It adds points to the chart's series for target SG, high limit,
     '''  and low limit.
     '''  If an exception occurs while plotting, an <see cref="ApplicationException"/> is thrown with details.
     ''' </remarks>
     <Extension>
     Friend Sub PlotHighLowLimitsAndTargetSg(chart As Chart, targetSsOnly As Boolean)
-        If s_listOfLimitRecords.Count = 0 Then Exit Sub
-        Dim limitsIndexList() As Integer = GetLimitsList(s_listOfSgRecords.Count - 1)
+        If s_limitRecords.Count = 0 Then Exit Sub
+        Dim limitsIndexList() As Integer = GetLimitsList(s_sgRecords.Count - 1)
         Dim targetSG As Single = If(CurrentUser Is Nothing, 0, CurrentUser.CurrentTarget)
         If Not targetSG.AlmostZero() Then
-            chart.Series(TargetSgSeriesName).Points.AddXY(s_listOfSgRecords(0).OaDateTime(), targetSG)
-            chart.Series(TargetSgSeriesName).Points.AddXY(s_listOfSgRecords.Last.OaDateTime(), targetSG)
+            chart.Series(TargetSgSeriesName).Points.AddXY(s_sgRecords(0).OaDateTime(), targetSG)
+            chart.Series(TargetSgSeriesName).Points.AddXY(s_sgRecords.Last.OaDateTime(), targetSG)
         End If
         If targetSsOnly Then Exit Sub
-        For Each sgListIndex As IndexClass(Of SG) In s_listOfSgRecords.WithIndex()
+        For Each sgListIndex As IndexClass(Of SG) In s_sgRecords.WithIndex()
             Dim sgOADateTime As OADate = sgListIndex.Value.OaDateTime()
             Try
-                Dim limitsLowValue As Single = s_listOfLimitRecords(limitsIndexList(sgListIndex.Index)).LowLimit
-                Dim limitsHighValue As Single = s_listOfLimitRecords(limitsIndexList(sgListIndex.Index)).HighLimit
+                Dim limitsLowValue As Single = s_limitRecords(limitsIndexList(sgListIndex.Index)).LowLimit
+                Dim limitsHighValue As Single = s_limitRecords(limitsIndexList(sgListIndex.Index)).HighLimit
                 If limitsHighValue <> 0 Then
                     chart.Series(HighLimitSeriesName).Points.AddXY(sgOADateTime, limitsHighValue)
                 End If

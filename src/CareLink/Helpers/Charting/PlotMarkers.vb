@@ -62,7 +62,7 @@ Friend Module PlotMarkers
     <Extension>
     Private Sub AdjustXAxisStartTime(ByRef axisX As Axis, lastTimeChangeRecord As TimeChange)
         Dim latestTime As Date = If(lastTimeChangeRecord.DisplayTime > lastTimeChangeRecord.Timestamp, lastTimeChangeRecord.DisplayTime, lastTimeChangeRecord.Timestamp)
-        Dim timeOffset As Double = (latestTime - s_listOfSgRecords(0).Timestamp).TotalMinutes
+        Dim timeOffset As Double = (latestTime - s_sgRecords(0).Timestamp).TotalMinutes
         axisX.IntervalOffset = timeOffset
         axisX.IntervalOffsetType = DateTimeIntervalType.Minutes
     End Sub
@@ -241,7 +241,7 @@ Friend Module PlotMarkers
                     innerException)
             End Try
         Next
-        If s_listOfTimeChangeMarkers.Count > 0 Then
+        If s_timeChangeMarkers.Count > 0 Then
             timeChangeSeries.IsVisibleInLegend = True
             pageChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
             pageChart.Legends(0).CustomItems.Last.Enabled = True
@@ -390,7 +390,7 @@ Friend Module PlotMarkers
         Next
         treatmentChart.Annotations.Last.BringToFront()
 
-        If s_listOfTimeChangeMarkers.Count <> 0 Then
+        If s_timeChangeMarkers.Count <> 0 Then
             treatmentMarkerTimeChangeSeries.IsVisibleInLegend = True
             treatmentChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
             treatmentChart.Legends(0).CustomItems.Last.Enabled = True

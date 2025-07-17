@@ -261,7 +261,7 @@ Friend Module Form1UpdateHelpers
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso {"AUTO_BASAL", "SAFE_BASAL"}.Contains(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmState.AutoModeShieldState)))
         End If
 
-        s_listOfSgRecords = If(RecentData.TryGetValue("sgs", value),
+        s_sgRecords = If(RecentData.TryGetValue("sgs", value),
             JsonToLisOfSgs(value),
             New List(Of SG))
 
@@ -281,6 +281,7 @@ Friend Module Form1UpdateHelpers
             Dim key As ServerDataIndexes = CType(c.Index, ServerDataIndexes)
             Dim recordNumber As Single = c.Index
             Dim message As String
+            Dim item As SummaryRecord
             Select Case kvp.Key
                 Case NameOf(ServerDataIndexes.clientTimeZoneName)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, key, kvp.Value))
@@ -317,7 +318,8 @@ Friend Module Form1UpdateHelpers
                         key:=NameOf(ServerDataIndexes.lastConduitDateTime),
                         value:=kvp.Value.CDateOrDefault(key:=NameOf(ServerDataIndexes.lastConduitDateTime), Provider))
                     message = $"Phone time is {kvp.Value}"
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
+                    item = New SummaryRecord(recordNumber, kvp, message)
+                    s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.lastConduitUpdateServerDateTime)
                     message = kvp.Value.Epoch2DateTimeString
@@ -351,8 +353,8 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.calibStatus)
                     Dim messageTableName As String = NameOf(s_calibrationMessages)
-                    s_listOfSummaryRecords.Add(
-                        item:=New SummaryRecord(recordNumber, kvp, messages:=s_calibrationMessages, messageTableName))
+                    item = New SummaryRecord(recordNumber, kvp, messages:=s_calibrationMessages, messageTableName)
+                    s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.calibrationIconId)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -404,10 +406,8 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.systemStatusTimeRemaining)
-                    s_systemStatusTimeRemaining = New TimeSpan(
-                                                    hours:=0,
-                                                    minutes:=PatientData.SystemStatusTimeRemaining,
-                                                    seconds:=0)
+                    s_systemStatusTimeRemaining =
+                        New TimeSpan(hours:=0, minutes:=PatientData.SystemStatusTimeRemaining, seconds:=0)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.gstBatteryLevel)
@@ -416,11 +416,13 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.pumpBannerState)
                     s_pumpBannerStateValue = JsonToDictionaryList(kvp.Value)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, key, value:=ClickToShowDetails))
+                    item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
+                    s_listOfSummaryRecords.Add(item)
                     mainForm.PumpBannerStateLabel.Visible = s_pumpBannerStateValue.Count > 0
 
                 Case NameOf(ServerDataIndexes.therapyAlgorithmState)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, key, value:=ClickToShowDetails))
+                    item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
+                    s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.reservoirLevelPercent)
                     message = $"Reservoir is {PatientData.ReservoirLevelPercent}% full."
@@ -455,15 +457,16 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.systemStatusMessage)
                     Dim messageTableName As String = NameOf(s_sensorMessages)
-                    s_listOfSummaryRecords.Add(
-                        item:=New SummaryRecord(recordNumber, kvp, messages:=s_sensorMessages, messageTableName))
+                    item = New SummaryRecord(recordNumber, kvp, messages:=s_sensorMessages, messageTableName)
+                    s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.sensorState)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                        recordNumber,
-                                                        kvp,
-                                                        messages:=s_sensorMessages,
-                                                        messageTableName:=NameOf(s_sensorMessages)))
+                    item = New SummaryRecord(
+                        recordNumber,
+                        kvp,
+                        messages:=s_sensorMessages,
+                        messageTableName:=NameOf(s_sensorMessages))
+                    s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.gstCommunicationState)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -474,7 +477,8 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.timeFormat)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
                 Case NameOf(ServerDataIndexes.bgUnits)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message:=GetBgUnitsString()))
+                    item = New SummaryRecord(recordNumber, kvp, message:=GetBgUnitsString())
+                    s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.maxAutoBasalRate)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -489,44 +493,34 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.lastAlarm)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                       recordNumber,
-                                                       key,
-                                                       value:=ClickToShowDetails))
+                    item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
+                    s_listOfSummaryRecords.Add(item)
                     s_lastAlarmValue = LoadIndexedItems(jsonString:=kvp.Value)
 
                 Case NameOf(ServerDataIndexes.activeInsulin)
                     s_activeInsulin = PatientData.ActiveInsulin
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                       recordNumber,
-                                                       key,
-                                                       value:=ClickToShowDetails))
+                    item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
+                    s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.basal)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                       recordNumber,
-                                                       key,
-                                                       value:=ClickToShowDetails))
+                    item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
+                    s_listOfSummaryRecords.Add(item)
                     s_basalList(0) = If(String.IsNullOrWhiteSpace(kvp.Value), New Basal, PatientData.Basal)
                 Case NameOf(ServerDataIndexes.lastSensorTime)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.lastSG)
                     s_lastSg = New SG(PatientData.LastSG)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                       recordNumber,
-                                                       key,
-                                                       value:=ClickToShowDetails))
+                    item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
+                    s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.lastSGTrend)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.limits)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(
-                                                       recordNumber,
-                                                       key,
-                                                       value:=ClickToShowDetails))
-                    s_listOfLimitRecords = PatientData.Limits
+                    item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
+                    s_listOfSummaryRecords.Add(item)
+                    s_limitRecords = PatientData.Limits
 
                 Case NameOf(ServerDataIndexes.belowHypoLimit)
                     message = $"Time below limit = {ConvertPercent24HoursToDisplayValueString(kvp.Value)}"
@@ -538,7 +532,8 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.timeInRange)
                     message = $"Time in range = {ConvertPercent24HoursToDisplayValueString(kvp.Value)}"
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
+                    item = New SummaryRecord(recordNumber, kvp, message)
+                    s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.averageSGFloat)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -547,20 +542,22 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.markers)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, key, value:=ClickToShowDetails))
+                    item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
+                    s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.sgs)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, key, value:=ClickToShowDetails))
+                    item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
+                    s_listOfSummaryRecords.Add(item)
                     s_lastSgValue = 0
-                    If s_listOfSgRecords.Count > 2 Then
-                        s_lastSgValue = s_listOfSgRecords.Item(s_listOfSgRecords.Count - 2).sg
+                    If s_sgRecords.Count > 2 Then
+                        s_lastSgValue = s_sgRecords.Item(index:=s_sgRecords.Count - 2).sg
                     End If
 
                 Case NameOf(ServerDataIndexes.notificationHistory)
-                    s_listOfSummaryRecords.Add(
-                        item:=New SummaryRecord(recordNumber:=CSng(c.Index + 0.1), key:="activeNotification"))
-                    s_listOfSummaryRecords.Add(
-                        item:=New SummaryRecord(recordNumber:=CSng(c.Index + 0.2), key:="clearedNotifications"))
+                    item = New SummaryRecord(recordNumber:=CSng(c.Index + 0.1), key:="activeNotification")
+                    s_listOfSummaryRecords.Add(item)
+                    item = New SummaryRecord(recordNumber:=CSng(c.Index + 0.2), key:="clearedNotifications")
+                    s_listOfSummaryRecords.Add(item)
                     s_notificationHistoryValue = LoadIndexedItems(jsonString:=kvp.Value)
 
                 Case NameOf(ServerDataIndexes.sensorLifeText)
@@ -583,40 +580,40 @@ Friend Module Form1UpdateHelpers
     Friend Sub UpdateMarkerTabs(mainForm As Form1)
         With mainForm
             .TableLayoutPanelAutoBasalDelivery.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfAutoBasalDeliveryMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_autoBasalDeliveryMarkers),
                 className:=NameOf(AutoBasalDelivery), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelAutoModeStatus.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfAutoModeStatusMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_autoModeStatusMarkers),
                 className:=NameOf(AutoModeStatus), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelBgReadings.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfBgReadingMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_bgReadingMarkers),
                 className:=NameOf(BgReading), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelInsulin.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfInsulinMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_insulinMarkers),
                 className:=NameOf(Insulin), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelMeal.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfMealMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_mealMarkers),
                 className:=NameOf(Meal), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelCalibration.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfCalibrationMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_calibrationMarkers),
                 className:=NameOf(Calibration), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfLowGlucoseSuspendedMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_lowGlucoseSuspendedMarkers),
                 className:=NameOf(LowGlucoseSuspended), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfTimeChangeMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_timeChangeMarkers),
                 className:=NameOf(TimeChange), rowIndex:=ServerDataIndexes.markers)
 
             DisplayDataTableInDGV(
                 realPanel:=Nothing,
-                table:=ClassCollectionToDataTable(classCollection:=s_listOfBasalPerHour),
+                table:=ClassCollectionToDataTable(classCollection:=s_basalPerHour),
                 dgv:=mainForm.DgvBasalPerHour,
                 rowIndex:=0)
             mainForm.DgvBasalPerHour.AutoSize = True

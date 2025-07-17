@@ -464,12 +464,12 @@ Friend Module CreateChartItems
                     .IntervalOffsetType = DateTimeIntervalType.Hours
                     .IntervalType = DateTimeIntervalType.Hours
                 End With
-                If s_listOfSgRecords.Count = 0 Then
+                If s_sgRecords.Count = 0 Then
                     c.AxisX.Maximum = New OADate(PumpNow)
                     c.AxisX.Minimum = New OADate(PumpNow.AddDays(-1))
                 Else
-                    c.AxisX.Maximum = s_listOfSgRecords.Aggregate(Function(i1, i2) If(i1.OaDateTime > i2.OaDateTime, i1, i2)).OaDateTime
-                    c.AxisX.Minimum = s_listOfSgRecords.Aggregate(Function(i1, i2) If(i1.OaDateTime < i2.OaDateTime, i1, i2)).OaDateTime
+                    c.AxisX.Maximum = s_sgRecords.Aggregate(Function(i1, i2) If(i1.OaDateTime > i2.OaDateTime, i1, i2)).OaDateTime
+                    c.AxisX.Minimum = s_sgRecords.Aggregate(Function(i1, i2) If(i1.OaDateTime < i2.OaDateTime, i1, i2)).OaDateTime
                 End If
             End With
         End With
