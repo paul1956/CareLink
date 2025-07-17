@@ -74,7 +74,7 @@ Friend Module PaintMarkerExtensions
         offsetInsulinImage As Boolean,
         paintOnY2 As Boolean)
 
-        If s_listOfSgRecords.Count = 0 OrElse Not ProgramInitialized Then
+        If s_sgRecords.Count = 0 OrElse Not ProgramInitialized Then
             Exit Sub
         End If
 
@@ -82,7 +82,7 @@ Friend Module PaintMarkerExtensions
             chartRelativePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(
                 ChartAreaName,
                 axis:=AxisName.X,
-                axisValue:=s_listOfSgRecords(0).OaDateTime))
+                axisValue:=s_sgRecords(0).OaDateTime))
             chartRelativePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(
                 ChartAreaName,
                 axis:=AxisName.Y2,
@@ -97,7 +97,7 @@ Friend Module PaintMarkerExtensions
             chartRelativePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(
                 ChartAreaName,
                 axis:=AxisName.X,
-                axisValue:=s_listOfSgRecords.Last.OaDateTime)) - chartRelativePosition.X
+                axisValue:=s_sgRecords.Last.OaDateTime)) - chartRelativePosition.X
         End If
 
         Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(

@@ -74,7 +74,7 @@ Friend Module LoginHelpers
         fileToLoad As FileToLoadOptions) As Boolean
 
         Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(Start:=False)
-        s_listOfAutoBasalDeliveryMarkers.Clear()
+        s_autoBasalDeliveryMarkers.Clear()
         ProgramInitialized = False
         Dim fromFile As Boolean
         Select Case fileToLoad
@@ -224,10 +224,10 @@ Friend Module LoginHelpers
     ''' <param name="mainForm">The main application form.</param>
     Friend Sub FinishInitialization(mainForm As Form1)
         mainForm.Cursor = Cursors.Default
-        Application.DoEvents()
         mainForm.InitializeSummaryTabCharts()
         mainForm.InitializeActiveInsulinTabChart()
         mainForm.InitializeTimeInRangeArea()
+        Application.DoEvents()
     End Sub
 
     ''' <summary>

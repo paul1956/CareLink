@@ -15,14 +15,14 @@ Public Class SG
     Public Sub New()
     End Sub
 
-    Public Sub New(last As LastSG)
-        Me.Kind = last.Kind
+    Public Sub New(lastSg As LastSG)
+        Me.Kind = lastSg.Kind
         Me.RecordNumber = 0
-        _sensorState = last.SensorState
-        _sg = If(last.Sg.IsSgValid, If(NativeMmolL, last.Sg / MmolLUnitsDivisor, last.Sg), Single.NaN)
+        _sensorState = lastSg.SensorState
+        _sg = If(lastSg.Sg.IsSgValid, If(NativeMmolL, lastSg.Sg / MmolLUnitsDivisor, lastSg.Sg), Single.NaN)
         Me.timeChange = False
-        _timestampAsString = last.TimestampAsString
-        Me.Version = last.Version
+        _timestampAsString = lastSg.TimestampAsString
+        Me.Version = lastSg.Version
     End Sub
 
     Public Sub New(innerJson As Dictionary(Of String, String), index As Integer)

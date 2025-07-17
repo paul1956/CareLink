@@ -44,9 +44,9 @@ Friend Class InsulinPerHour
         Dim hour As Integer = basalDeliveryMarker.DisplayTime.Hour
         Dim index As Integer = hour \ 2
         If (hour Mod 2) = 0 Then
-            s_listOfBasalPerHour(index).BasalRate += basalDeliveryMarker.BolusAmount
+            s_basalPerHour(index).BasalRate += basalDeliveryMarker.BolusAmount
         Else
-            s_listOfBasalPerHour(index).BasalRate2 += basalDeliveryMarker.BolusAmount
+            s_basalPerHour(index).BasalRate2 += basalDeliveryMarker.BolusAmount
         End If
     End Sub
 

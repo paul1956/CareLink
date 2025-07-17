@@ -34,9 +34,9 @@ Friend Module Form1CollectMarkersHelper
     '''  Ensures correct ordering and updates record numbers.
     ''' </summary>
     Private Sub SortAndFilterListOfLowGlucoseSuspendedMarkers()
-        s_listOfLowGlucoseSuspendedMarkers.Sort(Function(x, y) x.DisplayTime.CompareTo(y.DisplayTime))
+        s_lowGlucoseSuspendedMarkers.Sort(Function(x, y) x.DisplayTime.CompareTo(y.DisplayTime))
         Dim tmpList As New List(Of LowGlucoseSuspended)
-        For Each r As IndexClass(Of LowGlucoseSuspended) In s_listOfLowGlucoseSuspendedMarkers.WithIndex
+        For Each r As IndexClass(Of LowGlucoseSuspended) In s_lowGlucoseSuspendedMarkers.WithIndex
             Dim entry As LowGlucoseSuspended = r.Value
             entry.RecordNumber = tmpList.Count + 1
             If r.IsFirst Then
@@ -47,7 +47,7 @@ Friend Module Form1CollectMarkersHelper
                 tmpList.Add(entry)
             End If
         Next
-        s_listOfLowGlucoseSuspendedMarkers = tmpList
+        s_lowGlucoseSuspendedMarkers = tmpList
     End Sub
 
     ''' <summary>
@@ -56,18 +56,18 @@ Friend Module Form1CollectMarkersHelper
     ''' <param name="jsonRow">JSON Marker Row</param>
     ''' <returns>Max Basal/Hr</returns>
     Friend Function CollectMarkers() As String
-        s_listOfAutoBasalDeliveryMarkers.Clear()
-        s_listOfAutoModeStatusMarkers.Clear()
-        s_listOfBasalPerHour.Clear()
+        s_autoBasalDeliveryMarkers.Clear()
+        s_autoModeStatusMarkers.Clear()
+        s_basalPerHour.Clear()
         For index As Integer = 0 To 11
-            s_listOfBasalPerHour.Add(New BasalPerHour(index * 2))
+            s_basalPerHour.Add(New BasalPerHour(index * 2))
         Next
-        s_listOfBgReadingMarkers.Clear()
-        s_listOfCalibrationMarkers.Clear()
-        s_listOfInsulinMarkers.Clear()
-        s_listOfLowGlucoseSuspendedMarkers.Clear()
-        s_listOfMealMarkers.Clear()
-        s_listOfTimeChangeMarkers.Clear()
+        s_bgReadingMarkers.Clear()
+        s_calibrationMarkers.Clear()
+        s_insulinMarkers.Clear()
+        s_lowGlucoseSuspendedMarkers.Clear()
+        s_mealMarkers.Clear()
+        s_timeChangeMarkers.Clear()
         s_markers.Clear()
 
         MaxBasalPerDose = 0
@@ -80,27 +80,27 @@ Friend Module Form1CollectMarkersHelper
             Select Case markerEntry.Type
                 Case "AUTO_BASAL_DELIVERY"
                     s_markers.Add(markerEntry)
-                    Dim basalDeliveryMarker As New AutoBasalDelivery(markerEntry, recordNumber:=s_listOfAutoBasalDeliveryMarkers.Count + 1)
+                    Dim basalDeliveryMarker As New AutoBasalDelivery(markerEntry, recordNumber:=s_autoBasalDeliveryMarkers.Count + 1)
                     InsulinPerHour.AddBasalAmountToInsulinPerHour(basalDeliveryMarker)
-                    s_listOfAutoBasalDeliveryMarkers.Add(basalDeliveryMarker)
+                    s_autoBasalDeliveryMarkers.Add(basalDeliveryMarker)
                     If Not basalDictionary.TryAdd(basalDeliveryMarker.OAdateTime, basalDeliveryMarker.BolusAmount) Then
                         basalDictionary(basalDeliveryMarker.OAdateTime) += basalDeliveryMarker.BolusAmount
                     End If
-                    s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
+                    s_lowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_lowGlucoseSuspendedMarkers.Count + 1))
                 Case "AUTO_MODE_STATUS"
-                    s_listOfAutoModeStatusMarkers.Add(New AutoModeStatus(markerEntry, s_listOfAutoModeStatusMarkers.Count + 1))
-                    s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
+                    s_autoModeStatusMarkers.Add(New AutoModeStatus(markerEntry, s_autoModeStatusMarkers.Count + 1))
+                    s_lowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_lowGlucoseSuspendedMarkers.Count + 1))
                 Case "BG_READING"
                     s_markers.Add(markerEntry)
-                    s_listOfBgReadingMarkers.Add(New BgReading(markerEntry, s_listOfBgReadingMarkers.Count + 1))
+                    s_bgReadingMarkers.Add(New BgReading(markerEntry, s_bgReadingMarkers.Count + 1))
                 Case "CALIBRATION"
                     s_markers.Add(markerEntry.ScaleMarker)
-                    s_listOfCalibrationMarkers.Add(New Calibration(markerEntry.ScaleMarker(), s_listOfCalibrationMarkers.Count + 1))
+                    s_calibrationMarkers.Add(New Calibration(markerEntry.ScaleMarker(), s_calibrationMarkers.Count + 1))
                 Case "INSULIN"
                     s_markers.Add(markerEntry)
-                    Dim lastInsulinRecord As New Insulin(markerEntry, s_listOfInsulinMarkers.Count + 1)
-                    s_listOfInsulinMarkers.Add(lastInsulinRecord)
-                    s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
+                    Dim lastInsulinRecord As New Insulin(markerEntry, s_insulinMarkers.Count + 1)
+                    s_insulinMarkers.Add(lastInsulinRecord)
+                    s_lowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_lowGlucoseSuspendedMarkers.Count + 1))
                     Select Case markerEntry.GetStringValueFromJson(NameOf(Insulin.ActivationType))
                         Case "AUTOCORRECTION"
                             If Not basalDictionary.TryAdd(lastInsulinRecord.OAdateTime, lastInsulinRecord.DeliveredFastAmount) Then
@@ -118,15 +118,15 @@ Friend Module Form1CollectMarkersHelper
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
                     If Not InAutoMode Then
-                        s_listOfLowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_listOfLowGlucoseSuspendedMarkers.Count + 1))
+                        s_lowGlucoseSuspendedMarkers.Add(New LowGlucoseSuspended(markerEntry, s_lowGlucoseSuspendedMarkers.Count + 1))
                     End If
                     s_markers.Add(markerEntry)
                 Case "MEAL"
-                    s_listOfMealMarkers.Add(New Meal(markerEntry, s_listOfMealMarkers.Count + 1))
+                    s_mealMarkers.Add(New Meal(markerEntry, s_mealMarkers.Count + 1))
                     s_markers.Add(markerEntry)
                 Case "TIME_CHANGE"
                     s_markers.Add(markerEntry)
-                    s_listOfTimeChangeMarkers.Add(New TimeChange(markerEntry, s_listOfTimeChangeMarkers.Count + 1))
+                    s_timeChangeMarkers.Add(New TimeChange(markerEntry, s_timeChangeMarkers.Count + 1))
                 Case Else
                     Stop
                     Throw UnreachableException(markerEntry.Type)

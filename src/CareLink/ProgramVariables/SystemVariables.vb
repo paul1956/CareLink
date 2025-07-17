@@ -64,16 +64,16 @@ Friend Module SystemVariables
     '''  The Y value for insulin plotting.
     ''' </returns>
     Friend Function GetInsulinYValue() As Single
-        Dim maxYScaled As Single = s_listOfSgRecords.Max(Of Single)(Function(sgR As SG) sgR.sg) + 2
+        Dim maxYScaled As Single = s_sgRecords.Max(Of Single)(Function(sgR As SG) sgR.sg) + 2
         Const mmDlInsulinYValue As Integer = 330
         Const mmoLInsulinYValue As Single = mmDlInsulinYValue / MmolLUnitsDivisor
         Return If(Single.IsNaN(maxYScaled),
             If(NativeMmolL, mmoLInsulinYValue, mmDlInsulinYValue),
             If(NativeMmolL,
-                If(s_listOfSgRecords.Count = 0 OrElse maxYScaled > mmoLInsulinYValue,
+                If(s_sgRecords.Count = 0 OrElse maxYScaled > mmoLInsulinYValue,
                     342 / MmolLUnitsDivisor,
                     Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)),
-                If(s_listOfSgRecords.Count = 0 OrElse maxYScaled > mmDlInsulinYValue, 342, Math.Max(maxYScaled, 260))))
+                If(s_sgRecords.Count = 0 OrElse maxYScaled > mmDlInsulinYValue, 342, Math.Max(maxYScaled, 260))))
     End Function
 
     ''' <summary>
@@ -146,15 +146,15 @@ Friend Module SystemVariables
     ''' </returns>
     Friend Function GetTIR(Optional tight As Boolean = False) As (percent As UInteger, asString As String)
         If tight Then
-            If s_listOfSgRecords Is Nothing Then
+            If s_sgRecords Is Nothing Then
                 Return (0, "  ???")
             End If
 
-            Dim validSgCount As UInteger = CountValidSg(s_listOfSgRecords)
+            Dim validSgCount As UInteger = CountValidSg(s_sgRecords)
             If validSgCount = 0 Then
                 Return (0, "  ???")
             End If
-            Dim inTightRangeCount As UInteger = CountSgInTightRange(s_listOfSgRecords)
+            Dim inTightRangeCount As UInteger = CountSgInTightRange(s_sgRecords)
             Dim percentInTightRange As UInteger = CUInt(inTightRangeCount / validSgCount * 100)
             Return (percentInTightRange, percentInTightRange.ToString())
         End If

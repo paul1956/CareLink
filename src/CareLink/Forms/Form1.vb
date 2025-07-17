@@ -2990,8 +2990,6 @@ Public Class Form1
     ''' </remarks>
     Private Sub TabControlPage1_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles TabControlPage1.Selecting
         Select Case e.TabPage.Name
-            Case NameOf(TabPage05Insulin), NameOf(TabPage13SensorGlucose)
-                Me.Cursor = Cursors.WaitCursor
             Case NameOf(TabPage15More)
                 Me.DgvCareLinkUsers.InitializeDgv
 
@@ -3032,22 +3030,6 @@ Public Class Form1
                     _lastMarkerTabLocation = (page:=1, tab:=e.TabPageIndex)
                 End If
         End Select
-    End Sub
-
-    ''' <summary>
-    '''  Handles the <see cref="TabPage.Paint"/> event for the insulin and sensor glucose tabs.
-    '''  Resets the cursor to default once the tab is rendered.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, typically a TabPage control.</param>
-    ''' <param name="e">A <see cref="PaintEventArgs"/> that contains the event data.</param>
-    ''' <remarks>
-    '''  This method is used to ensure that the cursor is reset after rendering the tab content.
-    ''' </remarks>
-    Private Sub TabPage_Paint(sender As Object, e As PaintEventArgs) Handles _
-        TabPage05Insulin.Paint, TabPage13SensorGlucose.Paint
-
-        ' Reset the cursor to default once the tab is rendered
-        Me.Cursor = Cursors.Default
     End Sub
 
 #End Region ' Tab Events
@@ -3324,41 +3306,38 @@ Public Class Form1
     '''  This method is called to prepare the Time in Range chart and labels for displaying compliance information.
     ''' </summary>
     Friend Sub InitializeTimeInRangeArea()
-        If Me.SplitContainer3.Panel2.Controls.Count > 19 Then
-            Me.SplitContainer3.Panel2.Controls.RemoveAt(Me.SplitContainer3.Panel2.Controls.Count - 1)
-        End If
-        Me.PositionControlsInSplitContainer3Panel2()
-        Dim width1 As Integer = Me.SplitContainer3.Panel2.Width - 94
-        Me.TimeInRangeChart = New Chart With {
-            .Anchor = AnchorStyles.Top,
-            .BackColor = Color.Transparent,
-            .BackGradientStyle = GradientStyle.None,
-            .BackSecondaryColor = Color.Transparent,
-            .BorderlineColor = Color.Transparent,
-            .BorderlineWidth = 0,
-            .Size = New Size(width1, width1)}
+        If Me.SplitContainer3.Panel2.Controls.FindControlByName(NameOf(Me.TimeInRangeChart)) Is Nothing Then
+            Dim size As Integer = Me.SplitContainer3.Panel2.Width - 94
+            Me.TimeInRangeChart = New Chart With {
+                .Anchor = AnchorStyles.Top,
+                .BackColor = Color.Transparent,
+                .BackGradientStyle = GradientStyle.None,
+                .BackSecondaryColor = Color.Transparent,
+                .BorderlineColor = Color.Transparent,
+                .BorderlineWidth = 0,
+                .Size = New Size(width:=size, height:=size)}
 
-        With Me.TimeInRangeChart
-            .BorderSkin.BackSecondaryColor = Color.Transparent
-            .BorderSkin.SkinStyle = BorderSkinStyle.None
-            Dim timeInRangeChartArea As New ChartArea With {
+            With Me.TimeInRangeChart
+                .BorderSkin.BackSecondaryColor = Color.Transparent
+                .BorderSkin.SkinStyle = BorderSkinStyle.None
+                Dim timeInRangeChartArea As New ChartArea With {
                     .Name = NameOf(timeInRangeChartArea),
-                    .BackColor = Color.Black
-                }
-            .ChartAreas.Add(timeInRangeChartArea)
-            .Location = New Point(Me.TimeInRangeChartLabel.FindHorizontalMidpoint - (.Width \ 2),
-                                  CInt(Me.TimeInRangeChartLabel.FindVerticalMidpoint() - Math.Round(.Height / 2.5)))
-            .Name = NameOf(TimeInRangeChart)
-            Me.TimeInRangeSeries = New Series(NameOf(TimeInRangeSeries)) With {
+                    .BackColor = Color.Black}
+                .ChartAreas.Add(timeInRangeChartArea)
+                Dim chartLabel As Label = Me.TimeInRangeChartLabel
+                Dim x As Integer = chartLabel.FindHorizontalMidpoint - (.Width \ 2)
+                Dim y As Integer = CInt(chartLabel.FindVerticalMidpoint() - Math.Round(.Height / 2.5))
+                .Location = New Point(x, y)
+                .Name = NameOf(TimeInRangeChart)
+                Me.TimeInRangeSeries = New Series(NameOf(TimeInRangeSeries)) With {
                     .ChartArea = NameOf(timeInRangeChartArea),
-                    .ChartType = SeriesChartType.Doughnut
-                }
-            .Series.Add(Me.TimeInRangeSeries)
-            .Series(NameOf(TimeInRangeSeries))("DoughnutRadius") = "17"
-        End With
-
-        Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeChart)
-        Application.DoEvents()
+                    .ChartType = SeriesChartType.Doughnut}
+                .Series.Add(Me.TimeInRangeSeries)
+                .Series(NameOf(TimeInRangeSeries))("DoughnutRadius") = "17"
+            End With
+            Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeChart)
+        End If
+        Me.PositionControlsInPanel()
     End Sub
 
 #End Region ' Initialize Home Tab Charts
@@ -3872,7 +3851,7 @@ Public Class Form1
 
                 For i As Integer = 0 To 287
                     Dim initialBolus As Single = 0
-                    Dim firstNotSkippedOaTime As New OADate((s_listOfSgRecords(0).Timestamp + (FiveMinuteSpan * i)).RoundDownToMinute())
+                    Dim firstNotSkippedOaTime As New OADate((s_sgRecords(0).Timestamp + (FiveMinuteSpan * i)).RoundDownToMinute())
                     While currentMarker < timeOrderedMarkers.Count AndAlso timeOrderedMarkers.Keys(currentMarker) <= firstNotSkippedOaTime
                         initialBolus += timeOrderedMarkers.Values(currentMarker)
                         currentMarker += 1
@@ -4374,7 +4353,6 @@ Public Class Form1
         End If
 
         _timeInTightRange = GetTIR(tight:=True)
-
         Me.TimeInRangeChartLabel.Text = GetTIR.asString
         With Me.TimeInRangeChart
             With .Series(name:=NameOf(TimeInRangeSeries)).Points
@@ -4455,16 +4433,16 @@ Public Class Form1
         Me.AverageSGMessageLabel.Text = $"Average SG in {GetBgUnitsString()}"
 
         ' Calculate Time in AutoMode
-        If s_listOfAutoModeStatusMarkers.Count = 0 Then
+        If s_autoModeStatusMarkers.Count = 0 Then
             Me.SmartGuardLabel.Text = "SmartGuard 0%"
-        ElseIf s_listOfAutoModeStatusMarkers.Count = 1 AndAlso s_listOfAutoModeStatusMarkers.First.AutoModeOn Then
+        ElseIf s_autoModeStatusMarkers.Count = 1 AndAlso s_autoModeStatusMarkers.First.AutoModeOn Then
             Me.SmartGuardLabel.Text = "SmartGuard 100%"
         Else
             Try
                 ' need to figure out %
                 Dim autoModeStartTime As New Date
                 Dim timeInAutoMode As TimeSpan = ZeroTickSpan
-                For Each r As IndexClass(Of AutoModeStatus) In s_listOfAutoModeStatusMarkers.WithIndex
+                For Each r As IndexClass(Of AutoModeStatus) In s_autoModeStatusMarkers.WithIndex
                     If r.IsFirst Then
                         If r.Value.AutoModeOn Then
                             autoModeStartTime = r.Value.Timestamp
@@ -4474,7 +4452,7 @@ Public Class Form1
                     Else
                         If r.Value.AutoModeOn Then
                             If r.IsLast Then
-                                timeInAutoMode += s_listOfAutoModeStatusMarkers.First.Timestamp.AddDays(1) - r.Value.Timestamp
+                                timeInAutoMode += s_autoModeStatusMarkers.First.Timestamp.AddDays(value:=1) - r.Value.Timestamp
                             Else
                                 autoModeStartTime = r.Value.Timestamp
                             End If
@@ -4486,8 +4464,7 @@ Public Class Form1
                 Next
                 Me.SmartGuardLabel.Text = If(timeInAutoMode >= OneDaySpan,
                                              "SmartGuard 100%",
-                                             $"SmartGuard {CInt(timeInAutoMode / OneDaySpan * 100)}%"
-                                            )
+                                             $"SmartGuard {CInt(timeInAutoMode / OneDaySpan * 100)}%")
             Catch ex As Exception
                 Me.SmartGuardLabel.Text = "SmartGuard ???%"
             End Try
@@ -4500,7 +4477,7 @@ Public Class Form1
         Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
         Dim highScale As Single = (GetYMaxValueFromNativeMmolL() - GetTirHighLimit()) / (GetTirLowLimit() - GetYMinValueFromNativeMmolL())
-        For Each sg As SG In s_listOfSgRecords.Where(Function(entry As SG) Not entry.sg.IsSgInvalid)
+        For Each sg As SG In s_sgRecords.Where(Function(entry As SG) Not entry.sg.IsSgInvalid)
             elements += 1
             If sg.sgMgdL < 70 Then
                 lowCount += 1
@@ -4550,38 +4527,43 @@ Public Class Form1
                     Me.HighTirComplianceLabel.ForeColor = Color.Red
             End Select
         End If
-
-        Me.PositionControlsInSplitContainer3Panel2()
+        Me.PositionControlsInPanel()
     End Sub
 
-    Private Sub PositionControlsInSplitContainer3Panel2()
+    ''' <summary>
+    '''  Positions the controls in the panel of the home tab.
+    ''' </summary>
+    ''' <remarks>
+    '''  This method centers the labels in the panel based on their names and adjusts their positions accordingly.
+    ''' </remarks>
+    Private Sub PositionControlsInPanel()
         For Each ctrl As Control In Me.SplitContainer3.Panel2.Controls
             If TypeOf ctrl Is Label Then
                 Select Case ctrl.Name
                     Case NameOf(Me.LowTirComplianceLabel)
-                        ctrl.CenterLeft(onLeftHalf:=True)
+                        ctrl.CenterOnControl(onLeftHalf:=True)
 
                     Case NameOf(Me.HighTirComplianceLabel)
-                        ctrl.CenterLeft(onLeftHalf:=False)
+                        ctrl.CenterOnControl(onLeftHalf:=False)
 
                     Case NameOf(Me.TimeInRangeMessageLabel)
-                        ctrl.CenterLeft(onLeftHalf:=True)
+                        ctrl.CenterOnControl(onLeftHalf:=True)
 
                     Case NameOf(Me.TimeInRangeValueLabel)
-                        ctrl.CenterLeft(onLeftHalf:=True)
+                        ctrl.CenterOnControl(onLeftHalf:=True)
 
                     Case NameOf(Me.TiTRMgsLabel)
-                        ctrl.CenterLeft(onLeftHalf:=False)
+                        ctrl.CenterOnControl(onLeftHalf:=False)
 
                     Case NameOf(Me.TimeInTightRangeValueLabel)
-                        ctrl.CenterLeft(onLeftHalf:=False)
+                        ctrl.CenterOnControl(onLeftHalf:=False)
 
                     Case NameOf(Me.TiTRMgsLabel2)
                         With Me.TiTRMgsLabel2
                             .Left = ctrl.Parent.Width - .Width - .Margin.Right
                         End With
                     Case Else
-                        ctrl.CenterLeft()
+                        ctrl.CenterOnControl()
                 End Select
             End If
         Next
@@ -4713,7 +4695,7 @@ Public Class Form1
         Me.ModelLabel.Text = $"{mdi.ModelNumber} HW Version = {mdi.HardwareRevision}"
         Me.PumpNameLabel.Text = GetPumpName(mdi.ModelNumber)
 
-        Dim nonZeroRecords As IEnumerable(Of SG) = s_listOfSgRecords.Where(
+        Dim nonZeroRecords As IEnumerable(Of SG) = s_sgRecords.Where(
             predicate:=Function(entry As SG)
                            Return Not Single.IsNaN(entry.sg)
                        End Function)
@@ -4737,14 +4719,14 @@ Public Class Form1
 
         Dim keySelector As Func(Of SG, Integer) = Function(x) x.RecordNumber
         Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:=s_listOfSgRecords.OrderByDescending(keySelector).ToList()),
+            table:=ClassCollectionToDataTable(classCollection:=s_sgRecords.OrderByDescending(keySelector).ToList()),
             dgv:=Me.DgvSGs,
             rowIndex:=ServerDataIndexes.sgs)
         Me.DgvSGs.AutoSize = True
         Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
         Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:=s_listOfLimitRecords),
+            table:=ClassCollectionToDataTable(classCollection:=s_limitRecords),
             className:=NameOf(Limit), rowIndex:=ServerDataIndexes.limits)
 
         UpdateSummaryTab(
@@ -4778,7 +4760,7 @@ Public Class Form1
             homeChartLegend:=_summaryChartLegend,
             treatmentMarkersChartLegend:=_treatmentMarkersChartLegend)
 
-        showLegend = s_listOfLowGlucoseSuspendedMarkers.Any(Function(s) s.deliverySuspended = True)
+        showLegend = s_lowGlucoseSuspendedMarkers.Any(Function(s) s.deliverySuspended = True)
         ShowHideLegendItem(
             showLegend,
             legendString:="Suspend",

@@ -25,7 +25,7 @@ Friend Module PlotSeriesSg
     ''' </remarks>
     <Extension>
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
-        For Each sgRecordWithIndex As IndexClass(Of SG) In s_listOfSgRecords.WithIndex()
+        For Each sgRecordWithIndex As IndexClass(Of SG) In s_sgRecords.WithIndex()
             Try
                 With chart.Series(SgSeriesName).Points
                     Dim sgRecord As SG = sgRecordWithIndex.Value
