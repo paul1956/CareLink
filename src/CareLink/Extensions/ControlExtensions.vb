@@ -7,6 +7,21 @@ Imports System.Runtime.CompilerServices
 Public Module ControlExtensions
 
     ''' <summary>
+    '''  Centers a <see cref="Label"/> parent container.
+    ''' </summary>
+    ''' <param name="lbl">The <see cref="Label"/> to be centered.</param>
+    <Extension>
+    Friend Sub CenterLabelXOnParent(ByRef lbl As Label)
+        Dim controlWidth As Integer = lbl.Width
+        If lbl.AutoSize Then
+            ' If the control is a Label with AutoSize, adjust the width to fit the text
+            controlWidth = lbl.PreferredWidth
+        End If
+        ' Center in the middle of the parent control
+        lbl.Left = (lbl.Parent.Width - (controlWidth + lbl.Margin.Left + +lbl.Margin.Right)) \ 2
+    End Sub
+
+    ''' <summary>
     '''  Centers a <see cref="Label"/> on the left or right half or center of its parent container.
     ''' </summary>
     ''' <param name="ctrl">The <see cref="Label"/> to be centered.</param>
@@ -16,15 +31,14 @@ Public Module ControlExtensions
     '''  if <see langword="Nothing"/>, center in the middle of the parent control.
     ''' </param>
     <Extension>
-    Friend Sub CenterOnControl(ByRef ctrl As Control, Optional onLeftHalf As Boolean? = Nothing)
-        Dim parentWidth As Integer = ctrl.Parent.Width
+    Friend Sub CenterXOnParent(ByRef ctrl As Control, Optional onLeftHalf As Boolean? = Nothing)
         Dim controlWidth As Integer = ctrl.Width
         If TypeOf ctrl Is Label AndAlso ctrl.AutoSize Then
             ' If the control is a Label with AutoSize, adjust the width to fit the text
             controlWidth = DirectCast(ctrl, Label).PreferredWidth
         End If
         If onLeftHalf.HasValue Then
-            Dim halfWidth As Integer = parentWidth \ 2
+            Dim halfWidth As Integer = ctrl.Parent.Width \ 2
             If onLeftHalf.Value Then
                 ' Center on the left half
                 ctrl.Left = (halfWidth - (controlWidth + ctrl.Margin.Left)) \ 2
@@ -34,12 +48,31 @@ Public Module ControlExtensions
             End If
         Else
             ' Center in the middle of the parent control
-            ctrl.Left = (parentWidth - (controlWidth + ctrl.Margin.Left + +ctrl.Margin.Right)) \ 2
+            ctrl.Left = (ctrl.Parent.Width - (controlWidth + ctrl.Margin.Left + +ctrl.Margin.Right)) \ 2
         End If
     End Sub
 
     ''' <summary>
-    '''  Finds a <see cref="Control"/> by its name within a collection of controls.
+    '''  Centers a <see cref="Label"/> on its parent container.
+    ''' </summary>
+    ''' <param name="ctrl">The <see cref="Label"/> to be centered.</param>
+    ''' <param name="verticalOffset">Vertical offset to apply when centering.</param>
+    <Extension>
+    Friend Sub CenterXYOnParent(ByRef ctrl As Label, verticalOffset As Integer)
+        Dim controlWidth As Integer = ctrl.Width
+        Dim controlHeight As Integer = ctrl.Height
+        If ctrl.AutoSize Then
+            ' If the control is a Label with AutoSize, adjust the width to fit the text
+            controlWidth = ctrl.PreferredWidth
+            controlHeight = ctrl.PreferredHeight
+        End If
+        ' Center in the middle of the parent control
+        ctrl.Left = (ctrl.Parent.Width - (controlWidth + ctrl.Margin.Left + ctrl.Margin.Right)) \ 2
+        ctrl.Top = ((ctrl.Parent.Height - (controlHeight + ctrl.Margin.Top + ctrl.Margin.Bottom)) \ 2) + verticalOffset
+    End Sub
+
+    ''' <summary>
+    '''  Centers a <see cref="Label"/> on the left or right half or center of its parent container.
     ''' </summary>
     ''' <param name="controls">The collection of controls to search.</param>
     ''' <param name="controlName">The name of the control to find.</param>
@@ -79,4 +112,5 @@ Public Module ControlExtensions
     Friend Function FindVerticalMidpoint(ctrl As Control) As Integer
         Return ctrl.Top + (ctrl.Height \ 2)
     End Function
+
 End Module

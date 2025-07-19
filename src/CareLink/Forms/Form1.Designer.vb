@@ -506,7 +506,7 @@ Partial Class Form1
         CalibrationShieldPanel.Location = New Point(0, 0)
         CalibrationShieldPanel.Margin = New Padding(0)
         CalibrationShieldPanel.Name = "CalibrationShieldPanel"
-        CalibrationShieldPanel.Size = New Size(116, 134)
+        CalibrationShieldPanel.Size = New Size(116, 132)
         CalibrationShieldPanel.TabIndex = 64
         ' 
         ' LastSgOrExitTimeLabel
@@ -515,7 +515,7 @@ Partial Class Form1
         LastSgOrExitTimeLabel.Dock = DockStyle.Bottom
         LastSgOrExitTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         LastSgOrExitTimeLabel.ForeColor = Color.White
-        LastSgOrExitTimeLabel.Location = New Point(0, 113)
+        LastSgOrExitTimeLabel.Location = New Point(0, 111)
         LastSgOrExitTimeLabel.Name = "LastSgOrExitTimeLabel"
         LastSgOrExitTimeLabel.Size = New Size(116, 21)
         LastSgOrExitTimeLabel.TabIndex = 55
@@ -530,7 +530,7 @@ Partial Class Form1
         PumpBannerStateLabel.ForeColor = Color.Black
         PumpBannerStateLabel.Location = New Point(0, 0)
         PumpBannerStateLabel.Name = "PumpBannerStateLabel"
-        PumpBannerStateLabel.Size = New Size(116, 13)
+        PumpBannerStateLabel.Size = New Size(116, 15)
         PumpBannerStateLabel.TabIndex = 56
         PumpBannerStateLabel.Text = "Target 150 2:00 Hr"
         PumpBannerStateLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -541,7 +541,7 @@ Partial Class Form1
         ShieldUnitsLabel.BackColor = Color.Transparent
         ShieldUnitsLabel.Font = New Font("Segoe UI", 8.25F, FontStyle.Bold)
         ShieldUnitsLabel.ForeColor = Color.White
-        ShieldUnitsLabel.Location = New Point(38, 76)
+        ShieldUnitsLabel.Location = New Point(38, 60)
         ShieldUnitsLabel.Name = "ShieldUnitsLabel"
         ShieldUnitsLabel.Size = New Size(40, 13)
         ShieldUnitsLabel.TabIndex = 8
@@ -552,7 +552,7 @@ Partial Class Form1
         CurrentSgLabel.BackColor = Color.Transparent
         CurrentSgLabel.Font = New Font("Segoe UI", 18.0F, FontStyle.Bold)
         CurrentSgLabel.ForeColor = Color.White
-        CurrentSgLabel.Location = New Point(22, 35)
+        CurrentSgLabel.Location = New Point(22, 30)
         CurrentSgLabel.Name = "CurrentSgLabel"
         CurrentSgLabel.Size = New Size(72, 32)
         CurrentSgLabel.TabIndex = 9
@@ -575,10 +575,10 @@ Partial Class Form1
         ' SmartGuardShieldPictureBox
         ' 
         SmartGuardShieldPictureBox.Image = My.Resources.Resources.Shield
-        SmartGuardShieldPictureBox.Location = New Point(0, 0)
+        SmartGuardShieldPictureBox.Location = New Point(0, 16)
         SmartGuardShieldPictureBox.Margin = New Padding(5)
         SmartGuardShieldPictureBox.Name = "SmartGuardShieldPictureBox"
-        SmartGuardShieldPictureBox.Size = New Size(119, 116)
+        SmartGuardShieldPictureBox.Size = New Size(116, 100)
         SmartGuardShieldPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
         SmartGuardShieldPictureBox.TabIndex = 5
         SmartGuardShieldPictureBox.TabStop = False
@@ -669,7 +669,7 @@ Partial Class Form1
         DgvActiveInsulin.Name = "DgvActiveInsulin"
         DgvActiveInsulin.ReadOnly = True
         DgvActiveInsulin.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvActiveInsulin.Size = New Size(1370, 615)
+        DgvActiveInsulin.Size = New Size(1370, 609)
         DgvActiveInsulin.TabIndex = 0
         ' 
         ' DgvAutoBasalDelivery
@@ -680,7 +680,7 @@ Partial Class Form1
         DgvAutoBasalDelivery.ReadOnly = True
         DgvAutoBasalDelivery.RowHeadersVisible = False
         DgvAutoBasalDelivery.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvAutoBasalDelivery.Size = New Size(1364, 606)
+        DgvAutoBasalDelivery.Size = New Size(1364, 600)
         DgvAutoBasalDelivery.TabIndex = 0
         ' 
         ' DgvAutoModeStatus
@@ -691,7 +691,7 @@ Partial Class Form1
         DgvAutoModeStatus.ReadOnly = True
         DgvAutoModeStatus.RowHeadersVisible = False
         DgvAutoModeStatus.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvAutoModeStatus.Size = New Size(1364, 606)
+        DgvAutoModeStatus.Size = New Size(1364, 600)
         DgvAutoModeStatus.TabIndex = 0
         ' 
         ' DgvBasal
@@ -701,7 +701,7 @@ Partial Class Form1
         DgvBasal.Name = "DgvBasal"
         DgvBasal.ReadOnly = True
         DgvBasal.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvBasal.Size = New Size(1364, 606)
+        DgvBasal.Size = New Size(1364, 600)
         DgvBasal.TabIndex = 0
         ' 
         ' DgvBasalPerHour
@@ -711,7 +711,7 @@ Partial Class Form1
         DgvBasalPerHour.Name = "DgvBasalPerHour"
         DgvBasalPerHour.ReadOnly = True
         DgvBasalPerHour.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvBasalPerHour.Size = New Size(1376, 664)
+        DgvBasalPerHour.Size = New Size(1376, 658)
         DgvBasalPerHour.TabIndex = 0
         ' 
         ' DgvCalibration
@@ -722,7 +722,7 @@ Partial Class Form1
         DgvCalibration.Location = New Point(6, 52)
         DgvCalibration.Name = "DgvCalibration"
         DgvCalibration.ReadOnly = True
-        DgvCalibration.Size = New Size(1364, 606)
+        DgvCalibration.Size = New Size(1364, 600)
         DgvCalibration.TabIndex = 2
         ' 
         ' DgvCareLinkUsers
@@ -750,7 +750,7 @@ Partial Class Form1
         DgvCareLinkUsers.Location = New Point(0, 0)
         DgvCareLinkUsers.Name = "DgvCareLinkUsers"
         DgvCareLinkUsers.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvCareLinkUsers.Size = New Size(1376, 664)
+        DgvCareLinkUsers.Size = New Size(1376, 658)
         DgvCareLinkUsers.TabIndex = 0
         ' 
         ' DgvCurrentUser
@@ -760,7 +760,7 @@ Partial Class Form1
         DgvCurrentUser.Name = "DgvCurrentUser"
         DgvCurrentUser.ReadOnly = True
         DgvCurrentUser.RowHeadersVisible = False
-        DgvCurrentUser.Size = New Size(1376, 664)
+        DgvCurrentUser.Size = New Size(1376, 658)
         DgvCurrentUser.TabIndex = 0
         ' 
         ' DgvInsulin
@@ -770,7 +770,7 @@ Partial Class Form1
         DgvInsulin.Name = "DgvInsulin"
         DgvInsulin.ReadOnly = True
         DgvInsulin.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvInsulin.Size = New Size(1364, 606)
+        DgvInsulin.Size = New Size(1364, 600)
         DgvInsulin.TabIndex = 0
         ' 
         ' DgvLastAlarm
@@ -780,7 +780,7 @@ Partial Class Form1
         DgvLastAlarm.Name = "DgvLastAlarm"
         DgvLastAlarm.ReadOnly = True
         DgvLastAlarm.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvLastAlarm.Size = New Size(1364, 606)
+        DgvLastAlarm.Size = New Size(1364, 600)
         DgvLastAlarm.TabIndex = 0
         ' 
         ' DgvLastSensorGlucose
@@ -790,7 +790,7 @@ Partial Class Form1
         DgvLastSensorGlucose.Name = "DgvLastSensorGlucose"
         DgvLastSensorGlucose.ReadOnly = True
         DgvLastSensorGlucose.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvLastSensorGlucose.Size = New Size(1364, 606)
+        DgvLastSensorGlucose.Size = New Size(1364, 600)
         DgvLastSensorGlucose.TabIndex = 0
         ' 
         ' DgvLimits
@@ -800,7 +800,7 @@ Partial Class Form1
         DgvLimits.Name = "DgvLimits"
         DgvLimits.ReadOnly = True
         DgvLimits.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvLimits.Size = New Size(1364, 606)
+        DgvLimits.Size = New Size(1364, 600)
         DgvLimits.TabIndex = 0
         ' 
         ' DgvLowGlucoseSuspended
@@ -810,7 +810,7 @@ Partial Class Form1
         DgvLowGlucoseSuspended.Name = "DgvLowGlucoseSuspended"
         DgvLowGlucoseSuspended.ReadOnly = True
         DgvLowGlucoseSuspended.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvLowGlucoseSuspended.Size = New Size(1364, 606)
+        DgvLowGlucoseSuspended.Size = New Size(1364, 600)
         DgvLowGlucoseSuspended.TabIndex = 2
         ' 
         ' DgvMeal
@@ -820,7 +820,7 @@ Partial Class Form1
         DgvMeal.Name = "DgvMeal"
         DgvMeal.ReadOnly = True
         DgvMeal.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvMeal.Size = New Size(1364, 606)
+        DgvMeal.Size = New Size(1364, 600)
         DgvMeal.TabIndex = 0
         ' 
         ' DgvPumpBannerState
@@ -830,7 +830,7 @@ Partial Class Form1
         DgvPumpBannerState.Name = "DgvPumpBannerState"
         DgvPumpBannerState.ReadOnly = True
         DgvPumpBannerState.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvPumpBannerState.Size = New Size(1364, 606)
+        DgvPumpBannerState.Size = New Size(1364, 600)
         DgvPumpBannerState.TabIndex = 0
         ' 
         ' DgvSensorBgReadings
@@ -840,7 +840,7 @@ Partial Class Form1
         DgvSensorBgReadings.Name = "DgvSensorBgReadings"
         DgvSensorBgReadings.ReadOnly = True
         DgvSensorBgReadings.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvSensorBgReadings.Size = New Size(1364, 606)
+        DgvSensorBgReadings.Size = New Size(1364, 600)
         DgvSensorBgReadings.TabIndex = 2
         ' 
         ' DgvSGs
@@ -850,7 +850,7 @@ Partial Class Form1
         DgvSGs.Name = "DgvSGs"
         DgvSGs.ReadOnly = True
         DgvSGs.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvSGs.Size = New Size(1364, 606)
+        DgvSGs.Size = New Size(1364, 600)
         DgvSGs.TabIndex = 0
         ' 
         ' DgvSummary
@@ -860,7 +860,7 @@ Partial Class Form1
         DgvSummary.Name = "DgvSummary"
         DgvSummary.ReadOnly = True
         DgvSummary.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvSummary.Size = New Size(1376, 664)
+        DgvSummary.Size = New Size(1376, 658)
         DgvSummary.TabIndex = 0
         ' 
         ' DgvTherapyAlgorithmState
@@ -870,7 +870,7 @@ Partial Class Form1
         DgvTherapyAlgorithmState.Name = "DgvTherapyAlgorithmState"
         DgvTherapyAlgorithmState.ReadOnly = True
         DgvTherapyAlgorithmState.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvTherapyAlgorithmState.Size = New Size(1364, 606)
+        DgvTherapyAlgorithmState.Size = New Size(1364, 600)
         DgvTherapyAlgorithmState.TabIndex = 0
         ' 
         ' DgvTimeChange
@@ -880,7 +880,7 @@ Partial Class Form1
         DgvTimeChange.Name = "DgvTimeChange"
         DgvTimeChange.ReadOnly = True
         DgvTimeChange.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvTimeChange.Size = New Size(1364, 606)
+        DgvTimeChange.Size = New Size(1364, 600)
         DgvTimeChange.TabIndex = 2
         ' 
         ' FullNameLabel
@@ -1682,7 +1682,7 @@ Partial Class Form1
         ' 
         SplitContainer1.Panel1.BackColor = Color.Black
         SplitContainer1.Panel1.Controls.Add(TemporaryUseAdvanceAITDecayCheckBox)
-        SplitContainer1.Size = New Size(1376, 664)
+        SplitContainer1.Size = New Size(1376, 658)
         SplitContainer1.SplitterDistance = 30
         SplitContainer1.TabIndex = 0
         ' 
@@ -1734,8 +1734,8 @@ Partial Class Form1
         ' SplitContainer2.Panel2
         ' 
         SplitContainer2.Panel2.Controls.Add(SplitContainer3)
-        SplitContainer2.Size = New Size(1376, 664)
-        SplitContainer2.SplitterDistance = 134
+        SplitContainer2.Size = New Size(1376, 658)
+        SplitContainer2.SplitterDistance = 132
         SplitContainer2.TabIndex = 52
         ' 
         ' TrendValueLabel
@@ -1814,7 +1814,7 @@ Partial Class Form1
         SplitContainer3.Panel2.Controls.Add(SmartGuardLabel)
         SplitContainer3.Panel2.Controls.Add(TiTRMgsLabel)
         SplitContainer3.Panel2.Controls.Add(TiTRMgsLabel2)
-        SplitContainer3.Size = New Size(1376, 526)
+        SplitContainer3.Size = New Size(1376, 522)
         SplitContainer3.SplitterDistance = 1140
         SplitContainer3.TabIndex = 0
         ' 
@@ -1953,8 +1953,8 @@ Partial Class Form1
         ' SplitContainerNotificationsCleared.Panel2
         ' 
         SplitContainerNotificationsCleared.Panel2.Controls.Add(TableLayoutPanelNotificationsCleared)
-        SplitContainerNotificationsCleared.Size = New Size(1376, 664)
-        SplitContainerNotificationsCleared.SplitterDistance = 40
+        SplitContainerNotificationsCleared.Size = New Size(1376, 658)
+        SplitContainerNotificationsCleared.SplitterDistance = 39
         SplitContainerNotificationsCleared.TabIndex = 0
         ' 
         ' TableLayoutPanelNotificationsClearedTop
@@ -1971,7 +1971,7 @@ Partial Class Form1
         TableLayoutPanelNotificationsClearedTop.Name = "TableLayoutPanelNotificationsClearedTop"
         TableLayoutPanelNotificationsClearedTop.RowCount = 1
         TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationsClearedTop.Size = New Size(1376, 40)
+        TableLayoutPanelNotificationsClearedTop.Size = New Size(1376, 39)
         TableLayoutPanelNotificationsClearedTop.TabIndex = 1
         ' 
         ' TableLayoutPanelNotificationsCleared
@@ -1986,7 +1986,7 @@ Partial Class Form1
         TableLayoutPanelNotificationsCleared.Name = "TableLayoutPanelNotificationsCleared"
         TableLayoutPanelNotificationsCleared.RowCount = 1
         TableLayoutPanelNotificationsCleared.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationsCleared.Size = New Size(1376, 620)
+        TableLayoutPanelNotificationsCleared.Size = New Size(1376, 615)
         TableLayoutPanelNotificationsCleared.TabIndex = 0
         ' 
         ' StatusStrip1
@@ -2035,9 +2035,9 @@ Partial Class Form1
         ' 
         TabPage01HomePage.BackColor = Color.Black
         TabPage01HomePage.Controls.Add(SplitContainer2)
-        TabPage01HomePage.Location = New Point(4, 24)
+        TabPage01HomePage.Location = New Point(4, 30)
         TabPage01HomePage.Name = "TabPage01HomePage"
-        TabPage01HomePage.Size = New Size(1376, 664)
+        TabPage01HomePage.Size = New Size(1376, 658)
         TabPage01HomePage.TabIndex = 1
         TabPage01HomePage.Text = "Summary"
         TabPage01HomePage.UseVisualStyleBackColor = True
@@ -2045,18 +2045,18 @@ Partial Class Form1
         ' TabPage02RunningIOB
         ' 
         TabPage02RunningIOB.Controls.Add(SplitContainer1)
-        TabPage02RunningIOB.Location = New Point(4, 24)
+        TabPage02RunningIOB.Location = New Point(4, 30)
         TabPage02RunningIOB.Name = "TabPage02RunningIOB"
-        TabPage02RunningIOB.Size = New Size(1376, 664)
+        TabPage02RunningIOB.Size = New Size(1376, 658)
         TabPage02RunningIOB.TabIndex = 2
         TabPage02RunningIOB.Text = "Running IOB"
         TabPage02RunningIOB.UseVisualStyleBackColor = True
         ' 
         ' TabPage03TreatmentDetails
         ' 
-        TabPage03TreatmentDetails.Location = New Point(4, 24)
+        TabPage03TreatmentDetails.Location = New Point(4, 30)
         TabPage03TreatmentDetails.Name = "TabPage03TreatmentDetails"
-        TabPage03TreatmentDetails.Size = New Size(1376, 664)
+        TabPage03TreatmentDetails.Size = New Size(1376, 658)
         TabPage03TreatmentDetails.TabIndex = 3
         TabPage03TreatmentDetails.Text = "Treatment Details"
         TabPage03TreatmentDetails.UseVisualStyleBackColor = True
@@ -2064,9 +2064,9 @@ Partial Class Form1
         ' TabPage04SummaryData
         ' 
         TabPage04SummaryData.Controls.Add(DgvSummary)
-        TabPage04SummaryData.Location = New Point(4, 24)
+        TabPage04SummaryData.Location = New Point(4, 30)
         TabPage04SummaryData.Name = "TabPage04SummaryData"
-        TabPage04SummaryData.Size = New Size(1376, 664)
+        TabPage04SummaryData.Size = New Size(1376, 658)
         TabPage04SummaryData.TabIndex = 4
         TabPage04SummaryData.Text = "Summary Data"
         TabPage04SummaryData.UseVisualStyleBackColor = True
@@ -2074,9 +2074,9 @@ Partial Class Form1
         ' TabPage05ActiveInsulin
         ' 
         TabPage05ActiveInsulin.Controls.Add(TableLayoutPanelActiveInsulin)
-        TabPage05ActiveInsulin.Location = New Point(4, 24)
+        TabPage05ActiveInsulin.Location = New Point(4, 30)
         TabPage05ActiveInsulin.Name = "TabPage05ActiveInsulin"
-        TabPage05ActiveInsulin.Size = New Size(1376, 664)
+        TabPage05ActiveInsulin.Size = New Size(1376, 658)
         TabPage05ActiveInsulin.TabIndex = 18
         TabPage05ActiveInsulin.Text = "Active Insulin"
         TabPage05ActiveInsulin.UseVisualStyleBackColor = True
@@ -2095,7 +2095,7 @@ Partial Class Form1
         TableLayoutPanelActiveInsulin.RowCount = 2
         TableLayoutPanelActiveInsulin.RowStyles.Add(New RowStyle())
         TableLayoutPanelActiveInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelActiveInsulin.Size = New Size(1376, 664)
+        TableLayoutPanelActiveInsulin.Size = New Size(1376, 658)
         TableLayoutPanelActiveInsulin.TabIndex = 0
         ' 
         ' TableLayoutPanelActiveInsulinTop
@@ -2118,9 +2118,9 @@ Partial Class Form1
         ' TabPage06Basal
         ' 
         TabPage06Basal.Controls.Add(TableLayoutPanelBasal)
-        TabPage06Basal.Location = New Point(4, 24)
+        TabPage06Basal.Location = New Point(4, 30)
         TabPage06Basal.Name = "TabPage06Basal"
-        TabPage06Basal.Size = New Size(1376, 664)
+        TabPage06Basal.Size = New Size(1376, 658)
         TabPage06Basal.TabIndex = 23
         TabPage06Basal.Text = "Basal"
         TabPage06Basal.UseVisualStyleBackColor = True
@@ -2142,7 +2142,7 @@ Partial Class Form1
         TableLayoutPanelBasal.RowCount = 2
         TableLayoutPanelBasal.RowStyles.Add(New RowStyle())
         TableLayoutPanelBasal.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBasal.Size = New Size(1376, 664)
+        TableLayoutPanelBasal.Size = New Size(1376, 658)
         TableLayoutPanelBasal.TabIndex = 0
         ' 
         ' TableLayoutPanelBasalTop
@@ -2165,9 +2165,9 @@ Partial Class Form1
         ' TabPage07LastAlarm
         ' 
         TabPage07LastAlarm.Controls.Add(TableLayoutPanelLastAlarm)
-        TabPage07LastAlarm.Location = New Point(4, 24)
+        TabPage07LastAlarm.Location = New Point(4, 30)
         TabPage07LastAlarm.Name = "TabPage07LastAlarm"
-        TabPage07LastAlarm.Size = New Size(1376, 664)
+        TabPage07LastAlarm.Size = New Size(1376, 658)
         TabPage07LastAlarm.TabIndex = 17
         TabPage07LastAlarm.Text = "Last Alarm"
         TabPage07LastAlarm.UseVisualStyleBackColor = True
@@ -2188,7 +2188,7 @@ Partial Class Form1
         TableLayoutPanelLastAlarm.RowCount = 2
         TableLayoutPanelLastAlarm.RowStyles.Add(New RowStyle())
         TableLayoutPanelLastAlarm.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastAlarm.Size = New Size(1376, 664)
+        TableLayoutPanelLastAlarm.Size = New Size(1376, 658)
         TableLayoutPanelLastAlarm.TabIndex = 0
         ' 
         ' TableLayoutPanelLastAlarmTop
@@ -2211,9 +2211,9 @@ Partial Class Form1
         ' TabPage08LastSG
         ' 
         TabPage08LastSG.Controls.Add(TableLayoutPanelLastSG)
-        TabPage08LastSG.Location = New Point(4, 24)
+        TabPage08LastSG.Location = New Point(4, 30)
         TabPage08LastSG.Name = "TabPage08LastSG"
-        TabPage08LastSG.Size = New Size(1376, 664)
+        TabPage08LastSG.Size = New Size(1376, 658)
         TabPage08LastSG.TabIndex = 16
         TabPage08LastSG.Text = "Last SG"
         TabPage08LastSG.UseVisualStyleBackColor = True
@@ -2233,7 +2233,7 @@ Partial Class Form1
         TableLayoutPanelLastSG.RowCount = 2
         TableLayoutPanelLastSG.RowStyles.Add(New RowStyle())
         TableLayoutPanelLastSG.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastSG.Size = New Size(1376, 664)
+        TableLayoutPanelLastSG.Size = New Size(1376, 658)
         TableLayoutPanelLastSG.TabIndex = 1
         ' 
         ' TableLayoutPanelLastSgTop
@@ -2256,9 +2256,9 @@ Partial Class Form1
         ' TabPage09Limits
         ' 
         TabPage09Limits.Controls.Add(TableLayoutPanelLimits)
-        TabPage09Limits.Location = New Point(4, 24)
+        TabPage09Limits.Location = New Point(4, 30)
         TabPage09Limits.Name = "TabPage09Limits"
-        TabPage09Limits.Size = New Size(1376, 664)
+        TabPage09Limits.Size = New Size(1376, 658)
         TabPage09Limits.TabIndex = 9
         TabPage09Limits.Text = "Limits"
         TabPage09Limits.UseVisualStyleBackColor = True
@@ -2278,7 +2278,7 @@ Partial Class Form1
         TableLayoutPanelLimits.RowCount = 2
         TableLayoutPanelLimits.RowStyles.Add(New RowStyle())
         TableLayoutPanelLimits.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLimits.Size = New Size(1376, 664)
+        TableLayoutPanelLimits.Size = New Size(1376, 658)
         TableLayoutPanelLimits.TabIndex = 0
         ' 
         ' TableLayoutPanelLimitsTop
@@ -2301,9 +2301,9 @@ Partial Class Form1
         ' TabPage10NotificationActive
         ' 
         TabPage10NotificationActive.Controls.Add(TableLayoutPanelNotificationActive)
-        TabPage10NotificationActive.Location = New Point(4, 24)
+        TabPage10NotificationActive.Location = New Point(4, 30)
         TabPage10NotificationActive.Name = "TabPage10NotificationActive"
-        TabPage10NotificationActive.Size = New Size(1376, 664)
+        TabPage10NotificationActive.Size = New Size(1376, 658)
         TabPage10NotificationActive.TabIndex = 13
         TabPage10NotificationActive.Text = "Notification - Active"
         TabPage10NotificationActive.UseVisualStyleBackColor = True
@@ -2322,7 +2322,7 @@ Partial Class Form1
         TableLayoutPanelNotificationActive.RowCount = 2
         TableLayoutPanelNotificationActive.RowStyles.Add(New RowStyle())
         TableLayoutPanelNotificationActive.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationActive.Size = New Size(1376, 664)
+        TableLayoutPanelNotificationActive.Size = New Size(1376, 658)
         TableLayoutPanelNotificationActive.TabIndex = 0
         ' 
         ' TableLayoutPanelNotificationActiveTop
@@ -2345,9 +2345,9 @@ Partial Class Form1
         ' TabPage11NotificationsCleared
         ' 
         TabPage11NotificationsCleared.Controls.Add(SplitContainerNotificationsCleared)
-        TabPage11NotificationsCleared.Location = New Point(4, 24)
+        TabPage11NotificationsCleared.Location = New Point(4, 30)
         TabPage11NotificationsCleared.Name = "TabPage11NotificationsCleared"
-        TabPage11NotificationsCleared.Size = New Size(1376, 664)
+        TabPage11NotificationsCleared.Size = New Size(1376, 658)
         TabPage11NotificationsCleared.TabIndex = 5
         TabPage11NotificationsCleared.Text = "Notifications - Cleared"
         TabPage11NotificationsCleared.UseVisualStyleBackColor = True
@@ -2355,9 +2355,9 @@ Partial Class Form1
         ' TabPage12PumpBannerState
         ' 
         TabPage12PumpBannerState.Controls.Add(TableLayoutPanelPumpBannerState)
-        TabPage12PumpBannerState.Location = New Point(4, 24)
+        TabPage12PumpBannerState.Location = New Point(4, 30)
         TabPage12PumpBannerState.Name = "TabPage12PumpBannerState"
-        TabPage12PumpBannerState.Size = New Size(1376, 664)
+        TabPage12PumpBannerState.Size = New Size(1376, 658)
         TabPage12PumpBannerState.TabIndex = 22
         TabPage12PumpBannerState.Text = "Pump Banner State"
         TabPage12PumpBannerState.UseVisualStyleBackColor = True
@@ -2378,7 +2378,7 @@ Partial Class Form1
         TableLayoutPanelPumpBannerState.RowCount = 2
         TableLayoutPanelPumpBannerState.RowStyles.Add(New RowStyle())
         TableLayoutPanelPumpBannerState.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelPumpBannerState.Size = New Size(1376, 664)
+        TableLayoutPanelPumpBannerState.Size = New Size(1376, 658)
         TableLayoutPanelPumpBannerState.TabIndex = 0
         ' 
         ' TableLayoutPanelPumpBannerStateTop
@@ -2401,9 +2401,9 @@ Partial Class Form1
         ' TabPage13SensorGlucose
         ' 
         TabPage13SensorGlucose.Controls.Add(TableLayoutPanelSgs)
-        TabPage13SensorGlucose.Location = New Point(4, 24)
+        TabPage13SensorGlucose.Location = New Point(4, 30)
         TabPage13SensorGlucose.Name = "TabPage13SensorGlucose"
-        TabPage13SensorGlucose.Size = New Size(1376, 664)
+        TabPage13SensorGlucose.Size = New Size(1376, 658)
         TabPage13SensorGlucose.TabIndex = 19
         TabPage13SensorGlucose.Text = "Sensor Glucose"
         TabPage13SensorGlucose.UseVisualStyleBackColor = True
@@ -2423,7 +2423,7 @@ Partial Class Form1
         TableLayoutPanelSgs.RowCount = 2
         TableLayoutPanelSgs.RowStyles.Add(New RowStyle())
         TableLayoutPanelSgs.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelSgs.Size = New Size(1376, 664)
+        TableLayoutPanelSgs.Size = New Size(1376, 658)
         TableLayoutPanelSgs.TabIndex = 1
         ' 
         ' TableLayoutPanelSgsTop
@@ -2446,9 +2446,9 @@ Partial Class Form1
         ' TabPage14TherapyAlgorithmState
         ' 
         TabPage14TherapyAlgorithmState.Controls.Add(TableLayoutPanelTherapyAlgorithmState)
-        TabPage14TherapyAlgorithmState.Location = New Point(4, 24)
+        TabPage14TherapyAlgorithmState.Location = New Point(4, 30)
         TabPage14TherapyAlgorithmState.Name = "TabPage14TherapyAlgorithmState"
-        TabPage14TherapyAlgorithmState.Size = New Size(1376, 664)
+        TabPage14TherapyAlgorithmState.Size = New Size(1376, 658)
         TabPage14TherapyAlgorithmState.TabIndex = 10
         TabPage14TherapyAlgorithmState.Text = "Therapy Algorithm State"
         TabPage14TherapyAlgorithmState.UseVisualStyleBackColor = True
@@ -2467,7 +2467,7 @@ Partial Class Form1
         TableLayoutPanelTherapyAlgorithmState.RowCount = 2
         TableLayoutPanelTherapyAlgorithmState.RowStyles.Add(New RowStyle())
         TableLayoutPanelTherapyAlgorithmState.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTherapyAlgorithmState.Size = New Size(1376, 664)
+        TableLayoutPanelTherapyAlgorithmState.Size = New Size(1376, 658)
         TableLayoutPanelTherapyAlgorithmState.TabIndex = 0
         ' 
         ' TableLayoutPanelTherapyAlgorithmStateTop
@@ -2489,9 +2489,9 @@ Partial Class Form1
         ' 
         ' TabPage15More
         ' 
-        TabPage15More.Location = New Point(4, 24)
+        TabPage15More.Location = New Point(4, 30)
         TabPage15More.Name = "TabPage15More"
-        TabPage15More.Size = New Size(1376, 664)
+        TabPage15More.Size = New Size(1376, 658)
         TabPage15More.TabIndex = 24
         TabPage15More.Text = "More..."
         TabPage15More.UseVisualStyleBackColor = True
@@ -2499,9 +2499,9 @@ Partial Class Form1
         ' TabPage01AutoBasalDelivery
         ' 
         TabPage01AutoBasalDelivery.Controls.Add(TableLayoutPanelAutoBasalDelivery)
-        TabPage01AutoBasalDelivery.Location = New Point(4, 24)
+        TabPage01AutoBasalDelivery.Location = New Point(4, 30)
         TabPage01AutoBasalDelivery.Name = "TabPage01AutoBasalDelivery"
-        TabPage01AutoBasalDelivery.Size = New Size(1376, 664)
+        TabPage01AutoBasalDelivery.Size = New Size(1376, 658)
         TabPage01AutoBasalDelivery.TabIndex = 1
         TabPage01AutoBasalDelivery.Text = "Auto Basal Delivery"
         TabPage01AutoBasalDelivery.UseVisualStyleBackColor = True
@@ -2521,7 +2521,7 @@ Partial Class Form1
         TableLayoutPanelAutoBasalDelivery.RowCount = 2
         TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New RowStyle())
         TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoBasalDelivery.Size = New Size(1376, 664)
+        TableLayoutPanelAutoBasalDelivery.Size = New Size(1376, 658)
         TableLayoutPanelAutoBasalDelivery.TabIndex = 0
         ' 
         ' TableLayoutPanelAutoBasalDeliveryTop
@@ -2544,9 +2544,9 @@ Partial Class Form1
         ' TabPage02AutoModeStatus
         ' 
         TabPage02AutoModeStatus.Controls.Add(TableLayoutPanelAutoModeStatus)
-        TabPage02AutoModeStatus.Location = New Point(4, 24)
+        TabPage02AutoModeStatus.Location = New Point(4, 30)
         TabPage02AutoModeStatus.Name = "TabPage02AutoModeStatus"
-        TabPage02AutoModeStatus.Size = New Size(1376, 664)
+        TabPage02AutoModeStatus.Size = New Size(1376, 658)
         TabPage02AutoModeStatus.TabIndex = 2
         TabPage02AutoModeStatus.Text = "Auto Mode Status"
         TabPage02AutoModeStatus.UseVisualStyleBackColor = True
@@ -2566,7 +2566,7 @@ Partial Class Form1
         TableLayoutPanelAutoModeStatus.RowCount = 2
         TableLayoutPanelAutoModeStatus.RowStyles.Add(New RowStyle())
         TableLayoutPanelAutoModeStatus.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoModeStatus.Size = New Size(1376, 664)
+        TableLayoutPanelAutoModeStatus.Size = New Size(1376, 658)
         TableLayoutPanelAutoModeStatus.TabIndex = 0
         ' 
         ' TableLayoutPanelAutoModeStatusTop
@@ -2589,9 +2589,9 @@ Partial Class Form1
         ' TabPage03BgReadings
         ' 
         TabPage03BgReadings.Controls.Add(TableLayoutPanelBgReadings)
-        TabPage03BgReadings.Location = New Point(4, 24)
+        TabPage03BgReadings.Location = New Point(4, 30)
         TabPage03BgReadings.Name = "TabPage03BgReadings"
-        TabPage03BgReadings.Size = New Size(1376, 664)
+        TabPage03BgReadings.Size = New Size(1376, 658)
         TabPage03BgReadings.TabIndex = 3
         TabPage03BgReadings.Text = "Bg Readings"
         TabPage03BgReadings.UseVisualStyleBackColor = True
@@ -2612,7 +2612,7 @@ Partial Class Form1
         TableLayoutPanelBgReadings.RowCount = 2
         TableLayoutPanelBgReadings.RowStyles.Add(New RowStyle())
         TableLayoutPanelBgReadings.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBgReadings.Size = New Size(1376, 664)
+        TableLayoutPanelBgReadings.Size = New Size(1376, 658)
         TableLayoutPanelBgReadings.TabIndex = 1
         ' 
         ' TableLayoutPanelBgReadingsTop
@@ -2635,9 +2635,9 @@ Partial Class Form1
         ' TabPage04Calibration
         ' 
         TabPage04Calibration.Controls.Add(TableLayoutPanelCalibration)
-        TabPage04Calibration.Location = New Point(4, 24)
+        TabPage04Calibration.Location = New Point(4, 30)
         TabPage04Calibration.Name = "TabPage04Calibration"
-        TabPage04Calibration.Size = New Size(1376, 664)
+        TabPage04Calibration.Size = New Size(1376, 658)
         TabPage04Calibration.TabIndex = 4
         TabPage04Calibration.Text = "Calibration"
         TabPage04Calibration.UseVisualStyleBackColor = True
@@ -2658,7 +2658,7 @@ Partial Class Form1
         TableLayoutPanelCalibration.RowCount = 2
         TableLayoutPanelCalibration.RowStyles.Add(New RowStyle())
         TableLayoutPanelCalibration.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelCalibration.Size = New Size(1376, 664)
+        TableLayoutPanelCalibration.Size = New Size(1376, 658)
         TableLayoutPanelCalibration.TabIndex = 1
         ' 
         ' TableLayoutPanelCalibrationTop
@@ -2681,9 +2681,9 @@ Partial Class Form1
         ' TabPage05Insulin
         ' 
         TabPage05Insulin.Controls.Add(TableLayoutPanelInsulin)
-        TabPage05Insulin.Location = New Point(4, 24)
+        TabPage05Insulin.Location = New Point(4, 30)
         TabPage05Insulin.Name = "TabPage05Insulin"
-        TabPage05Insulin.Size = New Size(1376, 664)
+        TabPage05Insulin.Size = New Size(1376, 658)
         TabPage05Insulin.TabIndex = 5
         TabPage05Insulin.Text = "Insulin"
         TabPage05Insulin.UseVisualStyleBackColor = True
@@ -2704,7 +2704,7 @@ Partial Class Form1
         TableLayoutPanelInsulin.RowCount = 2
         TableLayoutPanelInsulin.RowStyles.Add(New RowStyle())
         TableLayoutPanelInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelInsulin.Size = New Size(1376, 664)
+        TableLayoutPanelInsulin.Size = New Size(1376, 658)
         TableLayoutPanelInsulin.TabIndex = 1
         ' 
         ' TableLayoutPanelInsulinTop
@@ -2727,9 +2727,9 @@ Partial Class Form1
         ' TabPage06LowGlucoseSuspended
         ' 
         TabPage06LowGlucoseSuspended.Controls.Add(TableLayoutPanelLowGlucoseSuspended)
-        TabPage06LowGlucoseSuspended.Location = New Point(4, 24)
+        TabPage06LowGlucoseSuspended.Location = New Point(4, 30)
         TabPage06LowGlucoseSuspended.Name = "TabPage06LowGlucoseSuspended"
-        TabPage06LowGlucoseSuspended.Size = New Size(1376, 664)
+        TabPage06LowGlucoseSuspended.Size = New Size(1376, 658)
         TabPage06LowGlucoseSuspended.TabIndex = 6
         TabPage06LowGlucoseSuspended.Text = "Low Glucose Suspended"
         TabPage06LowGlucoseSuspended.UseVisualStyleBackColor = True
@@ -2750,7 +2750,7 @@ Partial Class Form1
         TableLayoutPanelLowGlucoseSuspended.RowCount = 2
         TableLayoutPanelLowGlucoseSuspended.RowStyles.Add(New RowStyle())
         TableLayoutPanelLowGlucoseSuspended.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLowGlucoseSuspended.Size = New Size(1376, 664)
+        TableLayoutPanelLowGlucoseSuspended.Size = New Size(1376, 658)
         TableLayoutPanelLowGlucoseSuspended.TabIndex = 1
         ' 
         ' TableLayoutPanelLowGlucoseSuspendedTop
@@ -2773,9 +2773,9 @@ Partial Class Form1
         ' TabPage07Meal
         ' 
         TabPage07Meal.Controls.Add(TableLayoutPanelMeal)
-        TabPage07Meal.Location = New Point(4, 24)
+        TabPage07Meal.Location = New Point(4, 30)
         TabPage07Meal.Name = "TabPage07Meal"
-        TabPage07Meal.Size = New Size(1376, 664)
+        TabPage07Meal.Size = New Size(1376, 658)
         TabPage07Meal.TabIndex = 7
         TabPage07Meal.Text = "Meal"
         TabPage07Meal.UseVisualStyleBackColor = True
@@ -2796,7 +2796,7 @@ Partial Class Form1
         TableLayoutPanelMeal.RowCount = 2
         TableLayoutPanelMeal.RowStyles.Add(New RowStyle())
         TableLayoutPanelMeal.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelMeal.Size = New Size(1376, 664)
+        TableLayoutPanelMeal.Size = New Size(1376, 658)
         TableLayoutPanelMeal.TabIndex = 1
         ' 
         ' TableLayoutPanelMealTop
@@ -2819,9 +2819,9 @@ Partial Class Form1
         ' TabPage08TimeChange
         ' 
         TabPage08TimeChange.Controls.Add(TableLayoutPanelTimeChange)
-        TabPage08TimeChange.Location = New Point(4, 24)
+        TabPage08TimeChange.Location = New Point(4, 30)
         TabPage08TimeChange.Name = "TabPage08TimeChange"
-        TabPage08TimeChange.Size = New Size(1376, 664)
+        TabPage08TimeChange.Size = New Size(1376, 658)
         TabPage08TimeChange.TabIndex = 8
         TabPage08TimeChange.Text = "Time Change"
         TabPage08TimeChange.UseVisualStyleBackColor = True
@@ -2842,7 +2842,7 @@ Partial Class Form1
         TableLayoutPanelTimeChange.RowCount = 2
         TableLayoutPanelTimeChange.RowStyles.Add(New RowStyle())
         TableLayoutPanelTimeChange.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTimeChange.Size = New Size(1376, 664)
+        TableLayoutPanelTimeChange.Size = New Size(1376, 658)
         TableLayoutPanelTimeChange.TabIndex = 1
         ' 
         ' TableLayoutPanelTimeChangeTop
@@ -2865,9 +2865,9 @@ Partial Class Form1
         ' TabPage09BasalPerHour
         ' 
         TabPage09BasalPerHour.Controls.Add(DgvBasalPerHour)
-        TabPage09BasalPerHour.Location = New Point(4, 24)
+        TabPage09BasalPerHour.Location = New Point(4, 30)
         TabPage09BasalPerHour.Name = "TabPage09BasalPerHour"
-        TabPage09BasalPerHour.Size = New Size(1376, 664)
+        TabPage09BasalPerHour.Size = New Size(1376, 658)
         TabPage09BasalPerHour.TabIndex = 9
         TabPage09BasalPerHour.Text = "SmartGuard Basal Per Hour"
         TabPage09BasalPerHour.UseVisualStyleBackColor = True
@@ -2875,9 +2875,9 @@ Partial Class Form1
         ' TabPage10CurrentUser
         ' 
         TabPage10CurrentUser.Controls.Add(DgvCurrentUser)
-        TabPage10CurrentUser.Location = New Point(4, 24)
+        TabPage10CurrentUser.Location = New Point(4, 30)
         TabPage10CurrentUser.Name = "TabPage10CurrentUser"
-        TabPage10CurrentUser.Size = New Size(1376, 664)
+        TabPage10CurrentUser.Size = New Size(1376, 658)
         TabPage10CurrentUser.TabIndex = 10
         TabPage10CurrentUser.Text = "Current User"
         TabPage10CurrentUser.UseVisualStyleBackColor = True
@@ -2885,18 +2885,18 @@ Partial Class Form1
         ' TabPage11AllUsers
         ' 
         TabPage11AllUsers.Controls.Add(DgvCareLinkUsers)
-        TabPage11AllUsers.Location = New Point(4, 24)
+        TabPage11AllUsers.Location = New Point(4, 30)
         TabPage11AllUsers.Name = "TabPage11AllUsers"
-        TabPage11AllUsers.Size = New Size(1376, 664)
+        TabPage11AllUsers.Size = New Size(1376, 658)
         TabPage11AllUsers.TabIndex = 11
         TabPage11AllUsers.Text = "All Users"
         TabPage11AllUsers.UseVisualStyleBackColor = True
         ' 
         ' TabPage12BackToHomePage
         ' 
-        TabPage12BackToHomePage.Location = New Point(4, 24)
+        TabPage12BackToHomePage.Location = New Point(4, 30)
         TabPage12BackToHomePage.Name = "TabPage12BackToHomePage"
-        TabPage12BackToHomePage.Size = New Size(1376, 664)
+        TabPage12BackToHomePage.Size = New Size(1376, 658)
         TabPage12BackToHomePage.TabIndex = 12
         TabPage12BackToHomePage.Text = "Back.."
         TabPage12BackToHomePage.UseVisualStyleBackColor = True
@@ -2922,7 +2922,7 @@ Partial Class Form1
         TabControlPage1.Font = New Font("Segoe UI", 9.0F)
         TabControlPage1.Location = New Point(0, 24)
         TabControlPage1.Name = "TabControlPage1"
-        TabControlPage1.Padding = New Point(0, 0)
+        TabControlPage1.Padding = New Point(6, 6)
         TabControlPage1.SelectedIndex = 0
         TabControlPage1.Size = New Size(1384, 692)
         TabControlPage1.TabIndex = 1
@@ -2945,7 +2945,7 @@ Partial Class Form1
         TabControlPage2.Font = New Font("Segoe UI", 9.0F)
         TabControlPage2.Location = New Point(0, 24)
         TabControlPage2.Name = "TabControlPage2"
-        TabControlPage2.Padding = New Point(0, 0)
+        TabControlPage2.Padding = New Point(6, 6)
         TabControlPage2.SelectedIndex = 0
         TabControlPage2.Size = New Size(1384, 692)
         TabControlPage2.TabIndex = 0
