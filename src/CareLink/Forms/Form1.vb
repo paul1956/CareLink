@@ -3583,8 +3583,8 @@ Public Class Form1
     '''  Updates the notification icon with the latest sensor glucose value and displays a balloon tip if necessary.
     '''  This method is called to refresh the notification icon based on the latest sensor glucose reading.
     ''' </summary>
-    ''' <param name="lastSgString">The last sensor glucose value as a string.</param>
-    Private Sub UpdateNotifyIcon(lastSgString As String)
+    ''' <param name="sgString">The last sensor glucose value as a string.</param>
+    Private Sub UpdateNotifyIcon(sgString As String)
         Try
             Dim sg As Single = s_lastSg.sg
             Using bitmapText As New Bitmap(width:=16, height:=16)
@@ -3616,7 +3616,7 @@ Public Class Form1
                             _showBalloonTip = False
                     End Select
 
-                    Dim s As String = lastSgString.PadRight(totalWidth:=3) _
+                    Dim s As String = sgString.PadRight(totalWidth:=3) _
                                                   .Substring(startIndex:=0, length:=3).Trim _
                                                   .PadLeft(totalWidth:=3)
                     Me.NotifyIcon1.Icon = CreateTextIcon(s, backColor)
@@ -3625,7 +3625,7 @@ Public Class Form1
                     strBuilder.AppendLine(
                         value:=Date.Now().ToShortDateTimeString _
                              .Replace($"{dateSeparator}{Now.Year}", ""))
-                    strBuilder.AppendLine($"Last SG {lastSgString} {GetBgUnitsString()}")
+                    strBuilder.AppendLine($"Last SG {sgString} {GetBgUnitsString()}")
                     If PatientData.ConduitInRange Then
                         If s_lastSgValue.IsSgInvalid Then
                             Me.TrendValueLabel.Text = ""
@@ -3951,8 +3951,6 @@ Public Class Form1
     Private Sub UpdateAutoModeShield()
         Try
             Me.LastSgOrExitTimeLabel.Text = s_lastSg.Timestamp.ToString(s_timeWithMinuteFormat)
-            Me.LastSgOrExitTimeLabel.BackColor = Color.Transparent
-            Me.ShieldUnitsLabel.BackColor = Color.Transparent
             Me.ShieldUnitsLabel.Text = GetBgUnitsString()
 
             If InAutoMode Then
@@ -3966,6 +3964,7 @@ Public Class Form1
                     Case "WARM_UP"
                         Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield_Disabled
                     Case "UNKNOWN"
+                        Stop
                     Case Else
                         Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
                 End Select
@@ -3978,31 +3977,27 @@ Public Class Form1
             End If
 
             Dim message As String = ""
-            If Not s_lastSg.sg.IsSgInvalid Then
-                Me.CurrentSgLabel.Visible = True
-                Dim sgString As String
-                If s_autoModeReadinessState?.Value = "CALIBRATING" Then
-                    ' TODO
-                    sgString = New SG(PatientData.LastSG).ToString
-                    Me.CurrentSgLabel.Text = sgString
-                Else
-                    sgString = New SG(PatientData.LastSG).ToString
-                    Me.CurrentSgLabel.Text = sgString
-                End If
-                Me.UpdateNotifyIcon(sgString)
-                _sgMiniDisplay.SetCurrentSgString(sgString, s_lastSg.sg)
+            If s_lastSg.sg.IsSgValid Then
                 Me.SensorMessageLabel.Visible = False
-                If s_sensorMessages.TryGetValue(PatientData.SensorState, message) Then
+                Dim sgString As String = New SG(PatientData.LastSG).ToString()
+                Me.CurrentSgLabel.Text = sgString
+                Me.CurrentSgLabel.CenterXYOnParent(verticalOffset:=-Me.ShieldUnitsLabel.Height)
+                Me.CurrentSgLabel.Visible = True
+                Me.ShieldUnitsLabel.CenterLabelXOnParent()
+                Me.ShieldUnitsLabel.Top = Me.CurrentSgLabel.Bottom + 2
+                Me.UpdateNotifyIcon(sgString)
+                _sgMiniDisplay.SetCurrentSgString(sgString, sgValue:=s_lastSg.sg)
+                If s_sensorMessages.TryGetValue(key:=PatientData.SensorState, value:=message) Then
                     Dim splitMessage As String = message.Split(SentenceSeparator)(0)
                     message = If(message.Contains("..."), $"{splitMessage}...", splitMessage)
                 End If
             Else
-                _sgMiniDisplay.SetCurrentSgString("---", s_lastSg.sg)
+                _sgMiniDisplay.SetCurrentSgString(sgString:="---", sgValue:=s_lastSg.sg)
                 Me.CurrentSgLabel.Visible = False
                 Me.LastSgOrExitTimeLabel.Visible = False
                 Me.SensorMessageLabel.Visible = True
                 Me.SensorMessageLabel.BackColor = Color.Transparent
-                If s_sensorMessages.TryGetValue(PatientData.SensorState, message) Then
+                If s_sensorMessages.TryGetValue(key:=PatientData.SensorState, value:=message) Then
                     Dim splitMessage As String = message.Split(SentenceSeparator)(0)
                     message = If(message.Contains("..."), $"{splitMessage}...", splitMessage)
                 Else
@@ -4071,15 +4066,15 @@ Public Class Form1
         Try
             If PatientData.ConduitInRange Then
                 If PatientData.TimeToNextCalibHours >= Byte.MaxValue Then
-                    Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(720)
+                    Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(minutesToNextCalibration:=720)
                 ElseIf PatientData.TimeToNextCalibHours = 0 Then
                     Me.CalibrationDueImage.Image = If(PatientData.SystemStatusMessage = "WAIT_TO_CALIBRATE" OrElse PatientData.SensorState = "WARM_UP" OrElse PatientData.SensorState = "CHANGE_SENSOR",
                     My.Resources.CalibrationNotReady,
-                    My.Resources.CalibrationDotRed.DrawCenteredArc(s_timeToNextCalibrationMinutes))
+                    My.Resources.CalibrationDotRed.DrawCenteredArc(minutesToNextCalibration:=s_timeToNextCalibrationMinutes))
                 ElseIf s_timeToNextCalibrationMinutes = -1 Then
                     Me.CalibrationDueImage.Image = Nothing
                 Else
-                    Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(s_timeToNextCalibrationMinutes)
+                    Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(minutesToNextCalibration:=s_timeToNextCalibrationMinutes)
                 End If
             End If
             Me.CalibrationDueImage.Visible = PatientData.ConduitInRange
@@ -4477,7 +4472,7 @@ Public Class Form1
         Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
         Dim highScale As Single = (GetYMaxValueFromNativeMmolL() - GetTirHighLimit()) / (GetTirLowLimit() - GetYMinValueFromNativeMmolL())
-        For Each sg As SG In s_sgRecords.Where(Function(entry As SG) Not entry.sg.IsSgInvalid)
+        For Each sg As SG In s_sgRecords.Where(predicate:=Function(entry As SG) entry.sg.IsSgValid)
             elements += 1
             If sg.sgMgdL < 70 Then
                 lowCount += 1
@@ -4541,29 +4536,29 @@ Public Class Form1
             If TypeOf ctrl Is Label Then
                 Select Case ctrl.Name
                     Case NameOf(Me.LowTirComplianceLabel)
-                        ctrl.CenterOnControl(onLeftHalf:=True)
+                        ctrl.CenterXOnParent(onLeftHalf:=True)
 
                     Case NameOf(Me.HighTirComplianceLabel)
-                        ctrl.CenterOnControl(onLeftHalf:=False)
+                        ctrl.CenterXOnParent(onLeftHalf:=False)
 
                     Case NameOf(Me.TimeInRangeMessageLabel)
-                        ctrl.CenterOnControl(onLeftHalf:=True)
+                        ctrl.CenterXOnParent(onLeftHalf:=True)
 
                     Case NameOf(Me.TimeInRangeValueLabel)
-                        ctrl.CenterOnControl(onLeftHalf:=True)
+                        ctrl.CenterXOnParent(onLeftHalf:=True)
 
                     Case NameOf(Me.TiTRMgsLabel)
-                        ctrl.CenterOnControl(onLeftHalf:=False)
+                        ctrl.CenterXOnParent(onLeftHalf:=False)
 
                     Case NameOf(Me.TimeInTightRangeValueLabel)
-                        ctrl.CenterOnControl(onLeftHalf:=False)
+                        ctrl.CenterXOnParent(onLeftHalf:=False)
 
                     Case NameOf(Me.TiTRMgsLabel2)
                         With Me.TiTRMgsLabel2
                             .Left = ctrl.Parent.Width - .Width - .Margin.Right
                         End With
                     Case Else
-                        ctrl.CenterOnControl()
+                        ctrl.CenterXOnParent()
                 End Select
             End If
         Next

@@ -144,13 +144,12 @@ Public Class SG
             Dim resultMessage As String = Nothing
             Return If(s_sensorMessages.TryGetValue(_sensorState, resultMessage),
                       resultMessage,
-                      _sensorState?.ToTitle
-                    )
+                      _sensorState?.ToTitle)
         End Get
     End Property
 
     Public Overrides Function ToString() As String
-        Return If(NativeMmolL, Me.sg.ToString("F1", Provider), Me.sg.ToString("F0"))
+        Return If(NativeMmolL, Me.sg.ToString(format:="F1", Provider), Me.sg.ToString(format:="F0"))
     End Function
 
 End Class
