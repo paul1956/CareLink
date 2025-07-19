@@ -25,13 +25,16 @@ Public Class SgMiniForm
 
     Private Shared Function GetLastUpdateMessage() As String
         If PatientData Is Nothing Then
-            Return "Last Update Unknown"
+            Return "User Unknown!"
         End If
         Dim firstName As String = PatientData.FirstName
         Dim epoch2PumpDateTime As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime
-        Return If(PatientData.LastConduitUpdateServerDateTime > 0,
-            $"{firstName}'s Updated {CInt((PumpNow() - epoch2PumpDateTime).TotalMinutes)} minutes ago",
-            $"{firstName}'s Last Update Unknown")
+        If PatientData.LastConduitUpdateServerDateTime > 0 Then
+            Dim minutes As Integer = CInt(Math.Round(value:=(PumpNow() - epoch2PumpDateTime).TotalMinutes, digits:=0))
+            Return $"{firstName}'s Data Updated {minutes.ToTimeUnits("Minute")} Ago"
+        Else
+            Return $"{firstName}'s Data Last Update Time Unknown"
+        End If
     End Function
 
     Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs) Handles ActiveInsulinTextBox.GotFocus

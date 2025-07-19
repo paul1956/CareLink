@@ -104,6 +104,17 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
+    '''  Converts an integer representing total units (years, days, months, hours, minutes, or seconds) to a formatted string.
+    ''' </summary>
+    ''' <param name="totalUnits">The total units to convert.</param>
+    ''' <param name="Unit">The unit of time to use, e.g., "minute" or "hour".</param>
+    ''' <returns>A formatted string representing the total units.</returns>
+    <Extension>
+    Public Function ToTimeUnits(totalUnits As Integer, Unit As String) As String
+        Return $"{totalUnits:N0} {If(totalUnits = 1, Unit, $"{Unit}s")}"
+    End Function
+
+    ''' <summary>
     '''  Converts a string of words separated by a space or underscore to a title case string,
     '''  where the first letter of every word is capitalized and the rest are lower case.
     ''' </summary>

@@ -43,11 +43,11 @@ Friend Module TimeSpanExtensions
         Dim mins As Integer = minutes Mod 60
 
         Dim parts As New List(Of String)
-        If days > 0 Then parts.Add(If(days = 1, "1 day", $"{days} days"))
-        If hours > 0 Then parts.Add(If(hours = 1, "1 hour", $"{hours} hours"))
-        If mins > 0 OrElse parts.Count = 0 Then parts.Add(If(mins = 1, "1 minute", $"{mins} minutes"))
+        If days > 0 Then parts.Add(days.ToTimeUnits(Unit:="day"))
+        If hours > 0 Then parts.Add(hours.ToTimeUnits(Unit:="hour"))
+        If mins > 0 OrElse parts.Count = 0 Then parts.Add(mins.ToTimeUnits(Unit:="minute"))
 
-        Return String.Join(", ", parts)
+        Return String.Join(separator:=", ", values:=parts)
     End Function
 
     ''' <summary>
