@@ -53,15 +53,18 @@ Public Class SgMiniForm
     Private Sub DeltaTextBox_TextChanged(sender As Object, e As EventArgs) Handles DeltaTextBox.TextChanged
         Select Case True
             Case Me.DeltaTextBox.Text = ""
-
+                Me.DeltaTextBox.BackColor = SystemColors.Window
             Case Math.Abs(_currentDelta) < 0.001
                 Me.DeltaTextBox.Text = ""
+                Me.DeltaTextBox.BackColor = SystemColors.Window
 
             Case _currentDelta > 0
                 Me.DeltaTextBox.ForeColor = Color.Blue
+                Me.DeltaTextBox.BackColor = SystemColors.ControlDarkDark
 
             Case Else
                 Me.DeltaTextBox.ForeColor = Color.Orange
+                Me.DeltaTextBox.BackColor = SystemColors.Window
 
         End Select
     End Sub
