@@ -140,9 +140,9 @@ Partial Class AboutBox1
         ' 
         ' TextBoxDescription
         ' 
-        TextBoxDescription.BackColor = SystemColors.Control
+        TextBoxDescription.BackColor = Color.FromArgb(30, 30, 30)
         TextBoxDescription.Dock = DockStyle.Fill
-        TextBoxDescription.ForeColor = SystemColors.ControlText
+        TextBoxDescription.ForeColor = Color.White
         TextBoxDescription.Location = New Point(192, 126)
         TextBoxDescription.Margin = New Padding(7, 3, 4, 3)
         TextBoxDescription.Multiline = True
