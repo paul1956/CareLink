@@ -137,11 +137,11 @@ Public Class SgMiniForm
     End Sub
 
     Public Sub SetCurrentSgString(sgString As String, sgValue As Single)
+        _currentSgValue = sgValue
+        _normalizedSg = sgValue
         Me.SgTextBox.Text = If(String.IsNullOrWhiteSpace(sgString) OrElse Single.IsNaN(sgValue),
                                "---",
                                sgString)
-        _currentSgValue = sgValue
-        _normalizedSg = sgValue
         If NativeMmolL Then
             _normalizedSg *= MmolLUnitsDivisor
         End If
