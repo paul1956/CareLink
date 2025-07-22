@@ -3680,21 +3680,29 @@ Public Class Form1
                             Me.TrendValueLabel.Visible = False
                             _sgMiniDisplay.SetCurrentDeltaValue(deltaString:="", delta:=0)
                         Else
-                            Dim diffSg As Single = sg - s_lastSgValue
-                            Me.TrendValueLabel.Text = If(Math.Abs(diffSg) < 0.001,
-                                                         "0",
-                                                         diffSg.ToString(GetSgFormat(withSign:=True), provider:=CultureInfo.InvariantCulture)
-                                                        )
-                            _sgMiniDisplay.SetCurrentDeltaValue(Me.TrendValueLabel.Text, diffSg)
+                            Dim delta As Single = sg - s_lastSgValue
+                            Dim deltaString As String = ""
+                            Dim provider As CultureInfo = CultureInfo.InvariantCulture
+
+                            If sg.IsSgInvalid Then
+                                Me.TrendValueLabel.Text = ""
+                                _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta:=0)
+                            Else
+                                deltaString = If(Math.Abs(value:=delta) < 0.001,
+                                                          "0",
+                                                          delta.ToString(format:=GetSgFormat(withSign:=True), provider))
+                                Me.TrendValueLabel.Text = deltaString
+                                _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta)
+                            End If
                             Me.TrendValueLabel.ForeColor = backColor
-                            strBuilder.AppendLine($"SG Trend { diffSg.ToString(GetSgFormat(withSign:=True), provider:=CultureInfo.InvariantCulture)}")
+                            strBuilder.AppendLine($"SG Trend { deltaString}")
                             Me.TrendValueLabel.Visible = True
                         End If
                     Else
                         Me.TrendValueLabel.Visible = False
                     End If
                     strBuilder.Append($"Active ins. {PatientData.ActiveInsulin?.Amount:N3} U")
-                    Me.NotifyIcon1.Text = strBuilder.ToString
+                    Me.NotifyIcon1.Text = strBuilder.ToString()
                     Me.NotifyIcon1.Visible = True
                     s_lastSgValue = sg
                 End Using
