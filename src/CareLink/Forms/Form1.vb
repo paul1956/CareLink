@@ -4495,8 +4495,9 @@ Public Class Form1
                 Dim timeInAutoMode As TimeSpan = ZeroTickSpan
                 For Each r As IndexClass(Of AutoModeStatus) In s_autoModeStatusMarkers.WithIndex
                     If r.IsFirst Then
-                        If r.Value.AutoModeOn Then
+                        If r.Value.AutoModeOn OrElse s_autoModeStatusMarkers.Count = 1 Then
                             autoModeStartTime = r.Value.Timestamp
+                            timeInAutoMode += s_autoModeStatusMarkers.First.Timestamp.AddDays(value:=1) - autoModeStartTime
                         Else
 
                         End If
