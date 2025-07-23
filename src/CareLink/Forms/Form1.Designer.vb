@@ -365,7 +365,7 @@ Partial Class Form1
         AboveHighLimitValueLabel.AutoSize = True
         AboveHighLimitValueLabel.BackColor = Color.Black
         AboveHighLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
-        AboveHighLimitValueLabel.ForeColor = Color.White
+        AboveHighLimitValueLabel.ForeColor = Color.Yellow
         AboveHighLimitValueLabel.Location = New Point(79, 169)
         AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
         AboveHighLimitValueLabel.Size = New Size(75, 40)
@@ -475,7 +475,7 @@ Partial Class Form1
         BelowLowLimitValueLabel.AutoSize = True
         BelowLowLimitValueLabel.BackColor = Color.Black
         BelowLowLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
-        BelowLowLimitValueLabel.ForeColor = Color.White
+        BelowLowLimitValueLabel.ForeColor = Color.Red
         BelowLowLimitValueLabel.Location = New Point(79, 291)
         BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
         BelowLowLimitValueLabel.Size = New Size(75, 40)
