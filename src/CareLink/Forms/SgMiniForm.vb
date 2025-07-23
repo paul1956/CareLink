@@ -132,16 +132,16 @@ Public Class SgMiniForm
     End Sub
 
     Public Sub SetCurrentDeltaValue(deltaString As String, delta As Single)
-        Me.DeltaTextBox.Text = If(Math.Abs(delta) < 0.001, "", deltaString)
+        Me.DeltaTextBox.Text = If(delta.IsSgInvalid OrElse Math.Abs(delta) < 0.001, "", deltaString)
         _currentDelta = delta
     End Sub
 
     Public Sub SetCurrentSgString(sgString As String, sgValue As Single)
+        _currentSgValue = sgValue
+        _normalizedSg = sgValue
         Me.SgTextBox.Text = If(String.IsNullOrWhiteSpace(sgString) OrElse Single.IsNaN(sgValue),
                                "---",
                                sgString)
-        _currentSgValue = sgValue
-        _normalizedSg = sgValue
         If NativeMmolL Then
             _normalizedSg *= MmolLUnitsDivisor
         End If
