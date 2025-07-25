@@ -3930,13 +3930,13 @@ Public Class Form1
                     s.Points.Clear()
                 Next
                 .ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
-                .Titles(0).Text = $"Status - {Me.GetSubTitle()}"
+                .Titles(index:=0).Text = $"Status - {Me.GetSubTitle()}"
                 .PlotSuspendArea(SuspendSeries:=Me.SummarySuspendSeries)
                 .PlotMarkers(
                     timeChangeSeries:=Me.SummaryTimeChangeSeries,
                     markerInsulinDictionary:=s_summaryMarkerInsulinDictionary,
                     markerMealDictionary:=s_summaryMarkerMealDictionary)
-                .PlotSgSeries(GetYMinValueFromNativeMmolL())
+                .PlotSgSeries(HomePageMealRow:=GetYMinValueFromNativeMmolL())
                 .PlotHighLowLimitsAndTargetSg(targetSsOnly:=False)
                 Application.DoEvents()
             End With
@@ -4588,11 +4588,11 @@ Public Class Form1
         End If
         Try
             Me.InitializeTreatmentMarkersChart()
-            Me.TreatmentMarkersChart.Titles(NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details{s_basalList.Subtitle()}"
-            Me.TreatmentMarkersChart.ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
-            Me.TreatmentMarkersChart.PlotSuspendArea(Me.TreatmentMarkerSuspendSeries)
+            Me.TreatmentMarkersChart.Titles(name:=NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details{s_basalList.Subtitle()}"
+            Me.TreatmentMarkersChart.ChartAreas(name:=NameOf(ChartArea)).UpdateChartAreaSgAxisX()
+            Me.TreatmentMarkersChart.PlotSuspendArea(SuspendSeries:=Me.TreatmentMarkerSuspendSeries)
             Me.TreatmentMarkersChart.PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
-            Me.TreatmentMarkersChart.PlotSgSeries(GetYMinValueFromNativeMmolL())
+            Me.TreatmentMarkersChart.PlotSgSeries(HomePageMealRow:=GetYMinValueFromNativeMmolL())
             Me.TreatmentMarkersChart.PlotHighLowLimitsAndTargetSg(targetSsOnly:=True)
         Catch innerException As Exception
             Stop

@@ -434,13 +434,13 @@ Friend Module CreateChartItems
     ''' </summary>
     ''' <param name="chartTitle">The text of the chart title.</param>
     ''' <param name="name">The name of the title.</param>
-    ''' <param name="foreColor">The foreground color of the title.</param>
+    ''' <param name="foreColor">The foreground color of the title text, if White change to Gray</param>
     ''' <returns>A Title object configured with the specified properties.</returns>
     Friend Function CreateTitle(chartTitle As String, name As String, foreColor As Color) As Title
         Return New Title With {
             .BackColor = foreColor.ContrastingColor(),
             .Font = New Font(FamilyName, emSize:=14.0F, style:=FontStyle.Bold),
-            .ForeColor = foreColor,
+            .ForeColor = If(foreColor = Color.White, Color.Gray, foreColor),
             .Name = name,
             .ShadowColor = Color.FromArgb(alpha:=32, baseColor:=Color.Black),
             .ShadowOffset = 3,

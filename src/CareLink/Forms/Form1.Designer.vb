@@ -349,12 +349,13 @@ Partial Class Form1
         ' AboveHighLimitMessageLabel
         ' 
         AboveHighLimitMessageLabel.Anchor = AnchorStyles.Top
+        AboveHighLimitMessageLabel.AutoSize = True
         AboveHighLimitMessageLabel.BackColor = Color.Transparent
         AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         AboveHighLimitMessageLabel.ForeColor = Color.Yellow
-        AboveHighLimitMessageLabel.Location = New Point(31, 211)
+        AboveHighLimitMessageLabel.Location = New Point(44, 211)
         AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
-        AboveHighLimitMessageLabel.Size = New Size(170, 21)
+        AboveHighLimitMessageLabel.Size = New Size(144, 21)
         AboveHighLimitMessageLabel.TabIndex = 28
         AboveHighLimitMessageLabel.Text = "Above XXX XX/XX"
         AboveHighLimitMessageLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -366,11 +367,11 @@ Partial Class Form1
         AboveHighLimitValueLabel.BackColor = Color.Black
         AboveHighLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         AboveHighLimitValueLabel.ForeColor = Color.Yellow
-        AboveHighLimitValueLabel.Location = New Point(79, 169)
+        AboveHighLimitValueLabel.Location = New Point(87, 169)
         AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
-        AboveHighLimitValueLabel.Size = New Size(75, 40)
+        AboveHighLimitValueLabel.Size = New Size(59, 40)
         AboveHighLimitValueLabel.TabIndex = 22
-        AboveHighLimitValueLabel.Text = "  8%"
+        AboveHighLimitValueLabel.Text = "8%"
         AboveHighLimitValueLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' ActiveInsulinValue
@@ -389,12 +390,13 @@ Partial Class Form1
         ' AverageSGMessageLabel
         ' 
         AverageSGMessageLabel.Anchor = AnchorStyles.Top
+        AverageSGMessageLabel.AutoSize = True
         AverageSGMessageLabel.BackColor = Color.Transparent
         AverageSGMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         AverageSGMessageLabel.ForeColor = Color.White
-        AverageSGMessageLabel.Location = New Point(4, 393)
+        AverageSGMessageLabel.Location = New Point(33, 398)
         AverageSGMessageLabel.Name = "AverageSGMessageLabel"
-        AverageSGMessageLabel.Size = New Size(224, 21)
+        AverageSGMessageLabel.Size = New Size(167, 21)
         AverageSGMessageLabel.TabIndex = 0
         AverageSGMessageLabel.Text = "Average SG in XX/XX"
         AverageSGMessageLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -459,12 +461,13 @@ Partial Class Form1
         ' BelowLowLimitMessageLabel
         ' 
         BelowLowLimitMessageLabel.Anchor = AnchorStyles.Top
+        BelowLowLimitMessageLabel.AutoSize = True
         BelowLowLimitMessageLabel.BackColor = Color.Transparent
         BelowLowLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         BelowLowLimitMessageLabel.ForeColor = Color.Red
-        BelowLowLimitMessageLabel.Location = New Point(31, 333)
+        BelowLowLimitMessageLabel.Location = New Point(45, 333)
         BelowLowLimitMessageLabel.Name = "BelowLowLimitMessageLabel"
-        BelowLowLimitMessageLabel.Size = New Size(170, 21)
+        BelowLowLimitMessageLabel.Size = New Size(142, 21)
         BelowLowLimitMessageLabel.TabIndex = 32
         BelowLowLimitMessageLabel.Text = "Below XXX XX/XX"
         BelowLowLimitMessageLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -476,11 +479,11 @@ Partial Class Form1
         BelowLowLimitValueLabel.BackColor = Color.Black
         BelowLowLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         BelowLowLimitValueLabel.ForeColor = Color.Red
-        BelowLowLimitValueLabel.Location = New Point(79, 291)
+        BelowLowLimitValueLabel.Location = New Point(87, 291)
         BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
-        BelowLowLimitValueLabel.Size = New Size(75, 40)
+        BelowLowLimitValueLabel.Size = New Size(59, 40)
         BelowLowLimitValueLabel.TabIndex = 26
-        BelowLowLimitValueLabel.Text = "  2%"
+        BelowLowLimitValueLabel.Text = "2%"
         BelowLowLimitValueLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' CalibrationDueImage
@@ -901,8 +904,8 @@ Partial Class Form1
         GraphLast24HoursLabel.Anchor = AnchorStyles.Top
         GraphLast24HoursLabel.AutoSize = True
         GraphLast24HoursLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        GraphLast24HoursLabel.ForeColor = Color.White
-        GraphLast24HoursLabel.Location = New Point(62, 26)
+        GraphLast24HoursLabel.ForeColor = Color.Gray
+        GraphLast24HoursLabel.Location = New Point(62, 22)
         GraphLast24HoursLabel.Name = "GraphLast24HoursLabel"
         GraphLast24HoursLabel.Size = New Size(109, 21)
         GraphLast24HoursLabel.TabIndex = 34
@@ -963,7 +966,7 @@ Partial Class Form1
         ' 
         Last24HrAutoCorrectionLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24HrAutoCorrectionLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrAutoCorrectionLabel.ForeColor = Color.White
+        Last24HrAutoCorrectionLabel.ForeColor = Color.Gray
         Last24HrAutoCorrectionLabel.Location = New Point(0, 43)
         Last24HrAutoCorrectionLabel.Name = "Last24HrAutoCorrectionLabel"
         Last24HrAutoCorrectionLabel.Size = New Size(145, 21)
@@ -999,7 +1002,7 @@ Partial Class Form1
         ' 
         Last24HrBasalLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24HrBasalLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrBasalLabel.ForeColor = Color.White
+        Last24HrBasalLabel.ForeColor = Color.Gray
         Last24HrBasalLabel.Location = New Point(0, 23)
         Last24HrBasalLabel.Name = "Last24HrBasalLabel"
         Last24HrBasalLabel.Size = New Size(110, 21)
@@ -1036,7 +1039,7 @@ Partial Class Form1
         Last24HrCarbsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24HrCarbsLabel.AutoSize = True
         Last24HrCarbsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrCarbsLabel.ForeColor = Color.White
+        Last24HrCarbsLabel.ForeColor = Color.Gray
         Last24HrCarbsLabel.Location = New Point(0, 103)
         Last24HrCarbsLabel.Name = "Last24HrCarbsLabel"
         Last24HrCarbsLabel.Size = New Size(98, 21)
@@ -1060,7 +1063,7 @@ Partial Class Form1
         ' 
         Last24HrMealBolusLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24HrMealBolusLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrMealBolusLabel.ForeColor = Color.White
+        Last24HrMealBolusLabel.ForeColor = Color.Gray
         Last24HrMealBolusLabel.Location = New Point(0, 64)
         Last24HrMealBolusLabel.Name = "Last24HrMealBolusLabel"
         Last24HrMealBolusLabel.Size = New Size(110, 21)
@@ -1109,7 +1112,7 @@ Partial Class Form1
         ' 
         Last24HrTotalInsulinLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24HrTotalInsulinLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrTotalInsulinLabel.ForeColor = Color.White
+        Last24HrTotalInsulinLabel.ForeColor = Color.Gray
         Last24HrTotalInsulinLabel.Location = New Point(0, 85)
         Last24HrTotalInsulinLabel.Name = "Last24HrTotalInsulinLabel"
         Last24HrTotalInsulinLabel.Size = New Size(110, 21)
@@ -1660,12 +1663,13 @@ Partial Class Form1
         ' SmartGuardLabel
         ' 
         SmartGuardLabel.Anchor = AnchorStyles.Top
+        SmartGuardLabel.AutoSize = True
         SmartGuardLabel.BackColor = Color.Transparent
         SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
         SmartGuardLabel.ForeColor = Color.DodgerBlue
-        SmartGuardLabel.Location = New Point(4, 413)
+        SmartGuardLabel.Location = New Point(28, 421)
         SmartGuardLabel.Name = "SmartGuardLabel"
-        SmartGuardLabel.Size = New Size(224, 35)
+        SmartGuardLabel.Size = New Size(176, 25)
         SmartGuardLabel.TabIndex = 35
         SmartGuardLabel.Text = "SmartGuard 100%"
         SmartGuardLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1823,7 +1827,7 @@ Partial Class Form1
         TimeInRangeHeaderLabel.Anchor = AnchorStyles.Top
         TimeInRangeHeaderLabel.AutoSize = True
         TimeInRangeHeaderLabel.Font = New Font("Segoe UI", 14.0F, FontStyle.Bold)
-        TimeInRangeHeaderLabel.ForeColor = Color.White
+        TimeInRangeHeaderLabel.ForeColor = Color.Gray
         TimeInRangeHeaderLabel.Location = New Point(47, 0)
         TimeInRangeHeaderLabel.Name = "TimeInRangeHeaderLabel"
         TimeInRangeHeaderLabel.Size = New Size(138, 25)
@@ -1903,12 +1907,13 @@ Partial Class Form1
         ' TirComplianceLabel
         ' 
         TirComplianceLabel.Anchor = AnchorStyles.Top
+        TirComplianceLabel.AutoSize = True
         TirComplianceLabel.BackColor = Color.Transparent
         TirComplianceLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
-        TirComplianceLabel.ForeColor = Color.White
-        TirComplianceLabel.Location = New Point(3, 448)
+        TirComplianceLabel.ForeColor = Color.Gray
+        TirComplianceLabel.Location = New Point(38, 448)
         TirComplianceLabel.Name = "TirComplianceLabel"
-        TirComplianceLabel.Size = New Size(226, 25)
+        TirComplianceLabel.Size = New Size(157, 25)
         TirComplianceLabel.TabIndex = 35
         TirComplianceLabel.Text = "TIR Compliance¹"
         TirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1965,11 +1970,23 @@ Partial Class Form1
         TableLayoutPanelNotificationsClearedTop.ColumnCount = 2
         TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelNotificationsClearedTop.Dock = DockStyle.Fill
         TableLayoutPanelNotificationsClearedTop.LabelText = "Notifications Cleared"
         TableLayoutPanelNotificationsClearedTop.Location = New Point(0, 0)
         TableLayoutPanelNotificationsClearedTop.Name = "TableLayoutPanelNotificationsClearedTop"
         TableLayoutPanelNotificationsClearedTop.RowCount = 1
+        TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelNotificationsClearedTop.Size = New Size(1376, 39)
         TableLayoutPanelNotificationsClearedTop.TabIndex = 1
