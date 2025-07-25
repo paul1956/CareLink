@@ -18,7 +18,7 @@ Public Module ControlExtensions
             controlWidth = lbl.PreferredWidth
         End If
         ' Center in the middle of the parent control
-        lbl.Left = (lbl.Parent.Width - (controlWidth + lbl.Margin.Left + +lbl.Margin.Right)) \ 2
+        lbl.Left = (lbl.Parent.Width - controlWidth) \ 2
     End Sub
 
     ''' <summary>
@@ -32,23 +32,32 @@ Public Module ControlExtensions
     ''' </param>
     <Extension>
     Friend Sub CenterXOnParent(ByRef ctrl As Control, Optional onLeftHalf As Boolean? = Nothing)
-        Dim controlWidth As Integer = ctrl.Width
+        Dim controlWidth As Integer
         If TypeOf ctrl Is Label AndAlso ctrl.AutoSize Then
+            Dim lbl As Label = DirectCast(ctrl, Label)
             ' If the control is a Label with AutoSize, adjust the width to fit the text
-            controlWidth = DirectCast(ctrl, Label).PreferredWidth
+            If lbl.PreferredWidth > 0 Then
+                ' Ensure PreferredWidth is valid
+                controlWidth = lbl.PreferredWidth
+            Else
+                ' Fallback to Width if PreferredWidth is not set
+                controlWidth = ctrl.Width
+            End If
+        Else
+            controlWidth = ctrl.Width
         End If
         If onLeftHalf.HasValue Then
             Dim halfWidth As Integer = ctrl.Parent.Width \ 2
             If onLeftHalf.Value Then
                 ' Center on the left half
-                ctrl.Left = (halfWidth - (controlWidth + ctrl.Margin.Left)) \ 2
+                ctrl.Left = (halfWidth - controlWidth) \ 2
             Else
                 ' Center on the right half
-                ctrl.Left = halfWidth + ((halfWidth - (controlWidth + ctrl.Margin.Right)) \ 2)
+                ctrl.Left = halfWidth + ((halfWidth - controlWidth) \ 2)
             End If
         Else
             ' Center in the middle of the parent control
-            ctrl.Left = (ctrl.Parent.Width - (controlWidth + ctrl.Margin.Left + +ctrl.Margin.Right)) \ 2
+            ctrl.Left = (ctrl.Parent.Width - controlWidth) \ 2
         End If
     End Sub
 
@@ -67,7 +76,7 @@ Public Module ControlExtensions
             controlHeight = ctrl.PreferredHeight
         End If
         ' Center in the middle of the parent control
-        ctrl.Left = (ctrl.Parent.Width - (controlWidth + ctrl.Margin.Left + ctrl.Margin.Right)) \ 2
+        ctrl.Left = (ctrl.Parent.Width - controlWidth) \ 2
         ctrl.Top = ((ctrl.Parent.Height - (controlHeight + ctrl.Margin.Top + ctrl.Margin.Bottom)) \ 2) + verticalOffset
     End Sub
 
