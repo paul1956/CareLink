@@ -218,7 +218,7 @@ Friend Module DateTimeExtensions
     <Extension>
     Public Function ToHoursMinutes(timeInHours As Single) As String
         Dim hours As Integer = CInt(timeInHours)
-        Return New TimeSpan(hours, minutes:=CInt((timeInHours - hours) * 60), seconds:=0).ToString.Substring(startIndex:=4)
+        Return $"{New TimeSpan(hours, minutes:=CInt((timeInHours - hours) * 60), seconds:=0):h\:mm}"
 
     End Function
 
