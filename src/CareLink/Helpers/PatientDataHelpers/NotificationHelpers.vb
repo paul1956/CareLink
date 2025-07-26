@@ -72,11 +72,15 @@ Friend Module NotificationHelpers
     Private Sub DgvNotification_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If s_filterJsonData AndAlso s_columnsToHide.Contains(.Name) Then
+            If s_filterJsonData AndAlso s_columnsToHide.Contains(item:= .Name) Then
                 .Visible = False
             End If
+            Dim cellStyle As DataGridViewCellStyle = ClassPropertiesToColumnAlignment(Of SummaryRecord)(
+                alignmentTable:=s_alignmentTable,
+                columnName:= .Name)
+
             e.DgvColumnAdded(
-                cellStyle:=ClassPropertiesToColumnAlignment(Of SummaryRecord)(s_alignmentTable, .Name),
+                cellStyle,
                 forceReadOnly:=True,
                 caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
             If e.Column.Index = 0 Then

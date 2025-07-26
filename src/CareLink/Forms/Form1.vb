@@ -142,7 +142,7 @@ Public Class Form1
     ''' <param name="factor">The scaling factor.</param>
     ''' <param name="specified">The bounds specified for scaling.</param>
     Protected Overrides Sub ScaleControl(factor As SizeF, specified As BoundsSpecified)
-        _formScale = New SizeF(_formScale.Width * factor.Width, _formScale.Height * factor.Height)
+        _formScale = New SizeF(width:=_formScale.Width * factor.Width, height:=_formScale.Height * factor.Height)
         MyBase.ScaleControl(factor, specified)
     End Sub
 
@@ -668,7 +668,7 @@ Public Class Form1
                         Case NameOf(DgvActiveInsulin)
                             e.Value = $"{dgv.CellFormattingSingleValue(e, digits:=3)} U"
                         Case NameOf(DgvMeal)
-                            dgv.CellFormattingInteger(e, GetCarbDefaultUnit)
+                            dgv.CellFormattingInteger(e, message:=GetCarbDefaultUnit)
                     End Select
                 Case NameOf(BasalPerHour.BasalRate), NameOf(BasalPerHour.BasalRate2)
                     If dgv.Name = NameOf(DgvBasalPerHour) Then
@@ -886,8 +886,8 @@ Public Class Form1
             _dgvSummaryPrevColIndex > 0 AndAlso _dgvSummaryPrevColIndex < dgv.ColumnCount Then
 
             ' Restore the previous selection in the Summary DataGridView if its not empty or Row(0).Cell(0).
-            dgv.CurrentCell = dgv.Rows(_dgvSummaryPrevRowIndex).Cells(_dgvSummaryPrevColIndex)
-            dgv.Rows(_dgvSummaryPrevRowIndex).Selected = True
+            dgv.CurrentCell = dgv.Rows(index:=_dgvSummaryPrevRowIndex).Cells(index:=_dgvSummaryPrevColIndex)
+            dgv.Rows(index:=_dgvSummaryPrevRowIndex).Selected = True
             dgv.FirstDisplayedScrollingRowIndex = _dgvSummaryPrevRowIndex
         Else
             ' Clear the selection of all DataGridViews except Summary DataGridView.
@@ -1219,7 +1219,7 @@ Public Class Form1
             End Select
             s_allUserSettingsData.SaveAllUserRecords()
         Catch ex As Exception
-            MessageBox.Show(ex.DecodeException())
+            MessageBox.Show(text:=ex.DecodeException())
         End Try
     End Sub
 
@@ -2052,19 +2052,18 @@ Public Class Form1
             My.Settings.Save()
         End If
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)
-        Dim currentAllUserLoginFile As String = UserSettingsCsvFileWithPath
         If Not Directory.Exists(DirectoryForProjectData) Then
             Dim lastError As String = $"Can't create required project directories!"
             Directory.CreateDirectory(DirectoryForProjectData)
             Directory.CreateDirectory(GetSettingsDirectory())
         End If
 
-        If Not Directory.Exists(GetSettingsDirectory()) Then
-            Directory.CreateDirectory(GetSettingsDirectory())
+        If Not Directory.Exists(path:=GetSettingsDirectory()) Then
+            Directory.CreateDirectory(path:=GetSettingsDirectory())
         End If
 
-        If File.Exists(currentAllUserLoginFile) Then
-            s_allUserSettingsData.LoadUserRecords(currentAllUserLoginFile)
+        If File.Exists(UserSettingsCsvFileWithPath) Then
+            s_allUserSettingsData.LoadUserRecords(UserSettingsCsvFileWithPath)
         Else
             My.Settings.AutoLogin = False
         End If
@@ -2073,7 +2072,7 @@ Public Class Form1
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
         My.Forms.OptionsConfigureTiTR.TreatmentTargetPercent = My.Settings.TiTrTreatmentTargetPercent
         My.Forms.OptionsConfigureTiTR.LowThreshold = My.Settings.TiTrLowThreshold
-        Me.InitializeDgvCareLinkUsers(Me.DgvCareLinkUsers)
+        Me.InitializeDgvCareLinkUsers(dgv:=Me.DgvCareLinkUsers)
         s_formLoaded = True
         Me.MenuOptionsAudioAlerts.Checked = My.Settings.SystemAudioAlertsEnabled
         Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitionThreshold < 1
@@ -2088,9 +2087,9 @@ Public Class Form1
         End If
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
-        If String.IsNullOrWhiteSpace(GetWebViewCacheDirectory()) Then
+        If String.IsNullOrWhiteSpace(value:=GetWebViewCacheDirectory()) Then
             s_webView2CacheDirectory = Path.Join(ProjectWebCache, Guid.NewGuid().ToString())
-            Directory.CreateDirectory(s_webView2CacheDirectory)
+            Directory.CreateDirectory(path:=s_webView2CacheDirectory)
         End If
 
         Dim style As FontStyle = FontStyle.Bold
@@ -2117,7 +2116,7 @@ Public Class Form1
         If Me.WindowState = FormWindowState.Minimized Then
             Me.NotifyIcon1.Visible = True
             If Me.NotifyIcon1.BalloonTipText.Length > 0 Then
-                Me.NotifyIcon1.ShowBalloonTip(1000)
+                Me.NotifyIcon1.ShowBalloonTip(timeout:=1000)
             End If
         End If
     End Sub
@@ -2424,7 +2423,7 @@ Public Class Form1
                                 Me.TabControlPage2.Visible = True
                                 Me.TabControlPage1.Visible = True
                             Catch ex As Exception
-                                MessageBox.Show($"Error reading data file. Original error: {ex.DecodeException()}")
+                                MessageBox.Show(text:=$"Error reading data file. Original error: {ex.DecodeException()}")
                             End Try
                             CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName(
                                 FixedPart:="CareLink",
