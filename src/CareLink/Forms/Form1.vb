@@ -2174,6 +2174,8 @@ Public Class Form1
 
 #End Region ' Status Strip Colors
 
+        Me.PositionControlsInPanel()
+
         Me.NotifyIcon1.Visible = True
         Application.DoEvents()
         Me.NotifyIcon1.Visible = False
