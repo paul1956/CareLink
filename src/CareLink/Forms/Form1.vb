@@ -4208,6 +4208,7 @@ Public Class Form1
                 Select Case PatientData.SensorState
                     Case "UNKNOWN"
                         Me.SensorMessageLabel.Text = message
+                        Me.SensorMessageLabel.CenterXYOnParent(verticalOffset:=-5)
                     Case "WARM_UP"
                         Dim timeRemaining As String = ""
                         If s_systemStatusTimeRemaining.TotalMilliseconds > 0 Then
@@ -4221,8 +4222,10 @@ Public Class Form1
                                 timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} min"
                             End If
                             Me.SensorMessageLabel.Text = $"{message.Remove(oldValue:="...")}{vbCrLf}{timeRemaining}"
+                            Me.SensorMessageLabel.CenterXYOnParent(verticalOffset:=-5)
                         Else
                             Me.SensorMessageLabel.Text = message
+                            Me.SensorMessageLabel.CenterXYOnParent(verticalOffset:=-5)
                         End If
                     Case "CALIBRATION_REQUIRED"
                     Case Else

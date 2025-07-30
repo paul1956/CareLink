@@ -568,7 +568,7 @@ Partial Class Form1
         SensorMessageLabel.BackColor = Color.Transparent
         SensorMessageLabel.Font = New Font("Segoe UI", 9.5F, FontStyle.Bold)
         SensorMessageLabel.ForeColor = Color.White
-        SensorMessageLabel.Location = New Point(0, 13)
+        SensorMessageLabel.Location = New Point(0, 8)
         SensorMessageLabel.Name = "SensorMessageLabel"
         SensorMessageLabel.Size = New Size(116, 57)
         SensorMessageLabel.TabIndex = 1
