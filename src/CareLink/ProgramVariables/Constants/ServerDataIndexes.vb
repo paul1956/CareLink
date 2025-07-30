@@ -70,5 +70,4 @@ Public Enum ServerDataIndexes
     notificationHistory
     sensorLifeText
     sensorLifeIcon
-
 End Enum

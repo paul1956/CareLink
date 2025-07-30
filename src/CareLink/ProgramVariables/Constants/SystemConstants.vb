@@ -7,7 +7,6 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module SystemConstants
 
-    Friend Const RsaKeySize As Integer = 2048
     Friend Const BaseNameSavedErrorReport As String = "CareLinkErrorReport"
     Friend Const BaseNameSavedLastDownload As String = "CareLinkLastDownload"
     Friend Const BaseNameSavedSnapshot As String = "CareLinkSnapshot"
@@ -18,6 +17,7 @@ Public Module SystemConstants
     Friend Const FamilyName As String = "Segoe UI"
     Friend Const GitOwnerName As String = "Paul1956"
     Friend Const MmolLUnitsDivisor As Single = 18
+    Friend Const RsaKeySize As Integer = 2048
     Friend Const StackTraceStartingStr As String = "--- Start of stack trace ---"
     Friend Const StackTraceTerminatingStr As String = "--- End of stack trace from previous location ---"
     Friend Const TimeFormatMilitaryWithMinutes As String = "HH:mm"
@@ -64,6 +64,33 @@ Public Module SystemConstants
         {"UP_DOUBLE", "↑↑"},
         {"UP_TRIPLE", "↑↑↑"},
         {"NONE", "↔"}}
+
+    Public ReadOnly s_wrappedDataGridView As New List(Of String) From
+        {NameOf(Form1.DgvCalibration),
+         NameOf(Form1.DgvInsulin),
+         NameOf(Form1.DgvLastSensorGlucose),
+         NameOf(Form1.DgvSGs)}
+
+    Public ReadOnly s_wrappedStrings As New List(Of String) From
+        {"Delivered ",
+         "Display Time ",
+         "Programmed ",
+         "Record ",
+         "Safe Meal ",
+         "Sensor Glucose ",
+         "Timestamp ",
+         "Unit Value ",
+         $"Delivered{NonBreakingSpace}",
+         $"Display Time{NonBreakingSpace}",
+         $"Display{NonBreakingSpace}Time{NonBreakingSpace}",
+         $"Programmed{NonBreakingSpace}",
+         $"Safe Meal{NonBreakingSpace}",
+         $"Safe{NonBreakingSpace}Meal{NonBreakingSpace}",
+         $"Sensor Glucose{NonBreakingSpace}",
+         $"Sensor{NonBreakingSpace}Glucose{NonBreakingSpace}",
+         $"Timestamp{NonBreakingSpace}",
+         $"Unit Value{NonBreakingSpace}",
+         $"Unit{NonBreakingSpace}Value{NonBreakingSpace}"}
 
     Friend ReadOnly Property GitHubCareLinkUrl As String = $"https://GitHub.com/{GitOwnerName}/CareLink/"
     Friend ReadOnly Property SavedTitle As String = "CareLink™ For Windows"

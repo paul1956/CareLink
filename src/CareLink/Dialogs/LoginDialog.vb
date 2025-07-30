@@ -257,7 +257,7 @@ Public Class LoginDialog
             If Not s_allUserSettingsData.TryGetValue(s_userName, Me.LoggedOnUser) Then
                 s_allUserSettingsData.SaveAllUserRecords(
                     loggedOnUser:=New CareLinkUserDataRecord(s_allUserSettingsData),
-                    Key:=NameOf(CareLinkUserDataRecord.CareLinkUserName), Value:=s_userName)
+                    key:=NameOf(CareLinkUserDataRecord.CareLinkUserName), value:=s_userName)
             End If
             Me.DialogResult = DialogResult.OK
             Me.Hide()

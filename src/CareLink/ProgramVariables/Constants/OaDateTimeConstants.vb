@@ -4,8 +4,8 @@
 
 Friend Module OaDateTimeConstants
 
-    Public ReadOnly Property TwoMinutes30SecondsOADate As New OADate(Date.MinValue + New TimeSpan(0, 2, 30))
-    Public ReadOnly Property FiveMinuteOADate As New OADate(Date.MinValue + FiveMinuteSpan)
-    Public ReadOnly Property SixMinuteOADate As New OADate(Date.MinValue + New TimeSpan(0, 6, 0))
-    Public ReadOnly Property OneHourAsOADate As New OADate(Date.MinValue + New TimeSpan(1, 0, 0))
+    Public ReadOnly Property TwoMinutes30SecondsOADate As New OADate(asDate:=Date.MinValue + New TimeSpan(hours:=0, minutes:=2, seconds:=30))
+    Public ReadOnly Property FiveMinuteOADate As New OADate(asDate:=Date.MinValue + FiveMinuteSpan)
+    Public ReadOnly Property SixMinuteOADate As New OADate(asDate:=Date.MinValue + New TimeSpan(hours:=0, minutes:=6, seconds:=0))
+    Public ReadOnly Property OneHourAsOADate As New OADate(asDate:=Date.MinValue + New TimeSpan(hours:=1, minutes:=0, seconds:=0))
 End Module

@@ -276,20 +276,20 @@ Public Class CareLinkUserDataList
     '''  Saves all user records, updating the specified key and value for the logged-on user.
     ''' </summary>
     ''' <param name="loggedOnUser">The user to update.</param>
-    ''' <param name="Key">The key to update.</param>
-    ''' <param name="Value">The value to set.</param>
-    Friend Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, Key As String, Value As String)
-        If Not Key.EqualsIgnoreCase(NameOf(My.Settings.CareLinkUserName)) Then
+    ''' <param name="key">The key to update.</param>
+    ''' <param name="value">The value to set.</param>
+    Friend Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, key As String, value As String)
+        If Not key.EqualsIgnoreCase(NameOf(My.Settings.CareLinkUserName)) Then
             ' We are changing something other than the user name
             ' Update logged on user and the saved file
-            loggedOnUser.UpdateValue(Key, Value)
+            loggedOnUser.UpdateValue(key, value)
             If Not Me.TryAdd(loggedOnUser) Then
                 Me(loggedOnUser.CareLinkUserName) = loggedOnUser
             End If
         Else
             ' We are changing the user name, first try to load it
-            If Me.ContainsKey(Value) Then
-                loggedOnUser = Me(Value)
+            If Me.ContainsKey(value) Then
+                loggedOnUser = Me(value)
             Else
                 ' We have a new user
                 Me.Add(loggedOnUser)
