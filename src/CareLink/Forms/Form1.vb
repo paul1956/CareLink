@@ -1238,10 +1238,8 @@ Public Class Form1
     Private Sub DgvCareLinkUsers_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles _
         DgvCareLinkUsers.ColumnAdded
 
+        Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
-            Dim dgv As DataGridView = CType(sender, DataGridView)
-            With e.Column
                 .SortMode = DataGridViewColumnSortMode.NotSortable
                 Dim value As String = dgv.Columns(.Index).HeaderText
                 If String.IsNullOrWhiteSpace(value) Then
