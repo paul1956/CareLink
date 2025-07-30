@@ -2197,6 +2197,8 @@ Public Class Form1
 
 #End Region ' Status Strip Colors
 
+        Me.PositionControlsInPanel()
+
 #If NET9_0 Then
 
 #Region "Tab Page Colors"
@@ -2207,8 +2209,6 @@ Public Class Form1
 #End Region ' Tab Page Colors
 
 #End If ' NET9_0
-
-        Me.PositionControlsInPanel()
 
         Me.NotifyIcon1.Visible = True
         Application.DoEvents()
