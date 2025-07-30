@@ -42,7 +42,8 @@ Friend Module DataGridViewCellStyleExtensions
     End Function
 
     ''' <summary>
-    '''  Sets the <see cref="DataGridViewCellStyle.Alignment"/> and <see cref="DataGridViewCellStyle.Padding"/> properties
+    '''  Sets the <see cref="DataGridViewCellStyle.Alignment"/> and
+    '''  <see cref="DataGridViewCellStyle.Padding"/> properties
     '''  and returns the modified style.
     ''' </summary>
     ''' <param name="cellStyle">The <see cref="DataGridViewCellStyle"/> to modify.</param>

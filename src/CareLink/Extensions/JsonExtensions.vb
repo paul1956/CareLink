@@ -57,22 +57,22 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a <paramref name="JsonElement"/> array to a <see cref="List"/> of objects,
+    '''  Converts a <paramref name="jsonArray"/> array to a <see cref="List"/> of objects,
     '''  recursively handling nested arrays and objects.
     ''' </summary>
-    ''' <param name="jsonElement">The JsonElement representing a JSON array.</param>
+    ''' <param name="jsonArray">The JsonElement representing a JSON array.</param>
     ''' <returns>A list of objects representing the array elements.</returns>
     <Extension>
-    Public Function ConvertJsonArrayToList(jsonElement As JsonElement) As List(Of Object)
+    Public Function ConvertJsonArrayToList(jsonArray As JsonElement) As List(Of Object)
         Dim result As New List(Of Object)()
-        For Each element As JsonElement In jsonElement.EnumerateArray()
-            Select Case element.ValueKind
+        For Each jsonElement As JsonElement In jsonArray.EnumerateArray()
+            Select Case jsonElement.ValueKind
                 Case JsonValueKind.Object
-                    result.Add(ConvertJsonElementToDictionary(element))
+                    result.Add(item:=ConvertJsonElementToDictionary(jsonElement))
                 Case JsonValueKind.Array
-                    result.Add(ConvertJsonArrayToList(element))
+                    result.Add(item:=ConvertJsonArrayToList(jsonArray:=jsonElement))
                 Case Else
-                    result.Add(ConvertJsonValue(element))
+                    result.Add(item:=ConvertJsonValue(jsonElement))
             End Select
         Next
 
@@ -87,17 +87,18 @@ Public Module JsonExtensions
     ''' <returns>A dictionary representing the JSON object.</returns>
     <Extension>
     Public Function ConvertJsonElementToDictionary(jsonElement As JsonElement) As Dictionary(Of String, Object)
-        Dim result As New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase)
+        Dim result As New Dictionary(Of String, Object)(comparer:=StringComparer.OrdinalIgnoreCase)
 
         If jsonElement.ValueKind = JsonValueKind.Object Then
             For Each [property] As JsonProperty In jsonElement.EnumerateObject()
+                Dim key As String = [property].Name
                 Select Case [property].Value.ValueKind
                     Case JsonValueKind.Object
-                        result.Add([property].Name, ConvertJsonElementToDictionary([property].Value))
+                        result.Add(key, value:=ConvertJsonElementToDictionary(jsonElement:=[property].Value))
                     Case JsonValueKind.Array
-                        result.Add([property].Name, ConvertJsonArrayToList([property].Value))
+                        result.Add(key, value:=ConvertJsonArrayToList(jsonArray:=[property].Value))
                     Case Else
-                        result.Add([property].Name, ConvertJsonValue([property].Value))
+                        result.Add(key, value:=ConvertJsonValue(jsonElement:=[property].Value))
                 End Select
             Next
         End If
@@ -117,26 +118,29 @@ Public Module JsonExtensions
 
         If jsonElement.ValueKind = JsonValueKind.Object Then
             For Each [property] As JsonProperty In jsonElement.EnumerateObject()
+                Dim key As String = [property].Name
+                Dim value As String = [property].Value.ToString
+
                 Select Case [property].Value.ValueKind
                     Case JsonValueKind.String
-                        result.Add([property].Name, [property].Value.ToString)
+                        result.Add(key, value)
                     Case JsonValueKind.Object
-                        result.Add([property].Name, [property].Value.ToString)
+                        result.Add(key, value)
                     Case JsonValueKind.Array
-                        result.Add([property].Name, [property].Value.ToString)
+                        result.Add(key, value)
                     Case JsonValueKind.Null
-                        result.Add([property].Name, "")
+                        result.Add(key, value:="")
                     Case JsonValueKind.Undefined
                         Stop
                         Exit Select
                     Case JsonValueKind.Number
-                        result.Add([property].Name, [property].Value.ToString)
+                        result.Add(key, value)
                     Case JsonValueKind.True
-                        result.Add([property].Name, "True")
+                        result.Add(key, value:="True")
                     Case JsonValueKind.False
-                        result.Add([property].Name, "False")
+                        result.Add(key, value:="False")
                     Case Else
-                        result.Add([property].Name, ConvertJsonValue([property].Value).ToString)
+                        result.Add(key, value:=ConvertJsonValue(jsonElement:=[property].Value).ToString)
                 End Select
             Next
         End If
@@ -170,16 +174,16 @@ Public Module JsonExtensions
     ''' <summary>
     '''  Retrieves a <see langword="Boolean"/> value from a <see cref="Marker"/> entry's JSON data by field name.
     ''' </summary>
-    ''' <param name="markerEntry">The marker entry containing JSON data.</param>
-    ''' <param name="fieldName">The field name to retrieve.</param>
+    ''' <param name="item">The marker entry containing JSON data.</param>
+    ''' <param name="key">The field name to retrieve.</param>
     ''' <returns>The <see langword="Boolean"/> value if found; otherwise, <see langword="Nothing"/>.</returns>
     <Extension>
-    Public Function GetBooleanValueFromJson(markerEntry As Marker, fieldName As String) As Boolean
-        Dim obj As Object = Nothing
-        Dim value As Boolean = False
-        fieldName = fieldName.ToLowerCamelCase
-        If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
-            Dim element As JsonElement = CType(obj, JsonElement)
+    Public Function GetBooleanFromJson(item As Marker, key As String) As Boolean
+        Dim value As Object = Nothing
+        Dim result As Boolean = False
+        key = key.ToLowerCamelCase
+        If item.Data.DataValues.TryGetValue(key, value) Then
+            Dim element As JsonElement = CType(value, JsonElement)
             Select Case element.ValueKind
                 Case JsonValueKind.True
                     Return True
@@ -191,98 +195,100 @@ Public Module JsonExtensions
         Else
             Return Nothing
         End If
-        Return value
+        Return result
     End Function
 
     ''' <summary>
     '''  Retrieves a <see langword="Double"/> value from a <see cref="Marker"/> entry's JSON data by field name.
     ''' </summary>
-    ''' <param name="markerEntry">The marker entry containing JSON data.</param>
-    ''' <param name="fieldName">The field name to retrieve.</param>
+    ''' <param name="item">The marker entry containing JSON data.</param>
+    ''' <param name="key">The field name to retrieve.</param>
     ''' <returns>The <see langword="Double"/> value if found; otherwise, <see cref="Double.NaN"/>.</returns>
     <Extension>
-    Public Function GetDoubleValueFromJson(markerEntry As Marker, fieldName As String) As Double
-        Dim obj As Object = Nothing
-        Dim value As Double = Double.NaN
-        fieldName = fieldName.ToLowerCamelCase
-        If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
-            Dim element As JsonElement = CType(obj, JsonElement)
+    Public Function GetDoubleFromJson(item As Marker, key As String) As Double
+        Dim result As Double = Double.NaN
+        Dim value As Object = Nothing
+        key = key.ToLowerCamelCase
+        If item.Data.DataValues.TryGetValue(key, value) Then
+            Dim element As JsonElement = CType(value, JsonElement)
             Select Case element.ValueKind
                 Case JsonValueKind.String
-                    value = element.GetString.ParseDoubleInvariant
+                    result = element.GetString.ParseDoubleInvariant
                 Case JsonValueKind.Number
-                    value = element.GetDouble
+                    result = element.GetDouble
                 Case Else
                     Stop
             End Select
         Else
             Stop
         End If
-        Return value
+        Return result
     End Function
 
     ''' <summary>
     '''  Retrieves an <see langword="Integer"/> value from a <see cref="Marker"/> entry's JSON data by field name.
     ''' </summary>
-    ''' <param name="markerEntry">The marker entry containing JSON data.</param>
-    ''' <param name="fieldName">The field name to retrieve.</param>
+    ''' <param name="item">The marker entry containing JSON data.</param>
+    ''' <param name="key">The field name to retrieve.</param>
     ''' <returns>The <see langword="Integer"/> value if found; otherwise, <see langword="Nothing"/>.</returns>
     <Extension>
-    Public Function GetIntegerValueFromJson(markerEntry As Marker, fieldName As String) As Integer
-        Dim obj As Object = Nothing
-        Dim value As Integer = 0
-        fieldName = fieldName.ToLowerCamelCase
-        If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
-            Dim element As JsonElement = CType(obj, JsonElement)
+    Public Function GetIntegerFromJson(item As Marker, key As String) As Integer
+        Dim value As Object = Nothing
+        Dim result As Integer = 0
+        key = key.ToLowerCamelCase
+        If item.Data.DataValues.TryGetValue(key, value) Then
+            Dim element As JsonElement = CType(value, JsonElement)
             Select Case element.ValueKind
                 Case JsonValueKind.String
-                    value = Integer.Parse(element.GetString)
+                    result = Integer.Parse(element.GetString)
                 Case JsonValueKind.Number
-                    value = element.GetInt32
+                    result = element.GetInt32
                 Case Else
                     Stop
             End Select
         Else
             Return Nothing
         End If
-        Return value
+        Return result
     End Function
 
     ''' <summary>
     '''  Retrieves a <see langword="Single"/> value from a <see cref="Marker"/> entry's JSON data by field name.
     '''  Optionally rounds the value to a specified number of <paramref name="digits"/>.
     ''' </summary>
-    ''' <param name="markerEntry">The marker entry containing JSON data.</param>
-    ''' <param name="fieldName">The field name to retrieve.</param>
+    ''' <param name="item">The marker entry containing JSON data.</param>
+    ''' <param name="key">The field name to retrieve.</param>
     ''' <param name="digits">The number of decimal digits to round to. Use -1 for no rounding.</param>
     ''' <param name="considerValue">Whether to consider the value when rounding.</param>
     ''' <returns>The <see langword="Single"/> value if found; otherwise, <see cref="Single.NaN"/>.</returns>
     <Extension>
-    Public Function GetSingleValueFromJson(markerEntry As Marker, fieldName As String, Optional digits As Integer = -1, Optional considerValue As Boolean = False) As Single
-        Dim obj As Object = Nothing
-        Dim value As Single = Single.NaN
-        fieldName = fieldName.ToLowerCamelCase
-        If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
+    Public Function GetSingleFromJson(item As Marker, key As String, Optional digits As Integer = -1, Optional considerValue As Boolean = False) As Single
+        Dim value As Object = Nothing
+        Dim result As Single = Single.NaN
+        key = key.ToLowerCamelCase
+        If item.Data.DataValues.TryGetValue(key, value) Then
             Select Case True
-                Case TypeOf obj Is JsonElement
-                    Dim element As JsonElement = CType(obj, JsonElement)
+                Case TypeOf value Is JsonElement
+                    Dim element As JsonElement = CType(value, JsonElement)
                     Select Case element.ValueKind
                         Case JsonValueKind.String
-                            value = element.GetString.ParseSingleInvariant
+                            result = element.GetString.ParseSingleInvariant
                         Case JsonValueKind.Number
-                            value = element.GetSingle
+                            result = element.GetSingle
                         Case Else
                             Stop
-                            Return value
+                            Return result
                     End Select
-                Case TypeOf obj Is String
-                    value = CStr(obj).ParseSingleInvariant
+                Case TypeOf value Is String
+                    result = CStr(value).ParseSingleInvariant
                 Case Else
                     Stop
             End Select
 
-            If digits = -1 Then Return value
-            Return If(digits = 3, value.RoundTo025, value.RoundSingle(digits, considerValue))
+            If digits = -1 Then Return result
+            Return If(digits = 3,
+                      result.RoundTo025,
+                      result.RoundSingle(digits, considerValue))
         Else
             Return Single.NaN
         End If
@@ -291,15 +297,15 @@ Public Module JsonExtensions
     ''' <summary>
     '''  Retrieves a <see langword="String"/> value from a <see cref="Marker"/> entry's JSON data by field name.
     ''' </summary>
-    ''' <param name="markerEntry">The marker entry containing JSON data.</param>
-    ''' <param name="fieldName">The field name to retrieve.</param>
+    ''' <param name="item">The marker entry containing JSON data.</param>
+    ''' <param name="key">The field name to retrieve.</param>
     ''' <returns>The <see langword="String"/> value if found; otherwise, <see cref="String.Empty"/>.</returns>
     <Extension>
-    Public Function GetStringValueFromJson(markerEntry As Marker, fieldName As String) As String
-        Dim obj As Object = Nothing
-        fieldName = fieldName.ToLowerCamelCase
-        If markerEntry.Data.DataValues.TryGetValue(fieldName, obj) Then
-            Dim element As JsonElement = CType(obj, JsonElement)
+    Public Function GetStringFromJson(item As Marker, key As String) As String
+        Dim value As Object = Nothing
+        key = key.ToLowerCamelCase
+        If item.Data.DataValues.TryGetValue(key, value) Then
+            Dim element As JsonElement = CType(value, JsonElement)
             Select Case element.ValueKind
                 Case JsonValueKind.String
                     Return element.GetString
@@ -345,9 +351,9 @@ Public Module JsonExtensions
     ''' <returns>The <see langword="String"/> representation of the item's value.</returns>
     <Extension>
     Public Function jsonItemAsString(item As KeyValuePair(Of String, Object)) As String
-        Dim itemValue As JsonElement = CType(item.Value, JsonElement)
-        Dim valueAsString As String = itemValue.ToString
-        Select Case itemValue.ValueKind
+        Dim itemAsElement As JsonElement = CType(item.Value, JsonElement)
+        Dim valueAsString As String = itemAsElement.ToString
+        Select Case itemAsElement.ValueKind
             Case JsonValueKind.False
                 Return "False"
             Case JsonValueKind.Null

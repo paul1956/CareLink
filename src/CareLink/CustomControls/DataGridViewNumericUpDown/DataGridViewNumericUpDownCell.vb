@@ -479,8 +479,16 @@ Public Class DataGridViewNumericUpDownCell
 
         ' First paint the borders and background of the cell.
         MyBase.Paint(
-            graphics, clipBounds, cellBounds, rowIndex, cellState,
-            value, formattedValue, errorText, cellStyle, advancedBorderStyle,
+            graphics,
+            clipBounds,
+            cellBounds,
+            rowIndex,
+            cellState,
+            value,
+            formattedValue,
+            errorText,
+            cellStyle,
+            advancedBorderStyle,
             paintParts:=paintParts And Not (DataGridViewPaintParts.ErrorIcon Or DataGridViewPaintParts.ContentForeground))
 
         Dim ptCurrentCell As Point = Me.DataGridView.CurrentCellAddress

@@ -10,11 +10,13 @@ Imports System.Runtime.CompilerServices
 Public Module BasalListExtensions
 
     ''' <summary>
-    '''  Determines whether the specified list of <see cref="Basal"/> objects is empty or contains a default <see cref="Basal"/> instance.
+    '''  Determines whether the specified list of <see cref="Basal"/> objects is empty
+    '''  or contains a default <see cref="Basal"/> instance.
     ''' </summary>
     ''' <param name="basalList">The list of <see cref="Basal"/> objects to check.</param>
     ''' <returns>
     '''  <see langword="True"/> if the list is empty or the first element is a default <see cref="Basal"/>;
+    '''  <see cref="Basal"/> instance, which is defined as having no active basal pattern.
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
@@ -47,7 +49,8 @@ Public Module BasalListExtensions
     End Function
 
     ''' <summary>
-    '''  Gets a subtitle string representing the active basal pattern from the specified list of <see cref="Basal"/> objects.
+    '''  Gets a subtitle string representing the active basal pattern from the specified
+    '''  list of <see cref="Basal"/> objects.
     ''' </summary>
     ''' <param name="basalList">The list of <see cref="Basal"/> objects.</param>
     ''' <returns>

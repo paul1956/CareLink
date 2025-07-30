@@ -20,12 +20,13 @@ Public Module StringExtensions
     ''' <summary>
     '''  Replace multiple spaces with 1 and trim the ends
     ''' </summary>
-    ''' <param name="value">The input string to clean.</param>
+    ''' <param name="input">The input string to clean.</param>
     ''' <returns>A <see langword="String"/> with multiple spaces replaced by a single space and trimmed.</returns>
     <Extension>
-    Public Function CleanSpaces(value As String) As String
-        If String.IsNullOrWhiteSpace(value) Then Return ""
-        Return Regex.Replace(value, "\s+", " ").Trim
+    Public Function CleanSpaces(input As String) As String
+        Return If(String.IsNullOrWhiteSpace(value:=input),
+                  "",
+                  Regex.Replace(input, pattern:="\s+", replacement:=" ").Trim)
     End Function
 
     ''' <summary>
@@ -36,7 +37,9 @@ Public Module StringExtensions
     ''' <returns>The number of occurrences of the character <paramref name="c"/> in the string.</returns>
     <Extension()>
     Public Function Count(s As String, c As Char) As Integer
-        Return s.Count(Function(c1 As Char) c1 = c)
+        Return s.Count(predicate:=Function(c1 As Char)
+                                      Return c1 = c
+                                  End Function)
     End Function
 
     ''' <summary>
@@ -50,11 +53,11 @@ Public Module StringExtensions
     <Extension>
     Public Function FindIndexOfAnyChar(inputString As String, chars As List(Of Char), startIndex As Integer) As Integer
         If inputString Is Nothing OrElse chars Is Nothing OrElse startIndex < 0 OrElse startIndex >= inputString.Length Then
-            Throw New ArgumentException("Invalid input parameters.")
+            Throw New ArgumentException(message:="Invalid input parameters.")
         End If
 
         For i As Integer = startIndex To inputString.Length - 1
-            If chars.Contains(inputString(i)) Then
+            If chars.Contains(item:=inputString(index:=i)) Then
                 Return i
             End If
         Next
@@ -69,7 +72,8 @@ Public Module StringExtensions
     ''' <exception cref="FormatException">Thrown if the string is not a valid double.</exception>
     <Extension>
     Public Function ParseDoubleInvariant(value As String) As Double
-        Return Double.Parse(value.Replace(","c, CareLinkDecimalSeparator), provider:=CultureInfo.InvariantCulture)
+        Dim s As String = value.Replace(oldChar:=","c, newChar:=CareLinkDecimalSeparator)
+        Return Double.Parse(s, provider:=CultureInfo.InvariantCulture)
     End Function
 
     ''' <summary>
@@ -80,25 +84,26 @@ Public Module StringExtensions
     ''' <exception cref="FormatException">Thrown if the string is not a valid single.</exception>
     <Extension>
     Public Function ParseSingleInvariant(value As String) As Single
-        Return Single.Parse(value.Replace(","c, CareLinkDecimalSeparator), provider:=CultureInfo.InvariantCulture)
+        Dim s As String = value.Replace(oldChar:=","c, newChar:=CareLinkDecimalSeparator)
+        Return Single.Parse(s, provider:=CultureInfo.InvariantCulture)
     End Function
 
     ''' <summary>
     '''  Converts a string where the first letter of the string is not capitalized
     ''' </summary>
-    ''' <param name="inStr">A <see langword="String"/> like THIS_IS A TITLE</param>
+    ''' <param name="value">A <see langword="String"/> like THIS_IS A TITLE</param>
     ''' <returns>A <see langword="String"/> where the first character is lower case</returns>
     ''' <remarks>Used for converting strings that are not capitalized at the start</remarks>
     ''' <example>doNotCapitalizedFirstLetterString</example>
     <Extension()>
-    Public Function ToLowerCamelCase(inStr As String) As String
-        If String.IsNullOrWhiteSpace(inStr) Then
+    Public Function ToLowerCamelCase(value As String) As String
+        If String.IsNullOrWhiteSpace(value) Then
             Return ""
         End If
 
-        Dim result As New StringBuilder(Char.ToLowerInvariant(inStr(0)))
-        If inStr.Length > 1 Then
-            result.Append(inStr.AsSpan(1))
+        Dim result As New StringBuilder(value:=Char.ToLowerInvariant(value(index:=0)))
+        If value.Length > 1 Then
+            result.Append(value:=value.AsSpan(start:=1))
         End If
         Return result.ToString
     End Function
@@ -118,91 +123,93 @@ Public Module StringExtensions
     '''  Converts a string of words separated by a space or underscore to a title case string,
     '''  where the first letter of every word is capitalized and the rest are lower case.
     ''' </summary>
-    ''' <param name="inStr">A string like "THIS_IS A TITLE".</param>
+    ''' <param name="value">A string like "THIS_IS A TITLE".</param>
     ''' <param name="separateNumbers">If true, separates numbers into their own words.</param>
     ''' <returns>A title-cased string.</returns>
     <Extension()>
-    Public Function ToTitle(inStr As String, Optional separateNumbers As Boolean = False) As String
-        If String.IsNullOrWhiteSpace(inStr) Then
+    Public Function ToTitle(value As String, Optional separateNumbers As Boolean = False) As String
+        If String.IsNullOrWhiteSpace(value) Then
             Return ""
         End If
 
-        Dim result As New StringBuilder(Char.ToUpperInvariant(inStr(0)))
+        Dim c As Char = value(index:=0)
+        Dim result As New StringBuilder(value:=Char.ToUpperInvariant(c))
         Dim firstLetterOfWord As Boolean = False
-        For Each c As Char In inStr.Substring(1)
+        For Each c In value.Substring(startIndex:=1)
             If c = " "c Or c = "_"c Then
                 firstLetterOfWord = True
-                result.Append(" "c)
+                result.Append(value:=" "c)
             ElseIf firstLetterOfWord Then
                 firstLetterOfWord = False
-                result.Append(Char.ToUpperInvariant(c))
-            ElseIf separateNumbers AndAlso IsNumeric(c) Then
+                result.Append(value:=Char.ToUpperInvariant(c))
+            ElseIf separateNumbers AndAlso IsNumeric(Expression:=c) Then
                 firstLetterOfWord = True
-                result.Append(" "c)
-                result.Append(Char.ToLowerInvariant(c))
+                result.Append(value:=" "c)
+                result.Append(value:=Char.ToLowerInvariant(c))
             Else
-                result.Append(Char.ToLowerInvariant(c))
+                result.Append(value:=Char.ToLowerInvariant(c))
             End If
         Next
-        Return result.ToString.Replace("Bg ", "BG ").Replace("Sg ", "SG ")
+        Return result.ToString.Replace(oldValue:="Bg ", newValue:="BG ") _
+                              .Replace(oldValue:="Sg ", newValue:="SG ")
     End Function
 
     ''' <summary>
     '''  Converts a string of concatenated words (PascalCase or camelCase) to a title case string,
     '''  where the first letter of every word is capitalized and words are separated by spaces.
     ''' </summary>
-    ''' <param name="inStr">A string like "ThisIsATitle".</param>
+    ''' <param name="value">A string like "ThisIsATitle".</param>
     ''' <param name="separateNumbers">If true, separates numbers into their own words.</param>
     ''' <returns>A title-cased string with spaces between words.</returns>
     <Extension()>
-    Public Function ToTitleCase(inStr As String, Optional separateNumbers As Boolean = True) As String
-        If String.IsNullOrWhiteSpace(inStr) Then
+    Public Function ToTitleCase(value As String, Optional separateNumbers As Boolean = True) As String
+        If String.IsNullOrWhiteSpace(value) Then
             Return ""
         End If
-        If inStr.ContainsIgnoreCase("MmolL") Then
-            Return inStr
+        If value.ContainsIgnoreCase(value:="MmolL") Then
+            Return value
         End If
-        Dim result As New StringBuilder(Char.ToUpperInvariant(inStr(0)))
-        Dim lastWasNumeric As Boolean = Char.IsNumber(inStr(0))
-        For Each c As Char In inStr.Substring(1)
+        Dim result As New StringBuilder(value:=Char.ToUpperInvariant(value(index:=0)))
+        Dim lastWasNumeric As Boolean = Char.IsNumber(value(index:=0))
+        For Each c As Char In value.Substring(startIndex:=1)
             If Char.IsLower(c) OrElse lastWasNumeric Then
-                result.Append(c)
+                result.Append(value:=c)
                 lastWasNumeric = False
             ElseIf Char.IsNumber(c) AndAlso Not separateNumbers Then
-                result.Append(c)
+                result.Append(value:=c)
                 lastWasNumeric = True
             Else
-                result.Append($" {Char.ToUpperInvariant(c)}")
+                result.Append(value:=$" {Char.ToUpperInvariant(c)}")
                 lastWasNumeric = False
             End If
         Next
-        Dim resultString As String = result.Replace("Care Link", "CareLink").ToString
+        Dim resultString As String = result.Replace(oldValue:="Care Link", newValue:="CareLink").ToString
         If Not resultString.Contains("™"c) Then
-            resultString = resultString.Replace("CareLink", "CareLink™")
+            resultString = resultString.Replace(oldValue:="CareLink", newValue:="CareLink™")
         End If
-        resultString = resultString.Replace("S G", "Sensor Glucose", StringComparison.InvariantCulture)
-        Return resultString.Replace("time", " Time", ignoreCase:=False, culture:=Provider)
+        resultString = resultString.Replace(oldValue:="S G", newValue:="Sensor Glucose")
+        Return resultString.Replace(oldValue:="time", newValue:=" Time", ignoreCase:=False, culture:=Provider)
     End Function
 
     ''' <summary>
     '''  Truncates a string that represents a <see langword="Single"/> to a specified number of decimal digits.
     ''' </summary>
-    ''' <param name="s">The string to truncate.</param>
+    ''' <param name="expression">The string to truncate.</param>
     ''' <param name="digits">The number of decimal digits to keep.</param>
     ''' <returns>A truncated string representation of the <see langword="Single"/> value.</returns>
     ''' <remarks>Used for truncating values to a specific number of decimal places.</remarks>
     <Extension>
-    Public Function TruncateSingleString(s As String, digits As Integer) As String
-        Dim i As Integer = s.IndexOfAny(s_commaOrPeriod)
+    Public Function TruncateSingleString(expression As String, digits As Integer) As String
+        Dim i As Integer = expression.IndexOfAny(anyOf:=s_commaOrPeriod)
         If i < 0 Then
-            If Not IsNumeric(s) Then
-                Return s
+            If Not IsNumeric(expression) Then
+                Return expression
             End If
-            i = s.Length
-            s &= Provider.NumberFormat.NumberDecimalSeparator
+            i = expression.Length
+            expression &= Provider.NumberFormat.NumberDecimalSeparator
         End If
-        s &= New String("0"c, count:=digits + 1)
-        Return s.Substring(startIndex:=0, length:=i + digits + 1)
+        expression &= New String("0"c, count:=digits + 1)
+        Return expression.Substring(startIndex:=0, length:=i + digits + 1)
     End Function
 
 #Region "IgnoreCase String Comparisons"
@@ -254,6 +261,24 @@ Public Module StringExtensions
         Return String.Equals(a, b, comparisonType:=StringComparison.OrdinalIgnoreCase)
     End Function
 
+
+    ''' <summary>
+    '''  Checks if an object is equal to a string, ignoring case.
+    '''  This method is useful for comparing an object that may be a string or null with a string.
+    ''' </summary>
+    ''' <param name="a">The first object to compare.</param>
+    ''' <param name="b">The second string to compare.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the strings are equal, ignoring case;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    ''' <remarks>Used for case-insensitive <see langword="Object"/> to string comparisons.</remarks>
+    Public Function EqualsIgnoreCase(a As Object, b As String) As Boolean
+        If a Is Nothing OrElse b Is Nothing OrElse TypeOf a IsNot String Then Return False
+        Return EqualsIgnoreCase(a.ToString, b)
+    End Function
+
+
     ''' <summary>
     '''  Finds the index of the first occurrence of a string within another string, ignoring case.
     ''' </summary>
@@ -270,6 +295,49 @@ Public Module StringExtensions
         Return s1.IndexOf(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
     End Function
 
+    ''' <summary>
+    '''  Removes all occurrences of a specified string from the current string, ignoring case.
+    ''' </summary>
+    ''' <param name="s">The original string.</param>
+    ''' <param name="oldValue">The string to remove.</param>
+    ''' <returns>
+    '''  A new string that is equivalent to the current string except that all occurrences of
+    '''  <paramref name="oldValue"/> are removed.
+    ''' </returns>
+    ''' <remarks>
+    '''  This method is used for case-insensitive string removals, ensuring that the removal respects
+    '''  the current UI culture.
+    ''' </remarks>
+    <Extension()>
+    Public Function Remove(s As String, oldValue As String) As String
+        If s Is Nothing Then Return Nothing
+        Return s.Replace(oldValue, newValue:=String.Empty, ignoreCase:=True, culture:=Provider)
+    End Function
+
+    ''' <summary>
+    '''  Returns a new string in which all occurrences of a specified string in the current instance
+    '''  are replaced with another specified string, using CultureInfo.CurrentUICulture and case insensitivity.
+    ''' </summary>
+    ''' <param name="s">Original string</param>
+    ''' <param name="oldValue">The string to replace</param>
+    ''' <param name="newValue">The replacement string</param>
+    ''' <returns>
+    '''  A string that is equivalent to the current string except that all occurrences of
+    '''  <paramref name="oldValue"/> are replaced by <paramref name="newValue"/>.
+    '''  If <paramref name="oldValue"/> is <see cref="String.Empty"/>, the method returns the current string unchanged.
+    ''' </returns>
+    ''' <exception cref="ArgumentNullException">
+    '''  Thrown if <paramref name="oldValue"/> or <paramref name="newValue"/> is <see langword="Nothing"/>.
+    ''' </exception>
+    ''' <remarks>
+    '''  This method is used for case-insensitive string replacements, ensuring that the replacement
+    '''  respects the current UI culture.
+    ''' </remarks>
+    <Extension()>
+    Public Function ReplaceIgnoreCase(s As String, oldValue As String, newValue As String) As String
+        If s Is Nothing Then Return Nothing
+        Return s.Replace(oldValue, newValue, ignoreCase:=True, culture:=Provider)
+    End Function
     ''' <summary>
     '''  Checks if a string starts with another string, ignoring case.
     ''' </summary>

@@ -12,21 +12,26 @@ Friend Module RunningActiveInsulinHelpers
     '''  RunningActiveInsulin object by calling its Adjust method.
     ''' </summary>
     ''' <param name="myList">The list of RunningActiveInsulin objects to adjust.</param>
-    ''' <param name="startIndex">The starting index in the list from which to begin adjustments.</param>
+    ''' <param name="start">The starting index in the list from which to begin adjustments.</param>
     ''' <param name="count">The number of RunningActiveInsulin objects to adjust starting from startIndex.</param>
     ''' <remarks>
     '''  This method modifies the RunningActiveInsulin objects in place.
     ''' </remarks>
     <Extension>
-    Friend Sub AdjustList(myList As List(Of RunningActiveInsulin), startIndex As Integer, count As Integer)
-        ArgumentNullException.ThrowIfNull(myList)
-        If startIndex < 0 OrElse count < 0 Then Throw New ArgumentOutOfRangeException(NameOf(startIndex), "startIndex and count must be non-negative.")
-        If startIndex >= myList.Count Then Exit Sub
+    Friend Sub AdjustList(myList As List(Of RunningActiveInsulin), start As Integer, count As Integer)
+        ArgumentNullException.ThrowIfNull(argument:=myList)
+
+        If start < 0 OrElse count < 0 Then
+            Dim message As String = $"{NameOf(start)} and {NameOf(count)} must be non-negative."
+            Throw New ArgumentOutOfRangeException(paramName:=NameOf(start), message)
+        End If
+
+        If start >= myList.Count Then Exit Sub
 
         ' Ensure we do not go out of bounds
-        Dim endIndex As Integer = Math.Min(startIndex + count, myList.Count)
-        For i As Integer = startIndex To endIndex - 1
-            myList(i) = myList(i).Adjust()
+        Dim endIndex As Integer = Math.Min(start + count, myList.Count)
+        For i As Integer = start To endIndex - 1
+            myList(index:=i) = myList(index:=i).Adjust()
         Next
     End Sub
 
@@ -38,15 +43,17 @@ Friend Module RunningActiveInsulinHelpers
     '''  active insulin over a specific period without exceeding the list boundaries.
     ''' </summary>
     ''' <param name="myList">The list of RunningActiveInsulin objects to sum.</param>
-    ''' <param name="start">The starting index from which to sum.</param>
-    ''' <param name="length">The number of elements to sum.</param>
+    ''' <param name="index">The starting index from which to sum.</param>
+    ''' <param name="count">The number of elements to sum.</param>
     ''' <returns>The conditional sum of CurrentInsulinLevel.</returns>
     <Extension>
-    Friend Function ConditionalSum(myList As List(Of RunningActiveInsulin), start As Integer, length As Integer) As Double
-        If start + length > myList.Count Then
-            length = myList.Count - start
+    Friend Function ConditionalSum(myList As List(Of RunningActiveInsulin), index As Integer, count As Integer) As Double
+        If index + count > myList.Count Then
+            count = myList.Count - index
         End If
-        Dim sum As Single = myList.GetRange(start, length).Sum(Function(i As RunningActiveInsulin) i.CurrentInsulinLevel)
+        Dim sum As Single = myList.GetRange(index, count).Sum(selector:=Function(i As RunningActiveInsulin)
+                                                                            Return i.CurrentInsulinLevel
+                                                                        End Function)
         If sum < 0 Then sum = 0
         Return sum
     End Function

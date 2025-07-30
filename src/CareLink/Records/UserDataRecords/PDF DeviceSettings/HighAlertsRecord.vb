@@ -5,23 +5,25 @@
 Public Class HighAlertsRecord
     Private _snoozeTime As TimeSpan
 
+    Public Sub New()
+    End Sub
+
     Public Sub New(sTable As StringTable, listOfAllTextLines As List(Of String))
         _snoozeTime = OneHourSpan
-        PdfSettingsRecord.GetSnoozeInfo(listOfAllTextLines, "High Alerts", Me.SnoozeOn, snoozeTime:=_snoozeTime)
+        PdfSettingsRecord.GetSnoozeInfo(listOfAllTextLines, target:="High Alerts", Me.SnoozeOn, snoozeTime:=_snoozeTime)
         Dim valueUnits As String = ""
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
-            Dim s As StringTable.Row = e.Value
+            Dim row As StringTable.Row = e.Value
             If e.IsFirst Then
-                valueUnits = s.Columns(0).Replace("Start High Time (", "").Trim(")"c)
+                valueUnits = row.Columns(index:=0).Replace(oldValue:="Start High Time (", newValue:="").Trim(trimChar:=")"c)
                 Continue For
             End If
 
-            Dim item As New HighAlertRecord(s, valueUnits) With {
-                .End = If(e.IsLast OrElse String.IsNullOrWhiteSpace(sTable.Rows(e.Index + 1).Columns(0)),
+            Dim options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
+            Dim item As New HighAlertRecord(row, valueUnits) With {
+                .End = If(e.IsLast OrElse String.IsNullOrWhiteSpace(value:=sTable.Rows(index:=e.Index + 1).Columns(index:=0)),
                           Midnight,
-                          TimeOnly.Parse(sTable.Rows(e.Index + 1).Columns(0).Split(" ", StringSplitOptions.RemoveEmptyEntries)(0))
-                         )
-            }
+                          TimeOnly.Parse(s:=sTable.Rows(index:=e.Index + 1).Columns(index:=0).Split(separator:=" ", options)(0)))}
             If item.IsValid Then
                 Me.HighAlert.Add(item)
             Else
@@ -31,8 +33,6 @@ Public Class HighAlertsRecord
         Next
     End Sub
 
-    Public Sub New()
-    End Sub
 
     Public Property HighAlert As New List(Of HighAlertRecord)
 

@@ -8,15 +8,15 @@ Imports System.Text.Json.Serialization
 
 Public Class Calibration
 
-    Public Sub New(markerEntry As Marker, recordNumber As Integer)
+    Public Sub New(item As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
-        Me.Type = markerEntry.Type
+        Me.Type = item.Type
         Me.Kind = "Marker"
-        Me.TimestampAsString = markerEntry.TimestampAsString
-        Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
-        Me.CalibrationSuccess = markerEntry.GetBooleanValueFromJson(NameOf(CalibrationSuccess))
-        Me.UnitValue = markerEntry.GetSingleValueFromJson(NameOf(UnitValue), digits:=0, considerValue:=True)
-        Me.bgUnits = markerEntry.GetStringValueFromJson(NameOf(bgUnits))
+        Me.TimestampAsString = item.TimestampAsString
+        Me.DisplayTimeAsString = item.DisplayTimeAsString
+        Me.CalibrationSuccess = item.GetBooleanFromJson(NameOf(CalibrationSuccess))
+        Me.UnitValue = item.GetSingleFromJson(NameOf(UnitValue), digits:=0, considerValue:=True)
+        Me.bgUnits = item.GetStringFromJson(NameOf(bgUnits))
     End Sub
 
     <DisplayName("Record Number")>

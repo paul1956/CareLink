@@ -172,28 +172,28 @@ Friend Module SpeechSupport
         End If
 
         Dim message As String = ""
-        Dim recognizedTextLower As String = e.Result.Text.ToLower
+        Dim recognizedText As String = e.Result.Text.ToLower
         Dim confidence As Single = e.Result.Confidence.RoundSingle(2, False)
         If confidence < 0.8 Then
-            message = $"Rejected: {recognizedTextLower} with confidence {confidence}%"
+            message = $"Rejected: {recognizedText} with confidence {confidence}%"
             Debug.WriteLine(message)
             Form1.StatusStripSpeech.Text = message
             Exit Sub
         End If
 
-        If recognizedTextLower.StartsWith("carelink") Then
+        If recognizedText.StartsWith("carelink") Then
             If confidence >= My.Settings.SystemSpeechRecognitionThreshold Then
                 s_speechWakeWordFound = True
-                message = $"Heard: Wake word {recognizedTextLower} with confidence {confidence}%), waiting.."
+                message = $"Heard: Wake word {recognizedText} with confidence {confidence}%), waiting.."
                 Debug.WriteLine(message)
                 Form1.StatusStripSpeech.Text = message
                 Application.DoEvents()
-                If recognizedTextLower = "carelink" Then
+                If recognizedText = "carelink" Then
                     Exit Sub
                 End If
-                recognizedTextLower = recognizedTextLower.Replace("carelink", "").TrimEnd
+                recognizedText = recognizedText.Replace(oldValue:="carelink", newValue:="").TrimEnd
             Else
-                message = $"Rejected: {recognizedTextLower} with confidence {confidence}%"
+                message = $"Rejected: {recognizedText} with confidence {confidence}%"
                 Debug.WriteLine(message)
                 Form1.StatusStripSpeech.Text = message
                 Exit Sub
@@ -207,47 +207,47 @@ Friend Module SpeechSupport
         If s_speechWakeWordFound Then
             s_speechWakeWordFound = False
             If confidence < My.Settings.SystemSpeechRecognitionThreshold - 0.05 Then
-                message = $"Rejected: {recognizedTextLower} with confidence {confidence}%"
+                message = $"Rejected: {recognizedText} with confidence {confidence}%"
                 Debug.WriteLine(message)
                 Form1.StatusStripSpeech.Text = message
                 Exit Sub
             End If
 
             Select Case True
-                Case recognizedTextLower.StartsWith("what is my", StringComparison.CurrentCultureIgnoreCase)
+                Case recognizedText.StartsWithIgnoreCase(value:="what is my")
                     Form1.StatusStripSpeech.Text = message
-                    AnnounceSG(recognizedTextLower)
+                    AnnounceSG(recognizedText)
 
-                Case recognizedTextLower.StartsWith("tell me", StringComparison.CurrentCultureIgnoreCase)
-                    If Not recognizedTextLower.Contains(PatientData.FirstName, StringComparison.CurrentCultureIgnoreCase) Then
+                Case recognizedText.StartsWithIgnoreCase(value:="tell me")
+                    If Not recognizedText.ContainsIgnoreCase(value:=PatientData.FirstName) Then
                         Return
                     End If
                     Form1.StatusStripSpeech.Text = message
-                    AnnounceSG(recognizedTextLower)
+                    AnnounceSG(recognizedText)
 
-                Case recognizedTextLower = "what can I say"
+                Case recognizedText = "what can I say"
                     If My.Settings.SystemSpeechHelpShown Then
                         s_speechWakeWordFound = False
                         Exit Select
                     End If
-                    Dim text As New StringBuilder
-                    text.AppendLine("CareLink:")
-                    text.AppendLine("    All commands start with this")
-                    text.AppendLine("    A pause is allowed after saying CareLink.")
-                    text.AppendLine()
-                    text.AppendLine("What can I say:")
-                    text.AppendLine("    This message will be displayed")
-                    text.AppendLine()
-                    text.AppendLine("What is my SG/BG/Blood Glucose/Blood Sugar:")
-                    text.AppendLine($"    Your {CurrentSgMsg} will be spoken")
-                    text.AppendLine()
-                    text.AppendLine("Tell me name's SG/BG/Blood Glucose/Blood Sugar:")
-                    text.AppendLine("    Used when you support more than 1 user")
-                    text.AppendLine("    Example ""Tell me John's Sensor Glucose""")
+                    Dim sb As New StringBuilder
+                    sb.AppendLine("CareLink:")
+                    sb.AppendLine("    All commands start with this")
+                    sb.AppendLine("    A pause is allowed after saying CareLink.")
+                    sb.AppendLine()
+                    sb.AppendLine("What can I say:")
+                    sb.AppendLine("    This message will be displayed")
+                    sb.AppendLine()
+                    sb.AppendLine("What is my SG/BG/Blood Glucose/Blood Sugar:")
+                    sb.AppendLine($"    Your {CurrentSgMsg} will be spoken")
+                    sb.AppendLine()
+                    sb.AppendLine("Tell me name's SG/BG/Blood Glucose/Blood Sugar:")
+                    sb.AppendLine("    Used when you support more than 1 user")
+                    sb.AppendLine("    Example ""Tell me John's Sensor Glucose""")
                     Dim page As New TaskDialogPage
                     MsgBox(
                         heading:="",
-                        text:=text.ToString,
+                        text:=sb.ToString,
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Information,
                         title:="Speech Recognition Help",
                         autoCloseTimeOutSeconds:=30,

@@ -67,67 +67,96 @@ Public Class InitializeDialog
         End If
     End Sub
 
-    Private Sub InitializeDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles InitializeDataGridView.CellContentClick
+    Private Sub InitializeDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles _
+        InitializeDataGridView.CellContentClick
+
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim cell As DataGridViewCell = dgv.Rows(e.RowIndex).Cells(e.ColumnIndex)
-        Select Case dgv.Columns(e.ColumnIndex).Name
+        Dim cell As DataGridViewCell
+        Dim start As Integer
+        Dim columnName As String = dgv.Columns(index:=e.ColumnIndex).Name
+        Dim index As Integer
+        Select Case columnName
             Case NameOf(ColumnDeleteRow)
-                If Not CType(cell, DataGridViewDisableButtonCell).Enabled Then Exit Sub
-                dgv.Rows.Remove(dgv.Rows(e.RowIndex))
-                Dim currentRow As Integer = e.RowIndex - 1
-                With dgv.Rows(currentRow)
-                    Dim buttonCell As DataGridViewDisableButtonCell = CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell)
+                cell = dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex)
+                If Not CType(cell, DataGridViewDisableButtonCell).Enabled Then
+                    Exit Sub
+                End If
+                index = e.RowIndex
+                dgv.Rows.Remove(dataGridViewRow:=dgv.Rows(index))
+                index -= 1
+                With dgv.Rows(index)
+                    columnName = NameOf(ColumnDeleteRow)
+                    Dim buttonCell As DataGridViewDisableButtonCell =
+                        CType(.Cells(columnName), DataGridViewDisableButtonCell)
+
                     buttonCell.Enabled = False
                     buttonCell.ReadOnly = True
-                    Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                    Dim startTime As TimeOnly = TimeOnly.Parse(Me.InitializeDataGridView.Rows(currentRow).Cells(NameOf(ColumnEnd)).Value.ToString)
-                    InitializeComboList(c, CInt(startTime.ToTimeSpan.TotalMinutes / 30))
-                    c.Value = Eleven59
-                    c.ReadOnly = False
-                    buttonCell = CType(.Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell)
+                    columnName = NameOf(ColumnEnd)
+                    Dim comboBoxCell As DataGridViewComboBoxCell = CType(.Cells(columnName), DataGridViewComboBoxCell)
+                    columnName = NameOf(ColumnEnd)
+                    Dim startTime As TimeOnly =
+                        TimeOnly.Parse(Me.InitializeDataGridView.Rows(index).Cells(columnName).Value.ToString)
+
+                    start = CInt(startTime.ToTimeSpan.TotalMinutes / 30)
+                    InitializeComboList(comboBoxCell, start)
+                    comboBoxCell.Value = Eleven59
+                    comboBoxCell.ReadOnly = False
+                    columnName = NameOf(ColumnSave)
+                    buttonCell = CType(.Cells(columnName), DataGridViewDisableButtonCell)
                     buttonCell.ReadOnly = False
                     buttonCell.Enabled = True
                 End With
 
             Case NameOf(ColumnStart)
-                dgv.CurrentCell = dgv.Rows(e.RowIndex).Cells(NameOf(ColumnEnd))
+                dgv.CurrentCell = dgv.Rows(index:=e.RowIndex).Cells(columnName:=NameOf(ColumnEnd))
 
             Case NameOf(ColumnEnd)
             Case NameOf(ColumnNumericUpDown)
 
             Case NameOf(ColumnSave)
                 With Me.InitializeDataGridView
-                    If .Rows(e.RowIndex).Cells(NameOf(ColumnEnd)).Value.ToString = Eleven59Str OrElse .RowCount = 12 Then
+                    columnName = NameOf(ColumnEnd)
+                    cell = Me.InitializeDataGridView.Rows(index:=e.RowIndex).Cells(columnName)
+                    If cell.Value.ToString = Eleven59Str OrElse .RowCount = 12 Then
                         Me.OK_Button.Enabled = True
-                        Dim buttonCell As DataGridViewDisableButtonCell = CType(.Rows(.RowCount - 1).Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell)
+                        columnName = NameOf(ColumnSave)
+                        index = .RowCount - 1
+                        Dim buttonCell As DataGridViewDisableButtonCell =
+                            CType(.Rows(index).Cells(columnName), DataGridViewDisableButtonCell)
+
                         buttonCell.ReadOnly = True
                         buttonCell.Enabled = False
                         Me.InitializeDataGridView.Enabled = False
                         Me.OK_Button.Focus()
                         Exit Sub
                     End If
-                    With .Rows(e.RowIndex)
-                        CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = False
-                        CType(.Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell).Enabled = False
+                    With .Rows(index:=e.RowIndex)
+                        CType(.Cells(columnName:=NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = False
+                        CType(.Cells(columnName:=NameOf(ColumnSave)), DataGridViewDisableButtonCell).Enabled = False
                     End With
-                    For Each c As DataGridViewCell In .Rows(e.RowIndex).Cells
+                    For Each c As DataGridViewCell In .Rows(index:=e.RowIndex).Cells
                         c.ReadOnly = Not c.OwningColumn.HeaderText = "Carb Ratio g/U"
                     Next
                     .Rows.Add()
-                    With .Rows(.Rows.Count - 1)
+                    With .Rows(index:= .Rows.Count - 1)
                         Me.OK_Button.Enabled = False
-                        Dim c As DataGridViewComboBoxCell = CType(.Cells(NameOf(ColumnStart)), DataGridViewComboBoxCell)
-                        Dim columnEndCell As DataGridViewCell = Me.InitializeDataGridView.Rows(e.RowIndex).Cells(NameOf(ColumnEnd))
+                        Dim comboBoxCell As DataGridViewComboBoxCell =
+                            CType(.Cells(columnName:=NameOf(ColumnStart)), DataGridViewComboBoxCell)
+                        Dim columnEndCell As DataGridViewCell = Me.InitializeDataGridView.Rows(index:=e.RowIndex).Cells(columnName:=NameOf(ColumnEnd))
                         columnEndCell.ErrorText = ""
                         Dim timeOnly As TimeOnly = TimeOnly.Parse(columnEndCell.Value.ToString)
-                        Dim value As String = timeOnly.ToHoursMinutes
-                        c.Items.Add(value)
-                        c.Value = value
-                        c = CType(.Cells(NameOf(ColumnEnd)), DataGridViewComboBoxCell)
-                        InitializeComboList(c, CInt(timeOnly.ToTimeSpan.TotalMinutes / 30) + 1)
-                        c.Value = Eleven59
-                        .Cells(NameOf(ColumnNumericUpDown)).Value = 15.0
-                        CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = True
+                        Dim item As String = timeOnly.ToHoursMinutes
+                        comboBoxCell.Items.Add(item)
+                        comboBoxCell.Value = item
+                        columnName = NameOf(ColumnEnd)
+                        comboBoxCell = CType(.Cells(columnName), DataGridViewComboBoxCell)
+                        start = CInt(timeOnly.ToTimeSpan.TotalMinutes / 30) + 1
+                        InitializeComboList(comboBoxCell, start)
+                        comboBoxCell.Value = Eleven59
+                        columnName = NameOf(ColumnNumericUpDown)
+                        .Cells(columnName).Value = 15.0
+                        columnName = NameOf(ColumnDeleteRow)
+                        CType(.Cells(columnName), DataGridViewDisableButtonCell).Enabled = True
                     End With
 
                 End With
@@ -183,7 +212,7 @@ Public Class InitializeDialog
 
             .DisplayMember = "Key"
             .ValueMember = "Value"
-            .SelectedIndex = Me.TargetSgComboBox.Items.IndexOfValue(Of String, Single)(Me.CurrentUser.CurrentTarget)
+            .SelectedIndex = Me.TargetSgComboBox.Items.IndexOfValue(Of String, Single)(valueObject:=Me.CurrentUser.CurrentTarget)
             .Enabled = Not (Is700Series() OrElse _fromPdf)
         End With
 
@@ -299,15 +328,13 @@ Public Class InitializeDialog
     End Sub
 
     Private Sub InsulinTypeComboBox_Leave(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.Leave
-        Dim c As ComboBox = CType(sender, ComboBox)
-        c.Enabled = False
-
+        CType(sender, ComboBox).Enabled = False
     End Sub
 
     Private Sub InsulinTypeComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.SelectedIndexChanged
-        Dim c As ComboBox = CType(sender, ComboBox)
+        Dim comboBox As ComboBox = CType(sender, ComboBox)
         If Is700Series() Then
-            Me.UseAITAdvancedDecayCheckBox.Enabled = c.SelectedIndex > -1
+            Me.UseAITAdvancedDecayCheckBox.Enabled = comboBox.SelectedIndex > -1
         Else
             If _fromPdf Then
                 Me.OK_Button.Enabled = True
@@ -318,11 +345,11 @@ Public Class InitializeDialog
     End Sub
 
     Private Sub InsulinTypeComboBox_Validating(sender As Object, e As CancelEventArgs) Handles InsulinTypeComboBox.Validating
-        Dim c As ComboBox = CType(sender, ComboBox)
-        If c.SelectedIndex > -1 Then
-            Me.ErrorProvider1.SetError(c, "")
+        Dim control As ComboBox = CType(sender, ComboBox)
+        If control.SelectedIndex > -1 Then
+            Me.ErrorProvider1.SetError(control, value:="")
         Else
-            Me.ErrorProvider1.SetError(c, $"Value must be {MidnightStr}")
+            Me.ErrorProvider1.SetError(control, value:=$"Value must be {MidnightStr}")
             e.Cancel = True
         End If
 
@@ -363,23 +390,22 @@ Public Class InitializeDialog
     End Sub
 
     Private Sub PumpAitComboBoxComboBox_Leave(sender As Object, e As EventArgs) Handles PumpAitComboBox.Leave
-        Dim c As ComboBox = CType(sender, ComboBox)
-        c.Enabled = False
+        CType(sender, Control).Enabled = False
     End Sub
 
     Private Sub PumpAitComboBoxComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles PumpAitComboBox.SelectedIndexChanged
-        Dim c As ComboBox = CType(sender, ComboBox)
-        Me.InsulinTypeComboBox.Enabled = c.SelectedIndex > -1
+        Dim comboBox As ComboBox = CType(sender, ComboBox)
+        Me.InsulinTypeComboBox.Enabled = comboBox.SelectedIndex > -1
     End Sub
 
     Private Sub PumpAitComboBoxComboBox_Validating(sender As Object, e As CancelEventArgs) Handles PumpAitComboBox.Validating
-        Dim c As ComboBox = CType(sender, ComboBox)
-        If c.SelectedIndex > -1 Then
-            Me.ErrorProvider1.SetError(c, "")
+        Dim control As ComboBox = CType(sender, ComboBox)
+        If control.SelectedIndex > -1 Then
+            Me.ErrorProvider1.SetError(control, value:="")
             Me.InsulinTypeComboBox.Enabled = True
         Else
-            Me.ErrorProvider1.SetError(c, "You must select an AIT Value!")
-            c.Enabled = True
+            Me.ErrorProvider1.SetError(control, value:="You must select an AIT Value!")
+            control.Enabled = True
             e.Cancel = True
         End If
     End Sub
@@ -394,7 +420,7 @@ Public Class InitializeDialog
         End Select
         chkBox.Enabled = chkBox.CheckState = CheckState.Checked
         Dim dgv As DataGridView = Me.InitializeDataGridView
-        Dim cell As DataGridViewCell = dgv.Rows(Me.InitializeDataGridView.RowCount - 1).Cells(NameOf(ColumnEnd))
+        Dim cell As DataGridViewCell = dgv.Rows(index:=Me.InitializeDataGridView.RowCount - 1).Cells(columnName:=NameOf(ColumnEnd))
         cell.Value = Eleven59Str
         Me.InitializeDataGridView.Enabled = True
     End Sub

@@ -239,33 +239,40 @@ Friend Module SummaryHelpers
     '''  Generates a list of <see cref="SummaryRecord"/> objects from a dictionary of key-value pairs.
     '''  Optionally hides specified rows.
     ''' </summary>
-    ''' <param name="dic">The dictionary containing summary data.</param>
+    ''' <param name="jsonDictionary">The dictionary containing summary data.</param>
     ''' <param name="rowsToHide">An optional list of row keys to hide.</param>
     ''' <returns>A list of <see cref="SummaryRecord"/> objects representing the summary.</returns>
-    Friend Function GetSummaryRecords(dic As Dictionary(Of String, String), Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
+    Friend Function GetSummaryRecords(
+        jsonDictionary As Dictionary(Of String, String),
+        Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
+
         Dim listOfSummaryRecords As New List(Of SummaryRecord)
-        If dic IsNot Nothing Then
-            For Each kvp As KeyValuePair(Of String, String) In dic
-                If kvp.Value Is Nothing OrElse
-                   (rowsToHide IsNot Nothing AndAlso rowsToHide.Contains(kvp.Key, StringComparer.OrdinalIgnoreCase)) Then
+        If jsonDictionary IsNot Nothing Then
+            For Each kvp As KeyValuePair(Of String, String) In jsonDictionary
+                If kvp.Value Is Nothing Then
                     Continue For
                 End If
-
+                If rowsToHide IsNot Nothing AndAlso
+                    rowsToHide.Contains(value:=kvp.Key, comparer:=StringComparer.OrdinalIgnoreCase) Then
+                    Continue For
+                End If
                 Select Case kvp.Key
                     Case "faultId"
                         Dim message As String = String.Empty
-                        If s_notificationMessages.TryGetValue(kvp.Value, message) Then
-                            message = TranslateNotificationMessageId(dic, kvp.Value)
+                        If s_notificationMessages.TryGetValue(key:=kvp.Value, value:=message) Then
+                            message = TranslateNotificationMessageId(jsonDictionary, faultId:=kvp.Value)
                             If kvp.Value = "811" Then
-                                If dic.TryGetValue(NameOf(ActiveNotification.triggeredDateTime), s_suspendedSince) Then
+                                Dim key As String = NameOf(ActiveNotification.triggeredDateTime)
+                                If jsonDictionary.TryGetValue(key, value:=s_suspendedSince) Then
                                     Dim resultDate As Date = Nothing
-                                    s_suspendedSince = If(TryParseDate(s_suspendedSince, resultDate, NameOf(ActiveNotification.triggeredDateTime)),
-                                        resultDate.ToString(s_timeWithMinuteFormat),
-                                        "???")
+                                    key = NameOf(ActiveNotification.triggeredDateTime)
+                                    s_suspendedSince = If(TryParseDate(dateAsString:=s_suspendedSince, resultDate, key),
+                                                          resultDate.ToString(format:=s_timeWithMinuteFormat),
+                                                          "???")
                                 End If
                             End If
                             If kvp.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
-                                If dic("deliveredAmount").StartsWith("3"c) Then
+                                If jsonDictionary(key:="deliveredAmount").StartsWith(value:="3"c) Then
                                     message &= "Did you see drops at the end of the tubing?"
                                 Else
                                     message &= "Remove reservoir and select Rewind restart New reservoir procedure."
@@ -273,11 +280,12 @@ Friend Module SummaryHelpers
                             End If
                         Else
                             If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(kvp.Value) Then
+                                Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
                                 MsgBox(
                                     heading:=$"{kvp.Value} is unknown Notification Messages",
                                     text:=String.Empty,
                                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                                    title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
+                                    title:=GetTitleFromStack(stackFrame))
                             End If
                             message = kvp.Value.ToTitle
                         End If
@@ -317,22 +325,26 @@ Friend Module SummaryHelpers
     ''' </summary>
     ''' <typeparam name="T">The expected type of the value.</typeparam>
     ''' <param name="l">The list of <see cref="SummaryRecord"/> objects.</param>
-    ''' <param name="Key">The key to search for.</param>
+    ''' <param name="key">The key to search for.</param>
     ''' <param name="throwError">Whether to throw an exception if the key is not found.</param>
     ''' <param name="defaultValue">The default value to return if the key is not found and <paramref name="throwError"/> is false.</param>
     ''' <returns>The value associated with the key, or the default value.</returns>
     <Extension>
-    Friend Function GetValue(Of T)(l As List(Of SummaryRecord), Key As String, throwError As Boolean, Optional defaultValue As T = Nothing) As T
+    Friend Function GetValue(Of T)(
+        l As List(Of SummaryRecord),
+        key As String,
+        throwError As Boolean,
+        Optional defaultValue As T = Nothing) As T
 
         Try
             For Each s As SummaryRecord In l
-                If s.Key = Key Then
-                    Return CAnyType(Of T)(s.Value)
+                If s.Key = key Then
+                    Return CAnyType(Of T)(UTO:=s.Value)
                 End If
             Next
             If throwError Then
                 Stop
-                Throw New ArgumentException("Key not found", NameOf(Key))
+                Throw New ArgumentException(message:="Key not found", paramName:=NameOf(key))
             End If
         Catch ex As Exception
 
@@ -343,15 +355,15 @@ Friend Module SummaryHelpers
 
         Dim tReturnType As Type = GetType(T)
         If tReturnType Is GetType(String) Then
-            Return CAnyType(Of T)(String.Empty)
+            Return CAnyType(Of T)(UTO:=String.Empty)
         ElseIf tReturnType Is GetType(Boolean) Then
-            Return CAnyType(Of T)(False)
+            Return CAnyType(Of T)(UTO:=False)
         ElseIf tReturnType Is GetType(Integer) Then
-            Return CAnyType(Of T)(0)
+            Return CAnyType(Of T)(UTO:=0)
         ElseIf tReturnType Is GetType(Single) Then
-            Return CAnyType(Of T)(0.0)
+            Return CAnyType(Of T)(UTO:=0.0)
         ElseIf tReturnType Is GetType(UShort) Then
-            Return CAnyType(Of T)(UShort.MaxValue)
+            Return CAnyType(Of T)(UTO:=UShort.MaxValue)
         Else
             If Debugger.IsAttached Then
                 MsgBox(
@@ -371,17 +383,17 @@ Friend Module SummaryHelpers
     ''' </summary>
     ''' <typeparam name="T">The expected type of the value.</typeparam>
     ''' <param name="l">The list of <see cref="SummaryRecord"/> objects.</param>
-    ''' <param name="Key">The key to search for.</param>
+    ''' <param name="key">The key to search for.</param>
     ''' <returns>The value associated with the key.</returns>
     ''' <exception cref="ArgumentException">Thrown if the key is not found.</exception>
     <Extension>
-    Friend Function GetValue(Of T)(l As List(Of SummaryRecord), Key As String) As T
+    Friend Function GetValue(Of T)(l As List(Of SummaryRecord), key As String) As T
         For Each s As SummaryRecord In l
-            If s.Key = Key Then
-                Return CAnyType(Of T)(s.Value)
+            If s.Key = key Then
+                Return CAnyType(Of T)(UTO:=s.Value)
             End If
         Next
-        Throw New ArgumentException("Key not found", NameOf(Key))
+        Throw New ArgumentException(message:="Key not found", paramName:=NameOf(key))
     End Function
 
 End Module

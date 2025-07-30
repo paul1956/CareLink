@@ -4,8 +4,8 @@
 
 Public Class HighAlertRecord
 
-    Public Sub New(s As StringTable.Row, valueUnits As String)
-        Dim s1() As String = s.Columns(0).Split(" ", StringSplitOptions.RemoveEmptyEntries)
+    Public Sub New(row As StringTable.Row, valueUnits As String)
+        Dim s1() As String = row.Columns(index:=0).Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
         Select Case s1.Length
             Case 0
                 Exit Sub
@@ -26,16 +26,16 @@ Public Class HighAlertRecord
         End If
 
         Me.HighLimit = s1(1).ParseSingleInvariant
-        If Not String.IsNullOrWhiteSpace(s.Columns(1)) Then
+        If Not String.IsNullOrWhiteSpace(row.Columns(1)) Then
             Me.AlertBeforeHigh = True
             Me.TimeBeforeHigh &= " Please Verify!"
         End If
-        Me.AlertOnHigh = Not String.IsNullOrWhiteSpace(s.Columns(2))
-        If String.IsNullOrWhiteSpace(s.Columns(3)) Then
+        Me.AlertOnHigh = Not String.IsNullOrWhiteSpace(row.Columns(2))
+        If String.IsNullOrWhiteSpace(row.Columns(3)) Then
             Me.RiseAlert = False
         Else
             Me.RiseAlert = True
-            Me.RaiseLimit = s.Columns(3)
+            Me.RaiseLimit = row.Columns(3)
         End If
 
         Me.IsValid = True

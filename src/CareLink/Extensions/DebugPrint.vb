@@ -33,22 +33,22 @@ Friend Module DebugSupport
     ''' <param name="s">The URL string to print.</param>
     ''' <param name="width">The maximum width for splitting long parameter values.</param>
     Public Sub DebugPrintUrl(label As String, s As String, width As Integer)
-        Dim lines() As String = s.Split("?"c)
-        Debug.Print($"{label} = {lines(0)}?")
+        Dim lines() As String = s.Split(separator:="?"c)
+        Debug.Print(message:=$"{label} = {lines(0)}?")
         If lines.Length > 1 Then
-            Dim params() As String = lines(1).Split("&"c)
+            Dim params() As String = lines(1).Split(separator:="&"c)
             For Each l As String In params
-                lines = l.Split("="c)
+                lines = l.Split(separator:="="c)
                 If lines(1).Length < 100 Then
-                    Debug.Print($"{Space(label.Length + 8)}{lines(0)} = {lines(1)}")
+                    Debug.Print(message:=$"{Space(Number:=label.Length + 8)}{lines(0)} = {lines(1)}")
                 Else
-                    Dim mc As MatchCollection = Regex.Matches(lines(1), $".{{1,{width}}}")
+                    Dim mc As MatchCollection = Regex.Matches(input:=lines(1), pattern:=$".{{1,{width}}}")
                     For Each e As IndexClass(Of Match) In mc.WithIndex
                         Dim m As Match = e.Value
                         If e.IsFirst Then
-                            Debug.Print($"{Space(label.Length + 8)}{lines(0)} = {m.Value}")
+                            Debug.Print(message:=$"{Space(Number:=label.Length + 8)}{lines(0)} = {m.Value}")
                         Else
-                            Debug.Print($"{Space(label.Length + lines(0).Length + 11)}{m.Value}")
+                            Debug.Print(message:=$"{Space(Number:=label.Length + lines(0).Length + 11)}{m.Value}")
                         End If
                     Next
                 End If

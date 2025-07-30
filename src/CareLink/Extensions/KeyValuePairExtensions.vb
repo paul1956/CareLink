@@ -28,10 +28,10 @@ Friend Module KeyValuePairExtensions
     ''' <returns>A string representation of the scaled value.</returns>
     <Extension>
     Private Function ScaleSgToString(value As Single) As String
+        Dim digits As Integer = If(NativeMmolL, 2, 0)
         Return If(NativeMmolL,
-                  (value / MmolLUnitsDivisor).RoundSingle(digits:=If(NativeMmolL, 2, 0), considerValue:=False).ToString(Provider),
-                  value.ToString(Provider)
-                 )
+                  (value / MmolLUnitsDivisor).RoundSingle(digits, considerValue:=False).ToString(Provider),
+                  value.ToString(Provider))
     End Function
 
     ''' <summary>

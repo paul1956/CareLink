@@ -15,19 +15,19 @@ Public Class Meal
     ''' <summary>
     '''  Initializes a new instance of the <see cref="Meal"/> class using a marker entry and record number.
     ''' </summary>
-    ''' <param name="markerEntry">
+    ''' <param name="item">
     '''  The marker entry containing meal data.
     ''' </param>
     ''' <param name="recordNumber">
     '''  The record number for this meal marker.
     ''' </param>
-    Public Sub New(markerEntry As Marker, recordNumber As Integer)
+    Public Sub New(item As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
-        Me.Type = markerEntry.Type
+        Me.Type = item.Type
         Me.Kind = "Marker"
-        Me.TimestampAsString = markerEntry.TimestampAsString
-        Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
-        Me.Amount = CInt(markerEntry.GetSingleValueFromJson("amount", digits:=0))
+        Me.TimestampAsString = item.TimestampAsString
+        Me.DisplayTimeAsString = item.DisplayTimeAsString
+        Me.Amount = CInt(item.GetSingleFromJson("amount", digits:=0))
     End Sub
 
     ''' <summary>

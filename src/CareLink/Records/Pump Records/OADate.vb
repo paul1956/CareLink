@@ -27,9 +27,9 @@ Public Class OADate
     ''' <summary>
     '''  Initializes a new instance of the <see cref="OADate"/> class from a <see cref="Date"/>.
     ''' </summary>
-    ''' <param name="oADate">The <see cref="Date"/> to convert to OADate.</param>
-    Public Sub New(oADate As Date)
-        _oADate = oADate.ToOADate()
+    ''' <param name="asDate">The <see cref="Date"/> to convert to OADate.</param>
+    Public Sub New(asDate As Date)
+        _oADate = asDate.ToOADate()
     End Sub
 
     ''' <summary>

@@ -1970,23 +1970,11 @@ Partial Class Form1
         TableLayoutPanelNotificationsClearedTop.ColumnCount = 2
         TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
         TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelNotificationsClearedTop.Dock = DockStyle.Fill
         TableLayoutPanelNotificationsClearedTop.LabelText = "Notifications Cleared"
         TableLayoutPanelNotificationsClearedTop.Location = New Point(0, 0)
         TableLayoutPanelNotificationsClearedTop.Name = "TableLayoutPanelNotificationsClearedTop"
         TableLayoutPanelNotificationsClearedTop.RowCount = 1
-        TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
         TableLayoutPanelNotificationsClearedTop.Size = New Size(1376, 39)
         TableLayoutPanelNotificationsClearedTop.TabIndex = 1
@@ -2336,7 +2324,7 @@ Partial Class Form1
         TableLayoutPanelNotificationActive.Dock = DockStyle.Fill
         TableLayoutPanelNotificationActive.Location = New Point(0, 0)
         TableLayoutPanelNotificationActive.Name = "TableLayoutPanelNotificationActive"
-        TableLayoutPanelNotificationActive.RowCount = 2
+        TableLayoutPanelNotificationActive.RowCount = 1
         TableLayoutPanelNotificationActive.RowStyles.Add(New RowStyle())
         TableLayoutPanelNotificationActive.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TableLayoutPanelNotificationActive.Size = New Size(1376, 658)

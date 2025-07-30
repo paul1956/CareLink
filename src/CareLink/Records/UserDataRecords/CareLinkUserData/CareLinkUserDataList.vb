@@ -102,30 +102,30 @@ Public Class CareLinkUserDataList
     ''' </exception>
     Default Public Property Item(itemName As String) As CareLinkUserDataRecord
         Get
-            If String.IsNullOrWhiteSpace(itemName) Then
-                Throw New KeyNotFoundException($"Key may not be Nothing, in CareLinkUserDataList.Item")
+            If String.IsNullOrWhiteSpace(value:=itemName) Then
+                Throw New KeyNotFoundException(message:=$"Key may not be Nothing, in CareLinkUserDataList.Item")
             End If
             Try
-                For i As Integer = 0 To Me.List.Count - 1
-                    Dim entry As CareLinkUserDataRecord = CType(Me.List(i), CareLinkUserDataRecord)
+                For index As Integer = 0 To Me.List.Count - 1
+                    Dim entry As CareLinkUserDataRecord = CType(Me.List(index), CareLinkUserDataRecord)
                     If entry?.CareLinkUserName.EqualsIgnoreCase(itemName) Then
-                        Return CType(Me.List(i), CareLinkUserDataRecord)
+                        Return CType(Me.List(index), CareLinkUserDataRecord)
                     End If
                 Next
             Catch ex As Exception
-                Return New CareLinkUserDataRecord(Me)
+                Return New CareLinkUserDataRecord(parent:=Me)
             End Try
-            Throw New KeyNotFoundException($"Key '{itemName}' Not Present in Dictionary, in CareLinkUserDataList.Item")
+            Throw New KeyNotFoundException(message:=$"Key '{itemName}' Not Present in Dictionary, in CareLinkUserDataList.Item")
         End Get
         Set(Value As CareLinkUserDataRecord)
-            For i As Integer = 0 To Me.List.Count - 1
-                Dim entry As CareLinkUserDataRecord = CType(Me.List(i), CareLinkUserDataRecord)
-                If entry.CareLinkUserName.Equals(itemName, StringComparison.Ordinal) Then
-                    Me.List(i) = Value
+            For index As Integer = 0 To Me.List.Count - 1
+                Dim entry As CareLinkUserDataRecord = CType(Me.List(index), CareLinkUserDataRecord)
+                If entry.CareLinkUserName.EqualsIgnoreCase(itemName) Then
+                    Me.List(index) = Value
                     Exit Property
                 End If
             Next
-            Throw New KeyNotFoundException($"Key '{itemName}' Not Present in Dictionary")
+            Throw New KeyNotFoundException(message:=$"Key '{itemName}' Not Present in Dictionary")
         End Set
     End Property
 
@@ -149,56 +149,56 @@ Public Class CareLinkUserDataList
     ''' <summary>
     '''  Sets the parent reference and raises the <see cref="ListChanged"/> event after an item is inserted.
     ''' </summary>
-    ''' <param name="index">The index at which the item was inserted.</param>
+    ''' <param name="newIndex">The index at which the item was inserted.</param>
     ''' <param name="value">The inserted item.</param>
-    Protected Overrides Sub OnInsertComplete(index As Integer, value As Object)
+    Protected Overrides Sub OnInsertComplete(newIndex As Integer, value As Object)
         Dim c As CareLinkUserDataRecord = CType(value, CareLinkUserDataRecord)
         c.Parent = Me
-        Me.OnListChanged(New ListChangedEventArgs(ListChangedType.ItemAdded, index))
+        Me.OnListChanged(New ListChangedEventArgs(listChangedType:=ListChangedType.ItemAdded, newIndex))
     End Sub
 
     ''' <summary>
     '''  Raises the <see cref="ListChanged"/> event.
     ''' </summary>
-    ''' <param name="ev">The event arguments.</param>
-    Protected Overridable Sub OnListChanged(ev As ListChangedEventArgs)
-        _onListChanged1?(Me, ev)
+    ''' <param name="e">The event arguments.</param>
+    Protected Overridable Sub OnListChanged(e As ListChangedEventArgs)
+        _onListChanged1?(sender:=Me, e)
     End Sub
 
     ''' <summary>
     '''  Sets the parent reference and raises the <see cref="ListChanged"/> event after an item is removed.
     ''' </summary>
-    ''' <param name="index">The index of the removed item.</param>
+    ''' <param name="newIndex">The index of the removed item.</param>
     ''' <param name="value">The removed item.</param>
-    Protected Overrides Sub OnRemoveComplete(index As Integer, value As Object)
+    Protected Overrides Sub OnRemoveComplete(newIndex As Integer, value As Object)
         Dim c As CareLinkUserDataRecord = CType(value, CareLinkUserDataRecord)
         c.Parent = Me
-        Me.OnListChanged(New ListChangedEventArgs(ListChangedType.ItemDeleted, index))
+        Me.OnListChanged(New ListChangedEventArgs(listChangedType:=ListChangedType.ItemDeleted, newIndex))
     End Sub
 
     ''' <summary>
     '''  Updates parent references and raises the <see cref="ListChanged"/> event after an item is set.
     ''' </summary>
-    ''' <param name="index">The index of the item.</param>
+    ''' <param name="newIndex">The index of the item.</param>
     ''' <param name="oldValue">The old value.</param>
     ''' <param name="newValue">The new value.</param>
-    Protected Overrides Sub OnSetComplete(index As Integer, oldValue As Object, newValue As Object)
+    Protected Overrides Sub OnSetComplete(newIndex As Integer, oldValue As Object, newValue As Object)
         If oldValue Is newValue Then
             Dim oldUser As CareLinkUserDataRecord = CType(oldValue, CareLinkUserDataRecord)
             Dim newUser As CareLinkUserDataRecord = CType(newValue, CareLinkUserDataRecord)
             oldUser.Parent = Nothing
             newUser.Parent = Me
-            Me.OnListChanged(New ListChangedEventArgs(ListChangedType.ItemAdded, index))
+            Me.OnListChanged(New ListChangedEventArgs(listChangedType:=ListChangedType.ItemAdded, newIndex))
         End If
     End Sub
 
     ''' <summary>
     '''  Notifies the list that a user record has changed.
     ''' </summary>
-    ''' <param name="user">The changed user record.</param>
-    Friend Sub CareLinkUserChanged(user As CareLinkUserDataRecord)
-        Dim index As Integer = Me.List.IndexOf(user)
-        Me.OnListChanged(New ListChangedEventArgs(ListChangedType.ItemChanged, index))
+    ''' <param name="value">The changed user record.</param>
+    Friend Sub CareLinkUserChanged(value As CareLinkUserDataRecord)
+        Dim newIndex As Integer = Me.List.IndexOf(value)
+        Me.OnListChanged(New ListChangedEventArgs(listChangedType:=ListChangedType.ItemChanged, newIndex))
     End Sub
 
     ''' <summary>
@@ -209,7 +209,7 @@ Public Class CareLinkUserDataList
     '''  <see langword="True"/> if the user exists; otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function ContainsKey(key As String) As Boolean
-        If String.IsNullOrWhiteSpace(key) Then
+        If String.IsNullOrWhiteSpace(value:=key) Then
             Return False
         End If
 
@@ -231,7 +231,7 @@ Public Class CareLinkUserDataList
     Friend Function Keys() As List(Of String)
         Dim result As New List(Of String)
         For Each entry As CareLinkUserDataRecord In Me
-            result.Add(entry.CareLinkUserName)
+            result.Add(item:=entry.CareLinkUserName)
         Next
         Return result
     End Function
@@ -242,7 +242,7 @@ Public Class CareLinkUserDataList
     ''' <param name="userSettingsCsvFileWithPath">The path to the CSV file.</param>
     Friend Sub LoadUserRecords(userSettingsCsvFileWithPath As String)
         Dim l As IList = Me
-        Using myReader As New FileIO.TextFieldParser(userSettingsCsvFileWithPath)
+        Using myReader As New FileIO.TextFieldParser(path:=userSettingsCsvFileWithPath)
             myReader.TextFieldType = FileIO.FieldType.Delimited
             myReader.Delimiters = New String() {","}
             Dim currentRow As String()
@@ -256,7 +256,7 @@ Public Class CareLinkUserDataList
                     If rowIndex = 0 Then
                         headerRow = currentRow
                     Else
-                        l.Add(New CareLinkUserDataRecord(Me, headerRow, currentRow))
+                        l.Add(value:=New CareLinkUserDataRecord(parent:=Me, headerRow, currentRow))
                     End If
                     rowIndex += 1
                 Catch ex As FileIO.MalformedLineException
@@ -276,23 +276,23 @@ Public Class CareLinkUserDataList
     '''  Saves all user records, updating the specified key and value for the logged-on user.
     ''' </summary>
     ''' <param name="loggedOnUser">The user to update.</param>
-    ''' <param name="Key">The key to update.</param>
-    ''' <param name="Value">The value to set.</param>
-    Friend Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, Key As String, Value As String)
-        If Not Key.EqualsIgnoreCase(NameOf(My.Settings.CareLinkUserName)) Then
+    ''' <param name="key">The key to update.</param>
+    ''' <param name="value">The value to set.</param>
+    Friend Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, key As String, value As String)
+        If Not key.EqualsIgnoreCase(NameOf(My.Settings.CareLinkUserName)) Then
             ' We are changing something other than the user name
             ' Update logged on user and the saved file
-            loggedOnUser.UpdateValue(Key, Value)
+            loggedOnUser.UpdateValue(key, value)
             If Not Me.TryAdd(loggedOnUser) Then
-                Me(loggedOnUser.CareLinkUserName) = loggedOnUser
+                Me(itemName:=loggedOnUser.CareLinkUserName) = loggedOnUser
             End If
         Else
             ' We are changing the user name, first try to load it
-            If Me.ContainsKey(Value) Then
-                loggedOnUser = Me(Value)
+            If Me.ContainsKey(key:=value) Then
+                loggedOnUser = Me(itemName:=value)
             Else
                 ' We have a new user
-                Me.Add(loggedOnUser)
+                Me.Add(value:=loggedOnUser)
             End If
         End If
 
@@ -307,10 +307,10 @@ Public Class CareLinkUserDataList
     '''  <see langword="True"/> if the user was added; otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function TryAdd(loggedOnUser As CareLinkUserDataRecord) As Boolean
-        If Me.ContainsKey(loggedOnUser.CareLinkUserName) Then
+        If Me.ContainsKey(key:=loggedOnUser.CareLinkUserName) Then
             Return False
         End If
-        Me.Add(loggedOnUser)
+        Me.Add(value:=loggedOnUser)
         Return True
     End Function
 
@@ -350,9 +350,9 @@ Public Class CareLinkUserDataList
     '''  The newly added <see cref="CareLinkUserDataRecord"/>.
     ''' </returns>
     Public Function AddNew() As Object Implements IBindingList.AddNew
-        Dim c As New CareLinkUserDataRecord(Me)
-        Me.List.Add(c)
-        Return c
+        Dim value As New CareLinkUserDataRecord(parent:=Me)
+        Me.List.Add(value)
+        Return value
     End Function
 
     ''' <summary>
@@ -378,12 +378,15 @@ Public Class CareLinkUserDataList
     ''' </summary>
     Public Sub SaveAllUserRecords()
         Dim sb As New StringBuilder
-        sb.AppendLine(String.Join(",", s_headerColumns))
+        sb.AppendLine(value:=String.Join(separator:=",", values:=s_headerColumns))
         For Each r As CareLinkUserDataRecord In Me
-            sb.AppendLine(r.ToCsvString)
+            sb.AppendLine(value:=r.ToCsvString)
         Next
         Try
-            My.Computer.FileSystem.WriteAllText(UserSettingsCsvFileWithPath, text:=sb.ToString, append:=False)
+            My.Computer.FileSystem.WriteAllText(
+                file:=UserSettingsCsvFileWithPath,
+                text:=sb.ToString,
+                append:=False)
         Catch ex As Exception
             ' Handle exceptions as needed
         End Try

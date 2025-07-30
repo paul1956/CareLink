@@ -45,7 +45,8 @@ Friend Module NotificationHelpers
     Private Sub DgvNotification_CellContextMenuStripNeededWithoutExcel(
         sender As Object, e As DataGridViewCellContextMenuStripNeededEventArgs)
 
-        If e.RowIndex >= 0 AndAlso CType(sender, DataGridView).SelectedCells.Count > 0 Then
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        If e.RowIndex >= 0 AndAlso dgv.SelectedCells.Count > 0 Then
             e.ContextMenuStrip = My.Forms.Form1.DgvCopyWithoutExcelMenuStrip
         End If
     End Sub
@@ -57,9 +58,8 @@ Friend Module NotificationHelpers
     ''' <param name="e">Event arguments containing formatting information.</param>
     Private Sub DgvNotification_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-
-        If e.Value.ToString().StartsWithIgnoreCase("additionalInfo") Then
-            e.Value = e.Value.ToString.Replace(":", " : ")
+        If e.Value.ToString().StartsWithIgnoreCase(value:="additionalInfo") Then
+            e.Value = e.Value.ToString.Replace(oldValue:=":", newValue:=" : ")
         End If
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
@@ -70,6 +70,7 @@ Friend Module NotificationHelpers
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">Event arguments containing column information.</param>
     Private Sub DgvNotification_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If s_filterJsonData AndAlso s_columnsToHide.Contains(item:= .Name) Then
@@ -82,7 +83,7 @@ Friend Module NotificationHelpers
             e.DgvColumnAdded(
                 cellStyle,
                 forceReadOnly:=True,
-                caption:=CType(CType(sender, DataGridView).DataSource, DataTable).Columns(.Index).Caption)
+                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
             If e.Column.Index = 0 Then
                 e.Column.MinimumWidth = 45
                 e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -123,16 +124,22 @@ Friend Module NotificationHelpers
         dgv.AutoSize = False
 
         ' Calculate total height of rows and headers
-        Dim totalHeight As Integer = 0
+        Dim height As Integer = 5
         For Each row As DataGridViewRow In dgv.Rows
             If row.Visible Then
-                totalHeight += row.Height
+                height += row.Height
             End If
         Next
         ' Adjust DataGridView size if necessary
-        If dgv.ClientSize.Height <> totalHeight Then
-            dgv.ClientSize = New Size(dgv.ClientSize.Width, totalHeight)
+        If dgv.ClientSize.Height <> height Then
+            dgv.ClientSize = New Size(dgv.ClientSize.Width, height)
         End If
+
+        ' Set panel row to absolute height
+        Dim index As Integer = dgv.Parent.Controls.IndexOf(control:=dgv)
+        Dim panel As TableLayoutPanel = CType(dgv.Parent, TableLayoutPanel)
+        panel.RowStyles(index).SizeType = SizeType.Absolute
+        panel.RowStyles(index).Height = dgv.ClientSize.Height + 5
     End Sub
 
     ''' <summary>
@@ -142,25 +149,31 @@ Friend Module NotificationHelpers
     ''' <param name="table">The <see cref="DataTable"/> to display.</param>
     ''' <param name="className">The class name for naming the DataGridView.</param>
     ''' <param name="attachHandlers">Delegate to attach event handlers to the DataGridView.</param>
-    ''' <param name="row">The row index in the panel to add the DataGridView.</param>
     Private Sub DisplayNotificationDataTableInDGV(
-            realPanel As TableLayoutPanel,
-            table As DataTable,
-            className As String,
-            attachHandlers As attachHandlers,
-            row As Integer)
+        ByRef realPanel As TableLayoutPanel,
+        table As DataTable,
+        className As String,
+        attachHandlers As attachHandlers)
 
         Dim dgv As New DataGridView With {
-            .AutoSize = False,
-            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders,
-            .BorderStyle = BorderStyle.None,
-            .ColumnHeadersVisible = False,
-            .Dock = DockStyle.Top,
-            .Name = $"DataGridView{className}",
-            .RowHeadersVisible = False}
+                .AutoSize = False,
+                .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders,
+                .BorderStyle = BorderStyle.None,
+                .ColumnHeadersVisible = False,
+                .Dock = DockStyle.Top,
+                .Name = $"DataGridView{className}",
+                .RowHeadersVisible = False}
         realPanel.AutoSize = True
-        realPanel.Controls.Add(control:=dgv, column:=0, row)
-
+        realPanel.RowStyles.Add(rowStyle:=New RowStyle(sizeType:=SizeType.AutoSize))
+        realPanel.RowCount += 1
+        If className = "activeNotifications" Then
+            realPanel.Dock = DockStyle.Fill
+            realPanel.RowCount = 2
+            realPanel.Controls.Add(control:=dgv, column:=0, row:=1)
+            realPanel.RowStyles(index:=1).SizeType = SizeType.AutoSize
+        Else
+            realPanel.Controls.Add(control:=dgv, column:=0, row:=realPanel.RowCount - 1)
+        End If
         dgv.InitializeDgv()
         dgv.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         attachHandlers?(dgv)
@@ -170,41 +183,15 @@ Friend Module NotificationHelpers
         Next
         Dim rowIndex As Integer = 0
         dgv.DataSource = table
-        For Each dgvRow As DataGridViewRow In dgv.Rows
-            dgv.AutoResizeRow(rowIndex, autoSizeRowMode:=DataGridViewAutoSizeRowMode.AllCellsExceptHeader)
-            rowIndex += 1
-            dgvRow.DefaultCellStyle.WrapMode = DataGridViewTriState.False
-        Next
-        dgv.Width = dgv.PreferredSize.Width
-        dgv.Height = dgv.PreferredSize.Height
-    End Sub
+        If className = "activeNotifications" Then
+        Else
+            For Each dgvRow As DataGridViewRow In dgv.Rows
+                dgv.AutoResizeRow(rowIndex, autoSizeRowMode:=DataGridViewAutoSizeRowMode.AllCellsExceptHeader)
+                rowIndex += 1
+                dgvRow.DefaultCellStyle.WrapMode = DataGridViewTriState.False
+            Next
+        End If
 
-    ''' <summary>
-    '''  Resizes the specified panel to fit its contents.
-    '''  This method calculates the maximum width and height of the controls within the panel
-    '''  and adjusts the panel's size accordingly.
-    ''' </summary>
-    ''' <param name="panel">The <see cref="Panel"/> to resize.</param>
-    Private Sub ResizePanelToFitContents(panel As Panel)
-        Dim maxWidth As Integer = 0
-        Dim maxHeight As Integer = 0
-
-        ' Iterate through each control in the panel to find the maximum width and height
-        For Each ctrl As Control In panel.Controls
-            If ctrl.Right > maxWidth Then
-                maxWidth = ctrl.Right
-            End If
-
-            Dim height As Integer = Math.Abs(ctrl.Bottom)
-            If height > maxHeight Then
-                maxHeight = height
-            End If
-        Next
-
-        ' Set the panel size to fit all controls
-        panel.Size = New Size(
-            width:=maxWidth + panel.Padding.Right,
-            height:=maxHeight + panel.Padding.Bottom)
     End Sub
 
     ''' <summary>
@@ -213,60 +200,62 @@ Friend Module NotificationHelpers
     ''' <param name="mainForm">The main form containing notification panels.</param>
     Friend Sub UpdateNotificationTabs(mainForm As Form1)
         Const rowIndex As ServerDataIndexes = ServerDataIndexes.notificationHistory
-        mainForm.TableLayoutPanelNotificationActive.SetTableName(rowIndex, isClearedNotifications:=False)
-        For i As Integer = mainForm.TableLayoutPanelNotificationActive.Controls.Count - 1 To 1 Step -1
-            mainForm.TableLayoutPanelNotificationActive.Controls.RemoveAt(i)
-        Next
 
         mainForm.TableLayoutPanelNotificationsCleared.SetTableName(rowIndex, isClearedNotifications:=True)
         mainForm.TableLayoutPanelNotificationsCleared.Controls.Clear()
+        mainForm.TableLayoutPanelNotificationsCleared.RowStyles.Clear()
+        mainForm.TableLayoutPanelNotificationsCleared.RowCount = 0
 
         ' Force a full garbage collection and allow background GC if enabled
         GC.Collect(generation:=GC.MaxGeneration, mode:=GCCollectionMode.Optimized, blocking:=False, compacting:=False)
 
-        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In s_notificationHistoryValue.WithIndex()
-            Dim notificationType As KeyValuePair(Of String, String) = c.Value
-            Dim innerJson As List(Of Dictionary(Of String, String)) = JsonToDictionaryList(notificationType.Value)
-            Dim classCollection As List(Of SummaryRecord)
-            If notificationType.Key = "clearedNotifications" Then
-                If innerJson.Count > 0 Then
-                    innerJson.Reverse()
-                    mainForm.TableLayoutPanelNotificationsCleared.SuspendLayout()
-                    For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-                        classCollection = GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)
-                        DisplayNotificationDataTableInDGV(
-                            realPanel:=mainForm.TableLayoutPanelNotificationsCleared,
-                            table:=ClassCollectionToDataTable(classCollection),
-                            className:=NameOf(SummaryRecord),
-                            attachHandlers:=AddressOf NotificationHelpers.AttachHandlers,
-                            row:=innerDictionary.Index)
-                    Next
-                    mainForm.TableLayoutPanelNotificationsCleared.ResumeLayout()
-                    ResizePanelToFitContents(panel:=mainForm.TableLayoutPanelNotificationsCleared)
-                Else
-                    mainForm.TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
-                    mainForm.TableLayoutPanelNotificationsCleared.DisplayEmptyDGV(className:="clearedNotifications")
-                End If
-            Else
-                If innerJson.Count > 0 Then
-                    For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-                        classCollection = GetSummaryRecords(dic:=innerDictionary.Value, rowsToHide:=s_rowsToHide)
-                        DisplayNotificationDataTableInDGV(
-                            realPanel:=mainForm.TableLayoutPanelNotificationActive,
-                            table:=ClassCollectionToDataTable(classCollection),
-                            className:=NameOf(SummaryRecord),
-                            attachHandlers:=AddressOf NotificationHelpers.AttachHandlers,
-                            row:=innerDictionary.Index + 1)
-                    Next
-                Else
-                    mainForm.TableLayoutPanelNotificationActive.AutoSizeMode = AutoSizeMode.GrowAndShrink
-                    mainForm.TableLayoutPanelNotificationActive.DisplayEmptyDGV(className:="activeNotification")
-                End If
+        Dim innerJson As List(Of Dictionary(Of String, String))
+
+        ' clearedNotifications
+        innerJson = JsonToDictionaryList(s_notificationHistoryValue(key:="clearedNotifications"))
+        Dim classCollection As List(Of SummaryRecord)
+        If innerJson.Count > 0 Then
+            innerJson.Reverse()
+            For Each jsonDictionary As Dictionary(Of String, String) In innerJson
+                classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
+                DisplayNotificationDataTableInDGV(
+                    realPanel:=mainForm.TableLayoutPanelNotificationsCleared,
+                    table:=ClassCollectionToDataTable(classCollection),
+                    className:=NameOf(SummaryRecord),
+                    attachHandlers:=AddressOf NotificationHelpers.AttachHandlers)
+            Next
+            mainForm.TableLayoutPanelNotificationsCleared.HorizontalScroll.Enabled = False
+            mainForm.TableLayoutPanelNotificationsCleared.HorizontalScroll.Visible = False
+        Else
+            mainForm.TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
+            mainForm.TableLayoutPanelNotificationsCleared.DisplayEmptyDGV(className:="clearedNotifications")
+        End If
+
+        ' activeNotifications
+        innerJson = JsonToDictionaryList(s_notificationHistoryValue(key:="activeNotifications"))
+        If innerJson.Count > 0 Then
+            mainForm.TableLayoutPanelNotificationActive.SetTableName(rowIndex, isClearedNotifications:=False)
+            If mainForm.TableLayoutPanelNotificationActive.Controls.Count > 1 Then
+                mainForm.TableLayoutPanelNotificationActive.Controls.RemoveAt(index:=1)
+                mainForm.TableLayoutPanelNotificationActive.RowStyles.RemoveAt(index:=1)
+                mainForm.TableLayoutPanelNotificationActive.RowCount = 1
             End If
-            mainForm.TableLayoutPanelNotificationActive.AutoScroll = True
-            mainForm.TableLayoutPanelNotificationsCleared.AutoScroll = True
-            Application.DoEvents()
-        Next
+            For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
+                Dim jsonDictionary As Dictionary(Of String, String) = innerDictionary.Value
+                classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
+                DisplayNotificationDataTableInDGV(
+                    realPanel:=mainForm.TableLayoutPanelNotificationActive,
+                    table:=ClassCollectionToDataTable(classCollection),
+                    className:="ActiveNotifications",
+                    attachHandlers:=AddressOf NotificationHelpers.AttachHandlers)
+            Next
+        Else
+            mainForm.TableLayoutPanelNotificationActive.AutoSizeMode = AutoSizeMode.GrowAndShrink
+            mainForm.TableLayoutPanelNotificationActive.DisplayEmptyDGV(className:="activeNotification")
+        End If
+        mainForm.TableLayoutPanelNotificationActive.AutoScroll = True
+        mainForm.TableLayoutPanelNotificationsCleared.AutoScroll = True
+        Application.DoEvents()
     End Sub
 
 End Module

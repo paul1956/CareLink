@@ -16,7 +16,9 @@ Friend Module MathExtensions
     ''' <returns>The rounded Single value.</returns>
     <Extension>
     Friend Function GetRoundedValue(value As Single, digits As Integer) As Single
-        Return If(digits = 3, value.RoundTo025, value.RoundSingle(digits, considerValue:=False))
+        Return If(digits = 3,
+                  value.RoundTo025,
+                  value.RoundSingle(digits, considerValue:=False))
     End Function
 
     ''' <summary>
@@ -29,8 +31,8 @@ Friend Module MathExtensions
     ''' <returns>The rounded Single value.</returns>
     <Extension>
     Friend Function RoundSingle(value As Single, digits As Integer, considerValue As Boolean) As Single
-
-        Return CSng(Math.Round(value, digits:=If(considerValue AndAlso value < 10, 2, digits)))
+        digits = If(considerValue AndAlso value < 10, 2, digits)
+        Return CSng(Math.Round(value, digits))
     End Function
 
     ''' <summary>
@@ -43,20 +45,24 @@ Friend Module MathExtensions
     ''' <returns>The rounded value as Single.</returns>
     <Extension>
     Friend Function RoundToSingle(value As Double, digits As Integer, Optional considerValue As Boolean = False) As Single
-
-        Return CSng(Math.Round(value, digits:=If(considerValue AndAlso value < 10, 2, digits)))
+        digits = If(considerValue AndAlso value < 10, 2, digits)
+        Return CSng(Math.Round(value, digits))
     End Function
 
     ''' <summary>
-    '''  Determines whether a Single value is almost zero, within the range of <see cref="Single.Epsilon"/>.
+    '''  Checks whether the single value is close enough to zero within a reasonable tolerance.
     ''' </summary>
-    ''' <param name="single1">The Single value to check.</param>
+    ''' <param name="s">The Single value to check.</param>
+    ''' <param name="tolerance">The tolerance level for considering the value as zero.</param>
+    ''' <remarks>
+    '''  This is useful for comparing floating-point numbers to zero, accounting for precision issues.
+    ''' </remarks>
     ''' <returns>
     '''  <see langword="True"/> if the value is almost zero; otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
-    Public Function AlmostZero(single1 As Single) As Boolean
-        Return single1 >= 0 - Single.Epsilon AndAlso single1 <= 0 + Single.Epsilon
+    Public Function AlmostZero(s As Single, Optional tolerance As Single = 0.000001F) As Boolean
+        Return Math.Abs(s) <= tolerance
     End Function
 
     ''' <summary>
@@ -65,15 +71,25 @@ Friend Module MathExtensions
     ''' </summary>
     ''' <param name="singleValue">The Single value to compare.</param>
     ''' <param name="integerValue">The Integer value to compare.</param>
+    ''' <param name="tolerance">The tolerance level for considering the value as zero.</param>
     ''' <returns>
     '''  <see langword="True"/> if the values are almost equal; otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
-    Public Function IsSingleEqualToInteger(singleValue As Single, integerValue As Integer) As Boolean
-        Dim value As Single = singleValue - integerValue
-        Return Math.Abs(value) < Single.Epsilon AndAlso
-           singleValue > Integer.MinValue AndAlso
-           singleValue < Integer.MaxValue
+    Public Function IsSingleEqualToInteger(
+        singleValue As Single,
+        integerValue As Integer,
+        Optional tolerance As Single = 0.000001F) As Boolean
+
+        ' Optionally check if integerValue fits in Single range - typically integer fits in Single exactly up to 2^24
+        Const maxExactInteger As Integer = 16777216 ' 2^24
+        If integerValue > maxExactInteger OrElse integerValue < -maxExactInteger Then
+            ' Beyond this range, Single might not represent integer exactly.
+            ' So approximate equality may not be meaningful.
+            Return False
+        End If
+
+        Return Math.Abs(value:=singleValue - integerValue) <= tolerance
     End Function
 
     ''' <summary>
@@ -89,97 +105,95 @@ Friend Module MathExtensions
     ''' <summary>
     '''  Determines whether a Single value is an invalid sensor glucose (SG) value.
     ''' </summary>
-    ''' <param name="number">The Single value to check.</param>
+    ''' <param name="f">The Single value to check.</param>
     ''' <returns>
     '''  <see langword="True"/> if the value is invalid; otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
-    Public Function IsSgInvalid(number As Single) As Boolean
-        Return Single.IsNaN(number) OrElse
-            Single.IsInfinity(number) OrElse
-            Single.IsNegativeInfinity(number) OrElse
-            Single.IsPositiveInfinity(number) OrElse
-            number <= 0
+    Public Function IsSgInvalid(f As Single) As Boolean
+        Return Single.IsNaN(f) OrElse Single.IsInfinity(f) OrElse f <= 0
     End Function
 
     ''' <summary>
-    '''  Parses <paramref name="valueString"/> to a Single value,
+    '''  Parses <paramref name="value"/> to a Single value,
     '''  optionally rounding to the specified number of <paramref name="digits"/>.
     ''' </summary>
-    ''' <param name="valueString">The string to parse.</param>
+    ''' <param name="value">The string to parse.</param>
     ''' <param name="digits">The number of decimal digits to round to. If -1, determines from the string.</param>
     ''' <returns>The parsed and rounded Single value, or <see cref="Single.NaN"/> if parsing fails.</returns>
     <Extension>
-    Public Function ParseSingle(valueString As String, Optional digits As Integer = -1) As Single
-        If valueString Is Nothing Then
+    Public Function ParseSingle(value As String, Optional digits As Integer = -1) As Single
+        If String.IsNullOrWhiteSpace(value) Then
             Return Single.NaN
         End If
-        valueString = valueString.Trim
-        If valueString.Contains(","c) AndAlso valueString.Contains(CareLinkDecimalSeparator) Then
-            Dim message As String = $"{NameOf(valueString)} = {valueString}, contains both a comma and period."
-            Throw New ArgumentException(message, NameOf(valueString))
+        value = value.Trim
+        If value.Contains(value:=","c) AndAlso value.Contains(value:=CareLinkDecimalSeparator) Then
+            Dim message As String = $"{NameOf(value)} = {value}, contains both a comma and period."
+            Throw New ArgumentException(message, paramName:=NameOf(value))
         End If
-        valueString = valueString.Replace(","c, CareLinkDecimalSeparator)
-        Dim value As Single
+        value = value.Replace(oldChar:=","c, newChar:=CareLinkDecimalSeparator)
         If digits = -1 Then
-            Dim startIndex As Integer = valueString.IndexOf(CareLinkDecimalSeparator)
-            digits = If(startIndex = -1, 0, valueString.Substring(startIndex).Length)
+            Dim startIndex As Integer = value.IndexOf(CareLinkDecimalSeparator)
+            digits = If(startIndex = -1, 0, value.Substring(startIndex).Length)
         End If
-        Return If(Single.TryParse(s:=valueString, style:=NumberStyles.Number, provider:=usDataCulture, result:=value),
-            GetRoundedValue(value, digits),
-            Single.NaN)
+        Dim result As Single
+        Return If(Single.TryParse(s:=value, style:=NumberStyles.Number, provider:=usDataCulture, result),
+                  result.GetRoundedValue(digits),
+                  Single.NaN)
     End Function
 
     ''' <summary>
     '''  Parses an object to a Single value, rounding to the specified number of <paramref name="digits"/>.
     ''' </summary>
-    ''' <param name="valueObject">The object to parse (String, Single, Double, or Decimal).</param>
+    ''' <param name="value">The object to parse (String, Single, Double, or Decimal).</param>
     ''' <param name="digits">The number of decimal digits to round to.</param>
     ''' <returns>The parsed and rounded Single value, or <see cref="Single.NaN"/> if parsing fails.</returns>
-    Public Function ParseSingle(valueObject As Object, digits As Integer) As Single
-        If valueObject Is Nothing Then
+    Public Function ParseSingle(value As Object, digits As Integer) As Single
+        If value Is Nothing Then
             Return Single.NaN
         End If
 
         Dim returnSingle As Single
         Select Case True
-            Case TypeOf valueObject Is String
-                Return CStr(valueObject).ParseSingle(digits)
-            Case TypeOf valueObject Is Single
-                returnSingle = CSng(valueObject)
-            Case TypeOf valueObject Is Double
-                returnSingle = CSng(valueObject)
-            Case TypeOf valueObject Is Decimal
-                returnSingle = CSng(valueObject)
+            Case TypeOf value Is String
+                Return CStr(value).ParseSingle(digits)
+            Case TypeOf value Is Single
+                returnSingle = CSng(value)
+            Case TypeOf value Is Double
+                returnSingle = CSng(value)
+            Case TypeOf value Is Decimal
+                returnSingle = CSng(value)
             Case Else
-                Throw UnreachableException(valueObject.GetType.Name)
+                Throw UnreachableException(propertyName:=value.GetType.Name)
         End Select
 
-        Return GetRoundedValue(returnSingle, digits)
+        Return GetRoundedValue(value:=returnSingle, digits)
     End Function
 
     ''' <summary>
     '''  Rounds a Single value to the nearest 0.025 increment.
     ''' </summary>
-    ''' <param name="originalValue">The Single value to round.</param>
+    ''' <param name="f">The Single value to round.</param>
     ''' <returns>The rounded Single value, or <see cref="Single.NaN"/> if the input is NaN.</returns>
     <Extension>
-    Public Function RoundTo025(originalValue As Single) As Single
-        Return If(Single.IsNaN(originalValue), Single.NaN, CDbl(originalValue).RoundTo025)
+    Public Function RoundTo025(f As Single) As Single
+        Return If(Single.IsNaN(f),
+                  Single.NaN,
+                  CDbl(f).RoundTo025)
     End Function
 
     ''' <summary>
     '''  Rounds a Double value to the nearest 0.025 increment and returns as Single.
     ''' </summary>
-    ''' <param name="originalValue">The Double value to round.</param>
+    ''' <param name="d">The Double value to round.</param>
     ''' <returns>The rounded value as Single, or <see cref="Single.NaN"/> if the input is NaN.</returns>
     <Extension>
-    Public Function RoundTo025(originalValue As Double) As Single
-        If Double.IsNaN(originalValue) Then
+    Public Function RoundTo025(d As Double) As Single
+        If Double.IsNaN(d) Then
             Return Single.NaN
         Else
             Dim inverse As Single = 1 / 0.025
-            Dim dividend As Double = originalValue * inverse
+            Dim dividend As Double = d * inverse
             dividend = Math.Round(dividend)
             Return CSng(dividend / inverse)
         End If

@@ -27,14 +27,7 @@ Public Class BannerState
     <JsonPropertyName("message")>
     Public ReadOnly Property Message As String
         Get
-            Dim formattedMessage As String = Nothing
-            If s_sensorMessages.TryGetValue(Me.Type, formattedMessage) Then
-                Return formattedMessage
-            Else
-                Stop
-            End If
-
-            Return Me.Type.ToTitle
+            Return SG.TranslateAndTruncateSensorMessage(key:=Me.Type, truncate:=False)
         End Get
     End Property
 

@@ -14,7 +14,7 @@ Friend Module RichTextBoxExtensions
     ''' </param>
     <Extension>
     Public Sub AppendNewLine(rtb As RichTextBox)
-        rtb.AppendText(vbCrLf)
+        rtb.AppendText(text:=vbCrLf)
     End Sub
 
     ''' <summary>
@@ -41,17 +41,17 @@ Friend Module RichTextBoxExtensions
         Dim subheadingFont As New Font(familyName:="Tahoma", emSize:=16, style:=FontStyle.Regular)
 
         Dim splitText() As String = text.Split(separator:=Gear, options:=StringSplitOptions.None)
-        rtb.AppendTextWithFontChange(splitText(0), subheadingFont)
+        rtb.AppendTextWithFontChange(text:=splitText(0), newFont:=subheadingFont)
         If splitText.Length > 1 Then
             Dim bufferLength As Integer = rtb.Text.Length
-            rtb.AppendTextWithFontChange(Gear, subheadingFont)
+            rtb.AppendTextWithFontChange(text:=Gear, newFont:=subheadingFont)
             rtb.Select(bufferLength, length:=Gear.Length)
             rtb.SelectionBackColor = Color.Black
             rtb.SelectionColor = Color.Yellow
             rtb.SelectionStart = rtb.Text.Length
             rtb.SelectionBackColor = SystemColors.Window
             rtb.SelectionColor = SystemColors.WindowText
-            rtb.AppendTextWithFontChange(splitText(1), subheadingFont)
+            rtb.AppendTextWithFontChange(text:=splitText(1), newFont:=subheadingFont)
         End If
         If includeNewLine Then
             rtb.AppendNewLine

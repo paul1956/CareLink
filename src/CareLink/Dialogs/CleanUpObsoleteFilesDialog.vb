@@ -2,8 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.IO
-
 Public Class CleanupStaleFilesDialog
 
     Private Shared Function HasCheckChileNodes(node As TreeNode) As Boolean
@@ -25,6 +23,48 @@ Public Class CleanupStaleFilesDialog
         Next
     End Sub
 
+    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
+        Me.DialogResult = DialogResult.Cancel
+        Me.Close()
+    End Sub
+
+    Private Sub CleanupStaleFilesDialog_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+        Dim searchPattern As String = $"{BaseNameSavedErrorReport}*.txt"
+        Dim fileList As String() = IO.Directory.GetFiles(path:=DirectoryForProjectData, searchPattern)
+        With Me.TreeView1
+            .Nodes.Clear()
+            .CheckBoxes = True
+            .BeginUpdate()
+            .Nodes.Add(text:="Error Files")
+            .Nodes(index:=0).Checked = True
+            For Each file As String In fileList
+                .Nodes(index:=0).Nodes.Add(text:=file.Split(separator:="\").Last)
+                .Nodes(index:=0).LastNode.Checked = True
+            Next
+            .Nodes.Add(text:="WebCaches")
+            Dim path As String = IO.Path.Join(DirectoryForProjectData, "WebCache")
+            fileList = IO.Directory.GetDirectories(path)
+            For Each file As String In fileList
+                Dim webCacheFileName As String = file.Split(separator:="\").Last
+                .Nodes(index:=1).Nodes.Add(text:=webCacheFileName)
+                .Nodes(index:=1).LastNode.Checked = Not GetWebViewCacheDirectory().EndsWithIgnoreCase(value:=webCacheFileName)
+            Next
+            .ExpandAll()
+            .EndUpdate()
+        End With
+
+    End Sub
+
+    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
+        Me.DialogResult = Me.OptionalConfirmFileDelete(confirm:=True)
+        Me.Close()
+    End Sub
+
+    Private Sub OkDoNotConfirm_Button_Click(sender As Object, e As EventArgs) Handles OkDoNotConfirm_Button.Click
+        Me.DialogResult = Me.OptionalConfirmFileDelete(confirm:=False)
+        Me.Close()
+    End Sub
+
     Private Function OptionalConfirmFileDelete(confirm As Boolean) As DialogResult
         Dim result As DialogResult = DialogResult.OK
         With Me.TreeView1
@@ -40,7 +80,10 @@ Public Class CleanupStaleFilesDialog
                     End If
                     Select Case msgBoxResult
                         Case MsgBoxResult.Yes
-                            My.Computer.FileSystem.DeleteFile(Path.Join(DirectoryForProjectData, node.Text), FileIO.UIOption.OnlyErrorDialogs, FileIO.RecycleOption.SendToRecycleBin)
+                            Dim file As String = IO.Path.Join(DirectoryForProjectData, node.Text)
+                            Dim showUI As FileIO.UIOption = FileIO.UIOption.OnlyErrorDialogs
+                            Dim recycle As FileIO.RecycleOption = FileIO.RecycleOption.SendToRecycleBin
+                            My.Computer.FileSystem.DeleteFile(file, showUI, recycle)
                         Case MsgBoxResult.Cancel
                             result = DialogResult.Cancel
                             Exit For
@@ -52,7 +95,8 @@ Public Class CleanupStaleFilesDialog
             For Each node As TreeNode In .Nodes(1).Nodes
                 If node.Checked Then
                     Try
-                        Directory.Delete(Path.Join(DirectoryForProjectData, "WebCache", node.Text), recursive:=True)
+                        Dim path As String = IO.Path.Join(DirectoryForProjectData, "WebCache", node.Text)
+                        IO.Directory.Delete(path, recursive:=True)
                     Catch ex As Exception
                         Stop
                         ' Ignore ones I can't delete
@@ -63,60 +107,18 @@ Public Class CleanupStaleFilesDialog
         Return result
     End Function
 
-#Region "Events"
-
-    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
-        Me.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.Close()
-    End Sub
-
-    Private Sub CleanupStaleFilesDialog_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Dim fileList As String() = Directory.GetFiles(DirectoryForProjectData, $"{BaseNameSavedErrorReport}*.txt")
-        With Me.TreeView1
-            .Nodes.Clear()
-            .CheckBoxes = True
-            .BeginUpdate()
-            .Nodes.Add("Error Files")
-            .Nodes(0).Checked = True
-            For Each fi As String In fileList
-                .Nodes(0).Nodes.Add(fi.Split("\").Last)
-                .Nodes(0).LastNode.Checked = True
-            Next
-            .Nodes.Add("WebCaches")
-            fileList = Directory.GetDirectories(Path.Join(DirectoryForProjectData, "WebCache"))
-            For Each fi As String In fileList
-                Dim webCacheFileName As String = fi.Split("\").Last
-                .Nodes(index:=1).Nodes.Add(webCacheFileName)
-                .Nodes(index:=1).LastNode.Checked = Not GetWebViewCacheDirectory().EndsWithIgnoreCase(webCacheFileName)
-            Next
-            .ExpandAll()
-            .EndUpdate()
-        End With
-
-    End Sub
-
     Private Sub TreeView1_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterCheck
         If e.Action <> TreeViewAction.Unknown Then
             If e.Node.Text = "Error Files" Then
                 e.Node.Checked = HasCheckChileNodes(e.Node)
-            ElseIf e.Node.Text.StartsWith(BaseNameSavedErrorReport) Then
-                e.Node.Parent.Checked = HasCheckChileNodes(e.Node.Parent)
+            ElseIf e.Node.Text.StartsWith(value:=BaseNameSavedErrorReport) Then
+                e.Node.Parent.Checked = HasCheckChileNodes(node:=e.Node.Parent)
             End If
         End If
     End Sub
 
-    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
-        Me.DialogResult = Me.OptionalConfirmFileDelete(confirm:=True)
-        Me.Close()
-    End Sub
-
-    Private Sub OkDoNotConfirm_Button_Click(sender As Object, e As EventArgs) Handles OkDoNotConfirm_Button.Click
-        Me.DialogResult = Me.OptionalConfirmFileDelete(confirm:=False)
-        Me.Close()
-    End Sub
-
     Private Sub TreeView1_BeforeCheck(sender As Object, e As TreeViewCancelEventArgs) Handles TreeView1.BeforeCheck
-        If e.Node.Text.StartsWith(BaseNameSavedErrorReport) Then
+        If e.Node.Text.StartsWith(value:=BaseNameSavedErrorReport) Then
             e.Cancel = False
             Exit Sub
         End If
@@ -126,7 +128,7 @@ Public Class CleanupStaleFilesDialog
         End If
         If e.Node.Text = "Error Files" Then
             If e.Action = TreeViewAction.ByKeyboard OrElse e.Action = TreeViewAction.ByMouse Then
-                SetChildNodes(e.Node.Nodes, Not e.Node.Checked)
+                SetChildNodes(e.Node.Nodes, newValue:=Not e.Node.Checked)
                 e.Cancel = False
                 Exit Sub
             End If
@@ -139,7 +141,5 @@ Public Class CleanupStaleFilesDialog
         End If
         e.Cancel = True
     End Sub
-
-#End Region ' Events
 
 End Class

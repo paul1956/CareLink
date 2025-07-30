@@ -13,13 +13,17 @@ Public Module RandomFunctions
     ''' <summary>
     '''  Generates a random Base64-encoded string of the specified length.
     ''' </summary>
-    ''' <param name="length">The desired length of the resulting Base64 string.</param>
+    ''' <param name="count">The desired length of the resulting Base64 string.</param>
     ''' <returns>A random Base64-encoded string of the specified length.</returns>
-    Public Function GenerateRandomBase64String(length As Integer) As String
+    Public Function GenerateRandomBase64String(count As Integer) As String
         Dim random As New Random()
-        Dim chars As String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-        Dim result As New String(Enumerable.Repeat(chars, length + 10).Select(Function(s) s(random.Next(s.Length))).ToArray())
-        Return Convert.ToBase64String(Encoding.UTF8.GetBytes(result)).Substring(0, length)
+        Dim element As String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        Dim selector As Func(Of String, Char) = Function(str)
+                                                    Return str(index:=random.Next(maxValue:=str.Length))
+                                                End Function
+
+        Dim s As New String(value:=Enumerable.Repeat(element, count:=count + 10).Select(selector).ToArray())
+        Return Convert.ToBase64String(inArray:=Encoding.UTF8.GetBytes(s)).Substring(startIndex:=0, length:=count)
     End Function
 
     ''' <summary>
@@ -36,7 +40,7 @@ Public Module RandomFunctions
     ''' <returns>A string representing a random Android device model.</returns>
     Public Function RandomAndroidModel() As String
         Dim models() As String = {"SM-G973F", "SM-G988U1", "SM-G981W", "SM-G9600"}
-        Return models(New Random().Next(models.Length))
+        Return models(New Random().Next(maxValue:=models.Length))
     End Function
 
     ''' <summary>
@@ -44,12 +48,12 @@ Public Module RandomFunctions
     ''' </summary>
     ''' <returns>A random device ID in lowercase hexadecimal format.</returns>
     Public Function RandomDeviceId() As String
-        Dim randomBytes(39) As Byte
+        Dim data(39) As Byte
         Using rng As RandomNumberGenerator = RandomNumberGenerator.Create()
-            rng.GetBytes(randomBytes)
+            rng.GetBytes(data)
         End Using
-        Dim hashBytes As Byte() = SHA256.HashData(randomBytes)
-        Return Convert.ToHexStringLower(hashBytes)
+        Dim inArray As Byte() = SHA256.HashData(source:=data)
+        Return Convert.ToHexStringLower(inArray)
     End Function
 
 End Module

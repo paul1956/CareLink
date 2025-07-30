@@ -113,10 +113,16 @@ Public Module UnicodeNewline
         Dim type As UnicodeNewlines = Nothing
 
         For index As Integer = 0 To text.Length - 1
-            Dim ch As Char = text.Chars(index)
+            Dim curChar As Char = text.Chars(index)
             ' Do not delete the next line
             Dim j As Integer = index
-            If TryGetDelimiterLengthAndType(ch, length, type, Function() If(j < text.Length - 1, text.Chars(j + 1), ControlChars.NullChar)) Then
+            Dim nextChar As Func(Of Char) = Function()
+                                                Return If(j < text.Length - 1,
+                                                          text.Chars(index:=j + 1),
+                                                          ControlChars.NullChar)
+                                            End Function
+
+            If TryGetDelimiterLengthAndType(curChar, length, type, nextChar) Then
                 If Trim Then
                     result.Add(sb.ToString.Trim)
                 Else
@@ -126,7 +132,7 @@ Public Module UnicodeNewline
                 index += length - 1
                 Continue For
             End If
-            sb.Append(ch)
+            sb.Append(curChar)
         Next index
         If sb.Length > 0 Then
             If Trim Then
@@ -176,14 +182,20 @@ Public Module UnicodeNewline
         Dim type As UnicodeNewlines = Nothing
 
         For index As Integer = 0 To text.Length - 1
-            Dim ch As Char = text.Chars(index)
+            Dim curChar As Char = text.Chars(index)
             ' Do not delete the next line
             Dim j As Integer = index
-            If TryGetDelimiterLengthAndType(ch, length, type, Function() If(j < text.Length - 1, text.Chars(j + 1), substituteChar)) Then
+            Dim nextChar As Func(Of Char) = Function()
+                                                Return If(j < text.Length - 1,
+                                                          text.Chars(index:=j + 1),
+                                                          substituteChar)
+                                            End Function
+
+            If TryGetDelimiterLengthAndType(curChar, length, type, nextChar) Then
                 index += length - 1
                 Continue For
             End If
-            sb.Append(ch)
+            sb.Append(curChar)
         Next index
         Return sb.ToString
     End Function

@@ -62,8 +62,12 @@ Friend Module TimeZoneExtensions
     '''  The resolved <see cref="TimeZoneInfo"/> if found; otherwise, <see cref="TimeZoneInfo.Local"/>.
     '''  Returns <see langword="Nothing"/> if the input is null or whitespace.
     ''' </returns>
+    ''' <remarks>
+    '''  If <see cref="My.Settings.UseLocalTimeZone"/> is set, it returns <see cref="TimeZoneInfo.Local"/>.
+    '''  Otherwise, it tries to find the time zone in the cache or system time zones.
+    ''' </remarks>
     Friend Function CalculateTimeZone(timeZoneName As String) As TimeZoneInfo
-        If String.IsNullOrWhiteSpace(timeZoneName) Then
+        If String.IsNullOrWhiteSpace(value:=timeZoneName) Then
             Return Nothing
         End If
 
@@ -71,60 +75,50 @@ Friend Module TimeZoneExtensions
             Return TimeZoneInfo.Local
         End If
 
-        Dim id As String = ""
-        If Not s_specialKnownTimeZones.TryGetValue(timeZoneName, id) Then
-            id = timeZoneName
-        End If
+        ' Try to map special known time zones, otherwise use input as ID
+        Dim value As String = ""
+        value = If(s_specialKnownTimeZones.TryGetValue(key:=timeZoneName, value),
+                   value,
+                   timeZoneName)
 
-        Dim possibleTimeZone As TimeZoneInfo = Nothing
-        If s_timeZoneMap.TryGetValue(id, possibleTimeZone) Then
-            Return possibleTimeZone
-        End If
+        ' Attempt to get from cache
+        Dim tz As TimeZoneInfo = Nothing
+        If s_timeZoneMap.TryGetValue(key:=value, value:=tz) Then Return tz
 
+        ' Try to find system time zone by id
         Try
-            possibleTimeZone = TimeZoneInfo.FindSystemTimeZoneById(id)
-            If possibleTimeZone IsNot Nothing Then
-                s_timeZoneMap.Add(id, possibleTimeZone)
-                Return possibleTimeZone
-            End If
+            tz = TimeZoneInfo.FindSystemTimeZoneById(id:=value)
+            s_timeZoneMap(key:=value) = tz
+            Return tz
         Catch ex As TimeZoneNotFoundException
-        Catch ex1 As Exception
+        Catch ex As Exception
             Stop
         End Try
 
+        ' Cache system time zones for search
         If s_systemTimeZones Is Nothing Then
-            s_systemTimeZones = TimeZoneInfo.GetSystemTimeZones.ToList
+            s_systemTimeZones = TimeZoneInfo.GetSystemTimeZones.ToList()
         End If
 
-        If id.Contains("Daylight") Then
-            possibleTimeZone = s_systemTimeZones.Where(
-                predicate:=Function(t As TimeZoneInfo)
-                               Return t.DaylightName = id
-                           End Function).FirstOrDefault
-            If possibleTimeZone IsNot Nothing Then
-                s_timeZoneMap.Add(id, possibleTimeZone)
-                Return possibleTimeZone
+        ' Look for matching DaylightName or StandardName or Id
+        For Each selector As Func(Of TimeZoneInfo, String) In {
+            Function(t As TimeZoneInfo) t.DaylightName,
+            Function(t As TimeZoneInfo) t.StandardName,
+            Function(t As TimeZoneInfo) t.Id}
+
+            tz = s_systemTimeZones.FirstOrDefault(predicate:=Function(arg)
+                                                                 Return selector(arg) = value
+                                                             End Function)
+            If tz IsNot Nothing Then
+                s_timeZoneMap(key:=value) = tz
+                Return tz
             End If
-        End If
+        Next
 
-        possibleTimeZone = s_systemTimeZones.Where(
-                predicate:=Function(t As TimeZoneInfo)
-                               Return t.StandardName = id
-                           End Function).FirstOrDefault
-        If possibleTimeZone IsNot Nothing Then
-            s_timeZoneMap.Add(id, possibleTimeZone)
-            Return possibleTimeZone
-        End If
-
-        possibleTimeZone = s_systemTimeZones.Where(
-            predicate:=Function(t As TimeZoneInfo)
-                           Return t.Id = id
-                       End Function).FirstOrDefault
-
-        possibleTimeZone = If(possibleTimeZone, TimeZoneInfo.Local)
-        s_timeZoneMap.Add(id, possibleTimeZone)
-
-        Return possibleTimeZone
+        ' Fallback: use local time zone and cache
+        tz = TimeZoneInfo.Local
+        s_timeZoneMap(key:=value) = tz
+        Return tz
     End Function
 
     ''' <summary>

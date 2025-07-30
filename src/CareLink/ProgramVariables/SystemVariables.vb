@@ -28,6 +28,12 @@ Friend Module SystemVariables
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property MaxBasalPerDose As Double
     Friend Property NativeMmolL As Boolean = False
+
+
+    ''' <summary>
+    '''  Gets the character used to separate sentences, usually a period.
+    ''' </summary>
+    ''' <returns></returns>
     Friend Property SentenceSeparator As Char = "."c
     Friend Property TreatmentInsulinRow As Single
 
@@ -64,16 +70,20 @@ Friend Module SystemVariables
     '''  The Y value for insulin plotting.
     ''' </returns>
     Friend Function GetInsulinYValue() As Single
-        Dim maxYScaled As Single = s_sgRecords.Max(Of Single)(Function(sgR As SG) sgR.sg) + 2
         Const mmDlInsulinYValue As Integer = 330
         Const mmoLInsulinYValue As Single = mmDlInsulinYValue / MmolLUnitsDivisor
+        Dim maxYScaled As Single = s_sgRecords.Max(Of Single)(selector:=Function(sgR As SG)
+                                                                            Return sgR.sg
+                                                                        End Function) + 2
         Return If(Single.IsNaN(maxYScaled),
-            If(NativeMmolL, mmoLInsulinYValue, mmDlInsulinYValue),
-            If(NativeMmolL,
-                If(s_sgRecords.Count = 0 OrElse maxYScaled > mmoLInsulinYValue,
-                    342 / MmolLUnitsDivisor,
-                    Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)),
-                If(s_sgRecords.Count = 0 OrElse maxYScaled > mmDlInsulinYValue, 342, Math.Max(maxYScaled, 260))))
+                  If(NativeMmolL, mmoLInsulinYValue, mmDlInsulinYValue),
+                  If(NativeMmolL,
+                     If(s_sgRecords.Count = 0 OrElse maxYScaled > mmoLInsulinYValue,
+                        342 / MmolLUnitsDivisor,
+                        Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)),
+                     If(s_sgRecords.Count = 0 OrElse maxYScaled > mmDlInsulinYValue,
+                        342,
+                        Math.Max(maxYScaled, 260))))
     End Function
 
     ''' <summary>
@@ -112,12 +122,13 @@ Friend Module SystemVariables
     '''  The count of SG.sg values within the range and not NaN.
     ''' </returns>
     Friend Function CountSgInTightRange(sgList As IEnumerable(Of SG)) As UInteger
-        Return CUInt(sgList.Count(
-            predicate:=Function(sg)
-                           Return Not Single.IsNaN(sg.sg) AndAlso
-                                  sg.sgMgdL >= OptionsConfigureTiTR.LowThreshold AndAlso
-                                  sg.sgMgdL <= 140.0
-                       End Function))
+        Dim predicate As Func(Of SG, Boolean) = Function(sg)
+                                                    Return Not Single.IsNaN(sg.sg) AndAlso
+                                                           sg.sgMgdL >= OptionsConfigureTiTR.LowThreshold AndAlso
+                                                           sg.sgMgdL <= 140.0
+                                                End Function
+
+        Return CUInt(sgList.Count(predicate))
     End Function
 
     ''' <summary>

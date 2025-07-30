@@ -14,24 +14,24 @@ Public Class Insulin
     ''' <summary>
     '''  Initializes a new instance of the <see cref="Insulin"/> class using a marker entry and record number.
     ''' </summary>
-    ''' <param name="markerEntry">The marker entry containing insulin event data.</param>
+    ''' <param name="item">The marker entry containing insulin event data.</param>
     ''' <param name="recordNumber">The record number for this insulin entry.</param>
-    Public Sub New(markerEntry As Marker, recordNumber As Integer)
+    Public Sub New(item As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
-        Me.Type = markerEntry.Type
+        Me.Type = item.Type
         Me.Kind = "Marker"
-        Me.ActivationType = markerEntry.GetStringValueFromJson(NameOf(ActivationType))
-        Me.TimestampAsString = markerEntry.TimestampAsString
-        Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
-        Me.ProgrammedFastAmount = markerEntry.GetSingleValueFromJson(NameOf(ProgrammedFastAmount), digits:=3)
-        Me.DeliveredFastAmount = markerEntry.GetSingleValueFromJson(NameOf(DeliveredFastAmount), digits:=3)
-        Me.Completed = markerEntry.GetBooleanValueFromJson(NameOf(Completed))
-        Me.BolusType = markerEntry.GetStringValueFromJson(NameOf(BolusType))
-        Me.ProgrammedExtendedAmount = markerEntry.GetSingleValueFromJson(NameOf(ProgrammedExtendedAmount), digits:=3)
-        Me.DeliveredExtendedAmount = markerEntry.GetSingleValueFromJson(NameOf(DeliveredExtendedAmount), digits:=3)
-        Me.ProgrammedDuration = markerEntry.GetIntegerValueFromJson(NameOf(ProgrammedDuration))
-        Me.EffectiveDuration = markerEntry.GetIntegerValueFromJson(NameOf(EffectiveDuration))
-        Me.InsulinType = markerEntry.GetStringValueFromJson(NameOf(InsulinType))
+        Me.ActivationType = item.GetStringFromJson(NameOf(ActivationType))
+        Me.TimestampAsString = item.TimestampAsString
+        Me.DisplayTimeAsString = item.DisplayTimeAsString
+        Me.ProgrammedFastAmount = item.GetSingleFromJson(NameOf(ProgrammedFastAmount), digits:=3)
+        Me.DeliveredFastAmount = item.GetSingleFromJson(NameOf(DeliveredFastAmount), digits:=3)
+        Me.Completed = item.GetBooleanFromJson(NameOf(Completed))
+        Me.BolusType = item.GetStringFromJson(NameOf(BolusType))
+        Me.ProgrammedExtendedAmount = item.GetSingleFromJson(NameOf(ProgrammedExtendedAmount), digits:=3)
+        Me.DeliveredExtendedAmount = item.GetSingleFromJson(NameOf(DeliveredExtendedAmount), digits:=3)
+        Me.ProgrammedDuration = item.GetIntegerFromJson(NameOf(ProgrammedDuration))
+        Me.EffectiveDuration = item.GetIntegerFromJson(NameOf(EffectiveDuration))
+        Me.InsulinType = item.GetStringFromJson(NameOf(InsulinType))
         If Me.InsulinType.EqualsIgnoreCase("Unknown") Then
             Me.InsulinType = CurrentUser.InsulinTypeName
         End If

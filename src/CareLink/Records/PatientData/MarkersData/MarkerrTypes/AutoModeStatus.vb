@@ -8,12 +8,12 @@ Imports System.Text.Json.Serialization
 
 Public Class AutoModeStatus
 
-    Public Sub New(markerEntry As Marker, recordNumber As Integer)
+    Public Sub New(item As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
-        Me.Type = markerEntry.Type
+        Me.Type = item.Type
         Me.Kind = "Marker"
-        Me.TimestampAsString = markerEntry.TimestampAsString
-        Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
+        Me.TimestampAsString = item.TimestampAsString
+        Me.DisplayTimeAsString = item.DisplayTimeAsString
         Me.AutoModeOn = PatientData.TherapyAlgorithmState?.AutoModeShieldState = "AUTO_BASAL"
     End Sub
 

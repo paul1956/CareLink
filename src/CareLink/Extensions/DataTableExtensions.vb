@@ -9,16 +9,16 @@ Friend Module DataTableExtensions
     ''' <summary>
     '''  Returns an enumerable collection of all <see cref="DataColumn"/> objects in the specified <see cref="DataTable"/>.
     ''' </summary>
-    ''' <param name="Input">The <see cref="DataTable"/> whose columns are to be enumerated.</param>
+    ''' <param name="table">The <see cref="DataTable"/> whose columns are to be enumerated.</param>
     ''' <returns>
-    '''  An <see cref="IEnumerable(Of DataColumn)"/> containing all columns in the <paramref name="Input"/> table,
+    '''  An <see cref="IEnumerable(Of DataColumn)"/> containing all columns in the <paramref name="table"/> table,
     '''  or an empty list if the table is not valid.
     ''' </returns>
     <Extension>
-    Public Function GetColumns(Input As DataTable) As IEnumerable(Of DataColumn)
-        Return If(IsValidDataTable(Input),
+    Public Function GetColumns(table As DataTable) As IEnumerable(Of DataColumn)
+        Return If(IsValidDataTable(table),
                   New List(Of DataColumn)(),
-                  Input.Columns.OfType(Of DataColumn)().ToList())
+                  table.Columns.OfType(Of DataColumn)().ToList())
     End Function
 
     ''' <summary>

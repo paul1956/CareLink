@@ -7,6 +7,8 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 
 Public Module RegionCountryLists
+    Private ReadOnly s_countryCodeToCountry As New Dictionary(Of String, String) _
+        (comparer:=StringComparer.OrdinalIgnoreCase)
 
     ''' <summary>
     '''  A dictionary mapping country names to their ISO 2-letter country codes.
@@ -103,7 +105,6 @@ Public Module RegionCountryLists
         {"Philippines", "PH"},
         {"Poland", "PL"},
         {"Portugal", "PT"},
-        {"Puerto Rico", "US"},
         {"Qatar", "QA"},
         {"Romania", "RO"},
         {"Russia", "RU"},
@@ -229,7 +230,6 @@ Public Module RegionCountryLists
         {"Philippines", "Asia"},
         {"Poland", "Europe"},
         {"Portugal", "Europe"},
-        {"Puerto Rico", "North America"},
         {"Qatar", "Asia"},
         {"Romania", "Europe"},
         {"Russia", "Europe"},
@@ -349,7 +349,10 @@ Public Module RegionCountryLists
         Dim startIndex As Integer = indexOfOpenParenthesis + 1
         Dim length As Integer = indexOfClosedParenthesis - indexOfOpenParenthesis - 1
         Dim cultureName As String = filenameWithoutExtension.Substring(startIndex, length)
-        If Not CultureInfoList.Where(Function(c As CultureInfo) c.Name = cultureName).Any Then
+        Dim fileNameInvalid As Boolean = Not CultureInfoList.Any(predicate:=Function(c As CultureInfo)
+                                                                                Return c.Name = cultureName
+                                                                            End Function)
+        If fileNameInvalid Then
             MsgBox(
                 heading:="Invalid Filename",
                 text:=$"Culture name '{cultureName}' is not a valid culture name.",
@@ -367,9 +370,18 @@ Public Module RegionCountryLists
     ''' <returns>The country name if found; otherwise, <see langword="Nothing"/></returns>
     <Extension>
     Public Function GetCountryFromCode(countryCode As String) As String
-        Debug.Assert(countryCode.Length = 2)
-        Return s_countryCodeList.Where(Function(kvp As KeyValuePair(Of String, String)) kvp.Value.Equals(countryCode)) _
-                                .Select(Function(kvp As KeyValuePair(Of String, String)) kvp.Key).FirstOrDefault
+        Debug.Assert(condition:=countryCode.Length = 2)
+        If s_countryCodeToCountry.Count = 0 Then
+            ' Create the reverse lookup Dictionary only once
+            For Each kvp As KeyValuePair(Of String, String) In s_countryCodeList
+                s_countryCodeToCountry(key:=kvp.Value) = kvp.Key
+            Next
+        End If
+
+        Dim value As String = Nothing
+        Return If(s_countryCodeToCountry.TryGetValue(key:=countryCode, value),
+                  value,
+                  "US")
     End Function
 
     ''' <summary>

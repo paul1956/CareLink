@@ -65,7 +65,7 @@ Friend Module Form1UpdateHelpers
             Dim messageButtons As MessageBoxButtons
             If PumpTimeZoneInfo Is Nothing Then
                 Dim text As String
-                If String.IsNullOrWhiteSpace(kvp.Value.ToString) Then
+                If String.IsNullOrWhiteSpace(kvp.Value) Then
                     text = $"Your pump appears To be off-line, " &
                         "some values will be wrong do you want to continue? " &
                         "If you select OK '{TimeZoneInfo.Local.Id}' will be used as you local time " &
@@ -141,17 +141,20 @@ Friend Module Form1UpdateHelpers
         cultureName As String,
         extension As String,
         mustBeUnique As Boolean) As FileNameStruct
-
+        Dim message As String
         If String.IsNullOrWhiteSpace(baseName) Then
-            Throw New ArgumentException($"'{NameOf(baseName)}' cannot be null or whitespace.", paramName:=NameOf(baseName))
+            message = $"'{NameOf(baseName)}' cannot be null or whitespace."
+            Throw New ArgumentException(message, paramName:=NameOf(baseName))
         End If
 
         If String.IsNullOrWhiteSpace(cultureName) Then
-            Throw New ArgumentException($"'{NameOf(cultureName)}' cannot be null or whitespace.", paramName:=NameOf(cultureName))
+            message = $"'{NameOf(cultureName)}' cannot be null or whitespace."
+            Throw New ArgumentException(message, paramName:=NameOf(cultureName))
         End If
 
         If String.IsNullOrWhiteSpace(extension) Then
-            Throw New ArgumentException($"'{NameOf(extension)}' cannot be null or whitespace.", paramName:=NameOf(extension))
+            message = $"'{NameOf(extension)}' cannot be null or whitespace."
+            Throw New ArgumentException(message, paramName:=NameOf(extension))
         End If
 
         Try
@@ -164,12 +167,13 @@ Friend Module Form1UpdateHelpers
                 Dim count As Long
                 Do
                     count += 1
-                    filenameFullPath = Path.Join(DirectoryForProjectData, $"{filenameWithoutExtension}{count}.{extension}")
-                    filenameWithExtension = Path.GetFileName(filenameFullPath)
-                Loop While File.Exists(filenameFullPath)
+                    Dim filename As String = $"{filenameWithoutExtension}{count}.{extension}"
+                    filenameFullPath = Path.Join(DirectoryForProjectData, filename)
+                    filenameWithExtension = Path.GetFileName(path:=filenameFullPath)
+                Loop While File.Exists(path:=filenameFullPath)
             End If
 
-            Return New FileNameStruct(filenameFullPath, filenameWithExtension)
+            Return New FileNameStruct(withPath:=filenameFullPath, withoutPath:=filenameWithExtension)
         Catch ex As Exception
             Stop
         End Try
@@ -258,17 +262,19 @@ Friend Module Form1UpdateHelpers
 
         If RecentData.TryGetValue("therapyAlgorithmState", value) Then
             s_therapyAlgorithmStateValue = LoadIndexedItems(value)
-            InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso {"AUTO_BASAL", "SAFE_BASAL"}.Contains(s_therapyAlgorithmStateValue(NameOf(TherapyAlgorithmState.AutoModeShieldState)))
+            Dim key As String = NameOf(TherapyAlgorithmState.AutoModeShieldState)
+            InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso
+                {"AUTO_BASAL", "SAFE_BASAL"}.Contains(value:=s_therapyAlgorithmStateValue(key))
         End If
 
-        s_sgRecords = If(RecentData.TryGetValue("sgs", value),
-            JsonToLisOfSgs(value),
-            New List(Of SG))
+        s_sgRecords = If(RecentData.TryGetValue(key:="sgs", value),
+                         JsonToLisOfSgs(value),
+                         New List(Of SG))
 
         mainForm.MaxBasalPerHourLabel.Text =
             If(RecentData.TryGetValue(key:="markers", value),
-                CollectMarkers(),
-                String.Empty)
+               CollectMarkers(),
+               String.Empty)
 
         s_systemStatusTimeRemaining = Nothing
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In RecentData.WithIndex()
@@ -393,12 +399,12 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.sensorDurationMinutes)
-                    Dim sensorDurationMinutes As Integer = CInt(kvp.Value.ToString())
+                    Dim sensorDurationMinutes As Integer = CInt(kvp.Value)
                     message = sensorDurationMinutes.MinutesToDaysHoursMinutes
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataIndexes.sensorDurationHours)
-                    Dim sensorDurationHours As Integer = CInt(kvp.Value.ToString())
+                    Dim sensorDurationHours As Integer = CInt(kvp.Value)
                     message = sensorDurationHours.HoursToDaysAndHours
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
@@ -638,7 +644,7 @@ Friend Module Form1UpdateHelpers
                         Dim minutes As Integer = bannerStateRecord1.TimeRemaining
                         mainForm.PumpBannerStateLabel.BackColor = Color.Lime
                         mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
-                        mainForm.PumpBannerStateLabel.Text = $"Target {If(NativeMmolL, "8.3", "150")}  {minutes.ToHoursMinutes} hr"
+                        mainForm.PumpBannerStateLabel.Text = $"Target {If(NativeMmolL, "8.3", "150")} {minutes.ToHoursMinutes}/hr"
                         mainForm.PumpBannerStateLabel.Visible = True
                         mainForm.PumpBannerStateLabel.Dock = DockStyle.Top
                     Case "BG_REQUIRED"
@@ -681,11 +687,12 @@ Friend Module Form1UpdateHelpers
                         Stop
                     Case Else
                         If Debugger.IsAttached Then
+                            Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
                             MsgBox(
                                 heading:=$"{typeValue} Is unknown banner message!",
                                 text:="",
                                 buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                                title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
+                                title:=GetTitleFromStack(stackFrame))
                         End If
                 End Select
                 mainForm.PumpBannerStateLabel.ForeColor = ContrastingColor(baseColor:=mainForm.PumpBannerStateLabel.BackColor)
