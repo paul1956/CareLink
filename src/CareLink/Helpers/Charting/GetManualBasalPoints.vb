@@ -18,33 +18,34 @@ Friend Module GetManualBasalPoints
     '''  Returns an empty dictionary if the marker is not valid for manual basal calculation.
     ''' </returns>
     Friend Function GetManualBasalValues(markerWithIndex As IndexClass(Of Marker)) As SortedDictionary(Of OADate, Single)
-        Debug.Assert(CurrentPdf.IsValid)
-        Dim markerEntry As Marker = markerWithIndex.Value
-        If markerEntry.GetBooleanValueFromJson(NameOf(LowGlucoseSuspended.deliverySuspended)) Then
+        Debug.Assert(condition:=CurrentPdf.IsValid)
+        Dim item As Marker = markerWithIndex.Value
+        Dim key As String = NameOf(LowGlucoseSuspended.deliverySuspended)
+        If item.GetBooleanFromJson(key) Then
             Return New SortedDictionary(Of OADate, Single)
         End If
         Dim nextPumpSuspendTime As OADate
         Dim markerDateTime? As Date
         If s_markers.Count > 1 AndAlso markerWithIndex.Index = s_markers.Count - 2 Then
-            Dim activationType As String = s_markers.Last().GetStringValueFromJson(NameOf(Insulin.ActivationType))
+            Dim activationType As String = s_markers.Last().GetStringFromJson(NameOf(Insulin.ActivationType))
             If activationType = "MANUAL" Then
                 markerDateTime = s_markers.Last().GetMarkerTimestamp
                 If markerDateTime Is Nothing Then
                     Return New SortedDictionary(Of OADate, Single)
                 End If
-                nextPumpSuspendTime = New OADate(markerDateTime.Value)
+                nextPumpSuspendTime = New OADate(asDate:=markerDateTime.Value)
             Else
-                nextPumpSuspendTime = New OADate(PumpNow)
+                nextPumpSuspendTime = New OADate(asDate:=PumpNow)
             End If
         Else
-            markerDateTime = s_markers(markerWithIndex.Index + 1).GetMarkerTimestamp
+            markerDateTime = s_markers(index:=markerWithIndex.Index + 1).GetMarkerTimestamp
             If markerDateTime Is Nothing Then
                 Return New SortedDictionary(Of OADate, Single)
             End If
-            nextPumpSuspendTime = New OADate(markerDateTime.Value)
+            nextPumpSuspendTime = New OADate(asDate:=markerDateTime.Value)
         End If
 
-        Dim lowGlucoseSuspend As New LowGlucoseSuspended(s_markers.Last(), s_markers.Count)
+        Dim lowGlucoseSuspend As New LowGlucoseSuspended(item:=s_markers.Last(), recordNumber:=s_markers.Count)
         If lowGlucoseSuspend.deliverySuspended Then
             Return New SortedDictionary(Of OADate, Single)
         End If
@@ -54,33 +55,32 @@ Friend Module GetManualBasalPoints
             Return New SortedDictionary(Of OADate, Single)
         End If
 
-        markerDateTime = markerEntry.GetMarkerTimestamp
+        markerDateTime = item.GetMarkerTimestamp
         If markerDateTime Is Nothing Then
             Return New SortedDictionary(Of OADate, Single)
         End If
-        Dim currentMarkerTime As New OADate(markerDateTime.Value)
+        Dim currentMarkerTime As New OADate(asDate:=markerDateTime.Value)
         Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
         While nextPumpSuspendTime > currentMarkerTime
             For Each e As IndexClass(Of BasalRateRecord) In basalRateRecords.WithIndex
                 Dim basalRecord As BasalRateRecord = e.Value
-                Dim startTime As TimeOnly = basalRecord.Time
-                Dim endTime As TimeOnly = If(e.IsLast,
-                                             Eleven59.AddMinutes(1),
-                                             basalRateRecords(e.Index + 1).Time
-                                            )
-                If TimeOnly.FromDateTime(Date.FromOADate(currentMarkerTime)).IsBetween(startTime, endTime) Then
+                Dim start As TimeOnly = basalRecord.Time
+                Dim [end] As TimeOnly = If(e.IsLast,
+                                           Eleven59.AddMinutes(value:=1),
+                                           basalRateRecords(index:=e.Index + 1).Time)
+                If TimeOnly.FromDateTime(Date.FromOADate(currentMarkerTime)).IsBetween(start, [end]) Then
                     Dim rate As Single = basalRecord.UnitsPerHr / 12
                     Dim value As TimeSpan
                     If rate < 0.025 Then
                         If timeOrderedMarkers.ContainsKey(key:=currentMarkerTime) Then
                             timeOrderedMarkers(key:=currentMarkerTime) += 0.025!
                         Else
-                            timeOrderedMarkers.Add(currentMarkerTime, 0.025)
+                            timeOrderedMarkers.Add(key:=currentMarkerTime, value:=0.025)
                         End If
                         Dim oaBaseDate As Date = Date.FromOADate(currentMarkerTime)
                         Dim increments As Integer = CInt(Math.Ceiling((basalRecord.UnitsPerHr / 0.025).RoundTo025))
                         value = New TimeSpan(hours:=0, minutes:=60 \ increments, seconds:=0)
-                        currentMarkerTime = New OADate(oaBaseDate.Add(value))
+                        currentMarkerTime = New OADate(asDate:=oaBaseDate.Add(value))
                     Else
                         If timeOrderedMarkers.ContainsKey(key:=currentMarkerTime) Then
                             timeOrderedMarkers(key:=currentMarkerTime) += rate
@@ -88,7 +88,7 @@ Friend Module GetManualBasalPoints
                             timeOrderedMarkers.Add(key:=currentMarkerTime, value:=rate)
                         End If
                         Dim oaBaseDate As Date = Date.FromOADate(currentMarkerTime)
-                        currentMarkerTime = New OADate(oaBaseDate.Add(value:=FiveMinuteSpan))
+                        currentMarkerTime = New OADate(asDate:=oaBaseDate.Add(value:=FiveMinuteSpan))
                     End If
                     Exit For
                 End If

@@ -156,8 +156,12 @@ Friend Module LoginHelpers
                         Dim di As New DirectoryInfo(DirectoryForProjectData)
                         Dim fileList As String() = New DirectoryInfo(path:=DirectoryForProjectData) _
                             .EnumerateFiles(searchPattern:=$"CareLinkSnapshot*.json") _
-                            .OrderBy(Function(f As FileInfo) f.LastWriteTime) _
-                            .Select(Function(f As FileInfo) f.Name).ToArray
+                            .OrderBy(keySelector:=Function(f As FileInfo)
+                                                      Return f.LastWriteTime
+                                                  End Function) _
+                            .Select(selector:=Function(f As FileInfo)
+                                                  Return f.Name
+                                              End Function).ToArray
 
                         Using openFileDialog1 As New OpenFileDialog With {
                             .AddExtension = True,

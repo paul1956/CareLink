@@ -1240,33 +1240,33 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-                .SortMode = DataGridViewColumnSortMode.NotSortable
-                Dim value As String = dgv.Columns(.Index).HeaderText
-                If String.IsNullOrWhiteSpace(value) Then
-                    value = .DataPropertyName.Remove(oldValue:="DgvCareLinkUsers")
-                End If
-                If value.ContainsIgnoreCase(value:="DeleteRow") Then
-                    value = ""
-                Else
-                    If .Index > 0 AndAlso
-                        String.IsNullOrWhiteSpace(value:= .DataPropertyName) AndAlso
-                        String.IsNullOrWhiteSpace(value) Then
+            .SortMode = DataGridViewColumnSortMode.NotSortable
+            Dim value As String = dgv.Columns(.Index).HeaderText
+            If String.IsNullOrWhiteSpace(value) Then
+                value = .DataPropertyName.Remove(oldValue:="DgvCareLinkUsers")
+            End If
+            If value.ContainsIgnoreCase(value:="DeleteRow") Then
+                value = ""
+            Else
+                If .Index > 0 AndAlso
+                    String.IsNullOrWhiteSpace(value:= .DataPropertyName) AndAlso
+                    String.IsNullOrWhiteSpace(value) Then
 
-                        .DataPropertyName = s_headerColumns(index:= .Index - 2)
-                    End If
+                    .DataPropertyName = s_headerColumns(index:= .Index - 2)
                 End If
+            End If
             Dim forceReadOnly As Boolean
             If DataGridViewHelpers.HideColumn(Of CareLinkUserDataRecord)(.DataPropertyName) Then
                 .Visible = False
             Else
                 forceReadOnly = True
             End If
-                e.DgvColumnAdded(
+            e.DgvColumnAdded(
                 cellStyle:=CareLinkUserDataRecordHelpers.GetCellStyle(
                     columnName:= .DataPropertyName),
                     forceReadOnly,
                     caption:=value)
-            End With
+        End With
     End Sub
 
     ''' <summary>
@@ -1415,14 +1415,14 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-                If DataGridViewHelpers.HideColumn(Of Insulin)(dataPropertyName:= .Name) Then
-                    .Visible = False
-                End If
-                e.DgvColumnAdded(
-                    cellStyle:=DataGridViewHelpers.GetCellStyle(Of Insulin)(columnName:= .Name),
-                    forceReadOnly:=True,
-                    caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
-            End With
+            If DataGridViewHelpers.HideColumn(Of Insulin)(dataPropertyName:= .Name) Then
+                .Visible = False
+            End If
+            e.DgvColumnAdded(
+                cellStyle:=DataGridViewHelpers.GetCellStyle(Of Insulin)(columnName:= .Name),
+                forceReadOnly:=True,
+                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+        End With
     End Sub
 
     ''' <summary>
@@ -2076,7 +2076,6 @@ Public Class Form1
             My.Settings.Save()
         End If
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)
-        Dim currentAllUserLoginFile As String = UserSettingsCsvFileWithPath
         If Not Directory.Exists(DirectoryForProjectData) Then
             Dim lastError As String = $"Can't create required project directories!"
             Directory.CreateDirectory(DirectoryForProjectData)
@@ -3754,8 +3753,8 @@ Public Class Form1
                     End Select
 
                     Dim s As String = sgString.PadRight(totalWidth:=3) _
-                                                  .Substring(startIndex:=0, length:=3).Trim _
-                                                  .PadLeft(totalWidth:=3)
+                                              .Substring(startIndex:=0, length:=3).Trim _
+                                              .PadLeft(totalWidth:=3)
                     Me.NotifyIcon1.Icon = CreateTextIcon(s, backColor)
                     Dim strBuilder As New StringBuilder(100)
                     Dim dateSeparator As String = CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator
@@ -3777,8 +3776,8 @@ Public Class Form1
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta:=0)
                             Else
                                 deltaString = If(Math.Abs(value:=delta) < 0.001,
-                                                          "0",
-                                                          delta.ToString(format:=GetSgFormat(withSign:=True), provider))
+                                                 "0",
+                                                 delta.ToString(format:=GetSgFormat(withSign:=True), provider))
                                 Me.TrendValueLabel.Text = deltaString
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta)
                             End If
@@ -4451,7 +4450,7 @@ Public Class Form1
                     Me.SensorTimeLeftLabel.Text = $"{PatientData.SensorDurationHours} Hours"
                 Case Is = 0
                     Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(
-                        Key:=NameOf(ServerDataIndexes.sensorDurationMinutes),
+                        key:=NameOf(ServerDataIndexes.sensorDurationMinutes),
                         throwError:=False,
                         defaultValue:=-1)
 

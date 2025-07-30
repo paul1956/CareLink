@@ -130,13 +130,13 @@ Friend Module DateTimeExtensions
     ''' <returns>UTC Date</returns>
     <Extension>
     Friend Function GetCurrentDateCulture(countryCode As String) As CultureInfo
-        Dim localDateCulture As List(Of CultureInfo) = CultureInfoList.Where(
-            predicate:=Function(c As CultureInfo)
-                           Return c.Name = $"en-{countryCode}"
-                       End Function)?.ToList()
-        Return If(localDateCulture Is Nothing OrElse localDateCulture.Count = 0,
-                  New CultureInfo("en-US"),
-                  localDateCulture(0))
+        Dim code As String = $"en-{countryCode}"
+        Dim predicate As Func(Of CultureInfo, Boolean) = Function(c)
+                                                             Return c.Name = code
+                                                         End Function
+
+        Dim culture As CultureInfo = CultureInfoList.FirstOrDefault(predicate)
+        Return If(culture, New CultureInfo(name:="en-US"))
     End Function
 
     ''' <summary>
@@ -223,16 +223,6 @@ Friend Module DateTimeExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a <see langword="Date"/> to a <see langword="String"/> formatted as "ddd, MMM d HH:mm".
-    ''' </summary>
-    ''' <param name="triggeredDateTime">The <see langword="Date"/> to convert.</param>
-    ''' <returns>A <see langword="String"/> representing the date in the specified format.</returns>
-    <Extension>
-    Public Function ToNotificationDateTimeString(triggeredDateTime As Date) As String
-        Return triggeredDateTime.ToString($"ddd, MMM d {s_timeWithMinuteFormat}")
-    End Function
-
-    ''' <summary>
     '''  Converts a <see langword="TimeOnly"/> to a <see langword="String"/> formatted as "HH:mm".
     ''' </summary>
     ''' <param name="timeOnly">The <see langword="TimeOnly"/> to convert.</param>
@@ -245,6 +235,16 @@ Friend Module DateTimeExtensions
                   rawTimeOnly
                  )
 
+    End Function
+
+    ''' <summary>
+    '''  Converts a <see langword="Date"/> to a <see langword="String"/> formatted as "ddd, MMM d HH:mm".
+    ''' </summary>
+    ''' <param name="triggeredDateTime">The <see langword="Date"/> to convert.</param>
+    ''' <returns>A <see langword="String"/> representing the date in the specified format.</returns>
+    <Extension>
+    Public Function ToNotificationDateTimeString(triggeredDateTime As Date) As String
+        Return triggeredDateTime.ToString($"ddd, MMM d {s_timeWithMinuteFormat}")
     End Function
 
     ''' <summary>

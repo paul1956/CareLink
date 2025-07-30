@@ -8,10 +8,11 @@ Imports System.Text
 Public Module DataRowExtensions
 
     ''' <summary>
-    '''  Returns a new string in which all occurrences of the single quote character in the current instance are replaced with a back-tick character.
+    '''  Returns a new string in which all occurrences of the single quote character in the current instance
+    '''  are replaced with a back-tick character.
     ''' </summary>
     Private Function EscapeSingleQuotes(Input As String) As String
-        Return Input.Replace("'"c, "`"c) ' Replace with back-tick
+        Return Input.Replace(oldChar:="'"c, newChar:="`"c) ' Replace with back-tick
     End Function
 
     ''' <summary>
@@ -31,41 +32,19 @@ Public Module DataRowExtensions
         Dim result As New StringBuilder()
         For Each item As T In Collection
             If result.Length <> 0 Then
-                result.Append(Delimiter) ' Add comma
+                result.Append(value:=Delimiter) ' Add comma
             End If
 
-            result.Append(EscapeSingleQuotes(TryCast(item, String)))
+            result.Append(value:=EscapeSingleQuotes(Input:=TryCast(item, String)))
         Next item
         If result.Length < 1 Then
             Return String.Empty
         End If
 
-        result.Insert(0, Prefix)
-        result.Append(Postfix)
+        result.Insert(index:=0, value:=Prefix)
+        result.Append(value:=Postfix)
 
         Return result.ToString()
-    End Function
-
-    ''' <summary>
-    '''  Returns all the column names of the specified DataRow in a string delimited like an SQL INSERT INTO statement.
-    '''  Example: ([FullName], [Gender], [BirthDate])
-    ''' </summary>
-    ''' <returns>A string formatted like the columns specified in an SQL 'INSERT INTO' statement.</returns>
-    <Extension>
-    Public Function RowToColumnString(Row As DataRow) As String
-        Dim collection As IEnumerable(Of String) = Row.ItemArray.Select(Function(item) TryCast(item, String))
-        Return collection.ToDelimitedString(Prefix:="([", Delimiter:="], [", Postfix:="])")
-    End Function
-
-    ''' <summary>
-    '''  Returns all the values the specified DataRow in as a string delimited like and SQL INSERT INTO statement.
-    '''  Example: ('John Doe', 'M', '10/3/1981'')
-    ''' </summary>
-    ''' <returns>A string formatted like the values specified in an SQL 'INSERT INTO' statement.</returns>
-    <Extension>
-    Public Function RowToValueString(Row As DataRow) As String
-        Dim collection As IEnumerable(Of String) = Row.Table.GetColumns().Select(Function(c) c.ColumnName)
-        Return collection.ToDelimitedString(Prefix:="('", Delimiter:="', '", Postfix:="')")
     End Function
 
 End Module

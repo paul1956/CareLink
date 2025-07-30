@@ -8,13 +8,13 @@ Imports System.Text.Json.Serialization
 
 Public Class LowGlucoseSuspended
 
-    Public Sub New(markerEntry As Marker, recordNumber As Integer)
+    Public Sub New(item As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
-        Me.Type = markerEntry.Type
+        Me.Type = item.Type
         Me.Kind = "Marker"
-        Me.TimestampAsString = markerEntry.TimestampAsString
-        Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
-        Me.deliverySuspended = markerEntry.Type = "LOW_GLUCOSE_SUSPENDED"
+        Me.TimestampAsString = item.TimestampAsString
+        Me.DisplayTimeAsString = item.DisplayTimeAsString
+        Me.deliverySuspended = item.Type = "LOW_GLUCOSE_SUSPENDED"
     End Sub
 
     <DisplayName("Record Number")>

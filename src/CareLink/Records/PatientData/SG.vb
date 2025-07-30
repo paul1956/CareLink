@@ -27,18 +27,18 @@ Public Class SG
 
     Public Sub New(innerJson As Dictionary(Of String, String), index As Integer)
         Try
-            If innerJson(NameOf(sg)) <> "0" OrElse innerJson.Count = 5 Then
-                _timestampAsString = innerJson(NameOf(Me.Timestamp))
-                Me.SensorState = innerJson(NameOf(SensorState))
-                Me.sg = innerJson(NameOf(sg)).ParseSingle(digits:=2)
+            If innerJson(key:=NameOf(sg)) <> "0" OrElse innerJson.Count = 5 Then
+                _timestampAsString = innerJson(key:=NameOf(Me.Timestamp))
+                Me.SensorState = innerJson(key:=NameOf(SensorState))
+                Me.sg = innerJson(key:=NameOf(sg)).ParseSingle(digits:=2)
                 Dim value As String = "False"
-                Me.timeChange = innerJson.TryGetValue(NameOf(timeChange), value) AndAlso Boolean.Parse(innerJson(NameOf(timeChange)))
+                Me.timeChange = innerJson.TryGetValue(key:=NameOf(timeChange), value) AndAlso Boolean.Parse(value)
             Else
                 Me.sg = Single.NaN
             End If
-            Me.Kind = innerJson(NameOf(Kind))
+            Me.Kind = innerJson(key:=NameOf(Kind))
             Me.RecordNumber = index + 1
-            Me.Version = CInt(innerJson(NameOf(Version)))
+            Me.Version = CInt(innerJson(key:=NameOf(Version)))
         Catch ex As Exception
             Stop
         End Try
@@ -141,15 +141,48 @@ Public Class SG
     Public ReadOnly Property Message As String
         Get
             _sensorState = If(_sensorState, "")
-            Dim resultMessage As String = Nothing
-            Return If(s_sensorMessages.TryGetValue(_sensorState, resultMessage),
-                      resultMessage,
-                      _sensorState?.ToTitle)
+            Return TranslateAndTruncateSensorMessage(key:=PatientData.SensorState, truncate:=False)
         End Get
     End Property
 
     Public Overrides Function ToString() As String
         Return If(NativeMmolL, Me.sg.ToString(format:="F1", Provider), Me.sg.ToString(format:="F0"))
+    End Function
+
+    ''' <summary>
+    '''  Translates the sensor state message based on the <see langword="key"/>.
+    '''  If the sensor state is not recognized, it will return the state as a title-cased string.
+    '''  If debugging is enabled, it will show a message box with the unknown sensor state.
+    '''  If the sensor state message contains an ellipsis ("..."), it will truncate the message to the first line.
+    ''' </summary>
+    ''' <param name="key">The message key</param>
+    ''' <returns>
+    '''  A string representing the translated and truncated sensor state message.
+    ''' </returns>
+    ''' <param name="truncate">If <see langword="True"/> the message will be truncated to the first line.</param>
+    Public Shared Function TranslateAndTruncateSensorMessage(key As String, Optional truncate As Boolean = False) As String
+        Dim value As String = ""
+        If s_sensorMessages.TryGetValue(key, value) Then
+            If Not truncate Then
+                Return value
+            End If
+            Dim line1 As String = value.Split(separator:=SentenceSeparator)(0)
+            Return If(value.Contains(value:="..."),
+                      $"{line1}...",
+                      line1)
+        Else
+            If Debugger.IsAttached Then
+                Stop
+                Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
+                MsgBox(
+                    heading:=$"{PatientData.SensorState} is unknown sensor message",
+                    text:="",
+                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                    title:=GetTitleFromStack(stackFrame))
+            End If
+            Return value.ToTitle
+        End If
+
     End Function
 
 End Class

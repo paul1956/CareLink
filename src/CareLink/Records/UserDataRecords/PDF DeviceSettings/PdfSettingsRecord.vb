@@ -27,44 +27,45 @@ Public Class PdfSettingsRecord
     Private Const UtilitiesHeader As String = "Block Mode"
 
     Public Sub New(pdfFileNameWithPath As String)
-        Try
-            Form1.Cursor = Cursors.WaitCursor
-            Application.DoEvents()
-            Dim tables As Dictionary(Of String, PdfTable) = GetTableList(pdfFileNameWithPath, 0, 1)
-            Dim allText As String = ExtractTextFromPage(pdfFileNameWithPath, 0, 1)
-            Dim listOfAllTextLines As List(Of String) = allText.SplitLines(Trim:=True)
+        Form1.Cursor = Cursors.WaitCursor
+        Application.DoEvents()
+        Dim tables As Dictionary(Of String, PdfTable) = GetTableList(pdfFileNameWithPath, startPageNumber:=0, endPageNumber:=1)
+        Dim allText As String = ExtractTextFromPage(filename:=pdfFileNameWithPath, startPageNumber:=0, endPageNumber:=1)
+        Dim listOfAllTextLines As List(Of String) = allText.SplitLines(Trim:=True)
 
-            ' Get Sensor and Basal 4 Line to determine Active Basal later
-            Dim basal4Line As String
-            For Each s As IndexClass(Of String) In listOfAllTextLines.WithIndex
-                If s.Value.Contains("Basal 4") Then
-                    basal4Line = s.Value
-                End If
-            Next
+        ' Get Sensor and Basal 4 Line to determine Active Basal later
+        Dim basal4Line As String
+        For Each s As String In listOfAllTextLines
+            If s.Contains(value:="Basal 4") Then
+                basal4Line = s
+            End If
+        Next
 
-            Dim presetTempKeyIndex As Integer = 0
-            For Each kvp As KeyValuePair(Of String, PdfTable) In tables
+        Dim presetTempKeyIndex As Integer = 0
+        For Each kvp As KeyValuePair(Of String, PdfTable) In tables
+            Try
                 Dim itemKey As String = kvp.Key
-                Debug.Print(kvp.Key)
+                Debug.Print(message:=kvp.Key)
                 Dim sTable As StringTable
+                Dim table As PdfTable = kvp.Value
                 Select Case True
                     Case itemKey.StartsWith(MaximumBasalRateHeader)
-                        sTable = ConvertPdfTableToStringTable(tables.Values(0), MaximumBasalRateHeader)
+                        sTable = ConvertPdfTableToStringTable(table:=tables.Values(index:=0), tableHeader:=MaximumBasalRateHeader)
                         Me.Basal.MaximumBasalRate = sTable.GetSingleLineValue(Of Single)(MaximumBasalRateHeader)
                     Case itemKey.StartsWith(NamedBasalHeader)
                         Dim tableNumber As Integer = ExtractIndex(itemKey)
-                        Dim key As String = Me.Basal.NamedBasal.Keys(tableNumber - 1)
-                        Dim indexOfKey As Integer = allText.IndexOf(key)
-                        Dim isActive As Boolean = allText.Substring(indexOfKey + key.Length + 2, 1) = "("c
-                        Me.Basal.NamedBasal(key) = New NamedBasalRecord(kvp.Value, isActive)
-                    Case itemKey.StartsWith(BolusWizardHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, BolusWizardHeader)
+                        Dim key As String = Me.Basal.NamedBasal.Keys(index:=tableNumber - 1)
+                        Dim indexOfKey As Integer = allText.IndexOf(value:=key)
+                        Dim isActive As Boolean = allText.Substring(startIndex:=indexOfKey + key.Length + 2, length:=1) = "("c
+                        Me.Basal.NamedBasal(key) = New NamedBasalRecord(table, isActive)
+                    Case itemKey.StartsWith(value:=BolusWizardHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=BolusWizardHeader)
                         Me.Bolus.BolusWizard = New BolusWizardRecord(sTable)
-                    Case itemKey.StartsWith(EasyBolusHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, EasyBolusHeader)
+                    Case itemKey.StartsWith(value:=EasyBolusHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=EasyBolusHeader)
                         Me.Bolus.EasyBolus = New EasyBolusRecord(sTable)
-                    Case itemKey.StartsWith(CarbohydrateRatiosHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, CarbohydrateRatiosHeader)
+                    Case itemKey.StartsWith(value:=CarbohydrateRatiosHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=CarbohydrateRatiosHeader)
                         Me.Bolus.DeviceCarbohydrateRatios.Clear()
                         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                             If e.IsFirst Then Continue For
@@ -73,7 +74,7 @@ Public Class PdfSettingsRecord
                             Me.Bolus.DeviceCarbohydrateRatios.Add(item)
                         Next
                     Case itemKey.StartsWith(InsulinSensitivityHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, InsulinSensitivityHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=InsulinSensitivityHeader)
                         Me.Bolus.InsulinSensitivity.Clear()
                         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                             If e.IsFirst Then Continue For
@@ -81,99 +82,100 @@ Public Class PdfSettingsRecord
                             If Not item.IsValid Then Exit For
                             Me.Bolus.InsulinSensitivity.Add(item)
                         Next
-                    Case itemKey.StartsWith(BloodGlucoseTargetHeader)
+                    Case itemKey.StartsWith(value:=BloodGlucoseTargetHeader)
                         Me.Bolus.BloodGlucoseTarget.Clear()
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, BloodGlucoseTargetHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=BloodGlucoseTargetHeader)
                         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                             If e.IsFirst Then Continue For
                             Dim item As New BloodGlucoseTargetRecord(e.Value)
                             If Not item.IsValid Then Exit For
                             Me.Bolus.BloodGlucoseTarget.Add(item)
                         Next
-                    Case itemKey.StartsWith(PresetBolusHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, PresetBolusHeader)
+                    Case itemKey.StartsWith(value:=PresetBolusHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=PresetBolusHeader)
                         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                             If e.IsFirst Then Continue For
-                            Dim key As String = Me.PresetBolus.Keys(e.Index - 1)
+                            Dim key As String = Me.PresetBolus.Keys(index:=e.Index - 1)
                             Me.PresetBolus(key) = New PresetBolusRecord(e.Value, key)
                         Next
-                    Case itemKey.StartsWith(BasalRatesHeader)
-                        Dim index As Integer = ExtractIndex(itemKey)
-                        Dim key As String = Me.Basal.NamedBasal.Keys(index - 1)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, BasalRatesHeader)
+                    Case itemKey.StartsWith(value:=BasalRatesHeader)
+                        Dim index As Integer = ExtractIndex(itemKey) - 1
+                        Dim key As String = Me.Basal.NamedBasal.Keys(index)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=BasalRatesHeader)
                         Me.Basal.NamedBasal(key).UpdateBasalRates(sTable)
-                    Case itemKey.StartsWith(PresetTempHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, PresetTempHeader)
+                    Case itemKey.StartsWith(value:=PresetTempHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=PresetTempHeader)
                         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                             If e.IsFirst Then Continue For
-                            Dim key As String = Me.PresetTemp.Keys(presetTempKeyIndex)
+                            Dim key As String = Me.PresetTemp.Keys(index:=presetTempKeyIndex)
                             presetTempKeyIndex += 1
                             Me.PresetTemp(key) = New PresetTempRecord(e.Value, key)
                         Next
-                    Case itemKey.StartsWith(SmartGuardHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, SmartGuardHeader)
+                    Case itemKey.StartsWith(value:=SmartGuardHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=SmartGuardHeader)
                         If sTable.Rows.Count = 3 Then
-                            Me.SmartGuard = New SmartGuardRecord(sTable, sTable.GetSingleLineValue(Of String)(SmartGuardHeader))
+                            Dim smartGuard As String = sTable.GetSingleLineValue(Of String)(Key:=SmartGuardHeader)
+                            Me.SmartGuard = New SmartGuardRecord(sTable, smartGuard)
                         Else
                             Dim smartGuard As String = "Off"
                             For Each s As IndexClass(Of String) In listOfAllTextLines.WithIndex
-                                If s.Value.StartsWith(SmartGuardHeader) Then
+                                If s.Value.StartsWith(value:=SmartGuardHeader) Then
                                     s.MoveNext()
-                                    smartGuard = s.Value.Split(" ", StringSplitOptions.RemoveEmptyEntries).ToList(1)
+                                    smartGuard = s.Value.Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries).ToList(index:=1)
                                     Exit For
                                 End If
                             Next
                             Me.SmartGuard = New SmartGuardRecord(sTable, smartGuard)
                         End If
-                    Case itemKey.StartsWith(LowReservoirRemindersHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, LowReservoirRemindersHeader)
+                    Case itemKey.StartsWith(value:=LowReservoirRemindersHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=LowReservoirRemindersHeader)
                         Me.Reminders = New RemindersRecord(sTable)
-                    Case itemKey.StartsWith(HighAlertsHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, HighAlertsHeader)
+                    Case itemKey.StartsWith(value:=HighAlertsHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=HighAlertsHeader)
                         Me.HighAlerts = New HighAlertsRecord(sTable, listOfAllTextLines)
-                    Case itemKey.StartsWith(MissedMealBolusHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, MissedMealBolusHeader)
+                    Case itemKey.StartsWith(value:=MissedMealBolusHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=MissedMealBolusHeader)
                         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                             If e.IsFirst Then Continue For
                             Dim key As String = Me.Reminders.MissedMealBolus.Keys(e.Index - 1)
                             Me.Reminders.MissedMealBolus(key) = New MealStartEndRecord(e.Value, key)
                         Next
-                    Case itemKey.StartsWith(LowAlertsHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, LowAlertsHeader)
+                    Case itemKey.StartsWith(value:=LowAlertsHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=LowAlertsHeader)
                         Me.LowAlerts = New LowAlertsRecord(sTable, listOfAllTextLines)
-                    Case itemKey.StartsWith(SensorHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, SensorHeader)
+                    Case itemKey.StartsWith(value:=SensorHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=SensorHeader)
                         Me.Sensor = New SensorRecord(sTable)
-                    Case itemKey.StartsWith(PersonalRemindersHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, PersonalRemindersHeader)
+                    Case itemKey.StartsWith(value:=PersonalRemindersHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=PersonalRemindersHeader)
                         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                             If e.IsFirst Then Continue For
-                            Dim key As String = Me.Reminders.PersonalReminders.Keys(e.Index - 1)
+                            Dim key As String = Me.Reminders.PersonalReminders.Keys(index:=e.Index - 1)
                             Me.Reminders.PersonalReminders(key) = New PersonalRemindersRecord(e.Value, key)
                         Next
 
-                    Case itemKey.StartsWith(CalibrationRemindersHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, CalibrationRemindersHeader)
+                    Case itemKey.StartsWith(value:=CalibrationRemindersHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=CalibrationRemindersHeader)
                         Me.Sensor.UpdateCalibrationReminder(sTable)
-                    Case itemKey.StartsWith(UtilitiesHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, UtilitiesHeader)
+                    Case itemKey.StartsWith(value:=UtilitiesHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=UtilitiesHeader)
                         Me.Utilities = New UtilitiesRecord(sTable)
                         Me.IsValid = True
-                    Case itemKey.StartsWith(AutoCalibrationHeader)
-                        sTable = ConvertPdfTableToStringTable(kvp.Value, AutoCalibrationHeader)
+                    Case itemKey.StartsWith(value:=AutoCalibrationHeader)
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=AutoCalibrationHeader)
                         Me.Sensor.UpdateCalibrationReminder(sTable)
                     Case String.IsNullOrWhiteSpace(itemKey)
                         Continue For
                     Case Else
                         Stop
                 End Select
-            Next
-        Catch ex As Exception
-            Stop
-        Finally
-            Form1.Cursor = Cursors.Default
-            Application.DoEvents()
-        End Try
+            Catch ex As Exception
+                Stop
+            Finally
+                Form1.Cursor = Cursors.Default
+                Application.DoEvents()
+            End Try
+        Next
     End Sub
 
     ''' <summary>
@@ -182,8 +184,8 @@ Public Class PdfSettingsRecord
     ''' <param name="itemKey"></param>
     ''' <returns>index</returns>
     Private Shared Function ExtractIndex(itemKey As String) As Integer
-        Dim index As Integer = itemKey.IndexOf("("c) + 1
-        Return CInt(itemKey.Substring(index).Replace(")", ""))
+        Dim startIndex As Integer = itemKey.IndexOf("("c) + 1
+        Return CInt(itemKey.Substring(startIndex).Replace(oldValue:=")", newValue:=""))
     End Function
 
     Public Property Basal As New PumpBasalRecord
@@ -230,7 +232,7 @@ Public Class PdfSettingsRecord
     Public Shared Sub GetSnoozeInfo(listOfAllTextLines As List(Of String), target As String, ByRef snoozeOn As String, ByRef snoozeTime As TimeSpan)
         Dim snoozeLine As String
         snoozeOn = "Off"
-        snoozeLine = listOfAllTextLines.FindLineContaining(target)
+        snoozeLine = listOfAllTextLines.FindLine(target)
         Dim index As Integer = snoozeLine.IndexOf(")"c)
         If index >= 0 Then
             snoozeLine = snoozeLine.Substring(0, index + 1)

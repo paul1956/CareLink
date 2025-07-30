@@ -52,14 +52,18 @@ Friend Module DataTableHelpers
 
         For Each [property] As PropertyInfo In classType.GetProperties()
             Dim colAttribute As ColumnAttribute = [property].GetCustomAttributes(
-                attributeType:=GetType(ColumnAttribute),
-                inherit:=True).Cast(Of ColumnAttribute)().SingleOrDefault()
-            Dim order As Integer = If(colAttribute IsNot Nothing, colAttribute.Order, fallbackOrder)
-            While propertyOrder.ContainsKey(order)
-                order += 1 ' Avoid duplicate keys
+                    attributeType:=GetType(ColumnAttribute),
+                    inherit:=True).Cast(Of ColumnAttribute)().SingleOrDefault()
+            Dim key As Integer = If(colAttribute Is Nothing,
+                                    fallbackOrder,
+                                    colAttribute.Order)
+            While propertyOrder.ContainsKey(key)
+                key += 1 ' Avoid duplicate keys
             End While
-            propertyOrder.Add(order, [property])
-            If colAttribute Is Nothing Then fallbackOrder += 1
+            propertyOrder.Add(key, value:=[property])
+            If colAttribute Is Nothing Then
+                fallbackOrder += 1
+            End If
         Next
 
         For Each [property] As PropertyInfo In propertyOrder.Values
@@ -72,7 +76,7 @@ Friend Module DataTableHelpers
             Dim column As New DataColumn With {
                 .ColumnName = [property].Name,
                 .Caption = GetColumnDisplayName([property]),
-                .DataType = If(IsNullableType(propertyType) AndAlso propertyType.IsGenericType,
+                .DataType = If(IsNullableType(nullableType:=propertyType) AndAlso propertyType.IsGenericType,
                                propertyType.GenericTypeArguments.FirstOrDefault(),
                                propertyType)
             }
@@ -98,8 +102,8 @@ Friend Module DataTableHelpers
 
             ' Non-breaking space for better display
             Dim displayName As String = displayNameAttribute.DisplayName
-            If displayName.Contains("From Pump") OrElse displayName.Contains("As Date") Then
-                displayName = displayName.Replace(" ", NonBreakingSpace)
+            If displayName.Contains(value:="From Pump") OrElse displayName.Contains(value:="As Date") Then
+                displayName = displayName.Replace(oldValue:=" ", newValue:=NonBreakingSpace)
             End If
             Return displayName
         End If
@@ -108,13 +112,13 @@ Friend Module DataTableHelpers
     ''' <summary>
     '''  Indicates whether a specified Type can be assigned null.
     ''' </summary>
-    ''' <param name="Input">The Type to check for nullable property.</param>
+    ''' <param name="nullableType">The Type to check for nullable property.</param>
     ''' <returns>True if the specified Type can be assigned null, otherwise false.</returns>
-    Private Function IsNullableType(Input As Type) As Boolean
-        If Not Input.IsValueType Then
+    Private Function IsNullableType(nullableType As Type) As Boolean
+        If Not nullableType.IsValueType Then
             Return True ' Reference Type
         End If
-        If Nullable.GetUnderlyingType(Input) IsNot Nothing Then
+        If Nullable.GetUnderlyingType(nullableType) IsNot Nothing Then
             Return True ' Nullable<T>
         End If
         Return False ' Value Type
@@ -156,9 +160,19 @@ Friend Module DataTableHelpers
         If alignmentTable.Count = 0 Then
             For Each [property] As PropertyInfo In classType.GetProperties()
                 cellStyle = New DataGridViewCellStyle
-                Dim typeName As String = [property].GetCustomAttributes(GetType(ColumnAttribute), inherit:=True).Cast(Of ColumnAttribute)().SingleOrDefault()?.TypeName
+                Dim typeName As String = [property].GetCustomAttributes(
+                    attributeType:=GetType(ColumnAttribute),
+                    inherit:=True).Cast(Of ColumnAttribute)().SingleOrDefault()?.TypeName
+
                 Select Case typeName
-                    Case "additionalInfo", "Date", "DateTime", NameOf(OADate), "RecordNumber", NameOf([String]), "Version"
+                    Case "additionalInfo",
+                         "Date",
+                         "DateTime",
+                         NameOf(OADate),
+                         "RecordNumber",
+                         NameOf([String]),
+                         "Version"
+
                         cellStyle = cellStyle.SetCellStyle(
                             alignment:=DataGridViewContentAlignment.MiddleLeft,
                             padding:=New Padding(all:=1))

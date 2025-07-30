@@ -26,7 +26,7 @@ Friend Module DataGridViewColumnEventArgsExtensions
     <Extension>
     Friend Function TryGetPrefixMatch(list As List(Of String), headerText As String, ByRef result As String) As Boolean
         For Each value As String In list
-            If headerText.StartsWith(value, comparisonType:=StringComparison.OrdinalIgnoreCase) Then
+            If headerText.StartsWithIgnoreCase(value) Then
                 result = value
                 Return True
             End If
@@ -61,24 +61,27 @@ Friend Module DataGridViewColumnEventArgsExtensions
             .ReadOnly = forceReadOnly OrElse .DataPropertyName = "ID"
             .Resizable = DataGridViewTriState.False
             Dim title As New StringBuilder
-            Dim titleInTitleCase As String = .Name
-            If .Name.Contains("DeleteRow") Then
-                titleInTitleCase = ""
-            ElseIf Not .Name.ContainsIgnoreCase("OADateTime") Then
-                titleInTitleCase = If(.DataPropertyName.Length < 4, .Name, .Name.ToTitleCase())
+            Dim value As String = .Name
+            If .Name.Contains(value:="DeleteRow") Then
+                value = ""
+            ElseIf Not .Name.ContainsIgnoreCase(value:="OADateTime") Then
+                value = If(.DataPropertyName.Length < 4,
+                           .Name,
+                           .Name.ToTitleCase())
             End If
 
-            If titleInTitleCase.Contains("™"c) Then
-                title.Append(titleInTitleCase)
+            If value.Contains(value:="™"c) Then
+                title.Append(value)
             Else
-                title.Append(titleInTitleCase.Replace("Care Link", $"CareLink™"))
+                value = value.Replace(oldValue:="Care Link", newValue:=$"CareLink™")
+                title.Append(value)
             End If
 
-            .HeaderText = title.TrimEnd(vbCrLf).ToString
+            .HeaderText = title.TrimEnd(value:=vbCrLf).ToString
             .DefaultCellStyle = cellStyle
-            If String.IsNullOrWhiteSpace(caption) Then Return
-            .HeaderText = caption.Replace("_", "")
-            If .DataPropertyName.ContainsIgnoreCase("message") Then
+            If String.IsNullOrWhiteSpace(value:=caption) Then Return
+            .HeaderText = caption.Remove(oldValue:="_")
+            If .DataPropertyName.ContainsIgnoreCase(value:="message") Then
                 .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             Else
                 .SortMode = DataGridViewColumnSortMode.NotSortable

@@ -38,7 +38,6 @@ Friend Module DrawingExtensions
     ''' </returns>
     <Extension>
     Friend Function DrawCenteredArc(backImage As Bitmap, minutesToNextCalibration As Integer) As Bitmap
-
         If minutesToNextCalibration = 0 Then
             Return backImage
         End If
@@ -46,7 +45,7 @@ Friend Module DrawingExtensions
         Dim myGraphics As Graphics = Graphics.FromImage(targetImage)
         myGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
         Dim hoursToNextCalibration As Double = minutesToNextCalibration / 60
-        Dim pen As New Pen(GetColorFromTimeToNextCalib(hoursToNextCalibration), width:=4)
+        Dim pen As New Pen(color:=GetColorFromTimeToNextCalib(hoursToNextCalibration), width:=4)
         Dim rect As New Rectangle(x:=4, y:=2, width:=backImage.Width - 6, height:=backImage.Height - 6)
         Dim sweepAngle As Integer = CInt(30 + (Math.Min(minutesToNextCalibration, 720) / 720.0 * (360 - 30)))
         myGraphics.DrawArc(pen, rect, startAngle:=-90, sweepAngle:=-sweepAngle)
@@ -62,10 +61,10 @@ Friend Module DrawingExtensions
     ''' <returns>An <see cref="Icon"/> containing the text.</returns>
     Public Function CreateTextIcon(s As String, backColor As Color) As Icon
         Dim fontToUse As New Font(FamilyName, emSize:=10, style:=FontStyle.Regular, unit:=GraphicsUnit.Pixel)
-        Dim brushToUse As Brush = New SolidBrush(backColor.ContrastingColor())
+        Dim brushToUse As Brush = New SolidBrush(color:=backColor.ContrastingColor())
         Dim bitmapText As New Bitmap(width:=16, height:=16)
         Using g As Graphics = Graphics.FromImage(bitmapText)
-            g.Clear(backColor)
+            g.Clear(color:=backColor)
             g.TextRenderingHint = Text.TextRenderingHint.SingleBitPerPixelGridFit
             g.DrawString(s, font:=fontToUse, brush:=brushToUse, x:=-2, y:=0)
         End Using

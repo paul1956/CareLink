@@ -8,45 +8,63 @@ Imports System.Text
 Friend Module StringBuilderExtensions
 
     ''' <summary>
-    '''  Removes the specified string <paramref name="trimString"/> from
+    '''  Removes the specified string <paramref name="value"/> from
     '''  the end of the <see cref="StringBuilder"/> instance if it exists.
     ''' </summary>
     ''' <param name="sb">
     '''  The StringBuilder instance to trim.
     ''' </param>
-    ''' <param name="trimString">
+    ''' <param name="value">
     '''  The string to remove from the end of the StringBuilder.
     ''' </param>
     ''' <returns>
     '''  The modified <see cref="StringBuilder"/> instance with the specified string removed from the end, if present.
     ''' </returns>
     <Extension>
-    Public Function TrimEnd(sb As StringBuilder, trimString As String) As StringBuilder
-        If sb Is Nothing OrElse sb.Length = 0 OrElse String.IsNullOrEmpty(trimString) Then Return sb
-        Dim endIndex As Integer = sb.Length - trimString.Length
-        If endIndex >= 0 AndAlso sb.ToString(startIndex:=endIndex, trimString.Length) = trimString Then
-            sb.Remove(startIndex:=endIndex, trimString.Length)
+    Public Function TrimEnd(sb As StringBuilder, value As String) As StringBuilder
+        If sb Is Nothing OrElse sb.Length = 0 OrElse String.IsNullOrEmpty(value) Then
+            Return sb
         End If
+
+        Dim endIndex As Integer = sb.Length - value.Length
+        If endIndex >= 0 Then
+            Dim matched As Boolean = True
+            For i As Integer = 0 To value.Length - 1
+                If sb(index:=endIndex + i) <> value(index:=i) Then
+                    matched = False
+                    Exit For
+                End If
+            Next
+
+            If matched Then
+                sb.Remove(startIndex:=endIndex, value.Length)
+            End If
+        End If
+
         Return sb
     End Function
 
-    ''' <summary>
-    '''  Removes the specified character from the end of the <see cref="StringBuilder"/> instance if it exists.
+    ' <summary>
+    '''  Removes all occurrences of the specified character <paramref name="trimChar"/>
+    '''  from the end of the <see cref="StringBuilder"/> instance.
     ''' </summary>
     ''' <param name="sb">
     '''  The StringBuilder instance to trim.
     ''' </param>
-    ''' <param name="charToTrim">
+    ''' <param name="trimChar">
     '''  The character to remove from the end of the StringBuilder.
     ''' </param>
     ''' <returns>
-    '''  The modified StringBuilder instance with the specified character removed from the end, if present.
+    '''  The modified <see cref="StringBuilder"/> instance with the specified character removed from the end.
     ''' </returns>
     <Extension>
-    Public Function TrimEnd(sb As StringBuilder, charToTrim As Char) As StringBuilder
-        ' Check if the last character is the one to trim
-        If sb.Length > 0 AndAlso sb(sb.Length - 1) = charToTrim Then
-            sb.Remove(startIndex:=sb.Length - 1, length:=1)
+    Public Function TrimEnd(sb As StringBuilder, trimChar As Char) As StringBuilder
+        Dim i As Integer = sb.Length - 1
+        While i >= 0 AndAlso sb(index:=i) = trimChar
+            i -= 1
+        End While
+        If i < sb.Length - 1 Then
+            sb.Length = i + 1
         End If
         Return sb
     End Function

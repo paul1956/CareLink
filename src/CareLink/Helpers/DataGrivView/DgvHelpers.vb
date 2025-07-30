@@ -104,12 +104,10 @@ Public Module DgvHelpers
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
     ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
-    ''' <param name="bold">If set to <see langword="True"/>, applies bold font style to the cell.</param>
     <Extension>
     Public Sub CellFormattingSetForegroundColor(
         dgv As DataGridView,
-        ByRef e As DataGridViewCellFormattingEventArgs,
-        Optional bold As Boolean = False)
+        ByRef e As DataGridViewCellFormattingEventArgs)
         Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
 
         If col IsNot Nothing Then
@@ -119,9 +117,7 @@ Public Module DgvHelpers
             If argb <> Color.Black.ToArgb() AndAlso argb <> Color.White.ToArgb() Then
                 e.CellStyle.ForeColor = dgv.Rows(e.RowIndex).GetTextColor(textColor)
             End If
-            e.CellStyle.Font = If(bold,
-                New Font(prototype:=e.CellStyle.Font, newStyle:=FontStyle.Bold),
-                New Font(prototype:=e.CellStyle.Font, newStyle:=FontStyle.Regular))
+            e.CellStyle.Font = New Font(prototype:=e.CellStyle.Font, newStyle:=FontStyle.Regular)
             e.FormattingApplied = True
         End If
     End Sub
@@ -189,7 +185,7 @@ Public Module DgvHelpers
         digits As Integer) As Single
 
         Dim amount As Single = ParseSingle(e.Value, digits)
-        e.Value = amount.ToString($"F{digits}", Provider)
+        e.Value = amount.ToString(format:=$"F{digits}", Provider)
         dgv.CellFormattingSetForegroundColor(e)
         Return amount
     End Function
@@ -203,8 +199,8 @@ Public Module DgvHelpers
     ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
     <Extension>
     Public Sub CellFormattingSingleWord(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
-        Dim value As String = Convert.ToString(e.Value)
-        If e.ColumnIndex > 0 AndAlso Text.RegularExpressions.Regex.IsMatch(value, pattern:="^[A-Za-z]+$") Then
+        Dim input As String = Convert.ToString(e.Value)
+        If e.ColumnIndex > 0 AndAlso Text.RegularExpressions.Regex.IsMatch(input, pattern:="^[A-Za-z]+$") Then
             e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
         End If
         dgv.CellFormattingSetForegroundColor(e)
@@ -216,15 +212,13 @@ Public Module DgvHelpers
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
     ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
-    ''' <param name="bold">If set to <see langword="True"/>, applies bold font style to the cell.</param>
     <Extension>
     Public Sub CellFormattingToTitle(
         dgv As DataGridView,
-        ByRef e As DataGridViewCellFormattingEventArgs,
-        Optional bold As Boolean = False)
+        ByRef e As DataGridViewCellFormattingEventArgs)
 
-        e.Value = Convert.ToString(e.Value).Replace(vbCrLf, " ").ToTitle
-        dgv.CellFormattingSetForegroundColor(e, bold)
+        e.Value = Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ").ToTitle
+        dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
     ''' <summary>
@@ -235,7 +229,7 @@ Public Module DgvHelpers
     <Extension>
     Public Sub CellFormattingUrl(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
         e.Value = Convert.ToString(e.Value)
-        If dgv.Rows(e.RowIndex).Cells(e.ColumnIndex).Equals(dgv.CurrentCell) Then
+        If dgv.Rows(e.RowIndex).Cells(index:=e.ColumnIndex).Equals(dgv.CurrentCell) Then
             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Purple, isUri:=True)
         Else
             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.FromArgb(red:=0, green:=160, blue:=204), isUri:=True)
@@ -300,17 +294,17 @@ Public Module DgvHelpers
     End Sub
 
     ''' <summary>
-    '''  Hide column based on column name matching name returned by <paramref name="hideColumnFunction"/>
+    '''  Hide column based on column name matching name returned by <paramref name="hideColFunc"/>
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> whose columns will be hidden.</param>
-    ''' <param name="hideColumnFunction">A function that returns True for column names to hide.</param>
-    Public Sub HideDataGridViewColumnsByName(ByRef dgv As DataGridView, hideColumnFunction As Func(Of String, Boolean))
+    ''' <param name="hideColFunc">A function that returns True for column names to hide.</param>
+    Public Sub HideDataGridViewColumnsByName(ByRef dgv As DataGridView, hideColFunc As Func(Of String, Boolean))
         Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
         For i As Integer = 0 To lastColumnIndex
-            If i > 0 AndAlso String.IsNullOrWhiteSpace(dgv.Columns(index:=i).DataPropertyName) Then
+            If i > 0 AndAlso String.IsNullOrWhiteSpace(value:=dgv.Columns(index:=i).DataPropertyName) Then
                 Stop
             End If
-            dgv.Columns(index:=i).Visible = Not hideColumnFunction(dgv.Columns(index:=i).DataPropertyName)
+            dgv.Columns(index:=i).Visible = Not hideColFunc(arg:=dgv.Columns(index:=i).DataPropertyName)
         Next
     End Sub
 

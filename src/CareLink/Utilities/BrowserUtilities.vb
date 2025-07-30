@@ -35,26 +35,26 @@ Friend Module BrowserUtilities
             If progIdValue Is Nothing Then
                 Return False
             End If
-            Dim programFiles As String = Environment.ExpandEnvironmentVariables("%ProgramW6432%")
-            Dim programFilesX86 As String = Environment.ExpandEnvironmentVariables("%ProgramFiles(x86)%")
+            Dim programFiles As String = Environment.ExpandEnvironmentVariables(name:="%ProgramW6432%")
+            Dim programFilesX86 As String = Environment.ExpandEnvironmentVariables(name:="%ProgramFiles(x86)%")
             Dim browserPath As String = Nothing
             If progIdValue.ContainsIgnoreCase("chrome") Then
                 browserPath = If(File.Exists($"{programFiles}\Google\Chrome\Application\chrome.exe"),
                                  $"{programFiles}\Google\Chrome\Application\chrome.exe",
-                                 $"{programFilesX86}\Google\Chrome\Application\chrome.exe"
-                                )
+                                 $"{programFilesX86}\Google\Chrome\Application\chrome.exe")
             ElseIf progIdValue.ContainsIgnoreCase("Firefox") Then
                 browserPath = $"{programFiles}\Mozilla Firefox\Firefox.exe"
             ElseIf progIdValue.ContainsIgnoreCase("msEdgeHtm") Then
                 browserPath = If(File.Exists($"{programFiles}\Microsoft\Edge\Application\msEdge.exe"),
                                  $"{programFiles}\Microsoft\Edge\Application\msEdge.exe",
-                                 $"{programFilesX86}\Microsoft\Edge\Application\msEdge.exe"
-                                )
+                                 $"{programFilesX86}\Microsoft\Edge\Application\msEdge.exe")
             End If
 
-            If Not String.IsNullOrWhiteSpace(browserPath) Then
-                Dim info As New ProcessStartInfo(Environment.ExpandEnvironmentVariables(browserPath), url)
-                Process.Start(info)
+            If Not String.IsNullOrWhiteSpace(value:=browserPath) Then
+                Dim startInfo As New ProcessStartInfo(
+                    fileName:=Environment.ExpandEnvironmentVariables(name:=browserPath),
+                    arguments:=url)
+                Process.Start(startInfo)
             Else
                 MsgBox(
                     heading:=$"Your default browser can't be found!",

@@ -43,11 +43,11 @@ Friend Module TableLayoutPanelExtensions
     Private Sub SetTableName(ByRef innerTable As TableLayoutPanel, tableName As String)
         Try
             Select Case True
-                Case TypeOf innerTable.Controls(0) Is Button
+                Case TypeOf innerTable.Controls(index:=0) Is Button
                     Dim helpString As String
-                    If s_tablesSupportingExportToExcel.Contains(innerTable.Name) Then
+                    If s_tablesSupportingExportToExcel.Contains(item:=innerTable.Name) Then
                         helpString = ": Right Click on Table for Export Options including Excel"
-                    ElseIf s_tablesSupportingCopyToClipboard.Contains(innerTable.Name) Then
+                    ElseIf s_tablesSupportingCopyToClipboard.Contains(item:=innerTable.Name) Then
                         helpString = ": Right Click on Table for cell(s) Export Options"
                     Else
                         helpString = ""
@@ -55,11 +55,11 @@ Friend Module TableLayoutPanelExtensions
                     If tableName = "Markers" Then
                         tableName = $"{CType(innerTable.Parent.Parent, TabPage).Text} Markers"
                     End If
-                    innerTable.Controls(1).Text = $"{tableName}{helpString}"
-                Case TypeOf innerTable.Controls(0) Is DataGridView
-                    CType(innerTable.Controls(0), DataGridView).Parent.Controls(0).Text = tableName
-                Case TypeOf CType(innerTable.Controls(0), TableLayoutPanel).Controls(0) Is Label
-                    CType(innerTable.Controls(0), TableLayoutPanel).Controls(0).Text = tableName
+                    innerTable.Controls(index:=1).Text = $"{tableName}{helpString}"
+                Case TypeOf innerTable.Controls(index:=0) Is DataGridView
+                    CType(innerTable.Controls(index:=0), DataGridView).Parent.Controls(index:=0).Text = tableName
+                Case TypeOf CType(innerTable.Controls(index:=0), TableLayoutPanel).Controls(index:=0) Is Label
+                    CType(innerTable.Controls(index:=0), TableLayoutPanel).Controls(index:=0).Text = tableName
             End Select
         Catch ex As Exception
             Stop
@@ -85,13 +85,14 @@ Friend Module TableLayoutPanelExtensions
 
         Select Case True
             Case TypeOf table.Parent Is SplitterPanel
-                SetTableName(CType(CType(table.Parent.Parent, SplitContainer).Panel1.Controls(0), TableLayoutPanel), tableName)
+                Dim splitContainer As SplitContainer = CType(table.Parent.Parent, SplitContainer)
+                SetTableName(innerTable:=CType(splitContainer.Panel1.Controls(index:=0), TableLayoutPanel), tableName)
             Case TypeOf table.Parent Is TabPage
-                SetTableName(CType(table.Controls(0).Parent, TableLayoutPanel), tableName)
-            Case TypeOf table.Controls(0) Is TableLayoutPanel
-                SetTableName(CType(table.Controls(0), TableLayoutPanel), tableName)
-            Case TypeOf table.Controls(0) Is Label
-                CType(table.Controls(0), Label).Text = $"{CInt(rowIndex)} {rowIndex}"
+                SetTableName(innerTable:=CType(table.Controls(index:=0).Parent, TableLayoutPanel), tableName)
+            Case TypeOf table.Controls(index:=0) Is TableLayoutPanel
+                SetTableName(innerTable:=CType(table.Controls(index:=0), TableLayoutPanel), tableName)
+            Case TypeOf table.Controls(index:=0) Is Label
+                CType(table.Controls(index:=0), Label).Text = $"{CInt(rowIndex)} {rowIndex}"
             Case Else
                 Stop
         End Select

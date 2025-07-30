@@ -372,11 +372,14 @@ Public Class LoginDialog
     '''  Handles the <see cref="UsernameComboBox"/> selection change committed event,
     '''  loads user settings for the selected username.
     ''' </summary>
-    Private Sub UsernameComboBox_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles UsernameComboBox.SelectionChangeCommitted
+    Private Sub UsernameComboBox_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles _
+        UsernameComboBox.SelectionChangeCommitted
+
         Dim userRecord As CareLinkUserDataRecord = Nothing
 
+        Dim key As String = Me.UsernameComboBox.SelectedValue.ToString
         If Me.UsernameComboBox.SelectedValue IsNot Nothing AndAlso
-           s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.SelectedValue.ToString, userRecord) Then
+           s_allUserSettingsData.TryGetValue(key, userRecord) Then
 
             If Not userRecord.CareLinkUserName.EqualsIgnoreCase(Me.UsernameComboBox.Text) Then
                 Me.UsernameComboBox.Text = userRecord.CareLinkUserName
@@ -395,7 +398,7 @@ Public Class LoginDialog
     '''  Handles the <see cref="UsernameComboBox"/> validating event, ensures username is not empty.
     ''' </summary>
     Private Sub UsernameComboBox_Validating(sender As Object, e As CancelEventArgs) Handles UsernameComboBox.Validating
-        If String.IsNullOrWhiteSpace(Me.UsernameComboBox.Text) Then
+        If String.IsNullOrWhiteSpace(value:=Me.UsernameComboBox.Text) Then
             e.Cancel = True
             Me.UsernameComboBox.Focus()
         Else

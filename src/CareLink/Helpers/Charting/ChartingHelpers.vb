@@ -11,12 +11,13 @@ Friend Module ChartingHelpers
     '''  (0.025 units per hour) considering floating-point precision.
     '''  This is used to determine if the basal rate is effectively zero for charting purposes.
     ''' </summary>
-    ''' <param name="amount">The amount to check.</param>
+    ''' <param name="value">The amount to check.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the amount is the minimum basal rate; otherwise, <see langword="False"/>.</returns>
+    '''  <see langword="True"/> if the amount is the minimum basal rate; otherwise, <see langword="False"/>.
+    ''' </returns>
     <Extension>
-    Friend Function IsMinBasal(amount As Single) As Boolean
-        If amount < 0.025 OrElse Math.Abs(amount - 0.025) < 0.0005 Then
+    Friend Function IsMinBasal(value As Single) As Boolean
+        If value < 0.025 OrElse Math.Abs(value:=value - 0.025) < 0.0005 Then
             Return True  ' amount is <= 0.025, considering floating-point precision
         End If
         Return False

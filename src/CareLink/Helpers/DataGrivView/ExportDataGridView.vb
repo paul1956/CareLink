@@ -16,15 +16,15 @@ Friend Module ExportDataGridView
     '''  Determines whether any cell is selected in the specified column of the <see cref="DataGridView"/>.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> to check.</param>
-    ''' <param name="col">The column index to check for selected cells.</param>
+    ''' <param name="index">The column index to check for selected cells.</param>
     ''' <returns>
     '''  <see langword="True"/> if any cell is selected in the specified column; otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
-    Private Function AnyCellSelected(dgv As DataGridView, col As Integer) As Boolean
+    Private Function AnyCellSelected(dgv As DataGridView, index As Integer) As Boolean
         Dim anySelected As Boolean = False
         For Each row As DataGridViewRow In dgv.Rows
-            If row.Cells(col).Selected Then
+            If row.Cells(index).Selected Then
                 anySelected = True
                 Exit For
             End If
@@ -42,26 +42,54 @@ Friend Module ExportDataGridView
     ''' <param name="copyAll">If <see langword="True"/>, copies all cells; otherwise, only selected cells.</param>
     <Extension>
     Private Sub CopyToClipboard(dgv As DataGridView, copyHeaders As DataGridViewClipboardCopyMode, copyAll As Boolean)
-        If copyAll OrElse dgv.GetCellCount(DataGridViewElementStates.Selected) > 0 Then
+        If copyAll OrElse dgv.GetCellCount(includeFilter:=DataGridViewElementStates.Selected) > 0 Then
             Dim dataGridViewCells As List(Of DataGridViewCell) = dgv.SelectedCells.Cast(Of DataGridViewCell).ToList()
-            Dim colLow As Integer = If(copyAll, 0, dataGridViewCells.Min(Function(c As DataGridViewCell) c.ColumnIndex))
-            Dim colHigh As Integer = If(copyAll, dgv.Columns.Count - 1, dataGridViewCells.Max(Function(c As DataGridViewCell) c.ColumnIndex))
-            Dim rowLow As Integer = If(copyAll, 0, dataGridViewCells.Min(Function(c As DataGridViewCell) c.RowIndex))
-            Dim rowHigh As Integer = If(copyAll, dgv.RowCount - 1, dataGridViewCells.Max(Function(c As DataGridViewCell) c.RowIndex))
+            Dim selector As Func(Of DataGridViewCell, Integer) =
+                Function(c As DataGridViewCell)
+                    Return c.ColumnIndex
+                End Function
+
+            Dim colLow As Integer = If(copyAll,
+                                       0,
+                                       dataGridViewCells.Min(selector))
+            Dim colHigh As Integer = If(copyAll,
+                                        dgv.Columns.Count - 1,
+                                        dataGridViewCells.Max(selector))
+
+            selector = Function(c As DataGridViewCell)
+                           Return c.RowIndex
+                       End Function
+
+            Dim rowLow As Integer = If(copyAll,
+                                       0,
+                                       dataGridViewCells.Min(selector))
+            Dim rowHigh As Integer = If(copyAll,
+                                        dgv.RowCount - 1,
+                                        dataGridViewCells.Max(selector))
             Dim clipboard_string As New StringBuilder()
             If copyHeaders <> DataGridViewClipboardCopyMode.EnableWithoutHeaderText Then
-                For col As Integer = colLow To colHigh
-                    If Not (dgv.Columns(col).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(col))) Then Continue For
-                    clipboard_string.Append($"{dgv.Columns(col).HeaderText.Replace(vbCrLf, "")}{If(col = colHigh, vbCrLf, vbTab)}")
-                Next col
+                For index As Integer = colLow To colHigh
+                    If Not (dgv.Columns(index).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(index))) Then
+                        Continue For
+                    End If
+                    Dim value As String = $"{dgv.Columns(index).HeaderText.Remove(oldValue:=vbCrLf)}"
+                    Dim fieldSeparator As String = If(index = colHigh, vbCrLf, vbTab)
+                    clipboard_string.Append(value:=$"{value}{fieldSeparator}")
+                Next index
             End If
             For rowIndex As Integer = rowLow To rowHigh
-                Dim row As DataGridViewRow = dgv.Rows(rowIndex)
-                For col As Integer = colLow To colHigh
-                    If Not (dgv.Columns(col).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(col))) Then Continue For
-                    Dim currentCell As DataGridViewCell = row.Cells(col)
-                    clipboard_string.Append($"{If(copyAll OrElse currentCell.Selected, currentCell.Value.ToString, "")}{If(col = colHigh, vbCrLf, vbTab)}")
-                Next col
+                Dim row As DataGridViewRow = dgv.Rows(index:=rowIndex)
+                For index As Integer = colLow To colHigh
+                    If Not (dgv.Columns(index).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(index))) Then
+                        Continue For
+                    End If
+                    Dim currentCell As DataGridViewCell = row.Cells(index)
+                    Dim cellValue As Object = If(copyAll OrElse currentCell.Selected,
+                                                 currentCell.Value,
+                                                 "")
+                    Dim fieldSeparator As String = If(index = colHigh, vbCrLf, vbTab)
+                    clipboard_string.Append(value:=$"{cellValue}{fieldSeparator}")
+                Next index
             Next
             Clipboard.SetText(clipboard_string.ToString())
         End If
@@ -73,137 +101,135 @@ Friend Module ExportDataGridView
     ''' <param name="dgv">The <see cref="DataGridView"/> to export.</param>
     <Extension>
     Private Sub ExportToExcelWithFormatting(dgv As DataGridView)
-        Dim baseFileName As String = dgv.Name.Replace("dgv", "", StringComparison.CurrentCultureIgnoreCase)
+        Dim baseFileName As String = dgv.Name.Remove(oldValue:="dgv")
         Dim saveFileDialog1 As New SaveFileDialog With {
                 .CheckPathExists = True,
                 .FileName = $"{baseFileName} ({Date.Now:yyyy-MM-dd})",
                 .Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
                 .InitialDirectory = DirectoryForProjectData,
                 .OverwritePrompt = True,
-                .Title = "To Excel"
-               }
+                .Title = "To Excel"}
 
         If saveFileDialog1.ShowDialog(My.Forms.Form1) = DialogResult.OK Then
             Dim workbook As New XLWorkbook()
             Dim worksheet As IXLWorksheet = workbook.Worksheets.Add(baseFileName)
-            Dim excelColumn As Integer = 1
+            Dim column As Integer = 1
             For j As Integer = 0 To dgv.Columns.Count - 1
                 Dim dgvColumn As DataGridViewColumn = dgv.Columns(j)
                 If dgvColumn.Visible Then
                     If dgvColumn.Name.EqualsIgnoreCase("dateTime") Then
-                        worksheet.Cell(1, excelColumn).Value = "Date"
-                        worksheet.Cell(1, excelColumn).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center
-                        excelColumn += 1
-                        worksheet.Cell(1, excelColumn).Value = "Time"
+                        worksheet.Cell(row:=1, column).Value = "Date"
+                        worksheet.Cell(row:=1, column).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center
+                        column += 1
+                        worksheet.Cell(row:=1, column).Value = "Time"
                     Else
-                        worksheet.Cell(1, excelColumn).Value = dgvColumn.HeaderCell.Value.ToString
+                        worksheet.Cell(row:=1, column).Value = dgvColumn.HeaderCell.Value.ToString
                     End If
-                    worksheet.Cell(1, excelColumn).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center
-                    excelColumn += 1
+                    worksheet.Cell(row:=1, column).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center
+                    column += 1
                 End If
             Next j
 
             For i As Integer = 0 To dgv.Rows.Count - 1
-                excelColumn = 1
+                column = 1
                 For j As Integer = 0 To dgv.Columns.Count - 1
-                    If Not dgv.Columns(j).Visible Then Continue For
-                    Dim dgvCell As DataGridViewCell = dgv.Rows(i).Cells(j)
-                    Dim value As Object = dgvCell.Value
-                    Dim valueAsString As String = value?.ToString
-                    If String.IsNullOrWhiteSpace(valueAsString) Then
-                        worksheet.Cell(i + 2, excelColumn).Value = ""
-                        With worksheet.Cell(i + 2, excelColumn).Style
+                    If Not dgv.Columns(index:=j).Visible Then Continue For
+                    Dim dgvCell As DataGridViewCell = dgv.Rows(index:=i).Cells(index:=j)
+                    Dim valueObject As Object = dgvCell.Value
+                    Dim value As String = valueObject?.ToString
+                    If String.IsNullOrWhiteSpace(value) Then
+                        worksheet.Cell(row:=i + 2, column).Value = ""
+                        With worksheet.Cell(row:=i + 2, column).Style
                             Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
-                            .Fill.SetBackgroundColor(XLColor.FromColor(cellStyle.BackColor))
-                            .Font.SetFontColor(XLColor.FromColor(cellStyle.ForeColor))
+                            .Fill.SetBackgroundColor(value:=XLColor.FromColor(cellStyle.BackColor))
+                            .Font.SetFontColor(value:=XLColor.FromColor(cellStyle.ForeColor))
                             .Font.Bold = cellStyle.Font.Bold
                             .Font.FontName = dgv.Font.Name
                             .Font.FontSize = dgv.Font.Size
                         End With
                     Else
                         Dim align As XLAlignmentHorizontalValues
-                        With worksheet.Cell(i + 2, excelColumn)
+                        With worksheet.Cell(row:=i + 2, column)
                             Select Case dgvCell.ValueType.Name
                                 Case NameOf([Int32])
-                                    align = If(dgv.Columns(j).Name.EqualsIgnoreCase("RecordNumber"),
-                                                    XLAlignmentHorizontalValues.Center,
-                                                    XLAlignmentHorizontalValues.Right)
-                                    .Value = CInt(value)
+                                    align = If(dgv.Columns(index:=j).Name.EqualsIgnoreCase("RecordNumber"),
+                                               XLAlignmentHorizontalValues.Center,
+                                               XLAlignmentHorizontalValues.Right)
+                                    .Value = CInt(valueObject)
                                 Case NameOf(OADate)
                                     align = XLAlignmentHorizontalValues.Left
                                     Dim result As Double
-                                    If Double.TryParse(valueAsString, result) Then
+                                    If Double.TryParse(value, result) Then
                                         .Value = result
                                         .Style.NumberFormat.Format = $"0{Provider.NumberFormat.NumberDecimalSeparator}{StrDup(Number:=37, Character:="0"c)}"
                                     Else
-                                        .Value = $"'{valueAsString}"
+                                        .Value = $"'{value}"
                                     End If
                                 Case NameOf([Decimal]), NameOf([Double]), NameOf([Single])
-                                    Dim valueASingle As Single = ParseSingle(value, digits:=3)
+                                    Dim valueASingle As Single = ParseSingle(valueObject, digits:=3)
                                     If Single.IsNaN(valueASingle) Then
                                         .Value = "'Infinity"
                                         align = XLAlignmentHorizontalValues.Center
                                     Else
                                         .Value = valueASingle
-                                        .Style.NumberFormat.Format = If(dgv.Columns(j).Name.EqualsIgnoreCase("sg"),
-                                                                        GetSgFormat(withSign:=False),
-                                                                        $"0{Provider.NumberFormat.NumberDecimalSeparator}000"
-                                                                       )
+                                        .Style.NumberFormat.Format =
+                                            If(dgv.Columns(index:=j).Name.EqualsIgnoreCase("sg"),
+                                               GetSgFormat(withSign:=False),
+                                               $"0{Provider.NumberFormat.NumberDecimalSeparator}000")
 
                                         align = XLAlignmentHorizontalValues.Right
                                     End If
                                 Case NameOf([Boolean])
                                     align = XLAlignmentHorizontalValues.Center
-                                    .Value = CBool(value)
+                                    .Value = CBool(valueObject)
                                 Case NameOf([String])
                                     align = XLAlignmentHorizontalValues.Left
-                                    .Value = valueAsString
+                                    .Value = value
                                 Case NameOf([DateTime])
-                                    .Value = CDate(value).Date
+                                    .Value = CDate(valueObject).Date
                                     With .Style
                                         Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
                                         .Alignment.Horizontal = XLAlignmentHorizontalValues.Left
-                                        .Fill.SetBackgroundColor(XLColor.FromColor(cellStyle.BackColor))
-                                        .Font.SetFontColor(XLColor.FromColor(cellStyle.ForeColor))
+                                        .Fill.SetBackgroundColor(value:=XLColor.FromColor(cellStyle.BackColor))
+                                        .Font.SetFontColor(value:=XLColor.FromColor(cellStyle.ForeColor))
                                         .Font.Bold = cellStyle.Font.Bold
                                         .Font.FontName = dgv.Font.Name
                                         .Font.FontSize = dgv.Font.Size
                                     End With
-                                    excelColumn += 1
+                                    column += 1
 
                                     align = XLAlignmentHorizontalValues.Right
-                                    worksheet.Cell(i + 2, excelColumn).Value = CDate(value).TimeOfDay
-                                    worksheet.Cell(i + 2, excelColumn).Style.DateFormat.SetFormat("[$-x-systime]h:mm:ss AM/PM")
+                                    worksheet.Cell(row:=i + 2, column).Value = CDate(valueObject).TimeOfDay
+                                    worksheet.Cell(row:=i + 2, column).Style.DateFormat.SetFormat(value:="[$-x-systime]h:mm:ss AM/PM")
                                 Case Else
                                     Stop
                                     align = XLAlignmentHorizontalValues.Left
-                                    .Value = valueAsString
+                                    .Value = value
                             End Select
                         End With
 
-                        With worksheet.Cell(i + 2, excelColumn).Style
+                        With worksheet.Cell(row:=i + 2, column).Style
                             Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
                             .Alignment.Horizontal = align
-                            .Fill.SetBackgroundColor(XLColor.FromColor(cellStyle.BackColor))
-                            .Font.SetFontColor(XLColor.FromColor(cellStyle.ForeColor))
+                            .Fill.SetBackgroundColor(value:=XLColor.FromColor(cellStyle.BackColor))
+                            .Font.SetFontColor(value:=XLColor.FromColor(cellStyle.ForeColor))
                             .Font.Bold = cellStyle.Font.Bold
                             .Font.FontName = dgv.Font.Name
                             .Font.FontSize = dgv.Font.Size
                         End With
 
                     End If
-                    excelColumn += 1
+                    column += 1
                 Next j
             Next i
             worksheet.Columns().AdjustToContents()
             Try
-                workbook.SaveAs(saveFileDialog1.FileName)
-                If File.Exists(saveFileDialog1.FileName) Then
-                    Dim result As Process = Process.Start(New ProcessStartInfo With {
-                                        .FileName = saveFileDialog1.FileName,
-                                        .UseShellExecute = True
-                                    }
-                                  )
+                workbook.SaveAs(file:=saveFileDialog1.FileName)
+                If File.Exists(path:=saveFileDialog1.FileName) Then
+                    Dim startInfo As New ProcessStartInfo With {
+                        .FileName = saveFileDialog1.FileName,
+                        .UseShellExecute = True}
+                    Dim result As Process = Process.Start(startInfo)
                 End If
             Catch ex As IOException
                 MsgBox(
@@ -223,7 +249,8 @@ Friend Module ExportDataGridView
     ''' <param name="sender">The sender object from the event.</param>
     ''' <returns>The <see cref="DataGridView"/> associated with the context menu.</returns>
     Private Function GetDgvFromToolStripMenuItem(sender As Object) As DataGridView
-        Dim contextStrip As ContextMenuStrip = CType(CType(sender, ToolStripMenuItem).GetCurrentParent, ContextMenuStrip)
+        Dim menuItem As ToolStripMenuItem = CType(sender, ToolStripMenuItem)
+        Dim contextStrip As ContextMenuStrip = CType(menuItem.GetCurrentParent, ContextMenuStrip)
         Return CType(contextStrip.SourceControl, DataGridView)
     End Function
 

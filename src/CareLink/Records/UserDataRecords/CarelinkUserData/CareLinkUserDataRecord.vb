@@ -154,7 +154,7 @@ Partial Public Class CareLinkUserDataRecord
     ''' </summary>
     Private Sub OnCareLinkUserChanged()
         If Not _inTxn And (Me.Parent IsNot Nothing) Then
-            Me.Parent.CareLinkUserChanged(Me)
+            Me.Parent.CareLinkUserChanged(value:=Me)
         End If
     End Sub
 

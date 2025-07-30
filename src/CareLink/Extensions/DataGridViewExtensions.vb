@@ -32,19 +32,18 @@ Public Module DataGridViewExtensions
             .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
                 .Alignment = DataGridViewContentAlignment.MiddleCenter,
                 .BackColor = Color.Black,
-                .Font = New Font(
-                    FamilyName,
-                    emSize,
-                    style:=FontStyle.Bold),
+                .Font = New Font(FamilyName, emSize, style:=FontStyle.Bold),
                 .WrapMode = DataGridViewTriState.True}
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .DataSource = Nothing
+            .Dock = DockStyle.Fill
             .Location = New Point(x:=0, y:=0)
             .Padding = New Padding(all:=0)
             .ReadOnly = True
             .Rows.Clear()
             .RowsDefaultCellStyle = New DataGridViewCellStyle With {
                 .BackColor = Color.FromArgb(red:=180, green:=180, blue:=180),
+                .Font = New Font(FamilyName, emSize, style:=FontStyle.Bold),
                 .ForeColor = Color.Black,
                 .SelectionBackColor = Color.FromArgb(red:=51, green:=153, blue:=255),
                 .SelectionForeColor = Color.White}

@@ -8,12 +8,12 @@ Imports System.Text.Json.Serialization
 
 Public Class AutoBasalDelivery
 
-    Public Sub New(markerEntry As Marker, recordNumber As Integer)
+    Public Sub New(item As Marker, recordNumber As Integer)
         Me.RecordNumber = recordNumber
-        Me.TimestampAsString = markerEntry.TimestampAsString
-        Me.DisplayTimeAsString = markerEntry.DisplayTimeAsString
-        Me.BolusAmount = markerEntry.Data.DataValues(NameOf(BolusAmount).ToLowerCamelCase).ToString.ParseSingle(digits:=10)
-        Me.MaxAutoBasalRate = markerEntry.Data.DataValues(NameOf(MaxAutoBasalRate).ToLowerCamelCase).ToString.ParseSingle(digits:=10)
+        Me.TimestampAsString = item.TimestampAsString
+        Me.DisplayTimeAsString = item.DisplayTimeAsString
+        Me.BolusAmount = item.Data.DataValues(key:=NameOf(BolusAmount).ToLowerCamelCase).ToString.ParseSingle(digits:=10)
+        Me.MaxAutoBasalRate = item.Data.DataValues(key:=NameOf(MaxAutoBasalRate).ToLowerCamelCase).ToString.ParseSingle(digits:=10)
     End Sub
 
     <DisplayName("Record Number")>

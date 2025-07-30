@@ -14,15 +14,20 @@ Friend Module CreateChartItems
     '''  Creates a base series with common properties for charting.
     '''  This method is used to create series for active insulin, basal rates, limits, and sensor glucose values.
     ''' </summary>
-    ''' <param name="seriesName">The name of the series.</param>
+    ''' <param name="name">The name of the series.</param>
     ''' <param name="legendText">The text displayed in the legend.</param>
     ''' <param name="borderWidth">The width of the border.</param>
     ''' <param name="yAxisType">The Y-axis type for the series.</param>
     ''' <returns>A Series object configured with the specified properties.</returns>
-    Private Function CreateSeriesBase(seriesName As String, legendText As String, borderWidth As Integer, yAxisType As AxisType) As Series
+    Private Function CreateSeriesBase(
+        name As String,
+        legendText As String,
+        borderWidth As Integer,
+        yAxisType As AxisType) As Series
+
         Dim lineColor As Color = GetGraphLineColor(legendText)
-        Dim tmpSeries As New Series(seriesName) With {
-            .BorderColor = Color.FromArgb(180, lineColor),
+        Dim tmpSeries As New Series(name) With {
+            .BorderColor = Color.FromArgb(alpha:=180, baseColor:=lineColor),
             .BorderWidth = borderWidth,
             .ChartArea = NameOf(ChartArea),
             .ChartType = SeriesChartType.Line,
@@ -75,28 +80,34 @@ Friend Module CreateChartItems
     ''' <param name="treatmentMarkersChartLegend">
     '''  The legend of the treatment markers chart where the item will be shown or hidden.
     ''' </param>
-    Friend Sub ShowHideLegendItem(showLegend As Boolean, legendString As String, activeInsulinChartLegend As Legend, homeChartLegend As Legend, treatmentMarkersChartLegend As Legend)
+    Friend Sub ShowHideLegendItem(
+        showLegend As Boolean,
+        legendString As String,
+        activeInsulinChartLegend As Legend,
+        homeChartLegend As Legend,
+        treatmentMarkersChartLegend As Legend)
+
         Dim i As Integer = activeInsulinChartLegend.CustomItems.IndexOfLabel(legendString)
         If i < 0 Then
             ' Legend item not found, nothing to do
             Return
         End If
-        activeInsulinChartLegend.CustomItems(i).Enabled = showLegend
+        activeInsulinChartLegend.CustomItems(index:=i).Enabled = showLegend
         i = homeChartLegend.CustomItems.IndexOfLabel(legendString)
-        homeChartLegend.CustomItems(i).Enabled = showLegend
+        homeChartLegend.CustomItems(index:=i).Enabled = showLegend
         i = treatmentMarkersChartLegend.CustomItems.IndexOfLabel(legendString)
-        treatmentMarkersChartLegend.CustomItems(i).Enabled = showLegend
+        treatmentMarkersChartLegend.CustomItems(index:=i).Enabled = showLegend
     End Sub
 
     ''' <summary>
     '''  Creates a new chart with specified properties.
     '''  This method initializes a <see cref="Chart"/> control for displaying data, setting its appearance, docking, and annotations.
     ''' </summary>
-    ''' <param name="chartName">The name to assign to the chart instance.</param>
+    ''' <param name="key">The name to assign to the chart instance.</param>
     ''' <returns>
     '''  A <see cref="Chart"/> object configured with the specified name and default visual properties.
     ''' </returns>
-    Friend Function CreateChart(chartName As String) As Chart
+    Friend Function CreateChart(key As String) As Chart
         Dim chart As New Chart With {
             .Anchor = AnchorStyles.Left Or AnchorStyles.Right,
             .BackColor = Color.Black,
@@ -104,9 +115,9 @@ Friend Module CreateChartItems
             .BorderlineDashStyle = ChartDashStyle.Solid,
             .BorderlineWidth = 2,
             .Dock = DockStyle.Fill,
-            .Name = chartName,
+            .Name = key,
             .TabIndex = 0}
-        chart.Annotations.Add(s_calloutAnnotations(chartName))
+        chart.Annotations.Add(item:=s_calloutAnnotations(key))
         Return chart
     End Function
 
@@ -468,8 +479,16 @@ Friend Module CreateChartItems
                     c.AxisX.Maximum = New OADate(PumpNow)
                     c.AxisX.Minimum = New OADate(PumpNow.AddDays(-1))
                 Else
-                    c.AxisX.Maximum = s_sgRecords.Aggregate(Function(i1, i2) If(i1.OaDateTime > i2.OaDateTime, i1, i2)).OaDateTime
-                    c.AxisX.Minimum = s_sgRecords.Aggregate(Function(i1, i2) If(i1.OaDateTime < i2.OaDateTime, i1, i2)).OaDateTime
+                    c.AxisX.Maximum = s_sgRecords.Aggregate(func:=Function(i1, i2)
+                                                                      Return If(i1.OaDateTime > i2.OaDateTime,
+                                                                                i1,
+                                                                                i2)
+                                                                  End Function).OaDateTime
+                    c.AxisX.Minimum = s_sgRecords.Aggregate(func:=Function(i1, i2)
+                                                                      Return If(i1.OaDateTime < i2.OaDateTime,
+                                                                                i1,
+                                                                                i2)
+                                                                  End Function).OaDateTime
                 End If
             End With
         End With

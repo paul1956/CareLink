@@ -44,7 +44,7 @@ Public Module DictionaryExtensions
         For Each kvp As KeyValuePair(Of String, T) In dic
             result.Append($"{kvp.Key} = {kvp.Value}, ")
         Next
-        result.TrimEnd(trimString:=", ")
+        result.TrimEnd(value:=", ")
         Return $"{{{result}}}"
     End Function
 
@@ -74,11 +74,11 @@ Public Module DictionaryExtensions
     '''  This is useful when you want to create a copy of the dictionary without modifying the original.
     ''' </summary>
     ''' <typeparam name="T">The type of the values in the dictionary.</typeparam>
-    ''' <param name="dic">The dictionary to clone.</param>
+    ''' <param name="dictionary">The dictionary to clone.</param>
     ''' <returns>A new instance of <see cref="Dictionary(Of String, T)"/> with the same key-value pairs.</returns>
     <Extension>
-    Public Function Clone(Of T)(dic As Dictionary(Of String, T)) As Dictionary(Of String, T)
-        Return (From x In dic Select x).ToDictionary(keySelector:=Function(p) p.Key, elementSelector:=Function(p) p.Value)
+    Public Function Clone(Of T)(dictionary As Dictionary(Of String, T)) As Dictionary(Of String, T)
+        Return New Dictionary(Of String, T)(dictionary)
     End Function
 
     ''' <summary>
@@ -177,10 +177,12 @@ Public Module DictionaryExtensions
     ''' <returns>A Dictionary with the key-value pairs from the JSON string.
     Public Function GetValueList(jsonString As String) As String()
         Dim valueList As String() = JsonToDictionary(jsonString).ToCsv _
-            .Replace("{", "").Trim _
-            .Replace("}", "").Trim _
-            .Split(",")
-        Return valueList.Select(Function(s) s.Trim()).ToArray
+            .Replace(oldValue:="{", newValue:="").Trim _
+            .Replace(oldValue:="}", newValue:="").Trim _
+            .Split(separator:=",")
+        Return valueList.Select(selector:=Function(s)
+                                              Return s.Trim()
+                                          End Function).ToArray
     End Function
 
     ''' <summary>
@@ -208,8 +210,12 @@ Public Module DictionaryExtensions
             sortDic.Add(kvp.Key, kvp.Value)
         Next
         Return (From x In sortDic Select x).ToDictionary(
-            keySelector:=Function(p) p.Key,
-            elementSelector:=Function(p) p.Value)
+            keySelector:=Function(p)
+                             Return p.Key
+                         End Function,
+            elementSelector:=Function(p)
+                                 Return p.Value
+                             End Function)
     End Function
 
 End Module
