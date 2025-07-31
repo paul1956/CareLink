@@ -78,24 +78,30 @@ Friend Module TableLayoutPanelExtensions
     Friend Sub SetTableName(table As TableLayoutPanel, rowIndex As ServerDataIndexes, isClearedNotifications As Boolean)
         Dim tableName As String = rowIndex.ToString.ToTitleCase
         If tableName = "Notification History" Then
-            tableName = If(isClearedNotifications, "Cleared Notifications", "Active Notification")
+            tableName = If(isClearedNotifications,
+                           "Cleared Notifications",
+                           "Active Notification")
         ElseIf tableName = "Sgs" Then
             tableName = "Sensor Glucose Values"
         End If
 
-        Select Case True
-            Case TypeOf table.Parent Is SplitterPanel
-                Dim splitContainer As SplitContainer = CType(table.Parent.Parent, SplitContainer)
-                SetTableName(innerTable:=CType(splitContainer.Panel1.Controls(index:=0), TableLayoutPanel), tableName)
-            Case TypeOf table.Parent Is TabPage
-                SetTableName(innerTable:=CType(table.Controls(index:=0).Parent, TableLayoutPanel), tableName)
-            Case TypeOf table.Controls(index:=0) Is TableLayoutPanel
-                SetTableName(innerTable:=CType(table.Controls(index:=0), TableLayoutPanel), tableName)
-            Case TypeOf table.Controls(index:=0) Is Label
-                CType(table.Controls(index:=0), Label).Text = $"{CInt(rowIndex)} {rowIndex}"
-            Case Else
-                Stop
-        End Select
+        Try
+            ' Prevent crashes when the table is not initialized or disposed.
+            Select Case True
+                Case TypeOf table.Parent Is SplitterPanel
+                    Dim splitContainer As SplitContainer = CType(table.Parent.Parent, SplitContainer)
+                    SetTableName(innerTable:=CType(splitContainer.Panel1.Controls(index:=0), TableLayoutPanel), tableName)
+                Case TypeOf table.Parent Is TabPage
+                    SetTableName(innerTable:=CType(table.Controls(index:=0).Parent, TableLayoutPanel), tableName)
+                Case TypeOf table.Controls(index:=0) Is TableLayoutPanel
+                    SetTableName(innerTable:=CType(table.Controls(index:=0), TableLayoutPanel), tableName)
+                Case TypeOf table.Controls(index:=0) Is Label
+                    CType(table.Controls(index:=0), Label).Text = $"{CInt(rowIndex)} {rowIndex}"
+                Case Else
+                    Stop
+            End Select
+        Catch
+        End Try
     End Sub
 
 End Module

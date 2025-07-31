@@ -38,13 +38,13 @@ Friend Module HttpClientExtensions
         authParams As Dictionary(Of String, String)) As Task(Of JsonElement)
 
         Dim selector As Func(Of KeyValuePair(Of String, String), String) =
-            Function(kvp)
+            Function(kvp As KeyValuePair(Of String, String)) As String
                 Dim stringToEscape As String = kvp.Value
                 Dim escapedValue As String = Uri.EscapeDataString(stringToEscape)
                 Return $"{kvp.Key}={escapedValue}"
             End Function
-
         Dim params As String = String.Join(separator:="&", values:=authParams.Select(selector))
+
         Dim requestUri As String = $"{authorizeUrl}?{params}"
         Dim response As HttpResponseMessage = httpClient.GetAsync(requestUri).Result
         ' This will handle the redirect automatically

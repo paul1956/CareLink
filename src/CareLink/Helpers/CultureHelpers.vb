@@ -40,12 +40,6 @@ Friend Module CultureHelpers
         CultureInfo.GetCultures(CultureTypes.AllCultures).ToList
 
     ''' <summary>
-    '''  Gets or sets the culture provider used for formatting and parsing operations.
-    '''  Defaults to <see cref="CultureInfo.CurrentUICulture"/>.
-    ''' </summary>
-    Public Property Provider As CultureInfo = CultureInfo.CurrentUICulture
-
-    ''' <summary>
     '''  Gets the US English culture ("en-US").
     ''' </summary>
     Public ReadOnly Property usDataCulture As New CultureInfo("en-US")

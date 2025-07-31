@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
+
 ''' <summary>
 '''  Represents a date and time value stored as an OLE Automation date (OADate).
 '''  Provides arithmetic, comparison, and conversion operators, as well as utility methods
@@ -162,6 +164,7 @@ Public Class OADate
     ''' </summary>
     ''' <returns>A string representation of the OADate value.</returns>
     Public Overrides Function ToString() As String
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Return _oADate.ToString("F37", Provider)
     End Function
 

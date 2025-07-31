@@ -10,6 +10,23 @@ Imports System.Runtime.CompilerServices
 '''  and conversions between Unix time and DateTime.
 ''' </summary>
 Friend Module DateTimeExtensions
+    Private ReadOnly s_epochLocal As New DateTime(
+        year:=1970,
+        month:=1,
+        day:=1,
+        hour:=0,
+        minute:=0,
+        second:=0,
+        kind:=DateTimeKind.Utc)
+
+    Private ReadOnly s_epochUTC As New DateTime(
+        year:=1970,
+        month:=1,
+        day:=1,
+        hour:=0,
+        minute:=0,
+        second:=0,
+        kind:=DateTimeKind.Utc)
 
     Private ReadOnly s_dateTimeFormatUniqueCultures As New List(Of CultureInfo)
 
@@ -19,40 +36,48 @@ Friend Module DateTimeExtensions
     '''  the provider culture, and a list of unique cultures with different date formats.
     ''' </summary>
     ''' <param name="success">Output parameter indicating whether the parsing was successful.</param>
-    ''' <param name="dateAsString">The date string to parse.</param>
+    ''' <param name="s">The date string to parse.</param>
     ''' <param name="defaultCulture">The default culture to use for parsing.</param>
     ''' <param name="styles">The styles to apply during parsing.</param>
-    ''' <returns>A <see cref="Date"/> object if parsing is successful; otherwise, <see langword="Nothing"/>.</returns>
-    Private Function DoCultureSpecificParse(dateAsString As String, ByRef success As Boolean, defaultCulture As CultureInfo, styles As DateTimeStyles) As Date
+    ''' <returns>
+    '''  A <see cref="Date"/> object if parsing is successful; otherwise, <see langword="Nothing"/>.
+    ''' </returns>
+    <Extension>
+    Private Function DoCultureSpecificParse(
+        s As String,
+        styles As DateTimeStyles,
+        ByRef success As Boolean) As Date
+
         If s_dateTimeFormatUniqueCultures.Count = 0 Then
-            s_dateTimeFormatUniqueCultures.Add(CurrentDateCulture)
+            s_dateTimeFormatUniqueCultures.Add(item:=CurrentDateCulture)
             Dim fullDateTimeFormats As New List(Of String) From {CurrentDateCulture.DateTimeFormat.FullDateTimePattern}
-            For Each oneCulture As CultureInfo In CultureInfoList
-                If fullDateTimeFormats.Contains(oneCulture.DateTimeFormat.FullDateTimePattern) OrElse
-                   String.IsNullOrWhiteSpace(oneCulture.Name) OrElse
-                   Not oneCulture.Name.Contains("-"c) Then
+            For Each item As CultureInfo In CultureInfoList
+                If fullDateTimeFormats.Contains(item:=item.DateTimeFormat.FullDateTimePattern) OrElse
+                   String.IsNullOrWhiteSpace(value:=item.Name) OrElse
+                   Not item.Name.Contains(value:="-"c) Then
 
                     Continue For
                 End If
-                s_dateTimeFormatUniqueCultures.Add(oneCulture)
-                fullDateTimeFormats.Add(oneCulture.DateTimeFormat.FullDateTimePattern)
+                s_dateTimeFormatUniqueCultures.Add(item)
+                fullDateTimeFormats.Add(item:=item.DateTimeFormat.FullDateTimePattern)
             Next
         End If
-        Dim resultDate As Date
+        Dim result As Date
         success = True
-        If Date.TryParse(dateAsString, defaultCulture, styles, resultDate) Then
-            Return resultDate
+        If Date.TryParse(s, provider:=CurrentDateCulture, styles, result) Then
+            Return result
         End If
-        If CurrentDateCulture.Name <> Provider.Name AndAlso
-        Date.TryParse(dateAsString, Provider, styles, resultDate) Then
-            Return resultDate
+        If CurrentDateCulture.Name <> CultureInfo.CurrentUICulture.Name AndAlso
+            Date.TryParse(s, provider:=CultureInfo.CurrentUICulture, styles, result) Then
+
+            Return result
         End If
-        If Date.TryParse(dateAsString, usDataCulture, styles, resultDate) Then
-            Return resultDate
+        If Date.TryParse(s, provider:=usDataCulture, styles, result) Then
+            Return result
         End If
-        For Each c As CultureInfo In s_dateTimeFormatUniqueCultures
-            If Date.TryParse(dateAsString, c, styles, resultDate) Then
-                Return resultDate
+        For Each provider As CultureInfo In s_dateTimeFormatUniqueCultures
+            If Date.TryParse(s, provider, styles, result) Then
+                Return result
             End If
         Next
         success = False
@@ -62,65 +87,63 @@ Friend Module DateTimeExtensions
     ''' <summary>
     '''  Converts a Unix Milliseconds TimeSpan to UTC Date
     ''' </summary>
-    ''' <param name="unixTime" kind="Double">TimeSpan in Milliseconds</param>
+    ''' <param name="unixTimeSpan" kind="Double">TimeSpan in Milliseconds</param>
     ''' <returns>UTC Date</returns>
     <Extension>
-    Private Function FromUnixTime(unixTime As Double) As Date
-        Dim epoch As New DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-        Return epoch.AddMilliseconds(unixTime)
+    Private Function FromUnixTime(unixTimeSpan As Double) As Date
+        Return s_epochUTC.AddMilliseconds(value:=unixTimeSpan)
     End Function
 
     ''' <summary>
-    '''  Converts a UNIX Timespan string to UTC DateTime
+    '''  Converts a UNIX TimeSpan string to UTC DateTime
     ''' </summary>
-    ''' <param name="epoch">In Milliseconds As String</param>
+    ''' <param name="unixTimeSpan">In Milliseconds As String</param>
     ''' <returns>DateTime String in UTC and local Times</returns>
     <Extension>
-    Friend Function Epoch2DateTimeString(epoch As String) As String
-        If epoch = "0" Then
+    Friend Function Epoch2DateTimeString(unixTimeSpan As String) As String
+        If unixTimeSpan = "0" Then
             Return ""
         End If
-        Dim unixTime As Date = epoch.FromUnixTime
+        Dim unixTime As Date = unixTimeSpan.FromUnixTime
         Dim localTime As Date = unixTime.ToLocalTime
-        Dim pumpTime As Date = epoch.Epoch2PumpDateTime
+        Dim pumpTime As Date = unixTimeSpan.Epoch2PumpDateTime
         Dim timeStr As String = If(pumpTime.ToString = localTime.ToString,
-            $"Local & Pump Time = {localTime}",
-            $"Local Time = {localTime}, Pump Time = {pumpTime}")
+                                   $"Local & Pump Time = {localTime}",
+                                   $"Local Time = {localTime}, Pump Time = {pumpTime}")
         Dim unixTimeStr As String = $"{unixTime.ToShortDateTimeString} UTC"
-        Return $"{unixTimeStr,30}{Space(15)}{timeStr}"
+        Return $"{unixTimeStr,30}{Space(Number:=15)}{timeStr}"
     End Function
 
     ''' <summary>
     '''  Converts a Unix Milliseconds TimeSpan to Pump DateTime
     ''' </summary>
-    ''' <param name="epoch">Long</param>
+    ''' <param name="unixTimeSpan">Long</param>
     ''' <returns>Local DateTime</returns>
     <Extension>
-    Friend Function Epoch2PumpDateTime(epoch As Long) As Date
-        Return epoch.ToString.Epoch2PumpDateTime
+    Friend Function Epoch2PumpDateTime(unixTimeSpan As Long) As Date
+        Return unixTimeSpan.ToString.Epoch2PumpDateTime
     End Function
 
     ''' <summary>
     '''  Converts a Unix Milliseconds TimeSpan to Pump DateTime
     ''' </summary>
-    ''' <param name="epoch>In Milliseconds As String</param>
+    ''' <param name="unixTimeSpan>In Milliseconds As String</param>
     ''' <returns>Local DateTime</returns>
     <Extension>
     Friend Function Epoch2PumpDateTime(epoch As String) As Date
-        Return TimeZoneInfo.ConvertTimeFromUtc(epoch.FromUnixTime(), PumpTimeZoneInfo)
+        Return TimeZoneInfo.ConvertTimeFromUtc(dateTime:=epoch.FromUnixTime(), destinationTimeZone:=PumpTimeZoneInfo)
     End Function
 
     ''' <summary>
     '''  Converts a Unix Milliseconds TimeSpan to UTC Date
     ''' </summary>
-    ''' <param name="unixTime" kind="String">In Milliseconds As String</param>
+    ''' <param name="value" kind="String">In Milliseconds As String</param>
     ''' <returns>UTC Date</returns>
     <Extension>
-    Friend Function FromUnixTime(unixTime As String) As Date
-        Dim epoch As New DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Local)
-        Return If(String.IsNullOrWhiteSpace(unixTime),
-                  epoch,
-                  unixTime.ParseDoubleInvariant.FromUnixTime)
+    Friend Function FromUnixTime(value As String) As Date
+        Return If(String.IsNullOrWhiteSpace(value),
+                  s_epochLocal,
+                  value.ParseDoubleInvariant.FromUnixTime)
     End Function
 
     ''' <summary>
@@ -131,10 +154,11 @@ Friend Module DateTimeExtensions
     <Extension>
     Friend Function GetCurrentDateCulture(countryCode As String) As CultureInfo
         Dim code As String = $"en-{countryCode}"
-        Dim predicate As Func(Of CultureInfo, Boolean) = Function(c)
-                                                             Return c.Name = code
-                                                         End Function
 
+        Dim predicate As Func(Of CultureInfo, Boolean) =
+            Function(c As CultureInfo) As Boolean
+                Return c.Name = code
+            End Function
         Dim culture As CultureInfo = CultureInfoList.FirstOrDefault(predicate)
         Return If(culture, New CultureInfo(name:="en-US"))
     End Function
@@ -258,35 +282,35 @@ Friend Module DateTimeExtensions
     End Function
 
     ''' <summary>
-    '''  Try to parse a date <see langword="String"/> (<paramref name="dateAsString"/>) into a <see langword="Date"/>,
+    '''  Try to parse a date <see langword="String"/> (<paramref name="s"/>) into a <see langword="Date"/>,
     '''  using different parsing rules depending on the provided key.
     ''' </summary>
-    ''' <param name="dateAsString">The <see langword="String"/> to parse.</param>
+    ''' <param name="s">The <see langword="String"/> to parse.</param>
     ''' <param name="resultDate">The output variable for the parsed date.</param>
     ''' <param name="key">A <see langword="String"/> that determines which parsing rules to use.</param>
     ''' <returns><see langword="True"/> if parsing succeeds, and <see langword="False"/> otherwise. </returns>
     <Extension>
-    Public Function TryParseDate(dateAsString As String, ByRef resultDate As Date, key As String) As Boolean
+    Public Function TryParseDate(s As String, ByRef resultDate As Date, key As String) As Boolean
         Dim success As Boolean
         Select Case key
             Case ""
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeLocal)
+                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AssumeLocal, success)
             Case NameOf(ServerDataIndexes.lastConduitDateTime)
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeLocal)
+                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AssumeLocal, success)
             Case NameOf(ServerDataIndexes.medicalDeviceTime)
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
+                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AdjustToUniversal, success)
             Case "loginDateUTC"
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AssumeUniversal)
+                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AssumeUniversal, success)
             Case NameOf(SG.Timestamp)
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
+                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AdjustToUniversal, success)
             Case NameOf(TimeChange.Timestamp), NameOf(ClearedNotifications.dateTime)
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
+                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AdjustToUniversal, success)
             Case NameOf(ActiveNotification.SecondaryTime)
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.NoCurrentDateDefault)
+                resultDate = s.DoCultureSpecificParse(DateTimeStyles.NoCurrentDateDefault, success)
             Case NameOf(ActiveNotification.triggeredDateTime)
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
+                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AdjustToUniversal, success)
             Case "dateTime"
-                resultDate = DoCultureSpecificParse(dateAsString, success, CurrentDateCulture, DateTimeStyles.AdjustToUniversal)
+                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AdjustToUniversal, success)
             Case Else
         End Select
 
@@ -305,7 +329,7 @@ Friend Module DateTimeExtensions
     ''' </remarks>
     <Extension>
     Public Function TryParseDateStr(dateAsString As String) As Date
-        Return If(Not String.IsNullOrWhiteSpace(dateAsString),
+        Return If(Not String.IsNullOrWhiteSpace(value:=dateAsString),
                   Date.ParseExact(dateAsString, format:="yyyy-MM-ddTHH:mm:ss", provider:=CultureInfo.InvariantCulture),
                   Nothing)
     End Function

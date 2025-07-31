@@ -147,73 +147,12 @@ Friend Module DataTableHelpers
     End Function
 
     ''' <summary>
-    '''  Creates a <see cref="Dictionary"/> that maps class property names to <see cref="DataGridViewCellStyle"/> for column alignment.
-    '''  Determines alignment and padding based on the <see cref="ColumnAttribute"/> type name.
-    ''' </summary>
-    ''' <typeparam name="T">The type of the class whose properties are mapped.</typeparam>
-    ''' <param name="alignmentTable">A dictionary to populate with property name to cell style mappings.</param>
-    ''' <param name="columnName">The column name to retrieve or add alignment for.</param>
-    ''' <returns>The <see cref="DataGridViewCellStyle"/> for the specified column.</returns>
-    Public Function ClassPropertiesToColumnAlignment(Of T As Class)(ByRef alignmentTable As Dictionary(Of String, DataGridViewCellStyle), columnName As String) As DataGridViewCellStyle
-        Dim classType As Type = GetType(T)
-        Dim cellStyle As New DataGridViewCellStyle
-        If alignmentTable.Count = 0 Then
-            For Each [property] As PropertyInfo In classType.GetProperties()
-                cellStyle = New DataGridViewCellStyle
-                Dim typeName As String = [property].GetCustomAttributes(
-                    attributeType:=GetType(ColumnAttribute),
-                    inherit:=True).Cast(Of ColumnAttribute)().SingleOrDefault()?.TypeName
-
-                Select Case typeName
-                    Case "additionalInfo",
-                         "Date",
-                         "DateTime",
-                         NameOf(OADate),
-                         "RecordNumber",
-                         NameOf([String]),
-                         "Version"
-
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleLeft,
-                            padding:=New Padding(all:=1))
-                    Case "AdditionalInfo"
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleLeft,
-                            padding:=New Padding(all:=1))
-                    Case NameOf([Decimal]), NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleRight,
-                            padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
-                    Case NameOf([Boolean]), "DeleteRow"
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleCenter,
-                            padding:=New Padding(all:=0))
-                    Case "CustomProperty"
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleRight,
-                            padding:=New Padding(left:=0, top:=2, right:=2, bottom:=2))
-                    Case Else
-                        Throw UnreachableException([property].PropertyType.Name)
-                End Select
-                alignmentTable.Add([property].Name, cellStyle)
-            Next
-        End If
-        If Not alignmentTable.TryGetValue(columnName, cellStyle) Then
-            cellStyle = If(columnName = NameOf(SummaryRecord.RecordNumber) OrElse columnName = NameOf(Limit.Index),
-                           (New DataGridViewCellStyle).SetCellStyle(alignment:=DataGridViewContentAlignment.MiddleCenter, padding:=New Padding(all:=0)),
-                           (New DataGridViewCellStyle).SetCellStyle(alignment:=DataGridViewContentAlignment.MiddleLeft, padding:=New Padding(all:=1))
-                          )
-            alignmentTable.Add(columnName, cellStyle)
-        End If
-        Return cellStyle
-    End Function
-
-    ''' <summary>
     '''  Indicates whether a specified DataTable is null, has zero columns, or (optionally) zero rows.
     ''' </summary>
     ''' <param name="Table">DataTable to check.</param>
     ''' <param name="IgnoreRows">When set to true, the function will return true even if the table's row count is equal to zero.</param>
     ''' <returns>False if the specified DataTable null, has zero columns, or zero rows, otherwise true.</returns>
+    <Extension>
     Public Function IsValidDataTable(Table As DataTable, Optional IgnoreRows As Boolean = False) As Boolean
         Return Table IsNot Nothing AndAlso
                Table.Columns.Count <> 0 AndAlso

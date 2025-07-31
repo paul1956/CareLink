@@ -35,11 +35,11 @@ Friend Module Form1CollectMarkersHelper
     ''' </summary>
     Private Sub SortAndFilterListOfLowGlucoseSuspendedMarkers()
         Dim comparison As Comparison(Of LowGlucoseSuspended) =
-            Function(x, y)
+            Function(x As LowGlucoseSuspended, y As LowGlucoseSuspended) As Integer
                 Return x.DisplayTime.CompareTo(value:=y.DisplayTime)
             End Function
-
         s_lowGlucoseSuspendedMarkers.Sort(comparison)
+
         Dim tmpList As New List(Of LowGlucoseSuspended)
         For Each r As IndexClass(Of LowGlucoseSuspended) In s_lowGlucoseSuspendedMarkers.WithIndex
             Dim item As LowGlucoseSuspended = r.Value

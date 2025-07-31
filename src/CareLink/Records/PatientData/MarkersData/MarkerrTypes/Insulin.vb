@@ -20,18 +20,18 @@ Public Class Insulin
         Me.RecordNumber = recordNumber
         Me.Type = item.Type
         Me.Kind = "Marker"
-        Me.ActivationType = item.GetStringFromJson(NameOf(ActivationType))
+        Me.ActivationType = item.GetStringFromJson(key:=NameOf(ActivationType))
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
-        Me.ProgrammedFastAmount = item.GetSingleFromJson(NameOf(ProgrammedFastAmount), digits:=3)
-        Me.DeliveredFastAmount = item.GetSingleFromJson(NameOf(DeliveredFastAmount), digits:=3)
-        Me.Completed = item.GetBooleanFromJson(NameOf(Completed))
-        Me.BolusType = item.GetStringFromJson(NameOf(BolusType))
-        Me.ProgrammedExtendedAmount = item.GetSingleFromJson(NameOf(ProgrammedExtendedAmount), digits:=3)
-        Me.DeliveredExtendedAmount = item.GetSingleFromJson(NameOf(DeliveredExtendedAmount), digits:=3)
-        Me.ProgrammedDuration = item.GetIntegerFromJson(NameOf(ProgrammedDuration))
-        Me.EffectiveDuration = item.GetIntegerFromJson(NameOf(EffectiveDuration))
-        Me.InsulinType = item.GetStringFromJson(NameOf(InsulinType))
+        Me.ProgrammedFastAmount = item.GetSingleFromJson(key:=NameOf(ProgrammedFastAmount), digits:=3)
+        Me.DeliveredFastAmount = item.GetSingleFromJson(key:=NameOf(DeliveredFastAmount), digits:=3)
+        Me.Completed = item.GetBooleanFromJson(key:=NameOf(Completed))
+        Me.BolusType = item.GetStringFromJson(key:=NameOf(BolusType))
+        Me.ProgrammedExtendedAmount = item.GetSingleFromJson(key:=NameOf(ProgrammedExtendedAmount), digits:=3)
+        Me.DeliveredExtendedAmount = item.GetSingleFromJson(key:=NameOf(DeliveredExtendedAmount), digits:=3)
+        Me.ProgrammedDuration = item.GetIntegerFromJson(key:=NameOf(ProgrammedDuration))
+        Me.EffectiveDuration = item.GetIntegerFromJson(key:=NameOf(EffectiveDuration))
+        Me.InsulinType = item.GetStringFromJson(key:=NameOf(InsulinType))
         If Me.InsulinType.EqualsIgnoreCase("Unknown") Then
             Me.InsulinType = CurrentUser.InsulinTypeName
         End If
@@ -74,7 +74,7 @@ Public Class Insulin
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
         Get
-            Return TryParseDateStr(Me.TimestampAsString)
+            Return Me.TimestampAsString.TryParseDateStr()
         End Get
     End Property
 
@@ -94,7 +94,7 @@ Public Class Insulin
     <JsonPropertyName("displayTimeAsDate")>
     Public ReadOnly Property DisplayTime As Date
         Get
-            Return TryParseDateStr(Me.DisplayTimeAsString)
+            Return Me.DisplayTimeAsString.TryParseDateStr()
         End Get
     End Property
 
@@ -172,10 +172,11 @@ Public Class Insulin
     <Column(Order:=17, TypeName:=NameOf([Single]))>
     Public ReadOnly Property SafeMealReduction As Single
         Get
-            If {"RECOMMENDED", "UNDETERMINED"}.Contains(Me.ActivationType) Then
+            If {"RECOMMENDED", "UNDETERMINED"}.Contains(value:=Me.ActivationType) Then
                 Dim meal As Meal = Nothing
                 If Meal.TryGetMealRecord(Me.Timestamp, meal) Then
-                    Dim cRatio As Single = CurrentUser.GetCarbRatio(TimeOnly.FromDateTime(meal.Timestamp))
+                    Dim forTime As TimeOnly = TimeOnly.FromDateTime(meal.Timestamp)
+                    Dim cRatio As Single = CurrentUser.GetCarbRatio(forTime)
                     Dim expectedBolus As Single = meal.Amount / cRatio
                     If expectedBolus - 0.025 > Me.ProgrammedFastAmount Then
                         Return (expectedBolus - Me.ProgrammedFastAmount).RoundTo025

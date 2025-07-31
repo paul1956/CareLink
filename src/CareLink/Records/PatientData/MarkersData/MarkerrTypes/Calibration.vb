@@ -41,7 +41,7 @@ Public Class Calibration
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
         Get
-            Return TryParseDateStr(Me.TimestampAsString)
+            Return Me.TimestampAsString.TryParseDateStr()
         End Get
     End Property
 
@@ -55,7 +55,7 @@ Public Class Calibration
     <JsonPropertyName("displayTimeAsDate")>
     Public ReadOnly Property DisplayTime As Date
         Get
-            Return TryParseDateStr(Me.DisplayTimeAsString)
+            Return Me.DisplayTimeAsString.TryParseDateStr()
         End Get
     End Property
 
@@ -82,7 +82,7 @@ Public Class Calibration
             If Me.UnitValue.IsSgInvalid Then Return Me.UnitValue
             Return If(NativeMmolL,
                       Me.UnitValue,
-                      RoundSingle(value:=Me.UnitValue / MmolLUnitsDivisor, digits:=2, considerValue:=False))
+                      (Me.UnitValue / MmolLUnitsDivisor).RoundSingle(digits:=2, considerValue:=False))
         End Get
     End Property
 

@@ -114,7 +114,7 @@ Public Class PdfSettingsRecord
                     Case itemKey.StartsWith(value:=SmartGuardHeader)
                         sTable = ConvertPdfTableToStringTable(table, tableHeader:=SmartGuardHeader)
                         If sTable.Rows.Count = 3 Then
-                            Dim smartGuard As String = sTable.GetSingleLineValue(Of String)(Key:=SmartGuardHeader)
+                            Dim smartGuard As String = sTable.GetSingleLineValue(Of String)(key:=SmartGuardHeader)
                             Me.SmartGuard = New SmartGuardRecord(sTable, smartGuard)
                         Else
                             Dim smartGuard As String = "Off"

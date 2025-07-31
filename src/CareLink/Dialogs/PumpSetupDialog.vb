@@ -37,7 +37,7 @@ Public Class PumpSetupDialog
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
     Private Sub DataGridView_Paint(sender As Object, e As PaintEventArgs) Handles DgvHighAlert.Paint, DgvLowAlert.Paint
-        DgvPaintNoRecordsFound(sender, e)
+        DgvNoRecordsFoundPaint(sender, e)
     End Sub
 
     ''' <summary>

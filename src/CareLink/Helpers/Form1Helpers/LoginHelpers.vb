@@ -154,14 +154,20 @@ Friend Module LoginHelpers
                         fixedPart = "CareLink"
                         owner.Text = $"{SavedTitle} Using Snapshot Data"
                         Dim di As New DirectoryInfo(DirectoryForProjectData)
+                        Dim keySelector As Func(Of FileInfo, Date) =
+                            Function(f As FileInfo) As Date
+                                Return f.LastWriteTime
+                            End Function
+
+                        Dim selector As Func(Of FileInfo, String) =
+                            Function(f As FileInfo) As String
+                                Return f.Name
+                            End Function
+
                         Dim fileList As String() = New DirectoryInfo(path:=DirectoryForProjectData) _
                             .EnumerateFiles(searchPattern:=$"CareLinkSnapshot*.json") _
-                            .OrderBy(keySelector:=Function(f As FileInfo)
-                                                      Return f.LastWriteTime
-                                                  End Function) _
-                            .Select(selector:=Function(f As FileInfo)
-                                                  Return f.Name
-                                              End Function).ToArray
+                            .OrderBy(keySelector) _
+                            .Select(selector).ToArray
 
                         Using openFileDialog1 As New OpenFileDialog With {
                             .AddExtension = True,

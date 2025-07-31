@@ -9,30 +9,7 @@ Imports System.Text
 '''  Provides extension methods for <see cref="DataGridViewColumnEventArgs"/> to configure DataGridView columns
 '''  and for string prefix matching in lists.
 ''' </summary>
-Friend Module DataGridViewColumnEventArgsExtensions
-
-    ''' <summary>
-    '''  Tries to find a string in the list that <paramref name="headerText"/> starts with, ignoring case.
-    ''' </summary>
-    ''' <param name="list">The list of strings to search.</param>
-    ''' <param name="headerText">The header string to check against the list.</param>
-    ''' <param name="result">
-    '''  When this method returns, contains the matching string if found;
-    '''  otherwise, result is unmodified.
-    ''' </param>
-    ''' <returns>
-    '''  <see langword="True"/> if a matching string is found; otherwise, <see langword="False"/>.
-    ''' </returns>
-    <Extension>
-    Friend Function TryGetPrefixMatch(list As List(Of String), headerText As String, ByRef result As String) As Boolean
-        For Each value As String In list
-            If headerText.StartsWithIgnoreCase(value) Then
-                result = value
-                Return True
-            End If
-        Next
-        Return False
-    End Function
+Friend Module DgvColumnEventArgsExtensions
 
     ''' <summary>
     '''  Configures a <see cref="DataGridViewColumn"/> when it is added to a <see cref="DataGridView"/>.
@@ -80,7 +57,7 @@ Friend Module DataGridViewColumnEventArgsExtensions
             .HeaderText = title.TrimEnd(value:=vbCrLf).ToString
             .DefaultCellStyle = cellStyle
             If String.IsNullOrWhiteSpace(value:=caption) Then Return
-            .HeaderText = caption.Remove(oldValue:="_")
+            .HeaderText = caption.Remove(s:="_")
             If .DataPropertyName.ContainsIgnoreCase(value:="message") Then
                 .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             Else

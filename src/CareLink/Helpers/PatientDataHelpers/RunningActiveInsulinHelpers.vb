@@ -51,10 +51,15 @@ Friend Module RunningActiveInsulinHelpers
         If index + count > myList.Count Then
             count = myList.Count - index
         End If
-        Dim sum As Single = myList.GetRange(index, count).Sum(selector:=Function(i As RunningActiveInsulin)
-                                                                            Return i.CurrentInsulinLevel
-                                                                        End Function)
-        If sum < 0 Then sum = 0
+
+        Dim selector As Func(Of RunningActiveInsulin, Single) =
+            Function(i As RunningActiveInsulin) As Single
+                Return i.CurrentInsulinLevel
+            End Function
+        Dim sum As Single = myList.GetRange(index, count).Sum(selector)
+        If sum < 0 Then
+            sum = 0
+        End If
         Return sum
     End Function
 

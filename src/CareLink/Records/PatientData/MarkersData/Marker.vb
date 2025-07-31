@@ -25,7 +25,7 @@ Public Class Marker
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
         Get
-            Return TryParseDateStr(Me.TimestampAsString)
+            Return Me.TimestampAsString.TryParseDateStr()
         End Get
     End Property
 
@@ -39,7 +39,7 @@ Public Class Marker
     <JsonPropertyName("displayTimeAsDate")>
     Public ReadOnly Property DisplayTime As Date
         Get
-            Return TryParseDateStr(Me.DisplayTimeAsString)
+            Return Me.DisplayTimeAsString.TryParseDateStr()
         End Get
     End Property
 

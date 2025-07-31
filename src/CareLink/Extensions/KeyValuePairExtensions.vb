@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
@@ -29,9 +30,10 @@ Friend Module KeyValuePairExtensions
     <Extension>
     Private Function ScaleSgToString(value As Single) As String
         Dim digits As Integer = If(NativeMmolL, 2, 0)
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Return If(NativeMmolL,
-                  (value / MmolLUnitsDivisor).RoundSingle(digits, considerValue:=False).ToString(Provider),
-                  value.ToString(Provider))
+                  (value / MmolLUnitsDivisor).RoundSingle(digits, considerValue:=False).ToString(provider),
+                  value.ToString(provider))
     End Function
 
     ''' <summary>
@@ -53,9 +55,10 @@ Friend Module KeyValuePairExtensions
     <Extension>
     Public Function ScaleSgToString(item As JsonElement) As String
         Dim itemAsSingle As Single
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Select Case item.ValueKind
             Case JsonValueKind.String
-                itemAsSingle = Single.Parse(item.GetString(), Provider)
+                itemAsSingle = Single.Parse(item.GetString(), provider)
             Case JsonValueKind.Null
                 Return String.Empty
             Case JsonValueKind.Undefined
@@ -81,7 +84,8 @@ Friend Module KeyValuePairExtensions
     ''' <returns>A <see langword="String"/> representation of the scaled value.</returns>
     <Extension>
     Public Function ScaleSgToString(value As String) As String
-        Return value.ParseSingle(digits:=If(NativeMmolL, 2, 0)).ScaleSgToString()
+        Dim digits As Integer = If(NativeMmolL, 2, 0)
+        Return value.ParseSingle(digits).ScaleSgToString()
     End Function
 
 End Module

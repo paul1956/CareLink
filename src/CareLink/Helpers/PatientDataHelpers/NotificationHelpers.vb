@@ -228,7 +228,7 @@ Friend Module NotificationHelpers
             mainForm.TableLayoutPanelNotificationsCleared.HorizontalScroll.Visible = False
         Else
             mainForm.TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
-            mainForm.TableLayoutPanelNotificationsCleared.DisplayEmptyDGV(className:="clearedNotifications")
+            mainForm.TableLayoutPanelNotificationsCleared.DgvNoRecordsFound(className:="clearedNotifications")
         End If
 
         ' activeNotifications
@@ -251,7 +251,7 @@ Friend Module NotificationHelpers
             Next
         Else
             mainForm.TableLayoutPanelNotificationActive.AutoSizeMode = AutoSizeMode.GrowAndShrink
-            mainForm.TableLayoutPanelNotificationActive.DisplayEmptyDGV(className:="activeNotification")
+            mainForm.TableLayoutPanelNotificationActive.DgvNoRecordsFound(className:="activeNotification")
         End If
         mainForm.TableLayoutPanelNotificationActive.AutoScroll = True
         mainForm.TableLayoutPanelNotificationsCleared.AutoScroll = True

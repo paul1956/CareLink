@@ -8,7 +8,7 @@ Imports System.Runtime.CompilerServices
 '''  Provides extension methods and delegates for displaying <see cref="DataTable"/> objects in <see cref="DataGridView"/> controls
 '''  within a <see cref="TableLayoutPanel"/>. Handles initialization, data binding, and optional column visibility.
 ''' </summary>
-Friend Module DisplayDataTableInDgvHelpers
+Friend Module DgvDataTableHelpers
 
     ''' <summary>
     '''  Delegate for attaching event handlers to a <see cref="DataGridView"/>.
@@ -75,7 +75,7 @@ Friend Module DisplayDataTableInDgvHelpers
                 dgv.Columns("RecordNumber").Visible = False
             End If
         Else
-            DisplayEmptyDGV(realPanel, className)
+            DgvNoRecordsFound(realPanel, className)
         End If
         realPanel.Refresh()
     End Sub

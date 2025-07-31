@@ -33,7 +33,7 @@ Public Class Limit
         Get
             Return If(NativeMmolL,
                       Me.HighLimit,
-                      RoundSingle(value:=Me.HighLimit / MmolLUnitsDivisor, digits:=2, considerValue:=False))
+                      (Me.HighLimit / MmolLUnitsDivisor).RoundSingle(digits:=2, considerValue:=False))
         End Get
     End Property
 
@@ -48,8 +48,7 @@ Public Class Limit
         Get
             Return If(NativeMmolL,
                       CSng(Math.Round(Me.LowLimit * MmolLUnitsDivisor)),
-                      Me.LowLimit
-                     )
+                      Me.LowLimit)
         End Get
     End Property
 
@@ -59,8 +58,7 @@ Public Class Limit
         Get
             Return If(NativeMmolL,
                       Me.LowLimit,
-                      RoundSingle(value:=Me.LowLimit / MmolLUnitsDivisor, digits:=2, considerValue:=False)
-                     )
+                      (Me.LowLimit / MmolLUnitsDivisor).RoundSingle(digits:=2, considerValue:=False))
         End Get
     End Property
 
@@ -84,7 +82,7 @@ Public Class Limit
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
         Get
-            Return TryParseDateStr(Me.TimestampAsString)
+            Return Me.TimestampAsString.TryParseDateStr()
         End Get
     End Property
 

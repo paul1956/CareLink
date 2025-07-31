@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text
@@ -10,7 +11,7 @@ Imports ClosedXML.Excel
 ''' <summary>
 '''  Provides extension methods for exporting and copying data from a <see cref="DataGridView"/>.
 ''' </summary>
-Friend Module ExportDataGridView
+Friend Module DgvExportHelpers
 
     ''' <summary>
     '''  Determines whether any cell is selected in the specified column of the <see cref="DataGridView"/>.
@@ -44,11 +45,11 @@ Friend Module ExportDataGridView
     Private Sub CopyToClipboard(dgv As DataGridView, copyHeaders As DataGridViewClipboardCopyMode, copyAll As Boolean)
         If copyAll OrElse dgv.GetCellCount(includeFilter:=DataGridViewElementStates.Selected) > 0 Then
             Dim dataGridViewCells As List(Of DataGridViewCell) = dgv.SelectedCells.Cast(Of DataGridViewCell).ToList()
+
             Dim selector As Func(Of DataGridViewCell, Integer) =
-                Function(c As DataGridViewCell)
+                Function(c As DataGridViewCell) As Integer
                     Return c.ColumnIndex
                 End Function
-
             Dim colLow As Integer = If(copyAll,
                                        0,
                                        dataGridViewCells.Min(selector))
@@ -56,23 +57,23 @@ Friend Module ExportDataGridView
                                         dgv.Columns.Count - 1,
                                         dataGridViewCells.Max(selector))
 
-            selector = Function(c As DataGridViewCell)
+            selector = Function(c As DataGridViewCell) As Integer
                            Return c.RowIndex
                        End Function
-
             Dim rowLow As Integer = If(copyAll,
                                        0,
                                        dataGridViewCells.Min(selector))
             Dim rowHigh As Integer = If(copyAll,
                                         dgv.RowCount - 1,
                                         dataGridViewCells.Max(selector))
+
             Dim clipboard_string As New StringBuilder()
             If copyHeaders <> DataGridViewClipboardCopyMode.EnableWithoutHeaderText Then
                 For index As Integer = colLow To colHigh
                     If Not (dgv.Columns(index).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(index))) Then
                         Continue For
                     End If
-                    Dim value As String = $"{dgv.Columns(index).HeaderText.Remove(oldValue:=vbCrLf)}"
+                    Dim value As String = $"{dgv.Columns(index).HeaderText.Remove(s:=vbCrLf)}"
                     Dim fieldSeparator As String = If(index = colHigh, vbCrLf, vbTab)
                     clipboard_string.Append(value:=$"{value}{fieldSeparator}")
                 Next index
@@ -101,7 +102,7 @@ Friend Module ExportDataGridView
     ''' <param name="dgv">The <see cref="DataGridView"/> to export.</param>
     <Extension>
     Private Sub ExportToExcelWithFormatting(dgv As DataGridView)
-        Dim baseFileName As String = dgv.Name.Remove(oldValue:="dgv")
+        Dim baseFileName As String = dgv.Name.Remove(s:="dgv")
         Dim saveFileDialog1 As New SaveFileDialog With {
                 .CheckPathExists = True,
                 .FileName = $"{baseFileName} ({Date.Now:yyyy-MM-dd})",
@@ -161,7 +162,8 @@ Friend Module ExportDataGridView
                                     Dim result As Double
                                     If Double.TryParse(value, result) Then
                                         .Value = result
-                                        .Style.NumberFormat.Format = $"0{Provider.NumberFormat.NumberDecimalSeparator}{StrDup(Number:=37, Character:="0"c)}"
+
+                                        .Style.NumberFormat.Format = $"0{DecimalSeparator}{StrDup(Number:=37, Character:="0"c)}"
                                     Else
                                         .Value = $"'{value}"
                                     End If
@@ -175,7 +177,7 @@ Friend Module ExportDataGridView
                                         .Style.NumberFormat.Format =
                                             If(dgv.Columns(index:=j).Name.EqualsIgnoreCase("sg"),
                                                GetSgFormat(withSign:=False),
-                                               $"0{Provider.NumberFormat.NumberDecimalSeparator}000")
+                                               $"0{DecimalSeparator}000")
 
                                         align = XLAlignmentHorizontalValues.Right
                                     End If

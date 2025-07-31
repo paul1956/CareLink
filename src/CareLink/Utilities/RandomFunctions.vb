@@ -18,10 +18,11 @@ Public Module RandomFunctions
     Public Function GenerateRandomBase64String(count As Integer) As String
         Dim random As New Random()
         Dim element As String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-        Dim selector As Func(Of String, Char) = Function(str)
-                                                    Return str(index:=random.Next(maxValue:=str.Length))
-                                                End Function
 
+        Dim selector As Func(Of String, Char) =
+            Function(str As String) As Char
+                Return str(index:=random.Next(maxValue:=str.Length))
+            End Function
         Dim s As New String(value:=Enumerable.Repeat(element, count:=count + 10).Select(selector).ToArray())
         Return Convert.ToBase64String(inArray:=Encoding.UTF8.GetBytes(s)).Substring(startIndex:=0, length:=count)
     End Function
