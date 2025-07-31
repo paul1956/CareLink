@@ -7,12 +7,12 @@ Imports System.Runtime.CompilerServices
 Friend Module DeviceSettingsExtensions
 
     <Extension>
-    Friend Function GetSingleLineValue(Of T)(sTable As StringTable, Key As String) As T
+    Friend Function GetSingleLineValue(Of T)(sTable As StringTable, key As String) As T
         Dim typeOfT As Type = GetType(T)
         For Each r As StringTable.Row In sTable.Rows
-            Dim v As String = r.Columns(0)
-            If v.StartsWith(Key) Then
-                Dim value As String = v.Replace(Key, "").Trim
+            Dim v As String = r.Columns(index:=0)
+            If v.StartsWith(value:=key) Then
+                Dim value As String = v.Remove(key).Trim
                 If value = v Then
                     value = r.Columns(1)
                 End If

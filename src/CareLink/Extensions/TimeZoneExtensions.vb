@@ -106,9 +106,11 @@ Friend Module TimeZoneExtensions
             Function(t As TimeZoneInfo) t.StandardName,
             Function(t As TimeZoneInfo) t.Id}
 
-            tz = s_systemTimeZones.FirstOrDefault(predicate:=Function(arg)
-                                                                 Return selector(arg) = value
-                                                             End Function)
+            Dim predicate As Func(Of TimeZoneInfo, Boolean) =
+                Function(arg As TimeZoneInfo) As Boolean
+                    Return selector(arg) = value
+                End Function
+            tz = s_systemTimeZones.FirstOrDefault(predicate)
             If tz IsNot Nothing Then
                 s_timeZoneMap(key:=value) = tz
                 Return tz

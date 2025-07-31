@@ -33,7 +33,9 @@ Public Module BasalListExtensions
     ''' </returns>
     <Extension>
     Friend Function ActiveBasalPattern(basalList As List(Of Basal)) As String
-        Return If(basalList.IsEmpty, String.Empty, basalList(0).ActiveBasalPattern)
+        Return If(basalList.IsEmpty,
+                  String.Empty,
+                  basalList(index:=0).ActiveBasalPattern)
     End Function
 
     ''' <summary>
@@ -45,7 +47,9 @@ Public Module BasalListExtensions
     ''' </returns>
     <Extension>
     Friend Function GetBasalPerHour(basalList As List(Of Basal)) As Double
-        Return If(basalList.IsEmpty, Double.NaN, basalList(0).GetBasalPerHour)
+        Return If(basalList.IsEmpty,
+                  Double.NaN,
+                  basalList(index:=0).GetBasalPerHour)
     End Function
 
     ''' <summary>

@@ -37,9 +37,11 @@ Public Module StringExtensions
     ''' <returns>The number of occurrences of the character <paramref name="c"/> in the string.</returns>
     <Extension()>
     Public Function Count(s As String, c As Char) As Integer
-        Return s.Count(predicate:=Function(c1 As Char)
-                                      Return c1 = c
-                                  End Function)
+        Dim predicate As Func(Of Char, Boolean) =
+            Function(c1 As Char) As Boolean
+                Return c1 = c
+            End Function
+        Return s.Count(predicate)
     End Function
 
     ''' <summary>
@@ -184,11 +186,12 @@ Public Module StringExtensions
             End If
         Next
         Dim resultString As String = result.Replace(oldValue:="Care Link", newValue:="CareLink").ToString
-        If Not resultString.Contains("™"c) Then
+        If Not resultString.Contains(value:="™"c) Then
             resultString = resultString.Replace(oldValue:="CareLink", newValue:="CareLink™")
         End If
         resultString = resultString.Replace(oldValue:="S G", newValue:="Sensor Glucose")
-        Return resultString.Replace(oldValue:="time", newValue:=" Time", ignoreCase:=False, culture:=Provider)
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+        Return resultString.Replace(oldValue:="time", newValue:=" Time", ignoreCase:=False, culture:=provider)
     End Function
 
     ''' <summary>
@@ -206,7 +209,7 @@ Public Module StringExtensions
                 Return expression
             End If
             i = expression.Length
-            expression &= Provider.NumberFormat.NumberDecimalSeparator
+            expression &= DecimalSeparator
         End If
         expression &= New String("0"c, count:=digits + 1)
         Return expression.Substring(startIndex:=0, length:=i + digits + 1)
@@ -296,22 +299,24 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Removes all occurrences of a specified string from the current string, ignoring case.
+    '''  Removes all occurrences of a specified string from the <paramref name="input"/> string, ignoring case.
     ''' </summary>
-    ''' <param name="s">The original string.</param>
-    ''' <param name="oldValue">The string to remove.</param>
+    ''' <param name="input">The original string.</param>
+    ''' <param name="s">The string to remove.</param>
     ''' <returns>
     '''  A new string that is equivalent to the current string except that all occurrences of
-    '''  <paramref name="oldValue"/> are removed.
+    '''  <paramref name="s"/> are removed.
     ''' </returns>
     ''' <remarks>
     '''  This method is used for case-insensitive string removals, ensuring that the removal respects
     '''  the current UI culture.
     ''' </remarks>
     <Extension()>
-    Public Function Remove(s As String, oldValue As String) As String
-        If s Is Nothing Then Return Nothing
-        Return s.Replace(oldValue, newValue:=String.Empty, ignoreCase:=True, culture:=Provider)
+    Public Function Remove(input As String, s As String) As String
+        If input Is Nothing Then Return Nothing
+
+        Dim culture As CultureInfo = CultureInfo.CurrentUICulture
+        Return input.Replace(oldValue:=s, newValue:=String.Empty, ignoreCase:=True, culture)
     End Function
 
     ''' <summary>
@@ -336,7 +341,7 @@ Public Module StringExtensions
     <Extension()>
     Public Function ReplaceIgnoreCase(s As String, oldValue As String, newValue As String) As String
         If s Is Nothing Then Return Nothing
-        Return s.Replace(oldValue, newValue, ignoreCase:=True, culture:=Provider)
+        Return s.Replace(oldValue, newValue, ignoreCase:=True, culture:=CultureInfo.CurrentUICulture)
     End Function
     ''' <summary>
     '''  Checks if a string starts with another string, ignoring case.

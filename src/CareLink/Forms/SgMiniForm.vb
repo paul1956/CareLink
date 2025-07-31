@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.Media
 
 Public Class SgMiniForm
@@ -69,8 +70,10 @@ Public Class SgMiniForm
         End Select
     End Sub
 
-    Private Sub PlaySoundFromResource(SoundName As String)
-        Using player As New SoundPlayer(My.Resources.ResourceManager.GetStream(SoundName, Provider))
+    Private Sub PlaySoundFromResource(name As String)
+        Dim culture As CultureInfo = CultureInfo.CurrentUICulture
+
+        Using player As New SoundPlayer(My.Resources.ResourceManager.GetStream(name, culture))
             player.Play()
         End Using
     End Sub

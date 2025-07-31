@@ -2,7 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Linq
+Imports System.Globalization
 
 Friend Module SystemVariables
 
@@ -26,16 +26,50 @@ Friend Module SystemVariables
     Friend s_webView2CacheDirectory As String
     Friend Property CareLinkDecimalSeparator As Char = "."c
     Friend Property CurrentUser As CurrentUserRecord
+    Friend Property DecimalSeparator As String = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator
     Friend Property MaxBasalPerDose As Double
     Friend Property NativeMmolL As Boolean = False
-
 
     ''' <summary>
     '''  Gets the character used to separate sentences, usually a period.
     ''' </summary>
     ''' <returns></returns>
     Friend Property SentenceSeparator As Char = "."c
+
     Friend Property TreatmentInsulinRow As Single
+
+    ''' <summary>
+    '''  Counts the number of SG.sg values in the specified range [OptionsConfigureTiTR.LowThreshold, 140], excluding Single.NaN.
+    ''' </summary>
+    ''' <param name="sgList">The list of SG records to evaluate.</param>
+    ''' <returns>
+    '''  The count of SG.sg values within the range and not NaN.
+    ''' </returns>
+    Friend Function CountSgInTightRange(sgList As IEnumerable(Of SG)) As UInteger
+        Dim predicate As Func(Of SG, Boolean) =
+            Function(sg As SG) As Boolean
+                Return Not Single.IsNaN(sg.sg) AndAlso
+                       sg.sgMgdL >= OptionsConfigureTiTR.LowThreshold AndAlso
+                       sg.sgMgdL <= 140.0
+            End Function
+        Return CUInt(sgList.Count(predicate))
+    End Function
+
+    ''' <summary>
+    '''  Counts the number of valid SG records in the specified list.
+    '''  A valid SG record is one where sg is not NaN and sgMgdL is not zero.
+    ''' </summary>
+    ''' <param name="sgList">The list of SG records to evaluate.</param>
+    ''' <returns>
+    '''  The count of valid SG records.
+    ''' </returns>
+    Friend Function CountValidSg(sgList As IEnumerable(Of SG)) As UInteger
+        Dim predicate As Func(Of SG, Boolean) =
+            Function(sg As SG) As Boolean
+                Return Not Single.IsNaN(sg.sg) AndAlso sg.sgMgdL <> 0.0
+            End Function
+        Return CUInt(sgList.Count(predicate))
+    End Function
 
     ''' <summary>
     '''  Gets the above hyperglycemia limit as a tuple of unsigned integer and string.
@@ -72,9 +106,12 @@ Friend Module SystemVariables
     Friend Function GetInsulinYValue() As Single
         Const mmDlInsulinYValue As Integer = 330
         Const mmoLInsulinYValue As Single = mmDlInsulinYValue / MmolLUnitsDivisor
-        Dim maxYScaled As Single = s_sgRecords.Max(Of Single)(selector:=Function(sgR As SG)
-                                                                            Return sgR.sg
-                                                                        End Function) + 2
+
+        Dim selector As Func(Of SG, Single) =
+            Function(sgR As SG) As Single
+                Return sgR.sg
+            End Function
+        Dim maxYScaled As Single = s_sgRecords.Max(Of Single)(selector) + 2
         Return If(Single.IsNaN(maxYScaled),
                   If(NativeMmolL, mmoLInsulinYValue, mmDlInsulinYValue),
                   If(NativeMmolL,
@@ -93,10 +130,18 @@ Friend Module SystemVariables
     ''' <returns>
     '''  The format string for SG values.
     ''' </returns>
+    ''' <remarks>
+    '''  The format string is based on the current UI culture's decimal separator
+    '''  and whether the values are in mmol/L or mg/dL.
+    ''' </remarks>
     Friend Function GetSgFormat(withSign As Boolean) As String
         Return If(withSign,
-            If(NativeMmolL, $"+0{Provider.NumberFormat.NumberDecimalSeparator}0;-#{Provider.NumberFormat.NumberDecimalSeparator}0", "+0;-#"),
-            If(NativeMmolL, $"0{Provider.NumberFormat.NumberDecimalSeparator}0", "0"))
+            If(NativeMmolL,
+               $"+0{DecimalSeparator}0;-#{DecimalSeparator}0",
+               "+0;-#"),
+            If(NativeMmolL,
+               $"0{DecimalSeparator}0",
+               "0"))
     End Function
 
     ''' <summary>
@@ -112,38 +157,6 @@ Friend Module SystemVariables
                      MmolLItemsPeriod.Last.Value,
                      MgDlItems.Last.Value)
                     )
-    End Function
-
-    ''' <summary>
-    '''  Counts the number of SG.sg values in the specified range [OptionsConfigureTiTR.LowThreshold, 140], excluding Single.NaN.
-    ''' </summary>
-    ''' <param name="sgList">The list of SG records to evaluate.</param>
-    ''' <returns>
-    '''  The count of SG.sg values within the range and not NaN.
-    ''' </returns>
-    Friend Function CountSgInTightRange(sgList As IEnumerable(Of SG)) As UInteger
-        Dim predicate As Func(Of SG, Boolean) = Function(sg)
-                                                    Return Not Single.IsNaN(sg.sg) AndAlso
-                                                           sg.sgMgdL >= OptionsConfigureTiTR.LowThreshold AndAlso
-                                                           sg.sgMgdL <= 140.0
-                                                End Function
-
-        Return CUInt(sgList.Count(predicate))
-    End Function
-
-    ''' <summary>
-    '''  Counts the number of valid SG records in the specified list.
-    '''  A valid SG record is one where sg is not NaN and sgMgdL is not zero.
-    ''' </summary>
-    ''' <param name="sgList">The list of SG records to evaluate.</param>
-    ''' <returns>
-    '''  The count of valid SG records.
-    ''' </returns>
-    Friend Function CountValidSg(sgList As IEnumerable(Of SG)) As UInteger
-        Return CUInt(sgList.Count(
-            predicate:=Function(sg)
-                           Return Not Single.IsNaN(sg.sg) AndAlso sg.sgMgdL <> 0.0
-                       End Function))
     End Function
 
     ''' <summary>
@@ -202,7 +215,7 @@ Friend Module SystemVariables
     ''' </returns>
     Friend Function GetTirHighLimitWithUnits() As String
         Return $"{GetTirHighLimit()} {GetBgUnitsString()}".
-            Replace(CareLinkDecimalSeparator, Provider.NumberFormat.NumberDecimalSeparator)
+            Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
     End Function
 
     ''' <summary>
@@ -230,7 +243,7 @@ Friend Module SystemVariables
     ''' </returns>
     Friend Function GetTirLowLimitWithUnits() As String
         Return $"{GetTirLowLimit()} {GetBgUnitsString()}".
-            Replace(CareLinkDecimalSeparator, Provider.NumberFormat.NumberDecimalSeparator)
+            Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
     End Function
 
     ''' <summary>

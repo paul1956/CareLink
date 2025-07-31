@@ -266,7 +266,7 @@ Friend Module SummaryHelpers
                                 If jsonDictionary.TryGetValue(key, value:=s_suspendedSince) Then
                                     Dim resultDate As Date = Nothing
                                     key = NameOf(ActiveNotification.triggeredDateTime)
-                                    s_suspendedSince = If(TryParseDate(dateAsString:=s_suspendedSince, resultDate, key),
+                                    s_suspendedSince = If(TryParseDate(s:=s_suspendedSince, resultDate, key),
                                                           resultDate.ToString(format:=s_timeWithMinuteFormat),
                                                           "???")
                                 End If

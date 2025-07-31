@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
@@ -220,20 +221,22 @@ Friend Module CreateChartItems
                     .LineColor = Color.FromArgb(alpha:=64, baseColor)
                 End With
 
+                Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+                Dim format As String = If(NativeMmolL, "F1", "F0")
                 For i As Integer = 0 To s_mmolLValues.Count - 1
                     Dim yMin As Single = GetYMinValueFromNativeMmolL()
                     .CustomLabels.Add(
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,
                             toPosition:=firstAxis(index:=i) + yMin,
-                            text:=$"{firstAxis(index:=i).ToString(format:=If(NativeMmolL, "F1", "F0"), Provider).Replace(oldValue:=",0", newValue:="")}",
+                            text:=$"{firstAxis(index:=i).ToString(format, provider).Replace(oldValue:=",0", newValue:="")}",
                             labelRow:=0,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
                     .CustomLabels.Add(
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,
                             toPosition:=firstAxis(index:=i) + yMin,
-                            text:=$"{secondAxis(index:=i).ToString(format:=If(NativeMmolL, "F0", "F1"), Provider).Replace(oldValue:=",0", newValue:="")}",
+                            text:=$"{secondAxis(index:=i).ToString(format, provider).Replace(oldValue:=",0", newValue:="")}",
                             labelRow:=1,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
                 Next
@@ -476,19 +479,20 @@ Friend Module CreateChartItems
                     .IntervalType = DateTimeIntervalType.Hours
                 End With
                 If s_sgRecords.Count = 0 Then
-                    c.AxisX.Maximum = New OADate(PumpNow)
-                    c.AxisX.Minimum = New OADate(PumpNow.AddDays(-1))
+                    c.AxisX.Maximum = New OADate(asDate:=PumpNow)
+                    c.AxisX.Minimum = New OADate(asDate:=PumpNow.AddDays(value:=-1))
                 Else
-                    c.AxisX.Maximum = s_sgRecords.Aggregate(func:=Function(i1, i2)
-                                                                      Return If(i1.OaDateTime > i2.OaDateTime,
-                                                                                i1,
-                                                                                i2)
-                                                                  End Function).OaDateTime
-                    c.AxisX.Minimum = s_sgRecords.Aggregate(func:=Function(i1, i2)
-                                                                      Return If(i1.OaDateTime < i2.OaDateTime,
-                                                                                i1,
-                                                                                i2)
-                                                                  End Function).OaDateTime
+                    Dim funcMax As Func(Of SG, SG, SG) =
+                        Function(i1 As SG, i2 As SG) As SG
+                            Return If(i1.OaDateTime > i2.OaDateTime, i1, i2)
+                        End Function
+
+                    c.AxisX.Maximum = s_sgRecords.Aggregate(func:=funcMax).OaDateTime
+                    Dim funcMin As Func(Of SG, SG, SG) =
+                        Function(i1 As SG, i2 As SG) As SG
+                            Return If(i1.OaDateTime < i2.OaDateTime, i1, i2)
+                        End Function
+                    c.AxisX.Minimum = s_sgRecords.Aggregate(func:=funcMin).OaDateTime
                 End If
             End With
         End With

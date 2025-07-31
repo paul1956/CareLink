@@ -22,15 +22,21 @@ Public Module CareLinkUserDataRecordHelpers
                  NameOf(CareLinkUserDataRecord.CareLinkUserName),
                  NameOf(CareLinkUserDataRecord.CareLinkPassword),
                  NameOf(CareLinkUserDataRecord.CareLinkPatientUserID)
-                cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleLeft, New Padding(1))
+                cellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleLeft,
+                    padding:=New Padding(all:=1))
             Case NameOf(CareLinkUserDataRecord.AutoLogin),
                  NameOf(CareLinkUserDataRecord.CareLinkPartner),
                  NameOf(CareLinkUserDataRecord.CountryCode),
                  NameOf(CareLinkUserDataRecord.UseLocalTimeZone),
                  "DeleteRow"
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleCenter, New Padding(0))
+                cellStyle = cellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleCenter,
+                    padding:=New Padding(all:=0))
             Case ""
-                cellStyle = cellStyle.SetCellStyle(DataGridViewContentAlignment.MiddleRight, New Padding(1, 1, 1, 1))
+                cellStyle = cellStyle.SetCellStyle(
+                    alignment:=DataGridViewContentAlignment.MiddleRight,
+                    padding:=New Padding(all:=1))
             Case Else
                 Stop
                 'Throw UnreachableException($"{NameOf(CareLinkUserDataRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")

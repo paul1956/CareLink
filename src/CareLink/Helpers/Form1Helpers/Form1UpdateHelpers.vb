@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
 
@@ -320,9 +321,10 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataIndexes.lastConduitDateTime)
+                    Dim provider As CultureInfo = CultureInfo.CurrentUICulture
                     kvp = New KeyValuePair(Of String, String)(
                         key:=NameOf(ServerDataIndexes.lastConduitDateTime),
-                        value:=kvp.Value.CDateOrDefault(key:=NameOf(ServerDataIndexes.lastConduitDateTime), Provider))
+                        value:=kvp.Value.CDateOrDefault(key:=NameOf(ServerDataIndexes.lastConduitDateTime), provider))
                     message = $"Phone time is {kvp.Value}"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)

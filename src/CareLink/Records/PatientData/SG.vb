@@ -4,13 +4,13 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Globalization
 Imports System.Text.Json.Serialization
 
 Public Class SG
 
     Private _sensorState As String
     Private _sg As Single
-    Private _timestampAsString As String
 
     Public Sub New()
     End Sub
@@ -19,16 +19,20 @@ Public Class SG
         Me.Kind = lastSg.Kind
         Me.RecordNumber = 0
         _sensorState = lastSg.SensorState
-        _sg = If(lastSg.Sg.IsSgValid, If(NativeMmolL, lastSg.Sg / MmolLUnitsDivisor, lastSg.Sg), Single.NaN)
+        _sg = If(lastSg.Sg.IsSgValid,
+                 If(NativeMmolL,
+                    lastSg.Sg / MmolLUnitsDivisor,
+                    lastSg.Sg),
+                 Single.NaN)
         Me.timeChange = False
-        _timestampAsString = lastSg.TimestampAsString
+        Me.TimestampAsString = lastSg.TimestampAsString
         Me.Version = lastSg.Version
     End Sub
 
     Public Sub New(innerJson As Dictionary(Of String, String), index As Integer)
         Try
             If innerJson(key:=NameOf(sg)) <> "0" OrElse innerJson.Count = 5 Then
-                _timestampAsString = innerJson(key:=NameOf(Me.Timestamp))
+                Me.TimestampAsString = innerJson(key:=NameOf(Me.Timestamp))
                 Me.SensorState = innerJson(key:=NameOf(SensorState))
                 Me.sg = innerJson(key:=NameOf(sg)).ParseSingle(digits:=2)
                 Dim value As String = "False"
@@ -68,8 +72,7 @@ Public Class SG
         Set
             _sg = If(Value = 0,
                      Single.NaN,
-                     Value
-                    )
+                     Value)
         End Set
     End Property
 
@@ -77,8 +80,10 @@ Public Class SG
     <Column(Order:=4, TypeName:=NameOf([Single]))>
     Public ReadOnly Property sgMgdL As Single
         Get
-            If Single.IsNaN(_sg) Then Return _sg
-            Return If(NativeMmolL, CSng(Math.Round(_sg * MmolLUnitsDivisor)), _sg)
+            If _sg.IsSgInvalid Then Return _sg
+            Return If(NativeMmolL,
+                      CSng(Math.Round(_sg * MmolLUnitsDivisor)),
+                      _sg)
         End Get
     End Property
 
@@ -95,20 +100,13 @@ Public Class SG
     <Column(Order:=6, TypeName:="Date")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
-        Get
-            Return _timestampAsString
-        End Get
-        Set
-            _timestampAsString = Value
-        End Set
-    End Property
 
     <DisplayName("Timestamp As Date")>
     <Column(Order:=7, TypeName:="Date")>
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
         Get
-            Return TryParseDateStr(Me.TimestampAsString)
+            Return Me.TimestampAsString.TryParseDateStr()
         End Get
     End Property
 
@@ -146,7 +144,9 @@ Public Class SG
     End Property
 
     Public Overrides Function ToString() As String
-        Return If(NativeMmolL, Me.sg.ToString(format:="F1", Provider), Me.sg.ToString(format:="F0"))
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+        Dim format As String = If(NativeMmolL, "F1", "F0")
+        Return Me.sg.ToString(format, provider)
     End Function
 
     ''' <summary>

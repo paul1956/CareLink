@@ -4,10 +4,10 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Globalization
 Imports System.Text.Json.Serialization
 
 Public Class LastSG
-    Private _timestampAsString As String
 
     <DisplayName("Kind")>
     <Column(Order:=1, TypeName:=NameOf([String]))>
@@ -33,25 +33,20 @@ Public Class LastSG
     <Column(Order:=5, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
-        Get
-            Return _timestampAsString
-        End Get
-        Set
-            _timestampAsString = Value
-        End Set
-    End Property
 
     <DisplayName("Timestamp As Date")>
     <Column(Order:=6, TypeName:="Date")>
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property Timestamp As Date
         Get
-            Return TryParseDateStr(Me.TimestampAsString)
+            Return Me.TimestampAsString.TryParseDateStr()
         End Get
     End Property
 
     Public Overrides Function ToString() As String
-        Return If(NativeMmolL, Me.Sg.ToString("F1", Provider), Me.Sg.ToString("F0"))
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+        Dim format As String = If(NativeMmolL, "F1", "F0")
+        Return Me.Sg.ToString(format, provider)
     End Function
 
 End Class

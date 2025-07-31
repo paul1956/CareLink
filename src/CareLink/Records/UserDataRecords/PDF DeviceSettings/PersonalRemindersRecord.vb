@@ -8,7 +8,7 @@ Public Class PersonalRemindersRecord
     End Sub
 
     Public Sub New(r As StringTable.Row, key As String)
-        Me.Time = r.Columns(index:=0).Remove(oldValue:=key).CleanSpaces
+        Me.Time = r.Columns(index:=0).Remove(s:=key).CleanSpaces
     End Sub
 
     Public Property Time As String = "Off"

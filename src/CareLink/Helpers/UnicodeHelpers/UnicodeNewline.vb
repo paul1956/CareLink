@@ -116,11 +116,12 @@ Public Module UnicodeNewline
             Dim curChar As Char = text.Chars(index)
             ' Do not delete the next line
             Dim j As Integer = index
-            Dim nextChar As Func(Of Char) = Function()
-                                                Return If(j < text.Length - 1,
-                                                          text.Chars(index:=j + 1),
-                                                          ControlChars.NullChar)
-                                            End Function
+            Dim nextChar As Func(Of Char) =
+                Function() As Char
+                    Return If(j < text.Length - 1,
+                              text.Chars(index:=j + 1),
+                              ControlChars.NullChar)
+                End Function
 
             If TryGetDelimiterLengthAndType(curChar, length, type, nextChar) Then
                 If Trim Then
@@ -185,12 +186,13 @@ Public Module UnicodeNewline
             Dim curChar As Char = text.Chars(index)
             ' Do not delete the next line
             Dim j As Integer = index
-            Dim nextChar As Func(Of Char) = Function()
-                                                Return If(j < text.Length - 1,
-                                                          text.Chars(index:=j + 1),
-                                                          substituteChar)
-                                            End Function
 
+            Dim nextChar As Func(Of Char) =
+                Function() As Char
+                    Return If(j < text.Length - 1,
+                              text.Chars(index:=j + 1),
+                              substituteChar)
+                End Function
             If TryGetDelimiterLengthAndType(curChar, length, type, nextChar) Then
                 index += length - 1
                 Continue For

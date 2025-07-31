@@ -42,7 +42,7 @@ Public Module DictionaryExtensions
 
         Dim result As New StringBuilder
         For Each kvp As KeyValuePair(Of String, T) In dic
-            result.Append($"{kvp.Key} = {kvp.Value}, ")
+            result.Append(value:=$"{kvp.Key} = {kvp.Value}, ")
         Next
         result.TrimEnd(value:=", ")
         Return $"{{{result}}}"
@@ -164,8 +164,8 @@ Public Module DictionaryExtensions
         Dim valueList() As String = GetValueList(jsonString)
         Dim dic As New Dictionary(Of String, String)
         For Each row As String In valueList
-            Dim value() As String = row.Split(" = ")
-            dic.Add(value(0).Trim, value(1).Trim)
+            Dim value() As String = row.Split(separator:=" = ")
+            dic.Add(key:=value(0).Trim, value:=value(1).Trim)
         Next
         Return dic
     End Function
@@ -180,9 +180,12 @@ Public Module DictionaryExtensions
             .Replace(oldValue:="{", newValue:="").Trim _
             .Replace(oldValue:="}", newValue:="").Trim _
             .Split(separator:=",")
-        Return valueList.Select(selector:=Function(s)
-                                              Return s.Trim()
-                                          End Function).ToArray
+
+        Dim selector As Func(Of String, String) =
+            Function(s As String) As String
+                Return s.Trim()
+            End Function
+        Return valueList.Select(selector).ToArray
     End Function
 
     ''' <summary>
@@ -209,13 +212,16 @@ Public Module DictionaryExtensions
         For Each kvp As KeyValuePair(Of String, T) In dic
             sortDic.Add(kvp.Key, kvp.Value)
         Next
-        Return (From x In sortDic Select x).ToDictionary(
-            keySelector:=Function(p)
-                             Return p.Key
-                         End Function,
-            elementSelector:=Function(p)
-                                 Return p.Value
-                             End Function)
+
+        Dim keySelector As Func(Of KeyValuePair(Of String, T), String) =
+            Function(p As KeyValuePair(Of String, T)) As String
+                Return p.Key
+            End Function
+        Dim elementSelector As Func(Of KeyValuePair(Of String, T), T) =
+            Function(p As KeyValuePair(Of String, T)) As T
+                Return p.Value
+            End Function
+        Return (From x In sortDic Select x).ToDictionary(keySelector, elementSelector)
     End Function
 
 End Module

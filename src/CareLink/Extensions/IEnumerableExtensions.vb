@@ -5,7 +5,7 @@
 Imports System.Runtime.CompilerServices
 Imports System.Text
 
-Public Module DataRowExtensions
+Public Module IEnumerableExtensions
 
     ''' <summary>
     '''  Returns a new string in which all occurrences of the single quote character in the current instance

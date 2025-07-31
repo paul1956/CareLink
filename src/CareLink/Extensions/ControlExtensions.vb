@@ -33,6 +33,14 @@ Public Module ControlExtensions
     <Extension>
     Friend Sub CenterXOnParent(ByRef ctrl As Control, Optional onLeftHalf As Boolean? = Nothing)
         Dim controlWidth As Integer
+        Dim parent As Control = ctrl.Parent
+        If parent Is Nothing Then
+            If Not Debugger.IsAttached Then
+                Exit Sub
+            End If
+            Throw New InvalidOperationException(message:="The control must have a parent to center it.")
+        End If
+
         If TypeOf ctrl Is Label AndAlso ctrl.AutoSize Then
             Dim lbl As Label = DirectCast(ctrl, Label)
             ' If the control is a Label with AutoSize, adjust the width to fit the text
@@ -46,8 +54,10 @@ Public Module ControlExtensions
         Else
             controlWidth = ctrl.Width
         End If
+
+
         If onLeftHalf.HasValue Then
-            Dim halfWidth As Integer = ctrl.Parent.Width \ 2
+            Dim halfWidth As Integer = parent.Width \ 2
             If onLeftHalf.Value Then
                 ' Center on the left half
                 ctrl.Left = (halfWidth - controlWidth) \ 2
@@ -57,7 +67,7 @@ Public Module ControlExtensions
             End If
         Else
             ' Center in the middle of the parent control
-            ctrl.Left = (ctrl.Parent.Width - controlWidth) \ 2
+            ctrl.Left = (parent.Width - controlWidth) \ 2
         End If
     End Sub
 
@@ -68,16 +78,24 @@ Public Module ControlExtensions
     ''' <param name="verticalOffset">Vertical offset to apply when centering.</param>
     <Extension>
     Friend Sub CenterXYOnParent(ByRef ctrl As Label, verticalOffset As Integer)
-        Dim controlWidth As Integer = ctrl.Width
-        Dim controlHeight As Integer = ctrl.Height
+        Dim parent As Control = ctrl.Parent
+        If parent Is Nothing Then
+            If Not Debugger.IsAttached Then
+                Exit Sub
+            End If
+            Throw New InvalidOperationException(message:="The control must have a parent to center it.")
+        End If
+        Dim ctrlWidth As Integer = ctrl.Width
+        Dim ctrlHeight As Integer = ctrl.Height
         If ctrl.AutoSize Then
             ' If the control is a Label with AutoSize, adjust the width to fit the text
-            controlWidth = ctrl.PreferredWidth
-            controlHeight = ctrl.PreferredHeight
+            ctrlWidth = ctrl.PreferredWidth
+            ctrlHeight = ctrl.PreferredHeight
         End If
+
         ' Center in the middle of the parent control
-        ctrl.Left = (ctrl.Parent.Width - controlWidth) \ 2
-        ctrl.Top = ((ctrl.Parent.Height - (controlHeight + ctrl.Margin.Top + ctrl.Margin.Bottom)) \ 2) + verticalOffset
+        ctrl.Left = (parent.Width - ctrlWidth) \ 2
+        ctrl.Top = ((parent.Height - (ctrlHeight + ctrl.Margin.Top + ctrl.Margin.Bottom)) \ 2) + verticalOffset
     End Sub
 
     ''' <summary>
@@ -121,5 +139,27 @@ Public Module ControlExtensions
     Friend Function FindVerticalMidpoint(ctrl As Control) As Integer
         Return ctrl.Top + (ctrl.Height \ 2)
     End Function
+
+    ''' <summary>
+    '''  Sets the <see cref="DataGridView.EnableHeadersVisualStyles"/> property to <see langword="False"/>
+    '''  for all <see cref="DataGridView"/> controls within the specified control.
+    '''  This is used to ensure consistent header styles across all DataGridViews.
+    ''' </summary>
+    ''' <param name="ctrl">The parent control containing the DataGridViews.</param>
+    <Extension>
+    Friend Sub SetDgvCustomHeadersVisualStyles(ctrl As Control)
+        For Each c As Control In ctrl.Controls
+            If TypeOf c Is DataGridView Then
+                Dim dgv As DataGridView = CType(c, DataGridView)
+                dgv.EnableHeadersVisualStyles = False
+                dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.Black
+                dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White
+            End If
+            ' Recursively search child controls
+            If c.HasChildren Then
+                SetDgvCustomHeadersVisualStyles(ctrl:=c)
+            End If
+        Next
+    End Sub
 
 End Module
