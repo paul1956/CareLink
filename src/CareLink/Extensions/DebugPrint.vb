@@ -17,11 +17,15 @@ Friend Module DebugSupport
     ''' <param name="message">The message to print.</param>
     ''' <param name="memberName">The name of the calling member. Automatically supplied by the compiler.</param>
     ''' <param name="sourceLineNumber">The line number in the source file at which the method is called. Automatically supplied by the compiler.</param>
-    Public Sub DebugPrint(message As String, <CallerMemberName> Optional memberName As String = "", <CallerLineNumber> Optional sourceLineNumber As Integer = 0)
-        If message.StartsWith("("c) Then
-            Debug.Print($"{memberName}{message}")
+    Public Sub DebugPrint(
+            message As String,
+            <CallerMemberName> Optional memberName As String = "",
+            <CallerLineNumber> Optional sourceLineNumber As Integer = 0)
+
+        If message.StartsWith(value:="("c) Then
+            Debug.Print(message:=$"{memberName}{message}")
         Else
-            Debug.Print($"Function:{memberName} Line:{sourceLineNumber,4} {message}")
+            Debug.Print(message:=$"Function:{memberName} Line:{sourceLineNumber,4} {message}")
         End If
     End Sub
 

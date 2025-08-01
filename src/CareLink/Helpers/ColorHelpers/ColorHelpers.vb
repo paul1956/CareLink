@@ -23,10 +23,10 @@ Public Module ColorHelpers
     '''  Returns a contrasting color (black or white) based on the brightness of the specified KnownColor.
     '''  This is useful for ensuring text is readable against a colored background.
     ''' </summary>
-    ''' <param name="knownClrBase">The KnownColor to evaluate.</param>
+    ''' <param name="knownColor">The KnownColor to evaluate.</param>
     ''' <returns>A contrasting KnownColor based on the brightness.</returns>
-    Public Function GetContrastingKnownColor(knownClrBase As KnownColor) As KnownColor
-        Dim clrBase As Color = knownClrBase.ToColor
+    Public Function GetContrastingKnownColor(knownColor As KnownColor) As KnownColor
+        Dim clrBase As Color = knownColor.ToColor
         ' Y is the "brightness"
         Dim y As Double = (0.299 * clrBase.R) + (0.587 * clrBase.G) + (0.114 * clrBase.B)
         Return If(y < 140, KnownColor.White, KnownColor.Black)
@@ -44,7 +44,9 @@ Public Module ColorHelpers
     ''' </returns>
     <Extension>
     Public Function GetTextColor(row As DataGridViewRow, textColor As Color) As Color
-        Return If(textColor.IsDarkColor() = row.IsDarkRow(), textColor.InvertColor, textColor)
+        Return If(textColor.IsDarkColor() = row.IsDarkRow(),
+                  textColor.InvertColor,
+                  textColor)
     End Function
 
     ''' <summary>

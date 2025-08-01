@@ -14,14 +14,15 @@ Friend Module Form1CollectMarkersHelper
     ''' <returns>A new <cref name="Marker"/> with the scaled "unitValue".</returns>
     <Extension>
     Private Function ScaleMarker(item As Marker) As Marker
+        Const key As String = "unitValue"
         Dim newMarker As Marker = item
         Dim value As Object = Nothing
-        If item.Data.DataValues.TryGetValue("unitValue", value) Then
+        If item.Data.DataValues.TryGetValue(key, value) Then
             Select Case True
                 Case TypeOf value Is JsonElement
-                    item.Data.DataValues("unitValue") = CType(value, JsonElement).ScaleSgToString
+                    item.Data.DataValues(key) = CType(value, JsonElement).ScaleSgToString
                 Case TypeOf value Is String
-                    item.Data.DataValues("unitValue") = CType(value, String).ScaleSgToString
+                    item.Data.DataValues(key) = CType(value, String).ScaleSgToString
                 Case Else
                     Stop
             End Select

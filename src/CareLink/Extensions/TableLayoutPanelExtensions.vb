@@ -38,28 +38,28 @@ Friend Module TableLayoutPanelExtensions
     ''' <summary>
     '''  Sets the display name of a table, including help text for export/copy options if supported.
     ''' </summary>
-    ''' <param name="innerTable">The <see cref="TableLayoutPanel"/> whose name is to be set.</param>
+    ''' <param name="panel">The <see cref="TableLayoutPanel"/> whose name is to be set.</param>
     ''' <param name="tableName">The base name to display for the table.</param>
-    Private Sub SetTableName(ByRef innerTable As TableLayoutPanel, tableName As String)
+    Private Sub SetTableName(ByRef panel As TableLayoutPanel, tableName As String)
         Try
             Select Case True
-                Case TypeOf innerTable.Controls(index:=0) Is Button
+                Case TypeOf panel.Controls(index:=0) Is Button
                     Dim helpString As String
-                    If s_tablesSupportingExportToExcel.Contains(item:=innerTable.Name) Then
+                    If s_tablesSupportingExportToExcel.Contains(item:=panel.Name) Then
                         helpString = ": Right Click on Table for Export Options including Excel"
-                    ElseIf s_tablesSupportingCopyToClipboard.Contains(item:=innerTable.Name) Then
+                    ElseIf s_tablesSupportingCopyToClipboard.Contains(item:=panel.Name) Then
                         helpString = ": Right Click on Table for cell(s) Export Options"
                     Else
                         helpString = ""
                     End If
                     If tableName = "Markers" Then
-                        tableName = $"{CType(innerTable.Parent.Parent, TabPage).Text} Markers"
+                        tableName = $"{CType(panel.Parent.Parent, TabPage).Text} Markers"
                     End If
-                    innerTable.Controls(index:=1).Text = $"{tableName}{helpString}"
-                Case TypeOf innerTable.Controls(index:=0) Is DataGridView
-                    CType(innerTable.Controls(index:=0), DataGridView).Parent.Controls(index:=0).Text = tableName
-                Case TypeOf CType(innerTable.Controls(index:=0), TableLayoutPanel).Controls(index:=0) Is Label
-                    CType(innerTable.Controls(index:=0), TableLayoutPanel).Controls(index:=0).Text = tableName
+                    panel.Controls(index:=1).Text = $"{tableName}{helpString}"
+                Case TypeOf panel.Controls(index:=0) Is DataGridView
+                    CType(panel.Controls(index:=0), DataGridView).Parent.Controls(index:=0).Text = tableName
+                Case TypeOf CType(panel.Controls(index:=0), TableLayoutPanel).Controls(index:=0) Is Label
+                    CType(panel.Controls(index:=0), TableLayoutPanel).Controls(index:=0).Text = tableName
             End Select
         Catch ex As Exception
             Stop
@@ -71,11 +71,11 @@ Friend Module TableLayoutPanelExtensions
     '''  Extension method to set the table name for a <see cref="TableLayoutPanel"/> based on the specified row index
     '''  and notification state.
     ''' </summary>
-    ''' <param name="table">The <see cref="TableLayoutPanel"/> to update.</param>
+    ''' <param name="panel">The <see cref="TableLayoutPanel"/> to update.</param>
     ''' <param name="rowIndex">The <see cref="ServerDataIndexes"/> value representing the table's data type.</param>
     ''' <param name="isClearedNotifications">Indicates if the table represents cleared notifications.</param>
     <Extension>
-    Friend Sub SetTableName(table As TableLayoutPanel, rowIndex As ServerDataIndexes, isClearedNotifications As Boolean)
+    Friend Sub SetTableName(panel As TableLayoutPanel, rowIndex As ServerDataIndexes, isClearedNotifications As Boolean)
         Dim tableName As String = rowIndex.ToString.ToTitleCase
         If tableName = "Notification History" Then
             tableName = If(isClearedNotifications,
@@ -88,15 +88,15 @@ Friend Module TableLayoutPanelExtensions
         Try
             ' Prevent crashes when the table is not initialized or disposed.
             Select Case True
-                Case TypeOf table.Parent Is SplitterPanel
-                    Dim splitContainer As SplitContainer = CType(table.Parent.Parent, SplitContainer)
-                    SetTableName(innerTable:=CType(splitContainer.Panel1.Controls(index:=0), TableLayoutPanel), tableName)
-                Case TypeOf table.Parent Is TabPage
-                    SetTableName(innerTable:=CType(table.Controls(index:=0).Parent, TableLayoutPanel), tableName)
-                Case TypeOf table.Controls(index:=0) Is TableLayoutPanel
-                    SetTableName(innerTable:=CType(table.Controls(index:=0), TableLayoutPanel), tableName)
-                Case TypeOf table.Controls(index:=0) Is Label
-                    CType(table.Controls(index:=0), Label).Text = $"{CInt(rowIndex)} {rowIndex}"
+                Case TypeOf panel.Parent Is SplitterPanel
+                    Dim splitContainer As SplitContainer = CType(panel.Parent.Parent, SplitContainer)
+                    SetTableName(panel:=CType(splitContainer.Panel1.Controls(index:=0), TableLayoutPanel), tableName)
+                Case TypeOf panel.Parent Is TabPage
+                    SetTableName(panel:=CType(panel.Controls(index:=0).Parent, TableLayoutPanel), tableName)
+                Case TypeOf panel.Controls(index:=0) Is TableLayoutPanel
+                    SetTableName(panel:=CType(panel.Controls(index:=0), TableLayoutPanel), tableName)
+                Case TypeOf panel.Controls(index:=0) Is Label
+                    CType(panel.Controls(index:=0), Label).Text = $"{CInt(rowIndex)} {rowIndex}"
                 Case Else
                     Stop
             End Select

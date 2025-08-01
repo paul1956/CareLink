@@ -115,7 +115,7 @@ Friend Module HttpClientExtensions
             Return httpClient.GetAsync(requestUri).Result
         Catch ex As Exception
             lastError = ex.DecodeException()
-            Return New HttpResponseMessage(Net.HttpStatusCode.NotImplemented)
+            Return New HttpResponseMessage(statusCode:=Net.HttpStatusCode.NotImplemented)
         End Try
     End Function
 
@@ -151,21 +151,21 @@ Friend Module HttpClientExtensions
             Next
             uriBuilder = uriBuilder.TrimEnd(trimChar:="&"c)
         End If
-        Dim formData As FormUrlEncodedContent = Nothing
+        Dim content As FormUrlEncodedContent = Nothing
         If data IsNot Nothing Then
-            formData = New FormUrlEncodedContent(nameValueCollection:=data.ToList())
+            content = New FormUrlEncodedContent(nameValueCollection:=data.ToList())
         End If
         If headers IsNot Nothing Then
             httpClient.DefaultRequestHeaders.Clear()
             For Each header As KeyValuePair(Of String, String) In headers
-                If header.Key = "Content-Type" AndAlso formData IsNot Nothing Then
-                    formData.Headers.ContentType.MediaType = header.Value
+                If header.Key = "Content-Type" AndAlso content IsNot Nothing Then
+                    content.Headers.ContentType.MediaType = header.Value
                 Else
                     httpClient.DefaultRequestHeaders.Add(name:=header.Key, header.Value)
                 End If
             Next
         End If
-        Return httpClient.PostAsync(requestUri:=uriBuilder.ToString(), content:=formData).Result
+        Return httpClient.PostAsync(requestUri:=uriBuilder.ToString(), content).Result
     End Function
 
     ''' <summary>

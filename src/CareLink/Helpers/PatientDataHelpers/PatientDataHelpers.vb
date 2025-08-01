@@ -30,7 +30,7 @@ Public Module PatientDataHelpers
             End If
             Dim endPos As Integer = FindIndexOfAnyChar(inputString:=value, chars:=charList, startIndex)
             Dim length As Integer = endPos - startIndex
-            value = value.Replace(value.Substring(startIndex, length), kvp.Value)
+            value = value.Replace(oldValue:=value.Substring(startIndex, length), newValue:=kvp.Value)
         Next
         Return value
     End Function

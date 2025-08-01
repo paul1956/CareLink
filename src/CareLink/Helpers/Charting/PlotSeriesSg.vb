@@ -27,24 +27,27 @@ Friend Module PlotSeriesSg
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
         For Each sgRecordWithIndex As IndexClass(Of SG) In s_sgRecords.WithIndex()
             Try
-                With chart.Series(SgSeriesName).Points
+                With chart.Series(name:=SgSeriesName).Points
                     Dim sgRecord As SG = sgRecordWithIndex.Value
-                    Dim sgOADateTime As OADate = sgRecord.OaDateTime()
-                    Dim sgValue As Single = sgRecord.sg
-                    If Single.IsNaN(sgValue) OrElse sgValue.AlmostZero Then
-                        .AddXY(sgOADateTime, HomePageMealRow)
+                    Dim xValue As OADate = sgRecord.OaDateTime()
+                    Dim f As Single = sgRecord.sg
+                    If Single.IsNaN(f) OrElse f.AlmostZero Then
+                        .AddXY(xValue, yValue:=HomePageMealRow)
                         .Last().Color = Color.Transparent
                         .Last().IsEmpty = True
                     Else
-                        If .Count > 0 AndAlso (Not .Last.IsEmpty) AndAlso New OADate(.Last.XValue).Within6Minutes(sgOADateTime) Then
-                            .AddXY(.Last.XValue, Double.NaN)
+                        If .Count > 0 AndAlso
+                           (Not .Last.IsEmpty) AndAlso
+                           New OADate(oADateAsDouble:= .Last.XValue).Within6Minutes(xValue) Then
+
+                            .AddXY(.Last.XValue, yValue:=Double.NaN)
                             .Last().Color = Color.Transparent
                             .Last().IsEmpty = True
                         End If
-                        .AddXY(sgOADateTime, sgValue)
-                        If sgValue > GetTirHighLimit() Then
+                        .AddXY(xValue, yValue:=f)
+                        If f > GetTirHighLimit() Then
                             .Last.Color = Color.Yellow
-                        ElseIf sgValue < GetTirLowLimit() Then
+                        ElseIf f < GetTirLowLimit() Then
                             .Last.Color = Color.Red
                         Else
                             .Last.Color = Color.White

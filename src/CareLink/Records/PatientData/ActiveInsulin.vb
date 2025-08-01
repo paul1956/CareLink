@@ -32,7 +32,7 @@ Public Class ActiveInsulin
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property DateTime As Date
         Get
-            Return TryParseDateStr(dateAsString:=Me.DateTimeAsString)
+            Return TryParseDateStr(s:=Me.DateTimeAsString)
         End Get
     End Property
 

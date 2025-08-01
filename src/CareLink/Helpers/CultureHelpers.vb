@@ -42,6 +42,6 @@ Friend Module CultureHelpers
     ''' <summary>
     '''  Gets the US English culture ("en-US").
     ''' </summary>
-    Public ReadOnly Property usDataCulture As New CultureInfo("en-US")
+    Public ReadOnly Property usDataCulture As New CultureInfo(name:="en-US")
 
 End Module

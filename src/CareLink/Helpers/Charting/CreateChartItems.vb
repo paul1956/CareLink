@@ -289,7 +289,11 @@ Friend Module CreateChartItems
     ''' </summary>
     ''' <returns>A Series object configured for active insulin values.</returns>
     Friend Function CreateSeriesActiveInsulin() As Series
-        Dim s As Series = CreateSeriesBase(ActiveInsulinSeriesName, legendText:="Active Insulin", borderWidth:=4, yAxisType:=AxisType.Primary)
+        Dim s As Series = CreateSeriesBase(
+            name:=ActiveInsulinSeriesName,
+            legendText:="Active Insulin",
+            borderWidth:=4,
+            yAxisType:=AxisType.Primary)
         s.MarkerColor = Color.Black
         s.MarkerSize = 4
         s.MarkerStyle = MarkerStyle.Circle
@@ -300,24 +304,24 @@ Friend Module CreateChartItems
     '''  Creates a series for displaying basal insulin values in a chart.
     '''  This method is used to initialize a <see cref="Series"/> specifically for basal insulin data.
     ''' </summary>
-    ''' <param name="seriesName">The name of the <see cref="Series"/>.</param>
+    ''' <param name="name">The name of the <see cref="Series"/>.</param>
     ''' <param name="basalLegend">The legend associated with the basal insulin series.</param>
     ''' <param name="legendText">The text displayed in the legend for this series.</param>
     ''' <param name="yAxisType">The Y-axis type for the series.</param>
     ''' <returns>A <see cref="Series"/> object configured for basal insulin values.</returns>
-    Friend Function CreateSeriesBasal(seriesName As String, basalLegend As Legend, legendText As String, yAxisType As AxisType) As Series
-        Dim s As Series = CreateSeriesBase(seriesName, legendText, 2, yAxisType)
+    Friend Function CreateSeriesBasal(name As String, basalLegend As Legend, legendText As String, yAxisType As AxisType) As Series
+        Dim s As Series = CreateSeriesBase(name, legendText, borderWidth:=2, yAxisType)
         s.IsVisibleInLegend = False
-        Dim lineColor As Color = GetGraphLineColor(legendText)
+        Dim lineColor As Color = GetGraphLineColor(key:=legendText)
         Select Case legendText
             Case "Min Basal"
-                lineColor = Color.FromArgb(150, lineColor)
-                basalLegend.CustomItems.Add(New LegendItem(legendText, lineColor, ""))
+                lineColor = Color.FromArgb(alpha:=150, baseColor:=lineColor)
+                basalLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color:=lineColor, image:=""))
             Case "Auto Correction"
-                basalLegend.CustomItems.Add(New LegendItem(legendText, lineColor, ""))
+                basalLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color:=lineColor, image:=""))
                 basalLegend.CustomItems.Last.Enabled = False
             Case "Basal Series"
-                basalLegend.CustomItems.Add(New LegendItem(legendText, lineColor, ""))
+                basalLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color:=lineColor, image:=""))
             Case Else
                 Stop
         End Select
@@ -348,11 +352,11 @@ Friend Module CreateChartItems
                 legendText = "SG Target"
                 borderWidth = 4
         End Select
-        lineColor = GetGraphLineColor(legendText)
-        Dim s As Series = CreateSeriesBase(seriesName, legendText, borderWidth, AxisType.Secondary)
+        lineColor = GetGraphLineColor(key:=legendText)
+        Dim s As Series = CreateSeriesBase(name:=seriesName, legendText, borderWidth, yAxisType:=AxisType.Secondary)
         s.IsVisibleInLegend = False
         s.EmptyPointStyle.Color = Color.Transparent
-        limitsLegend.CustomItems.Add(New LegendItem(name:=legendText, color:=GetGraphLineColor(legendText), image:=""))
+        limitsLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color:=GetGraphLineColor(key:=legendText), image:=""))
         Return s
     End Function
 
@@ -364,9 +368,9 @@ Friend Module CreateChartItems
     ''' <returns>A Series object configured for sensor glucose values.</returns>
     Friend Function CreateSeriesSg(sgLegend As Legend) As Series
         Const legendText As String = "SG Series"
-        Dim s As Series = CreateSeriesBase(SgSeriesName, legendText, 4, AxisType.Secondary)
+        Dim s As Series = CreateSeriesBase(name:=SgSeriesName, legendText, borderWidth:=4, yAxisType:=AxisType.Secondary)
         s.IsVisibleInLegend = False
-        sgLegend.CustomItems.Add(New LegendItem(legendText, GetGraphLineColor(legendText), ""))
+        sgLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color:=GetGraphLineColor(key:=legendText), image:=""))
         Return s
     End Function
 
@@ -383,9 +387,10 @@ Friend Module CreateChartItems
     ''' </returns>
     Friend Function CreateSeriesSuspend(basalLegend As Legend) As Series
         Const legendText As String = "Suspend"
-        Dim s As Series = CreateSeriesBase(SuspendSeriesName, legendText, 1, AxisType.Primary)
+        Dim s As Series = CreateSeriesBase(name:=SuspendSeriesName, legendText, borderWidth:=1, yAxisType:=AxisType.Primary)
         s.IsVisibleInLegend = False
-        basalLegend.CustomItems.Add(New LegendItem(legendText, Color.FromArgb(128, Color.Red), ""))
+        Dim item As New LegendItem(name:=legendText, color:=Color.FromArgb(alpha:=128, baseColor:=Color.Red), image:="")
+        basalLegend.CustomItems.Add(item)
         With s.EmptyPointStyle
             .BorderWidth = 4
             .Color = Color.Transparent
@@ -400,10 +405,20 @@ Friend Module CreateChartItems
     ''' <param name="basalLegend">The legend associated with the time change series.</param>
     ''' <returns>A Series object configured for time change values.</returns>
     Friend Function CreateSeriesTimeChange(basalLegend As Legend) As Series
-        Const legendName As String = "Time Change"
-        Dim s As Series = CreateSeriesBase(TimeChangeSeriesName, legendName, borderWidth:=1, AxisType.Primary)
+        Const legendText As String = "Time Change"
+        Dim s As Series = CreateSeriesBase(
+            name:=TimeChangeSeriesName,
+            legendText,
+            borderWidth:=1,
+            yAxisType:=AxisType.Primary)
+
         s.IsVisibleInLegend = False
-        basalLegend.CustomItems.Add(New LegendItem(legendName, GetGraphLineColor(legendName), ""))
+        Dim item As New LegendItem(
+            name:=legendText,
+            color:=GetGraphLineColor(key:=legendText),
+            image:="")
+        basalLegend.CustomItems.Add(item)
+
         With s.EmptyPointStyle
             .BorderWidth = 4
             .Color = Color.Transparent
@@ -418,7 +433,7 @@ Friend Module CreateChartItems
     ''' <param name="YAxisType">The Y-axis type for the series.</param>
     ''' <returns>A Series object configured for markers without visible legend.</returns>
     Friend Function CreateSeriesWithoutVisibleLegend(YAxisType As AxisType) As Series
-        Dim s As New Series(MarkerSeriesName) With {
+        Dim s As New Series(name:=MarkerSeriesName) With {
             .BorderColor = Color.Transparent,
             .BorderWidth = 1,
             .ChartArea = NameOf(ChartArea),
@@ -482,17 +497,16 @@ Friend Module CreateChartItems
                     c.AxisX.Maximum = New OADate(asDate:=PumpNow)
                     c.AxisX.Minimum = New OADate(asDate:=PumpNow.AddDays(value:=-1))
                 Else
-                    Dim funcMax As Func(Of SG, SG, SG) =
+                    Dim func As Func(Of SG, SG, SG) =
                         Function(i1 As SG, i2 As SG) As SG
                             Return If(i1.OaDateTime > i2.OaDateTime, i1, i2)
                         End Function
 
-                    c.AxisX.Maximum = s_sgRecords.Aggregate(func:=funcMax).OaDateTime
-                    Dim funcMin As Func(Of SG, SG, SG) =
-                        Function(i1 As SG, i2 As SG) As SG
-                            Return If(i1.OaDateTime < i2.OaDateTime, i1, i2)
-                        End Function
-                    c.AxisX.Minimum = s_sgRecords.Aggregate(func:=funcMin).OaDateTime
+                    c.AxisX.Maximum = s_sgRecords.Aggregate(func).OaDateTime
+                    func = Function(i1 As SG, i2 As SG) As SG
+                               Return If(i1.OaDateTime < i2.OaDateTime, i1, i2)
+                           End Function
+                    c.AxisX.Minimum = s_sgRecords.Aggregate(func).OaDateTime
                 End If
             End With
         End With

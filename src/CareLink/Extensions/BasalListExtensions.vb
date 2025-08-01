@@ -21,7 +21,7 @@ Public Module BasalListExtensions
     ''' </returns>
     <Extension>
     Private Function IsEmpty(basalList As List(Of Basal)) As Boolean
-        Return basalList.Count = 0 OrElse basalList(0) = New Basal
+        Return basalList.Count = 0 OrElse basalList(index:=0) = New Basal
     End Function
 
     ''' <summary>
@@ -62,7 +62,9 @@ Public Module BasalListExtensions
     ''' </returns>
     <Extension>
     Friend Function Subtitle(basalList As List(Of Basal)) As String
-        Return If(basalList.IsEmpty, String.Empty, $"- {basalList(0).ActiveBasalPattern}")
+        Return If(basalList.IsEmpty,
+                  String.Empty,
+                  $"- {basalList(index:=0).ActiveBasalPattern}")
     End Function
 
     ''' <summary>
@@ -74,7 +76,9 @@ Public Module BasalListExtensions
     ''' </returns>
     <Extension>
     Friend Function ClassCollection(basalList As List(Of Basal)) As List(Of Basal)
-        Return If(basalList.IsEmpty, New List(Of Basal), basalList)
+        Return If(basalList.IsEmpty,
+                  New List(Of Basal),
+                  basalList)
     End Function
 
 End Module

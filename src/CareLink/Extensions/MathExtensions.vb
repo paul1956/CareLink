@@ -7,6 +7,10 @@ Imports System.Runtime.CompilerServices
 
 Friend Module MathExtensions
 
+    Private Function GetDigits(value As Double, digits As Integer, considerValue As Boolean) As Integer
+        Return If(considerValue AndAlso value < 10, 2, digits)
+    End Function
+
     ''' <summary>
     '''  Rounds a Single value to the specified number of decimal digits.
     '''  If <paramref name="digits"/> is 3, rounds to the nearest 0.025 increment.
@@ -31,7 +35,7 @@ Friend Module MathExtensions
     ''' <returns>The rounded Single value.</returns>
     <Extension>
     Friend Function RoundSingle(value As Single, digits As Integer, considerValue As Boolean) As Single
-        digits = If(considerValue AndAlso value < 10, 2, digits)
+        digits = GetDigits(value, digits, considerValue)
         Return CSng(Math.Round(value, digits))
     End Function
 
@@ -45,14 +49,14 @@ Friend Module MathExtensions
     ''' <returns>The rounded value as Single.</returns>
     <Extension>
     Friend Function RoundToSingle(value As Double, digits As Integer, Optional considerValue As Boolean = False) As Single
-        digits = If(considerValue AndAlso value < 10, 2, digits)
+        digits = GetDigits(value, digits, considerValue)
         Return CSng(Math.Round(value, digits))
     End Function
 
     ''' <summary>
     '''  Checks whether the single value is close enough to zero within a reasonable tolerance.
     ''' </summary>
-    ''' <param name="s">The Single value to check.</param>
+    ''' <param name="value">The Single value to check.</param>
     ''' <param name="tolerance">The tolerance level for considering the value as zero.</param>
     ''' <remarks>
     '''  This is useful for comparing floating-point numbers to zero, accounting for precision issues.
@@ -61,8 +65,30 @@ Friend Module MathExtensions
     '''  <see langword="True"/> if the value is almost zero; otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
-    Public Function AlmostZero(s As Single, Optional tolerance As Single = 0.000001F) As Boolean
-        Return Math.Abs(s) <= tolerance
+    Public Function AlmostZero(value As Single, Optional tolerance As Single = 0.000001F) As Boolean
+        Return Math.Abs(value) <= tolerance
+    End Function
+
+    ''' <summary>
+    '''  Determines whether a Single value is an invalid sensor glucose (SG) value.
+    ''' </summary>
+    ''' <param name="f">The Single value to check.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the value is invalid; otherwise, <see langword="False"/>.
+    ''' </returns>
+    <Extension>
+    Public Function IsSgInvalid(f As Single) As Boolean
+        Return Single.IsNaN(f) OrElse Single.IsInfinity(f) OrElse f <= 0
+    End Function
+
+    ''' <summary>
+    '''  Determines whether a Single value is a valid sensor glucose (SG) value.
+    ''' </summary>
+    ''' <param name="number">The Single value to check.</param>
+    '''  <see langword="True"/> if the value is valid; otherwise, <see langword="False"/>.
+    <Extension>
+    Public Function IsSgValid(number As Single) As Boolean
+        Return Not number.IsSgInvalid
     End Function
 
     ''' <summary>
@@ -90,28 +116,6 @@ Friend Module MathExtensions
         End If
 
         Return Math.Abs(value:=singleValue - integerValue) <= tolerance
-    End Function
-
-    ''' <summary>
-    '''  Determines whether a Single value is a valid sensor glucose (SG) value.
-    ''' </summary>
-    ''' <param name="number">The Single value to check.</param>
-    '''  <see langword="True"/> if the value is valid; otherwise, <see langword="False"/>.
-    <Extension>
-    Public Function IsSgValid(number As Single) As Boolean
-        Return Not number.IsSgInvalid
-    End Function
-
-    ''' <summary>
-    '''  Determines whether a Single value is an invalid sensor glucose (SG) value.
-    ''' </summary>
-    ''' <param name="f">The Single value to check.</param>
-    ''' <returns>
-    '''  <see langword="True"/> if the value is invalid; otherwise, <see langword="False"/>.
-    ''' </returns>
-    <Extension>
-    Public Function IsSgInvalid(f As Single) As Boolean
-        Return Single.IsNaN(f) OrElse Single.IsInfinity(f) OrElse f <= 0
     End Function
 
     ''' <summary>

@@ -23,13 +23,13 @@ Friend Module KnownColors
     Public Function GetAllKnownColors() As SortedDictionary(Of String, KnownColor)
         If s_allKnownColors.Count = 0 Then
             Dim kColor As Color
-            For Each known As KnownColor In [Enum].GetValues(Of KnownColor)
-                If known = KnownColor.Transparent Then Continue For
-                kColor = Color.FromKnownColor(known)
-                If kColor.IsSystemColor OrElse s_allKnownColors.ContainsValue(known) Then
+            For Each value As KnownColor In [Enum].GetValues(Of KnownColor)
+                If value = KnownColor.Transparent Then Continue For
+                kColor = Color.FromKnownColor(color:=value)
+                If kColor.IsSystemColor OrElse s_allKnownColors.ContainsValue(value) Then
                     Continue For
                 End If
-                s_allKnownColors.Add(kColor.Name, known)
+                s_allKnownColors.Add(key:=kColor.Name, value)
             Next
         End If
         Return s_allKnownColors
@@ -38,25 +38,25 @@ Friend Module KnownColors
     ''' <summary>
     '''  Gets the index of the specified known color in the sorted dictionary.
     ''' </summary>
-    ''' <param name="value">The <see cref="KnownColor"/> to find.</param>
+    ''' <param name="item">The <see cref="KnownColor"/> to find.</param>
     ''' <returns>
     '''  The zero-based index of the known color, or -1 if not found.
     ''' </returns>
-    Public Function GetIndexOfKnownColor(value As KnownColor) As Integer
-        Return GetAllKnownColors.IndexOfValue(value)
+    Public Function GetIndexOfKnownColor(item As KnownColor) As Integer
+        Return GetAllKnownColors.IndexOfValue(item)
     End Function
 
     ''' <summary>
     '''  Gets the <see cref="KnownColor"/> value from its name.
     ''' </summary>
-    ''' <param name="Name">The name of the known color.</param>
+    ''' <param name="key">The name of the known color.</param>
     ''' <returns>
     '''  The corresponding <see cref="KnownColor"/> if found; otherwise, <see cref="KnownColor.Red"/>.
     ''' </returns>
-    Public Function GetKnownColorFromName(Name As String) As KnownColor
-        Dim known As KnownColor = Nothing
-        If GetAllKnownColors.TryGetValue(Name, known) Then
-            Return known
+    Public Function GetKnownColorFromName(key As String) As KnownColor
+        Dim value As KnownColor = Nothing
+        If GetAllKnownColors.TryGetValue(key, value) Then
+            Return value
         End If
         Stop
         Return KnownColor.Red
@@ -65,12 +65,12 @@ Friend Module KnownColors
     ''' <summary>
     '''  Gets the name of the specified <see cref="KnownColor"/>.
     ''' </summary>
-    ''' <param name="known">The known color.</param>
+    ''' <param name="item">The known color.</param>
     ''' <returns>
     '''  The name of the known color, or "Unknown" if not found.
     ''' </returns>
-    Public Function GetNameFromKnownColor(known As KnownColor) As String
-        Dim index As Integer = GetAllKnownColors.IndexOfValue(known)
+    Public Function GetNameFromKnownColor(item As KnownColor) As String
+        Dim index As Integer = GetAllKnownColors.IndexOfValue(item)
         If index = -1 Then
             Return "Unknown"
         End If

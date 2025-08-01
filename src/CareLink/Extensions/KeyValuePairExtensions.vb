@@ -43,8 +43,8 @@ Friend Module KeyValuePairExtensions
     ''' <returns>A string representation of the scaled value.</returns>
     <Extension>
     Public Function ScaleSgToString(item As KeyValuePair(Of String, Object)) As String
-        Dim jsonToSingle As Single = item.JsonToSingle
-        Return ScaleSgToString(jsonToSingle)
+        Dim value As Single = item.JsonToSingle
+        Return ScaleSgToString(value)
     End Function
 
     ''' <summary>

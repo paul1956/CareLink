@@ -171,10 +171,10 @@ Public Class OADate
     ''' <summary>
     '''  Determines whether the current <see cref="OADate"/> is within 6 minutes of the specified <see cref="OADate"/>.
     ''' </summary>
-    ''' <param name="currentOADate">The <see cref="OADate"/> to compare to.</param>
+    ''' <param name="xValue">The <see cref="OADate"/> to compare to.</param>
     ''' <returns><c>True</c> if within 6 minutes; otherwise, <c>False</c>.</returns>
-    Public Function Within6Minutes(currentOADate As OADate) As Boolean
-        Return ((Me + SixMinuteOADate) <= currentOADate) OrElse currentOADate < Me
+    Public Function Within6Minutes(xValue As OADate) As Boolean
+        Return ((Me + SixMinuteOADate) <= xValue) OrElse xValue < Me
     End Function
 
 End Class
