@@ -25,37 +25,35 @@ Friend Module Form1UpdateHelpers
     '''  Converts a date string to a formatted date string using the specified provider,
     '''  or returns an empty string if parsing fails.
     ''' </summary>
-    ''' <param name="dateAsString">The date string to parse.</param>
+    ''' <param name="s">The date string to parse.</param>
     ''' <param name="key">The key associated with the date value.</param>
     ''' <param name="provider">The format provider to use for formatting the date.</param>
     ''' <returns>
     '''  The formatted date string if parsing succeeds; otherwise, an empty string.
     ''' </returns>
     <Extension>
-    Private Function CDateOrDefault(dateAsString As String, key As String, provider As IFormatProvider) As String
+    Private Function CDateOrDefault(s As String, key As String, provider As IFormatProvider) As String
         Dim resultDate As Date
-        Return If(TryParseDate(dateAsString, resultDate, key),
+        Return If(TryParseDate(s, resultDate, key),
                   resultDate.ToString(provider),
-                  ""
-                 )
+                  "")
     End Function
 
     ''' <summary>
     '''  Converts a percentage value (as a string) representing time out of 24 hours
     '''  to a display string in hours and minutes.
     ''' </summary>
-    ''' <param name="rowValue">The percentage value as a string.</param>
+    ''' <param name="value">The percentage value as a string.</param>
     ''' <returns>
     '''  A string describing the time in hours and minutes out of the last 24 hours.
     ''' </returns>
-    Private Function ConvertPercent24HoursToDisplayValueString(rowValue As String) As String
-        Dim val As Decimal = CDec(Convert.ToInt32(rowValue) * 0.24)
-        Dim hours As Integer = Convert.ToInt32(val)
+    Private Function ConvertPercent24HoursToDisplayValueString(value As String) As String
+        Dim val As Decimal = CDec(Convert.ToInt32(value) * 0.24)
+        Dim hours As Integer = Convert.ToInt32(value:=val)
         Dim minutes As Integer = CInt((val Mod 1) * 60)
         Return If(minutes = 0,
                   $"{hours} hours, out of last 24 hours.",
-                  $"{hours} hours and {minutes} minutes, out of last 24 hours."
-                 )
+                  $"{hours} hours and {minutes} minutes, out of last 24 hours.")
     End Function
 
     Private Sub SetupPumpTimeZoneInfo(mainForm As Form1, kvp As KeyValuePair(Of String, String))
@@ -240,36 +238,35 @@ Friend Module Form1UpdateHelpers
     ''' </summary>
     ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdateDataTables(mainForm As Form1)
-
         If RecentDataEmpty() Then
-            DebugPrint($"exiting, {NameOf(RecentData)} has no data!")
+            DebugPrint(message:=$"Exiting, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If
 
         s_listOfSummaryRecords.Clear()
 
         Dim value As String = ""
-        If RecentData.TryGetValue("clientTimeZoneName", value) Then
-            PumpTimeZoneInfo = CalculateTimeZone(value)
+        If RecentData.TryGetValue(key:="clientTimeZoneName", value) Then
+            PumpTimeZoneInfo = CalculateTimeZone(timeZoneName:=value)
         End If
         Dim bgUnitsNative As String = String.Empty
         Dim bgUnits As String = String.Empty
-        If RecentData.TryGetValue("bgUnits", bgUnitsNative) AndAlso
-            UnitsStrings.TryGetValue(bgUnitsNative, bgUnits) Then
+        If RecentData.TryGetValue("bgUnits", value:=bgUnitsNative) AndAlso
+            UnitsStrings.TryGetValue(key:=bgUnitsNative, value:=bgUnits) Then
             NativeMmolL = bgUnits.Equals("mmol/L")
         Else
             Stop
         End If
 
-        If RecentData.TryGetValue("therapyAlgorithmState", value) Then
-            s_therapyAlgorithmStateValue = LoadIndexedItems(value)
+        If RecentData.TryGetValue(key:="therapyAlgorithmState", value) Then
+            s_therapyAlgorithmStateValue = LoadIndexedItems(json:=value)
             Dim key As String = NameOf(TherapyAlgorithmState.AutoModeShieldState)
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso
                 {"AUTO_BASAL", "SAFE_BASAL"}.Contains(value:=s_therapyAlgorithmStateValue(key))
         End If
 
         s_sgRecords = If(RecentData.TryGetValue(key:="sgs", value),
-                         JsonToLisOfSgs(value),
+                         JsonToListOfSgs(json:=value),
                          New List(Of SG))
 
         mainForm.MaxBasalPerHourLabel.Text =
@@ -282,7 +279,7 @@ Friend Module Form1UpdateHelpers
 
             Dim kvp As KeyValuePair(Of String, String) = c.Value
             If kvp.Value Is Nothing Then
-                kvp = KeyValuePair.Create(kvp.Key, "")
+                kvp = KeyValuePair.Create(kvp.Key, value:="")
             End If
 
             Dim key As ServerDataIndexes = CType(c.Index, ServerDataIndexes)
@@ -503,7 +500,7 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.lastAlarm)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
-                    s_lastAlarmValue = LoadIndexedItems(jsonString:=kvp.Value)
+                    s_lastAlarmValue = LoadIndexedItems(json:=kvp.Value)
 
                 Case NameOf(ServerDataIndexes.activeInsulin)
                     s_activeInsulin = PatientData.ActiveInsulin
@@ -566,7 +563,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
                     item = New SummaryRecord(recordNumber:=CSng(c.Index + 0.2), key:="clearedNotifications")
                     s_listOfSummaryRecords.Add(item)
-                    s_notificationHistoryValue = LoadIndexedItems(jsonString:=kvp.Value)
+                    s_notificationHistoryValue = LoadIndexedItems(json:=kvp.Value)
 
                 Case NameOf(ServerDataIndexes.sensorLifeText)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -638,7 +635,8 @@ Friend Module Form1UpdateHelpers
         For Each dic As Dictionary(Of String, String) In s_pumpBannerStateValue
             Dim typeValue As String = ""
             If dic.TryGetValue(key:="type", value:=typeValue) Then
-                Dim bannerStateRecord1 As BannerState = DictionaryToClass(Of BannerState)(dic, recordNumber:=listOfBannerState.Count + 1)
+                Dim recordNumber As Integer = listOfBannerState.Count + 1
+                Dim bannerStateRecord1 As BannerState = DictionaryToClass(Of BannerState)(dic, recordNumber)
                 listOfBannerState.Add(bannerStateRecord1)
                 mainForm.PumpBannerStateLabel.Font = New Font(FamilyName, emSize:=8.25F, style:=FontStyle.Bold)
                 Select Case typeValue
@@ -697,17 +695,20 @@ Friend Module Form1UpdateHelpers
                                 title:=GetTitleFromStack(stackFrame))
                         End If
                 End Select
-                mainForm.PumpBannerStateLabel.ForeColor = ContrastingColor(baseColor:=mainForm.PumpBannerStateLabel.BackColor)
+                mainForm.PumpBannerStateLabel.ForeColor =
+                    ContrastingColor(baseColor:=mainForm.PumpBannerStateLabel.BackColor)
             Else
                 Stop
             End If
         Next
 
         Dim safeBasalDurationStr As String = ""
-        If s_therapyAlgorithmStateValue?.TryGetValue(NameOf(TherapyAlgorithmState.SafeBasalDuration), safeBasalDurationStr) Then
+        Dim key As String = NameOf(TherapyAlgorithmState.SafeBasalDuration)
+        If s_therapyAlgorithmStateValue?.TryGetValue(key, value:=safeBasalDurationStr) Then
             Dim safeBasalDuration As UInteger = CUInt(safeBasalDurationStr)
             If safeBasalDuration > 0 Then
-                mainForm.LastSgOrExitTimeLabel.Text = $"Exit In { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan("hr")}"
+                mainForm.LastSgOrExitTimeLabel.Text =
+                    $"Exit In { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(units:="hr")}"
                 mainForm.LastSgOrExitTimeLabel.Visible = True
             End If
         End If

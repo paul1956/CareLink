@@ -212,7 +212,7 @@ Friend Module NotificationHelpers
         Dim innerJson As List(Of Dictionary(Of String, String))
 
         ' clearedNotifications
-        innerJson = JsonToDictionaryList(s_notificationHistoryValue(key:="clearedNotifications"))
+        innerJson = JsonToDictionaryList(json:=s_notificationHistoryValue(key:="clearedNotifications"))
         Dim classCollection As List(Of SummaryRecord)
         If innerJson.Count > 0 Then
             innerJson.Reverse()

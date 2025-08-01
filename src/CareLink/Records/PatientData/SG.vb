@@ -29,20 +29,20 @@ Public Class SG
         Me.Version = lastSg.Version
     End Sub
 
-    Public Sub New(innerJson As Dictionary(Of String, String), index As Integer)
+    Public Sub New(json As Dictionary(Of String, String), index As Integer)
         Try
-            If innerJson(key:=NameOf(sg)) <> "0" OrElse innerJson.Count = 5 Then
-                Me.TimestampAsString = innerJson(key:=NameOf(Me.Timestamp))
-                Me.SensorState = innerJson(key:=NameOf(SensorState))
-                Me.sg = innerJson(key:=NameOf(sg)).ParseSingle(digits:=2)
+            If json(key:=NameOf(sg)) <> "0" OrElse json.Count = 5 Then
+                Me.TimestampAsString = json(key:=NameOf(Me.Timestamp))
+                Me.SensorState = json(key:=NameOf(SensorState))
+                Me.sg = json(key:=NameOf(sg)).ParseSingle(digits:=2)
                 Dim value As String = "False"
-                Me.timeChange = innerJson.TryGetValue(key:=NameOf(timeChange), value) AndAlso Boolean.Parse(value)
+                Me.timeChange = json.TryGetValue(key:=NameOf(timeChange), value) AndAlso Boolean.Parse(value)
             Else
                 Me.sg = Single.NaN
             End If
-            Me.Kind = innerJson(key:=NameOf(Kind))
+            Me.Kind = json(key:=NameOf(Kind))
             Me.RecordNumber = index + 1
-            Me.Version = CInt(innerJson(key:=NameOf(Version)))
+            Me.Version = CInt(json(key:=NameOf(Version)))
         Catch ex As Exception
             Stop
         End Try
@@ -92,7 +92,7 @@ Public Class SG
     Public ReadOnly Property sgMmolL As Single
         Get
             If Single.IsNaN(_sg) Then Return _sg
-            Return If(NativeMmolL, _sg, (_sg / MmolLUnitsDivisor).RoundSingle(2, False))
+            Return If(NativeMmolL, _sg, (_sg / MmolLUnitsDivisor).RoundSingle(digits:=2, considerValue:=False))
         End Get
     End Property
 

@@ -32,15 +32,15 @@ Public Module JsonExtensions
     <Extension>
     Private Function ToSgList(innerJson As List(Of Dictionary(Of String, String))) As List(Of SG)
         Dim sGs As New List(Of SG)
-        For i As Integer = 0 To innerJson.Count - 1
-            sGs.Add(New SG(innerJson(i), i))
-            With sGs.Last
-                If .Timestamp.Equals(New DateTime) Then
-                    .TimestampAsString = If(i = 0,
-                        (PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - Eleven55Span).RoundDownToMinute().ToStringExact(),
-                        (sGs(0).Timestamp + (FiveMinuteSpan * i)).ToStringExact())
-                End If
-            End With
+        Dim yesterday As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - Eleven55Span
+        For index As Integer = 0 To innerJson.Count - 1
+            sGs.Add(item:=New SG(json:=innerJson(index), index))
+            If sGs.Last.Timestamp.Equals(value:=New DateTime) Then
+                sGs.Last.TimestampAsString =
+                    If(index = 0,
+                       yesterday.RoundDownToMinute().ToStringExact(),
+                       (sGs(index:=0).Timestamp + (FiveMinuteSpan * index)).ToStringExact())
+            End If
         Next
         Return sGs
     End Function
@@ -53,7 +53,7 @@ Public Module JsonExtensions
     ''' <returns>The formatted date as a string.</returns>
     <Extension>
     Private Function ToStringExact(d As Date) As String
-        Return d.ToString("yyyy-MM-ddTHH:mm:ss", provider:=CultureInfo.InvariantCulture)
+        Return d.ToString(format:="yyyy-MM-ddTHH:mm:ss", provider:=CultureInfo.InvariantCulture)
     End Function
 
     ''' <summary>
@@ -373,8 +373,8 @@ Public Module JsonExtensions
     ''' <param name="jsonString">The JSON string to convert.</param>
     ''' <returns>A <see cref="Dictionary"/> with string values representing the JSON object.</returns>
     Public Function JsonToDictionary(jsonString As String) As Dictionary(Of String, String)
-        Dim resultDictionary As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
-        If String.IsNullOrWhiteSpace(jsonString) Then
+        Dim resultDictionary As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
+        If String.IsNullOrWhiteSpace(value:=jsonString) Then
             Return resultDictionary
         End If
 
@@ -382,10 +382,10 @@ Public Module JsonExtensions
         Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) = JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(jsonString, s_jsonDeserializerOptions).ToList()
         For Each item In rawJsonData
             If item.Value Is Nothing Then
-                resultDictionary.Add(item.Key, Nothing)
+                resultDictionary.Add(item.Key, value:=Nothing)
                 Continue For
             End If
-            resultDictionary.Add(item.Key, item.jsonItemAsString)
+            resultDictionary.Add(item.Key, value:=item.jsonItemAsString)
         Next
         Return resultDictionary
     End Function
@@ -393,65 +393,67 @@ Public Module JsonExtensions
     ''' <summary>
     '''  Converts a JSON string representing an array of objects to a <see cref="List(Of Dictionary(Of String, String)"/>.
     ''' </summary>
-    ''' <param name="value">The JSON string to convert.</param>
+    ''' <param name="json">The JSON string to convert.</param>
     ''' <returns>A <see cref="List(Of Dictionary(Of String, String)"/> representing the JSON objects.</returns>
-    Public Function JsonToDictionaryList(value As String) As List(Of Dictionary(Of String, String))
-        Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
-        If String.IsNullOrWhiteSpace(value) Then
-            Return resultDictionaryArray
+    Public Function JsonToDictionaryList(json As String) As List(Of Dictionary(Of String, String))
+        Dim resultListOfDictionary As New List(Of Dictionary(Of String, String))
+        If String.IsNullOrWhiteSpace(value:=json) Then
+            Return resultListOfDictionary
         End If
 
-        Dim jsonList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, s_jsonDeserializerOptions)
+        Dim jsonList As List(Of Dictionary(Of String, Object)) =
+            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(json, options:=s_jsonDeserializerOptions)
+
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
-            Dim resultDictionary As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
+            Dim item As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
             Dim defaultTime As Date = PumpNow() - Eleven55Span
             Dim index As Integer = -1
             For Each e1 As IndexClass(Of KeyValuePair(Of String, Object)) In e.Value.WithIndex
-                Dim item As KeyValuePair(Of String, Object) = e1.Value
-                If item.Value Is Nothing Then
-                    resultDictionary.Add(item.Key, value:=Nothing)
-                ElseIf item.Key = "index" Then
-                    index = CInt(item.jsonItemAsString)
-                    resultDictionary.Add(item.Key, value:=item.jsonItemAsString)
-                ElseIf item.Key = "sg" Then
-                    resultDictionary.Add(item.Key, value:=item.ScaleSgToString)
-                ElseIf item.Key = "dateTime" Then
-                    Dim d As Date = CType(item.Value, JsonElement).GetDateTime()
+                If e1.Value.Value Is Nothing Then
+                    item.Add(e1.Value.Key, value:=Nothing)
+                ElseIf e1.Value.Key = "index" Then
+                    index = CInt(e1.Value.jsonItemAsString)
+                    item.Add(e1.Value.Key, value:=e1.Value.jsonItemAsString)
+                ElseIf e1.Value.Key = "sg" Then
+                    item.Add(e1.Value.Key, value:=e1.Value.ScaleSgToString)
+                ElseIf e1.Value.Key = "dateTime" Then
+                    Dim d As Date = CType(e1.Value.Value, JsonElement).GetDateTime()
 
                     ' Prevent Crash but not valid data
                     If d.Year <= 2001 AndAlso index >= 0 Then
-                        resultDictionary.Add(item.Key,
-                                             value:=s_sgRecords(index).Timestamp.ToStringExact)
+                        item.Add(e1.Value.Key,
+                        value:=s_sgRecords(index).Timestamp.ToStringExact)
                     Else
-                        resultDictionary.Add(item.Key, value:=d.ToShortDateTimeString())
+                        item.Add(e1.Value.Key, value:=d.ToShortDateTimeString())
                     End If
                 Else
-                    resultDictionary.Add(item.Key, value:=item.jsonItemAsString())
+                    item.Add(e1.Value.Key, value:=e1.Value.jsonItemAsString())
                 End If
             Next
 
-            resultDictionaryArray.Add(resultDictionary)
+            resultListOfDictionary.Add(item)
         Next
-        Return resultDictionaryArray
+        Return resultListOfDictionary
     End Function
 
     ''' <summary>
     '''  Converts a JSON string representing an array of objects to a <see cref="List(Of SG)"/>.
     ''' </summary>
-    ''' <param name="value">The JSON string to convert.</param>
+    ''' <param name="json">The JSON string to convert.</param>
     ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
-    Public Function JsonToLisOfSgs(value As String) As List(Of SG)
-        Dim jsonList As List(Of Dictionary(Of String, Object)) = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(value, s_jsonDeserializerOptions)
+    Public Function JsonToListOfSgs(json As String) As List(Of SG)
+        Dim jsonList As List(Of Dictionary(Of String, Object)) =
+            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(json, options:=s_jsonDeserializerOptions)
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
-            Dim resultDictionary As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
+            Dim resultDictionary As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
             For Each item As KeyValuePair(Of String, Object) In e.Value
                 If item.Value Is Nothing Then
-                    resultDictionary.Add(item.Key, Nothing)
+                    resultDictionary.Add(item.Key, value:=Nothing)
                 ElseIf item.Key = "sg" Then
-                    resultDictionary.Add(item.Key, item.ScaleSgToString)
+                    resultDictionary.Add(item.Key, value:=item.ScaleSgToString)
                 Else
-                    resultDictionary.Add(item.Key, item.jsonItemAsString)
+                    resultDictionary.Add(item.Key, value:=item.jsonItemAsString)
                 End If
             Next
 
@@ -464,47 +466,63 @@ Public Module JsonExtensions
     '''  Loads indexed items from a JSON string into a <see cref="Dictionary(Of String, String)"/>.
     '''  Handles special cases for certain keys and manages time zone information.
     ''' </summary>
-    ''' <param name="jsonString">The JSON string to load.</param>
+    ''' <param name="json">The JSON string to load.</param>
     ''' <returns>
     '''  A <see cref="Dictionary(Of String, String)"/> with <see langword="String"/> values representing the indexed items.
     ''' </returns>
-    Public Function LoadIndexedItems(jsonString As String) As Dictionary(Of String, String)
-        Dim resultDictionary As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
-        If String.IsNullOrWhiteSpace(jsonString) Then
+    Public Function LoadIndexedItems(json As String) As Dictionary(Of String, String)
+        Dim resultDictionary As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
+        If String.IsNullOrWhiteSpace(value:=json) Then
             Return resultDictionary
         End If
         Dim item As KeyValuePair(Of String, Object)
-        Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) = JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(jsonString, s_jsonDeserializerOptions).ToList()
+        Dim options As JsonSerializerOptions = s_jsonDeserializerOptions
+        Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) =
+            JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json, options).ToList()
         For Each item In rawJsonData
             If item.Value Is Nothing Then
-                resultDictionary.Add(item.Key, Nothing)
+                resultDictionary.Add(item.Key, value:=Nothing)
                 Continue For
             End If
             Try
                 Select Case item.Key
                     Case "additionalInfo"
-                        Dim additionalInfo As Dictionary(Of String, Object) = JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(item.jsonItemAsString, s_jsonDeserializerOptions)
+                        Dim additionalInfo As Dictionary(Of String, Object) =
+                            JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json:=item.jsonItemAsString, options)
                         For Each kvp As KeyValuePair(Of String, Object) In additionalInfo
-                            resultDictionary.Add(kvp.Key, kvp.Value.ToString)
+                            resultDictionary.Add(kvp.Key, value:=kvp.Value.ToString)
                         Next
                     Case NameOf(ServerDataIndexes.clientTimeZoneName)
                         If s_useLocalTimeZone Then
                             PumpTimeZoneInfo = TimeZoneInfo.Local
                         Else
-                            PumpTimeZoneInfo = CalculateTimeZone(item.Value.ToString)
-                            Dim message As String
+                            PumpTimeZoneInfo = CalculateTimeZone(timeZoneName:=item.Value.ToString)
+                            Dim text As String
                             Dim messageButtons As MessageBoxButtons
                             If PumpTimeZoneInfo Is Nothing Then
-                                If String.IsNullOrWhiteSpace(item.Value.ToString) Then
-                                    message = $"Your pump appears To be off-line, some values will be wrong do you want to continue? If you select OK '{TimeZoneInfo.Local.Id}' will be used as you local time and you will not be prompted further. Cancel will Exit."
+                                If String.IsNullOrWhiteSpace(value:=item.Value?.ToString) Then
+                                    text = $"Your pump appears To be off-line," &
+                                        $" some values will be wrong do you want to continue?" &
+                                        $" If you select OK '{TimeZoneInfo.Local.Id}' will be used" &
+                                        $" as you local time and you will not be prompted further. Cancel will Exit."
                                     messageButtons = MessageBoxButtons.OKCancel
                                 Else
-                                    message = $"Your pump TimeZone '{item.Value}' is not recognized, do you want to exit? If you select No permanently use '{TimeZoneInfo.Local.Id}''? If you select Yes '{TimeZoneInfo.Local.Id}' will be used and you will not be prompted further. No will use '{TimeZoneInfo.Local.Id}' until you restart program. Cancel will exit program. Please open an issue and provide the name '{item.Value}'. After selecting 'Yes' you can change the behavior under the Options Menu."
+                                    text = $"Your pump TimeZone '{item.Value}' is not recognized," &
+                                        $" do you want to exit? If you select No permanently use" &
+                                        $" '{TimeZoneInfo.Local.Id}''? If you select Yes '{TimeZoneInfo.Local.Id}'" &
+                                        $" will be used and you will not be prompted further. No will use" &
+                                        $" '{TimeZoneInfo.Local.Id}' until you restart program." &
+                                        $" Cancel will exit program. Please open an issue and provide the name" &
+                                        $" '{item.Value}'. After selecting 'Yes' you can change the behavior under" &
+                                        $" the Options Menu."
                                     messageButtons = MessageBoxButtons.YesNoCancel
                                 End If
-                                Dim result As DialogResult = MessageBox.Show(message, "TimeZone Unknown",
-                                                                                     messageButtons,
-                                                                                     MessageBoxIcon.Question)
+                                Dim result As DialogResult = MessageBox.Show(
+                                    text,
+                                    caption:="TimeZone Unknown",
+                                    buttons:=messageButtons,
+                                    icon:=MessageBoxIcon.Question)
+
                                 s_useLocalTimeZone = True
                                 PumpTimeZoneInfo = TimeZoneInfo.Local
                                 Select Case result
@@ -515,11 +533,16 @@ Public Module JsonExtensions
                                 End Select
                             End If
                         End If
-                        resultDictionary.Add(item.Key, item.jsonItemAsString)
-                    Case "Sg", "sg", NameOf(ServerDataIndexes.averageSG), NameOf(ServerDataIndexes.sgBelowLimit), NameOf(ServerDataIndexes.averageSGFloat)
-                        resultDictionary.Add(item.Key, item.ScaleSgToString())
+                        resultDictionary.Add(item.Key, value:=item.jsonItemAsString)
+                    Case "Sg",
+                         "sg",
+                         NameOf(ServerDataIndexes.averageSG),
+                         NameOf(ServerDataIndexes.sgBelowLimit),
+                         NameOf(ServerDataIndexes.averageSGFloat)
+
+                        resultDictionary.Add(item.Key, value:=item.ScaleSgToString())
                     Case Else
-                        resultDictionary.Add(item.Key, item.jsonItemAsString)
+                        resultDictionary.Add(item.Key, value:=item.jsonItemAsString)
                 End Select
             Catch ex As Exception
                 Stop

@@ -33,7 +33,7 @@ Friend Module LoginHelpers
     Private Function ToDataSource(dic As Dictionary(Of String, Object)) As List(Of KeyValuePair(Of String, String))
         Dim dataSource As New List(Of KeyValuePair(Of String, String))
         For Each kvp As KeyValuePair(Of String, Object) In dic
-            dataSource.Add(KeyValuePair.Create(kvp.Key, CType(kvp.Value, String)))
+            dataSource.Add(item:=KeyValuePair.Create(kvp.Key, value:=CType(kvp.Value, String)))
         Next
         Return dataSource
     End Function
@@ -53,8 +53,14 @@ Friend Module LoginHelpers
                 icon:=MessageBoxIcon.Error)
             Stop
         End Try
-        s_timeWithMinuteFormat = If(PatientData.TimeFormat = "HR_12", TimeFormatTwelveHourWithMinutes, TimeFormatMilitaryWithMinutes)
-        s_timeWithoutMinuteFormat = If(PatientData.TimeFormat = "HR_12", TimeFormatTwelveHourWithoutMinutes, TimeFormatMilitaryWithoutMinutes)
+
+        If PatientData.TimeFormat = "HR_12" Then
+            s_timeWithMinuteFormat = TimeFormatTwelveHourWithMinutes
+            s_timeWithoutMinuteFormat = TimeFormatTwelveHourWithoutMinutes
+        Else
+            s_timeWithMinuteFormat = TimeFormatMilitaryWithMinutes
+            s_timeWithoutMinuteFormat = TimeFormatMilitaryWithoutMinutes
+        End If
     End Sub
 
     ''' <summary>
@@ -80,12 +86,13 @@ Friend Module LoginHelpers
         Select Case fileToLoad
             Case FileToLoadOptions.TestData
                 owner.Text = $"{SavedTitle} Using Test Data from 'SampleUserV2Data.json'"
-                CurrentDateCulture = New CultureInfo("en-US")
-                Dim json As String = File.ReadAllText(TestDataFileNameWithPath)
+                CurrentDateCulture = New CultureInfo(name:="en-US")
+                Dim path As String = TestDataFileNameWithPath
+                Dim json As String = File.ReadAllText(path)
                 PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
                 DeserializePatientElement()
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                Dim fileDate As Date = File.GetLastWriteTime(TestDataFileNameWithPath)
+                Dim fileDate As Date = File.GetLastWriteTime(path)
                 owner.SetLastUpdateTime(
                     msg:=fileDate.ToShortDateTimeString,
                     suffixMessage:="from file",
@@ -106,7 +113,7 @@ Friend Module LoginHelpers
                         Case DialogResult.Cancel
                             owner.TabControlPage1.Visible = False
                             owner.TabControlPage2.Visible = False
-                            StartOrStopServerUpdateTimer(serverTimerEnabled)
+                            StartOrStopServerUpdateTimer(Start:=serverTimerEnabled)
                             Return False
                         Case DialogResult.Retry
                     End Select
@@ -153,7 +160,8 @@ Friend Module LoginHelpers
                     Case FileToLoadOptions.Snapshot
                         fixedPart = "CareLink"
                         owner.Text = $"{SavedTitle} Using Snapshot Data"
-                        Dim di As New DirectoryInfo(DirectoryForProjectData)
+                        Dim path As String = DirectoryForProjectData
+                        Dim di As New DirectoryInfo(path)
                         Dim keySelector As Func(Of FileInfo, Date) =
                             Function(f As FileInfo) As Date
                                 Return f.LastWriteTime
@@ -164,7 +172,7 @@ Friend Module LoginHelpers
                                 Return f.Name
                             End Function
 
-                        Dim fileList As String() = New DirectoryInfo(path:=DirectoryForProjectData) _
+                        Dim fileList As String() = New DirectoryInfo(path) _
                             .EnumerateFiles(searchPattern:=$"CareLinkSnapshot*.json") _
                             .OrderBy(keySelector) _
                             .Select(selector).ToArray
@@ -176,7 +184,7 @@ Friend Module LoginHelpers
                             .CheckPathExists = True,
                             .DefaultExt = "json",
                             .Filter = $"json files (*.json)|CareLink*.json",
-                            .InitialDirectory = DirectoryForProjectData,
+                            .InitialDirectory = path,
                             .Multiselect = False,
                             .ReadOnlyChecked = True,
                             .RestoreDirectory = True,
@@ -187,7 +195,7 @@ Friend Module LoginHelpers
 
                             If openFileDialog1.ShowDialog(owner) = DialogResult.OK Then
                                 lastDownloadFileWithPath = openFileDialog1.FileName
-                                If Not File.Exists(lastDownloadFileWithPath) Then
+                                If Not File.Exists(path:=lastDownloadFileWithPath) Then
                                     Return False
                                 End If
                             Else
@@ -199,11 +207,11 @@ Friend Module LoginHelpers
                 owner.TabControlPage1.Visible = True
                 owner.TabControlPage2.Visible = True
                 CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(fixedPart, fuzzy:=True)
-                Dim json As String = File.ReadAllText(lastDownloadFileWithPath)
+                Dim json As String = File.ReadAllText(path:=lastDownloadFileWithPath)
                 PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
                 DeserializePatientElement()
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                Dim fileDate As Date = File.GetLastWriteTime(lastDownloadFileWithPath)
+                Dim fileDate As Date = File.GetLastWriteTime(path:=lastDownloadFileWithPath)
                 owner.SetLastUpdateTime(
                     msg:=fileDate.ToShortDateTimeString,
                     suffixMessage:="from file",

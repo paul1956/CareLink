@@ -14,8 +14,8 @@ Friend Module PlotSeriesBasal
     '''  Adds a basal data point to the specified <see cref="Series"/> for charting.
     ''' </summary>
     ''' <param name="basalSeries">The <see cref="Series"/> to which the basal data point will be added.</param>
-    ''' <param name="startX">The X value (OADate) for the new point.</param>
-    ''' <param name="StartY">The Y value for the new point.</param>
+    ''' <param name="xValue">The X value (OADate) for the new point.</param>
+    ''' <param name="yValue">The Y value for the new point.</param>
     ''' <param name="lineColor">The <see cref="Color"/> to use for the point.</param>
     ''' <param name="tag">A tag string to associate with the point.</param>
     ''' <remarks>
@@ -27,19 +27,19 @@ Friend Module PlotSeriesBasal
     <Extension>
     Private Sub AddBasalPoint(
         basalSeries As Series,
-        startX As OADate,
-        StartY As Double,
+        xValue As OADate,
+        yValue As Double,
         lineColor As Color,
         tag As String)
 
         If basalSeries.Points.Count > 0 AndAlso (Not basalSeries.Points.Last.IsEmpty) AndAlso
-           New OADate(basalSeries.Points.Last.XValue).Within6Minutes(startX) Then
+           New OADate(oADateAsDouble:=basalSeries.Points.Last.XValue).Within6Minutes(xValue) Then
             basalSeries.Points.AddXY(basalSeries.Points.Last, Double.NaN)
             basalSeries.Points.Last().Color = Color.Transparent
             basalSeries.Points.Last().IsEmpty = True
         End If
-        basalSeries.Points.AddXY(startX, StartY)
-        If Double.IsNaN(StartY) Then
+        basalSeries.Points.AddXY(xValue, yValue)
+        If Double.IsNaN(yValue) Then
             basalSeries.Points.Last.Color = Color.Transparent
             basalSeries.Points.Last.MarkerSize = 0
             basalSeries.Points.Last.IsEmpty = True
@@ -80,26 +80,26 @@ Friend Module PlotSeriesBasal
          DrawFromBottom As Boolean,
          tag As String)
 
-        Dim startX As OADate
-        Dim startY As Double
+        Dim xValue As OADate
+        Dim yValue As Double
         Dim lineColor As Color = If(amount.IsMinBasal(),
-                                     GetGraphLineColor(legendText:="Min Basal"),
-                                     GetGraphLineColor(legendText))
+                                    GetGraphLineColor(key:="Min Basal"),
+                                    GetGraphLineColor(legendText))
 
         If DrawFromBottom Then
-            startX = markerOADateTime + TwoMinutes30SecondsOADate
-            startY = amount.RoundTo025
-            basalSeries.AddBasalPoint(startX, StartY:=0, lineColor, tag)
-            basalSeries.AddBasalPoint(startX, startY, lineColor, tag)
-            basalSeries.AddBasalPoint(startX, StartY:=0, lineColor, tag)
-            basalSeries.AddBasalPoint(startX, StartY:=Double.NaN, lineColor:=Color.Transparent, tag)
+            xValue = markerOADateTime + TwoMinutes30SecondsOADate
+            yValue = amount.RoundTo025
+            basalSeries.AddBasalPoint(xValue, yValue:=0, lineColor, tag)
+            basalSeries.AddBasalPoint(xValue, yValue, lineColor, tag)
+            basalSeries.AddBasalPoint(xValue, yValue:=0, lineColor, tag)
+            basalSeries.AddBasalPoint(xValue, yValue:=Double.NaN, lineColor:=Color.Transparent, tag)
         Else
-            startX = markerOADateTime + TwoMinutes30SecondsOADate
-            startY = bolusRow - ((bolusRow - insulinRow) * (amount / MaxBasalPerDose))
-            basalSeries.AddBasalPoint(startX, StartY:=bolusRow, lineColor, tag)
-            basalSeries.AddBasalPoint(startX, startY, lineColor, tag)
-            basalSeries.AddBasalPoint(startX, StartY:=bolusRow, lineColor, tag)
-            basalSeries.AddBasalPoint(startX, StartY:=Double.NaN, lineColor:=Color.Transparent, tag)
+            xValue = markerOADateTime + TwoMinutes30SecondsOADate
+            yValue = bolusRow - ((bolusRow - insulinRow) * (amount / MaxBasalPerDose))
+            basalSeries.AddBasalPoint(xValue, yValue:=bolusRow, lineColor, tag)
+            basalSeries.AddBasalPoint(xValue, yValue, lineColor, tag)
+            basalSeries.AddBasalPoint(xValue, yValue:=bolusRow, lineColor, tag)
+            basalSeries.AddBasalPoint(xValue, yValue:=Double.NaN, lineColor:=Color.Transparent, tag)
         End If
     End Sub
 

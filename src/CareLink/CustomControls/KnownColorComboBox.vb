@@ -96,8 +96,8 @@ Public Class KnownColorComboBox
         Get
             Return Me.SelectedItem.Value
         End Get
-        Set(known As KnownColor)
-            Me.SelectedItem = KeyValuePair.Create(GetNameFromKnownColor(known), value:=known)
+        Set(item As KnownColor)
+            Me.SelectedItem = KeyValuePair.Create(key:=GetNameFromKnownColor(item), value:=item)
         End Set
     End Property
 

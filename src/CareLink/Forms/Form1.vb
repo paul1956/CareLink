@@ -655,7 +655,7 @@ Public Class Form1
                     Select Case Convert.ToString(e.Value)
                         Case "AUTOCORRECTION"
                             e.Value = "Auto Correction"
-                            Dim textColor As Color = GetGraphLineColor(legendText:="Auto Correction")
+                            Dim textColor As Color = GetGraphLineColor(key:="Auto Correction")
                             dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=False)
                         Case "FAST", "RECOMMENDED", "UNDETERMINED"
                             dgv.CellFormattingToTitle(e)
@@ -3328,17 +3328,17 @@ Public Class Form1
         _summaryChartLegend = CreateChartLegend(NameOf(_summaryChartLegend))
 
         Me.SummaryAutoCorrectionSeries = CreateSeriesBasal(
-            seriesName:=AutoCorrectionSeriesName,
+            name:=AutoCorrectionSeriesName,
             basalLegend:=_summaryChartLegend,
             legendText:="Auto Correction",
             yAxisType:=AxisType.Secondary)
         Me.SummaryBasalSeries = CreateSeriesBasal(
-            seriesName:=BasalSeriesName,
+            name:=BasalSeriesName,
             basalLegend:=_summaryChartLegend,
             legendText:="Basal Series",
             yAxisType:=AxisType.Secondary)
         Me.SummaryMinBasalSeries = CreateSeriesBasal(
-            seriesName:=MinBasalSeriesName,
+            name:=MinBasalSeriesName,
             basalLegend:=_summaryChartLegend,
             legendText:="Min Basal",
             yAxisType:=AxisType.Secondary)
@@ -3479,17 +3479,17 @@ Public Class Form1
             seriesName:=TargetSgSeriesName)
 
         Me.ActiveInsulinAutoCorrectionSeries = CreateSeriesBasal(
-            seriesName:=AutoCorrectionSeriesName,
+            name:=AutoCorrectionSeriesName,
             basalLegend:=_activeInsulinChartLegend,
             legendText:="Auto Correction",
             yAxisType:=AxisType.Secondary)
         Me.ActiveInsulinBasalSeries = CreateSeriesBasal(
-            seriesName:=BasalSeriesName,
+            name:=BasalSeriesName,
             basalLegend:=_activeInsulinChartLegend,
             legendText:="Basal Series",
             yAxisType:=AxisType.Secondary)
         Me.ActiveInsulinMinBasalSeries = CreateSeriesBasal(
-            seriesName:=MinBasalSeriesName,
+            name:=MinBasalSeriesName,
             basalLegend:=_activeInsulinChartLegend,
             legendText:="Min Basal",
             yAxisType:=AxisType.Secondary)
@@ -3609,17 +3609,17 @@ Public Class Form1
             limitsLegend:=_treatmentMarkersChartLegend,
             seriesName:=TargetSgSeriesName)
         Me.TreatmentMarkerAutoCorrectionSeries = CreateSeriesBasal(
-            seriesName:=AutoCorrectionSeriesName,
+            name:=AutoCorrectionSeriesName,
             basalLegend:=_treatmentMarkersChartLegend,
             legendText:="Auto Correction",
             yAxisType:=AxisType.Primary)
         Me.TreatmentMarkerBasalSeries = CreateSeriesBasal(
-            seriesName:=BasalSeriesName,
+            name:=BasalSeriesName,
             basalLegend:=_treatmentMarkersChartLegend,
             legendText:="Basal Series",
             yAxisType:=AxisType.Primary)
         Me.TreatmentMarkerMinBasalSeries = CreateSeriesBasal(
-            seriesName:=MinBasalSeriesName,
+            name:=MinBasalSeriesName,
             basalLegend:=_treatmentMarkersChartLegend,
             legendText:="Min Basal",
             yAxisType:=AxisType.Primary)

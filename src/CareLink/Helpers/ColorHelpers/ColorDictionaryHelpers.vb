@@ -21,13 +21,13 @@ Friend Module ColorDictionaryHelpers
     ''' <summary>
     '''  Gets the <see cref="Color"/> for a given legend text, applying transparency for "Suspend".
     ''' </summary>
-    ''' <param name="legendText">The legend text key.</param>
+    ''' <param name="key">The legend text key.</param>
     ''' <returns>The corresponding <see cref="Color"/>.</returns>
-    Friend Function GetGraphLineColor(legendText As String) As Color
-        Dim toColor As Color = GraphColorDictionary(legendText).ToColor
-        Return If(legendText = "Suspend",
-                  Color.FromArgb(128, toColor),
-                  toColor
+    Friend Function GetGraphLineColor(key As String) As Color
+        Dim baseColor As Color = GraphColorDictionary(key).ToColor
+        Return If(key = "Suspend",
+                  Color.FromArgb(alpha:=128, baseColor),
+                  baseColor
                  )
     End Function
 
@@ -44,24 +44,24 @@ Friend Module ColorDictionaryHelpers
     ''' </summary>
     Public Sub GetColorDictionaryFromFile()
 
-        Using fileStream As FileStream = File.OpenRead(GraphColorsFileNameWithPath)
-            Using sr As New StreamReader(fileStream)
+        Using stream As FileStream = File.OpenRead(path:=GraphColorsFileNameWithPath)
+            Using sr As New StreamReader(stream)
                 sr.ReadLine()
                 While sr.Peek() <> -1
                     Dim line As String = sr.ReadLine()
                     If line.Length = 0 Then
                         Continue While
                     End If
-                    Dim splitLine() As String = line.Split(","c)
+                    Dim splitLine() As String = line.Split(separator:=","c)
                     Dim key As String = splitLine(0)
                     If GraphColorDictionary.ContainsKey(key) Then
-                        GraphColorDictionary(key) = GetKnownColorFromName(splitLine(1))
+                        GraphColorDictionary(key) = GetKnownColorFromName(key:=splitLine(1))
                     End If
                 End While
                 sr.Close()
             End Using
 
-            fileStream.Close()
+            stream.Close()
         End Using
     End Sub
 
@@ -78,12 +78,12 @@ Friend Module ColorDictionaryHelpers
     '''  Writes the current color dictionary to a file, including contrasting background colors.
     ''' </summary>
     Public Sub WriteColorDictionaryToFile()
-        Using fileStream As FileStream = File.OpenWrite(GraphColorsFileNameWithPath)
-            Using sw As New StreamWriter(fileStream)
+        Using stream As FileStream = File.OpenWrite(path:=GraphColorsFileNameWithPath)
+            Using sw As New StreamWriter(stream)
                 sw.WriteLine($"Key,ForegroundColor,BackgroundColor")
                 For Each kvp As KeyValuePair(Of String, KnownColor) In GraphColorDictionary
-                    Dim contrastingColor As KnownColor = GetContrastingKnownColor(kvp.Value)
-                    sw.WriteLine($"{kvp.Key},{kvp.Value},{contrastingColor}")
+                    Dim contrastingColor As KnownColor = GetContrastingKnownColor(knownColor:=kvp.Value)
+                    sw.WriteLine(value:=$"{kvp.Key},{kvp.Value},{contrastingColor}")
                 Next
                 sw.Flush()
                 sw.Close()

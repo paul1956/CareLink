@@ -50,7 +50,7 @@ Public Module ComboBoxExtensions
 
         For index As Integer = 0 To objectCollection.Count - 1
             Dim item As KeyValuePair(Of Tk, Tv) = DirectCast(objectCollection(index), KeyValuePair(Of Tk, Tv))
-            If EqualityComparer(Of Tv).Default.Equals(item.Value, y) Then
+            If EqualityComparer(Of Tv).Default.Equals(x:=item.Value, y) Then
                 Return index
             End If
         Next

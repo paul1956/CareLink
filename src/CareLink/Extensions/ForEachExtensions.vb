@@ -14,16 +14,16 @@ Public Module ForEachExtensions
     '''  which provides access to the element, its index, and enumeration state.
     ''' </summary>
     ''' <typeparam name="T">The type of elements in the source sequence.</typeparam>
-    ''' <param name="source">The sequence to enumerate.</param>
+    ''' <param name="argument">The sequence to enumerate.</param>
     ''' <returns>
     '''  An <see cref="IEnumerable(Of IndexClass(Of T))"/> that yields each element with its index and enumeration context.
     ''' </returns>
-    ''' <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is <see langword="Nothing"/>.</exception>
+    ''' <exception cref="ArgumentNullException">Thrown if <paramref name="argument"/> is <see langword="Nothing"/>.</exception>
     <Extension>
-    Public Iterator Function WithIndex(Of T)(source As IEnumerable(Of T)) As IEnumerable(Of IndexClass(Of T))
-        ArgumentNullException.ThrowIfNull(source)
+    Public Iterator Function WithIndex(Of T)(argument As IEnumerable(Of T)) As IEnumerable(Of IndexClass(Of T))
+        ArgumentNullException.ThrowIfNull(argument)
 
-        Using enumerator As IEnumerator(Of T) = source.GetEnumerator
+        Using enumerator As IEnumerator(Of T) = argument.GetEnumerator
             Dim hasNext As Boolean = enumerator.MoveNext
             Dim index As Integer = -1
             While hasNext

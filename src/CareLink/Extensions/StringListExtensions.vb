@@ -40,7 +40,9 @@ Public Module StringListExtensions
     <Extension>
     Public Function FindLine(lines As List(Of String), value As String) As String
         Dim index As Integer = FindLineNumber(lines, value)
-        Return If(index >= 0, lines(index), "")
+        Return If(index >= 0,
+                  lines(index),
+                  "")
     End Function
 
     ''' <summary>

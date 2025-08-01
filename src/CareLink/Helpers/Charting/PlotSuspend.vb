@@ -19,12 +19,12 @@ Friend Module PlotSuspend
     ''' </remarks>
     <Extension>
     Friend Sub PlotSuspendArea(pageChart As Chart, SuspendSeries As Series)
-        If s_lowGlucoseSuspendedMarkers.Count = 1 AndAlso s_lowGlucoseSuspendedMarkers(0).deliverySuspended = False Then
+        If s_lowGlucoseSuspendedMarkers.Count = 1 AndAlso Not s_lowGlucoseSuspendedMarkers(index:=0).deliverySuspended Then
             Exit Sub
         End If
 
-        Dim lineColor As Color = GetGraphLineColor("Suspend")
-        With pageChart.Series(SuspendSeriesName).Points
+        Dim lineColor As Color = GetGraphLineColor(key:="Suspend")
+        With pageChart.Series(name:=SuspendSeriesName).Points
             Dim suspended As Boolean = False
             For Each e As IndexClass(Of LowGlucoseSuspended) In s_lowGlucoseSuspendedMarkers.WithIndex
                 Dim suspendRecord As LowGlucoseSuspended = e.Value
@@ -34,20 +34,19 @@ Friend Module PlotSuspend
                     .Last.Color = lineColor
                     .AddXY(suspendRecord.Timestamp, GetYMaxValueFromNativeMmolL())
                     Dim stopTimeSpan As TimeSpan =
-                                      If(Not e.IsLast,
-                                         s_lowGlucoseSuspendedMarkers(e.Index + 1).Timestamp - suspendRecord.Timestamp,
-                                         PumpNow() - suspendRecord.Timestamp
-                                        )
+                                      If(e.IsLast,
+                                         PumpNow() - suspendRecord.Timestamp,
+                                         s_lowGlucoseSuspendedMarkers(index:=e.Index + 1).Timestamp - suspendRecord.Timestamp)
 
                     For i As Long = 1 To CInt(Math.Ceiling(stopTimeSpan.TotalMinutes / 5)) - 1
-                        .AddXY(suspendRecord.Timestamp.AddMinutes(i * 5), 0)
+                        .AddXY(suspendRecord.Timestamp.AddMinutes(value:=i * 5), 0)
                         .Last.Color = lineColor
-                        .AddXY(suspendRecord.Timestamp.AddMinutes(i * 5), GetYMaxValueFromNativeMmolL())
+                        .AddXY(suspendRecord.Timestamp.AddMinutes(value:=i * 5), GetYMaxValueFromNativeMmolL())
                         .Last.Color = lineColor
                     Next
 
                     If Not e.IsLast Then
-                        .AddXY(s_lowGlucoseSuspendedMarkers(e.Index + 1).Timestamp, Double.NaN)
+                        .AddXY(s_lowGlucoseSuspendedMarkers(index:=e.Index + 1).Timestamp, Double.NaN)
                     End If
                     .Last.Color = Color.Transparent
                 Else

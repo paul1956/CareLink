@@ -138,9 +138,9 @@ Friend Module DataTableHelpers
             Return New DataTable()
         End If
         If classCollection?.Count > 0 Then
-            For Each classObject As T In classCollection
-                result.Add(classObject)
-            Next classObject
+            For Each obj As T In classCollection
+                result.Add(obj)
+            Next
         End If
 
         Return result

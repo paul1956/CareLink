@@ -209,7 +209,9 @@ Friend Module DateTimeExtensions
             Return resultDate
         End If
         Stop
-        Throw New FormatException($"String '{dateAsString}' with {NameOf(key)} = {key} from {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture.")
+        Dim message As String = $"String '{dateAsString}' with {NameOf(key)} = {key} from" &
+            $" {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture."
+        Throw New FormatException(message)
     End Function
 
     ''' <summary>
@@ -254,10 +256,9 @@ Friend Module DateTimeExtensions
     <Extension>
     Public Function ToHoursMinutes(timeOnly As TimeOnly) As String
         Dim rawTimeOnly As String = $" {timeOnly.ToString(CurrentDateCulture)}"
-        Return If(rawTimeOnly.Split(":")(0).Length = 1,
+        Return If(rawTimeOnly.Split(separator:=":")(0).Length = 1,
                   $" {rawTimeOnly}",
-                  rawTimeOnly
-                 )
+                  rawTimeOnly)
 
     End Function
 
@@ -268,7 +269,7 @@ Friend Module DateTimeExtensions
     ''' <returns>A <see langword="String"/> representing the date in the specified format.</returns>
     <Extension>
     Public Function ToNotificationDateTimeString(triggeredDateTime As Date) As String
-        Return triggeredDateTime.ToString($"ddd, MMM d {s_timeWithMinuteFormat}")
+        Return triggeredDateTime.ToString(format:=$"ddd, MMM d {s_timeWithMinuteFormat}")
     End Function
 
     ''' <summary>
@@ -294,43 +295,43 @@ Friend Module DateTimeExtensions
         Dim success As Boolean
         Select Case key
             Case ""
-                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AssumeLocal, success)
+                resultDate = s.DoCultureSpecificParse(styles:=DateTimeStyles.AssumeLocal, success)
             Case NameOf(ServerDataIndexes.lastConduitDateTime)
-                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AssumeLocal, success)
+                resultDate = s.DoCultureSpecificParse(styles:=DateTimeStyles.AssumeLocal, success)
             Case NameOf(ServerDataIndexes.medicalDeviceTime)
-                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AdjustToUniversal, success)
+                resultDate = s.DoCultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case "loginDateUTC"
-                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AssumeUniversal, success)
+                resultDate = s.DoCultureSpecificParse(styles:=DateTimeStyles.AssumeUniversal, success)
             Case NameOf(SG.Timestamp)
-                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AdjustToUniversal, success)
+                resultDate = s.DoCultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case NameOf(TimeChange.Timestamp), NameOf(ClearedNotifications.dateTime)
-                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AdjustToUniversal, success)
+                resultDate = s.DoCultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case NameOf(ActiveNotification.SecondaryTime)
-                resultDate = s.DoCultureSpecificParse(DateTimeStyles.NoCurrentDateDefault, success)
+                resultDate = s.DoCultureSpecificParse(styles:=DateTimeStyles.NoCurrentDateDefault, success)
             Case NameOf(ActiveNotification.triggeredDateTime)
-                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AdjustToUniversal, success)
+                resultDate = s.DoCultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case "dateTime"
-                resultDate = s.DoCultureSpecificParse(DateTimeStyles.AdjustToUniversal, success)
+                resultDate = s.DoCultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case Else
         End Select
 
         Return success
     End Function
 
-    'summary>
+    ''' <summary>
     '''  Attempts to parse a date string in the format "yyyy-MM-ddTHH:mm:ss" and returns the parsed date.
     '''  If the string is null or whitespace, it returns Nothing.
     ''' </summary>
-    ''' <param name="dateAsString">The date string to parse.</param>
+    ''' <param name="s">The date string to parse.</param>
     ''' <returns>Parsed Date or Nothing if parsing fails.</returns>
     ''' <remarks>
     '''  This method is an extension method for the <see langword="String"/> class.
     '''  It uses the invariant culture to ensure consistent parsing regardless of the current culture settings.
     ''' </remarks>
     <Extension>
-    Public Function TryParseDateStr(dateAsString As String) As Date
-        Return If(Not String.IsNullOrWhiteSpace(value:=dateAsString),
-                  Date.ParseExact(dateAsString, format:="yyyy-MM-ddTHH:mm:ss", provider:=CultureInfo.InvariantCulture),
+    Public Function TryParseDateStr(s As String) As Date
+        Return If(Not String.IsNullOrWhiteSpace(value:=s),
+                  Date.ParseExact(s, format:="yyyy-MM-ddTHH:mm:ss", provider:=CultureInfo.InvariantCulture),
                   Nothing)
     End Function
 

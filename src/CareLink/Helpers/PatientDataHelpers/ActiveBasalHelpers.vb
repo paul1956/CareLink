@@ -18,7 +18,7 @@ Friend Module ActiveBasalHelpers
     '''  It will return an empty list if no active basal rates are found.
     ''' </remarks>
     Public Function GetActiveBasalRateRecords() As List(Of BasalRateRecord)
-        Debug.Assert(CurrentPdf.IsValid)
+        Debug.Assert(condition:=CurrentPdf.IsValid)
         For Each namedBasal As KeyValuePair(Of String, NamedBasalRecord) In CurrentPdf.Basal.NamedBasal
             If namedBasal.Value.Active Then
                 Dim basalRates As List(Of BasalRateRecord) = namedBasal.Value.basalRates

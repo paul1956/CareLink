@@ -24,7 +24,7 @@ Friend Module Form1SummaryTabHelpers
         dgv.DataSource = ClassCollectionToDataTable(classCollection)
         dgv.RowHeadersVisible = False
         If s_currentSummaryRow <> 0 AndAlso dgv.Name = My.Forms.Form1.DgvSummary.Name Then
-            dgv.CurrentCell = dgv.Rows(s_currentSummaryRow).Cells(2)
+            dgv.CurrentCell = dgv.Rows(index:=s_currentSummaryRow).Cells(index:=2)
         End If
         dgv.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells)
     End Sub
