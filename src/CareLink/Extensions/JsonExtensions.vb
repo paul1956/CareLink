@@ -8,6 +8,7 @@ Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
 Public Module JsonExtensions
+    Private Const Format As String = "yyyy-MM-ddTHH:mm:ss"
 
     ''' <summary>
     '''  Default <see cref="JsonSerializerOptions"/> for deserialization. Ignores null values,
@@ -22,7 +23,8 @@ Public Module JsonExtensions
     ''' <summary>
     '''  Default <see cref="JsonSerializerOptions"/> for serialization with indented output.
     ''' </summary>
-    Public ReadOnly s_jsonSerializerOptions As New JsonSerializerOptions With {.WriteIndented = True}
+    Public ReadOnly s_jsonSerializerOptions As New JsonSerializerOptions With {
+        .WriteIndented = True}
 
     ''' <summary>
     '''  Converts a list of dictionaries representing JSON objects to a list of <see cref="SG"/> objects.
@@ -53,7 +55,7 @@ Public Module JsonExtensions
     ''' <returns>The formatted date as a string.</returns>
     <Extension>
     Private Function ToStringExact(d As Date) As String
-        Return d.ToString(format:="yyyy-MM-ddTHH:mm:ss", provider:=CultureInfo.InvariantCulture)
+        Return d.ToString(Format, provider:=CultureInfo.InvariantCulture)
     End Function
 
     ''' <summary>

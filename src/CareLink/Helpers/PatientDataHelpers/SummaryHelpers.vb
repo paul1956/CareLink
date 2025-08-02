@@ -202,7 +202,7 @@ Friend Module SummaryHelpers
                     .Replace(oldValue:="(suspendedSince)", newValue:=s_suspendedSince) _
                     .Replace(oldValue:="(sg)", newValue:=sg) _
                     .Replace(oldValue:="(triggeredDateTime)", newValue:=triggeredDateTime) _
-                    .Replace(oldValue:="(units)", newValue:=GetBgUnitsString()) _
+                    .Replace(oldValue:="(units)", newValue:=GetBgUnits()) _
                     .Replace(oldValue:="(unitsRemaining)", newValue:=unitsRemaining) _
                     .Replace(oldValue:="(vbCrLf)", newValue:=vbCrLf)
             Else

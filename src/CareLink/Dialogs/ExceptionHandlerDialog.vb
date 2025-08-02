@@ -42,19 +42,19 @@ Public Class ExceptionHandlerDialog
     Private Shared Sub CreateReportFile(exceptionText As String, stackTraceText As String, UniqueFileNameWithPath As String)
         Using stream As StreamWriter = File.CreateText(UniqueFileNameWithPath)
             ' write exception header
-            stream.WriteLine(ExceptionStartingString)
+            stream.WriteLine(value:=ExceptionStartingString)
             ' write exception
-            stream.WriteLine(exceptionText)
+            stream.WriteLine(value:=exceptionText)
             ' write exception trailer
-            stream.WriteLine(ExceptionTerminatingString)
+            stream.WriteLine(value:=ExceptionTerminatingString)
             ' write stack trace header
-            stream.WriteLine(StackTraceStartingStr)
+            stream.WriteLine(value:=StackTraceStartingStr)
             ' write stack trace
-            stream.WriteLine(stackTraceText)
+            stream.WriteLine(value:=stackTraceText)
             ' write stack trace trailer
-            stream.WriteLine(StackTraceTerminatingStr)
+            stream.WriteLine(value:=StackTraceTerminatingStr)
             ' write out data file
-            stream.Write(CleanPatientData())
+            stream.Write(value:=CleanPatientData())
         End Using
     End Sub
 
@@ -75,8 +75,8 @@ Public Class ExceptionHandlerDialog
     '''  Handles the Cancel button click event. Deletes the report file if it exists and closes the dialog.
     ''' </summary>
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
-        If Not String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
-            File.Delete(Me.ReportFileNameWithPath)
+        If Not String.IsNullOrWhiteSpace(value:=Me.ReportFileNameWithPath) Then
+            File.Delete(path:=Me.ReportFileNameWithPath)
         End If
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
@@ -93,7 +93,7 @@ Public Class ExceptionHandlerDialog
             productInformation:=New ProductHeaderValue(name:="CareLink.Issues"),
             baseAddress:=New Uri(uriString:=GitHubCareLinkUrl))
         Dim fontBold As New Font(prototype:=rtb.Font, newStyle:=FontStyle.Bold)
-        If String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
+        If String.IsNullOrWhiteSpace(value:=Me.ReportFileNameWithPath) Then
             ' Create error report and issue
             Me.ExceptionTextBox.Text = Me.UnhandledException.Exception.Message
             Me.StackTraceTextBox.Text = TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
@@ -119,7 +119,7 @@ Public Class ExceptionHandlerDialog
                 newFont)
             AppendTextWithFontChange(
                 rtb,
-                text:=$"{_gitClient.Repository.Get(GitOwnerName, "CareLink").Result.HtmlUrl}/issues.",
+                text:=$"{_gitClient.Repository.Get(owner:=GitOwnerName, name:="CareLink").Result.HtmlUrl}/issues.",
                 newFont)
             AppendTextWithFontChange(
                 rtb,
@@ -130,7 +130,7 @@ Public Class ExceptionHandlerDialog
                 stackTraceText:=Me.StackTraceTextBox.Text,
                 UniqueFileNameWithPath:=uniqueFileNameResult.withPath)
         Else
-            CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(BaseNameSavedErrorReport)
+            CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(FixedPart:=BaseNameSavedErrorReport)
             If CurrentDateCulture Is Nothing Then
                 Me.Close()
                 Exit Sub
@@ -157,10 +157,12 @@ Public Class ExceptionHandlerDialog
     '''  Handles link clicks in the instructions RichTextBox. Opens file links in Explorer or URLs in the browser.
     ''' </summary>
     Private Sub InstructionsRichTextBox_LinkClicked(sender As Object, e As LinkClickedEventArgs) Handles InstructionsRichTextBox.LinkClicked
-        If e.LinkText.StartsWith("file://") Then
-            Process.Start("Explorer.exe", e.LinkText.Substring(7))
+        Const value As String = "file://"
+        Dim startIndex As Integer = value.Length
+        If e.LinkText.StartsWith(value) Then
+            Process.Start(fileName:="Explorer.exe", arguments:=e.LinkText.Substring(startIndex))
         Else
-            OpenUrlInBrowser(e.LinkText)
+            OpenUrlInBrowser(webAddress:=e.LinkText)
         End If
     End Sub
 
@@ -170,7 +172,7 @@ Public Class ExceptionHandlerDialog
     Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
         Me.OK.Enabled = False
         Me.Cancel.Enabled = False
-        If String.IsNullOrWhiteSpace(Me.ReportFileNameWithPath) Then
+        If String.IsNullOrWhiteSpace(value:=Me.ReportFileNameWithPath) Then
             ' This branch creates a new report and will exit
             ' program upon return
 
@@ -216,13 +218,13 @@ Public Class ExceptionHandlerDialog
             ' read exception trailer
             currentLine = stream.ReadLine
             If currentLine <> ExceptionTerminatingString Then
-                Me.ReportInvalidErrorFile(currentLine, ExceptionTerminatingString)
+                Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=ExceptionTerminatingString)
             End If
 
             ' read stack trace header
             currentLine = stream.ReadLine
             If currentLine <> StackTraceStartingStr Then
-                Me.ReportInvalidErrorFile(currentLine, StackTraceStartingStr)
+                Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=StackTraceStartingStr)
             End If
 
             ' read stack trace
@@ -230,14 +232,14 @@ Public Class ExceptionHandlerDialog
             While stream.Peek > 0
                 currentLine = stream.ReadLine
                 If currentLine <> StackTraceTerminatingStr Then
-                    sb.AppendLine(currentLine)
+                    sb.AppendLine(value:=currentLine)
                 Else
                     Exit While
                 End If
                 currentLine = ""
             End While
             If currentLine <> StackTraceTerminatingStr Then
-                Me.ReportInvalidErrorFile(currentLine, StackTraceTerminatingStr)
+                Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=StackTraceTerminatingStr)
             End If
             stackTraceTextBox.Text = sb.ToString
             Return stream.ReadToEnd

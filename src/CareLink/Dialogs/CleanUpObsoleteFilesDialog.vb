@@ -68,7 +68,7 @@ Public Class CleanupStaleFilesDialog
     Private Function OptionalConfirmFileDelete(confirm As Boolean) As DialogResult
         Dim result As DialogResult = DialogResult.OK
         With Me.TreeView1
-            For Each node As TreeNode In .Nodes(0).Nodes
+            For Each node As TreeNode In .Nodes(index:=0).Nodes
                 Dim msgBoxResult As MsgBoxResult = MsgBoxResult.Yes
                 If node.Checked Then
                     If confirm Then
@@ -92,7 +92,7 @@ Public Class CleanupStaleFilesDialog
                     End Select
                 End If
             Next
-            For Each node As TreeNode In .Nodes(1).Nodes
+            For Each node As TreeNode In .Nodes(index:=1).Nodes
                 If node.Checked Then
                     Try
                         Dim path As String = IO.Path.Join(DirectoryForProjectData, "WebCache", node.Text)

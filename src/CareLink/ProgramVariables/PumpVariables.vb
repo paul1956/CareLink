@@ -66,10 +66,6 @@ Public Module PumpVariables
 
     Public Property RecentData As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
 
-    Friend Function GetBgUnitsString() As String
-        Return If(NativeMmolL, "Mmol/l", "mg/dL")
-    End Function
-
     Public Function GetCarbDefaultUnit() As String
         Return "Grams"
     End Function

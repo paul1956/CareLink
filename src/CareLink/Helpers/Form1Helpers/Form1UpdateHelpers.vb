@@ -482,7 +482,7 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.timeFormat)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
                 Case NameOf(ServerDataIndexes.bgUnits)
-                    item = New SummaryRecord(recordNumber, kvp, message:=GetBgUnitsString())
+                    item = New SummaryRecord(recordNumber, kvp, message:=GetBgUnits())
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.maxAutoBasalRate)

@@ -21,7 +21,7 @@ Friend Module PlotMarkers
     Private Sub AddSgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, f As Single)
         AddMarkerPoint(markerSeriesPoints, markerOADateTime, f, markerColor:=Color.DarkOrange)
         If Not Single.IsNaN(f) Then
-            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {f} {GetBgUnitsString()}"
+            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {f} {GetBgUnits()}"
         End If
     End Sub
 
@@ -41,7 +41,7 @@ Friend Module PlotMarkers
                                              "not accepted")
         Dim key As String = "unitValue"
         Dim unitValue As String = item.GetSingleFromJson(key, digits:=2, considerValue:=True).ToString
-        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {calibrationStatus}: {unitValue} {GetBgUnitsString()}"
+        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {calibrationStatus}: {unitValue} {GetBgUnits()}"
     End Sub
 
     ''' <summary>

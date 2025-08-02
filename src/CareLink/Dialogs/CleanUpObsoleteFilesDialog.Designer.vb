@@ -38,11 +38,11 @@ Partial Class CleanupStaleFilesDialog
         ' 
         TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         TableLayoutPanel1.ColumnCount = 3
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 25.0F))
         TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
         TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 25.0F))
-        TableLayoutPanel1.Controls.Add(OK_Button, 0, 0)
-        TableLayoutPanel1.Controls.Add(OkDoNotConfirm_Button, 1, 0)
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 25.0F))
+        TableLayoutPanel1.Controls.Add(OkDoNotConfirm_Button, 0, 0)
+        TableLayoutPanel1.Controls.Add(OK_Button, 1, 0)
         TableLayoutPanel1.Controls.Add(Cancel_Button, 2, 0)
         TableLayoutPanel1.Location = New Point(212, 316)
         TableLayoutPanel1.Margin = New Padding(4, 3, 4, 3)
@@ -55,17 +55,17 @@ Partial Class CleanupStaleFilesDialog
         ' OK_Button
         ' 
         OK_Button.Anchor = AnchorStyles.None
-        OK_Button.Location = New Point(4, 3)
+        OK_Button.Location = New Point(138, 3)
         OK_Button.Margin = New Padding(4, 3, 4, 3)
         OK_Button.Name = "OK_Button"
         OK_Button.Size = New Size(62, 27)
-        OK_Button.TabIndex = 0
+        OK_Button.TabIndex = 1
         OK_Button.Text = "OK"
         ' 
         ' OkDoNotConfirm_Button
         ' 
         OkDoNotConfirm_Button.Anchor = AnchorStyles.None
-        OkDoNotConfirm_Button.Location = New Point(74, 3)
+        OkDoNotConfirm_Button.Location = New Point(4, 3)
         OkDoNotConfirm_Button.Margin = New Padding(4, 3, 4, 3)
         OkDoNotConfirm_Button.Name = "OkDoNotConfirm_Button"
         OkDoNotConfirm_Button.Size = New Size(132, 27)
@@ -79,7 +79,7 @@ Partial Class CleanupStaleFilesDialog
         Cancel_Button.Margin = New Padding(4, 3, 4, 3)
         Cancel_Button.Name = "Cancel_Button"
         Cancel_Button.Size = New Size(63, 27)
-        Cancel_Button.TabIndex = 1
+        Cancel_Button.TabIndex = 2
         Cancel_Button.Text = "Cancel"
         ' 
         ' TreeView1

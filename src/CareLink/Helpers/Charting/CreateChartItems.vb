@@ -222,7 +222,7 @@ Friend Module CreateChartItems
                 End With
 
                 Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-                Dim format As String = If(NativeMmolL, "F1", "F0")
+                Dim format As String = GetFormatForBg()
                 For i As Integer = 0 To s_mmolLValues.Count - 1
                     Dim yMin As Single = GetYMinValueFromNativeMmolL()
                     .CustomLabels.Add(

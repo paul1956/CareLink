@@ -145,8 +145,7 @@ Public Class SG
 
     Public Overrides Function ToString() As String
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        Dim format As String = If(NativeMmolL, "F1", "F0")
-        Return Me.sg.ToString(format, provider)
+        Return Me.sg.ToString(format:=GetFormatForBg(), provider)
     End Function
 
     ''' <summary>

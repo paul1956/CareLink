@@ -60,7 +60,7 @@ Public Class InitializeDialog
             Me.PumpAitComboBox.Enabled = True
             Me.DialogResult = DialogResult.None
         Else
-            If Not Me.CurrentUser.Equals(_currentUserBackup) Then
+            If Not Me.CurrentUser.Equals(other:=_currentUserBackup) Then
                 ' TODO Warn editing will be lost
                 Me.CurrentUser = _currentUserBackup.Clone
             End If

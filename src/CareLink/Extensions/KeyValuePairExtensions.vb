@@ -29,7 +29,7 @@ Friend Module KeyValuePairExtensions
     ''' <returns>A string representation of the scaled value.</returns>
     <Extension>
     Private Function ScaleSgToString(value As Single) As String
-        Dim digits As Integer = If(NativeMmolL, 2, 0)
+        Dim digits As Integer = GetPrecisionDigits()
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Return If(NativeMmolL,
                   (value / MmolLUnitsDivisor).RoundSingle(digits, considerValue:=False).ToString(provider),
@@ -71,7 +71,7 @@ Friend Module KeyValuePairExtensions
 
         Dim s As Single = If(
             NativeMmolL,
-            (itemAsSingle / MmolLUnitsDivisor).RoundSingle(digits:=If(NativeMmolL, 2, 0), considerValue:=False),
+            (itemAsSingle / MmolLUnitsDivisor).RoundSingle(digits:=GetPrecisionDigits(), considerValue:=False),
             itemAsSingle)
         Return s.ToString(Provider)
     End Function
@@ -84,7 +84,7 @@ Friend Module KeyValuePairExtensions
     ''' <returns>A <see langword="String"/> representation of the scaled value.</returns>
     <Extension>
     Public Function ScaleSgToString(value As String) As String
-        Dim digits As Integer = If(NativeMmolL, 2, 0)
+        Dim digits As Integer = GetPrecisionDigits()
         Return value.ParseSingle(digits).ScaleSgToString()
     End Function
 

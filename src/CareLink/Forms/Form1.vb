@@ -451,7 +451,7 @@ Public Class Form1
                 Case SgSeriesName
                     Me.CursorMessage1Label.Text = "Sensor Glucose"
                     Me.CursorMessage1Label.Visible = True
-                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(digits:=3)} {GetBgUnitsString()}"
+                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(digits:=3)} {GetBgUnits()}"
                     Me.CursorMessage2Label.Visible = True
                     Me.CursorMessage3Label.Text = If(NativeMmolL,
                                                      $"{CInt(currentDataPoint.YValues(0) * MmolLUnitsDivisor)} mg/dL",
@@ -3682,7 +3682,7 @@ Public Class Form1
                                 Me.NotifyIcon1.ShowBalloonTip(
                                     timeout:=10000,
                                     tipTitle:=$"CareLink™ Alert",
-                                    tipText:=$"SG below {GetTirLowLimitWithUnits()} {GetBgUnitsString()}",
+                                    tipText:=$"SG below {GetTirLowLimitWithUnits()} {GetBgUnits()}",
                                     tipIcon:=Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
@@ -3695,7 +3695,7 @@ Public Class Form1
                                 Me.NotifyIcon1.ShowBalloonTip(
                                     timeout:=10000,
                                     tipTitle:=$"CareLink™ Alert",
-                                    tipText:=$"SG above {GetTirHighLimitWithUnits()} {GetBgUnitsString()}",
+                                    tipText:=$"SG above {GetTirHighLimitWithUnits()} {GetBgUnits()}",
                                     tipIcon:=Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
@@ -3709,7 +3709,7 @@ Public Class Form1
                     Dim dateSeparator As String = CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator
                     strBuilder.AppendLine(
                         value:=Date.Now().ToShortDateTimeString.Remove(s:=$"{dateSeparator}{Now.Year}"))
-                    strBuilder.AppendLine(value:=$"Last SG {sgString} {GetBgUnitsString()}")
+                    strBuilder.AppendLine(value:=$"Last SG {sgString} {GetBgUnits()}")
                     If PatientData.ConduitInRange Then
                         If s_lastSgValue.IsSgInvalid Then
                             Me.TrendValueLabel.Text = ""
@@ -4057,7 +4057,7 @@ Public Class Form1
     Private Sub UpdateAutoModeShield()
         Try
             Me.LastSgOrExitTimeLabel.Text = s_lastSg.Timestamp.ToString(format:=s_timeWithMinuteFormat)
-            Me.ShieldUnitsLabel.Text = GetBgUnitsString()
+            Me.ShieldUnitsLabel.Text = GetBgUnits()
 
             If InAutoMode Then
                 Select Case PatientData.SensorState
@@ -4492,7 +4492,7 @@ Public Class Form1
         End With
 
         Me.AboveHighLimitValueLabel.Text = $"{GetAboveHyperLimit.Str}%"
-        Me.AboveHighLimitMessageLabel.Text = $"Above {GetTirHighLimitWithUnits()} {GetBgUnitsString()}"
+        Me.AboveHighLimitMessageLabel.Text = $"Above {GetTirHighLimitWithUnits()} {GetBgUnits()}"
 
         Me.TimeInRangeValueLabel.Text = $"{GetTIR.asString}%"
         If GetTIR.percent >= 70 Then
@@ -4516,12 +4516,12 @@ Public Class Form1
         End If
 
         Me.BelowLowLimitValueLabel.Text = $"{GetBelowHypoLimit.Str}%"
-        Me.BelowLowLimitMessageLabel.Text = $"Below {GetTirLowLimitWithUnits()} {GetBgUnitsString()}"
+        Me.BelowLowLimitMessageLabel.Text = $"Below {GetTirLowLimitWithUnits()} {GetBgUnits()}"
         Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.averageSG))
         Me.AverageSGValueLabel.Text = If(NativeMmolL,
                                          averageSgStr.TruncateSingleString(digits:=2),
                                          averageSgStr)
-        Me.AverageSGMessageLabel.Text = $"Average SG in {GetBgUnitsString()}"
+        Me.AverageSGMessageLabel.Text = $"Average SG in {GetBgUnits()}"
 
         ' Calculate Time in AutoMode
         If s_autoModeStatusMarkers.Count = 0 Then
