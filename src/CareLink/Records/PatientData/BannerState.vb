@@ -27,7 +27,7 @@ Public Class BannerState
     <JsonPropertyName("message")>
     Public ReadOnly Property Message As String
         Get
-            Return SG.TranslateAndTruncateSensorMessage(key:=Me.Type, truncate:=False)
+            Return SG.FormatSensorMessage(key:=Me.Type, truncate:=False)
         End Get
     End Property
 

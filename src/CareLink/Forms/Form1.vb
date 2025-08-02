@@ -4147,7 +4147,7 @@ Public Class Form1
                 Me.ShieldUnitsLabel.Top = Me.CurrentSgLabel.Bottom + 2
                 Me.UpdateNotifyIcon(sgString)
                 _sgMiniDisplay.SetCurrentSgString(sgString, sgValue:=s_lastSg.sg)
-                message = SG.TranslateAndTruncateSensorMessage(key:=PatientData.SensorState, truncate:=True)
+                message = SG.FormatSensorMessage(key:=PatientData.SensorState, truncate:=True)
             Else
                 _sgMiniDisplay.SetCurrentSgString(sgString:="---", sgValue:=s_lastSg.sg)
                 Me.CurrentSgLabel.Visible = False
@@ -4155,7 +4155,7 @@ Public Class Form1
                 Me.SensorMessageLabel.Visible = True
                 Me.SensorMessageLabel.BackColor = Color.Transparent
 
-                message = SG.TranslateAndTruncateSensorMessage(key:=PatientData.SensorState, truncate:=True)
+                message = SG.FormatSensorMessage(key:=PatientData.SensorState, truncate:=True)
                 Select Case PatientData.SensorState
                     Case "UNKNOWN"
                         Me.SensorMessageLabel.Text = message
