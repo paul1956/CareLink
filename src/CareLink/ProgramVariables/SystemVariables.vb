@@ -28,7 +28,6 @@ Friend Module SystemVariables
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property DecimalSeparator As String = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator
     Friend Property MaxBasalPerDose As Double
-    Friend Property NativeMmolL As Boolean = False
 
     ''' <summary>
     '''  Gets the character used to separate sentences, usually a period.
@@ -124,27 +123,6 @@ Friend Module SystemVariables
     End Function
 
     ''' <summary>
-    '''  Gets the format string for SG values, optionally with sign.
-    ''' </summary>
-    ''' <param name="withSign">Whether to include a sign in the format.</param>
-    ''' <returns>
-    '''  The format string for SG values.
-    ''' </returns>
-    ''' <remarks>
-    '''  The format string is based on the current UI culture's decimal separator
-    '''  and whether the values are in mmol/L or mg/dL.
-    ''' </remarks>
-    Friend Function GetSgFormat(withSign As Boolean) As String
-        Return If(withSign,
-            If(NativeMmolL,
-               $"+0{DecimalSeparator}0;-#{DecimalSeparator}0",
-               "+0;-#"),
-            If(NativeMmolL,
-               $"0{DecimalSeparator}0",
-               "0"))
-    End Function
-
-    ''' <summary>
     '''  Gets the current SG target value.
     ''' </summary>
     ''' <returns>
@@ -214,7 +192,7 @@ Friend Module SystemVariables
     '''  The high limit for TIR in the selected units.
     ''' </returns>
     Friend Function GetTirHighLimitWithUnits() As String
-        Return $"{GetTirHighLimit()} {GetBgUnitsString()}".
+        Return $"{GetTirHighLimit()} {GetBgUnits()}".
             Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
     End Function
 
@@ -242,7 +220,7 @@ Friend Module SystemVariables
     '''  The low limit for TIR with units.
     ''' </returns>
     Friend Function GetTirLowLimitWithUnits() As String
-        Return $"{GetTirLowLimit()} {GetBgUnitsString()}".
+        Return $"{GetTirLowLimit()} {GetBgUnits()}".
             Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
     End Function
 
