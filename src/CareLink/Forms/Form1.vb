@@ -436,9 +436,10 @@ Public Class Form1
                                 Dim sgValue As Single = markerTag(2).Trim.Split(separator:=" ")(0).ParseSingle(digits:=2)
                                 Me.CursorMessage3Label.Text = markerTag(2).Trim
                                 Me.CursorMessage3Label.Visible = True
-                                Me.CursorMessage4Label.Text = If(NativeMmolL,
-                                                                 $"{CInt(sgValue * MmolLUnitsDivisor)} mg/dL",
-                                                                 $"{sgValue / MmolLUnitsDivisor:F1} mmol/L")
+                                Me.CursorMessage4Label.Text =
+                                    If(NativeMmolL,
+                                       $"{CInt(sgValue * MmolLUnitsDivisor)} mg/dL",
+                                       $"{sgValue / MmolLUnitsDivisor:F1} mmol/L")
                                 Me.CursorMessage4Label.Visible = True
                                 Me.CursorPanel.Visible = True
                             Case Else
@@ -451,11 +452,12 @@ Public Class Form1
                 Case SgSeriesName
                     Me.CursorMessage1Label.Text = "Sensor Glucose"
                     Me.CursorMessage1Label.Visible = True
-                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(digits:=3)} {GetBgUnits()}"
+                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundSingle(digits:=3)} {GetBgUnits()}"
                     Me.CursorMessage2Label.Visible = True
-                    Me.CursorMessage3Label.Text = If(NativeMmolL,
-                                                     $"{CInt(currentDataPoint.YValues(0) * MmolLUnitsDivisor)} mg/dL",
-                                                     $"{currentDataPoint.YValues(0) / MmolLUnitsDivisor:F1} mmol/L")
+                    Me.CursorMessage3Label.Text =
+                        If(NativeMmolL,
+                           $"{CInt(currentDataPoint.YValues(0) * MmolLUnitsDivisor)} mg/dL",
+                           $"{currentDataPoint.YValues(0) / MmolLUnitsDivisor:F1} mmol/L")
                     Me.CursorMessage3Label.Visible = True
                     Me.CursorMessage4Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(format:=s_timeWithMinuteFormat)
                     Me.CursorMessage4Label.Visible = True
@@ -3627,7 +3629,7 @@ Public Class Form1
         Dim labelFont As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
 
         With treatmentMarkersChartArea.AxisY
-            Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(digits:=3, considerValue:=False)
+            Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(digits:=3)
             .Interval = interval
             .IsInterlaced = False
             .IsMarginVisible = False
@@ -4571,7 +4573,7 @@ Public Class Form1
         Me.BelowLowLimitMessageLabel.Text = $"Below {GetTirLowLimitWithUnits()} {GetBgUnits()}"
         Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.averageSG))
         Me.AverageSGValueLabel.Text = If(NativeMmolL,
-                                         averageSgStr.TruncateSingleString(digits:=2),
+                                         averageSgStr.TruncateSingle(digits:=2),
                                          averageSgStr)
         Me.AverageSGMessageLabel.Text = $"Average SG in {GetBgUnits()}"
 
@@ -4650,7 +4652,7 @@ Public Class Form1
             Me.LowTirComplianceLabel.Text = ""
             Me.HighTirComplianceLabel.Text = ""
         Else
-            Dim lowDeviation As Single = Math.Sqrt(lowDeviations / (elements - highCount)).RoundToSingle(digits:=1, considerValue:=False)
+            Dim lowDeviation As Single = Math.Sqrt(lowDeviations / (elements - highCount)).RoundSingle(digits:=1)
             Select Case True
                 Case lowDeviation <= 2
                     Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}Excellent{Superscript2}"
@@ -4663,7 +4665,7 @@ Public Class Form1
                     Me.LowTirComplianceLabel.ForeColor = Color.Red
             End Select
 
-            Dim highDeviation As Single = Math.Sqrt(highDeviations / (elements - lowCount)).RoundToSingle(digits:=1, considerValue:=False)
+            Dim highDeviation As Single = Math.Sqrt(highDeviations / (elements - lowCount)).RoundSingle(digits:=1)
             Select Case True
                 Case highDeviation <= 2
                     Me.HighTirComplianceLabel.Text = $"High{vbCrLf}Excellent{Superscript2}"

@@ -92,7 +92,9 @@ Public Class SG
     Public ReadOnly Property sgMmolL As Single
         Get
             If Single.IsNaN(_sg) Then Return _sg
-            Return If(NativeMmolL, _sg, (_sg / MmolLUnitsDivisor).RoundSingle(digits:=2, considerValue:=False))
+            Return If(NativeMmolL,
+                      _sg,
+                      (_sg / MmolLUnitsDivisor).RoundSingle(digits:=2))
         End Get
     End Property
 
@@ -145,7 +147,8 @@ Public Class SG
 
     Public Overrides Function ToString() As String
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        Return Me.sg.ToString(format:=GetFormatForBg(), provider)
+        Dim format As String = GetSgFormat()
+        Return Me.sg.ToString(format, provider)
     End Function
 
     ''' <summary>

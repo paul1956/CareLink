@@ -202,7 +202,7 @@ Public Module StringExtensions
     ''' <returns>A truncated string representation of the <see langword="Single"/> value.</returns>
     ''' <remarks>Used for truncating values to a specific number of decimal places.</remarks>
     <Extension>
-    Public Function TruncateSingleString(expression As String, digits As Integer) As String
+    Public Function TruncateSingle(expression As String, digits As Integer) As String
         Dim i As Integer = expression.IndexOfAny(anyOf:=s_commaOrPeriod)
         If i < 0 Then
             If Not IsNumeric(expression) Then

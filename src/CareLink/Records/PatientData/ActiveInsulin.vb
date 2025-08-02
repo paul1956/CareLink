@@ -18,7 +18,7 @@ Public Class ActiveInsulin
             Return _amount
         End Get
         Set
-            _amount = Value.RoundSingle(digits:=3, considerValue:=False)
+            _amount = Value.RoundSingle(digits:=3)
         End Set
     End Property
 

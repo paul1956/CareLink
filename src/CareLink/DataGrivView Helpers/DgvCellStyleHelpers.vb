@@ -398,7 +398,7 @@ Public Module DgvCellStyleHelpers
             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
         Else
             Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-            Dim format As String = GetFormatForBg()
+            Dim format As String = GetSgFormat()
             Select Case sgColumnName
                 Case partialKey
                     e.Value = sensorValue.ToString(format, provider)
@@ -420,7 +420,7 @@ Public Module DgvCellStyleHelpers
                     End If
                 Case $"{partialKey}MmolL"
                     e.Value = sensorValue.ToString(format:="F1", provider)
-                    If sensorValue.RoundSingle(digits:=1, considerValue:=False) < GetTirLowLimit(asMmolL:=True) Then
+                    If sensorValue.RoundSingle(digits:=1) < GetTirLowLimit(asMmolL:=True) Then
                         dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
                     ElseIf sensorValue > GetTirHighLimit(asMmolL:=True) Then
                         dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Yellow, isUri:=False)

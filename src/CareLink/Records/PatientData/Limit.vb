@@ -33,7 +33,7 @@ Public Class Limit
         Get
             Return If(NativeMmolL,
                       Me.HighLimit,
-                      (Me.HighLimit / MmolLUnitsDivisor).RoundSingle(digits:=2, considerValue:=False))
+                      (Me.HighLimit / MmolLUnitsDivisor).RoundSingle(digits:=2))
         End Get
     End Property
 
@@ -58,7 +58,7 @@ Public Class Limit
         Get
             Return If(NativeMmolL,
                       Me.LowLimit,
-                      (Me.LowLimit / MmolLUnitsDivisor).RoundSingle(digits:=2, considerValue:=False))
+                      (Me.LowLimit / MmolLUnitsDivisor).RoundSingle(digits:=2))
         End Get
     End Property
 

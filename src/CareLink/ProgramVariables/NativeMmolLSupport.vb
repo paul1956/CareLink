@@ -16,19 +16,19 @@ Public Module NativeMmolLSupport
     End Function
 
     ''' <summary>
-    '''  Gets the Format for String conversion based on the current mmol/L setting.
-    ''' </summary>
-    ''' <returns>if MmolL "F1" or "F0" if mg/dL </returns>
-    Public Function GetFormatForBg() As String
-        Return If(NativeMmolL, "F1", "F0")
-    End Function
-
-    ''' <summary>
     '''  Gets the number of Precision Digits for String conversion based on the current mmol/L setting.
     ''' </summary>
     ''' <returns>if MmolL 2 or 0 if mg/dL </returns>
     Public Function GetPrecisionDigits() As Integer
         Return If(NativeMmolL, 2, 0)
+    End Function
+
+    ''' <summary>
+    '''  Gets the Format for String conversion based on the current mmol/L setting.
+    ''' </summary>
+    ''' <returns>if MmolL "F1" or "F0" if mg/dL </returns>
+    Public Function GetSgFormat() As String
+        Return If(NativeMmolL, "F1", "F0")
     End Function
 
     ''' <summary>
@@ -44,12 +44,12 @@ Public Module NativeMmolLSupport
     ''' </remarks>
     Public Function GetSgFormat(withSign As Boolean) As String
         Return If(withSign,
-            If(NativeMmolL,
-               $"+0{DecimalSeparator}0;-#{DecimalSeparator}0",
-               "+0;-#"),
-            If(NativeMmolL,
-               $"0{DecimalSeparator}0",
-               "0"))
+                  If(NativeMmolL,
+                     $"+0{DecimalSeparator}0;-#{DecimalSeparator}0",
+                     "+0;-#"),
+                  If(NativeMmolL,
+                     $"0{DecimalSeparator}0",
+                     "0"))
     End Function
 
 End Module

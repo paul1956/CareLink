@@ -215,9 +215,10 @@ Friend Module PlotMarkers
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then Continue For
                         If markerMealDictionary.TryAdd(key:=markerOADatetime, value:=GetYMinValueFromNativeMmolL()) Then
-                            Dim height As Double = If(NativeMmolL,
-                                                      s_mealImage.Height / 2 / MmolLUnitsDivisor,
-                                                      s_mealImage.Height / 2)
+                            Dim height As Double =
+                                If(NativeMmolL,
+                                   s_mealImage.Height / 2 / MmolLUnitsDivisor,
+                                   s_mealImage.Height / 2)
                             markerSeriesPoints.AddXY(xValue:=markerOADatetime, yValue:=GetYMinValueFromNativeMmolL() + height)
                             markerSeriesPoints.Last.Color = Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
@@ -247,7 +248,7 @@ Friend Module PlotMarkers
                                         insulinRow:=GetInsulinYValue(),
                                         legendText:="Basal Series",
                                         DrawFromBottom:=False,
-                                        tag:=$"Manual Basal: {kvp.Value.ToString.TruncateSingleString(digits:=3)}U")
+                                        tag:=$"Manual Basal: {kvp.Value.ToString.TruncateSingle(digits:=3)}U")
                                 End With
                             Next
 
@@ -370,7 +371,7 @@ Friend Module PlotMarkers
                                 Stop
                         End Select
                     Case "MEAL"
-                        Dim value As Single = CSng(TreatmentInsulinRow * 0.95).RoundSingle(digits:=3, considerValue:=False)
+                        Dim value As Single = CSng(TreatmentInsulinRow * 0.95).RoundSingle(digits:=3)
                         If s_treatmentMarkerMealDictionary.TryAdd(key:=markerOADateTime, value) Then
                             markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=value)
                             CreateCallout(
@@ -401,7 +402,7 @@ Friend Module PlotMarkers
                                         insulinRow:=TreatmentInsulinRow,
                                         legendText:=BasalSeriesName,
                                         DrawFromBottom:=True,
-                                        tag:=$"Manual Basal: {kvp.Value.ToString.TruncateSingleString(digits:=3)}U")
+                                        tag:=$"Manual Basal: {kvp.Value.ToString.TruncateSingle(digits:=3)}U")
                                 End With
                             Next
                         End If
