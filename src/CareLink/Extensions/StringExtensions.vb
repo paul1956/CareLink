@@ -126,10 +126,10 @@ Public Module StringExtensions
     '''  where the first letter of every word is capitalized and the rest are lower case.
     ''' </summary>
     ''' <param name="value">A string like "THIS_IS A TITLE".</param>
-    ''' <param name="separateNumbers">If true, separates numbers into their own words.</param>
+    ''' <param name="separateDigits">If true, separates numbers into their own words.</param>
     ''' <returns>A title-cased string.</returns>
     <Extension()>
-    Public Function ToTitle(value As String, Optional separateNumbers As Boolean = False) As String
+    Public Function ToTitle(value As String, Optional separateDigits As Boolean = False) As String
         If String.IsNullOrWhiteSpace(value) Then
             Return ""
         End If
@@ -144,7 +144,7 @@ Public Module StringExtensions
             ElseIf firstLetterOfWord Then
                 firstLetterOfWord = False
                 result.Append(value:=Char.ToUpperInvariant(c))
-            ElseIf separateNumbers AndAlso IsNumeric(Expression:=c) Then
+            ElseIf separateDigits AndAlso IsNumeric(Expression:=c) Then
                 firstLetterOfWord = True
                 result.Append(value:=" "c)
                 result.Append(value:=Char.ToLowerInvariant(c))
