@@ -1636,7 +1636,7 @@ Public Class Form1
                 ' Determine if this column is sorted and which direction
                 Dim glyphDir As SortOrder = col.HeaderCell.SortGlyphDirection
                 If glyphDir <> SortOrder.None Then
-                    Dim color As Color = color.White
+                    Dim color As Color = Color.White
                     Dim x As Integer = e.CellBounds.Right - 18
                     Dim y As Integer = e.CellBounds.Top + (e.CellBounds.Height \ 2) - 4
                     Dim points() As Point = If(glyphDir = SortOrder.Ascending,
@@ -2337,7 +2337,7 @@ Public Class Form1
             .CheckPathExists = True,
             .DefaultExt = "pdf",
             .Filter = $"Settings file (*.pdf)|*.pdf",
-            .initialDirectory = initialDirectory,
+            .InitialDirectory = initialDirectory,
             .Multiselect = False,
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
@@ -3402,7 +3402,7 @@ Public Class Form1
                 .BackSecondaryColor = Color.Transparent,
                 .BorderlineColor = Color.Transparent,
                 .BorderlineWidth = 0,
-                .size = New Size(width:=size, height:=size)}
+                .Size = New Size(width:=size, height:=size)}
 
             With Me.TimeInRangeChart
                 .BorderSkin.BackSecondaryColor = Color.Transparent
