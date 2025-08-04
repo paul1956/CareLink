@@ -92,7 +92,9 @@ Public Class SG
     Public ReadOnly Property sgMmolL As Single
         Get
             If Single.IsNaN(_sg) Then Return _sg
-            Return If(NativeMmolL, _sg, (_sg / MmolLUnitsDivisor).RoundSingle(digits:=2, considerValue:=False))
+            Return If(NativeMmolL,
+                      _sg,
+                      (_sg / MmolLUnitsDivisor).RoundSingle(digits:=2))
         End Get
     End Property
 
@@ -139,14 +141,9 @@ Public Class SG
     Public ReadOnly Property Message As String
         Get
             _sensorState = If(_sensorState, "")
-            Return TranslateAndTruncateSensorMessage(key:=PatientData.SensorState, truncate:=False)
+            Return FormatSensorMessage(key:=PatientData.SensorState, truncate:=False)
         End Get
     End Property
-
-    Public Overrides Function ToString() As String
-        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        Return Me.sg.ToString(format:=GetFormatForBg(), provider)
-    End Function
 
     ''' <summary>
     '''  Translates the sensor state message based on the <see langword="key"/>.
@@ -154,12 +151,12 @@ Public Class SG
     '''  If debugging is enabled, it will show a message box with the unknown sensor state.
     '''  If the sensor state message contains an ellipsis ("..."), it will truncate the message to the first line.
     ''' </summary>
-    ''' <param name="key">The message key</param>
-    ''' <returns>
-    '''  A string representing the translated and truncated sensor state message.
-    ''' </returns>
+    ''' <param name="key">The key for the sensor state message.</param>
     ''' <param name="truncate">If <see langword="True"/> the message will be truncated to the first line.</param>
-    Public Shared Function TranslateAndTruncateSensorMessage(key As String, Optional truncate As Boolean = False) As String
+    ''' <returns>
+    '''  A string representing the translated sensor state message.
+    ''' </returns>
+    Public Shared Function FormatSensorMessage(key As String, Optional truncate As Boolean = False) As String
         Dim value As String = ""
         If s_sensorMessages.TryGetValue(key, value) Then
             If Not truncate Then
@@ -182,6 +179,18 @@ Public Class SG
             Return value.ToTitle
         End If
 
+    End Function
+
+    ''' <summary>
+    '''  Gets the format string for the sensor glucose value based on the native mmol/L setting.
+    ''' </summary>
+    ''' <returns>
+    '''  A format string for displaying the sensor glucose value.
+    ''' </returns>
+    Public Overrides Function ToString() As String
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+        Dim format As String = GetSgFormat()
+        Return Me.sg.ToString(format, provider)
     End Function
 
 End Class

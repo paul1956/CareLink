@@ -22,7 +22,7 @@ Friend Module MathExtensions
     Friend Function GetRoundedValue(value As Single, digits As Integer) As Single
         Return If(digits = 3,
                   value.RoundTo025,
-                  value.RoundSingle(digits, considerValue:=False))
+                  value.RoundSingle(digits))
     End Function
 
     ''' <summary>
@@ -34,22 +34,21 @@ Friend Module MathExtensions
     ''' <param name="considerValue">Whether to consider the value for special rounding.</param>
     ''' <returns>The rounded Single value.</returns>
     <Extension>
-    Friend Function RoundSingle(value As Single, digits As Integer, considerValue As Boolean) As Single
+    Friend Function RoundSingle(value As Single, digits As Integer, Optional considerValue As Boolean = False) As Single
         digits = GetDigits(value, digits, considerValue)
         Return CSng(Math.Round(value, digits))
     End Function
 
     ''' <summary>
-    '''  Rounds a Double value to the specified number of <paramref name="digits"/> and returns as Single.
+    '''  Rounds a <see langword="Double"/> value to the specified number of <paramref name="digits"/>.
     '''  If <paramref name="considerValue"/> is True and the value is less than 10, rounds to 2 decimal digits.
     ''' </summary>
     ''' <param name="value">The Double value to round.</param>
     ''' <param name="digits">The number of decimal digits to round to.</param>
-    ''' <param name="considerValue">Whether to consider the value for special rounding (optional).</param>
-    ''' <returns>The rounded value as Single.</returns>
+    ''' <returns>The rounded Double value.</returns>
     <Extension>
-    Friend Function RoundToSingle(value As Double, digits As Integer, Optional considerValue As Boolean = False) As Single
-        digits = GetDigits(value, digits, considerValue)
+    Friend Function RoundSingle(value As Double, digits As Integer) As Single
+        digits = GetDigits(value, digits, considerValue:=False)
         Return CSng(Math.Round(value, digits))
     End Function
 

@@ -45,7 +45,7 @@ Public Class LastSG
 
     Public Overrides Function ToString() As String
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        Dim format As String = GetFormatForBg()
+        Dim format As String = GetSgFormat()
         Return Me.Sg.ToString(format, provider)
     End Function
 

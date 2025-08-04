@@ -264,7 +264,12 @@ Public Module JsonExtensions
     ''' <param name="considerValue">Whether to consider the value when rounding.</param>
     ''' <returns>The <see langword="Single"/> value if found; otherwise, <see cref="Single.NaN"/>.</returns>
     <Extension>
-    Public Function GetSingleFromJson(item As Marker, key As String, Optional digits As Integer = -1, Optional considerValue As Boolean = False) As Single
+    Public Function GetSingleFromJson(
+        item As Marker,
+        key As String,
+        Optional digits As Integer = -1,
+        Optional considerValue As Boolean = False) As Single
+
         Dim value As Object = Nothing
         Dim result As Single = Single.NaN
         key = key.ToLowerCamelCase

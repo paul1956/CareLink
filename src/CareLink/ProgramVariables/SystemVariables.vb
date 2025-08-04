@@ -111,15 +111,18 @@ Friend Module SystemVariables
                 Return sgR.sg
             End Function
         Dim maxYScaled As Single = s_sgRecords.Max(Of Single)(selector) + 2
-        Return If(Single.IsNaN(maxYScaled),
-                  If(NativeMmolL, mmoLInsulinYValue, mmDlInsulinYValue),
-                  If(NativeMmolL,
-                     If(s_sgRecords.Count = 0 OrElse maxYScaled > mmoLInsulinYValue,
-                        342 / MmolLUnitsDivisor,
-                        Math.Max(maxYScaled, 260 / MmolLUnitsDivisor)),
-                     If(s_sgRecords.Count = 0 OrElse maxYScaled > mmDlInsulinYValue,
-                        342,
-                        Math.Max(maxYScaled, 260))))
+        If Single.IsNaN(maxYScaled) Then
+            Return If(NativeMmolL, mmoLInsulinYValue, mmDlInsulinYValue)
+        End If
+
+        Dim noRecords As Boolean = s_sgRecords.Count = 0
+        Dim mmolValue As Single = If(noRecords OrElse maxYScaled > mmoLInsulinYValue,
+                                     342 / MmolLUnitsDivisor,
+                                     Math.Max(maxYScaled, 260 / MmolLUnitsDivisor))
+        Dim mgdlValue As Single = If(noRecords OrElse maxYScaled > mmDlInsulinYValue,
+                                     342,
+                                     Math.Max(maxYScaled, 260))
+        Return If(NativeMmolL, mmolValue, mgdlValue)
     End Function
 
     ''' <summary>
@@ -131,10 +134,7 @@ Friend Module SystemVariables
     Friend Function GetSgTarget() As Single
         Return If(CurrentUser.CurrentTarget <> 0,
                   CurrentUser.CurrentTarget,
-                  If(NativeMmolL,
-                     MmolLItemsPeriod.Last.Value,
-                     MgDlItems.Last.Value)
-                    )
+                  If(NativeMmolL, MmolLItemsPeriod.Last.Value, MgDlItems.Last.Value))
     End Function
 
     ''' <summary>

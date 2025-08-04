@@ -173,7 +173,7 @@ Friend Module SpeechSupport
 
         Dim message As String = ""
         Dim recognizedText As String = e.Result.Text.ToLower
-        Dim confidence As Single = e.Result.Confidence.RoundSingle(2, False)
+        Dim confidence As Single = e.Result.Confidence.RoundSingle(digits:=2)
         If confidence < 0.8 Then
             message = $"Rejected: {recognizedText} with confidence {confidence}%"
             Debug.WriteLine(message)

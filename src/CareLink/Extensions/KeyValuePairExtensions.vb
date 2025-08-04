@@ -32,7 +32,7 @@ Friend Module KeyValuePairExtensions
         Dim digits As Integer = GetPrecisionDigits()
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Return If(NativeMmolL,
-                  (value / MmolLUnitsDivisor).RoundSingle(digits, considerValue:=False).ToString(provider),
+                  (value / MmolLUnitsDivisor).RoundSingle(digits).ToString(provider),
                   value.ToString(provider))
     End Function
 
@@ -69,11 +69,11 @@ Friend Module KeyValuePairExtensions
                 Stop
         End Select
 
-        Dim s As Single = If(
-            NativeMmolL,
-            (itemAsSingle / MmolLUnitsDivisor).RoundSingle(digits:=GetPrecisionDigits(), considerValue:=False),
-            itemAsSingle)
-        Return s.ToString(Provider)
+        Dim s As Single =
+            If(NativeMmolL,
+               (itemAsSingle / MmolLUnitsDivisor).RoundSingle(digits:=GetPrecisionDigits()),
+               itemAsSingle)
+        Return s.ToString(provider)
     End Function
 
     ''' <summary>

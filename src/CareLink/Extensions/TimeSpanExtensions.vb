@@ -37,15 +37,15 @@ Friend Module TimeSpanExtensions
     '''  depending on the values.
     ''' </returns>
     <Extension>
-    Public Function MinutesToDaysHoursMinutes(minutes As Integer) As String
-        Dim days As Integer = minutes \ 1440 ' 1440 minutes in a day
-        Dim hours As Integer = (minutes Mod 1440) \ 60
-        Dim mins As Integer = minutes Mod 60
+    Public Function MinutesToDaysHoursMinutes(minutes As UInteger) As String
+        Dim days As UInteger = CUInt(minutes \ 1440) ' 1440 minutes in a day
+        Dim hours As UInteger = CUInt((minutes Mod 1440) \ 60)
+        Dim mins As UInteger = CUInt(minutes Mod 60)
 
         Dim parts As New List(Of String)
-        If days > 0 Then parts.Add(days.ToTimeUnits(Unit:="day"))
-        If hours > 0 Then parts.Add(hours.ToTimeUnits(Unit:="hour"))
-        If mins > 0 OrElse parts.Count = 0 Then parts.Add(mins.ToTimeUnits(Unit:="minute"))
+        If days > 0 Then parts.Add(item:=days.ToTimeUnits(Unit:="day"))
+        If hours > 0 Then parts.Add(item:=hours.ToTimeUnits(Unit:="hour"))
+        If mins > 0 OrElse parts.Count = 0 Then parts.Add(item:=mins.ToTimeUnits(Unit:="minute"))
 
         Return String.Join(separator:=", ", values:=parts)
     End Function

@@ -398,7 +398,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.sensorDurationMinutes)
-                    Dim sensorDurationMinutes As Integer = CInt(kvp.Value)
+                    Dim sensorDurationMinutes As UInteger = CUInt(kvp.Value)
                     message = sensorDurationMinutes.MinutesToDaysHoursMinutes
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
