@@ -51,19 +51,48 @@ Public Module StringExtensions
     ''' <param name="chars">The list of characters to find.</param>
     ''' <param name="startIndex">The index to start searching from.</param>
     ''' <returns>The index of the first occurrence of any character in the list, or -1 if not found.</returns>
-    ''' <exception cref="ArgumentException">Thrown if input parameters are invalid.</exception>
     <Extension>
     Public Function FindIndexOfAnyChar(inputString As String, chars As List(Of Char), startIndex As Integer) As Integer
-        If inputString Is Nothing OrElse chars Is Nothing OrElse startIndex < 0 OrElse startIndex >= inputString.Length Then
-            Throw New ArgumentException(message:="Invalid input parameters.")
+        If inputString Is Nothing Then
+            Return -1
         End If
 
+        If chars Is Nothing OrElse startIndex < 0 OrElse startIndex >= inputString.Length Then
+            Throw New ArgumentException(message:="Invalid input parameters.")
+        End If
         For i As Integer = startIndex To inputString.Length - 1
             If chars.Contains(item:=inputString(index:=i)) Then
                 Return i
             End If
         Next
         Return -1 ' Return -1 if no character is found
+    End Function
+
+    ''' <summary>
+    '''  Find the index of the first occurrence of any character in the <paramref name="chars"/> list
+    ''' </summary>
+    ''' <param name="inputString">The string to search.</param>
+    ''' <param name="strings">The list of strings to find.</param>
+    ''' <returns>The String found or String.Empty if not found.</returns>
+    <Extension>
+    Public Function FindAnyStringInInput(inputString As String, strings As List(Of String)) As _
+        (Units As String, Index As Integer)
+
+        If strings Is Nothing Then
+            Throw New ArgumentException(message:="Invalid input parameters.")
+        End If
+
+        If inputString Is Nothing Then
+            Return (Units:=String.Empty, Index:=-1)
+        End If
+
+        For Each value As String In strings
+            Dim index As Integer = inputString.IndexOf(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
+            If index <> -1 Then
+                Return (Units:=UnitsStrings(key:=value.ToUpperInvariant), index)
+            End If
+        Next
+        Return (Units:=String.Empty, Index:=-1)
     End Function
 
     ''' <summary>
@@ -117,7 +146,7 @@ Public Module StringExtensions
     ''' <param name="Unit">The unit of time to use, e.g., "minute" or "hour".</param>
     ''' <returns>A formatted string representing the total units.</returns>
     <Extension>
-    Public Function ToTimeUnits(totalUnits As Integer, Unit As String) As String
+    Public Function ToTimeUnits(totalUnits As UInteger, Unit As String) As String
         Return $"{totalUnits:N0} {If(totalUnits = 1, Unit, $"{Unit}s")}"
     End Function
 
@@ -126,29 +155,43 @@ Public Module StringExtensions
     '''  where the first letter of every word is capitalized and the rest are lower case.
     ''' </summary>
     ''' <param name="value">A string like "THIS_IS A TITLE".</param>
-    ''' <param name="separateNumbers">If true, separates numbers into their own words.</param>
+    ''' <param name="separateDigits">If true, separates numbers into their own words.</param>
     ''' <returns>A title-cased string.</returns>
     <Extension()>
-    Public Function ToTitle(value As String, Optional separateNumbers As Boolean = False) As String
+    Public Function ToTitle(value As String, Optional separateDigits As Boolean = False) As String
         If String.IsNullOrWhiteSpace(value) Then
             Return ""
         End If
 
         Dim c As Char = value(index:=0)
-        Dim result As New StringBuilder(value:=Char.ToUpperInvariant(c))
+        Dim previousCharNumeric As Boolean = False
         Dim firstLetterOfWord As Boolean = False
+        Dim result As New StringBuilder(value:=Char.ToUpperInvariant(c))
+
+        If separateDigits AndAlso IsNumeric(Expression:=c) Then
+            previousCharNumeric = True
+            firstLetterOfWord = True
+        End If
+
         For Each c In value.Substring(startIndex:=1)
             If c = " "c Or c = "_"c Then
                 firstLetterOfWord = True
+                previousCharNumeric = False
                 result.Append(value:=" "c)
-            ElseIf firstLetterOfWord Then
-                firstLetterOfWord = False
-                result.Append(value:=Char.ToUpperInvariant(c))
-            ElseIf separateNumbers AndAlso IsNumeric(Expression:=c) Then
+            ElseIf separateDigits AndAlso IsNumeric(Expression:=c) Then
                 firstLetterOfWord = True
+                previousCharNumeric = True
                 result.Append(value:=" "c)
                 result.Append(value:=Char.ToLowerInvariant(c))
+            ElseIf firstLetterOfWord Then
+                If previousCharNumeric Then
+                    previousCharNumeric = False
+                    result.Append(value:=" "c)
+                End If
+                firstLetterOfWord = False
+                result.Append(value:=Char.ToUpperInvariant(c))
             Else
+                previousCharNumeric = IsNumeric(Expression:=c)
                 result.Append(value:=Char.ToLowerInvariant(c))
             End If
         Next
@@ -174,21 +217,31 @@ Public Module StringExtensions
         Dim result As New StringBuilder(value:=Char.ToUpperInvariant(value(index:=0)))
         Dim lastWasNumeric As Boolean = Char.IsNumber(value(index:=0))
         For Each c As Char In value.Substring(startIndex:=1)
-            If Char.IsLower(c) OrElse lastWasNumeric Then
+            If Char.IsLower(c) Then
+                If lastWasNumeric Then
+                    result.Append(value:=Char.ToUpperInvariant(c))
+                Else
+                    result.Append(value:=c)
+                End If
+                lastWasNumeric = False
+            ElseIf Char.IsSymbol(c) Then
+                ' If the character is a symbol, we assume it is part of a word
                 result.Append(value:=c)
                 lastWasNumeric = False
             ElseIf Char.IsNumber(c) AndAlso Not separateNumbers Then
                 result.Append(value:=c)
                 lastWasNumeric = True
             Else
-                result.Append(value:=$" {Char.ToUpperInvariant(c)}")
+                ' add a space before the uppercase letter
+                result.Append(value:=" "c)
+                result.Append(value:=Char.ToUpperInvariant(c))
                 lastWasNumeric = False
             End If
         Next
         Dim resultString As String = result.Replace(oldValue:="Care Link", newValue:="CareLink").ToString
-        If Not resultString.Contains(value:="™"c) Then
-            resultString = resultString.Replace(oldValue:="CareLink", newValue:="CareLink™")
-        End If
+        resultString = If(Not resultString.Contains(value:="™"c),
+                          resultString.ReplaceIgnoreCase(oldValue:="CareLink", newValue:="CareLink™"),
+                          resultString.ReplaceIgnoreCase(oldValue:="CareLink", newValue:="CareLink"))
         resultString = resultString.Replace(oldValue:="S G", newValue:="Sensor Glucose")
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Return resultString.Replace(oldValue:="time", newValue:=" Time", ignoreCase:=False, culture:=provider)
@@ -228,7 +281,7 @@ Public Module StringExtensions
     ''' </returns>
     <Extension()>
     Public Function ContainsIgnoreCase(s1 As String, value As String) As Boolean
-        If s1 Is Nothing OrElse value Is Nothing Then Return False
+        If s1 Is Nothing Then Return False
         Return s1.Contains(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
     End Function
 

@@ -122,7 +122,7 @@ Friend Module SummaryHelpers
                             Select Case key
                                 Case "basalName"
                                     If additionalInfo.TryGetValue(key, value:=basalName) Then
-                                        basalName = basalName.ToTitle(separateNumbers:=True)
+                                        basalName = basalName.ToTitle(separateDigits:=True)
                                     Else
                                         Stop
                                     End If
