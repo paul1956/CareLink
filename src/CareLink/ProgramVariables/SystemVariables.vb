@@ -4,7 +4,7 @@
 
 Imports System.Globalization
 
-Friend Module SystemVariables
+Public Module SystemVariables
 
 #Region "Used for painting"
 
@@ -24,7 +24,7 @@ Friend Module SystemVariables
     Friend s_useLocalTimeZone As Boolean
     Friend s_userName As String = My.Settings.CareLinkUserName
     Friend s_webView2CacheDirectory As String
-    Friend Property CareLinkDecimalSeparator As Char = "."c
+    Friend ReadOnly Property CareLinkDecimalSeparator As Char = "."c
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property DecimalSeparator As String = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator
     Friend Property MaxBasalPerDose As Double
@@ -44,14 +44,14 @@ Friend Module SystemVariables
     ''' <returns>
     '''  The count of SG.sg values within the range and not NaN.
     ''' </returns>
-    Friend Function CountSgInTightRange(sgList As IEnumerable(Of SG)) As UInteger
+    Friend Function CountSgInTightRange(sgList As IEnumerable(Of SG)) As Integer
         Dim predicate As Func(Of SG, Boolean) =
             Function(sg As SG) As Boolean
                 Return Not Single.IsNaN(sg.sg) AndAlso
                        sg.sgMgdL >= OptionsConfigureTiTR.LowThreshold AndAlso
                        sg.sgMgdL <= 140.0
             End Function
-        Return CUInt(sgList.Count(predicate))
+        Return CInt(sgList.Count(predicate))
     End Function
 
     ''' <summary>
@@ -62,12 +62,12 @@ Friend Module SystemVariables
     ''' <returns>
     '''  The count of valid SG records.
     ''' </returns>
-    Friend Function CountValidSg(sgList As IEnumerable(Of SG)) As UInteger
+    Friend Function CountValidSg(sgList As IEnumerable(Of SG)) As Integer
         Dim predicate As Func(Of SG, Boolean) =
             Function(sg As SG) As Boolean
                 Return Not Single.IsNaN(sg.sg) AndAlso sg.sgMgdL <> 0.0
             End Function
-        Return CUInt(sgList.Count(predicate))
+        Return CInt(sgList.Count(predicate))
     End Function
 
     ''' <summary>
@@ -76,11 +76,11 @@ Friend Module SystemVariables
     ''' <returns>
     '''  A tuple containing the above hyper limit as an unsigned integer and its string representation.
     ''' </returns>
-    Friend Function GetAboveHyperLimit() As (Uint As UInteger, Str As String)
+    Friend Function GetAboveHyperLimit() As (int As Integer, Str As String)
         Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.GetRoundedValue(digits:=1)
         Return If(aboveHyperLimit >= 0,
-                  (CUInt(aboveHyperLimit), aboveHyperLimit.ToString),
-                  (CUInt(0), "??? "))
+                  (CInt(aboveHyperLimit), aboveHyperLimit.ToString),
+                  (CInt(0), "??? "))
     End Function
 
     ''' <summary>
@@ -146,17 +146,17 @@ Friend Module SystemVariables
     ''' <returns>
     '''  A <see cref="tuple"/> containing the TIR as an unsigned integer and its string representation.
     ''' </returns>
-    Friend Function GetTIR(Optional tight As Boolean = False) As (percent As UInteger, asString As String)
+    Friend Function GetTIR(Optional tight As Boolean = False) As (Percent As UInteger, AsString As String)
         If tight Then
             If s_sgRecords Is Nothing Then
                 Return (0, "  ???")
             End If
 
-            Dim validSgCount As UInteger = CountValidSg(s_sgRecords)
+            Dim validSgCount As Integer = CountValidSg(sgList:=s_sgRecords)
             If validSgCount = 0 Then
                 Return (0, "  ???")
             End If
-            Dim inTightRangeCount As UInteger = CountSgInTightRange(s_sgRecords)
+            Dim inTightRangeCount As Integer = CountSgInTightRange(sgList:=s_sgRecords)
             Dim percentInTightRange As UInteger = CUInt(inTightRangeCount / validSgCount * 100)
             Return (percentInTightRange, percentInTightRange.ToString())
         End If

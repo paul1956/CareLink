@@ -51,7 +51,7 @@ Friend Module Form1UpdateHelpers
         Dim val As Decimal = CDec(Convert.ToInt32(value) * 0.24)
         Dim hours As Integer = Convert.ToInt32(value:=val)
         Dim minutes As Integer = CInt((val Mod 1) * 60)
-        Return If(minutes = 0,
+        Return If(val.FractionalPart = 0,
                   $"{hours} hours, out of last 24 hours.",
                   $"{hours} hours and {minutes} minutes, out of last 24 hours.")
     End Function
@@ -398,7 +398,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.sensorDurationMinutes)
-                    Dim sensorDurationMinutes As UInteger = CUInt(kvp.Value)
+                    Dim sensorDurationMinutes As Integer = CInt(kvp.Value)
                     message = sensorDurationMinutes.MinutesToDaysHoursMinutes
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
@@ -510,7 +510,7 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.basal)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
-                    s_basalList(0) = If(String.IsNullOrWhiteSpace(kvp.Value), New Basal, PatientData.Basal)
+                    s_basalList(index:=0) = If(String.IsNullOrWhiteSpace(kvp.Value), New Basal, PatientData.Basal)
                 Case NameOf(ServerDataIndexes.lastSensorTime)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
@@ -690,7 +690,7 @@ Friend Module Form1UpdateHelpers
                             Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
                             MsgBox(
                                 heading:=$"{typeValue} Is unknown banner message!",
-                                text:="",
+                                prompt:="",
                                 buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                                 title:=GetTitleFromStack(stackFrame))
                         End If
@@ -705,10 +705,10 @@ Friend Module Form1UpdateHelpers
         Dim safeBasalDurationStr As String = ""
         Dim key As String = NameOf(TherapyAlgorithmState.SafeBasalDuration)
         If s_therapyAlgorithmStateValue?.TryGetValue(key, value:=safeBasalDurationStr) Then
-            Dim safeBasalDuration As UInteger = CUInt(safeBasalDurationStr)
+            Dim safeBasalDuration As Integer = CInt(safeBasalDurationStr)
             If safeBasalDuration > 0 Then
                 mainForm.LastSgOrExitTimeLabel.Text =
-                    $"Exit In { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(units:="hr")}"
+                    $"Exit In { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(unit:="hr")}"
                 mainForm.LastSgOrExitTimeLabel.Visible = True
             End If
         End If

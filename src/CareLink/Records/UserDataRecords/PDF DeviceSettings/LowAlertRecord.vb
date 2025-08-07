@@ -8,7 +8,7 @@ Public Class LowAlertRecord
         If s.Columns.Count <> 5 Then
             Stop
         End If
-        Dim s1() As String = s.Columns(0).Split(" ", StringSplitOptions.RemoveEmptyEntries)
+        Dim s1() As String = s.Columns(index:=0).Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
         Select Case s1.Length
             Case 0
                 Exit Sub
@@ -24,13 +24,13 @@ Public Class LowAlertRecord
         End Select
 
         Me.ValueUnits = valueUnits
-        If Not TimeOnly.TryParse(s1(0), Me.Start) Then
+        If Not TimeOnly.TryParse(s:=s1(0), result:=Me.Start) Then
             Stop
         End If
 
         Me.LowLimit = s1(1).ParseSingleInvariant
         Me.Suspend = s.Columns(index:=1)
-        Me.SuspendOnLow = Me.Suspend.ContainsIgnoreCase("On")
+        Me.SuspendOnLow = Me.Suspend.ContainsIgnoreCase(value:="On")
         Me.AlertOnLow = s.Columns(index:=2) = "x"
         Me.AlertBeforeLow = s.Columns(index:=3) = "x"
         Me.ResumeBasalAlert = s.Columns(index:=4) = "x"

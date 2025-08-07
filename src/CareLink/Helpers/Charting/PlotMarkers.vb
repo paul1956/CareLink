@@ -265,11 +265,11 @@ Friend Module PlotMarkers
         Next
         If s_timeChangeMarkers.Count > 0 Then
             timeChangeSeries.IsVisibleInLegend = True
-            pageChart.ChartAreas(NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
-            pageChart.Legends(0).CustomItems.Last.Enabled = True
+            pageChart.ChartAreas(name:=NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+            pageChart.Legends(index:=0).CustomItems.Last.Enabled = True
         Else
             timeChangeSeries.IsVisibleInLegend = False
-            pageChart.Legends(0).CustomItems.Last.Enabled = False
+            pageChart.Legends(index:=0).CustomItems.Last.Enabled = False
         End If
     End Sub
 

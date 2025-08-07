@@ -13,12 +13,15 @@ Public Class DataGridViewNumericUpDownColumn
     Inherits DataGridViewColumn
 
     Private Const Browsable As Boolean = False
+    Private ReadOnly Property Message As String =
+        "Operation cannot be completed because this " &
+        NameOf(DataGridViewColumn) & " does not have a CellTemplate."
 
     ''' <summary>
     '''  Constructor for the <see cref="DataGridViewNumericUpDownColumn"/> class.
     ''' </summary>
     Public Sub New()
-        MyBase.New(New DataGridViewNumericUpDownCell)
+        MyBase.New(cellTemplate:=New DataGridViewNumericUpDownCell)
     End Sub
 
     ''' <summary>
@@ -33,7 +36,10 @@ Public Class DataGridViewNumericUpDownColumn
         Set(value As DataGridViewCell)
             Dim dataGridViewNumericUpDownCell1 As DataGridViewNumericUpDownCell = TryCast(value, DataGridViewNumericUpDownCell)
             If value IsNot Nothing AndAlso dataGridViewNumericUpDownCell1 Is Nothing Then
-                Throw New InvalidCastException("Value provided for CellTemplate must be of type DataGridViewNumericUpDownElements.DataGridViewNumericUpDownCell or derive from it.")
+                Dim message As String =
+                    $"Value provided for {NameOf(CellTemplate)} must be of type" &
+                    $" {NameOf(DataGridViewNumericUpDownCell)} or derive from it."
+                Throw New InvalidCastException(message)
             End If
 
             MyBase.CellTemplate = value
@@ -49,7 +55,7 @@ Public Class DataGridViewNumericUpDownColumn
     Public Property DecimalPlaces As Integer
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then
-                Throw New InvalidOperationException("Operation cannot be completed because this DataGridViewColumn does not have a CellTemplate.")
+                Throw New InvalidOperationException(Me.Message)
             End If
 
             Return Me.NumericUpDownCellTemplate.DecimalPlaces
@@ -57,7 +63,7 @@ Public Class DataGridViewNumericUpDownColumn
 
         Set(value As Integer)
             If Me.NumericUpDownCellTemplate Is Nothing Then
-                Throw New InvalidOperationException("Operation cannot be completed because this DataGridViewColumn does not have a CellTemplate.")
+                Throw New InvalidOperationException(Me.Message)
             End If
 
             ' Update the template cell so that subsequent cloned cells use the new value.
@@ -89,7 +95,7 @@ Public Class DataGridViewNumericUpDownColumn
     Public Property Increment As Decimal
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then
-                Throw New InvalidOperationException("Operation cannot be completed because this DataGridViewColumn does not have a CellTemplate.")
+                Throw New InvalidOperationException(Me.Message)
             End If
 
             Return Me.NumericUpDownCellTemplate.Increment
@@ -97,7 +103,7 @@ Public Class DataGridViewNumericUpDownColumn
 
         Set(value As Decimal)
             If Me.NumericUpDownCellTemplate Is Nothing Then
-                Throw New InvalidOperationException("Operation cannot be completed because this DataGridViewColumn does not have a CellTemplate.")
+                Throw New InvalidOperationException(Me.Message)
             End If
 
             Me.NumericUpDownCellTemplate.Increment = value
@@ -127,7 +133,7 @@ Public Class DataGridViewNumericUpDownColumn
     Public Property Maximum As Decimal
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then
-                Throw New InvalidOperationException("Operation cannot be completed because this DataGridViewColumn does not have a CellTemplate.")
+                Throw New InvalidOperationException(Me.Message)
             End If
 
             Return Me.NumericUpDownCellTemplate.Maximum
@@ -135,7 +141,7 @@ Public Class DataGridViewNumericUpDownColumn
 
         Set(value As Decimal)
             If Me.NumericUpDownCellTemplate Is Nothing Then
-                Throw New InvalidOperationException("Operation cannot be completed because this DataGridViewColumn does not have a CellTemplate.")
+                Throw New InvalidOperationException(Me.Message)
             End If
 
             Me.NumericUpDownCellTemplate.Maximum = value
@@ -172,7 +178,7 @@ Public Class DataGridViewNumericUpDownColumn
     Public Property Minimum As Decimal
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then
-                Throw New InvalidOperationException("Operation cannot be completed because this DataGridViewColumn does not have a CellTemplate.")
+                Throw New InvalidOperationException(Me.Message)
             End If
 
             Return Me.NumericUpDownCellTemplate.Minimum
@@ -180,7 +186,7 @@ Public Class DataGridViewNumericUpDownColumn
 
         Set(value As Decimal)
             If Me.NumericUpDownCellTemplate Is Nothing Then
-                Throw New InvalidOperationException("Operation cannot be completed because this DataGridViewColumn does not have a CellTemplate.")
+                Throw New InvalidOperationException(Me.Message)
             End If
 
             Me.NumericUpDownCellTemplate.Minimum = value
@@ -217,7 +223,7 @@ Public Class DataGridViewNumericUpDownColumn
     Public Property ThousandsSeparator As Boolean
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then
-                Throw New InvalidOperationException("Operation cannot be completed because this DataGridViewColumn does not have a CellTemplate.")
+                Throw New InvalidOperationException(Me.Message)
             End If
 
             Return Me.NumericUpDownCellTemplate.ThousandsSeparator
@@ -225,7 +231,7 @@ Public Class DataGridViewNumericUpDownColumn
 
         Set(value As Boolean)
             If Me.NumericUpDownCellTemplate Is Nothing Then
-                Throw New InvalidOperationException("Operation cannot be completed because this DataGridViewColumn does not have a CellTemplate.")
+                Throw New InvalidOperationException(Me.Message)
             End If
 
             Me.NumericUpDownCellTemplate.ThousandsSeparator = value
@@ -259,12 +265,12 @@ Public Class DataGridViewNumericUpDownColumn
     '''  Returns a standard compact string representation of the column.
     ''' </summary>
     Public Overrides Function ToString() As String
-        Dim sb As New StringBuilder(100)
-        sb.Append("DataGridViewNumericUpDownColumn { Name=")
-        sb.Append(Me.Name)
-        sb.Append(", Index=")
-        sb.Append(Me.Index.ToString(CultureInfo.CurrentCulture))
-        sb.Append(" }")
+        Dim sb As New StringBuilder(capacity:=100)
+        sb.Append(value:="DataGridViewNumericUpDownColumn { Name=")
+        sb.Append(value:=Me.Name)
+        sb.Append(value:=", Index=")
+        sb.Append(value:=Me.Index.ToString(provider:=CultureInfo.CurrentCulture))
+        sb.Append(value:=" }")
         Return sb.ToString()
     End Function
 

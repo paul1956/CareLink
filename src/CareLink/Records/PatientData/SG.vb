@@ -172,7 +172,7 @@ Public Class SG
                 Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
                 MsgBox(
                     heading:=$"{PatientData.SensorState} is unknown sensor message",
-                    text:="",
+                    prompt:="",
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                     title:=GetTitleFromStack(stackFrame))
             End If

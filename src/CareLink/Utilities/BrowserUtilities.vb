@@ -58,7 +58,7 @@ Friend Module BrowserUtilities
             Else
                 MsgBox(
                     heading:=$"Your default browser can't be found!",
-                    text:=$"Please use any browser and navigate to {url}.",
+                    prompt:=$"Please use any browser and navigate to {url}.",
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation Or MsgBoxStyle.MsgBoxSetForeground,
                     title:="Error Launching Browser")
             End If

@@ -206,16 +206,16 @@ Friend Module SummaryHelpers
                     .Replace(oldValue:="(unitsRemaining)", newValue:=unitsRemaining) _
                     .Replace(oldValue:="(vbCrLf)", newValue:=vbCrLf)
             Else
-                Dim text As String = $"faultId = '{faultId}'"
+                Dim prompt As String = $"faultId = '{faultId}'"
                 If Debugger.IsAttached Then
                     Stop
                     MsgBox(
                         heading:="Unknown faultId",
-                        text,
+                        prompt,
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                         title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
                 End If
-                Return text
+                Return prompt
             End If
         Catch ex As Exception
             Stop
@@ -285,7 +285,7 @@ Friend Module SummaryHelpers
                                 Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
                                 MsgBox(
                                     heading:=$"{kvp.Value} is unknown Notification Messages",
-                                    text:=String.Empty,
+                                    prompt:=String.Empty,
                                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                                     title:=GetTitleFromStack(stackFrame))
                             End If
@@ -370,7 +370,7 @@ Friend Module SummaryHelpers
             If Debugger.IsAttached Then
                 MsgBox(
                     heading:=$"{tReturnType} type is not yet defined.",
-                    text:=String.Empty,
+                    prompt:=String.Empty,
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                     title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
             End If

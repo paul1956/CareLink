@@ -145,7 +145,7 @@ Public Module DictionaryExtensions
                 Stop
                 MsgBox(
                     heading:=$"'{row.Key}' is unknown Property",
-                    text:=$"Please open a GitHub issue at {GitHubCareLinkUrl}issues",
+                    prompt:=$"Please open a GitHub issue at {GitHubCareLinkUrl}issues",
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                     title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
             End If

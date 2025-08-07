@@ -9,12 +9,12 @@ Public Class PresetAmountRecord
     Private ReadOnly _typeIsRate As Boolean
 
     Public Sub New(s As String)
-        If s.Contains("%"c) Then
+        If s.Contains(value:="%"c) Then
             _typeIsRate = False
-            _percent = Integer.Parse(s.Trim("%"c).Trim)
+            _percent = Integer.Parse(s:=s.Trim(trimChar:="%"c).Trim)
         Else
             _typeIsRate = True
-            Dim sSplit As String() = s.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+            Dim sSplit As String() = s.Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
             _rate = sSplit(0).ParseSingleInvariant
             _units = sSplit(1)
         End If

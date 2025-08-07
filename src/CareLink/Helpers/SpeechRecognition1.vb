@@ -115,10 +115,10 @@ Friend Module SpeechSupport
                     Dim page As New TaskDialogPage
                     MsgBox(
                         heading:="Audio signal problem",
-                        text:=details.ToString,
+                        prompt:=details.ToString,
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Information,
                         title:="Audio Error",
-                        autoCloseTimeOutSeconds:=15,
+                        autoCloseTimeOut:=15,
                         page)
                     s_speechErrorReported = page.Verification.Checked
                 End If
@@ -247,10 +247,10 @@ Friend Module SpeechSupport
                     Dim page As New TaskDialogPage
                     MsgBox(
                         heading:="",
-                        text:=sb.ToString,
+                        prompt:=sb.ToString,
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Information,
                         title:="Speech Recognition Help",
-                        autoCloseTimeOutSeconds:=30,
+                        autoCloseTimeOut:=30,
                         page)
                     My.Settings.SystemSpeechHelpShown = page.Verification.Checked
                 Case Else

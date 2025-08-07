@@ -236,7 +236,7 @@ Friend Module DgvExportHelpers
             Catch ex As IOException
                 MsgBox(
                     heading:="Error saving file!",
-                    text:=ex.Message,
+                    prompt:=ex.Message,
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Information,
                     title:="I/O Error")
             Catch ex1 As Exception

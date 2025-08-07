@@ -291,7 +291,7 @@ Public Module RegionCountryLists
         If filenameWithoutExtension.Count("("c) = 0 Then
             MsgBox(
                 heading:="Invalid Filename",
-                text:=$"'{filenameWithoutExtension}' malformed,{vbCrLf}it must contain at least one '('.",
+                prompt:=$"'{filenameWithoutExtension}' malformed,{vbCrLf}it must contain at least one '('.",
                 buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                 title:="Malformed Error Report Filename")
             Return Nothing
@@ -300,7 +300,7 @@ Public Module RegionCountryLists
         If filenameWithoutExtension.Count(")"c) = 0 Then
             MsgBox(
                 heading:="Invalid Filename",
-                text:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain at least one ')'.",
+                prompt:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain at least one ')'.",
                 buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                 title:="Malformed Error Report Filename")
             Return Nothing
@@ -309,7 +309,7 @@ Public Module RegionCountryLists
         If Not filenameWithoutExtension.StartsWith(FixedPart) Then
             MsgBox(
                 heading:="Invalid Filename",
-                text:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must start with '{FixedPart}'.",
+                prompt:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must start with '{FixedPart}'.",
                 buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                 title:="Malformed Error Report Filename")
             Return Nothing
@@ -320,7 +320,7 @@ Public Module RegionCountryLists
             If indexOfOpenParenthesis < FixedPart.Length Then
                 MsgBox(
                     heading:="Invalid Filename",
-                    text:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain '(' after '{FixedPart}.",
+                    prompt:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain '(' after '{FixedPart}.",
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                     title:="Malformed Error Report Filename")
                 Return Nothing
@@ -329,7 +329,7 @@ Public Module RegionCountryLists
             If indexOfOpenParenthesis <> FixedPart.Length Then
                 MsgBox(
                     heading:="Invalid Filename",
-                    text:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain '(' immediately after '{FixedPart}.",
+                    prompt:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain '(' immediately after '{FixedPart}.",
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                     title:="Malformed Error Report Filename")
                 Return Nothing
@@ -340,7 +340,7 @@ Public Module RegionCountryLists
         If indexOfClosedParenthesis < 0 Then
             MsgBox(
                 heading:="Invalid Filename",
-                text:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain ')'.",
+                prompt:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain ')'.",
                 buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                 title:="Malformed Error Report Filename")
             Return Nothing
@@ -358,7 +358,7 @@ Public Module RegionCountryLists
         If fileNameInvalid Then
             MsgBox(
                 heading:="Invalid Filename",
-                text:=$"Culture name '{cultureName}' is not a valid culture name.",
+                prompt:=$"Culture name '{cultureName}' is not a valid culture name.",
                 buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                 title:="Invalid Culture Name")
             Return CultureInfo.CurrentCulture

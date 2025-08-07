@@ -195,7 +195,7 @@ Public Class PumpSetupDialog
                 If presetTempRecord.IsValid Then
                     .AppendTextWithFontChange(text:=$"{tab}{presetTempRecord.PresetAmount}", newFont:=defaultFont)
                     .AppendTextWithFontChange(
-                        text:=$"{tab}Duration:{tab}{presetTempRecord.Duration.ToFormattedTimeSpan("U/hr").Trim}",
+                        text:=$"{tab}Duration:{tab}{presetTempRecord.Duration.ToFormattedTimeSpan(unit:="U/hr").Trim}",
                         newFont:=defaultFont)
                 Else
                     .AppendNewLine
@@ -279,7 +279,7 @@ Public Class PumpSetupDialog
                 newFont:=defaultFont)
             If _pdf.Utilities.AutoSuspend.Alarm <> "Off" Then
                 .AppendTextWithFontChange(
-                    text:=$"{tab}Time: {_pdf.Utilities.AutoSuspend.Time.ToFormattedTimeSpan("hr")}",
+                    text:=$"{tab}Time: {_pdf.Utilities.AutoSuspend.Time.ToFormattedTimeSpan(unit:="hr")}",
                     newFont:=defaultFont)
             End If
             .AppendNewLine
@@ -296,9 +296,9 @@ Public Class PumpSetupDialog
             .AppendTextWithFontChange(
                 text:=$"{tab}Brightness: {_pdf.Utilities.Brightness}",
                 newFont:=defaultFont)
-            Dim backlightTimeout As String = _pdf.Utilities.BackLightTimeout.ToFormattedTimeSpan("min")
+            Dim backlightTimeout As String = _pdf.Utilities.BackLightTimeout.ToFormattedTimeSpan(unit:="min")
             .AppendTextWithFontChange(
-                text:=$"{tab}Backlight: {backlightTimeout.TrimStart("0"c)}",
+                text:=$"{tab}Backlight: {backlightTimeout.TrimStart(trimChar:="0"c)}",
                 newFont:=defaultFont)
             .AppendNewLine
 

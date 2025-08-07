@@ -127,14 +127,14 @@ Friend Class DataGridViewNumericUpDownEditingControl
         Me.Font = dataGridViewCellStyle.Font
         If dataGridViewCellStyle.BackColor.A < 255 Then
             ' The NumericUpDown control does not support transparent back colors
-            Dim opaqueBackColor As Color = Color.FromArgb(255, dataGridViewCellStyle.BackColor)
+            Dim opaqueBackColor As Color = Color.FromArgb(alpha:=255, baseColor:=dataGridViewCellStyle.BackColor)
             Me.BackColor = opaqueBackColor
             _dataGridView.EditingPanel.BackColor = opaqueBackColor
         Else
             Me.BackColor = dataGridViewCellStyle.BackColor
         End If
         Me.ForeColor = dataGridViewCellStyle.ForeColor
-        Me.TextAlign = DataGridViewNumericUpDownCell.TranslateAlignment(dataGridViewCellStyle.Alignment)
+        Me.TextAlign = DataGridViewNumericUpDownCell.TranslateAlignment(align:=dataGridViewCellStyle.Alignment)
     End Sub
 
     ''' <summary>
@@ -147,7 +147,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
     Public Overridable Function EditingControlWantsInputKey(keyData As Keys, dataGridViewWantsInputKey As Boolean) As Boolean Implements IDataGridViewEditingControl.EditingControlWantsInputKey
         Select Case keyData And Keys.KeyCode
             Case Keys.Right
-                Dim textBox As TextBox = TryCast(Me.Controls(1), TextBox)
+                Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
                 If textBox IsNot Nothing Then
                     ' If the end of the selection is at the end of the string,
                     ' let the DataGridView treat the key message
@@ -159,7 +159,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
                 Exit Select
 
             Case Keys.Left
-                Dim textBox As TextBox = TryCast(Me.Controls(1), TextBox)
+                Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
                 If textBox IsNot Nothing Then
                     ' If the end of the selection is at the beginning of the string
                     ' or if the entire text is selected and we did not start editing,
@@ -187,7 +187,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
 
             Case Keys.Home, Keys.[End]
                 ' Let the grid handle the key if the entire text is selected.
-                Dim textBox As TextBox = TryCast(Me.Controls(1), TextBox)
+                Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
                 If textBox IsNot Nothing Then
                     If textBox.SelectionLength <> textBox.Text.Length Then
                         Return True
@@ -197,7 +197,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
 
             Case Keys.Delete
                 ' Let the grid handle the key if the caret is at the end of the text.
-                Dim textBox As TextBox = TryCast(Me.Controls(1), TextBox)
+                Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
                 If textBox IsNot Nothing Then
                     If textBox.SelectionLength > 0 OrElse
                             textBox.SelectionStart < textBox.Text.Length Then
@@ -231,7 +231,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
     ''' </summary>
     ''' <param name="selectAll">true to select all text; otherwise, false.</param>
     Public Overridable Sub PrepareEditingControlForEdit(selectAll As Boolean) Implements IDataGridViewEditingControl.PrepareEditingControlForEdit
-        Dim textBox As TextBox = TryCast(Me.Controls(1), TextBox)
+        Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
         If textBox IsNot Nothing Then
             If selectAll Then
                 textBox.SelectAll()
@@ -271,13 +271,13 @@ Friend Class DataGridViewNumericUpDownEditingControl
             Dim groupSeparatorStr As String = numberFormatInfo.NumberGroupSeparator
             Dim negativeSignStr As String = numberFormatInfo.NegativeSign
             If Not String.IsNullOrEmpty(decimalSeparatorStr) AndAlso decimalSeparatorStr.Length = 1 Then
-                notifyValueChange = decimalSeparatorStr(0) = e.KeyChar
+                notifyValueChange = decimalSeparatorStr(index:=0) = e.KeyChar
             End If
             If Not notifyValueChange AndAlso Not String.IsNullOrEmpty(groupSeparatorStr) AndAlso groupSeparatorStr.Length = 1 Then
-                notifyValueChange = groupSeparatorStr(0) = e.KeyChar
+                notifyValueChange = groupSeparatorStr(index:=0) = e.KeyChar
             End If
             If Not notifyValueChange AndAlso Not String.IsNullOrEmpty(negativeSignStr) AndAlso negativeSignStr.Length = 1 Then
-                notifyValueChange = negativeSignStr(0) = e.KeyChar
+                notifyValueChange = negativeSignStr(index:=0) = e.KeyChar
             End If
         End If
 
@@ -306,9 +306,9 @@ Friend Class DataGridViewNumericUpDownEditingControl
     ''' <param name="m">A <see cref="Message"/> that represents the window message to process.</param>
     ''' <returns><c>true</c> if the message was processed; otherwise, <c>false</c>.</returns>
     Protected Overrides Function ProcessKeyEventArgs(ByRef m As Message) As Boolean
-        Dim textBox As TextBox = TryCast(Me.Controls(1), TextBox)
+        Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
         If textBox IsNot Nothing Then
-            SendMessage(textBox.Handle, m.Msg, m.WParam, m.LParam)
+            SendMessage(hWnd:=textBox.Handle, m.Msg, m.WParam, m.LParam)
             Return True
         Else
             Return MyBase.ProcessKeyEventArgs(m)

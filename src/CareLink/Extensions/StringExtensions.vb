@@ -140,14 +140,18 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Converts an integer representing total units (years, days, months, hours, minutes, or seconds) to a formatted string.
+    '''  Converts an unsigned integer representing total units (years, days, months, hours, minutes, or seconds) to a formatted string.
     ''' </summary>
     ''' <param name="totalUnits">The total units to convert.</param>
     ''' <param name="Unit">The unit of time to use, e.g., "minute" or "hour".</param>
     ''' <returns>A formatted string representing the total units.</returns>
+    ''' <param name="includeValue"></param>
     <Extension>
-    Public Function ToTimeUnits(totalUnits As UInteger, Unit As String) As String
-        Return $"{totalUnits:N0} {If(totalUnits = 1, Unit, $"{Unit}s")}"
+    Public Function ToTimeUnits(totalUnits As UInteger, unit As String, Optional includeValue As Boolean = True) As String
+        Dim unitOnly As String = If(totalUnits = 1, unit, $"{unit}s")
+        Return If(includeValue,
+                  $"{totalUnits:N0} {unitOnly}",
+                  unitOnly)
     End Function
 
     ''' <summary>

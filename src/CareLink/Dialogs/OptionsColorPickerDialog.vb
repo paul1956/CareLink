@@ -36,7 +36,7 @@ Public Class OptionsColorPickerDialog
         Application.DoEvents()
         If MsgBox(
                 heading:="Are you sure you want to continue?",
-                text:=$"Yes will save changes and application will restart{vbCrLf}" &
+                prompt:=$"Yes will save changes and application will restart{vbCrLf}" &
                     "If you select ""No"" changes will be lost.",
                 buttonStyle:=MsgBoxStyle.YesNo Or MsgBoxStyle.Exclamation,
                 title:="Color Options") = MsgBoxResult.Yes Then

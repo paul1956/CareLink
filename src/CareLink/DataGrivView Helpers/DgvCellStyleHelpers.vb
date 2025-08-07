@@ -109,17 +109,22 @@ Public Module DgvCellStyleHelpers
                             alignment:=DataGridViewContentAlignment.MiddleRight,
                             padding:=New Padding(left:=0, top:=2, right:=2, bottom:=2))
                     Case Else
-                        Throw UnreachableException([property].PropertyType.Name)
+                        Throw UnreachableException(propertyName:=[property].PropertyType.Name)
                 End Select
-                alignmentTable.Add([property].Name, cellStyle)
+                alignmentTable.Add(key:=[property].Name, value:=cellStyle)
             Next
         End If
-        If Not alignmentTable.TryGetValue(columnName, cellStyle) Then
-            cellStyle = If(columnName = NameOf(SummaryRecord.RecordNumber) OrElse columnName = NameOf(Limit.Index),
-                           (New DataGridViewCellStyle).SetCellStyle(alignment:=DataGridViewContentAlignment.MiddleCenter, padding:=New Padding(all:=0)),
-                           (New DataGridViewCellStyle).SetCellStyle(alignment:=DataGridViewContentAlignment.MiddleLeft, padding:=New Padding(all:=1))
-                          )
-            alignmentTable.Add(columnName, cellStyle)
+        If Not alignmentTable.TryGetValue(key:=columnName, value:=cellStyle) Then
+            Dim alignMiddle As Boolean = columnName = NameOf(SummaryRecord.RecordNumber) OrElse
+                                         columnName = NameOf(Limit.Index)
+            cellStyle = If(alignMiddle,
+                           (New DataGridViewCellStyle).SetCellStyle(
+                               alignment:=DataGridViewContentAlignment.MiddleCenter,
+                               padding:=New Padding(all:=0)),
+                           (New DataGridViewCellStyle).SetCellStyle(
+                               alignment:=DataGridViewContentAlignment.MiddleLeft,
+                               padding:=New Padding(all:=1)))
+            alignmentTable.Add(key:=columnName, value:=cellStyle)
         End If
         Return cellStyle
     End Function

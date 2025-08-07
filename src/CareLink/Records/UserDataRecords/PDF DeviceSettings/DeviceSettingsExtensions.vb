@@ -14,35 +14,35 @@ Friend Module DeviceSettingsExtensions
             If v.StartsWith(value:=key) Then
                 Dim value As String = v.Remove(key).Trim
                 If value = v Then
-                    value = r.Columns(1)
+                    value = r.Columns(index:=1)
                 End If
                 If typeOfT Is GetType(String) Then
                     Return CType(CObj(value), T)
                 End If
-                value = value.Split(" ", StringSplitOptions.RemoveEmptyEntries)(0)
+                value = value.Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)(0)
                 If typeOfT Is GetType(Single) Then
-                    value = value.Replace(","c, CareLinkDecimalSeparator)
-                    Return If(IsNumeric(value),
+                    value = value.Replace(oldChar:=","c, newChar:=CareLinkDecimalSeparator)
+                    Return If(IsNumeric(Expression:=value),
                               CType(CObj(value), T),
                               CType(CObj(Single.NaN), T)
                              )
                 End If
                 If typeOfT Is GetType(Integer) Then
-                    Return If(IsNumeric(value),
+                    Return If(IsNumeric(Expression:=value),
                               CType(CObj(value), T),
                               CType(CObj(0), T)
                              )
                 End If
                 If typeOfT Is GetType(TimeOnly) Then
                     Dim timeOnly As TimeOnly = Nothing
-                    Return If(TimeOnly.TryParse(value, result:=timeOnly),
+                    Return If(TimeOnly.TryParse(s:=value, result:=timeOnly),
                               CType(CObj(timeOnly), T),
                               CType(CObj(Eleven59), T)
                              )
                 End If
                 If typeOfT Is GetType(TimeSpan) Then
                     Dim timeSpan As TimeSpan = Nothing
-                    Return If(TimeSpan.TryParse(value, result:=timeSpan),
+                    Return If(TimeSpan.TryParse(s:=value, result:=timeSpan),
                               CType(CObj(timeSpan), T),
                               CType(CObj(ZeroTickSpan), T)
                              )

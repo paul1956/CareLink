@@ -21,21 +21,21 @@ Public Class HighAlertRecord
         End Select
 
         Me.ValueUnits = valueUnits
-        If Not TimeOnly.TryParse(s1(0), Me.Start) Then
+        If Not TimeOnly.TryParse(s:=s1(0), result:=Me.Start) Then
             Stop
         End If
 
         Me.HighLimit = s1(1).ParseSingleInvariant
-        If Not String.IsNullOrWhiteSpace(row.Columns(1)) Then
+        If Not String.IsNullOrWhiteSpace(value:=row.Columns(index:=1)) Then
             Me.AlertBeforeHigh = True
             Me.TimeBeforeHigh &= " Please Verify!"
         End If
-        Me.AlertOnHigh = Not String.IsNullOrWhiteSpace(row.Columns(2))
-        If String.IsNullOrWhiteSpace(row.Columns(3)) Then
+        Me.AlertOnHigh = Not String.IsNullOrWhiteSpace(value:=row.Columns(index:=2))
+        If String.IsNullOrWhiteSpace(value:=row.Columns(index:=3)) Then
             Me.RiseAlert = False
         Else
             Me.RiseAlert = True
-            Me.RaiseLimit = row.Columns(3)
+            Me.RaiseLimit = row.Columns(index:=3)
         End If
 
         Me.IsValid = True

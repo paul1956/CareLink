@@ -82,7 +82,7 @@ Friend Module PaintMarkerExtensions
             chartRelativePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(
                 ChartAreaName,
                 axis:=AxisName.X,
-                axisValue:=s_sgRecords(0).OaDateTime))
+                axisValue:=s_sgRecords(index:=0).OaDateTime))
             chartRelativePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(
                 ChartAreaName,
                 axis:=AxisName.Y2,

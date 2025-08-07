@@ -30,12 +30,12 @@ Friend Structure TabLocation
         tab = Me.tab
     End Sub
 
-    Public Shared Widening Operator CType(value As TabLocation) As (page As Integer, tab As Integer)
+    Public Shared Widening Operator CType(value As TabLocation) As (Page As Integer, Tab As Integer)
         Return (value.page, value.tab)
     End Operator
 
-    Public Shared Widening Operator CType(value As (page As Integer, tab As Integer)) As TabLocation
-        Return New TabLocation(value.page, value.tab)
+    Public Shared Widening Operator CType(value As (Page As Integer, Tab As Integer)) As TabLocation
+        Return New TabLocation(value.Page, value.Tab)
     End Operator
 
 End Structure

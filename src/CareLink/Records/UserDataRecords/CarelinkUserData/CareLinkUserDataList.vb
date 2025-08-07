@@ -239,10 +239,9 @@ Public Class CareLinkUserDataList
     ''' <summary>
     '''  Loads user records from a CSV file.
     ''' </summary>
-    ''' <param name="userSettingsCsvFileWithPath">The path to the CSV file.</param>
-    Friend Sub LoadUserRecords(userSettingsCsvFileWithPath As String)
+    Friend Sub LoadUserRecords()
         Dim l As IList = Me
-        Using myReader As New FileIO.TextFieldParser(path:=userSettingsCsvFileWithPath)
+        Using myReader As New FileIO.TextFieldParser(path:=UserSettingsCsvFileWithPath)
             myReader.TextFieldType = FileIO.FieldType.Delimited
             myReader.Delimiters = New String() {","}
             Dim currentRow As String()
@@ -262,7 +261,7 @@ Public Class CareLinkUserDataList
                 Catch ex As FileIO.MalformedLineException
                     MsgBox(
                       heading:="Malformed Line Exception",
-                      text:=$"Line {ex.Message} is invalid.  Skipping",
+                      prompt:=$"Line {ex.Message} is invalid.  Skipping",
                       buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                       title:="Load User Records")
                 End Try
