@@ -13,10 +13,10 @@ Friend Module DgvEmptyHelpers
     ''' <param name="className">The class name to use for naming the DataGridView.</param>
     <Extension>
     Friend Sub DgvNoRecordsFound(realPanel As TableLayoutPanel, className As String)
-        Dim dgvIndex As Integer = realPanel.Controls.Count - 1
+        Dim index As Integer = realPanel.Controls.Count - 1
         Dim dgv As DataGridView = Nothing
-        If dgvIndex >= 0 Then
-            dgv = TryCast(realPanel.Controls(dgvIndex), DataGridView)
+        If index >= 0 Then
+            dgv = TryCast(realPanel.Controls(index), DataGridView)
         End If
         If dgv Is Nothing Then
             dgv = New DataGridView With {

@@ -138,7 +138,8 @@ Public Class DataGridViewNumericUpDownCell
 
         Set(value As Decimal)
             If value < CDec(0.0) Then
-                Throw New ArgumentOutOfRangeException(NameOf(value), "The Increment property cannot be smaller than 0.")
+                Const message As String = "The Increment property cannot be smaller than 0."
+                Throw New ArgumentOutOfRangeException(paramName:=NameOf(value), message)
             End If
             _increment = value
             Me.SetIncrement(Me.RowIndex, value)
@@ -254,7 +255,7 @@ Public Class DataGridViewNumericUpDownCell
             ' performance reasons (to avoid an unnecessary control destruction and creation).
             ' Here the undo buffer of the TextBox inside the NumericUpDown control gets cleared to avoid
             ' interferences between the editing sessions.
-            TryCast(numericUpDown.Controls(1), TextBox)?.ClearUndo()
+            TryCast(numericUpDown.Controls(index:=1), TextBox)?.ClearUndo()
         End If
 
         MyBase.DetachEditingControl()
@@ -538,25 +539,25 @@ Public Class DataGridViewNumericUpDownCell
                 s_paintingNumericUpDown.Width = valBounds.Width
                 s_paintingNumericUpDown.Height = valBounds.Height
                 s_paintingNumericUpDown.RightToLeft = Me.DataGridView.RightToLeft
-                s_paintingNumericUpDown.Location = New Point(0, -s_paintingNumericUpDown.Height - 100)
+                s_paintingNumericUpDown.Location = New Point(x:=0, y:=-s_paintingNumericUpDown.Height - 100)
                 s_paintingNumericUpDown.Text = TryCast(formattedValue, String)
 
-                Dim backColor As Color = If((paintParts And DataGridViewPaintParts.SelectionBackground) <> 0 AndAlso cellSelected,
-                                            cellStyle.SelectionBackColor,
-                                            cellStyle.BackColor
-                                           )
+                Dim baseColor As Color =
+                    If((paintParts And DataGridViewPaintParts.SelectionBackground) <> 0 AndAlso cellSelected,
+                       cellStyle.SelectionBackColor,
+                       cellStyle.BackColor)
 
                 If (paintParts And DataGridViewPaintParts.Background) <> 0 Then
-                    If backColor.A < 255 Then
+                    If baseColor.A < 255 Then
                         ' The NumericUpDown control does not support transparent back colors
-                        backColor = Color.FromArgb(255, backColor)
+                        baseColor = Color.FromArgb(alpha:=255, baseColor)
                     End If
-                    s_paintingNumericUpDown.BackColor = backColor
+                    s_paintingNumericUpDown.BackColor = baseColor
                 End If
                 ' Finally paint the NumericUpDown control
-                Dim srcRect As New Rectangle(0, 0, valBounds.Width, valBounds.Height)
+                Dim srcRect As New Rectangle(x:=0, y:=0, valBounds.Width, valBounds.Height)
                 If srcRect.Width > 0 AndAlso srcRect.Height > 0 Then
-                    s_paintingNumericUpDown.DrawToBitmap(s_renderingBitmap, srcRect)
+                    s_paintingNumericUpDown.DrawToBitmap(bitmap:=s_renderingBitmap, targetBounds:=srcRect)
                     graphics.DrawImage(
                         image:=s_renderingBitmap,
                         destRect:=New Rectangle(valBounds.Location, valBounds.Size),
@@ -567,8 +568,17 @@ Public Class DataGridViewNumericUpDownCell
             If (paintParts And DataGridViewPaintParts.ErrorIcon) <> 0 Then
                 ' Paint the potential error icon on top of the NumericUpDown control
                 MyBase.Paint(
-                    graphics, clipBounds, cellBounds, rowIndex, cellState, value, formattedValue, errorText,
-                    cellStyle, advancedBorderStyle, paintParts:=DataGridViewPaintParts.ErrorIcon)
+                    graphics,
+                    clipBounds,
+                    cellBounds,
+                    rowIndex,
+                    cellState,
+                    value,
+                    formattedValue,
+                    errorText,
+                    cellStyle,
+                    advancedBorderStyle,
+                    paintParts:=DataGridViewPaintParts.ErrorIcon)
             End If
         End If
     End Sub
@@ -635,7 +645,7 @@ Public Class DataGridViewNumericUpDownCell
     ''' <param name="rowIndex">The row index.</param>
     ''' <param name="value">The new increment value.</param>
     Friend Sub SetIncrement(rowIndex As Integer, value As Decimal)
-        Debug.Assert(value >= CDec(0.0))
+        Debug.Assert(condition:=value >= CDec(0.0))
         _increment = value
         If Me.OwnsEditingNumericUpDown(rowIndex) Then
             Me.EditingNumericUpDown.Increment = value

@@ -109,14 +109,14 @@ Public Class LoginDialog
             Dim userRecord As CareLinkUserDataRecord = Nothing
             Dim param As String = commandLineArguments(1)
             Select Case True
-                Case param.StartsWithIgnoreCase("/Safe")
+                Case param.StartsWithIgnoreCase(value:="/Safe")
                     My.Settings.AutoLogin = False
                     My.Settings.Save()
 
                      ' username=name
-                Case param.StartsWithIgnoreCase("UserName")
-                    Dim arg As String() = param.Split("=")
-                    If arg.Length = 2 AndAlso s_allUserSettingsData.TryGetValue(arg(1), userRecord) Then
+                Case param.StartsWithIgnoreCase(value:="UserName")
+                    Dim arg As String() = param.Split(separator:="=")
+                    If arg.Length = 2 AndAlso s_allUserSettingsData.TryGetValue(key:=arg(1), userRecord) Then
                         userRecord.UpdateSettings()
                     End If
             End Select
@@ -274,7 +274,7 @@ Public Class LoginDialog
             Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"Response Code = {Me.Client.GetHttpStatusCode}")
             Select Case MsgBox(
                     heading:=$"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!",
-                    text:=networkDownMessage,
+                    prompt:=networkDownMessage,
                     buttonStyle:=MsgBoxStyle.AbortRetryIgnore Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question,
                     title:="Login Failed")
                 Case MsgBoxResult.Abort

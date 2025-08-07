@@ -51,7 +51,7 @@ Public Class InitializeDialog
         If _currentUserBackup Is Nothing Then
             If MsgBox(
                 heading:="If you cancel, the program will exit",
-                text:="Retry will allow editing.",
+                prompt:="Retry will allow editing.",
                 buttonStyle:=MsgBoxStyle.RetryCancel Or MsgBoxStyle.Exclamation,
                 title:="Exit Or Retry") = MsgBoxResult.Cancel Then
 
