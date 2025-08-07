@@ -21,10 +21,10 @@ Friend Module NewMessageBox
     '''  and an optional checkbox.
     ''' </summary>
     ''' <param name="heading">The heading text of the message box.</param>
-    ''' <param name="text">The main message text.</param>
+    ''' <param name="prompt">The main message text.</param>
     ''' <param name="buttonStyle">The style and combination of buttons and icons to display.</param>
     ''' <param name="title">The window title of the message box.</param>
-    ''' <param name="autoCloseTimeOutSeconds">
+    ''' <param name="autoCloseTimeOut">
     '''  The number of seconds before the dialog auto-closes. Set to -1 to disable auto-close.
     ''' </param>
     ''' <param name="page">The <see cref="TaskDialogPage"/> to configure and display.</param>
@@ -33,58 +33,53 @@ Friend Module NewMessageBox
     <DebuggerNonUserCode>
     Private Function MsgBox(
         heading As String,
-        text As String,
+        prompt As String,
         buttonStyle As MsgBoxStyle,
         title As String,
-        autoCloseTimeOutSeconds As Integer,
+        autoCloseTimeOut As Integer,
         page As TaskDialogPage,
         checkBoxPrompt As String) As MsgBoxResult
 
-        Dim remainingTenthSeconds As Integer = autoCloseTimeOutSeconds * 10
+        Dim remainingTenthSeconds As Integer = autoCloseTimeOut * 10
         page.Caption = title
         page.Heading = heading
-        page.Text = GetPrompt(text, autoCloseTimeOutSeconds, remainingTenthSeconds)
-        If Not String.IsNullOrWhiteSpace(checkBoxPrompt) Then
+        page.Text = GetPrompt(prompt, autoCloseTimeOut, remainingTenthSeconds)
+        If Not String.IsNullOrWhiteSpace(value:=checkBoxPrompt) Then
             page.Verification = New TaskDialogVerificationCheckBox() With
-                {
-                    .Text = checkBoxPrompt,
-                    .Checked = True
-                }
+                {.Text = checkBoxPrompt, .Checked = True}
         End If
 
-        If autoCloseTimeOutSeconds > -1 Then
+        If autoCloseTimeOut > -1 Then
             page.ProgressBar = New TaskDialogProgressBar() With
-            {
-                .State = TaskDialogProgressBarState.Paused
-            }
+                {.State = TaskDialogProgressBarState.Paused}
         End If
         Dim buttonCollection As New TaskDialogButtonCollection
-        Dim okButton As New TaskDialogButton("Ok")
+        Dim okButton As New TaskDialogButton(text:="Ok")
         Select Case buttonStyle And &H7
             Case MsgBoxStyle.OkOnly
-                buttonCollection.Add(okButton)
+                buttonCollection.Add(item:=okButton)
 
             Case MsgBoxStyle.OkCancel
-                buttonCollection.Add(okButton)
-                buttonCollection.Add(TaskDialogButton.Cancel)
+                buttonCollection.Add(item:=okButton)
+                buttonCollection.Add(item:=TaskDialogButton.Cancel)
 
             Case MsgBoxStyle.AbortRetryIgnore
-                buttonCollection.Add(TaskDialogButton.Abort)
-                buttonCollection.Add(TaskDialogButton.Retry)
-                buttonCollection.Add(TaskDialogButton.Ignore)
+                buttonCollection.Add(item:=TaskDialogButton.Abort)
+                buttonCollection.Add(item:=TaskDialogButton.Retry)
+                buttonCollection.Add(item:=TaskDialogButton.Ignore)
 
             Case MsgBoxStyle.YesNoCancel
-                buttonCollection.Add(TaskDialogButton.Yes)
-                buttonCollection.Add(TaskDialogButton.No)
-                buttonCollection.Add(TaskDialogButton.Cancel)
+                buttonCollection.Add(item:=TaskDialogButton.Yes)
+                buttonCollection.Add(item:=TaskDialogButton.No)
+                buttonCollection.Add(item:=TaskDialogButton.Cancel)
 
             Case MsgBoxStyle.YesNo
-                buttonCollection.Add(TaskDialogButton.Yes)
-                buttonCollection.Add(TaskDialogButton.No)
+                buttonCollection.Add(item:=TaskDialogButton.Yes)
+                buttonCollection.Add(item:=TaskDialogButton.No)
 
             Case MsgBoxStyle.RetryCancel
-                buttonCollection.Add(TaskDialogButton.Retry)
-                buttonCollection.Add(TaskDialogButton.Cancel)
+                buttonCollection.Add(item:=TaskDialogButton.Retry)
+                buttonCollection.Add(item:=TaskDialogButton.Cancel)
             Case Else
                 Stop
         End Select
@@ -98,18 +93,18 @@ Friend Module NewMessageBox
             Case MsgBoxStyle.Information
                 page.Icon = TaskDialogIcon.Information
             Case MsgBoxStyle.Question
-                page.Icon = New TaskDialogIcon(My.Resources.QuestionMark)
+                page.Icon = New TaskDialogIcon(icon:=My.Resources.QuestionMark)
             Case Else
                 Stop
         End Select
 
         Select Case buttonStyle And &H300
             Case MsgBoxStyle.DefaultButton1
-                page.DefaultButton = buttonCollection(0)
+                page.DefaultButton = buttonCollection(index:=0)
             Case MsgBoxStyle.DefaultButton2
-                page.DefaultButton = buttonCollection(1)
+                page.DefaultButton = buttonCollection(index:=1)
             Case MsgBoxStyle.DefaultButton3
-                page.DefaultButton = buttonCollection(2)
+                page.DefaultButton = buttonCollection(index:=2)
             Case Else
                 Exit Select
         End Select
@@ -135,14 +130,14 @@ Friend Module NewMessageBox
             .Enabled = True,
             .Interval = 100
         }
-            If autoCloseTimeOutSeconds > -1 Then
+            If autoCloseTimeOut > -1 Then
                 AddHandler timer.Tick,
                     Sub(s, e)
                         remainingTenthSeconds -= 1
                         If remainingTenthSeconds > 0 Then
                             ' Update the remaining time and progress bar.
-                            page.Text = GetPrompt(text, autoCloseTimeOutSeconds, remainingTenthSeconds)
-                            Dim autoCloseTimeoutTenthSeconds As Integer = autoCloseTimeOutSeconds * 10
+                            page.Text = GetPrompt(prompt, autoCloseTimeOut, remainingTenthSeconds)
+                            Dim autoCloseTimeoutTenthSeconds As Integer = autoCloseTimeOut * 10
                             page.ProgressBar.Value = CInt(100 * (remainingTenthSeconds / autoCloseTimeoutTenthSeconds))
                         Else
                             ' Stop the timer and click the "Reconnect" button - this will
@@ -153,7 +148,7 @@ Friend Module NewMessageBox
                     End Sub
             End If
 
-            Dim result As TaskDialogButton = TaskDialog.ShowDialog(Form1, page)
+            Dim result As TaskDialogButton = TaskDialog.ShowDialog(owner:=Form1, page)
             Return [Enum].Parse(Of MsgBoxResult)(value:=result.ToString)
         End Using
     End Function
@@ -162,10 +157,10 @@ Friend Module NewMessageBox
     '''  Shows a <see cref="MsgBox"/> with the specified options and a default checkbox prompt ("Do not show again").
     ''' </summary>
     ''' <param name="heading">The heading text of the message box.</param>
-    ''' <param name="text">The main message text.</param>
+    ''' <param name="prompt">The main message text.</param>
     ''' <param name="buttonStyle">The style and combination of buttons and icons to display.</param>
     ''' <param name="title">The window title of the message box.</param>
-    ''' <param name="autoCloseTimeOutSeconds">
+    ''' <param name="autoCloseTimeOut">
     '''  The number of seconds before the dialog auto-closes. Set to -1 to disable auto-close.
     ''' </param>
     ''' <param name="page">The <see cref="TaskDialogPage"/> to configure and display.</param>
@@ -173,18 +168,18 @@ Friend Module NewMessageBox
     <DebuggerNonUserCode()>
     Public Function MsgBox(
         heading As String,
-        text As String,
+        prompt As String,
         buttonStyle As MsgBoxStyle,
         title As String,
-        autoCloseTimeOutSeconds As Integer,
+        autoCloseTimeOut As Integer,
         page As TaskDialogPage) As MsgBoxResult
 
         Return MsgBox(
             heading,
-            text,
+            prompt,
             buttonStyle,
             title,
-            autoCloseTimeOutSeconds,
+            autoCloseTimeOut,
             page,
             checkBoxPrompt:="Do not show again")
     End Function
@@ -193,18 +188,18 @@ Friend Module NewMessageBox
     '''  Shows a <see cref="MsgBox"/> with the specified options and no checkbox or auto-close.
     ''' </summary>
     ''' <param name="heading">The heading text of the message box.</param>
-    ''' <param name="text">The main message text.</param>
+    ''' <param name="prompt">The main message text.</param>
     ''' <param name="buttonStyle">The style and combination of buttons and icons to display.</param>
     ''' <param name="title">The window title of the message box.</param>
     ''' <returns>The <see cref="MsgBoxResult"/> indicating which button was pressed.</returns>
     <DebuggerNonUserCode()>
-    Public Function MsgBox(heading As String, text As String, buttonStyle As MsgBoxStyle, title As String) As MsgBoxResult
+    Public Function MsgBox(heading As String, prompt As String, buttonStyle As MsgBoxStyle, title As String) As MsgBoxResult
         Return MsgBox(
             heading,
-            text,
+            prompt,
             buttonStyle,
             title,
-            autoCloseTimeOutSeconds:=-1,
+            autoCloseTimeOut:=-1,
             page:=New TaskDialogPage,
             checkBoxPrompt:="")
     End Function

@@ -26,6 +26,16 @@ Friend Module MathExtensions
     End Function
 
     ''' <summary>
+    '''  Gets the fractional part of a Decimal value.
+    ''' </summary>
+    ''' <param name="d">The Decimal value to get the fractional part from.</param>
+    ''' <returns>The fractional part of the Decimal value.</returns>
+    <Extension>
+    Public Function FractionalPart(d As Decimal) As Decimal
+        Return d - Math.Floor(d)
+    End Function
+
+    ''' <summary>
     '''  Rounds a <see langword="Single"/> value to the specified number of <paramref name="digits"/>.
     '''  If <paramref name="considerValue"/> is True and the value is less than 10, rounds to 2 decimal digits.
     ''' </summary>

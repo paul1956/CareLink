@@ -29,7 +29,7 @@ Public Class Form1
     Private _dgvSummaryPrevColIndex As Integer = -1
     Private _formScale As New SizeF(width:=1.0F, height:=1.0F)
     Private _inMouseMove As Boolean = False
-    Private _lastMarkerTabLocation As (page As Integer, tab As Integer) = (0, 0)
+    Private _lastMarkerTabLocation As (Page As Integer, Tab As Integer) = (Page:=0, Tab:=0)
     Private _lastSummaryTabIndex As Integer = 0
     Private _previousLoc As Point
     Private _showBalloonTip As Boolean = True
@@ -706,7 +706,7 @@ Public Class Form1
                 Case NameOf(InsulinPerHour.Hour), NameOf(InsulinPerHour.Hour2)
                     Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
                     Dim time As New DateTime(year:=1, month:=1, day:=1, hour, minute:=0, second:=0)
-                    e.Value = time.ToString(s_timeWithoutMinuteFormat)
+                    e.Value = time.ToString(format:=s_timeWithoutMinuteFormat)
                     e.CellStyle.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
                 Case NameOf(BannerState.Message)
                     Select Case dgv.Name
@@ -1639,16 +1639,17 @@ Public Class Form1
                     Dim color As Color = Color.White
                     Dim x As Integer = e.CellBounds.Right - 18
                     Dim y As Integer = e.CellBounds.Top + (e.CellBounds.Height \ 2) - 4
-                    Dim points() As Point = If(glyphDir = SortOrder.Ascending,
-                                               {New Point(x, y:=y + 6),
-                                                New Point(x:=x + 8, y:=y + 6),
-                                                New Point(x:=x + 4, y)},
-                                               {New Point(x, y),
-                                                New Point(x:=x + 8, y),
-                                                New Point(x:=x + 4, y:=y + 6)})
+                    Dim points() As Point =
+                        If(glyphDir = SortOrder.Ascending,
+                           {New Point(x, y:=y + 6),
+                            New Point(x:=x + 8, y:=y + 6),
+                            New Point(x:=x + 4, y)},
+                           {New Point(x, y),
+                            New Point(x:=x + 8, y),
+                            New Point(x:=x + 4, y:=y + 6)})
 
                     Dim g As Graphics = e.Graphics
-                    g.FillPolygon(New SolidBrush(color), points)
+                    g.FillPolygon(brush:=New SolidBrush(color), points)
                 End If
                 e.Handled = True
             End If
@@ -1901,12 +1902,12 @@ Public Class Form1
                     Case ServerDataIndexes.therapyAlgorithmState
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage14TherapyAlgorithmState))
                     Case ServerDataIndexes.markers
-                        Dim page As Integer = _lastMarkerTabLocation.page
-                        Dim tab As Integer = _lastMarkerTabLocation.tab
+                        Dim page As Integer = _lastMarkerTabLocation.Page
+                        Dim tab As Integer = _lastMarkerTabLocation.Tab
                         If page = 0 Then
                             _lastMarkerTabLocation = New TabLocation(page:=1, tab:=0)
                         End If
-                        Me.TabControlPage2.SelectedIndex = _lastMarkerTabLocation.tab
+                        Me.TabControlPage2.SelectedIndex = _lastMarkerTabLocation.Tab
                         .Visible = False
                 End Select
             End With
@@ -1974,7 +1975,7 @@ Public Class Form1
 
                     e.CellStyle = e.CellStyle.SetCellStyle(
                         alignment:=DataGridViewContentAlignment.MiddleLeft,
-                        padding:=New Padding(1))
+                        padding:=New Padding(all:=1))
 
                 Case NameOf(TherapyAlgorithmState.SafeBasalDuration),
                      NameOf(TherapyAlgorithmState.WaitToCalibrateDuration)
@@ -2067,16 +2068,16 @@ Public Class Form1
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Me.NotifyIcon1?.Dispose()
         If _webView2ProcessId > 0 Then
-            Dim webViewProcess As Process = Process.GetProcessById(_webView2ProcessId)
+            Dim webViewProcess As Process = Process.GetProcessById(processId:=_webView2ProcessId)
             ' TODO: dispose of the WebView2 control
             'LoginDialog.WebView21.Dispose()
             webViewProcess.Kill()
-            webViewProcess.WaitForExit(3_000)
+            webViewProcess.WaitForExit(milliseconds:=3_000)
         End If
 
-        If Directory.Exists(GetWebViewCacheDirectory()) Then
+        If Directory.Exists(path:=GetWebViewCacheDirectory()) Then
             Try
-                Directory.Delete(GetWebViewCacheDirectory(), recursive:=True)
+                Directory.Delete(path:=GetWebViewCacheDirectory(), recursive:=True)
             Catch
                 Stop
                 ' Ignore errors here
@@ -2100,19 +2101,19 @@ Public Class Form1
             My.Settings.UpgradeRequired = False
             My.Settings.Save()
         End If
-        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance)
-        If Not Directory.Exists(DirectoryForProjectData) Then
+        Encoding.RegisterProvider(provider:=CodePagesEncodingProvider.Instance)
+        If Not Directory.Exists(path:=DirectoryForProjectData) Then
             Dim lastError As String = $"Can't create required project directories!"
-            Directory.CreateDirectory(DirectoryForProjectData)
-            Directory.CreateDirectory(GetSettingsDirectory())
+            Directory.CreateDirectory(path:=DirectoryForProjectData)
+            Directory.CreateDirectory(path:=GetSettingsDirectory())
         End If
 
         If Not Directory.Exists(path:=GetSettingsDirectory()) Then
             Directory.CreateDirectory(path:=GetSettingsDirectory())
         End If
 
-        If File.Exists(UserSettingsCsvFileWithPath) Then
-            s_allUserSettingsData.LoadUserRecords(UserSettingsCsvFileWithPath)
+        If File.Exists(path:=UserSettingsCsvFileWithPath) Then
+            s_allUserSettingsData.LoadUserRecords()
         Else
             My.Settings.AutoLogin = False
         End If
@@ -2129,13 +2130,13 @@ Public Class Form1
         Me.MenuOptionsConfigureTiTR.Text = $"Configure TiTR ({My.Forms.OptionsConfigureTiTR.GetTiTrMsg()})..."
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
-        If File.Exists(GraphColorsFileNameWithPath) Then
+        If File.Exists(path:=GraphColorsFileNameWithPath) Then
             GetColorDictionaryFromFile()
         Else
             WriteColorDictionaryToFile()
         End If
 
-        Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(1)
+        Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(index:=1)
         If String.IsNullOrWhiteSpace(value:=GetWebViewCacheDirectory()) Then
             s_webView2CacheDirectory = Path.Join(ProjectWebCache, Guid.NewGuid().ToString())
             Directory.CreateDirectory(path:=s_webView2CacheDirectory)
@@ -2259,10 +2260,10 @@ Public Class Form1
     Private Sub SerialNumberButton_Click(sender As Object, e As EventArgs) Handles SerialNumberButton.Click
         Me.TabControlPage1.SelectedIndex = 3
         Me.TabControlPage1.Visible = True
-        Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(3).Controls(0), DataGridView)
+        Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(index:=3).Controls(index:=0), DataGridView)
         For Each row As DataGridViewRow In dgv.Rows
-            If row.Cells(1).FormattedValue.ToString.StartsWith("medicalDeviceInformation") Then
-                dgv.CurrentCell = dgv.Rows(row.Index).Cells(1)
+            If row.Cells(index:=1).FormattedValue.ToString.StartsWith("medicalDeviceInformation") Then
+                dgv.CurrentCell = dgv.Rows(row.Index).Cells(index:=1)
                 _dgvSummaryPrevRowIndex = dgv.CurrentCell.RowIndex
                 _dgvSummaryPrevColIndex = dgv.CurrentCell.ColumnIndex
                 dgv.Rows(row.Index).Selected = True
@@ -2395,14 +2396,14 @@ Public Class Form1
             Else
                 MsgBox(
                     heading:=$"Device Setting PDF file Is invalid",
-                    text:=UserSettingsPdfFileWithPath,
+                    prompt:=UserSettingsPdfFileWithPath,
                     buttonStyle:=MsgBoxStyle.OkOnly,
                     title:="Invalid Settings PDF File")
             End If
         Else
             MsgBox(
                 heading:=$"Device Setting PDF file Is missing!",
-                text:=UserSettingsPdfFileWithPath,
+                prompt:=UserSettingsPdfFileWithPath,
                 buttonStyle:=MsgBoxStyle.OkOnly,
                 title:="Missing Settings PDF File")
         End If
@@ -2452,7 +2453,7 @@ Public Class Form1
             .CheckFileExists = True,
             .CheckPathExists = True,
             .DefaultExt = "txt",
-            .FileName = If(fileList.Length > 0, Path.GetFileName(fileList(0)), "CareLink"),
+            .FileName = If(fileList.Length > 0, Path.GetFileName(path:=fileList(0)), "CareLink"),
             .Filter = $"Error files (*.txt)|{BaseNameSavedErrorReport}*.txt",
             .InitialDirectory = DirectoryForProjectData,
             .Multiselect = False,
@@ -3119,9 +3120,9 @@ Public Class Form1
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not DgvCellStyleHelpers.HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
                 Next
-                Me.TabControlPage2.SelectedIndex = If(_lastMarkerTabLocation.page = 0,
+                Me.TabControlPage2.SelectedIndex = If(_lastMarkerTabLocation.Page = 0,
                                                       0,
-                                                      _lastMarkerTabLocation.tab)
+                                                      _lastMarkerTabLocation.Tab)
                 Me.TabControlPage1.Visible = False
                 Exit Sub
         End Select
@@ -3152,7 +3153,7 @@ Public Class Form1
                 Next
             Case Else
                 If e.TabPageIndex <= GetTabIndexFromName(NameOf(TabPage09BasalPerHour)) Then
-                    _lastMarkerTabLocation = (page:=1, tab:=e.TabPageIndex)
+                    _lastMarkerTabLocation = (Page:=1, Tab:=e.TabPageIndex)
                 End If
         End Select
     End Sub
@@ -3759,7 +3760,7 @@ Public Class Form1
                                               .Substring(startIndex:=0, length:=3).Trim _
                                               .PadLeft(totalWidth:=3)
                     Me.NotifyIcon1.Icon = CreateTextIcon(s, backColor)
-                    Dim strBuilder As New StringBuilder(100)
+                    Dim strBuilder As New StringBuilder(capacity:=100)
                     Dim dateSeparator As String = CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator
                     strBuilder.AppendLine(
                         value:=Date.Now().ToShortDateTimeString.Remove(s:=$"{dateSeparator}{Now.Year}"))
@@ -4320,21 +4321,21 @@ Public Class Form1
         Me.Last24HrBasalUnitsLabel.Text = String.Format(provider, format:=$"{s_totalBasal:F1} U")
         Me.Last24HrBasalPercentLabel.Text = $"{totalPercent}%"
 
-        Me.Last24HrTotalInsulinUnitsLabel.Text = String.Format(Provider, format:=$"{s_totalDailyDose:F1} U")
+        Me.Last24HrTotalInsulinUnitsLabel.Text = String.Format(provider, format:=$"{s_totalDailyDose:F1} U")
 
         If s_totalAutoCorrection > 0 Then
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
             End If
             Me.Last24HrAutoCorrectionLabel.Visible = True
-            Me.Last24HrAutoCorrectionUnitsLabel.Text = String.Format(Provider, format:=$"{s_totalAutoCorrection:F1} U")
+            Me.Last24HrAutoCorrectionUnitsLabel.Text = String.Format(provider, format:=$"{s_totalAutoCorrection:F1} U")
             Me.Last24HrAutoCorrectionUnitsLabel.Visible = True
             Me.Last24HrAutoCorrectionPercentLabel.Text = $"{totalPercent}%"
             Me.Last24HrAutoCorrectionPercentLabel.Visible = True
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24HrMealBolusUnitsLabel.Text = String.Format(Provider, format:=$"{s_totalManualBolus:F1} U")
+            Me.Last24HrMealBolusUnitsLabel.Text = String.Format(provider, format:=$"{s_totalManualBolus:F1} U")
             Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         Else
             Me.Last24HrAutoCorrectionLabel.Visible = False
@@ -4343,7 +4344,7 @@ Public Class Form1
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24HrMealBolusUnitsLabel.Text = String.Format(Provider, format:=$"{s_totalManualBolus:F1} U")
+            Me.Last24HrMealBolusUnitsLabel.Text = String.Format(provider, format:=$"{s_totalManualBolus:F1} U")
             Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         End If
         Me.Last24HrCarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}{Superscript3}"
@@ -4496,7 +4497,7 @@ Public Class Form1
         End If
 
         _timeInTightRange = GetTIR(tight:=True)
-        Me.TimeInRangeChartLabel.Text = GetTIR.asString
+        Me.TimeInRangeChartLabel.Text = GetTIR.AsString
         With Me.TimeInRangeChart
             With .Series(name:=NameOf(TimeInRangeSeries)).Points
                 .Clear()
@@ -4512,14 +4513,14 @@ Public Class Form1
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                Dim tir As UInteger = GetTIR.percent
+                Dim tir As UInteger = GetTIR.Percent
                 If _timeInTightRange.Uint = tir Then
                     .AddXY($"{_timeInTightRange.Str}% In Tight Range = TIR", _timeInTightRange.Uint / 100)
                     .Last().Color = Color.LimeGreen
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
                 ElseIf _timeInTightRange.Uint < tir Then
-                    .AddXY($"{GetTIR.asString}% In Range", (tir - _timeInTightRange.Uint) / 100)
+                    .AddXY($"{GetTIR.AsString}% In Range", (tir - _timeInTightRange.Uint) / 100)
                     .Last().Color = Color.Green
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
@@ -4534,7 +4535,7 @@ Public Class Form1
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
 
-                    .AddXY($"{GetTIR.asString}% In Range", (_timeInTightRange.Uint - tir) / 100)
+                    .AddXY($"{GetTIR.AsString}% In Range", (_timeInTightRange.Uint - tir) / 100)
                     .Last().Color = Color.Green
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
@@ -4548,8 +4549,8 @@ Public Class Form1
         Me.AboveHighLimitValueLabel.Text = $"{GetAboveHyperLimit.Str}%"
         Me.AboveHighLimitMessageLabel.Text = $"Above {GetTirHighLimitWithUnits()} {GetBgUnits()}"
 
-        Me.TimeInRangeValueLabel.Text = $"{GetTIR.asString}%"
-        If GetTIR.percent >= 70 Then
+        Me.TimeInRangeValueLabel.Text = $"{GetTIR.AsString}%"
+        If GetTIR.Percent >= 70 Then
             Me.TimeInRangeMessageLabel.ForeColor = Color.DarkGreen
             Me.TimeInRangeValueLabel.ForeColor = Color.DarkGreen
         Else

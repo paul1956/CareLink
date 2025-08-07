@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Friend Module TimeSpanExtensions
+Public Module TimeSpanExtensions
 
     '''' <summary>
     '''  Converts a number of hours into a human-readable string representing days and hours.
@@ -37,62 +37,71 @@ Friend Module TimeSpanExtensions
     '''  depending on the values.
     ''' </returns>
     <Extension>
-    Public Function MinutesToDaysHoursMinutes(minutes As UInteger) As String
+    Public Function MinutesToDaysHoursMinutes(minutes As Integer) As String
+        Dim parts As New List(Of String)
+        If minutes < 0 Then
+            Return "Unknown"
+        End If
         Dim days As UInteger = CUInt(minutes \ 1440) ' 1440 minutes in a day
         Dim hours As UInteger = CUInt((minutes Mod 1440) \ 60)
         Dim mins As UInteger = CUInt(minutes Mod 60)
 
-        Dim parts As New List(Of String)
-        If days > 0 Then parts.Add(item:=days.ToTimeUnits(Unit:="day"))
-        If hours > 0 Then parts.Add(item:=hours.ToTimeUnits(Unit:="hour"))
-        If mins > 0 OrElse parts.Count = 0 Then parts.Add(item:=mins.ToTimeUnits(Unit:="minute"))
+        If days > 0 Then parts.Add(item:=days.ToTimeUnits(unit:="day"))
+        If hours > 0 Then parts.Add(item:=hours.ToTimeUnits(unit:="hour"))
+        If mins > 0 OrElse parts.Count = 0 Then parts.Add(item:=mins.ToTimeUnits(unit:="minute"))
 
         Return String.Join(separator:=", ", values:=parts)
     End Function
 
     ''' <summary>
-    '''  Formats a <see cref="TimeSpan"/> into a human-readable string, optionally using specified units.
+    '''  Formats a <see cref="TimeSpan"/> into a human-readable string.
     ''' </summary>
     ''' <param name="tSpan">The <see cref="TimeSpan"/> to format.</param>
-    ''' <param name="units">
-    '''  Optional. The <paramref name="units"/> to use in the formatted string (e.g., "hr", "min", "sec").
-    '''  If not specified, the method will infer appropriate units based on the <see cref="TimeSpan"/> value.
+    ''' <param name="unit">
+    '''  The <paramref name="unit"/> to use in the formatted string (e.g., "hr", "min").
     ''' </param>
     ''' <returns>
     '''  A formatted string representing the <see cref="TimeSpan"/>, including appropriate units.
     ''' </returns>
     <Extension>
-    Public Function ToFormattedTimeSpan(tSpan As TimeSpan, Optional units As String = "") As String
-        Dim r As String = ""
-        If units.Contains("hr") Then
-            units = If(tSpan.Hours = 0,
-                       units,
-                       units.Replace("hr", "hrs")
-                      )
-            r = $"{tSpan.Hours,2}:"
-        End If
-        If tSpan.Seconds > 0 AndAlso tSpan.Minutes > 0 Then
-            r &= $"{tSpan.Minutes}:{tSpan.Seconds:D2}"
-            units = If(tSpan.Minutes = 0,
-                       "min",
-                       "mins"
-                      )
-        ElseIf tSpan.Seconds > 0 Then
-            r &= $"{tSpan.Seconds:D2}"
-            units = If(tSpan.Minutes = 0,
-                       "sec",
-                       "sec"
-                      )
-        Else
-            r &= $"{tSpan.Minutes:D2}"
-            If Not units.Contains("hr") Then
-                units = If(tSpan.Minutes = 0,
-                           "min",
-                           "mins"
-                          )
-            End If
-        End If
-        Return $"{r} {units}".TrimEnd
+    Public Function ToFormattedTimeSpan(tSpan As TimeSpan, unit As String) As String
+        Dim r As String
+        Dim unitOut As String = unit
+        Select Case True
+            Case unit = "hr"
+                If tSpan.Hours > 0 Then
+                    r = $"{tSpan.Hours,2}:{tSpan.Minutes:D2}"
+                    unitOut = If(tSpan.Minutes > 0,
+                                 "hrs",
+                                 CUInt(tSpan.Hours).ToTimeUnits(unit:="hr", includeValue:=False))
+                ElseIf tSpan.Minutes > 0 Then
+                    r = $"{tSpan.Minutes:D2}"
+                    unitOut = CUInt(tSpan.Minutes).ToTimeUnits(unit:="min", includeValue:=False)
+                Else
+                    r = " 0"
+                    unitOut = CUInt(tSpan.Hours).ToTimeUnits(unit, includeValue:=False)
+                End If
+            Case unit.Contains(value:="hr")
+                r = $"{tSpan.Hours}"
+            Case unit = "min"
+                If tSpan.Minutes > 0 AndAlso tSpan.Seconds > 0 Then
+                    r = $"{0:D2}:{tSpan.Seconds:D2}"
+                    unitOut = CUInt(tSpan.Seconds).ToTimeUnits(unit, includeValue:=False)
+                ElseIf tSpan.Minutes > 0 Then
+                    r = $"{tSpan.Minutes,2}"
+                    unitOut = CUInt(tSpan.Seconds).ToTimeUnits(unit, includeValue:=False)
+                ElseIf tSpan.Seconds > 0 Then
+                    r = $"{tSpan.Seconds:D2}"
+                    unitOut = CUInt(tSpan.Seconds).ToTimeUnits(unit:="Sec", includeValue:=False)
+                Else
+                    r = $"{0,2}"
+                    unitOut = ToTimeUnits(totalUnits:=0, unit, includeValue:=False)
+                End If
+            Case Else
+                unitOut = unit
+                r = $"{tSpan.Hours,2}:{tSpan.Minutes:D2}:{tSpan.Seconds:D2}"
+        End Select
+        Return $"{r} {unitOut}".TrimEnd
     End Function
 
 End Module

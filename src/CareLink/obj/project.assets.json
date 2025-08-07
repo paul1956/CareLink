@@ -235,7 +235,7 @@
           }
         }
       },
-      "Microsoft.Web.WebView2/1.0.3351.48": {
+      "Microsoft.Web.WebView2/1.0.3415-prerelease": {
         "type": "package",
         "build": {
           "buildTransitive/Microsoft.Web.WebView2.targets": {}
@@ -345,7 +345,7 @@
           }
         }
       },
-      "System.Speech/10.0.0-preview.5.25277.114": {
+      "System.Speech/10.0.0-preview.6.25358.103": {
         "type": "package",
         "compile": {
           "lib/net9.0/System.Speech.dll": {
@@ -681,10 +681,10 @@
         "microsoft.extensions.primitives.nuspec"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.3351.48": {
-      "sha512": "UIzXdl3x3H2MX2es7+BHYT3pLkLoT7090omqla9S3MQQCma0slwiY+CXBM6x0LmdLTpksoQ6XUqOAXrtxjtklQ==",
+    "Microsoft.Web.WebView2/1.0.3415-prerelease": {
+      "sha512": "7CGb9Y+KGdrJEKhrkU9g+Cz4WjG8wIeWx8eWbKqLgHZEUMayNfyxvILmE05gXhBnG/nz+i1cVLeGfrmIPNMjXQ==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.3351.48",
+      "path": "microsoft.web.webview2/1.0.3415-prerelease",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -693,6 +693,8 @@
         "NOTICE.txt",
         "WebView2.idl",
         "WebView2.tlb",
+        "WebView2Experimental.idl",
+        "WebView2Experimental.tlb",
         "build/Common.targets",
         "build/Microsoft.Web.WebView2.targets",
         "build/WebView2Rules.Project.xml",
@@ -705,6 +707,8 @@
         "build/native/include-winrt/WebView2Interop.tlb",
         "build/native/include/WebView2.h",
         "build/native/include/WebView2EnvironmentOptions.h",
+        "build/native/include/WebView2Experimental.h",
+        "build/native/include/WebView2ExperimentalEnvironmentOptions.h",
         "build/native/x64/WebView2Loader.dll",
         "build/native/x64/WebView2Loader.dll.lib",
         "build/native/x64/WebView2LoaderStatic.lib",
@@ -730,7 +734,7 @@
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.3351.48.nupkg.sha512",
+        "microsoft.web.webview2.1.0.3415-prerelease.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -892,15 +896,14 @@
         "xamarin.interactive/SkiaSharp.Workbooks.dll"
       ]
     },
-    "System.Speech/10.0.0-preview.5.25277.114": {
-      "sha512": "RC6WcWH1z1+fuvCOO/ylCtfB9ClyelS91CG/uVT2Jd4omPmHHtwxwee/uhVfR2dC8n2Px6XxtsUXqq8agcIdOw==",
+    "System.Speech/10.0.0-preview.6.25358.103": {
+      "sha512": "MF8SZ3nOz+5hn2eaVvRLBydDf9b6U2htZ0hz04m5OLVTtOt4EQVoUvmie+NEkYT+lVwK0ogmhhyIDYG8VpdwMg==",
       "type": "package",
-      "path": "system.speech/10.0.0-preview.5.25277.114",
+      "path": "system.speech/10.0.0-preview.6.25358.103",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
-        "LICENSE.TXT",
         "PACKAGE.md",
         "THIRD-PARTY-NOTICES.TXT",
         "buildTransitive/net8.0/_._",
@@ -920,7 +923,7 @@
         "runtimes/win/lib/net8.0/System.Speech.xml",
         "runtimes/win/lib/net9.0/System.Speech.dll",
         "runtimes/win/lib/net9.0/System.Speech.xml",
-        "system.speech.10.0.0-preview.5.25277.114.nupkg.sha512",
+        "system.speech.10.0.0-preview.6.25358.103.nupkg.sha512",
         "system.speech.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -1020,9 +1023,9 @@
       "ClosedXML >= 0.105.0",
       "DataGridViewDisableButtonColumnEx >= 1.0.8",
       "FreeSpire.PDF >= 10.2.0",
-      "Microsoft.Web.WebView2 >= 1.0.3351.48",
+      "Microsoft.Web.WebView2 >= 1.0.3415-prerelease",
       "Octokit >= 14.0.0",
-      "System.Speech >= 10.0.0-preview.5.25277.114",
+      "System.Speech >= 10.0.0-preview.6.25358.103",
       "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.8",
       "WebView2.DevTools.Dom >= 5.0.0",
@@ -1091,7 +1094,7 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.3351.48, )"
+            "version": "[1.0.3415-prerelease, )"
           },
           "Octokit": {
             "target": "Package",
@@ -1099,7 +1102,7 @@
           },
           "System.Speech": {
             "target": "Package",
-            "version": "[10.0.0-preview.5.25277.114, )"
+            "version": "[10.0.0-preview.6.25358.103, )"
           },
           "TableLayputPanelTop": {
             "target": "Package",

@@ -261,13 +261,13 @@ Friend Module LoginHelpers
     ''' <summary>
     '''  Converts a PNG <see cref="Bitmap"/> to an <see cref="Icon"/> object (with 32x32 size).
     ''' </summary>
-    ''' <param name="bmp">The <see cref="Bitmap"/> to convert.</param>
+    ''' <param name="original">The <see cref="Bitmap"/> to convert.</param>
     ''' <returns>
     '''  An <see cref="Icon"/> object created from the bitmap.
     ''' </returns>
-    Public Function PngBitmapToIcon(bmp As Bitmap) As Icon
+    Public Function PngBitmapToIcon(original As Bitmap) As Icon
         ' Optionally resize to 32x32 for best icon compatibility
-        Using resizedBmp As New Bitmap(bmp, New Size(32, 32))
+        Using resizedBmp As New Bitmap(original, newSize:=New Size(width:=32, height:=32))
             Dim hIcon As IntPtr = resizedBmp.GetHicon()
             Return Icon.FromHandle(hIcon)
         End Using

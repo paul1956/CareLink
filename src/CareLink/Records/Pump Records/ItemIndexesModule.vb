@@ -22,18 +22,18 @@ Friend Module ItemIndexesModule
     Friend Function GetItemIndex(key As String) As ServerDataIndexes
         Dim result As Object = Nothing
 
-        If key.Contains("Notification") Then
+        If key.Contains(value:="Notification") Then
             Return ServerDataIndexes.notificationHistory
         End If
-        If key.Contains(":"c) Then
-            key = key.Split(":")(0)
+        If key.Contains(value:=":"c) Then
+            key = key.Split(separator:=":")(0)
         End If
 
-        If [Enum].TryParse(GetType(ServerDataIndexes), key, result) Then
+        If [Enum].TryParse(enumType:=GetType(ServerDataIndexes), value:=key, result) Then
             Return CType(result, ServerDataIndexes)
         End If
         Stop
-        Throw New ArgumentException($"{key} was not found in {NameOf(ServerDataIndexes)}")
+        Throw New ArgumentException(message:=$"{key} was not found in {NameOf(ServerDataIndexes)}")
     End Function
 
 End Module

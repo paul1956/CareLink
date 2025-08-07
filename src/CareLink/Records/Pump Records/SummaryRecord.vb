@@ -32,7 +32,7 @@ Public Class SummaryRecord
                     Stop
                     MsgBox(
                         heading:=$"{kvp.Value} is unknown message for {messageTableName}!",
-                        text:="",
+                        prompt:="",
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                         title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
                 End If

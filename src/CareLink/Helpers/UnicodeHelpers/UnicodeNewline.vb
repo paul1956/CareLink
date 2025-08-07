@@ -87,12 +87,18 @@ Public Module UnicodeNewline
         If String.IsNullOrEmpty(str) Then
             Return False
         End If
-        Dim ch As Char = str.Chars(0)
+        Dim ch As Char = str.Chars(index:=0)
         Select Case str.Length
             Case 0
                 Return False
             Case 1, 2
-                Return ch = Cr OrElse ch = Lf OrElse ch = Nel OrElse ch = Vt OrElse ch = Ff OrElse ch = Ls OrElse ch = Ps
+                Return ch = Cr OrElse
+                       ch = Lf OrElse
+                       ch = Nel OrElse
+                       ch = Vt OrElse
+                       ch = Ff OrElse
+                       ch = Ls OrElse
+                       ch = Ps
             Case Else
                 Return False
         End Select

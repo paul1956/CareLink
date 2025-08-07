@@ -9,10 +9,10 @@ Public Class BasalRateRecord
             Exit Sub
         End If
         If value.Trim.Length > 0 Then
-            Dim lineParts() As String = value.Split(" ")
-            If lineParts.Length >= 2 AndAlso IsNumeric(lineParts(1)) Then
-                Me.[Time] = TimeOnly.Parse(lineParts(0))
-                Me.UnitsPerHr = ParseSingle(lineParts(1))
+            Dim lineParts() As String = value.Split(separator:=" ")
+            If lineParts.Length >= 2 AndAlso IsNumeric(Expression:=lineParts(1)) Then
+                Me.[Time] = TimeOnly.Parse(s:=lineParts(0))
+                Me.UnitsPerHr = ParseSingle(value:=lineParts(1))
                 Me.IsValid = True
             Else
                 Stop

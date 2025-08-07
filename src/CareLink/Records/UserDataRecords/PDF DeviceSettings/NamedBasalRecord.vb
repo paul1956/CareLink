@@ -21,9 +21,11 @@ Public Class NamedBasalRecord
 
     Public Sub UpdateBasalRates(sTable As StringTable)
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
-            If e.IsFirst Then Continue For
-            Dim line As String = e.Value.Columns(0)
-            Dim item As New BasalRateRecord(line)
+            If e.IsFirst Then
+                Continue For
+            End If
+            Dim value As String = e.Value.Columns(index:=0)
+            Dim item As New BasalRateRecord(value)
             If Not item.IsValid Then Exit For
             Me.basalRates.Add(item)
         Next

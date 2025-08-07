@@ -14,26 +14,15 @@ Public Class Client2
     ' Constants
     Private Const TokenBaseFileName As String = "logindata.json"
 
+    Private ReadOnly _httpClient As HttpClient
     Private ReadOnly _tokenBaseFileName As String
     Private _accessTokenPayload As Dictionary(Of String, Object)
     Private _config As Dictionary(Of String, Object)
     Private _country As String
-    Private ReadOnly _httpClient As HttpClient
     Private _lastHttpStatusCode As HttpStatusCode
     Private _patientElement As Dictionary(Of String, String)
     Private _tokenDataElement As JsonElement
     Private _userElementDictionary As Dictionary(Of String, Object)
-    Public Property LoggedIn As Boolean
-    Public Property PatientPersonalData As New PatientPersonalInfo
-
-    Public Property UserElementDictionary As Dictionary(Of String, Object)
-        Get
-            Return _userElementDictionary
-        End Get
-        Set
-            _userElementDictionary = Value
-        End Set
-    End Property
 
     ''' <summary>
     '''  Initializes a new instance of the <see cref="Client2"/> class.
@@ -75,6 +64,89 @@ Public Class Client2
             _config = value
         End Set
     End Property
+
+    Public Property LoggedIn As Boolean
+    Public Property PatientPersonalData As New PatientPersonalInfo
+
+    Public Property UserElementDictionary As Dictionary(Of String, Object)
+        Get
+            Return _userElementDictionary
+        End Get
+        Set
+            _userElementDictionary = Value
+        End Set
+    End Property
+
+    ''' <summary>
+    '''  Extracts the access token payload from the given token data.
+    ''' </summary>
+    ''' <param name="token_data">The token data as a <see cref="JsonElement"/>.</param>
+    ''' <returns>
+    '''  A <see cref="Dictionary(Of String, Object)"/> containing the access token payload,
+    '''  or <see langword="Nothing"/> if extraction fails.
+    ''' </returns>
+    Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, Object)
+        Debug.WriteLine(NameOf(GetAccessTokenPayload))
+        Try
+            Dim token As String = CStr(token_data.ConvertJsonElementToDictionary("access_token"))
+            Dim payload_b64 As String = token.Split(separator:="."c)(1)
+            Dim payload_b64_bytes As Byte() = Encoding.UTF8.GetBytes(s:=payload_b64)
+            Dim count As Integer = (4 - (payload_b64_bytes.Length Mod 4)) Mod 4
+            If count > 0 Then
+                payload_b64 &= New String(c:="="c, count)
+            End If
+            Dim bytes As Byte() = Convert.FromBase64String(s:=payload_b64)
+            Dim json As String = Encoding.UTF8.GetString(bytes)
+            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json)
+        Catch ex As Exception
+            Dim exceptionMessage As String = ex.DecodeException()
+            Dim message As String =
+                $"No access token found or malformed access token: {exceptionMessage} in {NameOf(GetAccessTokenPayload)}"
+            Debug.WriteLine(message)
+            Stop
+            Return Nothing
+        End Try
+    End Function
+
+    ''' <summary>
+    '''  Determines whether the provided access token payload is valid and not expired.
+    ''' </summary>
+    ''' <param name="access_token_payload">
+    '''  The access token payload as a <see cref="Dictionary(Of String, Object)"/>.
+    ''' </param>
+    ''' <returns>
+    '''  <see langword="True"/> if the token is valid; otherwise, <see langword="False"/>.
+    ''' </returns>
+    Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, Object)) As Boolean
+        Debug.WriteLine(NameOf(IsTokenValid))
+        Try
+            ' Get expiration time stamp
+            Dim unixTimeToValidate As Long = CType(access_token_payload("exp"), JsonElement).GetInt64()
+
+            ' Check expiration time stamp
+            Dim unixCurrentTime As Long = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+            Dim tDiff As Long = unixTimeToValidate - unixCurrentTime
+
+            If tDiff < 0 Then
+                Debug.WriteLine($"In {NameOf(IsTokenValid)} access token has expired {Math.Abs(tDiff)}s ago")
+                Return False
+            End If
+
+            If tDiff < 600 Then
+                Debug.WriteLine($"In {NameOf(IsTokenValid)} access token is about to expire in {tDiff}s")
+                Return False
+            End If
+
+            ' Token is valid
+            Dim authTokenValidTo As String = DateTimeOffset.FromUnixTimeSeconds(unixTimeToValidate) _
+                                                           .ToString("ddd MMM dd HH:mm:ss UTC yyyy")
+            Debug.WriteLine($"In {NameOf(IsTokenValid)} access token expires in {tDiff}s ({authTokenValidTo})")
+            Return True
+        Catch ex As Exception
+            Debug.WriteLine($"In {NameOf(IsTokenValid)} missing data in access token. {ex.DecodeException()}")
+            Return False
+        End Try
+    End Function
 
     ''' <summary>
     '''  Refreshes the authentication token using the provided configuration and token data.
@@ -159,260 +231,6 @@ Public Class Client2
             response.Dispose()
         End Try
         Return Task.FromResult(New JsonElement)
-    End Function
-
-    ''' <summary>
-    '''  Extracts the access token payload from the given token data.
-    ''' </summary>
-    ''' <param name="token_data">The token data as a <see cref="JsonElement"/>.</param>
-    ''' <returns>
-    '''  A <see cref="Dictionary(Of String, Object)"/> containing the access token payload,
-    '''  or <see langword="Nothing"/> if extraction fails.
-    ''' </returns>
-    Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, Object)
-        Debug.WriteLine(NameOf(GetAccessTokenPayload))
-        Try
-            Dim token As String = CStr(token_data.ConvertJsonElementToDictionary("access_token"))
-            Dim payload_b64 As String = token.Split(separator:="."c)(1)
-            Dim payload_b64_bytes As Byte() = Encoding.UTF8.GetBytes(s:=payload_b64)
-            Dim count As Integer = (4 - (payload_b64_bytes.Length Mod 4)) Mod 4
-            If count > 0 Then
-                payload_b64 &= New String(c:="="c, count)
-            End If
-            Dim bytes As Byte() = Convert.FromBase64String(s:=payload_b64)
-            Dim json As String = Encoding.UTF8.GetString(bytes)
-            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json)
-        Catch ex As Exception
-            Dim exceptionMessage As String = ex.DecodeException()
-            Dim message As String =
-                $"No access token found or malformed access token: {exceptionMessage} in {NameOf(GetAccessTokenPayload)}"
-            Debug.WriteLine(message)
-            Stop
-            Return Nothing
-        End Try
-    End Function
-
-    ''' <summary>
-    '''  Attempts to download the device settings PDF file for the current user.
-    ''' </summary>
-    ''' <param name="pdfFileNameWithPath">The file name to save the PDF as.</param>
-    ''' <returns>
-    '''  <see langword="True"/> if the PDF was successfully downloaded; otherwise, <see langword="False"/>.
-    ''' </returns>
-    ''' <remarks>
-    '''  <para>
-    '''   This method is not implemented for CareLink Partners and will always return <see langword="False"/>.
-    '''  </para>
-    ''' </remarks>
-    Friend Function TryGetDeviceSettingsPdfFile(pdfFileNameWithPath As String) As Boolean
-        Dim authToken As String = ""
-
-        ' CareLink Partners do not support download
-        If My.Settings.CareLinkPartner Then Return False
-#If False Then ' TODO: Implement
-
-        Dim tokenData As Dictionary(Of String, String) = _tokenDataElement.ConvertJsonElementToStringDictionary()
-
-        Dim response As HttpResponseMessage = Nothing
-        Dim serverUri As New Uri(CStr(_config("baseUrlCumulus")))
-        Dim headers As New Dictionary(Of String, String) From {
-            {"Accept", "application/json, text/plain, */*"},
-            {"Accept-Encoding", "gzip, deflate, br"},
-            {"application_language", "en"},
-            {"Authorization", $"Bearer {tokenData("access_token")}"},
-            {"Host", serverUri.Host},
-            {"mag-identifier", tokenData("mag-identifier")},
-            {"Origin", $"https://{serverUri.Host}"}
-        }
-
-        _httpClient.SetDefaultRequestHeaders()
-        For Each header As KeyValuePair(Of String, String) In headers.Sort
-            _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
-        Next
-        Dim jsonData As Dictionary(Of String, String)
-        Dim lastResponseCode As Integer
-        Try
-            Dim requestUri As New Uri($"{CStr(_config("baseUrlCumulus"))}/patient/reports/generateReport")
-            Dim request As New HttpRequestMessage(HttpMethod.Get, requestUri)
-            request.Headers.Referrer = New Uri($"{CStr(_config("baseUrlCumulus"))}/app/reports")
-            Dim inputValue As GetReportsSettingsRecord = New GetReportsSettingsRecord With {
-                .patientId = CStr(Form1.Client.UserElementDictionary("accountId"))
-            }
-
-            Dim postRequest As New HttpRequestMessage(HttpMethod.Post, requestUri) With {.Content = Json.JsonContent.Create(inputValue)}
-            response = _httpClient.SendAsync(postRequest).Result
-            lastResponseCode = response.StatusCode
-            If Not (response?.IsSuccessStatusCode) Then
-                Return False
-            End If
-        Catch ex As Exception
-            Dim lastErrorMessage As String = ex.DecodeException()
-            DebugPrint($"{lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
-            Return False
-        End Try
-        Try
-            jsonData = JsonToDictionary(response.ResultText)
-            Dim uuidString As String = $"{jsonData.Keys(0)}={jsonData.Values(0)}"
-            Dim requestUri As New Uri($"https://{CStr(_config("baseUrlCumulus"))}/patient/reports/reportStatus?{uuidString}")
-            Dim delay As Integer = 250
-            DebugPrint($"{NameOf(requestUri)} = {requestUri}")
-            While True
-                Dim t As Task(Of HttpResponseMessage) = _httpClient.SendAsync(New HttpRequestMessage(HttpMethod.Get, requestUri))
-                For i As Integer = 0 To delay
-                    If t.IsCompleted Then
-                        Exit For
-                    End If
-                    Threading.Thread.Sleep(10)
-                Next
-                response = t.Result
-                lastResponseCode = response.StatusCode
-                DebugPrint($"{NameOf(response)}?.IsSuccessStatusCode={response?.IsSuccessStatusCode}")
-                If response?.IsSuccessStatusCode Then
-                    Dim resultText As String = response.ResultText
-                    DebugPrint($"resultText={resultText}")
-                    Select Case JsonToDictionary(resultText)("status")
-                        Case "READY"
-                            DebugPrint("READY")
-                            Exit While
-                        Case "NOT_READY"
-                            DebugPrint("NOT_READY")
-                        Case Else
-                            Stop
-                    End Select
-                Else
-                    Return False
-                End If
-            End While
-            requestUri = New Uri($"https://{CStr(_config("baseUrlCumulus"))}/patient/reports/reportPdf?{uuidString}")
-            _httpClient.SetDefaultRequestHeaders()
-            response = _httpClient.SendAsync(New HttpRequestMessage(HttpMethod.Get, requestUri)).Result
-            lastResponseCode = response.StatusCode
-            If response?.IsSuccessStatusCode Then
-                Dim fileNameOrDefault As String = response.Content.Headers.GetValues("Content-Disposition").FirstOrDefault
-                If fileNameOrDefault.StartsWith("filename=") Then
-                    Dim fileContents As Byte() = response.Content.ReadAsByteArrayAsync.Result
-                    ByteArrayToFile(pdfFileName, fileContents)
-
-                End If
-            End If
-            Return True
-        Catch ex As Exception
-            If NetworkUnavailable() Then
-                DebugPrint($"has no Internet Connection!")
-            End If
-            DebugPrint($"failed {ex.DecodeException().Replace(vbCrLf, "")}")
-        End Try
-        Stop
-#End If
-        Return False
-    End Function
-
-    ''' <summary>
-    '''  Determines whether the provided access token payload is valid and not expired.
-    ''' </summary>
-    ''' <param name="access_token_payload">
-    '''  The access token payload as a <see cref="Dictionary(Of String, Object)"/>.
-    ''' </param>
-    ''' <returns>
-    '''  <see langword="True"/> if the token is valid; otherwise, <see langword="False"/>.
-    ''' </returns>
-    Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, Object)) As Boolean
-        Debug.WriteLine(NameOf(IsTokenValid))
-        Try
-            ' Get expiration time stamp
-            Dim unixTimeToValidate As Long = CType(access_token_payload("exp"), JsonElement).GetInt64()
-
-            ' Check expiration time stamp
-            Dim unixCurrentTime As Long = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-            Dim tDiff As Long = unixTimeToValidate - unixCurrentTime
-
-            If tDiff < 0 Then
-                Debug.WriteLine($"In {NameOf(IsTokenValid)} access token has expired {Math.Abs(tDiff)}s ago")
-                Return False
-            End If
-
-            If tDiff < 600 Then
-                Debug.WriteLine($"In {NameOf(IsTokenValid)} access token is about to expire in {tDiff}s")
-                Return False
-            End If
-
-            ' Token is valid
-            Dim authTokenValidTo As String = DateTimeOffset.FromUnixTimeSeconds(unixTimeToValidate) _
-                                                           .ToString("ddd MMM dd HH:mm:ss UTC yyyy")
-            Debug.WriteLine($"In {NameOf(IsTokenValid)} access token expires in {tDiff}s ({authTokenValidTo})")
-            Return True
-        Catch ex As Exception
-            Debug.WriteLine($"In {NameOf(IsTokenValid)} missing data in access token. {ex.DecodeException()}")
-            Return False
-        End Try
-    End Function
-
-    ''' <summary>
-    '''  Initializes the client by reading the token file and setting up configuration and user data.
-    ''' </summary>
-    ''' <returns>
-    '''  <see langword="True"/> if initialization is successful; otherwise, <see langword="False"/>.
-    ''' </returns>
-    ''' <remarks>
-    '''  <para>
-    '''   This method reads the token file, retrieves the access token payload, and sets up the API
-    '''   configuration and user information. If the token is invalid or expired, it attempts to refresh
-    '''   the token.
-    '''  </para>
-    ''' </remarks>
-    Private Function internalInit() As Boolean
-        _tokenDataElement = ReadTokenFile(userName:=s_userName, tokenBaseFileName:=_tokenBaseFileName)
-        If _tokenDataElement.ValueKind.IsNullOrUndefined Then
-            Me.LoggedIn = False
-            Return False
-        End If
-
-        _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
-        If _accessTokenPayload Is Nothing Then
-            Return False
-        End If
-        Dim configJsonElement As JsonElement
-        Try
-            Dim element As JsonElement = CType(_accessTokenPayload("token_details"), JsonElement)
-            Application.DoEvents()
-            Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, s_jsonDeserializerOptions)
-            _country = payload.Country
-            configJsonElement = GetConfigElement(_httpClient, payload.Country)
-            Me.Config = configJsonElement.ConvertJsonElementToDictionary()
-            Dim userString As String = Me.GetUserString(configJsonElement, _tokenDataElement)
-            If String.IsNullOrWhiteSpace(userString) Then
-                Throw New UnauthorizedAccessException
-            End If
-            _userElementDictionary = If(String.IsNullOrWhiteSpace(userString),
-                Nothing,
-                JsonSerializer.Deserialize(Of JsonElement)(userString).ConvertJsonElementToDictionary)
-            _PatientPersonalData = JsonSerializer.Deserialize(Of PatientPersonalInfo)(userString)
-
-            Dim role As String = _PatientPersonalData.role
-            If role.ContainsIgnoreCase("Partner") Then
-                _patientElement = Me.GetPatient(configJsonElement, _tokenDataElement).Result
-            End If
-        Catch ex As Exception
-            Debug.WriteLine(ex.ToString())
-
-            If Auth_Error_Codes.Contains(_lastHttpStatusCode) Then
-                Try
-                    _tokenDataElement = Me.DoRefresh(configJsonElement.ConvertJsonElementToDictionary, _tokenDataElement).Result
-                    If Not (_tokenDataElement.ValueKind = JsonValueKind.Undefined OrElse _tokenDataElement.ValueKind = JsonValueKind.Null) Then
-                        _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
-                        WriteTokenFile(value:=_tokenDataElement, userName:=s_userName)
-                    End If
-                Catch refreshEx As Exception
-                    Debug.WriteLine(refreshEx.ToString())
-                End Try
-            End If
-
-            Me.LoggedIn = False
-            Return False
-        End Try
-
-        Me.LoggedIn = True
-        Return True
     End Function
 
     ''' <summary>
@@ -534,6 +352,189 @@ Public Class Client2
         Return If(response.IsSuccessStatusCode,
             response.Content.ReadAsStringAsync().Result,
             Nothing)
+    End Function
+
+    ''' <summary>
+    '''  Initializes the client by reading the token file and setting up configuration and user data.
+    ''' </summary>
+    ''' <returns>
+    '''  <see langword="True"/> if initialization is successful; otherwise, <see langword="False"/>.
+    ''' </returns>
+    ''' <remarks>
+    '''  <para>
+    '''   This method reads the token file, retrieves the access token payload, and sets up the API
+    '''   configuration and user information. If the token is invalid or expired, it attempts to refresh
+    '''   the token.
+    '''  </para>
+    ''' </remarks>
+    Private Function internalInit() As Boolean
+        _tokenDataElement = ReadTokenFile(userName:=s_userName, tokenBaseFileName:=_tokenBaseFileName)
+        If _tokenDataElement.ValueKind.IsNullOrUndefined Then
+            Me.LoggedIn = False
+            Return False
+        End If
+
+        _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
+        If _accessTokenPayload Is Nothing Then
+            Return False
+        End If
+        Dim configJsonElement As JsonElement
+        Try
+            Dim element As JsonElement = CType(_accessTokenPayload("token_details"), JsonElement)
+            Application.DoEvents()
+            Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, s_jsonDeserializerOptions)
+            _country = payload.Country
+            configJsonElement = GetConfigElement(_httpClient, payload.Country)
+            Me.Config = configJsonElement.ConvertJsonElementToDictionary()
+            Dim userString As String = Me.GetUserString(configJsonElement, _tokenDataElement)
+            If String.IsNullOrWhiteSpace(userString) Then
+                Throw New UnauthorizedAccessException
+            End If
+            _userElementDictionary = If(String.IsNullOrWhiteSpace(userString),
+                Nothing,
+                JsonSerializer.Deserialize(Of JsonElement)(userString).ConvertJsonElementToDictionary)
+            _PatientPersonalData = JsonSerializer.Deserialize(Of PatientPersonalInfo)(userString)
+
+            Dim role As String = _PatientPersonalData.role
+            If role.ContainsIgnoreCase("Partner") Then
+                _patientElement = Me.GetPatient(configJsonElement, _tokenDataElement).Result
+            End If
+        Catch ex As Exception
+            Debug.WriteLine(ex.ToString())
+
+            If Auth_Error_Codes.Contains(_lastHttpStatusCode) Then
+                Try
+                    _tokenDataElement = Me.DoRefresh(configJsonElement.ConvertJsonElementToDictionary, _tokenDataElement).Result
+                    If Not (_tokenDataElement.ValueKind = JsonValueKind.Undefined OrElse _tokenDataElement.ValueKind = JsonValueKind.Null) Then
+                        _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
+                        WriteTokenFile(value:=_tokenDataElement, userName:=s_userName)
+                    End If
+                Catch refreshEx As Exception
+                    Debug.WriteLine(refreshEx.ToString())
+                End Try
+            End If
+
+            Me.LoggedIn = False
+            Return False
+        End Try
+
+        Me.LoggedIn = True
+        Return True
+    End Function
+
+    ''' <summary>
+    '''  Attempts to download the device settings PDF file for the current user.
+    ''' </summary>
+    ''' <param name="pdfFileNameWithPath">The file name to save the PDF as.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the PDF was successfully downloaded; otherwise, <see langword="False"/>.
+    ''' </returns>
+    ''' <remarks>
+    '''  <para>
+    '''   This method is not implemented for CareLink Partners and will always return <see langword="False"/>.
+    '''  </para>
+    ''' </remarks>
+    Friend Function TryGetDeviceSettingsPdfFile(pdfFileNameWithPath As String) As Boolean
+        Dim authToken As String = ""
+
+        ' CareLink Partners do not support download
+        If My.Settings.CareLinkPartner Then Return False
+#If False Then ' TODO: Implement
+
+                Dim tokenData As Dictionary(Of String, String) = _tokenDataElement.ConvertJsonElementToStringDictionary()
+
+                Dim response As HttpResponseMessage = Nothing
+                Dim serverUri As New Uri(CStr(_config("baseUrlCumulus")))
+                Dim headers As New Dictionary(Of String, String) From {
+                    {"Accept", "application/json, text/plain, */*"},
+                    {"Accept-Encoding", "gzip, deflate, br"},
+                    {"application_language", "en"},
+                    {"Authorization", $"Bearer {tokenData("access_token")}"},
+                    {"Host", serverUri.Host},
+                    {"mag-identifier", tokenData("mag-identifier")},
+                    {"Origin", $"https://{serverUri.Host}"}
+                }
+
+                _httpClient.SetDefaultRequestHeaders()
+                For Each header As KeyValuePair(Of String, String) In headers.Sort
+                    _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
+                Next
+                Dim jsonData As Dictionary(Of String, String)
+                Dim lastResponseCode As Integer
+                Try
+                    Dim requestUri As New Uri($"{CStr(_config("baseUrlCumulus"))}/patient/reports/generateReport")
+                    Dim request As New HttpRequestMessage(HttpMethod.Get, requestUri)
+                    request.Headers.Referrer = New Uri($"{CStr(_config("baseUrlCumulus"))}/app/reports")
+                    Dim inputValue As GetReportsSettingsRecord = New GetReportsSettingsRecord With {
+                        .patientId = CStr(Form1.Client.UserElementDictionary("accountId"))
+                    }
+
+                    Dim postRequest As New HttpRequestMessage(HttpMethod.Post, requestUri) With {.Content = Json.JsonContent.Create(inputValue)}
+                    response = _httpClient.SendAsync(postRequest).Result
+                    lastResponseCode = response.StatusCode
+                    If Not (response?.IsSuccessStatusCode) Then
+                        Return False
+                    End If
+                Catch ex As Exception
+                    Dim lastErrorMessage As String = ex.DecodeException()
+                    DebugPrint($"{lastErrorMessage.Replace(vbCrLf, "")}, status {response?.StatusCode}")
+                    Return False
+                End Try
+                Try
+                    jsonData = JsonToDictionary(response.ResultText)
+                    Dim uuidString As String = $"{jsonData.Keys(0)}={jsonData.Values(0)}"
+                    Dim requestUri As New Uri($"https://{CStr(_config("baseUrlCumulus"))}/patient/reports/reportStatus?{uuidString}")
+                    Dim delay As Integer = 250
+                    DebugPrint($"{NameOf(requestUri)} = {requestUri}")
+                    While True
+                        Dim t As Task(Of HttpResponseMessage) = _httpClient.SendAsync(New HttpRequestMessage(HttpMethod.Get, requestUri))
+                        For i As Integer = 0 To delay
+                            If t.IsCompleted Then
+                                Exit For
+                            End If
+                            Threading.Thread.Sleep(10)
+                        Next
+                        response = t.Result
+                        lastResponseCode = response.StatusCode
+                        DebugPrint($"{NameOf(response)}?.IsSuccessStatusCode={response?.IsSuccessStatusCode}")
+                        If response?.IsSuccessStatusCode Then
+                            Dim resultText As String = response.ResultText
+                            DebugPrint($"resultText={resultText}")
+                            Select Case JsonToDictionary(resultText)("status")
+                                Case "READY"
+                                    DebugPrint("READY")
+                                    Exit While
+                                Case "NOT_READY"
+                                    DebugPrint("NOT_READY")
+                                Case Else
+                                    Stop
+                            End Select
+                        Else
+                            Return False
+                        End If
+                    End While
+                    requestUri = New Uri($"https://{CStr(_config("baseUrlCumulus"))}/patient/reports/reportPdf?{uuidString}")
+                    _httpClient.SetDefaultRequestHeaders()
+                    response = _httpClient.SendAsync(New HttpRequestMessage(HttpMethod.Get, requestUri)).Result
+                    lastResponseCode = response.StatusCode
+                    If response?.IsSuccessStatusCode Then
+                        Dim fileNameOrDefault As String = response.Content.Headers.GetValues("Content-Disposition").FirstOrDefault
+                        If fileNameOrDefault.StartsWith("filename=") Then
+                            Dim fileContents As Byte() = response.Content.ReadAsByteArrayAsync.Result
+                            ByteArrayToFile(pdfFileName, fileContents)
+
+                        End If
+                    End If
+                    Return True
+                Catch ex As Exception
+                    If NetworkUnavailable() Then
+                        DebugPrint($"has no Internet Connection!")
+                    End If
+                    DebugPrint($"failed {ex.DecodeException().Replace(vbCrLf, "")}")
+                End Try
+                Stop
+#End If
+        Return False
     End Function
 
     ''' <summary>

@@ -6,12 +6,12 @@
 Public Class DualSquareRecord
 
     Public Sub New(line As String)
-        If String.IsNullOrWhiteSpace(line) Then
+        If String.IsNullOrWhiteSpace(value:=line) Then
             Me.Dual = "Off"
             Me.Square = "Off"
             Exit Sub
         End If
-        Dim values() As String = line.Split("/")
+        Dim values() As String = line.Split(separator:="/")
         Me.Dual = values(0)
         Me.Square = values(1)
     End Sub

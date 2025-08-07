@@ -44,7 +44,7 @@ Public Module PDFParser
     ''' </returns>
     Public Function ConvertPdfTableToStringTable(table As PdfTable, tableHeader As String) As StringTable
         Dim sTable As StringTable = ExtractTableText(table)
-        If sTable.IsValid AndAlso sTable.Rows(0).Columns(0).StartsWith(tableHeader) Then
+        If sTable.IsValid AndAlso sTable.Rows(index:=0).Columns(index:=0).StartsWith(value:=tableHeader) Then
             Return sTable
         Else
             Stop
@@ -69,17 +69,17 @@ Public Module PDFParser
         For i As Integer = startPageNumber To endPageNumber
 
             'Get the page
-            Dim page As PdfPageBase = doc.Pages(i)
+            Dim page As PdfPageBase = doc.Pages(index:=i)
 
             'Create a PdfTextExtractor object
             Dim textExtractor As New PdfTextExtractor(page)
 
             'Create a PdfTextExtractOptions object
             'Set isExtractAllText to true
-            Dim extractOptions As New PdfTextExtractOptions With {
+            Dim options As New PdfTextExtractOptions With {
                 .IsExtractAllText = True
             }
-            text &= textExtractor.ExtractText(extractOptions)
+            text &= textExtractor.ExtractText(options)
         Next
         Return text
     End Function

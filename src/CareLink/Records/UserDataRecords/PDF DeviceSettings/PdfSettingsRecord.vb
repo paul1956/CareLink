@@ -229,19 +229,24 @@ Public Class PdfSettingsRecord
     Public Property Utilities As New UtilitiesRecord
     Public ReadOnly Property IsValid As Boolean = False
 
-    Public Shared Sub GetSnoozeInfo(listOfAllTextLines As List(Of String), target As String, ByRef snoozeOn As String, ByRef snoozeTime As TimeSpan)
+    Public Shared Sub GetSnoozeInfo(
+        listOfAllTextLines As List(Of String),
+        target As String,
+        ByRef snoozeOn As String,
+        ByRef snoozeTime As TimeSpan)
+
         Dim snoozeLine As String
         snoozeOn = "Off"
-        snoozeLine = listOfAllTextLines.FindLine(target)
-        Dim index As Integer = snoozeLine.IndexOf(")"c)
+        snoozeLine = listOfAllTextLines.FindLine(value:=target)
+        Dim index As Integer = snoozeLine.IndexOf(value:=")"c)
         If index >= 0 Then
-            snoozeLine = snoozeLine.Substring(0, index + 1)
-            index = snoozeLine.IndexOf("Snooze ")
-            snoozeLine = snoozeLine.Substring(index).Trim(")"c)
-            Dim splitSnoozeLine As String() = snoozeLine.Split(" ", StringSplitOptions.RemoveEmptyEntries)
+            snoozeLine = snoozeLine.Substring(startIndex:=0, length:=index + 1)
+            index = snoozeLine.IndexOf(value:="Snooze ")
+            snoozeLine = snoozeLine.Substring(startIndex:=index).Trim(trimChar:=")"c)
+            Dim splitSnoozeLine As String() = snoozeLine.Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
             If splitSnoozeLine.Length = 2 Then
                 snoozeOn = "On"
-                If Not TimeSpan.TryParse(splitSnoozeLine(1), snoozeTime) Then
+                If Not TimeSpan.TryParse(s:=splitSnoozeLine(1), result:=snoozeTime) Then
                     Stop
                 End If
             Else

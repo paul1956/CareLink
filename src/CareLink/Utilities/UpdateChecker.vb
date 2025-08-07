@@ -92,7 +92,7 @@ Friend Module UpdateChecker
                         If Interlocked.Exchange(location1:=s_inCheckForUpdate, 1) = 0 Then
                             If MsgBox(
                                 heading:=$"There is a newer version available, do you want to install now?",
-                                text:=$"Current version {My.Application.Info.Version}{vbCrLf}New version {gitHubVersion}",
+                                prompt:=$"Current version {My.Application.Info.Version}{vbCrLf}New version {gitHubVersion}",
                                 buttonStyle:=MsgBoxStyle.YesNo Or MsgBoxStyle.Question,
                                 title:="Updates Available") = MsgBoxResult.Yes Then
 
@@ -112,7 +112,7 @@ Friend Module UpdateChecker
                 If reportSuccessfulResult Then
                     MsgBox(
                         heading:="You are running the latest version",
-                        text:="",
+                        prompt:="",
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Information,
                         title:="No Updates Available")
                 End If
@@ -121,7 +121,7 @@ Friend Module UpdateChecker
             If reportSuccessfulResult Then
                 MsgBox(
                     heading:="Connection failed while checking for new version",
-                    text:=ex.DecodeException(),
+                    prompt:=ex.DecodeException(),
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Information,
                     title:="Version Check Failed")
             End If

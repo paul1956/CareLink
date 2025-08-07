@@ -85,7 +85,7 @@ Public Module NearestKnownColor
                 hsbList.Add(key:=hsb, value:=rgbList.Values(index:=i))
             End If
         Next
-        Return hsbList.Values(0)
+        Return hsbList.Values(index:=0)
     End Function
 
 End Module

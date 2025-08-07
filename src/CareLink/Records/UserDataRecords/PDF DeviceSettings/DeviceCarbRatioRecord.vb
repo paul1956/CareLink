@@ -5,12 +5,12 @@
 Public Class DeviceCarbRatioRecord
 
     Public Sub New(r As StringTable.Row)
-        Dim s() As String = r.Columns(0).Split(" ", StringSplitOptions.RemoveEmptyEntries)
+        Dim s() As String = r.Columns(index:=0).Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
         If s.Length <> 2 Then
             Exit Sub
         End If
-        If TimeOnly.TryParse(s(0), Me.Time) Then
-            Me.Ratio = ParseSingle(s(1))
+        If TimeOnly.TryParse(s:=s(0), result:=Me.Time) Then
+            Me.Ratio = ParseSingle(value:=s(1))
             Me.IsValid = True
         Else
             Stop

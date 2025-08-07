@@ -11,6 +11,8 @@
 Option Strict On
 Option Explicit On
 
+' Add InternalsVisibleTo attribute for test access
+<Assembly: System.Runtime.CompilerServices.InternalsVisibleTo("TestProject")>
 
 Namespace My
 

@@ -212,12 +212,12 @@ Friend Module CreateChartItems
                 .LineColor = Color.FromArgb(alpha:=64, baseColor)
 
                 With .MajorGrid
-                    .Interval = firstAxis(0)
+                    .Interval = firstAxis(index:=0)
                     .LineColor = Color.FromArgb(alpha:=64, baseColor)
                 End With
                 With .MajorTickMark
                     .Enabled = True
-                    .Interval = firstAxis(0)
+                    .Interval = firstAxis(index:=0)
                     .LineColor = Color.FromArgb(alpha:=64, baseColor)
                 End With
 
