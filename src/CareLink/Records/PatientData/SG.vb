@@ -94,7 +94,7 @@ Public Class SG
             If Single.IsNaN(_sg) Then Return _sg
             Return If(NativeMmolL,
                       _sg,
-                      (_sg / MmolLUnitsDivisor).RoundSingle(digits:=2))
+                      (_sg / MmolLUnitsDivisor).RoundToSingle(digits:=2))
         End Get
     End Property
 

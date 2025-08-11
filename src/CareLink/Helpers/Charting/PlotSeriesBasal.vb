@@ -88,7 +88,7 @@ Friend Module PlotSeriesBasal
 
         If DrawFromBottom Then
             xValue = markerOADateTime + TwoMinutes30SecondsOADate
-            yValue = amount.RoundTo025
+            yValue = amount.RoundTo025()
             basalSeries.AddBasalPoint(xValue, yValue:=0, lineColor, tag)
             basalSeries.AddBasalPoint(xValue, yValue, lineColor, tag)
             basalSeries.AddBasalPoint(xValue, yValue:=0, lineColor, tag)

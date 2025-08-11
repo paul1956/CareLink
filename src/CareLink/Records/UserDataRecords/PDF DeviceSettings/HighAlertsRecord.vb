@@ -21,9 +21,9 @@ Public Class HighAlertsRecord
 
             Dim options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
             Dim item As New HighAlertRecord(row, valueUnits) With {
-                .End = If(e.IsLast OrElse String.IsNullOrWhiteSpace(value:=sTable.Rows(index:=e.Index + 1).Columns(index:=0)),
-                          Midnight,
-                          TimeOnly.Parse(s:=sTable.Rows(index:=e.Index + 1).Columns(index:=0).Split(separator:=" ", options)(0)))}
+                          .End = If(e.IsLast OrElse String.IsNullOrWhiteSpace(value:=sTable.Rows(index:=e.Index + 1).Columns(index:=0)),
+                                    Midnight,
+                                    TimeOnly.Parse(s:=sTable.Rows(index:=e.Index + 1).Columns(index:=0).Split(separator:=" ", options)(0)))}
             If item.IsValid Then
                 Me.HighAlert.Add(item)
             Else

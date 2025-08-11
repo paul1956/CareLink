@@ -106,25 +106,29 @@ Public Class ExceptionHandlerDialog
                 mustBeUnique:=True)
 
             Dim fileLink As String = $"{uniqueFileNameResult.withoutPath}: file://{uniqueFileNameResult.withPath}"
-            AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold)
-            AppendTextWithFontChange(rtb, text:="and stored in", newFont)
-            AppendTextWithFontChange(rtb, text:=DirectoryForProjectData, newFont:=fontBold)
+            AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
+            AppendTextWithFontChange(rtb, text:="and stored in", newFont:=newFont, padRight:=0)
+            AppendTextWithFontChange(rtb, text:=DirectoryForProjectData, newFont:=fontBold, padRight:=0)
             AppendTextWithFontChange(
                 rtb,
                 text:="You can review what is being stored and then attach it to a new issue at",
-                newFont)
+                newFont:=newFont,
+                padRight:=0)
             AppendTextWithFontChange(
                 rtb,
                 text:="You can review what is being stored and then attach it to a new issue at",
-                newFont)
+                newFont:=newFont,
+                padRight:=0)
             AppendTextWithFontChange(
                 rtb,
                 text:=$"{_gitClient.Repository.Get(owner:=GitOwnerName, name:="CareLink").Result.HtmlUrl}/issues.",
-                newFont)
+                newFont:=newFont,
+                padRight:=0)
             AppendTextWithFontChange(
                 rtb,
                 text:="This will help me isolate issues quickly.",
-                newFont)
+                newFont:=newFont,
+                padRight:=0)
             CreateReportFile(
                 exceptionText:=Me.ExceptionTextBox.Text,
                 stackTraceText:=Me.StackTraceTextBox.Text,
@@ -137,9 +141,9 @@ Public Class ExceptionHandlerDialog
             End If
             rtb.Text = $"Clicking OK will rerun the data file that caused the error{vbCrLf}"
             Dim fileLink As String = $"{Path.GetFileName(path:=Me.ReportFileNameWithPath)}: file://{Me.ReportFileNameWithPath}"
-            AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold)
-            AppendTextWithFontChange(rtb, text:="and stored in", newFont)
-            AppendTextWithFontChange(rtb, text:=DirectoryForProjectData, newFont:=fontBold)
+            AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
+            AppendTextWithFontChange(rtb, text:="and stored in", newFont:=newFont, padRight:=0)
+            AppendTextWithFontChange(rtb, text:=DirectoryForProjectData, newFont:=fontBold, padRight:=0)
             Me.LocalRawData = Me.DecomposeReportFile(Me.ExceptionTextBox, Me.StackTraceTextBox, Me.ReportFileNameWithPath)
         End If
     End Sub

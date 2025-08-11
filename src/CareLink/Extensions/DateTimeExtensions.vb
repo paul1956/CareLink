@@ -255,7 +255,7 @@ Friend Module DateTimeExtensions
     ''' <returns>A <see langword="String"/> representing the time in "HH:mm" format.</returns>
     <Extension>
     Public Function ToHoursMinutes(timeOnly As TimeOnly) As String
-        Dim rawTimeOnly As String = $" {timeOnly.ToString(CurrentDateCulture)}"
+        Dim rawTimeOnly As String = $"{timeOnly.ToString(provider:=CurrentDateCulture)}"
         Return If(rawTimeOnly.Split(separator:=":")(0).Length = 1,
                   $" {rawTimeOnly}",
                   rawTimeOnly)

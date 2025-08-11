@@ -77,7 +77,7 @@ Public Module SystemVariables
     '''  A tuple containing the above hyper limit as an unsigned integer and its string representation.
     ''' </returns>
     Friend Function GetAboveHyperLimit() As (int As Integer, Str As String)
-        Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.GetRoundedValue(digits:=1)
+        Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.RoundToSingle(digits:=1)
         Return If(aboveHyperLimit >= 0,
                   (CInt(aboveHyperLimit), aboveHyperLimit.ToString),
                   (CInt(0), "??? "))
@@ -90,7 +90,7 @@ Public Module SystemVariables
     '''  A tuple containing the below hypo limit as an unsigned integer and its string representation.
     ''' </returns>
     Friend Function GetBelowHypoLimit() As (Uint As UInteger, Str As String)
-        Dim belowHyperLimit As Single = PatientData.BelowHypoLimit.GetRoundedValue(digits:=1)
+        Dim belowHyperLimit As Single = PatientData.BelowHypoLimit.RoundToSingle(digits:=1)
         Return If(belowHyperLimit >= 0,
                   (CUInt(belowHyperLimit), belowHyperLimit.ToString),
                   (CUInt(0), "??? "))

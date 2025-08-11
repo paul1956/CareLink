@@ -18,7 +18,11 @@ Friend Module UnicodeConstants
     '''  Gear, U+2699
     '''  Represents a gear symbol, often used to indicate settings or configuration options.
     ''' </summary>
-    Public Const Gear As String = ChrW(CharCode:=&H2699)
+    Public Const Gear As Char = ChrW(CharCode:=&H2699)
+
+    Public Const Shield As Char = ChrW(CharCode:=&H26E8)
+
+    Public Const Speaker As String = "🔊"
 
     ''' <summary>
     '''  Line Feed, U+000A

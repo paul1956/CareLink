@@ -28,7 +28,7 @@ Public Class HighAlertRecord
         Me.HighLimit = s1(1).ParseSingleInvariant
         If Not String.IsNullOrWhiteSpace(value:=row.Columns(index:=1)) Then
             Me.AlertBeforeHigh = True
-            Me.TimeBeforeHigh &= " Please Verify!"
+            Me.TimeBeforeHigh &= " *Verify!"
         End If
         Me.AlertOnHigh = Not String.IsNullOrWhiteSpace(value:=row.Columns(index:=2))
         If String.IsNullOrWhiteSpace(value:=row.Columns(index:=3)) Then
@@ -49,6 +49,6 @@ Public Class HighAlertRecord
     Public ReadOnly Property RaiseLimit As String
     Public ReadOnly Property RiseAlert As Boolean
     Public ReadOnly Property Start As TimeOnly
-    Public ReadOnly Property TimeBeforeHigh As String = "15* Min"
+    Public ReadOnly Property TimeBeforeHigh As String = "15 Min"
     Public Property ValueUnits As String
 End Class

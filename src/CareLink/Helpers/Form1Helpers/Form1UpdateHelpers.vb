@@ -48,10 +48,10 @@ Friend Module Form1UpdateHelpers
     '''  A string describing the time in hours and minutes out of the last 24 hours.
     ''' </returns>
     Private Function ConvertPercent24HoursToDisplayValueString(value As String) As String
-        Dim val As Decimal = CDec(Convert.ToInt32(value) * 0.24)
-        Dim hours As Integer = Convert.ToInt32(value:=val)
-        Dim minutes As Integer = CInt((val Mod 1) * 60)
-        Return If(val.FractionalPart = 0,
+        Dim d As Decimal = CDec(Convert.ToInt32(value) * 0.24)
+        Dim hours As Integer = CInt(Math.Floor(d))
+        Dim minutes As Integer = CInt(d.FractionalPart() * 60)
+        Return If(d.FractionalPart().AlmostZero(),
                   $"{hours} hours, out of last 24 hours.",
                   $"{hours} hours and {minutes} minutes, out of last 24 hours.")
     End Function

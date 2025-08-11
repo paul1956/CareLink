@@ -85,7 +85,7 @@ Public Class BgReading
             If Me.UnitValue.IsSgInvalid Then Return Me.UnitValue
             Return If(Me.bgUnits <> "MGDL",
                       Me.UnitValue,
-                      (Me.UnitValue / MmolLUnitsDivisor).RoundSingle(digits:=2))
+                      (Me.UnitValue / MmolLUnitsDivisor).RoundToSingle(digits:=2))
         End Get
     End Property
 

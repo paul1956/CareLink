@@ -6,23 +6,55 @@ Imports System.Globalization
 Imports System.Runtime.CompilerServices
 
 Friend Module MathExtensions
+    Public Const Tolerance As Single = 0.000001F
 
     Private Function GetDigits(value As Double, digits As Integer, considerValue As Boolean) As Integer
         Return If(considerValue AndAlso value < 10, 2, digits)
     End Function
 
     ''' <summary>
-    '''  Rounds a Single value to the specified number of decimal digits.
+    '''  Rounds a <see langword="Single"/> value to the specified number of <paramref name="digits"/>.
     '''  If <paramref name="digits"/> is 3, rounds to the nearest 0.025 increment.
+    '''  If <paramref name="considerValue"/> is True and the value is less than 10, rounds to 2 decimal digits.
     ''' </summary>
     ''' <param name="value">The Single value to round.</param>
     ''' <param name="digits">The number of decimal digits to round to.</param>
+    ''' <param name="considerValue">Whether to consider the value for special rounding.</param>
     ''' <returns>The rounded Single value.</returns>
     <Extension>
-    Friend Function GetRoundedValue(value As Single, digits As Integer) As Single
-        Return If(digits = 3,
-                  value.RoundTo025,
-                  value.RoundSingle(digits))
+    Friend Function RoundToSingle(value As Single, digits As Integer, Optional considerValue As Boolean = False) As Single
+        If digits = 3 Then
+            ' Special case for 0.025 increments
+            Return value.RoundTo025()
+        End If
+        digits = GetDigits(value, digits, considerValue)
+        Return CSng(Math.Round(value, digits))
+    End Function
+
+    ''' <summary>
+    '''  Rounds a <see langword="Double"/> value to the specified number of <paramref name="digits"/>.
+    ''' </summary>
+    ''' <param name="value">The Double value to round.</param>
+    ''' <param name="digits">The number of decimal digits to round to.</param>
+    ''' <returns>The rounded Double value.</returns>
+    <Extension>
+    Friend Function RoundToSingle(value As Double, digits As Integer) As Single
+        Return CSng(value).RoundToSingle(digits, considerValue:=False)
+    End Function
+
+    ''' <summary>
+    '''  Checks whether the single value is close enough to zero within a reasonable <see cref="Tolerance"/>.
+    ''' </summary>
+    ''' <param name="value">The Single value to check.</param>
+    ''' <remarks>
+    '''  This is useful for comparing floating-point numbers to zero, accounting for precision issues.
+    ''' </remarks>
+    ''' <returns>
+    '''  <see langword="True"/> if the value is almost zero; otherwise, <see langword="False"/>.
+    ''' </returns>
+    <Extension>
+    Public Function AlmostZero(value As Single) As Boolean
+        Return Math.Abs(value) <= Tolerance
     End Function
 
     ''' <summary>
@@ -31,51 +63,8 @@ Friend Module MathExtensions
     ''' <param name="d">The Decimal value to get the fractional part from.</param>
     ''' <returns>The fractional part of the Decimal value.</returns>
     <Extension>
-    Public Function FractionalPart(d As Decimal) As Decimal
+    Public Function FractionalPart(d As Decimal) As Single
         Return d - Math.Floor(d)
-    End Function
-
-    ''' <summary>
-    '''  Rounds a <see langword="Single"/> value to the specified number of <paramref name="digits"/>.
-    '''  If <paramref name="considerValue"/> is True and the value is less than 10, rounds to 2 decimal digits.
-    ''' </summary>
-    ''' <param name="value">The Single value to round.</param>
-    ''' <param name="digits">The number of decimal digits to round to.</param>
-    ''' <param name="considerValue">Whether to consider the value for special rounding.</param>
-    ''' <returns>The rounded Single value.</returns>
-    <Extension>
-    Friend Function RoundSingle(value As Single, digits As Integer, Optional considerValue As Boolean = False) As Single
-        digits = GetDigits(value, digits, considerValue)
-        Return CSng(Math.Round(value, digits))
-    End Function
-
-    ''' <summary>
-    '''  Rounds a <see langword="Double"/> value to the specified number of <paramref name="digits"/>.
-    '''  If <paramref name="considerValue"/> is True and the value is less than 10, rounds to 2 decimal digits.
-    ''' </summary>
-    ''' <param name="value">The Double value to round.</param>
-    ''' <param name="digits">The number of decimal digits to round to.</param>
-    ''' <returns>The rounded Double value.</returns>
-    <Extension>
-    Friend Function RoundSingle(value As Double, digits As Integer) As Single
-        digits = GetDigits(value, digits, considerValue:=False)
-        Return CSng(Math.Round(value, digits))
-    End Function
-
-    ''' <summary>
-    '''  Checks whether the single value is close enough to zero within a reasonable tolerance.
-    ''' </summary>
-    ''' <param name="value">The Single value to check.</param>
-    ''' <param name="tolerance">The tolerance level for considering the value as zero.</param>
-    ''' <remarks>
-    '''  This is useful for comparing floating-point numbers to zero, accounting for precision issues.
-    ''' </remarks>
-    ''' <returns>
-    '''  <see langword="True"/> if the value is almost zero; otherwise, <see langword="False"/>.
-    ''' </returns>
-    <Extension>
-    Public Function AlmostZero(value As Single, Optional tolerance As Single = 0.000001F) As Boolean
-        Return Math.Abs(value) <= tolerance
     End Function
 
     ''' <summary>
@@ -106,15 +95,13 @@ Friend Module MathExtensions
     ''' </summary>
     ''' <param name="singleValue">The Single value to compare.</param>
     ''' <param name="integerValue">The Integer value to compare.</param>
-    ''' <param name="tolerance">The tolerance level for considering the value as zero.</param>
     ''' <returns>
     '''  <see langword="True"/> if the values are almost equal; otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
     Public Function IsSingleEqualToInteger(
         singleValue As Single,
-        integerValue As Integer,
-        Optional tolerance As Single = 0.000001F) As Boolean
+        integerValue As Integer) As Boolean
 
         ' Optionally check if integerValue fits in Single range - typically integer fits in Single exactly up to 2^24
         Const maxExactInteger As Integer = 16777216 ' 2^24
@@ -124,7 +111,7 @@ Friend Module MathExtensions
             Return False
         End If
 
-        Return Math.Abs(value:=singleValue - integerValue) <= tolerance
+        Return Math.Abs(value:=singleValue - integerValue) <= Tolerance
     End Function
 
     ''' <summary>
@@ -151,7 +138,7 @@ Friend Module MathExtensions
         End If
         Dim result As Single
         Return If(Single.TryParse(s:=value, style:=NumberStyles.Number, provider:=usDataCulture, result),
-                  result.GetRoundedValue(digits),
+                  result.RoundToSingle(digits),
                   Single.NaN)
     End Function
 
@@ -180,7 +167,7 @@ Friend Module MathExtensions
                 Throw UnreachableException(propertyName:=value.GetType.Name)
         End Select
 
-        Return GetRoundedValue(value:=returnSingle, digits)
+        Return returnSingle.RoundToSingle(digits)
     End Function
 
     ''' <summary>

@@ -294,8 +294,8 @@ Public Module JsonExtensions
 
             If digits = -1 Then Return result
             Return If(digits = 3,
-                      result.RoundTo025,
-                      result.RoundSingle(digits, considerValue))
+                      result.RoundTo025(),
+                      result.RoundToSingle(digits, considerValue))
         Else
             Return Single.NaN
         End If
@@ -557,6 +557,35 @@ Public Module JsonExtensions
             End Try
         Next
         Return resultDictionary
+    End Function
+
+    ''' <summary>
+    '''  Converts a JsonElement to a string representation of the value, scaled according to the NativeMmolL setting.
+    ''' </summary>
+    ''' <param name="item">The JsonElement to convert.</param>
+    ''' <returns>A string representation of the scaled value.</returns>
+    <Extension>
+    Public Function ScaleSgToString(item As JsonElement) As String
+        Dim itemAsSingle As Single
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+        Select Case item.ValueKind
+            Case JsonValueKind.String
+                itemAsSingle = Single.Parse(item.GetString(), provider)
+            Case JsonValueKind.Null
+                Return String.Empty
+            Case JsonValueKind.Undefined
+                Return String.Empty
+            Case JsonValueKind.Number
+                itemAsSingle = item.GetSingle
+            Case Else
+                Stop
+        End Select
+
+        Dim s As Single =
+            If(NativeMmolL,
+               (itemAsSingle / MmolLUnitsDivisor).RoundToSingle(digits:=GetPrecisionDigits()),
+               itemAsSingle)
+        Return s.ToString(provider)
     End Function
 
 End Module

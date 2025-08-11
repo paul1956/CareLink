@@ -179,7 +179,7 @@ Public Class Insulin
                     Dim cRatio As Single = CurrentUser.GetCarbRatio(forTime)
                     Dim expectedBolus As Single = meal.Amount / cRatio
                     If expectedBolus - 0.025 > Me.ProgrammedFastAmount Then
-                        Return (expectedBolus - Me.ProgrammedFastAmount).RoundTo025
+                        Return (expectedBolus - Me.ProgrammedFastAmount).RoundTo025()
                     End If
                 End If
             End If

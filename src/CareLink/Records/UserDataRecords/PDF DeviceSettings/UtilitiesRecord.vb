@@ -12,7 +12,6 @@ Public Class UtilitiesRecord
             Stop
             Exit Sub
         End If
-        Me.BlockMode = sTable.GetSingleLineValue(Of String)("Block Mode ")
         Me.TimeFormat = sTable.GetSingleLineValue(Of String)("Time Format ")
         Me.Brightness = sTable.GetSingleLineValue(Of String)("Brightness ")
         Dim s As String = sTable.GetSingleLineValue(Of String)("Backlight Timeout ")
@@ -24,8 +23,9 @@ Public Class UtilitiesRecord
         Else
             Stop
         End If
-        Me.AudioOptions = sTable.GetSingleLineValue(Of String)("Audio Options ")
-        Me.AlarmVolume = sTable.GetSingleLineValue(Of String)("Alarm Volume ")
+        Me.BlockMode = sTable.GetSingleLineValue(Of String)(key:="Block Mode ")
+        Me.AudioOptions = sTable.GetSingleLineValue(Of String)(key:="Audio Options ")
+        Me.AlarmVolume = sTable.GetSingleLineValue(Of String)(key:="Alarm Volume ")
 
         Me.AutoSuspend = New AutoSuspendRecord(sTable)
 

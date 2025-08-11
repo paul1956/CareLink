@@ -425,7 +425,7 @@ Public Module DgvCellStyleHelpers
                     End If
                 Case $"{partialKey}MmolL"
                     e.Value = sensorValue.ToString(format:="F1", provider)
-                    If sensorValue.RoundSingle(digits:=1) < GetTirLowLimit(asMmolL:=True) Then
+                    If sensorValue.RoundToSingle(digits:=1) < GetTirLowLimit(asMmolL:=True) Then
                         dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
                     ElseIf sensorValue > GetTirHighLimit(asMmolL:=True) Then
                         dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Yellow, isUri:=False)

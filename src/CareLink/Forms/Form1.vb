@@ -452,7 +452,7 @@ Public Class Form1
                 Case SgSeriesName
                     Me.CursorMessage1Label.Text = "Sensor Glucose"
                     Me.CursorMessage1Label.Visible = True
-                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundSingle(digits:=3)} {GetBgUnits()}"
+                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(digits:=3)} {GetBgUnits()}"
                     Me.CursorMessage2Label.Visible = True
                     Me.CursorMessage3Label.Text =
                         If(NativeMmolL,
@@ -3630,7 +3630,7 @@ Public Class Form1
         Dim labelFont As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
 
         With treatmentMarkersChartArea.AxisY
-            Dim interval As Single = (TreatmentInsulinRow / 10).RoundSingle(digits:=3)
+            Dim interval As Single = (TreatmentInsulinRow / 10).RoundToSingle(digits:=3)
             .Interval = interval
             .IsInterlaced = False
             .IsMarginVisible = False
@@ -4164,15 +4164,7 @@ Public Class Form1
                     Case "WARM_UP"
                         Dim timeRemaining As String = ""
                         If s_systemStatusTimeRemaining.TotalMilliseconds > 0 Then
-                            If s_systemStatusTimeRemaining.Hours > 1 Then
-                                timeRemaining = $"{s_systemStatusTimeRemaining.Hours}:{s_systemStatusTimeRemaining.Minutes:D2} hrs"
-                            ElseIf s_systemStatusTimeRemaining.Hours > 0 Then
-                                timeRemaining = $"{s_systemStatusTimeRemaining.Hours}:{s_systemStatusTimeRemaining.Minutes:D2} hr"
-                            ElseIf s_systemStatusTimeRemaining.Minutes > 1 Then
-                                timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} mins"
-                            Else
-                                timeRemaining = $"{s_systemStatusTimeRemaining.Minutes} min"
-                            End If
+                            timeRemaining = s_systemStatusTimeRemaining.ToFormattedTimeSpan(unit:="hr")
                             Me.SensorMessageLabel.Text = $"{message.Remove(s:="...")}{vbCrLf}{timeRemaining}"
                             Me.SensorMessageLabel.CenterXYOnParent(verticalOffset:=-5)
                         Else
@@ -4503,13 +4495,13 @@ Public Class Form1
                 .Clear()
                 .AddXY(
                     $"{GetBelowHypoLimit.Str}% Below {GetTirLowLimitWithUnits()}",
-                    PatientData.BelowHypoLimit.GetRoundedValue(digits:=1) / 100)
+                    PatientData.BelowHypoLimit.RoundToSingle(digits:=1) / 100)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
                 .AddXY(
                     $"{GetAboveHyperLimit.Str}% Above {GetTirHighLimitWithUnits()}",
-                    PatientData.AboveHyperLimit.GetRoundedValue(digits:=1) / 100)
+                    PatientData.AboveHyperLimit.RoundToSingle(digits:=1) / 100)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
@@ -4653,7 +4645,7 @@ Public Class Form1
             Me.LowTirComplianceLabel.Text = ""
             Me.HighTirComplianceLabel.Text = ""
         Else
-            Dim lowDeviation As Single = Math.Sqrt(lowDeviations / (elements - highCount)).RoundSingle(digits:=1)
+            Dim lowDeviation As Single = Math.Sqrt(lowDeviations / (elements - highCount)).RoundToSingle(digits:=1)
             Select Case True
                 Case lowDeviation <= 2
                     Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}Excellent{Superscript2}"
@@ -4666,7 +4658,7 @@ Public Class Form1
                     Me.LowTirComplianceLabel.ForeColor = Color.Red
             End Select
 
-            Dim highDeviation As Single = Math.Sqrt(highDeviations / (elements - lowCount)).RoundSingle(digits:=1)
+            Dim highDeviation As Single = Math.Sqrt(highDeviations / (elements - lowCount)).RoundToSingle(digits:=1)
             Select Case True
                 Case highDeviation <= 2
                     Me.HighTirComplianceLabel.Text = $"High{vbCrLf}Excellent{Superscript2}"

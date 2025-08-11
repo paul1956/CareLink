@@ -140,18 +140,39 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Converts an unsigned integer representing total units (years, days, months, hours, minutes, or seconds) to a formatted string.
+    '''  Converts an unsigned integer representing total units
+    '''  (years, days, months, hours, minutes, or seconds) to a formatted string.
     ''' </summary>
     ''' <param name="totalUnits">The total units to convert.</param>
-    ''' <param name="Unit">The unit of time to use, e.g., "minute" or "hour".</param>
+    ''' <param name="Unit">The unit  to use, e.g., "minute" or "hour".</param>
     ''' <returns>A formatted string representing the total units.</returns>
     ''' <param name="includeValue"></param>
     <Extension>
-    Public Function ToTimeUnits(totalUnits As UInteger, unit As String, Optional includeValue As Boolean = True) As String
-        Dim unitOnly As String = If(totalUnits = 1, unit, $"{unit}s")
+    Public Function ToUnits(totalUnits As UInteger, unit As String, Optional includeValue As Boolean = True) As String
+        Dim unitOnly As String = If(totalUnits = 1,
+                                    unit,
+                                    $"{unit}s")
         Return If(includeValue,
                   $"{totalUnits:N0} {unitOnly}",
                   unitOnly)
+    End Function
+
+    ''' <summary>
+    '''  Converts an integer representing total units (e.g., years, days, months, hours, minutes, or seconds)
+    '''  to a formatted string with optional prefix and suffix.
+    ''' </summary>
+    ''' <param name="totalUnits">The total units to convert.</param>
+    ''' <param name="unit">The unit to use, e.g., "minute" or "hour".</param>
+    ''' <param name="prefix">Optional prefix to prepend to the formatted string.</param>
+    ''' <param name="suffix">Optional suffix to append to the formatted string.</param>
+    ''' <param name="includeValue">If true, includes the numeric value in the formatted string.</param>
+    ''' <returns>A formatted string representing the total units with optional prefix and suffix.</returns>
+    <Extension>
+    Public Function ToUnits(totalUnits As Integer, unit As String, Optional prefix As String = "", Optional suffix As String = "", Optional includeValue As Boolean = True) As String
+        Dim unitOnly As String = If(totalUnits = 1, unit, $"{unit}s")
+        Return If(includeValue,
+                  $"{prefix}{totalUnits:N0}{unitOnly}{suffix}",
+                  $"{prefix}{unitOnly}{suffix}")
     End Function
 
     ''' <summary>

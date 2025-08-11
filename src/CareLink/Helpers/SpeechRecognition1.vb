@@ -83,9 +83,9 @@ Friend Module SpeechSupport
         End Select
 
         Dim currentSgStr As String = Form1.CurrentSgLabel.Text
-        If IsNumeric(currentSgStr) Then
+        If IsNumeric(Expression:=currentSgStr) Then
             Dim sgMessage As String = $"current {sgName} is {currentSgStr}"
-            PlayText(textToSpeak:=$"{PatientData.FirstName}'s {sgMessage}{GetTrendText()}")
+            PlayText(textToSpeak:=$"{PatientData.FirstName}'s {sgMessage}{GetTrendText(arrows:=Form1.TrendArrowsLabel.Text)}")
         Else
             PlayText(textToSpeak:=$"{PatientData.FirstName}'s current {sgName} and trend are Unknown")
         End If
@@ -145,16 +145,16 @@ Friend Module SpeechSupport
     '''  Gets a description of the current trend based on the trend arrows.
     ''' </summary>
     ''' <returns>A string describing the trend direction and arrow count.</returns>
-    Private Function GetTrendText() As String
-        Dim arrows As String = Form1.TrendArrowsLabel.Text
+    Friend Function GetTrendText(arrows As String) As String
         Dim arrowCount As Integer
+        Const unit As String = "arrow"
         Select Case True
             Case arrows.Contains("↓"c)
                 arrowCount = arrows.Count("↓"c)
-                Return $" and is trending down with {arrowCount} Arrow{If(arrowCount > 1, "s", "")}"
+                Return arrowCount.ToUnits(unit, prefix:=$" and is trending down with {arrowCount} ", includeValue:=False)
             Case arrows.Contains("↑"c)
                 arrowCount = arrows.Count("↑"c)
-                Return $" and is trending up with {arrowCount} Arrow{If(arrowCount > 1, "s", "")}"
+                Return arrowCount.ToUnits(unit, prefix:=$" and is trending up with {arrowCount} ", includeValue:=False)
             Case Else
                 Return " with no trend arrows"
         End Select
@@ -173,7 +173,7 @@ Friend Module SpeechSupport
 
         Dim message As String = ""
         Dim recognizedText As String = e.Result.Text.ToLower
-        Dim confidence As Single = e.Result.Confidence.RoundSingle(digits:=2)
+        Dim confidence As Single = e.Result.Confidence.RoundToSingle(digits:=2)
         If confidence < 0.8 Then
             message = $"Rejected: {recognizedText} with confidence {confidence}%"
             Debug.WriteLine(message)

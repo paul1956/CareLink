@@ -26,9 +26,16 @@ Public Class PdfSettingsRecord
     Private Const SmartGuardHeader As String = "SmartGuard"
     Private Const UtilitiesHeader As String = "Block Mode"
 
+    ''' <summary>
+    '''  Initializes a new instance of the <see cref="PdfSettingsRecord"/> class
+    '''  by extracting data from the specified PDF file.
+    ''' </summary>
+    ''' <param name="pdfFileNameWithPath">The full path to the PDF file containing device settings.</param>
+    ''' <param name="notTesting">
+    '''  If set to <see langword="True"/>, WinForms support is required so the cursor
+    '''  will change to a wait cursor during processing.
+    ''' </param>
     Public Sub New(pdfFileNameWithPath As String)
-        Form1.Cursor = Cursors.WaitCursor
-        Application.DoEvents()
         Dim tables As Dictionary(Of String, PdfTable) = GetTableList(pdfFileNameWithPath, startPageNumber:=0, endPageNumber:=1)
         Dim allText As String = ExtractTextFromPage(filename:=pdfFileNameWithPath, startPageNumber:=0, endPageNumber:=1)
         Dim listOfAllTextLines As List(Of String) = allText.SplitLines(Trim:=True)
@@ -51,7 +58,7 @@ Public Class PdfSettingsRecord
                 Select Case True
                     Case itemKey.StartsWith(MaximumBasalRateHeader)
                         sTable = ConvertPdfTableToStringTable(table:=tables.Values(index:=0), tableHeader:=MaximumBasalRateHeader)
-                        Me.Basal.MaximumBasalRate = sTable.GetSingleLineValue(Of Single)(MaximumBasalRateHeader)
+                        Me.Basal.MaximumBasalRate = sTable.GetSingleLineValue(Of Single)(key:=MaximumBasalRateHeader)
                     Case itemKey.StartsWith(NamedBasalHeader)
                         Dim tableNumber As Integer = ExtractIndex(itemKey)
                         Dim key As String = Me.Basal.NamedBasal.Keys(index:=tableNumber - 1)
@@ -137,8 +144,8 @@ Public Class PdfSettingsRecord
                         sTable = ConvertPdfTableToStringTable(table, tableHeader:=MissedMealBolusHeader)
                         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                             If e.IsFirst Then Continue For
-                            Dim key As String = Me.Reminders.MissedMealBolus.Keys(e.Index - 1)
-                            Me.Reminders.MissedMealBolus(key) = New MealStartEndRecord(e.Value, key)
+                            Dim key As String = Me.Reminders.MissedMealBolus.Keys(index:=e.Index - 1)
+                            Me.Reminders.MissedMealBolus(key) = New MealStartEndRecord(r:=e.Value, key)
                         Next
                     Case itemKey.StartsWith(value:=LowAlertsHeader)
                         sTable = ConvertPdfTableToStringTable(table, tableHeader:=LowAlertsHeader)
@@ -171,9 +178,6 @@ Public Class PdfSettingsRecord
                 End Select
             Catch ex As Exception
                 Stop
-            Finally
-                Form1.Cursor = Cursors.Default
-                Application.DoEvents()
             End Try
         Next
     End Sub

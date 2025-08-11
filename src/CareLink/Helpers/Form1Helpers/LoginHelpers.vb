@@ -367,8 +367,9 @@ Friend Module LoginHelpers
             If Not forceUI Then
                 If Not newPdfFile Then
                     ' If the PDF file exists and is valid, load it without prompting the user.
+                    Form1.Cursor = Cursors.WaitCursor
+                    Application.DoEvents()
                     CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
-                    Exit Sub
                 End If
             End If
         Else
@@ -389,6 +390,7 @@ Friend Module LoginHelpers
            File.Exists(pdfFileNameWithPath) Then
 
             CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
+
             If CurrentPdf.IsValid Then
                 If CurrentUser.PumpAit <> CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime Then
                     currentUserUpdateNeeded = True
