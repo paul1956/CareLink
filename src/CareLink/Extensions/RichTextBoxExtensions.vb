@@ -19,21 +19,16 @@ Friend Module RichTextBoxExtensions
     ''' </summary>
     ''' <param name="tOnly">The <see cref="TimeOnly"/> value to format.</param>
     ''' <returns>A string representation of the time, padded to a standard width.</returns>
+    ''' <param name="timeFormat"></param>
     <Extension>
-    Private Function StandardTimeOnlyWidth(tOnly As TimeOnly) As String
-        Dim tAsString As String = tOnly.ToString
-        Dim leftPadding As String = String.Empty
-
-        Dim shortTimePattern As String = CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern
-        ' If is12HourFormat is False, system uses 24-hour time; if True, it's 12-hour time.
-        Dim is12HourFormat As Boolean = Not shortTimePattern.Contains(value:="H"c)
-
-        ' Convert to 12-hour format
-        Dim hour As Integer = tOnly.Hour Mod 12
-        If hour > 0 AndAlso hour < 10 AndAlso is12HourFormat Then
-            leftPadding = " "
+    Private Function StandardTimeOnlyWidth(tOnly As TimeOnly, timeFormat As String) As String
+        If timeFormat = "12 Hr" Then
+            ' Ensure the hour is always two digits in 12-hour format
+            Return tOnly.ToString("hh:mm tt", provider:=CultureInfo.InvariantCulture)
+        Else
+            ' Ensure the hour is always two digits in 24-hour format
+            Return tOnly.ToString("HH:mm", provider:=CultureInfo.InvariantCulture)
         End If
-        Return $"{leftPadding}{tAsString}"
     End Function
 
     ''' <summary>
@@ -64,9 +59,14 @@ Friend Module RichTextBoxExtensions
     ''' </param>
     ''' <param name="singleIndent"></param>
     <Extension>
-    Friend Sub AppendKeyValue(rtb As RichTextBox, key As String, value As String)
+    Friend Sub AppendKeyValue(
+        rtb As RichTextBox,
+        key As String,
+        value As String,
+        Optional indent As String = Indent4)
+
         rtb.AppendTextWithFontChange(
-            text:=$"{Indent4}{key}",
+            text:=$"{indent}{key}",
             newFont:=FixedWidthBoldFont)
         rtb.AppendTextWithFontChange(
             text:=value.AlignCenter(),
@@ -142,7 +142,7 @@ Friend Module RichTextBoxExtensions
         Optional includeNewLine As Boolean = True)
 
         Dim splitText() As String = text.Split(separator:=symbol, options:=StringSplitOptions.None)
-        rtb.AppendTextWithFontChange(text:=splitText(0), newFont:=HeadingFont, padRight:=0)
+        rtb.AppendTextWithFontChange(text:=splitText(0), newFont:=HeadingBoldFont, padRight:=0)
         If splitText.Length > 1 Then
             Dim bufferLength As Integer = rtb.Text.Length
             rtb.AppendTextWithFontChange(text:=symbol, newFont:=HeadingBoldFont, padRight:=0)
@@ -159,7 +159,7 @@ Friend Module RichTextBoxExtensions
             rtb.SelectionStart = rtb.Text.Length
             rtb.SelectionBackColor = SystemColors.Window
             rtb.SelectionColor = SystemColors.WindowText
-            rtb.AppendTextWithFontChange(text:=splitText(1), newFont:=HeadingFont, padRight:=0)
+            rtb.AppendTextWithFontChange(text:=splitText(1), newFont:=HeadingBoldFont, padRight:=0)
         End If
         If includeNewLine Then
             rtb.AppendNewLine
@@ -175,22 +175,26 @@ Friend Module RichTextBoxExtensions
     ''' <param name="startTime">The start time of the row.</param>
     ''' <param name="endTime">The end time of the row.</param>
     ''' <param name="value">The value associated with the time range.</param>
-    ''' <param name="singleIndent">If true, applies a single indent to the row.</param>
+    ''' <param name="timeFormat"></param>
     ''' <remarks>
     '''  The time values are formatted to a standard width for consistency.
     ''' </remarks>
+    ''' <param name="indent">If true, applies a single indent to the row.</param>
+    ''' <param name="heading"></param>
     <Extension>
     Friend Sub AppendTimeValueRow(
         rtb As RichTextBox,
-        startTime As TimeOnly,
-        endTime As TimeOnly,
-        value As String,
-        Optional singleIndent As Boolean = False)
+    startTime As TimeOnly,
+    endTime As TimeOnly,
+    value As String,
+    timeFormat As String,
+    Optional indent As String = Indent8,
+    Optional heading As Boolean = False)
 
-        Dim indent As String = If(singleIndent, Indent4, Indent8)
+        Dim timeRange As String = $"{startTime.StandardTimeOnlyWidth(timeFormat)} - {endTime.StandardTimeOnlyWidth(timeFormat)}"
+        Dim newFont As Font = If(heading, FixedWidthBoldFont, FixedWidthFont)
 
-        Dim timeRange As String = $"{startTime.StandardTimeOnlyWidth()} - {endTime.StandardTimeOnlyWidth()}"
-        rtb.AppendTextWithFontChange(text:=$"{indent}{timeRange}", newFont:=FixedWidthFont)
+        rtb.AppendTextWithFontChange(text:=$"{indent}{timeRange}", newFont)
         Dim text As String = $"{value}".AlignCenter()
         rtb.AppendTextWithFontChange(text, newFont:=FixedWidthFont, includeNewLine:=True)
     End Sub

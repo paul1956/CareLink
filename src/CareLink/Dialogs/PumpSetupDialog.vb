@@ -20,16 +20,6 @@ Public Class PumpSetupDialog
     End Property
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.Paint"/> event for high and low alert DataGridViews.
-    '''  Paints a message if no records are found.
-    ''' </summary>
-    ''' <param name="sender">The event sender.</param>
-    ''' <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
-    Private Sub DataGridView_Paint(sender As Object, e As PaintEventArgs)
-        DgvNoRecordsFoundPaint(sender, e)
-    End Sub
-
-    ''' <summary>
     '''  Handles the <see cref="OK_Button"/> click event.
     '''  Sets the dialog result to OK and closes the dialog.
     ''' </summary>
@@ -226,7 +216,7 @@ Public Class PumpSetupDialog
                                                  Eleven59,
                                                  item.Value.basalRates(index:=e.Index + 1).Time)
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
-                    .AppendTimeValueRow(startTime, endTime, value)
+                    .AppendTimeValueRow(startTime, endTime, value, _pdf.Utilities.TimeFormat)
                 Next
             Next
         End With
@@ -235,11 +225,16 @@ Public Class PumpSetupDialog
     Private Sub Settings1AlertSettings1HighAlert()
         With Me.RtbMainRight
             For Each h As HighAlertRecord In _pdf.HighAlerts.HighAlert
-                .AppendTimeValueRow(startTime:=h.Start, endTime:=h.End, value:=$"{h.HighLimit}", singleIndent:=True)
-                .AppendKeyValue(key:="Alert Before High:", value:=h.AlertBeforeHigh.BoolToOnOff())
-                .AppendKeyValue(key:="Time Before High:", value:=h.TimeBeforeHigh)
-                .AppendKeyValue(key:="Alert on High:", value:=h.AlertOnHigh.BoolToOnOff())
-                .AppendKeyValue(key:="Rise Alert:", value:=h.RiseAlert.BoolToOnOff())
+                .AppendTimeValueRow(
+                    startTime:=h.Start,
+                    endTime:=h.End,
+                    value:=$"{h.HighLimit}",
+                    timeFormat:=_pdf.Utilities.TimeFormat,
+                    indent:=Indent4, heading:=True)
+                .AppendKeyValue(key:="Alert Before High:", value:=h.AlertBeforeHigh.BoolToOnOff(), indent:=Indent8)
+                .AppendKeyValue(key:="Time Before High:", value:=h.TimeBeforeHigh, indent:=Indent8)
+                .AppendKeyValue(key:="Alert on High:", value:=h.AlertOnHigh.BoolToOnOff(), indent:=Indent8)
+                .AppendKeyValue(key:="Rise Alert:", value:=h.RiseAlert.BoolToOnOff(), indent:=Indent8)
             Next
         End With
     End Sub
@@ -247,14 +242,18 @@ Public Class PumpSetupDialog
     Private Sub Settings1AlertSettings2LowAlert()
         With Me.RtbMainRight
             For Each l As LowAlertRecord In _pdf.LowAlerts.LowAlert
-                .AppendTimeValueRow(startTime:=l.Start, endTime:=l.End, value:=$"{l.LowLimit}", singleIndent:=True)
-                .AppendKeyValue(key:=$"Suspend:", value:=$"{l.Suspend}")
-                .AppendKeyValue(key:="Alert Before Low:", value:=l.AlertBeforeLow.BoolToOnOff())
-                .AppendKeyValue(key:="Alert on Low:", value:=l.AlertOnLow.BoolToOnOff())
-                .AppendKeyValue(key:="Resume Basal Alert:", value:=$"{l.ResumeBasalAlert}")
+                .AppendTimeValueRow(
+                    startTime:=l.Start,
+                    endTime:=l.End,
+                    value:=$"{l.LowLimit}",
+                    timeFormat:=_pdf.Utilities.TimeFormat,
+                    indent:=Indent4, heading:=True)
+                .AppendKeyValue(key:=$"Suspend:", value:=$"{l.Suspend}", indent:=Indent8)
+                .AppendKeyValue(key:="Alert Before Low:", value:=l.AlertBeforeLow.BoolToOnOff(), indent:=Indent8)
+                .AppendKeyValue(key:="Alert on Low:", value:=l.AlertOnLow.BoolToOnOff(), indent:=Indent8)
+                .AppendKeyValue(key:="Resume Basal Alert:", value:=$"{l.ResumeBasalAlert}", indent:=Indent8)
             Next
         End With
-
     End Sub
 
     Private Sub Settings1AlertSettings3SnoozeHighLow()
@@ -339,7 +338,7 @@ Public Class PumpSetupDialog
 
             For Each item As CarbRatioRecord In _pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
                 Dim value As String = $"{item.CarbRatio} g/U"
-                .AppendTimeValueRow(item.StartTime, item.EndTime, value)
+                .AppendTimeValueRow(item.StartTime, item.EndTime, value, _pdf.Utilities.TimeFormat)
             Next
             .AppendNewLine
         End With
@@ -380,7 +379,7 @@ Public Class PumpSetupDialog
                                                "0.00",
                                                item.Sensitivity.RoundTo025.ToString(format:="F3"))
                 Dim value As String = $"{sensitivity} {_pdf.Bolus.BolusWizard.Units.CarbUnits}/U"
-                .AppendTimeValueRow(startTime, endTime, value)
+                .AppendTimeValueRow(startTime, endTime, value, _pdf.Utilities.TimeFormat)
             Next
             .AppendNewLine
         End With
@@ -411,7 +410,7 @@ Public Class PumpSetupDialog
                                              _pdf.Bolus.BloodGlucoseTarget(index:=e.Index + 1).Time)
                 startTime = item.Time
                 Dim value As String = $"{item.Low}-{item.High} {_pdf.Bolus.BolusWizard.Units.BgUnits}"
-                .AppendTimeValueRow(startTime, endTime, value)
+                .AppendTimeValueRow(startTime, endTime, value, _pdf.Utilities.TimeFormat)
             Next
             .AppendNewLine
         End With
@@ -434,7 +433,7 @@ Public Class PumpSetupDialog
                                                  Eleven59,
                                                  item.Value.basalRates(index:=e.Index + 1).Time)
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
-                    .AppendTimeValueRow(startTime, endTime, value)
+                    .AppendTimeValueRow(startTime, endTime, value, _pdf.Utilities.TimeFormat)
                 Next
             Next
         End With

@@ -75,8 +75,9 @@ Public Module StringExtensions
     ''' <param name="strings">The list of strings to find.</param>
     ''' <returns>The String found or String.Empty if not found.</returns>
     <Extension>
-    Public Function FindAnyStringInInput(inputString As String, strings As List(Of String)) As _
-        (Units As String, Index As Integer)
+    Public Function FindAnyStringInInput(
+        inputString As String,
+        strings As List(Of String)) As (Units As String, Index As Integer)
 
         If strings Is Nothing Then
             Throw New ArgumentException(message:="Invalid input parameters.")

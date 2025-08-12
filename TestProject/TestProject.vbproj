@@ -9,7 +9,7 @@
     <OptionStrict>On</OptionStrict>
     <OptionInfer>Off</OptionInfer>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-      </PropertyGroup>
+   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4">
@@ -29,6 +29,5 @@
   <ItemGroup>
     <ProjectReference Include="..\src\CareLink\CareLink.vbproj" />
   </ItemGroup>
-
 
 </Project>
