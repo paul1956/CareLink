@@ -15,13 +15,14 @@ Friend Module RichTextBoxExtensions
     Public ReadOnly Property HeadingFont As New Font(familyName:="Segoe UI", emSize:=16, style:=FontStyle.Regular)
 
     ''' <summary>
-    '''  Returns a string representation of a <see cref="TimeOnly"/> value, padded to a standard width if necessary.
+    '''  Returns a string representation of a <see cref="TimeOnly"/> value,
+    '''  padded to a standard width if necessary.
     ''' </summary>
     ''' <param name="tOnly">The <see cref="TimeOnly"/> value to format.</param>
     ''' <returns>A string representation of the time, padded to a standard width.</returns>
     ''' <param name="timeFormat"></param>
     <Extension>
-    Private Function StandardTimeOnlyWidth(tOnly As TimeOnly, timeFormat As String) As String
+    Private Function StandardWidth(tOnly As TimeOnly, timeFormat As String) As String
         If timeFormat = "12 Hr" Then
             ' Ensure the hour is always two digits in 12-hour format
             Return tOnly.ToString("hh:mm tt", provider:=CultureInfo.InvariantCulture)
@@ -184,14 +185,16 @@ Friend Module RichTextBoxExtensions
     <Extension>
     Friend Sub AppendTimeValueRow(
         rtb As RichTextBox,
-    startTime As TimeOnly,
-    endTime As TimeOnly,
-    value As String,
-    timeFormat As String,
-    Optional indent As String = Indent8,
-    Optional heading As Boolean = False)
+        startTime As TimeOnly,
+        endTime As TimeOnly,
+        value As String,
+        timeFormat As String,
+        Optional indent As String = Indent8,
+        Optional heading As Boolean = False)
 
-        Dim timeRange As String = $"{startTime.StandardTimeOnlyWidth(timeFormat)} - {endTime.StandardTimeOnlyWidth(timeFormat)}"
+        Dim startTimeStr As String = startTime.StandardWidth(timeFormat)
+        Dim endTimeStr As String = endTime.StandardWidth(timeFormat)
+        Dim timeRange As String = $"{startTimeStr} - {endTimeStr}"
         Dim newFont As Font = If(heading, FixedWidthBoldFont, FixedWidthFont)
 
         rtb.AppendTextWithFontChange(text:=$"{indent}{timeRange}", newFont)
@@ -209,7 +212,12 @@ Friend Module RichTextBoxExtensions
     ''' <param name="startTime">The start time of the row as a string.</param>
     ''' <param name="endTime">The end time of the row as a string.</param>
     <Extension>
-    Friend Sub AppendTimeValueRow(rtb As RichTextBox, key As String, startTime As String, Optional endTime As String = "")
+    Friend Sub AppendTimeValueRow(
+        rtb As RichTextBox,
+        key As String,
+        startTime As String,
+        Optional endTime As String = "")
+
         Dim text As String = $"{Indent4}{key}".PadRight(TotalWidth)
         rtb.AppendTextWithFontChange(text, newFont:=FixedWidthFont)
 

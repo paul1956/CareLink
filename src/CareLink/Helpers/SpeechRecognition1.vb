@@ -82,13 +82,17 @@ Friend Module SpeechSupport
                 Exit Sub
         End Select
 
+        Dim firstName As String = $"{PatientData.FirstName}'s"
         Dim currentSgStr As String = Form1.CurrentSgLabel.Text
+        Dim textToSpeak As String
         If IsNumeric(Expression:=currentSgStr) Then
             Dim sgMessage As String = $"current {sgName} is {currentSgStr}"
-            PlayText(textToSpeak:=$"{PatientData.FirstName}'s {sgMessage}{GetTrendText(arrows:=Form1.TrendArrowsLabel.Text)}")
+            Dim arrows As String = Form1.TrendArrowsLabel.Text
+            textToSpeak = $"{firstName} {sgMessage}{GetTrendText(arrows)}"
         Else
-            PlayText(textToSpeak:=$"{PatientData.FirstName}'s current {sgName} and trend are Unknown")
+            textToSpeak = $"{firstName} current {sgName} and trend are Unknown"
         End If
+        PlayText(textToSpeak)
     End Sub
 
     ''' <summary>
@@ -148,13 +152,16 @@ Friend Module SpeechSupport
     Friend Function GetTrendText(arrows As String) As String
         Dim arrowCount As Integer
         Const unit As String = "arrow"
+        Dim prefix As String
         Select Case True
-            Case arrows.Contains("↓"c)
-                arrowCount = arrows.Count("↓"c)
-                Return arrowCount.ToUnits(unit, prefix:=$" and is trending down with {arrowCount} ", includeValue:=False)
-            Case arrows.Contains("↑"c)
-                arrowCount = arrows.Count("↑"c)
-                Return arrowCount.ToUnits(unit, prefix:=$" and is trending up with {arrowCount} ", includeValue:=False)
+            Case arrows.Contains(value:="↓"c)
+                arrowCount = arrows.Count(c:="↓"c)
+                prefix = $" and is trending down with {arrowCount} "
+                Return arrowCount.ToUnits(unit, prefix, includeValue:=False)
+            Case arrows.Contains(value:="↑"c)
+                arrowCount = arrows.Count(c:="↑"c)
+                prefix = $" and is trending up with {arrowCount} "
+                Return arrowCount.ToUnits(unit, prefix, includeValue:=False)
             Case Else
                 Return " with no trend arrows"
         End Select
@@ -303,42 +310,32 @@ Friend Module SpeechSupport
         Try
             s_speechWakeWordFound = False
 
-            Dim culture As New CultureInfo("en-us")
+            Dim culture As New CultureInfo(name:="en-us")
             s_speechRecognitionEngine = New SpeechRecognitionEngine(culture)
             s_speechRecognitionEngine.SetInputToDefaultAudioDevice()
 
-            Dim gb_Attention As New GrammarBuilder With {.Culture = culture}
-            gb_Attention.Append("carelink")
-            s_speechRecognitionEngine.LoadGrammarAsync(New Grammar(gb_Attention))
+            Dim builder As New GrammarBuilder With {.Culture = culture}
+            builder.Append(phrase:="carelink")
+            s_speechRecognitionEngine.LoadGrammarAsync(grammar:=New Grammar(builder))
 
-            'Dim gb_StartStop As New GrammarBuilder With {.Culture = culture}
-            'gb_StartStop.Append("alerts")
-            'gb_StartStop.Append(New Choices("off", "on"))
-            's_sre.LoadGrammarAsync(New Grammar(gb_StartStop))
-
-            Dim gb_what As New GrammarBuilder With {.Culture = culture}
-            gb_what.Append("What")
-            gb_what.Append(New Choices("can I say", "is my SG", "is my BG", "is my Blood Sugar", "is my Blood Glucose"))
-            s_speechRecognitionEngine.LoadGrammarAsync(New Grammar(gb_what))
+            builder = New GrammarBuilder With {.Culture = culture}
+            builder.Append(phrase:="What")
+            Dim alternateChoices As New Choices(
+                "can I say",
+                "is my SG",
+                "is my BG",
+                "is my Blood Sugar",
+                "is my Blood Glucose")
+            builder.Append(alternateChoices)
+            s_speechRecognitionEngine.LoadGrammarAsync(grammar:=New Grammar(builder))
 
             Dim gb_tellMe As New GrammarBuilder With {.Culture = culture}
-            gb_tellMe.Append("Tell me")
-            gb_tellMe.Append($"{PatientData.FirstName}'s")
-            gb_tellMe.Append(New Choices("SG", "BG", "Blood Sugar", "Blood Glucose"))
-            s_speechRecognitionEngine.LoadGrammarAsync(New Grammar(gb_tellMe))
-
-            'Dim gb_showTab As New GrammarBuilder()
-            'gb_showTab.Append("Show")
-            'Dim showChoices As New Choices()
-            'For Each tab As TabPage In Form1.TabControlPage1.TabPages
-            '    showChoices.Add(tab.Text.TrimEnd("."c))
-            'Next
-            'For Each tab As TabPage In Form1.TabControlPage2.TabPages
-            '    showChoices.Add(tab.Text.TrimEnd("."c))
-            'Next
-
-            'gb_showTab.Append(showChoices)
-            's_sre.LoadGrammarAsync(New Grammar(gb_showTab))
+            gb_tellMe.Append(phrase:="Tell me")
+            gb_tellMe.Append(phrase:=$"{PatientData.FirstName}'s")
+            alternateChoices = New Choices("SG", "BG", "Blood Sugar", "Blood Glucose")
+            gb_tellMe.Append(alternateChoices)
+            s_speechRecognitionEngine.LoadGrammarAsync(
+                grammar:=New Grammar(builder:=gb_tellMe))
 
             Form1.Cursor = Cursors.WaitCursor
             Application.DoEvents()
@@ -346,7 +343,7 @@ Friend Module SpeechSupport
                 Dim textToSpeak As String
                 textToSpeak = $"Speech recognition enabled for {PatientData.FirstName}"
 
-                If String.IsNullOrWhiteSpace(oldUserName) Then
+                If String.IsNullOrWhiteSpace(value:=oldUserName) Then
                     textToSpeak &= " for a list of commands say, CareLink what can I say"
                 End If
 
@@ -358,7 +355,9 @@ Friend Module SpeechSupport
             AddHandler s_speechRecognitionEngine.SpeechRecognized, AddressOf SpeechRecognized
 
             Form1.Cursor = Cursors.Default
-            AddHandler s_speechRecognitionEngine.AudioSignalProblemOccurred, AddressOf AudioSignalProblemOccurred
+            AddHandler s_speechRecognitionEngine.AudioSignalProblemOccurred,
+                AddressOf AudioSignalProblemOccurred
+
             Form1.MenuOptionsSpeechRecognitionEnabled.Checked = True
         Catch ex As Exception
             Debug.WriteLine(ex.Message)
@@ -376,7 +375,9 @@ Friend Module SpeechSupport
             Form1.StatusStripSpeech.Text = "Audio Alerts Disabled"
             Return
         End If
-        If s_lastSpokenMessage = textToSpeak AndAlso DateDiff(DateInterval.Minute, Now, s_timeOfLastAlert) < ThirtySecondInMilliseconds Then
+
+        Dim diff As Long = DateDiff(Interval:=DateInterval.Minute, Now, s_timeOfLastAlert)
+        If s_lastSpokenMessage = textToSpeak AndAlso diff < ThirtySecondInMilliseconds Then
             Form1.StatusStripSpeech.Text = $"Rejected: '{textToSpeak}' too soon, Listening"
             s_statusStripSpeechText = textToSpeak
         End If

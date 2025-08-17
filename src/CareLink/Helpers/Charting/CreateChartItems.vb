@@ -42,17 +42,24 @@ Friend Module CreateChartItems
     End Function
 
     ''' <summary>
-    '''  Finds the index of a legend item with the specified name in a collection of custom legend items.
-    '''  This method iterates through the collection and returns the index of the first item whose <c>Name</c> property
-    '''  matches <paramref name="legendString"/>. If no matching item is found, the method returns -1.
+    '''  Finds the index of a legend item with the specified name in a
+    '''  collection of custom legend items.
+    '''  This method iterates through the collection and returns the index
+    '''  of the first item whose Name property matches <paramref name="legendString"/>.
+    '''  If no matching item is found, the method returns -1.
     ''' </summary>
     ''' <param name="customItems">
     '''  The <see cref="LegendItemsCollection"/> to search for the legend item.
     ''' </param>
     ''' <param name="legendString">The name of the legend item to find.</param>
-    ''' <returns>The zero-based index of the legend item if found; otherwise, <see langword="-1"/>.</returns>
+    ''' <returns>
+    '''  The zero-based index of the legend item if found; otherwise, <see langword="-1"/>.
+    ''' </returns>
     <Extension>
-    Private Function IndexOfLabel(customItems As LegendItemsCollection, legendString As String) As Integer
+    Private Function IndexOfLabel(
+        customItems As LegendItemsCollection,
+        legendString As String) As Integer
+
         For Each item As IndexClass(Of LegendItem) In customItems.WithIndex
             If item.Value.Name = legendString Then
                 Return item.Index
@@ -63,11 +70,14 @@ Friend Module CreateChartItems
     End Function
 
     ''' <summary>
-    '''  Shows or hides a legend item in the active insulin chart, home chart, and treatment markers chart.
-    '''  This method updates the visibility of a specific legend item based on the provided parameters.
+    '''  Shows or hides a legend item in the active insulin chart, home chart,
+    '''  and treatment markers chart.
+    '''  This method updates the visibility of a specific legend item based
+    '''  on the provided parameters.
     ''' </summary>
     ''' <param name="showLegend">
-    '''  A boolean indicating whether to show (<see langword="True"/>) or hide (<see langword="False"/>) the legend item.
+    '''  A boolean indicating whether to show (<see langword="True"/>)
+    '''  or hide (<see langword="False"/>) the legend item.
     ''' </param>
     ''' <param name="legendString">
     '''  The name of the legend item to show or hide.
@@ -102,11 +112,13 @@ Friend Module CreateChartItems
 
     ''' <summary>
     '''  Creates a new chart with specified properties.
-    '''  This method initializes a <see cref="Chart"/> control for displaying data, setting its appearance, docking, and annotations.
+    '''  This method initializes a <see cref="Chart"/> control for displaying
+    '''  data, setting its appearance, docking, and annotations.
     ''' </summary>
     ''' <param name="key">The name to assign to the chart instance.</param>
     ''' <returns>
-    '''  A <see cref="Chart"/> object configured with the specified name and default visual properties.
+    '''  A <see cref="Chart"/> object configured with the specified name
+    '''  and default visual properties.
     ''' </returns>
     Friend Function CreateChart(key As String) As Chart
         Dim chart As New Chart With {
@@ -124,14 +136,18 @@ Friend Module CreateChartItems
 
     ''' <summary>
     '''  Creates a chart area with specific properties for displaying data in a chart.
-    '''  This method configures the appearance and behavior of the chart area, including axes, grid lines, labels, and colors.
-    '''  It sets up both primary and secondary Y-axes, custom labels for mmol/L and mg/dL, and X-axis formatting for time.
+    '''  This method configures the appearance and behavior of the chart area,
+    '''  including axes, grid lines, labels, and colors.
+    '''  It sets up both primary and secondary Y-axes, custom labels for mmol/L and mg/dL,
+    '''  and X-axis formatting for time.
     ''' </summary>
     ''' <param name="containingChart">
-    '''  The chart that will contain this chart area. Used to determine contrasting colors and font settings.
+    '''  The chart that will contain this chart area. Used to determine contrasting colors
+    '''  and font settings.
     ''' </param>
     ''' <returns>
-    '''  A <see cref="ChartArea"/> object configured with the specified properties for use in charting.
+    '''  A <see cref="ChartArea"/> object configured with the specified properties
+    '''  for use in charting.
     ''' </returns>
     Friend Function CreateChartArea(containingChart As Chart) As ChartArea
         Dim tmpChartArea As New ChartArea(NameOf(ChartArea)) With {
@@ -148,7 +164,10 @@ Friend Module CreateChartItems
                 .IntervalType = DateTimeIntervalType.Hours
                 .IsInterlaced = True
                 .IsMarginVisible = True
-                .LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or LabelAutoFitStyles.DecreaseFont Or LabelAutoFitStyles.WordWrap
+                .LabelAutoFitStyle =
+                    LabelAutoFitStyles.IncreaseFont Or
+                    LabelAutoFitStyles.DecreaseFont Or
+                    LabelAutoFitStyles.WordWrap
                 With .LabelStyle
                     .Font = labelFont
                     .ForeColor = baseColor
@@ -225,18 +244,20 @@ Friend Module CreateChartItems
                 Dim format As String = GetSgFormat()
                 For i As Integer = 0 To s_mmolLValues.Count - 1
                     Dim yMin As Single = GetYMinValueFromNativeMmolL()
+                    Dim axisText As String = firstAxis(index:=i).ToString(format, provider)
                     .CustomLabels.Add(
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,
                             toPosition:=firstAxis(index:=i) + yMin,
-                            text:=$"{firstAxis(index:=i).ToString(format, provider).Replace(oldValue:=",0", newValue:="")}",
+                            text:=$"{axisText.Replace(oldValue:=",0", newValue:="")}",
                             labelRow:=0,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
+                    axisText = secondAxis(index:=i).ToString(format, provider)
                     .CustomLabels.Add(
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,
                             toPosition:=firstAxis(index:=i) + yMin,
-                            text:=$"{secondAxis(index:=i).ToString(format, provider).Replace(oldValue:=",0", newValue:="")}",
+                            text:=$"{axisText.Replace(oldValue:=",0", newValue:="")}",
                             labelRow:=1,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
                 Next
@@ -302,14 +323,19 @@ Friend Module CreateChartItems
 
     ''' <summary>
     '''  Creates a series for displaying basal insulin values in a chart.
-    '''  This method is used to initialize a <see cref="Series"/> specifically for basal insulin data.
+    '''  Method used to initialize a <see cref="Series"/> specifically for basal insulin data.
     ''' </summary>
     ''' <param name="name">The name of the <see cref="Series"/>.</param>
     ''' <param name="basalLegend">The legend associated with the basal insulin series.</param>
     ''' <param name="legendText">The text displayed in the legend for this series.</param>
     ''' <param name="yAxisType">The Y-axis type for the series.</param>
     ''' <returns>A <see cref="Series"/> object configured for basal insulin values.</returns>
-    Friend Function CreateSeriesBasal(name As String, basalLegend As Legend, legendText As String, yAxisType As AxisType) As Series
+    Friend Function CreateSeriesBasal(
+        name As String,
+        basalLegend As Legend,
+        legendText As String,
+        yAxisType As AxisType) As Series
+
         Dim s As Series = CreateSeriesBase(name, legendText, borderWidth:=2, yAxisType)
         s.IsVisibleInLegend = False
         Dim lineColor As Color = GetGraphLineColor(key:=legendText)
@@ -339,24 +365,32 @@ Friend Module CreateChartItems
     ''' <param name="limitsLegend">The legend associated with the limits series.</param>
     ''' <param name="seriesName">The name of the series.</param>
     ''' <returns>A Series object configured for limit and target values.</returns>
-    Friend Function CreateSeriesLimitsAndTarget(limitsLegend As Legend, seriesName As String) As Series
-        Dim legendText As String
-        Dim lineColor As Color
+    Friend Function CreateSeriesLimitsAndTarget(
+            limitsLegend As Legend,
+            seriesName As String) As Series
+
+        Dim key As String
         Dim borderWidth As Integer = 2
         Select Case seriesName
             Case HighLimitSeriesName
-                legendText = "High Alert"
+                key = "High Alert"
             Case LowLimitSeriesName
-                legendText = "Low Alert"
+                key = "Low Alert"
             Case Else
-                legendText = "SG Target"
+                key = "SG Target"
                 borderWidth = 4
         End Select
-        lineColor = GetGraphLineColor(key:=legendText)
-        Dim s As Series = CreateSeriesBase(name:=seriesName, legendText, borderWidth, yAxisType:=AxisType.Secondary)
+
+        Dim lineColor As Color = GetGraphLineColor(key)
+        Dim s As Series = CreateSeriesBase(
+            name:=seriesName,
+            legendText:=key,
+            borderWidth,
+            yAxisType:=AxisType.Secondary)
         s.IsVisibleInLegend = False
         s.EmptyPointStyle.Color = Color.Transparent
-        limitsLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color:=GetGraphLineColor(key:=legendText), image:=""))
+        Dim item As New LegendItem(name:=key, color:=GetGraphLineColor(key), image:="")
+        limitsLegend.CustomItems.Add(item)
         Return s
     End Function
 
@@ -368,16 +402,23 @@ Friend Module CreateChartItems
     ''' <returns>A Series object configured for sensor glucose values.</returns>
     Friend Function CreateSeriesSg(sgLegend As Legend) As Series
         Const legendText As String = "SG Series"
-        Dim s As Series = CreateSeriesBase(name:=SgSeriesName, legendText, borderWidth:=4, yAxisType:=AxisType.Secondary)
+        Dim s As Series = CreateSeriesBase(
+            name:=SgSeriesName,
+            legendText,
+            borderWidth:=4,
+            yAxisType:=AxisType.Secondary)
         s.IsVisibleInLegend = False
-        sgLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color:=GetGraphLineColor(key:=legendText), image:=""))
+        Dim color As Color = GetGraphLineColor(key:=legendText)
+        sgLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color, image:=""))
         Return s
     End Function
 
     ''' <summary>
     '''  Creates a series for displaying "Suspend" events in a chart.
-    '''  This method initializes a <see cref="Series"/> specifically for representing insulin suspension data,
-    '''  configures its appearance, and adds a corresponding legend item to the provided <paramref name="basalLegend"/>.
+    '''  This method initializes a <see cref="Series"/> specifically for
+    '''  representing insulin suspension data,
+    '''  configures its appearance, and adds a corresponding legend item
+    '''  to the provided <paramref name="basalLegend"/>.
     ''' </summary>
     ''' <param name="basalLegend">
     '''  The <see cref="Legend"/> to which the "Suspend" legend item will be added.
@@ -387,9 +428,16 @@ Friend Module CreateChartItems
     ''' </returns>
     Friend Function CreateSeriesSuspend(basalLegend As Legend) As Series
         Const legendText As String = "Suspend"
-        Dim s As Series = CreateSeriesBase(name:=SuspendSeriesName, legendText, borderWidth:=1, yAxisType:=AxisType.Primary)
+        Dim s As Series = CreateSeriesBase(
+            name:=SuspendSeriesName,
+            legendText,
+            borderWidth:=1,
+            yAxisType:=AxisType.Primary)
         s.IsVisibleInLegend = False
-        Dim item As New LegendItem(name:=legendText, color:=Color.FromArgb(alpha:=128, baseColor:=Color.Red), image:="")
+        Dim item As New LegendItem(
+            name:=legendText,
+            color:=Color.FromArgb(alpha:=128, baseColor:=Color.Red),
+            image:="")
         basalLegend.CustomItems.Add(item)
         With s.EmptyPointStyle
             .BorderWidth = 4
@@ -428,7 +476,8 @@ Friend Module CreateChartItems
 
     ''' <summary>
     '''  Creates a series for displaying markers in a chart without showing the legend.
-    '''  This method is used to initialize a series specifically for markers data, ensuring it does not appear in the legend.
+    '''  This method is used to initialize a series specifically for markers data,
+    '''  ensuring it does not appear in the legend.
     ''' </summary>
     ''' <param name="YAxisType">The Y-axis type for the series.</param>
     ''' <returns>A Series object configured for markers without visible legend.</returns>

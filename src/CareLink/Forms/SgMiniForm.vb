@@ -29,9 +29,14 @@ Public Class SgMiniForm
             Return "User Unknown!"
         End If
         Dim firstName As String = PatientData.FirstName
-        Dim epoch2PumpDateTime As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime
-        If PatientData.LastConduitUpdateServerDateTime > 0 Then
-            Dim minutes As UInteger = CUInt(Math.Round(value:=(PumpNow() - epoch2PumpDateTime).TotalMinutes, digits:=0))
+        Dim lastConduitUpdateServerDateTime As Long =
+            PatientData.LastConduitUpdateServerDateTime
+        Dim epoch2PumpDateTime As Date =
+            lastConduitUpdateServerDateTime.Epoch2PumpDateTime
+        If lastConduitUpdateServerDateTime > 0 Then
+            Dim minutes As UInteger =
+                CUInt(Math.Round(value:=(PumpNow() - epoch2PumpDateTime).TotalMinutes,
+                                 digits:=0))
             Return $"{firstName}'s Data Updated {minutes.ToUnits(unit:="Minute")} Ago"
         Else
             Return $"{firstName}'s Data Last Update Time Unknown"
@@ -104,9 +109,12 @@ Public Class SgMiniForm
         Me.HiddenTextBox.Focus()
     End Sub
 
-    Private Sub SgTextBox_TextChanged(sender As Object, e As EventArgs) Handles SgTextBox.TextChanged
+    Private Sub SgTextBox_TextChanged(sender As Object, e As EventArgs) _
+        Handles SgTextBox.TextChanged
+
         Dim firstName As String = If(PatientData?.FirstName, "Patient")
-        Dim textToSpeak As String = $"alarm for {firstName}, {CurrentSgMsg} {_currentSgValue}.{" Please check levels."}"
+        Dim textToSpeak As String =
+            $"alarm for {firstName}, {CurrentSgMsg} {_currentSgValue}. Please check levels."
         Select Case True
             Case Single.IsNaN(_normalizedSg), _normalizedSg = 0
                 Me.SgTextBox.ForeColor = SystemColors.ControlText

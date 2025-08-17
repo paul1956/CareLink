@@ -23,14 +23,17 @@ Friend Module LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginDialog
 
     ''' <summary>
-    '''  Converts a <see cref="Dictionary(Of String, Object)"/> to a <see cref="List(Of KeyValuePair(Of String, String))"/>.
+    '''  Converts a <see cref="Dictionary(Of String, Object)"/> to a
+    '''  <see cref="List(Of KeyValuePair(Of String, String))"/>.
     ''' </summary>
     ''' <param name="dic">The <see cref="Dictionary(Of String, Object)"/> to convert.</param>
     ''' <returns>
     '''  A list of key-value pairs where the value is converted to a <see langword="String"/>.
     ''' </returns>
     <Extension>
-    Private Function ToDataSource(dic As Dictionary(Of String, Object)) As List(Of KeyValuePair(Of String, String))
+    Private Function ToDataSource(dic As Dictionary(Of String, Object)) As _
+        List(Of KeyValuePair(Of String, String))
+
         Dim dataSource As New List(Of KeyValuePair(Of String, String))
         For Each kvp As KeyValuePair(Of String, Object) In dic
             dataSource.Add(item:=KeyValuePair.Create(kvp.Key, value:=CType(kvp.Value, String)))
@@ -43,7 +46,9 @@ Friend Module LoginHelpers
     ''' </summary>
     Friend Sub DeserializePatientElement()
         Try
-            PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(PatientDataElement, s_jsonDeserializerOptions)
+            PatientData = JsonSerializer.Deserialize(Of PatientDataInfo) _
+                (element:=PatientDataElement, options:=s_jsonDeserializerOptions)
+
             RecentData = PatientDataElement.ConvertJsonElementToStringDictionary()
         Catch ex As Exception
             MessageBox.Show(
@@ -87,14 +92,14 @@ Friend Module LoginHelpers
             Case FileToLoadOptions.TestData
                 owner.Text = $"{SavedTitle} Using Test Data from 'SampleUserV2Data.json'"
                 CurrentDateCulture = New CultureInfo(name:="en-US")
-                Dim path As String = TestDataFileNameWithPath
+                Dim path As String = GetTestDataPath()
                 Dim json As String = File.ReadAllText(path)
                 PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
                 DeserializePatientElement()
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path)
                 owner.SetLastUpdateTime(
-                    msg:=fileDate.ToShortDateTimeString,
+                    msg:=fileDate.ToShortDateString,
                     suffixMessage:="from file",
                     highLight:=False,
                     isDaylightSavingTime:=fileDate.IsDaylightSavingTime)
@@ -120,10 +125,15 @@ Friend Module LoginHelpers
                 Loop
 
                 If Form1.Client Is Nothing OrElse Not Form1.Client.LoggedIn Then
-                    StartOrStopServerUpdateTimer(Start:=True, interval:=FiveMinutesInMilliseconds)
+                    StartOrStopServerUpdateTimer(
+                        Start:=True,
+                        interval:=FiveMinutesInMilliseconds)
 
                     If NetworkUnavailable() Then
-                        ReportLoginStatus(owner.LoginStatus, hasErrors:=True, lastErrorMessage:="Network Unavailable")
+                        ReportLoginStatus(
+                            owner.LoginStatus,
+                            hasErrors:=True,
+                            lastErrorMessage:="Network Unavailable")
                         Return False
                     End If
 
@@ -143,7 +153,7 @@ Friend Module LoginHelpers
                     ReportLoginStatus(owner.LoginStatus)
                     Return False
                 End If
-                ErrorReportingHelpers.ReportLoginStatus(owner.LoginStatus, hasErrors:=RecentDataEmpty, lastErrorMessage)
+                ReportLoginStatus(owner.LoginStatus, hasErrors:=RecentDataEmpty, lastErrorMessage)
                 owner.MenuShowMiniDisplay.Visible = True
                 fromFile = False
                 owner.TabControlPage1.Visible = True
@@ -160,7 +170,7 @@ Friend Module LoginHelpers
                     Case FileToLoadOptions.Snapshot
                         fixedPart = "CareLink"
                         owner.Text = $"{SavedTitle} Using Snapshot Data"
-                        Dim path As String = DirectoryForProjectData
+                        Dim path As String = GetProjectDataDirectory()
                         Dim di As New DirectoryInfo(path)
                         Dim keySelector As Func(Of FileInfo, Date) =
                             Function(f As FileInfo) As Date
@@ -213,7 +223,7 @@ Friend Module LoginHelpers
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path:=lastDownloadFileWithPath)
                 owner.SetLastUpdateTime(
-                    msg:=fileDate.ToShortDateTimeString,
+                    msg:=fileDate.ToShortDateString,
                     suffixMessage:="from file",
                     highLight:=False,
                     isDaylightSavingTime:=fileDate.IsDaylightSavingTime)
@@ -327,7 +337,7 @@ Friend Module LoginHelpers
     '''  Loads and deserializes the user settings from JSON file.
     ''' </summary>
     Friend Sub SetUpCareLinkUser()
-        Dim path As String = UserSettingsFileWithPath()
+        Dim path As String = GetUserSettingsPath()
         Dim json As String = File.ReadAllText(path)
         CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonDeserializerOptions)
     End Sub
@@ -342,12 +352,11 @@ Friend Module LoginHelpers
     Friend Sub SetUpCareLinkUser(forceUI As Boolean)
         Dim currentUserUpdateNeeded As Boolean = False
         Dim newPdfFile As Boolean = False
-        Dim pdfFileNameWithPath As String = UserSettingsPdfFileWithPath
+        Dim pdfFileNameWithPath As String = GetUserPdfPath()
 
-        Dim path As String = UserSettingsFileWithPath()
 
-        If File.Exists(path) Then
-            Dim userSettingsJson As String = File.ReadAllText(path)
+        If File.Exists(GetUserSettingsPath()) Then
+            Dim userSettingsJson As String = File.ReadAllText(path:=GetUserSettingsPath())
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(
                 json:=userSettingsJson,
                 options:=s_jsonSerializerOptions)
@@ -360,8 +369,8 @@ Friend Module LoginHelpers
             End If
 
             If File.Exists(path:=pdfFileNameWithPath) Then
-                newPdfFile = Not IsFileReadOnly(path) AndAlso
-                    File.GetLastWriteTime(path:=pdfFileNameWithPath) > File.GetLastWriteTime(path)
+                newPdfFile = Not IsFileReadOnly(GetUserSettingsPath()) AndAlso
+                    File.GetLastWriteTime(path:=pdfFileNameWithPath) > File.GetLastWriteTime(GetUserSettingsPath())
             End If
 
             If Not forceUI Then
@@ -417,10 +426,10 @@ Friend Module LoginHelpers
         End If
         If currentUserUpdateNeeded Then
             File.WriteAllTextAsync(
-                path,
+                GetUserSettingsPath(),
                 contents:=JsonSerializer.Serialize(value:=CurrentUser, options:=s_jsonSerializerOptions))
         Else
-            TouchFile(path)
+            TouchFile(GetUserSettingsPath())
         End If
         Form1.Cursor = Cursors.Default
         Application.DoEvents()

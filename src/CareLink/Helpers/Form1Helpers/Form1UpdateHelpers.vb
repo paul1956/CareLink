@@ -29,12 +29,13 @@ Friend Module Form1UpdateHelpers
     ''' <param name="key">The key associated with the date value.</param>
     ''' <param name="provider">The format provider to use for formatting the date.</param>
     ''' <returns>
-    '''  The formatted date string if parsing succeeds; otherwise, an empty string.
+    '''  The formatted date string if parsing succeeds;
+    '''  otherwise, an empty string.
     ''' </returns>
     <Extension>
     Private Function CDateOrDefault(s As String, key As String, provider As IFormatProvider) As String
         Dim resultDate As Date
-        Return If(TryParseDate(s, resultDate, key),
+        Return If(TryParseDate(s, key, resultDate),
                   resultDate.ToString(provider),
                   "")
     End Function
@@ -103,7 +104,8 @@ Friend Module Form1UpdateHelpers
     ''' </summary>
     ''' <param name="value">The model number of the pump.</param>
     ''' <returns>
-    '''  The display name of the pump if recognized; otherwise, "Unknown".
+    '''  The display name of the pump if recognized;
+    '''  otherwise, "Unknown".
     ''' </returns>
     Friend Function GetPumpName(value As String) As String
         Select Case value
@@ -123,14 +125,20 @@ Friend Module Form1UpdateHelpers
     End Function
 
     ''' <summary>
-    '''  Generates a possibly unique file name for data export, based on the specified base name, culture, and extension.
+    '''  Generates a possibly unique file name for data export,
+    '''  based on the specified base name, culture, and extension.
     ''' </summary>
     ''' <param name="baseName">The first part of the file name.</param>
-    ''' <param name="cultureName">A valid culture name in the form of language-CountryCode.</param>
+    ''' <param name="cultureName">
+    '''  A valid culture name in the form of language-CountryCode.
+    ''' </param>
     ''' <param name="extension">The extension for the file.</param>
-    ''' <param name="mustBeUnique">If <see langword="True"/>, ensures the file name is unique.</param>
+    ''' <param name="mustBeUnique">
+    '''  If <see langword="True"/>, ensures the file name is unique.
+    ''' </param>
     ''' <returns>
-    '''  A <see cref="FileNameStruct"/> containing the full and short file name, or an empty struct on error.
+    '''  A <see cref="FileNameStruct"/> containing the full and short file name,
+    '''  or an empty struct on error.
     ''' </returns>
     ''' <example>
     '''  GetUniqueDataFileName("MyFile", "en-US", "txt", mustBeUnique:=True)
@@ -159,7 +167,7 @@ Friend Module Form1UpdateHelpers
         Try
             Dim filenameWithoutExtension As String = $"{baseName}({cultureName}){s_userName}"
             Dim filenameWithExtension As String = $"{filenameWithoutExtension}.{extension}"
-            Dim filenameFullPath As String = Path.Join(DirectoryForProjectData, filenameWithExtension)
+            Dim filenameFullPath As String = Path.Join(GetProjectDataDirectory(), filenameWithExtension)
 
             If mustBeUnique AndAlso File.Exists(filenameFullPath) Then
                 'Get unique file name
@@ -167,7 +175,7 @@ Friend Module Form1UpdateHelpers
                 Do
                     count += 1
                     Dim filename As String = $"{filenameWithoutExtension}{count}.{extension}"
-                    filenameFullPath = Path.Join(DirectoryForProjectData, filename)
+                    filenameFullPath = Path.Join(GetProjectDataDirectory(), filename)
                     filenameWithExtension = Path.GetFileName(path:=filenameFullPath)
                 Loop While File.Exists(path:=filenameFullPath)
             End If
@@ -216,7 +224,8 @@ Friend Module Form1UpdateHelpers
     '''  Checks if the <see cref="PatientData.MedicalDeviceInformation.ModelNumber"/> is a 700 series model.
     ''' </summary>
     ''' <returns>
-    '''  <see langword="True"/> if the model number is a 700 series model; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if the model number is a 700 series model;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function Is700Series() As Boolean
         If RecentDataEmpty() Then Return False
@@ -227,7 +236,8 @@ Friend Module Form1UpdateHelpers
     '''  Checks if the <see cref="RecentData"/> is empty or not.
     ''' </summary>
     ''' <returns>
-    '''  <see langword="True"/> if <see cref="RecentData"/> is empty; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if <see cref="RecentData"/> is empty;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function RecentDataEmpty() As Boolean
         Return RecentData Is Nothing OrElse RecentData.Count = 0
@@ -288,13 +298,18 @@ Friend Module Form1UpdateHelpers
             Dim item As SummaryRecord
             Select Case kvp.Key
                 Case NameOf(ServerDataIndexes.clientTimeZoneName)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, key, kvp.Value))
+                    item = New SummaryRecord(recordNumber, key, kvp.Value)
+                    s_listOfSummaryRecords.Add(item)
                     SetupPumpTimeZoneInfo(mainForm, kvp)
                 Case NameOf(ServerDataIndexes.lastName)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.firstName)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, key, value:=PatientData.FirstName))
+                    item = New SummaryRecord(
+                        recordNumber,
+                        key,
+                        value:=PatientData.FirstName)
+                    s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.appModelType)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -304,7 +319,8 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataIndexes.currentServerTime)
                     message = kvp.Value.Epoch2DateTimeString
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
+                    item = New SummaryRecord(recordNumber, kvp, message)
+                    s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.conduitSerialNumber)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -351,14 +367,22 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataIndexes.cgmInfo)
-                    HandleComplexItems(kvp, recordNumber, key:="cgmInfo", listOfSummaryRecords:=s_listOfSummaryRecords)
+                    HandleComplexItems(
+                        kvp,
+                        recordNumber,
+                        key:="cgmInfo",
+                        listOfSummaryRecords:=s_listOfSummaryRecords)
 
                 Case NameOf(ServerDataIndexes.calFreeSensor)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataIndexes.calibStatus)
                     Dim messageTableName As String = NameOf(s_calibrationMessages)
-                    item = New SummaryRecord(recordNumber, kvp, messages:=s_calibrationMessages, messageTableName)
+                    item = New SummaryRecord(
+                        recordNumber,
+                        kvp,
+                        messages:=s_calibrationMessages,
+                        messageTableName)
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.calibrationIconId)
@@ -482,7 +506,7 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.timeFormat)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
                 Case NameOf(ServerDataIndexes.bgUnits)
-                    item = New SummaryRecord(recordNumber, kvp, message:=GetBgUnits())
+                    item = New SummaryRecord(recordNumber, kvp, message:=BgUnits)
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.maxAutoBasalRate)
@@ -609,7 +633,7 @@ Friend Module Form1UpdateHelpers
                 className:=NameOf(Calibration), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelLowGlucoseSuspended.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_lowGlucoseSuspendedMarkers),
+                table:=ClassCollectionToDataTable(classCollection:=s_suspendedMarkers),
                 className:=NameOf(LowGlucoseSuspended), rowIndex:=ServerDataIndexes.markers)
 
             .TableLayoutPanelTimeChange.DisplayDataTableInDGV(
@@ -643,26 +667,31 @@ Friend Module Form1UpdateHelpers
                     Case "TEMP_TARGET"
                         Dim minutes As Integer = bannerStateRecord1.TimeRemaining
                         mainForm.PumpBannerStateLabel.BackColor = Color.Lime
-                        mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
-                        mainForm.PumpBannerStateLabel.Text = $"Target {If(NativeMmolL, "8.3", "150")} {minutes.ToHoursMinutes}/hr"
+                        mainForm.PumpBannerStateLabel.ForeColor =
+                            mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
+                        mainForm.PumpBannerStateLabel.Text =
+                            $"Target {If(NativeMmolL, "8.3", "150")} {minutes.ToHoursMinutes}/hr"
                         mainForm.PumpBannerStateLabel.Visible = True
                         mainForm.PumpBannerStateLabel.Dock = DockStyle.Top
                     Case "BG_REQUIRED"
                         mainForm.PumpBannerStateLabel.BackColor = Color.CadetBlue
-                        mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
+                        mainForm.PumpBannerStateLabel.ForeColor =
+                            mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
 
                         mainForm.PumpBannerStateLabel.Text = "Enter BG Now"
                         mainForm.PumpBannerStateLabel.Visible = True
                         mainForm.PumpBannerStateLabel.Dock = DockStyle.Top
                     Case "DELIVERY_SUSPEND"
                         mainForm.PumpBannerStateLabel.BackColor = Color.IndianRed
-                        mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
+                        mainForm.PumpBannerStateLabel.ForeColor =
+                            mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
                         mainForm.PumpBannerStateLabel.Text = "Delivery Suspended"
                         mainForm.PumpBannerStateLabel.Visible = True
                         mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
                     Case "LOAD_RESERVOIR"
                         mainForm.PumpBannerStateLabel.BackColor = Color.Yellow
-                        mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
+                        mainForm.PumpBannerStateLabel.ForeColor =
+                            mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
                         mainForm.PumpBannerStateLabel.Text = "Load Reservoir"
                         mainForm.PumpBannerStateLabel.Visible = True
                         mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
@@ -670,19 +699,26 @@ Friend Module Form1UpdateHelpers
                         Stop
                     Case "SUSPENDED_BEFORE_LOW", "SUSPENDED_ON_LOW"
                         mainForm.PumpBannerStateLabel.BackColor = Color.IndianRed
-                        mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
+                        mainForm.PumpBannerStateLabel.ForeColor =
+                            mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
                         mainForm.PumpBannerStateLabel.Text = typeValue.ToTitle()
                         mainForm.PumpBannerStateLabel.Visible = True
                         mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
-                        mainForm.PumpBannerStateLabel.Font = New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
+                        mainForm.PumpBannerStateLabel.Font =
+                            New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
                     Case "TEMP_BASAL"
                         mainForm.PumpBannerStateLabel.BackColor = Color.Lime
-                        mainForm.PumpBannerStateLabel.ForeColor = mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
-                        Dim hours As String = PatientData.PumpBannerState(index:=0).TimeRemaining.ToHoursMinutes
+                        mainForm.PumpBannerStateLabel.ForeColor =
+                            mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
+                        Dim bannerState As BannerState =
+                            PatientData.PumpBannerState(index:=0)
+                        Dim hours As String =
+                            bannerState.TimeRemaining.ToHoursMinutes
                         mainForm.PumpBannerStateLabel.Text = $"Temp Basal {hours} hr"
                         mainForm.PumpBannerStateLabel.Visible = True
                         mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
-                        mainForm.PumpBannerStateLabel.Font = New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
+                        mainForm.PumpBannerStateLabel.Font =
+                            New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
                     Case "WAIT_TO_ENTER_BG"
                         Stop
                     Case Else

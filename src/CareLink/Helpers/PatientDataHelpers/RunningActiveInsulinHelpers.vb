@@ -39,24 +39,29 @@ Friend Module RunningActiveInsulinHelpers
     '''  Calculates the conditional sum of the CurrentInsulinLevel property for a specified range in a list
     '''  of RunningActiveInsulin objects. This method sums the CurrentInsulinLevel values from
     '''  the specified start index to the specified length, ensuring that it does not exceed the bounds of the list.
-    '''  If the sum is negative, it returns 0 instead. This is useful for calculating the total
-    '''  active insulin over a specific period without exceeding the list boundaries.
+    '''  If the sum is negative, it returns 0 instead. This is useful for
+    '''  calculating the total active insulin over a specific period without
+    '''  exceeding the list boundaries.
     ''' </summary>
-    ''' <param name="myList">The list of RunningActiveInsulin objects to sum.</param>
+    ''' <param name="list">The list of RunningActiveInsulin objects to sum.</param>
     ''' <param name="index">The starting index from which to sum.</param>
     ''' <param name="count">The number of elements to sum.</param>
     ''' <returns>The conditional sum of CurrentInsulinLevel.</returns>
     <Extension>
-    Friend Function ConditionalSum(myList As List(Of RunningActiveInsulin), index As Integer, count As Integer) As Double
-        If index + count > myList.Count Then
-            count = myList.Count - index
+    Friend Function ConditionalSum(
+        list As List(Of RunningActiveInsulin),
+        index As Integer,
+        count As Integer) As Double
+
+        If index + count > list.Count Then
+            count = list.Count - index
         End If
 
         Dim selector As Func(Of RunningActiveInsulin, Single) =
             Function(i As RunningActiveInsulin) As Single
                 Return i.CurrentInsulinLevel
             End Function
-        Dim sum As Single = myList.GetRange(index, count).Sum(selector)
+        Dim sum As Single = list.GetRange(index, count).Sum(selector)
         If sum < 0 Then
             sum = 0
         End If

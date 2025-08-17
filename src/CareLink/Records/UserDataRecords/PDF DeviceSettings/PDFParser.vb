@@ -57,9 +57,15 @@ Public Module PDFParser
     ''' </summary>
     ''' <param name="filename">The path to the PDF file.</param>
     ''' <param name="startPageNumber">The starting page number (zero-based).</param>
-    ''' <param name="endPageNumber">The ending page number (zero-based). If 0, only the start page is used.</param>
+    ''' <param name="endPageNumber">
+    '''  The ending page number (zero-based). If 0, only the start page is used.
+    ''' </param>
     ''' <returns>The extracted text from the specified page range.</returns>
-    Public Function ExtractTextFromPage(filename As String, startPageNumber As Integer, Optional endPageNumber As Integer = 0) As String
+    Public Function ExtractTextFromPage(
+        filename As String,
+        startPageNumber As Integer,
+        Optional endPageNumber As Integer = 0) As String
+
         'Create a PdfDocument object
         Dim doc As New PdfDocument()
 
@@ -102,15 +108,22 @@ Public Module PDFParser
     End Function
 
     ''' <summary>
-    '''  Extracts all tables from a range of pages in a PDF file and returns them in a dictionary with descriptive keys.
+    '''  Extracts all tables from a range of pages in a PDF file and
+    '''  returns them in a dictionary with descriptive keys.
     ''' </summary>
     ''' <param name="pdfFileNameWithPath">The path to the PDF file.</param>
     ''' <param name="startPageNumber">The starting page number (zero-based).</param>
-    ''' <param name="endPageNumber">The ending page number (zero-based). If 0, only the start page is used.</param>
+    ''' <param name="endPageNumber">
+    '''  The ending page number (zero-based). If 0, only the start page is used.
+    ''' </param>
     ''' <returns>
     '''  A dictionary mapping descriptive table titles to <see cref="PdfTable"/> objects.
     ''' </returns>
-    Public Function GetTableList(pdfFileNameWithPath As String, startPageNumber As Integer, Optional endPageNumber As Integer = 0) As Dictionary(Of String, PdfTable)
+    Public Function GetTableList(
+        pdfFileNameWithPath As String,
+        startPageNumber As Integer,
+        Optional endPageNumber As Integer = 0) As Dictionary(Of String, PdfTable)
+
         Dim results As New Dictionary(Of String, PdfTable)
         If Not File.Exists(path:=pdfFileNameWithPath) Then
             Return results
@@ -194,7 +207,14 @@ Public Module PDFParser
     ''' <param name="Width">The width of the rectangle.</param>
     ''' <param name="Height">The height of the rectangle.</param>
     ''' <returns>The extracted text from the specified rectangle area.</returns>
-    Public Function ExtractTextFromRectangleArea(fileName As String, startPageNumber As Integer, x As Integer, y As Integer, Width As Integer, Height As Integer) As String
+    Public Function ExtractTextFromRectangleArea(
+        fileName As String,
+        startPageNumber As Integer,
+        x As Integer,
+        y As Integer,
+        Width As Integer,
+        Height As Integer) As String
+
         'Create a PdfDocument object
         Dim doc As New PdfDocument()
 
@@ -209,7 +229,8 @@ Public Module PDFParser
 
         'Create a PdfTextExtractOptions object
         'Set the rectangle area
-        Dim extractOptions As New PdfTextExtractOptions With {.ExtractArea = New RectangleF(x, y, Width, Height)}
+        Dim extractOptions As New PdfTextExtractOptions With {.ExtractArea =
+            New RectangleF(x, y, Width, Height)}
 
         'Extract text from the rectangle
         Return textExtractor.ExtractText(extractOptions)

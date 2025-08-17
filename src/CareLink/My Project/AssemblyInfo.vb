@@ -1,6 +1,4 @@
-﻿' This file contains assembly attributes for the CareLink project.
-Option Strict On
-Option Explicit On
+﻿' This file contains assembly attributes for the CareLink™ project.
 
 Imports System.Runtime.CompilerServices
 

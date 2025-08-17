@@ -377,16 +377,21 @@ Public Module JsonExtensions
     ''' <summary>
     '''  Converts a JSON string to a <see cref="Dictionary(Of String, String)"/>.
     ''' </summary>
-    ''' <param name="jsonString">The JSON string to convert.</param>
-    ''' <returns>A <see cref="Dictionary"/> with string values representing the JSON object.</returns>
-    Public Function JsonToDictionary(jsonString As String) As Dictionary(Of String, String)
-        Dim resultDictionary As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
-        If String.IsNullOrWhiteSpace(value:=jsonString) Then
+    ''' <param name="json">The JSON string to convert.</param>
+    ''' <returns>
+    '''  A <see cref="Dictionary"/> with string values representing the JSON object.
+    ''' </returns>
+    Public Function JsonToDictionary(json As String) As Dictionary(Of String, String)
+        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
+        Dim resultDictionary As New Dictionary(Of String, String)(comparer)
+        If String.IsNullOrWhiteSpace(value:=json) Then
             Return resultDictionary
         End If
 
         Dim item As KeyValuePair(Of String, Object)
-        Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) = JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(jsonString, s_jsonDeserializerOptions).ToList()
+        Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) =
+            JsonSerializer.Deserialize(Of Dictionary(Of String, Object)) _
+                (json, options:=s_jsonDeserializerOptions).ToList()
         For Each item In rawJsonData
             If item.Value Is Nothing Then
                 resultDictionary.Add(item.Key, value:=Nothing)
@@ -398,10 +403,14 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a JSON string representing an array of objects to a <see cref="List(Of Dictionary(Of String, String)"/>.
+    '''  Converts a JSON string representing an array of objects
+    '''  to a <see cref="List(Of Dictionary(Of String, String)"/>.
     ''' </summary>
     ''' <param name="json">The JSON string to convert.</param>
-    ''' <returns>A <see cref="List(Of Dictionary(Of String, String)"/> representing the JSON objects.</returns>
+    ''' <returns>
+    '''  A <see cref="List(Of Dictionary(Of String, String)"/> representing
+    '''  the JSON objects.
+    ''' </returns>
     Public Function JsonToDictionaryList(json As String) As List(Of Dictionary(Of String, String))
         Dim resultListOfDictionary As New List(Of Dictionary(Of String, String))
         If String.IsNullOrWhiteSpace(value:=json) Then
@@ -409,7 +418,8 @@ Public Module JsonExtensions
         End If
 
         Dim jsonList As List(Of Dictionary(Of String, Object)) =
-            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(json, options:=s_jsonDeserializerOptions)
+            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object))) _
+                (json, options:=s_jsonDeserializerOptions)
 
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
             Dim item As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
@@ -431,7 +441,7 @@ Public Module JsonExtensions
                         item.Add(e1.Value.Key,
                         value:=s_sgRecords(index).Timestamp.ToStringExact)
                     Else
-                        item.Add(e1.Value.Key, value:=d.ToShortDateTimeString())
+                        item.Add(e1.Value.Key, value:=ToShortDateString(d))
                     End If
                 Else
                     item.Add(e1.Value.Key, value:=e1.Value.jsonItemAsString())
@@ -450,10 +460,12 @@ Public Module JsonExtensions
     ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
     Public Function JsonToListOfSgs(json As String) As List(Of SG)
         Dim jsonList As List(Of Dictionary(Of String, Object)) =
-            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(json, options:=s_jsonDeserializerOptions)
+            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object))) _
+                (json, options:=s_jsonDeserializerOptions)
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
+        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
-            Dim resultDictionary As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
+            Dim resultDictionary As New Dictionary(Of String, String)(comparer)
             For Each item As KeyValuePair(Of String, Object) In e.Value
                 If item.Value Is Nothing Then
                     resultDictionary.Add(item.Key, value:=Nothing)
@@ -475,10 +487,12 @@ Public Module JsonExtensions
     ''' </summary>
     ''' <param name="json">The JSON string to load.</param>
     ''' <returns>
-    '''  A <see cref="Dictionary(Of String, String)"/> with <see langword="String"/> values representing the indexed items.
+    '''  A <see cref="Dictionary(Of String, String)"/> with
+    '''  <see langword="String"/> values representing the indexed items.
     ''' </returns>
     Public Function LoadIndexedItems(json As String) As Dictionary(Of String, String)
-        Dim resultDictionary As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
+        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
+        Dim resultDictionary As New Dictionary(Of String, String)(comparer)
         If String.IsNullOrWhiteSpace(value:=json) Then
             Return resultDictionary
         End If
@@ -495,7 +509,8 @@ Public Module JsonExtensions
                 Select Case item.Key
                     Case "additionalInfo"
                         Dim additionalInfo As Dictionary(Of String, Object) =
-                            JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json:=item.jsonItemAsString, options)
+                            JsonSerializer.Deserialize(Of Dictionary(Of String, Object)) _
+                                (json:=item.jsonItemAsString, options)
                         For Each kvp As KeyValuePair(Of String, Object) In additionalInfo
                             resultDictionary.Add(kvp.Key, value:=kvp.Value.ToString)
                         Next
@@ -503,25 +518,34 @@ Public Module JsonExtensions
                         If s_useLocalTimeZone Then
                             PumpTimeZoneInfo = TimeZoneInfo.Local
                         Else
-                            PumpTimeZoneInfo = CalculateTimeZone(timeZoneName:=item.Value.ToString)
+                            PumpTimeZoneInfo =
+                                CalculateTimeZone(timeZoneName:=item.Value.ToString)
                             Dim text As String
                             Dim messageButtons As MessageBoxButtons
                             If PumpTimeZoneInfo Is Nothing Then
-                                If String.IsNullOrWhiteSpace(value:=item.Value?.ToString) Then
-                                    text = $"Your pump appears To be off-line," &
-                                        $" some values will be wrong do you want to continue?" &
-                                        $" If you select OK '{TimeZoneInfo.Local.Id}' will be used" &
-                                        $" as you local time and you will not be prompted further. Cancel will Exit."
+                                Dim value As String = item.Value?.ToString
+                                If String.IsNullOrWhiteSpace(value) Then
+                                    text =
+                                        "Your pump appears To be off-line, some " &
+                                        "values will be wrong do you want to continue?" &
+                                        $" If you select OK '{TimeZoneInfo.Local.Id}'" &
+                                        " will be used as you local time and you will" &
+                                        " not be prompted further. Cancel will Exit."
                                     messageButtons = MessageBoxButtons.OKCancel
                                 Else
-                                    text = $"Your pump TimeZone '{item.Value}' is not recognized," &
-                                        $" do you want to exit? If you select No permanently use" &
-                                        $" '{TimeZoneInfo.Local.Id}''? If you select Yes '{TimeZoneInfo.Local.Id}'" &
-                                        $" will be used and you will not be prompted further. No will use" &
-                                        $" '{TimeZoneInfo.Local.Id}' until you restart program." &
-                                        $" Cancel will exit program. Please open an issue and provide the name" &
-                                        $" '{item.Value}'. After selecting 'Yes' you can change the behavior under" &
-                                        $" the Options Menu."
+                                    text = $"Your pump TimeZone '{item.Value}' " &
+                                        "is not recognized, do you want to exit?" &
+                                        " If you select No permanently use" &
+                                        $" '{TimeZoneInfo.Local.Id}''? If you select" &
+                                        $" Yes '{TimeZoneInfo.Local.Id}'" &
+                                        $" will be used and you will not be prompted" &
+                                        " further. No will use" &
+                                        $" '{TimeZoneInfo.Local.Id}' until you restart" &
+                                        " program. Cancel will exit program." &
+                                        " Please open an issue and provide the name" &
+                                        $" '{item.Value}'. After selecting 'Yes'" &
+                                        " you can change the behavior under" &
+                                        " the Options Menu."
                                     messageButtons = MessageBoxButtons.YesNoCancel
                                 End If
                                 Dim result As DialogResult = MessageBox.Show(

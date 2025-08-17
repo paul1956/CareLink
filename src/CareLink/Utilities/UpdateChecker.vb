@@ -18,15 +18,17 @@ Friend Module UpdateChecker
     '''  Retrieves the latest version string from the GitHub releases page.
     ''' </summary>
     ''' <returns>
-    '''  A <see cref="Task(Of String)"/> representing the asynchronous operation. The result contains the version string,
-    '''  or "0.0.0.0" if the version could not be determined.
+    '''  A <see cref="Task(Of String)"/> representing the asynchronous operation.
+    '''  The result contains the version string, or "0.0.0.0" if the version could not
+    '''  be determined.
     ''' </returns>
     Private Async Function GetVersionString() As Task(Of String)
         Dim versionStr As String = "0.0.0.0"
         Dim responseBody As String
         Try
             Using httpClient As New HttpClient()
-                responseBody = Await httpClient.GetStringAsync($"{GitHubCareLinkUrl}releases")
+                responseBody = Await httpClient.GetStringAsync(
+                    requestUri:=$"{GitHubCareLinkUrl}releases")
             End Using
         Catch ex1 As HttpRequestException
             ' GitHub not reachable
@@ -34,20 +36,24 @@ Friend Module UpdateChecker
         Catch ex As Exception
             Return versionStr
         End Try
-        Dim index As Integer
+        Dim startIndex As Integer
         For Each e As IndexClass(Of String) In responseBody.SplitLines().WithIndex()
             Dim line As String = e.Value
             If line.ContainsIgnoreCase(s_versionSearchKey) Then
-                index = line.IndexOfIgnoreCase(s_versionSearchKey) + s_versionSearchKey.Length
-                If index < 0 Then
-                    Exit For
+                startIndex = line.IndexOfIgnoreCase(value:=s_versionSearchKey)
+                If startIndex >= 0 Then
+                    startIndex += s_versionSearchKey.Length
+
+                    Dim quotePos As Integer = line.IndexOf(value:=""""c, startIndex)
+                    If quotePos > startIndex Then
+                        versionStr = line.Substring(startIndex, length:=quotePos - startIndex)
+
+                        ' Skip versions with a dash (e.g., pre-release builds)
+                        If Not versionStr.Contains("-"c) Then
+                            Return versionStr
+                        End If
+                    End If
                 End If
-                Dim versionLength As Integer = line.IndexOf(value:=""""c, startIndex:=index) - index
-                versionStr = line.Substring(startIndex:=index, length:=versionLength)
-                If versionStr.Contains("-"c) Then
-                    Continue For
-                End If
-                Return versionStr
             End If
         Next
 
@@ -57,13 +63,13 @@ Friend Module UpdateChecker
     ''' <summary>
     '''  Compares the GitHub version string with the current application version.
     ''' </summary>
-    ''' <param name="gitHubVersions">The version string retrieved from GitHub.</param>
-    ''' <param name="appVersion">The current application version.</param>
+    ''' <param name="gitHubVersion">The version string retrieved from GitHub.</param>
+    ''' <param name="version">The current application version.</param>
     ''' <returns><see langword="True"/> if application version or converter version is different</returns>
-    Private Function IsNewerVersion(gitHubVersions As String, appVersion As Version) As Boolean
-        Return gitHubVersions IsNot Nothing AndAlso
-            Not String.IsNullOrWhiteSpace(gitHubVersions) AndAlso
-            Version.Parse(gitHubVersions) > Version.Parse(appVersion.ToString())
+    Private Function IsNewerVersion(gitHubVersion As String, version As Version) As Boolean
+        Return gitHubVersion IsNot Nothing AndAlso
+            Not String.IsNullOrWhiteSpace(value:=gitHubVersion) AndAlso
+            Version.Parse(input:=gitHubVersion) > Version.Parse(input:=version.ToString())
     End Function
 
     ''' <summary>
@@ -74,6 +80,8 @@ Friend Module UpdateChecker
     '''  If <see langword="True"/>, always reports the result to the user, even if no update is available.
     ''' </param>
     Friend Async Sub CheckForUpdatesAsync(reportSuccessfulResult As Boolean)
+        Const heading As String =
+            "There is a newer version available, do you want to install now?"
         Try
             If reportSuccessfulResult Then
                 s_updateSleepCount = 0
@@ -83,20 +91,34 @@ Friend Module UpdateChecker
                 If s_updateSleepCount > 0 Then
                     s_updateSleepCount -= 1
                 Else
-                    Form1.UpdateAvailableStatusStripLabel.Text = $"Update {gitHubVersion} available"
-                    Form1.UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
-                    Form1.UpdateAvailableStatusStripLabel.Image = My.Resources.NotificationAlertRed_16x
-                    Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
+                    Form1.UpdateAvailableStatusStripLabel.Text =
+                        $"Update {gitHubVersion} available"
+
+                    Form1.UpdateAvailableStatusStripLabel.DisplayStyle =
+                        ToolStripItemDisplayStyle.ImageAndText
+
+                    Form1.UpdateAvailableStatusStripLabel.Image =
+                        My.Resources.NotificationAlertRed_16x
+
+                    Form1.UpdateAvailableStatusStripLabel.ImageAlign =
+                        ContentAlignment.MiddleLeft
+
                     Form1.UpdateAvailableStatusStripLabel.ForeColor = Color.Red
                     If reportSuccessfulResult Then
-                        If Interlocked.Exchange(location1:=s_inCheckForUpdate, 1) = 0 Then
+                        If Interlocked.Exchange(
+                                location1:=s_inCheckForUpdate,
+                                value:=1) = 0 Then
+                            Dim prompt As String =
+                                $"Current version {My.Application.Info.Version}" & vbCrLf &
+                                $"New version {gitHubVersion}"
+
                             If MsgBox(
-                                heading:=$"There is a newer version available, do you want to install now?",
-                                prompt:=$"Current version {My.Application.Info.Version}{vbCrLf}New version {gitHubVersion}",
+                                heading,
+                                prompt,
                                 buttonStyle:=MsgBoxStyle.YesNo Or MsgBoxStyle.Question,
                                 title:="Updates Available") = MsgBoxResult.Yes Then
 
-                                OpenUrlInBrowser($"{GitHubCareLinkUrl}releases/")
+                                OpenUrlInBrowser(url:=$"{GitHubCareLinkUrl}releases/")
                                 End
                             End If
                             s_inCheckForUpdate = 0
@@ -105,10 +127,14 @@ Friend Module UpdateChecker
                     End If
                 End If
             Else
-                Form1.UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
-                Form1.UpdateAvailableStatusStripLabel.Text = $"Current version {My.Application.Info.Version}"
-                Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
-                Form1.UpdateAvailableStatusStripLabel.ForeColor = Form1.MenuStrip1.ForeColor
+                Form1.UpdateAvailableStatusStripLabel.DisplayStyle =
+                    ToolStripItemDisplayStyle.Text
+                Form1.UpdateAvailableStatusStripLabel.Text =
+                    $"Current version {My.Application.Info.Version}"
+                Form1.UpdateAvailableStatusStripLabel.ImageAlign =
+                    ContentAlignment.MiddleLeft
+                Form1.UpdateAvailableStatusStripLabel.ForeColor =
+                    Form1.MenuStrip1.ForeColor
                 If reportSuccessfulResult Then
                     MsgBox(
                         heading:="You are running the latest version",

@@ -14,7 +14,7 @@ Public Class TrendHelperTests
         Dim arrows As String = "↑" ' single up arrow
 
         ' Act
-        Dim result As String = SpeechSupport.GetTrendText(arrows)
+        Dim result As String = GetTrendText(arrows)
 
         ' Assert
         result.Should().Be(expected:=" and is trending up with 1 arrow")
@@ -26,7 +26,7 @@ Public Class TrendHelperTests
         Dim arrows As String = "--" ' no arrows
 
         ' Act
-        Dim result As String = SpeechSupport.GetTrendText(arrows)
+        Dim result As String = GetTrendText(arrows)
 
         ' Assert
         result.Should().Be(expected:=" with no trend arrows")
@@ -38,7 +38,7 @@ Public Class TrendHelperTests
         Dim arrows As String = "↓↓↓" ' 3 down arrows
 
         ' Act
-        Dim result As String = SpeechSupport.GetTrendText(arrows)
+        Dim result As String = GetTrendText(arrows)
 
         ' Assert
         result.Should().Be(expected:=" and is trending down with 3 arrows")
@@ -50,7 +50,7 @@ Public Class TrendHelperTests
         Dim arrows As String = "↑↑" ' 2 up arrows
 
         ' Act
-        Dim result As String = SpeechSupport.GetTrendText(arrows)
+        Dim result As String = GetTrendText(arrows)
 
         ' Assert
         result.Should().Be(expected:=" and is trending up with 2 arrows")

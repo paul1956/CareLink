@@ -57,8 +57,10 @@ Friend Module PlotSeriesSg
                 End With
             Catch innerException As Exception
                 Stop
+                Dim str As String = innerException.DecodeException()
+                Dim local As String = $"{NameOf(PlotSgSeries)}"
                 Throw New ApplicationException(
-                    message:=$"{innerException.DecodeException()} exception in {NameOf(PlotSgSeries)}",
+                    message:=$"{str} exception in {local}",
                     innerException)
             End Try
         Next

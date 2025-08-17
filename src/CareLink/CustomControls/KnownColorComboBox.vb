@@ -128,7 +128,8 @@ Public Class KnownColorComboBox
     ''' <param name="e">The <see cref="DrawItemEventArgs"/> containing event data.</Param>
     ''' <remarks>
     '''  <para>
-    '''   This method overrides the default drawing behavior to display each color with its name and
+    '''   This method overrides the default drawing behavior
+    '''   to display each color with its name and
     '''   a background swatch.
     '''  </para>
     ''' </remarks>
@@ -136,7 +137,8 @@ Public Class KnownColorComboBox
         MyBase.OnDrawItem(e)
         If e.Index = -1 Then Exit Sub
 
-        Dim item As KeyValuePair(Of String, KnownColor) = CType(Me.Items(e.Index), KeyValuePair(Of String, KnownColor))
+        Dim item As KeyValuePair(Of String, KnownColor) =
+            CType(Me.Items(e.Index), KeyValuePair(Of String, KnownColor))
         Dim backColor As Color = Color.FromKnownColor(color:=item.Value)
         Dim eBounds As Rectangle = e.Bounds
         Using b As Brush = New SolidBrush(color:=backColor)

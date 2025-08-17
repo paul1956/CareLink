@@ -22,7 +22,11 @@ Friend Module MathExtensions
     ''' <param name="considerValue">Whether to consider the value for special rounding.</param>
     ''' <returns>The rounded Single value.</returns>
     <Extension>
-    Friend Function RoundToSingle(value As Single, digits As Integer, Optional considerValue As Boolean = False) As Single
+    Friend Function RoundToSingle(
+        value As Single,
+        digits As Integer,
+        Optional considerValue As Boolean = False) As Single
+
         If digits = 3 Then
             ' Special case for 0.025 increments
             Return value.RoundTo025()
@@ -164,7 +168,7 @@ Friend Module MathExtensions
             Case TypeOf value Is Decimal
                 returnSingle = CSng(value)
             Case Else
-                Throw UnreachableException(propertyName:=value.GetType.Name)
+                Throw UnreachableException(paramName:=value.GetType.Name)
         End Select
 
         Return returnSingle.RoundToSingle(digits)

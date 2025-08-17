@@ -19,12 +19,18 @@ Friend Module CalloutHelpers
     ''' <param name="lastDataPoint">The data point to anchor the annotation to.</param>
     ''' <param name="tagText">The text to display in the annotation.</param>
     <Extension>
-    Private Sub AddOrUpdateAnnotation(treatmentChart As Chart, lastDataPoint As DataPoint, tagText As String)
+    Private Sub AddOrUpdateAnnotation(
+        treatmentChart As Chart,
+        lastDataPoint As DataPoint,
+        tagText As String)
+
         Dim annotation As CalloutAnnotation = treatmentChart.FindAnnotation(lastDataPoint)
         With annotation
             If annotation IsNot Nothing Then
-                Dim yValue As Double = lastDataPoint.YValues(0) - ((lastDataPoint.YValues(0) - annotation.AnchorDataPoint.YValues(0)) / 2)
                 .Text = $"{tagText}{vbCrLf}{annotation.Text}"
+                Dim yValues0 As Double = lastDataPoint.YValues(0)
+                Dim yValue As Double =
+                    yValues0 - ((yValues0 - annotation.AnchorDataPoint.YValues(0)) / 2)
                 .AnchorDataPoint.SetValueXY(lastDataPoint.XValue, yValue)
                 Exit Sub
             End If
@@ -72,10 +78,17 @@ Friend Module CalloutHelpers
     ''' </summary>
     ''' <param name="treatmentChart">The chart to which the callout will be added.</param>
     ''' <param name="lastDataPoint">The data point to annotate.</param>
-    ''' <param name="markerBorderColor">The color to use for the marker border and fill.</param>
+    ''' <param name="markerBorderColor">
+    '''  The color to use for the marker border and fill.
+    ''' </param>
     ''' <param name="tagText">The text to display in the callout annotation.</param>
     <Extension>
-    Friend Sub CreateCallout(treatmentChart As Chart, lastDataPoint As DataPoint, markerBorderColor As Color, tagText As String)
+    Friend Sub CreateCallout(
+        treatmentChart As Chart,
+        lastDataPoint As DataPoint,
+        markerBorderColor As Color,
+        tagText As String)
+
         lastDataPoint.Color = markerBorderColor
         lastDataPoint.MarkerBorderWidth = 2
         lastDataPoint.MarkerBorderColor = markerBorderColor
@@ -105,9 +118,12 @@ Friend Module CalloutHelpers
     End Function
 
     ''' <summary>
-    '''  Sets up a callout annotation for the specified chart and data point with the given annotation text.
-    '''  If the chart is "TreatmentMarkersChart" and the annotation text starts with "Bolus " or "Meal ", the method returns without making changes.
-    '''  Otherwise, it updates the anchor data point and text of the callout annotation, and ensures it is visible.
+    '''  Sets up a callout annotation for the specified chart and
+    '''  data point with the given annotation text.
+    '''  If the chart is "TreatmentMarkersChart" and the annotation text starts
+    '''  with "Bolus " or "Meal ", the method returns without making changes.
+    '''  Otherwise, it updates the anchor data point and text of the callout annotation,
+    '''  and ensures it is visible.
     ''' </summary>
     ''' <param name="chart1">The chart to update the callout annotation for.</param>
     ''' <param name="currentDataPoint">The data point to anchor the annotation to.</param>

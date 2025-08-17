@@ -34,13 +34,15 @@ Public Module ColorHelpers
 
     ''' <summary>
     '''  Returns a text color based on the row's background color.
-    '''  If the text color and the row's background are both dark or both light, the text color is inverted for contrast.
+    '''  If the text color and the row's background are both dark or both light,
+    '''  the text color is inverted for contrast.
     '''  Otherwise, the original text color is returned.
     ''' </summary>
     ''' <param name="row">The <see cref="DataGridViewRow"/> to evaluate.</param>
     ''' <param name="textColor">The base <see cref="Color"/> to use for text.</param>
     ''' <returns>
-    '''  The appropriate <see cref="Color"/> for text to ensure readability against the row's background.
+    '''  The appropriate <see cref="Color"/> for text to ensure readability
+    '''  against the row's background.
     ''' </returns>
     <Extension>
     Public Function GetTextColor(row As DataGridViewRow, textColor As Color) As Color
@@ -54,7 +56,8 @@ Public Module ColorHelpers
     ''' </summary>
     ''' <param name="row">The <see cref="DataGridViewRow"/> to evaluate.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the row's background color is dark; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if the row's background color is dark;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
     Public Function InvertColor(myColor As Color) As Color
@@ -66,7 +69,8 @@ Public Module ColorHelpers
     '''  This method uses the luminance formula to determine if a color is dark.
     ''' </summary>
     ''' <param name="backColor">The <see cref="Color"/> to evaluate.</param>
-    ''' <returns><see langword="True"/> if the color is dark; otherwise, <see langword="False"/>.</returns>
+    ''' <returns><see langword="True"/> if the color is dark;
+    ''' otherwise, <see langword="False"/>.</returns>
     <Extension>
     Public Function IsDarkColor(backColor As Color) As Boolean
         Return (0.2126 * backColor.R) + (0.7152 * backColor.G) + (0.0722 * backColor.B) < 128

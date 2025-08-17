@@ -46,7 +46,7 @@ Public Class OADate
     ''' </summary>
     ''' <returns>A string representation of the OADate value.</returns>
     Private Function GetDebuggerDisplay() As String
-        Return Date.FromOADate(_oADate).ToShortDateTimeString
+        Return Date.FromOADate(_oADate).ToShortDateString
     End Function
 
     ''' <summary>
@@ -145,7 +145,7 @@ Public Class OADate
     '''  Determines whether the specified object is equal to the current <see cref="OADate"/>.
     ''' </summary>
     ''' <param name="obj">The object to compare with the current instance.</param>
-    ''' <returns><c>True</c> if the objects are equal; otherwise, <c>False</c>.</returns>
+    ''' <returns><see langword="True"/> if the objects are equal; otherwise, <see langword="False"/>.</returns>
     Public Overrides Function Equals(obj As Object) As Boolean
         Dim oA As OADate = TryCast(obj, OADate)
         Return oA IsNot Nothing AndAlso _oADate = oA._oADate
@@ -169,10 +169,14 @@ Public Class OADate
     End Function
 
     ''' <summary>
-    '''  Determines whether the current <see cref="OADate"/> is within 6 minutes of the specified <see cref="OADate"/>.
+    '''  Determines whether the current <see cref="OADate"/> is within 6 minutes
+    '''  of the specified <see cref="OADate"/>.
     ''' </summary>
     ''' <param name="xValue">The <see cref="OADate"/> to compare to.</param>
-    ''' <returns><c>True</c> if within 6 minutes; otherwise, <c>False</c>.</returns>
+    ''' <returns>
+    '''  <see langword="True"/> if within 6 minutes;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
     Public Function Within6Minutes(xValue As OADate) As Boolean
         Return ((Me + SixMinuteOADate) <= xValue) OrElse xValue < Me
     End Function

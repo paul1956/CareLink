@@ -11,28 +11,45 @@ Public Module UnicodeNewline
     ''' <summary>
     '''  Determines if a char is a new line delimiter.
     ''' </summary>
-    ''' <returns>0 == no new line, otherwise it returns either 1 or 2 depending of the length of the delimiter.</returns>
+    ''' <returns>
+    '''  0 == no new line, otherwise it returns either 1 or 2 depending of the length
+    '''  of the delimiter.
+    ''' </returns>
     ''' <param name="curChar">The current character.</param>
-    ''' <param name="nextChar">The next character (if != LF then length will always be 0 or 1).</param>
+    ''' <param name="nextChar">
+    '''  The next character (if != LF then length will always be 0 or 1).
+    ''' </param>
     Public Function GetDelimiterLength(curChar As Char, nextChar As Char) As Integer
         Return If(curChar = Cr,
                   If(nextChar = Lf, 2, 1),
-                  If(curChar = Lf OrElse curChar = Nel OrElse curChar = Vt OrElse curChar = Ff OrElse curChar = Ls OrElse curChar = Ps,
+                  If(curChar = Lf OrElse
+                     curChar = Nel OrElse
+                     curChar = Vt OrElse
+                     curChar = Ff OrElse
+                     curChar = Ls OrElse
+                     curChar = Ps,
                      1,
-                     0
-                    )
+                     0)
                  )
     End Function
 
     ''' <summary>
     '''  Determines if a char is a new line delimiter.
     ''' </summary>
-    ''' <returns>0 == no new line, otherwise it returns either 1 or 2 depending of the length of the delimiter.</returns>
+    ''' <returns>
+    '''  0 == no new line, otherwise it returns either 1 or 2
+    '''  depending of the length of the delimiter.
+    ''' </returns>
     ''' <param name="curChar">The current character.</param>
     ''' <param name = "length">The length of the delimiter</param>
     ''' <param name = "type">The type of the delimiter</param>
     ''' <param name="nextChar">A callback getting the next character (may be null).</param>
-    Friend Function TryGetDelimiterLengthAndType(curChar As Char, <Out()> ByRef length As Integer, <Out()> ByRef type As UnicodeNewlines, Optional nextChar As Func(Of Char) = Nothing) As Boolean
+    Friend Function TryGetDelimiterLengthAndType(
+        curChar As Char,
+        <Out()> ByRef length As Integer,
+        <Out()> ByRef type As UnicodeNewlines,
+        Optional nextChar As Func(Of Char) = Nothing) As Boolean
+
         If curChar = Cr Then
             If nextChar IsNot Nothing AndAlso nextChar() = Lf Then
                 length = 2

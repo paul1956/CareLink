@@ -5,7 +5,9 @@
 Public Class HighAlertRecord
 
     Public Sub New(row As StringTable.Row, valueUnits As String)
-        Dim s1() As String = row.Columns(index:=0).Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
+        Dim s1() As String =
+            row.Columns(index:=0) _
+               .Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
         Select Case s1.Length
             Case 0
                 Exit Sub

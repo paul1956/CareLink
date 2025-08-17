@@ -45,14 +45,21 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Find the index of the first occurrence of any character in the <paramref name="chars"/> list
+    '''  Find the index of the first occurrence of any character in
+    '''  the <paramref name="chars"/> list
     ''' </summary>
     ''' <param name="inputString">The string to search.</param>
     ''' <param name="chars">The list of characters to find.</param>
     ''' <param name="startIndex">The index to start searching from.</param>
-    ''' <returns>The index of the first occurrence of any character in the list, or -1 if not found.</returns>
+    ''' <returns>
+    '''  The index of the first occurrence of any character in the list, or -1 if not found.
+    ''' </returns>
     <Extension>
-    Public Function FindIndexOfAnyChar(inputString As String, chars As List(Of Char), startIndex As Integer) As Integer
+    Public Function FindIndexOfAnyChar(
+        inputString As String,
+        chars As List(Of Char),
+        startIndex As Integer) As Integer
+
         If inputString Is Nothing Then
             Return -1
         End If
@@ -97,11 +104,14 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a <see langword="String"/> to a <see langword="Double"/> using <see cref="CultureInfo.InvariantCulture"/>.
+    '''  Converts a <see langword="String"/> to a <see langword="Double"/>
+    '''  using <see cref="CultureInfo.InvariantCulture"/>.
     ''' </summary>
     ''' <param name="value">The string to convert to a <see langword="Double"/>.</param>
     ''' <returns>The converted <see langword="Double"/> value.</returns>
-    ''' <exception cref="FormatException">Thrown if the string is not a valid double.</exception>
+    ''' <exception cref="FormatException">
+    '''  Thrown if the string is not a valid double.
+    ''' </exception>
     <Extension>
     Public Function ParseDoubleInvariant(value As String) As Double
         Dim s As String = value.Replace(oldChar:=","c, newChar:=CareLinkDecimalSeparator)
@@ -109,11 +119,14 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a <see langword="String"/> to a <see langword="Single"/> using <see cref="CultureInfo.InvariantCulture"/>.
+    '''  Converts a <see langword="String"/> to a <see langword="Single"/>
+    '''  using <see cref="CultureInfo.InvariantCulture"/>.
     ''' </summary>
     ''' <param name="value">The string to convert to a Single.</param>
     ''' <returns>The converted <see langword="Single"/> value.</returns>
-    ''' <exception cref="FormatException">Thrown if the string is not a valid single.</exception>
+    ''' <exception cref="FormatException">
+    '''  Thrown if the string is not a valid single.
+    ''' </exception>
     <Extension>
     Public Function ParseSingleInvariant(value As String) As Single
         Dim s As String = value.Replace(oldChar:=","c, newChar:=CareLinkDecimalSeparator)
@@ -169,7 +182,13 @@ Public Module StringExtensions
     ''' <param name="includeValue">If true, includes the numeric value in the formatted string.</param>
     ''' <returns>A formatted string representing the total units with optional prefix and suffix.</returns>
     <Extension>
-    Public Function ToUnits(totalUnits As Integer, unit As String, Optional prefix As String = "", Optional suffix As String = "", Optional includeValue As Boolean = True) As String
+    Public Function ToUnits(
+        totalUnits As Integer,
+        unit As String,
+        Optional prefix As String = "",
+        Optional suffix As String = "",
+        Optional includeValue As Boolean = True) As String
+
         Dim unitOnly As String = If(totalUnits = 1, unit, $"{unit}s")
         Return If(includeValue,
                   $"{prefix}{totalUnits:N0}{unitOnly}{suffix}",
@@ -264,13 +283,21 @@ Public Module StringExtensions
                 lastWasNumeric = False
             End If
         Next
-        Dim resultString As String = result.Replace(oldValue:="Care Link", newValue:="CareLink").ToString
-        resultString = If(Not resultString.Contains(value:="™"c),
-                          resultString.ReplaceIgnoreCase(oldValue:="CareLink", newValue:="CareLink™"),
-                          resultString.ReplaceIgnoreCase(oldValue:="CareLink", newValue:="CareLink"))
+        Dim resultString As String =
+            result.Replace(oldValue:="Care Link", newValue:="CareLink").ToString
+
+        resultString =
+            If(Not resultString.Contains(value:="™"c),
+               resultString.ReplaceIgnoreCase(oldValue:="CareLink", newValue:="CareLink™"),
+               resultString.ReplaceIgnoreCase(oldValue:="CareLink", newValue:="CareLink"))
         resultString = resultString.Replace(oldValue:="S G", newValue:="Sensor Glucose")
+
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        Return resultString.Replace(oldValue:="time", newValue:=" Time", ignoreCase:=False, culture:=provider)
+        Return resultString.Replace(
+            oldValue:="time",
+            newValue:=" Time",
+            ignoreCase:=False,
+            culture:=provider)
     End Function
 
     ''' <summary>
@@ -399,28 +426,36 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Returns a new string in which all occurrences of a specified string in the current instance
-    '''  are replaced with another specified string, using CultureInfo.CurrentUICulture and case insensitivity.
+    '''  Returns a new string in which all occurrences of a specified string
+    '''  in the current instance are replaced with another specified string,
+    '''  using CultureInfo.CurrentUICulture and case insensitivity.
     ''' </summary>
     ''' <param name="s">Original string</param>
     ''' <param name="oldValue">The string to replace</param>
     ''' <param name="newValue">The replacement string</param>
     ''' <returns>
-    '''  A string that is equivalent to the current string except that all occurrences of
-    '''  <paramref name="oldValue"/> are replaced by <paramref name="newValue"/>.
-    '''  If <paramref name="oldValue"/> is <see cref="String.Empty"/>, the method returns the current string unchanged.
+    '''  A string that is equivalent to the current string except that all
+    '''  occurrences of <paramref name="oldValue"/> are replaced by
+    '''  <paramref name="newValue"/>. If <paramref name="oldValue"/> is
+    '''  <see cref="String.Empty"/>, the method returns the current string unchanged.
     ''' </returns>
     ''' <exception cref="ArgumentNullException">
-    '''  Thrown if <paramref name="oldValue"/> or <paramref name="newValue"/> is <see langword="Nothing"/>.
+    '''  Thrown if <paramref name="oldValue"/> or <paramref name="newValue"/>
+    '''  is <see langword="Nothing"/>.
     ''' </exception>
     ''' <remarks>
-    '''  This method is used for case-insensitive string replacements, ensuring that the replacement
-    '''  respects the current UI culture.
+    '''  This method is used for case-insensitive string replacements,
+    '''  ensuring that the replacement respects the current UI culture.
     ''' </remarks>
     <Extension()>
-    Public Function ReplaceIgnoreCase(s As String, oldValue As String, newValue As String) As String
-        If s Is Nothing Then Return Nothing
-        Return s.Replace(oldValue, newValue, ignoreCase:=True, culture:=CultureInfo.CurrentUICulture)
+    Public Function ReplaceIgnoreCase(s As String, oldValue As String, newValue As String) _
+        As String
+
+        If s Is Nothing Then
+            Return Nothing
+        End If
+        Dim culture As CultureInfo = CultureInfo.CurrentUICulture
+        Return s.Replace(oldValue, newValue, ignoreCase:=True, culture)
     End Function
     ''' <summary>
     '''  Checks if a string starts with another string, ignoring case.

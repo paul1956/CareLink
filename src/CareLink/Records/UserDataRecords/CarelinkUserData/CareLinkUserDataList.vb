@@ -11,7 +11,7 @@ Imports System.Text
 ''' <remarks>
 '''  <para>
 '''   This class implements <see cref="IBindingList"/> to provide change notification and editing support for
-'''   user data records in the CareLink application. Sorting and searching are not supported.
+'''   user data records in the CareLink™ application. Sorting and searching are not supported.
 '''  </para>
 ''' </remarks>
 Public Class CareLinkUserDataList
@@ -56,7 +56,8 @@ Public Class CareLinkUserDataList
     ''' <summary>
     '''  Gets a value indicating whether the list supports change notification.
     ''' </summary>
-    Public ReadOnly Property SupportsChangeNotification() As Boolean Implements IBindingList.SupportsChangeNotification
+    Public ReadOnly Property SupportsChangeNotification() As Boolean _
+        Implements IBindingList.SupportsChangeNotification
         Get
             Return True
         End Get
@@ -115,11 +116,14 @@ Public Class CareLinkUserDataList
             Catch ex As Exception
                 Return New CareLinkUserDataRecord(parent:=Me)
             End Try
-            Throw New KeyNotFoundException(message:=$"Key '{itemName}' Not Present in Dictionary, in CareLinkUserDataList.Item")
+            Dim message As String =
+                $"Key '{itemName}' Not Present in Dictionary, in CareLinkUserDataList.Item"
+            Throw New KeyNotFoundException(message)
         End Get
         Set(Value As CareLinkUserDataRecord)
             For index As Integer = 0 To Me.List.Count - 1
-                Dim entry As CareLinkUserDataRecord = CType(Me.List(index), CareLinkUserDataRecord)
+                Dim entry As CareLinkUserDataRecord =
+                    CType(Me.List(index), CareLinkUserDataRecord)
                 If entry.CareLinkUserName.EqualsIgnoreCase(itemName) Then
                     Me.List(index) = Value
                     Exit Property
@@ -241,7 +245,7 @@ Public Class CareLinkUserDataList
     ''' </summary>
     Friend Sub LoadUserRecords()
         Dim l As IList = Me
-        Using myReader As New FileIO.TextFieldParser(path:=UserSettingsCsvFileWithPath)
+        Using myReader As New FileIO.TextFieldParser(path:=GetAllUsersCsvPath())
             myReader.TextFieldType = FileIO.FieldType.Delimited
             myReader.Delimiters = New String() {","}
             Dim currentRow As String()
@@ -317,11 +321,17 @@ Public Class CareLinkUserDataList
     '''  Attempts to get a user record by key.
     ''' </summary>
     ''' <param name="key">The user name to locate.</param>
-    ''' <param name="userRecord">When this method returns, contains the user record if found; otherwise, <see langword="Nothing"/>.</param>
+    ''' <param name="userRecord">
+    '''  When this method returns, contains the user record if found;
+    '''  otherwise, <see langword="Nothing"/>.
+    ''' </param>
     ''' <returns>
     '''  <see langword="True"/> if the user was found; otherwise, <see langword="False"/>.
     ''' </returns>
-    Friend Function TryGetValue(key As String, ByRef userRecord As CareLinkUserDataRecord) As Boolean
+    Friend Function TryGetValue(
+        key As String,
+        ByRef userRecord As CareLinkUserDataRecord) As Boolean
+
         For Each entry As CareLinkUserDataRecord In Me
             If entry.CareLinkUserName = key Then
                 userRecord = entry
@@ -383,7 +393,7 @@ Public Class CareLinkUserDataList
         Next
         Try
             My.Computer.FileSystem.WriteAllText(
-                file:=UserSettingsCsvFileWithPath,
+                file:=GetAllUsersCsvPath(),
                 text:=sb.ToString,
                 append:=False)
         Catch ex As Exception
@@ -433,7 +443,10 @@ Public Class CareLinkUserDataList
     ''' </summary>
     ''' <param name="propertyDescriptor">The property descriptor.</param>
     ''' <param name="direction">The sort direction.</param>
-    Public Sub ApplySort(propertyDescriptor As PropertyDescriptor, direction As ListSortDirection) Implements IBindingList.ApplySort
+    Public Sub ApplySort(
+            propertyDescriptor As PropertyDescriptor,
+            direction As ListSortDirection) Implements IBindingList.ApplySort
+
         ' No sorting support
     End Sub
 
@@ -445,7 +458,10 @@ Public Class CareLinkUserDataList
     ''' <returns>
     '''  Always returns -1.
     ''' </returns>
-    Public Function Find(propertyDescriptor As PropertyDescriptor, key As Object) As Integer Implements IBindingList.Find
+    Public Function Find(
+        propertyDescriptor As PropertyDescriptor,
+        key As Object) As Integer Implements IBindingList.Find
+
         ' No searching support
         Return -1
     End Function

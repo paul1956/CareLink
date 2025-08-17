@@ -35,20 +35,33 @@ Public Class PumpSetupDialog
     '''  Populates all UI controls with data from the <see cref="_pdf"/> settings record.
     ''' </summary>
     ''' <param name="sender">The event sender.</param>
-    ''' <param name="e1">The <see cref="EventArgs"/> instance containing the event data.</param>
-    ''' <exception cref="NullReferenceException">Thrown if <see cref="_pdf"/> is not set.</exception>
-    Private Sub PumpSetupDialog_Shown(sender As Object, e1 As EventArgs) Handles MyBase.Shown
+    ''' <param name="e1">
+    '''  The <see cref="EventArgs"/> instance containing the event data.
+    ''' </param>
+    ''' <exception cref="NullReferenceException">
+    '''  Thrown if <see cref="_pdf"/> is not set.
+    ''' </exception>
+    Private Sub PumpSetupDialog_Shown(sender As Object, e1 As EventArgs) _
+        Handles MyBase.Shown
+
         If _pdf Is Nothing Then
-            Throw New NullReferenceException(NameOf(_pdf))
+            Throw New NullReferenceException(message:=NameOf(_pdf))
         End If
 
-        Me.RtbMainLeft.Clear()
-        Me.RtbMainRight.Clear()
+        If Not _pdf.IsValid Then
+            Const message As String = "The PDF settings record is not valid."
+            Throw New InvalidOperationException(message:=message)
+        End If
 
+        Me.Text = $"Pump Setup Instructions For {_pdf.UserName}"
+
+        Dim symbol As String = Gear
         With Me.RtbMainLeft
             .ReadOnly = False
-
-            .AppendTextWithSymbol(text:=$"Menu > {Gear} > Delivery Settings > Bolus Wizard Setup", symbol:=Gear, includeNewLine:=True)
+            .Text = ""
+            .AppendTextWithSymbol(
+                text:=$"Menu > {symbol} > Delivery Settings > Bolus Wizard Setup", symbol,
+                includeNewLine:=True)
             Me.Settings2DeliverySettings1BolusWizardSetup1BolusWizard()
             Me.Settings2DeliverySettings1BolusWizardSetup2CarbRatio()
             Me.Settings2DeliverySettings1BolusWizardSetup3ActiveInsulinTime()
@@ -56,37 +69,37 @@ Public Class PumpSetupDialog
             Me.Settings2DeliverySettings1BolusWizardSetup5BgTarget()
 
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Delivery Settings > Basal Pattern Setup", symbol:=Gear)
+                text:=$"Menu > {Gear} > Delivery Settings > Basal Pattern Setup", symbol)
             Me.Settings2DeliverySettings2BasalPatternSetup()
             .AppendNewLine
 
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Delivery Settings > Max Basal/Bolus", symbol:=Gear)
+                text:=$"Menu > {Gear} > Delivery Settings > Max Basal/Bolus", symbol)
             Me.Settings2DeliverySettings3MaxBasalBolus()
             .AppendNewLine
 
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Delivery Settings > Dual/Square Wave", symbol:=Gear)
+                text:=$"Menu > {Gear} > Delivery Settings > Dual/Square Wave", symbol)
             Me.Settings2DeliverySettings4DualSquareWave()
             .AppendNewLine
 
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Delivery Settings > Bolus Increment", symbol:=Gear)
+                text:=$"Menu > {Gear} > Delivery Settings > Bolus Increment", symbol)
             Me.Settings2DeliverySettings5BolusIncrement()
             .AppendNewLine
 
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Delivery Settings > Bolus Speed", symbol:=Gear)
+                text:=$"Menu > {Gear} > Delivery Settings > Bolus Speed", symbol)
             Me.Settings2DeliverySettings6BolusSpeed()
             .AppendNewLine
 
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Delivery Settings > Preset Bolus Setup", symbol:=Gear)
+                text:=$"Menu > {Gear} > Delivery Settings > Preset Bolus Setup", symbol)
             Me.Settings2DeliverySettings7PresetBolusSetup()
             .AppendNewLine
 
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Delivery Settings > Preset Temp Setup", symbol:=Gear)
+                text:=$"Menu > {Gear} > Delivery Settings > Preset Temp Setup", symbol)
             Me.Settings2DeliverySettings8PresetTempSetup()
 
             .ReadOnly = True
@@ -94,24 +107,26 @@ Public Class PumpSetupDialog
         End With
 
         With Me.RtbMainRight
+            symbol = Gear
+            .ReadOnly = False
+            .Text = ""
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Device Settings", symbol:=Gear)
+                text:=$"Menu > {Gear} > Device Settings", symbol)
             Me.Settings2DeviceSettings()
-
             .AppendNewLine
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Device Settings > Time & Date", symbol:=Gear)
+                text:=$"Menu > {Gear} > Device Settings > Time & Date", symbol)
             .AppendKeyValue(key:="Time Format:", value:=_pdf.Utilities.TimeFormat)
 
             .AppendNewLine
-            .AppendTextWithSymbol(text:=$"Menu > {Gear} > Device Settings > Display", symbol:=Gear)
+            .AppendTextWithSymbol(text:=$"Menu > {Gear} > Device Settings > Display", symbol)
             .AppendKeyValue(key:="Brightness:", value:=_pdf.Utilities.Brightness)
             Dim value As String = _pdf.Utilities.BackLightTimeout.ToFormattedTimeSpan(unit:="min")
             .AppendKeyValue(key:="Backlight:", value)
 
             .AppendNewLine
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Device Settings > Easy Bolus", symbol:=Gear)
+                text:=$"Menu > {Gear} > Device Settings > Easy Bolus", symbol)
             .AppendKeyValue(key:="Easy Bolus:", value:=_pdf.Bolus.EasyBolus.EasyBolus)
             .AppendKeyValue(
                 key:="Step Size: ",
@@ -119,7 +134,7 @@ Public Class PumpSetupDialog
 
             .AppendNewLine
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Delivery Settings > Auto Suspend", symbol:=Gear)
+                text:=$"Menu > {Gear} > Delivery Settings > Auto Suspend", symbol)
             .AppendKeyValue(key:="Alarm:", value:=_pdf.Utilities.AutoSuspend.Alarm)
             Dim bufferLength As Integer = .Text.Length
             .AppendTextWithFontChange(text:=$"{Indent4}Time:", newFont:=FixedWidthBoldFont)
@@ -140,49 +155,45 @@ Public Class PumpSetupDialog
 
             .AppendNewLine
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Alert Settings > High Alert",
-                symbol:=Gear)
+                text:=$"Menu > {Gear} > Alert Settings > High Alert", symbol)
             Me.Settings1AlertSettings1HighAlert()
 
             .AppendNewLine
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Alert Settings > Low Alert",
-                symbol:=Gear)
+                text:=$"Menu > {Gear} > Alert Settings > Low Alert", symbol)
             Me.Settings1AlertSettings2LowAlert()
 
             .AppendNewLine
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Alert Settings > Snooze High & Low",
-                symbol:=Gear)
+                text:=$"Menu > {Gear} > Alert Settings > Snooze High & Low", symbol)
             Me.Settings1AlertSettings3SnoozeHighLow()
 
             .AppendNewLine
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Alert Settings > Reminders > Low Reservoir",
-                symbol:=Gear)
+                text:=$"Menu > {Gear} > Alert Settings > Reminders > Low Reservoir", symbol)
             Me.Settings1AlertSettings4Reminders()
 
             .AppendNewLine
+            symbol = Shield
             .AppendTextWithSymbol(
-                text:=$"Menu > {Shield} > SmartGuard > SmartGuard Settings", symbol:=Shield)
-            .AppendKeyValue(
-                key:="Target:",
-                value:=$"{_pdf.SmartGuard.Target.RoundToSingle(digits:=0, considerValue:=True)}")
-            .AppendKeyValue(
-                key:="Auto Correction:",
-                value:=$"{_pdf.SmartGuard.SmartGuard}")
+                text:=$"Menu > {Shield} > SmartGuard > SmartGuard Settings", symbol)
+
+            value = $"{_pdf.SmartGuard.Target.RoundToSingle(digits:=0, considerValue:=True)}"
+            .AppendKeyValue(key:="Target:", value)
+            .AppendKeyValue(key:="Auto Correction:", value:=$"{_pdf.SmartGuard.SmartGuard}")
 
             .AppendNewLine
             .AppendTextWithSymbol(
-                text:=$"Menu > {Shield} > SmartGuard", symbol:=Shield)
+                text:=$"Menu > {Shield} > SmartGuard", symbol)
             .AppendKeyValue(
                 key:="SmartGuard:",
                 value:=$"{_pdf.SmartGuard.AutoCorrection}")
 
             .AppendNewLine
+            symbol = "🔊"
             .AppendTextWithSymbol(
-                text:=$"Menu > {Speaker} > Sound & Vibration",
-                symbol:=Speaker)
+                text:=$"Menu > {"🔊"} > Sound & Vibration",
+                symbol)
             .AppendKeyValue(
                 key:="Volume:",
                 value:=$"{_pdf.Utilities.AlarmVolume}")
@@ -200,7 +211,9 @@ Public Class PumpSetupDialog
 
     Private Sub Settings1Alert()
         With Me.RtbMainLeft
-            For Each index As IndexClass(Of KeyValuePair(Of String, NamedBasalRecord)) In _pdf.Basal.NamedBasal.WithIndex
+            For Each index As IndexClass(Of KeyValuePair(Of String, NamedBasalRecord)) In
+                _pdf.Basal.NamedBasal.WithIndex
+
                 Dim item As KeyValuePair(Of String, NamedBasalRecord) = index.Value
                 .AppendTextWithFontChange(
                     text:=$"{Indent4}{item.Key}:",
@@ -270,37 +283,29 @@ Public Class PumpSetupDialog
 
     Private Sub Settings1AlertSettings4Reminders()
         With Me.RtbMainRight
+            Dim symbol As Char = Gear
             .AppendKeyValue(
-            key:="Low Reservoir Warning:",
+                key:="Low Reservoir Warning:",
                 value:=$"{_pdf.Reminders.LowReservoirWarning}")
-            .AppendKeyValue(
-                key:="Type:",
-                value:="Units")
-            .AppendKeyValue(
-                key:="Units:",
-                value:=$"{_pdf.Reminders.Amount}")
+            .AppendKeyValue(key:="Type:", value:="Units")
+            .AppendKeyValue(key:="Units:", value:=$"{_pdf.Reminders.Amount}")
 
             .AppendNewLine
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Alert Settings > Reminders > Set Change",
-                symbol:=Gear)
-            .AppendKeyValue(
-                key:="Set Change:",
-                value:=$"{_pdf.Reminders.SetChange}")
+                text:=$"Menu > {Gear} > Alert Settings > Reminders > Set Change", symbol)
+            .AppendKeyValue(key:="Set Change:", value:=$"{_pdf.Reminders.SetChange}")
 
             .AppendNewLine
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Alert Settings > Reminders > Bolus BG Check",
-                symbol:=Gear)
-            .AppendKeyValue(
-                key:="Reminder:",
-                value:=$"{_pdf.Reminders.BolusBgCheck}")
+                text:=$"Menu > {Gear} > Alert Settings > Reminders > Bolus BG Check", symbol)
+            .AppendKeyValue(key:="Reminder:", value:=$"{_pdf.Reminders.BolusBgCheck}")
 
             .AppendNewLine
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Alert Settings > Reminders > Missed Meal",
-                symbol:=Gear)
-            For Each item As KeyValuePair(Of String, MealStartEndRecord) In _pdf.Reminders.MissedMealBolus
+                text:=$"Menu > {Gear} > Alert Settings > Reminders > Missed Meal", symbol)
+            For Each item As KeyValuePair(Of String, MealStartEndRecord) In
+                _pdf.Reminders.MissedMealBolus
+
                 Dim startTime As String = item.Value.Start
                 Dim endTime As String = item.Value.End
                 .AppendTimeValueRow(item.Key, startTime, endTime)
@@ -308,11 +313,11 @@ Public Class PumpSetupDialog
 
             .AppendNewLine
             .AppendTextWithSymbol(
-                text:=$"Menu > {Gear} > Alert Settings > Reminders > Personal",
-                symbol:=Gear)
-            For Each item As KeyValuePair(Of String, PersonalRemindersRecord) In _pdf.Reminders.PersonalReminders
-                Dim startTime As String = item.Value.Time
-                .AppendTimeValueRow(key:=item.Key, startTime)
+                text:=$"Menu > {Gear} > Alert Settings > Reminders > Personal", symbol)
+            For Each item As KeyValuePair(Of String, PersonalRemindersRecord) In
+                _pdf.Reminders.PersonalReminders
+
+                .AppendTimeValueRow(key:=item.Key, startTime:=item.Value.Time)
             Next
 
         End With
@@ -336,9 +341,14 @@ Public Class PumpSetupDialog
                 includeValue:=False)}"
             .AppendTextWithFontChange(text, newFont:=FixedWidthBoldFont, includeNewLine:=True)
 
-            For Each item As CarbRatioRecord In _pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
-                Dim value As String = $"{item.CarbRatio} g/U"
-                .AppendTimeValueRow(item.StartTime, item.EndTime, value, _pdf.Utilities.TimeFormat)
+            For Each item As CarbRatioRecord In
+                _pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
+
+                Call .AppendTimeValueRow(
+                    item.StartTime,
+                    item.EndTime,
+                    value:=$"{item.CarbRatio} g/U",
+                    _pdf.Utilities.TimeFormat)
             Next
             .AppendNewLine
         End With
@@ -364,7 +374,9 @@ Public Class PumpSetupDialog
                 text,
                 newFont:=FixedWidthBoldFont,
                 includeNewLine:=True)
-            For Each e As IndexClass(Of InsulinSensitivityRecord) In _pdf.Bolus.InsulinSensitivity.WithIndex
+            For Each e As IndexClass(Of InsulinSensitivityRecord) In
+                _pdf.Bolus.InsulinSensitivity.WithIndex
+
                 Dim item As InsulinSensitivityRecord = e.Value
                 If Not item.IsValid Then
                     Exit For
@@ -375,10 +387,12 @@ Public Class PumpSetupDialog
                     If(e.IsLast,
                        Midnight,
                        _pdf.Bolus.InsulinSensitivity(index:=e.Index + 1).Time)
-                Dim sensitivity As String = If(item.Sensitivity < 0.01,
-                                               "0.00",
-                                               item.Sensitivity.RoundTo025.ToString(format:="F3"))
-                Dim value As String = $"{sensitivity} {_pdf.Bolus.BolusWizard.Units.CarbUnits}/U"
+                Dim sensitivity As String =
+                    If(item.Sensitivity < 0.01,
+                       "0.00",
+                       item.Sensitivity.RoundTo025.ToString(format:="F3"))
+                Dim value As String =
+                    $"{sensitivity} {_pdf.Bolus.BolusWizard.Units.CarbUnits}/U"
                 .AppendTimeValueRow(startTime, endTime, value, _pdf.Utilities.TimeFormat)
             Next
             .AppendNewLine
@@ -403,13 +417,13 @@ Public Class PumpSetupDialog
                     Exit For
                 End If
 
-                Dim startTime As TimeOnly
-
-                Dim endTime As TimeOnly = If(e.IsLast,
-                                             Eleven59,
-                                             _pdf.Bolus.BloodGlucoseTarget(index:=e.Index + 1).Time)
-                startTime = item.Time
-                Dim value As String = $"{item.Low}-{item.High} {_pdf.Bolus.BolusWizard.Units.BgUnits}"
+                Dim startTime As TimeOnly = item.Time
+                Dim endTime As TimeOnly =
+                    If(e.IsLast,
+                       Eleven59,
+                       _pdf.Bolus.BloodGlucoseTarget(index:=e.Index + 1).Time)
+                Dim value As String =
+                    $"{item.Low}-{item.High} {_pdf.Bolus.BolusWizard.Units.BgUnits}"
                 .AppendTimeValueRow(startTime, endTime, value, _pdf.Utilities.TimeFormat)
             Next
             .AppendNewLine
@@ -429,9 +443,10 @@ Public Class PumpSetupDialog
                         Exit For
                     End If
                     Dim startTime As TimeOnly = basalRate.Time
-                    Dim endTime As TimeOnly = If(e.IsLast,
-                                                 Eleven59,
-                                                 item.Value.basalRates(index:=e.Index + 1).Time)
+                    Dim endTime As TimeOnly =
+                        If(e.IsLast,
+                           Eleven59,
+                           item.Value.basalRates(index:=e.Index + 1).Time)
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
                     .AppendTimeValueRow(startTime, endTime, value, _pdf.Utilities.TimeFormat)
                 Next
@@ -481,8 +496,13 @@ Public Class PumpSetupDialog
 
     Private Sub Settings2DeliverySettings7PresetBolusSetup()
         With Me.RtbMainLeft
-            For Each item As KeyValuePair(Of String, PresetBolusRecord) In _pdf.PresetBolus
-                .AppendTextWithFontChange(text:=$"{Indent4}{item.Key}:", newFont:=FixedWidthBoldFont)
+            For Each item As KeyValuePair(Of String, PresetBolusRecord) In
+                _pdf.PresetBolus
+
+                .AppendTextWithFontChange(
+                    text:=$"{Indent4}{item.Key}:",
+                    newFont:=FixedWidthBoldFont)
+
                 If item.Value.IsValid Then
                     Dim presetBolus As PresetBolusRecord = item.Value
                     Dim bolusType As String = If(presetBolus.BolusTypeNormal,
@@ -506,16 +526,19 @@ Public Class PumpSetupDialog
     Private Sub Settings2DeliverySettings8PresetTempSetup()
         With Me.RtbMainLeft
             For Each item As KeyValuePair(Of String, PresetTempRecord) In _pdf.PresetTemp
+                .AppendTextWithFontChange(
+                    text:=$"{Indent4}{item.Key}:",
+                    newFont:=FixedWidthBoldFont)
 
-                .AppendTextWithFontChange(text:=$"{Indent4}{item.Key}:", newFont:=FixedWidthBoldFont)
                 Dim presetTempRecord As PresetTempRecord = item.Value
-
                 If presetTempRecord.IsValid Then
                     .AppendTextWithFontChange(
                         text:=$"{Indent4}{Indent4}{presetTempRecord.PresetAmount}",
                         newFont:=FixedWidthFont)
+                    Dim duration As TimeSpan = presetTempRecord.Duration
+                    Dim durationText As String = duration.ToFormattedTimeSpan(unit:="U/hr")
                     .AppendTextWithFontChange(
-                        text:=$"{Indent4}Duration:{Indent4}{presetTempRecord.Duration.ToFormattedTimeSpan(unit:="U/hr").Trim}",
+                        text:=$"{Indent4}Duration:{Indent4}{durationText.Trim}",
                         newFont:=FixedWidthFont,
                         includeNewLine:=True)
                 Else

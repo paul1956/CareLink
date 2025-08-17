@@ -23,11 +23,15 @@ Public Class SummaryRecord
     ''' <param name="messages">A dictionary containing message translations.</param>
     ''' <param name="messageTableName">The name of the message table for error reporting.</param>
     ''' <remarks>Handles messages that are not in the message table.</remarks>
-    Protected Friend Sub New(recordNumber As Single, kvp As KeyValuePair(Of String, String), messages As Dictionary(Of String, String), messageTableName As String)
+    Protected Friend Sub New(
+            recordNumber As Single,
+            kvp As KeyValuePair(Of String, String),
+            messages As Dictionary(Of String, String),
+            messageTableName As String)
         Me.New(recordNumber, kvp)
         Dim message As String = ""
         If Not String.IsNullOrWhiteSpace(kvp.Value) Then
-            If Not messages.TryGetValue(kvp.Value, message) Then
+            If Not messages.TryGetValue(key:=kvp.Value, value:=message) Then
                 If Debugger.IsAttached Then
                     Stop
                     MsgBox(
@@ -44,13 +48,20 @@ Public Class SummaryRecord
     End Sub
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="SummaryRecord"/> class from a key-value pair
+    '''  Initializes a new instance of the <see cref="SummaryRecord"/> class
+    '''  from a key-value pair
     '''  and an optional message.
     ''' </summary>
-    ''' <param name="recordNumber">The record number associated with this summary record.</param>
+    ''' <param name="recordNumber">
+    '''  The record number associated with this summary record.
+    ''' </param>
     ''' <param name="kvp">A key-value pair representing the data row.</param>
     ''' <param name="message">An optional message for the record.</param>
-    Protected Friend Sub New(recordNumber As Single, kvp As KeyValuePair(Of String, String), Optional message As String = "")
+    Protected Friend Sub New(
+            recordNumber As Single,
+            kvp As KeyValuePair(Of String, String),
+            Optional message As String = "")
+
         Me.New(recordNumber, kvp.Key, kvp.Value, message)
     End Sub
 
@@ -58,7 +69,9 @@ Public Class SummaryRecord
     '''  Initializes a new instance of the <see cref="SummaryRecord"/> class
     '''  using a <see cref="ServerDataIndexes"/> key and value.
     ''' </summary>
-    ''' <param name="recordNumber">The record number associated with this summary record.</param>
+    ''' <param name="recordNumber">
+    '''  The record number associated with this summary record.
+    ''' </param>
     ''' <param name="key">The key as a <see cref="ServerDataIndexes"/> enum value.</param>
     ''' <param name="value">The value associated with the key.</param>
     Protected Friend Sub New(recordNumber As Single, key As ServerDataIndexes, value As String)
@@ -79,23 +92,38 @@ Public Class SummaryRecord
     End Sub
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="SummaryRecord"/> class using a record number, key, value, and message.
+    '''  Initializes a new instance of the <see cref="SummaryRecord"/> class
+    '''  using a record number, key, value, and message.
     ''' </summary>
-    ''' <param name="recordNumber">The record number associated with this summary record.</param>
+    ''' <param name="recordNumber">
+    '''  The record number associated with this summary record.
+    ''' </param>
     ''' <param name="value">The value associated with the key.</param>
     ''' <param name="message">The message for the record.</param>
     Protected Friend Sub New(recordNumber As Single, value As String, message As String)
-        Me.New(recordNumber, key:=CType(recordNumber, ServerDataIndexes).ToString, value, message)
+        Me.New(
+            recordNumber,
+            key:=CType(recordNumber, ServerDataIndexes).ToString,
+            value,
+            message)
     End Sub
 
     ''' <summary>
-    ''' Initializes a new instance of the <see cref="SummaryRecord"/> class using a record number, key, value, and message.
+    ''' Initializes a new instance of the <see cref="SummaryRecord"/> class
+    ''' using a record number, key, value, and message.
     ''' </summary>
-    ''' <param name="recordNumber">The record number associated with this summary record.</param>
+    ''' <param name="recordNumber">
+    '''  The record number associated with this summary record.
+    ''' </param>
     ''' <param name="key">The key for the record.</param>
     ''' <param name="value">The value associated with the key.</param>
     ''' <param name="message">The message for the record.</param>
-    Protected Friend Sub New(recordNumber As Single, key As String, value As String, message As String)
+    Protected Friend Sub New(
+        recordNumber As Single,
+        key As String,
+        value As String,
+        message As String)
+
         Me.RecordNumber = recordNumber + 1
         Me.Key = key
         Me.Value = value
@@ -120,7 +148,8 @@ Public Class SummaryRecord
     Public ReadOnly Property Message As String = ""
 
     ''' <summary>
-    '''  Compares this instance with a specified <see cref="SummaryRecord"/> and indicates whether this instance
+    '''  Compares this instance with a specified <see cref="SummaryRecord"/> and
+    '''  indicates whether this instance
     '''  precedes, follows, or appears in the same position in the sort order as the specified object.
     ''' </summary>
     ''' <param name="obj">The object to compare with this instance.</param>

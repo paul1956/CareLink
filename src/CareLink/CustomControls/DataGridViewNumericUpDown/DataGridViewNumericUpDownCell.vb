@@ -21,44 +21,53 @@ Public Class DataGridViewNumericUpDownCell
                                                                      DataGridViewContentAlignment.BottomCenter
 
     ' Default dimensions of the static rendering bitmap used for the painting of the non-edited cells
-    Private Const DATAGRIDVIEWNUMERICUPDOWNCELL_defaultRenderingBitmapWidth As Integer = 100
+    Private Const DgvNumericUpDownCell_defaultRenderingBitmapWidth As Integer = 100
 
-    Private Const DATAGRIDVIEWNUMERICUPDOWNCELL_defaultRenderingBitmapHeight As Integer = 22
+    Private Const DgvNumericUpDownCell_defaultRenderingBitmapHeight As Integer = 22
 
     ' Default value of the DecimalPlaces property
-    Friend Const DATAGRIDVIEWNUMERICUPDOWNCELL_defaultDecimalPlaces As Integer = 0
+    Friend Const DgvNumericUpDownCell_defaultDecimalPlaces As Integer = 0
 
     ' Default value of the Increment property
-    Friend Const DATAGRIDVIEWNUMERICUPDOWNCELL_defaultIncrement As Decimal = Decimal.One
+    Friend Const DgvNumericUpDownCell_defaultIncrement As Decimal = Decimal.One
 
     ' Default value of the Maximum property
-    Friend Const DATAGRIDVIEWNUMERICUPDOWNCELL_defaultMaximum As Decimal = CDec(100.0)
+    Friend Const DgvNumericUpDownCell_defaultMaximum As Decimal = CDec(100.0)
 
     ' Default value of the Minimum property
-    Friend Const DATAGRIDVIEWNUMERICUPDOWNCELL_defaultMinimum As Decimal = Decimal.Zero
+    Friend Const DgvNumericUpDownCell_defaultMinimum As Decimal = Decimal.Zero
 
     ' Default value of the ThousandsSeparator property
-    Friend Const DATAGRIDVIEWNUMERICUPDOWNCELL_defaultThousandsSeparator As Boolean = False
+    Friend Const DgvNumericUpDownCell_defaultThousandsSeparator As Boolean = False
 
     ' Type of this cell's editing control
-    Private Shared ReadOnly s_defaultEditType As Type = GetType(DataGridViewNumericUpDownEditingControl)
+    Private Shared ReadOnly s_defaultEditType As Type =
+        GetType(DataGridViewNumericUpDownEditingControl)
 
-    ' Type of this cell's value. The formatted value type is string, the same as the base class DataGridViewTextBoxCell
+    ' Type of this cell's value. The formatted value type is string,
+    ' the same as the base class DataGridViewTextBoxCell
     Private Shared ReadOnly s_defaultValueType As Type = GetType(Decimal)
 
-    ' The bitmap used to paint the non-edited cells via a call to NumericUpDown.DrawToBitmap
+    ' The bitmap used to paint the non-edited cells
+    ' via a call to NumericUpDown.DrawToBitmap
     <ThreadStatic>
     Private Shared s_renderingBitmap As Bitmap
 
-    ' The NumericUpDown control used to paint the non-edited cells via a call to NumericUpDown.DrawToBitmap
+    ' The NumericUpDown control used to paint the non-edited
+    ' cells via a call to NumericUpDown.DrawToBitmap
     <ThreadStatic>
     Private Shared s_paintingNumericUpDown As NumericUpDown
 
-    Private _decimalPlaces As Integer       ' Caches the value of the DecimalPlaces property
-    Private _increment As Decimal       ' Caches the value of the Increment property
-    Private _minimum As Decimal         ' Caches the value of the Minimum property
-    Private _maximum As Decimal         ' Caches the value of the Maximum property
-    Private _thousandsSeparator As Boolean ' Caches the value of the ThousandsSeparator property
+    ' Caches the value of the DecimalPlaces property
+    Private _decimalPlaces As Integer
+    ' Caches the value of the Increment property
+    Private _increment As Decimal
+    ' Caches the value of the Minimum property
+    Private _minimum As Decimal
+    ' Caches the value of the Maximum property
+    Private _maximum As Decimal
+    ' Caches the value of the ThousandsSeparator property
+    Private _thousandsSeparator As Boolean
 
     ''' <summary>
     '''  Constructor for the DataGridViewNumericUpDownCell cell type
@@ -67,11 +76,12 @@ Public Class DataGridViewNumericUpDownCell
         ' Create a thread specific bitmap used for the painting of the non-edited cells
         If s_renderingBitmap Is Nothing Then
             s_renderingBitmap = New Bitmap(
-                width:=DATAGRIDVIEWNUMERICUPDOWNCELL_defaultRenderingBitmapWidth,
-                height:=DATAGRIDVIEWNUMERICUPDOWNCELL_defaultRenderingBitmapHeight)
+                width:=DgvNumericUpDownCell_defaultRenderingBitmapWidth,
+                height:=DgvNumericUpDownCell_defaultRenderingBitmapHeight)
         End If
 
-        ' Create a thread specific NumericUpDown control used for the painting of the non-edited cells
+        ' Create a thread specific NumericUpDown control used for the painting
+        ' of the non-edited cells
         If s_paintingNumericUpDown Is Nothing Then
             ' Some properties only need to be set once for the lifetime of the control:
             s_paintingNumericUpDown = New NumericUpDown With {
@@ -82,30 +92,37 @@ Public Class DataGridViewNumericUpDownCell
         End If
 
         ' Set the default values of the properties:
-        _decimalPlaces = DATAGRIDVIEWNUMERICUPDOWNCELL_defaultDecimalPlaces
-        _increment = DATAGRIDVIEWNUMERICUPDOWNCELL_defaultIncrement
-        _minimum = DATAGRIDVIEWNUMERICUPDOWNCELL_defaultMinimum
-        _maximum = DATAGRIDVIEWNUMERICUPDOWNCELL_defaultMaximum
-        _thousandsSeparator = DATAGRIDVIEWNUMERICUPDOWNCELL_defaultThousandsSeparator
+        _decimalPlaces = DgvNumericUpDownCell_defaultDecimalPlaces
+        _increment = DgvNumericUpDownCell_defaultIncrement
+        _minimum = DgvNumericUpDownCell_defaultMinimum
+        _maximum = DgvNumericUpDownCell_defaultMaximum
+        _thousandsSeparator = DgvNumericUpDownCell_defaultThousandsSeparator
     End Sub
 
     ''' <summary>
-    '''  The DecimalPlaces property replicates the one from the <see cref="NumericUpDown"/> control
+    '''  The DecimalPlaces property replicates the one from the
+    '''  <see cref="NumericUpDown"/> control
     ''' </summary>
-    <DefaultValue(DATAGRIDVIEWNUMERICUPDOWNCELL_defaultDecimalPlaces)>
+    <DefaultValue(DgvNumericUpDownCell_defaultDecimalPlaces)>
     Public Property DecimalPlaces As Integer
         Get
             Return _decimalPlaces
         End Get
 
         Set(value As Integer)
+            Const message As String =
+                    "The DecimalPlaces property cannot be smaller" &
+                    "than 0 or larger than 99."
             If value < 0 OrElse value > 99 Then
-                Throw New ArgumentOutOfRangeException(NameOf(value), "The DecimalPlaces property cannot be smaller than 0 or larger than 99.")
+                Throw New ArgumentOutOfRangeException(
+                  paramName:=NameOf(value),
+                    message)
             End If
 
             If _decimalPlaces <> value Then
                 Me.SetDecimalPlaces(Me.RowIndex, value)
-                Me.OnCommonChange() ' Assure that the cell or column gets repainted and autosized if needed
+                ' Assure that the cell or column gets repainted and autosized if needed
+                Me.OnCommonChange()
             End If
         End Set
     End Property
@@ -182,7 +199,7 @@ Public Class DataGridViewNumericUpDownCell
     ''' <summary>
     '''  The ThousandsSeparator property replicates the one from the NumericUpDown control
     ''' </summary>
-    <DefaultValue(DATAGRIDVIEWNUMERICUPDOWNCELL_defaultThousandsSeparator)>
+    <DefaultValue(DgvNumericUpDownCell_defaultThousandsSeparator)>
     Public Property ThousandsSeparator As Boolean
         Get
             Return _thousandsSeparator
@@ -238,8 +255,10 @@ Public Class DataGridViewNumericUpDownCell
     End Function
 
     ''' <summary>
-    '''  <see cref="DataGridView.DetachEditingControl"/> gets called by the <see cref="DataGridView"/> control when the editing session is ending.
-    '''  Clears the undo buffer of the editing control's textbox to avoid interference between sessions.
+    '''  <see cref="DataGridView.DetachEditingControl"/> gets called by
+    '''  the <see cref="DataGridView"/> control when the editing session is ending.
+    '''  Clears the undo buffer of the editing control's textbox
+    '''  to avoid interference between sessions.
     ''' </summary>
     <EditorBrowsable(EditorBrowsableState.Advanced)>
     Public Overrides Sub DetachEditingControl()
@@ -262,12 +281,16 @@ Public Class DataGridViewNumericUpDownCell
     End Sub
 
     ''' <summary>
-    '''  Adjusts the location and size of the editing control given the alignment characteristics of the cell.
+    '''  Adjusts the location and size of the editing control given
+    '''  the alignment characteristics of the cell.
     ''' </summary>
     ''' <param name="editingControlBounds">The bounds of the editing control.</param>
     ''' <param name="cellStyle">The cell style to use for alignment and font.</param>
     ''' <returns>The adjusted bounds for the editing control.</returns>
-    Private Shared Function GetAdjustedEditingControlBounds(editingControlBounds As Rectangle, cellStyle As DataGridViewCellStyle) As Rectangle
+    Private Shared Function GetAdjustedEditingControlBounds(
+            editingControlBounds As Rectangle,
+            cellStyle As DataGridViewCellStyle) As Rectangle
+
         ' Add a 1 pixel padding on the left and right of the editing control
         editingControlBounds.X += 1
         editingControlBounds.Width = Math.Max(0, editingControlBounds.Width - 2)
@@ -276,9 +299,16 @@ Public Class DataGridViewNumericUpDownCell
         Dim preferredHeight As Integer = cellStyle.Font.Height + 3
         If preferredHeight < editingControlBounds.Height Then
             Select Case cellStyle.Alignment
-                Case DataGridViewContentAlignment.MiddleLeft, DataGridViewContentAlignment.MiddleCenter, DataGridViewContentAlignment.MiddleRight
-                    editingControlBounds.Y += CInt((editingControlBounds.Height - preferredHeight) / 2)
-                Case DataGridViewContentAlignment.BottomLeft, DataGridViewContentAlignment.BottomCenter, DataGridViewContentAlignment.BottomRight
+                Case DataGridViewContentAlignment.MiddleLeft,
+                     DataGridViewContentAlignment.MiddleCenter,
+                     DataGridViewContentAlignment.MiddleRight
+
+                    editingControlBounds.Y +=
+                        CInt((editingControlBounds.Height - preferredHeight) / 2)
+                Case DataGridViewContentAlignment.BottomLeft,
+                     DataGridViewContentAlignment.BottomCenter,
+                     DataGridViewContentAlignment.BottomRight
+
                     editingControlBounds.Y += editingControlBounds.Height - preferredHeight
             End Select
         End If
@@ -286,30 +316,41 @@ Public Class DataGridViewNumericUpDownCell
     End Function
 
     ''' <summary>
-    '''  Customized implementation of the <see cref="GetErrorIconBounds"/> function in order to draw the potential
+    '''  Customized implementation of the <see cref="GetErrorIconBounds"/>
+    '''  function in order to draw the potential
     '''  error icon next to the up/down buttons and not on top of them.
     ''' </summary>
     ''' <param name="graphics">The graphics context.</param>
     ''' <param name="cellStyle">The cell style.</param>
     ''' <param name="rowIndex">The row index.</param>
     ''' <returns>The bounds for the error icon.</returns>
-    Protected Overrides Function GetErrorIconBounds(graphics As Graphics, cellStyle As DataGridViewCellStyle, rowIndex As Integer) As Rectangle
+    Protected Overrides Function GetErrorIconBounds(
+            graphics As Graphics,
+            cellStyle As DataGridViewCellStyle,
+            rowIndex As Integer) As Rectangle
         Const buttonsWidth As Integer = 16
 
-        Dim errorIconBounds As Rectangle = MyBase.GetErrorIconBounds(graphics, cellStyle, rowIndex)
-        errorIconBounds.X = If(Me.DataGridView.RightToLeft = RightToLeft.Yes, errorIconBounds.Left + buttonsWidth, errorIconBounds.Left - buttonsWidth)
+        Dim errorIconBounds As Rectangle =
+            MyBase.GetErrorIconBounds(graphics, cellStyle, rowIndex)
+        errorIconBounds.X =
+            If(Me.DataGridView.RightToLeft = RightToLeft.Yes,
+               errorIconBounds.Left + buttonsWidth,
+               errorIconBounds.Left - buttonsWidth)
         Return errorIconBounds
     End Function
 
     ''' <summary>
-    '''  Customized implementation of the <see cref="GetFormattedValue"/> function in order to include the decimal
-    '''  and thousand separator characters in the formatted representation of the cell value.
+    '''  Customized implementation of the <see cref="GetFormattedValue"/> function
+    '''  in order to include the decimal and thousand separator characters in the
+    '''  formatted representation of the cell value.
     ''' </summary>
     ''' <param name="value">The value to format.</param>
     ''' <param name="rowIndex">The row index.</param>
     ''' <param name="cellStyle">The cell style.</param>
     ''' <param name="valueTypeConverter">The value type converter.</param>
-    ''' <param name="formattedValueTypeConverter">The formatted value type converter.</param>
+    ''' <param name="formattedValueTypeConverter">
+    '''  The formatted value type converter.
+    ''' </param>
     ''' <param name="context">The data error context.</param>
     ''' <returns>The formatted value as an object.</returns>
     Protected Overrides Function GetFormattedValue(
@@ -320,32 +361,48 @@ Public Class DataGridViewNumericUpDownCell
         formattedValueTypeConverter As TypeConverter,
         context As DataGridViewDataErrorContexts) As Object
 
-        ' By default, the base implementation converts the Decimal 1234.5 into the string "1234.5"
-        Dim formattedValue As Object = MyBase.GetFormattedValue(value, rowIndex, cellStyle, valueTypeConverter, formattedValueTypeConverter, context)
+        ' By default, the base implementation converts the Decimal 1234.5
+        ' into the string "1234.5"
+        Dim formattedValue As Object = MyBase.GetFormattedValue(
+            value,
+            rowIndex,
+            cellStyle,
+            valueTypeConverter,
+            formattedValueTypeConverter,
+            context)
         Dim formattedNumber As String = TryCast(formattedValue, String)
         If Not String.IsNullOrEmpty(formattedNumber) AndAlso value IsNot Nothing Then
             Dim unformattedDecimal As Decimal = Convert.ToDecimal(value)
             Dim formattedDecimal As Decimal = Convert.ToDecimal(formattedNumber)
             If unformattedDecimal = formattedDecimal Then
-                ' The base implementation of GetFormattedValue (which triggers the CellFormatting event) did nothing else than
-                ' the typical 1234.5 to "1234.5" conversion. But depending on the values of ThousandsSeparator and DecimalPlaces,
-                ' this may not be the actual string displayed. The real formatted value may be "1,234.500"
-                Return formattedDecimal.ToString($"{If(_thousandsSeparator, "N", "F")}{_decimalPlaces}")
+                ' The base implementation of GetFormattedValue
+                ' (which triggers the CellFormatting event) did nothing else than
+                ' the typical 1234.5 to "1234.5" conversion.
+                ' But depending on the values of ThousandsSeparator and DecimalPlaces,
+                ' this may not be the actual string displayed.
+                ' The real formatted value may be "1,234.500"
+                Dim format As String = $"{If(_thousandsSeparator, "N", "F")}{_decimalPlaces}"
+                Return formattedDecimal.ToString(format)
             End If
         End If
         Return formattedValue
     End Function
 
     ''' <summary>
-    '''  Custom implementation of the <see cref="GetPreferredSize"/> function. This implementation uses the preferred
-    '''  size of the base <see cref="DataGridViewTextBoxCell"/> cell and adds room for the up/down buttons.
+    '''  Custom implementation of the <see cref="GetPreferredSize"/> function.
+    '''  This implementation uses the preferred size of the base
+    '''  <see cref="DataGridViewTextBoxCell"/> cell and adds room for the up/down buttons.
     ''' </summary>
     ''' <param name="graphics">The graphics context.</param>
     ''' <param name="cellStyle">The cell style.</param>
     ''' <param name="rowIndex">The row index.</param>
     ''' <param name="constraintSize">The constraint size.</param>
     ''' <returns>The preferred size for the cell.</returns>
-    Protected Overrides Function GetPreferredSize(graphics As Graphics, cellStyle As DataGridViewCellStyle, rowIndex As Integer, constraintSize As Size) As Size
+    Protected Overrides Function GetPreferredSize(
+        graphics As Graphics,
+        cellStyle As DataGridViewCellStyle,
+        rowIndex As Integer,
+        constraintSize As Size) As Size
         If Me.DataGridView Is Nothing Then
             Return New Size(-1, -1)
         End If
@@ -361,16 +418,26 @@ Public Class DataGridViewNumericUpDownCell
 
     ''' <summary>
     '''  Custom implementation of the <see cref="InitializeEditingControl"/> function.
-    '''  This function is called by the <see cref="DataGridView"/> control at the beginning of an editing session.
+    '''  This function is called by the <see cref="DataGridView"/> control
+    '''  at the beginning of an editing session.
     '''  It makes sure that the properties of the NumericUpDown editing control are
     '''  set according to the cell properties.
     ''' </summary>
     ''' <param name="rowIndex">The row index.</param>
     ''' <param name="initialFormattedValue">The initial formatted value.</param>
     ''' <param name="dataGridViewCellStyle">The cell style.</param>
-    Public Overrides Sub InitializeEditingControl(rowIndex As Integer, initialFormattedValue As Object, dataGridViewCellStyle As DataGridViewCellStyle)
-        MyBase.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle)
-        Dim numericUpDown As NumericUpDown = TryCast(Me.DataGridView.EditingControl, NumericUpDown)
+    Public Overrides Sub InitializeEditingControl(
+        rowIndex As Integer,
+        initialFormattedValue As Object,
+        dataGridViewCellStyle As DataGridViewCellStyle)
+
+        MyBase.InitializeEditingControl(
+            rowIndex,
+            initialFormattedValue,
+            dataGridViewCellStyle)
+        Dim numericUpDown As NumericUpDown =
+            TryCast(Me.DataGridView.EditingControl, NumericUpDown)
+
         If numericUpDown IsNot Nothing Then
             numericUpDown.BorderStyle = BorderStyle.None
             numericUpDown.DecimalPlaces = Me.DecimalPlaces
@@ -384,12 +451,13 @@ Public Class DataGridViewNumericUpDownCell
     End Sub
 
     ''' <summary>
-    '''  Custom implementation of the <see cref="KeyEntersEditMode"/> function. This function is called by the DataGridView control
-    '''  to decide whether a keystroke must start an editing session or not. In this case, a new session is started when
-    '''  a digit or negative sign key is hit.
+    '''  Custom implementation of the <see cref="KeyEntersEditMode"/> function.
+    '''  This function is called by the DataGridView control
+    '''  to decide whether a keystroke must start an editing session or not.
+    '''  In this case, a new session is started when a digit or negative sign key is hit.
     ''' </summary>
     ''' <param name="e">The key event arguments.</param>
-    ''' <returns><c>True</c> if the key should start editing; otherwise, <c>False</c>.</returns>
+    ''' <returns><see langword="True"/> if the key should start editing; otherwise, <see langword="False"/>.</returns>
     Public Overrides Function KeyEntersEditMode(e As KeyEventArgs) As Boolean
         Dim numberFormatInfo As NumberFormatInfo = CultureInfo.CurrentCulture.NumberFormat
         Dim negativeSignKey As Keys = Keys.None
@@ -406,12 +474,16 @@ Public Class DataGridViewNumericUpDownCell
     End Function
 
     ''' <summary>
-    '''  Called when a cell characteristic that affects its rendering and/or preferred size has changed.
-    '''  This implementation only takes care of repainting the cells. The DataGridView's autosizing methods
+    '''  Called when a cell characteristic that affects its rendering
+    '''  and/or preferred size has changed. This implementation only takes
+    '''  care of repainting the cells. The DataGridView's autosizing methods
     '''  also need to be called in cases where some grid elements AutoSize.
     ''' </summary>
     Private Sub OnCommonChange()
-        If Me.DataGridView IsNot Nothing AndAlso Not Me.DataGridView.IsDisposed AndAlso Not Me.DataGridView.Disposing Then
+        If Me.DataGridView IsNot Nothing AndAlso
+           Not Me.DataGridView.IsDisposed AndAlso
+           Not Me.DataGridView.Disposing Then
+
             If Me.RowIndex = -1 Then
                 ' Invalidate and AutoSize column
                 Me.DataGridView.InvalidateColumn(Me.ColumnIndex)
@@ -430,24 +502,35 @@ Public Class DataGridViewNumericUpDownCell
     End Sub
 
     ''' <summary>
-    '''  Determines whether this cell, at the given row index, shows the grid's editing control or not.
-    '''  The row index needs to be provided as a parameter because this cell may be shared among multiple rows.
+    '''  Determines whether this cell, at the given row index,
+    '''  shows the grid's editing control or not.
+    '''  The row index needs to be provided as a parameter because
+    '''  this cell may be shared among multiple rows.
     ''' </summary>
     ''' <param name="rowIndex">The row index.</param>
-    ''' <returns><c>True</c> if this cell owns the editing control; otherwise, <c>False</c>.</returns>
+    ''' <returns>
+    '''  <see langword="True"/> if this cell owns the editing control;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
     Private Function OwnsEditingNumericUpDown(rowIndex As Integer) As Boolean
         If rowIndex = -1 OrElse Me.DataGridView Is Nothing Then
             Return False
         End If
-        Dim numericUpDownEditingControl As DataGridViewNumericUpDownEditingControl = TryCast(Me.DataGridView.EditingControl, DataGridViewNumericUpDownEditingControl)
-        Return numericUpDownEditingControl IsNot Nothing AndAlso rowIndex = CType(numericUpDownEditingControl, IDataGridViewEditingControl).EditingControlRowIndex
+        Dim upDownEditingControl As DataGridViewNumericUpDownEditingControl =
+            TryCast(Me.DataGridView.EditingControl, DataGridViewNumericUpDownEditingControl)
+        Return upDownEditingControl IsNot Nothing AndAlso rowIndex =
+            CType(upDownEditingControl, IDataGridViewEditingControl).EditingControlRowIndex
     End Function
 
     ''' <summary>
-    '''  Custom paints the cell. The base implementation of the <see cref="DataGridViewTextBoxCell"/> type is called first,
-    '''  dropping the icon error and content foreground parts. Those two parts are painted by this custom implementation.
-    '''  In this sample, the non-edited <see cref="NumericUpDown"/> control is painted by using a call to <see cref="Control.DrawToBitmap"/>.
-    '''  This is an easy solution for painting controls but it's not necessarily the most performant.
+    '''  Custom paints the cell. The base implementation of the
+    '''  <see cref="DataGridViewTextBoxCell"/> type is called first,
+    '''  dropping the icon error and content foreground parts.
+    '''  Those two parts are painted by this custom implementation.
+    '''  In this sample, the non-edited <see cref="NumericUpDown"/> control
+    '''  is painted by using a call to <see cref="Control.DrawToBitmap"/>.
+    '''  This is an easy solution for painting controls but it's not
+    '''  necessarily the most performant.
     ''' </summary>
     ''' <param name="graphics">The graphics context.</param>
     ''' <param name="clipBounds">The clip bounds.</param>
@@ -490,11 +573,14 @@ Public Class DataGridViewNumericUpDownCell
             errorText,
             cellStyle,
             advancedBorderStyle,
-            paintParts:=paintParts And Not (DataGridViewPaintParts.ErrorIcon Or DataGridViewPaintParts.ContentForeground))
+            paintParts:=paintParts And
+            Not (DataGridViewPaintParts.ErrorIcon Or DataGridViewPaintParts.ContentForeground))
 
         Dim ptCurrentCell As Point = Me.DataGridView.CurrentCellAddress
-        Dim cellCurrent As Boolean = ptCurrentCell.X = Me.ColumnIndex AndAlso ptCurrentCell.Y = rowIndex
-        Dim cellEdited As Boolean = cellCurrent AndAlso Me.DataGridView.EditingControl IsNot Nothing
+        Dim cellCurrent As Boolean =
+            ptCurrentCell.X = Me.ColumnIndex AndAlso ptCurrentCell.Y = rowIndex
+        Dim cellEdited As Boolean =
+            cellCurrent AndAlso Me.DataGridView.EditingControl IsNot Nothing
 
         ' If the cell is in editing mode, there is nothing else to paint
         If Not cellEdited Then
@@ -621,11 +707,15 @@ Public Class DataGridViewNumericUpDownCell
     End Sub
 
     ''' <summary>
-    '''  Utility function that sets a new value for the <see cref="DecimalPlaces"/> property of the cell.
+    '''  Utility function that sets a new value for the
+    '''  <see cref="DecimalPlaces"/> property of the cell.
     '''  This function is used by the cell and column <see cref="DecimalPlaces"/> property.
-    '''  The column uses this method instead of the <see cref="DecimalPlaces"/> property for performance reasons.
-    '''  This way the column can invalidate the entire column at once instead of invalidating each cell of the column individually.
-    '''  A row index needs to be provided as a parameter because this cell may be shared among multiple rows.
+    '''  The column uses this method instead of the <see cref="DecimalPlaces"/>
+    '''  property for performance reasons.
+    '''  This way the column can invalidate the entire column at once instead
+    '''  of invalidating each cell of the column individually.
+    '''  A row index needs to be provided as a parameter because
+    '''  this cell may be shared among multiple rows.
     ''' </summary>
     ''' <param name="rowIndex">The row index.</param>
     ''' <param name="value">The new decimal places value.</param>
@@ -638,9 +728,10 @@ Public Class DataGridViewNumericUpDownCell
     End Sub
 
     ''' <summary>
-    '''  Utility function that sets a new value for the <see cref="Increment"/> property of the cell.
-    '''  This function is used by the cell and column <see cref="Increment"/> property.
-    '''  A row index needs to be provided as a parameter because this cell may be shared among multiple rows.
+    '''  Utility function that sets a new value for the <see cref="Increment"/> property
+    '''  of the cell. This function is used by the cell and
+    '''  column <see cref="Increment"/> property. A row index needs to be provided
+    '''  as a parameter because this cell may be shared among multiple rows.
     ''' </summary>
     ''' <param name="rowIndex">The row index.</param>
     ''' <param name="value">The new increment value.</param>
@@ -653,11 +744,15 @@ Public Class DataGridViewNumericUpDownCell
     End Sub
 
     ''' <summary>
-    '''  Utility function that sets a new value for the <see cref="Maximum"/> property of the cell.
-    '''  This function is used by the cell and column <see cref="Maximum"/> property.
-    '''  The column uses this method instead of the <see cref="Maximum"/> property for performance reasons.
-    '''  This way the column can invalidate the entire column at once instead of invalidating each cell of the column individually.
-    '''  A row index needs to be provided as a parameter because this cell may be shared among multiple rows.
+    '''  Utility function that sets a new value for the <see cref="Maximum"/> property
+    '''  of the cell. This function is used by the cell and
+    '''  column <see cref="Maximum"/> property.
+    '''  The column uses this method instead of the <see cref="Maximum"/> property
+    '''  for performance reasons.
+    '''  This way the column can invalidate the entire column at once instead
+    '''  of invalidating each cell of the column individually.
+    '''  A row index needs to be provided as a parameter because
+    '''  this cell may be shared among multiple rows.
     ''' </summary>
     ''' <param name="rowIndex">The row index.</param>
     ''' <param name="value">The new maximum value.</param>
@@ -672,21 +767,23 @@ Public Class DataGridViewNumericUpDownCell
             Dim currentValue As Decimal = Convert.ToDecimal(cellValue)
             Dim constrainedValue As Decimal = Me.Constrain(currentValue)
             If constrainedValue <> currentValue Then
-                Me.SetValue(rowIndex, constrainedValue)
+                Me.SetValue(rowIndex, value:=constrainedValue)
             End If
         End If
-        Debug.Assert(_maximum = value)
+        Debug.Assert(condition:=_maximum = value)
         If Me.OwnsEditingNumericUpDown(rowIndex) Then
             Me.EditingNumericUpDown.Maximum = value
         End If
     End Sub
 
     ''' <summary>
-    '''  Utility function that sets a new value for the <see cref="Minimum"/> property of the cell. This function is used by
-    '''  the cell and column Minimum property. The column uses this method instead of the Minimum
-    '''  property for performance reasons. This way the column can invalidate the entire column at once instead of
-    '''  invalidating each cell of the column individually. A row index needs to be provided as a parameter because
-    '''  this cell may be shared among multiple rows.
+    '''  Utility function that sets a new value for the <see cref="Minimum"/> property
+    '''  of the cell. This function is used by the cell and column Minimum property.
+    '''  The column uses this method instead of the Minimum property for performance
+    '''  reasons. This way the column can invalidate the entire column at once instead
+    '''  of invalidating each cell of the column individually.
+    '''  A row index needs to be provided as a parameter because this cell may
+    '''  be shared among multiple rows.
     ''' </summary>
     ''' <param name="rowIndex">The row index.</param>
     ''' <param name="value">The new minimum value.</param>
@@ -697,24 +794,27 @@ Public Class DataGridViewNumericUpDownCell
         End If
         Dim cellValue As Object = Me.GetValue(rowIndex)
         If cellValue IsNot Nothing Then
-            Dim currentValue As Decimal = Convert.ToDecimal(cellValue)
-            Dim constrainedValue As Decimal = Me.Constrain(currentValue)
+            Dim currentValue As Decimal = Convert.ToDecimal(value:=cellValue)
+            Dim constrainedValue As Decimal = Me.Constrain(value:=currentValue)
             If constrainedValue <> currentValue Then
-                Me.SetValue(rowIndex, constrainedValue)
+                Me.SetValue(rowIndex, value:=constrainedValue)
             End If
         End If
-        Debug.Assert(_minimum = value)
+        Debug.Assert(condition:=_minimum = value)
         If Me.OwnsEditingNumericUpDown(rowIndex) Then
             Me.EditingNumericUpDown.Minimum = value
         End If
     End Sub
 
     ''' <summary>
-    '''  Utility function that sets a new value for the <see cref="ThousandsSeparator"/> property of the cell. This function is used by
-    '''  the cell and column ThousandsSeparator property. The column uses this method instead of the ThousandsSeparator
-    '''  property for performance reasons. This way the column can invalidate the entire column at once instead of
-    '''  invalidating each cell of the column individually. A row index needs to be provided as a parameter because
-    '''  this cell may be shared among multiple rows.
+    '''  Utility function that sets a new value for the <see cref="ThousandsSeparator"
+    '''  /> property of the cell. This function is used by the cell and column
+    '''  ThousandsSeparator property. The column uses this method instead of the
+    '''  ThousandsSeparator property for performance reasons.
+    '''  This way the column can invalidate the entire column at once instead of
+    '''  invalidating each cell of the column individually.
+    '''  A row index needs to be provided as a parameter because this cell may be shared
+    '''  among multiple rows.
     ''' </summary>
     ''' <param name="rowIndex">The row index.</param>
     ''' <param name="value">The new thousands separator value.</param>

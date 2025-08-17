@@ -298,7 +298,11 @@ Public Class TextMap
         {"Nalert.receiver.battery.low", "Mobile Device Battery Low"}
     }
 
-    Private Shared Function GetErrorMessage(deviceFamily As String, guardianErrorCode As String, ngpErrorCode As Integer) As String
+    Private Shared Function GetErrorMessage(
+        deviceFamily As String,
+        guardianErrorCode As String,
+        ngpErrorCode As Integer) As String
+
         Dim errorTextId As String = Nothing
         Dim internalEC As String
 
@@ -308,24 +312,39 @@ Public Class TextMap
                 errorTextId = $"{ERROR_TEXT_PREFIX_GUARDIAN}{guardianErrorCode}"
             End If
         ElseIf deviceFamily = DEVICE_FAMILY_NGP Then
-            Dim formattedEC As String = ngpErrorCode.ToString("D3")
-            internalEC = If(s_errorCodeMap.TryGetValue(formattedEC, value), value, formattedEC)
+            Dim formattedEC As String = ngpErrorCode.ToString(format:="D3")
+            internalEC =
+                If(s_errorCodeMap.TryGetValue(key:=formattedEC, value), value, formattedEC)
             errorTextId = $"{ERROR_TEXT_PREFIX_NGP}{internalEC}"
         End If
 
-        Return If(Not String.IsNullOrEmpty(errorTextId) AndAlso s_errorTextMap.TryGetValue(errorTextId, value), value, Nothing)
+        Return If(Not String.IsNullOrEmpty(value:=errorTextId) AndAlso
+            s_errorTextMap.TryGetValue(key:=errorTextId, value), value, Nothing)
     End Function
 
     Public Shared Function GetAlarmMessage(deviceFamily As String, alarm As Alarm) As String
-        Return GetErrorMessage(deviceFamily, alarm.Kind, alarm.Code)
+        Return GetErrorMessage(
+            deviceFamily,
+            guardianErrorCode:=alarm.Kind,
+            ngpErrorCode:=alarm.Code)
     End Function
 
-    Public Shared Function GetNotificationMessage(deviceFamily As String, notification As ClearedNotification) As String
-        Return GetErrorMessage(deviceFamily, notification.MessageId, notification.FaultId)
+    Public Shared Function GetNotificationMessage(
+        deviceFamily As String,
+        notification As ClearedNotification) As String
+
+        Return GetErrorMessage(
+            deviceFamily,
+            guardianErrorCode:=notification.MessageId,
+            ngpErrorCode:=notification.FaultId)
     End Function
 
-    Public Shared Function GetNotificationMessage(deviceFamily As String, messageId As String, faultId As Integer) As String
-        Return GetErrorMessage(deviceFamily, messageId, faultId)
+    Public Shared Function GetNotificationMessage(
+        deviceFamily As String,
+        guardianErrorCode As String,
+        faultId As Integer) As String
+
+        Return GetErrorMessage(deviceFamily, guardianErrorCode, ngpErrorCode:=faultId)
     End Function
 
     Public Class Alarm

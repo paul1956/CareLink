@@ -136,7 +136,8 @@ Public Module RegionCountryLists
     '''  A dictionary mapping country names to their corresponding regions.
     ''' </summary>
     ''' <remarks>
-    '''  The regions are defined as per the ISO 3166-1 standard, grouping countries into continents or major geographic areas.
+    '''  The regions are defined as per the ISO 3166-1 standard,
+    '''  grouping countries into continents or major geographic areas.
     ''' </remarks>
     Public ReadOnly s_regionCountryList As New Dictionary(Of String, String) From {
         {"United States", "North America"},
@@ -286,61 +287,73 @@ Public Module RegionCountryLists
         FixedPart As String,
         Optional fuzzy As Boolean = False) As CultureInfo
 
-        Dim filenameWithoutExtension As String = Path.GetFileNameWithoutExtension(ReportFileNameWithPath)
+        Dim filename As String =
+            Path.GetFileNameWithoutExtension(ReportFileNameWithPath)
+        Dim prompt As String
 
-        If filenameWithoutExtension.Count("("c) = 0 Then
+        If filename.Count(c:="("c) = 0 Then
+            prompt = $"'{filename}' malformed,{vbCrLf}it must contain at least one '('."
             MsgBox(
                 heading:="Invalid Filename",
-                prompt:=$"'{filenameWithoutExtension}' malformed,{vbCrLf}it must contain at least one '('.",
+                prompt,
                 buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                 title:="Malformed Error Report Filename")
             Return Nothing
         End If
 
-        If filenameWithoutExtension.Count(")"c) = 0 Then
+        If filename.Count(")"c) = 0 Then
+            prompt =
+                $"Filename '{filename}' malformed,{vbCrLf}it must contain at least one ')'."
             MsgBox(
                 heading:="Invalid Filename",
-                prompt:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain at least one ')'.",
+                prompt,
                 buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                 title:="Malformed Error Report Filename")
             Return Nothing
         End If
 
-        If Not filenameWithoutExtension.StartsWith(FixedPart) Then
+        If Not filename.StartsWith(value:=FixedPart) Then
+            prompt =
+                $"Filename '{filename}' malformed,{vbCrLf}it must start with '{FixedPart}'."
             MsgBox(
                 heading:="Invalid Filename",
-                prompt:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must start with '{FixedPart}'.",
+                prompt,
                 buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                 title:="Malformed Error Report Filename")
             Return Nothing
         End If
 
-        Dim indexOfOpenParenthesis As Integer = filenameWithoutExtension.IndexOf("("c)
+        Dim indexOfOpenParenthesis As Integer = filename.IndexOf(value:="("c)
+        prompt =
+            $"Filename '{filename}' malformed,{vbCrLf}it must contain '(' after '{FixedPart}'."
         If fuzzy Then
             If indexOfOpenParenthesis < FixedPart.Length Then
                 MsgBox(
                     heading:="Invalid Filename",
-                    prompt:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain '(' after '{FixedPart}.",
+                    prompt,
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                     title:="Malformed Error Report Filename")
                 Return Nothing
             End If
         Else
+            prompt =
+                $"Filename '{filename}' malformed," &
+                $"{vbCrLf}it must contain '(' immediately after '{FixedPart}'."
             If indexOfOpenParenthesis <> FixedPart.Length Then
                 MsgBox(
                     heading:="Invalid Filename",
-                    prompt:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain '(' immediately after '{FixedPart}.",
+                    prompt,
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                     title:="Malformed Error Report Filename")
                 Return Nothing
             End If
         End If
 
-        Dim indexOfClosedParenthesis As Integer = filenameWithoutExtension.IndexOf(")"c)
+        Dim indexOfClosedParenthesis As Integer = filename.IndexOf(")"c)
         If indexOfClosedParenthesis < 0 Then
             MsgBox(
                 heading:="Invalid Filename",
-                prompt:=$"Filename '{filenameWithoutExtension}' malformed,{vbCrLf}it must contain ')'.",
+                prompt:=$"Filename '{filename}' malformed,{vbCrLf}it must contain ')'.",
                 buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                 title:="Malformed Error Report Filename")
             Return Nothing
@@ -348,7 +361,7 @@ Public Module RegionCountryLists
 
         Dim startIndex As Integer = indexOfOpenParenthesis + 1
         Dim length As Integer = indexOfClosedParenthesis - indexOfOpenParenthesis - 1
-        Dim cultureName As String = filenameWithoutExtension.Substring(startIndex, length)
+        Dim cultureName As String = filename.Substring(startIndex, length)
 
         Dim predicate As Func(Of CultureInfo, Boolean) =
             Function(c As CultureInfo) As Boolean

@@ -22,15 +22,15 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>5.0.4.0</Version>
-    <AssemblyVersion>5.0.4.0</AssemblyVersion>
-    <FileVersion>5.0.4.0</FileVersion>
+    <Version>5.1.0.0</Version>
+    <AssemblyVersion>5.1.0.0</AssemblyVersion>
+    <FileVersion>5.1.0.0</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
     <PackageTags>CareLink Medtronic Insulin Pump</PackageTags>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
-    <PackageReleaseNotes>Requires Windows 10 or later and .Net 7.0 of later
+    <PackageReleaseNotes>Requires Windows 10 or later and .Net 9.0 of later
     </PackageReleaseNotes>
     <Title>CareLink For Windows</Title>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -42,6 +42,10 @@
 
   <PropertyGroup>
     <NoWarn>$(NoWarn);NETSDK1206;NETSDK1194</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);WFO5001</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

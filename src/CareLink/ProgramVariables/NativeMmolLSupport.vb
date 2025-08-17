@@ -11,9 +11,11 @@ Public Module NativeMmolLSupport
     ''' <returns>
     '''  Returns "Mmol/l" if NativeMmolL is True, otherwise returns "mg/dL".
     ''' </returns>
-    Public Function GetBgUnits() As String
-        Return If(NativeMmolL, "Mmol/l", "mg/dL")
-    End Function
+    Public ReadOnly Property BgUnits As String
+        Get
+            Return If(NativeMmolL, "Mmol/l", "mg/dL")
+        End Get
+    End Property
 
     ''' <summary>
     '''  Gets the number of Precision Digits for String conversion based on the current mmol/L setting.

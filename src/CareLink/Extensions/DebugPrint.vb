@@ -15,8 +15,13 @@ Friend Module DebugSupport
     '''  If the message starts with '(', only the member name is prepended.
     ''' </summary>
     ''' <param name="message">The message to print.</param>
-    ''' <param name="memberName">The name of the calling member. Automatically supplied by the compiler.</param>
-    ''' <param name="sourceLineNumber">The line number in the source file at which the method is called. Automatically supplied by the compiler.</param>
+    ''' <param name="memberName">
+    '''  The name of the calling member. Automatically supplied by the compiler.
+    ''' </param>
+    ''' <param name="sourceLineNumber">
+    '''  The line number in the source file at which the method is called.
+    '''  Automatically supplied by the compiler.
+    ''' </param>
     Public Sub DebugPrint(
             message As String,
             <CallerMemberName> Optional memberName As String = "",

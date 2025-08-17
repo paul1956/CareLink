@@ -5,47 +5,75 @@ https://GitHub.com/paul1956/CareLink/releases/
 
 # Description
 
-This application is designed to show all the available pump data in a visual version that mimics the one on iPhone and in tables that can be exported to Microsoft Excel or the Clipboard.
+This application is designed to show all the available pump data in a
+  visual version that mimics the one on iPhone and in tables that can
+  be exported to Microsoft Excel or the Clipboard.
 
 ![Same display](https://GitHub.com/paul1956/CareLink/blob/master/Screenshot%202022-10-08%20203350.png?raw=true)
 
-Some data is filtered out by default because I could not see any use for it. You can turn off filters from Options Menu. but performance will suffer.
+Some data is filtered out by default because I could not see any use
+  for it. You can turn off filters from Options Menu. but performance
+   will suffer.
 
 # Disclaimer And Warning
-This project is intended for educational and informational purposes only.
-It relies on a series of fragile components and assumptions, any of which may break at any time.
+This project is intended for educational and informational purposes
+  only.
+It relies on a series of fragile components and assumptions, any of
+  which may break at any time.
 It is not FDA approved and should not be used to make medical decisions.
-It is neither affiliated with nor endorsed by Medtronic, and may violate their Terms of Service.
+It is neither affiliated with nor endorsed by Medtronic, and may
+  violate their Terms of Service.
 Use of this code is without warranty or formal support of any kind.
 Try it out and send feedback.
 
 # Required Settings
 
-A directory MyDocuments/CareLink/Settings contains a Settings File which is initially blank it will contain information about your pump that is not available from CareLink™.
+A directory MyDocuments/CareLink/Settings contains a Settings File
+  which is initially blank it will contain information about your pump
+  that is not available from CareLink™.
 
 - Pump AIT
-- Insulin Type from drop down List, currently limited to 5 popular pump insulin type open issue it yours is missing and one listed isn't close
-- A check box to allow selection of AIT decay algorithm (one uses pump value for 770G only and an advanced one that is based on Insulin Type).
-- For MiniMed™ 780G it allows setting you pump Target SG for MiniMed™ 770G its fixed at 120
+- Insulin Type from drop down List, currently limited to 5 popular pump
+   insulin type open issue it yours is missing and one listed isn't
+   close
+- A check box to allow selection of AIT decay algorithm (one uses pump
+   value for 770G only and an advanced one that is based on Insulin
+   Type).
+- For MiniMed™ 780G it allows setting you pump Target SG for MiniMed™
+   770G its fixed at 120
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-07/20/2025
+08/17/2025
 
 ## What's New
+New in 5.1.0.0
+- Introduced new data visualization for Pump Setting for better user
+  experience. These new visualizations provide a more intuitive and
+  user-friendly interface for viewing pump settings and is also
+  available as a standalone application PumpSetup.exe.
+- Enhanced performance for data loading and processing.
+- Major refactoring of the codebase to improve maintainability and
+  readability.
+
 New in 5.0.4.0
 - Improve navigation and usability of the application.
-- Improve the display of time units like "hours" and "minutes" in the UI.
+- Improve the display of time units like "hours" and "minutes" in the
+   UI.
 
 New in 5.0.3.9
-- Add support for Time in Tight Range (TiTR) thresholds in Settings file.
-- Display Carb Ratio in SummaryPage when mouse hovers over the Carb Ratio label.
+- Add support for Time in Tight Range (TiTR) thresholds in Settings
+   file.
+- Display Carb Ratio in SummaryPage when mouse hovers over the
+   Carb Ratio label.
 
 New in 5.0.3.8
 - Fix issue with Speech to Text.
 
 New in 5.0.3.7
-- Improved accuracy of TiTR results through session-specific adjustments the adjustments are made based on the specific session data.
+- Improved accuracy of TiTR results through session-specific
+   adjustments the adjustments are made based on the specific
+   session data.
 
 New in 5.0.3.6
 - Enhance performance for Time in Range and TITR calculations.
@@ -56,7 +84,8 @@ New in 5.0.3.6
  - Add support of Time In Tight Range (TITR) calculation
 
 New in 5.0.3.5
- - Use NET9_0 test instead of Not Full FullDarkModeSupport to support Dark Mode in .NET 9.0
+ - Use NET9_0 test instead of Not Full FullDarkModeSupport to
+   support Dark Mode in .NET 9.0
  - Improve Summary Page formatting
  - Fix crash when No Data From Pump
  - Show UI when using TestData
@@ -69,39 +98,46 @@ New in 5.0.3.3
  - Improve responsiveness of the application while loading data.
 
 New in 5.0.3.2
- - Fix handling of DataGridView Controls, where once a control had a row it would not display the empty message.
+ - Fix handling of DataGridView Controls, where once a control
+   had a row it would not display the empty message.
 
 New in 5.0.3.1
- - Update table names and other logic so that "Return to Summary Page" works correctly
+ - Update table names and other logic so that
+     "Return to Summary Page" works correctly
  - Fix display of user notifications after data loading.
 
 New in 5.0.3.0
  - Fix IsMinBasal algorithm
- - Cleanup formatting for all the tables, including update function names to better reflect what they do
+ - Cleanup formatting for all the tables, including update
+     function names to better reflect what they do
  - Enhanced feature for better user experience in DataGrid view.
 
 New in 5.0.2.6
- - All Table columns are not sortable except the RecordNumber column on Sensor Glucose Table
+ - All Table columns are not sortable except the RecordNumber
+    column on Sensor Glucose Table
 
 New in 5.0.2.5
  - Code cleanup and refactoring
  - Rename decimalDigits to digits in arguments
  - Rename listOfClass to classCollection
- - After cancelled login attempt and then successfully logging in make TabControlPages Visible
+ - After cancelled login attempt and then successfully logging
+     in make TabControlPages Visible
 
 New in 5.0.2.4
  - Improved user interface for settings management.
  - Enhanced data visualization options for better user experience.
 
 New in 5.0.2.3
- - Fixed creation of CareLinkErrorReportFile and loading of it caused by incorrect removal of personal information.
+ - Fixed creation of CareLinkErrorReportFile and loading of
+     it caused by incorrect removal of personal information.
 
 New in 5.0.2.2
  - Optimized data loading speed for improved performance.
 
 New in 5.0.2.1
  - Added support if .Net 9.0 with DarkMode Tabs and StatusStrip.
- - Fixed error where login was failing because Python Login Client could not be found
+ - Fixed error where login was failing because
+     Python Login Client could not be found
 
 New in 5.0.2.0
  - Cleanup and address many formatting issues where titles were cut off
@@ -118,7 +154,8 @@ New in 5.0.1.4
 
 New in 5.0.1.2
  - Exclude Login Code that is not currently used
- - Pass Form1 as a Function parameter wherever possible, when not possible use My.Forms.Form1
+ - Pass Form1 as a Function parameter wherever possible,
+     when not possible use My.Forms.Form1
  - Update NuGet packages
 
 New in 5.0.1.1
@@ -155,7 +192,8 @@ New in 5.0.0.9
  - Fix for crash in tab navigation
 
 New in 5.0.0.8
- - Fix Status Bar text color' this is a temporary fix until I can find a better way to handle
+ - Fix Status Bar text color' this is a temporary fix until
+     I can find a better way to handle
    Dark Mode with controls that don't support it like StatusStrip 
 
 New in 5.0.0.7
@@ -197,35 +235,6 @@ New in 4.0.2.0
 
 ## Known Issue for developers only
 
-For the visualization layer I use the open source System.Windows.Forms.DataVisualization library
+For the visualization layer I use the open source
+  System.Windows.Forms.DataVisualization library
 https://GitHub.com/Kirsan31/WinForms-DataVisualization
-
-
-- If you get the error below
-
-> "System.Configuration.ConfigurationErrorsException: 'Configuration system failed to initialize'"
-> will need to edit CareLink\src\CareLink\bin\Debug\net7.0-windows\CareLink.dll.config and remove the following lines
-```
-<system.diagnostics>
-    <sources>
-        <!-- This section defines the logging configuration for My.Application.Log -->
-        <source name="DefaultSource" switchName="DefaultSwitch">
-            <listeners>
-                <add name="FileLog"/>
-                <!-- Uncomment the below section to write to the Application Event Log -->
-                <!--<add name="EventLog"/>-->
-            </listeners>
-        </source>
-    </sources>
-    <switches>
-        <add name="DefaultSwitch" value="Information" />
-    </switches>
-    <sharedListeners>
-        <add name="FileLog"
-                type="Microsoft.VisualBasic.Logging.FileLogTraceListener, Microsoft.VisualBasic, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
-                initializeData="FileLogWriter"/>
-        <!-- Uncomment the below section and replace APPLICATION_NAME with the name of your application to write to the Application Event Log -->
-        <!--<add name="EventLog" type="System.Diagnostics.EventLogTraceListener" initializeData="APPLICATION_NAME"/> -->
-    </sharedListeners>
-</system.diagnostics>
-```

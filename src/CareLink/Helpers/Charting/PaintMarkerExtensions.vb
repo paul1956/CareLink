@@ -14,43 +14,78 @@ Friend Module PaintMarkerExtensions
     ''' <summary>
     '''  Paints markers on the chart using the specified image and dictionary of markers.
     '''  The markers are drawn at their respective positions on the X-axis and Y-axis.
-    '''  If <paramref name="noImageOffset"/> is true, the image is drawn without any vertical offset.
-    '''  If <paramref name="paintOnY2"/> is true, the markers are painted on the Y2 axis; otherwise, they are painted on the Y axis.
+    '''  If <paramref name="noImageOffset"/> is <see langword="True"/>,
+    '''  the image is drawn without any vertical offset.
+    '''  If <paramref name="paintOnY2"/> is <see langword="True"/>,
+    '''  the markers are painted on the Y2 axis; otherwise, they are painted on the Y axis.
     ''' </summary>
-    ''' <param name="e">The <see cref="ChartPaintEventArgs"/> containing chart graphics context.</param>
-    ''' <param name="markerImage">The <see cref="Bitmap"/> image to use for the marker.</param>
-    ''' <param name="markerDictionary">A dictionary mapping OADate values to Y-axis values for marker positions.</param>
-    ''' <param name="noImageOffset">If true, the image is drawn without vertical offset; otherwise, it is centered on the marker position.</param>
-    ''' <param name="paintOnY2">If true, markers are painted on the Y2 axis; otherwise, on the Y axis.</param>
+    ''' <param name="e">
+    '''  The <see cref="ChartPaintEventArgs"/> containing chart graphics context.
+    ''' </param>
+    ''' <param name="markerImage">
+    '''  The <see cref="Bitmap"/> image to use for the marker.
+    ''' </param>
+    ''' <param name="markerDictionary">
+    '''  A dictionary mapping OADate values to Y-axis values for marker positions.
+    ''' </param>
+    ''' <param name="noImageOffset">
+    '''  If <see langword="True"/>, the image is drawn without vertical offset;
+    '''  otherwise, it is centered on the marker position.</param>
+    ''' <param name="paintOnY2">
+    '''  If <see langword="True"/>, markers are painted on the Y2 axis;
+    '''  otherwise, on the Y axis.
+    ''' </param>
     <Extension>
-    Private Sub PaintMarker(e As ChartPaintEventArgs, markerImage As Bitmap, markerDictionary As Dictionary(Of OADate, Single), noImageOffset As Boolean, paintOnY2 As Boolean)
+    Private Sub PaintMarker(
+        e As ChartPaintEventArgs,
+        markerImage As Bitmap,
+        markerDictionary As Dictionary(Of OADate, Single),
+        noImageOffset As Boolean,
+        paintOnY2 As Boolean)
+
         ' Draw the cloned portion of the Bitmap object.
         Dim halfHeight As Single = CSng(If(noImageOffset, 0, markerImage.Height / 2))
         Dim halfWidth As Single = CSng(markerImage.Width / 2)
         For Each markerKvp As KeyValuePair(Of OADate, Single) In markerDictionary
             Dim imagePosition As RectangleF = RectangleF.Empty
-            imagePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, axis:=AxisName.X, axisValue:=markerKvp.Key))
-            imagePosition.Y = If(paintOnY2,
-                                 CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, axis:=AxisName.Y2, axisValue:=markerKvp.Value)),
-                                 CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName, axis:=AxisName.Y, axisValue:=markerKvp.Value))
-                                )
+            imagePosition.X =
+                CSng(e.ChartGraphics.GetPositionFromAxis(
+                            ChartAreaName,
+                            axis:=AxisName.X,
+                            axisValue:=markerKvp.Key))
+            imagePosition.Y =
+                If(paintOnY2,
+                   CSng(e.ChartGraphics.GetPositionFromAxis(
+                            ChartAreaName,
+                            axis:=AxisName.Y2,
+                            axisValue:=markerKvp.Value)),
+                   CSng(e.ChartGraphics.GetPositionFromAxis(
+                            ChartAreaName,
+                            axis:=AxisName.Y,
+                            axisValue:=markerKvp.Value)))
             imagePosition.Width = markerImage.Width
             imagePosition.Height = markerImage.Height
-            imagePosition = e.ChartGraphics.GetAbsoluteRectangle(imagePosition)
+            imagePosition = e.ChartGraphics.GetAbsoluteRectangle(rectangle:=imagePosition)
             imagePosition.Y -= halfHeight
             imagePosition.X -= halfWidth
             ' Draw image
-            e.ChartGraphics.Graphics.DrawImage(markerImage, imagePosition.X, imagePosition.Y)
+            e.ChartGraphics.Graphics.DrawImage(
+                image:=markerImage,
+                imagePosition.X,
+                imagePosition.Y)
         Next
     End Sub
 
     ''' <summary>
-    '''  Provides post-painting support for the chart, including filling high/low limit rectangles
-    '''  and painting insulin/meal markers.
+    '''  Provides post-painting support for the chart, including filling high/low limit
+    '''  rectangles and painting insulin/meal markers.
     ''' </summary>
-    ''' <param name="e">The <see cref="ChartPaintEventArgs"/> containing chart graphics context.</param>
+    ''' <param name="e">
+    '''  The <see cref="ChartPaintEventArgs"/> containing chart graphics context.
+    ''' </param>
     ''' <param name="chartRelativePosition">
-    '''  A <see cref="RectangleF"/> representing the relative position of the chart area. Will be initialized if empty.
+    '''  A <see cref="RectangleF"/> representing the relative position of the chart area.
+    '''  Will be initialized if empty.
     ''' </param>
     ''' <param name="insulinDictionary">
     '''  A dictionary mapping OADate values to Y-axis values for insulin markers. Can be null.
@@ -59,10 +94,12 @@ Friend Module PaintMarkerExtensions
     '''  A dictionary mapping OADate values to Y-axis values for meal markers. Can be null.
     ''' </param>
     ''' <param name="offsetInsulinImage">
-    '''  If <see langword="True"/>, insulin marker images are vertically offset to center on the marker position.
+    '''  If <see langword="True"/>, insulin marker images are vertically offset
+    '''  to center on the marker position.
     ''' </param>
     ''' <param name="paintOnY2">
-    '''  If <see langword="True"/>, markers are painted on the Y2 axis; otherwise, on the Y axis.
+    '''  If <see langword="True"/>, markers are painted on the Y2 axis;
+    '''  otherwise, on the Y axis.
     ''' </param>
     <DebuggerNonUserCode()>
     <Extension>

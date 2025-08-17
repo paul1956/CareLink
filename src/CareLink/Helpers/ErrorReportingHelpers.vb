@@ -21,9 +21,16 @@ Friend Module ErrorReportingHelpers
     ''' <param name="loginStatus">The <see cref="ToolStripStatusLabel"/> to update.</param>
     ''' <param name="hasErrors">Indicates whether there are errors.</param>
     ''' <param name="lastErrorMessage">The last error message to display. Defaults to empty string.</param>
-    Friend Sub ReportLoginStatus(loginStatus As ToolStripStatusLabel, hasErrors As Boolean, Optional lastErrorMessage As String = "")
+    Friend Sub ReportLoginStatus(
+            loginStatus As ToolStripStatusLabel,
+            hasErrors As Boolean,
+            Optional lastErrorMessage As String = "")
+
         If hasErrors Then
-            loginStatus.ForeColor = If(lastErrorMessage = "OK", Form1.MenuStrip1.ForeColor, Color.Red)
+            loginStatus.ForeColor =
+                If(lastErrorMessage = "OK",
+                   Form1.MenuStrip1.ForeColor,
+                   Color.Red)
             loginStatus.Text = $"Login Status: {lastErrorMessage}"
         Else
             loginStatus.ForeColor = Form1.MenuStrip1.ForeColor

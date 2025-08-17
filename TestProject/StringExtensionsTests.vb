@@ -342,20 +342,24 @@ Public Class StringExtensionsTests
 
         ' Case 1: Next char is lower OR lastWasNumeric --> branch 1
         Dim input As String = "ab"
-        input.ToTitleCase().Should().Be(expected:="Ab") ' a (upper), b (lower) triggers first If
+
+        ' a (upper), b (lower) triggers first If
+        input.ToTitleCase().Should().Be(expected:="Ab")
 
         ' Case 2: Next char is number AND separateNumbers = False --> ElseIf
+        ' a (upper), 1 (ElseIf, since it's a digit and separateNumbers=False)
         input = "a1b"
         input.ToTitleCase(separateNumbers:=False).Should().Be(expected:="A1B")
-        '     a (upper), 1 (ElseIf, since it's a digit and separateNumbers=False)
 
         ' Case 3: Else branch (uppercase letter after previous char not number)
+        ' a (upper), B triggers Else since not lower/not lastWasNumeric/not number
         input = "aB"
-        input.ToTitleCase().Should().Be(expected:="A B") ' a (upper), B triggers Else since not lower/not lastWasNumeric/not number
+        input.ToTitleCase().Should().Be(expected:="A B")
 
         ' Case 4: Else branch (number with separateNumbers=True)
+        ' A (upper), 1 (Else, since separateNumbers=True), B triggers another Else
         input = "A1B"
-        input.ToTitleCase(separateNumbers:=True).Should().Be(expected:="A 1 B") ' A (upper), 1 (Else, since separateNumbers=True), B triggers another Else
+        input.ToTitleCase(separateNumbers:=True).Should().Be(expected:="A 1 B")
 
         ' Multiple transitions: covers else and elseif
         input = "A1bC"

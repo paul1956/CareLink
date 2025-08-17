@@ -147,13 +147,23 @@ Friend Module DataTableHelpers
     End Function
 
     ''' <summary>
-    '''  Indicates whether a specified DataTable is null, has zero columns, or (optionally) zero rows.
+    '''  Indicates whether a specified DataTable is null, has zero columns,
+    '''  or (optionally) zero rows.
     ''' </summary>
     ''' <param name="Table">DataTable to check.</param>
-    ''' <param name="IgnoreRows">When set to true, the function will return true even if the table's row count is equal to zero.</param>
-    ''' <returns>False if the specified DataTable null, has zero columns, or zero rows, otherwise true.</returns>
+    ''' <param name="IgnoreRows">
+    '''  When set to true, the function will return true even if the table's row count
+    '''  is equal to zero.
+    ''' </param>
+    ''' <returns>
+    '''  False if the specified DataTable null, has zero columns,
+    '''  or zero rows, otherwise true.
+    ''' </returns>
     <Extension>
-    Public Function IsValidDataTable(Table As DataTable, Optional IgnoreRows As Boolean = False) As Boolean
+    Public Function IsValidDataTable(
+        Table As DataTable,
+        Optional IgnoreRows As Boolean = False) As Boolean
+
         Return Table IsNot Nothing AndAlso
                Table.Columns.Count <> 0 AndAlso
                (IgnoreRows OrElse Table.Rows.Count <> 0)

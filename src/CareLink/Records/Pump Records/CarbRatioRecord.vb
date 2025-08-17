@@ -26,7 +26,7 @@ Public Class CarbRatioRecord
 
     ''' <summary>
     '''  Gets or sets the end time for this carb ratio period.
-    '''  If set to <c>Midnight</c>, it is replaced with <c>Eleven59</c>.
+    '''  If set to <see cref="Midnight"/>, it is replaced with <see cref="Eleven59"/>.
     ''' </summary>
     <DisplayName("End Time")>
     <Column(Order:=1, TypeName:=NameOf(TimeOnly))>
@@ -50,17 +50,25 @@ Public Class CarbRatioRecord
     '''  Determines whether the specified object is equal to the current <see cref="CarbRatioRecord"/>.
     ''' </summary>
     ''' <param name="obj">The object to compare with the current object.</param>
-    ''' <returns><c>True</c> if the objects are equal; otherwise, <c>False</c>.</returns>
+    ''' <returns><see langword="True"/> if the objects are equal; otherwise, <see langword="False"/>.</returns>
     Public Overrides Function Equals(obj As Object) As Boolean
         Return Me.Equals(TryCast(obj, CarbRatioRecord))
     End Function
 
     ''' <summary>
-    '''  Determines whether the specified <see cref="CarbRatioRecord"/> is equal to the current <see cref="CarbRatioRecord"/>.
+    '''  Determines whether the specified <see cref="CarbRatioRecord"/> is equal
+    '''  to the current <see cref="CarbRatioRecord"/>.
     ''' </summary>
-    ''' <param name="other">The <see cref="CarbRatioRecord"/> to compare with the current object.</param>
-    ''' <returns><c>True</c> if the records are equal; otherwise, <c>False</c>.</returns>
-    Public Overloads Function Equals(other As CarbRatioRecord) As Boolean Implements IEquatable(Of CarbRatioRecord).Equals
+    ''' <param name="other">
+    '''  The <see cref="CarbRatioRecord"/> to compare with the current object.
+    ''' </param>
+    ''' <returns>
+    '''  <see langword="True"/> if the records are equal;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    Public Overloads Function Equals(other As CarbRatioRecord) As Boolean _
+        Implements IEquatable(Of CarbRatioRecord).Equals
+
         Return other IsNot Nothing AndAlso
             Me.CarbRatio = other.CarbRatio AndAlso
             Me.StartTime.Equals(other.StartTime) AndAlso

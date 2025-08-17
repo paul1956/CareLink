@@ -7,12 +7,14 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Text.Json.Serialization
 
 ''' <summary>
-'''  Represents an insulin marker record, containing details about insulin delivery events such as bolus, extended bolus, and related metadata.
+'''  Represents an insulin marker record, containing details about insulin
+'''  delivery events such as bolus, extended bolus, and related metadata.
 ''' </summary>
 Public Class Insulin
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="Insulin"/> class using a marker entry and record number.
+    '''  Initializes a new instance of the <see cref="Insulin"/>
+    '''  class using a marker entry and record number.
     ''' </summary>
     ''' <param name="item">The marker entry containing insulin event data.</param>
     ''' <param name="recordNumber">The record number for this insulin entry.</param>
@@ -166,7 +168,8 @@ Public Class Insulin
     Public Property DeliveredFastAmount As Single
 
     ''' <summary>
-    '''  Gets the safe meal reduction value, representing the difference between expected and programmed bolus if applicable.
+    '''  Gets the safe meal reduction value, representing the difference between expected
+    '''  and programmed bolus if applicable.
     ''' </summary>
     <DisplayName("Safe Meal Reduction")>
     <Column(Order:=17, TypeName:=NameOf([Single]))>

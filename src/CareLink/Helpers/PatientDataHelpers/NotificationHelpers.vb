@@ -65,20 +65,25 @@ Friend Module NotificationHelpers
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event to configure column properties for notification tables.
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event to configure
+    '''  column properties for notification tables.
     ''' </summary>
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">Event arguments containing column information.</param>
-    Private Sub DgvNotification_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
+    Private Sub DgvNotification_ColumnAdded(
+        sender As Object,
+        e As DataGridViewColumnEventArgs)
+
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             If s_filterJsonData AndAlso s_columnsToHide.Contains(item:= .Name) Then
                 .Visible = False
             End If
-            Dim cellStyle As DataGridViewCellStyle = ClassPropertiesToColumnAlignment(Of SummaryRecord)(
-                alignmentTable:=s_alignmentTable,
-                columnName:= .Name)
+            Dim cellStyle As DataGridViewCellStyle =
+                ClassPropertiesToColumnAlignment(Of SummaryRecord)(
+                    alignmentTable:=s_alignmentTable,
+                    columnName:= .Name)
 
             e.DgvColumnAdded(
                 cellStyle,
@@ -222,7 +227,7 @@ Friend Module NotificationHelpers
                     realPanel:=mainForm.TableLayoutPanelNotificationsCleared,
                     table:=ClassCollectionToDataTable(classCollection),
                     className:=NameOf(SummaryRecord),
-                    attachHandlers:=AddressOf NotificationHelpers.AttachHandlers)
+                    attachHandlers:=AddressOf AttachHandlers)
             Next
             mainForm.TableLayoutPanelNotificationsCleared.HorizontalScroll.Enabled = False
             mainForm.TableLayoutPanelNotificationsCleared.HorizontalScroll.Visible = False
@@ -247,7 +252,7 @@ Friend Module NotificationHelpers
                     realPanel:=mainForm.TableLayoutPanelNotificationActive,
                     table:=ClassCollectionToDataTable(classCollection),
                     className:="ActiveNotifications",
-                    attachHandlers:=AddressOf NotificationHelpers.AttachHandlers)
+                    attachHandlers:=AddressOf AttachHandlers)
             Next
         Else
             mainForm.TableLayoutPanelNotificationActive.AutoSizeMode = AutoSizeMode.GrowAndShrink

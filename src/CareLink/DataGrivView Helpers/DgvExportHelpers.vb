@@ -2,24 +2,28 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text
 Imports ClosedXML.Excel
 
 ''' <summary>
-'''  Provides extension methods for exporting and copying data from a <see cref="DataGridView"/>.
+'''  Provides extension methods for exporting and copying data
+'''  from a <see cref="DataGridView"/>.
 ''' </summary>
 Friend Module DgvExportHelpers
 
+    Private ReadOnly Property zeroX37 As String = StrDup(Number:=37, Character:="0"c)
+
     ''' <summary>
-    '''  Determines whether any cell is selected in the specified column of the <see cref="DataGridView"/>.
+    '''  Determines whether any cell is selected in the specified column
+    '''  of the <see cref="DataGridView"/>.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> to check.</param>
     ''' <param name="index">The column index to check for selected cells.</param>
     ''' <returns>
-    '''  <see langword="True"/> if any cell is selected in the specified column; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if any cell is selected in the specified column;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
     Private Function AnyCellSelected(dgv As DataGridView, index As Integer) As Boolean
@@ -35,16 +39,28 @@ Friend Module DgvExportHelpers
     End Function
 
     ''' <summary>
-    '''  Copies the selected cells or all cells from the <see cref="DataGridView"/> to the <see cref="Clipboard"/>,
+    '''  Copies the selected cells or all cells from the <see cref="DataGridView"/>
+    '''  to the <see cref="Clipboard"/>,
     '''  with optional headers.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> to copy from.</param>
-    ''' <param name="copyHeaders">Specifies whether to include headers in the copied data.</param>
-    ''' <param name="copyAll">If <see langword="True"/>, copies all cells; otherwise, only selected cells.</param>
+    ''' <param name="copyHeaders">
+    '''  Specifies whether to include headers in the copied data.
+    ''' </param>
+    ''' <param name="copyAll">
+    '''  If <see langword="True"/>, copies all cells; otherwise, only selected cells.
+    ''' </param>
     <Extension>
-    Private Sub CopyToClipboard(dgv As DataGridView, copyHeaders As DataGridViewClipboardCopyMode, copyAll As Boolean)
-        If copyAll OrElse dgv.GetCellCount(includeFilter:=DataGridViewElementStates.Selected) > 0 Then
-            Dim dataGridViewCells As List(Of DataGridViewCell) = dgv.SelectedCells.Cast(Of DataGridViewCell).ToList()
+    Private Sub CopyToClipboard(
+        dgv As DataGridView,
+        copyHeaders As DataGridViewClipboardCopyMode,
+        copyAll As Boolean)
+
+        If copyAll OrElse
+           dgv.GetCellCount(includeFilter:=DataGridViewElementStates.Selected) > 0 Then
+
+            Dim dataGridViewCells As List(Of DataGridViewCell) =
+                dgv.SelectedCells.Cast(Of DataGridViewCell).ToList()
 
             Dim selector As Func(Of DataGridViewCell, Integer) =
                 Function(c As DataGridViewCell) As Integer
@@ -70,7 +86,9 @@ Friend Module DgvExportHelpers
             Dim clipboard_string As New StringBuilder()
             If copyHeaders <> DataGridViewClipboardCopyMode.EnableWithoutHeaderText Then
                 For index As Integer = colLow To colHigh
-                    If Not (dgv.Columns(index).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(index))) Then
+                    If Not (dgv.Columns(index).Visible AndAlso
+                       (copyAll OrElse dgv.AnyCellSelected(index))) Then
+
                         Continue For
                     End If
                     Dim value As String = $"{dgv.Columns(index).HeaderText.Remove(s:=vbCrLf)}"
@@ -81,7 +99,9 @@ Friend Module DgvExportHelpers
             For rowIndex As Integer = rowLow To rowHigh
                 Dim row As DataGridViewRow = dgv.Rows(index:=rowIndex)
                 For index As Integer = colLow To colHigh
-                    If Not (dgv.Columns(index).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(index))) Then
+                    If Not (dgv.Columns(index).Visible AndAlso
+                       (copyAll OrElse dgv.AnyCellSelected(index))) Then
+
                         Continue For
                     End If
                     Dim currentCell As DataGridViewCell = row.Cells(index)
@@ -107,7 +127,7 @@ Friend Module DgvExportHelpers
                 .CheckPathExists = True,
                 .FileName = $"{baseFileName} ({Date.Now:yyyy-MM-dd})",
                 .Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
-                .InitialDirectory = DirectoryForProjectData,
+                .InitialDirectory = GetProjectDataDirectory(),
                 .OverwritePrompt = True,
                 .Title = "To Excel"}
 
@@ -159,11 +179,11 @@ Friend Module DgvExportHelpers
                                     .Value = CInt(valueObject)
                                 Case NameOf(OADate)
                                     align = XLAlignmentHorizontalValues.Left
+                                    Dim format As String = $"0{DecimalSeparator}{zeroX37}"
                                     Dim result As Double
                                     If Double.TryParse(value, result) Then
                                         .Value = result
-
-                                        .Style.NumberFormat.Format = $"0{DecimalSeparator}{StrDup(Number:=37, Character:="0"c)}"
+                                        .Style.NumberFormat.Format = format
                                     Else
                                         .Value = $"'{value}"
                                     End If
@@ -201,8 +221,10 @@ Friend Module DgvExportHelpers
                                     column += 1
 
                                     align = XLAlignmentHorizontalValues.Right
-                                    worksheet.Cell(row:=i + 2, column).Value = CDate(valueObject).TimeOfDay
-                                    worksheet.Cell(row:=i + 2, column).Style.DateFormat.SetFormat(value:="[$-x-systime]h:mm:ss AM/PM")
+                                    worksheet.Cell(row:=i + 2, column).Value =
+                                        CDate(valueObject).TimeOfDay
+                                    worksheet.Cell(row:=i + 2, column).Style.DateFormat _
+                                             .SetFormat(value:="[$-x-systime]h:mm:ss AM/PM")
                                 Case Else
                                     Stop
                                     align = XLAlignmentHorizontalValues.Left
@@ -246,18 +268,21 @@ Friend Module DgvExportHelpers
     End Sub
 
     ''' <summary>
-    '''  Retrieves the <see cref="DataGridView"/> associated with the sender of a <see cref="ToolStripMenuItem"/> event.
+    '''  Retrieves the <see cref="DataGridView"/> associated with the sender
+    '''  of a <see cref="ToolStripMenuItem"/> event.
     ''' </summary>
     ''' <param name="sender">The sender object from the event.</param>
     ''' <returns>The <see cref="DataGridView"/> associated with the context menu.</returns>
     Private Function GetDgvFromToolStripMenuItem(sender As Object) As DataGridView
         Dim menuItem As ToolStripMenuItem = CType(sender, ToolStripMenuItem)
-        Dim contextStrip As ContextMenuStrip = CType(menuItem.GetCurrentParent, ContextMenuStrip)
+        Dim contextStrip As ContextMenuStrip =
+            CType(menuItem.GetCurrentParent, ContextMenuStrip)
         Return CType(contextStrip.SourceControl, DataGridView)
     End Function
 
     ''' <summary>
-    '''  Copies the selected cells of a <see cref="DataGridView"/> to the <see cref="Clipboard"/>, including headers.
+    '''  Copies the selected cells of a <see cref="DataGridView"/>
+    '''  to the <see cref="Clipboard"/>, including headers.
     ''' </summary>
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>

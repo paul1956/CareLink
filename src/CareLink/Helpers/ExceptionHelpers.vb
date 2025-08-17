@@ -12,22 +12,33 @@ Friend Module ExceptionHelpers
     Private Const InnerExceptionMessage As String = ", see inner exception."
 
     ''' <summary>
-    '''  Gets an <see cref="ArgumentOutOfRangeException"/> indicating an unreachable program location.
+    '''  Gets an <see cref="ArgumentOutOfRangeException"/> indicating
+    '''  an unreachable program location.
     ''' </summary>
-    ''' <param name="propertyName">The name of the property or parameter that caused the exception.</param>
-    ''' <param name="memberName">The name of the member where the exception occurred. Automatically supplied by the compiler.</param>
-    ''' <param name="sourceLineNumber">The line number in the source file where the exception occurred. Automatically supplied by the compiler.</param>
+    ''' <param name="paramName">
+    '''  The name of the property or parameter that caused the exception.
+    ''' </param>
+    ''' <param name="memberName">
+    '''  The name of the member where the exception occurred.
+    '''  Automatically supplied by the compiler.</param>
+    ''' <param name="sourceLineNumber">
+    '''  The line number in the source file where the exception occurred.
+    '''  Automatically supplied by the compiler.
+    ''' </param>
     ''' <returns>
     '''  An <see cref="ArgumentOutOfRangeException"/> describing the unreachable code location.
     ''' </returns>
     <ExcludeFromCodeCoverage>
     Public ReadOnly Property UnreachableException(
-        propertyName As String,
+        paramName As String,
         <CallerMemberName> Optional memberName As String = Nothing,
         <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Exception
 
         Get
-            Return New ArgumentOutOfRangeException(propertyName, $"The program location {memberName} line {sourceLineNumber} is thought to be unreachable.")
+            Dim message As String =
+                $"The program location {memberName} line {sourceLineNumber}" &
+                " is thought to be unreachable."
+            Return New ArgumentOutOfRangeException(paramName, message)
         End Get
     End Property
 

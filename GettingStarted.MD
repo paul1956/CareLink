@@ -19,13 +19,13 @@ After a few minutes Visual Studio will start with all the code loaded.
 
 ## Running the code
 
-Make sure "CareLink" is selected as Startup project, there should be a green triangle next to CareLink on the second line of the Visual Studio window, if it says ChartWin change it in the drop down immediately to the left of the arrow.
+Make sure "CareLink" is selected as Startup project, there should be a green triangle next to CareLink™ on the second line of the Visual Studio window, if it says ChartWin change it in the drop down immediately to the left of the arrow.
 
 If you get an error, the instructions to fix it are in the ReadMe.MD file.
 
 After fixing the error
 
-You can log in with you CareLink account, the user info can optionally be saved locally or you can use Sample Data, found under option menu.
+You can log in with you CareLink™ account, the user info can optionally be saved locally or you can use Sample Data, found under option menu.
 
 ## Reporting Issues
 

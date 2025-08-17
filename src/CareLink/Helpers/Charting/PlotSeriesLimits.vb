@@ -32,17 +32,22 @@ Friend Module PlotSeriesLimits
     End Function
 
     ''' <summary>
-    '''  Plots the SG (sensor glucose) target line and, optionally, the high and low limit lines on the specified chart.
+    '''  Plots the SG (sensor glucose) target line and, optionally,
+    '''  the high and low limit lines on the specified chart.
     ''' </summary>
     ''' <param name="chart">The <see cref="Chart"/> control to plot onto.</param>
     ''' <param name="targetSsOnly">
-    '''  If <c>True</c>, only the target SG line is plotted; if <c>False</c>, high and low limits are also plotted.
+    '''  If <see langword="True"/>, only the target SG line is plotted;
+    '''  if <see langword="False"/>,
+    '''  high and low limits are also plotted.
     ''' </param>
     ''' <remarks>
-    '''  This method uses the global lists <see cref="s_sgRecords"/> and <see cref="s_limitRecords"/> to
-    '''  determine the data points for plotting. It adds points to the chart's series for target SG, high limit,
+    '''  This method uses the global lists <see cref="s_sgRecords"/> and
+    '''  <see cref="s_limitRecords"/> to determine the data points for plotting.
+    '''  It adds points to the chart's series for target SG, high limit,
     '''  and low limit.
-    '''  If an exception occurs while plotting, an <see cref="ApplicationException"/> is thrown with details.
+    '''  If an exception occurs while plotting, an <see cref="ApplicationException"/>
+    '''  is thrown with details.
     ''' </remarks>
     <Extension>
     Friend Sub PlotHighLowLimitsAndTargetSg(chart As Chart, targetSsOnly As Boolean)
@@ -67,8 +72,10 @@ Friend Module PlotSeriesLimits
                 End If
             Catch innerException As Exception
                 Stop
+                Dim str As String = innerException.DecodeException()
+                Dim local As String = NameOf(PlotHighLowLimitsAndTargetSg)
                 Dim message As String =
-                    $"{innerException.DecodeException()} exception while plotting Limits in {NameOf(PlotHighLowLimitsAndTargetSg)}"
+                    $"{str} exception while plotting Limits in {local}"
                 Throw New ApplicationException(message, innerException)
             End Try
         Next

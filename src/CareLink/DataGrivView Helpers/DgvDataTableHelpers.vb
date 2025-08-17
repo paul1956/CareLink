@@ -5,8 +5,10 @@
 Imports System.Runtime.CompilerServices
 
 ''' <summary>
-'''  Provides extension methods and delegates for displaying <see cref="DataTable"/> objects in <see cref="DataGridView"/> controls
-'''  within a <see cref="TableLayoutPanel"/>. Handles initialization, data binding, and optional column visibility.
+'''  Provides extension methods and delegates for displaying
+'''  <see cref="DataTable"/> objects in <see cref="DataGridView"/> controls
+'''  within a <see cref="TableLayoutPanel"/>. Handles initialization,
+'''  data binding, and optional column visibility.
 ''' </summary>
 Friend Module DgvDataTableHelpers
 

@@ -13,15 +13,18 @@ Friend Module PlotSeriesBasal
     ''' <summary>
     '''  Adds a basal data point to the specified <see cref="Series"/> for charting.
     ''' </summary>
-    ''' <param name="basalSeries">The <see cref="Series"/> to which the basal data point will be added.</param>
+    ''' <param name="basalSeries">
+    '''  The <see cref="Series"/> to which the basal data point will be added.
+    ''' </param>
     ''' <param name="xValue">The X value (OADate) for the new point.</param>
     ''' <param name="yValue">The Y value for the new point.</param>
     ''' <param name="lineColor">The <see cref="Color"/> to use for the point.</param>
     ''' <param name="tag">A tag string to associate with the point.</param>
     ''' <remarks>
     '''   <para>
-    '''    Handles special cases for empty points and color assignment. If the previous point is not empty and is within
-    '''    6 minutes of the new point, an empty point is inserted for visual separation.
+    '''    Handles special cases for empty points and color assignment.
+    '''    If the previous point is not empty and is within 6 minutes of the new point,
+    '''    an empty point is inserted for visual separation.
     '''   </para>
     ''' </remarks>
     <Extension>

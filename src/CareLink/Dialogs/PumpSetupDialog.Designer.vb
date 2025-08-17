@@ -100,7 +100,7 @@ Partial Class PumpSetupDialog
         Me.Name = "PumpSetupDialog"
         Me.ShowInTaskbar = False
         Me.StartPosition = FormStartPosition.CenterParent
-        Me.Text = "Pump Setup Dialog"
+        Me.Text = "Pump Setup Instructions"
         SplitContainer1.Panel1.ResumeLayout(False)
         SplitContainer1.Panel2.ResumeLayout(False)
         CType(SplitContainer1, ComponentModel.ISupportInitialize).EndInit()

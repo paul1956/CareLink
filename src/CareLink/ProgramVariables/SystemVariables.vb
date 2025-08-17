@@ -38,7 +38,8 @@ Public Module SystemVariables
     Friend Property TreatmentInsulinRow As Single
 
     ''' <summary>
-    '''  Counts the number of SG.sg values in the specified range [OptionsConfigureTiTR.LowThreshold, 140], excluding Single.NaN.
+    '''  Counts the number of SG.sg values in the specified range
+    '''  [OptionsConfigureTiTR.LowThreshold, 140], excluding Single.NaN.
     ''' </summary>
     ''' <param name="sgList">The list of SG records to evaluate.</param>
     ''' <returns>
@@ -192,7 +193,7 @@ Public Module SystemVariables
     '''  The high limit for TIR in the selected units.
     ''' </returns>
     Friend Function GetTirHighLimitWithUnits() As String
-        Return $"{GetTirHighLimit()} {GetBgUnits()}".
+        Return $"{GetTirHighLimit()} {BgUnits}".
             Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
     End Function
 
@@ -220,7 +221,7 @@ Public Module SystemVariables
     '''  The low limit for TIR with units.
     ''' </returns>
     Friend Function GetTirLowLimitWithUnits() As String
-        Return $"{GetTirLowLimit()} {GetBgUnits()}".
+        Return $"{GetTirLowLimit()} {BgUnits}".
             Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
     End Function
 
