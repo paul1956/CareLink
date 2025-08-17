@@ -6,12 +6,14 @@ Imports System.ComponentModel
 Imports System.Text
 
 ''' <summary>
-'''  Represents a collection of <see cref="CareLinkUserDataRecord"/> objects with support for data binding.
+'''  Represents a collection of <see cref="CareLinkUserDataRecord"/> objects
+'''  with support for data binding.
 ''' </summary>
 ''' <remarks>
 '''  <para>
-'''   This class implements <see cref="IBindingList"/> to provide change notification and editing support for
-'''   user data records in the CareLink application. Sorting and searching are not supported.
+'''   This class implements <see cref="IBindingList"/> to provide change notification
+'''   and editing support for user data records in the CareLink™ application.
+'''   Sorting and searching are not supported.
 '''  </para>
 ''' </remarks>
 Public Class CareLinkUserDataList
@@ -19,7 +21,8 @@ Public Class CareLinkUserDataList
     Implements IBindingList
 
     Private ReadOnly _onListChanged1 As ListChangedEventHandler
-    Private ReadOnly _resetEvent As New ListChangedEventArgs(ListChangedType.Reset, -1)
+    Private ReadOnly _resetEvent As _
+        New ListChangedEventArgs(listChangedType:=ListChangedType.Reset, newIndex:=-1)
 
     ''' <summary>
     '''  Occurs when the list changes or an item in the list changes.
@@ -56,7 +59,8 @@ Public Class CareLinkUserDataList
     ''' <summary>
     '''  Gets a value indicating whether the list supports change notification.
     ''' </summary>
-    Public ReadOnly Property SupportsChangeNotification() As Boolean Implements IBindingList.SupportsChangeNotification
+    Public ReadOnly Property SupportsChangeNotification() As Boolean _
+        Implements IBindingList.SupportsChangeNotification
         Get
             Return True
         End Get
@@ -65,7 +69,9 @@ Public Class CareLinkUserDataList
     ''' <summary>
     '''  Gets a value indicating whether the list supports searching.
     ''' </summary>
-    Public ReadOnly Property SupportsSearching() As Boolean Implements IBindingList.SupportsSearching
+    Public ReadOnly Property SupportsSearching() As Boolean _
+        Implements IBindingList.SupportsSearching
+
         Get
             Return False
         End Get
@@ -74,7 +80,9 @@ Public Class CareLinkUserDataList
     ''' <summary>
     '''  Gets a value indicating whether the list supports sorting.
     ''' </summary>
-    Public ReadOnly Property SupportsSorting() As Boolean Implements IBindingList.SupportsSorting
+    Public ReadOnly Property SupportsSorting() As Boolean _
+        Implements IBindingList.SupportsSorting
+
         Get
             Return False
         End Get
@@ -102,12 +110,15 @@ Public Class CareLinkUserDataList
     ''' </exception>
     Default Public Property Item(itemName As String) As CareLinkUserDataRecord
         Get
+            Dim message As String
             If String.IsNullOrWhiteSpace(value:=itemName) Then
-                Throw New KeyNotFoundException(message:=$"Key may not be Nothing, in CareLinkUserDataList.Item")
+                message = "Key may not be Nothing, in CareLinkUserDataList.Item"
+                Throw New KeyNotFoundException(message)
             End If
             Try
                 For index As Integer = 0 To Me.List.Count - 1
-                    Dim entry As CareLinkUserDataRecord = CType(Me.List(index), CareLinkUserDataRecord)
+                    Dim entry As CareLinkUserDataRecord =
+                        CType(Me.List(index), CareLinkUserDataRecord)
                     If entry?.CareLinkUserName.EqualsIgnoreCase(itemName) Then
                         Return CType(Me.List(index), CareLinkUserDataRecord)
                     End If
@@ -115,17 +126,21 @@ Public Class CareLinkUserDataList
             Catch ex As Exception
                 Return New CareLinkUserDataRecord(parent:=Me)
             End Try
-            Throw New KeyNotFoundException(message:=$"Key '{itemName}' Not Present in Dictionary, in CareLinkUserDataList.Item")
+            message =
+                $"Key '{itemName}' Not Present in Dictionary, in CareLinkUserDataList.Item"
+            Throw New KeyNotFoundException(message)
         End Get
         Set(Value As CareLinkUserDataRecord)
             For index As Integer = 0 To Me.List.Count - 1
-                Dim entry As CareLinkUserDataRecord = CType(Me.List(index), CareLinkUserDataRecord)
+                Dim entry As CareLinkUserDataRecord =
+                    CType(Me.List(index), CareLinkUserDataRecord)
                 If entry.CareLinkUserName.EqualsIgnoreCase(itemName) Then
                     Me.List(index) = Value
                     Exit Property
                 End If
             Next
-            Throw New KeyNotFoundException(message:=$"Key '{itemName}' Not Present in Dictionary")
+            Dim message As String = $"Key '{itemName}' Not Present in Dictionary"
+            Throw New KeyNotFoundException(message)
         End Set
     End Property
 
@@ -147,14 +162,16 @@ Public Class CareLinkUserDataList
     End Sub
 
     ''' <summary>
-    '''  Sets the parent reference and raises the <see cref="ListChanged"/> event after an item is inserted.
+    '''  Sets the parent reference and raises the <see cref="ListChanged"/>
+    '''  event after an item is inserted.
     ''' </summary>
     ''' <param name="newIndex">The index at which the item was inserted.</param>
     ''' <param name="value">The inserted item.</param>
     Protected Overrides Sub OnInsertComplete(newIndex As Integer, value As Object)
         Dim c As CareLinkUserDataRecord = CType(value, CareLinkUserDataRecord)
         c.Parent = Me
-        Me.OnListChanged(New ListChangedEventArgs(listChangedType:=ListChangedType.ItemAdded, newIndex))
+        Dim e As New ListChangedEventArgs(listChangedType:=ListChangedType.ItemAdded, newIndex)
+        Me.OnListChanged(e)
     End Sub
 
     ''' <summary>
@@ -166,14 +183,18 @@ Public Class CareLinkUserDataList
     End Sub
 
     ''' <summary>
-    '''  Sets the parent reference and raises the <see cref="ListChanged"/> event after an item is removed.
+    '''  Sets the parent reference and raises the <see cref="ListChanged"/> event
+    '''  after an item is removed.
     ''' </summary>
     ''' <param name="newIndex">The index of the removed item.</param>
     ''' <param name="value">The removed item.</param>
     Protected Overrides Sub OnRemoveComplete(newIndex As Integer, value As Object)
         Dim c As CareLinkUserDataRecord = CType(value, CareLinkUserDataRecord)
         c.Parent = Me
-        Me.OnListChanged(New ListChangedEventArgs(listChangedType:=ListChangedType.ItemDeleted, newIndex))
+        Dim e As New ListChangedEventArgs(
+            listChangedType:=ListChangedType.ItemDeleted,
+            newIndex)
+        Me.OnListChanged(e)
     End Sub
 
     ''' <summary>
@@ -182,13 +203,20 @@ Public Class CareLinkUserDataList
     ''' <param name="newIndex">The index of the item.</param>
     ''' <param name="oldValue">The old value.</param>
     ''' <param name="newValue">The new value.</param>
-    Protected Overrides Sub OnSetComplete(newIndex As Integer, oldValue As Object, newValue As Object)
+    Protected Overrides Sub OnSetComplete(
+        newIndex As Integer,
+        oldValue As Object,
+        newValue As Object)
+
         If oldValue Is newValue Then
             Dim oldUser As CareLinkUserDataRecord = CType(oldValue, CareLinkUserDataRecord)
             Dim newUser As CareLinkUserDataRecord = CType(newValue, CareLinkUserDataRecord)
             oldUser.Parent = Nothing
             newUser.Parent = Me
-            Me.OnListChanged(New ListChangedEventArgs(listChangedType:=ListChangedType.ItemAdded, newIndex))
+            Dim e As New ListChangedEventArgs(
+                listChangedType:=ListChangedType.ItemAdded,
+                newIndex)
+            Me.OnListChanged(e)
         End If
     End Sub
 
@@ -198,7 +226,10 @@ Public Class CareLinkUserDataList
     ''' <param name="value">The changed user record.</param>
     Friend Sub CareLinkUserChanged(value As CareLinkUserDataRecord)
         Dim newIndex As Integer = Me.List.IndexOf(value)
-        Me.OnListChanged(New ListChangedEventArgs(listChangedType:=ListChangedType.ItemChanged, newIndex))
+        Dim e As New ListChangedEventArgs(
+            listChangedType:=ListChangedType.ItemChanged,
+            newIndex)
+        Me.OnListChanged(e)
     End Sub
 
     ''' <summary>
@@ -215,7 +246,7 @@ Public Class CareLinkUserDataList
 
         If Me.List Is Nothing Then Return False
         For Each entry As CareLinkUserDataRecord In Me
-            If EqualsIgnoreCase(entry?.CareLinkUserName, key) Then
+            If EqualsIgnoreCase(a:=entry?.CareLinkUserName, b:=key) Then
                 Return True
             End If
         Next
@@ -241,7 +272,7 @@ Public Class CareLinkUserDataList
     ''' </summary>
     Friend Sub LoadUserRecords()
         Dim l As IList = Me
-        Using myReader As New FileIO.TextFieldParser(path:=UserSettingsCsvFileWithPath)
+        Using myReader As New FileIO.TextFieldParser(path:=GetAllUsersCsvPath())
             myReader.TextFieldType = FileIO.FieldType.Delimited
             myReader.Delimiters = New String() {","}
             Dim currentRow As String()
@@ -255,7 +286,11 @@ Public Class CareLinkUserDataList
                     If rowIndex = 0 Then
                         headerRow = currentRow
                     Else
-                        l.Add(value:=New CareLinkUserDataRecord(parent:=Me, headerRow, currentRow))
+                        Dim value As New CareLinkUserDataRecord(
+                            parent:=Me,
+                            headerRow,
+                            currentRow)
+                        l.Add(value)
                     End If
                     rowIndex += 1
                 Catch ex As FileIO.MalformedLineException
@@ -277,7 +312,11 @@ Public Class CareLinkUserDataList
     ''' <param name="loggedOnUser">The user to update.</param>
     ''' <param name="key">The key to update.</param>
     ''' <param name="value">The value to set.</param>
-    Friend Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, key As String, value As String)
+    Friend Sub SaveAllUserRecords(
+        loggedOnUser As CareLinkUserDataRecord,
+        key As String,
+        value As String)
+
         If Not key.EqualsIgnoreCase(NameOf(My.Settings.CareLinkUserName)) Then
             ' We are changing something other than the user name
             ' Update logged on user and the saved file
@@ -317,11 +356,17 @@ Public Class CareLinkUserDataList
     '''  Attempts to get a user record by key.
     ''' </summary>
     ''' <param name="key">The user name to locate.</param>
-    ''' <param name="userRecord">When this method returns, contains the user record if found; otherwise, <see langword="Nothing"/>.</param>
+    ''' <param name="userRecord">
+    '''  When this method returns, contains the user record if found;
+    '''  otherwise, <see langword="Nothing"/>.
+    ''' </param>
     ''' <returns>
     '''  <see langword="True"/> if the user was found; otherwise, <see langword="False"/>.
     ''' </returns>
-    Friend Function TryGetValue(key As String, ByRef userRecord As CareLinkUserDataRecord) As Boolean
+    Friend Function TryGetValue(
+        key As String,
+        ByRef userRecord As CareLinkUserDataRecord) As Boolean
+
         For Each entry As CareLinkUserDataRecord In Me
             If entry.CareLinkUserName = key Then
                 userRecord = entry
@@ -355,7 +400,8 @@ Public Class CareLinkUserDataList
     End Function
 
     ''' <summary>
-    '''  Adds a new <see cref="CareLinkUserDataRecord"/> to the list and returns it as a strongly typed object.
+    '''  Adds a new <see cref="CareLinkUserDataRecord"/> to the list and
+    '''  returns it as a strongly typed object.
     ''' </summary>
     ''' <returns>
     '''  The newly added <see cref="CareLinkUserDataRecord"/>.
@@ -383,7 +429,7 @@ Public Class CareLinkUserDataList
         Next
         Try
             My.Computer.FileSystem.WriteAllText(
-                file:=UserSettingsCsvFileWithPath,
+                file:=GetAllUsersCsvPath(),
                 text:=sb.ToString,
                 append:=False)
         Catch ex As Exception
@@ -405,7 +451,8 @@ Public Class CareLinkUserDataList
     ''' <summary>
     '''  Not supported. Always returns <see cref="ListSortDirection.Ascending"/>.
     ''' </summary>
-    Public ReadOnly Property SortDirection As ListSortDirection Implements IBindingList.SortDirection
+    Public ReadOnly Property SortDirection As ListSortDirection _
+        Implements IBindingList.SortDirection
         Get
             Return ListSortDirection.Ascending
         End Get
@@ -414,7 +461,8 @@ Public Class CareLinkUserDataList
     ''' <summary>
     '''  Not supported. Always returns <see langword="Nothing"/>.
     ''' </summary>
-    Public ReadOnly Property SortProperty As PropertyDescriptor Implements IBindingList.SortProperty
+    Public ReadOnly Property SortProperty As PropertyDescriptor _
+        Implements IBindingList.SortProperty
         Get
             Return Nothing
         End Get
@@ -424,7 +472,8 @@ Public Class CareLinkUserDataList
     '''  Not supported. Required by <see cref="IBindingList"/>.
     ''' </summary>
     ''' <param name="propertyDescriptor">The property descriptor.</param>
-    Public Sub AddIndex(propertyDescriptor As PropertyDescriptor) Implements IBindingList.AddIndex
+    Public Sub AddIndex(propertyDescriptor As PropertyDescriptor) _
+        Implements IBindingList.AddIndex
         ' No index support
     End Sub
 
@@ -433,7 +482,10 @@ Public Class CareLinkUserDataList
     ''' </summary>
     ''' <param name="propertyDescriptor">The property descriptor.</param>
     ''' <param name="direction">The sort direction.</param>
-    Public Sub ApplySort(propertyDescriptor As PropertyDescriptor, direction As ListSortDirection) Implements IBindingList.ApplySort
+    Public Sub ApplySort(
+            propertyDescriptor As PropertyDescriptor,
+            direction As ListSortDirection) Implements IBindingList.ApplySort
+
         ' No sorting support
     End Sub
 
@@ -445,7 +497,10 @@ Public Class CareLinkUserDataList
     ''' <returns>
     '''  Always returns -1.
     ''' </returns>
-    Public Function Find(propertyDescriptor As PropertyDescriptor, key As Object) As Integer Implements IBindingList.Find
+    Public Function Find(
+        propertyDescriptor As PropertyDescriptor,
+        key As Object) As Integer Implements IBindingList.Find
+
         ' No searching support
         Return -1
     End Function
@@ -454,7 +509,8 @@ Public Class CareLinkUserDataList
     '''  Not supported. Required by <see cref="IBindingList"/>.
     ''' </summary>
     ''' <param name="propertyDescriptor">The property descriptor.</param>
-    Public Sub RemoveIndex(propertyDescriptor As PropertyDescriptor) Implements IBindingList.RemoveIndex
+    Public Sub RemoveIndex(propertyDescriptor As PropertyDescriptor) _
+        Implements IBindingList.RemoveIndex
         ' No index support
     End Sub
 
