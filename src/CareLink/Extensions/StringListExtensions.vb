@@ -7,7 +7,8 @@ Imports System.Runtime.CompilerServices
 Public Module StringListExtensions
 
     ''' <summary>
-    '''  Tries to find a string in the list that <paramref name="headerText"/> starts with, ignoring case.
+    '''  Tries to find a string in the list that <paramref name="headerText"/>
+    '''  starts with, ignoring case.
     ''' </summary>
     ''' <param name="list">The list of strings to search.</param>
     ''' <param name="headerText">The header string to check against the list.</param>
@@ -16,10 +17,15 @@ Public Module StringListExtensions
     '''  otherwise, result is unmodified.
     ''' </param>
     ''' <returns>
-    '''  <see langword="True"/> if a matching string is found; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if a matching string is found;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
-    Friend Function TryGetPrefixMatch(list As List(Of String), headerText As String, ByRef result As String) As Boolean
+    Friend Function TryGetPrefixMatch(
+        list As List(Of String),
+        headerText As String,
+        ByRef result As String) As Boolean
+
         For Each value As String In list
             If headerText.StartsWithIgnoreCase(value) Then
                 result = value

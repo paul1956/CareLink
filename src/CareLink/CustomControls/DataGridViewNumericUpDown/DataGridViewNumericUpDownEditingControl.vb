@@ -51,7 +51,9 @@ Friend Class DataGridViewNumericUpDownEditingControl
     ''' <summary>
     '''  Gets or sets the <see cref="DataGridView"/> that uses this editing control.
     ''' </summary>
-    Public Overridable Property EditingControlDataGridView As DataGridView Implements IDataGridViewEditingControl.EditingControlDataGridView
+    Public Overridable Property EditingControlDataGridView As DataGridView _
+        Implements IDataGridViewEditingControl.EditingControlDataGridView
+
         Get
             Return _dataGridView
         End Get
@@ -64,9 +66,13 @@ Friend Class DataGridViewNumericUpDownEditingControl
     ''' <summary>
     '''  Gets or sets the current formatted value of the editing control.
     ''' </summary>
-    Public Overridable Property EditingControlFormattedValue As Object Implements IDataGridViewEditingControl.EditingControlFormattedValue
+    Public Overridable Property EditingControlFormattedValue As Object _
+        Implements IDataGridViewEditingControl.EditingControlFormattedValue
+
         Get
-            Return Me.GetEditingControlFormattedValue(DataGridViewDataErrorContexts.Formatting)
+            Const context As DataGridViewDataErrorContexts =
+                DataGridViewDataErrorContexts.Formatting
+            Return Me.GetEditingControlFormattedValue(context)
         End Get
 
         Set(value As Object)
@@ -77,7 +83,9 @@ Friend Class DataGridViewNumericUpDownEditingControl
     ''' <summary>
     '''  Gets or sets the row index in which the editing control resides.
     ''' </summary>
-    Public Overridable Property EditingControl_RowIndex As Integer Implements IDataGridViewEditingControl.EditingControlRowIndex
+    Public Overridable Property EditingControl_RowIndex As Integer _
+        Implements IDataGridViewEditingControl.EditingControlRowIndex
+
         Get
             Return _rowIndex
         End Get
@@ -90,7 +98,9 @@ Friend Class DataGridViewNumericUpDownEditingControl
     ''' <summary>
     '''  Gets or sets a value indicating whether the value of the editing control has changed.
     ''' </summary>
-    Public Overridable Property EditingControl_ValueChanged As Boolean Implements IDataGridViewEditingControl.EditingControlValueChanged
+    Public Overridable Property EditingControl_ValueChanged As Boolean _
+        Implements IDataGridViewEditingControl.EditingControlValueChanged
+
         Get
             Return _valueChanged
         End Get
@@ -101,18 +111,24 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Property
 
     ''' <summary>
-    '''  Gets the cursor that must be used for the editing panel (the parent of the editing control).
+    '''  Gets the cursor that must be used for the editing panel
+    '''  (the parent of the editing control).
     ''' </summary>
-    Public Overridable ReadOnly Property EditingPanelCursor As Cursor Implements IDataGridViewEditingControl.EditingPanelCursor
+    Public Overridable ReadOnly Property EditingPanelCursor As Cursor _
+        Implements IDataGridViewEditingControl.EditingPanelCursor
+
         Get
             Return Cursors.Default
         End Get
     End Property
 
     ''' <summary>
-    '''  Gets a value indicating whether the editing control needs to be repositioned when its value changes.
+    '''  Gets a value indicating whether the editing control needs to be
+    '''  repositioned when its value changes.
     ''' </summary>
-    Public Overridable ReadOnly Property RepositionEditingControlOnValueChange As Boolean Implements IDataGridViewEditingControl.RepositionEditingControlOnValueChange
+    Public Overridable ReadOnly Property RepositionEditingControlOnValueChange As Boolean _
+        Implements IDataGridViewEditingControl.RepositionEditingControlOnValueChange
+
         Get
             Return False
         End Get
@@ -120,21 +136,34 @@ Friend Class DataGridViewNumericUpDownEditingControl
 
     ''' <summary>
     '''  Applies the specified cell style to the editing control.
-    '''  Called by the grid before the editing control is shown so it can adapt to the provided cell style.
+    '''  Called by the grid before the editing control is shown so it can
+    '''  adapt to the provided cell style.
     ''' </summary>
-    ''' <param name="dataGridViewCellStyle">The cell style to apply to the editing control.</param>
-    Public Overridable Sub ApplyCellStyleToEditingControl(dataGridViewCellStyle As DataGridViewCellStyle) Implements IDataGridViewEditingControl.ApplyCellStyleToEditingControl
+    ''' <param name="dataGridViewCellStyle">
+    '''  The cell style to apply to the editing control.
+    '''  This style is typically the style of the cell that is being edited,
+    '''  and it may include properties such as font, back color, fore color,
+    '''  and text alignment that should be applied to the control.
+    ''' </param>
+    Public Overridable Sub ApplyCellStyleToEditingControl(
+        dataGridViewCellStyle As DataGridViewCellStyle) _
+        Implements IDataGridViewEditingControl.ApplyCellStyleToEditingControl
+
         Me.Font = dataGridViewCellStyle.Font
         If dataGridViewCellStyle.BackColor.A < 255 Then
             ' The NumericUpDown control does not support transparent back colors
-            Dim opaqueBackColor As Color = Color.FromArgb(alpha:=255, baseColor:=dataGridViewCellStyle.BackColor)
+            Dim opaqueBackColor As Color =
+                Color.FromArgb(alpha:=255, baseColor:=dataGridViewCellStyle.BackColor)
             Me.BackColor = opaqueBackColor
             _dataGridView.EditingPanel.BackColor = opaqueBackColor
         Else
             Me.BackColor = dataGridViewCellStyle.BackColor
         End If
         Me.ForeColor = dataGridViewCellStyle.ForeColor
-        Me.TextAlign = DataGridViewNumericUpDownCell.TranslateAlignment(align:=dataGridViewCellStyle.Alignment)
+
+        Dim align As DataGridViewContentAlignment = dataGridViewCellStyle.Alignment
+        Me.TextAlign =
+            DataGridViewNumericUpDownCell.TranslateAlignment(align)
     End Sub
 
     ''' <summary>
@@ -142,17 +171,33 @@ Friend Class DataGridViewNumericUpDownEditingControl
     '''  Called by the grid on keystrokes to determine if the editing control wants the key.
     ''' </summary>
     ''' <param name="keyData">The key data.</param>
-    ''' <param name="dataGridViewWantsInputKey">Whether the DataGridView wants the input key.</param>
-    ''' <returns><c>true</c> if the editing control wants the key; otherwise, <c>false</c>.</returns>
-    Public Overridable Function EditingControlWantsInputKey(keyData As Keys, dataGridViewWantsInputKey As Boolean) As Boolean Implements IDataGridViewEditingControl.EditingControlWantsInputKey
+    ''' <param name="dataGridViewWantsInputKey">
+    '''  Whether the DataGridView wants the input key.
+    ''' </param>
+    ''' <returns>
+    '''  <see langword="True"/> if the editing control wants the key;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    Public Overridable Function EditingControlWantsInputKey(
+        keyData As Keys, dataGridViewWantsInputKey As Boolean) As Boolean _
+        Implements IDataGridViewEditingControl.EditingControlWantsInputKey
+
         Select Case keyData And Keys.KeyCode
             Case Keys.Right
                 Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
                 If textBox IsNot Nothing Then
                     ' If the end of the selection is at the end of the string,
                     ' let the DataGridView treat the key message
-                    If (Me.RightToLeft = RightToLeft.No AndAlso Not (textBox.SelectionLength = 0 AndAlso textBox.SelectionStart = textBox.Text.Length)) OrElse
-                        (Me.RightToLeft = RightToLeft.Yes AndAlso Not (textBox.SelectionLength = 0 AndAlso textBox.SelectionStart = 0)) Then
+                    Dim isRTL As Boolean = Me.RightToLeft = RightToLeft.Yes
+                    Dim hasSelectionAtEnd As Boolean =
+                        textBox.SelectionLength = 0 AndAlso
+                        textBox.SelectionStart = textBox.Text.Length
+                    Dim hasSelectionAtStart As Boolean =
+                        textBox.SelectionLength = 0 AndAlso
+                        textBox.SelectionStart = 0
+
+                    If (Not isRTL AndAlso Not hasSelectionAtEnd) OrElse
+                        (isRTL AndAlso Not hasSelectionAtStart) Then
                         Return True
                     End If
                 End If
@@ -163,23 +208,36 @@ Friend Class DataGridViewNumericUpDownEditingControl
                 If textBox IsNot Nothing Then
                     ' If the end of the selection is at the beginning of the string
                     ' or if the entire text is selected and we did not start editing,
-                    ' send this character to the dataGridView, else process the key message
-                    If (Me.RightToLeft = RightToLeft.No AndAlso Not (textBox.SelectionLength = 0 AndAlso textBox.SelectionStart = 0)) OrElse
-                        (Me.RightToLeft = RightToLeft.Yes AndAlso Not (textBox.SelectionLength = 0 AndAlso textBox.SelectionStart = textBox.Text.Length)) Then
+                    ' send this character to the DataGridView, else process the key message.
+
+                    Dim isLtr As Boolean = Me.RightToLeft = RightToLeft.No
+                    Dim isRtl As Boolean = Me.RightToLeft = RightToLeft.Yes
+
+                    Dim atStart As Boolean =
+                        textBox.SelectionLength = 0 AndAlso textBox.SelectionStart = 0
+
+                    Dim atEnd As Boolean =
+                        textBox.SelectionLength = 0 AndAlso
+                        textBox.SelectionStart = textBox.Text.Length
+
+                    If (isLtr AndAlso Not atStart) OrElse (isRtl AndAlso Not atEnd) Then
                         Return True
                     End If
+
                 End If
                 Exit Select
 
             Case Keys.Down
-                ' If the current value hasn't reached its minimum yet, handle the key. Otherwise let
+                ' If the current value hasn't reached its minimum yet,
+                ' handle the key. Otherwise let
                 ' the grid handle it.
                 If Me.Value > Me.Minimum Then
                     Return True
                 End If
 
             Case Keys.Up
-                ' If the current value hasn't reached its maximum yet, handle the key. Otherwise let
+                ' If the current value hasn't reached its maximum yet,
+                ' handle the key. Otherwise let
                 ' the grid handle it.
                 If Me.Value < Me.Maximum Then
                     Return True
@@ -212,14 +270,22 @@ Friend Class DataGridViewNumericUpDownEditingControl
     ''' <summary>
     '''  Returns the current formatted value of the editing control.
     ''' </summary>
-    ''' <param name="context">A bitwise combination of <see cref="DataGridViewDataErrorContexts"/> values that specifies the context in which the data is needed.</param>
+    ''' <param name="context">
+    '''  A bitwise combination of <see cref="DataGridViewDataErrorContexts"/>
+    '''  values that specifies the context in which the data is needed.
+    ''' </param>
     ''' <returns>The formatted value of the editing control.</returns>
-    Public Overridable Function GetEditingControlFormattedValue(context As DataGridViewDataErrorContexts) As Object Implements IDataGridViewEditingControl.GetEditingControlFormattedValue
+    Public Overridable Function GetEditingControlFormattedValue(
+        context As DataGridViewDataErrorContexts) As Object _
+        Implements IDataGridViewEditingControl.GetEditingControlFormattedValue
+
         Dim userEdit As Boolean = Me.UserEdit
         Try
-            ' Prevent the Value from being set to Maximum or Minimum when the cell is being painted.
+            ' Prevent the Value from being set to Maximum or Minimum when
+            ' the cell is being painted.
             Me.UserEdit = (context And DataGridViewDataErrorContexts.Display) = 0
-            Return Me.Value.ToString($"{If(Me.ThousandsSeparator, "N", "F")}{Me.DecimalPlaces}")
+            Dim format As String = $"{If(Me.ThousandsSeparator, "N", "F")}{Me.DecimalPlaces}"
+            Return Me.Value.ToString(format)
         Finally
             Me.UserEdit = userEdit
         End Try
@@ -227,10 +293,13 @@ Friend Class DataGridViewNumericUpDownEditingControl
 
     ''' <summary>
     '''  Prepares the editing control for editing.
-    '''  Called by the grid to give the editing control a chance to prepare itself for the editing session.
+    '''  Called by the grid to give the editing control a chance
+    '''  to prepare itself for the editing session.
     ''' </summary>
     ''' <param name="selectAll">true to select all text; otherwise, false.</param>
-    Public Overridable Sub PrepareEditingControlForEdit(selectAll As Boolean) Implements IDataGridViewEditingControl.PrepareEditingControlForEdit
+    Public Overridable Sub PrepareEditingControlForEdit(selectAll As Boolean) _
+        Implements IDataGridViewEditingControl.PrepareEditingControlForEdit
+
         Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
         If textBox IsNot Nothing Then
             If selectAll Then
@@ -266,17 +335,26 @@ Friend Class DataGridViewNumericUpDownEditingControl
         If Char.IsDigit(e.KeyChar) Then
             notifyValueChange = True
         Else
-            Dim numberFormatInfo As Globalization.NumberFormatInfo = Globalization.CultureInfo.CurrentCulture.NumberFormat
+            Dim numberFormatInfo As Globalization.NumberFormatInfo =
+                Globalization.CultureInfo.CurrentCulture.NumberFormat
             Dim decimalSeparatorStr As String = numberFormatInfo.NumberDecimalSeparator
             Dim groupSeparatorStr As String = numberFormatInfo.NumberGroupSeparator
             Dim negativeSignStr As String = numberFormatInfo.NegativeSign
-            If Not String.IsNullOrEmpty(decimalSeparatorStr) AndAlso decimalSeparatorStr.Length = 1 Then
+            If Not String.IsNullOrEmpty(decimalSeparatorStr) AndAlso
+               decimalSeparatorStr.Length = 1 Then
+
                 notifyValueChange = decimalSeparatorStr(index:=0) = e.KeyChar
             End If
-            If Not notifyValueChange AndAlso Not String.IsNullOrEmpty(groupSeparatorStr) AndAlso groupSeparatorStr.Length = 1 Then
+            If Not notifyValueChange AndAlso
+               Not String.IsNullOrEmpty(value:=groupSeparatorStr) AndAlso
+               groupSeparatorStr.Length = 1 Then
+
                 notifyValueChange = groupSeparatorStr(index:=0) = e.KeyChar
             End If
-            If Not notifyValueChange AndAlso Not String.IsNullOrEmpty(negativeSignStr) AndAlso negativeSignStr.Length = 1 Then
+            If Not notifyValueChange AndAlso
+               Not String.IsNullOrEmpty(value:=negativeSignStr) AndAlso
+               negativeSignStr.Length = 1 Then
+
                 notifyValueChange = negativeSignStr(index:=0) = e.KeyChar
             End If
         End If
@@ -300,11 +378,16 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Sub
 
     ''' <summary>
-    '''  Forwards certain keyboard messages to the inner <see cref="TextBox"/> of the <see cref="NumericUpDown"/> control
+    '''  Forwards certain keyboard messages to the inner <see cref="TextBox"/>
+    '''  of the <see cref="NumericUpDown"/> control
     '''  so that the first character pressed appears in it.
     ''' </summary>
-    ''' <param name="m">A <see cref="Message"/> that represents the window message to process.</param>
-    ''' <returns><c>true</c> if the message was processed; otherwise, <c>false</c>.</returns>
+    ''' <param name="m">
+    '''  A <see cref="Message"/> that represents the window message to process.
+    ''' </param>
+    ''' <returns><see langword="True"/>
+    '''  if the message was processed; otherwise, <see langword="False"/>.
+    ''' </returns>
     Protected Overrides Function ProcessKeyEventArgs(ByRef m As Message) As Boolean
         Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
         If textBox IsNot Nothing Then

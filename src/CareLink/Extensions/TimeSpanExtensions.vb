@@ -46,9 +46,9 @@ Public Module TimeSpanExtensions
         Dim hours As UInteger = CUInt((minutes Mod 1440) \ 60)
         Dim mins As UInteger = CUInt(minutes Mod 60)
 
-        If days > 0 Then parts.Add(item:=days.ToTimeUnits(unit:="day"))
-        If hours > 0 Then parts.Add(item:=hours.ToTimeUnits(unit:="hour"))
-        If mins > 0 OrElse parts.Count = 0 Then parts.Add(item:=mins.ToTimeUnits(unit:="minute"))
+        If days > 0 Then parts.Add(item:=days.ToUnits(unit:="day"))
+        If hours > 0 Then parts.Add(item:=hours.ToUnits(unit:="hour"))
+        If mins > 0 OrElse parts.Count = 0 Then parts.Add(item:=mins.ToUnits(unit:="minute"))
 
         Return String.Join(separator:=", ", values:=parts)
     End Function
@@ -73,29 +73,29 @@ Public Module TimeSpanExtensions
                     r = $"{tSpan.Hours,2}:{tSpan.Minutes:D2}"
                     unitOut = If(tSpan.Minutes > 0,
                                  "hrs",
-                                 CUInt(tSpan.Hours).ToTimeUnits(unit:="hr", includeValue:=False))
+                                 tSpan.Hours.ToUnits(unit:="hr", includeValue:=False))
                 ElseIf tSpan.Minutes > 0 Then
                     r = $"{tSpan.Minutes:D2}"
-                    unitOut = CUInt(tSpan.Minutes).ToTimeUnits(unit:="min", includeValue:=False)
+                    unitOut = tSpan.Minutes.ToUnits(unit:="min", includeValue:=False)
                 Else
                     r = " 0"
-                    unitOut = CUInt(tSpan.Hours).ToTimeUnits(unit, includeValue:=False)
+                    unitOut = tSpan.Hours.ToUnits(unit, includeValue:=False)
                 End If
             Case unit.Contains(value:="hr")
                 r = $"{tSpan.Hours}"
             Case unit = "min"
                 If tSpan.Minutes > 0 AndAlso tSpan.Seconds > 0 Then
                     r = $"{0:D2}:{tSpan.Seconds:D2}"
-                    unitOut = CUInt(tSpan.Seconds).ToTimeUnits(unit, includeValue:=False)
+                    unitOut = tSpan.Minutes.ToUnits(unit, includeValue:=False)
                 ElseIf tSpan.Minutes > 0 Then
                     r = $"{tSpan.Minutes,2}"
-                    unitOut = CUInt(tSpan.Seconds).ToTimeUnits(unit, includeValue:=False)
+                    unitOut = tSpan.Minutes.ToUnits(unit, includeValue:=False)
                 ElseIf tSpan.Seconds > 0 Then
                     r = $"{tSpan.Seconds:D2}"
-                    unitOut = CUInt(tSpan.Seconds).ToTimeUnits(unit:="Sec", includeValue:=False)
+                    unitOut = tSpan.Seconds.ToUnits(unit:="Sec", includeValue:=False)
                 Else
                     r = $"{0,2}"
-                    unitOut = ToTimeUnits(totalUnits:=0, unit, includeValue:=False)
+                    unitOut = ToUnits(totalUnits:=0, unit, includeValue:=False)
                 End If
             Case Else
                 unitOut = unit

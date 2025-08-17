@@ -17,7 +17,7 @@ Public Class TimeSpanExtensionsTests
     <InlineData(48, "2 days")>
     <InlineData(49, "2 days, 1 hour")>
     Public Sub HoursToDaysAndHours_ReturnsExpectedString(hours As Integer, expected As String)
-        Dim result As String = TimeSpanExtensions.HoursToDaysAndHours(hours)
+        Dim result As String = HoursToDaysAndHours(hours)
         result.Should().Be(expected)
     End Sub
 
@@ -34,7 +34,7 @@ Public Class TimeSpanExtensionsTests
     <InlineData(1500, "1 day, 1 hour")>
     <InlineData(1501, "1 day, 1 hour, 1 minute")>
     Public Sub MinutesToDaysHoursMinutes_ReturnsExpectedString(minutes As Integer, expected As String)
-        Dim result As String = TimeSpanExtensions.MinutesToDaysHoursMinutes(minutes)
+        Dim result As String = MinutesToDaysHoursMinutes(minutes)
         result.Should().Be(expected)
     End Sub
 
@@ -42,7 +42,12 @@ Public Class TimeSpanExtensionsTests
     <InlineData(1, 0, 0, "invalid")>
     <InlineData(0, 0, 0, "hourly")>
     <InlineData(0, 0, 0, "seconds")>
-    Public Sub ToFormattedTimeSpan_InvalidUnits_StillReturnsString(hours As Integer, minutes As Integer, seconds As Integer, unit As String)
+    Public Sub ToFormattedTimeSpan_InvalidUnits_StillReturnsString(
+        hours As Integer,
+        minutes As Integer,
+        seconds As Integer,
+        unit As String)
+
         Dim tSpan As New TimeSpan(hours, minutes, seconds)
         Dim result As String = tSpan.ToFormattedTimeSpan(unit)
         result.Should().NotBeNullOrEmpty()
@@ -56,7 +61,13 @@ Public Class TimeSpanExtensionsTests
     <InlineData(0, 0, 0, "hr", " 0 hrs")>
     <InlineData(0, 0, 0, "min", " 0 mins")>
     <InlineData(0, 0, 0, "U/hr", "0 U/hr")>
-    Public Sub ToFormattedTimeSpan_ValidUnits_ReturnsExpectedString(hours As Integer, minutes As Integer, seconds As Integer, units As String, expected As String)
+    Public Sub ToFormattedTimeSpan_ValidUnits_ReturnsExpectedString(
+        hours As Integer,
+        minutes As Integer,
+        seconds As Integer,
+        units As String,
+        expected As String)
+
         ' Only allow hr, U/hr, min as valid units for this test
         If units <> "hr" AndAlso units <> "U/hr" AndAlso units <> "min" Then
             Return

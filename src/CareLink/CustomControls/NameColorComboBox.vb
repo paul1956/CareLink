@@ -3,8 +3,10 @@
 ' See the LICENSE file in the project root for more information.
 
 ''' <summary>
-'''  Represents a ComboBox control that displays a list of color names and their associated <see cref="KnownColor"/> values.
-'''  Provides strongly-typed access to the selected color item and custom drawing for color visualization.
+'''  Represents a ComboBox control that displays a list of color names
+'''  and their associated <see cref="KnownColor"/> values.
+'''  Provides strongly-typed access to the selected color item and
+'''  custom drawing for color visualization.
 ''' </summary>
 Public Class NameColorComboBox
     Inherits ComboBox
@@ -55,7 +57,8 @@ Public Class NameColorComboBox
     End Property
 
     ''' <summary>
-    '''  Initializes the layout of the control, populating the ComboBox with color items and configuring drawing settings.
+    '''  Initializes the layout of the control,
+    '''  populating the ComboBox with color items and configuring drawing settings.
     ''' </summary>
     Protected Overrides Sub InitLayout()
         MyBase.InitLayout()
@@ -70,14 +73,18 @@ Public Class NameColorComboBox
     End Sub
 
     ''' <summary>
-    '''  Handles the drawing of each item in the ComboBox, displaying the color name and a color swatch.
+    '''  Handles the drawing of each item in the ComboBox,
+    '''  displaying the color name and a color swatch.
     ''' </summary>
-    ''' <param name="e">A <see cref="DrawItemEventArgs"/> that contains the event data.</param>
+    ''' <param name="e">
+    '''  A <see cref="DrawItemEventArgs"/> that contains the event data.
+    ''' </param>
     Protected Overrides Sub OnDrawItem(e As DrawItemEventArgs)
         MyBase.OnDrawItem(e)
         If e.Index = -1 Then Exit Sub
         Dim eBounds As Rectangle = e.Bounds
-        Dim item As KeyValuePair(Of String, KnownColor) = CType(Me.Items(e.Index), KeyValuePair(Of String, KnownColor))
+        Dim item As KeyValuePair(Of String, KnownColor) =
+            CType(Me.Items(e.Index), KeyValuePair(Of String, KnownColor))
         Dim key As String = item.Key
         Using b As Brush = New SolidBrush(SystemColors.Control)
             Dim pt As New Point(eBounds.X, eBounds.Top)

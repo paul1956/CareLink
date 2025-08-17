@@ -7,18 +7,25 @@ Imports System.ComponentModel
 Public Class OptionsColorPickerDialog
     Private Property SaveGraphColorDictionary As Dictionary(Of String, KnownColor)
 
-    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
+    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) _
+        Handles Cancel_Button.Click
+
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 
-    Private Sub ItemNameComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ItemNameComboBox.SelectedIndexChanged
-        Me.KnownColorsComboBox1.SelectedIndex = GetIndexOfKnownColor(Me.ItemNameComboBox.SelectedValue)
+    Private Sub ItemNameComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) _
+        Handles ItemNameComboBox.SelectedIndexChanged
+
+        Me.KnownColorsComboBox1.SelectedIndex =
+            GetIndexOfKnownColor(item:=Me.ItemNameComboBox.SelectedValue)
         Me.UpdateForegroundButton.Enabled = False
         Application.DoEvents()
     End Sub
 
-    Private Sub KnownColorsComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles KnownColorsComboBox1.SelectedIndexChanged
+    Private Sub KnownColorsComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) _
+        Handles KnownColorsComboBox1.SelectedIndexChanged
+
         If Me.ItemNameComboBox.SelectedIndex < 0 OrElse Me.KnownColorsComboBox1.SelectedIndex < 0 Then
             Exit Sub
         End If
@@ -67,10 +74,13 @@ Public Class OptionsColorPickerDialog
         Me.ItemNameComboBox.ValueMember = "Value"
 
         Me.ItemNameComboBox.SelectedIndex = 0
-        Me.KnownColorsComboBox1.SelectedIndex = GetIndexOfKnownColor(Me.ItemNameComboBox.SelectedValue)
+        Me.KnownColorsComboBox1.SelectedIndex =
+            GetIndexOfKnownColor(Me.ItemNameComboBox.SelectedValue)
     End Sub
 
-    Private Sub UpdateForegroundButton_Click(sender As Object, e As EventArgs) Handles UpdateForegroundButton.Click
+    Private Sub UpdateForegroundButton_Click(sender As Object, e As EventArgs) _
+        Handles UpdateForegroundButton.Click
+
         Dim item As KnownColor = Me.KnownColorsComboBox1.SelectedValue
         Dim key As String = Me.ItemNameComboBox.SelectedItem.Key
         Dim saveIndex As Integer = Me.ItemNameComboBox.SelectedIndex

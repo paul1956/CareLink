@@ -12,13 +12,19 @@ Public Module DictionaryExtensions
     '''  Sets a <see cref="Date"/> property on an object by assigning the string value
     '''  to a corresponding property with an "AsString" suffix.
     ''' </summary>
-    ''' <typeparam name="T">The type of the object, which must be a class with a parameterless constructor.</typeparam>
+    ''' <typeparam name="T">
+    '''  The type of the object, which must be a class with a parameterless constructor.
+    ''' </typeparam>
     ''' <param name="obj">The object whose property will be set.</param>
     ''' <param name="row">The key-value pair containing the property name and value.</param>
     ''' <param name="[property]">The <see cref="PropertyInfo"/> of the property to set.</param>
-    Private Sub SetDateProperty(Of T As {Class, New})(obj As T, row As KeyValuePair(Of String, String), [property] As PropertyInfo)
+    Private Sub SetDateProperty(Of T As {Class, New})(
+            obj As T,
+            row As KeyValuePair(Of String, String),
+            [property] As PropertyInfo)
         Try
-            Dim propertyInfo As PropertyInfo = obj.GetType.GetProperty($"{[property].Name}AsString")
+            Dim propertyInfo As PropertyInfo =
+                obj.GetType.GetProperty($"{[property].Name}AsString")
             If propertyInfo Is Nothing Then
                 Stop
             End If
@@ -82,7 +88,8 @@ Public Module DictionaryExtensions
     End Function
 
     ''' <summary>
-    '''  Fills properties of a class from a row of a <see cref="Dictionary(Of String, String)"/> where the propertyName
+    '''  Fills properties of a class from a row of a
+    '''  <see cref="Dictionary(Of String, String)"/> where the propertyName
     '''  of the property matches the Key from that dictionary.
     '''  It does this for each row in the Dictionary, returning a class.
     ''' </summary>
@@ -92,7 +99,10 @@ Public Module DictionaryExtensions
     '''  A list of <see langword="Class"/> types with its properties set to the data
     '''  from the matching columns from the <see cref="DataTable"/>.
     ''' </returns>
-    Public Function DictionaryToClass(Of T As {Class, New})(dic As Dictionary(Of String, String), recordNumber As Integer) As T
+    Public Function DictionaryToClass(Of T As {Class, New})(
+            dic As Dictionary(Of String, String),
+            recordNumber As Integer) As T
+
         If dic Is Nothing OrElse dic.Count = 0 Then
             Return New T
         End If
@@ -133,7 +143,7 @@ Public Module DictionaryExtensions
                             Case "MarkerData"
                                 Stop
                             Case Else
-                                Throw UnreachableException(propertyName:=[property].PropertyType.Name)
+                                Throw UnreachableException(paramName:=[property].PropertyType.Name)
                         End Select
 
                         obj.GetType.GetProperty([property].Name).SetValue(obj, value, index:=Nothing)

@@ -107,10 +107,12 @@ Public Class Meal
     '''  The timestamp to search for.
     ''' </param>
     ''' <param name="meal">
-    '''  When this method returns, contains the found <see cref="Meal"/> if found; otherwise, <see langword="Nothing"/>.
+    '''  When this method returns, contains the found <see cref="Meal"/> if found;
+    '''  otherwise, <see langword="Nothing"/>.
     ''' </param>
     ''' <returns>
-    '''  <see langword="True"/> if a meal record with the specified timestamp is found; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if a meal record with the specified timestamp is found;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Public Shared Function TryGetMealRecord(timestamp As Date, ByRef meal As Meal) As Boolean
         For Each m As Meal In s_mealMarkers

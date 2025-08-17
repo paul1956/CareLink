@@ -8,16 +8,21 @@
 Friend Module GetManualBasalPoints
 
     ''' <summary>
-    '''  Calculates the manual basal values for a given marker, returning a sorted dictionary of OADate to basal rate.
+    '''  Calculates the manual basal values for a given marker,
+    '''  returning a sorted dictionary of OADate to basal rate.
     ''' </summary>
     ''' <param name="markerWithIndex">
-    '''  The <see cref="IndexClass(Of Marker)"/> containing the marker and its index in the marker list.
+    '''  The <see cref="IndexClass(Of Marker)"/> containing the marker and
+    '''  its index in the marker list.
     ''' </param>
     ''' <returns>
-    '''  A <see cref="SortedDictionary(Of OADate, Single)"/> mapping OADate timestamps to basal rates.
-    '''  Returns an empty dictionary if the marker is not valid for manual basal calculation.
+    '''  A <see cref="SortedDictionary(Of OADate, Single)"/> mapping OADate
+    '''  timestamps to basal rates. Returns an empty dictionary if the marker
+    '''  is not valid for manual basal calculation.
     ''' </returns>
-    Friend Function GetManualBasalValues(markerWithIndex As IndexClass(Of Marker)) As SortedDictionary(Of OADate, Single)
+    Friend Function GetManualBasalValues(markerWithIndex As IndexClass(Of Marker)) _
+        As SortedDictionary(Of OADate, Single)
+
         Debug.Assert(condition:=CurrentPdf.IsValid)
         Dim item As Marker = markerWithIndex.Value
         Dim key As String = NameOf(LowGlucoseSuspended.deliverySuspended)

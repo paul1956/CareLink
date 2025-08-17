@@ -4,7 +4,8 @@
 
 Friend Module TimeConstants
 
-    Friend ReadOnly Property Eleven59 As TimeOnly = TimeOnly.FromTimeSpan(New TimeSpan(hours:=23, minutes:=59, seconds:=59))
+    Friend ReadOnly Property Eleven59 As TimeOnly =
+        TimeOnly.FromTimeSpan(New TimeSpan(hours:=23, minutes:=59, seconds:=59))
     Friend ReadOnly Property Eleven59Str As String = Eleven59.ToHoursMinutes
     Friend ReadOnly Property Midnight As New TimeOnly(hour:=0, minute:=0)
     Friend ReadOnly Property MidnightStr As String = Midnight.ToHoursMinutes()

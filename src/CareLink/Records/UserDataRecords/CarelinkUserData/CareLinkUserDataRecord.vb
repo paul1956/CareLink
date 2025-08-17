@@ -61,7 +61,7 @@ Partial Public Class CareLinkUserDataRecord
         End Get
     End Property
 
-    <DisplayName("CareLink UserName")>
+    <DisplayName("CareLink™ UserName")>
     <Column(Order:=1, TypeName:=NameOf([String]))>
     Public Property CareLinkUserName As String
         Get
@@ -73,7 +73,7 @@ Partial Public Class CareLinkUserDataRecord
         End Set
     End Property
 
-    <DisplayName("CareLink Password")>
+    <DisplayName("CareLink™ Password")>
     <Column(Order:=2, TypeName:=NameOf([String]))>
     Public Property CareLinkPassword As String
         Get
@@ -121,7 +121,7 @@ Partial Public Class CareLinkUserDataRecord
         End Set
     End Property
 
-    <DisplayName("CareLink Partner")>
+    <DisplayName("CareLink™ Partner")>
     <Column(Order:=6, TypeName:=NameOf([Boolean]))>
     Public Property CareLinkPartner As Boolean
         Get
@@ -133,7 +133,7 @@ Partial Public Class CareLinkUserDataRecord
         End Set
     End Property
 
-    <DisplayName("CareLink Patient UserID")>
+    <DisplayName("CareLink™ Patient UserID")>
     <Column(Order:=7, TypeName:=NameOf([String]))>
     Public Property CareLinkPatientUserID As String
         Get
@@ -163,7 +163,15 @@ Partial Public Class CareLinkUserDataRecord
     ''' </summary>
     ''' <returns>A CSV string of the user data fields.</returns>
     Friend Function ToCsvString() As String
-        Return $"{Me.CareLinkUserName},{Me.CareLinkPassword},{Me.CountryCode},{Me.UseLocalTimeZone},{Me.AutoLogin},{Me.CareLinkPartner},{Me.CareLinkPatientUserID}"
+        Dim values As New List(Of String) From {
+            Me.CareLinkUserName,
+            Me.CareLinkPassword,
+            Me.CountryCode,
+            Me.UseLocalTimeZone.ToString,
+            Me.AutoLogin.ToString,
+            Me.CareLinkPartner.ToString,
+            Me.CareLinkPatientUserID}
+        Return String.Join(separator:=",", values)
     End Function
 
     ''' <summary>

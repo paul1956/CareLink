@@ -68,14 +68,22 @@ Friend Module TableLayoutPanelExtensions
     End Sub
 
     ''' <summary>
-    '''  Extension method to set the table name for a <see cref="TableLayoutPanel"/> based on the specified row index
-    '''  and notification state.
+    '''  Extension method to set the table name for a <see cref="TableLayoutPanel"/>
+    '''  based on the specified row index and notification state.
     ''' </summary>
     ''' <param name="panel">The <see cref="TableLayoutPanel"/> to update.</param>
-    ''' <param name="rowIndex">The <see cref="ServerDataIndexes"/> value representing the table's data type.</param>
-    ''' <param name="isClearedNotifications">Indicates if the table represents cleared notifications.</param>
+    ''' <param name="rowIndex">
+    '''  The <see cref="ServerDataIndexes"/> value representing the table's data type.
+    ''' </param>
+    ''' <param name="isClearedNotifications">
+    '''  Indicates if the table represents cleared notifications.
+    ''' </param>
     <Extension>
-    Friend Sub SetTableName(panel As TableLayoutPanel, rowIndex As ServerDataIndexes, isClearedNotifications As Boolean)
+    Friend Sub SetTableName(
+        panel As TableLayoutPanel,
+        rowIndex As ServerDataIndexes,
+        isClearedNotifications As Boolean)
+
         Dim tableName As String = rowIndex.ToString.ToTitleCase
         If tableName = "Notification History" Then
             tableName = If(isClearedNotifications,

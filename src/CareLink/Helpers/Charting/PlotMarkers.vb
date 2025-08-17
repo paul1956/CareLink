@@ -21,7 +21,7 @@ Friend Module PlotMarkers
     Private Sub AddSgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, f As Single)
         AddMarkerPoint(markerSeriesPoints, markerOADateTime, f, markerColor:=Color.DarkOrange)
         If Not Single.IsNaN(f) Then
-            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {f} {GetBgUnits()}"
+            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {f} {BgUnits}"
         End If
     End Sub
 
@@ -33,15 +33,21 @@ Friend Module PlotMarkers
     ''' <param name="f">The numeric SG value.</param>
     ''' <param name="item">The marker entry containing calibration data.</param>
     <Extension>
-    Private Sub AddCalibrationPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, f As Single, item As Marker)
+    Private Sub AddCalibrationPoint(
+        markerSeriesPoints As DataPointCollection,
+        markerOADateTime As OADate,
+        f As Single,
+        item As Marker)
+
         AddMarkerPoint(markerSeriesPoints, markerOADateTime, f, markerColor:=Color.Red)
 
-        Dim calibrationStatus As String = If(CBool(item.GetStringFromJson(key:="calibrationSuccess")),
-                                             "accepted",
-                                             "not accepted")
+        Dim status As Boolean = CBool(item.GetStringFromJson(key:="calibrationSuccess"))
+        Dim calibrationStatus As String = If(status, "accepted", "not accepted")
         Dim key As String = "unitValue"
-        Dim unitValue As String = item.GetSingleFromJson(key, digits:=2, considerValue:=True).ToString
-        markerSeriesPoints.Last.Tag = $"Blood Glucose: Calibration {calibrationStatus}: {unitValue} {GetBgUnits()}"
+        Dim unitValue As String =
+            item.GetSingleFromJson(key, digits:=2, considerValue:=True).ToString
+        markerSeriesPoints.Last.Tag =
+            $"Blood Glucose: Calibration {calibrationStatus}: {unitValue} {BgUnits}"
     End Sub
 
     ''' <summary>
@@ -190,21 +196,30 @@ Friend Module PlotMarkers
                                         tag:=$"Auto Correction: {autoCorrection}U")
                                 End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                                If markerInsulinDictionary.TryAdd(key:=markerOADatetime, value:=CInt(GetInsulinYValue())) Then
+                                If markerInsulinDictionary.TryAdd(
+                                    key:=markerOADatetime,
+                                    value:=CInt(GetInsulinYValue())) Then
+
                                     Dim yValue As Double = GetInsulinYValue() - If(NativeMmolL, 0.555, 10)
                                     markerSeriesPoints.AddXY(xValue:=markerOADatetime, yValue)
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
-                                    markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(alpha:=10, baseColor:=Color.Black)
+                                    markerSeriesPoints.Last.MarkerBorderColor =
+                                        Color.FromArgb(alpha:=10, baseColor:=Color.Black)
                                     markerSeriesPoints.Last.MarkerSize = 20
                                     markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
                                     If Double.IsNaN(GetInsulinYValue()) Then
                                         markerSeriesPoints.Last.Color = Color.Transparent
                                         markerSeriesPoints.Last.MarkerSize = 0
                                     Else
-                                        markerSeriesPoints.Last.Color = Color.FromArgb(alpha:=30, baseColor:=Color.LightBlue)
+                                        markerSeriesPoints.Last.Color =
+                                            Color.FromArgb(
+                                                alpha:=30,
+                                                baseColor:=Color.LightBlue)
                                         key = "deliveredFastAmount"
-                                        Dim autoCorrection As Single = item.GetSingleFromJson(key, digits:=3)
-                                        markerSeriesPoints.Last.Tag = $"Bolus: {autoCorrection}U"
+                                        Dim autoCorrection As Single =
+                                            item.GetSingleFromJson(key, digits:=3)
+                                        markerSeriesPoints.Last.Tag =
+                                            $"Bolus: {autoCorrection}U"
                                     End If
                                 Else
                                     Stop
@@ -214,18 +229,26 @@ Friend Module PlotMarkers
                         End Select
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then Continue For
-                        If markerMealDictionary.TryAdd(key:=markerOADatetime, value:=GetYMinValueFromNativeMmolL()) Then
+                        If markerMealDictionary.TryAdd(
+                            key:=markerOADatetime,
+                            value:=GetYMinValueFromNativeMmolL()) Then
+
                             Dim height As Double =
                                 If(NativeMmolL,
                                    s_mealImage.Height / 2 / MmolLUnitsDivisor,
                                    s_mealImage.Height / 2)
-                            markerSeriesPoints.AddXY(xValue:=markerOADatetime, yValue:=GetYMinValueFromNativeMmolL() + height)
-                            markerSeriesPoints.Last.Color = Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
+                            markerSeriesPoints.AddXY(
+                                xValue:=markerOADatetime,
+                                yValue:=GetYMinValueFromNativeMmolL() + height)
+                            markerSeriesPoints.Last.Color =
+                                Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
-                            markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
+                            markerSeriesPoints.Last.MarkerBorderColor =
+                                Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
                             markerSeriesPoints.Last.MarkerSize = 20
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                            Dim amount As Integer = CInt(item.GetSingleFromJson(key:="amount", digits:=0))
+                            Dim amount As Integer =
+                                CInt(item.GetSingleFromJson(key:="amount", digits:=0))
                             markerSeriesPoints.Last.Tag = $"Meal:{amount} grams"
                         End If
                     Case "TIME_CHANGE"
@@ -238,7 +261,8 @@ Friend Module PlotMarkers
                         End With
                     Case "LOW_GLUCOSE_SUSPENDED"
                         If PatientData.ConduitSensorInRange AndAlso CurrentPdf?.IsValid AndAlso Not InAutoMode Then
-                            Dim timeOrderedMarkers As SortedDictionary(Of OADate, Single) = GetManualBasalValues(markerWithIndex)
+                            Dim timeOrderedMarkers As SortedDictionary(Of OADate, Single) =
+                                GetManualBasalValues(markerWithIndex)
                             For Each kvp As KeyValuePair(Of OADate, Single) In timeOrderedMarkers
                                 With pageChart.Series(name:=BasalSeriesName)
                                     .PlotBasalSeries(
@@ -258,8 +282,9 @@ Friend Module PlotMarkers
                 End Select
             Catch innerException As Exception
                 Stop
+                Dim str As String = innerException.DecodeException()
                 Throw New ApplicationException(
-                    message:=$"{innerException.DecodeException()} exception in {memberName} at {sourceLineNumber}",
+                    message:=$"{str} exception in {memberName} at {sourceLineNumber}",
                     innerException)
             End Try
         Next
@@ -274,16 +299,19 @@ Friend Module PlotMarkers
     End Sub
 
     ''' <summary>
-    '''  Plots treatment markers on the specified treatment chart, including insulin and meal markers.
+    '''  Plots treatment markers on the specified treatment chart,
+    '''  including insulin and meal markers.
     ''' </summary>
     ''' <param name="treatmentChart">The chart to plot treatment markers on.</param>
-    ''' <param name="treatmentMarkerTimeChangeSeries">The series used for time change markers in the treatment chart.</param>
+    ''' <param name="treatmentMarkerTimeChangeSeries">
+    '''  The series used for time change markers in the treatment chart.
+    ''' </param>
     ''' <param name="memberName">
     '''  Optional. The name of the calling member, automatically supplied by the compiler.
     ''' </param>
     ''' <param name="sourceLineNumber">
-    '''  Optional. The line number in the source file at which the method is called, automatically supplied
-    '''  by the compiler.
+    '''  Optional. The line number in the source file at which the
+    '''  method is called, automatically supplied by the compiler.
     ''' </param>
     <Extension>
     Friend Sub PlotTreatmentMarkers(
@@ -349,14 +377,22 @@ Friend Module PlotMarkers
                                         tag:=$"Auto Correction: {amount}U")
                                 End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                                If s_treatmentMarkerInsulinDictionary.TryAdd(key:=markerOADateTime, value:=TreatmentInsulinRow) Then
-                                    markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=TreatmentInsulinRow)
+                                If s_treatmentMarkerInsulinDictionary.TryAdd(
+                                    key:=markerOADateTime,
+                                    value:=TreatmentInsulinRow) Then
+
+                                    markerSeriesPoints.AddXY(
+                                        xValue:=markerOADateTime,
+                                        yValue:=TreatmentInsulinRow)
                                     Dim lastDataPoint As DataPoint = markerSeriesPoints.Last
                                     If Double.IsNaN(GetInsulinYValue()) Then
                                         lastDataPoint.Color = Color.Transparent
                                         lastDataPoint.MarkerSize = 0
                                     Else
-                                        lastDataPoint.Color = Color.FromArgb(alpha:=30, baseColor:=Color.LightBlue)
+                                        lastDataPoint.Color =
+                                            Color.FromArgb(
+                                                alpha:=30,
+                                                baseColor:=Color.LightBlue)
                                         key = NameOf(Insulin.DeliveredFastAmount)
                                         CreateCallout(
                                             treatmentChart,
@@ -371,7 +407,7 @@ Friend Module PlotMarkers
                                 Stop
                         End Select
                     Case "MEAL"
-                        Dim value As Single = CSng(TreatmentInsulinRow * 0.95).RoundSingle(digits:=3)
+                        Dim value As Single = CSng(TreatmentInsulinRow * 0.95).RoundToSingle(digits:=3)
                         If s_treatmentMarkerMealDictionary.TryAdd(key:=markerOADateTime, value) Then
                             markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=value)
                             CreateCallout(
@@ -391,9 +427,14 @@ Friend Module PlotMarkers
                             .AddXY(xValue:=markerOADateTime, yValue:=Double.NaN)
                         End With
                     Case "LOW_GLUCOSE_SUSPENDED"
-                        If PatientData.ConduitSensorInRange AndAlso CurrentPdf?.IsValid AndAlso Not InAutoMode Then
-                            Dim timeOrderedMarkers As SortedDictionary(Of OADate, Single) = GetManualBasalValues(markerWithIndex)
-                            For Each kvp As KeyValuePair(Of OADate, Single) In timeOrderedMarkers
+                        If PatientData.ConduitSensorInRange AndAlso
+                            CurrentPdf?.IsValid AndAlso
+                            Not InAutoMode Then
+
+                            Dim orderedMarkers As SortedDictionary(Of OADate, Single) =
+                                GetManualBasalValues(markerWithIndex)
+
+                            For Each kvp As KeyValuePair(Of OADate, Single) In orderedMarkers
                                 With treatmentChart.Series(name:=BasalSeriesName)
                                     .PlotBasalSeries(
                                         markerOADateTime:=kvp.Key,
@@ -411,8 +452,10 @@ Friend Module PlotMarkers
                 End Select
             Catch innerException As Exception
                 Stop
-                Dim decodedException As String = innerException.DecodeException()
-                Dim message As String = $"{decodedException} exception in {NameOf(PlotTreatmentMarkers)} at {memberName} line {sourceLineNumber}"
+                Dim str As String = innerException.DecodeException()
+                Dim local As String = NameOf(PlotTreatmentMarkers)
+                Dim message As String =
+                    $"{str} exception in {local} at {memberName} line {sourceLineNumber}"
                 Throw New ApplicationException(message, innerException)
             End Try
         Next

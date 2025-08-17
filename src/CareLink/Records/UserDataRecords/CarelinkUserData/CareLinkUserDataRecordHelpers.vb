@@ -14,7 +14,7 @@ Public Module CareLinkUserDataRecordHelpers
     '''  A <see cref="DataGridViewCellStyle"/> instance with alignment and padding set
     '''  according to the column's expected content.
     ''' </returns>
-    Friend Function GetCellStyle(columnName As String) As DataGridViewCellStyle
+    Friend Function GetCellStyleForCareLinkUser(columnName As String) As DataGridViewCellStyle
         Dim cellStyle As New DataGridViewCellStyle
 
         Select Case columnName
@@ -39,7 +39,9 @@ Public Module CareLinkUserDataRecordHelpers
                     padding:=New Padding(all:=1))
             Case Else
                 Stop
-                'Throw UnreachableException($"{NameOf(CareLinkUserDataRecordHelpers)}.{NameOf(GetCellStyle)}, {NameOf(columnName)} = {columnName}")
+                Throw UnreachableException(
+                    paramName:=$"Column {NameOf(columnName)} = {columnName}",
+                    memberName:=NameOf(CareLinkUserDataRecordHelpers))
         End Select
         Return cellStyle
     End Function
@@ -51,7 +53,7 @@ Public Module CareLinkUserDataRecordHelpers
     '''  <see langword="True"/> if the user login info file exists; otherwise, <see langword="False"/>.
     ''' </returns>
     Public Function AllUserLoginInfoFileExists() As Boolean
-        Return SavedUsersFileExists(UserSettingsCsvFileWithPath)
+        Return SavedUsersFileExists()
     End Function
 
     ''' <summary>
@@ -61,8 +63,8 @@ Public Module CareLinkUserDataRecordHelpers
     ''' <returns>
     '''  <see langword="True"/> if the file exists at the specified path; otherwise, <see langword="False"/>.
     ''' </returns>
-    Public Function SavedUsersFileExists(userSettingsCsvFileWithPath As String) As Boolean
-        Return File.Exists(userSettingsCsvFileWithPath)
+    Public Function SavedUsersFileExists() As Boolean
+        Return File.Exists(path:=GetAllUsersCsvPath())
     End Function
 
 End Module

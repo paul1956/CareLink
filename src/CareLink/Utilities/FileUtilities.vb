@@ -50,7 +50,10 @@ Friend Module FileUtilities
     ''' <exception cref="ArgumentException">
     '''  Thrown if <paramref name="tokenBaseFileName"/> is null or whitespace.
     ''' </exception>
-    Friend Function GetLoginDataFileName(userName As String, Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As String
+    Friend Function GetLoginDataFileName(
+            userName As String,
+            Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As String
+
         If String.IsNullOrWhiteSpace(tokenBaseFileName) Then
             Throw New ArgumentException(
                 message:=$"'{NameOf(tokenBaseFileName)}' cannot be null or whitespace.",
@@ -58,7 +61,8 @@ Friend Module FileUtilities
         End If
 
         If tokenBaseFileName.EqualsIgnoreCase(LOGIN_DATA_FILENAME) Then
-            Dim settingsPathParent As String = Directory.GetParent(path:=GetSettingsDirectory()).FullName
+            Dim settingsPathParent As String =
+                Directory.GetParent(path:=GetSettingsDirectory()).FullName
             Dim loginTokenFileName As String = $"{userName}{LOGIN_DATA_FILENAME}"
             Return Path.Join(settingsPathParent, loginTokenFileName)
         Else
@@ -67,16 +71,22 @@ Friend Module FileUtilities
     End Function
 
     ''' <summary>
-    '''  Reads and validates the token data file for a user and returns a <see cref="TokenData"/> object.
+    '''  Reads and validates the token data file for a user and
+    '''  returns a <see cref="TokenData"/> object.
     ''' </summary>
     ''' <param name="userName">The user name.</param>
     ''' <param name="tokenBaseFileName">
-    '''  The base file name for the token data file. Defaults to <see cref="LOGIN_DATA_FILENAME"/>.
+    '''  The base file name for the token data file.
+    '''  Defaults to <see cref="LOGIN_DATA_FILENAME"/>.
     ''' </param>
     ''' <returns>
-    '''  A <see cref="TokenData"/> object if the file exists and is valid; otherwise, <see langword="Nothing"/>.
+    '''  A <see cref="TokenData"/> object if the file exists and is valid;
+    '''  otherwise, <see langword="Nothing"/>.
     ''' </returns>
-    Friend Function ReadTokenDataFile(userName As String, Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As TokenData
+    Friend Function ReadTokenDataFile(
+            userName As String,
+            Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As TokenData
+
         Dim fileWithPath As String = GetLoginDataFileName(userName, tokenBaseFileName)
         If File.Exists(fileWithPath) Then
             Try
@@ -97,16 +107,22 @@ Friend Module FileUtilities
     End Function
 
     ''' <summary>
-    '''  Reads and validates the token file for a user and returns a <see cref="JsonElement"/>.
+    '''  Reads and validates the token file for a user and
+    '''  returns a <see cref="JsonElement"/>.
     ''' </summary>
     ''' <param name="userName">The user name.</param>
     ''' <param name="tokenBaseFileName">
-    '''  The base file name for the token data file. Defaults to <see cref="LOGIN_DATA_FILENAME"/>.
+    '''  The base file name for the token data file.
+    '''  Defaults to <see cref="LOGIN_DATA_FILENAME"/>.
     ''' </param>
     ''' <returns>
-    '''  A <see cref="JsonElement"/> if the file exists and is valid; otherwise, <see langword="Nothing"/>.
+    '''  A <see cref="JsonElement"/> if the file exists and is valid;
+    '''  otherwise, <see langword="Nothing"/>.
     ''' </returns>
-    Friend Function ReadTokenFile(userName As String, Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As JsonElement
+    Friend Function ReadTokenFile(
+            userName As String,
+            Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As JsonElement
+
         Dim path As String = GetLoginDataFileName(userName, tokenBaseFileName)
         Debug.WriteLine(NameOf(path))
         If File.Exists(path) Then

@@ -12,8 +12,12 @@ Public Class AutoBasalDelivery
         Me.RecordNumber = recordNumber
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
-        Me.BolusAmount = item.Data.DataValues(key:=NameOf(BolusAmount).ToLowerCamelCase).ToString.ParseSingle(digits:=10)
-        Me.MaxAutoBasalRate = item.Data.DataValues(key:=NameOf(MaxAutoBasalRate).ToLowerCamelCase).ToString.ParseSingle(digits:=10)
+        Me.BolusAmount =
+            item.Data.DataValues(key:=NameOf(BolusAmount).ToLowerCamelCase).ToString _
+                     .ParseSingle(digits:=10)
+        Me.MaxAutoBasalRate =
+            item.Data.DataValues(key:=NameOf(MaxAutoBasalRate).ToLowerCamelCase).ToString _
+                     .ParseSingle(digits:=10)
     End Sub
 
     <DisplayName("Record Number")>

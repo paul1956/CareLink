@@ -31,7 +31,9 @@ Friend Structure FileNameStruct
     '''  Determines whether the specified object is equal to the current <see cref="FileNameStruct"/>.
     ''' </summary>
     ''' <param name="obj">The object to compare with the current structure.</param>
-    ''' <returns><see langword="True"/> if the specified object is equal to the current structure; otherwise, <c>False</c>.</returns>
+    ''' <returns>
+    '''  <see langword="True"/> if the specified object is equal to the current structure;
+    '''  otherwise, <see langword="False"/>.</returns>
     Public Overrides Function Equals(obj As Object) As Boolean
         If Not (TypeOf obj Is FileNameStruct) Then
             Return False

@@ -23,8 +23,16 @@ Public Module PumpVariables
     Friend ReadOnly s_insulinMarkers As New List(Of Insulin)
     Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
     Friend ReadOnly s_mealMarkers As New List(Of Meal)
-    Friend s_lowGlucoseSuspendedMarkers As New List(Of LowGlucoseSuspended)
+
     Friend s_markers As New List(Of Marker)
+
+    ''' <summary>
+    '''  Represents a list of low glucose suspended markers.
+    '''  These markers indicate when the pump has suspended insulin
+    '''  delivery due to low glucose levels.
+    ''' </summary>
+    Friend s_suspendedMarkers As New List(Of LowGlucoseSuspended)
+
     Friend s_timeChangeMarkers As New List(Of TimeChange)
 
 #End Region ' Markers

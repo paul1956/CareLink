@@ -38,7 +38,8 @@ Public Module SystemVariables
     Friend Property TreatmentInsulinRow As Single
 
     ''' <summary>
-    '''  Counts the number of SG.sg values in the specified range [OptionsConfigureTiTR.LowThreshold, 140], excluding Single.NaN.
+    '''  Counts the number of SG.sg values in the specified range
+    '''  [OptionsConfigureTiTR.LowThreshold, 140], excluding Single.NaN.
     ''' </summary>
     ''' <param name="sgList">The list of SG records to evaluate.</param>
     ''' <returns>
@@ -77,7 +78,7 @@ Public Module SystemVariables
     '''  A tuple containing the above hyper limit as an unsigned integer and its string representation.
     ''' </returns>
     Friend Function GetAboveHyperLimit() As (int As Integer, Str As String)
-        Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.GetRoundedValue(digits:=1)
+        Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.RoundToSingle(digits:=1)
         Return If(aboveHyperLimit >= 0,
                   (CInt(aboveHyperLimit), aboveHyperLimit.ToString),
                   (CInt(0), "??? "))
@@ -90,7 +91,7 @@ Public Module SystemVariables
     '''  A tuple containing the below hypo limit as an unsigned integer and its string representation.
     ''' </returns>
     Friend Function GetBelowHypoLimit() As (Uint As UInteger, Str As String)
-        Dim belowHyperLimit As Single = PatientData.BelowHypoLimit.GetRoundedValue(digits:=1)
+        Dim belowHyperLimit As Single = PatientData.BelowHypoLimit.RoundToSingle(digits:=1)
         Return If(belowHyperLimit >= 0,
                   (CUInt(belowHyperLimit), belowHyperLimit.ToString),
                   (CUInt(0), "??? "))
@@ -192,7 +193,7 @@ Public Module SystemVariables
     '''  The high limit for TIR in the selected units.
     ''' </returns>
     Friend Function GetTirHighLimitWithUnits() As String
-        Return $"{GetTirHighLimit()} {GetBgUnits()}".
+        Return $"{GetTirHighLimit()} {BgUnits}".
             Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
     End Function
 
@@ -220,7 +221,7 @@ Public Module SystemVariables
     '''  The low limit for TIR with units.
     ''' </returns>
     Friend Function GetTirLowLimitWithUnits() As String
-        Return $"{GetTirLowLimit()} {GetBgUnits()}".
+        Return $"{GetTirLowLimit()} {BgUnits}".
             Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
     End Function
 

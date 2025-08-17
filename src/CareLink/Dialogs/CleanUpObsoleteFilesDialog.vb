@@ -30,7 +30,7 @@ Public Class CleanupStaleFilesDialog
 
     Private Sub CleanupStaleFilesDialog_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Dim searchPattern As String = $"{BaseNameSavedErrorReport}*.txt"
-        Dim fileList As String() = IO.Directory.GetFiles(path:=DirectoryForProjectData, searchPattern)
+        Dim fileList As String() = IO.Directory.GetFiles(path:=GetProjectDataDirectory(), searchPattern)
         With Me.TreeView1
             .Nodes.Clear()
             .CheckBoxes = True
@@ -42,12 +42,13 @@ Public Class CleanupStaleFilesDialog
                 .Nodes(index:=0).LastNode.Checked = True
             Next
             .Nodes.Add(text:="WebCaches")
-            Dim path As String = IO.Path.Join(DirectoryForProjectData, "WebCache")
+            Dim path As String = IO.Path.Join(GetProjectDataDirectory(), "WebCache")
             fileList = IO.Directory.GetDirectories(path)
             For Each file As String In fileList
                 Dim webCacheFileName As String = file.Split(separator:="\").Last
                 .Nodes(index:=1).Nodes.Add(text:=webCacheFileName)
-                .Nodes(index:=1).LastNode.Checked = Not GetWebViewCacheDirectory().EndsWithIgnoreCase(value:=webCacheFileName)
+                .Nodes(index:=1).LastNode.Checked =
+                    Not GetWebViewCacheDirectory().EndsWithIgnoreCase(value:=webCacheFileName)
             Next
             .ExpandAll()
             .EndUpdate()
@@ -80,7 +81,7 @@ Public Class CleanupStaleFilesDialog
                     End If
                     Select Case msgBoxResult
                         Case MsgBoxResult.Yes
-                            Dim file As String = IO.Path.Join(DirectoryForProjectData, node.Text)
+                            Dim file As String = IO.Path.Join(GetProjectDataDirectory(), node.Text)
                             Dim showUI As FileIO.UIOption = FileIO.UIOption.OnlyErrorDialogs
                             Dim recycle As FileIO.RecycleOption = FileIO.RecycleOption.SendToRecycleBin
                             My.Computer.FileSystem.DeleteFile(file, showUI, recycle)
@@ -95,7 +96,7 @@ Public Class CleanupStaleFilesDialog
             For Each node As TreeNode In .Nodes(index:=1).Nodes
                 If node.Checked Then
                     Try
-                        Dim path As String = IO.Path.Join(DirectoryForProjectData, "WebCache", node.Text)
+                        Dim path As String = IO.Path.Join(GetProjectDataDirectory(), "WebCache", node.Text)
                         IO.Directory.Delete(path, recursive:=True)
                     Catch ex As Exception
                         Stop

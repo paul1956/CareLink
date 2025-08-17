@@ -11,7 +11,7 @@ Public Module CertificateSigningRequest
     ''' <summary>
     '''  Creates a Certificate Signing Request in PEM format using the specified RSA key pair and subject details.
     ''' </summary>
-    ''' <param name="keypair">The RSA key pair to use for signing the CSR.</param>
+    ''' <param name="key">The RSA key pair to use for signing the CSR.</param>
     ''' <param name="cn">The Common Name (CN) for the subject.</param>
     ''' <param name="ou">The Organizational Unit (OU) for the subject.</param>
     ''' <param name="dc">The Domain Component (DC) for the subject.</param>
@@ -19,33 +19,53 @@ Public Module CertificateSigningRequest
     ''' <returns>
     '''  A string containing the CSR in PEM format, including header and footer.
     ''' </returns>
-    Public Function CreateCertificateSigningRequest(keypair As RSA, cn As String, ou As String, dc As String, o As String) As String
-        Dim subject As New X500DistinguishedName($"CN={cn}, OU={ou}, DC={dc}, O={o}")
-        Dim request As New CertificateRequest(subject, keypair, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1)
-        Dim csr As Byte() = request.CreateSigningRequest()
+    Public Function CreateCertificateSigningRequest(
+        key As RSA,
+        cn As String,
+        ou As String,
+        dc As String,
+        o As String) As String
+
+        Dim distinguishedName As String = $"CN={cn}, OU={ou}, DC={dc}, O={o}"
+        Dim subjectName As New X500DistinguishedName(distinguishedName)
+        Dim request As New CertificateRequest(
+            subjectName,
+            key,
+            hashAlgorithm:=HashAlgorithmName.SHA256,
+            padding:=RSASignaturePadding.Pkcs1)
+
+        Dim inArray As Byte() = request.CreateSigningRequest()
 
         ' Convert the Certificate Signing Request to PEM format
         Dim pem As New StringBuilder()
-        pem.AppendLine("-----BEGIN CERTIFICATE REQUEST-----")
-        pem.AppendLine(Convert.ToBase64String(csr, Base64FormattingOptions.InsertLineBreaks))
-        pem.AppendLine("-----END CERTIFICATE REQUEST-----")
+        pem.AppendLine(value:="-----BEGIN CERTIFICATE REQUEST-----")
+        Const options As Base64FormattingOptions = Base64FormattingOptions.InsertLineBreaks
+        pem.AppendLine(value:=Convert.ToBase64String(inArray, options))
+        pem.AppendLine(value:="-----END CERTIFICATE REQUEST-----")
 
         Return pem.ToString()
     End Function
 
     ''' <summary>
-    '''  Reformats a PEM-encoded Certificate Signing Request by removing the header and footer, and re-encodes it using URL-safe base64 encoding.
+    '''  Reformats a PEM-encoded Certificate Signing Request by
+    '''  removing the header and footer, and re-encodes it using URL-safe base64 encoding.
     ''' </summary>
     ''' <param name="csr">The Certificate Signing Request string in PEM format.</param>
-    ''' <returns>A URL-safe base64 encoded string representing the raw Certificate Signing Request data.</returns>
+    ''' <returns>
+    '''  A URL-safe base64 encoded string representing
+    '''  the raw Certificate Signing Request data.
+    ''' </returns>
     Public Function ReformatCertificateSigningRequest(csr As String) As String
         ' Remove footer & header, re-encode with URL-safe base64
-        csr = csr.Replace(vbCrLf, "")
-        csr = csr.Replace("-----BEGIN CERTIFICATE REQUEST-----", "")
-        csr = csr.Replace("-----END CERTIFICATE REQUEST-----", "")
+        csr = csr.Replace(oldValue:=vbCrLf, newValue:="")
+        csr = csr.Replace(oldValue:="-----BEGIN CERTIFICATE REQUEST-----", newValue:="")
+        csr = csr.Replace(oldValue:="-----END CERTIFICATE REQUEST-----", newValue:="")
 
-        Dim csrRaw As Byte() = Convert.FromBase64String(csr)
-        csr = Convert.ToBase64String(csrRaw).Replace("+", "-").Replace("/", "_").Replace("=", "")
+        Dim inArray As Byte() = Convert.FromBase64String(csr)
+        csr = Convert.ToBase64String(inArray) _
+                     .Replace(oldValue:="+", newValue:="-") _
+                     .Replace(oldValue:="/", newValue:="_") _
+                     .Replace(oldValue:="=", newValue:="")
 
         Return csr
     End Function

@@ -34,7 +34,8 @@ Public Class DataGridViewNumericUpDownColumn
         End Get
 
         Set(value As DataGridViewCell)
-            Dim dataGridViewNumericUpDownCell1 As DataGridViewNumericUpDownCell = TryCast(value, DataGridViewNumericUpDownCell)
+            Dim dataGridViewNumericUpDownCell1 As DataGridViewNumericUpDownCell =
+                TryCast(value, DataGridViewNumericUpDownCell)
             If value IsNot Nothing AndAlso dataGridViewNumericUpDownCell1 Is Nothing Then
                 Dim message As String =
                     $"Value provided for {NameOf(CellTemplate)} must be of type" &
@@ -50,7 +51,7 @@ Public Class DataGridViewNumericUpDownColumn
     '''  Replicates the DecimalPlaces property of the DataGridViewNumericUpDownCell cell type.
     ''' </summary>
     <Category("Appearance"),
-        DefaultValue(DataGridViewNumericUpDownCell.DATAGRIDVIEWNUMERICUPDOWNCELL_defaultDecimalPlaces),
+        DefaultValue(DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultDecimalPlaces),
         Description("Indicates the number of decimal places to display.")>
     Public Property DecimalPlaces As Integer
         Get
@@ -75,15 +76,21 @@ Public Class DataGridViewNumericUpDownColumn
                 For rowIndex As Integer = 0 To rowCount - 1
                     ' Be careful not to unshare rows unnecessarily.
                     ' This could have severe performance repercussions.
-                    Dim dataGridViewRow1 As DataGridViewRow = dataGridViewRows.SharedRow(rowIndex)
-                    Dim dataGridViewCell1 As DataGridViewNumericUpDownCell = TryCast(dataGridViewRow1.Cells(Me.Index), DataGridViewNumericUpDownCell)
-                    ' Call the internal SetDecimalPlaces method instead of the property to avoid invalidation
-                    ' of each cell. The whole column is invalidated later in a single operation for better performance.
+                    Dim dgvRow As DataGridViewRow =
+                        dataGridViewRows.SharedRow(rowIndex)
+
+                    Dim dataGridViewCell1 As DataGridViewNumericUpDownCell =
+                        TryCast(dgvRow.Cells(Me.Index), DataGridViewNumericUpDownCell)
+                    ' Call the internal SetDecimalPlaces method instead of
+                    ' the property to avoid invalidation of each cell.
+                    ' The whole column is invalidated later in a single operation
+                    ' for better performance.
                     dataGridViewCell1?.SetDecimalPlaces(rowIndex, value)
                 Next
 
                 Me.DataGridView.InvalidateColumn(Me.Index)
-                ' TODO: Call the grid's autosizing methods to autosize the column, rows, column headers / row headers as needed.
+                ' TODO: Call the grid's autosizing methods to autosize the
+                ' column, rows, column headers / row headers as needed.
             End If
         End Set
     End Property
@@ -111,9 +118,10 @@ Public Class DataGridViewNumericUpDownColumn
                 Dim dataGridViewRows As DataGridViewRowCollection = Me.DataGridView.Rows
                 Dim rowCount As Integer = dataGridViewRows.Count
                 For rowIndex As Integer = 0 To rowCount - 1
-                    Dim dataGridViewRow1 As DataGridViewRow = dataGridViewRows.SharedRow(rowIndex)
-                    Dim dataGridViewCell1 As DataGridViewNumericUpDownCell = TryCast(dataGridViewRow1.Cells(Me.Index), DataGridViewNumericUpDownCell)
-                    dataGridViewCell1?.SetIncrement(rowIndex, value)
+                    Dim dgvRow As DataGridViewRow = dataGridViewRows.SharedRow(rowIndex)
+                    Dim dgvCell1 As DataGridViewNumericUpDownCell =
+                        TryCast(dgvRow.Cells(Me.Index), DataGridViewNumericUpDownCell)
+                    dgvCell1?.SetIncrement(rowIndex, value)
                 Next
             End If
         End Set
@@ -123,13 +131,15 @@ Public Class DataGridViewNumericUpDownColumn
     '''  Indicates whether the Increment property should be persisted.
     '''  </summary>
     Private Function ShouldSerializeIncrement() As Boolean
-        Return Not Me.Increment.Equals(DataGridViewNumericUpDownCell.DATAGRIDVIEWNUMERICUPDOWNCELL_defaultIncrement)
+        Return Not Me.Increment.Equals(DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultIncrement)
     End Function
 
     ''' <summary>
     '''  Replicates the Maximum property of the DataGridViewNumericUpDownCell cell type.
     ''' </summary>
-    <Category("Data"), Description("Indicates the maximum value for the numeric up-down cells."), RefreshProperties(RefreshProperties.All)>
+    <Category("Data"),
+        Description("Indicates the maximum value for the numeric up-down cells."),
+        RefreshProperties(RefreshProperties.All)>
     Public Property Maximum As Decimal
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then
@@ -149,15 +159,18 @@ Public Class DataGridViewNumericUpDownColumn
                 Dim dataGridViewRows As DataGridViewRowCollection = Me.DataGridView.Rows
                 Dim rowCount As Integer = dataGridViewRows.Count
                 For rowIndex As Integer = 0 To rowCount - 1
-                    Dim dataGridViewRow1 As DataGridViewRow = dataGridViewRows.SharedRow(rowIndex)
-                    Dim dataGridViewCell1 As DataGridViewNumericUpDownCell = TryCast(dataGridViewRow1.Cells(Me.Index), DataGridViewNumericUpDownCell)
-                    dataGridViewCell1?.SetMaximum(rowIndex, value)
+                    Dim dgvRow As DataGridViewRow =
+                        dataGridViewRows.SharedRow(rowIndex)
+                    Dim dgvCell As DataGridViewNumericUpDownCell =
+                        TryCast(dgvRow.Cells(Me.Index), DataGridViewNumericUpDownCell)
+                    dgvCell?.SetMaximum(rowIndex, value)
                 Next
 
                 Me.DataGridView.InvalidateColumn(Me.Index)
-                ' TODO: This column and/or grid rows may need to be autosized depending on their
-                '       AutoSize settings. Call the autosizing methods to autosize the column, rows,
-                '       column headers / row headers as needed.
+                ' TODO: Call the grid's autosizing methods to autosize the
+                ' column, rows, column headers / row headers as needed.
+                ' Call the autosizing methods to autosize the column, rows,
+                ' column headers / row headers as needed.
             End If
         End Set
     End Property
@@ -166,7 +179,9 @@ Public Class DataGridViewNumericUpDownColumn
     '''  Indicates whether the Maximum property should be persisted.
     ''' </summary>
     Private Function ShouldSerializeMaximum() As Boolean
-        Return Not Me.Maximum.Equals(DataGridViewNumericUpDownCell.DATAGRIDVIEWNUMERICUPDOWNCELL_defaultMaximum)
+        Const value As Decimal =
+            DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultMaximum
+        Return Not Me.Maximum.Equals(value)
     End Function
 
     ''' <summary>
@@ -194,9 +209,10 @@ Public Class DataGridViewNumericUpDownColumn
                 Dim dataGridViewRows As DataGridViewRowCollection = Me.DataGridView.Rows
                 Dim rowCount As Integer = dataGridViewRows.Count
                 For rowIndex As Integer = 0 To rowCount - 1
-                    Dim dataGridViewRow1 As DataGridViewRow = dataGridViewRows.SharedRow(rowIndex)
-                    Dim dataGridViewCell1 As DataGridViewNumericUpDownCell = TryCast(dataGridViewRow1.Cells(Me.Index), DataGridViewNumericUpDownCell)
-                    dataGridViewCell1?.SetMinimum(rowIndex, value)
+                    Dim gvRow As DataGridViewRow = dataGridViewRows.SharedRow(rowIndex)
+                    Dim dgvCell As DataGridViewNumericUpDownCell =
+                        TryCast(gvRow.Cells(Me.Index), DataGridViewNumericUpDownCell)
+                    dgvCell?.SetMinimum(rowIndex, value)
                 Next
 
                 Me.DataGridView.InvalidateColumn(Me.Index)
@@ -211,14 +227,16 @@ Public Class DataGridViewNumericUpDownColumn
     '''  Indicates whether the Maximum property should be persisted.
     ''' </summary>
     Private Function ShouldSerializeMinimum() As Boolean
-        Return Not Me.Minimum.Equals(DataGridViewNumericUpDownCell.DATAGRIDVIEWNUMERICUPDOWNCELL_defaultMinimum)
+        Const value As Decimal = DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultMinimum
+        Return Not Me.Minimum.Equals(value)
     End Function
 
     ''' <summary>
-    '''  Replicates the ThousandsSeparator property of the <see cref="DataGridViewNumericUpDownCell"/> cell type.
+    '''  Replicates the ThousandsSeparator property of the
+    '''  <see cref="DataGridViewNumericUpDownCell"/> cell type.
     ''' </summary>
     <Category("Data"),
-        DefaultValue(DataGridViewNumericUpDownCell.DATAGRIDVIEWNUMERICUPDOWNCELL_defaultThousandsSeparator),
+        DefaultValue(DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultThousandsSeparator),
         Description("Indicates whether the thousands separator will be inserted between every three decimal digits.")>
     Public Property ThousandsSeparator As Boolean
         Get
@@ -239,15 +257,18 @@ Public Class DataGridViewNumericUpDownColumn
                 Dim dataGridViewRows As DataGridViewRowCollection = Me.DataGridView.Rows
                 Dim rowCount As Integer = dataGridViewRows.Count
                 For rowIndex As Integer = 0 To rowCount - 1
-                    Dim dataGridViewRow1 As DataGridViewRow = dataGridViewRows.SharedRow(rowIndex)
-                    Dim dataGridViewCell1 As DataGridViewNumericUpDownCell = TryCast(dataGridViewRow1.Cells(Me.Index), DataGridViewNumericUpDownCell)
+                    Dim dataGridViewRow1 As DataGridViewRow =
+                        dataGridViewRows.SharedRow(rowIndex)
+
+                    Dim cell As DataGridViewCell = dataGridViewRow1.Cells(Me.Index)
+                    Dim dataGridViewCell1 As DataGridViewNumericUpDownCell =
+                        TryCast(cell, DataGridViewNumericUpDownCell)
                     dataGridViewCell1?.SetThousandsSeparator(rowIndex, value)
                 Next
 
                 Me.DataGridView.InvalidateColumn(Me.Index)
-                ' TODO: This column and/or grid rows may need to be autosized depending on their
-                '       AutoSize settings. Call the autosizing methods to autosize the column, rows,
-                '       column headers / row headers as needed.
+                ' TODO: Call the grid's autosizing methods to autosize the
+                ' column, rows, column headers / row headers as needed.
             End If
         End Set
     End Property

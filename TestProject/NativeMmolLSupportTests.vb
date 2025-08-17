@@ -19,9 +19,9 @@ Public Class NativeMmolLSupportTests
     <Fact>
     Public Sub GetBgUnits_ReturnsCorrectUnits()
         NativeMmolL = True
-        GetBgUnits().Should().Be(expected:="Mmol/l")
+        BgUnits.Should().Be(expected:="Mmol/l")
         NativeMmolL = False
-        GetBgUnits().Should().Be(expected:="mg/dL")
+        BgUnits.Should().Be(expected:="mg/dL")
     End Sub
 
     <Fact>

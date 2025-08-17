@@ -45,12 +45,18 @@ Public Module NearestKnownColor
     ''' <param name="green">The green component (0-255).</param>
     ''' <param name="blue">The blue component (0-255).</param>
     ''' <param name="excludeSystemColors">
-    '''  If <see langword="True"/>, system colors are excluded from the search. Default is <see langword="True"/>.
+    '''  If <see langword="True"/>, system colors are excluded from the search.
+    '''  Default is <see langword="True"/>.
     ''' </param>
     ''' <returns>
     '''  The <see cref="KnownColor"/> that is closest to the specified RGB values.
     ''' </returns>
-    Public Function GetNearestKnownColor(red As Integer, green As Integer, blue As Integer, Optional excludeSystemColors As Boolean = True) As KnownColor
+    Public Function GetNearestKnownColor(
+            red As Integer,
+            green As Integer,
+            blue As Integer,
+            Optional excludeSystemColors As Boolean = True) As KnownColor
+
         Return GetNearestKnownColor(Color.FromArgb(red, green, blue), excludeSystemColors)
     End Function
 

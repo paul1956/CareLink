@@ -8,19 +8,35 @@ Public Class LowAlertsRecord
 
     Public Sub New(sTable As StringTable, listOfAllTextLines As List(Of String))
         _snoozeTime = New TimeSpan(hours:=0, minutes:=20, seconds:=0)
-        PdfSettingsRecord.GetSnoozeInfo(listOfAllTextLines, target:="Low Alerts", Me.SnoozeOn, snoozeTime:=_snoozeTime)
+        PdfSettingsRecord.GetSnoozeInfo(
+            listOfAllTextLines,
+            target:="Low Alerts",
+            Me.SnoozeOn,
+            snoozeTime:=_snoozeTime)
 
         Dim valueUnits As String = ""
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             Dim s As StringTable.Row = e.Value
             If e.IsFirst Then
-                valueUnits = s.Columns(index:=0).Replace("Start Low Time (", newValue:="").Trim(trimChar:=")"c)
+                valueUnits = s.Columns(index:=0) _
+                              .Replace(oldValue:="Start Low Time (", newValue:="") _
+                              .Trim(trimChar:=")"c)
                 Continue For
             End If
-            Dim item As New LowAlertRecord(s, valueUnits) With {
-                .End = If(e.IsLast OrElse String.IsNullOrWhiteSpace(sTable.Rows(e.Index + 1).Columns(index:=0)),
-                          Midnight,
-                          TimeOnly.Parse(s:=sTable.Rows(index:=e.Index + 1).Columns(index:=0).Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)(0)))}
+
+            Dim value As String = sTable.Rows(index:=e.Index + 1).Columns(index:=0)
+            Dim endTimeOnly As TimeOnly
+            If e.IsLast OrElse String.IsNullOrWhiteSpace(value) Then
+                endTimeOnly = Midnight
+            Else
+                Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
+                endTimeOnly = TimeOnly.Parse(
+                    s:=sTable.Rows(index:=e.Index + 1) _
+                             .Columns(index:=0) _
+                             .Split(separator:=" ", options)(0))
+            End If
+
+            Dim item As New LowAlertRecord(s, valueUnits) With {.End = endTimeOnly}
             If item.IsValid Then
                 Me.LowAlert.Add(item)
             Else

@@ -31,39 +31,53 @@ Public Class CurrentUserRecord
     End Function
 
     Public Overrides Function Equals(obj As Object) As Boolean
-        Return Me.Equals(TryCast(obj, CurrentUserRecord))
+        Return Me.Equals(other:=TryCast(obj, CurrentUserRecord))
     End Function
 
-    Public Overloads Function Equals(other As CurrentUserRecord) As Boolean Implements IEquatable(Of CurrentUserRecord).Equals
-        Return other IsNot Nothing AndAlso
-               EqualityComparer(Of List(Of CarbRatioRecord)).Default.Equals(Me.CarbRatios, other.CarbRatios) AndAlso
-               Me.CarbRatios.Equals(other.CarbRatios) AndAlso
-               Me.CurrentTarget.Equals(other.CurrentTarget) AndAlso
-               Me.InsulinRealAit.Equals(other.InsulinRealAit) AndAlso
+    Public Overloads Function Equals(other As CurrentUserRecord) As Boolean _
+        Implements IEquatable(Of CurrentUserRecord).Equals
+        If other Is Nothing Then
+            Return False
+        End If
+        Dim x As List(Of CarbRatioRecord) = Me.CarbRatios
+        Dim y As List(Of CarbRatioRecord) = other.CarbRatios
+        Return _
+            EqualityComparer(Of List(Of CarbRatioRecord)).Default.Equals(x, y) AndAlso
+               Me.CarbRatios.Equals(obj:=other.CarbRatios) AndAlso
+               Me.CurrentTarget.Equals(obj:=other.CurrentTarget) AndAlso
+               Me.InsulinRealAit.Equals(obj:=other.InsulinRealAit) AndAlso
                Me.InsulinTypeName = other.InsulinTypeName AndAlso
-               Me.PumpAit.Equals(other.PumpAit) AndAlso
+               (Me.PumpAit - other.PumpAit).AlmostZero AndAlso
                Me.UseAdvancedAitDecay = other.UseAdvancedAitDecay AndAlso
                Me.UserName = other.UserName
     End Function
 
     Public Function GetActiveInsulinIncrements() As Integer
-        Return If(Me.UseAdvancedAitDecay = CheckState.Checked, CInt(Me.InsulinRealAit * 12), CInt(Me.PumpAit * 12))
+        Return If(Me.UseAdvancedAitDecay = CheckState.Checked,
+                  CInt(Me.InsulinRealAit * 12),
+                  CInt(Me.PumpAit * 12))
 
     End Function
 
     Public Function GetCarbRatio(forTime As TimeOnly) As Single
 
         For Each carbRatio As CarbRatioRecord In Me.CarbRatios
-            If forTime.IsBetween(carbRatio.StartTime, carbRatio.EndTime) Then
+            If forTime.IsBetween(start:=carbRatio.StartTime, [end]:=carbRatio.EndTime) Then
                 Return carbRatio.CarbRatio
             End If
         Next
         Stop
-        Throw UnreachableException(NameOf(forTime))
+        Throw UnreachableException(paramName:=NameOf(forTime))
     End Function
 
     Public Overrides Function GetHashCode() As Integer
-        Return HashCode.Combine(Me.PumpAit, Me.CarbRatios, Me.InsulinRealAit, Me.InsulinTypeName, Me.UseAdvancedAitDecay, Me.UserName)
+        Return HashCode.Combine(
+            Me.PumpAit,
+            Me.CarbRatios,
+            Me.InsulinRealAit,
+            Me.InsulinTypeName,
+            Me.UseAdvancedAitDecay,
+            Me.UserName)
     End Function
 
     Public Function GetPumpAitString() As String

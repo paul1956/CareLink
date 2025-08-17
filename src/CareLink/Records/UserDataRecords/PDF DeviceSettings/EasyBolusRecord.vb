@@ -5,10 +5,14 @@
 Public Class EasyBolusRecord
 
     Public Sub New(sTable As StringTable)
-        Me.EasyBolus = sTable.GetSingleLineValue(Of String)("Easy Bolus")
-        Me.BolusIncrement = sTable.GetSingleLineValue(Of Single)("Bolus Increment")
-        Me.BolusSpeed = sTable.GetSingleLineValue(Of String)("Bolus Speed ")
-        Me.DualSquare = New DualSquareRecord(sTable.GetSingleLineValue(Of String)("Dual/Square"))
+        Me.EasyBolus = sTable.GetSingleLineValue(Of String)(key:="Easy Bolus")
+        ' Ensure EasyBolus is formatted correctly 0.01  U
+        If Me.EasyBolus.Length = 6 Then
+            Me.EasyBolus = Me.EasyBolus.Replace(oldValue:=" ", newValue:="  ")
+        End If
+        Me.BolusIncrement = sTable.GetSingleLineValue(Of Single)(key:="Bolus Increment")
+        Me.BolusSpeed = sTable.GetSingleLineValue(Of String)(key:="Bolus Speed ")
+        Me.DualSquare = New DualSquareRecord(sTable.GetSingleLineValue(Of String)(key:="Dual/Square"))
     End Sub
 
     Public Sub New()

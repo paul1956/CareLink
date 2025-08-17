@@ -31,23 +31,32 @@ Public Module SystemConstants
         {"TreatmentMarkersChart", New CalloutAnnotation}}
 
     Friend ReadOnly s_common_Headers As New Dictionary(Of String, String) From {
-        {"Accept", "application/json,text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"},
+        {"Accept", "application/json,text/html,application/xhtml+xml,application/" &
+        "xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-" &
+        "exchange;deviceFamily=b3;q=0.9"},
         {"Accept-Language", "en-US,en;q=0.9"},
         {"Connection", "keep-alive"},
-        {"sec-ch-ua", """Not/A)Brand"";v=""99"", ""Microsoft Edge"";v=""115"", ""Chromium"";v=""115"""},
-        {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/120.0.0.0"}}
+        {"sec-ch-ua", """Not/A)Brand"";v=""99"", ""Microsoft Edge"";v=""115""," &
+        " ""Chromium"";v=""115"""},
+        {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" &
+        " (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/120.0.0.0"}}
 
     Friend ReadOnly s_discoverUrl As New Dictionary(Of String, String) From {
         {"EU", "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"},
         {"US", "https://clcloud.minimed.com/connect/carepartner/v11/discover/android/3.2"}}
 
     Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationRecord) From {
-        {$"Humalog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},
-        {$"Novolog{RegisteredTrademark}", New InsulinActivationRecord(8, 4)},
-        {$"Generic (Insulin Lispro)", New InsulinActivationRecord(9, 4)},
-        {$"NovoRapid", New InsulinActivationRecord(7, 4)},
-        {$"FIASP{RegisteredTrademark}", New InsulinActivationRecord(4, 3)},
-        {$"Lyumjev{RegisteredTrademark}", New InsulinActivationRecord(3, 3)}}
+        {$"Humalog{RegisteredTrademark}",
+         New InsulinActivationRecord(upCount:=8, aitHours:=4)},
+        {$"Novolog{RegisteredTrademark}",
+         New InsulinActivationRecord(upCount:=8, aitHours:=4)},
+        {$"Generic (Insulin Lispro)",
+         New InsulinActivationRecord(upCount:=9, aitHours:=4)},
+        {$"NovoRapid", New InsulinActivationRecord(upCount:=7, aitHours:=4)},
+        {$"FIASP{RegisteredTrademark}",
+         New InsulinActivationRecord(upCount:=4, aitHours:=3)},
+        {$"Lyumjev{RegisteredTrademark}",
+         New InsulinActivationRecord(upCount:=3, aitHours:=3)}}
 
     Public ReadOnly s_oneToNineteen As New List(Of String) From {
         "zero",

@@ -58,18 +58,35 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the Cancel button click event, cancels the login and hides the dialog.
+    '''  Handles the Cancel button click event, setting a flag to indicate cancellation.
     ''' </summary>
-    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <remarks>
+    '''  This method sets a flag to indicate that the operation was cancelled
+    '''  and hides the dialog.
+    ''' </remarks>
+    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) _
+        Handles Cancel_Button.Click
+
         _doCancel = True
         Me.DialogResult = DialogResult.Cancel
         Me.Hide()
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="CarePartnerCheckBox"/> checked change event, toggling partner user fields.
+    '''  Handles the Care Partner checkbox checked change event,
+    '''  toggling visibility of the Patient User ID controls.
     ''' </summary>
-    Private Sub CarePartnerCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles CarePartnerCheckBox.CheckedChanged
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <remarks>
+    '''  If the Care Partner checkbox is checked, the Patient User ID label
+    '''  and textbox are made visible. If unchecked, they are hidden.
+    ''' </remarks>
+    Private Sub CarePartnerCheckBox_CheckedChanged(sender As Object, e As EventArgs) _
+        Handles CarePartnerCheckBox.CheckedChanged
+
         Dim careLinkPartner As Boolean = Me.CarePartnerCheckBox.Checked
         Me.PatientUserIDLabel.Visible = careLinkPartner
         Me.PatientUserIDTextBox.Visible = careLinkPartner
@@ -79,24 +96,42 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="CountryComboBox"/> selected value change event, updating the current date culture.
+    '''  Handles the Country ComboBox selected value changed event,
+    '''  updating the current date culture.
     ''' </summary>
-    Private Sub CountryComboBox_SelectedValueChanged(sender As Object, e As EventArgs) Handles CountryComboBox.SelectedValueChanged
-        CurrentDateCulture = If(TypeOf Me.CountryComboBox.SelectedValue Is String,
-                                Me.CountryComboBox.SelectedValue.ToString.GetCurrentDateCulture,
-                                CType(Me.CountryComboBox.SelectedValue, KeyValuePair(Of String, String)).Value.GetCurrentDateCulture
-                               )
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <remarks>
+    '''  This method updates the CurrentDateCulture based on the selected
+    '''  country in the CountryComboBox.
+    ''' </remarks>
+    Private Sub CountryComboBox_SelectedValueChanged(sender As Object, e As EventArgs) _
+        Handles CountryComboBox.SelectedValueChanged
+
+        Dim selectedValue As Object = Me.CountryComboBox.SelectedValue
+        If TypeOf selectedValue Is String Then
+            CurrentDateCulture = selectedValue.ToString.GetCurrentDateCulture
+        Else
+            Dim selectedValue1 As KeyValuePair(Of String, String) =
+                CType(selectedValue, KeyValuePair(Of String, String))
+            CurrentDateCulture = selectedValue1.Value.GetCurrentDateCulture
+        End If
     End Sub
 
     ''' <summary>
-    '''  Handles the dialog <see cref="Load"/> event, initializing UI controls and loading user settings.
+    '''  Handles the dialog <see cref="Load"/> event,
+    '''  initializes the form controls and settings.
     ''' </summary>
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <remarks>
+    '''  This method sets the dialog icon, initializes the HTTP client,
+    '''  loads user settings, and populates the username and region combo boxes.
+    ''' </remarks>
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-#Disable Warning WFO5001 ' Type is for evaluation purposes only and is subject to change or removal in future updates.
         Me.Icon = If(Application.IsDarkModeEnabled,
-            PngBitmapToIcon(My.Resources.LoginLight),
-            PngBitmapToIcon(My.Resources.LoginDark))
-#Enable Warning WFO5001 ' Type is for evaluation purposes only and is subject to change or removal in future updates.
+            PngBitmapToIcon(original:=My.Resources.LoginLight),
+            PngBitmapToIcon(original:=My.Resources.LoginDark))
         _httpClient = New HttpClient()
         _httpClient.SetDefaultRequestHeaders()
         If _initialHeight = 0 Then
@@ -164,8 +199,14 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the dialog <see cref="MyBase.Shown"/> event, triggers automatic login if configured.
+    '''  Handles the dialog <see cref="Shown"/> event, sets the initial height and visibility.
     ''' </summary>
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <remarks>
+    '''  This method sets the dialog's height to the initial height and makes it visible.
+    '''  If the login source is automatic, it triggers the OK button click event.
+    ''' </remarks>
     Private Sub LoginForm1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.Height = _initialHeight
         Me.Visible = True
@@ -175,8 +216,10 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="OK_Button"/> click event, performs user authentication and updates settings.
+    '''  Handles the OK button click event, validates input and attempts to log in.
     ''' </summary>
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
         If Me.UsernameComboBox.Text.Length = 0 Then
             Me.UsernameComboBox.Focus()
@@ -252,18 +295,25 @@ Public Class LoginDialog
             My.Settings.CareLinkUserName = s_userName
             My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
             My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-            My.Settings.CareLinkPartner = Me.CarePartnerCheckBox.Checked OrElse Not String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text)
+            My.Settings.CareLinkPartner =
+                Me.CarePartnerCheckBox.Checked OrElse
+                Not String.IsNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text)
             My.Settings.Save()
-            If Not s_allUserSettingsData.TryGetValue(s_userName, Me.LoggedOnUser) Then
+            Dim key As String = s_userName
+            If Not s_allUserSettingsData.TryGetValue(key, userRecord:=Me.LoggedOnUser) Then
                 s_allUserSettingsData.SaveAllUserRecords(
-                    loggedOnUser:=New CareLinkUserDataRecord(s_allUserSettingsData),
+                    loggedOnUser:=New CareLinkUserDataRecord(parent:=s_allUserSettingsData),
                     key:=NameOf(CareLinkUserDataRecord.CareLinkUserName), value:=s_userName)
             End If
             Me.DialogResult = DialogResult.OK
             Me.Hide()
         Else
-            ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMessage, lastHttpStatusCode:=Me.Client.GetHttpStatusCode)
-            If Client2.Auth_Error_Codes.Contains(Me.Client.GetHttpStatusCode) Then
+            ReportLoginStatus(
+                Me.LoginStatus,
+                hasErrors:=True,
+                lastErrorMessage,
+                lastHttpStatusCode:=Me.Client.GetHttpStatusCode)
+            If Client2.Auth_Error_Codes.Contains(value:=Me.Client.GetHttpStatusCode) Then
                 Me.PasswordTextBox.Text = ""
                 Dim userRecord As CareLinkUserDataRecord = Nothing
                 If s_allUserSettingsData.TryGetValue(s_userName, userRecord) Then
@@ -271,12 +321,20 @@ Public Class LoginDialog
                 End If
             End If
 
-            Dim networkDownMessage As String = If(NetworkUnavailable(), "due to network being unavailable", $"Response Code = {Me.Client.GetHttpStatusCode}")
-            Select Case MsgBox(
-                    heading:=$"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!",
-                    prompt:=networkDownMessage,
-                    buttonStyle:=MsgBoxStyle.AbortRetryIgnore Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question,
-                    title:="Login Failed")
+            Dim networkDownMessage As String =
+                If(NetworkUnavailable(),
+                   "due to network being unavailable",
+                   $"Response Code = {Me.Client.GetHttpStatusCode}")
+            Dim heading As String =
+                $"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!"
+            Const buttonStyle As MsgBoxStyle =
+                MsgBoxStyle.AbortRetryIgnore Or
+                MsgBoxStyle.DefaultButton2 Or
+                MsgBoxStyle.Question
+            Dim msgBoxResult As MsgBoxResult =
+                MsgBox(heading, prompt:=networkDownMessage, buttonStyle, title:="Login Failed")
+
+            Select Case msgBoxResult
                 Case MsgBoxResult.Abort
                     End
                 Case MsgBoxResult.Ignore
@@ -289,9 +347,17 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="PasswordTextBox"/> validating event, ensures password is not empty.
+    '''  Handles the Password TextBox validating event, ensures password is not empty.
     ''' </summary>
-    Private Sub PasswordTextBox_Validating(sender As Object, e As CancelEventArgs) Handles PasswordTextBox.Validating
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
+    ''' <remarks>
+    '''  If the password is empty, it cancels the event and focuses on the PasswordTextBox.
+    '''  If a username is selected, it enables the OK button.
+    ''' </remarks>
+    Private Sub PasswordTextBox_Validating(sender As Object, e As CancelEventArgs) _
+        Handles PasswordTextBox.Validating
+
         If String.IsNullOrWhiteSpace(Me.PasswordTextBox.Text) Then
             e.Cancel = True
             Me.PasswordTextBox.Focus()
@@ -306,20 +372,29 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="RegionComboBox"/> selected index change event,
-    '''  updates country list for the selected region.
+    '''  Handles the Region ComboBox selected index changed event,
+    '''  updates the Country ComboBox based on the selected region.
     ''' </summary>
-    Private Sub RegionComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) Handles RegionComboBox.SelectedIndexChanged
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <remarks>
+    '''  This method populates the CountryComboBox with countries from the selected region.
+    ''' </remarks>
+    Private Sub RegionComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) _
+        Handles RegionComboBox.SelectedIndexChanged
+
         Dim countriesInRegion As New Dictionary(Of String, String)
-        Dim selectedRegion As String = s_regionList.Values(Me.RegionComboBox.SelectedIndex)
+        Dim selectedRegion As String =
+            s_regionList.Values(index:=Me.RegionComboBox.SelectedIndex)
         For Each kvp As KeyValuePair(Of String, String) In s_regionCountryList
 
             If kvp.Value = selectedRegion Then
-                countriesInRegion.Add(kvp.Key, s_countryCodeList(kvp.Key))
+                countriesInRegion.Add(kvp.Key, value:=s_countryCodeList(kvp.Key))
             End If
         Next
         If countriesInRegion.Count > 0 Then
-            Me.CountryComboBox.DataSource = New BindingSource(dataSource:=countriesInRegion, dataMember:=Nothing)
+            Me.CountryComboBox.DataSource =
+                New BindingSource(dataSource:=countriesInRegion, dataMember:=Nothing)
             Me.CountryComboBox.DisplayMember = "Key"
             Me.CountryComboBox.ValueMember = "Value"
             Me.CountryComboBox.Enabled = True
@@ -329,9 +404,17 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="ShowPasswordCheckBox"/> checked change event, toggles password visibility.
+    '''  Handles the Show Password checkbox checked change event,
+    '''  toggles the visibility of the password in the PasswordTextBox.
     ''' </summary>
-    Private Sub ShowPasswordCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowPasswordCheckBox.CheckedChanged
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <remarks>
+    '''  If the checkbox is checked, the password is shown as plain text;
+    '''  if unchecked, it is masked with an asterisk character.
+    ''' </remarks>
+    Private Sub ShowPasswordCheckBox_CheckedChanged(sender As Object, e As EventArgs) _
+        Handles ShowPasswordCheckBox.CheckedChanged
         Me.PasswordTextBox.PasswordChar = If(Me.ShowPasswordCheckBox.Checked,
                                              Nothing,
                                              "*"c
@@ -372,8 +455,8 @@ Public Class LoginDialog
     '''  Handles the <see cref="UsernameComboBox"/> selection change committed event,
     '''  loads user settings for the selected username.
     ''' </summary>
-    Private Sub UsernameComboBox_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles _
-        UsernameComboBox.SelectionChangeCommitted
+    Private Sub UsernameComboBox_SelectionChangeCommitted(sender As Object, e As EventArgs) _
+        Handles UsernameComboBox.SelectionChangeCommitted
 
         Dim userRecord As CareLinkUserDataRecord = Nothing
 
@@ -397,7 +480,9 @@ Public Class LoginDialog
     ''' <summary>
     '''  Handles the <see cref="UsernameComboBox"/> validating event, ensures username is not empty.
     ''' </summary>
-    Private Sub UsernameComboBox_Validating(sender As Object, e As CancelEventArgs) Handles UsernameComboBox.Validating
+    Private Sub UsernameComboBox_Validating(sender As Object, e As CancelEventArgs) _
+        Handles UsernameComboBox.Validating
+
         If String.IsNullOrWhiteSpace(value:=Me.UsernameComboBox.Text) Then
             e.Cancel = True
             Me.UsernameComboBox.Focus()

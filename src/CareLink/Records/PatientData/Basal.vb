@@ -111,7 +111,14 @@ Public Class Basal
     '''  An integer representing the hash code of the current instance.
     ''' </returns>
     Public Overrides Function GetHashCode() As Integer
-        Return HashCode.Combine(Me.ActiveBasalPattern, Me.BasalRate, Me.presetTempName, Me.tempBasalDurationRemaining, Me.tempBasalPercentage, Me.TempBasalRate, Me.tempBasalType)
+        Return HashCode.Combine(
+            Me.ActiveBasalPattern,
+            Me.BasalRate,
+            Me.presetTempName,
+            Me.tempBasalDurationRemaining,
+            Me.tempBasalPercentage,
+            Me.TempBasalRate,
+            Me.tempBasalType)
     End Function
 
     ''' <summary>

@@ -7,6 +7,8 @@
 ''' </summary>
 Friend Module TimeZoneExtensions
 
+    Private ReadOnly s_comparer As StringComparer = StringComparer.OrdinalIgnoreCase
+
 #Region "Time Zone Helper"
 
     Private s_pumpTimeZoneInfo As TimeZoneInfo
@@ -29,7 +31,7 @@ Friend Module TimeZoneExtensions
     '''  This is used to avoid repeated lookups for the same time zone ID.
     ''' </remarks>
     Private ReadOnly s_timeZoneMap As New Dictionary(Of String, TimeZoneInfo) _
-            (StringComparer.OrdinalIgnoreCase)
+            (comparer:=s_comparer)
 
     ''' <summary>
     '''  Special known time zones with their corresponding standard time zone IDs.
@@ -37,7 +39,8 @@ Friend Module TimeZoneExtensions
     ''' <remarks>
     '''  This is used to map common names to their official time zone IDs.
     ''' </remarks>
-    Private ReadOnly s_specialKnownTimeZones As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase) From {
+    Private ReadOnly s_specialKnownTimeZones As New Dictionary(Of String, String) _
+        (comparer:=s_comparer) From {
             {"Amazon Standard Time", "Central Brazilian Standard Time"},
             {"Argentina Standard Time", "Argentina Standard Time"},
             {"Bolivia Time", "SA Western Standard Time"},

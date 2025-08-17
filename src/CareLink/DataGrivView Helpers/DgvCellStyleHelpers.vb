@@ -9,125 +9,56 @@ Imports System.Runtime.CompilerServices
 
 Public Module DgvCellStyleHelpers
 
-    Private ReadOnly s_alignmentTable As New Dictionary(Of Type, Dictionary(Of String, DataGridViewCellStyle))
+    Private ReadOnly s_alignmentTable As _
+        New Dictionary(Of Type, Dictionary(Of String, DataGridViewCellStyle))
 
     Private ReadOnly s_columnsToHide As New Dictionary(Of Type, List(Of String)) From {
-            {GetType(ActiveInsulin), New List(Of String) From {
-                NameOf(ActiveInsulin.kind),
-                NameOf(ActiveInsulin.Version)}},
-            {GetType(AutoBasalDelivery), New List(Of String) From {
-                NameOf(AutoBasalDelivery.OAdateTime)}},
-            {GetType(AutoModeStatus), New List(Of String) From {
-                NameOf(AutoModeStatus.Kind),
-                NameOf(AutoModeStatus.Type)}},
-            {GetType(BannerState), New List(Of String) From {}},
-            {GetType(Basal), New List(Of String) From {}},
-            {GetType(BgReading), New List(Of String) From {
-                NameOf(BgReading.Kind),
-                NameOf(BgReading.Type)}},
-            {GetType(Calibration), New List(Of String) From {
-                NameOf(Calibration.Kind),
-                NameOf(Calibration.Type)}},
-            {GetType(CareLinkUserDataRecord), New List(Of String) From {
-                NameOf(CareLinkUserDataRecord.ID),
-                NameOf(CareLinkUserDataRecord.CareLinkPassword)}},
-            {GetType(Insulin), New List(Of String) From {
-                NameOf(Insulin.Kind),
-                NameOf(Insulin.OAdateTime),
-                NameOf(Insulin.Type)}},
-            {GetType(CurrentUserRecord), New List(Of String) From {}},
-            {GetType(LastAlarm), New List(Of String) From {}},
-            {GetType(LastSG), New List(Of String) From {
-                "RecordNumber",
-                NameOf(LastSG.Kind),
-                NameOf(LastSG.Version)}},
-            {GetType(Limit), New List(Of String) From {
-                NameOf(Limit.Kind),
-                NameOf(Limit.Version)}},
-            {GetType(LowGlucoseSuspended), New List(Of String) From {
-                NameOf(LowGlucoseSuspended.Kind),
-                NameOf(LowGlucoseSuspended.Type)}},
-            {GetType(Meal), New List(Of String) From {
-                NameOf(Meal.Kind),
-                NameOf(Meal.Type)}},
-            {GetType(SG), New List(Of String) From {
-                NameOf(SG.Kind),
-                NameOf(SG.OaDateTime),
-                NameOf(SG.Version)}},
-            {GetType(TherapyAlgorithmState), New List(Of String) From {}},
-            {GetType(TimeChange), New List(Of String) From {
-                NameOf(TimeChange.Kind),
-                NameOf(TimeChange.Type)}}}
-
-    ''' <summary>
-    '''  Creates a <see cref="Dictionary"/> that maps class property names to <see cref="DataGridViewCellStyle"/> for column alignment.
-    '''  Determines alignment and padding based on the <see cref="ColumnAttribute"/> type name.
-    ''' </summary>
-    ''' <typeparam name="T">The type of the class whose properties are mapped.</typeparam>
-    ''' <param name="alignmentTable">A dictionary to populate with property name to cell style mappings.</param>
-    ''' <param name="columnName">The column name to retrieve or add alignment for.</param>
-    ''' <returns>The <see cref="DataGridViewCellStyle"/> for the specified column.</returns>
-    Friend Function ClassPropertiesToColumnAlignment(Of T As Class)(
-            ByRef alignmentTable As Dictionary(Of String, DataGridViewCellStyle),
-            columnName As String) As DataGridViewCellStyle
-
-        Dim classType As Type = GetType(T)
-        Dim cellStyle As New DataGridViewCellStyle
-        If alignmentTable.Count = 0 Then
-            For Each [property] As PropertyInfo In classType.GetProperties()
-                cellStyle = New DataGridViewCellStyle
-                Dim typeName As String = [property].GetCustomAttributes(
-                    attributeType:=GetType(ColumnAttribute),
-                    inherit:=True).Cast(Of ColumnAttribute)().SingleOrDefault()?.TypeName
-
-                Select Case typeName
-                    Case "additionalInfo",
-                         "Date",
-                         "DateTime",
-                         NameOf(OADate),
-                         "RecordNumber",
-                         NameOf([String]),
-                         "Version"
-
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleLeft,
-                            padding:=New Padding(all:=1))
-                    Case "AdditionalInfo"
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleLeft,
-                            padding:=New Padding(all:=1))
-                    Case NameOf([Decimal]), NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleRight,
-                            padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
-                    Case NameOf([Boolean]), "DeleteRow"
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleCenter,
-                            padding:=New Padding(all:=0))
-                    Case "CustomProperty"
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleRight,
-                            padding:=New Padding(left:=0, top:=2, right:=2, bottom:=2))
-                    Case Else
-                        Throw UnreachableException(propertyName:=[property].PropertyType.Name)
-                End Select
-                alignmentTable.Add(key:=[property].Name, value:=cellStyle)
-            Next
-        End If
-        If Not alignmentTable.TryGetValue(key:=columnName, value:=cellStyle) Then
-            Dim alignMiddle As Boolean = columnName = NameOf(SummaryRecord.RecordNumber) OrElse
-                                         columnName = NameOf(Limit.Index)
-            cellStyle = If(alignMiddle,
-                           (New DataGridViewCellStyle).SetCellStyle(
-                               alignment:=DataGridViewContentAlignment.MiddleCenter,
-                               padding:=New Padding(all:=0)),
-                           (New DataGridViewCellStyle).SetCellStyle(
-                               alignment:=DataGridViewContentAlignment.MiddleLeft,
-                               padding:=New Padding(all:=1)))
-            alignmentTable.Add(key:=columnName, value:=cellStyle)
-        End If
-        Return cellStyle
-    End Function
+        {GetType(ActiveInsulin), New List(Of String) From {
+            NameOf(ActiveInsulin.kind),
+            NameOf(ActiveInsulin.Version)}},
+        {GetType(AutoBasalDelivery), New List(Of String) From {
+            NameOf(AutoBasalDelivery.OAdateTime)}},
+        {GetType(AutoModeStatus), New List(Of String) From {
+            NameOf(AutoModeStatus.Kind),
+            NameOf(AutoModeStatus.Type)}},
+        {GetType(BannerState), New List(Of String) From {}},
+        {GetType(Basal), New List(Of String) From {}},
+        {GetType(BgReading), New List(Of String) From {
+            NameOf(BgReading.Kind),
+            NameOf(BgReading.Type)}},
+        {GetType(Calibration), New List(Of String) From {
+            NameOf(Calibration.Kind),
+            NameOf(Calibration.Type)}},
+        {GetType(CareLinkUserDataRecord), New List(Of String) From {
+            NameOf(CareLinkUserDataRecord.ID),
+            NameOf(CareLinkUserDataRecord.CareLinkPassword)}},
+        {GetType(Insulin), New List(Of String) From {
+            NameOf(Insulin.Kind),
+            NameOf(Insulin.OAdateTime),
+            NameOf(Insulin.Type)}},
+        {GetType(CurrentUserRecord), New List(Of String) From {}},
+        {GetType(LastAlarm), New List(Of String) From {}},
+        {GetType(LastSG), New List(Of String) From {
+            "RecordNumber",
+            NameOf(LastSG.Kind),
+            NameOf(LastSG.Version)}},
+        {GetType(Limit), New List(Of String) From {
+            NameOf(Limit.Kind),
+            NameOf(Limit.Version)}},
+        {GetType(LowGlucoseSuspended), New List(Of String) From {
+            NameOf(LowGlucoseSuspended.Kind),
+            NameOf(LowGlucoseSuspended.Type)}},
+        {GetType(Meal), New List(Of String) From {
+            NameOf(Meal.Kind),
+            NameOf(Meal.Type)}},
+        {GetType(SG), New List(Of String) From {
+            NameOf(SG.Kind),
+            NameOf(SG.OaDateTime),
+            NameOf(SG.Version)}},
+        {GetType(TherapyAlgorithmState), New List(Of String) From {}},
+        {GetType(TimeChange), New List(Of String) From {
+            NameOf(TimeChange.Kind),
+            NameOf(TimeChange.Type)}}}
 
     ''' <summary>
     '''  Gets the <see cref="DataGridViewCellStyle"/> for a given column name and data type.
@@ -141,7 +72,7 @@ Public Module DgvCellStyleHelpers
     ''' <returns>
     '''  The <see cref="DataGridViewCellStyle"/> for the specified column.
     ''' </returns>
-    Friend Function GetCellStyle(Of T As Class)(columnName As String) As DataGridViewCellStyle
+    Public Function GetCellStyle(Of T As Class)(columnName As String) As DataGridViewCellStyle
         Dim key As Type = GetType(T)
         Dim value As Dictionary(Of String, DataGridViewCellStyle) = Nothing
 
@@ -153,10 +84,13 @@ Public Module DgvCellStyleHelpers
     End Function
 
     ''' <summary>
-    '''  Gets the formatted <see cref="DataGridViewCellStyle"/> for the specified <see cref="DataGridViewCell"/>,
+    '''  Gets the formatted <see cref="DataGridViewCellStyle"/> for the
+    '''  specified <see cref="DataGridViewCell"/>,
     '''  simulating the formatting event to retrieve the effective style.
     ''' </summary>
-    ''' <param name="cell">The <see cref="DataGridViewCell"/> to get the formatted style for.</param>
+    ''' <param name="cell">
+    '''  The <see cref="DataGridViewCell"/> to get the formatted style for.
+    ''' </param>
     ''' <returns>
     '''  The <see cref="DataGridViewCellStyle"/> as it would appear after formatting.
     ''' </returns>
@@ -209,7 +143,7 @@ Public Module DgvCellStyleHelpers
                 Stop
             End If
             Dim item As String = dgv.Columns(index:=i).DataPropertyName
-            dgv.Columns(index:=i).Visible = Not DgvCellStyleHelpers.HideColumn(Of T)(item)
+            dgv.Columns(index:=i).Visible = Not HideColumn(Of T)(item)
         Next
     End Sub
 
@@ -345,7 +279,7 @@ Public Module DgvCellStyleHelpers
         Dim value As String = Convert.ToString(e.Value)
         If value <> String.Empty Then
             Try
-                e.Value = value.ParseDate("").ToShortDateTimeString
+                e.Value = value.ParseDate("").ToShortDateString
             Catch ex As Exception
                 e.Value = value
             End Try
@@ -360,7 +294,11 @@ Public Module DgvCellStyleHelpers
     ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
     ''' <param name="message">The message to append to the value.</param>
     <Extension>
-    Public Sub CellFormattingInteger(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, message As String)
+    Public Sub CellFormattingInteger(
+        dgv As DataGridView,
+        ByRef e As DataGridViewCellFormattingEventArgs,
+        message As String)
+
         e.Value = $"{e.Value} {message}"
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
@@ -395,8 +333,12 @@ Public Module DgvCellStyleHelpers
     ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
     ''' <param name="partialKey">The partial column name key to match for formatting.</param>
     <Extension>
-    Public Sub CellFormattingSgValue(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs, partialKey As String)
-        Dim sgColumnName As String = dgv.Columns(e.ColumnIndex).Name
+    Public Sub CellFormattingSgValue(
+        dgv As DataGridView,
+        ByRef e As DataGridViewCellFormattingEventArgs,
+        partialKey As String)
+
+        Dim sgColumnName As String = dgv.Columns(index:=e.ColumnIndex).Name
         Dim sensorValue As Single = ParseSingle(e.Value, digits:=1)
         If Single.IsNaN(sensorValue) Then
             e.Value = "NaN"
@@ -425,7 +367,7 @@ Public Module DgvCellStyleHelpers
                     End If
                 Case $"{partialKey}MmolL"
                     e.Value = sensorValue.ToString(format:="F1", provider)
-                    If sensorValue.RoundSingle(digits:=1) < GetTirLowLimit(asMmolL:=True) Then
+                    If sensorValue.RoundToSingle(digits:=1) < GetTirLowLimit(asMmolL:=True) Then
                         dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
                     ElseIf sensorValue > GetTirHighLimit(asMmolL:=True) Then
                         dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Yellow, isUri:=False)

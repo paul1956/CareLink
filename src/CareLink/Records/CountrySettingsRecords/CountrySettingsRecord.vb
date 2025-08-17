@@ -44,8 +44,22 @@ Public Class CountrySettingsRecord
 #Region "Lists"
 
     Private _hasValue As Boolean
-    Private Property languages As New List(Of LanguageRecord)                 ' "[{""name"":""English"",""code"":""EN""}]"
-    Private Property supportedReports As New List(Of SupportedReportRecord)   ' "[{""report"":""ADHERENCE"",""onlyFor"":[],""notFor"":[]},{""report"":""ASSESSMENT_AND_PROGRESS"",""onlyFor"":[],""notFor"":[]},{""report"":""BOLUS_WIZARD_FOOD_BOLUS"",""onlyFor"":[],""notFor"":[]},{""report"":""DAILY_DETAILS"",""onlyFor"":[],""notFor"":[]},{""report"":""DASHBOARD"",""onlyFor"":[],""notFor"":[]},{""report"":""DEVICE_SETTINGS"",""onlyFor"":[],""notFor"":[]},{""report"":""EPISODE_SUMMARY"",""onlyFor"":[],""notFor"":[]},{""report"":""LOGBOOK"",""onlyFor"":[],""notFor"":[]},{""report"":""OVERVIEW"",""onlyFor"":[],""notFor"":[]},{""report"":""WEEKLY_REVIEW"",""onlyFor"":[],""notFor"":[]}]"
+
+    Private Property languages As New List(Of LanguageRecord)
+    ' "[{""name"":""English"",""code"":""EN""}]"
+
+    Private Property supportedReports As New List(Of SupportedReportRecord)
+    '"[{""report"":""ADHERENCE"",""onlyFor"":[],""notFor"":[]},
+    '{""report"":""ASSESSMENT_AND_PROGRESS"",""onlyFor"":[],""notFor"":[]},
+    '{""report"":""BOLUS_WIZARD_FOOD_BOLUS"",""onlyFor"":[],""notFor"":[]},
+    '{""report"":""DAILY_DETAILS"",""onlyFor"":[],""notFor"":[]},
+    '{""report"":""DASHBOARD"",""onlyFor"":[],""notFor"":[]},
+    '{""report"":""DEVICE_SETTINGS"",""onlyFor"":[],""notFor"":[]},
+    '{""report"":""EPISODE_SUMMARY"",""onlyFor"":[],""notFor"":[]},
+    '{""report"":""LOGBOOK"",""onlyFor"":[],""notFor"":[]},
+    '{""report"":""OVERVIEW"",""onlyFor"":[],""notFor"":[]},
+    '{""report"":""WEEKLY_REVIEW"",""onlyFor"":[],""notFor"":[]}]"
+
 
 #End Region
 

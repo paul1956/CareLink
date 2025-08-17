@@ -39,10 +39,10 @@ Friend Module Form1CollectMarkersHelper
             Function(x As LowGlucoseSuspended, y As LowGlucoseSuspended) As Integer
                 Return x.DisplayTime.CompareTo(value:=y.DisplayTime)
             End Function
-        s_lowGlucoseSuspendedMarkers.Sort(comparison)
+        s_suspendedMarkers.Sort(comparison)
 
         Dim tmpList As New List(Of LowGlucoseSuspended)
-        For Each r As IndexClass(Of LowGlucoseSuspended) In s_lowGlucoseSuspendedMarkers.WithIndex
+        For Each r As IndexClass(Of LowGlucoseSuspended) In s_suspendedMarkers.WithIndex
             Dim item As LowGlucoseSuspended = r.Value
             item.RecordNumber = tmpList.Count + 1
             If r.IsFirst Then
@@ -53,7 +53,7 @@ Friend Module Form1CollectMarkersHelper
                 tmpList.Add(item)
             End If
         Next
-        s_lowGlucoseSuspendedMarkers = tmpList
+        s_suspendedMarkers = tmpList
     End Sub
 
     ''' <summary>
@@ -71,7 +71,7 @@ Friend Module Form1CollectMarkersHelper
         s_bgReadingMarkers.Clear()
         s_calibrationMarkers.Clear()
         s_insulinMarkers.Clear()
-        s_lowGlucoseSuspendedMarkers.Clear()
+        s_suspendedMarkers.Clear()
         s_mealMarkers.Clear()
         s_timeChangeMarkers.Clear()
         s_markers.Clear()
@@ -86,31 +86,53 @@ Friend Module Form1CollectMarkersHelper
             Select Case item.Type
                 Case "AUTO_BASAL_DELIVERY"
                     s_markers.Add(item)
-                    Dim basalDeliveryMarker As New AutoBasalDelivery(item, recordNumber:=s_autoBasalDeliveryMarkers.Count + 1)
+                    Dim basalDeliveryMarker As New AutoBasalDelivery(
+                        item,
+                        recordNumber:=s_autoBasalDeliveryMarkers.Count + 1)
                     InsulinPerHour.AddBasalAmountToInsulinPerHour(basalDeliveryMarker)
                     s_autoBasalDeliveryMarkers.Add(item:=basalDeliveryMarker)
-                    If Not basalDictionary.TryAdd(key:=basalDeliveryMarker.OAdateTime, value:=basalDeliveryMarker.BolusAmount) Then
-                        basalDictionary(key:=basalDeliveryMarker.OAdateTime) += basalDeliveryMarker.BolusAmount
+                    If Not basalDictionary.TryAdd(
+                        key:=basalDeliveryMarker.OAdateTime,
+                        value:=basalDeliveryMarker.BolusAmount) Then
+
+                        basalDictionary(key:=basalDeliveryMarker.OAdateTime) +=
+                            basalDeliveryMarker.BolusAmount
                     End If
-                    s_lowGlucoseSuspendedMarkers.Add(item:=New LowGlucoseSuspended(item, recordNumber:=s_lowGlucoseSuspendedMarkers.Count + 1))
+                    s_suspendedMarkers.Add(item:=New LowGlucoseSuspended(
+                       item,
+                       recordNumber:=s_suspendedMarkers.Count + 1))
                 Case "AUTO_MODE_STATUS"
-                    s_autoModeStatusMarkers.Add(item:=New AutoModeStatus(item, recordNumber:=s_autoModeStatusMarkers.Count + 1))
-                    s_lowGlucoseSuspendedMarkers.Add(item:=New LowGlucoseSuspended(item, recordNumber:=s_lowGlucoseSuspendedMarkers.Count + 1))
+                    s_autoModeStatusMarkers.Add(item:=New AutoModeStatus(
+                        item,
+                        recordNumber:=s_autoModeStatusMarkers.Count + 1))
+                    s_suspendedMarkers.Add(item:=New LowGlucoseSuspended(
+                        item,
+                        recordNumber:=s_suspendedMarkers.Count + 1))
                 Case "BG_READING"
                     s_markers.Add(item)
-                    s_bgReadingMarkers.Add(item:=New BgReading(item, recordNumber:=s_bgReadingMarkers.Count + 1))
+                    s_bgReadingMarkers.Add(item:=New BgReading(
+                        item,
+                        recordNumber:=s_bgReadingMarkers.Count + 1))
                 Case "CALIBRATION"
                     s_markers.Add(item:=item.ScaleMarker)
-                    s_calibrationMarkers.Add(item:=New Calibration(item:=item.ScaleMarker(), recordNumber:=s_calibrationMarkers.Count + 1))
+                    s_calibrationMarkers.Add(item:=New Calibration(
+                        item:=item.ScaleMarker(),
+                        recordNumber:=s_calibrationMarkers.Count + 1))
                 Case "INSULIN"
                     s_markers.Add(item)
-                    Dim lastInsulinRecord As New Insulin(item, recordNumber:=s_insulinMarkers.Count + 1)
+                    Dim lastInsulinRecord As New Insulin(
+                        item,
+                        recordNumber:=s_insulinMarkers.Count + 1)
                     s_insulinMarkers.Add(item:=lastInsulinRecord)
-                    s_lowGlucoseSuspendedMarkers.Add(item:=New LowGlucoseSuspended(item, recordNumber:=s_lowGlucoseSuspendedMarkers.Count + 1))
+                    s_suspendedMarkers.Add(item:=New LowGlucoseSuspended(
+                        item,
+                        recordNumber:=s_suspendedMarkers.Count + 1))
                     Select Case item.GetStringFromJson(key:=NameOf(Insulin.ActivationType))
                         Case "AUTOCORRECTION"
-                            If Not basalDictionary.TryAdd(key:=lastInsulinRecord.OAdateTime, value:=lastInsulinRecord.DeliveredFastAmount) Then
-                                basalDictionary(key:=lastInsulinRecord.OAdateTime) += lastInsulinRecord.DeliveredFastAmount
+                            Dim key As OADate = lastInsulinRecord.OAdateTime
+                            Dim value As Single = lastInsulinRecord.DeliveredFastAmount
+                            If Not basalDictionary.TryAdd(key, value) Then
+                                basalDictionary(key) += value
                             End If
                         Case "MANUAL"
                             Stop
@@ -120,29 +142,40 @@ Friend Module Form1CollectMarkersHelper
                             ' handled elsewhere
                         Case Else
                             Stop
-                            Throw UnreachableException(propertyName:=item.Type)
+                            Throw UnreachableException(paramName:=item.Type)
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
                     If Not InAutoMode Then
-                        s_lowGlucoseSuspendedMarkers.Add(item:=New LowGlucoseSuspended(item, recordNumber:=s_lowGlucoseSuspendedMarkers.Count + 1))
+                        s_suspendedMarkers.Add(item:=New LowGlucoseSuspended(
+                            item,
+                            recordNumber:=s_suspendedMarkers.Count + 1))
                     End If
                     s_markers.Add(item)
                 Case "MEAL"
-                    s_mealMarkers.Add(item:=New Meal(item, recordNumber:=s_mealMarkers.Count + 1))
+                    s_mealMarkers.Add(item:=New Meal(
+                        item,
+                        recordNumber:=s_mealMarkers.Count + 1))
                     s_markers.Add(item)
                 Case "TIME_CHANGE"
                     s_markers.Add(item)
-                    s_timeChangeMarkers.Add(item:=New TimeChange(item, recordNumber:=s_timeChangeMarkers.Count + 1))
+                    s_timeChangeMarkers.Add(item:=New TimeChange(
+                        item,
+                        recordNumber:=s_timeChangeMarkers.Count + 1))
                 Case Else
                     Stop
-                    Throw UnreachableException(propertyName:=item.Type)
+                    Throw UnreachableException(paramName:=item.Type)
             End Select
         Next
 
         SortAndFilterListOfLowGlucoseSuspendedMarkers()
-        Dim endOADate As OADate = If(basalDictionary.Count = 0,
-                                     New OADate(asDate:=PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime),
-                                     basalDictionary.Last.Key)
+        Dim endOADate As OADate
+
+        If basalDictionary.Count = 0 Then
+            Dim asDate As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime
+            endOADate = New OADate(asDate)
+        Else
+            endOADate = basalDictionary.Last.Key
+        End If
 
         Dim i As Integer = 0
         Dim maxBasalPerHour As Double = 0
@@ -152,7 +185,9 @@ Friend Module Form1CollectMarkersHelper
                 Dim sum As Double = 0
                 Dim j As Integer = i
                 Dim startOADate As OADate = basalDictionary.Keys(index:=i)
-                While j < basalDictionary.Count AndAlso basalDictionary.Keys(index:=j) <= startOADate + OneHourAsOADate
+                While j < basalDictionary.Count AndAlso
+                      basalDictionary.Keys(index:=j) <= startOADate + OneHourAsOADate
+
                     sum += basalDictionary.Values(index:=j)
                     j += 1
                 End While

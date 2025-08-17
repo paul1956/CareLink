@@ -39,7 +39,11 @@ Public Class ExceptionHandlerDialog
     ''' <param name="exceptionText">The exception message text.</param>
     ''' <param name="stackTraceText">The stack trace text.</param>
     ''' <param name="UniqueFileNameWithPath">The full path for the report file.</param>
-    Private Shared Sub CreateReportFile(exceptionText As String, stackTraceText As String, UniqueFileNameWithPath As String)
+    Private Shared Sub CreateReportFile(
+            exceptionText As String,
+            stackTraceText As String,
+            UniqueFileNameWithPath As String)
+
         Using stream As StreamWriter = File.CreateText(UniqueFileNameWithPath)
             ' write exception header
             stream.WriteLine(value:=ExceptionStartingString)
@@ -74,6 +78,9 @@ Public Class ExceptionHandlerDialog
     ''' <summary>
     '''  Handles the Cancel button click event. Deletes the report file if it exists and closes the dialog.
     ''' </summary>
+    ''' <param name="sender">The sender of the event.</param>
+    ''' <param name="e">The event arguments.</param>
+    ''' <remarks>This method is called when the Cancel button is clicked.</remarks>
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
         If Not String.IsNullOrWhiteSpace(value:=Me.ReportFileNameWithPath) Then
             File.Delete(path:=Me.ReportFileNameWithPath)
@@ -83,8 +90,12 @@ Public Class ExceptionHandlerDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the dialog load event. Prepares the UI and creates or loads the error report as needed.
+    '''  Handles the form load event. Initializes the dialog,
+    '''  sets up the GitHub client, and prepares the instructions.
     ''' </summary>
+    ''' <param name="sender">The sender of the event.</param>
+    ''' <param name="e">The event arguments.</param>
+    ''' <remarks>This method is called when the dialog is loaded.</remarks>
     Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         StartOrStopServerUpdateTimer(Start:=False)
         Dim rtb As RichTextBox = Me.InstructionsRichTextBox
@@ -96,79 +107,120 @@ Public Class ExceptionHandlerDialog
         If String.IsNullOrWhiteSpace(value:=Me.ReportFileNameWithPath) Then
             ' Create error report and issue
             Me.ExceptionTextBox.Text = Me.UnhandledException.Exception.Message
-            Me.StackTraceTextBox.Text = TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
+            Me.StackTraceTextBox.Text =
+                TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
 
-            rtb.Text = $"By clicking OK, the Stack Trace, Exception and the CareLink™ data that caused the error will be package as a text file called{vbCrLf}"
+            rtb.Text =
+                "By clicking OK, the Stack Trace, Exception " &
+                "and the CareLink™ data that caused the error will" &
+                $" be package as a text file called{vbCrLf}"
             Dim uniqueFileNameResult As FileNameStruct = GetUniqueDataFileName(
                 baseName:=BaseNameSavedErrorReport,
                 cultureName:=CurrentDateCulture.Name,
                 extension:="txt",
                 mustBeUnique:=True)
 
-            Dim fileLink As String = $"{uniqueFileNameResult.withoutPath}: file://{uniqueFileNameResult.withPath}"
-            AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold)
-            AppendTextWithFontChange(rtb, text:="and stored in", newFont)
-            AppendTextWithFontChange(rtb, text:=DirectoryForProjectData, newFont:=fontBold)
+            Dim fileLink As String =
+                $"{uniqueFileNameResult.withoutPath}: file://{uniqueFileNameResult.withPath}"
+            AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
             AppendTextWithFontChange(
                 rtb,
-                text:="You can review what is being stored and then attach it to a new issue at",
-                newFont)
+                text:="and stored in",
+                newFont:=newFont,
+                padRight:=0)
             AppendTextWithFontChange(
                 rtb,
-                text:="You can review what is being stored and then attach it to a new issue at",
-                newFont)
+                text:=GetProjectDataDirectory(),
+                newFont:=fontBold,
+                padRight:=0)
             AppendTextWithFontChange(
                 rtb,
-                text:=$"{_gitClient.Repository.Get(owner:=GitOwnerName, name:="CareLink").Result.HtmlUrl}/issues.",
-                newFont)
+                text:="You can review what is being stored and" &
+                      " then attach it to a new issue at",
+                newFont:=newFont,
+                padRight:=0)
+            AppendTextWithFontChange(
+                rtb,
+                text:="You can review what is being stored and" &
+                      " then attach it to a new issue at",
+                newFont:=newFont,
+                padRight:=0)
+            AppendTextWithFontChange(
+                rtb,
+                text:=$"{_gitClient.Repository.Get(
+                            owner:=GitOwnerName,
+                            name:="CareLink").Result.HtmlUrl}/issues.",
+                newFont:=newFont,
+                padRight:=0)
             AppendTextWithFontChange(
                 rtb,
                 text:="This will help me isolate issues quickly.",
-                newFont)
+                newFont:=newFont,
+                padRight:=0)
             CreateReportFile(
                 exceptionText:=Me.ExceptionTextBox.Text,
                 stackTraceText:=Me.StackTraceTextBox.Text,
                 UniqueFileNameWithPath:=uniqueFileNameResult.withPath)
         Else
-            CurrentDateCulture = Me.ReportFileNameWithPath.ExtractCultureFromFileName(FixedPart:=BaseNameSavedErrorReport)
+            CurrentDateCulture =
+                Me.ReportFileNameWithPath.ExtractCultureFromFileName(FixedPart:=BaseNameSavedErrorReport)
             If CurrentDateCulture Is Nothing Then
                 Me.Close()
                 Exit Sub
             End If
             rtb.Text = $"Clicking OK will rerun the data file that caused the error{vbCrLf}"
-            Dim fileLink As String = $"{Path.GetFileName(path:=Me.ReportFileNameWithPath)}: file://{Me.ReportFileNameWithPath}"
-            AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold)
-            AppendTextWithFontChange(rtb, text:="and stored in", newFont)
-            AppendTextWithFontChange(rtb, text:=DirectoryForProjectData, newFont:=fontBold)
-            Me.LocalRawData = Me.DecomposeReportFile(Me.ExceptionTextBox, Me.StackTraceTextBox, Me.ReportFileNameWithPath)
+            Dim fileLink As String =
+                $"{Path.GetFileName(path:=Me.ReportFileNameWithPath)}: file://{Me.ReportFileNameWithPath}"
+            AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
+            AppendTextWithFontChange(rtb, text:="and stored in", newFont:=newFont, padRight:=0)
+            AppendTextWithFontChange(rtb, text:=GetProjectDataDirectory(), newFont:=fontBold, padRight:=0)
+            Me.LocalRawData =
+                Me.DecomposeReportFile(Me.ExceptionTextBox, Me.StackTraceTextBox, Me.ReportFileNameWithPath)
         End If
     End Sub
 
     ''' <summary>
-    '''  Handles the dialog Shown event. Hides the mini form, shows the main form, and sets this dialog as topmost.
+    '''  Handles the form shown event. Hides the main form and sets the dialog to be topmost.
     ''' </summary>
-    Private Sub ExceptionHandlerForm_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    ''' <param name="sender">The sender of the event.</param>
+    ''' <param name="e">The event arguments.</param>
+    ''' <remarks>This is used to ensure the dialog is displayed above other forms.</remarks>
+    Private Sub ExceptionHandlerForm_Shown(sender As Object, e As EventArgs) _
+        Handles MyBase.Shown
+
         My.Forms.SgMiniForm.Hide()
         My.Forms.Form1.Show()
         Me.TopMost = True
     End Sub
 
     ''' <summary>
-    '''  Handles link clicks in the instructions RichTextBox. Opens file links in Explorer or URLs in the browser.
+    '''  Handles the link clicked event in the instructions rich text box.
+    '''  Opens the link in the default web browser or Explorer if it is a file link.
     ''' </summary>
-    Private Sub InstructionsRichTextBox_LinkClicked(sender As Object, e As LinkClickedEventArgs) Handles InstructionsRichTextBox.LinkClicked
+    ''' <param name="sender">The sender of the event.</param>
+    ''' <param name="e">The event arguments containing the link text.</param>
+    ''' <remarks>
+    '''  This method is called when a link in the instructions rich text box is clicked.
+    ''' </remarks>
+    Private Sub InstructionsRichTextBox_LinkClicked(
+            sender As Object,
+            e As LinkClickedEventArgs) Handles InstructionsRichTextBox.LinkClicked
+
         Const value As String = "file://"
         Dim startIndex As Integer = value.Length
         If e.LinkText.StartsWith(value) Then
             Process.Start(fileName:="Explorer.exe", arguments:=e.LinkText.Substring(startIndex))
         Else
-            OpenUrlInBrowser(webAddress:=e.LinkText)
+            OpenUrlInBrowser(url:=e.LinkText)
         End If
     End Sub
 
     ''' <summary>
-    '''  Handles the OK button click event. Sets the dialog result and closes the dialog.
+    '''  Handles the OK button click event. Sets the dialog result based on whether a report file is specified.
     ''' </summary>
+    ''' <param name="sender">The sender of the event.</param>
+    ''' <param name="e">The event arguments.</param>
+    ''' <remarks>This method is called when the OK button is clicked.</remarks>
     Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
         Me.OK.Enabled = False
         Me.Cancel.Enabled = False
@@ -203,7 +255,10 @@ Public Class ExceptionHandlerDialog
     ''' <param name="stackTraceTextBox">The TextBox to receive the stack trace.</param>
     ''' <param name="ReportFileNameWithPath">The full path to the report file.</param>
     ''' <returns>The raw data portion of the report file.</returns>
-    Friend Function DecomposeReportFile(ExceptionTextBox As TextBox, stackTraceTextBox As TextBox, ReportFileNameWithPath As String) As String
+    Friend Function DecomposeReportFile(
+        ExceptionTextBox As TextBox,
+        stackTraceTextBox As TextBox,
+        ReportFileNameWithPath As String) As String
 
         Using stream As StreamReader = File.OpenText(ReportFileNameWithPath)
             ' read exception header

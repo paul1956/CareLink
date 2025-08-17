@@ -5,7 +5,9 @@
 Public Class HighAlertRecord
 
     Public Sub New(row As StringTable.Row, valueUnits As String)
-        Dim s1() As String = row.Columns(index:=0).Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
+        Dim s1() As String =
+            row.Columns(index:=0) _
+               .Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
         Select Case s1.Length
             Case 0
                 Exit Sub
@@ -28,7 +30,7 @@ Public Class HighAlertRecord
         Me.HighLimit = s1(1).ParseSingleInvariant
         If Not String.IsNullOrWhiteSpace(value:=row.Columns(index:=1)) Then
             Me.AlertBeforeHigh = True
-            Me.TimeBeforeHigh &= " Please Verify!"
+            Me.TimeBeforeHigh &= " *Verify!"
         End If
         Me.AlertOnHigh = Not String.IsNullOrWhiteSpace(value:=row.Columns(index:=2))
         If String.IsNullOrWhiteSpace(value:=row.Columns(index:=3)) Then
@@ -49,6 +51,6 @@ Public Class HighAlertRecord
     Public ReadOnly Property RaiseLimit As String
     Public ReadOnly Property RiseAlert As Boolean
     Public ReadOnly Property Start As TimeOnly
-    Public ReadOnly Property TimeBeforeHigh As String = "15* Min"
+    Public ReadOnly Property TimeBeforeHigh As String = "15 Min"
     Public Property ValueUnits As String
 End Class

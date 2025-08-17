@@ -24,7 +24,12 @@ Public Module IEnumerableExtensions
     ''' <param name="Delimiter">The string that will appear between each item in the specified collection.</param>
     ''' <param name="Postfix">The string to postfix the result.</param>
     <Extension>
-    Public Function ToDelimitedString(Of T)(Collection As IEnumerable(Of T), Prefix As String, Delimiter As String, Postfix As String) As String
+    Public Function ToDelimitedString(Of T)(
+        Collection As IEnumerable(Of T),
+        Prefix As String,
+        Delimiter As String,
+        Postfix As String) As String
+
         If Collection Is Nothing OrElse Not Collection.Any() Then
             Return String.Empty
         End If
