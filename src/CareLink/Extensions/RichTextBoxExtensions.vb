@@ -121,17 +121,17 @@ Friend Module RichTextBoxExtensions
     End Sub
 
     ''' <summary>
-    '''  Appends text to current text in a <see cref="RichTextBox"/> with an option to append a line break.
-    '''  The text is formatted with a specified <see cref="Font"/>, and optionally highlights a specific substring
-    '''  with a different <see cref="Font"/> and <see cref="Color"/>.
+    '''  Appends text to current text in a <see cref="RichTextBox"/> with an option
+    '''  to append a line break. The text is formatted with a specified <see cref="Font"/>,
+    '''  and optionally highlights a specific substring with a different <see cref="Font"/>
+    '''  and <see cref="Color"/>.
     ''' </summary>
-    ''' <param name="rtb">
-    '''  The <see cref="RichTextBox"/> to append text to.
+    ''' <param name="rtb">The <see cref="RichTextBox"/> to append text to.</param>
+    ''' <param name="text">The text to append.</param>
+    ''' <param name="symbol">
+    '''  The symbol to use to represent button to press with Gear, Shield, or other symbols.
+    '''  Defaults to Gear symbol.
     ''' </param>
-    ''' <param name="text">
-    '''  The text to append.
-    ''' </param>
-    ''' <param name="symbol"></param>
     ''' <param name="includeNewLine">
     '''  If <see langword="True"/>, appends a new line after the text.
     ''' </param>
@@ -139,7 +139,7 @@ Friend Module RichTextBoxExtensions
     Friend Sub AppendTextWithSymbol(
         rtb As RichTextBox,
         text As String,
-        symbol As String,
+        Optional symbol As String = Gear,
         Optional includeNewLine As Boolean = True)
 
         Dim splitText() As String = text.Split(separator:=symbol, options:=StringSplitOptions.None)
