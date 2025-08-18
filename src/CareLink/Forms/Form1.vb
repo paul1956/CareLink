@@ -2383,17 +2383,6 @@ Public Class Form1
 
         Me.PositionControlsInPanel()
 
-#If NET9_0 Then
-
-#Region "Tab Page Colors"
-
-        Me.TabControlPage1.DrawMode = TabDrawMode.OwnerDrawFixed
-        Me.TabControlPage2.DrawMode = TabDrawMode.OwnerDrawFixed
-
-#End Region ' Tab Page Colors
-
-#End If ' NET9_0
-
         Me.NotifyIcon1.Visible = True
         Application.DoEvents()
         Me.NotifyIcon1.Visible = False
@@ -3301,47 +3290,6 @@ Public Class Form1
 #End Region ' Summary Events
 
 #Region "Tab Events"
-
-#If NET9_0 Then
-
-    ''' <summary>
-    '''  Handles the <see cref="TabControl.DrawItem"/> event for the main and secondary tab controls.
-    '''  Customizes the drawing of the tab pages to highlight the selected tab with a
-    '''  different background and foreground color.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, typically a TabControl control.</param>
-    ''' <param name="e">
-    '''  A <see cref="DrawItemEventArgs"/> that contains the event data,
-    '''  including the index of the tab page being drawn.
-    ''' </param>
-    ''' <remarks>
-    '''  This method is used to provide a custom appearance for the tab pages in the application.
-    '''  It fills the background with a solid color and draws the tab text centered within the tab rectangle.
-    ''' </remarks>
-    Private Sub TabControl_DrawItem(sender As Object, e As DrawItemEventArgs) _
-        Handles TabControlPage1.DrawItem, TabControlPage2.DrawItem
-
-        Dim tabControl As TabControl = CType(sender, TabControl)
-        Dim rect As Rectangle = tabControl.GetTabRect(e.Index)
-        Dim format As New StringFormat With {
-            .Alignment = StringAlignment.Center,
-            .LineAlignment = StringAlignment.Center}
-
-        ' Highlight selected tab
-        Dim color As Color = If(tabControl.SelectedIndex = e.Index,
-                                   Color.Black,
-                                   SystemColors.ControlDark)
-
-        Using brush As New SolidBrush(color), textBrush As New SolidBrush(color:=Color.White)
-            Using g As Graphics = e.Graphics
-                g.FillRectangle(brush, rect)
-                Dim s As String = tabControl.TabPages(e.Index).Text
-                g.DrawString(s, tabControl.Font, brush:=textBrush, layoutRectangle:=rect, format)
-            End Using
-        End Using
-    End Sub
-
-#End If ' NET9_0
 
     ''' <summary>
     '''  Handles the <see cref="TabControl.Selecting"/> event for the main tab control.
