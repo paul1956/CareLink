@@ -109,8 +109,13 @@ Public Module FileIoHelpers
     '''  Determines whether the specified file has not been modified for at least 30 days.
     ''' </summary>
     ''' <param name="path">The full path to the user settings file.</param>
-    ''' <returns><see langword="True"/> if the file is stale; otherwise, <see langword="False"/>.</returns>
-    ''' <exception cref="ArgumentNullException">Thrown if the path is null or whitespace.</exception>
+    ''' <returns>
+    '''  <see langword="True"/> if the file is stale;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    ''' <exception cref="ArgumentNullException">
+    '''  Thrown if the path is null or whitespace.
+    ''' </exception>
     ''' <remarks>
     '''  A file is considered stale if it has not been modified in the last 30 days.
     ''' </remarks>
@@ -190,8 +195,13 @@ Public Module FileIoHelpers
     '''  Determines whether the specified file is read-only.
     ''' </summary>
     ''' <param name="path">The full path to the file.</param>
-    ''' <returns><see langword="True"/> if the file is read-only; otherwise, <see langword="False"/>.</returns>
-    ''' <exception cref="ArgumentException">Thrown if the file name is null or whitespace.</exception>
+    ''' <returns>
+    '''  <see langword="True"/> if the file is read-only; otherwise,
+    '''  <see langword="False"/>.
+    ''' </returns>
+    ''' <exception cref="ArgumentException">
+    '''  Thrown if the file name is null or whitespace.
+    ''' </exception>
     Public Function IsFileReadOnly(path As String) As Boolean
         If String.IsNullOrWhiteSpace(path) Then
             Throw New ArgumentException(

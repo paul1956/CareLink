@@ -36,7 +36,9 @@ Public Class SG
                 Me.SensorState = json(key:=NameOf(SensorState))
                 Me.sg = json(key:=NameOf(sg)).ParseSingle(digits:=2)
                 Dim value As String = "False"
-                Me.timeChange = json.TryGetValue(key:=NameOf(timeChange), value) AndAlso Boolean.Parse(value)
+                Me.timeChange =
+                    json.TryGetValue(key:=NameOf(timeChange), value) AndAlso
+                    Boolean.Parse(value)
             Else
                 Me.sg = Single.NaN
             End If
@@ -147,16 +149,23 @@ Public Class SG
 
     ''' <summary>
     '''  Translates the sensor state message based on the <see langword="key"/>.
-    '''  If the sensor state is not recognized, it will return the state as a title-cased string.
+    '''  If the sensor state is not recognized, it will return the state
+    '''  as a title-cased string.
     '''  If debugging is enabled, it will show a message box with the unknown sensor state.
-    '''  If the sensor state message contains an ellipsis ("..."), it will truncate the message to the first line.
+    '''  If the sensor state message contains an ellipsis ("..."),
+    '''  it will truncate the message to the first line.
     ''' </summary>
     ''' <param name="key">The key for the sensor state message.</param>
-    ''' <param name="truncate">If <see langword="True"/> the message will be truncated to the first line.</param>
+    ''' <param name="truncate">
+    '''  If <see langword="True"/> the message will be truncated to the first line.
+    ''' </param>
     ''' <returns>
     '''  A string representing the translated sensor state message.
     ''' </returns>
-    Public Shared Function FormatSensorMessage(key As String, Optional truncate As Boolean = False) As String
+    Public Shared Function FormatSensorMessage(
+        key As String,
+        Optional truncate As Boolean = False) As String
+
         Dim value As String = ""
         If s_sensorMessages.TryGetValue(key, value) Then
             If Not truncate Then
@@ -182,7 +191,8 @@ Public Class SG
     End Function
 
     ''' <summary>
-    '''  Gets the format string for the sensor glucose value based on the native mmol/L setting.
+    '''  Gets the format string for the sensor glucose value based
+    '''  on the native mmol/L setting.
     ''' </summary>
     ''' <returns>
     '''  A format string for displaying the sensor glucose value.

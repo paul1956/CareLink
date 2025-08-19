@@ -48,7 +48,8 @@ Friend Module DgvExportHelpers
     '''  Specifies whether to include headers in the copied data.
     ''' </param>
     ''' <param name="copyAll">
-    '''  If <see langword="True"/>, copies all cells; otherwise, only selected cells.
+    '''  <see langword="True"/>, copies all cells;
+    '''  otherwise, only selected cells.
     ''' </param>
     <Extension>
     Private Sub CopyToClipboard(
@@ -105,9 +106,10 @@ Friend Module DgvExportHelpers
                         Continue For
                     End If
                     Dim currentCell As DataGridViewCell = row.Cells(index)
-                    Dim cellValue As Object = If(copyAll OrElse currentCell.Selected,
-                                                 currentCell.Value,
-                                                 "")
+                    Dim cellValue As Object =
+                        If(copyAll OrElse currentCell.Selected,
+                           currentCell.Value,
+                           "")
                     Dim fieldSeparator As String = If(index = colHigh, vbCrLf, vbTab)
                     clipboard_string.Append(value:=$"{cellValue}{fieldSeparator}")
                 Next index
@@ -117,7 +119,8 @@ Friend Module DgvExportHelpers
     End Sub
 
     ''' <summary>
-    '''  Exports the contents of the <see cref="DataGridView"/> to an Excel file with formatting.
+    '''  Exports the contents of the <see cref="DataGridView"/> to an
+    '''  Excel file with formatting.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> to export.</param>
     <Extension>
@@ -131,22 +134,25 @@ Friend Module DgvExportHelpers
                 .OverwritePrompt = True,
                 .Title = "To Excel"}
 
-        If saveFileDialog1.ShowDialog(My.Forms.Form1) = DialogResult.OK Then
+        If saveFileDialog1.ShowDialog(owner:=My.Forms.Form1) = DialogResult.OK Then
             Dim workbook As New XLWorkbook()
-            Dim worksheet As IXLWorksheet = workbook.Worksheets.Add(baseFileName)
+            Dim worksheet As IXLWorksheet = workbook.Worksheets.Add(sheetName:=baseFileName)
             Dim column As Integer = 1
             For j As Integer = 0 To dgv.Columns.Count - 1
                 Dim dgvColumn As DataGridViewColumn = dgv.Columns(j)
                 If dgvColumn.Visible Then
                     If dgvColumn.Name.EqualsIgnoreCase("dateTime") Then
                         worksheet.Cell(row:=1, column).Value = "Date"
-                        worksheet.Cell(row:=1, column).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center
+                        worksheet.Cell(row:=1, column).Style.Alignment.Horizontal =
+                            XLAlignmentHorizontalValues.Center
                         column += 1
                         worksheet.Cell(row:=1, column).Value = "Time"
                     Else
-                        worksheet.Cell(row:=1, column).Value = dgvColumn.HeaderCell.Value.ToString
+                        worksheet.Cell(row:=1, column).Value =
+                            dgvColumn.HeaderCell.Value.ToString
                     End If
-                    worksheet.Cell(row:=1, column).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center
+                    worksheet.Cell(row:=1, column).Style.Alignment.Horizontal =
+                        XLAlignmentHorizontalValues.Center
                     column += 1
                 End If
             Next j
@@ -161,8 +167,10 @@ Friend Module DgvExportHelpers
                     If String.IsNullOrWhiteSpace(value) Then
                         worksheet.Cell(row:=i + 2, column).Value = ""
                         With worksheet.Cell(row:=i + 2, column).Style
-                            Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
-                            .Fill.SetBackgroundColor(value:=XLColor.FromColor(cellStyle.BackColor))
+                            Dim cellStyle As DataGridViewCellStyle =
+                                dgvCell.GetFormattedStyle()
+                            .Fill.SetBackgroundColor(
+                                value:=XLColor.FromColor(cellStyle.BackColor))
                             .Font.SetFontColor(value:=XLColor.FromColor(cellStyle.ForeColor))
                             .Font.Bold = cellStyle.Font.Bold
                             .Font.FontName = dgv.Font.Name
@@ -173,9 +181,11 @@ Friend Module DgvExportHelpers
                         With worksheet.Cell(row:=i + 2, column)
                             Select Case dgvCell.ValueType.Name
                                 Case NameOf([Int32])
-                                    align = If(dgv.Columns(index:=j).Name.EqualsIgnoreCase("RecordNumber"),
-                                               XLAlignmentHorizontalValues.Center,
-                                               XLAlignmentHorizontalValues.Right)
+                                    align =
+                                        If(dgv.Columns(index:=j).Name _
+                                              .EqualsIgnoreCase("RecordNumber"),
+                                           XLAlignmentHorizontalValues.Center,
+                                           XLAlignmentHorizontalValues.Right)
                                     .Value = CInt(valueObject)
                                 Case NameOf(OADate)
                                     align = XLAlignmentHorizontalValues.Left
@@ -188,14 +198,16 @@ Friend Module DgvExportHelpers
                                         .Value = $"'{value}"
                                     End If
                                 Case NameOf([Decimal]), NameOf([Double]), NameOf([Single])
-                                    Dim valueASingle As Single = ParseSingle(valueObject, digits:=3)
+                                    Dim valueASingle As Single =
+                                        ParseSingle(valueObject, digits:=3)
                                     If Single.IsNaN(valueASingle) Then
                                         .Value = "'Infinity"
                                         align = XLAlignmentHorizontalValues.Center
                                     Else
                                         .Value = valueASingle
                                         .Style.NumberFormat.Format =
-                                            If(dgv.Columns(index:=j).Name.EqualsIgnoreCase("sg"),
+                                            If(dgv.Columns(index:=j).Name _
+                                            .EqualsIgnoreCase("sg"),
                                                GetSgFormat(withSign:=False),
                                                $"0{DecimalSeparator}000")
 
@@ -209,11 +221,15 @@ Friend Module DgvExportHelpers
                                     .Value = value
                                 Case NameOf([DateTime])
                                     .Value = CDate(valueObject).Date
+                                    Dim cellStyle As DataGridViewCellStyle =
+                                        dgvCell.GetFormattedStyle()
                                     With .Style
-                                        Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
-                                        .Alignment.Horizontal = XLAlignmentHorizontalValues.Left
-                                        .Fill.SetBackgroundColor(value:=XLColor.FromColor(cellStyle.BackColor))
-                                        .Font.SetFontColor(value:=XLColor.FromColor(cellStyle.ForeColor))
+                                        .Alignment.Horizontal =
+                                            XLAlignmentHorizontalValues.Left
+                                        .Fill.SetBackgroundColor(
+                                            value:=XLColor.FromColor(cellStyle.BackColor))
+                                        .Font.SetFontColor(
+                                            value:=XLColor.FromColor(cellStyle.ForeColor))
                                         .Font.Bold = cellStyle.Font.Bold
                                         .Font.FontName = dgv.Font.Name
                                         .Font.FontSize = dgv.Font.Size
@@ -233,9 +249,11 @@ Friend Module DgvExportHelpers
                         End With
 
                         With worksheet.Cell(row:=i + 2, column).Style
-                            Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
+                            Dim cellStyle As DataGridViewCellStyle =
+                                dgvCell.GetFormattedStyle()
                             .Alignment.Horizontal = align
-                            .Fill.SetBackgroundColor(value:=XLColor.FromColor(cellStyle.BackColor))
+                            .Fill.SetBackgroundColor(
+                                value:=XLColor.FromColor(cellStyle.BackColor))
                             .Font.SetFontColor(value:=XLColor.FromColor(cellStyle.ForeColor))
                             .Font.Bold = cellStyle.Font.Bold
                             .Font.FontName = dgv.Font.Name
@@ -293,18 +311,23 @@ Friend Module DgvExportHelpers
     End Sub
 
     ''' <summary>
-    '''  Copies the selected cells of a <see cref="DataGridView"/> to the <see cref="Clipboard"/>, without headers.
+    '''  Copies the selected cells of a <see cref="DataGridView"/> to
+    '''  the <see cref="Clipboard"/>, without headers.
     ''' </summary>
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
-    Public Sub DgvCopySelectedCellsToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
+    Public Sub DgvCopySelectedCellsToClipBoardWithoutHeaders(
+        sender As Object,
+        e As EventArgs)
+
         GetDgvFromToolStripMenuItem(sender).CopyToClipboard(
             copyHeaders:=DataGridViewClipboardCopyMode.EnableWithoutHeaderText,
             copyAll:=False)
     End Sub
 
     ''' <summary>
-    '''  Copies all cells of a <see cref="DataGridView"/> to the <see cref="Clipboard"/>, including headers.
+    '''  Copies all cells of a <see cref="DataGridView"/> to the <see cref="Clipboard"/>,
+    '''  including headers.
     ''' </summary>
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
@@ -315,7 +338,8 @@ Friend Module DgvExportHelpers
     End Sub
 
     ''' <summary>
-    '''  Copies all cells of a <see cref="DataGridView"/> to the <see cref="Clipboard"/>, without headers.
+    '''  Copies all cells of a <see cref="DataGridView"/> to the <see cref="Clipboard"/>,
+    '''  without headers.
     ''' </summary>
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>

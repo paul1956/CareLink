@@ -34,7 +34,8 @@ Public Class ExceptionHandlerDialog
     Public Property ReportFileNameWithPath As String
 
     ''' <summary>
-    '''  Creates a report file containing exception and stack trace information, as well as cleaned patient data.
+    '''  Creates a report file containing exception and stack trace information,
+    '''  as well as cleaned patient data.
     ''' </summary>
     ''' <param name="exceptionText">The exception message text.</param>
     ''' <param name="stackTraceText">The stack trace text.</param>
@@ -76,7 +77,8 @@ Public Class ExceptionHandlerDialog
     End Function
 
     ''' <summary>
-    '''  Handles the Cancel button click event. Deletes the report file if it exists and closes the dialog.
+    '''  Handles the Cancel button click event. Deletes the report file if it exists
+    '''  and closes the dialog.
     ''' </summary>
     ''' <param name="sender">The sender of the event.</param>
     ''' <param name="e">The event arguments.</param>
@@ -96,7 +98,9 @@ Public Class ExceptionHandlerDialog
     ''' <param name="sender">The sender of the event.</param>
     ''' <param name="e">The event arguments.</param>
     ''' <remarks>This method is called when the dialog is loaded.</remarks>
-    Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) _
+        Handles MyBase.Load
+
         StartOrStopServerUpdateTimer(Start:=False)
         Dim rtb As RichTextBox = Me.InstructionsRichTextBox
         Dim newFont As Font = rtb.Font
@@ -180,11 +184,14 @@ Public Class ExceptionHandlerDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the form shown event. Hides the main form and sets the dialog to be topmost.
+    '''  Handles the form shown event. Hides the main form and sets the dialog
+    '''  to be topmost.
     ''' </summary>
     ''' <param name="sender">The sender of the event.</param>
     ''' <param name="e">The event arguments.</param>
-    ''' <remarks>This is used to ensure the dialog is displayed above other forms.</remarks>
+    ''' <remarks>
+    '''  This is used to ensure the dialog is displayed above other forms.
+    ''' </remarks>
     Private Sub ExceptionHandlerForm_Shown(sender As Object, e As EventArgs) _
         Handles MyBase.Shown
 
@@ -209,14 +216,17 @@ Public Class ExceptionHandlerDialog
         Const value As String = "file://"
         Dim startIndex As Integer = value.Length
         If e.LinkText.StartsWith(value) Then
-            Process.Start(fileName:="Explorer.exe", arguments:=e.LinkText.Substring(startIndex))
+            Process.Start(
+                fileName:="Explorer.exe",
+                arguments:=e.LinkText.Substring(startIndex))
         Else
             OpenUrlInBrowser(url:=e.LinkText)
         End If
     End Sub
 
     ''' <summary>
-    '''  Handles the OK button click event. Sets the dialog result based on whether a report file is specified.
+    '''  Handles the OK button click event. Sets the dialog result based on
+    '''  whether a report file is specified.
     ''' </summary>
     ''' <param name="sender">The sender of the event.</param>
     ''' <param name="e">The event arguments.</param>
@@ -243,7 +253,9 @@ Public Class ExceptionHandlerDialog
     '''  Reports an invalid error file by throwing a NotImplementedException.
     ''' </summary>
     ''' <param name="currentLine">The current line read from the file.</param>
-    ''' <param name="exceptionStartingString">The expected starting string for the exception section.</param>
+    ''' <param name="exceptionStartingString">
+    '''  The expected starting string for the exception section.
+    ''' </param>
     Private Sub ReportInvalidErrorFile(currentLine As String, exceptionStartingString As String)
         Throw New NotImplementedException()
     End Sub

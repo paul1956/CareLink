@@ -273,12 +273,16 @@ Public Module RegionCountryLists
     '''  Extracts the <see cref="CultureInfo"/> from a report file name.
     ''' </summary>
     ''' <param name="ReportFileNameWithPath">The full path or name of the report file.</param>
-    ''' <param name="FixedPart">The fixed prefix part of the file name before the culture info.</param>
+    ''' <param name="FixedPart">
+    '''  The fixed prefix part of the file name before the culture info.
+    ''' </param>
     ''' <param name="fuzzy">
-    '''  If <see langword="True"/>, allows the '(' to appear after the fixed part, not necessarily immediately after.
+    '''  If <see langword="True"/>, allows the '(' to appear after the fixed part,
+    '''  not necessarily immediately after.
     ''' </param>
     ''' <returns>
-    '''  The <see cref="CultureInfo"/> extracted from the file name, or <see langword="Nothing"/> if extraction fails.
+    '''  The <see cref="CultureInfo"/> extracted from the file name,
+    '''  or <see langword="Nothing"/> if extraction fails.
     '''  If the culture name is invalid, returns <see cref="CultureInfo.CurrentCulture"/>.
     ''' </returns>
     <Extension>

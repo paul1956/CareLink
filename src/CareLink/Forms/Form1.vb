@@ -108,13 +108,16 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Scales the control based on the <paramref name="factor"/> and <paramref name="specified"/> bounds.
-    '''  This method overrides the base method to adjust the form scale and fix SplitContainer controls.
+    '''  Scales the control based on the <paramref name="factor"/>
+    '''  and <paramref name="specified"/> bounds.
+    '''  This method overrides the base method to adjust the form scale
+    '''  and fix SplitContainer controls.
     ''' </summary>
     ''' <param name="factor">The scaling factor.</param>
     ''' <param name="specified">The bounds specified for scaling.</param>
     Protected Overrides Sub ScaleControl(factor As SizeF, specified As BoundsSpecified)
-        _formScale = New SizeF(width:=_formScale.Width * factor.Width, height:=_formScale.Height * factor.Height)
+        _formScale = New SizeF(width:=_formScale.Width * factor.Width,
+                               height:=_formScale.Height * factor.Height)
         MyBase.ScaleControl(factor, specified)
     End Sub
 
@@ -130,35 +133,51 @@ Public Class Form1
                 Select Case m.WParam.ToInt32()
                     'value passed when system is going on standby / suspended
                     Case PBT_APMQUERYSUSPEND
-                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Suspend))
+                        Me.PowerModeChanged(
+                            sender:=Nothing,
+                            e:=New PowerModeChangedEventArgs(mode:=PowerModes.Suspend))
 
                         'value passed when system is resumed after suspension.
                     Case PBT_APMRESUMESUSPEND
-                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+                        Me.PowerModeChanged(
+                            sender:=Nothing,
+                            e:=New PowerModeChangedEventArgs(mode:=PowerModes.Resume))
 
                     'value passed when system Suspend Failed
                     Case PBT_APMQUERYSUSPENDFAILED
-                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+                        Me.PowerModeChanged(
+                            sender:=Nothing,
+                            e:=New PowerModeChangedEventArgs(mode:=PowerModes.Resume))
 
                     'value passed when system is suspended
                     Case PBT_APMSUSPEND
-                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Suspend))
+                        Me.PowerModeChanged(
+                            sender:=Nothing,
+                            e:=New PowerModeChangedEventArgs(mode:=PowerModes.Suspend))
 
                     'value passed when system is in standby
                     Case PBT_APMSTANDBY
-                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Suspend))
+                        Me.PowerModeChanged(
+                            sender:=Nothing,
+                            e:=New PowerModeChangedEventArgs(mode:=PowerModes.Suspend))
 
                         'value passed when system resumes from standby
                     Case PBT_APMRESUMESTANDBY
-                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+                        Me.PowerModeChanged(
+                            sender:=Nothing,
+                            e:=New PowerModeChangedEventArgs(mode:=PowerModes.Resume))
 
                         'value passed when system resumes from suspend
                     Case PBT_APMRESUMESUSPEND
-                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+                        Me.PowerModeChanged(
+                            sender:=Nothing,
+                            e:=New PowerModeChangedEventArgs(mode:=PowerModes.Resume))
 
                     'value passed when system is resumed automatically
                     Case PBT_APMRESUMEAUTOMATIC
-                        Me.PowerModeChanged(sender:=Nothing, New PowerModeChangedEventArgs(PowerModes.Resume))
+                        Me.PowerModeChanged(
+                            sender:=Nothing,
+                            e:=New PowerModeChangedEventArgs(mode:=PowerModes.Resume))
 
                     'value passed when system is resumed from critical
                     'suspension possibly due to battery failure
@@ -296,9 +315,10 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="Chart.MouseLeave"/> event for
-    '''  the <see cref="ActiveInsulinChart"/>, <see cref="SummaryChart"/>, and <see cref="TreatmentMarkersChart"/>.
-    '''  Hides the callout annotation when the mouse leaves the chart area.
+    '''  Handles the <see cref="Chart.MouseLeave"/> event for the
+    '''  <see cref="ActiveInsulinChart"/>, <see cref="SummaryChart"/>,
+    '''  and <see cref="TreatmentMarkersChart"/>. Hides the callout annotation
+    '''  when the mouse leaves the chart area.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="Chart"/> control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
@@ -317,9 +337,11 @@ Public Class Form1
 
     ''' <summary>
     '''  Handles the <see cref="Chart.MouseMove"/> event for
-    '''  the <see cref="ActiveInsulinChart"/>, <see cref="SummaryChart"/>, and <see cref="TreatmentMarkersChart"/>.
-    '''  Displays context-sensitive information in a panel or callout when the mouse moves over a data point.
-    '''  Shows details such as marker type, value, and time, or sensor glucose information, depending on the series.
+    '''  the <see cref="ActiveInsulinChart"/>, <see cref="SummaryChart"/>,
+    '''  and <see cref="TreatmentMarkersChart"/>. Displays context-sensitive
+    '''  information in a panel or callout when the mouse moves over a data point.
+    '''  Shows details such as marker type, value, and time,
+    '''  or sensor glucose information, depending on the series.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="Chart"/> control.</param>
     ''' <param name="e">A <see cref="MouseEventArgs"/> that contains the event data.</param>
@@ -331,7 +353,9 @@ Public Class Form1
         If Not ProgramInitialized Then
             Exit Sub
         End If
-        If e.Button <> MouseButtons.None OrElse e.Clicks > 0 OrElse e.Location = _previousLoc Then
+        If e.Button <> MouseButtons.None OrElse
+           e.Clicks > 0 OrElse
+           e.Location = _previousLoc Then
             Return
         End If
         _inMouseMove = True
@@ -340,7 +364,9 @@ Public Class Form1
         Dim chart1 As Chart = CType(sender, Chart)
         Dim isHomePage As Boolean = chart1.Name = NameOf(SummaryChart)
         Try
-            yInPixels = chart1.ChartAreas(name:=NameOf(ChartArea)).AxisY2.ValueToPixelPosition(axisValue:=e.Y)
+            yInPixels =
+                chart1.ChartAreas(name:=NameOf(ChartArea)).AxisY2 _
+                    .ValueToPixelPosition(axisValue:=e.Y)
         Catch ex As Exception
             yInPixels = Double.NaN
         End Try
@@ -369,10 +395,12 @@ Public Class Form1
                 Case HighLimitSeriesName, LowLimitSeriesName, TargetSgSeriesName
                     Me.CursorPanel.Visible = False
                 Case MarkerSeriesName, BasalSeriesName
-                    Dim markerTag() As String = currentDataPoint.Tag.ToString.Split(separator:=":"c)
+                    Dim markerTag() As String =
+                        currentDataPoint.Tag.ToString.Split(separator:=":"c)
                     If markerTag.Length <= 1 Then
                         If chart1.Name = NameOf(TreatmentMarkersChart) Then
-                            Dim callout As CalloutAnnotation = chart1.FindAnnotation(lastDataPoint:=currentDataPoint)
+                            Dim callout As CalloutAnnotation =
+                                chart1.FindAnnotation(lastDataPoint:=currentDataPoint)
                             callout.BringToFront()
                         Else
                             Me.CursorPanel.Visible = True
@@ -384,7 +412,8 @@ Public Class Form1
                         Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
                         Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                         Me.CursorPictureBox.Visible = True
-                        Me.CursorMessage2Label.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
+                        Me.CursorMessage2Label.Font =
+                            New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
                         Select Case markerTag.Length
                             Case 2
                                 Me.CursorMessage1Label.Text = markerTag(0)
@@ -392,7 +421,8 @@ Public Class Form1
                                 Me.CursorMessage2Label.Text = markerTag(1).Trim
                                 Me.CursorMessage2Label.Visible = True
                                 Me.CursorMessage3Label.Text =
-                                    Date.FromOADate(currentDataPoint.XValue).ToString(format:=s_timeWithMinuteFormat)
+                                    Date.FromOADate(currentDataPoint.XValue) _
+                                        .ToString(format:=s_timeWithMinuteFormat)
                                 Me.CursorMessage3Label.Visible = True
                                 Me.CursorMessage4Label.Visible = False
                                 Select Case markerTag(0)
@@ -405,7 +435,8 @@ Public Class Form1
                                     Case "Bolus"
                                         Me.CursorPictureBox.Image = My.Resources.InsulinVial
                                     Case "Meal"
-                                        Me.CursorPictureBox.Image = My.Resources.MealImageLarge
+                                        Me.CursorPictureBox.Image =
+                                            My.Resources.MealImageLarge
                                     Case Else
                                         Stop
                                         Me.CursorMessage1Label.Visible = False
@@ -421,7 +452,8 @@ Public Class Form1
                                         Me.CursorPictureBox.Image =
                                             My.Resources.CalibrationDotRed
                                     Case "Not used for calibration"
-                                        Me.CursorPictureBox.Image = My.Resources.CalibrationDot
+                                        Me.CursorPictureBox.Image =
+                                            My.Resources.CalibrationDot
                                         Dim style As FontStyle = FontStyle.Bold
                                         Me.CursorMessage2Label.Font =
                                             New Font(FamilyName, emSize:=11.0F, style)
@@ -429,16 +461,19 @@ Public Class Form1
                                         Stop
                                 End Select
                                 Me.CursorMessage1Label.Text =
-                                    $"{markerTag(0)}@{xValue.ToString(format:=s_timeWithMinuteFormat)}"
+                                    $"{markerTag(0)}@{xValue.
+                                        ToString(format:=s_timeWithMinuteFormat)}"
                                 Me.CursorMessage1Label.Visible = True
-                                Me.CursorMessage2Label.Text = markerTag(1).Replace(
-                                    oldValue:="Calibration not",
-                                    newValue:="Cal. not").Trim
+                                Me.CursorMessage2Label.Text =
+                                    markerTag(1).Replace(
+                                        oldValue:="Calibration not",
+                                        newValue:="Cal. not").Trim
                                 Me.CursorMessage2Label.Visible = True
                                 Me.CursorMessage3Label.Text = markerTag(2).Trim
                                 Me.CursorMessage3Label.Visible = True
                                 Dim sgValue As Single =
-                                    markerTag(2).Trim.Split(separator:=" ")(0).ParseSingle(digits:=2)
+                                    markerTag(2).Trim.Split(separator:=" ")(0).
+                                        ParseSingle(digits:=2)
                                 Me.CursorMessage4Label.Text =
                                     If(NativeMmolL,
                                        $"{CInt(sgValue * MmolLUnitsDivisor)} mg/dL",
@@ -474,7 +509,10 @@ Public Class Form1
                 Case SuspendSeriesName, TimeChangeSeriesName
                     Me.CursorPanel.Visible = False
                 Case ActiveInsulinSeriesName
-                    annotationText = $"Theoretical Active Insulin {currentDataPoint.YValues.FirstOrDefault:F3} U"
+                    Dim yValue As Single =
+                        currentDataPoint.YValues.FirstOrDefault().RoundToSingle(digits:=3)
+                    annotationText =
+                        $"Theoretical Active Insulin {yValue:F3} U"
                     chart1.SetupCallout(currentDataPoint, annotationText)
                 Case Else
                     Stop
@@ -489,9 +527,12 @@ Public Class Form1
 #Region "Post Paint Events"
 
     ''' <summary>
-    '''  Handles the <see cref="Chart.PostPaint"/> event for the <see cref="ActiveInsulinChart"/>.
-    '''  Draws additional graphics or overlays after the chart is painted, such as insulin and meal markers.
-    '''  Skips painting if a mouse move is in progress, the chart is updating, or the program is not initialized.
+    '''  Handles the <see cref="Chart.PostPaint"/> event
+    '''  for the <see cref="ActiveInsulinChart"/>.
+    '''  Draws additional graphics or overlays after the chart is painted,
+    '''  such as insulin and meal markers.
+    '''  Skips painting if a mouse move is in progress, the chart is updating,
+    '''  or the program is not initialized.
     ''' </summary>
     ''' <param name="sender">The source chart control.</param>
     ''' <param name="e">A <see cref="ChartPaintEventArgs"/> containing event data.</param>
@@ -522,12 +563,14 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="Chart.PostPaint"/> event for the <see cref="SummaryChart"/>.
     '''  Draws overlays such as insulin and meal markers after the summary chart is painted.
-    '''  Skips painting if a mouse move is in progress, the chart is updating, or the program is not initialized.
+    '''  Skips painting if a mouse move is in progress,
+    '''  the chart is updating, or the program is not initialized.
     ''' </summary>
     ''' <param name="sender">The source chart control.</param>
     ''' <param name="e">A <see cref="ChartPaintEventArgs"/> containing event data.</param>
     <DebuggerNonUserCode()>
-    Private Sub SummaryChart_PostPaint(sender As Object, e As ChartPaintEventArgs) Handles SummaryChart.PostPaint
+    Private Sub SummaryChart_PostPaint(sender As Object, e As ChartPaintEventArgs) _
+        Handles SummaryChart.PostPaint
         If _inMouseMove Then
             Exit Sub
         End If
@@ -549,9 +592,12 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="Chart.PostPaint"/> event for the <see cref="TreatmentMarkersChart"/>.
-    '''  Draws overlays such as insulin and meal markers after the treatment markers chart is painted.
-    '''  Skips painting if a mouse move is in progress, the chart is updating, or the program is not initialized.
+    '''  Handles the <see cref="Chart.PostPaint"/> event
+    '''  for the <see cref="TreatmentMarkersChart"/>.
+    '''  Draws overlays such as insulin and meal markers after the
+    '''  treatment markers chart is painted.
+    '''  Skips painting if a mouse move is in progress, the chart is updating,
+    '''  or the program is not initialized.
     ''' </summary>
     ''' <param name="sender">The source chart control.</param>
     ''' <param name="e">A <see cref="ChartPaintEventArgs"/> containing event data.</param>
@@ -688,10 +734,13 @@ Public Class Form1
                         Case NameOf(DgvMeal)
                             dgv.CellFormattingInteger(e, message:=GetCarbDefaultUnit)
                     End Select
-                Case NameOf(BasalPerHour.BasalRate), NameOf(BasalPerHour.BasalRate2)
+                Case NameOf(BasalPerHour.BasalRate),
+                     NameOf(BasalPerHour.BasalRate2)
+
                     If dgv.Name = NameOf(DgvBasalPerHour) Then
                         e.Value = $"{dgv.CellFormattingSingleValue(e, digits:=3)} U/h"
-                        e.CellStyle.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
+                        e.CellStyle.Font =
+                            New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
                     End If
                 Case NameOf(Calibration.bgUnits)
                     Dim key As String = Convert.ToString(e.Value)
@@ -708,38 +757,61 @@ Public Class Form1
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
-                Case NameOf(Insulin.BolusType), NameOf(Insulin.InsulinType)
+                Case NameOf(Insulin.BolusType),
+                     NameOf(Insulin.InsulinType)
+
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     dgv.CellFormattingToTitle(e)
                 Case NameOf(ActiveInsulin.DateTime),
-                 NameOf(AutoModeStatus.DisplayTime),
-                 NameOf(AutoModeStatus.Timestamp)
+                     NameOf(AutoModeStatus.DisplayTime),
+                     NameOf(AutoModeStatus.Timestamp)
+
                     dgv.CellFormattingDateTime(e)
-                Case NameOf(Limit.HighLimit), NameOf(Limit.HighLimitMgdL), NameOf(Limit.HighLimitMmolL)
+                Case NameOf(Limit.HighLimit),
+                     NameOf(Limit.HighLimitMgdL),
+                     NameOf(Limit.HighLimitMmolL)
+
                     dgv.CellFormattingSgValue(e, partialKey:=NameOf(Limit.HighLimit))
-                Case NameOf(Limit.LowLimit), NameOf(Limit.lowLimitMgdL), NameOf(Limit.lowLimitMmolL)
+                Case NameOf(Limit.LowLimit),
+                     NameOf(Limit.lowLimitMgdL),
+                     NameOf(Limit.lowLimitMmolL)
                     dgv.CellFormattingSgValue(e, partialKey:=NameOf(Limit.LowLimit))
-                Case NameOf(InsulinPerHour.Hour), NameOf(InsulinPerHour.Hour2)
+                Case NameOf(InsulinPerHour.Hour),
+                     NameOf(InsulinPerHour.Hour2)
                     Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
-                    Dim time As New DateTime(year:=1, month:=1, day:=1, hour, minute:=0, second:=0)
+                    Dim time As New DateTime(
+                        year:=1,
+                        month:=1,
+                        day:=1,
+                        hour,
+                        minute:=0,
+                        second:=0)
                     e.Value = time.ToString(format:=s_timeWithoutMinuteFormat)
-                    e.CellStyle.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
+                    e.CellStyle.Font =
+                        New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
                 Case NameOf(BannerState.Message)
                     Select Case dgv.Name
                         Case NameOf(DgvPumpBannerState)
                             dgv.CellFormattingToTitle(e)
                         Case NameOf(DgvSGs)
-                            e.Value = Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ")
+                            e.Value =
+                                Convert.ToString(e.Value).
+                                    Replace(oldValue:=vbCrLf, newValue:=" ")
                             dgv.CellFormattingSetForegroundColor(e)
                         Case Else
-                            e.Value = Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ")
+                            e.Value =
+                                Convert.ToString(e.Value).
+                                    Replace(oldValue:=vbCrLf, newValue:=" ")
                             dgv.CellFormattingToTitle(e)
                     End Select
                 Case NameOf(ActiveInsulin.Precision)
                     dgv.CellFormattingToTitle(e)
                 Case NameOf(Insulin.SafeMealReduction)
                     If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.OrangeRed, isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(
+                            e,
+                            textColor:=Color.OrangeRed,
+                            isUri:=False)
                     Else
                         e.Value = ""
                         dgv.CellFormattingSetForegroundColor(e)
@@ -784,8 +856,9 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.DataError"/> event for all DataGridViews in the form.
-    '''  This event is raised when an exception occurs during data operations such as
+    '''  Handles the <see cref="DataGridView.DataError"/> event
+    '''  for all DataGridViews in the form. This event is raised when an
+    '''  exception occurs during data operations such as
     '''  formatting, parsing, or committing a cell value.
     '''  The handler currently stops execution for debugging purposes.
     ''' </summary>
@@ -828,9 +901,13 @@ Public Class Form1
 
         ' Show a user-friendly message
         Dim dgvName As String = dgv.Name.Remove(s:="dgv")
-        Dim text As String = $"An error {e.Exception.Message} occurred while processing {dgvName}. " &
+        Dim text As String =
+            $"An error {e.Exception.Message} occurred while processing {dgvName}. " &
             $"Please check your data and try again."
-        MessageBox.Show(text, caption:="Input Error", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)
+        MessageBox.Show(
+            text,
+            caption:="Input Error",
+            buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)
 
         Debug.WriteLine($"Context: {e.Context}")
 
@@ -842,12 +919,18 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="DataGridView.DataBindingComplete"/> event.
     '''  This event is raised when the data binding operation is complete.
-    '''  It clears the selection of all DataGridViews to ensure no cells are selected after data binding.
+    '''  It clears the selection of all DataGridViews to ensure no cells
+    '''  are selected after data binding.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">The <see cref="DataGridViewBindingCompleteEventArgs"/> containing the event data.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewBindingCompleteEventArgs"/> containing the event data.
+    ''' </param>
     ''' <remarks>
-    '''  This event is used to customize the appearance of DataGridViews after data binding is complete.
+    '''  This event is used to customize the appearance of DataGridViews
+    '''  after data binding is complete.
     ''' </remarks>
     Public Sub Dgv_DataBindingComplete(
             sender As Object,
@@ -911,8 +994,10 @@ Public Class Form1
             _dgvSummaryPrevColIndex > 0 AndAlso
             _dgvSummaryPrevColIndex < dgv.ColumnCount Then
 
-            ' Restore the previous selection in the Summary DataGridView if its not empty or Row(0).Cell(0).
-            dgv.CurrentCell = dgv.Rows(index:=_dgvSummaryPrevRowIndex).Cells(index:=_dgvSummaryPrevColIndex)
+            ' Restore the previous selection in the Summary DataGridView
+            ' if its not empty or Row(0).Cell(0).
+            dgv.CurrentCell =
+                dgv.Rows(index:=_dgvSummaryPrevRowIndex).Cells(index:=_dgvSummaryPrevColIndex)
             dgv.Rows(index:=_dgvSummaryPrevRowIndex).Selected = True
             dgv.FirstDisplayedScrollingRowIndex = _dgvSummaryPrevRowIndex
         Else
@@ -927,8 +1012,10 @@ Public Class Form1
     Friend WithEvents DgvCopyWithoutExcelMenuStrip As New ContextMenuStrip
 
     ''' <summary>
-    '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event for the copy-with-Excel context menu.
-    '''  Populates the context menu with options to copy data with or without headers, or save to Excel.
+    '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event
+    '''  for the copy-with-Excel context menu.
+    '''  Populates the context menu with options to copy data with or without headers,
+    '''  or save to Excel.
     ''' </summary>
     ''' <param name="sender">The context menu strip.</param>
     ''' <param name="e">A <see cref="CancelEventArgs"/> containing event data.</param>
@@ -962,8 +1049,10 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event for the copy-without-Excel context menu.
-    '''  Populates the context menu with options to copy selected cells with or without headers.
+    '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event
+    '''  for the copy-without-Excel context menu.
+    '''  Populates the context menu with options to copy selected cells with
+    '''  or without headers.
     ''' </summary>
     ''' <param name="sender">The context menu strip.</param>
     ''' <param name="e">A <see cref="CancelEventArgs"/> containing event data.</param>
@@ -999,12 +1088,18 @@ Public Class Form1
 #Region "Dgv Active Insulin Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvActiveInsulin"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event
+    '''  for the <see cref="DgvActiveInsulin"/> DataGridView.
     '''  This event is raised when a new column is added to the <see cref="DataGridView"/>.
-    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    '''  It sets the properties of the newly added column,
+    '''  such as sort mode, visibility, and cell style.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e"> A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
+    ''' </param>
     Private Sub DgvActiveInsulin_ColumnAdded(
         sender As Object,
         e As DataGridViewColumnEventArgs) Handles DgvActiveInsulin.ColumnAdded
@@ -1127,12 +1222,18 @@ Public Class Form1
 #Region "Dgv Basal Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvBasal"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event
+    '''  for the <see cref="DgvBasal"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
-    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    '''  It sets the properties of the newly added column, such as sort mode,
+    '''  visibility, and cell style.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
+    ''' </param>
     Private Sub DgvBasal_ColumnAdded(
         sender As Object,
         e As DataGridViewColumnEventArgs) Handles DgvBasal.ColumnAdded
@@ -1155,12 +1256,18 @@ Public Class Form1
 #Region "Dgv Basal Per Hour Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvBasalPerHour"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event
+    '''  for the <see cref="DgvBasalPerHour"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
-    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    '''  It sets the properties of the newly added column, such as sort mode,
+    '''  visibility, and cell style.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
+    ''' </param>
     Friend Sub DgvBasalPerHour_ColumnAdded(
         sender As Object,
         e As DataGridViewColumnEventArgs) Handles DgvBasalPerHour.ColumnAdded
@@ -1180,12 +1287,18 @@ Public Class Form1
 #Region "Dgv Calibration Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvCalibration"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event
+    '''  for the <see cref="DgvCalibration"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
-    '''  It sets the column properties such as SortMode, visibility, cell style, and caption.
+    '''  It sets the column properties such as SortMode, visibility,
+    '''  cell style, and caption.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
+    ''' </param>
     Private Sub DgvCalibration_ColumnAdded(
         sender As Object,
         e As DataGridViewColumnEventArgs) Handles DgvCalibration.ColumnAdded
@@ -1227,7 +1340,8 @@ Public Class Form1
         e As DataGridViewCellCancelEventArgs) Handles DgvCareLinkUsers.CellBeginEdit
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        'Here we save a current value of cell to some variable, that later we can compare with a new value
+        'Here we save a current value of cell to some variable,
+        'that later we can compare with a new value
         'For example using of dgv.Tag property
         If e.RowIndex >= 0 AndAlso e.ColumnIndex > 0 Then
             dgv.Tag = dgv.CurrentCell.Value.ToString
@@ -1271,12 +1385,17 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellEndEdit"/> event for the <see cref="DgvCareLinkUsers"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.CellEndEdit"/> event
+    '''  for the <see cref="DgvCareLinkUsers"/> DataGridView.
     '''  This event is raised after a cell edit is completed.
     '''  Intended for post-edit logic, such as validation or saving changes.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellEventArgs"/> that contains the event data.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewCellEventArgs"/> that contains the event data.
+    ''' </param>
     Private Sub DgvCareLinkUsers_CellEndEdit(
         sender As Object,
         e As DataGridViewCellEventArgs) Handles DgvCareLinkUsers.CellEndEdit
@@ -1377,11 +1496,17 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.RowsAdded"/> event for the <see cref="DgvCareLinkUsers"/> DataGridView.
-    '''  Enables or disables the delete button cell based on whether the row belongs to the logged-on user.
+    '''  Handles the <see cref="DataGridView.RowsAdded"/> event
+    '''  for the <see cref="DgvCareLinkUsers"/> DataGridView.
+    '''  Enables or disables the delete button cell based on whether
+    '''  the row belongs to the logged-on user.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewRowsAddedEventArgs"/> that contains the event data.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewRowsAddedEventArgs"/> that contains the event data.
+    ''' </param>
     Private Sub DgvCareLinkUsers_RowsAdded(
         sender As Object,
         e As DataGridViewRowsAddedEventArgs) Handles DgvCareLinkUsers.RowsAdded
@@ -1393,13 +1518,16 @@ Public Class Form1
             Dim disableButtonCell As DataGridViewDisableButtonCell =
                 CType(dgv.Rows(index:=i).Cells(columnName), DataGridViewDisableButtonCell)
 
-            Dim careLinkUserName As String = LoginHelpers.LoginDialog.LoggedOnUser.CareLinkUserName
-            disableButtonCell.Enabled = s_allUserSettingsData(index:=i).CareLinkUserName <> careLinkUserName
+            Dim careLinkUserName As String =
+                LoginHelpers.LoginDialog.LoggedOnUser.CareLinkUserName
+            disableButtonCell.Enabled =
+                s_allUserSettingsData(index:=i).CareLinkUserName <> careLinkUserName
         Next
     End Sub
 
     ''' <summary>
-    '''  Initializes the <see cref="DgvCareLinkUsers"/> DataGridView with columns and sets its data source.
+    '''  Initializes the <see cref="DgvCareLinkUsers"/> DataGridView
+    '''  with columns and sets its data source.
     '''  Adds columns for user ID, delete row button, username, password, country code,
     '''  time zone, auto login, partner, and patient user ID.
     ''' </summary>
@@ -1550,22 +1678,32 @@ Public Class Form1
     ''' <summary>
     '''  Handles the DataGridView's DataBindingComplete event.
     '''  This event is raised when the data binding operation is complete.
-    '''  It clears the selection of all DataGridViews to ensure no cells are selected after data binding.
+    '''  It clears the selection of all DataGridViews to ensure no cells
+    '''  are selected after data binding.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
     ''' <param name="e">
     '''  The DataGridViewBindingCompleteEventArgs containing the event data.
     ''' </param>
     ''' <remarks>
-    '''  This event is used to customize the appearance of DataGridViews after data binding is complete.
+    '''  This event is used to customize the appearance of DataGridViews
+    '''  after data binding is complete.
     ''' </remarks>
     Public Sub DgvInsulinDataBindingComplete(
         sender As Object,
         e As DataGridViewBindingCompleteEventArgs) Handles DgvInsulin.DataBindingComplete
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        HideUnneededColumns(dgv, columnName:=NameOf(Insulin.DeliveredExtendedAmount), value:="NaN")
-        HideUnneededColumns(dgv, columnName:=NameOf(Insulin.ProgrammedExtendedAmount), value:="NaN")
+        HideUnneededColumns(
+            dgv,
+            columnName:=NameOf(Insulin.DeliveredExtendedAmount),
+            value:="NaN")
+        HideUnneededColumns(
+            dgv,
+            columnName:=NameOf(Insulin.ProgrammedExtendedAmount),
+            value:="NaN")
         HideUnneededColumns(dgv, columnName:=NameOf(Insulin.ProgrammedDuration), value:="0")
         HideUnneededColumns(dgv, columnName:=NameOf(Insulin.EffectiveDuration), value:="0")
         Me.Dgv_DataBindingComplete(sender, e)
@@ -1611,12 +1749,18 @@ Public Class Form1
 #Region "Dgv Limits Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvLimits"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event
+    '''  for the <see cref="DgvLimits"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
-    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    '''  It sets the properties of the newly added column,
+    '''  such as sort mode, visibility, and cell style.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
+    ''' </param>
     Private Sub DataGridView_ColumnAdded(
         sender As Object,
         e As DataGridViewColumnEventArgs) Handles DgvLimits.ColumnAdded
@@ -1673,13 +1817,20 @@ Public Class Form1
 #Region "Dgv Meal Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvMeal"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event
+    '''  for the <see cref="DgvMeal"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
-    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    '''  It sets the properties of the newly added column,
+    '''  such as sort mode, visibility, and cell style.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
-    Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) Handles DgvMeal.ColumnAdded
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
+    ''' </param>
+    Private Sub DgvMeal_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
+        Handles DgvMeal.ColumnAdded
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
@@ -1733,12 +1884,19 @@ Public Class Form1
 #Region "Dgv SGs Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellPainting"/> event for the <see cref="DgvSGs"/> DataGridView.
-    '''  This event is raised when a cell is painted, allowing custom rendering of the cell's content.
-    '''  Specifically, it draws a custom sort glyph in the header cells of sortable columns.
+    '''  Handles the <see cref="DataGridView.CellPainting"/> event
+    '''  for the <see cref="DgvSGs"/> DataGridView.
+    '''  This event is raised when a cell is painted, allowing custom rendering
+    '''  of the cell's content.
+    '''  Specifically, it draws a custom sort glyph in the header cells
+    '''  of sortable columns.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellPaintingEventArgs"/> that contains the event data.
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewCellPaintingEventArgs"/> that contains the event data.
+    ''' </param>
     Private Sub DgvSGs_CellPainting(
         sender As Object,
         e As DataGridViewCellPaintingEventArgs) Handles DgvSGs.CellPainting
@@ -1862,7 +2020,8 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
         dgv.Columns(index:=lastColumnIndex).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        dgv.Columns(index:=lastColumnIndex).DefaultCellStyle.WrapMode = DataGridViewTriState.True
+        dgv.Columns(index:=lastColumnIndex).DefaultCellStyle.WrapMode =
+            DataGridViewTriState.True
         dgv.Columns(index:=0).HeaderCell.SortGlyphDirection =
             If(dgv.RowCount > 0,
                If(String.Equals(dgv.Rows(index:=0).Cells(index:=0).Value.ToString(), "1"),
@@ -1877,17 +2036,23 @@ Public Class Form1
 #Region "Dgv Summary Events"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvSummary"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.CellFormatting"/> event
+    '''  for the <see cref="DgvSummary"/> DataGridView.
     '''  This event is raised when a cell's value needs to be formatted for display.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewCellFormattingEventArgs"/> that contains the event data.
+    ''' </param>
     Private Sub DgvSummary_CellFormatting(
         sender As Object,
         e As DataGridViewCellFormattingEventArgs) Handles DgvSummary.CellFormatting
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim key As String = dgv.Rows(index:=e.RowIndex).Cells(columnName:="key").Value.ToString
+        Dim key As String =
+            dgv.Rows(index:=e.RowIndex).Cells(columnName:="key").Value.ToString
         Dim eValue As String = Convert.ToString(e.Value)
 
         Select Case e.ColumnIndex
@@ -1915,52 +2080,72 @@ Public Class Form1
                                 padding:=New Padding(all:=1))
 
                         ' Not Clickable Cells - Center
-                        Case ServerDataIndexes.clientTimeZoneName, ServerDataIndexes.lastName,
-                             ServerDataIndexes.firstName, ServerDataIndexes.appModelType,
-                             ServerDataIndexes.conduitBatteryStatus, ServerDataIndexes.medicalDeviceFamily,
-                             ServerDataIndexes.medicalDeviceInformation, ServerDataIndexes.cgmInfo,
-                             ServerDataIndexes.approvedForTreatment, ServerDataIndexes.calibStatus,
-                             ServerDataIndexes.calFreeSensor, ServerDataIndexes.calibrationIconId,
+                        Case ServerDataIndexes.clientTimeZoneName,
+                             ServerDataIndexes.lastName,
+                             ServerDataIndexes.firstName,
+                             ServerDataIndexes.appModelType,
+                             ServerDataIndexes.conduitBatteryStatus,
+                             ServerDataIndexes.medicalDeviceFamily,
+                             ServerDataIndexes.medicalDeviceInformation,
+                             ServerDataIndexes.cgmInfo,
+                             ServerDataIndexes.approvedForTreatment,
+                             ServerDataIndexes.calibStatus,
+                             ServerDataIndexes.calFreeSensor,
+                             ServerDataIndexes.calibrationIconId,
                              ServerDataIndexes.finalCalibration,
-                             ServerDataIndexes.pumpSuspended, ServerDataIndexes.conduitInRange,
-                             ServerDataIndexes.conduitMedicalDeviceInRange, ServerDataIndexes.conduitSensorInRange,
-                             ServerDataIndexes.gstCommunicationState, ServerDataIndexes.pumpCommunicationState
+                             ServerDataIndexes.pumpSuspended,
+                             ServerDataIndexes.conduitInRange,
+                             ServerDataIndexes.conduitMedicalDeviceInRange,
+                             ServerDataIndexes.conduitSensorInRange,
+                             ServerDataIndexes.gstCommunicationState,
+                             ServerDataIndexes.pumpCommunicationState
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleCenter,
                                 padding:=New Padding(all:=1))
 
                         ' Not Clickable - Data Dependent
-                        Case ServerDataIndexes.appModelNumber, ServerDataIndexes.transmitterPairedTime
+                        Case ServerDataIndexes.appModelNumber,
+                             ServerDataIndexes.transmitterPairedTime
                             If eValue = "NA" Then
                                 e.CellStyle = e.CellStyle.SetCellStyle(
                                     alignment:=DataGridViewContentAlignment.MiddleCenter,
                                     padding:=New Padding(all:=1))
                                 e.Value = "N/A"
                             Else
-                                e.CellStyle = e.CellStyle.SetCellStyle(
+                                e.CellStyle =
+                                    e.CellStyle.SetCellStyle(
                                     alignment:=DataGridViewContentAlignment.MiddleRight,
-                                    padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                                    padding:=New Padding(all:=1))
                             End If
 
                         ' Not Clickable Cells - Right
-                        Case ServerDataIndexes.currentServerTime, ServerDataIndexes.conduitBatteryLevel,
-                             ServerDataIndexes.lastConduitUpdateServerDateTime, ServerDataIndexes.medicalDeviceTime,
+                        Case ServerDataIndexes.currentServerTime,
+                             ServerDataIndexes.conduitBatteryLevel,
+                             ServerDataIndexes.lastConduitUpdateServerDateTime,
+                             ServerDataIndexes.medicalDeviceTime,
                              ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime,
                              ServerDataIndexes.timeToNextCalibrationMinutes,
                              ServerDataIndexes.timeToNextCalibrationRecommendedMinutes,
                              ServerDataIndexes.timeToNextCalibHours,
-                             ServerDataIndexes.sensorDurationHours, ServerDataIndexes.systemStatusTimeRemaining,
-                             ServerDataIndexes.gstBatteryLevel, ServerDataIndexes.reservoirLevelPercent,
-                             ServerDataIndexes.reservoirAmount, ServerDataIndexes.pumpBatteryLevelPercent,
+                             ServerDataIndexes.sensorDurationHours,
+                             ServerDataIndexes.systemStatusTimeRemaining,
+                             ServerDataIndexes.gstBatteryLevel,
+                             ServerDataIndexes.reservoirLevelPercent,
+                             ServerDataIndexes.reservoirAmount,
+                             ServerDataIndexes.pumpBatteryLevelPercent,
                              ServerDataIndexes.reservoirRemainingUnits,
-                             ServerDataIndexes.maxAutoBasalRate, ServerDataIndexes.maxBolusAmount,
-                             ServerDataIndexes.sgBelowLimit, ServerDataIndexes.lastSensorTime,
-                             ServerDataIndexes.averageSGFloat, ServerDataIndexes.averageSG,
-                             ServerDataIndexes.belowHypoLimit, ServerDataIndexes.aboveHyperLimit,
+                             ServerDataIndexes.maxAutoBasalRate,
+                             ServerDataIndexes.maxBolusAmount,
+                             ServerDataIndexes.sgBelowLimit,
+                             ServerDataIndexes.lastSensorTime,
+                             ServerDataIndexes.averageSGFloat,
+                             ServerDataIndexes.averageSG,
+                             ServerDataIndexes.belowHypoLimit,
+                             ServerDataIndexes.aboveHyperLimit,
                              ServerDataIndexes.timeInRange
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleRight,
-                                padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                                padding:=New Padding(all:=1))
 
                          ' Not Clickable Cells - Integer with comma, align Right
                         Case ServerDataIndexes.timeToNextEarlyCalibrationMinutes,
@@ -1971,15 +2156,24 @@ Public Class Form1
                                 padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
 
                             ' Clickable Cells - Center
-                        Case ServerDataIndexes.pumpBannerState, ServerDataIndexes.therapyAlgorithmState,
-                             ServerDataIndexes.lastAlarm, ServerDataIndexes.activeInsulin,
-                             ServerDataIndexes.basal, ServerDataIndexes.lastSG,
-                             ServerDataIndexes.limits, ServerDataIndexes.markers,
-                             ServerDataIndexes.sgs, ServerDataIndexes.notificationHistory
+                        Case ServerDataIndexes.pumpBannerState,
+                             ServerDataIndexes.therapyAlgorithmState,
+                             ServerDataIndexes.lastAlarm,
+                             ServerDataIndexes.activeInsulin,
+                             ServerDataIndexes.basal,
+                             ServerDataIndexes.lastSG,
+                             ServerDataIndexes.limits,
+                             ServerDataIndexes.markers,
+                             ServerDataIndexes.sgs,
+                             ServerDataIndexes.notificationHistory
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleCenter,
                                 padding:=New Padding(all:=1))
-                            dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Black, isUri:=False, emIncrease:=1)
+                            dgv.CellFormattingApplyBoldColor(
+                                e,
+                                textColor:=Color.Black,
+                                isUri:=False,
+                                emIncrease:=1)
                         Case Else
                             Stop
                     End Select
@@ -2012,31 +2206,45 @@ Public Class Form1
 
         If e.RowIndex < 0 OrElse _updating Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim value As String = dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex).Value.ToString
+        Dim value As String =
+            dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex).Value.ToString
         If value.StartsWith(value:=ClickToShowDetails) Then
             With Me.TabControlPage1
-                Dim key As String = dgv.Rows(index:=e.RowIndex).Cells(columnName:="key").Value.ToString
+                Dim key As String =
+                    dgv.Rows(index:=e.RowIndex).Cells(columnName:="key").Value.ToString
                 Select Case key.GetItemIndex()
                     Case ServerDataIndexes.activeInsulin
-                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage05ActiveInsulin))
+                        .SelectedIndex =
+                            GetTabIndexFromName(tabPageName:=NameOf(TabPage05ActiveInsulin))
                     Case ServerDataIndexes.basal
-                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage06Basal))
+                        .SelectedIndex =
+                            GetTabIndexFromName(tabPageName:=NameOf(TabPage06Basal))
                     Case ServerDataIndexes.lastAlarm
-                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage07LastAlarm))
+                        .SelectedIndex =
+                            GetTabIndexFromName(tabPageName:=NameOf(TabPage07LastAlarm))
                     Case ServerDataIndexes.lastSG
-                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage08LastSG))
+                        .SelectedIndex =
+                            GetTabIndexFromName(tabPageName:=NameOf(TabPage08LastSG))
                     Case ServerDataIndexes.limits
-                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage09Limits))
+                        .SelectedIndex =
+                            GetTabIndexFromName(tabPageName:=NameOf(TabPage09Limits))
                     Case ServerDataIndexes.notificationHistory
-                        .SelectedIndex = If(key = "activeNotification",
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage10NotificationActive)),
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage11NotificationsCleared)))
+                        .SelectedIndex =
+                            If(key = "activeNotification",
+                                GetTabIndexFromName(
+                                    tabPageName:=NameOf(TabPage10NotificationActive)),
+                                GetTabIndexFromName(
+                                    tabPageName:=NameOf(TabPage11NotificationsCleared)))
                     Case ServerDataIndexes.pumpBannerState
-                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage12PumpBannerState))
+                        .SelectedIndex =
+                            GetTabIndexFromName(tabPageName:=NameOf(TabPage12PumpBannerState))
                     Case ServerDataIndexes.sgs
-                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage13SensorGlucose))
+                        .SelectedIndex =
+                            GetTabIndexFromName(tabPageName:=NameOf(TabPage13SensorGlucose))
                     Case ServerDataIndexes.therapyAlgorithmState
-                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage14TherapyAlgorithmState))
+                        .SelectedIndex =
+                            GetTabIndexFromName(
+                                tabPageName:=NameOf(TabPage14TherapyAlgorithmState))
                     Case ServerDataIndexes.markers
                         Dim page As Integer = _lastMarkerTabLocation.Page
                         Dim tab As Integer = _lastMarkerTabLocation.Tab
@@ -2051,12 +2259,18 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvSummary"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event
+    '''  for the <see cref="DgvSummary"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
-    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    '''  It sets the properties of the newly added column, such as
+    '''  sort mode, visibility, and cell style.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
+    ''' </param>
     Private Sub DgvSummary_ColumnAdded(
         sender As Object,
         e As DataGridViewColumnEventArgs) Handles DgvSummary.ColumnAdded
@@ -2072,13 +2286,17 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.SelectionChanged"/> event for the <see cref="DgvSummary"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.SelectionChanged"/> event
+    '''  for the <see cref="DgvSummary"/> DataGridView.
     '''  This event is raised when the selection in the DataGridView changes.
     '''  It updates the previous row and column indices to track the last selected cell.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
     ''' <param name="e">A <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub DgvSummary_SelectionChanged(sender As Object, e As EventArgs) Handles DgvSummary.SelectionChanged
+    Private Sub DgvSummary_SelectionChanged(sender As Object, e As EventArgs) _
+        Handles DgvSummary.SelectionChanged
         Dim dgv As DataGridView = DirectCast(sender, DataGridView)
         If dgv.CurrentCell IsNot Nothing AndAlso
             dgv.CurrentCell.RowIndex >= 0 AndAlso
@@ -2216,12 +2434,17 @@ Public Class Form1
     '''  cache directory when the form is closing.
     ''' </summary>
     ''' <param name="sender">The source of the event, <see cref="Form"/>.</param>
-    ''' <param name="e">A <see cref="FormClosingEventArgs"/> that contains the event data.</param>
+    ''' <param name="e">
+    '''  A <see cref="FormClosingEventArgs"/> that contains the event data.
+    ''' </param>
     ''' <remarks>
-    '''  Ensures proper resource cleanup before the application exits, including killing the WebView2 process
+    '''  Ensures proper resource cleanup before the application exits,
+    '''  including killing the WebView2 process
     '''  and removing its cache directory if present.
     ''' </remarks>
-    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) _
+        Handles MyBase.FormClosing
+
         Me.NotifyIcon1?.Dispose()
         If _webView2ProcessId > 0 Then
             Dim webViewProcess As Process = Process.GetProcessById(processId:=_webView2ProcessId)
@@ -2243,13 +2466,16 @@ Public Class Form1
 
     ''' <summary>
     '''  Main form for the CareLink™ application.
-    '''  Handles initialization, event wiring, chart setup, DataGridView formatting, and user interaction logic.
+    '''  Handles initialization, event wiring, chart setup, DataGridView formatting,
+    '''  and user interaction logic.
     ''' </summary>
     ''' <param name="sender">The source of the event, <see cref="Form"/>.</param>
     ''' <param name="e">The EventArgs containing the event data.</param>
     ''' <remarks>
-    '''  This form manages the primary UI, including charts, data grids, user settings, and notification icons.
-    '''  It coordinates loading and saving user data, updating UI elements, and responding to user and system events.
+    '''  This form manages the primary UI, including charts, data grids,
+    '''  user settings, and notification icons.
+    '''  It coordinates loading and saving user data, updating UI elements,
+    '''  and responding to user and system events.
     ''' </remarks>
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If My.Settings.UpgradeRequired Then
@@ -2276,14 +2502,17 @@ Public Class Form1
 
         Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
-        My.Forms.OptionsConfigureTiTR.TreatmentTargetPercent = My.Settings.TiTrTreatmentTargetPercent
+        My.Forms.OptionsConfigureTiTR.TreatmentTargetPercent =
+            My.Settings.TiTrTreatmentTargetPercent
         My.Forms.OptionsConfigureTiTR.LowThreshold = My.Settings.TiTrLowThreshold
         Me.InitializeDgvCareLinkUsers(dgv:=Me.DgvCareLinkUsers)
         s_formLoaded = True
         Me.MenuOptionsAudioAlerts.Checked = My.Settings.SystemAudioAlertsEnabled
-        Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitionThreshold < 1
+        Me.MenuOptionsSpeechRecognitionEnabled.Checked =
+            My.Settings.SystemSpeechRecognitionThreshold < 1
         Me.SetSpeechRecognitionConfidenceThreshold()
-        Me.MenuOptionsConfigureTiTR.Text = $"Configure TiTR ({My.Forms.OptionsConfigureTiTR.GetTiTrMsg()})..."
+        Me.MenuOptionsConfigureTiTR.Text =
+            $"Configure TiTR ({My.Forms.OptionsConfigureTiTR.GetTiTrMsg()})..."
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
         If File.Exists(path:=GetGraphColorsFileNameWithPath()) Then
@@ -2294,14 +2523,16 @@ Public Class Form1
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(index:=1)
         If String.IsNullOrWhiteSpace(value:=GetWebViewCacheDirectory()) Then
-            s_webView2CacheDirectory = Path.Join(GetProjectWebCache(), Guid.NewGuid().ToString())
+            s_webView2CacheDirectory =
+                Path.Join(GetProjectWebCache(), Guid.NewGuid().ToString())
             Directory.CreateDirectory(path:=s_webView2CacheDirectory)
         End If
 
         Dim style As FontStyle = FontStyle.Bold
         Dim emSize As Single = 12.0F
         Me.DgvBasalPerHour.Font = New Font(FamilyName, emSize, style)
-        Dim currentHeaderStyle As DataGridViewCellStyle = Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle.Clone
+        Dim currentHeaderStyle As DataGridViewCellStyle =
+            Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle.Clone
         currentHeaderStyle.Font = New Font(FamilyName, emSize, style)
         Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle = currentHeaderStyle
         Me.DgvBasalPerHour.DefaultCellStyle = New DataGridViewCellStyle With {
@@ -2316,7 +2547,8 @@ Public Class Form1
     ''' <param name="sender">The source of the event, <see cref="Form"/>.</param>
     ''' <param name="e">The EventArgs containing the event data.</param>
     ''' <remarks>
-    '''  This event is used to manage the visibility of the notification icon when the form is minimized.
+    '''  This event is used to manage the visibility of the notification
+    '''  icon when the form is minimized.
     ''' </remarks>
     Private Sub Form1_Resize(sender As Object, e As EventArgs) Handles MyBase.Resize
         If Me.WindowState = FormWindowState.Minimized Then
@@ -2399,7 +2631,11 @@ Public Class Form1
         Me.NotifyIcon1.Visible = False
         Application.DoEvents()
 
-        If DoOptionalLoginAndUpdateData(owner:=Me, updateAllTabs:=False, fileToLoad:=FileToLoadOptions.NewUser) Then
+        If DoOptionalLoginAndUpdateData(
+            owner:=Me,
+            updateAllTabs:=False,
+            fileToLoad:=FileToLoadOptions.NewUser) Then
+
             Me.UpdateAllTabPages(fromFile:=False)
         End If
 
@@ -2415,12 +2651,16 @@ Public Class Form1
     ''' <remarks>
     '''  This event is used to navigate to the Serial Number tab and focus on the relevant data.
     ''' </remarks>
-    Private Sub SerialNumberButton_Click(sender As Object, e As EventArgs) Handles SerialNumberButton.Click
+    Private Sub SerialNumberButton_Click(sender As Object, e As EventArgs) _
+        Handles SerialNumberButton.Click
+
         Me.TabControlPage1.SelectedIndex = 3
         Me.TabControlPage1.Visible = True
-        Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(index:=3).Controls(index:=0), DataGridView)
+        Dim dgv As DataGridView =
+            CType(Me.TabControlPage1.TabPages(index:=3).Controls(index:=0), DataGridView)
         For Each row As DataGridViewRow In dgv.Rows
-            If row.Cells(index:=1).FormattedValue.ToString.StartsWith("medicalDeviceInformation") Then
+            If row.Cells(index:=1).FormattedValue.ToString _
+                  .StartsWith(value:="medicalDeviceInformation") Then
                 dgv.CurrentCell = dgv.Rows(row.Index).Cells(index:=1)
                 _dgvSummaryPrevRowIndex = dgv.CurrentCell.RowIndex
                 _dgvSummaryPrevColIndex = dgv.CurrentCell.ColumnIndex
@@ -2444,17 +2684,22 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
-    Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
-        Me.MenuStartHereLoadSavedDataFile.Enabled = AnyMatchingFiles(
-            path:=GetProjectDataDirectory(),
+    Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) _
+        Handles MenuStartHere.DropDownOpening
+
+        Me.MenuStartHereLoadSavedDataFile.Enabled =
+            AnyMatchingFiles(path:=GetProjectDataDirectory(),
             searchPattern:=$"CareLink*.json")
         Me.MenuStartHereSaveSnapshotFile.Enabled = Not RecentDataEmpty()
         Me.MenuStartHereUseExceptionReport.Visible = AnyMatchingFiles(
             path:=GetProjectDataDirectory(),
             searchPattern:=$"{BaseNameSavedErrorReport}*.txt")
 
-        Dim userPdfExists As Boolean = Not (String.IsNullOrWhiteSpace(s_userName) OrElse
-            Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern:=$"{s_userName}Settings.pdf"))
+        Dim userPdfExists As Boolean =
+            Not (String.IsNullOrWhiteSpace(s_userName) OrElse
+            Not AnyMatchingFiles(
+                path:=GetSettingsDirectory(),
+                searchPattern:=$"{s_userName}Settings.pdf"))
 
         Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists AndAlso
                                                 CurrentPdf IsNot Nothing AndAlso
@@ -2492,7 +2737,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
-    Private Sub MenuStartHereExit_Click(sender As Object, e As EventArgs) Handles MenuStartHereExit.Click
+    Private Sub MenuStartHereExit_Click(sender As Object, e As EventArgs) _
+        Handles MenuStartHereExit.Click
+
         Me.Close()
     End Sub
 
@@ -2659,8 +2906,11 @@ Public Class Form1
                                 FixedPart:="CareLink",
                                 fuzzy:=True)
                             Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                            Me.Text = $"{SavedTitle} Using file {Path.GetFileName(fileNameWithPath)}"
-                            Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
+                            Dim file As String =
+                                Path.GetFileName(fileNameWithPath)
+                            Me.Text = $"{SavedTitle} Using file {file}"
+                            Dim epochDateTime As Date =
+                                s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
                             Me.SetLastUpdateTime(
                                 msg:=epochDateTime.ToShortDateString,
                                 suffixMessage:="from file",
@@ -2715,12 +2965,14 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="Form.Click"/> event for the User Login menu item.
     '''  This event is raised when the User Login menu item is clicked.
-    '''  It allows the user to log in to their CareLink™ account and update the application state accordingly.
+    '''  It allows the user to log in to their CareLink™ account and
+    '''  update the application state accordingly.
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
     ''' <remarks>
-    '''  The user will be prompted to log in, and their data will be updated based on their account information.
+    '''  The user will be prompted to log in, and their data will be updated
+    '''  based on their account information.
     ''' </remarks>
     Private Sub MenuStartHereUserLogin_Click(sender As Object, e As EventArgs) _
         Handles MenuStartHereUserLogin.Click
@@ -2734,7 +2986,8 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="Form.Click"/> event for the Use Saved Data File menu item.
     '''  This event is raised when the Use Saved Data File menu item is clicked.
-    '''  It allows the user to load a saved data file and update the application state accordingly.
+    '''  It allows the user to load a saved data file and update the application
+    '''  state accordingly.
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
@@ -2798,9 +3051,12 @@ Public Class Form1
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">The event data.</param>
     <DebuggerNonUserCode()>
-    Private Sub MenuOptions_DropDownOpening(sender As Object, e As EventArgs) Handles MenuOptions.DropDownOpening
-        Me.MenuOptionsEditPumpSettings.Enabled = Debugger.IsAttached OrElse
-            Not String.IsNullOrWhiteSpace(CurrentUser?.UserName)
+    Private Sub MenuOptions_DropDownOpening(sender As Object, e As EventArgs) _
+    Handles MenuOptions.DropDownOpening
+
+        Me.MenuOptionsEditPumpSettings.Enabled =
+            Debugger.IsAttached OrElse
+            Not String.IsNullOrWhiteSpace(value:=CurrentUser?.UserName)
     End Sub
 
     ''' <summary>
@@ -2810,7 +3066,8 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
-    Private Sub MenuOptionsAudioAlerts_Click(sender As Object, e As EventArgs) Handles MenuOptionsAudioAlerts.Click
+    Private Sub MenuOptionsAudioAlerts_Click(sender As Object, e As EventArgs) _
+        Handles MenuOptionsAudioAlerts.Click
         Dim playAudioAlerts As Boolean = Me.MenuOptionsAudioAlerts.Checked
         My.Settings.SystemAudioAlertsEnabled = playAudioAlerts
         My.Settings.Save()
@@ -2821,14 +3078,16 @@ Public Class Form1
                 InitializeSpeechRecognition()
             End If
         Else
-            Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitionThreshold < 1
+            Me.MenuOptionsSpeechRecognitionEnabled.Checked =
+                My.Settings.SystemSpeechRecognitionThreshold < 1
             Me.MenuOptionsSpeechRecognitionEnabled.Enabled = False
             CancelSpeechRecognition()
         End If
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="CheckBox.CheckedChanged"/> event for the <see cref="MenuOptionsAutoLogin"/> checkbox.
+    '''  Handles the <see cref="CheckBox.CheckedChanged"/> event
+    '''  for the <see cref="MenuOptionsAutoLogin"/> checkbox.
     '''  Updates the application's AutoLogin setting based on the checkbox state.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="CheckBox"/> control.</param>
@@ -2848,7 +3107,9 @@ Public Class Form1
     '''  The source of the event, a <see cref="ToolStripMenuItem"/> control.
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuOptionsColorPicker_Click(sender As Object, e As EventArgs) Handles MenuOptionsColorPicker.Click
+    Private Sub MenuOptionsColorPicker_Click(sender As Object, e As EventArgs) _
+        Handles MenuOptionsColorPicker.Click
+
         Using o As New OptionsColorPickerDialog()
             o.ShowDialog(owner:=Me)
         End Using
@@ -2891,7 +3152,10 @@ Public Class Form1
 
         SetUpCareLinkUser(forceUI:=True)
         Dim json As String = File.ReadAllText(path:=GetUserSettingsPath())
-        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonSerializerOptions)
+        CurrentUser =
+            JsonSerializer.Deserialize(Of CurrentUserRecord)(
+                json,
+                options:=s_jsonSerializerOptions)
     End Sub
 
     ''' <summary>
@@ -3070,7 +3334,8 @@ Public Class Form1
                 Me.MenuOptionsSpeechRecognition90.Checked = False
                 Me.MenuOptionsSpeechRecognition95.Checked = True
         End Select
-        Me.MenuOptionsSpeechRecognitionEnabled.Checked = Me.MenuOptionsSpeechRecognitionDisabled.Checked = False
+        Me.MenuOptionsSpeechRecognitionEnabled.Checked =
+            Me.MenuOptionsSpeechRecognitionDisabled.Checked = False
     End Sub
 
 #End Region ' Menus Options
@@ -3147,13 +3412,20 @@ Public Class Form1
 #Region "Form Misc Events"
 
     ''' <summary>
-    '''  Handles the <see cref="Label.Paint"/> event for the <see cref="ActiveInsulinValue"/> control.
+    '''  Handles the <see cref="Label.Paint"/> event
+    '''  for the <see cref="ActiveInsulinValue"/> control.
     '''  Draws a solid lime green border around the ActiveInsulinValue label.
     ''' </summary>
     ''' <param name="sender">The source of the event, the ActiveInsulinValue label.</param>
     ''' <param name="e">A <see cref="PaintEventArgs"/> that contains the event data.</param>
-    Private Sub ActiveInsulinValue_Paint(sender As Object, e As PaintEventArgs) Handles ActiveInsulinValue.Paint
-        ControlPaint.DrawBorder(e.Graphics, e.ClipRectangle, Color.LimeGreen, ButtonBorderStyle.Solid)
+    Private Sub ActiveInsulinValue_Paint(sender As Object, e As PaintEventArgs) _
+        Handles ActiveInsulinValue.Paint
+
+        ControlPaint.DrawBorder(
+            e.Graphics,
+            bounds:=e.ClipRectangle,
+            color:=Color.LimeGreen,
+            style:=ButtonBorderStyle.Solid)
     End Sub
 
     ''' <summary>
@@ -3170,10 +3442,12 @@ Public Class Form1
 
         ' Update the checkbox text based on the current state and insulin type.
         With CurrentUser
-            Me.TemporaryUseAdvanceAITDecayCheckBox.Text = If(
-                Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked,
-                $"Advanced Decay, AIT will decay over { .InsulinRealAit} hours While Using { .InsulinTypeName}",
-                $"AIT will decay over { .PumpAit.ToHoursMinutes} While Using { .InsulinTypeName}")
+            Me.TemporaryUseAdvanceAITDecayCheckBox.Text =
+                If(Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked,
+                   "Advanced Decay, AIT will decay over " &
+                    $"{ .InsulinRealAit} hours While Using { .InsulinTypeName}",
+                   $"AIT will decay over { .PumpAit.ToHoursMinutes} While " &
+                    $"Using { .InsulinTypeName}")
             CurrentUser.UseAdvancedAitDecay = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
         End With
         Me.UpdateActiveInsulinChart()
@@ -3184,12 +3458,17 @@ Public Class Form1
 #Region "NotifyIcon Events"
 
     ''' <summary>
-    '''  Handles the <see cref="NotifyIcon.DoubleClick"/> event for the application's notification icon.
-    '''  Restores the main window to the taskbar and sets its state to normal when the icon is double-clicked.
+    '''  Handles the <see cref="NotifyIcon.DoubleClick"/> event
+    '''  for the application's notification icon. Restores the main window
+    '''  to the taskbar and sets its state to normal when the icon is double-clicked.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="NotifyIcon"/> control.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="NotifyIcon"/> control.
+    ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub NotifyIcon1_DoubleClick(sender As Object, e As EventArgs) Handles NotifyIcon1.DoubleClick
+    Private Sub NotifyIcon1_DoubleClick(sender As Object, e As EventArgs) _
+        Handles NotifyIcon1.DoubleClick
+
         Me.ShowInTaskbar = True
         Me.WindowState = FormWindowState.Normal
     End Sub
@@ -3211,7 +3490,8 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, typically the settings object.</param>
     ''' <param name="e">
-    '''  A <see cref="SettingChangingEventArgs"/> containing the event data, including the setting name and new value.
+    '''  A <see cref="SettingChangingEventArgs"/> containing the event data,
+    '''  including the setting name and new value.
     ''' </param>
     Private Sub MySettings_SettingChanging(sender As Object, e As SettingChangingEventArgs)
         If e.SettingName.StartsWith(value:="System") Then Exit Sub
@@ -3305,7 +3585,8 @@ Public Class Form1
 #If NET9_0 Then
 
     ''' <summary>
-    '''  Handles the <see cref="TabControl.DrawItem"/> event for the main and secondary tab controls.
+    '''  Handles the <see cref="TabControl.DrawItem"/> event
+    '''  for the main and secondary tab controls.
     '''  Customizes the drawing of the tab pages to highlight the selected tab with a
     '''  different background and foreground color.
     ''' </summary>
@@ -3315,8 +3596,9 @@ Public Class Form1
     '''  including the index of the tab page being drawn.
     ''' </param>
     ''' <remarks>
-    '''  This method is used to provide a custom appearance for the tab pages in the application.
-    '''  It fills the background with a solid color and draws the tab text centered within the tab rectangle.
+    '''  This method is used to provide a custom appearance for the tab
+    '''  pages in the application. It fills the background with a solid color
+    '''  and draws the tab text centered within the tab rectangle.
     ''' </remarks>
     Private Sub TabControl_DrawItem(sender As Object, e As DrawItemEventArgs) _
         Handles TabControlPage1.DrawItem, TabControlPage2.DrawItem
@@ -3449,7 +3731,8 @@ Public Class Form1
         ElseIf tabName = "SensorGlucoseValues" Then
             tabName = "Sgs"
         End If
-        Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(index:=3).Controls(index:=0), DataGridView)
+        Dim dgv As DataGridView =
+            CType(Me.TabControlPage1.TabPages(index:=3).Controls(index:=0), DataGridView)
         For index As Integer = 0 To dgv.RowCount - 1
             Dim row As DataGridViewRow = dgv.Rows(index)
             Dim message As String = row.Cells(index:=1).FormattedValue.ToString
@@ -3470,12 +3753,14 @@ Public Class Form1
 
     ''' <summary>
     '''  Handles the <see cref="Timer.Tick"/> event for the cursor timer.
-    '''  This method is called periodically to reset the cursor position if the chart is not zoomed.
+    '''  This method is called periodically to reset the cursor position
+    '''  if the chart is not zoomed.
     ''' </summary>
     ''' <param name="sender">The source of the event, typically a Timer control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     ''' <remarks>
-    '''  The timer is stopped if the chart is not zoomed, and the cursor position is set to NaN.
+    '''  The timer is stopped if the chart is not zoomed,
+    '''  and the cursor position is set to NaN.
     ''' </remarks>
     Private Sub CursorTimer_Tick(sender As Object, e As EventArgs) Handles CursorTimer.Tick
         If Not Me.SummaryChart.ChartAreas(NameOf(ChartArea)).AxisX.ScaleView.IsZoomed Then
@@ -3525,11 +3810,16 @@ Public Class Form1
     '''  This method is called periodically to update the server data and refresh the UI.
     ''' </summary>
     ''' <param name="sender">The source of the event, typically a Timer control.</param>
-    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    ''' <param name="e">
+    '''  An <see cref="EventArgs"/> that contains the event data.
+    ''' </param>
     ''' <remarks>
-    '''  The method checks if updates are in progress, retrieves recent data, and updates the UI accordingly.
+    '''  The method checks if updates are in progress, retrieves recent data,
+    '''  and updates the UI accordingly.
     ''' </remarks>
-    Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
+    Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) _
+        Handles ServerUpdateTimer.Tick
+
         StartOrStopServerUpdateTimer(Start:=False)
         Dim lastErrorMessage As String = String.Empty
         SyncLock _updatingLock
@@ -3838,30 +4128,39 @@ Public Class Form1
 #Region "Initialize Treatment Markers Chart"
 
     ''' <summary>
-    '''  Initializes the Treatment Markers tab chart, including chart area, axes, series, and legend.
-    '''  This method sets up the chart for displaying treatment details
-    '''  such as insulin delivery and sensor glucose readings.
+    '''  Initializes the Treatment Markers tab chart, including chart area,
+    '''  axes, series, and legend. This method sets up the chart for
+    '''  displaying treatment details such as insulin delivery and sensor glucose readings.
     ''' </summary>
     ''' <remarks>
     '''  <list type="bullet">
     '''   <item>Clears any existing controls from the treatment details tab page.</item>
-    '''   <item>Creates and configures the chart and its area, including axis labels, intervals, and colors.</item>
-    '''   <item>Sets the maximum insulin delivery row based on the maximum basal per dose.
-    '''     Adjusts the interval and label style for the Y-axis to display insulin delivery values.
-    '''   </item>
-    '''   <item>Adds all required series for displaying treatment markers.
-    '''     This includes target sensor glucose, auto correction, basal series, min basal, suspend,
-    '''     sensor glucose, markers, and time change.
+    '''   <item>
+    '''    Creates and configures the chart and its area,
+    '''   including axis labels, intervals, and colors.
+    '''  </item>
+    '''  <item>
+    '''   Sets the maximum insulin delivery row based on the maximum basal per dose.
+    '''    Adjusts the interval and label style for the Y-axis to
+    '''    display insulin delivery values.
+    '''  </item>
+    '''  <item>
+    '''    Adds all required series for displaying treatment markers. This includes
+    '''    target sensor glucose, auto correction, basal series, min basal, suspend,
+    '''    sensor glucose, markers, and time change.
     '''   </item>
     '''   <item>Sets the legend and title for the chart.</item>
-    '''   <item>Adds the chart to the treatment details tab page and processes UI events.</item>
+    '''   <item>
+    '''    Adds the chart to the treatment details tab page and processes UI events.
+    '''   </item>
     '''  </list>
     ''' </remarks>
     Private Sub InitializeTreatmentMarkersChart()
         Me.TabPage03TreatmentDetails.Controls.Clear()
 
         Me.TreatmentMarkersChart = CreateChart(key:=NameOf(TreatmentMarkersChart))
-        Dim treatmentMarkersChartArea As ChartArea = CreateChartArea(containingChart:=Me.TreatmentMarkersChart)
+        Dim treatmentMarkersChartArea As ChartArea =
+            CreateChartArea(containingChart:=Me.TreatmentMarkersChart)
 
         Select Case MaxBasalPerDose
             Case < 0.5
@@ -3930,9 +4229,12 @@ Public Class Form1
             yAxisType:=AxisType.Primary)
 
         Me.TreatmentMarkerSgSeries = CreateSeriesSg(sgLegend:=_treatmentMarkersChartLegend)
-        Me.TreatmentMarkerMarkersSeries = CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Primary)
-        Me.TreatmentMarkerTimeChangeSeries = CreateSeriesTimeChange(basalLegend:=_treatmentMarkersChartLegend)
-        Me.TreatmentMarkerSuspendSeries = CreateSeriesSuspend(basalLegend:=_treatmentMarkersChartLegend)
+        Me.TreatmentMarkerMarkersSeries =
+            CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Primary)
+        Me.TreatmentMarkerTimeChangeSeries =
+            CreateSeriesTimeChange(basalLegend:=_treatmentMarkersChartLegend)
+        Me.TreatmentMarkerSuspendSeries =
+            CreateSeriesSuspend(basalLegend:=_treatmentMarkersChartLegend)
 
         With Me.TreatmentMarkersChart
             With .Series
@@ -3970,8 +4272,10 @@ Public Class Form1
 #Region "NotifyIcon Support"
 
     ''' <summary>
-    '''  Updates the notification icon with the latest sensor glucose value and displays a balloon tip if necessary.
-    '''  This method is called to refresh the notification icon based on the latest sensor glucose reading.
+    '''  Updates the notification icon with the latest sensor glucose value
+    '''  and displays a balloon tip if necessary.
+    '''  This method is called to refresh the notification icon based on
+    '''  the latest sensor glucose reading.
     ''' </summary>
     ''' <param name="sgString">The last sensor glucose value as a string.</param>
     Private Sub UpdateNotifyIcon(sgString As String)
@@ -4029,9 +4333,12 @@ Public Class Form1
                                 Me.TrendValueLabel.Text = ""
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta:=0)
                             Else
-                                deltaString = If(Math.Abs(value:=delta) < 0.001,
-                                                 "0",
-                                                 delta.ToString(format:=GetSgFormat(withSign:=True), provider))
+                                deltaString =
+                                    If(Math.Abs(value:=delta) < 0.001,
+                                       "0",
+                                       delta.ToString(
+                                            format:=GetSgFormat(withSign:=True),
+                                            provider))
                                 Me.TrendValueLabel.Text = deltaString
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta)
                             End If
@@ -4042,7 +4349,8 @@ Public Class Form1
                     Else
                         Me.TrendValueLabel.Visible = False
                     End If
-                    strBuilder.Append(value:=$"Active ins. {PatientData.ActiveInsulin?.Amount:N3} U")
+                    strBuilder.Append(
+                        value:=$"Active ins. {PatientData.ActiveInsulin?.Amount:N3} U")
                     Me.NotifyIcon1.Text = strBuilder.ToString()
                     Me.NotifyIcon1.Visible = True
                     s_lastSgValue = sg
@@ -4059,13 +4367,15 @@ Public Class Form1
 #Region "Scale Split Containers"
 
     ''' <summary>
-    '''  Fixes the <see cref="SplitContainer"/> control's SplitterDistance based on the current form scale.
-    '''  This method is called to ensure that the SplitContainer's splitter distance is correctly scaled
-    '''  when the form is resized or scaled.
+    '''  Fixes the <see cref="SplitContainer"/> control's SplitterDistance
+    '''  based on the current form scale.
+    '''  This method is called to ensure that the SplitContainer's
+    '''  splitter distance is correctly scaled when the form is resized or scaled.
     ''' </summary>
     ''' <param name="sp">The SplitContainer control to fix.</param>
     ''' <remarks>
-    '''  The method adjusts the SplitterDistance based on the orientation and fixed panel of the SplitContainer.
+    '''  The method adjusts the SplitterDistance based on the orientation
+    '''  and fixed panel of the SplitContainer.
     ''' </remarks>
     Private Sub Fix(sp As SplitContainer)
         ' Scale factor depends on orientation
@@ -4073,7 +4383,8 @@ Public Class Form1
                               _formScale.Width,
                               _formScale.Height)
         If sp.FixedPanel = FixedPanel.Panel1 Then
-            sp.SplitterDistance = CInt(Math.Truncate(Math.Round(sp.SplitterDistance * sc)))
+            sp.SplitterDistance =
+                CInt(Math.Truncate(Math.Round(sp.SplitterDistance * sc)))
         ElseIf sp.FixedPanel = FixedPanel.Panel2 Then
             Dim cs As Integer = If(sp.Orientation = Orientation.Vertical,
                                    sp.Panel2.ClientSize.Width,
@@ -4084,7 +4395,8 @@ Public Class Form1
 
     ''' <summary>
     '''  Recursively fixes the SplitContainer controls within the specified control.
-    '''  This method is called to ensure that all SplitContainer controls in the control hierarchy are fixed.
+    '''  This method is called to ensure that all SplitContainer controls
+    '''  in the control hierarchy are fixed.
     ''' </summary>
     ''' <param name="c">The control containing SplitContainer controls to fix.</param>
     Private Sub Fix(c As Control)
@@ -4155,8 +4467,11 @@ Public Class Form1
     ''' </exception>
     Private Sub UpdateActiveInsulin()
         Try
-            If PatientData.ActiveInsulin IsNot Nothing AndAlso PatientData.ActiveInsulin.Amount >= 0 Then
-                Dim activeInsulinStr As String = $"Active Insulin {$"{PatientData.ActiveInsulin.Amount:N3}"} U"
+            If PatientData.ActiveInsulin IsNot Nothing AndAlso
+               PatientData.ActiveInsulin.Amount >= 0 Then
+
+                Dim activeInsulinStr As String =
+                    $"Active Insulin {$"{PatientData.ActiveInsulin.Amount:N3}"} U"
                 Me.ActiveInsulinValue.Text = activeInsulinStr
                 _sgMiniDisplay.ActiveInsulinTextBox.Text = activeInsulinStr
             Else
@@ -4198,7 +4513,8 @@ Public Class Form1
         End If
 
         Try
-            Me.TemporaryUseAdvanceAITDecayCheckBox.Checked = CurrentUser.UseAdvancedAitDecay = CheckState.Checked
+            Me.TemporaryUseAdvanceAITDecayCheckBox.Checked =
+                CurrentUser.UseAdvancedAitDecay = CheckState.Checked
             If Me.ActiveInsulinChart Is Nothing Then
                 Return
             End If
@@ -4230,7 +4546,9 @@ Public Class Form1
                             If timeOrderedMarkers.ContainsKey(key:=markerOADateTime) Then
                                 timeOrderedMarkers(key:=markerOADateTime) += bolusAmount
                             Else
-                                timeOrderedMarkers.Add(key:=markerOADateTime, value:=bolusAmount)
+                                timeOrderedMarkers.Add(
+                                    key:=markerOADateTime,
+                                    value:=bolusAmount)
                             End If
                         Case "MANUAL_BASAL_DELIVERY"
                             key = NameOf(AutoBasalDelivery.BolusAmount)
@@ -4238,7 +4556,9 @@ Public Class Form1
                             If timeOrderedMarkers.ContainsKey(key:=markerOADateTime) Then
                                 timeOrderedMarkers(key:=markerOADateTime) += bolusAmount
                             Else
-                                timeOrderedMarkers.Add(key:=markerOADateTime, value:=bolusAmount)
+                                timeOrderedMarkers.Add(
+                                    key:=markerOADateTime,
+                                    value:=bolusAmount)
                             End If
                         Case "INSULIN"
                             key = NameOf(Insulin.DeliveredFastAmount)
@@ -4246,7 +4566,9 @@ Public Class Form1
                             If timeOrderedMarkers.ContainsKey(key:=markerOADateTime) Then
                                 timeOrderedMarkers(key:=markerOADateTime) += bolusAmount
                             Else
-                                timeOrderedMarkers.Add(key:=markerOADateTime, value:=bolusAmount)
+                                timeOrderedMarkers.Add(
+                                    key:=markerOADateTime,
+                                    value:=bolusAmount)
                             End If
                         Case "LOW_GLUCOSE_SUSPENDED"
                             If PatientData.ConduitSensorInRange AndAlso
@@ -4287,18 +4609,24 @@ Public Class Form1
                         initialInsulinLevel += timeOrderedMarkers.Values(index:=currentMarker)
                         currentMarker += 1
                     End While
-                    Dim item As New RunningActiveInsulin(firstNotSkippedOaTime, initialInsulinLevel, CurrentUser)
+                    Dim item As New RunningActiveInsulin(
+                        firstNotSkippedOaTime,
+                        initialInsulinLevel, CurrentUser)
+
                     remainingInsulinList.Add(item)
                 Next
 
-                .ChartAreas(name:=NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValueFromNativeMmolL()
+                .ChartAreas(name:=NameOf(ChartArea)).AxisY2.Maximum =
+                    GetYMaxValueFromNativeMmolL()
                 ' walk all markers, adjust active insulin and then add new markerWithIndex
                 Dim maxActiveInsulin As Double = 0
                 Dim count As Integer = CurrentUser.GetActiveInsulinIncrements
                 For i As Integer = 0 To remainingInsulinList.Count - 1
                     If i < count Then
                         With Me.ActiveInsulinActiveInsulinSeries
-                            .Points.AddXY(xValue:=remainingInsulinList(index:=i).OaDateTime, yValue:=Double.NaN)
+                            .Points.AddXY(
+                                xValue:=remainingInsulinList(index:=i).OaDateTime,
+                                yValue:=Double.NaN)
                             .Points.Last.IsEmpty = True
                         End With
                         If i > 0 Then
@@ -4391,7 +4719,9 @@ Public Class Form1
     ''' </remarks>
     Private Sub UpdateAutoModeShield()
         Try
-            Me.LastSgOrExitTimeLabel.Text = s_lastSg.Timestamp.ToString(format:=s_timeWithMinuteFormat)
+            Dim lastSgTimestamp As String =
+                s_lastSg.Timestamp.ToString(format:=s_timeWithMinuteFormat)
+            Me.LastSgOrExitTimeLabel.Text = lastSgTimestamp
             Me.ShieldUnitsLabel.Text = BgUnits
 
             If InAutoMode Then
@@ -4444,8 +4774,10 @@ Public Class Form1
                     Case "WARM_UP"
                         Dim timeRemaining As String = ""
                         If s_systemStatusTimeRemaining.TotalMilliseconds > 0 Then
-                            timeRemaining = s_systemStatusTimeRemaining.ToFormattedTimeSpan(unit:="hr")
-                            Me.SensorMessageLabel.Text = $"{message.Remove(s:="...")}{vbCrLf}{timeRemaining}"
+                            timeRemaining =
+                                s_systemStatusTimeRemaining.ToFormattedTimeSpan(unit:="hr")
+                            Me.SensorMessageLabel.Text =
+                                $"{message.Remove(s:="...")}{vbCrLf}{timeRemaining}"
                             Me.SensorMessageLabel.CenterXYOnParent(verticalOffset:=-5)
                         Else
                             Me.SensorMessageLabel.Text = message
@@ -4490,12 +4822,14 @@ Public Class Form1
         Try
             If PatientData.ConduitInRange Then
                 If PatientData.TimeToNextCalibHours >= Byte.MaxValue Then
+                    Dim calibrationDot As Bitmap = My.Resources.CalibrationDot
                     Me.CalibrationDueImage.Image =
-                        My.Resources.CalibrationDot.DrawCenteredArc(minutesToNextCalibration:=720)
+                        calibrationDot.DrawCenteredArc(minutesToNextCalibration:=720)
                 ElseIf PatientData.TimeToNextCalibHours = 0 Then
-                    Dim notReady As Boolean = PatientData.SystemStatusMessage = "WAIT_TO_CALIBRATE" OrElse
-                           PatientData.SensorState = "WARM_UP" OrElse
-                           PatientData.SensorState = "CHANGE_SENSOR"
+                    Dim notReady As Boolean =
+                        PatientData.SystemStatusMessage = "WAIT_TO_CALIBRATE" OrElse
+                        PatientData.SensorState = "WARM_UP" OrElse
+                        PatientData.SensorState = "CHANGE_SENSOR"
                     If notReady Then
                         Me.CalibrationDueImage.Image = My.Resources.CalibrationNotReady
                     Else
@@ -4615,12 +4949,17 @@ Public Class Form1
             End If
         End If
 
-        Dim totalPercent As String = If(s_totalDailyDose = 0, "???", $"{CInt(s_totalBasal / s_totalDailyDose * 100)}")
+        Dim totalPercent As String =
+            If(s_totalDailyDose = 0,
+               "???",
+               $"{CInt(s_totalBasal / s_totalDailyDose * 100)}")
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        Me.Last24HrBasalUnitsLabel.Text = String.Format(provider, format:=$"{s_totalBasal:F1} U")
+        Me.Last24HrBasalUnitsLabel.Text =
+            String.Format(provider, format:=$"{s_totalBasal:F1} U")
         Me.Last24HrBasalPercentLabel.Text = $"{totalPercent}%"
 
-        Me.Last24HrTotalInsulinUnitsLabel.Text = String.Format(provider, format:=$"{s_totalDailyDose:F1} U")
+        Me.Last24HrTotalInsulinUnitsLabel.Text =
+            String.Format(provider, format:=$"{s_totalDailyDose:F1} U")
 
         If s_totalAutoCorrection > 0 Then
             If s_totalDailyDose > 0 Then
@@ -4645,10 +4984,12 @@ Public Class Form1
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24HrMealBolusUnitsLabel.Text = String.Format(provider, format:=$"{s_totalManualBolus:F1} U")
+            Me.Last24HrMealBolusUnitsLabel.Text =
+                String.Format(provider, format:=$"{s_totalManualBolus:F1} U")
             Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         End If
-        Me.Last24HrCarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}{Superscript3}"
+        Me.Last24HrCarbsValueLabel.Text =
+            $"{s_totalCarbs} {GetCarbDefaultUnit()}{Superscript3}"
     End Sub
 
     ''' <summary>
@@ -4756,11 +5097,13 @@ Public Class Form1
                     Me.SensorTimeLeftLabel.Text = "7 Days"
 
                 Case Is >= 24
-                    Me.SensorDaysLeftLabel.Text = Math.Ceiling(PatientData.SensorDurationHours / 24).ToString()
+                    Me.SensorDaysLeftLabel.Text =
+                        Math.Ceiling(PatientData.SensorDurationHours / 24).ToString()
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
                     Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
                 Case Is > 0
-                    Me.SensorDaysLeftLabel.Text = $"<{Math.Ceiling(PatientData.SensorDurationHours / 24)}"
+                    Me.SensorDaysLeftLabel.Text =
+                        $"<{Math.Ceiling(PatientData.SensorDurationHours / 24)}"
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                     Me.SensorTimeLeftLabel.Text = $"{PatientData.SensorDurationHours} Hours"
                 Case Is = 0
@@ -4780,7 +5123,8 @@ Public Class Form1
                             Me.SensorTimeLeftLabel.Text = "Expired"
                         Case Else
                             Me.SensorDaysLeftLabel.Text = ""
-                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
+                            Me.SensorTimeLeftPictureBox.Image =
+                                My.Resources.SensorExpirationUnknown
                             Me.SensorTimeLeftLabel.Text = "Unknown"
                     End Select
 
@@ -4826,27 +5170,37 @@ Public Class Form1
                 .Last().BorderWidth = 2
                 Dim tir As UInteger = GetTIR.Percent
                 If _timeInTightRange.Uint = tir Then
-                    .AddXY($"{_timeInTightRange.Str}% In Tight Range = TIR", _timeInTightRange.Uint / 100)
+                    .AddXY(
+                        $"{_timeInTightRange.Str}% In Tight Range = TIR",
+                        _timeInTightRange.Uint / 100)
                     .Last().Color = Color.LimeGreen
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
                 ElseIf _timeInTightRange.Uint < tir Then
-                    .AddXY($"{GetTIR.AsString}% In Range", (tir - _timeInTightRange.Uint) / 100)
+                    .AddXY(
+                        $"{GetTIR.AsString}% In Range",
+                        (tir - _timeInTightRange.Uint) / 100)
                     .Last().Color = Color.Green
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
 
-                    .AddXY($"{_timeInTightRange.Str}% In Tight Range", _timeInTightRange.Uint / 100)
+                    .AddXY(
+                        $"{_timeInTightRange.Str}% In Tight Range",
+                        _timeInTightRange.Uint / 100)
                     .Last().Color = Color.LimeGreen
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
                 Else
-                    .AddXY($"{_timeInTightRange.Str}% In Tight Range", _timeInTightRange.Uint / 100)
+                    .AddXY(
+                        $"{_timeInTightRange.Str}% In Tight Range",
+                        _timeInTightRange.Uint / 100)
                     .Last().Color = Color.LimeGreen
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
 
-                    .AddXY($"{GetTIR.AsString}% In Range", (_timeInTightRange.Uint - tir) / 100)
+                    .AddXY(
+                        $"{GetTIR.AsString}% In Range",
+                        (_timeInTightRange.Uint - tir) / 100)
                     .Last().Color = Color.Green
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
@@ -4883,7 +5237,8 @@ Public Class Form1
 
         Me.BelowLowLimitValueLabel.Text = $"{GetBelowHypoLimit.Str}%"
         Me.BelowLowLimitMessageLabel.Text = $"Below {GetTirLowLimitWithUnits()} {BgUnits}"
-        Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.averageSG))
+        Dim averageSgStr As String =
+            RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.averageSG))
         Me.AverageSGValueLabel.Text = If(NativeMmolL,
                                          averageSgStr.TruncateSingle(digits:=2),
                                          averageSgStr)
@@ -4892,7 +5247,9 @@ Public Class Form1
         ' Calculate Time in AutoMode
         If s_autoModeStatusMarkers.Count = 0 Then
             Me.SmartGuardLabel.Text = "SmartGuard 0%"
-        ElseIf s_autoModeStatusMarkers.Count = 1 AndAlso s_autoModeStatusMarkers.First.AutoModeOn Then
+        ElseIf s_autoModeStatusMarkers.Count = 1 AndAlso
+               s_autoModeStatusMarkers.First.AutoModeOn Then
+
             Me.SmartGuardLabel.Text = "SmartGuard 100%"
         Else
             Try
@@ -4900,7 +5257,9 @@ Public Class Form1
                 Dim autoModeStartTime As New Date
                 Dim timeInAutoMode As TimeSpan = ZeroTickSpan
                 Dim timestamp As Date
-                For Each r As IndexClass(Of AutoModeStatus) In s_autoModeStatusMarkers.WithIndex
+                For Each r As IndexClass(Of AutoModeStatus) In
+                    s_autoModeStatusMarkers.WithIndex
+
                     If r.IsFirst Then
                         If r.Value.AutoModeOn OrElse s_autoModeStatusMarkers.Count = 1 Then
                             autoModeStartTime = r.Value.Timestamp
@@ -4953,14 +5312,16 @@ Public Class Form1
             If sg.sgMgdL < 70 Then
                 lowCount += 1
                 If NativeMmolL Then
-                    lowDeviations += ((GetTirLowLimit() - sg.sgMmolL) * MmolLUnitsDivisor) ^ 2
+                    lowDeviations +=
+                        ((GetTirLowLimit() - sg.sgMmolL) * MmolLUnitsDivisor) ^ 2
                 Else
                     lowDeviations += (GetTirLowLimit() - sg.sgMgdL) ^ 2
                 End If
             ElseIf sg.sgMgdL > 180 Then
                 highCount += 1
                 If NativeMmolL Then
-                    highDeviations += ((sg.sgMmolL - GetTirHighLimit()) * MmolLUnitsDivisor) ^ 2
+                    highDeviations +=
+                        ((sg.sgMmolL - GetTirHighLimit()) * MmolLUnitsDivisor) ^ 2
                 Else
                     highDeviations += (sg.sgMgdL - GetTirHighLimit()) ^ 2
                 End If
@@ -4972,13 +5333,15 @@ Public Class Form1
             Me.LowTirComplianceLabel.Text = ""
             Me.HighTirComplianceLabel.Text = ""
         Else
-            Dim lowDeviation As Single = Math.Sqrt(lowDeviations / (elements - highCount)).RoundToSingle(digits:=1)
+            Dim lowDeviation As Single =
+                Math.Sqrt(lowDeviations / (elements - highCount)).RoundToSingle(digits:=1)
             Select Case True
                 Case lowDeviation <= 2
                     Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}Excellent{Superscript2}"
                     Me.LowTirComplianceLabel.ForeColor = Color.LimeGreen
                 Case lowDeviation <= 4
-                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}({lowDeviation}) OK{Superscript2}"
+                    Me.LowTirComplianceLabel.Text =
+                        $"Low{vbCrLf}({lowDeviation}) OK{Superscript2}"
                     Me.LowTirComplianceLabel.ForeColor = Color.Yellow
                 Case Else
                     Me.LowTirComplianceLabel.Text =
@@ -4986,13 +5349,15 @@ Public Class Form1
                     Me.LowTirComplianceLabel.ForeColor = Color.Red
             End Select
 
-            Dim highDeviation As Single = Math.Sqrt(highDeviations / (elements - lowCount)).RoundToSingle(digits:=1)
+            Dim highDeviation As Single =
+                Math.Sqrt(highDeviations / (elements - lowCount)).RoundToSingle(digits:=1)
             Select Case True
                 Case highDeviation <= 2
                     Me.HighTirComplianceLabel.Text = $"High{vbCrLf}Excellent{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.LimeGreen
                 Case highDeviation <= 4
-                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) OK{Superscript2}"
+                    Me.HighTirComplianceLabel.Text =
+                        $"High{vbCrLf}({highDeviation}) OK{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.Yellow
                 Case Else
                     Me.HighTirComplianceLabel.Text =
@@ -5007,7 +5372,8 @@ Public Class Form1
     '''  Positions the controls in the panel of the home tab.
     ''' </summary>
     ''' <remarks>
-    '''  This method centers the labels in the panel based on their names and adjusts their positions accordingly.
+    '''  This method centers the labels in the panel based on their names
+    '''  and adjusts their positions accordingly.
     ''' </remarks>
     Private Sub PositionControlsInPanel()
         For Each ctrl As Control In Me.SplitContainer3.Panel2.Controls
@@ -5016,7 +5382,8 @@ Public Class Form1
                 If Not Debugger.IsAttached Then
                     Exit Sub
                 End If
-                Throw New InvalidOperationException(message:="The control must have a parent to center it.")
+                Const message As String = "The control must have a parent to center it."
+                Throw New InvalidOperationException(message)
             End If
             If TypeOf ctrl Is Label Then
                 Select Case ctrl.Name
@@ -5053,8 +5420,9 @@ Public Class Form1
     '''  Updates the Treatment Markers chart with the latest data and settings.
     ''' </summary>
     ''' <remarks>
-    '''  This method reinitializes the Treatment Markers chart, updates its title, axes, and series.
-    '''  It plots suspend areas, treatment markers, sensor glucose series, and high/low/target limits.
+    '''  This method reinitializes the Treatment Markers chart,
+    '''  updates its title, axes, and series. It plots suspend areas,
+    '''  treatment markers, sensor glucose series, and high/low/target limits.
     '''  If the program is not initialized, the method exits without making changes.
     '''  Any exceptions encountered during the update are caught, the debugger is stopped,
     '''  and an <see cref="ApplicationException"/> is thrown.
@@ -5066,7 +5434,8 @@ Public Class Form1
         Try
             Me.InitializeTreatmentMarkersChart()
             With Me.TreatmentMarkersChart
-                .Titles(name:=NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details{s_basalList.Subtitle()}"
+                .Titles(name:=NameOf(TreatmentMarkersChartTitle)).Text =
+                    $"Treatment Details{s_basalList.Subtitle()}"
                 .ChartAreas(name:=NameOf(ChartArea)).UpdateChartAreaSgAxisX()
                 .PlotSuspendArea(SuspendSeries:=Me.TreatmentMarkerSuspendSeries)
                 .PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
@@ -5085,13 +5454,16 @@ Public Class Form1
 
     ''' <summary>
     '''  Updates the trend arrows display on the home tab.
-    '''  This method updates the trend arrows label based on the current sensor glucose trend value.
+    '''  This method updates the trend arrows label based on the
+    '''  current sensor glucose trend value.
     ''' </summary>
     ''' <remarks>
-    '''  The trend arrows label is set based on the last sensor glucose trend value and is styled accordingly.
+    '''  The trend arrows label is set based on the last sensor glucose trend
+    '''  value and is styled accordingly.
     ''' </remarks>
     Private Sub UpdateTrendArrows()
-        Dim key As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.lastSGTrend))
+        Dim key As String =
+            RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.lastSGTrend))
         If PatientData.ConduitInRange Then
             Dim value As String = Nothing
             If s_trends.TryGetValue(key, value) Then
@@ -5101,7 +5473,8 @@ Public Class Form1
                        New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold))
                 Me.TrendArrowsLabel.Text = s_trends(key)
             Else
-                Me.TrendArrowsLabel.Font = New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold)
+                Me.TrendArrowsLabel.Font =
+                    New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold)
                 Me.TrendArrowsLabel.Text = key
             End If
         End If
@@ -5115,7 +5488,8 @@ Public Class Form1
     ''' </summary>
     ''' <param name="fromFile">Indicates whether the update is from a saved file.</param>
     ''' <remarks>
-    '''  This method updates various components of the main form, including data tables, charts, and labels,
+    '''  This method updates various components of the main form,
+    '''  including data tables, charts, and labels,
     '''  based on the current patient data and system status.
     ''' </remarks>
     Friend Sub UpdateAllTabPages(fromFile As Boolean)
@@ -5126,10 +5500,12 @@ Public Class Form1
         Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = ""
         Dim key As String = NameOf(ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime)
         If RecentData.TryGetValue(key, value:=lastMedicalDeviceDataUpdateServerTimeEpoch) Then
-            If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) = s_lastMedicalDeviceDataUpdateServerEpoch Then
+            If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) =
+                s_lastMedicalDeviceDataUpdateServerEpoch Then
                 Exit Sub
             Else
-                s_lastMedicalDeviceDataUpdateServerEpoch = CLng(lastMedicalDeviceDataUpdateServerTimeEpoch)
+                s_lastMedicalDeviceDataUpdateServerEpoch =
+                    CLng(lastMedicalDeviceDataUpdateServerTimeEpoch)
             End If
         End If
 
@@ -5163,7 +5539,10 @@ Public Class Form1
 
         FinishInitialization(mainForm:=Me)
         Me.UpdateTrendArrows()
-        UpdateSummaryTab(dgv:=Me.DgvSummary, classCollection:=s_listOfSummaryRecords, sort:=True)
+        UpdateSummaryTab(
+            dgv:=Me.DgvSummary,
+            classCollection:=s_listOfSummaryRecords,
+            sort:=True)
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()
@@ -5176,7 +5555,8 @@ Public Class Form1
         Me.UpdateDosingAndCarbs()
 
         key = NameOf(ServerDataIndexes.lastName)
-        Me.FullNameLabel.Text = $"{PatientData.FirstName} {RecentData.GetStringValueOrEmpty(key)}"
+        Me.FullNameLabel.Text =
+            $"{PatientData.FirstName} {RecentData.GetStringValueOrEmpty(key)}"
 
         Dim mdi As MedicalDeviceInformation = PatientData.MedicalDeviceInformation
         Me.ModelLabel.Text = $"{mdi.ModelNumber} HW Version = {mdi.HardwareRevision}"
@@ -5210,8 +5590,10 @@ Public Class Form1
             Function(x As SG) As Integer
                 Return x.RecordNumber
             End Function
+        Dim classCollection As List(Of SG) =
+            s_sgRecords.OrderByDescending(keySelector).ToList()
         Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:=s_sgRecords.OrderByDescending(keySelector).ToList()),
+            table:=ClassCollectionToDataTable(classCollection),
             dgv:=Me.DgvSGs,
             rowIndex:=ServerDataIndexes.sgs)
         Me.DgvSGs.AutoSize = True
@@ -5244,7 +5626,8 @@ Public Class Form1
 
         Me.ShowHideLegends()
 
-        If My.Settings.SystemAudioAlertsEnabled AndAlso My.Settings.SystemSpeechRecognitionThreshold <> 1 Then
+        If My.Settings.SystemAudioAlertsEnabled AndAlso
+           My.Settings.SystemSpeechRecognitionThreshold <> 1 Then
             InitializeSpeechRecognition()
         Else
             CancelSpeechRecognition()

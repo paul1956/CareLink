@@ -307,9 +307,14 @@ Friend Module DateTimeExtensions
     '''  provided key.
     ''' </summary>
     ''' <param name="s">The <see langword="String"/> to parse.</param>
-    ''' <param name="key">A <see langword="String"/> that determines which parsing rules to use.</param>
+    ''' <param name="key">
+    '''  A <see langword="String"/> that determines which parsing rules to use.
+    ''' </param>
     ''' <param name="result">The output variable for the parsed date.</param>
-    ''' <returns><see langword="True"/> if parsing succeeds, and <see langword="False"/> otherwise. </returns>
+    ''' <returns>
+    '''  <see langword="True"/> if parsing succeeds,
+    '''  otherwise <see langword="False"/>.
+    ''' </returns>
     <Extension>
     Public Function TryParseDate(s As String, key As String, ByRef result As Date) As Boolean
         Dim success As Boolean

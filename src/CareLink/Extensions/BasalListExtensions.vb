@@ -15,7 +15,7 @@ Public Module BasalListExtensions
     ''' </summary>
     ''' <param name="basalList">The list of <see cref="Basal"/> objects to check.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the list is empty or the first element is a default <see cref="Basal"/>;
+    '''  <see langword="True"/> if the list is empty or the first element is a default
     '''  <see cref="Basal"/> instance, which is defined as having no active basal pattern.
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
@@ -68,7 +68,8 @@ Public Module BasalListExtensions
     End Function
 
     ''' <summary>
-    '''  Returns the specified list of <see cref="Basal"/> objects, or a new empty list if the original is empty.
+    '''  Returns the specified list of <see cref="Basal"/> objects,
+    '''  or a new empty list if the original is empty.
     ''' </summary>
     ''' <param name="basalList">The list of <see cref="Basal"/> objects.</param>
     ''' <returns>

@@ -14,7 +14,7 @@ Public Class InsulinSensitivityRecord
             Exit Sub
         End If
         If TimeOnly.TryParse(s:=s(0), result:=Me.Time) Then
-            Me.Sensitivity = ParseSingle(value:=s(1))
+            Me.Sensitivity = ParseSingle(s:=s(1))
             Me.IsValid = True
         Else
             Stop

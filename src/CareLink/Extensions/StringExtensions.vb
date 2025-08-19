@@ -21,7 +21,10 @@ Public Module StringExtensions
     '''  Replace multiple spaces with 1 and trim the ends
     ''' </summary>
     ''' <param name="input">The input string to clean.</param>
-    ''' <returns>A <see langword="String"/> with multiple spaces replaced by a single space and trimmed.</returns>
+    ''' <returns>
+    '''  A <see langword="String"/> with multiple spaces replaced by a single space
+    '''  and trimmed.
+    ''' </returns>
     <Extension>
     Public Function CleanSpaces(input As String) As String
         Return If(String.IsNullOrWhiteSpace(value:=input),
@@ -95,7 +98,8 @@ Public Module StringExtensions
         End If
 
         For Each value As String In strings
-            Dim index As Integer = inputString.IndexOf(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
+            Dim index As Integer =
+                inputString.IndexOf(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
             If index <> -1 Then
                 Return (Units:=UnitsStrings(key:=value.ToUpperInvariant), index)
             End If
@@ -162,25 +166,32 @@ Public Module StringExtensions
     ''' <returns>A formatted string representing the total units.</returns>
     ''' <param name="includeValue"></param>
     <Extension>
-    Public Function ToUnits(totalUnits As UInteger, unit As String, Optional includeValue As Boolean = True) As String
+    Public Function ToUnits(
+        totalUnits As UInteger,
+        unit As String,
+        Optional includeValue As Boolean = True) As String
+
         Dim unitOnly As String = If(totalUnits = 1,
                                     unit,
                                     $"{unit}s")
-        Return If(includeValue,
-                  $"{totalUnits:N0} {unitOnly}",
-                  unitOnly)
+        Return If(includeValue, $"{totalUnits:N0} {unitOnly}", unitOnly)
     End Function
 
     ''' <summary>
-    '''  Converts an integer representing total units (e.g., years, days, months, hours, minutes, or seconds)
+    '''  Converts an integer representing total units
+    '''  (e.g., years, days, months, hours, minutes, or seconds)
     '''  to a formatted string with optional prefix and suffix.
     ''' </summary>
     ''' <param name="totalUnits">The total units to convert.</param>
     ''' <param name="unit">The unit to use, e.g., "minute" or "hour".</param>
     ''' <param name="prefix">Optional prefix to prepend to the formatted string.</param>
     ''' <param name="suffix">Optional suffix to append to the formatted string.</param>
-    ''' <param name="includeValue">If true, includes the numeric value in the formatted string.</param>
-    ''' <returns>A formatted string representing the total units with optional prefix and suffix.</returns>
+    ''' <param name="includeValue">
+    '''  If true, includes the numeric value in the formatted string.
+    ''' </param>
+    ''' <returns>
+    '''  A formatted string representing the total units with optional prefix and suffix.
+    ''' </returns>
     <Extension>
     Public Function ToUnits(
         totalUnits As Integer,
@@ -301,12 +312,19 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Truncates a string that represents a <see langword="Single"/> to a specified number of decimal digits.
+    '''  Truncates a string that represents a <see langword="Single"/>
+    '''  to a specified number of decimal digits.
     ''' </summary>
     ''' <param name="expression">The string to truncate.</param>
-    ''' <param name="digits">The number of decimal digits to keep.</param>
-    ''' <returns>A truncated string representation of the <see langword="Single"/> value.</returns>
-    ''' <remarks>Used for truncating values to a specific number of decimal places.</remarks>
+    ''' <param name="digits">
+    '''  The number of decimal digits to keep.
+    ''' </param>
+    ''' <returns>
+    '''  A truncated string representation of the <see langword="Single"/> value.
+    ''' </returns>
+    ''' <remarks>
+    '''  Used for truncating values to a specific number of decimal places.
+    ''' </remarks>
     <Extension>
     Public Function TruncateSingle(expression As String, digits As Integer) As String
         Dim i As Integer = expression.IndexOfAny(anyOf:=s_commaOrPeriod)
@@ -373,7 +391,8 @@ Public Module StringExtensions
 
     ''' <summary>
     '''  Checks if an object is equal to a string, ignoring case.
-    '''  This method is useful for comparing an object that may be a string or null with a string.
+    '''  This method is useful for comparing an object that may be a string
+    '''  or null with a string.
     ''' </summary>
     ''' <param name="a">The first object to compare.</param>
     ''' <param name="b">The second string to compare.</param>
@@ -381,7 +400,9 @@ Public Module StringExtensions
     '''  <see langword="True"/> if the strings are equal, ignoring case;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    ''' <remarks>Used for case-insensitive <see langword="Object"/> to string comparisons.</remarks>
+    ''' <remarks>
+    '''  Used for case-insensitive <see langword="Object"/> to string comparisons.
+    ''' </remarks>
     Public Function EqualsIgnoreCase(a As Object, b As String) As Boolean
         If a Is Nothing OrElse b Is Nothing OrElse TypeOf a IsNot String Then Return False
         Return EqualsIgnoreCase(a.ToString, b)
@@ -389,12 +410,14 @@ Public Module StringExtensions
 
 
     ''' <summary>
-    '''  Finds the index of the first occurrence of a string within another string, ignoring case.
+    '''  Finds the index of the first occurrence of a string within another string,
+    '''  ignoring case.
     ''' </summary>
     ''' <param name="s1">The string to search in.</param>
     ''' <param name="value">The string to search for.</param>
     ''' <returns>
-    '''  The zero-based index of the first occurrence of <paramref name="value"/> in <paramref name="s1"/>;
+    '''  The zero-based index of the first occurrence of<paramref name="value"/>
+    '''  in <paramref name="s1"/>;
     '''  or -1 if not found.
     ''' </returns>
     ''' <remarks>Used for case-insensitive substring searches.</remarks>
@@ -405,16 +428,19 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Removes all occurrences of a specified string from the <paramref name="input"/> string, ignoring case.
+    '''  Removes all occurrences of a specified string from the
+    '''  <paramref name="input"/> string, ignoring case.
     ''' </summary>
     ''' <param name="input">The original string.</param>
     ''' <param name="s">The string to remove.</param>
     ''' <returns>
-    '''  A new string that is equivalent to the current string except that all occurrences of
+    '''  A new string that is equivalent to the current string except
+    '''  that all occurrences of
     '''  <paramref name="s"/> are removed.
     ''' </returns>
     ''' <remarks>
-    '''  This method is used for case-insensitive string removals, ensuring that the removal respects
+    '''  This method is used for case-insensitive string removals,
+    '''  ensuring that the removal respects
     '''  the current UI culture.
     ''' </remarks>
     <Extension()>
@@ -448,8 +474,10 @@ Public Module StringExtensions
     '''  ensuring that the replacement respects the current UI culture.
     ''' </remarks>
     <Extension()>
-    Public Function ReplaceIgnoreCase(s As String, oldValue As String, newValue As String) _
-        As String
+    Public Function ReplaceIgnoreCase(
+        s As String,
+        oldValue As String,
+        newValue As String) As String
 
         If s Is Nothing Then
             Return Nothing

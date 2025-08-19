@@ -15,13 +15,14 @@ Friend Module BrowserUtilities
     ''' </summary>
     ''' <param name="url">The URL to open in the browser.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the browser was successfully launched or a message was shown to the user;
+    '''  <see langword="True"/> if the browser was successfully launched
+    '''  or a message was shown to the user;
     '''  <see langword="False"/> if the default browser could not be determined.
     ''' </returns>
     ''' <remarks>
     '''  This method determines the default browser by reading the Windows registry
-    '''  and attempts to launch it.
-    '''  If the browser cannot be found, a message box is shown to the user.
+    '''  and attempts to launch it. If the browser cannot be found,
+    '''  a message box is shown to the user.
     ''' </remarks>
     Private Function LaunchBrowser(url As String) As Boolean
         Const name As String =

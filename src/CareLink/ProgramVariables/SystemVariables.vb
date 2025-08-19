@@ -26,7 +26,8 @@ Public Module SystemVariables
     Friend s_webView2CacheDirectory As String
     Friend ReadOnly Property CareLinkDecimalSeparator As Char = "."c
     Friend Property CurrentUser As CurrentUserRecord
-    Friend Property DecimalSeparator As String = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator
+    Friend Property DecimalSeparator As String =
+        CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator
     Friend Property MaxBasalPerDose As Double
 
     ''' <summary>
@@ -142,12 +143,16 @@ Public Module SystemVariables
     '''  Gets the Time In Range (TIR) as a tuple of unsigned integer and string.
     ''' </summary>
     ''' <param name="tight">
-    '''  Optional. If <see langword="True"/>, calculates TIR based on tight range; otherwise, uses the standard TIR.
+    '''  Optional. If <see langword="True"/>, calculates TIR based on tight range;
+    '''  otherwise, uses the standard TIR.
     ''' </param>
     ''' <returns>
-    '''  A <see cref="tuple"/> containing the TIR as an unsigned integer and its string representation.
+    '''  A <see cref="tuple"/> containing the TIR as an unsigned integer
+    '''  and its string representation.
     ''' </returns>
-    Friend Function GetTIR(Optional tight As Boolean = False) As (Percent As UInteger, AsString As String)
+    Friend Function GetTIR(Optional tight As Boolean = False) _
+        As (Percent As UInteger, AsString As String)
+
         If tight Then
             If s_sgRecords Is Nothing Then
                 Return (0, "  ???")
@@ -173,7 +178,8 @@ Public Module SystemVariables
     '''  optionally user can control units by specifying <paramref name="asMmolL"/>
     ''' </summary>
     ''' <param name="asMmolL">
-    '''  Optional. If <see langword="True"/>, returns value as mmol/L; otherwise, as mg/dL.
+    '''  Optional. If <see langword="True"/>, returns value as mmol/L;
+    '''  otherwise, as mg/dL.
     '''  If not specified, uses <see cref="NativeMmolL"/>.
     ''' </param>
     ''' <returns>
@@ -201,7 +207,8 @@ Public Module SystemVariables
     '''  Gets the low limit for Time In Range (TIR), optionally as mmol/L.
     ''' </summary>
     ''' <param name="asMmolL">
-    '''  Optional. If <see langword="True"/>, returns value as mmol/L; otherwise, as mg/dL.
+    '''  Optional. If <see langword="True"/>, returns value as mmol/L;
+    '''  otherwise, as mg/dL.
     '''  If not specified, uses <see cref="NativeMmolL"/>.
     ''' </param>
     ''' <returns>

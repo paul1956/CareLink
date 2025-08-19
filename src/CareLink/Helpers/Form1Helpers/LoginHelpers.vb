@@ -19,6 +19,7 @@ Public Enum FileToLoadOptions As Integer
 End Enum
 
 Friend Module LoginHelpers
+
     Public Property CurrentPdf As PdfSettingsRecord
     Public ReadOnly Property LoginDialog As New LoginDialog
 
@@ -73,11 +74,13 @@ Friend Module LoginHelpers
     ''' </summary>
     ''' <param name="owner">The main application form.</param>
     ''' <param name="updateAllTabs">
-    '''  <see langword="True"/> to update all tabs after login; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> to update all tabs after login;
+    '''  otherwise, <see langword="False"/>.
     ''' </param>
     ''' <param name="fileToLoad">The file load option to use.</param>
     ''' <returns>
-    '''  <see langword="True"/> if login and data update succeeded; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if login and data update succeeded;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function DoOptionalLoginAndUpdateData(
         owner As Form1,
@@ -216,7 +219,8 @@ Friend Module LoginHelpers
                 End Select
                 owner.TabControlPage1.Visible = True
                 owner.TabControlPage2.Visible = True
-                CurrentDateCulture = lastDownloadFileWithPath.ExtractCultureFromFileName(fixedPart, fuzzy:=True)
+                CurrentDateCulture =
+                    lastDownloadFileWithPath.ExtractCultureFromFileName(fixedPart, fuzzy:=True)
                 Dim json As String = File.ReadAllText(path:=lastDownloadFileWithPath)
                 PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
                 DeserializePatientElement()
@@ -262,7 +266,8 @@ Friend Module LoginHelpers
     '''  Determines whether the network is unavailable.
     ''' </summary>
     ''' <returns>
-    '''  <see langword="True"/> if the network is unavailable; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if the network is unavailable;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function NetworkUnavailable() As Boolean
         Return Not My.Computer.Network.IsAvailable
@@ -290,10 +295,12 @@ Friend Module LoginHelpers
     ''' <param name="msg">The message to display for the last update time.</param>
     ''' <param name="suffixMessage">The suffix message for the time zone label.</param>
     ''' <param name="highLight">
-    '''  <see langword="True"/> to highlight the status label; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> to highlight the status label;
+    '''  otherwise, <see langword="False"/>.
     ''' </param>
     ''' <param name="isDaylightSavingTime">
-    '''  <see langword="Nothing"/> if unknown; otherwise, <see langword="True"/> or <see langword="False"/>.
+    '''  <see langword="Nothing"/> if unknown;
+    '''  otherwise, <see langword="True"/> or <see langword="False"/>.
     ''' </param>
     <Extension>
     Friend Sub SetLastUpdateTime(
@@ -339,14 +346,18 @@ Friend Module LoginHelpers
     Friend Sub SetUpCareLinkUser()
         Dim path As String = GetUserSettingsPath()
         Dim json As String = File.ReadAllText(path)
-        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonDeserializerOptions)
+        CurrentUser =
+            JsonSerializer.Deserialize(Of CurrentUserRecord)(
+                json,
+                options:=s_jsonDeserializerOptions)
     End Sub
 
     ''' <summary>
     '''  Loads and optionally updates the user settings, prompting the user if necessary.
     ''' </summary>
     ''' <param name="forceUI">
-    '''  <see langword="True"/> to force the user interface for updating settings; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> to force the user interface for updating settings;
+    '''  otherwise, <see langword="False"/>.
     ''' </param>
     '''
     Friend Sub SetUpCareLinkUser(forceUI As Boolean)
@@ -369,8 +380,9 @@ Friend Module LoginHelpers
             End If
 
             If File.Exists(path:=pdfFileNameWithPath) Then
-                newPdfFile = Not IsFileReadOnly(GetUserSettingsPath()) AndAlso
-                    File.GetLastWriteTime(path:=pdfFileNameWithPath) > File.GetLastWriteTime(GetUserSettingsPath())
+                Dim lastWriteTime As Date = File.GetLastWriteTime(GetUserSettingsPath())
+                newPdfFile = Not IsFileReadOnly(path:=GetUserSettingsPath()) AndAlso
+                      File.GetLastWriteTime(path:=pdfFileNameWithPath) > lastWriteTime
             End If
 
             If Not forceUI Then
@@ -382,7 +394,8 @@ Friend Module LoginHelpers
                 End If
             End If
         Else
-            Dim useAdvancedAitDecay As CheckState = If(Is700Series(), CheckState.Indeterminate, CheckState.Checked)
+            Dim useAdvancedAitDecay As CheckState =
+                If(Is700Series(), CheckState.Indeterminate, CheckState.Checked)
             CurrentUser = New CurrentUserRecord(userName:=s_userName, useAdvancedAitDecay)
             currentUserUpdateNeeded = True
         End If
@@ -409,25 +422,32 @@ Friend Module LoginHelpers
                     currentUserUpdateNeeded = True
                 End If
                 currentTarget = CurrentPdf.SmartGuard.Target
-                If Not CurrentPdf.Bolus.DeviceCarbohydrateRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
+                Dim deviceCarbRatios As List(Of DeviceCarbRatioRecord) =
+                    CurrentPdf.Bolus.DeviceCarbohydrateRatios
+
+                If Not deviceCarbRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
                     currentUserUpdateNeeded = True
                 End If
-                carbRatios = CurrentPdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
+                carbRatios = deviceCarbRatios.ToCarbRatioList
             End If
         End If
         If currentUserUpdateNeeded OrElse forceUI Then
             Using f As New InitializeDialog(ait, currentTarget, carbRatios)
                 Dim result As DialogResult = f.ShowDialog(owner:=My.Forms.Form1)
                 If result = DialogResult.OK Then
-                    currentUserUpdateNeeded = currentUserUpdateNeeded OrElse Not CurrentUser.Equals(f.CurrentUser)
+                    currentUserUpdateNeeded =
+                        currentUserUpdateNeeded OrElse
+                        Not CurrentUser.Equals(other:=f.CurrentUser)
                     CurrentUser = f.CurrentUser.Clone
                 End If
             End Using
         End If
         If currentUserUpdateNeeded Then
             File.WriteAllTextAsync(
-                GetUserSettingsPath(),
-                contents:=JsonSerializer.Serialize(value:=CurrentUser, options:=s_jsonSerializerOptions))
+             path:=GetUserSettingsPath(),
+                contents:=JsonSerializer.Serialize(
+                    value:=CurrentUser,
+                    options:=s_jsonSerializerOptions))
         Else
             TouchFile(GetUserSettingsPath())
         End If
@@ -439,13 +459,22 @@ Friend Module LoginHelpers
     '''  Starts or stops the server update timer.
     ''' </summary>
     ''' <param name="Start">
-    '''  <see langword="True"/> to start the timer; <see langword="False"/> to stop it.
+    '''  <see langword="True"/> to start the timer;
+    '''  otherwise, <see langword="False"/> to stop it.
     ''' </param>
-    ''' <param name="interval">The timer interval in milliseconds. Default is -1 (no change).</param>
+    ''' <param name="interval">
+    '''  The timer interval in milliseconds. Default is -1 (no change).
+    ''' </param>
     ''' <returns>
-    '''  <see langword="True"/> if the timer was running before the call; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if the timer was running before the call;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Friend Function StartOrStopServerUpdateTimer(Start As Boolean, Optional interval As Integer = -1) As Boolean
+    Friend Function StartOrStopServerUpdateTimer(
+        Start As Boolean,
+        Optional interval As Integer = -1) As Boolean
+
+        ReportMemory()
+
         If Start Then
             If interval > -1 Then
                 Form1.ServerUpdateTimer.Interval = interval

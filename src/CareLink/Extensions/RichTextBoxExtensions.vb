@@ -9,10 +9,25 @@ Friend Module RichTextBoxExtensions
     Private Const TotalWidth As Integer = 28
     Public Const Indent4 As String = "    "
     Public Const Indent8 As String = "        "
-    Public ReadOnly Property FixedWidthBoldFont As New Font(familyName:="Consolas", emSize:=14, style:=FontStyle.Bold)
-    Public ReadOnly Property FixedWidthFont As New Font(familyName:="Consolas", emSize:=14, style:=FontStyle.Regular)
-    Public ReadOnly Property HeadingBoldFont As New Font(familyName:="Segoe UI", emSize:=16, style:=FontStyle.Bold)
-    Public ReadOnly Property HeadingFont As New Font(familyName:="Segoe UI", emSize:=16, style:=FontStyle.Regular)
+    Public ReadOnly Property FixedWidthBoldFont As New Font(
+        familyName:="Consolas",
+        emSize:=14,
+        style:=FontStyle.Bold)
+
+    Public ReadOnly Property FixedWidthFont As New Font(
+        familyName:="Consolas",
+        emSize:=14,
+        style:=FontStyle.Regular)
+
+    Public ReadOnly Property HeadingBoldFont As New Font(
+        familyName:="Segoe UI",
+        emSize:=16,
+        style:=FontStyle.Bold)
+
+    Public ReadOnly Property HeadingFont As New Font(
+        familyName:="Segoe UI",
+        emSize:=16,
+        style:=FontStyle.Regular)
 
     ''' <summary>
     '''  Returns a string representation of a <see cref="TimeOnly"/> value,

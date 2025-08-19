@@ -237,7 +237,8 @@ Public Class CareLinkUserDataList
     ''' </summary>
     ''' <param name="key">The user name to locate.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the user exists; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if the user exists;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function ContainsKey(key As String) As Boolean
         If String.IsNullOrWhiteSpace(value:=key) Then
@@ -342,7 +343,8 @@ Public Class CareLinkUserDataList
     ''' </summary>
     ''' <param name="loggedOnUser">The user record to add.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the user was added; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if the user was added;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function TryAdd(loggedOnUser As CareLinkUserDataRecord) As Boolean
         If Me.ContainsKey(key:=loggedOnUser.CareLinkUserName) Then
@@ -361,7 +363,8 @@ Public Class CareLinkUserDataList
     '''  otherwise, <see langword="Nothing"/>.
     ''' </param>
     ''' <returns>
-    '''  <see langword="True"/> if the user was found; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if the user was found;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function TryGetValue(
         key As String,

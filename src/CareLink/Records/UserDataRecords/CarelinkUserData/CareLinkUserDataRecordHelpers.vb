@@ -50,7 +50,8 @@ Public Module CareLinkUserDataRecordHelpers
     '''  Determines whether the file containing all user login information exists.
     ''' </summary>
     ''' <returns>
-    '''  <see langword="True"/> if the user login info file exists; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if the user login info file exists;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Public Function AllUserLoginInfoFileExists() As Boolean
         Return SavedUsersFileExists()
@@ -59,9 +60,11 @@ Public Module CareLinkUserDataRecordHelpers
     ''' <summary>
     '''  Determines whether the specified user settings CSV file exists.
     ''' </summary>
-    ''' <param name="userSettingsCsvFileWithPath">The full path to the user settings CSV file.</param>
+    ''' <param name="userSettingsCsvFileWithPath">
+    '''  The full path to the user settings CSV file.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the file exists at the specified path; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if the file exists at the specified path;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Public Function SavedUsersFileExists() As Boolean
         Return File.Exists(path:=GetAllUsersCsvPath())

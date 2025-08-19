@@ -13,7 +13,8 @@ Friend Module ChartingHelpers
     ''' </summary>
     ''' <param name="value">The amount to check.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the amount is the minimum basal rate; otherwise, <see langword="False"/>.
+    '''  <see langword="True"/> if the amount is the minimum basal rate;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
     Friend Function IsMinBasal(value As Single) As Boolean

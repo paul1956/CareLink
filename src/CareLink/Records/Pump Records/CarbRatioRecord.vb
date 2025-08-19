@@ -47,10 +47,14 @@ Public Class CarbRatioRecord
     Public Property CarbRatio As Single
 
     ''' <summary>
-    '''  Determines whether the specified object is equal to the current <see cref="CarbRatioRecord"/>.
+    '''  Determines whether the specified object is equal to the current
+    '''  <see cref="CarbRatioRecord"/>.
     ''' </summary>
     ''' <param name="obj">The object to compare with the current object.</param>
-    ''' <returns><see langword="True"/> if the objects are equal; otherwise, <see langword="False"/>.</returns>
+    ''' <returns>
+    '''  <see langword="True"/> if the objects are equal;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
     Public Overrides Function Equals(obj As Object) As Boolean
         Return Me.Equals(TryCast(obj, CarbRatioRecord))
     End Function
