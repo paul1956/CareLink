@@ -286,7 +286,7 @@ Public Module RegionCountryLists
     '''  If the culture name is invalid, returns <see cref="CultureInfo.CurrentCulture"/>.
     ''' </returns>
     <Extension>
-    Public Function ExtractCultureFromFileName(
+    Public Function ExtractCulture(
         ReportFileNameWithPath As String,
         FixedPart As String,
         Optional fuzzy As Boolean = False) As CultureInfo

@@ -1636,8 +1636,9 @@ Public Class Form1
 
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
         Dim alignment As DataGridViewContentAlignment = DataGridViewContentAlignment.MiddleLeft
+        Dim padding1 As New Padding(all:=1)
         e.DgvColumnAdded(
-            cellStyle:=New DataGridViewCellStyle().SetCellStyle(alignment, padding:=New Padding(all:=1)),
+            cellStyle:=New DataGridViewCellStyle().SetCellStyle(alignment, padding:=padding1),
             forceReadOnly:=True,
             caption:=Nothing)
     End Sub
@@ -1934,12 +1935,18 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event for the <see cref="DgvSGs"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event
+    '''  for the <see cref="DgvSGs"/> DataGridView.
     '''  This event is raised when a new column is added to the DataGridView.
-    '''  It sets the properties of the newly added column, such as sort mode, visibility, and cell style.
+    '''  It sets the properties of the newly added column, such as sort mode,
+    '''  visibility, and cell style.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="DataGridView"/> control.</param>
-    ''' <param name="e">A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
+    ''' </param>
     Private Sub DgvSGs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
         Handles DgvLastSensorGlucose.ColumnAdded, DgvSGs.ColumnAdded
 
@@ -1981,8 +1988,9 @@ Public Class Form1
     ''' <param name="e">
     '''  A <see cref="DataGridViewCellMouseEventArgs"/> that contains the event data.
     ''' </param>
-    Private Sub DgvSGs_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) _
-        Handles DgvSGs.ColumnHeaderMouseClick
+    Private Sub DgvSGs_ColumnHeaderMouseClick(
+        sender As Object,
+        e As DataGridViewCellMouseEventArgs) Handles DgvSGs.ColumnHeaderMouseClick
 
         If e.ColumnIndex <> 0 Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -2069,11 +2077,14 @@ Public Class Form1
                 If e.Value IsNot Nothing Then
                     Select Case GetItemIndex(key)
                         ' Not Clickable Cells - Left
-                        Case ServerDataIndexes.conduitSerialNumber, ServerDataIndexes.lastConduitDateTime,
+                        Case ServerDataIndexes.conduitSerialNumber,
+                             ServerDataIndexes.lastConduitDateTime,
                              ServerDataIndexes.systemStatusMessage,
-                             ServerDataIndexes.sensorState, ServerDataIndexes.timeFormat,
+                             ServerDataIndexes.sensorState,
+                             ServerDataIndexes.timeFormat,
                              ServerDataIndexes.bgUnits,
-                             ServerDataIndexes.lastSGTrend, ServerDataIndexes.sensorLifeText,
+                             ServerDataIndexes.lastSGTrend,
+                             ServerDataIndexes.sensorLifeText,
                              ServerDataIndexes.sensorLifeIcon
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleLeft,
@@ -2642,14 +2653,16 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="Button.Click"/> event for the <see cref="SerialNumberButton"/> control.
+    '''  Handles the <see cref="Button.Click"/> event for
+    '''  the <see cref="SerialNumberButton"/> control.
     '''  It switches to the Serial Number tab and scrolls to the last row in the DataGridView.
     '''  Highlights the row containing "medicalDeviceInformation" in the second column.
     ''' </summary>
     ''' <param name="sender">The source of the event, typically the SerialNumberButton.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     ''' <remarks>
-    '''  This event is used to navigate to the Serial Number tab and focus on the relevant data.
+    '''  This event is used to navigate to the Serial Number tab and
+    '''  focus on the relevant data.
     ''' </remarks>
     Private Sub SerialNumberButton_Click(sender As Object, e As EventArgs) _
         Handles SerialNumberButton.Click
@@ -2791,7 +2804,8 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="Form.Click"/> event for the Show Pump Setup menu item.
     '''  This event is raised when the Show Pump Setup menu item is clicked.
-    '''  It opens a dialog to display the pump setup information from the user's settings PDF file.
+    '''  It opens a dialog to display the pump setup information from
+    '''  the user's settings PDF file.
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
@@ -2800,7 +2814,7 @@ Public Class Form1
 
         If File.Exists(GetUserPdfPath()) Then
             If CurrentPdf.IsValid Then
-                StartOrStopServerUpdateTimer(Start:=False)
+                SetServerUpdateTimer(Start:=False)
                 Using dialog As New PumpSetupDialog
                     dialog.Pdf = CurrentPdf
                     dialog.ShowDialog(owner:=Me)
@@ -2809,7 +2823,7 @@ Public Class Form1
 
             ' If the PDF file is not valid after setup, show a message box to the user.
             If CurrentPdf.IsValid Then
-                StartOrStopServerUpdateTimer(Start:=True)
+                SetServerUpdateTimer(Start:=True)
             Else
                 MsgBox(
                     heading:=$"Device Setting PDF file Is invalid",
@@ -2884,7 +2898,7 @@ Public Class Form1
             If openFileDialog1.ShowDialog(owner:=Me) = DialogResult.OK Then
                 Try
                     Dim fileNameWithPath As String = openFileDialog1.FileName
-                    StartOrStopServerUpdateTimer(Start:=False)
+                    SetServerUpdateTimer(Start:=False)
                     If File.Exists(fileNameWithPath) Then
                         RecentData = New Dictionary(Of String, String)
                         ExceptionHandlerDialog.ReportFileNameWithPath = fileNameWithPath
@@ -2902,9 +2916,10 @@ Public Class Form1
                                 MessageBox.Show(
                                     text:=$"Error reading data file. Original error: {str}")
                             End Try
-                            CurrentDateCulture = openFileDialog1.FileName.ExtractCultureFromFileName(
-                                FixedPart:="CareLink",
-                                fuzzy:=True)
+                            CurrentDateCulture =
+                                openFileDialog1.FileName.ExtractCulture(
+                                    FixedPart:="CareLink",
+                                    fuzzy:=True)
                             Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                             Dim file As String =
                                 Path.GetFileName(fileNameWithPath)
@@ -3045,8 +3060,9 @@ Public Class Form1
     End Function
 
     ''' <summary>
-    '''  Handles the <see cref="MenuOptions.DropDownOpening"/> event for the <see cref="MenuOptions"/> menu.
-    '''  Enables or disables the Edit Pump Settings menu item based on debugger state or user name.
+    '''  Handles the <see cref="MenuOptions.DropDownOpening"/> event
+    '''  for the <see cref="MenuOptions"/> menu. Enables or disables the Edit Pump Settings
+    '''  menu item based on debugger state or user name.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">The event data.</param>
@@ -3062,7 +3078,8 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="MenuOptionsAudioAlerts.Click"/> event.
     '''  This event is raised when the Audio Alerts menu item is clicked.
-    '''  It toggles the audio alerts setting and initializes or cancels speech recognition accordingly.
+    '''  It toggles the audio alerts setting and initializes or
+    '''  cancels speech recognition accordingly.
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
@@ -3130,7 +3147,8 @@ Public Class Form1
 
         Dim result As DialogResult = OptionsConfigureTiTR.ShowDialog(owner:=Me)
         If result = DialogResult.OK Then
-            Me.MenuOptionsConfigureTiTR.Text = $"Configure TiTR ({OptionsConfigureTiTR.GetTiTrMsg()})..."
+            Me.MenuOptionsConfigureTiTR.Text =
+                $"Configure TiTR ({OptionsConfigureTiTR.GetTiTrMsg()})..."
             Me.TiTRMgsLabel2.Text = OptionsConfigureTiTR.GetTiTrMsg()
 
             ' Update the TiTR compliance values based on the user's configuration.
@@ -3274,16 +3292,20 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for
     '''  the <see cref="MenuOptionsUseLocalTimeZone"/> menu item.
-    '''  Sets the application's time zone to local or server based on the menu item's checked state,
-    '''  and updates the corresponding setting if changed.
+    '''  Sets the application's time zone to local or server based
+    '''  on the menu item's checked state, and updates the
+    '''  corresponding setting if changed.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="ToolStripMenuItem"/> control.
+    ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub MenuOptionsUseLocalTimeZone_Click(sender As Object, e As EventArgs) _
         Handles MenuOptionsUseLocalTimeZone.Click
 
         ' Toggle the UseLocalTimeZone setting and update the PumpTimeZoneInfo accordingly.
-        Dim saveRequired As Boolean = Me.MenuOptionsUseLocalTimeZone.Checked <> My.Settings.UseLocalTimeZone
+        Dim saveRequired As Boolean =
+            Me.MenuOptionsUseLocalTimeZone.Checked <> My.Settings.UseLocalTimeZone
         If Me.MenuOptionsUseLocalTimeZone.Checked Then
             PumpTimeZoneInfo = TimeZoneInfo.Local
             My.Settings.UseLocalTimeZone = True
@@ -3297,8 +3319,9 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Sets the checked state of speech recognition confidence threshold menu items
-    '''  based on the current value in <see cref="My.Settings.SystemSpeechRecognitionThreshold"/>.
+    '''  Sets the checked state of speech recognition confidence threshold
+    '''  menu items based on the current value in
+    '''  <see cref="My.Settings.SystemSpeechRecognitionThreshold"/>.
     '''  Ensures only the selected threshold is checked.
     ''' </summary>
     Private Sub SetSpeechRecognitionConfidenceThreshold()
@@ -3382,7 +3405,9 @@ Public Class Form1
     '''  for the <see cref="MenuHelpCheckForUpdates"/> menu item.
     '''  Initiates an asynchronous check for application updates and reports the result.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="ToolStripMenuItem"/> control.
+    ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub MenuHelpCheckForUpdates_Click(sender As Object, e As EventArgs) _
         Handles MenuHelpCheckForUpdates.Click
@@ -3478,7 +3503,8 @@ Public Class Form1
 #Region "Settings Events"
 
     ''' <summary>
-    '''  Handles the <see cref="ApplicationSettingsBase.SettingChanging"/> event for application settings.
+    '''  Handles the <see cref="ApplicationSettingsBase.SettingChanging"/> event
+    '''  for application settings.
     '''  This method is called whenever a setting is about to change,
     '''  except for settings whose names start with "System".
     '''  It checks if the new value is different from the current value (case-insensitive).
@@ -3504,7 +3530,8 @@ Public Class Form1
         End If
         If e.SettingName = "CareLinkUserName" Then
             If s_allUserSettingsData?.ContainsKey(key:=e.NewValue.ToString) Then
-                LoginHelpers.LoginDialog.LoggedOnUser = s_allUserSettingsData(itemName:=e.NewValue.ToString)
+                LoginHelpers.LoginDialog.LoggedOnUser =
+                    s_allUserSettingsData(itemName:=e.NewValue.ToString)
                 Exit Sub
             Else
                 Dim userSettings As New CareLinkUserDataRecord(parent:=s_allUserSettingsData)
@@ -3547,9 +3574,12 @@ Public Class Form1
 
     ''' <summary>
     '''  Handles the <see cref="MouseHover"/> event for the SensorDaysLeftLabel control.
-    '''  Displays a tooltip with the remaining sensor duration in hours if it is less than 24 hours.
+    '''  Displays a tooltip with the remaining sensor duration in hours
+    '''  if it is less than 24 hours.
     ''' </summary>
-    ''' <param name="sender">The source of the event, typically the SensorDaysLeftLabel control.</param>
+    ''' <param name="sender">
+    '''  The source of the event, typically the SensorDaysLeftLabel control.
+    ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub Last24HrCarbLabel_MouseHover(sender As Object, e As EventArgs) _
         Handles Last24HrCarbsLabel.MouseHover, Last24HrCarbsValueLabel.MouseHover
@@ -3630,9 +3660,12 @@ Public Class Form1
     '''  Updates the cursor and last selected tab index based on the selected tab page.
     ''' </summary>
     ''' <param name="sender">The source of the event, typically a TabControl control.</param>
-    ''' <param name="e">A <see cref="TabControlCancelEventArgs"/> that contains the event data.</param>
+    ''' <param name="e">
+    '''  A <see cref="TabControlCancelEventArgs"/> that contains the event data.
+    ''' </param>
     ''' <remarks>
-    '''  This method is used to manage cursor visibility and last selected tab index for navigation.
+    '''  This method is used to manage cursor visibility and
+    '''  last selected tab index for navigation.
     ''' </remarks>
     Private Sub TabControlPage1_Selecting(sender As Object, e As TabControlCancelEventArgs) _
         Handles TabControlPage1.Selecting
@@ -3642,11 +3675,13 @@ Public Class Form1
                 Me.DgvCareLinkUsers.InitializeDgv
 
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
-                    c.Visible = Not HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
+                    c.Visible =
+                        Not HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
                 Next
-                Me.TabControlPage2.SelectedIndex = If(_lastMarkerTabLocation.Page = 0,
-                                                      0,
-                                                      _lastMarkerTabLocation.Tab)
+                Me.TabControlPage2.SelectedIndex =
+                    If(_lastMarkerTabLocation.Page = 0,
+                       0,
+                       _lastMarkerTabLocation.Tab)
                 Me.TabControlPage1.Visible = False
                 Exit Sub
         End Select
@@ -3654,13 +3689,17 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="TabControlPage2.Selecting"/> event for the secondary tab control.
-    '''  Updates the selected index and visibility of the main tab control based on the selected tab page.
+    '''  Handles the <see cref="TabControlPage2.Selecting"/> event for the
+    '''  secondary tab control. Updates the selected index and
+    '''  visibility of the main tab control based on the selected tab page.
     ''' </summary>
     ''' <param name="sender">The source of the event, typically a TabControl control.</param>
-    ''' <param name="e">A <see cref="TabControlCancelEventArgs"/> that contains the event data.</param>
+    ''' <param name="e">
+    '''  A <see cref="TabControlCancelEventArgs"/> that contains the event data.
+    ''' </param>
     ''' <remarks>
-    '''  This method is used to manage navigation between different summary tabs and user settings.
+    '''  This method is used to manage navigation between different summary tabs
+    '''  and user settings.
     ''' </remarks>
     Private Sub TabControlPage2_Selecting(sender As Object, e As TabControlCancelEventArgs) _
         Handles TabControlPage2.Selecting
@@ -3673,10 +3712,12 @@ Public Class Form1
             Case NameOf(TabPage11AllUsers)
                 Me.DgvCareLinkUsers.DataSource = s_allUserSettingsData
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
-                    c.Visible = Not HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
+                    c.Visible =
+                        Not HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
                 Next
             Case Else
-                If e.TabPageIndex <= GetTabIndexFromName(NameOf(TabPage09BasalPerHour)) Then
+                Const tabPageName As String = NameOf(TabPage09BasalPerHour)
+                If e.TabPageIndex <= GetTabIndexFromName(tabPageName) Then
                     _lastMarkerTabLocation = (Page:=1, Tab:=e.TabPageIndex)
                 End If
         End Select
@@ -3687,8 +3728,10 @@ Public Class Form1
 #Region "TableLayoutPanelTop Button Events"
 
     ''' <summary>
-    '''  Handles the <see cref="Button.Click"/> event for buttons in the top TableLayoutPanel controls.
-    '''  This method is used to navigate to the corresponding summary tab based on the button clicked.
+    '''  Handles the <see cref="Button.Click"/> event for buttons
+    '''  in the top TableLayoutPanel controls.
+    '''  This method is used to navigate to the corresponding
+    '''  summary tab based on the button clicked.
     ''' </summary>
     ''' <param name="sender">The source of the event, typically a Button control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
@@ -3697,24 +3740,24 @@ Public Class Form1
     '''  selects the appropriate tab in the main tab control.
     ''' </remarks>
     Private Sub TableLayoutPanelTopButton_Click(sender As Object, e As EventArgs) Handles _
-        TableLayoutPanelActiveInsulinTop.ButtonClick,
-        TableLayoutPanelAutoBasalDeliveryTop.ButtonClick,
-        TableLayoutPanelAutoModeStatusTop.ButtonClick,
-        TableLayoutPanelPumpBannerStateTop.ButtonClick,
-        TableLayoutPanelBasalTop.ButtonClick,
-        TableLayoutPanelBgReadingsTop.ButtonClick,
-        TableLayoutPanelCalibrationTop.ButtonClick,
-        TableLayoutPanelInsulinTop.ButtonClick,
-        TableLayoutPanelLastAlarmTop.ButtonClick,
-        TableLayoutPanelLastSgTop.ButtonClick,
-        TableLayoutPanelLimitsTop.ButtonClick,
-        TableLayoutPanelLowGlucoseSuspendedTop.ButtonClick,
-        TableLayoutPanelMealTop.ButtonClick,
-        TableLayoutPanelNotificationActiveTop.ButtonClick,
-        TableLayoutPanelNotificationsClearedTop.ButtonClick,
-        TableLayoutPanelSgsTop.ButtonClick,
-        TableLayoutPanelTherapyAlgorithmStateTop.ButtonClick,
-        TableLayoutPanelTimeChangeTop.ButtonClick
+        TlpActiveInsulinTop.ButtonClick,
+        TlpAutoBasalDeliveryTop.ButtonClick,
+        TlpAutoModeStatusTop.ButtonClick,
+        TlpPumpBannerStateTop.ButtonClick,
+        TlpBasalTop.ButtonClick,
+        TlpBgReadingsTop.ButtonClick,
+        TlpCalibrationTop.ButtonClick,
+        TlpInsulinTop.ButtonClick,
+        TlpLastAlarmTop.ButtonClick,
+        TlpLastSgTop.ButtonClick,
+        TlpLimitsTop.ButtonClick,
+        TlpLowGlucoseSuspendedTop.ButtonClick,
+        TlpMealTop.ButtonClick,
+        TlpNotificationActiveTop.ButtonClick,
+        TlpNotificationsClearedTop.ButtonClick,
+        TlpSgsTop.ButtonClick,
+        TlpTherapyAlgorithmStateTop.ButtonClick,
+        TlpTimeChangeTop.ButtonClick
 
         Me.TabControlPage1.Visible = True
         Dim button As Button = CType(sender, Button)
@@ -3774,16 +3817,20 @@ Public Class Form1
     '''  This method is called when the system enters or resumes from a sleep state.
     '''  It manages the server update timer and updates the last update time accordingly.
     ''' </summary>
-    ''' <param name="sender">The source of the event, typically the application or system.</param>
-    ''' <param name="e">A <see cref="PowerModeChangedEventArgs"/> that contains the event data.</param>
+    ''' <param name="sender">
+    '''  The source of the event, typically the application or system.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="PowerModeChangedEventArgs"/> that contains the event data.
+    ''' </param>
     ''' <remarks>
     '''  The method stops the server update timer on suspend and restarts it on resume.
     ''' </remarks>
     Private Sub PowerModeChanged(sender As Object, e As PowerModeChangedEventArgs)
-        Debug.WriteLine($"PowerModeChange {e.Mode}")
+        Debug.WriteLine(message:=$"PowerModeChange {e.Mode}")
         Select Case e.Mode
             Case PowerModes.Suspend
-                StartOrStopServerUpdateTimer(Start:=False)
+                SetServerUpdateTimer(Start:=False)
                 s_shuttingDown = True
                 Me.SetLastUpdateTime(
                     msg:="System Sleeping",
@@ -3797,9 +3844,10 @@ Public Class Form1
                     highLight:=True,
                     isDaylightSavingTime:=Nothing)
                 s_shuttingDown = False
-                StartOrStopServerUpdateTimer(Start:=True, interval:=ThirtySecondInMilliseconds \ 3)
+                SetServerUpdateTimer(Start:=True, interval:=ThirtySecondInMilliseconds \ 3)
+                Dim name As String = NameOf(ServerUpdateTimer)
                 Dim message As String =
-                    $"restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now.ToLongTimeString}"
+                    $"restarted after wake. {name} started at {Now.ToLongTimeString}"
                 DebugPrint(message)
         End Select
 
@@ -3820,7 +3868,7 @@ Public Class Form1
     Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) _
         Handles ServerUpdateTimer.Tick
 
-        StartOrStopServerUpdateTimer(Start:=False)
+        SetServerUpdateTimer(Start:=False)
         Dim lastErrorMessage As String = String.Empty
         SyncLock _updatingLock
             If _updating Then
@@ -3837,7 +3885,7 @@ Public Class Form1
                                 Case DialogResult.OK
                                     Exit Do
                                 Case DialogResult.Cancel
-                                    StartOrStopServerUpdateTimer(Start:=False)
+                                    SetServerUpdateTimer(Start:=False)
                                     Return
                                 Case DialogResult.Retry
                             End Select
@@ -3889,7 +3937,7 @@ Public Class Form1
             ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMessage)
             _sgMiniDisplay.SetCurrentSgString(sgString:="---", sgValue:=0)
         End If
-        StartOrStopServerUpdateTimer(Start:=True, interval:=OneMinutesInMilliseconds)
+        SetServerUpdateTimer(Start:=True, interval:=OneMinutesInMilliseconds)
     End Sub
 
 #End Region ' Timer Events
@@ -3901,8 +3949,10 @@ Public Class Form1
 #Region "Initialize Summary Charts"
 
     ''' <summary>
-    '''  Initializes the summary tab charts, including setting up chart areas, series, and legends.
-    '''  This method is called to prepare the summary chart for displaying data related to insulin therapy.
+    '''  Initializes the summary tab charts, including setting up
+    '''  chart areas, series, and legends.
+    '''  This method is called to prepare the summary chart for displaying
+    '''  data related to insulin therapy.
     ''' </summary>
     Friend Sub InitializeSummaryTabCharts()
         Me.SplitContainer3.Panel1.Controls.Clear()
@@ -3912,9 +3962,9 @@ Public Class Form1
             name:=NameOf(summaryTitle),
             foreColor:=Me.SummaryChart.BackColor.ContrastingColor())
 
-        Dim summaryChartArea As ChartArea = CreateChartArea(Me.SummaryChart)
-        Me.SummaryChart.ChartAreas.Add(summaryChartArea)
-        _summaryChartLegend = CreateChartLegend(NameOf(_summaryChartLegend))
+        Dim summaryChartArea As ChartArea = CreateChartArea(containingChart:=Me.SummaryChart)
+        Me.SummaryChart.ChartAreas.Add(item:=summaryChartArea)
+        _summaryChartLegend = CreateChartLegend(legendName:=NameOf(_summaryChartLegend))
 
         Me.SummaryAutoCorrectionSeries = CreateSeriesBasal(
             name:=AutoCorrectionSeriesName,
@@ -3942,7 +3992,8 @@ Public Class Form1
         Me.SummaryLowLimitSeries = CreateSeriesLimitsAndTarget(
             limitsLegend:=_summaryChartLegend,
             seriesName:=LowLimitSeriesName)
-        Me.SummaryMarkerSeries = CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Secondary)
+        Me.SummaryMarkerSeries =
+            CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Secondary)
         Me.SummaryTimeChangeSeries = CreateSeriesTimeChange(basalLegend:=_summaryChartLegend)
 
         Me.SplitContainer3.Panel1.Controls.Add(Me.SummaryChart)
@@ -3982,7 +4033,11 @@ Public Class Form1
     '''  labels for displaying compliance information.
     ''' </summary>
     Friend Sub InitializeTimeInRangeArea()
-        If Me.SplitContainer3.Panel2.Controls.FindControlByName(NameOf(Me.TimeInRangeChart)) Is Nothing Then
+        Const controlName As String = NameOf(Me.TimeInRangeChart)
+        Dim c As Control =
+            Me.SplitContainer3.Panel2.Controls.FindControlByName(controlName)
+
+        If c Is Nothing Then
             Dim size As Integer = Me.SplitContainer3.Panel2.Width - 94
             Me.TimeInRangeChart = New Chart With {
                 .Anchor = AnchorStyles.Top,
@@ -4002,7 +4057,8 @@ Public Class Form1
                 .ChartAreas.Add(timeInRangeChartArea)
                 Dim chartLabel As Label = Me.TimeInRangeChartLabel
                 Dim x As Integer = chartLabel.FindHorizontalMidpoint - (.Width \ 2)
-                Dim y As Integer = CInt(chartLabel.FindVerticalMidpoint() - Math.Round(.Height / 2.5))
+                Dim y As Integer =
+                    CInt(chartLabel.FindVerticalMidpoint() - Math.Round(.Height / 2.5))
                 .Location = New Point(x, y)
                 .Name = NameOf(TimeInRangeChart)
                 Me.TimeInRangeSeries = New Series(NameOf(TimeInRangeSeries)) With {
@@ -4063,7 +4119,8 @@ Public Class Form1
             .TitleForeColor = labelColor
         End With
         Me.ActiveInsulinChart.ChartAreas.Add(activeInsulinChartArea)
-        _activeInsulinChartLegend = CreateChartLegend(legendName:=NameOf(_activeInsulinChartLegend))
+        _activeInsulinChartLegend =
+            CreateChartLegend(legendName:=NameOf(_activeInsulinChartLegend))
         Me.ActiveInsulinChartTitle = CreateTitle(
             chartTitle:=$"Running Insulin On Board (IOB)",
             name:=NameOf(ActiveInsulinChartTitle),
@@ -4089,11 +4146,14 @@ Public Class Form1
             legendText:="Min Basal",
             yAxisType:=AxisType.Secondary)
 
-        Me.ActiveInsulinSuspendSeries = CreateSeriesSuspend(basalLegend:=_activeInsulinChartLegend)
+        Me.ActiveInsulinSuspendSeries =
+            CreateSeriesSuspend(basalLegend:=_activeInsulinChartLegend)
 
         Me.ActiveInsulinSgSeries = CreateSeriesSg(sgLegend:=_activeInsulinChartLegend)
-        Me.ActiveInsulinMarkerSeries = CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Secondary)
-        Me.ActiveInsulinTimeChangeSeries = CreateSeriesTimeChange(basalLegend:=_activeInsulinChartLegend)
+        Me.ActiveInsulinMarkerSeries =
+            CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Secondary)
+        Me.ActiveInsulinTimeChangeSeries =
+            CreateSeriesTimeChange(basalLegend:=_activeInsulinChartLegend)
 
         With Me.ActiveInsulinChart
             With .Series
@@ -4315,9 +4375,11 @@ Public Class Form1
                                               .PadLeft(totalWidth:=3)
                     Me.NotifyIcon1.Icon = CreateTextIcon(s, backColor)
                     Dim strBuilder As New StringBuilder(capacity:=100)
-                    Dim dateSeparator As String = CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator
+                    Dim dateSeparator As String =
+                        CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator
                     strBuilder.AppendLine(
-                        value:=Date.Now().ToShortDateString.Remove(s:=$"{dateSeparator}{Now.Year}"))
+                        value:=Date.Now().ToShortDateString _
+                                   .Remove(s:=$"{dateSeparator}{Now.Year}"))
                     strBuilder.AppendLine(value:=$"Last SG {sgString} {BgUnits}")
                     If PatientData.ConduitInRange Then
                         If s_lastSgValue.IsSgInvalid Then
@@ -5570,7 +5632,7 @@ Public Class Form1
 
         Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/{288} SG Readings"
 
-        Me.TableLayoutPanelLastSG.DisplayDataTableInDGV(
+        Me.TlpLastSG.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:={s_lastSg}.ToList),
             className:=NameOf(LastSG), rowIndex:=ServerDataIndexes.lastSG,
             hideRecordNumberColumn:=True)
@@ -5581,7 +5643,7 @@ Public Class Form1
             sort:=True)
         Me.DgvLastAlarm.Columns(index:=0).Visible = False
 
-        Me.TableLayoutPanelActiveInsulin.DisplayDataTableInDGV(
+        Me.TlpActiveInsulin.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:={s_activeInsulin}.ToList),
             className:=NameOf(ActiveInsulin), rowIndex:=ServerDataIndexes.activeInsulin,
             hideRecordNumberColumn:=True)
@@ -5592,14 +5654,14 @@ Public Class Form1
             End Function
         Dim classCollection As List(Of SG) =
             s_sgRecords.OrderByDescending(keySelector).ToList()
-        Me.TableLayoutPanelSgs.DisplayDataTableInDGV(
+        Me.TlpSgs.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection),
             dgv:=Me.DgvSGs,
             rowIndex:=ServerDataIndexes.sgs)
         Me.DgvSGs.AutoSize = True
         Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
-        Me.TableLayoutPanelLimits.DisplayDataTableInDGV(
+        Me.TlpLimits.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:=s_limitRecords),
             className:=NameOf(Limit), rowIndex:=ServerDataIndexes.limits)
 
@@ -5610,7 +5672,7 @@ Public Class Form1
         Me.DgvTherapyAlgorithmState.Columns(index:=0).Visible = False
 
         Me.DgvLastAlarm.Columns(index:=0).Visible = False
-        Me.TableLayoutPanelBasal.DisplayDataTableInDGV(
+        Me.TlpBasal.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(s_basalList.ClassCollection),
             className:=NameOf(Basal), rowIndex:=ServerDataIndexes.basal,
             hideRecordNumberColumn:=True)

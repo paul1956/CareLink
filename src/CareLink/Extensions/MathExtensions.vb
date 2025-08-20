@@ -124,7 +124,8 @@ Friend Module MathExtensions
     End Function
 
     ''' <summary>
-    '''  Determines whether <paramref name="singleValue"/> is equal to <paramref name="integerValue"/>,
+    '''  Determines whether <paramref name="singleValue"/> is equal
+    '''  to <paramref name="integerValue"/>,
     '''  within <see cref="Single.Epsilon"/>.
     ''' </summary>
     ''' <param name="singleValue">The Single value to compare.</param>
@@ -218,7 +219,9 @@ Friend Module MathExtensions
     '''  Rounds a Single value to the nearest 0.025 increment.
     ''' </summary>
     ''' <param name="f">The Single value to round.</param>
-    ''' <returns>The rounded Single value, or <see cref="Single.NaN"/> if the input is NaN.</returns>
+    ''' <returns>
+    '''  The rounded Single value, or <see cref="Single.NaN"/> if the input is NaN.
+    ''' </returns>
     <Extension>
     Public Function RoundTo025(f As Single) As Single
         Return If(Single.IsNaN(f),
@@ -230,7 +233,9 @@ Friend Module MathExtensions
     '''  Rounds a Double value to the nearest 0.025 increment and returns as Single.
     ''' </summary>
     ''' <param name="d">The Double value to round.</param>
-    ''' <returns>The rounded value as Single, or <see cref="Single.NaN"/> if the input is NaN.</returns>
+    ''' <returns>
+    '''  The rounded value as Single, or <see cref="Single.NaN"/> if the input is NaN.
+    ''' </returns>
     <Extension>
     Public Function RoundTo025(d As Double) As Single
         If Double.IsNaN(d) Then

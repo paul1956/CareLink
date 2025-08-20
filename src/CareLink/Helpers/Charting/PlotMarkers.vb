@@ -6,7 +6,8 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 ''' <summary>
-'''  Provides extension methods and helpers for plotting marker data points and treatment markers on charts.
+'''  Provides extension methods and helpers for plotting marker data points
+'''  and treatment markers on charts.
 ''' </summary>
 Friend Module PlotMarkers
 
@@ -18,10 +19,15 @@ Friend Module PlotMarkers
     ''' <param name="f">The numeric SG value.</param>
     '''
     <Extension>
-    Private Sub AddSgReadingPoint(markerSeriesPoints As DataPointCollection, markerOADateTime As OADate, f As Single)
+    Private Sub AddSgReadingPoint(
+        markerSeriesPoints As DataPointCollection,
+        markerOADateTime As OADate,
+        f As Single)
+
         AddMarkerPoint(markerSeriesPoints, markerOADateTime, f, markerColor:=Color.DarkOrange)
         If Not Single.IsNaN(f) Then
-            markerSeriesPoints.Last.Tag = $"Blood Glucose: Not used for calibration: {f} {BgUnits}"
+            markerSeriesPoints.Last.Tag =
+                $"Blood Glucose: Not used for calibration: {f} {BgUnits}"
         End If
     End Sub
 
@@ -51,7 +57,8 @@ Friend Module PlotMarkers
     End Sub
 
     ''' <summary>
-    '''  Adds a generic marker point to the marker series with the specified color and formatting.
+    '''  Adds a generic marker point to the marker series with the specified color
+    '''  and formatting.
     ''' </summary>
     ''' <param name="markerSeriesPoints">The collection of data points to add to.</param>
     ''' <param name="markerOADateTime">The OADate timestamp for the marker.</param>
@@ -75,12 +82,16 @@ Friend Module PlotMarkers
     '''  Adjusts the X-axis start time based on the last time change record.
     ''' </summary>
     ''' <param name="axisX">The X-axis to adjust.</param>
-    ''' <param name="lastTimeChangeRecord">The last time change record to use for adjustment.</param>
+    ''' <param name="lastTimeChangeRecord">
+    '''  The last time change record to use for adjustment.
+    ''' </param>
     <Extension>
     Private Sub AdjustXAxisStartTime(ByRef axisX As Axis, lastTimeChangeRecord As TimeChange)
-        Dim latestTime As Date = If(lastTimeChangeRecord.DisplayTime > lastTimeChangeRecord.Timestamp,
-                                    lastTimeChangeRecord.DisplayTime,
-                                    lastTimeChangeRecord.Timestamp)
+        Dim latestTime As Date =
+            If(lastTimeChangeRecord.DisplayTime > lastTimeChangeRecord.Timestamp,
+               lastTimeChangeRecord.DisplayTime,
+               lastTimeChangeRecord.Timestamp)
+
         Dim timeOffset As Double = (latestTime - s_sgRecords(index:=0).Timestamp).TotalMinutes
         axisX.IntervalOffset = timeOffset
         axisX.IntervalOffsetType = DateTimeIntervalType.Minutes
@@ -110,18 +121,21 @@ Friend Module PlotMarkers
     End Function
 
     ''' <summary>
-    '''  Plots all markers on the specified chart, including insulin, meal, and time change markers.
+    '''  Plots all markers on the specified chart, including insulin, meal,
+    '''  and time change markers.
     ''' </summary>
     ''' <param name="pageChart">The chart to plot markers on.</param>
     ''' <param name="timeChangeSeries">The series used for time change markers.</param>
-    ''' <param name="markerInsulinDictionary">Dictionary to store insulin marker positions.</param>
+    ''' <param name="markerInsulinDictionary">
+    '''  Dictionary to store insulin marker positions.
+    ''' </param>
     ''' <param name="markerMealDictionary">Dictionary to store meal marker positions.</param>
     ''' <param name="memberName">
     '''  Optional. The name of the calling member, automatically supplied by the compiler.
     ''' </param>
     ''' <param name="sourceLineNumber">
-    '''  Optional. The line number in the source file at which the method is called, automatically supplied
-    '''  by the compiler.
+    '''  Optional. The line number in the source file at which the method is called,
+    '''  automatically supplied by the compiler.
     ''' </param>
     <Extension>
     Friend Sub PlotMarkers(
@@ -147,7 +161,8 @@ Friend Module PlotMarkers
                     f = Math.Min(GetYMaxValueFromNativeMmolL(), f)
                     f = Math.Max(GetYMinValueFromNativeMmolL(), f)
                 End If
-                Dim markerSeriesPoints As DataPointCollection = pageChart.Series(name:=MarkerSeriesName).Points
+                Dim markerSeriesPoints As DataPointCollection =
+                    pageChart.Series(name:=MarkerSeriesName).Points
                 Select Case item.Type
                     Case "BG_READING"
                         If Not Single.IsNaN(f) Then
@@ -156,7 +171,8 @@ Friend Module PlotMarkers
                     Case "CALIBRATION"
                         markerSeriesPoints.AddCalibrationPoint(markerOADatetime, f, item)
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim amount As Single = item.GetSingleFromJson(key:="bolusAmount", digits:=3)
+                        Dim amount As Single =
+                            item.GetSingleFromJson(key:="bolusAmount", digits:=3)
                         With pageChart.Series(name:=BasalSeriesName)
                             .PlotBasalSeries(
                                 markerOADatetime,
@@ -184,7 +200,8 @@ Friend Module PlotMarkers
                         Select Case item.GetStringFromJson(key:=NameOf(Insulin.ActivationType))
                             Case "AUTOCORRECTION"
                                 key = "deliveredFastAmount"
-                                Dim autoCorrection As Single = item.GetSingleFromJson(key, digits:=3)
+                                Dim autoCorrection As Single =
+                                    item.GetSingleFromJson(key, digits:=3)
                                 With pageChart.Series(name:=BasalSeriesName)
                                     .PlotBasalSeries(
                                         markerOADatetime,
@@ -200,7 +217,8 @@ Friend Module PlotMarkers
                                     key:=markerOADatetime,
                                     value:=CInt(GetInsulinYValue())) Then
 
-                                    Dim yValue As Double = GetInsulinYValue() - If(NativeMmolL, 0.555, 10)
+                                    Dim yValue As Double =
+                                        GetInsulinYValue() - If(NativeMmolL, 0.555, 10)
                                     markerSeriesPoints.AddXY(xValue:=markerOADatetime, yValue)
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
                                     markerSeriesPoints.Last.MarkerBorderColor =
@@ -256,15 +274,23 @@ Friend Module PlotMarkers
                             lastTimeChangeRecord = New TimeChange(item, recordNumber:=1)
                             markerOADatetime = New OADate(asDate:=lastTimeChangeRecord.Timestamp)
                             .AddXY(xValue:=markerOADatetime, yValue:=0)
-                            .AddXY(xValue:=markerOADatetime, yValue:=GetYMaxValueFromNativeMmolL())
+                            .AddXY(
+                                xValue:=markerOADatetime,
+                                yValue:=GetYMaxValueFromNativeMmolL())
                             .AddXY(xValue:=markerOADatetime, yValue:=Double.NaN)
                         End With
                     Case "LOW_GLUCOSE_SUSPENDED"
-                        If PatientData.ConduitSensorInRange AndAlso CurrentPdf?.IsValid AndAlso Not InAutoMode Then
+                        If PatientData.ConduitSensorInRange AndAlso
+                           CurrentPdf?.IsValid AndAlso Not InAutoMode Then
+
                             Dim timeOrderedMarkers As SortedDictionary(Of OADate, Single) =
                                 GetManualBasalValues(markerWithIndex)
-                            For Each kvp As KeyValuePair(Of OADate, Single) In timeOrderedMarkers
+                            For Each kvp As KeyValuePair(Of OADate, Single) In
+                                timeOrderedMarkers
+
                                 With pageChart.Series(name:=BasalSeriesName)
+                                    Dim sValue As String =
+                                        kvp.Value.ToString.TruncateSingle(digits:=3)
                                     .PlotBasalSeries(
                                         markerOADateTime:=kvp.Key,
                                         amount:=kvp.Value,
@@ -272,7 +298,7 @@ Friend Module PlotMarkers
                                         insulinRow:=GetInsulinYValue(),
                                         legendText:="Basal Series",
                                         DrawFromBottom:=False,
-                                        tag:=$"Manual Basal: {kvp.Value.ToString.TruncateSingle(digits:=3)}U")
+                                        tag:=$"Manual Basal: {sValue}U")
                                 End With
                             Next
 
@@ -290,7 +316,8 @@ Friend Module PlotMarkers
         Next
         If s_timeChangeMarkers.Count > 0 Then
             timeChangeSeries.IsVisibleInLegend = True
-            pageChart.ChartAreas(name:=NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+            Const name As String = NameOf(ChartArea)
+            pageChart.ChartAreas(name).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
             pageChart.Legends(index:=0).CustomItems.Last.Enabled = True
         Else
             timeChangeSeries.IsVisibleInLegend = False
@@ -330,7 +357,9 @@ Friend Module PlotMarkers
                 Dim markerDateTime As Date = item.GetMarkerTimestamp
                 Dim markerOADate As New OADate(asDate:=markerDateTime)
                 Dim markerOADateTime As New OADate(asDate:=item.GetMarkerTimestamp)
-                Dim markerSeriesPoints As DataPointCollection = treatmentChart.Series(name:=MarkerSeriesName).Points
+                Dim markerSeriesPoints As DataPointCollection =
+                    treatmentChart.Series(name:=MarkerSeriesName).Points
+                Dim markerBorderColor As Color
                 Select Case item.Type
                     Case "AUTO_BASAL_DELIVERY"
                         key = NameOf(AutoBasalDelivery.BolusAmount)
@@ -394,11 +423,15 @@ Friend Module PlotMarkers
                                                 alpha:=30,
                                                 baseColor:=Color.LightBlue)
                                         key = NameOf(Insulin.DeliveredFastAmount)
+                                        markerBorderColor =
+                                            Color.FromArgb(alpha:=10, baseColor:=Color.Black)
+                                        Dim singleValue As Single =
+                                            item.GetSingleFromJson(key, digits:=3)
                                         CreateCallout(
                                             treatmentChart,
                                             lastDataPoint,
-                                            markerBorderColor:=Color.FromArgb(alpha:=10, baseColor:=Color.Black),
-                                            tagText:=$"Bolus {item.GetSingleFromJson(key, digits:=3)}U")
+                                            markerBorderColor,
+                                            tagText:=$"Bolus {singleValue}U")
                                     End If
                                 Else
                                     Stop
@@ -407,21 +440,30 @@ Friend Module PlotMarkers
                                 Stop
                         End Select
                     Case "MEAL"
-                        Dim value As Single = CSng(TreatmentInsulinRow * 0.95).RoundToSingle(digits:=3)
-                        If s_treatmentMarkerMealDictionary.TryAdd(key:=markerOADateTime, value) Then
+                        Dim value As Single =
+                            CSng(TreatmentInsulinRow * 0.95).RoundToSingle(digits:=3)
+                        If s_treatmentMarkerMealDictionary.TryAdd(
+                            key:=markerOADateTime,
+                            value) Then
+
                             markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=value)
+                            markerBorderColor =
+                                Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
+                            Dim amount As Integer =
+                                CInt(item.GetSingleFromJson(key:="amount", digits:=0))
                             CreateCallout(
                                 treatmentChart,
                                 lastDataPoint:=markerSeriesPoints.Last,
-                                markerBorderColor:=Color.FromArgb(alpha:=10, baseColor:=Color.Yellow),
-                                tagText:=$"Meal {item.GetSingleFromJson(key:="amount", digits:=0)} grams")
+                                markerBorderColor:=markerBorderColor,
+                                tagText:=$"Meal {amount} grams")
                         End If
                     Case "BG_READING"
                     Case "CALIBRATION"
                     Case "TIME_CHANGE"
                         With treatmentChart.Series(name:=TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChange(item, recordNumber:=1)
-                            markerOADateTime = New OADate(asDate:=lastTimeChangeRecord.Timestamp)
+                            markerOADateTime =
+                                New OADate(asDate:=lastTimeChangeRecord.Timestamp)
                             .AddXY(xValue:=markerOADateTime, yValue:=0)
                             .AddXY(xValue:=markerOADateTime, yValue:=TreatmentInsulinRow)
                             .AddXY(xValue:=markerOADateTime, yValue:=Double.NaN)
@@ -436,6 +478,8 @@ Friend Module PlotMarkers
 
                             For Each kvp As KeyValuePair(Of OADate, Single) In orderedMarkers
                                 With treatmentChart.Series(name:=BasalSeriesName)
+                                    Dim tag As String =
+                                        $"Manual Basal: {kvp.Value.RoundToSingle(digits:=3)}U"
                                     .PlotBasalSeries(
                                         markerOADateTime:=kvp.Key,
                                         amount:=kvp.Value,
@@ -443,7 +487,7 @@ Friend Module PlotMarkers
                                         insulinRow:=TreatmentInsulinRow,
                                         legendText:=BasalSeriesName,
                                         DrawFromBottom:=True,
-                                        tag:=$"Manual Basal: {kvp.Value.ToString.TruncateSingle(digits:=3)}U")
+                                        tag)
                                 End With
                             Next
                         End If
@@ -463,7 +507,8 @@ Friend Module PlotMarkers
 
         If s_timeChangeMarkers.Count <> 0 Then
             treatmentMarkerTimeChangeSeries.IsVisibleInLegend = True
-            treatmentChart.ChartAreas(name:=NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+            treatmentChart.ChartAreas(name:=NameOf(ChartArea)).AxisX _
+                          .AdjustXAxisStartTime(lastTimeChangeRecord)
             treatmentChart.Legends(index:=0).CustomItems.Last.Enabled = True
         Else
             treatmentMarkerTimeChangeSeries.IsVisibleInLegend = False

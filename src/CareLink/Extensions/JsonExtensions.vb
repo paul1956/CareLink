@@ -497,7 +497,8 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a JSON string representing an array of objects to a <see cref="List(Of SG)"/>.
+    '''  Converts a JSON string representing an array of objects to a
+    '''  <see cref="List(Of SG)"/>.
     ''' </summary>
     ''' <param name="json">The JSON string to convert.</param>
     ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>

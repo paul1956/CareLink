@@ -87,7 +87,7 @@ Friend Module LoginHelpers
         updateAllTabs As Boolean,
         fileToLoad As FileToLoadOptions) As Boolean
 
-        Dim serverTimerEnabled As Boolean = StartOrStopServerUpdateTimer(Start:=False)
+        Dim serverTimerEnabled As Boolean = SetServerUpdateTimer(Start:=False)
         s_autoBasalDeliveryMarkers.Clear()
         ProgramInitialized = False
         Dim fromFile As Boolean
@@ -121,14 +121,14 @@ Friend Module LoginHelpers
                         Case DialogResult.Cancel
                             owner.TabControlPage1.Visible = False
                             owner.TabControlPage2.Visible = False
-                            StartOrStopServerUpdateTimer(Start:=serverTimerEnabled)
+                            SetServerUpdateTimer(Start:=serverTimerEnabled)
                             Return False
                         Case DialogResult.Retry
                     End Select
                 Loop
 
                 If Form1.Client Is Nothing OrElse Not Form1.Client.LoggedIn Then
-                    StartOrStopServerUpdateTimer(
+                    SetServerUpdateTimer(
                         Start:=True,
                         interval:=FiveMinutesInMilliseconds)
 
@@ -150,7 +150,7 @@ Friend Module LoginHelpers
                 Dim lastErrorMessage As String = LoginDialog.Client.GetRecentData()
 
                 SetUpCareLinkUser(forceUI:=False)
-                StartOrStopServerUpdateTimer(Start:=True, interval:=OneMinutesInMilliseconds)
+                SetServerUpdateTimer(Start:=True, interval:=OneMinutesInMilliseconds)
 
                 If NetworkUnavailable() Then
                     ReportLoginStatus(owner.LoginStatus)
@@ -220,7 +220,7 @@ Friend Module LoginHelpers
                 owner.TabControlPage1.Visible = True
                 owner.TabControlPage2.Visible = True
                 CurrentDateCulture =
-                    lastDownloadFileWithPath.ExtractCultureFromFileName(fixedPart, fuzzy:=True)
+                    lastDownloadFileWithPath.ExtractCulture(fixedPart, fuzzy:=True)
                 Dim json As String = File.ReadAllText(path:=lastDownloadFileWithPath)
                 PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
                 DeserializePatientElement()
@@ -328,7 +328,8 @@ Friend Module LoginHelpers
             .ForeColor = form1.MenuStrip1.ForeColor
             If isDaylightSavingTime IsNot Nothing Then
                 Dim timeZoneName As String = Nothing
-                If RecentData?.TryGetValue(NameOf(ServerDataIndexes.clientTimeZoneName), timeZoneName) Then
+                Const key As String = NameOf(ServerDataIndexes.clientTimeZoneName)
+                If RecentData?.TryGetValue(key, value:=timeZoneName) Then
                     Dim timeZoneInfo As TimeZoneInfo = CalculateTimeZone(timeZoneName)
                     Dim dst As String = If(isDaylightSavingTime,
                                            timeZoneInfo.DaylightName,
@@ -469,7 +470,7 @@ Friend Module LoginHelpers
     '''  <see langword="True"/> if the timer was running before the call;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Friend Function StartOrStopServerUpdateTimer(
+    Friend Function SetServerUpdateTimer(
         Start As Boolean,
         Optional interval As Integer = -1) As Boolean
 

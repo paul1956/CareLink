@@ -7,13 +7,30 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module CreateChartItems
-    Private ReadOnly s_mgdLValues As New List(Of Single) From {MinMmDl50, 100, 150, 200, 250, 300, 350, MaxMmDl400}
+    Private ReadOnly s_mgdLValues As New List(Of Single) From {
+        MinMmDl50,
+        100,
+        150,
+        200,
+        250,
+        300,
+        350,
+        MaxMmDl400}
 
-    Private ReadOnly s_mmolLValues As New List(Of Single) From {MinMmolL2_8, 5, 8, 11, 14, 17, 20, MaxMmolL22_2}
+    Private ReadOnly s_mmolLValues As New List(Of Single) From {
+        MinMmolL2_8,
+        5,
+        8,
+        11,
+        14,
+        17,
+        20,
+        MaxMmolL22_2}
 
     ''' <summary>
     '''  Creates a base series with common properties for charting.
-    '''  This method is used to create series for active insulin, basal rates, limits, and sensor glucose values.
+    '''  This method is used to create series for active insulin,
+    '''  basal rates, limits, and sensor glucose values.
     ''' </summary>
     ''' <param name="name">The name of the series.</param>
     ''' <param name="legendText">The text displayed in the legend.</param>
@@ -339,15 +356,19 @@ Friend Module CreateChartItems
         Dim s As Series = CreateSeriesBase(name, legendText, borderWidth:=2, yAxisType)
         s.IsVisibleInLegend = False
         Dim lineColor As Color = GetGraphLineColor(key:=legendText)
+        Dim item As LegendItem
         Select Case legendText
             Case "Min Basal"
                 lineColor = Color.FromArgb(alpha:=150, baseColor:=lineColor)
-                basalLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color:=lineColor, image:=""))
+                item = New LegendItem(name:=legendText, color:=lineColor, image:="")
+                basalLegend.CustomItems.Add(item)
             Case "Auto Correction"
-                basalLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color:=lineColor, image:=""))
+                item = New LegendItem(name:=legendText, color:=lineColor, image:="")
+                basalLegend.CustomItems.Add(item)
                 basalLegend.CustomItems.Last.Enabled = False
             Case "Basal Series"
-                basalLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color:=lineColor, image:=""))
+                item = New LegendItem(name:=legendText, color:=lineColor, image:="")
+                basalLegend.CustomItems.Add(item)
             Case Else
                 Stop
         End Select
@@ -360,7 +381,8 @@ Friend Module CreateChartItems
 
     ''' <summary>
     '''  Creates a series for displaying limits and target values in a chart.
-    '''  This method is used to initialize series for high and low limits, as well as the sensor glucose target.
+    '''  This method is used to initialize series for high and low limits,
+    '''  as well as the sensor glucose target.
     ''' </summary>
     ''' <param name="limitsLegend">The legend associated with the limits series.</param>
     ''' <param name="seriesName">The name of the series.</param>
@@ -508,13 +530,20 @@ Friend Module CreateChartItems
 
     ''' <summary>
     '''  Creates a title for a chart with specific properties.
-    '''  This method is used to initialize a title for the chart, including text, font, and color.
+    '''  This method is used to initialize a title for the chart,
+    '''  including text, font, and color.
     ''' </summary>
     ''' <param name="chartTitle">The text of the chart title.</param>
     ''' <param name="name">The name of the title.</param>
-    ''' <param name="foreColor">The foreground color of the title text, if White change to Gray</param>
+    ''' <param name="foreColor">
+    '''  The foreground color of the title text, if White change to Gray
+    ''' </param>
     ''' <returns>A Title object configured with the specified properties.</returns>
-    Friend Function CreateTitle(chartTitle As String, name As String, foreColor As Color) As Title
+    Friend Function CreateTitle(
+        chartTitle As String,
+        name As String,
+        foreColor As Color) As Title
+
         Return New Title With {
             .BackColor = foreColor.ContrastingColor(),
             .Font = New Font(FamilyName, emSize:=14.0F, style:=FontStyle.Bold),
@@ -527,10 +556,12 @@ Friend Module CreateChartItems
 
     ''' <summary>
     '''  Updates the X-axis of a chart area for sensor glucose (SG) data.
-    '''  This method adjusts the X-axis properties based on the current SG records and the pump's current time.
+    '''  This method adjusts the X-axis properties based on the current SG records
+    '''  and the pump's current time.
     ''' </summary>
     ''' <param name="c">The ChartArea to update.</param>
-    ''' <remarks>This method sets the interval, grid lines, and maximum/minimum values for the X-axis.</remarks>
+    ''' <remarks>This method sets the interval, grid lines, and maximum/minimum values
+    ''' for the X-axis.</remarks>
     <Extension>
     Friend Sub UpdateChartAreaSgAxisX(c As ChartArea)
         With c
