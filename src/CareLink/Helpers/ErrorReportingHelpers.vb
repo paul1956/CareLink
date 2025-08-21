@@ -8,8 +8,18 @@
 Friend Module ErrorReportingHelpers
     Private s_lastReportedMemory As Double = 0
 
+    ''' <summary>
+    '''  Reports the current memory usage of the process to the debug output.
+    '''  It only reports if there is a significant change in memory usage.
+    ''' </summary>
+    ''' <remarks>
+    '''  This method is useful for monitoring memory usage during debugging.
+    ''' </remarks>
     Friend Sub ReportMemory()
-
+        If Not Debugger.IsAttached Then
+            ' Memory reporting is only useful when debugging
+            Return
+        End If
         Dim proc As Process = Process.GetCurrentProcess()
         proc.Refresh() ' Get the most up-to-date values
 
@@ -20,7 +30,7 @@ Friend Module ErrorReportingHelpers
             ' No change in memory usage, no need to report
             Return
         End If
-        Dim upDown As String = If(diff < 0, "↑", "↓")
+        Dim upDown As String = If(diff > 0, "↑", "↓")
         Dim message As String =
             $"Current process memory usage: {memInMB:F2} MB, from last: " &
             $"{upDown} {Math.Abs(value:=diff):F2} MB"

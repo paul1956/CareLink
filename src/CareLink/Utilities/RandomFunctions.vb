@@ -24,9 +24,9 @@ Public Module RandomFunctions
             Function(str As String) As Char
                 Return str(index:=random.Next(maxValue:=str.Length))
             End Function
-
-        Dim s As New String(value:=Enumerable.Repeat(element, count:=count + 10).
-                                                Select(selector).ToArray())
+        Dim value As Char() = Enumerable.Repeat(element, count:=count + 10) _
+                                        .Select(selector).ToArray()
+        Dim s As New String(value)
         Dim inArray As Byte() = Encoding.UTF8.GetBytes(s)
         Return Convert.ToBase64String(inArray).Substring(startIndex:=0, length:=count)
     End Function
