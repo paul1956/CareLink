@@ -79,13 +79,18 @@ Public Class SummaryRecord
     End Sub
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="SummaryRecord"/> class using a key and a default message.
-    '''  Used where we will provide a Button to click for details on another <see cref="TabPage"/>.
+    '''  Initializes a new instance of the <see cref="SummaryRecord"/>
+    '''  class using a key and a default message.
+    '''  Used where we will provide a Button to click for details on another
+    '''  <see cref="TabPage"/>.
     ''' </summary>
-    ''' <param name="recordNumber">The record number associated with this summary record.</param>
+    ''' <param name="recordNumber">
+    '''  The record number associated with this summary record.
+    ''' </param>
     ''' <param name="key">The key for the record.</param>
     ''' <remarks>
-    '''  Used where we will provide a Button to click for details on another <see cref="TabPage"/>.
+    '''  Used where we will provide a Button to click for details
+    '''  on another <see cref="TabPage"/>.
     ''' </remarks>
     Protected Friend Sub New(recordNumber As Single, key As String)
         Me.New(recordNumber, key, value:=ClickToShowDetails, message:="")
@@ -150,13 +155,16 @@ Public Class SummaryRecord
     ''' <summary>
     '''  Compares this instance with a specified <see cref="SummaryRecord"/> and
     '''  indicates whether this instance
-    '''  precedes, follows, or appears in the same position in the sort order as the specified object.
+    '''  precedes, follows, or appears in the same position in the sort order
+    '''  as the specified object.
     ''' </summary>
     ''' <param name="obj">The object to compare with this instance.</param>
     ''' <returns>
     '''  A value that indicates the relative order of the objects being compared.
     ''' </returns>
-    ''' <exception cref="ArgumentException">Thrown when the object is not a <see cref="SummaryRecord"/>.</exception>
+    ''' <exception cref="ArgumentException">
+    '''  Thrown when the object is not a <see cref="SummaryRecord"/>.
+    ''' </exception>
     Public Function CompareTo(obj As Object) As Integer Implements IComparable.CompareTo
         Dim bom As SummaryRecord = CType(obj, SummaryRecord)
 

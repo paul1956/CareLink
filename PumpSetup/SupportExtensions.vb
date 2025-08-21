@@ -15,7 +15,8 @@ Friend Module SupportExtensions
     '''  The string to make bold.
     ''' </param>
     ''' <remarks>
-    '''  This method searches for all occurrences of the specified string and applies bold formatting to them.
+    '''  This method searches for all occurrences of the specified string
+    '''  and applies bold formatting to them.
     ''' </remarks>
     <Extension>
     Public Sub BoldText(rtb As RichTextBox, text As String)

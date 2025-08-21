@@ -132,7 +132,9 @@ Friend Module DateTimeExtensions
     ''' <returns>Local DateTime</returns>
     <Extension>
     Friend Function Epoch2PumpDateTime(epoch As String) As Date
-        Return TimeZoneInfo.ConvertTimeFromUtc(dateTime:=epoch.FromUnixTime(), destinationTimeZone:=PumpTimeZoneInfo)
+        Return TimeZoneInfo.ConvertTimeFromUtc(
+            dateTime:=epoch.FromUnixTime(),
+            destinationTimeZone:=PumpTimeZoneInfo)
     End Function
 
     ''' <summary>
@@ -167,14 +169,18 @@ Friend Module DateTimeExtensions
     ''' <summary>
     '''  Gets the timestamp of a marker, rounded down to the nearest minute.
     ''' </summary>
-    ''' <param name="marker">The <see cref="Marker"/> object whose timestamp is to be retrieved.</param>
+    ''' <param name="marker">
+    '''  The <see cref="Marker"/> object whose timestamp is to be retrieved.
+    ''' </param>
     ''' <returns>
-    '''  The <see langword="Date"/> value of the marker's timestamp, rounded down to the nearest minute.
+    '''  The <see langword="Date"/> value of the marker's timestamp,
+    '''  rounded down to the nearest minute.
     '''  Returns <see langword="Nothing"/> if an exception occurs.
     ''' </returns>
     ''' <remarks>
     '''  This method attempts to round down the marker's timestamp to the nearest minute.
-    '''  If an exception occurs, execution is stopped for debugging and <see langword="Nothing"/> is returned.
+    '''  If an exception occurs, execution is stopped for debugging
+    '''  and <see langword="Nothing"/> is returned.
     ''' </remarks>
     <Extension>
     Friend Function GetMarkerTimestamp(marker As Marker) As Date
@@ -218,13 +224,16 @@ Friend Module DateTimeExtensions
             Return resultDate
         End If
         Stop
-        Dim message As String = $"String '{dateAsString}' with {NameOf(key)} = {key} from" &
-            $" {memberName} line {sourceLineNumber} was not recognized as a valid DateTime in any supported culture."
+        Dim message As String =
+            $"String '{dateAsString}' with {NameOf(key)} = {key} from " &
+            $"{memberName} line {sourceLineNumber} was not recognized as a valid " &
+            "DateTime in any supported culture."
         Throw New FormatException(message)
     End Function
 
     ''' <summary>
-    '''  Rounds down the specified <see cref="Date"/> to the nearest minute by setting seconds to zero.
+    '''  Rounds down the specified <see cref="Date"/> to the nearest minute by
+    '''  setting seconds to zero.
     ''' </summary>
     ''' <param name="d">The <see cref="Date"/> to round down.</param>
     ''' <returns>A new <see cref="Date"/> with seconds set to zero.</returns>
@@ -292,10 +301,15 @@ Friend Module DateTimeExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a <see langword="Date"/> to a <see langword="String"/> formatted as "MM/dd/yyyy HH:mm:ss".
+    '''  Converts a <see langword="Date"/> to a <see langword="String"/>
+    '''  formatted as "MM/dd/yyyy HH:mm:ss".
     ''' </summary>
-    ''' <param name="dateValue">The <see langword="Date"/> to convert.</param>
-    ''' <returns>A <see langword="String"/> representing the date in "MM/dd/yyyy HH:mm:ss" format.</returns>
+    ''' <param name="dateValue">
+    '''  The <see langword="Date"/> to convert.
+    ''' </param>
+    ''' <returns>
+    '''  A <see langword="String"/> representing the date in "MM/dd/yyyy HH:mm:ss" format.
+    ''' </returns>
     <Extension>
     Public Function ToShortDateString(dateValue As Date) As String
         Return $"{dateValue.ToShortDateString()} {dateValue.ToLongTimeString()}"
@@ -307,9 +321,14 @@ Friend Module DateTimeExtensions
     '''  provided key.
     ''' </summary>
     ''' <param name="s">The <see langword="String"/> to parse.</param>
-    ''' <param name="key">A <see langword="String"/> that determines which parsing rules to use.</param>
+    ''' <param name="key">
+    '''  A <see langword="String"/> that determines which parsing rules to use.
+    ''' </param>
     ''' <param name="result">The output variable for the parsed date.</param>
-    ''' <returns><see langword="True"/> if parsing succeeds, and <see langword="False"/> otherwise. </returns>
+    ''' <returns>
+    '''  <see langword="True"/> if parsing succeeds,
+    '''  otherwise <see langword="False"/>.
+    ''' </returns>
     <Extension>
     Public Function TryParseDate(s As String, key As String, ByRef result As Date) As Boolean
         Dim success As Boolean
@@ -360,19 +379,22 @@ Friend Module DateTimeExtensions
     End Function
 
     ''' <summary>
-    '''  Attempts to parse a date string in the format "yyyy-MM-ddTHH:mm:ss" and returns the parsed date.
-    '''  If the string is null or whitespace, it returns Nothing.
+    '''  Attempts to parse a date string in the format "yyyy-MM-ddTHH:mm:ss"
+    '''  and returns the parsed date. If the string is null or whitespace,
+    '''  it returns <see langword="Nothing"/>.
     ''' </summary>
     ''' <param name="s">The date string to parse.</param>
     ''' <returns>Parsed Date or Nothing if parsing fails.</returns>
     ''' <remarks>
     '''  This method is an extension method for the <see langword="String"/> class.
-    '''  It uses the invariant culture to ensure consistent parsing regardless of the current culture settings.
+    '''  It uses the invariant culture to ensure consistent parsing regardless
+    '''  of the current culture settings.
     ''' </remarks>
     <Extension>
     Public Function TryParseDateStr(s As String) As Date
+        Dim provider As IFormatProvider = CultureInfo.InvariantCulture
         Return If(Not String.IsNullOrWhiteSpace(value:=s),
-                  Date.ParseExact(s, format:="yyyy-MM-ddTHH:mm:ss", provider:=CultureInfo.InvariantCulture),
+                  Date.ParseExact(s, format:="yyyy-MM-ddTHH:mm:ss", provider),
                   Nothing)
     End Function
 

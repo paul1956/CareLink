@@ -19,7 +19,8 @@ Friend Module CultureHelpers
     '''  Defaults to <see cref="CultureInfo.CurrentUICulture"/> if not set.
     ''' </summary>
     ''' <remarks>
-    '''  This property allows overriding the default date culture for formatting and parsing operations.
+    '''  This property allows overriding the default date culture for formatting
+    '''  and parsing operations.
     ''' </remarks>
     Public Property CurrentDateCulture As CultureInfo
         Get

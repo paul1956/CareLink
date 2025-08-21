@@ -8,7 +8,8 @@ Imports System.Windows.Forms.DataVisualization.Charting
 Friend Module PlotSeriesLimits
 
     ''' <summary>
-    '''  Generates an array mapping each <see cref="SG"/> record index to the corresponding limit record index.
+    '''  Generates an array mapping each <see cref="SG"/> record index
+    '''  to the corresponding limit record index.
     ''' </summary>
     ''' <param name="count">The number of SG records minus one.</param>
     ''' <returns>
@@ -23,7 +24,9 @@ Friend Module PlotSeriesLimits
         Next
 
         For i As Integer = 0 To limitsIndexList.GetUpperBound(dimension:=0)
-            If index + 1 < s_limitRecords.Count AndAlso s_limitRecords(index:=index + 1).Index < i Then
+            If index + 1 < s_limitRecords.Count AndAlso
+               s_limitRecords(index:=index + 1).Index < i Then
+
                 index += 1
             End If
             limitsIndexList(i) = index
@@ -38,37 +41,44 @@ Friend Module PlotSeriesLimits
     ''' <param name="chart">The <see cref="Chart"/> control to plot onto.</param>
     ''' <param name="targetSsOnly">
     '''  If <see langword="True"/>, only the target SG line is plotted;
-    '''  if <see langword="False"/>,
-    '''  high and low limits are also plotted.
+    '''  if <see langword="False"/>, high and low limits are also plotted.
     ''' </param>
     ''' <remarks>
     '''  This method uses the global lists <see cref="s_sgRecords"/> and
     '''  <see cref="s_limitRecords"/> to determine the data points for plotting.
-    '''  It adds points to the chart's series for target SG, high limit,
-    '''  and low limit.
-    '''  If an exception occurs while plotting, an <see cref="ApplicationException"/>
-    '''  is thrown with details.
+    '''  It adds points to the chart's series for target SG, high limit, and low limit.
     ''' </remarks>
+    ''' <exception cref="ApplicationException">If an error occurs while plotting.</exception>
     <Extension>
     Friend Sub PlotHighLowLimitsAndTargetSg(chart As Chart, targetSsOnly As Boolean)
         If s_limitRecords.Count = 0 Then Exit Sub
         Dim limitsIndexList() As Integer = GetLimitsList(count:=s_sgRecords.Count - 1)
         Dim yValue As Single = If(CurrentUser Is Nothing, 0, CurrentUser.CurrentTarget)
         If Not yValue.AlmostZero() Then
-            chart.Series(name:=TargetSgSeriesName).Points.AddXY(xValue:=s_sgRecords(index:=0).OaDateTime(), yValue)
-            chart.Series(name:=TargetSgSeriesName).Points.AddXY(xValue:=s_sgRecords.Last.OaDateTime(), yValue)
+            chart.Series(name:=TargetSgSeriesName).Points.AddXY(
+                xValue:=s_sgRecords(index:=0).OaDateTime(),
+                yValue)
+            chart.Series(name:=TargetSgSeriesName).Points.AddXY(
+                xValue:=s_sgRecords.Last.OaDateTime(),
+                yValue)
         End If
         If targetSsOnly Then Exit Sub
         For Each sgListIndex As IndexClass(Of SG) In s_sgRecords.WithIndex()
             Dim xValue As OADate = sgListIndex.Value.OaDateTime()
             Try
-                Dim limitsLowValue As Single = s_limitRecords(index:=limitsIndexList(sgListIndex.Index)).LowLimit
-                Dim limitsHighValue As Single = s_limitRecords(index:=limitsIndexList(sgListIndex.Index)).HighLimit
+                Dim limitsLowValue As Single =
+                    s_limitRecords(index:=limitsIndexList(sgListIndex.Index)).LowLimit
+                Dim limitsHighValue As Single =
+                    s_limitRecords(index:=limitsIndexList(sgListIndex.Index)).HighLimit
                 If limitsHighValue <> 0 Then
-                    chart.Series(HighLimitSeriesName).Points.AddXY(xValue, yValue:=limitsHighValue)
+                    chart.Series(HighLimitSeriesName).Points.AddXY(
+                        xValue,
+                        yValue:=limitsHighValue)
                 End If
                 If limitsLowValue <> 0 Then
-                    chart.Series(LowLimitSeriesName).Points.AddXY(xValue, yValue:=limitsLowValue)
+                    chart.Series(LowLimitSeriesName).Points.AddXY(
+                        xValue,
+                        yValue:=limitsLowValue)
                 End If
             Catch innerException As Exception
                 Stop

@@ -236,8 +236,8 @@ Public Class DataGridViewNumericUpDownColumn
     '''  <see cref="DataGridViewNumericUpDownCell"/> cell type.
     ''' </summary>
     <Category("Data"),
-        DefaultValue(DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultThousandsSeparator),
-        Description("Indicates whether the thousands separator will be inserted between every three decimal digits.")>
+        DefaultValue(DataGridViewNumericUpDownCell.DefaultThousandsSeparator),
+        Description("Should separator be inserted between 3 decimal digits.")>
     Public Property ThousandsSeparator As Boolean
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then
@@ -274,7 +274,8 @@ Public Class DataGridViewNumericUpDownColumn
     End Property
 
     ''' <summary>
-    '''  Small utility function that returns the template cell as a <see cref="DataGridViewNumericUpDownCell"/>
+    '''  Small utility function that returns the template cell as a
+    '''  <see cref="DataGridViewNumericUpDownCell"/>
     ''' </summary>
     Private ReadOnly Property NumericUpDownCellTemplate As DataGridViewNumericUpDownCell
         Get

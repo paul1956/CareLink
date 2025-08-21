@@ -126,18 +126,23 @@ Public Class StringExtensionsTests
     End Sub
 
     <Fact>
-    Public Sub FindIndexOfAnyChar_ShouldThrowException_WhenCharsIsNothing()
+    Public Sub FindIndexOfAnyChar_ShouldThrow_WhenCharsIsNothing()
         ' Act
         Dim act As Action = Sub()
-                                FindIndexOfAnyChar(inputString:="abc", chars:=Nothing, startIndex:=0)
+                                FindIndexOfAnyChar(
+                                    inputString:="abc",
+                                    chars:=Nothing,
+                                    startIndex:=0)
                             End Sub
 
         ' Assert
-        act.Should().Throw(Of ArgumentException)().WithMessage(expectedWildcardPattern:="Invalid input parameters.")
+        act.Should() _
+           .Throw(Of ArgumentException)() _
+           .WithMessage(expectedWildcardPattern:="Invalid input parameters.")
     End Sub
 
     <Fact>
-    Public Sub FindIndexOfAnyChar_ShouldThrowException_WhenStartIndexIsGreaterThanOrEqualLength()
+    Public Sub FindIndexOfAnyChar_ShouldThrow_WhenStartIndexIsGreaterThanOrEqualLength()
         ' Arrange
         Dim inputString As String = "abc"
         Dim chars As New List(Of Char) From {"a"c, "b"c}
@@ -149,11 +154,13 @@ Public Class StringExtensionsTests
                             End Sub
 
         ' Assert
-        act.Should().Throw(Of ArgumentException)().WithMessage(expectedWildcardPattern:="Invalid input parameters.")
+        act.Should() _
+           .Throw(Of ArgumentException)() _
+           .WithMessage(expectedWildcardPattern:="Invalid input parameters.")
     End Sub
 
     <Fact>
-    Public Sub FindIndexOfAnyChar_ShouldThrowException_WhenStartIndexIsNegative()
+    Public Sub FindIndexOfAnyChar_ShouldThrow_WhenStartIndexIsNegative()
         ' Arrange
         Dim chars As New List(Of Char) From {"a"c, "b"c}
 
@@ -163,7 +170,9 @@ Public Class StringExtensionsTests
                             End Sub
 
         ' Assert
-        act.Should().Throw(Of ArgumentException)().WithMessage(expectedWildcardPattern:="Invalid input parameters.")
+        act.Should() _
+           .Throw(Of ArgumentException)() _
+           .WithMessage(expectedWildcardPattern:="Invalid input parameters.")
     End Sub
 
     <Fact>
@@ -318,7 +327,7 @@ Public Class StringExtensionsTests
     End Sub
 
     <Fact>
-    Public Sub ToTitle_SeparateNumbersInsertsSpaceAndLowercasesDigit_WhenSeparateNumbersIsTrueAndFirstCharIsDigit()
+    Public Sub ToTitle_SeparateNumberInsertsSpaceLowerDigit_WhenSeparateNumbersFirstCharDigit()
         Dim input As String = "1test"
         Dim result As String = input.ToTitle(separateDigits:=True)
         result.Should().Be(expected:="1 Test")

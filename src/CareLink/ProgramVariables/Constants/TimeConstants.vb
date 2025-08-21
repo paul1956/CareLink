@@ -37,9 +37,12 @@ Friend Module TimeConstants
 
 #Region "Millisecond Constants"
 
-    Public ReadOnly Property OneMinutesInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds)
-    Public ReadOnly Property ThirtySecondInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds / 2)
-    Public ReadOnly Property FiveMinutesInMilliseconds As Integer = CInt(FiveMinuteSpan.TotalMilliseconds)
+    Public ReadOnly Property OneMinutesInMilliseconds As Integer =
+        CInt(OneMinuteSpan.TotalMilliseconds)
+    Public ReadOnly Property ThirtySecondInMilliseconds As Integer =
+        CInt(OneMinuteSpan.TotalMilliseconds / 2)
+    Public ReadOnly Property FiveMinutesInMilliseconds As Integer =
+        CInt(FiveMinuteSpan.TotalMilliseconds)
 
 #End Region ' Millisecond Constants
 

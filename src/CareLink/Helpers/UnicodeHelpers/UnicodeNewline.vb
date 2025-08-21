@@ -198,7 +198,10 @@ Public Module UnicodeNewline
     ''' <param name="substituteChar">Default is vbNullChar</param>
     ''' <returns>String with Unicode NewLines replaced with SubstituteChar</returns>
     <Extension>
-    Public Function WithoutNewLines(text As String, Optional substituteChar As Char = ControlChars.NullChar) As String
+    Public Function WithoutNewLines(
+        text As String,
+        Optional substituteChar As Char = ControlChars.NullChar) As String
+
         ArgumentNullException.ThrowIfNull(text)
 
         Dim sb As New StringBuilder()

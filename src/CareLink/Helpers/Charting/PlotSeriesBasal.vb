@@ -67,10 +67,9 @@ Friend Module PlotSeriesBasal
     ''' </param>
     ''' <param name="tag">A tag string to associate with the points.</param>
     ''' <remarks>
-    '''   <para>
-    '''    Draws the basal profile either from the bottom or at a specified row, with color and tag information.
-    '''    Uses <see cref="AddBasalPoint"/> to add each segment of the basal series.
-    '''   </para>
+    '''  Draws the basal profile either from the bottom or at a specified row,
+    '''  with color and tag information.
+    '''  Uses <see cref="AddBasalPoint"/> to add each segment of the basal series.
     ''' </remarks>
     <Extension>
     Friend Sub PlotBasalSeries(
@@ -95,14 +94,22 @@ Friend Module PlotSeriesBasal
             basalSeries.AddBasalPoint(xValue, yValue:=0, lineColor, tag)
             basalSeries.AddBasalPoint(xValue, yValue, lineColor, tag)
             basalSeries.AddBasalPoint(xValue, yValue:=0, lineColor, tag)
-            basalSeries.AddBasalPoint(xValue, yValue:=Double.NaN, lineColor:=Color.Transparent, tag)
+            basalSeries.AddBasalPoint(
+                xValue,
+                yValue:=Double.NaN,
+                lineColor:=Color.Transparent,
+                tag)
         Else
             xValue = markerOADateTime + TwoMinutes30SecondsOADate
             yValue = bolusRow - ((bolusRow - insulinRow) * (amount / MaxBasalPerDose))
             basalSeries.AddBasalPoint(xValue, yValue:=bolusRow, lineColor, tag)
             basalSeries.AddBasalPoint(xValue, yValue, lineColor, tag)
             basalSeries.AddBasalPoint(xValue, yValue:=bolusRow, lineColor, tag)
-            basalSeries.AddBasalPoint(xValue, yValue:=Double.NaN, lineColor:=Color.Transparent, tag)
+            basalSeries.AddBasalPoint(
+                xValue,
+                yValue:=Double.NaN,
+                lineColor:=Color.Transparent,
+                tag)
         End If
     End Sub
 

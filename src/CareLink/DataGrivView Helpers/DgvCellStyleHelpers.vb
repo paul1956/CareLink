@@ -177,7 +177,10 @@ Public Module DgvCellStyleHelpers
     '''  Determines if the row uses a dark background color.
     ''' </summary>
     ''' <param name="row">The <see cref="DataGridViewRow"/> to check.</param>
-    ''' <returns><see langword="True"/> if the row uses a dark color; otherwise, <see langword="False"/>.</returns>
+    ''' <returns>
+    '''  <see langword="True"/> if the row uses a dark color;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
     <Extension>
     Friend Function IsDarkRow(row As DataGridViewRow) As Boolean
         Return row.Index Mod 2 = 1
@@ -206,10 +209,15 @@ Public Module DgvCellStyleHelpers
     End Function
 
     ''' <summary>
-    '''  Sets the cell value to <see cref="String.Empty"/> if the value is <see langword="Nothing"/> or "0".
-    '''  This is used to avoid displaying "0" in cells where it is not meaningful, such as in a duration column.
+    '''  Sets the cell value to <see cref="String.Empty"/> if the
+    '''  value is <see langword="Nothing"/> or "0".
+    '''  This is used to avoid displaying "0" in cells where it is not meaningful,
+    '''  such as in a duration column.
     ''' </summary>
-    ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell
+    '''  being formatted.
+    ''' </param>
     <Extension>
     Public Sub CellFormatting0Value(ByRef e As DataGridViewCellFormattingEventArgs)
         Dim value As String = Convert.ToString(e.Value)
@@ -221,12 +229,17 @@ Public Module DgvCellStyleHelpers
 
     ''' <summary>
     '''  Applies a <see cref="Color"/> to the cell based on whether it is a URI or not.
-    '''  If it is a URI, it applies a purple color; otherwise, it applies the specified highlight color.
+    '''  If it is a URI, it applies a purple color;
+    '''  otherwise, it applies the specified highlight color.
     '''  Colored cells are also set to bold font style.
-    '''  This is useful for highlighting important cells, such as those containing URIs or other significant values.
+    '''  This is useful for highlighting important cells,
+    '''  such as those containing URIs or other significant values.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
-    ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
+    '''  the cell being formatted.
+    ''' </param>
     ''' <param name="textColor">The color to use for highlighting.</param>
     ''' <param name="isUri">Indicates if the cell value is a URI.</param>
     ''' <param name="emIncrease"></param>
@@ -247,11 +260,13 @@ Public Module DgvCellStyleHelpers
         If value = ClickToShowDetails Then
             e.Value = value
             Dim row As DataGridViewRow = dgv.Rows(index:=e.RowIndex)
-            row.Cells(index:=e.ColumnIndex).ToolTipText = $"{ClickToShowDetails} for {row.Cells(index:=1).Value}."
+            row.Cells(index:=e.ColumnIndex).ToolTipText =
+                $"{ClickToShowDetails} for {row.Cells(index:=1).Value}."
         End If
         With e.CellStyle
             If isUri Then
-                Dim foregroundColor As Color = dgv.Rows(index:=e.RowIndex).GetTextColor(textColor:=Color.Purple)
+                Dim foregroundColor As Color =
+                    dgv.Rows(index:=e.RowIndex).GetTextColor(textColor:=Color.Purple)
                 If dgv.Rows(index:=e.RowIndex).IsDarkRow() Then
                     .SelectionBackColor = foregroundColor.ContrastingColor()
                     .SelectionForeColor = foregroundColor
@@ -262,7 +277,10 @@ Public Module DgvCellStyleHelpers
             Else
                 .ForeColor = dgv.Rows(index:=e.RowIndex).GetTextColor(textColor)
             End If
-            .Font = New Font(family:= .Font.FontFamily, emSize:= .Font.Size + emIncrease, style:=FontStyle.Italic)
+            .Font = New Font(
+                family:= .Font.FontFamily,
+                emSize:= .Font.Size + emIncrease,
+                style:=FontStyle.Italic)
         End With
         e.FormattingApplied = True
     End Sub
@@ -273,9 +291,15 @@ Public Module DgvCellStyleHelpers
     '''  It also sets the foreground color based on the row's text color.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
-    ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
+    '''  the cell being formatted.
+    ''' </param>
     <Extension>
-    Public Sub CellFormattingDateTime(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Public Sub CellFormattingDateTime(
+        dgv As DataGridView,
+        ByRef e As DataGridViewCellFormattingEventArgs)
+
         Dim value As String = Convert.ToString(e.Value)
         If value <> String.Empty Then
             Try
@@ -288,10 +312,14 @@ Public Module DgvCellStyleHelpers
     End Sub
 
     ''' <summary>
-    '''  Formats the cell value as an integer with a message appended, and sets the foreground color.
+    '''  Formats the cell value as an integer with a message appended,
+    '''  and sets the foreground color.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
-    ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for the
+    '''  cell being formatted.
+    ''' </param>
     ''' <param name="message">The message to append to the value.</param>
     <Extension>
     Public Sub CellFormattingInteger(
@@ -307,12 +335,16 @@ Public Module DgvCellStyleHelpers
     '''  Sets the foreground <see cref="Color"/> of a cell based on the row's text color.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
-    ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
+    '''  the cell being formatted.
+    ''' </param>
     <Extension>
     Public Sub CellFormattingSetForegroundColor(
         dgv As DataGridView,
         ByRef e As DataGridViewCellFormattingEventArgs)
-        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
+        Dim col As DataGridViewTextBoxColumn =
+            TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
 
         If col IsNot Nothing Then
             e.Value = $"{e.Value}"
@@ -321,17 +353,24 @@ Public Module DgvCellStyleHelpers
             If argb <> Color.Black.ToArgb() AndAlso argb <> Color.White.ToArgb() Then
                 e.CellStyle.ForeColor = dgv.Rows(index:=e.RowIndex).GetTextColor(textColor)
             End If
-            e.CellStyle.Font = New Font(prototype:=e.CellStyle.Font, newStyle:=FontStyle.Regular)
+            e.CellStyle.Font =
+                New Font(prototype:=e.CellStyle.Font, newStyle:=FontStyle.Regular)
             e.FormattingApplied = True
         End If
     End Sub
 
     ''' <summary>
-    '''  Formats the cell value as an SG (Sensor Glucose) value, applying color based on TIR (Time In Range) limits.
+    '''  Formats the cell value as an SG (Sensor Glucose) value,
+    '''  applying color based on TIR (Time In Range) limits.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
-    ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
-    ''' <param name="partialKey">The partial column name key to match for formatting.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
+    '''  the cell being formatted.
+    ''' </param>
+    ''' <param name="partialKey">
+    '''  The partial column name key to match for formatting.
+    ''' </param>
     <Extension>
     Public Sub CellFormattingSgValue(
         dgv As DataGridView,
@@ -381,11 +420,15 @@ Public Module DgvCellStyleHelpers
     End Sub
 
     ''' <summary>
-    '''  Formats the cell value as a single-precision floating point value with the specified number of digits.
+    '''  Formats the cell value as a single-precision floating point
+    '''  value with the specified number of digits.
     '''  Also sets the foreground color.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
-    ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
+    '''  the cell being formatted.
+    ''' </param>
     ''' <param name="digits">The number of decimal digits to display.</param>
     ''' <returns>The parsed single value.</returns>
     <Extension>
@@ -402,16 +445,24 @@ Public Module DgvCellStyleHelpers
     End Function
 
     ''' <summary>
-    '''  Formats the cell value to center-align it if it contains a single word (no spaces) and column is not 0.
+    '''  Formats the cell value to center-align it if it contains
+    '''  a single word (no spaces) and column is not 0.
     '''  This is useful for displaying single-word values in a visually appealing manner.
     '''  Only alphabetic words (A-Z, a-z) are considered.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
-    ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.
+    ''' </param>
     <Extension>
-    Public Sub CellFormattingSingleWord(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Public Sub CellFormattingSingleWord(
+        dgv As DataGridView,
+        ByRef e As DataGridViewCellFormattingEventArgs)
+
         Dim input As String = Convert.ToString(e.Value)
-        If e.ColumnIndex > 0 AndAlso Text.RegularExpressions.Regex.IsMatch(input, pattern:="^[A-Za-z]+$") Then
+        If e.ColumnIndex > 0 AndAlso
+           Text.RegularExpressions.Regex.IsMatch(input, pattern:="^[A-Za-z]+$") Then
+
             e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
         End If
         dgv.CellFormattingSetForegroundColor(e)
@@ -422,7 +473,9 @@ Public Module DgvCellStyleHelpers
     '''  Also sets the foreground color.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
-    ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.
+    ''' </param>
     <Extension>
     Public Sub CellFormattingToTitle(
         dgv As DataGridView,
@@ -436,14 +489,23 @@ Public Module DgvCellStyleHelpers
     '''  Formats the cell as a URL, applying a color based on selection state.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
-    ''' <param name="e">The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.
+    ''' </param>
     <Extension>
-    Public Sub CellFormattingUrl(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Public Sub CellFormattingUrl(
+        dgv As DataGridView,
+        ByRef e As DataGridViewCellFormattingEventArgs)
+
         e.Value = Convert.ToString(e.Value)
-        If dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex).Equals(dgv.CurrentCell) Then
+        Dim cell As DataGridViewCell = dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex)
+        If cell.Equals(obj:=dgv.CurrentCell) Then
             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Purple, isUri:=True)
         Else
-            dgv.CellFormattingApplyBoldColor(e, textColor:=Color.FromArgb(red:=0, green:=160, blue:=204), isUri:=True)
+            dgv.CellFormattingApplyBoldColor(
+                e,
+                textColor:=Color.FromArgb(red:=0, green:=160, blue:=204),
+                isUri:=True)
         End If
         e.FormattingApplied = True
     End Sub

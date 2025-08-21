@@ -43,11 +43,15 @@ Public Class SgMiniForm
         End If
     End Function
 
-    Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs) Handles ActiveInsulinTextBox.GotFocus
+    Private Sub ActiveInsulinTextBox_GotFocus(sender As Object, e As EventArgs) _
+        Handles ActiveInsulinTextBox.GotFocus
+
         Me.HiddenTextBox.Focus()
     End Sub
 
-    Private Sub ChkTopMost_CheckedChanged(sender As Object, e As EventArgs) Handles ChkTopMost.CheckedChanged
+    Private Sub ChkTopMost_CheckedChanged(sender As Object, e As EventArgs) _
+        Handles ChkTopMost.CheckedChanged
+
         Me.TopMost = Me.ChkTopMost.Checked
     End Sub
 

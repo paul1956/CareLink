@@ -12,10 +12,14 @@ Friend Module CalloutHelpers
 
     ''' <summary>
     '''  Adds or updates a callout annotation for the last data point in the treatment chart.
-    '''  If an annotation already exists for the last data point, it updates the text and position.
-    '''  If no annotation exists, it creates a new <see cref="CalloutAnnotation"/> with the specified tag text.
+    '''  If an annotation already exists for the last data point, it updates the text
+    '''  and position.
+    '''  If no annotation exists, it creates a new <see cref="CalloutAnnotation"/>
+    '''  with the specified tag text.
     ''' </summary>
-    ''' <param name="treatmentChart">The chart to which the annotation will be added or updated.</param>
+    ''' <param name="treatmentChart">
+    '''  The chart to which the annotation will be added or updated.
+    ''' </param>
     ''' <param name="lastDataPoint">The data point to anchor the annotation to.</param>
     ''' <param name="tagText">The text to display in the annotation.</param>
     <Extension>
@@ -99,14 +103,21 @@ Friend Module CalloutHelpers
     End Sub
 
     ''' <summary>
-    '''  Finds the <see cref="CalloutAnnotation"/> associated with the last data point in the treatment chart.
+    '''  Finds the <see cref="CalloutAnnotation"/> associated with the last data point
+    '''  in the treatment chart.
     '''  If no annotation exists for the last data point, it returns <see langword="Nothing"/>.
     ''' </summary>
     ''' <param name="treatmentChart">The chart to search for the annotation.</param>
     ''' <param name="lastDataPoint">The data point to find the annotation for.</param>
-    ''' <returns>A <see cref="CalloutAnnotation"/> if found; otherwise, <see langword="Nothing"/>.</returns>
+    ''' <returns>
+    '''  A <see cref="CalloutAnnotation"/> if found;
+    '''  otherwise, <see langword="Nothing"/>.
+    ''' </returns>
     <Extension>
-    Friend Function FindAnnotation(treatmentChart As Chart, lastDataPoint As DataPoint) As CalloutAnnotation
+    Friend Function FindAnnotation(
+        treatmentChart As Chart,
+        lastDataPoint As DataPoint) As CalloutAnnotation
+
         For Each e As IndexClass(Of Annotation) In treatmentChart.Annotations.ToList.WithIndex
             Dim annotation As CalloutAnnotation = CType(e.Value, CalloutAnnotation)
             If annotation.AnchorDataPoint Is Nothing Then Continue For
@@ -129,7 +140,11 @@ Friend Module CalloutHelpers
     ''' <param name="currentDataPoint">The data point to anchor the annotation to.</param>
     ''' <param name="annotationText">The text to display in the annotation.</param>
     <Extension>
-    Friend Sub SetupCallout(chart1 As Chart, currentDataPoint As DataPoint, annotationText As String)
+    Friend Sub SetupCallout(
+        chart1 As Chart,
+        currentDataPoint As DataPoint,
+        annotationText As String)
+
         If chart1.Name = "TreatmentMarkersChart" AndAlso
             (annotationText.StartsWith("Bolus ") OrElse
              annotationText.StartsWith("Meal ")) Then
@@ -146,13 +161,18 @@ Friend Module CalloutHelpers
 
     ''' <summary>
     '''  Sets up a callout annotation for the current data point in the chart.
-    '''  This method retrieves the annotation text based on the provided marker tag and applies it to the chart.
+    '''  This method retrieves the annotation text based on the provided marker tag
+    '''  and applies it to the chart.
     ''' </summary>
     ''' <param name="chart1">The chart to update the callout annotation for.</param>
     ''' <param name="currentDataPoint">The data point to anchor the annotation to.</param>
     ''' <param name="markerTag">An array of strings representing the marker tags.</param>
     <Extension>
-    Friend Sub SetUpCallout(chart1 As Chart, currentDataPoint As DataPoint, markerTag() As String)
+    Friend Sub SetUpCallout(
+        chart1 As Chart,
+        currentDataPoint As DataPoint,
+        markerTag() As String)
+
         Dim annotationText As String = GetAnnotationText(markerTag)
         chart1.SetupCallout(currentDataPoint, annotationText)
     End Sub

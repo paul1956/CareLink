@@ -62,11 +62,13 @@ Friend Module TimeZoneExtensions
     ''' </summary>
     ''' <param name="timeZoneName">The name or ID of the time zone to resolve.</param>
     ''' <returns>
-    '''  The resolved <see cref="TimeZoneInfo"/> if found; otherwise, <see cref="TimeZoneInfo.Local"/>.
+    '''  The resolved <see cref="TimeZoneInfo"/> if found;
+    '''  otherwise, <see cref="TimeZoneInfo.Local"/>.
     '''  Returns <see langword="Nothing"/> if the input is null or whitespace.
     ''' </returns>
     ''' <remarks>
-    '''  If <see cref="My.Settings.UseLocalTimeZone"/> is set, it returns <see cref="TimeZoneInfo.Local"/>.
+    '''  If <see cref="My.Settings.UseLocalTimeZone"/> is set,
+    '''  it returns <see cref="TimeZoneInfo.Local"/>.
     '''  Otherwise, it tries to find the time zone in the cache or system time zones.
     ''' </remarks>
     Friend Function CalculateTimeZone(timeZoneName As String) As TimeZoneInfo

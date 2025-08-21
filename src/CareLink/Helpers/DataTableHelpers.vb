@@ -13,7 +13,8 @@ Imports System.Runtime.CompilerServices
 Friend Module DataTableHelpers
 
     ''' <summary>
-    '''  Adds a <see cref="DataRow"/> to a <see cref="DataTable"/> from the public properties of a class.
+    '''  Adds a <see cref="DataRow"/> to a <see cref="DataTable"/> from
+    '''  the public properties of a class.
     ''' </summary>
     ''' <typeparam name="T">The type of the class to add as a row.</typeparam>
     ''' <param name="table">A reference to the DataTable to insert the DataRow into.</param>
@@ -42,7 +43,8 @@ Friend Module DataTableHelpers
     ''' </summary>
     ''' <typeparam name="T">The type of the class to create a DataTable from.</typeparam>
     ''' <returns>
-    '''  A DataTable who's DataColumns match the name and type of each class T's public properties.
+    '''  A DataTable who's DataColumns match the name and type of each
+    '''  class T's public properties.
     ''' </returns>
     Private Function ClassToDataTable(Of T As Class)() As DataTable
         Dim classType As Type = GetType(T)
@@ -76,9 +78,11 @@ Friend Module DataTableHelpers
             Dim column As New DataColumn With {
                 .ColumnName = [property].Name,
                 .Caption = GetColumnDisplayName([property]),
-                .DataType = If(IsNullableType(nullableType:=propertyType) AndAlso propertyType.IsGenericType,
-                               propertyType.GenericTypeArguments.FirstOrDefault(),
-                               propertyType)
+                .DataType =
+                If(IsNullableType(nullableType:=propertyType) AndAlso
+                        propertyType.IsGenericType,
+                   propertyType.GenericTypeArguments.FirstOrDefault(),
+                   propertyType)
             }
             result.Columns.Add(column)
         Next
@@ -87,7 +91,8 @@ Friend Module DataTableHelpers
     End Function
 
     ''' <summary>
-    '''  Gets the display name for a property, using the <see cref="DisplayNameAttribute"/> if present.
+    '''  Gets the display name for a property, using the
+    '''  <see cref="DisplayNameAttribute"/> if present.
     '''  Replaces spaces with non-breaking spaces for certain display names.
     ''' </summary>
     ''' <param name="property">The property to get the display name for.</param>
@@ -102,7 +107,8 @@ Friend Module DataTableHelpers
 
             ' Non-breaking space for better display
             Dim displayName As String = displayNameAttribute.DisplayName
-            If displayName.Contains(value:="From Pump") OrElse displayName.Contains(value:="As Date") Then
+            If displayName.Contains(value:="From Pump") OrElse
+                    displayName.Contains(value:="As Date") Then
                 displayName = displayName.Replace(oldValue:=" ", newValue:=NonBreakingSpace)
             End If
             Return displayName
@@ -130,8 +136,13 @@ Friend Module DataTableHelpers
     '''  The DataColumns of the table will match the name and type of the public properties.
     ''' </summary>
     ''' <param name="classCollection">A List(Of class) to fill the DataTable with.</param>
-    ''' <returns>A DataTable who's DataColumns match the name and type of each class T's public properties.</returns>
-    Public Function ClassCollectionToDataTable(Of T As Class)(classCollection As List(Of T)) As DataTable
+    ''' <returns>
+    '''  A DataTable who's DataColumns match the name and type of
+    '''  each class T's public properties.
+    ''' </returns>
+    Public Function ClassCollectionToDataTable(Of T As Class)(classCollection As List(Of T)) _
+        As DataTable
+
         Dim result As DataTable = ClassToDataTable(Of T)()
 
         If Not IsValidDataTable(result, IgnoreRows:=True) Then

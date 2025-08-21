@@ -13,7 +13,8 @@ Imports Spire.Pdf.Utilities
 Public Module PDFParser
 
     ''' <summary>
-    '''  Extracts the text content from a <see cref="PdfTable"/> and returns it as a <see cref="StringTable"/>.
+    '''  Extracts the text content from a <see cref="PdfTable"/> and
+    '''  returns it as a <see cref="StringTable"/>.
     ''' </summary>
     ''' <param name="table">The PDF table to extract text from.</param>
     ''' <returns>A <see cref="StringTable"/> containing the extracted text.</returns>
@@ -35,16 +36,19 @@ Public Module PDFParser
     End Function
 
     ''' <summary>
-    '''  Converts a <see cref="PdfTable"/> to a <see cref="StringTable"/> and validates the header.
+    '''  Converts a <see cref="PdfTable"/> to a <see cref="StringTable"/> and
+    '''  validates the header.
     ''' </summary>
     ''' <param name="table">The PDF table to convert.</param>
     ''' <param name="tableHeader">The expected header string for validation.</param>
     ''' <returns>
-    '''  A <see cref="StringTable"/> if the header matches; otherwise, a new empty <see cref="StringTable"/>.
+    '''  A <see cref="StringTable"/> if the header matches;
+    '''  otherwise, a new empty <see cref="StringTable"/>.
     ''' </returns>
     Public Function ConvertPdfTableToStringTable(table As PdfTable, tableHeader As String) As StringTable
         Dim sTable As StringTable = ExtractTableText(table)
-        If sTable.IsValid AndAlso sTable.Rows(index:=0).Columns(index:=0).StartsWith(value:=tableHeader) Then
+        If sTable.IsValid AndAlso
+           sTable.Rows(index:=0).Columns(index:=0).StartsWith(value:=tableHeader) Then
             Return sTable
         Else
             Stop

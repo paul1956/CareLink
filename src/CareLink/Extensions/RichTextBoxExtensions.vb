@@ -9,10 +9,25 @@ Friend Module RichTextBoxExtensions
     Private Const TotalWidth As Integer = 28
     Public Const Indent4 As String = "    "
     Public Const Indent8 As String = "        "
-    Public ReadOnly Property FixedWidthBoldFont As New Font(familyName:="Consolas", emSize:=14, style:=FontStyle.Bold)
-    Public ReadOnly Property FixedWidthFont As New Font(familyName:="Consolas", emSize:=14, style:=FontStyle.Regular)
-    Public ReadOnly Property HeadingBoldFont As New Font(familyName:="Segoe UI", emSize:=16, style:=FontStyle.Bold)
-    Public ReadOnly Property HeadingFont As New Font(familyName:="Segoe UI", emSize:=16, style:=FontStyle.Regular)
+    Public ReadOnly Property FixedWidthBoldFont As New Font(
+        familyName:="Consolas",
+        emSize:=14,
+        style:=FontStyle.Bold)
+
+    Public ReadOnly Property FixedWidthFont As New Font(
+        familyName:="Consolas",
+        emSize:=14,
+        style:=FontStyle.Regular)
+
+    Public ReadOnly Property HeadingBoldFont As New Font(
+        familyName:="Segoe UI",
+        emSize:=16,
+        style:=FontStyle.Bold)
+
+    Public ReadOnly Property HeadingFont As New Font(
+        familyName:="Segoe UI",
+        emSize:=16,
+        style:=FontStyle.Regular)
 
     ''' <summary>
     '''  Returns a string representation of a <see cref="TimeOnly"/> value,
@@ -33,7 +48,8 @@ Friend Module RichTextBoxExtensions
     End Function
 
     ''' <summary>
-    '''  Returns a string representation of the given text, centered within a specified total width.
+    '''  Returns a string representation of the given text, centered within
+    '''  a specified total width.
     ''' </summary>
     ''' <param name="text">The text to center.</param>
     ''' <returns>A centered string representation of the text.</returns>
@@ -142,7 +158,8 @@ Friend Module RichTextBoxExtensions
         Optional symbol As String = Gear,
         Optional includeNewLine As Boolean = True)
 
-        Dim splitText() As String = text.Split(separator:=symbol, options:=StringSplitOptions.None)
+        Dim splitText() As String =
+            text.Split(separator:=symbol, options:=StringSplitOptions.None)
         rtb.AppendTextWithFontChange(text:=splitText(0), newFont:=HeadingBoldFont, padRight:=0)
         If splitText.Length > 1 Then
             Dim bufferLength As Integer = rtb.Text.Length
@@ -160,7 +177,10 @@ Friend Module RichTextBoxExtensions
             rtb.SelectionStart = rtb.Text.Length
             rtb.SelectionBackColor = SystemColors.Window
             rtb.SelectionColor = SystemColors.WindowText
-            rtb.AppendTextWithFontChange(text:=splitText(1), newFont:=HeadingBoldFont, padRight:=0)
+            rtb.AppendTextWithFontChange(
+                text:=splitText(1),
+                newFont:=HeadingBoldFont,
+                padRight:=0)
         End If
         If includeNewLine Then
             rtb.AppendNewLine
@@ -203,7 +223,8 @@ Friend Module RichTextBoxExtensions
     End Sub
 
     ' <summary>
-    '''  Appends a time value row to the <see cref="RichTextBox"/> with start and end times as strings.
+    '''  Appends a time value row to the <see cref="RichTextBox"/> with start
+    '''  and end times as strings.
     ''' </summary>
     ''' <param name="rtb">
     '''  The <see cref="RichTextBox"/> to append the time value row to.

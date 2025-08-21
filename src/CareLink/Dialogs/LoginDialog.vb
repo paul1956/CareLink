@@ -61,7 +61,9 @@ Public Class LoginDialog
     '''  Handles the Cancel button click event, setting a flag to indicate cancellation.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <param name="e">
+    '''  The <see cref="EventArgs"/> instance containing the event data.
+    ''' </param>
     ''' <remarks>
     '''  This method sets a flag to indicate that the operation was cancelled
     '''  and hides the dialog.
@@ -79,7 +81,9 @@ Public Class LoginDialog
     '''  toggling visibility of the Patient User ID controls.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <param name="e">
+    '''  The <see cref="EventArgs"/> instance containing the event data.
+    ''' </param>
     ''' <remarks>
     '''  If the Care Partner checkbox is checked, the Patient User ID label
     '''  and textbox are made visible. If unchecked, they are hidden.
@@ -90,7 +94,8 @@ Public Class LoginDialog
         Dim careLinkPartner As Boolean = Me.CarePartnerCheckBox.Checked
         Me.PatientUserIDLabel.Visible = careLinkPartner
         Me.PatientUserIDTextBox.Visible = careLinkPartner
-        If careLinkPartner AndAlso String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text) Then
+        If careLinkPartner AndAlso
+           String.IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text) Then
             Me.PatientUserIDTextBox.Focus()
         End If
     End Sub
@@ -100,7 +105,9 @@ Public Class LoginDialog
     '''  updating the current date culture.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <param name="e">
+    '''  The <see cref="EventArgs"/> instance containing the event data.
+    ''' </param>
     ''' <remarks>
     '''  This method updates the CurrentDateCulture based on the selected
     '''  country in the CountryComboBox.
@@ -123,7 +130,9 @@ Public Class LoginDialog
     '''  initializes the form controls and settings.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <param name="e">
+    '''  The <see cref="EventArgs"/> instance containing the event data.
+    ''' </param>
     ''' <remarks>
     '''  This method sets the dialog icon, initializes the HTTP client,
     '''  loads user settings, and populates the username and region combo boxes.
@@ -151,7 +160,8 @@ Public Class LoginDialog
                      ' username=name
                 Case param.StartsWithIgnoreCase(value:="UserName")
                     Dim arg As String() = param.Split(separator:="=")
-                    If arg.Length = 2 AndAlso s_allUserSettingsData.TryGetValue(key:=arg(1), userRecord) Then
+                    If arg.Length = 2 AndAlso
+                       s_allUserSettingsData.TryGetValue(key:=arg(1), userRecord) Then
                         userRecord.UpdateSettings()
                     End If
             End Select
@@ -199,10 +209,13 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the dialog <see cref="Shown"/> event, sets the initial height and visibility.
+    '''  Handles the dialog <see cref="Shown"/> event, sets the initial
+    '''  height and visibility.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <param name="e">
+    '''  The <see cref="EventArgs"/> instance containing the event data.
+    ''' </param>
     ''' <remarks>
     '''  This method sets the dialog's height to the initial height and makes it visible.
     '''  If the login source is automatic, it triggers the OK button click event.
@@ -219,7 +232,9 @@ Public Class LoginDialog
     '''  Handles the OK button click event, validates input and attempts to log in.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <param name="e">
+    '''  The <see cref="EventArgs"/> instance containing the event data.
+    ''' </param>
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
         If Me.UsernameComboBox.Text.Length = 0 Then
             Me.UsernameComboBox.Focus()
@@ -350,7 +365,9 @@ Public Class LoginDialog
     '''  Handles the Password TextBox validating event, ensures password is not empty.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
+    ''' <param name="e">
+    '''  The <see cref="CancelEventArgs"/> instance containing the event data.
+    ''' </param>
     ''' <remarks>
     '''  If the password is empty, it cancels the event and focuses on the PasswordTextBox.
     '''  If a username is selected, it enables the OK button.
@@ -376,7 +393,9 @@ Public Class LoginDialog
     '''  updates the Country ComboBox based on the selected region.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <param name="e">
+    '''  The <see cref="EventArgs"/> instance containing the event data.
+    ''' </param>
     ''' <remarks>
     '''  This method populates the CountryComboBox with countries from the selected region.
     ''' </remarks>
@@ -408,7 +427,9 @@ Public Class LoginDialog
     '''  toggles the visibility of the password in the PasswordTextBox.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <param name="e">
+    '''  The <see cref="EventArgs"/> instance containing the event data.
+    ''' </param>
     ''' <remarks>
     '''  If the checkbox is checked, the password is shown as plain text;
     '''  if unchecked, it is masked with an asterisk character.
@@ -422,9 +443,11 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="UsernameComboBox"/> leave event, loads user settings for the entered username.
+    '''  Handles the <see cref="UsernameComboBox"/> leave event,
+    '''  loads user settings for the entered username.
     ''' </summary>
-    Private Sub UsernameComboBox_Leave(sender As Object, e As EventArgs) Handles UsernameComboBox.Leave
+    Private Sub UsernameComboBox_Leave(sender As Object, e As EventArgs) _
+        Handles UsernameComboBox.Leave
         Try
 
             Dim userRecord As CareLinkUserDataRecord = Nothing

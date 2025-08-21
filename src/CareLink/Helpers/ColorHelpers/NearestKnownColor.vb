@@ -3,17 +3,20 @@
 ' See the LICENSE file in the project root for more information.
 
 ''' <summary>
-'''  Provides helper methods for finding the nearest <see cref="KnownColor"/> to a given <see cref="Color"/>.
+'''  Provides helper methods for finding the nearest <see cref="KnownColor"/>
+'''  to a given <see cref="Color"/>.
 ''' </summary>
 Public Module NearestKnownColor
 
     ''' <summary>
-    '''  Calculates the difference between two colors in HSB (Hue, Saturation, Brightness) space.
+    '''  Calculates the difference between two colors in
+    '''  HSB (Hue, Saturation, Brightness) space.
     ''' </summary>
     ''' <param name="color1">The first color to compare.</param>
     ''' <param name="color2">The second color to compare.</param>
     ''' <returns>
-    '''  The sum of the absolute differences of hue, saturation, and brightness between the two colors.
+    '''  The sum of the absolute differences of hue, saturation,
+    '''  and brightness between the two colors.
     ''' </returns>
     Private Function HsbDifference(color1 As Color, color2 As Color) As Single
         Dim h, s, b As Single
@@ -65,12 +68,16 @@ Public Module NearestKnownColor
     ''' </summary>
     ''' <param name="col">The color to match.</param>
     ''' <param name="excludeSystemColors">
-    '''  If <see langword="True"/>, system colors are excluded from the search. Default is <see langword="True"/>.
+    '''  If <see langword="True"/>, system colors are excluded from the search.
+    '''  Default is <see langword="True"/>.
     ''' </param>
     ''' <returns>
     '''  The <see cref="KnownColor"/> that is closest to the specified <see cref="Color"/>.
     ''' </returns>
-    Public Function GetNearestKnownColor(col As Color, Optional excludeSystemColors As Boolean = True) As KnownColor
+    Public Function GetNearestKnownColor(
+        col As Color,
+        Optional excludeSystemColors As Boolean = True) As KnownColor
+
         Dim rgbList As New SortedList(Of Long, KnownColor)
         Dim key As Integer
         Dim hsb As Single, kColor As Color

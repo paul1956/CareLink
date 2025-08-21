@@ -231,11 +231,12 @@ Friend Module SummaryHelpers
                 Dim prompt As String = $"faultId = '{faultId}'"
                 If Debugger.IsAttached Then
                     Stop
+                    Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
                     MsgBox(
                         heading:="Unknown faultId",
                         prompt,
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                        title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
+                        title:=GetTitleFromStack(stackFrame))
                 End If
                 Return prompt
             End If
@@ -249,10 +250,12 @@ Friend Module SummaryHelpers
     '''  Gets the human-readable sensor update time string for a given key.
     ''' </summary>
     ''' <param name="key">The key representing the sensor update time.</param>
-    ''' <returns>The corresponding sensor update time string, or an error message if not found.</returns>
+    ''' <returns>
+    '''  The corresponding sensor update time string, or an error message if not found.
+    ''' </returns>
     Friend Function GetSensorUpdateTime(key As String) As String
         Dim sensorUpdateTime As String = String.Empty
-        If s_sensorUpdateTimes.TryGetValue(key, sensorUpdateTime) Then
+        If s_sensorUpdateTimes.TryGetValue(key, value:=sensorUpdateTime) Then
             Return sensorUpdateTime
         End If
         Stop
@@ -260,12 +263,15 @@ Friend Module SummaryHelpers
     End Function
 
     ''' <summary>
-    '''  Generates a list of <see cref="SummaryRecord"/> objects from a dictionary of key-value pairs.
+    '''  Generates a list of <see cref="SummaryRecord"/> objects from a dictionary
+    '''  of key-value pairs.
     '''  Optionally hides specified rows.
     ''' </summary>
     ''' <param name="jsonDictionary">The dictionary containing summary data.</param>
     ''' <param name="rowsToHide">An optional list of row keys to hide.</param>
-    ''' <returns>A list of <see cref="SummaryRecord"/> objects representing the summary.</returns>
+    ''' <returns>
+    '''  A list of <see cref="SummaryRecord"/> objects representing the summary.
+    ''' </returns>
     Friend Function GetSummaryRecords(
         jsonDictionary As Dictionary(Of String, String),
         Optional rowsToHide As List(Of String) = Nothing) As List(Of SummaryRecord)
@@ -277,7 +283,9 @@ Friend Module SummaryHelpers
                     Continue For
                 End If
                 If rowsToHide IsNot Nothing AndAlso
-                    rowsToHide.Contains(value:=kvp.Key, comparer:=StringComparer.OrdinalIgnoreCase) Then
+                    rowsToHide.Contains(
+                        value:=kvp.Key,
+                        comparer:=StringComparer.OrdinalIgnoreCase) Then
                     Continue For
                 End If
                 Dim recordNumber As Integer
@@ -285,11 +293,20 @@ Friend Module SummaryHelpers
                 Select Case kvp.Key
                     Case "faultId"
                         Dim message As String = String.Empty
-                        If s_notificationMessages.TryGetValue(key:=kvp.Value, value:=message) Then
-                            message = TranslateNotificationMessageId(jsonDictionary, faultId:=kvp.Value)
+                        If s_notificationMessages.TryGetValue(
+                            key:=kvp.Value,
+                            value:=message) Then
+
+                            message = TranslateNotificationMessageId(
+                                jsonDictionary,
+                                faultId:=kvp.Value)
                             If kvp.Value = "811" Then
-                                Dim key As String = NameOf(ActiveNotification.triggeredDateTime)
-                                If jsonDictionary.TryGetValue(key, value:=s_suspendedSince) Then
+                                Dim key As String =
+                                    NameOf(ActiveNotification.triggeredDateTime)
+                                If jsonDictionary.TryGetValue(
+                                    key,
+                                    value:=s_suspendedSince) Then
+
                                     Dim result As Date = Nothing
                                     key = NameOf(ActiveNotification.triggeredDateTime)
                                     s_suspendedSince =
@@ -308,8 +325,11 @@ Friend Module SummaryHelpers
                                 End If
                             End If
                         Else
-                            If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(kvp.Value) Then
-                                Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
+                            Dim stackFrame As StackFrame
+                            If Debugger.IsAttached AndAlso
+                                Not String.IsNullOrWhiteSpace(kvp.Value) Then
+
+                                stackFrame = New StackFrame(skipFrames:=0, needFileInfo:=True)
                                 MsgBox(
                                     heading:=$"{kvp.Value} is unknown Notification Messages",
                                     prompt:=String.Empty,
@@ -429,11 +449,12 @@ Friend Module SummaryHelpers
             Return CAnyType(Of T)(UTO:=UShort.MaxValue)
         Else
             If Debugger.IsAttached Then
+                Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
                 MsgBox(
                     heading:=$"{tReturnType} type is not yet defined.",
                     prompt:=String.Empty,
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                    title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
+                    title:=GetTitleFromStack(stackFrame))
             End If
             Return Nothing
         End If

@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Runtime.InteropServices
+
 ''' <summary>
 '''  Defines the editing control for the <see cref="DataGridViewNumericUpDownCell"/> custom cell type.
 '''  This control is hosted within a <see cref="DataGridView"/> when a cell enters edit mode,
@@ -19,8 +21,12 @@ Friend Class DataGridViewNumericUpDownEditingControl
     ''' <param name="wParam">First message parameter.</param>
     ''' <param name="lParam">Second message parameter.</param>
     ''' <returns>Result of the message processing.</returns>
-    <Runtime.InteropServices.DllImport("USER32.DLL", CharSet:=Runtime.InteropServices.CharSet.Auto)>
-    Private Shared Function SendMessage(hWnd As IntPtr, msg As Integer, wParam As IntPtr, lParam As IntPtr) As IntPtr
+    <DllImport("USER32.DLL", CharSet:=Runtime.InteropServices.CharSet.Auto)>
+    Private Shared Function SendMessage(
+        hWnd As IntPtr,
+        msg As Integer,
+        wParam As IntPtr,
+        lParam As IntPtr) As IntPtr
     End Function
 
     ''' <summary>
@@ -323,9 +329,12 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="Control.KeyPress"/> event to detect value changes and notify the grid.
+    '''  Handles the <see cref="Control.KeyPress"/> event to detect value changes
+    '''  and notify the grid.
     ''' </summary>
-    ''' <param name="e">A <see cref="KeyPressEventArgs"/> that contains the event data.</param>
+    ''' <param name="e">
+    '''  A <see cref="KeyPressEventArgs"/> that contains the event data.
+    ''' </param>
     Protected Overrides Sub OnKeyPress(e As KeyPressEventArgs)
         MyBase.OnKeyPress(e)
 
@@ -366,7 +375,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="NumericUpDown.ValueChanged"/> event to notify the grid of value changes.
+    '''  Handles the <see cref="NumericUpDown.ValueChanged"/> event to notify the
+    '''  grid of value changes.
     ''' </summary>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Protected Overrides Sub OnValueChanged(e As EventArgs)
@@ -385,8 +395,9 @@ Friend Class DataGridViewNumericUpDownEditingControl
     ''' <param name="m">
     '''  A <see cref="Message"/> that represents the window message to process.
     ''' </param>
-    ''' <returns><see langword="True"/>
-    '''  if the message was processed; otherwise, <see langword="False"/>.
+    ''' <returns>
+    '''  <see langword="True"/> if the message was processed;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Protected Overrides Function ProcessKeyEventArgs(ByRef m As Message) As Boolean
         Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)

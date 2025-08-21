@@ -65,7 +65,9 @@ Friend Module UpdateChecker
     ''' </summary>
     ''' <param name="gitHubVersion">The version string retrieved from GitHub.</param>
     ''' <param name="version">The current application version.</param>
-    ''' <returns><see langword="True"/> if application version or converter version is different</returns>
+    ''' <returns>
+    '''  <see langword="True"/> if application version or converter version is different
+    ''' </returns>
     Private Function IsNewerVersion(gitHubVersion As String, version As Version) As Boolean
         Return gitHubVersion IsNot Nothing AndAlso
             Not String.IsNullOrWhiteSpace(value:=gitHubVersion) AndAlso
@@ -73,11 +75,14 @@ Friend Module UpdateChecker
     End Function
 
     ''' <summary>
-    '''  Checks for updates by comparing the current application version with the latest version available on GitHub.
-    '''  If a newer version is found, notifies the user and optionally prompts to install the update.
+    '''  Checks for updates by comparing the current application version
+    '''  with the latest version available on GitHub.
+    '''  If a newer version is found, notifies the user and
+    '''  optionally prompts to install the update.
     ''' </summary>
     ''' <param name="reportSuccessfulResult">
-    '''  If <see langword="True"/>, always reports the result to the user, even if no update is available.
+    '''  If <see langword="True"/>, always reports the result to the user,
+    '''  even if no update is available.
     ''' </param>
     Friend Async Sub CheckForUpdatesAsync(reportSuccessfulResult As Boolean)
         Const heading As String =

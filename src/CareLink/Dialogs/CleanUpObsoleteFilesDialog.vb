@@ -61,7 +61,9 @@ Public Class CleanupStaleFilesDialog
         Me.Close()
     End Sub
 
-    Private Sub OkDoNotConfirm_Button_Click(sender As Object, e As EventArgs) Handles OkDoNotConfirm_Button.Click
+    Private Sub OkDoNotConfirm_Button_Click(sender As Object, e As EventArgs) _
+        Handles OkDoNotConfirm_Button.Click
+
         Me.DialogResult = Me.OptionalConfirmFileDelete(confirm:=False)
         Me.Close()
     End Sub
@@ -118,7 +120,9 @@ Public Class CleanupStaleFilesDialog
         End If
     End Sub
 
-    Private Sub TreeView1_BeforeCheck(sender As Object, e As TreeViewCancelEventArgs) Handles TreeView1.BeforeCheck
+    Private Sub TreeView1_BeforeCheck(sender As Object, e As TreeViewCancelEventArgs) _
+        Handles TreeView1.BeforeCheck
+
         If e.Node.Text.StartsWith(value:=BaseNameSavedErrorReport) Then
             e.Cancel = False
             Exit Sub
@@ -128,7 +132,9 @@ Public Class CleanupStaleFilesDialog
             Exit Sub
         End If
         If e.Node.Text = "Error Files" Then
-            If e.Action = TreeViewAction.ByKeyboard OrElse e.Action = TreeViewAction.ByMouse Then
+            If e.Action = TreeViewAction.ByKeyboard OrElse
+               e.Action = TreeViewAction.ByMouse Then
+
                 SetChildNodes(e.Node.Nodes, newValue:=Not e.Node.Checked)
                 e.Cancel = False
                 Exit Sub

@@ -178,8 +178,8 @@ Partial Class Form1
         TiTRMgsLabel = New Label()
         TiTRMgsLabel2 = New Label()
         SplitContainerNotificationsCleared = New SplitContainer()
-        TableLayoutPanelNotificationsClearedTop = New TableLayoutPanelTopEx()
-        TableLayoutPanelNotificationsCleared = New TableLayoutPanel()
+        TlpNotificationsClearedTop = New TableLayoutPanelTopEx()
+        TlpNotificationsCleared = New TableLayoutPanel()
         StatusStrip1 = New StatusStrip()
         StatusStripSpeech = New ToolStripStatusLabel()
         TimeZoneToolStripStatusLabel = New ToolStripStatusLabel()
@@ -190,58 +190,58 @@ Partial Class Form1
         TabPage03TreatmentDetails = New TabPage()
         TabPage04SummaryData = New TabPage()
         TabPage05ActiveInsulin = New TabPage()
-        TableLayoutPanelActiveInsulin = New TableLayoutPanel()
-        TableLayoutPanelActiveInsulinTop = New TableLayoutPanelTopEx()
+        TlpActiveInsulin = New TableLayoutPanel()
+        TlpActiveInsulinTop = New TableLayoutPanelTopEx()
         TabPage06Basal = New TabPage()
-        TableLayoutPanelBasal = New TableLayoutPanel()
-        TableLayoutPanelBasalTop = New TableLayoutPanelTopEx()
+        TlpBasal = New TableLayoutPanel()
+        TlpBasalTop = New TableLayoutPanelTopEx()
         TabPage07LastAlarm = New TabPage()
-        TableLayoutPanelLastAlarm = New TableLayoutPanel()
-        TableLayoutPanelLastAlarmTop = New TableLayoutPanelTopEx()
+        TlpLastAlarm = New TableLayoutPanel()
+        TlpLastAlarmTop = New TableLayoutPanelTopEx()
         TabPage08LastSG = New TabPage()
-        TableLayoutPanelLastSG = New TableLayoutPanel()
-        TableLayoutPanelLastSgTop = New TableLayoutPanelTopEx()
+        TlpLastSG = New TableLayoutPanel()
+        TlpLastSgTop = New TableLayoutPanelTopEx()
         TabPage09Limits = New TabPage()
-        TableLayoutPanelLimits = New TableLayoutPanel()
-        TableLayoutPanelLimitsTop = New TableLayoutPanelTopEx()
+        TlpLimits = New TableLayoutPanel()
+        TlpLimitsTop = New TableLayoutPanelTopEx()
         TabPage10NotificationActive = New TabPage()
-        TableLayoutPanelNotificationActive = New TableLayoutPanel()
-        TableLayoutPanelNotificationActiveTop = New TableLayoutPanelTopEx()
+        TlpNotificationActive = New TableLayoutPanel()
+        TlpNotificationActiveTop = New TableLayoutPanelTopEx()
         TabPage11NotificationsCleared = New TabPage()
         TabPage12PumpBannerState = New TabPage()
-        TableLayoutPanelPumpBannerState = New TableLayoutPanel()
-        TableLayoutPanelPumpBannerStateTop = New TableLayoutPanelTopEx()
+        TlpPumpBannerState = New TableLayoutPanel()
+        TlpPumpBannerStateTop = New TableLayoutPanelTopEx()
         TabPage13SensorGlucose = New TabPage()
-        TableLayoutPanelSgs = New TableLayoutPanel()
-        TableLayoutPanelSgsTop = New TableLayoutPanelTopEx()
+        TlpSgs = New TableLayoutPanel()
+        TlpSgsTop = New TableLayoutPanelTopEx()
         TabPage14TherapyAlgorithmState = New TabPage()
-        TableLayoutPanelTherapyAlgorithmState = New TableLayoutPanel()
-        TableLayoutPanelTherapyAlgorithmStateTop = New TableLayoutPanelTopEx()
+        TlpTherapyAlgorithmState = New TableLayoutPanel()
+        TlpTherapyAlgorithmStateTop = New TableLayoutPanelTopEx()
         TabPage15More = New TabPage()
         TabPage01AutoBasalDelivery = New TabPage()
-        TableLayoutPanelAutoBasalDelivery = New TableLayoutPanel()
-        TableLayoutPanelAutoBasalDeliveryTop = New TableLayoutPanelTopEx()
+        TlpAutoBasalDelivery = New TableLayoutPanel()
+        TlpAutoBasalDeliveryTop = New TableLayoutPanelTopEx()
         TabPage02AutoModeStatus = New TabPage()
-        TableLayoutPanelAutoModeStatus = New TableLayoutPanel()
-        TableLayoutPanelAutoModeStatusTop = New TableLayoutPanelTopEx()
+        TlpAutoModeStatus = New TableLayoutPanel()
+        TlpAutoModeStatusTop = New TableLayoutPanelTopEx()
         TabPage03BgReadings = New TabPage()
-        TableLayoutPanelBgReadings = New TableLayoutPanel()
-        TableLayoutPanelBgReadingsTop = New TableLayoutPanelTopEx()
+        TlpBgReadings = New TableLayoutPanel()
+        TlpBgReadingsTop = New TableLayoutPanelTopEx()
         TabPage04Calibration = New TabPage()
-        TableLayoutPanelCalibration = New TableLayoutPanel()
-        TableLayoutPanelCalibrationTop = New TableLayoutPanelTopEx()
+        TlpCalibration = New TableLayoutPanel()
+        TlpCalibrationTop = New TableLayoutPanelTopEx()
         TabPage05Insulin = New TabPage()
-        TableLayoutPanelInsulin = New TableLayoutPanel()
-        TableLayoutPanelInsulinTop = New TableLayoutPanelTopEx()
+        TlpInsulin = New TableLayoutPanel()
+        TlpInsulinTop = New TableLayoutPanelTopEx()
         TabPage06LowGlucoseSuspended = New TabPage()
-        TableLayoutPanelLowGlucoseSuspended = New TableLayoutPanel()
-        TableLayoutPanelLowGlucoseSuspendedTop = New TableLayoutPanelTopEx()
+        TlpLowGlucoseSuspended = New TableLayoutPanel()
+        TlpLowGlucoseSuspendedTop = New TableLayoutPanelTopEx()
         TabPage07Meal = New TabPage()
-        TableLayoutPanelMeal = New TableLayoutPanel()
-        TableLayoutPanelMealTop = New TableLayoutPanelTopEx()
+        TlpMeal = New TableLayoutPanel()
+        TlpMealTop = New TableLayoutPanelTopEx()
         TabPage08TimeChange = New TabPage()
-        TableLayoutPanelTimeChange = New TableLayoutPanel()
-        TableLayoutPanelTimeChangeTop = New TableLayoutPanelTopEx()
+        TlpTimeChange = New TableLayoutPanel()
+        TlpTimeChangeTop = New TableLayoutPanelTopEx()
         TabPage09BasalPerHour = New TabPage()
         TabPage10CurrentUser = New TabPage()
         TabPage11AllUsers = New TabPage()
@@ -304,40 +304,40 @@ Partial Class Form1
         TabPage02RunningIOB.SuspendLayout()
         TabPage04SummaryData.SuspendLayout()
         TabPage05ActiveInsulin.SuspendLayout()
-        TableLayoutPanelActiveInsulin.SuspendLayout()
+        TlpActiveInsulin.SuspendLayout()
         TabPage06Basal.SuspendLayout()
-        TableLayoutPanelBasal.SuspendLayout()
+        TlpBasal.SuspendLayout()
         TabPage07LastAlarm.SuspendLayout()
-        TableLayoutPanelLastAlarm.SuspendLayout()
+        TlpLastAlarm.SuspendLayout()
         TabPage08LastSG.SuspendLayout()
-        TableLayoutPanelLastSG.SuspendLayout()
+        TlpLastSG.SuspendLayout()
         TabPage09Limits.SuspendLayout()
-        TableLayoutPanelLimits.SuspendLayout()
+        TlpLimits.SuspendLayout()
         TabPage10NotificationActive.SuspendLayout()
-        TableLayoutPanelNotificationActive.SuspendLayout()
+        TlpNotificationActive.SuspendLayout()
         TabPage11NotificationsCleared.SuspendLayout()
         TabPage12PumpBannerState.SuspendLayout()
-        TableLayoutPanelPumpBannerState.SuspendLayout()
+        TlpPumpBannerState.SuspendLayout()
         TabPage13SensorGlucose.SuspendLayout()
-        TableLayoutPanelSgs.SuspendLayout()
+        TlpSgs.SuspendLayout()
         TabPage14TherapyAlgorithmState.SuspendLayout()
-        TableLayoutPanelTherapyAlgorithmState.SuspendLayout()
+        TlpTherapyAlgorithmState.SuspendLayout()
         TabPage01AutoBasalDelivery.SuspendLayout()
-        TableLayoutPanelAutoBasalDelivery.SuspendLayout()
+        TlpAutoBasalDelivery.SuspendLayout()
         TabPage02AutoModeStatus.SuspendLayout()
-        TableLayoutPanelAutoModeStatus.SuspendLayout()
+        TlpAutoModeStatus.SuspendLayout()
         TabPage03BgReadings.SuspendLayout()
-        TableLayoutPanelBgReadings.SuspendLayout()
+        TlpBgReadings.SuspendLayout()
         TabPage04Calibration.SuspendLayout()
-        TableLayoutPanelCalibration.SuspendLayout()
+        TlpCalibration.SuspendLayout()
         TabPage05Insulin.SuspendLayout()
-        TableLayoutPanelInsulin.SuspendLayout()
+        TlpInsulin.SuspendLayout()
         TabPage06LowGlucoseSuspended.SuspendLayout()
-        TableLayoutPanelLowGlucoseSuspended.SuspendLayout()
+        TlpLowGlucoseSuspended.SuspendLayout()
         TabPage07Meal.SuspendLayout()
-        TableLayoutPanelMeal.SuspendLayout()
+        TlpMeal.SuspendLayout()
         TabPage08TimeChange.SuspendLayout()
-        TableLayoutPanelTimeChange.SuspendLayout()
+        TlpTimeChange.SuspendLayout()
         TabPage09BasalPerHour.SuspendLayout()
         TabPage10CurrentUser.SuspendLayout()
         TabPage11AllUsers.SuspendLayout()
@@ -1953,46 +1953,46 @@ Partial Class Form1
         ' 
         ' SplitContainerNotificationsCleared.Panel1
         ' 
-        SplitContainerNotificationsCleared.Panel1.Controls.Add(TableLayoutPanelNotificationsClearedTop)
+        SplitContainerNotificationsCleared.Panel1.Controls.Add(TlpNotificationsClearedTop)
         ' 
         ' SplitContainerNotificationsCleared.Panel2
         ' 
-        SplitContainerNotificationsCleared.Panel2.Controls.Add(TableLayoutPanelNotificationsCleared)
+        SplitContainerNotificationsCleared.Panel2.Controls.Add(TlpNotificationsCleared)
         SplitContainerNotificationsCleared.Size = New Size(1376, 658)
         SplitContainerNotificationsCleared.SplitterDistance = 39
         SplitContainerNotificationsCleared.TabIndex = 0
         ' 
-        ' TableLayoutPanelNotificationsClearedTop
+        ' TlpNotificationsClearedTop
         ' 
-        TableLayoutPanelNotificationsClearedTop.AutoSize = True
-        TableLayoutPanelNotificationsClearedTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelNotificationsClearedTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelNotificationsClearedTop.ColumnCount = 2
-        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationsClearedTop.Dock = DockStyle.Fill
-        TableLayoutPanelNotificationsClearedTop.LabelText = "Notifications Cleared"
-        TableLayoutPanelNotificationsClearedTop.Location = New Point(0, 0)
-        TableLayoutPanelNotificationsClearedTop.Name = "TableLayoutPanelNotificationsClearedTop"
-        TableLayoutPanelNotificationsClearedTop.RowCount = 1
-        TableLayoutPanelNotificationsClearedTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationsClearedTop.Size = New Size(1376, 39)
-        TableLayoutPanelNotificationsClearedTop.TabIndex = 1
+        TlpNotificationsClearedTop.AutoSize = True
+        TlpNotificationsClearedTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpNotificationsClearedTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpNotificationsClearedTop.ColumnCount = 2
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.Dock = DockStyle.Fill
+        TlpNotificationsClearedTop.LabelText = "Notifications Cleared"
+        TlpNotificationsClearedTop.Location = New Point(0, 0)
+        TlpNotificationsClearedTop.Name = "TlpNotificationsClearedTop"
+        TlpNotificationsClearedTop.RowCount = 1
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.Size = New Size(1376, 39)
+        TlpNotificationsClearedTop.TabIndex = 1
         ' 
-        ' TableLayoutPanelNotificationsCleared
+        ' TlpNotificationsCleared
         ' 
-        TableLayoutPanelNotificationsCleared.AutoScroll = True
-        TableLayoutPanelNotificationsCleared.AutoSize = True
-        TableLayoutPanelNotificationsCleared.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelNotificationsCleared.ColumnCount = 1
-        TableLayoutPanelNotificationsCleared.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationsCleared.Dock = DockStyle.Fill
-        TableLayoutPanelNotificationsCleared.Location = New Point(0, 0)
-        TableLayoutPanelNotificationsCleared.Name = "TableLayoutPanelNotificationsCleared"
-        TableLayoutPanelNotificationsCleared.RowCount = 1
-        TableLayoutPanelNotificationsCleared.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationsCleared.Size = New Size(1376, 615)
-        TableLayoutPanelNotificationsCleared.TabIndex = 0
+        TlpNotificationsCleared.AutoScroll = True
+        TlpNotificationsCleared.AutoSize = True
+        TlpNotificationsCleared.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpNotificationsCleared.ColumnCount = 1
+        TlpNotificationsCleared.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsCleared.Dock = DockStyle.Fill
+        TlpNotificationsCleared.Location = New Point(0, 0)
+        TlpNotificationsCleared.Name = "TlpNotificationsCleared"
+        TlpNotificationsCleared.RowCount = 1
+        TlpNotificationsCleared.RowStyles.Add(New RowStyle())
+        TlpNotificationsCleared.Size = New Size(1376, 615)
+        TlpNotificationsCleared.TabIndex = 0
         ' 
         ' StatusStrip1
         ' 
@@ -2078,7 +2078,7 @@ Partial Class Form1
         ' 
         ' TabPage05ActiveInsulin
         ' 
-        TabPage05ActiveInsulin.Controls.Add(TableLayoutPanelActiveInsulin)
+        TabPage05ActiveInsulin.Controls.Add(TlpActiveInsulin)
         TabPage05ActiveInsulin.Location = New Point(4, 30)
         TabPage05ActiveInsulin.Name = "TabPage05ActiveInsulin"
         TabPage05ActiveInsulin.Size = New Size(1376, 658)
@@ -2086,43 +2086,43 @@ Partial Class Form1
         TabPage05ActiveInsulin.Text = "Active Insulin"
         TabPage05ActiveInsulin.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelActiveInsulin
+        ' TlpActiveInsulin
         ' 
-        TableLayoutPanelActiveInsulin.AutoSize = True
-        TableLayoutPanelActiveInsulin.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelActiveInsulin.ColumnCount = 1
-        TableLayoutPanelActiveInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelActiveInsulin.Controls.Add(TableLayoutPanelActiveInsulinTop, 0, 0)
-        TableLayoutPanelActiveInsulin.Controls.Add(DgvActiveInsulin, 0, 1)
-        TableLayoutPanelActiveInsulin.Dock = DockStyle.Fill
-        TableLayoutPanelActiveInsulin.Location = New Point(0, 0)
-        TableLayoutPanelActiveInsulin.Name = "TableLayoutPanelActiveInsulin"
-        TableLayoutPanelActiveInsulin.RowCount = 2
-        TableLayoutPanelActiveInsulin.RowStyles.Add(New RowStyle())
-        TableLayoutPanelActiveInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelActiveInsulin.Size = New Size(1376, 658)
-        TableLayoutPanelActiveInsulin.TabIndex = 0
+        TlpActiveInsulin.AutoSize = True
+        TlpActiveInsulin.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpActiveInsulin.ColumnCount = 1
+        TlpActiveInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulin.Controls.Add(TlpActiveInsulinTop, 0, 0)
+        TlpActiveInsulin.Controls.Add(DgvActiveInsulin, 0, 1)
+        TlpActiveInsulin.Dock = DockStyle.Fill
+        TlpActiveInsulin.Location = New Point(0, 0)
+        TlpActiveInsulin.Name = "TlpActiveInsulin"
+        TlpActiveInsulin.RowCount = 2
+        TlpActiveInsulin.RowStyles.Add(New RowStyle())
+        TlpActiveInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulin.Size = New Size(1376, 658)
+        TlpActiveInsulin.TabIndex = 0
         ' 
-        ' TableLayoutPanelActiveInsulinTop
+        ' TlpActiveInsulinTop
         ' 
-        TableLayoutPanelActiveInsulinTop.AutoSize = True
-        TableLayoutPanelActiveInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelActiveInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelActiveInsulinTop.ColumnCount = 2
-        TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelActiveInsulinTop.Dock = DockStyle.Fill
-        TableLayoutPanelActiveInsulinTop.LabelText = "Active Insulin"
-        TableLayoutPanelActiveInsulinTop.Location = New Point(3, 3)
-        TableLayoutPanelActiveInsulinTop.Name = "TableLayoutPanelActiveInsulinTop"
-        TableLayoutPanelActiveInsulinTop.RowCount = 1
-        TableLayoutPanelActiveInsulinTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelActiveInsulinTop.Size = New Size(1370, 37)
-        TableLayoutPanelActiveInsulinTop.TabIndex = 1
+        TlpActiveInsulinTop.AutoSize = True
+        TlpActiveInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpActiveInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpActiveInsulinTop.ColumnCount = 2
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.Dock = DockStyle.Fill
+        TlpActiveInsulinTop.LabelText = "Active Insulin"
+        TlpActiveInsulinTop.Location = New Point(3, 3)
+        TlpActiveInsulinTop.Name = "TlpActiveInsulinTop"
+        TlpActiveInsulinTop.RowCount = 1
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.Size = New Size(1370, 37)
+        TlpActiveInsulinTop.TabIndex = 1
         ' 
         ' TabPage06Basal
         ' 
-        TabPage06Basal.Controls.Add(TableLayoutPanelBasal)
+        TabPage06Basal.Controls.Add(TlpBasal)
         TabPage06Basal.Location = New Point(4, 30)
         TabPage06Basal.Name = "TabPage06Basal"
         TabPage06Basal.Size = New Size(1376, 658)
@@ -2130,46 +2130,46 @@ Partial Class Form1
         TabPage06Basal.Text = "Basal"
         TabPage06Basal.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelBasal
+        ' TlpBasal
         ' 
-        TableLayoutPanelBasal.AutoScroll = True
-        TableLayoutPanelBasal.AutoSize = True
-        TableLayoutPanelBasal.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelBasal.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelBasal.ColumnCount = 1
-        TableLayoutPanelBasal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBasal.Controls.Add(TableLayoutPanelBasalTop, 0, 0)
-        TableLayoutPanelBasal.Controls.Add(DgvBasal, 0, 1)
-        TableLayoutPanelBasal.Dock = DockStyle.Fill
-        TableLayoutPanelBasal.Location = New Point(0, 0)
-        TableLayoutPanelBasal.Margin = New Padding(0)
-        TableLayoutPanelBasal.Name = "TableLayoutPanelBasal"
-        TableLayoutPanelBasal.RowCount = 2
-        TableLayoutPanelBasal.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBasal.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBasal.Size = New Size(1376, 658)
-        TableLayoutPanelBasal.TabIndex = 0
+        TlpBasal.AutoScroll = True
+        TlpBasal.AutoSize = True
+        TlpBasal.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpBasal.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpBasal.ColumnCount = 1
+        TlpBasal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasal.Controls.Add(TlpBasalTop, 0, 0)
+        TlpBasal.Controls.Add(DgvBasal, 0, 1)
+        TlpBasal.Dock = DockStyle.Fill
+        TlpBasal.Location = New Point(0, 0)
+        TlpBasal.Margin = New Padding(0)
+        TlpBasal.Name = "TlpBasal"
+        TlpBasal.RowCount = 2
+        TlpBasal.RowStyles.Add(New RowStyle())
+        TlpBasal.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpBasal.Size = New Size(1376, 658)
+        TlpBasal.TabIndex = 0
         ' 
-        ' TableLayoutPanelBasalTop
+        ' TlpBasalTop
         ' 
-        TableLayoutPanelBasalTop.AutoSize = True
-        TableLayoutPanelBasalTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelBasalTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelBasalTop.ColumnCount = 2
-        TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBasalTop.Dock = DockStyle.Fill
-        TableLayoutPanelBasalTop.LabelText = "Basal"
-        TableLayoutPanelBasalTop.Location = New Point(6, 6)
-        TableLayoutPanelBasalTop.Name = "TableLayoutPanelBasalTop"
-        TableLayoutPanelBasalTop.RowCount = 1
-        TableLayoutPanelBasalTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBasalTop.Size = New Size(1364, 37)
-        TableLayoutPanelBasalTop.TabIndex = 1
+        TlpBasalTop.AutoSize = True
+        TlpBasalTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpBasalTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpBasalTop.ColumnCount = 2
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.Dock = DockStyle.Fill
+        TlpBasalTop.LabelText = "Basal"
+        TlpBasalTop.Location = New Point(6, 6)
+        TlpBasalTop.Name = "TlpBasalTop"
+        TlpBasalTop.RowCount = 1
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.Size = New Size(1364, 37)
+        TlpBasalTop.TabIndex = 1
         ' 
         ' TabPage07LastAlarm
         ' 
-        TabPage07LastAlarm.Controls.Add(TableLayoutPanelLastAlarm)
+        TabPage07LastAlarm.Controls.Add(TlpLastAlarm)
         TabPage07LastAlarm.Location = New Point(4, 30)
         TabPage07LastAlarm.Name = "TabPage07LastAlarm"
         TabPage07LastAlarm.Size = New Size(1376, 658)
@@ -2177,45 +2177,45 @@ Partial Class Form1
         TabPage07LastAlarm.Text = "Last Alarm"
         TabPage07LastAlarm.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelLastAlarm
+        ' TlpLastAlarm
         ' 
-        TableLayoutPanelLastAlarm.AutoSize = True
-        TableLayoutPanelLastAlarm.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLastAlarm.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelLastAlarm.ColumnCount = 1
-        TableLayoutPanelLastAlarm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastAlarm.Controls.Add(TableLayoutPanelLastAlarmTop, 0, 0)
-        TableLayoutPanelLastAlarm.Controls.Add(DgvLastAlarm, 0, 1)
-        TableLayoutPanelLastAlarm.Dock = DockStyle.Fill
-        TableLayoutPanelLastAlarm.Location = New Point(0, 0)
-        TableLayoutPanelLastAlarm.Margin = New Padding(0)
-        TableLayoutPanelLastAlarm.Name = "TableLayoutPanelLastAlarm"
-        TableLayoutPanelLastAlarm.RowCount = 2
-        TableLayoutPanelLastAlarm.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLastAlarm.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastAlarm.Size = New Size(1376, 658)
-        TableLayoutPanelLastAlarm.TabIndex = 0
+        TlpLastAlarm.AutoSize = True
+        TlpLastAlarm.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpLastAlarm.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpLastAlarm.ColumnCount = 1
+        TlpLastAlarm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarm.Controls.Add(TlpLastAlarmTop, 0, 0)
+        TlpLastAlarm.Controls.Add(DgvLastAlarm, 0, 1)
+        TlpLastAlarm.Dock = DockStyle.Fill
+        TlpLastAlarm.Location = New Point(0, 0)
+        TlpLastAlarm.Margin = New Padding(0)
+        TlpLastAlarm.Name = "TlpLastAlarm"
+        TlpLastAlarm.RowCount = 2
+        TlpLastAlarm.RowStyles.Add(New RowStyle())
+        TlpLastAlarm.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarm.Size = New Size(1376, 658)
+        TlpLastAlarm.TabIndex = 0
         ' 
-        ' TableLayoutPanelLastAlarmTop
+        ' TlpLastAlarmTop
         ' 
-        TableLayoutPanelLastAlarmTop.AutoSize = True
-        TableLayoutPanelLastAlarmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLastAlarmTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelLastAlarmTop.ColumnCount = 2
-        TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastAlarmTop.Dock = DockStyle.Fill
-        TableLayoutPanelLastAlarmTop.LabelText = "Last Alarm"
-        TableLayoutPanelLastAlarmTop.Location = New Point(6, 6)
-        TableLayoutPanelLastAlarmTop.Name = "TableLayoutPanelLastAlarmTop"
-        TableLayoutPanelLastAlarmTop.RowCount = 1
-        TableLayoutPanelLastAlarmTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLastAlarmTop.Size = New Size(1364, 37)
-        TableLayoutPanelLastAlarmTop.TabIndex = 1
+        TlpLastAlarmTop.AutoSize = True
+        TlpLastAlarmTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpLastAlarmTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpLastAlarmTop.ColumnCount = 2
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.Dock = DockStyle.Fill
+        TlpLastAlarmTop.LabelText = "Last Alarm"
+        TlpLastAlarmTop.Location = New Point(6, 6)
+        TlpLastAlarmTop.Name = "TlpLastAlarmTop"
+        TlpLastAlarmTop.RowCount = 1
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.Size = New Size(1364, 37)
+        TlpLastAlarmTop.TabIndex = 1
         ' 
         ' TabPage08LastSG
         ' 
-        TabPage08LastSG.Controls.Add(TableLayoutPanelLastSG)
+        TabPage08LastSG.Controls.Add(TlpLastSG)
         TabPage08LastSG.Location = New Point(4, 30)
         TabPage08LastSG.Name = "TabPage08LastSG"
         TabPage08LastSG.Size = New Size(1376, 658)
@@ -2223,44 +2223,44 @@ Partial Class Form1
         TabPage08LastSG.Text = "Last SG"
         TabPage08LastSG.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelLastSG
+        ' TlpLastSG
         ' 
-        TableLayoutPanelLastSG.AutoSize = True
-        TableLayoutPanelLastSG.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLastSG.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelLastSG.ColumnCount = 1
-        TableLayoutPanelLastSG.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastSG.Controls.Add(TableLayoutPanelLastSgTop, 0, 0)
-        TableLayoutPanelLastSG.Controls.Add(DgvLastSensorGlucose, 0, 1)
-        TableLayoutPanelLastSG.Dock = DockStyle.Fill
-        TableLayoutPanelLastSG.Location = New Point(0, 0)
-        TableLayoutPanelLastSG.Name = "TableLayoutPanelLastSG"
-        TableLayoutPanelLastSG.RowCount = 2
-        TableLayoutPanelLastSG.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLastSG.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastSG.Size = New Size(1376, 658)
-        TableLayoutPanelLastSG.TabIndex = 1
+        TlpLastSG.AutoSize = True
+        TlpLastSG.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpLastSG.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpLastSG.ColumnCount = 1
+        TlpLastSG.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSG.Controls.Add(TlpLastSgTop, 0, 0)
+        TlpLastSG.Controls.Add(DgvLastSensorGlucose, 0, 1)
+        TlpLastSG.Dock = DockStyle.Fill
+        TlpLastSG.Location = New Point(0, 0)
+        TlpLastSG.Name = "TlpLastSG"
+        TlpLastSG.RowCount = 2
+        TlpLastSG.RowStyles.Add(New RowStyle())
+        TlpLastSG.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpLastSG.Size = New Size(1376, 658)
+        TlpLastSG.TabIndex = 1
         ' 
-        ' TableLayoutPanelLastSgTop
+        ' TlpLastSgTop
         ' 
-        TableLayoutPanelLastSgTop.AutoSize = True
-        TableLayoutPanelLastSgTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLastSgTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelLastSgTop.ColumnCount = 2
-        TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLastSgTop.Dock = DockStyle.Fill
-        TableLayoutPanelLastSgTop.LabelText = "Last Sensor Glucose"
-        TableLayoutPanelLastSgTop.Location = New Point(6, 6)
-        TableLayoutPanelLastSgTop.Name = "TableLayoutPanelLastSgTop"
-        TableLayoutPanelLastSgTop.RowCount = 1
-        TableLayoutPanelLastSgTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLastSgTop.Size = New Size(1364, 37)
-        TableLayoutPanelLastSgTop.TabIndex = 1
+        TlpLastSgTop.AutoSize = True
+        TlpLastSgTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpLastSgTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpLastSgTop.ColumnCount = 2
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.Dock = DockStyle.Fill
+        TlpLastSgTop.LabelText = "Last Sensor Glucose"
+        TlpLastSgTop.Location = New Point(6, 6)
+        TlpLastSgTop.Name = "TlpLastSgTop"
+        TlpLastSgTop.RowCount = 1
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.Size = New Size(1364, 37)
+        TlpLastSgTop.TabIndex = 1
         ' 
         ' TabPage09Limits
         ' 
-        TabPage09Limits.Controls.Add(TableLayoutPanelLimits)
+        TabPage09Limits.Controls.Add(TlpLimits)
         TabPage09Limits.Location = New Point(4, 30)
         TabPage09Limits.Name = "TabPage09Limits"
         TabPage09Limits.Size = New Size(1376, 658)
@@ -2268,44 +2268,44 @@ Partial Class Form1
         TabPage09Limits.Text = "Limits"
         TabPage09Limits.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelLimits
+        ' TlpLimits
         ' 
-        TableLayoutPanelLimits.AutoSize = True
-        TableLayoutPanelLimits.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLimits.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelLimits.ColumnCount = 1
-        TableLayoutPanelLimits.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLimits.Controls.Add(TableLayoutPanelLimitsTop, 0, 0)
-        TableLayoutPanelLimits.Controls.Add(DgvLimits, 0, 1)
-        TableLayoutPanelLimits.Dock = DockStyle.Fill
-        TableLayoutPanelLimits.Location = New Point(0, 0)
-        TableLayoutPanelLimits.Name = "TableLayoutPanelLimits"
-        TableLayoutPanelLimits.RowCount = 2
-        TableLayoutPanelLimits.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLimits.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLimits.Size = New Size(1376, 658)
-        TableLayoutPanelLimits.TabIndex = 0
+        TlpLimits.AutoSize = True
+        TlpLimits.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpLimits.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpLimits.ColumnCount = 1
+        TlpLimits.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimits.Controls.Add(TlpLimitsTop, 0, 0)
+        TlpLimits.Controls.Add(DgvLimits, 0, 1)
+        TlpLimits.Dock = DockStyle.Fill
+        TlpLimits.Location = New Point(0, 0)
+        TlpLimits.Name = "TlpLimits"
+        TlpLimits.RowCount = 2
+        TlpLimits.RowStyles.Add(New RowStyle())
+        TlpLimits.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpLimits.Size = New Size(1376, 658)
+        TlpLimits.TabIndex = 0
         ' 
-        ' TableLayoutPanelLimitsTop
+        ' TlpLimitsTop
         ' 
-        TableLayoutPanelLimitsTop.AutoSize = True
-        TableLayoutPanelLimitsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLimitsTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelLimitsTop.ColumnCount = 2
-        TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLimitsTop.Dock = DockStyle.Fill
-        TableLayoutPanelLimitsTop.LabelText = "Limits"
-        TableLayoutPanelLimitsTop.Location = New Point(6, 6)
-        TableLayoutPanelLimitsTop.Name = "TableLayoutPanelLimitsTop"
-        TableLayoutPanelLimitsTop.RowCount = 1
-        TableLayoutPanelLimitsTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLimitsTop.Size = New Size(1364, 37)
-        TableLayoutPanelLimitsTop.TabIndex = 1
+        TlpLimitsTop.AutoSize = True
+        TlpLimitsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpLimitsTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpLimitsTop.ColumnCount = 2
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.Dock = DockStyle.Fill
+        TlpLimitsTop.LabelText = "Limits"
+        TlpLimitsTop.Location = New Point(6, 6)
+        TlpLimitsTop.Name = "TlpLimitsTop"
+        TlpLimitsTop.RowCount = 1
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.Size = New Size(1364, 37)
+        TlpLimitsTop.TabIndex = 1
         ' 
         ' TabPage10NotificationActive
         ' 
-        TabPage10NotificationActive.Controls.Add(TableLayoutPanelNotificationActive)
+        TabPage10NotificationActive.Controls.Add(TlpNotificationActive)
         TabPage10NotificationActive.Location = New Point(4, 30)
         TabPage10NotificationActive.Name = "TabPage10NotificationActive"
         TabPage10NotificationActive.Size = New Size(1376, 658)
@@ -2313,39 +2313,39 @@ Partial Class Form1
         TabPage10NotificationActive.Text = "Notification - Active"
         TabPage10NotificationActive.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelNotificationActive
+        ' TlpNotificationActive
         ' 
-        TableLayoutPanelNotificationActive.AutoScroll = True
-        TableLayoutPanelNotificationActive.AutoSize = True
-        TableLayoutPanelNotificationActive.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelNotificationActive.ColumnCount = 1
-        TableLayoutPanelNotificationActive.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationActive.Controls.Add(TableLayoutPanelNotificationActiveTop, 0, 0)
-        TableLayoutPanelNotificationActive.Dock = DockStyle.Fill
-        TableLayoutPanelNotificationActive.Location = New Point(0, 0)
-        TableLayoutPanelNotificationActive.Name = "TableLayoutPanelNotificationActive"
-        TableLayoutPanelNotificationActive.RowCount = 1
-        TableLayoutPanelNotificationActive.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationActive.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationActive.Size = New Size(1376, 658)
-        TableLayoutPanelNotificationActive.TabIndex = 0
+        TlpNotificationActive.AutoScroll = True
+        TlpNotificationActive.AutoSize = True
+        TlpNotificationActive.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpNotificationActive.ColumnCount = 1
+        TlpNotificationActive.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActive.Controls.Add(TlpNotificationActiveTop, 0, 0)
+        TlpNotificationActive.Dock = DockStyle.Fill
+        TlpNotificationActive.Location = New Point(0, 0)
+        TlpNotificationActive.Name = "TlpNotificationActive"
+        TlpNotificationActive.RowCount = 1
+        TlpNotificationActive.RowStyles.Add(New RowStyle())
+        TlpNotificationActive.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActive.Size = New Size(1376, 658)
+        TlpNotificationActive.TabIndex = 0
         ' 
-        ' TableLayoutPanelNotificationActiveTop
+        ' TlpNotificationActiveTop
         ' 
-        TableLayoutPanelNotificationActiveTop.AutoSize = True
-        TableLayoutPanelNotificationActiveTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelNotificationActiveTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelNotificationActiveTop.ColumnCount = 2
-        TableLayoutPanelNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelNotificationActiveTop.Dock = DockStyle.Fill
-        TableLayoutPanelNotificationActiveTop.LabelText = "Active Notification"
-        TableLayoutPanelNotificationActiveTop.Location = New Point(6, 6)
-        TableLayoutPanelNotificationActiveTop.Name = "TableLayoutPanelNotificationActiveTop"
-        TableLayoutPanelNotificationActiveTop.RowCount = 1
-        TableLayoutPanelNotificationActiveTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelNotificationActiveTop.Size = New Size(1364, 37)
-        TableLayoutPanelNotificationActiveTop.TabIndex = 1
+        TlpNotificationActiveTop.AutoSize = True
+        TlpNotificationActiveTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpNotificationActiveTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpNotificationActiveTop.ColumnCount = 2
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.Dock = DockStyle.Fill
+        TlpNotificationActiveTop.LabelText = "Active Notification"
+        TlpNotificationActiveTop.Location = New Point(6, 6)
+        TlpNotificationActiveTop.Name = "TlpNotificationActiveTop"
+        TlpNotificationActiveTop.RowCount = 1
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.Size = New Size(1364, 37)
+        TlpNotificationActiveTop.TabIndex = 1
         ' 
         ' TabPage11NotificationsCleared
         ' 
@@ -2359,7 +2359,7 @@ Partial Class Form1
         ' 
         ' TabPage12PumpBannerState
         ' 
-        TabPage12PumpBannerState.Controls.Add(TableLayoutPanelPumpBannerState)
+        TabPage12PumpBannerState.Controls.Add(TlpPumpBannerState)
         TabPage12PumpBannerState.Location = New Point(4, 30)
         TabPage12PumpBannerState.Name = "TabPage12PumpBannerState"
         TabPage12PumpBannerState.Size = New Size(1376, 658)
@@ -2367,45 +2367,45 @@ Partial Class Form1
         TabPage12PumpBannerState.Text = "Pump Banner State"
         TabPage12PumpBannerState.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelPumpBannerState
+        ' TlpPumpBannerState
         ' 
-        TableLayoutPanelPumpBannerState.AutoSize = True
-        TableLayoutPanelPumpBannerState.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelPumpBannerState.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelPumpBannerState.ColumnCount = 1
-        TableLayoutPanelPumpBannerState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelPumpBannerState.Controls.Add(TableLayoutPanelPumpBannerStateTop, 0, 0)
-        TableLayoutPanelPumpBannerState.Controls.Add(DgvPumpBannerState, 0, 1)
-        TableLayoutPanelPumpBannerState.Dock = DockStyle.Fill
-        TableLayoutPanelPumpBannerState.Location = New Point(0, 0)
-        TableLayoutPanelPumpBannerState.Margin = New Padding(0)
-        TableLayoutPanelPumpBannerState.Name = "TableLayoutPanelPumpBannerState"
-        TableLayoutPanelPumpBannerState.RowCount = 2
-        TableLayoutPanelPumpBannerState.RowStyles.Add(New RowStyle())
-        TableLayoutPanelPumpBannerState.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelPumpBannerState.Size = New Size(1376, 658)
-        TableLayoutPanelPumpBannerState.TabIndex = 0
+        TlpPumpBannerState.AutoSize = True
+        TlpPumpBannerState.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpPumpBannerState.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpPumpBannerState.ColumnCount = 1
+        TlpPumpBannerState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerState.Controls.Add(TlpPumpBannerStateTop, 0, 0)
+        TlpPumpBannerState.Controls.Add(DgvPumpBannerState, 0, 1)
+        TlpPumpBannerState.Dock = DockStyle.Fill
+        TlpPumpBannerState.Location = New Point(0, 0)
+        TlpPumpBannerState.Margin = New Padding(0)
+        TlpPumpBannerState.Name = "TlpPumpBannerState"
+        TlpPumpBannerState.RowCount = 2
+        TlpPumpBannerState.RowStyles.Add(New RowStyle())
+        TlpPumpBannerState.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerState.Size = New Size(1376, 658)
+        TlpPumpBannerState.TabIndex = 0
         ' 
-        ' TableLayoutPanelPumpBannerStateTop
+        ' TlpPumpBannerStateTop
         ' 
-        TableLayoutPanelPumpBannerStateTop.AutoSize = True
-        TableLayoutPanelPumpBannerStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelPumpBannerStateTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelPumpBannerStateTop.ColumnCount = 2
-        TableLayoutPanelPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelPumpBannerStateTop.Dock = DockStyle.Fill
-        TableLayoutPanelPumpBannerStateTop.LabelText = "Pump Banner State"
-        TableLayoutPanelPumpBannerStateTop.Location = New Point(6, 6)
-        TableLayoutPanelPumpBannerStateTop.Name = "TableLayoutPanelPumpBannerStateTop"
-        TableLayoutPanelPumpBannerStateTop.RowCount = 1
-        TableLayoutPanelPumpBannerStateTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelPumpBannerStateTop.Size = New Size(1364, 37)
-        TableLayoutPanelPumpBannerStateTop.TabIndex = 1
+        TlpPumpBannerStateTop.AutoSize = True
+        TlpPumpBannerStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpPumpBannerStateTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpPumpBannerStateTop.ColumnCount = 2
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.Dock = DockStyle.Fill
+        TlpPumpBannerStateTop.LabelText = "Pump Banner State"
+        TlpPumpBannerStateTop.Location = New Point(6, 6)
+        TlpPumpBannerStateTop.Name = "TlpPumpBannerStateTop"
+        TlpPumpBannerStateTop.RowCount = 1
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.Size = New Size(1364, 37)
+        TlpPumpBannerStateTop.TabIndex = 1
         ' 
         ' TabPage13SensorGlucose
         ' 
-        TabPage13SensorGlucose.Controls.Add(TableLayoutPanelSgs)
+        TabPage13SensorGlucose.Controls.Add(TlpSgs)
         TabPage13SensorGlucose.Location = New Point(4, 30)
         TabPage13SensorGlucose.Name = "TabPage13SensorGlucose"
         TabPage13SensorGlucose.Size = New Size(1376, 658)
@@ -2413,44 +2413,44 @@ Partial Class Form1
         TabPage13SensorGlucose.Text = "Sensor Glucose"
         TabPage13SensorGlucose.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelSgs
+        ' TlpSgs
         ' 
-        TableLayoutPanelSgs.AutoSize = True
-        TableLayoutPanelSgs.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelSgs.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelSgs.ColumnCount = 1
-        TableLayoutPanelSgs.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelSgs.Controls.Add(TableLayoutPanelSgsTop, 0, 0)
-        TableLayoutPanelSgs.Controls.Add(DgvSGs, 0, 1)
-        TableLayoutPanelSgs.Dock = DockStyle.Fill
-        TableLayoutPanelSgs.Location = New Point(0, 0)
-        TableLayoutPanelSgs.Name = "TableLayoutPanelSgs"
-        TableLayoutPanelSgs.RowCount = 2
-        TableLayoutPanelSgs.RowStyles.Add(New RowStyle())
-        TableLayoutPanelSgs.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelSgs.Size = New Size(1376, 658)
-        TableLayoutPanelSgs.TabIndex = 1
+        TlpSgs.AutoSize = True
+        TlpSgs.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpSgs.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpSgs.ColumnCount = 1
+        TlpSgs.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgs.Controls.Add(TlpSgsTop, 0, 0)
+        TlpSgs.Controls.Add(DgvSGs, 0, 1)
+        TlpSgs.Dock = DockStyle.Fill
+        TlpSgs.Location = New Point(0, 0)
+        TlpSgs.Name = "TlpSgs"
+        TlpSgs.RowCount = 2
+        TlpSgs.RowStyles.Add(New RowStyle())
+        TlpSgs.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpSgs.Size = New Size(1376, 658)
+        TlpSgs.TabIndex = 1
         ' 
-        ' TableLayoutPanelSgsTop
+        ' TlpSgsTop
         ' 
-        TableLayoutPanelSgsTop.AutoSize = True
-        TableLayoutPanelSgsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelSgsTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelSgsTop.ColumnCount = 2
-        TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelSgsTop.Dock = DockStyle.Fill
-        TableLayoutPanelSgsTop.LabelText = "Sensor Glucose Values"
-        TableLayoutPanelSgsTop.Location = New Point(6, 6)
-        TableLayoutPanelSgsTop.Name = "TableLayoutPanelSgsTop"
-        TableLayoutPanelSgsTop.RowCount = 1
-        TableLayoutPanelSgsTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelSgsTop.Size = New Size(1364, 37)
-        TableLayoutPanelSgsTop.TabIndex = 1
+        TlpSgsTop.AutoSize = True
+        TlpSgsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpSgsTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpSgsTop.ColumnCount = 2
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.Dock = DockStyle.Fill
+        TlpSgsTop.LabelText = "Sensor Glucose Values"
+        TlpSgsTop.Location = New Point(6, 6)
+        TlpSgsTop.Name = "TlpSgsTop"
+        TlpSgsTop.RowCount = 1
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.Size = New Size(1364, 37)
+        TlpSgsTop.TabIndex = 1
         ' 
         ' TabPage14TherapyAlgorithmState
         ' 
-        TabPage14TherapyAlgorithmState.Controls.Add(TableLayoutPanelTherapyAlgorithmState)
+        TabPage14TherapyAlgorithmState.Controls.Add(TlpTherapyAlgorithmState)
         TabPage14TherapyAlgorithmState.Location = New Point(4, 30)
         TabPage14TherapyAlgorithmState.Name = "TabPage14TherapyAlgorithmState"
         TabPage14TherapyAlgorithmState.Size = New Size(1376, 658)
@@ -2458,39 +2458,39 @@ Partial Class Form1
         TabPage14TherapyAlgorithmState.Text = "Therapy Algorithm State"
         TabPage14TherapyAlgorithmState.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelTherapyAlgorithmState
+        ' TlpTherapyAlgorithmState
         ' 
-        TableLayoutPanelTherapyAlgorithmState.AutoSize = True
-        TableLayoutPanelTherapyAlgorithmState.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelTherapyAlgorithmState.ColumnCount = 1
-        TableLayoutPanelTherapyAlgorithmState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTherapyAlgorithmState.Controls.Add(TableLayoutPanelTherapyAlgorithmStateTop, 0, 0)
-        TableLayoutPanelTherapyAlgorithmState.Controls.Add(DgvTherapyAlgorithmState, 0, 1)
-        TableLayoutPanelTherapyAlgorithmState.Dock = DockStyle.Fill
-        TableLayoutPanelTherapyAlgorithmState.Location = New Point(0, 0)
-        TableLayoutPanelTherapyAlgorithmState.Name = "TableLayoutPanelTherapyAlgorithmState"
-        TableLayoutPanelTherapyAlgorithmState.RowCount = 2
-        TableLayoutPanelTherapyAlgorithmState.RowStyles.Add(New RowStyle())
-        TableLayoutPanelTherapyAlgorithmState.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTherapyAlgorithmState.Size = New Size(1376, 658)
-        TableLayoutPanelTherapyAlgorithmState.TabIndex = 0
+        TlpTherapyAlgorithmState.AutoSize = True
+        TlpTherapyAlgorithmState.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpTherapyAlgorithmState.ColumnCount = 1
+        TlpTherapyAlgorithmState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmState.Controls.Add(TlpTherapyAlgorithmStateTop, 0, 0)
+        TlpTherapyAlgorithmState.Controls.Add(DgvTherapyAlgorithmState, 0, 1)
+        TlpTherapyAlgorithmState.Dock = DockStyle.Fill
+        TlpTherapyAlgorithmState.Location = New Point(0, 0)
+        TlpTherapyAlgorithmState.Name = "TlpTherapyAlgorithmState"
+        TlpTherapyAlgorithmState.RowCount = 2
+        TlpTherapyAlgorithmState.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmState.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmState.Size = New Size(1376, 658)
+        TlpTherapyAlgorithmState.TabIndex = 0
         ' 
-        ' TableLayoutPanelTherapyAlgorithmStateTop
+        ' TlpTherapyAlgorithmStateTop
         ' 
-        TableLayoutPanelTherapyAlgorithmStateTop.AutoSize = True
-        TableLayoutPanelTherapyAlgorithmStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelTherapyAlgorithmStateTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelTherapyAlgorithmStateTop.ColumnCount = 2
-        TableLayoutPanelTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTherapyAlgorithmStateTop.Dock = DockStyle.Fill
-        TableLayoutPanelTherapyAlgorithmStateTop.LabelText = "Therapy Algorithm State"
-        TableLayoutPanelTherapyAlgorithmStateTop.Location = New Point(6, 6)
-        TableLayoutPanelTherapyAlgorithmStateTop.Name = "TableLayoutPanelTherapyAlgorithmStateTop"
-        TableLayoutPanelTherapyAlgorithmStateTop.RowCount = 1
-        TableLayoutPanelTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelTherapyAlgorithmStateTop.Size = New Size(1364, 37)
-        TableLayoutPanelTherapyAlgorithmStateTop.TabIndex = 1
+        TlpTherapyAlgorithmStateTop.AutoSize = True
+        TlpTherapyAlgorithmStateTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpTherapyAlgorithmStateTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpTherapyAlgorithmStateTop.ColumnCount = 2
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.Dock = DockStyle.Fill
+        TlpTherapyAlgorithmStateTop.LabelText = "Therapy Algorithm State"
+        TlpTherapyAlgorithmStateTop.Location = New Point(6, 6)
+        TlpTherapyAlgorithmStateTop.Name = "TlpTherapyAlgorithmStateTop"
+        TlpTherapyAlgorithmStateTop.RowCount = 1
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.Size = New Size(1364, 37)
+        TlpTherapyAlgorithmStateTop.TabIndex = 1
         ' 
         ' TabPage15More
         ' 
@@ -2503,7 +2503,7 @@ Partial Class Form1
         ' 
         ' TabPage01AutoBasalDelivery
         ' 
-        TabPage01AutoBasalDelivery.Controls.Add(TableLayoutPanelAutoBasalDelivery)
+        TabPage01AutoBasalDelivery.Controls.Add(TlpAutoBasalDelivery)
         TabPage01AutoBasalDelivery.Location = New Point(4, 30)
         TabPage01AutoBasalDelivery.Name = "TabPage01AutoBasalDelivery"
         TabPage01AutoBasalDelivery.Size = New Size(1376, 658)
@@ -2511,44 +2511,44 @@ Partial Class Form1
         TabPage01AutoBasalDelivery.Text = "Auto Basal Delivery"
         TabPage01AutoBasalDelivery.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelAutoBasalDelivery
+        ' TlpAutoBasalDelivery
         ' 
-        TableLayoutPanelAutoBasalDelivery.AutoSize = True
-        TableLayoutPanelAutoBasalDelivery.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelAutoBasalDelivery.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelAutoBasalDelivery.ColumnCount = 1
-        TableLayoutPanelAutoBasalDelivery.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoBasalDelivery.Controls.Add(TableLayoutPanelAutoBasalDeliveryTop, 0, 0)
-        TableLayoutPanelAutoBasalDelivery.Controls.Add(DgvAutoBasalDelivery, 0, 1)
-        TableLayoutPanelAutoBasalDelivery.Dock = DockStyle.Fill
-        TableLayoutPanelAutoBasalDelivery.Location = New Point(0, 0)
-        TableLayoutPanelAutoBasalDelivery.Name = "TableLayoutPanelAutoBasalDelivery"
-        TableLayoutPanelAutoBasalDelivery.RowCount = 2
-        TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New RowStyle())
-        TableLayoutPanelAutoBasalDelivery.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoBasalDelivery.Size = New Size(1376, 658)
-        TableLayoutPanelAutoBasalDelivery.TabIndex = 0
+        TlpAutoBasalDelivery.AutoSize = True
+        TlpAutoBasalDelivery.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpAutoBasalDelivery.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpAutoBasalDelivery.ColumnCount = 1
+        TlpAutoBasalDelivery.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDelivery.Controls.Add(TlpAutoBasalDeliveryTop, 0, 0)
+        TlpAutoBasalDelivery.Controls.Add(DgvAutoBasalDelivery, 0, 1)
+        TlpAutoBasalDelivery.Dock = DockStyle.Fill
+        TlpAutoBasalDelivery.Location = New Point(0, 0)
+        TlpAutoBasalDelivery.Name = "TlpAutoBasalDelivery"
+        TlpAutoBasalDelivery.RowCount = 2
+        TlpAutoBasalDelivery.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDelivery.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDelivery.Size = New Size(1376, 658)
+        TlpAutoBasalDelivery.TabIndex = 0
         ' 
-        ' TableLayoutPanelAutoBasalDeliveryTop
+        ' TlpAutoBasalDeliveryTop
         ' 
-        TableLayoutPanelAutoBasalDeliveryTop.AutoSize = True
-        TableLayoutPanelAutoBasalDeliveryTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelAutoBasalDeliveryTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelAutoBasalDeliveryTop.ColumnCount = 2
-        TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoBasalDeliveryTop.Dock = DockStyle.Fill
-        TableLayoutPanelAutoBasalDeliveryTop.LabelText = "Marker : Auto Basal Delivery"
-        TableLayoutPanelAutoBasalDeliveryTop.Location = New Point(6, 6)
-        TableLayoutPanelAutoBasalDeliveryTop.Name = "TableLayoutPanelAutoBasalDeliveryTop"
-        TableLayoutPanelAutoBasalDeliveryTop.RowCount = 1
-        TableLayoutPanelAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelAutoBasalDeliveryTop.Size = New Size(1364, 37)
-        TableLayoutPanelAutoBasalDeliveryTop.TabIndex = 1
+        TlpAutoBasalDeliveryTop.AutoSize = True
+        TlpAutoBasalDeliveryTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpAutoBasalDeliveryTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpAutoBasalDeliveryTop.ColumnCount = 2
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.Dock = DockStyle.Fill
+        TlpAutoBasalDeliveryTop.LabelText = "Marker : Auto Basal Delivery"
+        TlpAutoBasalDeliveryTop.Location = New Point(6, 6)
+        TlpAutoBasalDeliveryTop.Name = "TlpAutoBasalDeliveryTop"
+        TlpAutoBasalDeliveryTop.RowCount = 1
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.Size = New Size(1364, 37)
+        TlpAutoBasalDeliveryTop.TabIndex = 1
         ' 
         ' TabPage02AutoModeStatus
         ' 
-        TabPage02AutoModeStatus.Controls.Add(TableLayoutPanelAutoModeStatus)
+        TabPage02AutoModeStatus.Controls.Add(TlpAutoModeStatus)
         TabPage02AutoModeStatus.Location = New Point(4, 30)
         TabPage02AutoModeStatus.Name = "TabPage02AutoModeStatus"
         TabPage02AutoModeStatus.Size = New Size(1376, 658)
@@ -2556,44 +2556,44 @@ Partial Class Form1
         TabPage02AutoModeStatus.Text = "Auto Mode Status"
         TabPage02AutoModeStatus.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelAutoModeStatus
+        ' TlpAutoModeStatus
         ' 
-        TableLayoutPanelAutoModeStatus.AutoSize = True
-        TableLayoutPanelAutoModeStatus.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelAutoModeStatus.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelAutoModeStatus.ColumnCount = 1
-        TableLayoutPanelAutoModeStatus.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoModeStatus.Controls.Add(TableLayoutPanelAutoModeStatusTop, 0, 0)
-        TableLayoutPanelAutoModeStatus.Controls.Add(DgvAutoModeStatus, 0, 1)
-        TableLayoutPanelAutoModeStatus.Dock = DockStyle.Fill
-        TableLayoutPanelAutoModeStatus.Location = New Point(0, 0)
-        TableLayoutPanelAutoModeStatus.Name = "TableLayoutPanelAutoModeStatus"
-        TableLayoutPanelAutoModeStatus.RowCount = 2
-        TableLayoutPanelAutoModeStatus.RowStyles.Add(New RowStyle())
-        TableLayoutPanelAutoModeStatus.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoModeStatus.Size = New Size(1376, 658)
-        TableLayoutPanelAutoModeStatus.TabIndex = 0
+        TlpAutoModeStatus.AutoSize = True
+        TlpAutoModeStatus.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpAutoModeStatus.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpAutoModeStatus.ColumnCount = 1
+        TlpAutoModeStatus.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatus.Controls.Add(TlpAutoModeStatusTop, 0, 0)
+        TlpAutoModeStatus.Controls.Add(DgvAutoModeStatus, 0, 1)
+        TlpAutoModeStatus.Dock = DockStyle.Fill
+        TlpAutoModeStatus.Location = New Point(0, 0)
+        TlpAutoModeStatus.Name = "TlpAutoModeStatus"
+        TlpAutoModeStatus.RowCount = 2
+        TlpAutoModeStatus.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatus.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatus.Size = New Size(1376, 658)
+        TlpAutoModeStatus.TabIndex = 0
         ' 
-        ' TableLayoutPanelAutoModeStatusTop
+        ' TlpAutoModeStatusTop
         ' 
-        TableLayoutPanelAutoModeStatusTop.AutoSize = True
-        TableLayoutPanelAutoModeStatusTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelAutoModeStatusTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelAutoModeStatusTop.ColumnCount = 2
-        TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelAutoModeStatusTop.Dock = DockStyle.Fill
-        TableLayoutPanelAutoModeStatusTop.LabelText = "Marker : Auto Mode Status"
-        TableLayoutPanelAutoModeStatusTop.Location = New Point(6, 6)
-        TableLayoutPanelAutoModeStatusTop.Name = "TableLayoutPanelAutoModeStatusTop"
-        TableLayoutPanelAutoModeStatusTop.RowCount = 1
-        TableLayoutPanelAutoModeStatusTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelAutoModeStatusTop.Size = New Size(1364, 37)
-        TableLayoutPanelAutoModeStatusTop.TabIndex = 1
+        TlpAutoModeStatusTop.AutoSize = True
+        TlpAutoModeStatusTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpAutoModeStatusTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpAutoModeStatusTop.ColumnCount = 2
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.Dock = DockStyle.Fill
+        TlpAutoModeStatusTop.LabelText = "Marker : Auto Mode Status"
+        TlpAutoModeStatusTop.Location = New Point(6, 6)
+        TlpAutoModeStatusTop.Name = "TlpAutoModeStatusTop"
+        TlpAutoModeStatusTop.RowCount = 1
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.Size = New Size(1364, 37)
+        TlpAutoModeStatusTop.TabIndex = 1
         ' 
         ' TabPage03BgReadings
         ' 
-        TabPage03BgReadings.Controls.Add(TableLayoutPanelBgReadings)
+        TabPage03BgReadings.Controls.Add(TlpBgReadings)
         TabPage03BgReadings.Location = New Point(4, 30)
         TabPage03BgReadings.Name = "TabPage03BgReadings"
         TabPage03BgReadings.Size = New Size(1376, 658)
@@ -2601,45 +2601,45 @@ Partial Class Form1
         TabPage03BgReadings.Text = "Bg Readings"
         TabPage03BgReadings.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelBgReadings
+        ' TlpBgReadings
         ' 
-        TableLayoutPanelBgReadings.AutoScroll = True
-        TableLayoutPanelBgReadings.AutoSize = True
-        TableLayoutPanelBgReadings.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelBgReadings.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelBgReadings.ColumnCount = 1
-        TableLayoutPanelBgReadings.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBgReadings.Controls.Add(TableLayoutPanelBgReadingsTop, 0, 0)
-        TableLayoutPanelBgReadings.Controls.Add(DgvSensorBgReadings, 0, 1)
-        TableLayoutPanelBgReadings.Dock = DockStyle.Fill
-        TableLayoutPanelBgReadings.Location = New Point(0, 0)
-        TableLayoutPanelBgReadings.Name = "TableLayoutPanelBgReadings"
-        TableLayoutPanelBgReadings.RowCount = 2
-        TableLayoutPanelBgReadings.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBgReadings.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBgReadings.Size = New Size(1376, 658)
-        TableLayoutPanelBgReadings.TabIndex = 1
+        TlpBgReadings.AutoScroll = True
+        TlpBgReadings.AutoSize = True
+        TlpBgReadings.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpBgReadings.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpBgReadings.ColumnCount = 1
+        TlpBgReadings.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadings.Controls.Add(TlpBgReadingsTop, 0, 0)
+        TlpBgReadings.Controls.Add(DgvSensorBgReadings, 0, 1)
+        TlpBgReadings.Dock = DockStyle.Fill
+        TlpBgReadings.Location = New Point(0, 0)
+        TlpBgReadings.Name = "TlpBgReadings"
+        TlpBgReadings.RowCount = 2
+        TlpBgReadings.RowStyles.Add(New RowStyle())
+        TlpBgReadings.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpBgReadings.Size = New Size(1376, 658)
+        TlpBgReadings.TabIndex = 1
         ' 
-        ' TableLayoutPanelBgReadingsTop
+        ' TlpBgReadingsTop
         ' 
-        TableLayoutPanelBgReadingsTop.AutoSize = True
-        TableLayoutPanelBgReadingsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelBgReadingsTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelBgReadingsTop.ColumnCount = 2
-        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelBgReadingsTop.Dock = DockStyle.Fill
-        TableLayoutPanelBgReadingsTop.LabelText = "Marker : Blood Glucose Readings"
-        TableLayoutPanelBgReadingsTop.Location = New Point(6, 6)
-        TableLayoutPanelBgReadingsTop.Name = "TableLayoutPanelBgReadingsTop"
-        TableLayoutPanelBgReadingsTop.RowCount = 1
-        TableLayoutPanelBgReadingsTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelBgReadingsTop.Size = New Size(1364, 37)
-        TableLayoutPanelBgReadingsTop.TabIndex = 1
+        TlpBgReadingsTop.AutoSize = True
+        TlpBgReadingsTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpBgReadingsTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpBgReadingsTop.ColumnCount = 2
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.Dock = DockStyle.Fill
+        TlpBgReadingsTop.LabelText = "Marker : Blood Glucose Readings"
+        TlpBgReadingsTop.Location = New Point(6, 6)
+        TlpBgReadingsTop.Name = "TlpBgReadingsTop"
+        TlpBgReadingsTop.RowCount = 1
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.Size = New Size(1364, 37)
+        TlpBgReadingsTop.TabIndex = 1
         ' 
         ' TabPage04Calibration
         ' 
-        TabPage04Calibration.Controls.Add(TableLayoutPanelCalibration)
+        TabPage04Calibration.Controls.Add(TlpCalibration)
         TabPage04Calibration.Location = New Point(4, 30)
         TabPage04Calibration.Name = "TabPage04Calibration"
         TabPage04Calibration.Size = New Size(1376, 658)
@@ -2649,43 +2649,43 @@ Partial Class Form1
         ' 
         ' TableLayoutPanelCalibration
         ' 
-        TableLayoutPanelCalibration.AutoScroll = True
-        TableLayoutPanelCalibration.AutoSize = True
-        TableLayoutPanelCalibration.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelCalibration.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelCalibration.ColumnCount = 1
-        TableLayoutPanelCalibration.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelCalibration.Controls.Add(TableLayoutPanelCalibrationTop, 0, 0)
-        TableLayoutPanelCalibration.Controls.Add(DgvCalibration, 0, 1)
-        TableLayoutPanelCalibration.Dock = DockStyle.Fill
-        TableLayoutPanelCalibration.Location = New Point(0, 0)
-        TableLayoutPanelCalibration.Name = "TableLayoutPanelCalibration"
-        TableLayoutPanelCalibration.RowCount = 2
-        TableLayoutPanelCalibration.RowStyles.Add(New RowStyle())
-        TableLayoutPanelCalibration.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelCalibration.Size = New Size(1376, 658)
-        TableLayoutPanelCalibration.TabIndex = 1
+        TlpCalibration.AutoScroll = True
+        TlpCalibration.AutoSize = True
+        TlpCalibration.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpCalibration.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpCalibration.ColumnCount = 1
+        TlpCalibration.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibration.Controls.Add(TlpCalibrationTop, 0, 0)
+        TlpCalibration.Controls.Add(DgvCalibration, 0, 1)
+        TlpCalibration.Dock = DockStyle.Fill
+        TlpCalibration.Location = New Point(0, 0)
+        TlpCalibration.Name = "TableLayoutPanelCalibration"
+        TlpCalibration.RowCount = 2
+        TlpCalibration.RowStyles.Add(New RowStyle())
+        TlpCalibration.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpCalibration.Size = New Size(1376, 658)
+        TlpCalibration.TabIndex = 1
         ' 
-        ' TableLayoutPanelCalibrationTop
+        ' TlpCalibrationTop
         ' 
-        TableLayoutPanelCalibrationTop.AutoSize = True
-        TableLayoutPanelCalibrationTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelCalibrationTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelCalibrationTop.ColumnCount = 2
-        TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelCalibrationTop.Dock = DockStyle.Fill
-        TableLayoutPanelCalibrationTop.LabelText = "Marker : Calibration"
-        TableLayoutPanelCalibrationTop.Location = New Point(6, 6)
-        TableLayoutPanelCalibrationTop.Name = "TableLayoutPanelCalibrationTop"
-        TableLayoutPanelCalibrationTop.RowCount = 1
-        TableLayoutPanelCalibrationTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelCalibrationTop.Size = New Size(1364, 37)
-        TableLayoutPanelCalibrationTop.TabIndex = 1
+        TlpCalibrationTop.AutoSize = True
+        TlpCalibrationTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpCalibrationTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpCalibrationTop.ColumnCount = 2
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.Dock = DockStyle.Fill
+        TlpCalibrationTop.LabelText = "Marker : Calibration"
+        TlpCalibrationTop.Location = New Point(6, 6)
+        TlpCalibrationTop.Name = "TlpCalibrationTop"
+        TlpCalibrationTop.RowCount = 1
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.Size = New Size(1364, 37)
+        TlpCalibrationTop.TabIndex = 1
         ' 
         ' TabPage05Insulin
         ' 
-        TabPage05Insulin.Controls.Add(TableLayoutPanelInsulin)
+        TabPage05Insulin.Controls.Add(TlpInsulin)
         TabPage05Insulin.Location = New Point(4, 30)
         TabPage05Insulin.Name = "TabPage05Insulin"
         TabPage05Insulin.Size = New Size(1376, 658)
@@ -2693,45 +2693,45 @@ Partial Class Form1
         TabPage05Insulin.Text = "Insulin"
         TabPage05Insulin.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelInsulin
+        ' TlpInsulin
         ' 
-        TableLayoutPanelInsulin.AutoScroll = True
-        TableLayoutPanelInsulin.AutoSize = True
-        TableLayoutPanelInsulin.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelInsulin.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelInsulin.ColumnCount = 1
-        TableLayoutPanelInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelInsulin.Controls.Add(TableLayoutPanelInsulinTop, 0, 0)
-        TableLayoutPanelInsulin.Controls.Add(DgvInsulin, 0, 1)
-        TableLayoutPanelInsulin.Dock = DockStyle.Fill
-        TableLayoutPanelInsulin.Location = New Point(0, 0)
-        TableLayoutPanelInsulin.Name = "TableLayoutPanelInsulin"
-        TableLayoutPanelInsulin.RowCount = 2
-        TableLayoutPanelInsulin.RowStyles.Add(New RowStyle())
-        TableLayoutPanelInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelInsulin.Size = New Size(1376, 658)
-        TableLayoutPanelInsulin.TabIndex = 1
+        TlpInsulin.AutoScroll = True
+        TlpInsulin.AutoSize = True
+        TlpInsulin.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpInsulin.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpInsulin.ColumnCount = 1
+        TlpInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulin.Controls.Add(TlpInsulinTop, 0, 0)
+        TlpInsulin.Controls.Add(DgvInsulin, 0, 1)
+        TlpInsulin.Dock = DockStyle.Fill
+        TlpInsulin.Location = New Point(0, 0)
+        TlpInsulin.Name = "TlpInsulin"
+        TlpInsulin.RowCount = 2
+        TlpInsulin.RowStyles.Add(New RowStyle())
+        TlpInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpInsulin.Size = New Size(1376, 658)
+        TlpInsulin.TabIndex = 1
         ' 
-        ' TableLayoutPanelInsulinTop
+        ' TlpInsulinTop
         ' 
-        TableLayoutPanelInsulinTop.AutoSize = True
-        TableLayoutPanelInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelInsulinTop.ColumnCount = 2
-        TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelInsulinTop.Dock = DockStyle.Fill
-        TableLayoutPanelInsulinTop.LabelText = "Marker : Insulin"
-        TableLayoutPanelInsulinTop.Location = New Point(6, 6)
-        TableLayoutPanelInsulinTop.Name = "TableLayoutPanelInsulinTop"
-        TableLayoutPanelInsulinTop.RowCount = 1
-        TableLayoutPanelInsulinTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelInsulinTop.Size = New Size(1364, 37)
-        TableLayoutPanelInsulinTop.TabIndex = 1
+        TlpInsulinTop.AutoSize = True
+        TlpInsulinTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpInsulinTop.ColumnCount = 2
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.Dock = DockStyle.Fill
+        TlpInsulinTop.LabelText = "Marker : Insulin"
+        TlpInsulinTop.Location = New Point(6, 6)
+        TlpInsulinTop.Name = "TlpInsulinTop"
+        TlpInsulinTop.RowCount = 1
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.Size = New Size(1364, 37)
+        TlpInsulinTop.TabIndex = 1
         ' 
         ' TabPage06LowGlucoseSuspended
         ' 
-        TabPage06LowGlucoseSuspended.Controls.Add(TableLayoutPanelLowGlucoseSuspended)
+        TabPage06LowGlucoseSuspended.Controls.Add(TlpLowGlucoseSuspended)
         TabPage06LowGlucoseSuspended.Location = New Point(4, 30)
         TabPage06LowGlucoseSuspended.Name = "TabPage06LowGlucoseSuspended"
         TabPage06LowGlucoseSuspended.Size = New Size(1376, 658)
@@ -2739,45 +2739,45 @@ Partial Class Form1
         TabPage06LowGlucoseSuspended.Text = "Low Glucose Suspended"
         TabPage06LowGlucoseSuspended.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelLowGlucoseSuspended
+        ' TlpLowGlucoseSuspended
         ' 
-        TableLayoutPanelLowGlucoseSuspended.AutoScroll = True
-        TableLayoutPanelLowGlucoseSuspended.AutoSize = True
-        TableLayoutPanelLowGlucoseSuspended.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLowGlucoseSuspended.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelLowGlucoseSuspended.ColumnCount = 1
-        TableLayoutPanelLowGlucoseSuspended.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLowGlucoseSuspended.Controls.Add(TableLayoutPanelLowGlucoseSuspendedTop, 0, 0)
-        TableLayoutPanelLowGlucoseSuspended.Controls.Add(DgvLowGlucoseSuspended, 0, 1)
-        TableLayoutPanelLowGlucoseSuspended.Dock = DockStyle.Fill
-        TableLayoutPanelLowGlucoseSuspended.Location = New Point(0, 0)
-        TableLayoutPanelLowGlucoseSuspended.Name = "TableLayoutPanelLowGlucoseSuspended"
-        TableLayoutPanelLowGlucoseSuspended.RowCount = 2
-        TableLayoutPanelLowGlucoseSuspended.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLowGlucoseSuspended.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLowGlucoseSuspended.Size = New Size(1376, 658)
-        TableLayoutPanelLowGlucoseSuspended.TabIndex = 1
+        TlpLowGlucoseSuspended.AutoScroll = True
+        TlpLowGlucoseSuspended.AutoSize = True
+        TlpLowGlucoseSuspended.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpLowGlucoseSuspended.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpLowGlucoseSuspended.ColumnCount = 1
+        TlpLowGlucoseSuspended.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspended.Controls.Add(TlpLowGlucoseSuspendedTop, 0, 0)
+        TlpLowGlucoseSuspended.Controls.Add(DgvLowGlucoseSuspended, 0, 1)
+        TlpLowGlucoseSuspended.Dock = DockStyle.Fill
+        TlpLowGlucoseSuspended.Location = New Point(0, 0)
+        TlpLowGlucoseSuspended.Name = "TlpLowGlucoseSuspended"
+        TlpLowGlucoseSuspended.RowCount = 2
+        TlpLowGlucoseSuspended.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspended.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspended.Size = New Size(1376, 658)
+        TlpLowGlucoseSuspended.TabIndex = 1
         ' 
-        ' TableLayoutPanelLowGlucoseSuspendedTop
+        ' TlpLowGlucoseSuspendedTop
         ' 
-        TableLayoutPanelLowGlucoseSuspendedTop.AutoSize = True
-        TableLayoutPanelLowGlucoseSuspendedTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelLowGlucoseSuspendedTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelLowGlucoseSuspendedTop.ColumnCount = 2
-        TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelLowGlucoseSuspendedTop.Dock = DockStyle.Fill
-        TableLayoutPanelLowGlucoseSuspendedTop.LabelText = "Marker : Low Glucose Suspended"
-        TableLayoutPanelLowGlucoseSuspendedTop.Location = New Point(6, 6)
-        TableLayoutPanelLowGlucoseSuspendedTop.Name = "TableLayoutPanelLowGlucoseSuspendedTop"
-        TableLayoutPanelLowGlucoseSuspendedTop.RowCount = 1
-        TableLayoutPanelLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelLowGlucoseSuspendedTop.Size = New Size(1364, 37)
-        TableLayoutPanelLowGlucoseSuspendedTop.TabIndex = 1
+        TlpLowGlucoseSuspendedTop.AutoSize = True
+        TlpLowGlucoseSuspendedTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpLowGlucoseSuspendedTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpLowGlucoseSuspendedTop.ColumnCount = 2
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.Dock = DockStyle.Fill
+        TlpLowGlucoseSuspendedTop.LabelText = "Marker : Low Glucose Suspended"
+        TlpLowGlucoseSuspendedTop.Location = New Point(6, 6)
+        TlpLowGlucoseSuspendedTop.Name = "TlpLowGlucoseSuspendedTop"
+        TlpLowGlucoseSuspendedTop.RowCount = 1
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.Size = New Size(1364, 37)
+        TlpLowGlucoseSuspendedTop.TabIndex = 1
         ' 
         ' TabPage07Meal
         ' 
-        TabPage07Meal.Controls.Add(TableLayoutPanelMeal)
+        TabPage07Meal.Controls.Add(TlpMeal)
         TabPage07Meal.Location = New Point(4, 30)
         TabPage07Meal.Name = "TabPage07Meal"
         TabPage07Meal.Size = New Size(1376, 658)
@@ -2785,45 +2785,45 @@ Partial Class Form1
         TabPage07Meal.Text = "Meal"
         TabPage07Meal.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelMeal
+        ' TlpMeal
         ' 
-        TableLayoutPanelMeal.AutoScroll = True
-        TableLayoutPanelMeal.AutoSize = True
-        TableLayoutPanelMeal.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelMeal.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelMeal.ColumnCount = 1
-        TableLayoutPanelMeal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelMeal.Controls.Add(TableLayoutPanelMealTop, 0, 0)
-        TableLayoutPanelMeal.Controls.Add(DgvMeal, 0, 1)
-        TableLayoutPanelMeal.Dock = DockStyle.Fill
-        TableLayoutPanelMeal.Location = New Point(0, 0)
-        TableLayoutPanelMeal.Name = "TableLayoutPanelMeal"
-        TableLayoutPanelMeal.RowCount = 2
-        TableLayoutPanelMeal.RowStyles.Add(New RowStyle())
-        TableLayoutPanelMeal.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelMeal.Size = New Size(1376, 658)
-        TableLayoutPanelMeal.TabIndex = 1
+        TlpMeal.AutoScroll = True
+        TlpMeal.AutoSize = True
+        TlpMeal.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpMeal.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpMeal.ColumnCount = 1
+        TlpMeal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMeal.Controls.Add(TlpMealTop, 0, 0)
+        TlpMeal.Controls.Add(DgvMeal, 0, 1)
+        TlpMeal.Dock = DockStyle.Fill
+        TlpMeal.Location = New Point(0, 0)
+        TlpMeal.Name = "TlpMeal"
+        TlpMeal.RowCount = 2
+        TlpMeal.RowStyles.Add(New RowStyle())
+        TlpMeal.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpMeal.Size = New Size(1376, 658)
+        TlpMeal.TabIndex = 1
         ' 
-        ' TableLayoutPanelMealTop
+        ' TlpMealTop
         ' 
-        TableLayoutPanelMealTop.AutoSize = True
-        TableLayoutPanelMealTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelMealTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelMealTop.ColumnCount = 2
-        TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelMealTop.Dock = DockStyle.Fill
-        TableLayoutPanelMealTop.LabelText = "Marker : Meal"
-        TableLayoutPanelMealTop.Location = New Point(6, 6)
-        TableLayoutPanelMealTop.Name = "TableLayoutPanelMealTop"
-        TableLayoutPanelMealTop.RowCount = 1
-        TableLayoutPanelMealTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelMealTop.Size = New Size(1364, 37)
-        TableLayoutPanelMealTop.TabIndex = 1
+        TlpMealTop.AutoSize = True
+        TlpMealTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpMealTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpMealTop.ColumnCount = 2
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.Dock = DockStyle.Fill
+        TlpMealTop.LabelText = "Marker : Meal"
+        TlpMealTop.Location = New Point(6, 6)
+        TlpMealTop.Name = "TlpMealTop"
+        TlpMealTop.RowCount = 1
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.Size = New Size(1364, 37)
+        TlpMealTop.TabIndex = 1
         ' 
         ' TabPage08TimeChange
         ' 
-        TabPage08TimeChange.Controls.Add(TableLayoutPanelTimeChange)
+        TabPage08TimeChange.Controls.Add(TlpTimeChange)
         TabPage08TimeChange.Location = New Point(4, 30)
         TabPage08TimeChange.Name = "TabPage08TimeChange"
         TabPage08TimeChange.Size = New Size(1376, 658)
@@ -2831,41 +2831,41 @@ Partial Class Form1
         TabPage08TimeChange.Text = "Time Change"
         TabPage08TimeChange.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelTimeChange
+        ' TlpTimeChange
         ' 
-        TableLayoutPanelTimeChange.AutoScroll = True
-        TableLayoutPanelTimeChange.AutoSize = True
-        TableLayoutPanelTimeChange.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelTimeChange.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
-        TableLayoutPanelTimeChange.ColumnCount = 1
-        TableLayoutPanelTimeChange.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTimeChange.Controls.Add(TableLayoutPanelTimeChangeTop, 0, 0)
-        TableLayoutPanelTimeChange.Controls.Add(DgvTimeChange, 0, 1)
-        TableLayoutPanelTimeChange.Dock = DockStyle.Fill
-        TableLayoutPanelTimeChange.Location = New Point(0, 0)
-        TableLayoutPanelTimeChange.Name = "TableLayoutPanelTimeChange"
-        TableLayoutPanelTimeChange.RowCount = 2
-        TableLayoutPanelTimeChange.RowStyles.Add(New RowStyle())
-        TableLayoutPanelTimeChange.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTimeChange.Size = New Size(1376, 658)
-        TableLayoutPanelTimeChange.TabIndex = 1
+        TlpTimeChange.AutoScroll = True
+        TlpTimeChange.AutoSize = True
+        TlpTimeChange.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpTimeChange.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
+        TlpTimeChange.ColumnCount = 1
+        TlpTimeChange.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChange.Controls.Add(TlpTimeChangeTop, 0, 0)
+        TlpTimeChange.Controls.Add(DgvTimeChange, 0, 1)
+        TlpTimeChange.Dock = DockStyle.Fill
+        TlpTimeChange.Location = New Point(0, 0)
+        TlpTimeChange.Name = "TlpTimeChange"
+        TlpTimeChange.RowCount = 2
+        TlpTimeChange.RowStyles.Add(New RowStyle())
+        TlpTimeChange.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
+        TlpTimeChange.Size = New Size(1376, 658)
+        TlpTimeChange.TabIndex = 1
         ' 
-        ' TableLayoutPanelTimeChangeTop
+        ' TlpTimeChangeTop
         ' 
-        TableLayoutPanelTimeChangeTop.AutoSize = True
-        TableLayoutPanelTimeChangeTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
-        TableLayoutPanelTimeChangeTop.ButtonText = "Return To 'Summary Data' Tab"
-        TableLayoutPanelTimeChangeTop.ColumnCount = 2
-        TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
-        TableLayoutPanelTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
-        TableLayoutPanelTimeChangeTop.Dock = DockStyle.Fill
-        TableLayoutPanelTimeChangeTop.LabelText = "Marker : Time Change"
-        TableLayoutPanelTimeChangeTop.Location = New Point(6, 6)
-        TableLayoutPanelTimeChangeTop.Name = "TableLayoutPanelTimeChangeTop"
-        TableLayoutPanelTimeChangeTop.RowCount = 1
-        TableLayoutPanelTimeChangeTop.RowStyles.Add(New RowStyle())
-        TableLayoutPanelTimeChangeTop.Size = New Size(1364, 37)
-        TableLayoutPanelTimeChangeTop.TabIndex = 1
+        TlpTimeChangeTop.AutoSize = True
+        TlpTimeChangeTop.AutoSizeMode = AutoSizeMode.GrowAndShrink
+        TlpTimeChangeTop.ButtonText = "Return To 'Summary Data' Tab"
+        TlpTimeChangeTop.ColumnCount = 2
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.Dock = DockStyle.Fill
+        TlpTimeChangeTop.LabelText = "Marker : Time Change"
+        TlpTimeChangeTop.Location = New Point(6, 6)
+        TlpTimeChangeTop.Name = "TlpTimeChangeTop"
+        TlpTimeChangeTop.RowCount = 1
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.Size = New Size(1364, 37)
+        TlpTimeChangeTop.TabIndex = 1
         ' 
         ' TabPage09BasalPerHour
         ' 
@@ -3065,73 +3065,73 @@ Partial Class Form1
         TabPage04SummaryData.ResumeLayout(False)
         TabPage05ActiveInsulin.ResumeLayout(False)
         TabPage05ActiveInsulin.PerformLayout()
-        TableLayoutPanelActiveInsulin.ResumeLayout(False)
-        TableLayoutPanelActiveInsulin.PerformLayout()
+        TlpActiveInsulin.ResumeLayout(False)
+        TlpActiveInsulin.PerformLayout()
         TabPage06Basal.ResumeLayout(False)
         TabPage06Basal.PerformLayout()
-        TableLayoutPanelBasal.ResumeLayout(False)
-        TableLayoutPanelBasal.PerformLayout()
+        TlpBasal.ResumeLayout(False)
+        TlpBasal.PerformLayout()
         TabPage07LastAlarm.ResumeLayout(False)
         TabPage07LastAlarm.PerformLayout()
-        TableLayoutPanelLastAlarm.ResumeLayout(False)
-        TableLayoutPanelLastAlarm.PerformLayout()
+        TlpLastAlarm.ResumeLayout(False)
+        TlpLastAlarm.PerformLayout()
         TabPage08LastSG.ResumeLayout(False)
         TabPage08LastSG.PerformLayout()
-        TableLayoutPanelLastSG.ResumeLayout(False)
-        TableLayoutPanelLastSG.PerformLayout()
+        TlpLastSG.ResumeLayout(False)
+        TlpLastSG.PerformLayout()
         TabPage09Limits.ResumeLayout(False)
         TabPage09Limits.PerformLayout()
-        TableLayoutPanelLimits.ResumeLayout(False)
-        TableLayoutPanelLimits.PerformLayout()
+        TlpLimits.ResumeLayout(False)
+        TlpLimits.PerformLayout()
         TabPage10NotificationActive.ResumeLayout(False)
         TabPage10NotificationActive.PerformLayout()
-        TableLayoutPanelNotificationActive.ResumeLayout(False)
-        TableLayoutPanelNotificationActive.PerformLayout()
+        TlpNotificationActive.ResumeLayout(False)
+        TlpNotificationActive.PerformLayout()
         TabPage11NotificationsCleared.ResumeLayout(False)
         TabPage12PumpBannerState.ResumeLayout(False)
         TabPage12PumpBannerState.PerformLayout()
-        TableLayoutPanelPumpBannerState.ResumeLayout(False)
-        TableLayoutPanelPumpBannerState.PerformLayout()
+        TlpPumpBannerState.ResumeLayout(False)
+        TlpPumpBannerState.PerformLayout()
         TabPage13SensorGlucose.ResumeLayout(False)
         TabPage13SensorGlucose.PerformLayout()
-        TableLayoutPanelSgs.ResumeLayout(False)
-        TableLayoutPanelSgs.PerformLayout()
+        TlpSgs.ResumeLayout(False)
+        TlpSgs.PerformLayout()
         TabPage14TherapyAlgorithmState.ResumeLayout(False)
         TabPage14TherapyAlgorithmState.PerformLayout()
-        TableLayoutPanelTherapyAlgorithmState.ResumeLayout(False)
-        TableLayoutPanelTherapyAlgorithmState.PerformLayout()
+        TlpTherapyAlgorithmState.ResumeLayout(False)
+        TlpTherapyAlgorithmState.PerformLayout()
         TabPage01AutoBasalDelivery.ResumeLayout(False)
         TabPage01AutoBasalDelivery.PerformLayout()
-        TableLayoutPanelAutoBasalDelivery.ResumeLayout(False)
-        TableLayoutPanelAutoBasalDelivery.PerformLayout()
+        TlpAutoBasalDelivery.ResumeLayout(False)
+        TlpAutoBasalDelivery.PerformLayout()
         TabPage02AutoModeStatus.ResumeLayout(False)
         TabPage02AutoModeStatus.PerformLayout()
-        TableLayoutPanelAutoModeStatus.ResumeLayout(False)
-        TableLayoutPanelAutoModeStatus.PerformLayout()
+        TlpAutoModeStatus.ResumeLayout(False)
+        TlpAutoModeStatus.PerformLayout()
         TabPage03BgReadings.ResumeLayout(False)
         TabPage03BgReadings.PerformLayout()
-        TableLayoutPanelBgReadings.ResumeLayout(False)
-        TableLayoutPanelBgReadings.PerformLayout()
+        TlpBgReadings.ResumeLayout(False)
+        TlpBgReadings.PerformLayout()
         TabPage04Calibration.ResumeLayout(False)
         TabPage04Calibration.PerformLayout()
-        TableLayoutPanelCalibration.ResumeLayout(False)
-        TableLayoutPanelCalibration.PerformLayout()
+        TlpCalibration.ResumeLayout(False)
+        TlpCalibration.PerformLayout()
         TabPage05Insulin.ResumeLayout(False)
         TabPage05Insulin.PerformLayout()
-        TableLayoutPanelInsulin.ResumeLayout(False)
-        TableLayoutPanelInsulin.PerformLayout()
+        TlpInsulin.ResumeLayout(False)
+        TlpInsulin.PerformLayout()
         TabPage06LowGlucoseSuspended.ResumeLayout(False)
         TabPage06LowGlucoseSuspended.PerformLayout()
-        TableLayoutPanelLowGlucoseSuspended.ResumeLayout(False)
-        TableLayoutPanelLowGlucoseSuspended.PerformLayout()
+        TlpLowGlucoseSuspended.ResumeLayout(False)
+        TlpLowGlucoseSuspended.PerformLayout()
         TabPage07Meal.ResumeLayout(False)
         TabPage07Meal.PerformLayout()
-        TableLayoutPanelMeal.ResumeLayout(False)
-        TableLayoutPanelMeal.PerformLayout()
+        TlpMeal.ResumeLayout(False)
+        TlpMeal.PerformLayout()
         TabPage08TimeChange.ResumeLayout(False)
         TabPage08TimeChange.PerformLayout()
-        TableLayoutPanelTimeChange.ResumeLayout(False)
-        TableLayoutPanelTimeChange.PerformLayout()
+        TlpTimeChange.ResumeLayout(False)
+        TlpTimeChange.PerformLayout()
         TabPage09BasalPerHour.ResumeLayout(False)
         TabPage10CurrentUser.ResumeLayout(False)
         TabPage11AllUsers.ResumeLayout(False)
@@ -3275,6 +3275,8 @@ Partial Class Form1
     Friend WithEvents StatusStrip1 As StatusStrip
     Friend WithEvents StatusStripSpacerRight As ToolStripStatusLabel
     Friend WithEvents StatusStripSpeech As ToolStripStatusLabel
+    Friend WithEvents TabControlPage1 As TabControl
+    Friend WithEvents TabControlPage2 As TabControl
     Friend WithEvents TabPage01AutoBasalDelivery As TabPage
     Friend WithEvents TabPage01HomePage As TabPage
     Friend WithEvents TabPage02AutoModeStatus As TabPage
@@ -3302,44 +3304,6 @@ Partial Class Form1
     Friend WithEvents TabPage13SensorGlucose As TabPage
     Friend WithEvents TabPage14TherapyAlgorithmState As TabPage
     Friend WithEvents TabPage15More As TabPage
-    Friend WithEvents TabControlPage1 As TabControl
-    Friend WithEvents TabControlPage2 As TabControl
-    Friend WithEvents TableLayoutPanelActiveInsulin As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelActiveInsulinTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelAutoBasalDelivery As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelAutoBasalDeliveryTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelAutoModeStatus As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelAutoModeStatusTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelBasal As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelBasalTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelBgReadings As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelBgReadingsTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelCalibration As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelCalibrationTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelInsulin As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelInsulinTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelLastAlarm As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelLastAlarmTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelLastSG As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelLastSgTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelLimits As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelLimitsTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelLowGlucoseSuspended As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelLowGlucoseSuspendedTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelMeal As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelMealTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelNotificationActive As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelNotificationActiveTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelNotificationsCleared As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelNotificationsClearedTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelPumpBannerState As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelPumpBannerStateTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelSgs As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelSgsTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelTherapyAlgorithmState As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelTherapyAlgorithmStateTop As TableLayoutPanelTopEx
-    Friend WithEvents TableLayoutPanelTimeChange As TableLayoutPanel
-    Friend WithEvents TableLayoutPanelTimeChangeTop As TableLayoutPanelTopEx
     Friend WithEvents TemporaryUseAdvanceAITDecayCheckBox As CheckBox
     Friend WithEvents TimeChangeLabel As Label
     Friend WithEvents TimeInRangeChartLabel As Label
@@ -3353,6 +3317,42 @@ Partial Class Form1
     Friend WithEvents TirComplianceLabel As Label
     Friend WithEvents TiTRMgsLabel As Label
     Friend WithEvents TiTRMgsLabel2 As Label
+    Friend WithEvents TlpActiveInsulin As TableLayoutPanel
+    Friend WithEvents TlpActiveInsulinTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpAutoBasalDelivery As TableLayoutPanel
+    Friend WithEvents TlpAutoBasalDeliveryTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpAutoModeStatus As TableLayoutPanel
+    Friend WithEvents TlpAutoModeStatusTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpBasal As TableLayoutPanel
+    Friend WithEvents TlpBasalTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpBgReadings As TableLayoutPanel
+    Friend WithEvents TlpBgReadingsTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpCalibration As TableLayoutPanel
+    Friend WithEvents TlpCalibrationTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpInsulin As TableLayoutPanel
+    Friend WithEvents TlpInsulinTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpLastAlarm As TableLayoutPanel
+    Friend WithEvents TlpLastAlarmTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpLastSG As TableLayoutPanel
+    Friend WithEvents TlpLastSgTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpLimits As TableLayoutPanel
+    Friend WithEvents TlpLimitsTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpLowGlucoseSuspended As TableLayoutPanel
+    Friend WithEvents TlpLowGlucoseSuspendedTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpMeal As TableLayoutPanel
+    Friend WithEvents TlpMealTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpNotificationActive As TableLayoutPanel
+    Friend WithEvents TlpNotificationActiveTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpNotificationsCleared As TableLayoutPanel
+    Friend WithEvents TlpNotificationsClearedTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpPumpBannerState As TableLayoutPanel
+    Friend WithEvents TlpPumpBannerStateTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpSgs As TableLayoutPanel
+    Friend WithEvents TlpSgsTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpTherapyAlgorithmState As TableLayoutPanel
+    Friend WithEvents TlpTherapyAlgorithmStateTop As TableLayoutPanelTopEx
+    Friend WithEvents TlpTimeChange As TableLayoutPanel
+    Friend WithEvents TlpTimeChangeTop As TableLayoutPanelTopEx
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator2 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator3 As ToolStripSeparator

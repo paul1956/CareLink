@@ -2,14 +2,14 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.IO
 Imports System.Text
 Imports Microsoft.VisualBasic.ApplicationServices
 
 Imports Octokit
 
 ''' <summary>
-'''  Dialog for handling unhandled exceptions, generating error reports, and guiding users to report issues.
+'''  Dialog for handling unhandled exceptions, generating error reports,
+'''  and guiding users to report issues.
 ''' </summary>
 Public Class ExceptionHandlerDialog
 
@@ -34,7 +34,8 @@ Public Class ExceptionHandlerDialog
     Public Property ReportFileNameWithPath As String
 
     ''' <summary>
-    '''  Creates a report file containing exception and stack trace information, as well as cleaned patient data.
+    '''  Creates a report file containing exception and stack trace information,
+    '''  as well as cleaned patient data.
     ''' </summary>
     ''' <param name="exceptionText">The exception message text.</param>
     ''' <param name="stackTraceText">The stack trace text.</param>
@@ -44,7 +45,7 @@ Public Class ExceptionHandlerDialog
             stackTraceText As String,
             UniqueFileNameWithPath As String)
 
-        Using stream As StreamWriter = File.CreateText(UniqueFileNameWithPath)
+        Using stream As IO.StreamWriter = IO.File.CreateText(UniqueFileNameWithPath)
             ' write exception header
             stream.WriteLine(value:=ExceptionStartingString)
             ' write exception
@@ -76,14 +77,15 @@ Public Class ExceptionHandlerDialog
     End Function
 
     ''' <summary>
-    '''  Handles the Cancel button click event. Deletes the report file if it exists and closes the dialog.
+    '''  Handles the Cancel button click event. Deletes the report file if it exists
+    '''  and closes the dialog.
     ''' </summary>
     ''' <param name="sender">The sender of the event.</param>
     ''' <param name="e">The event arguments.</param>
     ''' <remarks>This method is called when the Cancel button is clicked.</remarks>
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
         If Not String.IsNullOrWhiteSpace(value:=Me.ReportFileNameWithPath) Then
-            File.Delete(path:=Me.ReportFileNameWithPath)
+            IO.File.Delete(path:=Me.ReportFileNameWithPath)
         End If
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
@@ -96,8 +98,10 @@ Public Class ExceptionHandlerDialog
     ''' <param name="sender">The sender of the event.</param>
     ''' <param name="e">The event arguments.</param>
     ''' <remarks>This method is called when the dialog is loaded.</remarks>
-    Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        StartOrStopServerUpdateTimer(Start:=False)
+    Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) _
+        Handles MyBase.Load
+
+        SetServerUpdateTimer(Start:=False)
         Dim rtb As RichTextBox = Me.InstructionsRichTextBox
         Dim newFont As Font = rtb.Font
         _gitClient = New GitHubClient(
@@ -163,28 +167,40 @@ Public Class ExceptionHandlerDialog
                 UniqueFileNameWithPath:=uniqueFileNameResult.withPath)
         Else
             CurrentDateCulture =
-                Me.ReportFileNameWithPath.ExtractCultureFromFileName(FixedPart:=BaseNameSavedErrorReport)
+                Me.ReportFileNameWithPath.ExtractCulture(FixedPart:=BaseNameSavedErrorReport)
             If CurrentDateCulture Is Nothing Then
                 Me.Close()
                 Exit Sub
             End If
             rtb.Text = $"Clicking OK will rerun the data file that caused the error{vbCrLf}"
+            Dim path As String =
+                IO.Path.GetFileName(path:=Me.ReportFileNameWithPath)
             Dim fileLink As String =
-                $"{Path.GetFileName(path:=Me.ReportFileNameWithPath)}: file://{Me.ReportFileNameWithPath}"
+                $"{path}: file://{Me.ReportFileNameWithPath}"
             AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
             AppendTextWithFontChange(rtb, text:="and stored in", newFont:=newFont, padRight:=0)
-            AppendTextWithFontChange(rtb, text:=GetProjectDataDirectory(), newFont:=fontBold, padRight:=0)
+            AppendTextWithFontChange(
+                rtb,
+                text:=GetProjectDataDirectory(),
+                newFont:=fontBold,
+                padRight:=0)
             Me.LocalRawData =
-                Me.DecomposeReportFile(Me.ExceptionTextBox, Me.StackTraceTextBox, Me.ReportFileNameWithPath)
+                Me.DecomposeReportFile(
+                    Me.ExceptionTextBox,
+                    Me.StackTraceTextBox,
+                    Me.ReportFileNameWithPath)
         End If
     End Sub
 
     ''' <summary>
-    '''  Handles the form shown event. Hides the main form and sets the dialog to be topmost.
+    '''  Handles the form shown event. Hides the main form and sets the dialog
+    '''  to be topmost.
     ''' </summary>
     ''' <param name="sender">The sender of the event.</param>
     ''' <param name="e">The event arguments.</param>
-    ''' <remarks>This is used to ensure the dialog is displayed above other forms.</remarks>
+    ''' <remarks>
+    '''  This is used to ensure the dialog is displayed above other forms.
+    ''' </remarks>
     Private Sub ExceptionHandlerForm_Shown(sender As Object, e As EventArgs) _
         Handles MyBase.Shown
 
@@ -209,14 +225,17 @@ Public Class ExceptionHandlerDialog
         Const value As String = "file://"
         Dim startIndex As Integer = value.Length
         If e.LinkText.StartsWith(value) Then
-            Process.Start(fileName:="Explorer.exe", arguments:=e.LinkText.Substring(startIndex))
+            Process.Start(
+                fileName:="Explorer.exe",
+                arguments:=e.LinkText.Substring(startIndex))
         Else
             OpenUrlInBrowser(url:=e.LinkText)
         End If
     End Sub
 
     ''' <summary>
-    '''  Handles the OK button click event. Sets the dialog result based on whether a report file is specified.
+    '''  Handles the OK button click event. Sets the dialog result based on
+    '''  whether a report file is specified.
     ''' </summary>
     ''' <param name="sender">The sender of the event.</param>
     ''' <param name="e">The event arguments.</param>
@@ -243,7 +262,9 @@ Public Class ExceptionHandlerDialog
     '''  Reports an invalid error file by throwing a NotImplementedException.
     ''' </summary>
     ''' <param name="currentLine">The current line read from the file.</param>
-    ''' <param name="exceptionStartingString">The expected starting string for the exception section.</param>
+    ''' <param name="exceptionStartingString">
+    '''  The expected starting string for the exception section.
+    ''' </param>
     Private Sub ReportInvalidErrorFile(currentLine As String, exceptionStartingString As String)
         Throw New NotImplementedException()
     End Sub
@@ -260,7 +281,7 @@ Public Class ExceptionHandlerDialog
         stackTraceTextBox As TextBox,
         ReportFileNameWithPath As String) As String
 
-        Using stream As StreamReader = File.OpenText(ReportFileNameWithPath)
+        Using stream As IO.StreamReader = IO.File.OpenText(ReportFileNameWithPath)
             ' read exception header
             Dim currentLine As String = stream.ReadLine()
             If currentLine <> ExceptionStartingString Then
@@ -273,13 +294,17 @@ Public Class ExceptionHandlerDialog
             ' read exception trailer
             currentLine = stream.ReadLine
             If currentLine <> ExceptionTerminatingString Then
-                Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=ExceptionTerminatingString)
+                Me.ReportInvalidErrorFile(
+                    currentLine,
+                    exceptionStartingString:=ExceptionTerminatingString)
             End If
 
             ' read stack trace header
             currentLine = stream.ReadLine
             If currentLine <> StackTraceStartingStr Then
-                Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=StackTraceStartingStr)
+                Me.ReportInvalidErrorFile(
+                    currentLine,
+                    exceptionStartingString:=StackTraceStartingStr)
             End If
 
             ' read stack trace
@@ -294,7 +319,9 @@ Public Class ExceptionHandlerDialog
                 currentLine = ""
             End While
             If currentLine <> StackTraceTerminatingStr Then
-                Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=StackTraceTerminatingStr)
+                Me.ReportInvalidErrorFile(
+                    currentLine,
+                    exceptionStartingString:=StackTraceTerminatingStr)
             End If
             stackTraceTextBox.Text = sb.ToString
             Return stream.ReadToEnd

@@ -25,7 +25,9 @@ Public Class PumpSetup
     ''' </summary>
     ''' <param name="text">The text to search.</param>
     ''' <param name="index">The index at which to find the word.</param>
-    ''' <returns>The word at the specified index, or an empty string if the index is out of bounds.</returns>
+    ''' <returns>
+    '''  The word at the specified index, or an empty string if the index is out of bounds.
+    ''' </returns>
     Private Shared Function GetWordAtIndex(text As String, index As Integer) As String
         If index < 0 OrElse index >= text.Length Then Return ""
         Dim start As Integer = index
@@ -111,7 +113,8 @@ Public Class PumpSetup
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">The MouseEventArgs for the MouseDown event.</param>
-    Private Sub InstructionsRtb_MouseDown(sender As Object, e As MouseEventArgs) Handles InstructionsRtb.MouseDown
+    Private Sub InstructionsRtb_MouseDown(sender As Object, e As MouseEventArgs) _
+        Handles InstructionsRtb.MouseDown
         If e.Button = MouseButtons.Right Then
             Dim idx As Integer = Me.InstructionsRtb.GetCharIndexFromPosition(pt:=e.Location)
             Dim word As String = GetWordAtIndex(Me.InstructionsRtb.Text, idx)

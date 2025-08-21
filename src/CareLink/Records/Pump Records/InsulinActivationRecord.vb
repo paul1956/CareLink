@@ -3,12 +3,14 @@
 ' See the LICENSE file in the project root for more information.
 
 ''' <summary>
-'''  Represents a record of insulin activation, including the up count and active insulin time (AIT) in hours.
+'''  Represents a record of insulin activation, including the up count and
+'''  active insulin time (AIT) in hours.
 ''' </summary>
 Public Class InsulinActivationRecord
 
     ''' <summary>
-    '''  Gets or sets the up count value, which may represent the number of activations or changes.
+    '''  Gets or sets the up count value, which may represent the number
+    '''  of activations or changes.
     ''' </summary>
     Public Property UpCount As Integer
 

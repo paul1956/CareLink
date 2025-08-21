@@ -9,6 +9,7 @@ Friend Module DeviceSettingsExtensions
     <Extension>
     Friend Function GetSingleLineValue(Of T)(sTable As StringTable, key As String) As T
         Dim typeOfT As Type = GetType(T)
+        Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
         For Each r As StringTable.Row In sTable.Rows
             Dim v As String = r.Columns(index:=0)
             If v.StartsWith(value:=key) Then
@@ -19,7 +20,7 @@ Friend Module DeviceSettingsExtensions
                 If typeOfT Is GetType(String) Then
                     Return CType(CObj(value), T)
                 End If
-                value = value.Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)(0)
+                value = value.Split(separator:=" ", options)(0)
                 If typeOfT Is GetType(Single) Then
                     value = value.Replace(oldChar:=","c, newChar:=CareLinkDecimalSeparator)
                     Return If(IsNumeric(Expression:=value),
@@ -99,7 +100,9 @@ Friend Module DeviceSettingsExtensions
     End Function
 
     <Extension>
-    Public Function ToCarbRatioList(deviceCarbRatios As List(Of DeviceCarbRatioRecord)) As List(Of CarbRatioRecord)
+    Public Function ToCarbRatioList(
+        deviceCarbRatios As List(Of DeviceCarbRatioRecord)) As List(Of CarbRatioRecord)
+
         Dim carbRatios As New List(Of CarbRatioRecord)
         For Each e As IndexClass(Of DeviceCarbRatioRecord) In deviceCarbRatios.WithIndex
             Dim deviceCarbRatio As DeviceCarbRatioRecord = e.Value
@@ -108,8 +111,7 @@ Friend Module DeviceSettingsExtensions
                             .CarbRatio = deviceCarbRatio.Ratio,
                             .EndTime = If(e.IsLast,
                                           Eleven59,
-                                          deviceCarbRatios(e.Index + 1).Time
-                                         )
+                                          deviceCarbRatios(e.Index + 1).Time)
             })
         Next
         Return carbRatios

@@ -32,7 +32,8 @@ Friend Module GetManualBasalPoints
         Dim nextPumpSuspendTime As OADate
         Dim markerDateTime? As Date
         If s_markers.Count > 1 AndAlso markerWithIndex.Index = s_markers.Count - 2 Then
-            Dim activationType As String = s_markers.Last().GetStringFromJson(NameOf(Insulin.ActivationType))
+            Dim activationType As String =
+                s_markers.Last().GetStringFromJson(NameOf(Insulin.ActivationType))
             If activationType = "MANUAL" Then
                 markerDateTime = s_markers.Last().GetMarkerTimestamp
                 If markerDateTime Is Nothing Then
@@ -50,7 +51,9 @@ Friend Module GetManualBasalPoints
             nextPumpSuspendTime = New OADate(asDate:=markerDateTime.Value)
         End If
 
-        Dim lowGlucoseSuspend As New LowGlucoseSuspended(item:=s_markers.Last(), recordNumber:=s_markers.Count)
+        Dim lowGlucoseSuspend As New LowGlucoseSuspended(
+            item:=s_markers.Last(),
+            recordNumber:=s_markers.Count)
         If lowGlucoseSuspend.deliverySuspended Then
             Return New SortedDictionary(Of OADate, Single)
         End If
@@ -73,7 +76,10 @@ Friend Module GetManualBasalPoints
                 Dim [end] As TimeOnly = If(e.IsLast,
                                            Eleven59.AddMinutes(value:=1),
                                            basalRateRecords(index:=e.Index + 1).Time)
-                If TimeOnly.FromDateTime(Date.FromOADate(currentMarkerTime)).IsBetween(start, [end]) Then
+                Dim currentTimeOnly As TimeOnly =
+                    TimeOnly.FromDateTime(Date.FromOADate(currentMarkerTime))
+
+                If currentTimeOnly.IsBetween(start, [end]) Then
                     Dim rate As Single = basalRecord.UnitsPerHr / 12
                     Dim value As TimeSpan
                     If rate < 0.025 Then
@@ -83,7 +89,8 @@ Friend Module GetManualBasalPoints
                             timeOrderedMarkers.Add(key:=currentMarkerTime, value:=0.025)
                         End If
                         Dim oaBaseDate As Date = Date.FromOADate(currentMarkerTime)
-                        Dim increments As Integer = CInt(Math.Ceiling((basalRecord.UnitsPerHr / 0.025).RoundTo025))
+                        Dim increments As Integer =
+                            CInt(Math.Ceiling((basalRecord.UnitsPerHr / 0.025).RoundTo025))
                         value = New TimeSpan(hours:=0, minutes:=60 \ increments, seconds:=0)
                         currentMarkerTime = New OADate(asDate:=oaBaseDate.Add(value))
                     Else
@@ -93,7 +100,8 @@ Friend Module GetManualBasalPoints
                             timeOrderedMarkers.Add(key:=currentMarkerTime, value:=rate)
                         End If
                         Dim oaBaseDate As Date = Date.FromOADate(currentMarkerTime)
-                        currentMarkerTime = New OADate(asDate:=oaBaseDate.Add(value:=FiveMinuteSpan))
+                        currentMarkerTime =
+                            New OADate(asDate:=oaBaseDate.Add(value:=FiveMinuteSpan))
                     End If
                     Exit For
                 End If

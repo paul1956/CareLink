@@ -3,8 +3,9 @@
 ' See the LICENSE file in the project root for more information.
 
 ''' <summary>
-'''  Provides helper methods for displaying and managing notification data in <see cref="DataGridView"/> controls.
-'''  Handles attaching event handlers, formatting, and layout for notification tables.
+'''  Provides helper methods for displaying and managing notification data
+'''  in <see cref="DataGridView"/> controls. Handles attaching event handlers,
+'''  formatting, and layout for notification tables.
 ''' </summary>
 Friend Module NotificationHelpers
     Private ReadOnly s_columnsToHide As New List(Of String)
@@ -22,14 +23,18 @@ Friend Module NotificationHelpers
     '''  It includes handlers for context menu, cell formatting, column addition,
     '''  data binding completion, and layout events.
     ''' </summary>
-    ''' <param name="dgv">The <see cref="DataGridView"/> to which the handlers will be attached.</param>
+    ''' <param name="dgv">
+    '''  The <see cref="DataGridView"/> to which the handlers will be attached.
+    ''' </param>
     Private Sub AttachHandlers(dgv As DataGridView)
-        RemoveHandler dgv.CellContextMenuStripNeeded, AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
+        RemoveHandler dgv.CellContextMenuStripNeeded,
+            AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
         RemoveHandler dgv.CellFormatting, AddressOf DgvNotification_CellFormatting
         RemoveHandler dgv.ColumnAdded, AddressOf DgvNotification_ColumnAdded
         RemoveHandler dgv.DataBindingComplete, AddressOf DgvNotification_DataBindingComplete
         RemoveHandler dgv.Layout, AddressOf DgvNotification_Layout
-        AddHandler dgv.CellContextMenuStripNeeded, AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
+        AddHandler dgv.CellContextMenuStripNeeded,
+            AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
         AddHandler dgv.CellFormatting, AddressOf DgvNotification_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DgvNotification_ColumnAdded
         AddHandler dgv.DataBindingComplete, AddressOf DgvNotification_DataBindingComplete
@@ -107,11 +112,15 @@ Friend Module NotificationHelpers
     ''' </summary>
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">Event arguments for data binding completion.</param>
-    Private Sub DgvNotification_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs)
+    Private Sub DgvNotification_DataBindingComplete(
+            sender As Object,
+            e As DataGridViewBindingCompleteEventArgs)
+
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.ColumnCount > 0 Then
             dgv.ScrollBars = ScrollBars.None
-            Dim dataGridViewLastColumn As DataGridViewColumn = dgv.Columns(dgv.ColumnCount - 1)
+            Dim dataGridViewLastColumn As DataGridViewColumn =
+                dgv.Columns(index:=dgv.ColumnCount - 1)
             If dataGridViewLastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
                 dataGridViewLastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
             End If
@@ -120,7 +129,8 @@ Friend Module NotificationHelpers
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.Layout"/> event to adjust the DataGridView size to fit its rows.
+    '''  Handles the <see cref="DataGridView.Layout"/> event to
+    '''  adjust the DataGridView size to fit its rows.
     ''' </summary>
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">Layout event arguments.</param>
@@ -148,12 +158,17 @@ Friend Module NotificationHelpers
     End Sub
 
     ''' <summary>
-    '''  Displays a notification data table in a <see cref="DataGridView"/> within the specified panel.
+    '''  Displays a notification data table in a <see cref="DataGridView"/> within
+    '''  the specified panel.
     ''' </summary>
-    ''' <param name="realPanel">The <see cref="TableLayoutPanel"/> to add the DataGridView to.</param>
+    ''' <param name="realPanel">
+    '''  The <see cref="TableLayoutPanel"/> to add the DataGridView to.
+    ''' </param>
     ''' <param name="table">The <see cref="DataTable"/> to display.</param>
     ''' <param name="className">The class name for naming the DataGridView.</param>
-    ''' <param name="attachHandlers">Delegate to attach event handlers to the DataGridView.</param>
+    ''' <param name="attachHandlers">
+    '''  Delegate to attach event handlers to the DataGridView.
+    ''' </param>
     Private Sub DisplayNotificationDataTableInDGV(
         ByRef realPanel As TableLayoutPanel,
         table As DataTable,
@@ -191,7 +206,9 @@ Friend Module NotificationHelpers
         If className = "activeNotifications" Then
         Else
             For Each dgvRow As DataGridViewRow In dgv.Rows
-                dgv.AutoResizeRow(rowIndex, autoSizeRowMode:=DataGridViewAutoSizeRowMode.AllCellsExceptHeader)
+                dgv.AutoResizeRow(
+                    rowIndex,
+                    autoSizeRowMode:=DataGridViewAutoSizeRowMode.AllCellsExceptHeader)
                 rowIndex += 1
                 dgvRow.DefaultCellStyle.WrapMode = DataGridViewTriState.False
             Next
@@ -200,66 +217,78 @@ Friend Module NotificationHelpers
     End Sub
 
     ''' <summary>
-    '''  Creates notification tables for active and cleared notifications and displays them in the main form.
+    '''  Creates notification tables for active and cleared notifications
+    '''  and displays them in the main form.
     ''' </summary>
     ''' <param name="mainForm">The main form containing notification panels.</param>
     Friend Sub UpdateNotificationTabs(mainForm As Form1)
         Const rowIndex As ServerDataIndexes = ServerDataIndexes.notificationHistory
 
-        mainForm.TableLayoutPanelNotificationsCleared.SetTableName(rowIndex, isClearedNotifications:=True)
-        mainForm.TableLayoutPanelNotificationsCleared.Controls.Clear()
-        mainForm.TableLayoutPanelNotificationsCleared.RowStyles.Clear()
-        mainForm.TableLayoutPanelNotificationsCleared.RowCount = 0
+        mainForm.TlpNotificationsCleared.SetTableName(rowIndex, isClearedNotifications:=True)
+        mainForm.TlpNotificationsCleared.Controls.Clear()
+        mainForm.TlpNotificationsCleared.RowStyles.Clear()
+        mainForm.TlpNotificationsCleared.RowCount = 0
 
         ' Force a full garbage collection and allow background GC if enabled
-        GC.Collect(generation:=GC.MaxGeneration, mode:=GCCollectionMode.Optimized, blocking:=False, compacting:=False)
+        GC.Collect(
+            generation:=GC.MaxGeneration,
+            mode:=GCCollectionMode.Optimized,
+            blocking:=False,
+            compacting:=False)
 
         Dim innerJson As List(Of Dictionary(Of String, String))
 
         ' clearedNotifications
-        innerJson = JsonToDictionaryList(json:=s_notificationHistoryValue(key:="clearedNotifications"))
+        innerJson =
+            JsonToDictionaryList(json:=s_notificationHistoryValue(key:="clearedNotifications"))
         Dim classCollection As List(Of SummaryRecord)
         If innerJson.Count > 0 Then
             innerJson.Reverse()
             For Each jsonDictionary As Dictionary(Of String, String) In innerJson
                 classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
                 DisplayNotificationDataTableInDGV(
-                    realPanel:=mainForm.TableLayoutPanelNotificationsCleared,
+                    realPanel:=mainForm.TlpNotificationsCleared,
                     table:=ClassCollectionToDataTable(classCollection),
                     className:=NameOf(SummaryRecord),
                     attachHandlers:=AddressOf AttachHandlers)
             Next
-            mainForm.TableLayoutPanelNotificationsCleared.HorizontalScroll.Enabled = False
-            mainForm.TableLayoutPanelNotificationsCleared.HorizontalScroll.Visible = False
+            mainForm.TlpNotificationsCleared.HorizontalScroll.Enabled = False
+            mainForm.TlpNotificationsCleared.HorizontalScroll.Visible = False
         Else
-            mainForm.TableLayoutPanelNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
-            mainForm.TableLayoutPanelNotificationsCleared.DgvNoRecordsFound(className:="clearedNotifications")
+            mainForm.TlpNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
+            Dim className As String = "clearedNotifications"
+            mainForm.TlpNotificationsCleared.DgvNoRecordsFound(className)
         End If
 
         ' activeNotifications
-        innerJson = JsonToDictionaryList(s_notificationHistoryValue(key:="activeNotifications"))
+        innerJson =
+            JsonToDictionaryList(s_notificationHistoryValue(key:="activeNotifications"))
         If innerJson.Count > 0 Then
-            mainForm.TableLayoutPanelNotificationActive.SetTableName(rowIndex, isClearedNotifications:=False)
-            If mainForm.TableLayoutPanelNotificationActive.Controls.Count > 1 Then
-                mainForm.TableLayoutPanelNotificationActive.Controls.RemoveAt(index:=1)
-                mainForm.TableLayoutPanelNotificationActive.RowStyles.RemoveAt(index:=1)
-                mainForm.TableLayoutPanelNotificationActive.RowCount = 1
+            mainForm.TlpNotificationActive.SetTableName(
+                rowIndex,
+                isClearedNotifications:=False)
+            If mainForm.TlpNotificationActive.Controls.Count > 1 Then
+                mainForm.TlpNotificationActive.Controls.RemoveAt(index:=1)
+                mainForm.TlpNotificationActive.RowStyles.RemoveAt(index:=1)
+                mainForm.TlpNotificationActive.RowCount = 1
             End If
-            For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
+            For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In
+                innerJson.WithIndex()
+
                 Dim jsonDictionary As Dictionary(Of String, String) = innerDictionary.Value
                 classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
                 DisplayNotificationDataTableInDGV(
-                    realPanel:=mainForm.TableLayoutPanelNotificationActive,
+                    realPanel:=mainForm.TlpNotificationActive,
                     table:=ClassCollectionToDataTable(classCollection),
                     className:="ActiveNotifications",
                     attachHandlers:=AddressOf AttachHandlers)
             Next
         Else
-            mainForm.TableLayoutPanelNotificationActive.AutoSizeMode = AutoSizeMode.GrowAndShrink
-            mainForm.TableLayoutPanelNotificationActive.DgvNoRecordsFound(className:="activeNotification")
+            mainForm.TlpNotificationActive.AutoSizeMode = AutoSizeMode.GrowAndShrink
+            mainForm.TlpNotificationActive.DgvNoRecordsFound(className:="activeNotification")
         End If
-        mainForm.TableLayoutPanelNotificationActive.AutoScroll = True
-        mainForm.TableLayoutPanelNotificationsCleared.AutoScroll = True
+        mainForm.TlpNotificationActive.AutoScroll = True
+        mainForm.TlpNotificationsCleared.AutoScroll = True
         Application.DoEvents()
     End Sub
 

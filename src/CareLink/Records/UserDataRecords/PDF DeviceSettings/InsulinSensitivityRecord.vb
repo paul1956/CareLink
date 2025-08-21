@@ -8,13 +8,14 @@ Public Class InsulinSensitivityRecord
         If String.IsNullOrWhiteSpace(value:=r.Columns(index:=0)) Then
             Exit Sub
         End If
-        Dim s() As String = r.Columns(index:=0).Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
+        Dim s() As String =
+            r.Columns(index:=0).Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
         If s.Length <> 2 Then
             Stop
             Exit Sub
         End If
         If TimeOnly.TryParse(s:=s(0), result:=Me.Time) Then
-            Me.Sensitivity = ParseSingle(value:=s(1))
+            Me.Sensitivity = ParseSingle(s:=s(1))
             Me.IsValid = True
         Else
             Stop

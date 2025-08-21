@@ -19,7 +19,8 @@ Public Class OADate
     Private ReadOnly _oADate As Double
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="OADate"/> class from a <see cref="Double"/> OADate value.
+    '''  Initializes a new instance of the <see cref="OADate"/> class
+    '''  from a <see cref="Double"/> OADate value.
     ''' </summary>
     ''' <param name="oADateAsDouble">The OLE Automation date as a <see cref="Double"/>.</param>
     Public Sub New(oADateAsDouble As Double)
@@ -27,7 +28,8 @@ Public Class OADate
     End Sub
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="OADate"/> class from a <see cref="Date"/>.
+    '''  Initializes a new instance of the <see cref="OADate"/> class
+    '''  from a <see cref="Date"/>.
     ''' </summary>
     ''' <param name="asDate">The <see cref="Date"/> to convert to OADate.</param>
     Public Sub New(asDate As Date)
@@ -126,7 +128,7 @@ Public Class OADate
     ''' <param name="b">The <see cref="Byte"/> value to convert.</param>
     ''' <returns>A new <see cref="OADate"/> instance.</returns>
     Public Shared Narrowing Operator CType(b As Byte) As OADate
-        Return New OADate(b)
+        Return New OADate(oADateAsDouble:=b)
     End Operator
 
     ''' <summary>
@@ -137,7 +139,9 @@ Public Class OADate
     '''  A value less than zero if this instance is less than <paramref name="other"/>,
     '''  zero if they are equal, or greater than zero if this instance is greater.
     ''' </returns>
-    Public Function CompareTo(other As OADate) As Integer Implements IComparable(Of OADate).CompareTo
+    Public Function CompareTo(other As OADate) As Integer _
+        Implements IComparable(Of OADate).CompareTo
+
         Return _oADate.CompareTo(other._oADate)
     End Function
 
@@ -145,7 +149,8 @@ Public Class OADate
     '''  Determines whether the specified object is equal to the current <see cref="OADate"/>.
     ''' </summary>
     ''' <param name="obj">The object to compare with the current instance.</param>
-    ''' <returns><see langword="True"/> if the objects are equal; otherwise, <see langword="False"/>.</returns>
+    ''' <returns><see langword="True"/> if the objects are equal;
+    ''' otherwise, <see langword="False"/>.</returns>
     Public Overrides Function Equals(obj As Object) As Boolean
         Dim oA As OADate = TryCast(obj, OADate)
         Return oA IsNot Nothing AndAlso _oADate = oA._oADate

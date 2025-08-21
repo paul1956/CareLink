@@ -7,48 +7,54 @@ Imports System.Runtime.CompilerServices
 Friend Module TableLayoutPanelExtensions
 
     Private ReadOnly s_tablesSupportingCopyToClipboard As New List(Of String) From {
-        NameOf(Form1.TableLayoutPanelActiveInsulinTop),
-        NameOf(Form1.TableLayoutPanelAutoBasalDeliveryTop),
-        NameOf(Form1.TableLayoutPanelBgReadingsTop),
-        NameOf(Form1.TableLayoutPanelPumpBannerStateTop),
-        NameOf(Form1.TableLayoutPanelBasalTop),
-        NameOf(Form1.TableLayoutPanelCalibrationTop),
-        NameOf(Form1.TableLayoutPanelLastAlarmTop),
-        NameOf(Form1.TableLayoutPanelLastSgTop),
-        NameOf(Form1.TableLayoutPanelLowGlucoseSuspendedTop),
-        NameOf(Form1.TableLayoutPanelNotificationActiveTop),
-        NameOf(Form1.TableLayoutPanelNotificationsClearedTop),
-        NameOf(Form1.TableLayoutPanelTherapyAlgorithmStateTop),
-        NameOf(Form1.TableLayoutPanelTimeChangeTop)}
+        NameOf(Form1.TlpActiveInsulinTop),
+        NameOf(Form1.TlpAutoBasalDeliveryTop),
+        NameOf(Form1.TlpBgReadingsTop),
+        NameOf(Form1.TlpPumpBannerStateTop),
+        NameOf(Form1.TlpBasalTop),
+        NameOf(Form1.TlpCalibrationTop),
+        NameOf(Form1.TlpLastAlarmTop),
+        NameOf(Form1.TlpLastSgTop),
+        NameOf(Form1.TlpLowGlucoseSuspendedTop),
+        NameOf(Form1.TlpNotificationActiveTop),
+        NameOf(Form1.TlpNotificationsClearedTop),
+        NameOf(Form1.TlpTherapyAlgorithmStateTop),
+        NameOf(Form1.TlpTimeChangeTop)}
 
     Private ReadOnly s_tablesSupportingExportToExcel As New List(Of String) From {
-        NameOf(Form1.TableLayoutPanelAutoBasalDeliveryTop),
-        NameOf(Form1.TableLayoutPanelAutoModeStatusTop),
-        NameOf(Form1.TableLayoutPanelBgReadingsTop),
-        NameOf(Form1.TableLayoutPanelBasalTop),
-        NameOf(Form1.TableLayoutPanelCalibrationTop),
-        NameOf(Form1.TableLayoutPanelInsulinTop),
-        NameOf(Form1.TableLayoutPanelLimitsTop),
-        NameOf(Form1.TableLayoutPanelMealTop),
-        NameOf(Form1.TableLayoutPanelNotificationActiveTop),
-        NameOf(Form1.TableLayoutPanelNotificationsClearedTop),
-        NameOf(Form1.TableLayoutPanelSgsTop),
-        NameOf(Form1.TableLayoutPanelTimeChangeTop)}
+        NameOf(Form1.TlpAutoBasalDeliveryTop),
+        NameOf(Form1.TlpAutoModeStatusTop),
+        NameOf(Form1.TlpBgReadingsTop),
+        NameOf(Form1.TlpBasalTop),
+        NameOf(Form1.TlpCalibrationTop),
+        NameOf(Form1.TlpInsulinTop),
+        NameOf(Form1.TlpLimitsTop),
+        NameOf(Form1.TlpMealTop),
+        NameOf(Form1.TlpNotificationActiveTop),
+        NameOf(Form1.TlpNotificationsClearedTop),
+        NameOf(Form1.TlpSgsTop),
+        NameOf(Form1.TlpTimeChangeTop)}
 
     ''' <summary>
-    '''  Sets the display name of a table, including help text for export/copy options if supported.
+    '''  Sets the display name of a table, including help text for export/copy
+    '''  options if supported.
     ''' </summary>
-    ''' <param name="panel">The <see cref="TableLayoutPanel"/> whose name is to be set.</param>
+    ''' <param name="panel">
+    '''  The <see cref="TableLayoutPanel"/> whose name is to be set.
+    ''' </param>
     ''' <param name="tableName">The base name to display for the table.</param>
     Private Sub SetTableName(ByRef panel As TableLayoutPanel, tableName As String)
         Try
+            Dim c As Control = panel.Controls(index:=0)
             Select Case True
-                Case TypeOf panel.Controls(index:=0) Is Button
+                Case TypeOf c Is Button
                     Dim helpString As String
                     If s_tablesSupportingExportToExcel.Contains(item:=panel.Name) Then
-                        helpString = ": Right Click on Table for Export Options including Excel"
+                        helpString =
+                            ": Right Click on Table for Export Options including Excel"
                     ElseIf s_tablesSupportingCopyToClipboard.Contains(item:=panel.Name) Then
-                        helpString = ": Right Click on Table for cell(s) Export Options"
+                        helpString =
+                            ": Right Click on Table for cell(s) Export Options"
                     Else
                         helpString = ""
                     End If
@@ -56,10 +62,10 @@ Friend Module TableLayoutPanelExtensions
                         tableName = $"{CType(panel.Parent.Parent, TabPage).Text} Markers"
                     End If
                     panel.Controls(index:=1).Text = $"{tableName}{helpString}"
-                Case TypeOf panel.Controls(index:=0) Is DataGridView
-                    CType(panel.Controls(index:=0), DataGridView).Parent.Controls(index:=0).Text = tableName
-                Case TypeOf CType(panel.Controls(index:=0), TableLayoutPanel).Controls(index:=0) Is Label
-                    CType(panel.Controls(index:=0), TableLayoutPanel).Controls(index:=0).Text = tableName
+                Case TypeOf c Is DataGridView
+                    CType(c, DataGridView).Parent.Controls(index:=0).Text = tableName
+                Case TypeOf CType(c, TableLayoutPanel).Controls(index:=0) Is Label
+                    CType(c, TableLayoutPanel).Controls(index:=0).Text = tableName
             End Select
         Catch ex As Exception
             Stop
@@ -95,16 +101,22 @@ Friend Module TableLayoutPanelExtensions
 
         Try
             ' Prevent crashes when the table is not initialized or disposed.
+            Dim c As Control
             Select Case True
                 Case TypeOf panel.Parent Is SplitterPanel
-                    Dim splitContainer As SplitContainer = CType(panel.Parent.Parent, SplitContainer)
-                    SetTableName(panel:=CType(splitContainer.Panel1.Controls(index:=0), TableLayoutPanel), tableName)
+                    Dim splitContainer As SplitContainer =
+                        CType(panel.Parent.Parent, SplitContainer)
+                    c = splitContainer.Panel1.Controls(index:=0)
+                    SetTableName(panel:=CType(c, TableLayoutPanel), tableName)
                 Case TypeOf panel.Parent Is TabPage
-                    SetTableName(panel:=CType(panel.Controls(index:=0).Parent, TableLayoutPanel), tableName)
+                    c = panel.Controls(index:=0).Parent
+                    SetTableName(panel:=CType(c, TableLayoutPanel), tableName)
                 Case TypeOf panel.Controls(index:=0) Is TableLayoutPanel
-                    SetTableName(panel:=CType(panel.Controls(index:=0), TableLayoutPanel), tableName)
+                    c = panel.Controls(index:=0)
+                    SetTableName(panel:=CType(c, TableLayoutPanel), tableName)
                 Case TypeOf panel.Controls(index:=0) Is Label
-                    CType(panel.Controls(index:=0), Label).Text = $"{CInt(rowIndex)} {rowIndex}"
+                    CType(panel.Controls(index:=0), Label).Text =
+                        $"{CInt(rowIndex)} {rowIndex}"
                 Case Else
                     Stop
             End Select

@@ -5,12 +5,14 @@
 Imports System.Runtime.CompilerServices
 
 ''' <summary>
-'''  Provides extension methods for <see cref="DataGridView"/> to simplify initialization and configuration.
+'''  Provides extension methods for <see cref="DataGridView"/> to simplify
+'''   initialization and configuration.
 ''' </summary>
 Public Module DgvInitializationExtensions
 
     ''' <summary>
-    '''  Initializes the specified <see cref="DataGridView"/> with default settings for appearance and behavior.
+    '''  Initializes the specified <see cref="DataGridView"/> with default settings
+    '''  for appearance and behavior.
     ''' </summary>
     ''' <param name="dgv">
     '''  The <see cref="DataGridView"/> to initialize.

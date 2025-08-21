@@ -19,7 +19,9 @@ Friend Module ActiveBasalHelpers
     ''' </remarks>
     Public Function GetActiveBasalRateRecords() As List(Of BasalRateRecord)
         Debug.Assert(condition:=CurrentPdf.IsValid)
-        For Each namedBasal As KeyValuePair(Of String, NamedBasalRecord) In CurrentPdf.Basal.NamedBasal
+        For Each namedBasal As KeyValuePair(Of String, NamedBasalRecord) In
+            CurrentPdf.Basal.NamedBasal
+
             If namedBasal.Value.Active Then
                 Dim basalRates As List(Of BasalRateRecord) = namedBasal.Value.basalRates
                 If basalRates IsNot Nothing AndAlso basalRates.Count > 0 Then

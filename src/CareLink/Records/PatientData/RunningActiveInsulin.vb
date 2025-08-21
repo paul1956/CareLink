@@ -7,7 +7,11 @@ Friend Class RunningActiveInsulin
     Private _adjustmentValue As Single
     Private _incrementUpCount As Integer
 
-    Public Sub New(firstNotSkippedOaTime As OADate, initialInsulinLevel As Single, currentUser As CurrentUserRecord)
+    Public Sub New(
+        firstNotSkippedOaTime As OADate,
+        initialInsulinLevel As Single,
+        currentUser As CurrentUserRecord)
+
         Me.OaDateTime = firstNotSkippedOaTime
         Me.EventDate = Date.FromOADate(firstNotSkippedOaTime)
 

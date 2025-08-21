@@ -46,11 +46,16 @@ Public Module ClassHelpers
                         cellStyle = cellStyle.SetCellStyle(
                             alignment:=DataGridViewContentAlignment.MiddleLeft,
                             padding:=New Padding(all:=1))
-                    Case NameOf([Decimal]), NameOf([Double]), NameOf([Int32]), NameOf([Single]), NameOf([TimeSpan])
+                    Case NameOf([Decimal]),
+                         NameOf([Double]),
+                         NameOf([Int32]),
+                         NameOf([Single]),
+                         NameOf([TimeSpan])
                         cellStyle = cellStyle.SetCellStyle(
                             alignment:=DataGridViewContentAlignment.MiddleRight,
                             padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
-                    Case NameOf([Boolean]), "DeleteRow"
+                    Case NameOf([Boolean]),
+                         "DeleteRow"
                         cellStyle = cellStyle.SetCellStyle(
                             alignment:=DataGridViewContentAlignment.MiddleCenter,
                             padding:=New Padding(all:=0))
@@ -65,8 +70,9 @@ Public Module ClassHelpers
             Next
         End If
         If Not alignmentTable.TryGetValue(key:=columnName, value:=cellStyle) Then
-            Dim alignMiddle As Boolean = columnName = NameOf(SummaryRecord.RecordNumber) OrElse
-                                         columnName = NameOf(Limit.Index)
+            Dim alignMiddle As Boolean =
+                columnName = NameOf(SummaryRecord.RecordNumber) OrElse
+                                columnName = NameOf(Limit.Index)
             cellStyle = If(alignMiddle,
                            (New DataGridViewCellStyle).SetCellStyle(
                                alignment:=DataGridViewContentAlignment.MiddleCenter,

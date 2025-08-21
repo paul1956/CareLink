@@ -17,8 +17,8 @@ Partial Public Class CareLinkUserDataRecord
     Private _userData As CareLinkUserData
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="CareLinkUserDataRecord"/> class with the specified parent list.
-    '''  Populates user data from application settings.
+    '''  Initializes a new instance of the <see cref="CareLinkUserDataRecord"/>
+    '''  class with the specified parent list. Populates user data from application settings.
     ''' </summary>
     ''' <param name="parent">The parent <see cref="CareLinkUserDataList"/>.</param>
     Public Sub New(parent As CareLinkUserDataList)

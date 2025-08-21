@@ -11,7 +11,8 @@ Public Module TimeSpanExtensions
     ''' </summary>
     ''' <param name="hours">The total number of hours to convert.</param>
     ''' <returns>
-    '''  A string formatted as "X days, Y hours" or "X days" or "Y hours", depending on the values.
+    '''  A string formatted as "X days, Y hours" or "X days" or "Y hours",
+    '''  depending on the values.
     ''' </returns>
     <Extension>
     Public Function HoursToDaysAndHours(hours As Integer) As String
@@ -29,12 +30,13 @@ Public Module TimeSpanExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a number of minutes into a human-readable string representing days, hours, and minutes.
+    '''  Converts a number of minutes into a human-readable string representing
+    '''  days, hours, and minutes.
     ''' </summary>
     ''' <param name="minutes">The total number of minutes to convert.</param>
     ''' <returns>
-    '''  A string formatted as "X days, Y hours, Z minutes" or "X days" or "Y hours" or "Z minutes",
-    '''  depending on the values.
+    '''  A string formatted as "X days, Y hours, Z minutes" or "X days" or
+    '''  "Y hours" or "Z minutes", depending on the values.
     ''' </returns>
     <Extension>
     Public Function MinutesToDaysHoursMinutes(minutes As Integer) As String
@@ -61,7 +63,8 @@ Public Module TimeSpanExtensions
     '''  The <paramref name="unit"/> to use in the formatted string (e.g., "hr", "min").
     ''' </param>
     ''' <returns>
-    '''  A formatted string representing the <see cref="TimeSpan"/>, including appropriate units.
+    '''  A formatted string representing the <see cref="TimeSpan"/>,
+    '''  including appropriate units.
     ''' </returns>
     <Extension>
     Public Function ToFormattedTimeSpan(tSpan As TimeSpan, unit As String) As String

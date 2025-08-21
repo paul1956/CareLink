@@ -88,14 +88,29 @@ Public Class NameColorComboBox
         Dim key As String = item.Key
         Using b As Brush = New SolidBrush(SystemColors.Control)
             Dim pt As New Point(eBounds.X, eBounds.Top)
-            e.Graphics.FillRectangle(b, eBounds.X, eBounds.Y, eBounds.Width \ 2, eBounds.Height)
-            TextRenderer.DrawText(e.Graphics, item.Key, Me.Font, pt, SystemColors.ControlText, SystemColors.Control)
+            e.Graphics.FillRectangle(
+                brush:=b,
+                eBounds.X,
+                eBounds.Y,
+                width:=eBounds.Width \ 2,
+                eBounds.Height)
+            TextRenderer.DrawText(
+                dc:=e.Graphics,
+                text:=item.Key,
+                Me.Font,
+                pt,
+                foreColor:=SystemColors.ControlText,
+                backColor:=SystemColors.Control)
         End Using
 
         Dim paintColor As Color = item.Value.ToColor
-
-        Using b As Brush = New SolidBrush(paintColor)
-            e.Graphics.FillRectangle(b, eBounds.X + (eBounds.Width \ 2), eBounds.Y, eBounds.Width \ 2, eBounds.Height)
+        Using b As Brush = New SolidBrush(color:=paintColor)
+            e.Graphics.FillRectangle(
+                brush:=b,
+                x:=eBounds.X + (eBounds.Width \ 2),
+                eBounds.Y,
+                width:=eBounds.Width \ 2,
+                eBounds.Height)
         End Using
         e.DrawFocusRectangle()
     End Sub

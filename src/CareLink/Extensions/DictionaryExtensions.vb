@@ -77,13 +77,19 @@ Public Module DictionaryExtensions
 
     ''' <summary>
     '''  Clones a <see cref="Dictionary(Of String, T)"/> to a new instance.
-    '''  This is useful when you want to create a copy of the dictionary without modifying the original.
+    '''  This is useful when you want to create a copy of the dictionary
+    '''  without modifying the original.
     ''' </summary>
     ''' <typeparam name="T">The type of the values in the dictionary.</typeparam>
     ''' <param name="dictionary">The dictionary to clone.</param>
-    ''' <returns>A new instance of <see cref="Dictionary(Of String, T)"/> with the same key-value pairs.</returns>
+    ''' <returns>
+    '''  A new instance of <see cref="Dictionary(Of String, T)"/> with
+    '''  the same key-value pairs.
+    ''' </returns>
     <Extension>
-    Public Function Clone(Of T)(dictionary As Dictionary(Of String, T)) As Dictionary(Of String, T)
+    Public Function Clone(Of T)(dictionary As Dictionary(Of String, T)) As _
+        Dictionary(Of String, T)
+
         Return New Dictionary(Of String, T)(dictionary)
     End Function
 
@@ -120,7 +126,9 @@ Public Module DictionaryExtensions
         For Each row As KeyValuePair(Of String, String) In dic
             Dim [property] As PropertyInfo = classType.GetProperty(
                 name:=row.Key,
-                bindingAttr:=BindingFlags.Public Or BindingFlags.Instance Or BindingFlags.IgnoreCase)
+                bindingAttr:=BindingFlags.Public Or
+                             BindingFlags.Instance Or
+                             BindingFlags.IgnoreCase)
 
             If [property] IsNot Nothing Then
                 If [property].CanWrite Then ' Make sure property isn't read only
@@ -139,29 +147,34 @@ Public Module DictionaryExtensions
                             Case NameOf([Boolean]),
                                  NameOf([Int32]),
                                  NameOf([String])
-                                value = Convert.ChangeType(row.Value, conversionType:=[property].PropertyType)
+                                value = Convert.ChangeType(
+                                    row.Value,
+                                    conversionType:=[property].PropertyType)
                             Case "MarkerData"
                                 Stop
                             Case Else
-                                Throw UnreachableException(paramName:=[property].PropertyType.Name)
+                                Throw UnreachableException(
+                                    paramName:=[property].PropertyType.Name)
                         End Select
 
-                        obj.GetType.GetProperty([property].Name).SetValue(obj, value, index:=Nothing)
+                        obj.GetType.GetProperty([property].Name) _
+                                   .SetValue(obj, value, index:=Nothing)
                     Catch ex As Exception
                         Return New T
                     End Try
                 End If
             Else
-                Stop
+                Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
                 MsgBox(
                     heading:=$"'{row.Key}' is unknown Property",
                     prompt:=$"Please open a GitHub issue at {GitHubCareLinkUrl}issues",
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                    title:=GetTitleFromStack(stackFrame:=New StackFrame(skipFrames:=0, needFileInfo:=True)))
+                    title:=GetTitleFromStack(stackFrame))
             End If
         Next row
 
-        obj.GetType.GetProperty("RecordNumber")?.SetValue(obj, value:=recordNumber, index:=Nothing)
+        obj.GetType.GetProperty(name:="RecordNumber")?. _
+            SetValue(obj, value:=recordNumber, index:=Nothing)
         Return obj
     End Function
 
@@ -203,9 +216,15 @@ Public Module DictionaryExtensions
     ''' </summary>
     ''' <param name="dic">The SortedDictionary to search.</param>
     ''' <param name="item">The <see cref="KnownColor"/> to find.</param>
-    ''' <returns>The index of the item in the <see cref="SortedDictionary"/>, or -1 if not found.</returns>
+    ''' <returns>
+    '''  The index of the item in the <see cref="SortedDictionary"/>,
+    '''  otherwise -1 if not found.
+    ''' </returns>
     <Extension>
-    Public Function IndexOfValue(dic As SortedDictionary(Of String, KnownColor), item As KnownColor) As Integer
+    Public Function IndexOfValue(
+        dic As SortedDictionary(Of String, KnownColor),
+        item As KnownColor) As Integer
+
         Return dic.Values.ToList.IndexOf(item)
     End Function
 

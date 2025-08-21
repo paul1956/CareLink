@@ -7,13 +7,15 @@
 ''' </summary>
 ''' <remarks>
 '''  <para>
-'''   The <see cref="KnownColorComboBox"/> control allows users to select from a list of known colors,
-'''   excluding system and transparent colors. The control supports owner-drawn items to display color
+'''   The <see cref="KnownColorComboBox"/> control allows users to select
+'''   from a list of known colors, excluding system and transparent colors.
+'''   The control supports owner-drawn items to display color
 '''   swatches and their names.
 '''  </para>
 '''  <para>
-'''   The <see cref="SelectedItem"/>, <see cref="SelectedText"/>, and <see cref="SelectedValue"/> properties
-'''   provide convenient access to the selected color's name and value.
+'''   The <see cref="SelectedItem"/>, <see cref="SelectedText"/>, and
+'''   <see cref="SelectedValue"/>  provide convenient access to the selected color's name
+'''   and value.
 '''  </para>
 ''' </remarks>
 Public Class KnownColorComboBox
@@ -22,11 +24,13 @@ Public Class KnownColorComboBox
     Private ReadOnly _allKnownColors As New SortedDictionary(Of String, KnownColor)
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="KnownColorComboBox"/> class and populates the color list.
+    '''  Initializes a new instance of the <see cref="KnownColorComboBox"/> class
+    '''  and populates the color list.
     ''' </summary>
     ''' <remarks>
     '''  <para>
-    '''   The constructor filters out <see cref="KnownColor.Transparent"/> and all system colors, ensuring only
+    '''   The constructor filters out <see cref="KnownColor.Transparent"/> and
+    '''   all system colors, ensuring only
     '''   unique, non-system known colors are available for selection.
     '''  </para>
     ''' </remarks>

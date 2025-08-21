@@ -6,7 +6,8 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 ''' <summary>
-'''  Provides extension methods for painting markers and post-painting support on chart controls.
+'''  Provides extension methods for painting markers and post-painting
+'''  support on chart controls.
 ''' </summary>
 Friend Module PaintMarkerExtensions
     Private Const ChartAreaName As String = NameOf(ChartArea)

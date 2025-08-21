@@ -8,21 +8,31 @@ Friend Module RunningActiveInsulinHelpers
 
     ''' <summary>
     '''  Adjusts the insulin levels in a list of RunningActiveInsulin objects.
-    '''  This method iterates through the specified range of indices in the list and adjusts each
+    '''  This method iterates through the specified range of indices in
+    '''  the list and adjusts each
     '''  RunningActiveInsulin object by calling its Adjust method.
     ''' </summary>
     ''' <param name="myList">The list of RunningActiveInsulin objects to adjust.</param>
-    ''' <param name="start">The starting index in the list from which to begin adjustments.</param>
-    ''' <param name="count">The number of RunningActiveInsulin objects to adjust starting from startIndex.</param>
+    ''' <param name="start">
+    '''  The starting index in the list from which to begin adjustments.
+    ''' </param>
+    ''' <param name="count">
+    '''  The number of RunningActiveInsulin objects to adjust starting from startIndex.
+    ''' </param>
     ''' <remarks>
     '''  This method modifies the RunningActiveInsulin objects in place.
     ''' </remarks>
     <Extension>
-    Friend Sub AdjustList(myList As List(Of RunningActiveInsulin), start As Integer, count As Integer)
+    Friend Sub AdjustList(
+        myList As List(Of RunningActiveInsulin),
+        start As Integer,
+        count As Integer)
+
         ArgumentNullException.ThrowIfNull(argument:=myList)
 
         If start < 0 OrElse count < 0 Then
-            Dim message As String = $"{NameOf(start)} and {NameOf(count)} must be non-negative."
+            Dim message As String =
+                $"{NameOf(start)} and {NameOf(count)} must be non-negative."
             Throw New ArgumentOutOfRangeException(paramName:=NameOf(start), message)
         End If
 
@@ -36,9 +46,11 @@ Friend Module RunningActiveInsulinHelpers
     End Sub
 
     ''' <summary>
-    '''  Calculates the conditional sum of the CurrentInsulinLevel property for a specified range in a list
+    '''  Calculates the conditional sum of the CurrentInsulinLevel property
+    '''  for a specified range in a list
     '''  of RunningActiveInsulin objects. This method sums the CurrentInsulinLevel values from
-    '''  the specified start index to the specified length, ensuring that it does not exceed the bounds of the list.
+    '''  the specified start index to the specified length, ensuring that it
+    '''  does not exceed the bounds of the list.
     '''  If the sum is negative, it returns 0 instead. This is useful for
     '''  calculating the total active insulin over a specific period without
     '''  exceeding the list boundaries.

@@ -53,14 +53,14 @@ Public Class OptionsColorPickerDialog
             GraphColorDictionary = Me.SaveGraphColorDictionary.Clone
         End If
 
-        StartOrStopServerUpdateTimer(Start:=True)
+        SetServerUpdateTimer(Start:=True)
         Me.Cursor = Cursors.Default
         Application.DoEvents()
         Me.Close()
     End Sub
 
     Private Sub OptionsDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        StartOrStopServerUpdateTimer(Start:=False)
+        SetServerUpdateTimer(Start:=False)
         Me.ItemNameComboBox.DrawMode = DrawMode.OwnerDrawFixed
         Dim resources As New ComponentResourceManager(GetType(OptionsColorPickerDialog))
         Me.KnownColorsComboBox1.SelectedItem = CType(

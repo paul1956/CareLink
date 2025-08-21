@@ -7,13 +7,14 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Text.Json.Serialization
 
 ''' <summary>
-'''  Represents a meal marker record, containing information about a meal event such as timestamp, display time,
-'''  and carbohydrate amount.
+'''  Represents a meal marker record, containing information about a meal event
+'''  such as timestamp, display time, and carbohydrate amount.
 ''' </summary>
 Public Class Meal
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="Meal"/> class using a marker entry and record number.
+    '''  Initializes a new instance of the <see cref="Meal"/> class using a marker entry
+    '''  and record number.
     ''' </summary>
     ''' <param name="item">
     '''  The marker entry containing meal data.
@@ -81,7 +82,8 @@ Public Class Meal
     Public Property DisplayTimeAsString As String
 
     ''' <summary>
-    '''  Gets the display time as a <see cref="Date"/> object, parsed from <see cref="DisplayTimeAsString"/>.
+    '''  Gets the display time as a <see cref="Date"/> object,
+    '''  parsed from <see cref="DisplayTimeAsString"/>.
     ''' </summary>
     <DisplayName("Display Time As Date")>
     <Column(Order:=6, TypeName:="Date")>

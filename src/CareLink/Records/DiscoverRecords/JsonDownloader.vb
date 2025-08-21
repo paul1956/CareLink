@@ -24,19 +24,24 @@ Public Module JsonDownloader
     End Function
 
     ''' <summary>
-    '''  Downloads JSON content from the specified URL and deserializes it into an object of type T.
-    '''  This method uses the <see cref="JsonSerializer"/> to convert the JSON string into the specified type.
+    '''  Downloads JSON content from the specified URL and deserializes it into
+    '''  an object of type T.
+    '''  This method uses the <see cref="JsonSerializer"/> to convert the JSON string
+    '''  into the specified type.
     ''' </summary>
-    ''' <typeparam name="T">The type to which the JSON content will be deserialized.</typeparam>
+    ''' <typeparam name="T">
+    '''  The type to which the JSON content will be deserialized.
+    ''' </typeparam>
     ''' <param name="url">The URL from which to download the JSON content.</param>
     ''' <returns>An object of type T containing the deserialized JSON data.</returns>
-    ''' <remarks>This method uses the static s_jsonDeserializerOptions for deserialization.</remarks>
+    ''' <remarks>
+    '''  This method uses the static s_jsonDeserializerOptions for deserialization.
+    ''' </remarks>
     ''' <exception cref="HttpRequestException">Thrown when the request fails.</exception>
     ''' <exception cref="JsonException">Thrown when deserialization fails.</exception
     Public Function DownloadAndDecodeJson(Of T)(url As String) As T
-
-        Dim jsonContent As String = DownloadJson(url)
-        Return JsonSerializer.Deserialize(Of T)(jsonContent, s_jsonDeserializerOptions)
+        Dim json As String = DownloadJson(url)
+        Return JsonSerializer.Deserialize(Of T)(json, options:=s_jsonDeserializerOptions)
     End Function
 
 End Module

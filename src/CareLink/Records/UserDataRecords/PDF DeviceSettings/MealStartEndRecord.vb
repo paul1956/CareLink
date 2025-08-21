@@ -13,7 +13,8 @@ Public Class MealStartEndRecord
     ''' <param name="r">The row from which to extract meal start and end times.</param>
     ''' <param name="key">The key used to replace in the row's columns.</param>
     ''' <remarks>
-    '''  The constructor replaces the old value in the row's columns with an empty string and cleans up spaces.
+    '''  The constructor replaces the old value in the row's columns with
+    '''  an empty string and cleans up spaces.
     ''' </remarks>
     ''' <exception cref="ArgumentNullException">Thrown if the row is null.</exception>
     Public Sub New(r As StringTable.Row, key As String)
