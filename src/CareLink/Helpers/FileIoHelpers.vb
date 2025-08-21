@@ -6,7 +6,8 @@ Imports System.Globalization
 Imports System.IO
 
 ''' <summary>
-'''  Provides helper methods and properties for file and directory I/O operations within the CareLink™ project.
+'''  Provides helper methods and properties for file and directory I/O operations
+'''  within the CareLink™ project.
 ''' </summary>
 Public Module FileIoHelpers
 

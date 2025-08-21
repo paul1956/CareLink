@@ -9,7 +9,8 @@ Imports System.Text.Json
 Friend Module SgConversionExtensions
 
     ''' <summary>
-    '''  Converts a Single value to a string representation, scaled according to the NativeMmolL setting.
+    '''  Converts a Single value to a string representation,
+    '''  scaled according to the NativeMmolL setting.
     ''' </summary>
     ''' <param name="value">The Single value to convert.</param>
     ''' <returns>A string representation of the scaled value.</returns>
@@ -23,7 +24,8 @@ Friend Module SgConversionExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a KeyValuePair to a string representation of the value, scaled according to the NativeMmolL setting.
+    '''  Converts a KeyValuePair to a string representation of the value,
+    '''  scaled according to the NativeMmolL setting.
     ''' </summary>
     ''' <param name="item">The KeyValuePair to convert.</param>
     ''' <returns>A string representation of the scaled value.</returns>
@@ -35,7 +37,8 @@ Friend Module SgConversionExtensions
 
     ''' <summary>
     '''  Converts a String representation of a value to a
-    '''  string representation of the value, scaled according to the <see cref="NativeMmolL"/> setting.
+    '''  string representation of the value, scaled according
+    '''  to the <see cref="NativeMmolL"/> setting.
     ''' </summary>
     ''' <param name="value">The string representation of the value to convert.</param>
     ''' <returns>A <see langword="String"/> representation of the scaled value.</returns>

@@ -30,12 +30,6 @@ Public Module SystemVariables
         CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator
     Friend Property MaxBasalPerDose As Double
 
-    ''' <summary>
-    '''  Gets the character used to separate sentences, usually a period.
-    ''' </summary>
-    ''' <returns></returns>
-    Friend Property SentenceSeparator As Char = "."c
-
     Friend Property TreatmentInsulinRow As Single
 
     ''' <summary>

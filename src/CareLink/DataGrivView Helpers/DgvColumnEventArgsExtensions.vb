@@ -6,13 +6,14 @@ Imports System.Runtime.CompilerServices
 Imports System.Text
 
 ''' <summary>
-'''  Provides extension methods for <see cref="DataGridViewColumnEventArgs"/> to configure DataGridView columns
-'''  and for string prefix matching in lists.
+'''  Provides extension methods for <see cref="DataGridViewColumnEventArgs"/>
+'''  to configure DataGridView columns and for string prefix matching in lists.
 ''' </summary>
 Friend Module DgvColumnEventArgsExtensions
 
     ''' <summary>
-    '''  Configures a <see cref="DataGridViewColumn"/> when it is added to a <see cref="DataGridView"/>.
+    '''  Configures a <see cref="DataGridViewColumn"/> when it is added to a
+    '''  <see cref="DataGridView"/>.
     ''' </summary>
     ''' <param name="e">
     '''  The <see cref="DataGridViewColumnEventArgs"/> containing the column to configure.
@@ -24,7 +25,8 @@ Friend Module DgvColumnEventArgsExtensions
     '''  If set to <see langword="True"/>, the column will be set as read-only.
     ''' </param>
     ''' <param name="caption">
-    '''  The caption to use for the column header. If empty or whitespace, the default header text is used.
+    '''  The caption to use for the column header. If empty or whitespace,
+    '''  the default header text is used.
     ''' </param>
     <Extension>
     Public Sub DgvColumnAdded(

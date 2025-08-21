@@ -44,20 +44,27 @@ Friend Module DebugSupport
     Public Sub DebugPrintUrl(label As String, s As String, width As Integer)
         Dim lines() As String = s.Split(separator:="?"c)
         Debug.Print(message:=$"{label} = {lines(0)}?")
+        Dim message As String
         If lines.Length > 1 Then
             Dim params() As String = lines(1).Split(separator:="&"c)
             For Each l As String In params
                 lines = l.Split(separator:="="c)
                 If lines(1).Length < 100 Then
-                    Debug.Print(message:=$"{Space(Number:=label.Length + 8)}{lines(0)} = {lines(1)}")
+                    message = $"{Space(Number:=label.Length + 8)}{lines(0)} = {lines(1)}"
+                    Debug.Print(message)
                 Else
-                    Dim mc As MatchCollection = Regex.Matches(input:=lines(1), pattern:=$".{{1,{width}}}")
+                    Dim mc As MatchCollection =
+                        Regex.Matches(input:=lines(1), pattern:=$".{{1,{width}}}")
                     For Each e As IndexClass(Of Match) In mc.WithIndex
                         Dim m As Match = e.Value
+                        Dim spaces As String
                         If e.IsFirst Then
-                            Debug.Print(message:=$"{Space(Number:=label.Length + 8)}{lines(0)} = {m.Value}")
+                            spaces = Space(Number:=label.Length + 8)
+                            message = $"{spaces}{lines(0)} = {m.Value}"
+                            Debug.Print(message)
                         Else
-                            Debug.Print(message:=$"{Space(Number:=label.Length + lines(0).Length + 11)}{m.Value}")
+                            spaces = Space(Number:=label.Length + lines(0).Length + 11)
+                            Debug.Print(message:=$"{spaces}{m.Value}")
                         End If
                     Next
                 End If

@@ -8,7 +8,8 @@ Imports System.Text.Json
 Friend Module Form1CollectMarkersHelper
 
     ''' <summary>
-    '''  Scales the "unitValue" in the marker's data, converting it to a string representation if necessary.
+    '''  Scales the "unitValue" in the marker's data, converting it to a string
+    '''  representation if necessary.
     ''' </summary>
     ''' <param name="item">The marker to scale.</param>
     ''' <returns>A new <cref name="Marker"/> with the scaled "unitValue".</returns>

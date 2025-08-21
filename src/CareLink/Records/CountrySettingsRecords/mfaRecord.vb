@@ -8,9 +8,11 @@ Public Class MfaRecord
     Public Sub New(jsonData As String)
         _asList = JsonToDictionary(jsonData)
         If _asList.Keys.Count <> 6 Then
+            Dim mfaError As New ApplicationException("Invalid Mfa record structure.")
             Throw New ApplicationException(
-                message:=$"{NameOf(MfaRecord)}({NameOf(jsonData)}) contains {_asList.Count} entries, 6 expected.",
-                innerException:=New ApplicationException("Invalid Mfa record structure."))
+                message:=$"{NameOf(MfaRecord)}({NameOf(jsonData)}) contains " &
+                         $"{_asList.Count} entries, 6 expected.",
+                innerException:=mfaError)
         End If
         Me.status = _asList(NameOf(status))
         Me.fromDate = _asList(NameOf(fromDate))

@@ -172,17 +172,22 @@ Public Class Client2
     ''' <summary>
     '''  Refreshes the authentication token using the provided configuration and token data.
     ''' </summary>
-    ''' <param name="config">The API configuration as a <see cref="Dictionary(Of String, Object)"/>.</param>
-    ''' <param name="tokenDataElement">The current token data as a <see cref="JsonElement"/>.</param>
+    ''' <param name="config">
+    '''  The API configuration as a <see cref="Dictionary(Of String, Object)"/>.
+    ''' </param>
+    ''' <param name="tokenDataElement">
+    '''  The current token data as a <see cref="JsonElement"/>.
+    ''' </param>
     ''' <returns>
     '''  A <see cref="Task(Of JsonElement)"/> containing the refreshed token data.
     ''' </returns>
     ''' <remarks>
-    '''  This method attempts to refresh the access token using the refresh token. If the refresh fails,
-    '''  the user may be prompted to log in again.
+    '''  This method attempts to refresh the access token using the refresh token.
+    '''  If the refresh fails, the user may be prompted to log in again.
     ''' </remarks>
     ''' <exception cref="ApplicationException">
-    '''  Thrown if the refresh token operation fails and the user does not choose to log in again.
+    '''  Thrown if the refresh token operation fails and the user does not choose
+    '''  to log in again.
     ''' </exception>
     Private Function DoRefresh(
             config As Dictionary(Of String, Object),
@@ -247,10 +252,14 @@ Public Class Client2
                 End If
             End If
             Dim responseBody As String = response.Content.ReadAsStringAsync().Result
-            Dim newData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(responseBody)
-            tokenData(key:="access_token") = newData.GetProperty(propertyName:="access_token").GetString()
-            tokenData(key:="refresh_token") = newData.GetProperty(propertyName:="refresh_token").GetString()
-            Dim json As String = JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions)
+            Dim newData As JsonElement =
+                JsonSerializer.Deserialize(Of JsonElement)(responseBody)
+            tokenData(key:="access_token") =
+                newData.GetProperty(propertyName:="access_token").GetString()
+            tokenData(key:="refresh_token") =
+                newData.GetProperty(propertyName:="refresh_token").GetString()
+            Dim json As String =
+                JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions)
             Return Task.FromResult(JsonSerializer.Deserialize(Of JsonElement)(json))
         Catch ex As Exception
             Debug.WriteLine($"ERROR: {ex.DecodeException()} in {NameOf(DoRefresh)}")

@@ -6,7 +6,8 @@ Imports System.Net.Http
 Imports System.Text.Json
 
 ''' <summary>
-'''  Provides methods for discovering and retrieving configuration data for supported countries and regions.
+'''  Provides methods for discovering and retrieving configuration data
+'''  for supported countries and regions.
 ''' </summary>
 Public Module Discover
 
@@ -46,10 +47,15 @@ Public Module Discover
             Throw New ApplicationException(message)
         End If
         Debug.WriteLine($"   region: {region}")
-        Dim countryInfo As CountryInfo = JsonSerializer.Deserialize(Of CountryInfo)(JsonSerializer.Serialize(region))
-        For Each c As JsonElement In jsonElementData.GetProperty("CP").EnumerateArray
+        Dim json As String = JsonSerializer.Serialize(value:=region)
+        Dim countryInfo As CountryInfo =
+            JsonSerializer.Deserialize(Of CountryInfo)(json)
+        For Each c As JsonElement In
+            jsonElementData.GetProperty(propertyName:="CP").EnumerateArray()
+
             Try
-                Dim cpInfo As CPInfo = JsonSerializer.Deserialize(Of CPInfo)(JsonSerializer.Serialize(c))
+                Dim cpInfo As CPInfo =
+                    JsonSerializer.Deserialize(Of CPInfo)(JsonSerializer.Serialize(c))
                 If countryInfo.Region = cpInfo.Region Then
                     config = c
                     Exit For

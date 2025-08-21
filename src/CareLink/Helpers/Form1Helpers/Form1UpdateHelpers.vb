@@ -229,7 +229,8 @@ Friend Module Form1UpdateHelpers
     End Sub
 
     ''' <summary>
-    '''  Checks if the <see cref="PatientData.MedicalDeviceInformation.ModelNumber"/> is a 700 series model.
+    '''  Checks if the <see cref="PatientData.MedicalDeviceInformation.ModelNumber"/>
+    '''  is a 700 series model.
     ''' </summary>
     ''' <returns>
     '''  <see langword="True"/> if the model number is a 700 series model;
@@ -708,7 +709,8 @@ Friend Module Form1UpdateHelpers
     End Sub
 
     ''' <summary>
-    '''  Updates the pump banner state tab in the <paramref name="mainForm"/> with the latest banner state data.
+    '''  Updates the pump banner state tab in the <paramref name="mainForm"/>
+    '''  with the latest banner state data.
     ''' </summary>
     ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdatePumpBannerStateTab(mainForm As Form1)
@@ -717,17 +719,20 @@ Friend Module Form1UpdateHelpers
             Dim typeValue As String = ""
             If dic.TryGetValue(key:="type", value:=typeValue) Then
                 Dim recordNumber As Integer = listOfBannerState.Count + 1
-                Dim bannerStateRecord1 As BannerState = DictionaryToClass(Of BannerState)(dic, recordNumber)
+                Dim bannerStateRecord1 As BannerState =
+                    DictionaryToClass(Of BannerState)(dic, recordNumber)
                 listOfBannerState.Add(bannerStateRecord1)
-                mainForm.PumpBannerStateLabel.Font = New Font(FamilyName, emSize:=8.25F, style:=FontStyle.Bold)
+                mainForm.PumpBannerStateLabel.Font =
+                    New Font(FamilyName, emSize:=8.25F, style:=FontStyle.Bold)
                 Select Case typeValue
                     Case "TEMP_TARGET"
                         Dim minutes As Integer = bannerStateRecord1.TimeRemaining
                         mainForm.PumpBannerStateLabel.BackColor = Color.Lime
                         mainForm.PumpBannerStateLabel.ForeColor =
                             mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
+                        Dim target150 As String = If(NativeMmolL, "8.3", "150")
                         mainForm.PumpBannerStateLabel.Text =
-                            $"Target {If(NativeMmolL, "8.3", "150")} {minutes.ToHoursMinutes}/hr"
+                            $"Target {target150} {minutes.ToHoursMinutes}/hr"
                         mainForm.PumpBannerStateLabel.Visible = True
                         mainForm.PumpBannerStateLabel.Dock = DockStyle.Top
                     Case "BG_REQUIRED"

@@ -66,7 +66,9 @@ Friend Module SpeechSupport
     ''' <summary>
     '''  Announces the current sensor glucose (SG) value using speech synthesis.
     ''' </summary>
-    ''' <param name="recognizedText">The recognized speech text to determine which value to announce.</param>
+    ''' <param name="recognizedText">
+    '''  The recognized speech text to determine which value to announce.
+    ''' </param>
     Private Sub AnnounceSG(recognizedText As String)
         Dim sgName As String
         Select Case True
@@ -102,8 +104,16 @@ Friend Module SpeechSupport
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">Event arguments containing audio signal problem details.</param>
     <DebuggerStepThrough()>
-    Private Sub AudioSignalProblemOccurred(sender As Object, e As AudioSignalProblemOccurredEventArgs)
-        If s_shuttingDown OrElse s_speechErrorReported OrElse s_speechRecognitionEngine Is Nothing Then Exit Sub
+    Private Sub AudioSignalProblemOccurred(
+        sender As Object,
+        e As AudioSignalProblemOccurredEventArgs)
+
+        If s_shuttingDown OrElse
+           s_speechErrorReported OrElse
+           s_speechRecognitionEngine Is Nothing Then
+
+            Exit Sub
+        End If
         Dim errorMsg As String = "Listening"
         Select Case e.AudioSignalProblem
             Case AudioSignalProblem.NoSignal
@@ -271,12 +281,15 @@ Friend Module SpeechSupport
     End Sub
 
     ''' <summary>
-    '''  Cancels and disposes the current speech recognition engine, removes event handlers, and updates UI state.
+    '''  Cancels and disposes the current speech recognition engine,
+    '''  removes event handlers, and updates UI state.
     ''' </summary>
     Friend Sub CancelSpeechRecognition()
         If s_speechRecognitionEngine IsNot Nothing Then
-            RemoveHandler s_speechRecognitionEngine.AudioSignalProblemOccurred, AddressOf AudioSignalProblemOccurred
-            RemoveHandler s_speechRecognitionEngine.SpeechRecognized, AddressOf SpeechRecognized
+            RemoveHandler s_speechRecognitionEngine.AudioSignalProblemOccurred,
+                AddressOf AudioSignalProblemOccurred
+            RemoveHandler s_speechRecognitionEngine.SpeechRecognized,
+                AddressOf SpeechRecognized
             s_speechRecognitionEngine.RecognizeAsyncCancel()
             s_speechRecognitionEngine.Dispose()
             s_speechRecognitionEngine = Nothing
@@ -298,11 +311,13 @@ Friend Module SpeechSupport
     End Sub
 
     ''' <summary>
-    '''  Initializes and configures the speech recognition engine, loads grammars, and starts recognition.
+    '''  Initializes and configures the speech recognition engine,
+    '''  loads grammars, and starts recognition.
     ''' </summary>
     Friend Sub InitializeSpeechRecognition()
         Dim oldUserName As String = s_speechUserName
-        If s_speechUserName = PatientData.FirstName AndAlso s_speechRecognitionEngine IsNot Nothing Then
+        If s_speechUserName = PatientData.FirstName AndAlso
+           s_speechRecognitionEngine IsNot Nothing Then
             Exit Sub
         End If
         CancelSpeechRecognition()

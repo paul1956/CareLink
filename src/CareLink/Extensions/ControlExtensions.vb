@@ -95,11 +95,13 @@ Public Module ControlExtensions
 
         ' Center in the middle of the parent control
         ctrl.Left = (parent.Width - ctrlWidth) \ 2
-        ctrl.Top = ((parent.Height - (ctrlHeight + ctrl.Margin.Top + ctrl.Margin.Bottom)) \ 2) + verticalOffset
+        Dim totalHeight As Integer = ctrlHeight + ctrl.Margin.Top + ctrl.Margin.Bottom
+        ctrl.Top = ((parent.Height - totalHeight) \ 2) + verticalOffset
     End Sub
 
     ''' <summary>
-    '''  Centers a <see cref="Label"/> on the left or right half or center of its parent container.
+    '''  Centers a <see cref="Label"/> on the left or right half or
+    '''  center of its parent container.
     ''' </summary>
     ''' <param name="controls">The collection of controls to search.</param>
     ''' <param name="controlName">The name of the control to find.</param>
@@ -107,7 +109,10 @@ Public Module ControlExtensions
     '''  The control with the specified name, or <see langword="Nothing"/> if not found.
     ''' </returns>
     <Extension>
-    Friend Function FindControlByName(controls As Control.ControlCollection, controlName As String) As Control
+    Friend Function FindControlByName(
+        controls As Control.ControlCollection,
+        controlName As String) As Control
+
         For Each ctrl As Control In controls
             If ctrl.Name = controlName Then
                 Return ctrl
@@ -121,7 +126,8 @@ Public Module ControlExtensions
     ''' </summary>
     ''' <param name="ctrl">The control for which to find the horizontal midpoint.</param>
     ''' <returns>
-    '''  <see langword="Integer"/> representing the X coordinate of the midpoint, relative to the parent control.
+    '''  <see langword="Integer"/> representing the X coordinate of the midpoint,
+    '''  relative to the parent control.
     ''' </returns>
     <Extension>
     Friend Function FindHorizontalMidpoint(ctrl As Control) As Integer
@@ -133,7 +139,8 @@ Public Module ControlExtensions
     ''' </summary>
     ''' <param name="ctrl">The control for which to find the vertical midpoint.</param>
     ''' <returns>
-    '''  <see langword="Integer"/> representing the Y coordinate of the midpoint, relative to the parent control.
+    '''  <see langword="Integer"/> representing the Y coordinate of the midpoint,
+    '''  relative to the parent control.
     ''' </returns>
     <Extension>
     Friend Function FindVerticalMidpoint(ctrl As Control) As Integer
@@ -141,8 +148,9 @@ Public Module ControlExtensions
     End Function
 
     ''' <summary>
-    '''  Sets the <see cref="DataGridView.EnableHeadersVisualStyles"/> property to <see langword="False"/>
-    '''  for all <see cref="DataGridView"/> controls within the specified control.
+    '''  Sets the <see cref="DataGridView.EnableHeadersVisualStyles"/> property to
+    '''  <see langword="False"/> for all <see cref="DataGridView"/> controls
+    '''  within the specified control.
     '''  This is used to ensure consistent header styles across all DataGridViews.
     ''' </summary>
     ''' <param name="ctrl">The parent control containing the DataGridViews.</param>

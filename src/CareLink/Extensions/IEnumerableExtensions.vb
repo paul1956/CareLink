@@ -8,8 +8,8 @@ Imports System.Text
 Public Module IEnumerableExtensions
 
     ''' <summary>
-    '''  Returns a new string in which all occurrences of the single quote character in the current instance
-    '''  are replaced with a back-tick character.
+    '''  Returns a new string in which all occurrences of the single quote character
+    '''  in the current instance are replaced with a back-tick character.
     ''' </summary>
     Private Function EscapeSingleQuotes(Input As String) As String
         Return Input.Replace(oldChar:="'"c, newChar:="`"c) ' Replace with back-tick
@@ -21,7 +21,9 @@ Public Module IEnumerableExtensions
     ''' <typeparam name="T">The Type of the collection.</typeparam>
     ''' <param name="Collection">An Enumerator to a collection to populate the string.</param>
     ''' <param name="Prefix">The string to prefix the result.</param>
-    ''' <param name="Delimiter">The string that will appear between each item in the specified collection.</param>
+    ''' <param name="Delimiter">
+    '''  The string that will appear between each item in the specified collection.
+    ''' </param>
     ''' <param name="Postfix">The string to postfix the result.</param>
     <Extension>
     Public Function ToDelimitedString(Of T)(

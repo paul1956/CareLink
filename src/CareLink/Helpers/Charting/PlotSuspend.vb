@@ -8,14 +8,18 @@ Imports System.Windows.Forms.DataVisualization.Charting
 Friend Module PlotSuspend
 
     ''' <summary>
-    '''  Plots the area on the <see cref="Chart"/> where insulin delivery was suspended due to low glucose events.
+    '''  Plots the area on the <see cref="Chart"/> where insulin delivery was suspended
+    '''  due to low glucose events.
     ''' </summary>
     ''' <param name="pageChart">The <see cref="Chart"/> control to plot onto.</param>
-    ''' <param name="SuspendSeries">The <see cref="Series"/> object representing the suspend area.</param>
+    ''' <param name="SuspendSeries">
+    '''  The <see cref="Series"/> object representing the suspend area.
+    ''' </param>
     ''' <remarks>
-    '''  This method iterates through the list of low glucose suspension markers and plots the corresponding
-    '''  area on the chart, using a specific color for the suspend period. If a suspension is detected,
-    '''  it fills the area between the suspension start and end times, handling multiple suspension events.
+    '''  This method iterates through the list of low glucose suspension markers
+    '''  and plots the corresponding area on the chart, using a specific color
+    '''  for the suspend period. If a suspension is detected, it fills the area between
+    '''  the suspension start and end times, handling multiple suspension events.
     ''' </remarks>
     <Extension>
     Friend Sub PlotSuspendArea(pageChart As Chart, SuspendSeries As Series)
@@ -55,7 +59,9 @@ Friend Module PlotSuspend
                     Next
 
                     If Not e.IsLast Then
-                        .AddXY(s_suspendedMarkers(index:=e.Index + 1).Timestamp, Double.NaN)
+                        .AddXY(
+                            s_suspendedMarkers(index:=e.Index + 1).Timestamp,
+                            Double.NaN)
                     End If
                     .Last.Color = Color.Transparent
                 Else

@@ -42,7 +42,8 @@ Public Class IndexClass(Of T)
     Public Property Enumerator As IEnumerator(Of T)
 
     ''' <summary>
-    '''  Advances the enumerator to the next element, updates the value and index, and sets the IsLast property.
+    '''  Advances the enumerator to the next element, updates the value and index,
+    '''  and sets the IsLast property.
     ''' </summary>
     Public Sub MoveNext()
         Me.Value = Me.Enumerator.Current

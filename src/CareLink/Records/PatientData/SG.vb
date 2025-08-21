@@ -171,7 +171,7 @@ Public Class SG
             If Not truncate Then
                 Return value
             End If
-            Dim line1 As String = value.Split(separator:=SentenceSeparator)(0)
+            Dim line1 As String = value.Split(separator:=".")(0)
             Return If(value.Contains(value:="..."),
                       $"{line1}...",
                       line1)

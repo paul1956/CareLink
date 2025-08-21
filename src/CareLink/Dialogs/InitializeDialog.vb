@@ -12,7 +12,8 @@ Imports DataGridViewColumnControls
 Public Class InitializeDialog
     Private ReadOnly _fromPdf As Boolean
 
-    Private ReadOnly _insulinTypesBindingSource As New BindingSource(dataSource:=s_insulinTypes, dataMember:=Nothing)
+    Private ReadOnly _insulinTypesBindingSource As _
+        New BindingSource(dataSource:=s_insulinTypes, dataMember:=Nothing)
 
     Private _currentUserBackup As CurrentUserRecord = Nothing
 
@@ -189,11 +190,13 @@ Public Class InitializeDialog
         Me.InitializeDataGridView.CausesValidation = True
     End Sub
 
-    Private Sub InitializeDataGridView_Validating(sender As Object, e As CancelEventArgs) _
-        Handles InitializeDataGridView.Validating
+    Private Sub InitializeDataGridView_Validating(
+        sender As Object,
+        e As CancelEventArgs) Handles InitializeDataGridView.Validating
 
         Dim index As Integer = Me.InitializeDataGridView.RowCount - 1
-        Dim cell As DataGridViewCell = Me.InitializeDataGridView.Rows(index).Cells(columnName:=NameOf(ColumnEnd))
+        Dim cell As DataGridViewCell =
+            Me.InitializeDataGridView.Rows(index).Cells(columnName:=NameOf(ColumnEnd))
         If cell.Value.ToString = MidnightStr Then
             cell.ErrorText = ""
         Else
@@ -201,8 +204,9 @@ Public Class InitializeDialog
                 If .RowCount = 12 Then
                     cell.Value = Eleven59Str
                     cell.ErrorText = ""
+                    Dim obj As Object = .Rows(index).Cells(columnName:=NameOf(ColumnSave))
                     Dim buttonCell As DataGridViewDisableButtonCell =
-                        CType(.Rows(index).Cells(columnName:=NameOf(ColumnSave)), DataGridViewDisableButtonCell)
+                        CType(obj, DataGridViewDisableButtonCell)
                     buttonCell.ReadOnly = True
                     buttonCell.Enabled = False
                     .Enabled = False

@@ -43,21 +43,27 @@ Friend Module ExceptionHelpers
     End Property
 
     ''' <summary>
-    '''  Decodes an <see cref="Exception"/> to a readable string, recursively including inner exception messages.
+    '''  Decodes an <see cref="Exception"/> to a readable string,
+    '''  recursively including inner exception messages.
     ''' </summary>
     ''' <param name="ex">The exception to decode.</param>
     ''' <returns>
-    '''  A string containing the exception message and any inner exception messages, formatted for readability.
+    '''  A string containing the exception message and any inner exception messages,
+    '''  formatted for readability.
     ''' </returns>
     <Extension>
     Public Function DecodeException(ex As Exception) As String
         Dim errorMsg As String = ex.Message
         If errorMsg.Contains(InnerExceptionMessage) Then
             Dim innerExMessage As String = ex.InnerException.Message
-            errorMsg = If(innerExMessage.Contains(InnerExceptionMessage),
-                          DecodeException(ex.InnerException),
-                          $"{errorMsg.Replace(InnerExceptionMessage, SentenceSeparator)}{vbCrLf}{innerExMessage}"
-                         )
+            If innerExMessage.Contains(value:=InnerExceptionMessage) Then
+                errorMsg = DecodeException(ex.InnerException)
+            Else
+                Dim shortMsg As String =
+                    $"{errorMsg.Replace(oldValue:=InnerExceptionMessage, newValue:=".")}"
+                errorMsg =
+                    $"{shortMsg}{vbCrLf}{innerExMessage}"
+            End If
         End If
 
         Return errorMsg

@@ -120,18 +120,26 @@ Friend Module HttpClientExtensions
     End Function
 
     ''' <summary>
-    '''  Sends a POST request to the specified URL with optional headers, query parameters, and form data.
+    '''  Sends a POST request to the specified URL with optional headers,
+    '''  query parameters, and form data.
     ''' </summary>
-    ''' <param name="httpClient">The <see cref="HttpClient"/> instance used to send the request.</param>
-    ''' <param name="uriBuilder">The <see cref="StringBuilder"/> containing the request URL.</param>
+    ''' <param name="httpClient">
+    '''  The <see cref="HttpClient"/> instance used to send the request.
+    ''' </param>
+    ''' <param name="uriBuilder">
+    '''  The <see cref="StringBuilder"/> containing the request URL.
+    ''' </param>
     ''' <param name="headers">
-    '''  Optional. A <see cref="Dictionary(Of String, String)"/> of headers to include in the request.
+    '''  Optional. A <see cref="Dictionary(Of String, String)"/> of headers to include
+    '''  in the request.
     ''' </param>
-    ''' <param name="params">
-    '''  Optional. A <see cref="Dictionary(Of String, String)"/> of query parameters to append to the URL.
+    ''' <param name="params"> Optional.
+    '''  A <see cref="Dictionary(Of String, String)"/> of query parameters
+    '''  to append to the URL.
     ''' </param>
-    ''' <param name="data">
-    '''  Optional. A <see cref="Dictionary(Of String, String)"/> of form data to include in the request body.
+    ''' <param name="data"> Optional.
+    '''  A <see cref="Dictionary(Of String, String)"/> of form data to
+    '''  include in the request body.
     ''' </param>
     ''' <returns>
     '''  The <see cref="HttpResponseMessage"/> returned by the POST request.
@@ -169,13 +177,16 @@ Friend Module HttpClientExtensions
     End Function
 
     ''' <summary>
-    '''  Sends a POST request to the specified URL with the given form data and headers, and returns the
-    '''  response content as a string.
+    '''  Sends a POST request to the specified URL with the given form data and headers,
+    '''  and returns the response content as a string.
     ''' </summary>
-    ''' <param name="httpClient">The <see cref="HttpClient"/> instance used to send the request.</param>
+    ''' <param name="httpClient">
+    '''  The <see cref="HttpClient"/> instance used to send the request.
+    ''' </param>
     ''' <param name="requestUri">The URL to which the POST request is sent.</param>
     ''' <param name="nameValueCollection">
-    '''  A <see cref="Dictionary(Of String, String)"/> containing the form data to include in the request body.
+    '''  A <see cref="Dictionary(Of String, String)"/> containing the form data
+    '''  to include in the request body.
     ''' </param>
     ''' <param name="headers">
     '''  A <see cref="Dictionary(Of String, String)"/> of headers to include in the request.

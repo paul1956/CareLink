@@ -33,11 +33,14 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Counts the number of times a specific character <paramref name="c"/> appears in a string.
+    '''  Counts the number of times a specific character
+    '''  <paramref name="c"/> appears in a string.
     ''' </summary>
     ''' <param name="s">The string to search.</param>
     ''' <param name="c">The character to count.</param>
-    ''' <returns>The number of occurrences of the character <paramref name="c"/> in the string.</returns>
+    ''' <returns>
+    '''  The number of occurrences of the character <paramref name="c"/> in the string.
+    ''' </returns>
     <Extension()>
     Public Function Count(s As String, c As Char) As Integer
         Dim predicate As Func(Of Char, Boolean) =
@@ -79,7 +82,8 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Find the index of the first occurrence of any character in the <paramref name="chars"/> list
+    '''  Find the index of the first occurrence of any character
+    '''  in the <paramref name="chars"/> list
     ''' </summary>
     ''' <param name="inputString">The string to search.</param>
     ''' <param name="strings">The list of strings to find.</param>
@@ -256,14 +260,18 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a string of concatenated words (PascalCase or camelCase) to a title case string,
+    '''  Converts a string of concatenated words (PascalCase or camelCase)
+    '''  to a title case string,
     '''  where the first letter of every word is capitalized and words are separated by spaces.
     ''' </summary>
     ''' <param name="value">A string like "ThisIsATitle".</param>
     ''' <param name="separateNumbers">If true, separates numbers into their own words.</param>
     ''' <returns>A title-cased string with spaces between words.</returns>
     <Extension()>
-    Public Function ToTitleCase(value As String, Optional separateNumbers As Boolean = True) As String
+    Public Function ToTitleCase(
+        value As String,
+        Optional separateNumbers As Boolean = True) As String
+
         If String.IsNullOrWhiteSpace(value) Then
             Return ""
         End If

@@ -41,7 +41,7 @@ Public Class DataGridViewNumericUpDownCell
     Friend Const DgvNumericUpDownCell_defaultMinimum As Decimal = Decimal.Zero
 
     ' Default value of the ThousandsSeparator property
-    Friend Const DgvNumericUpDownCell_defaultThousandsSeparator As Boolean = False
+    Friend Const DefaultThousandsSeparator As Boolean = False
 
     ' Type of this cell's editing control
     Private Shared ReadOnly s_defaultEditType As Type =
@@ -99,7 +99,7 @@ Public Class DataGridViewNumericUpDownCell
         _increment = DgvNumericUpDownCell_defaultIncrement
         _minimum = DgvNumericUpDownCell_defaultMinimum
         _maximum = DgvNumericUpDownCell_defaultMaximum
-        _thousandsSeparator = DgvNumericUpDownCell_defaultThousandsSeparator
+        _thousandsSeparator = DefaultThousandsSeparator
     End Sub
 
     ''' <summary>
@@ -206,7 +206,7 @@ Public Class DataGridViewNumericUpDownCell
     ''' <summary>
     '''  The ThousandsSeparator property replicates the one from the NumericUpDown control
     ''' </summary>
-    <DefaultValue(DgvNumericUpDownCell_defaultThousandsSeparator)>
+    <DefaultValue(DefaultThousandsSeparator)>
     Public Property ThousandsSeparator As Boolean
         Get
             Return _thousandsSeparator
@@ -418,10 +418,13 @@ Public Class DataGridViewNumericUpDownCell
             Return New Size(-1, -1)
         End If
 
-        Dim preferredSize As Size = MyBase.GetPreferredSize(graphics, cellStyle, rowIndex, constraintSize)
+        Dim preferredSize As Size =
+            MyBase.GetPreferredSize(graphics, cellStyle, rowIndex, constraintSize)
         If constraintSize.Width = 0 Then
-            Const buttonsWidth As Integer = 16 ' Account for the width of the up/down buttons.
-            Const buttonMargin As Integer = 8  ' Account for some blank pixels between the text and buttons.
+            ' Account for the width of the up/down buttons.
+            Const buttonsWidth As Integer = 16
+            ' Account for some blank pixels between the text and buttons.
+            Const buttonMargin As Integer = 8
             preferredSize.Width += buttonsWidth + buttonMargin
         End If
         Return preferredSize
@@ -476,7 +479,8 @@ Public Class DataGridViewNumericUpDownCell
         Dim numberFormatInfo As NumberFormatInfo = CultureInfo.CurrentCulture.NumberFormat
         Dim negativeSignKey As Keys = Keys.None
         Dim negativeSignStr As String = numberFormatInfo.NegativeSign
-        If Not String.IsNullOrEmpty(negativeSignStr) AndAlso negativeSignStr.Length = 1 Then
+        If Not String.IsNullOrEmpty(negativeSignStr) AndAlso
+                negativeSignStr.Length = 1 Then
             negativeSignKey = CType(VkKeyScan(negativeSignStr(index:=0)), Keys)
         End If
 

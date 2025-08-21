@@ -9,9 +9,13 @@ Public Class NumberFormatRecord
     Public Sub New(jsonData As String)
         _asList = JsonToDictionary(jsonData)
         If _asList.Count <> 2 Then
+            Dim innerException As New ApplicationException(
+                message:="Invalid number format record structure.")
+
             Throw New ApplicationException(
-                message:=$"{NameOf(NumberFormatRecord)}({NameOf(jsonData)}) contains {jsonData.Length} entries.",
-                innerException:=New ApplicationException("Invalid number format record structure."))
+                message:=$"{NameOf(NumberFormatRecord)}({NameOf(jsonData)})" &
+                         $" contains {jsonData.Length} entries.",
+                innerException)
         End If
         Me.decimalSeparator = _asList(NameOf(decimalSeparator))
         Me.groupsSeparator = _asList(NameOf(groupsSeparator))
@@ -22,7 +26,8 @@ Public Class NumberFormatRecord
     Public Property groupsSeparator As String
 
     Private Function GetDebuggerDisplay() As String
-        Return $"{NameOf(decimalSeparator)} = {Me.decimalSeparator}, {NameOf(groupsSeparator)} = {Me.groupsSeparator}"
+        Return $"{NameOf(decimalSeparator)} = {Me.decimalSeparator}," &
+                $"{NameOf(groupsSeparator)} = {Me.groupsSeparator}"
     End Function
 
     Public Function ToList() As Dictionary(Of String, String)

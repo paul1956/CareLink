@@ -18,7 +18,8 @@ Friend Module StringBuilderExtensions
     '''  The string to remove from the end of the StringBuilder.
     ''' </param>
     ''' <returns>
-    '''  The modified <see cref="StringBuilder"/> instance with the specified string removed from the end, if present.
+    '''  The modified <see cref="StringBuilder"/> instance with the
+    '''  specified string removed from the end, if present.
     ''' </returns>
     <Extension>
     Public Function TrimEnd(sb As StringBuilder, value As String) As StringBuilder
@@ -55,7 +56,8 @@ Friend Module StringBuilderExtensions
     '''  The character to remove from the end of the StringBuilder.
     ''' </param>
     ''' <returns>
-    '''  The modified <see cref="StringBuilder"/> instance with the specified character removed from the end.
+    '''  The modified <see cref="StringBuilder"/> instance with
+    '''  the specified character removed from the end.
     ''' </returns>
     <Extension>
     Public Function TrimEnd(sb As StringBuilder, trimChar As Char) As StringBuilder

@@ -14,7 +14,8 @@ Public Class PresetAmountRecord
             _percent = Integer.Parse(s:=s.Trim(trimChar:="%"c).Trim)
         Else
             _typeIsRate = True
-            Dim sSplit As String() = s.Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
+            Dim sSplit As String() =
+                s.Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
             _rate = sSplit(0).ParseSingleInvariant
             _units = sSplit(1)
         End If

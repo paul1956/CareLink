@@ -9,7 +9,8 @@ Imports System.Text
 Public Module CertificateSigningRequest
 
     ''' <summary>
-    '''  Creates a Certificate Signing Request in PEM format using the specified RSA key pair and subject details.
+    '''  Creates a Certificate Signing Request in PEM format using the specified RSA key pair
+    '''  and subject details.
     ''' </summary>
     ''' <param name="key">The RSA key pair to use for signing the CSR.</param>
     ''' <param name="cn">The Common Name (CN) for the subject.</param>
