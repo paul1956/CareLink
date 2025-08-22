@@ -5,7 +5,7 @@
 Imports System.Globalization
 Imports System.Runtime.CompilerServices
 
-Friend Module RichTextBoxExtensions
+Public Module RichTextBoxExtensions
     Private Const TotalWidth As Integer = 28
     Public Const Indent4 As String = "    "
     Public Const Indent8 As String = "        "
@@ -255,6 +255,42 @@ Friend Module RichTextBoxExtensions
 
         text = $"{startTime}{separator}{endTime}".AlignCenter()
         rtb.AppendTextWithFontChange(text, newFont:=FixedWidthFont, includeNewLine:=True)
+    End Sub
+
+    ''' <summary>
+    '''  Makes all occurrences of a specified string in a <see cref="RichTextBox"/> bold.
+    ''' </summary>
+    ''' <param name="rtb">
+    '''  The <see cref="RichTextBox"/> to modify.
+    ''' </param>
+    ''' <param name="str">
+    '''  The string to make bold.
+    ''' </param>
+    ''' <remarks>
+    '''  This method searches for all occurrences of the specified string
+    '''  and applies bold formatting to them.
+    ''' </remarks>
+    <Extension>
+    Public Sub BoldText(
+        rtb As RichTextBox,
+        str As String,
+        Optional options As RichTextBoxFinds = RichTextBoxFinds.MatchCase)
+
+        Const newStyle As FontStyle = FontStyle.Bold
+        Dim start As Integer = 0
+        Dim length As Integer = str.Length
+        While start < rtb.TextLength - 1
+            Dim wordStartIndex As Integer =
+                rtb.Find(str, start, [end]:=rtb.TextLength - 1, options)
+            If wordStartIndex = -1 Then
+                Exit While ' No more occurrences found
+            Else
+                rtb.Select(start:=wordStartIndex, length)
+                rtb.SelectionFont = New Font(prototype:=rtb.SelectionFont, newStyle)
+                start = wordStartIndex + length
+            End If
+        End While
+        rtb.SelectionLength = 0
     End Sub
 
     ''' <summary>
