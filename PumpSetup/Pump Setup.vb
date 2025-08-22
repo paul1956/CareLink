@@ -183,7 +183,7 @@ Public Class PumpSetup
         step1 &= $"{vbCr}{CareLinkUrl}.{vbCr}" &
             $"Select it from the dropdown then click Accept."
         Me.InstructionsRtb.Text = step1
-        Me.InstructionsRtb.BoldText(text:="Accept")
+        Me.InstructionsRtb.BoldText(str:="Accept")
 
         Me.ComboBoxPDFs.Items.Add(item:="(None)")
         For Each pdfFile As String In _pdfFilesInDownLoadDirectory
