@@ -474,6 +474,8 @@ Friend Module LoginHelpers
         Start As Boolean,
         Optional interval As Integer = -1) As Boolean
 
+        GC.Collect()
+        GC.WaitForPendingFinalizers()
         ReportMemory()
 
         If Start Then
