@@ -192,7 +192,8 @@ Public Class LoginDialog
                                          "")
         End With
 
-        Me.RegionComboBox.DataSource = New BindingSource(dataSource:=s_regionList, dataMember:=Nothing)
+        Me.RegionComboBox.DataSource =
+            New BindingSource(dataSource:=s_regionList, dataMember:=Nothing)
         Me.RegionComboBox.DisplayMember = "Key"
         Me.RegionComboBox.ValueMember = "Value"
         If String.IsNullOrEmpty(My.Settings.CountryCode) Then
@@ -501,7 +502,8 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="UsernameComboBox"/> validating event, ensures username is not empty.
+    '''  Handles the <see cref="UsernameComboBox"/> validating event,
+    '''  ensures username is not empty.
     ''' </summary>
     Private Sub UsernameComboBox_Validating(sender As Object, e As CancelEventArgs) _
         Handles UsernameComboBox.Validating

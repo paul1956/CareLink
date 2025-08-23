@@ -8,6 +8,7 @@ Public Class UtilitiesRecord
     End Sub
 
     Public Sub New(sTable As StringTable)
+        Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
         If Not sTable.IsValid Then
             Stop
             Exit Sub
@@ -15,11 +16,11 @@ Public Class UtilitiesRecord
         Me.TimeFormat = sTable.GetSingleLineValue(Of String)("Time Format ")
         Me.Brightness = sTable.GetSingleLineValue(Of String)("Brightness ")
         Dim s As String = sTable.GetSingleLineValue(Of String)("Backlight Timeout ")
-        If s.EndsWith("s"c) Then
+        If s.EndsWith(value:="s"c) Then
             Me.BackLightTimeout = New TimeSpan(
                 hours:=0,
                 minutes:=0,
-                seconds:=CInt(s.Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)(0)))
+                seconds:=CInt(s.Split(separator:=" ", options)(0)))
         Else
             Stop
         End If

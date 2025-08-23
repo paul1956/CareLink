@@ -178,7 +178,7 @@ Public Class PdfSettingsRecord
                             Me.SmartGuard = New SmartGuardRecord(sTable, smartGuard)
                         Else
                             Dim smartGuard As String = "Off"
-                            Dim options As StringSplitOptions =
+                            Const options As StringSplitOptions =
                                 StringSplitOptions.RemoveEmptyEntries
                             For Each s As IndexClass(Of String) In listOfAllTextLines.WithIndex
                                 If s.Value.StartsWith(value:=SmartGuardHeader) Then

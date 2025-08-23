@@ -2458,7 +2458,8 @@ Public Class Form1
 
         Me.NotifyIcon1?.Dispose()
         If _webView2ProcessId > 0 Then
-            Dim webViewProcess As Process = Process.GetProcessById(processId:=_webView2ProcessId)
+            Dim webViewProcess As Process =
+                Process.GetProcessById(processId:=_webView2ProcessId)
             ' TODO: dispose of the WebView2 control
             'LoginDialog.WebView21.Dispose()
             webViewProcess.Kill()
@@ -2884,7 +2885,9 @@ Public Class Form1
             .CheckFileExists = True,
             .CheckPathExists = True,
             .DefaultExt = "txt",
-            .FileName = If(fileList.Length > 0, Path.GetFileName(path:=fileList(0)), "CareLink"),
+            .FileName = If(fileList.Length > 0,
+                           Path.GetFileName(path:=fileList(0)),
+                           "CareLink"),
             .Filter = $"Error files (*.txt)|{BaseNameSavedErrorReport}*.txt",
             .InitialDirectory = GetProjectDataDirectory(),
             .Multiselect = False,
@@ -3051,8 +3054,10 @@ Public Class Form1
     '''  Returns 100 if no item is checked or no numeric value is found.
     ''' </returns>
     Private Function GetSpeechConfidenceValue() As Double
-        For Each item As ToolStripMenuItem In Me.MenuOptionsSpeechRecognitionEnabled.DropDownItems
-            If IsNumeric(item.Text) AndAlso item.Checked Then
+        For Each item As ToolStripMenuItem In
+            Me.MenuOptionsSpeechRecognitionEnabled.DropDownItems
+
+            If IsNumeric(Expression:=item.Text) AndAlso item.Checked Then
                 Return CDbl(item.Text)
             End If
         Next
@@ -3427,7 +3432,7 @@ Public Class Form1
     Private Sub MenuHelpReportAnIssue_Click(sender As Object, e As EventArgs) _
         Handles MenuHelpReportAnIssue.Click
 
-        OpenUrlInBrowser($"{GitHubCareLinkUrl}issues")
+        OpenUrlInBrowser(url:=$"{GitHubCareLinkUrl}issues")
     End Sub
 
 #End Region ' Help Menu Events
@@ -3456,8 +3461,9 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="CheckBox.CheckedChanged"/> event for
     '''  the <see cref="TemporaryUseAdvanceAITDecayCheckBox"/>.
-    '''  Updates the checkbox text and the <see cref="CurrentUser.UseAdvancedAitDecay"/> property,
-    '''  then updates the active insulin chart.
+    '''  Updates the checkbox text and the
+    '''  <see cref="CurrentUser.UseAdvancedAitDecay"/> property, then updates
+    '''  the active insulin chart.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="CheckBox"/> control.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>

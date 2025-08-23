@@ -27,7 +27,7 @@ Public Class HighAlertsRecord
                 Continue For
             End If
 
-            Dim options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
+            Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
             Dim value As String = sTable.Rows(index:=e.Index + 1).Columns(index:=0)
             Dim item As New HighAlertRecord(row, valueUnits) With {
                 .End =
