@@ -27,8 +27,10 @@ Public Class PumpSetupDialog
                 .SelectionBackColor = SystemColors.Window
                 .SelectionColor = SystemColors.WindowText
             Else
+
+                Dim autoSuspendTimeSpan As TimeSpan = Me.Pdf.Utilities.AutoSuspend.Time
                 .AppendTextWithFontChange(
-                    text:=$"{Indent4}{Me.Pdf.Utilities.AutoSuspend.Time.ToFormattedTimeSpan(unit:="hr")}",
+                    text:=$"{Indent4}{autoSuspendTimeSpan.ToFormattedTimeSpan(unit:="hr")}",
                     newFont:=FixedWidthFont,
                     includeNewLine:=True)
             End If
@@ -184,7 +186,9 @@ Public Class PumpSetupDialog
             .AppendTextWithSymbol(
                 text:=$"Menu>{Shield}>SmartGuard > SmartGuard Settings", symbol)
 
-            value = $"{Me.Pdf.SmartGuard.Target.RoundToSingle(digits:=0, considerValue:=True)}"
+            value =
+                $"{Me.Pdf.SmartGuard.Target.RoundToSingle(digits:=0, considerValue:=True)}"
+
             .AppendKeyValue(key:="Target:", value)
             .AppendKeyValue(key:="Auto Correction:", value:=$"{Me.Pdf.SmartGuard.SmartGuard}")
 
@@ -227,17 +231,24 @@ Public Class PumpSetupDialog
                     text:=$"{Indent4}{item.Key}:",
                     newFont:=FixedWidthBoldFont,
                     includeNewLine:=True)
-                For Each e As IndexClass(Of BasalRateRecord) In item.Value.basalRates.WithIndex
+                For Each e As IndexClass(Of BasalRateRecord) In
+                    item.Value.basalRates.WithIndex
+
                     Dim basalRate As BasalRateRecord = e.Value
                     If Not basalRate.IsValid Then
                         Exit For
                     End If
                     Dim startTime As TimeOnly = basalRate.Time
-                    Dim endTime As TimeOnly = If(e.IsLast,
-                                                 Eleven59,
-                                                 item.Value.basalRates(index:=e.Index + 1).Time)
+                    Dim endTime As TimeOnly =
+                        If(e.IsLast,
+                           Eleven59,
+                           item.Value.basalRates(index:=e.Index + 1).Time)
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
-                    .AppendTimeValueRow(startTime, endTime, value, Me.Pdf.Utilities.TimeFormat)
+                    .AppendTimeValueRow(
+                        startTime,
+                        endTime,
+                        value,
+                        Me.Pdf.Utilities.TimeFormat)
                 Next
             Next
         End With

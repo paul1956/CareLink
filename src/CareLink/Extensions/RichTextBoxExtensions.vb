@@ -160,7 +160,10 @@ Public Module RichTextBoxExtensions
 
         Dim splitText() As String =
             text.Split(separator:=symbol, options:=StringSplitOptions.None)
-        rtb.AppendTextWithFontChange(text:=splitText(0), newFont:=HeadingBoldFont, padRight:=0)
+        rtb.AppendTextWithFontChange(
+            text:=splitText(0),
+            newFont:=HeadingBoldFont,
+            padRight:=0)
         If splitText.Length > 1 Then
             Dim bufferLength As Integer = rtb.Text.Length
             rtb.AppendTextWithFontChange(text:=symbol, newFont:=HeadingBoldFont, padRight:=0)
