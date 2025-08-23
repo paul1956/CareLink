@@ -47,7 +47,8 @@ Friend Module UpdateChecker
 
                     Dim quotePos As Integer = line.IndexOf(value:=""""c, startIndex)
                     If quotePos > startIndex Then
-                        versionStr = line.Substring(startIndex, length:=quotePos - startIndex)
+                        versionStr =
+                            line.Substring(startIndex, length:=quotePos - startIndex)
 
                         ' Skip versions with a dash (e.g., pre-release builds)
                         If Not versionStr.Contains("-"c) Then

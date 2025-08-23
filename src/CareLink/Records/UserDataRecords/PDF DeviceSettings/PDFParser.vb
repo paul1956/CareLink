@@ -8,7 +8,8 @@ Imports Spire.Pdf.Texts
 Imports Spire.Pdf.Utilities
 
 ''' <summary>
-'''  Provides utility functions for extracting tables and text from PDF documents using Spire.PDF.
+'''  Provides utility functions for extracting tables and text from PDF documents
+'''  using Spire.PDF.
 ''' </summary>
 Public Module PDFParser
 
@@ -23,14 +24,17 @@ Public Module PDFParser
 
         Dim builder As New StringTable
         'Loop though the row and column
-        For i As Integer = 0 To table.GetRowCount() - 1
+        For rowIndex As Integer = 0 To table.GetRowCount() - 1
             Dim columns As New List(Of String)
-            For j As Integer = 0 To table.GetColumnCount() - 1
+            For columnIndex As Integer = 0 To table.GetColumnCount() - 1
                 'Get text from the specific cell
                 'Add text to the string builder
-                columns.Add(table.GetText(i, j).Replace(vbLf, " "))
+                Dim item As String =
+                    table.GetText(rowIndex, columnIndex).
+                        Replace(oldValue:=vbLf, newValue:=" ")
+                columns.Add(item)
             Next
-            builder.Rows.Add(New StringTable.Row(columns))
+            builder.Rows.Add(item:=New StringTable.Row(columns))
         Next
         Return builder
     End Function
@@ -45,7 +49,10 @@ Public Module PDFParser
     '''  A <see cref="StringTable"/> if the header matches;
     '''  otherwise, a new empty <see cref="StringTable"/>.
     ''' </returns>
-    Public Function ConvertPdfTableToStringTable(table As PdfTable, tableHeader As String) As StringTable
+    Public Function ConvertPdfTableToStringTable(
+        table As PdfTable,
+        tableHeader As String) As StringTable
+
         Dim sTable As StringTable = ExtractTableText(table)
         If sTable.IsValid AndAlso
            sTable.Rows(index:=0).Columns(index:=0).StartsWith(value:=tableHeader) Then
@@ -98,7 +105,9 @@ Public Module PDFParser
     '''  Creates a <see cref="PdfTableExtractor"/> for the specified PDF file.
     ''' </summary>
     ''' <param name="pdfFileNameWithPath">The path to the PDF file.</param>
-    ''' <returns>A <see cref="PdfTableExtractor"/> instance for the loaded PDF document.</returns>
+    ''' <returns>
+    '''  A <see cref="PdfTableExtractor"/> instance for the loaded PDF document.
+    ''' </returns>
     Public Function GetPdfExtractor(pdfFileNameWithPath As String) As PdfTableExtractor
         'Create a PdfDocument object
         Dim document As New PdfDocument()

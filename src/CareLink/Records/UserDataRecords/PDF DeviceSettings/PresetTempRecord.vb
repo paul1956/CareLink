@@ -11,7 +11,8 @@ Public Class PresetTempRecord
         If r.Columns.Count <> 3 OrElse r.Columns(index:=0).Length = 0 Then
             Exit Sub
         End If
-        Dim column0Trim As String = r.Columns(index:=0).Replace(oldValue:=key, newValue:="").Trim
+        Dim column0Trim As String =
+            r.Columns(index:=0).Replace(oldValue:=key, newValue:="").Trim
         If column0Trim.Length = 0 Then
             If r.Columns(index:=1).Length = 0 AndAlso r.Columns(index:=1).Length = 0 Then
                 Exit Sub

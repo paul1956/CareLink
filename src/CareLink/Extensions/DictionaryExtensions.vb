@@ -64,15 +64,17 @@ Public Module DictionaryExtensions
     '''  The value for the key, or a <see cref="String.Empty"/> if not found.
     ''' </returns>
     <Extension>
-    Friend Function GetStringValueOrEmpty(item As Dictionary(Of String, String), Key As String) As String
+    Friend Function GetStringValueOrEmpty(
+        item As Dictionary(Of String, String),
+        Key As String) As String
+
         If item Is Nothing Then
             Return ""
         End If
         Dim value As String = String.Empty
         Return If(item.TryGetValue(Key, value),
                   value,
-                  String.Empty
-                 )
+                  String.Empty)
     End Function
 
     ''' <summary>
@@ -183,7 +185,9 @@ Public Module DictionaryExtensions
     ''' </summary>
     ''' <param name="jsonString">The JSON string to convert.</param>
     ''' <returns>A Dictionary with the key-value pairs from the JSON string.</returns>
-    Public Function GetAdditionalInformation(jsonString As String) As Dictionary(Of String, String)
+    Public Function GetAdditionalInformation(
+        jsonString As String) As Dictionary(Of String, String)
+
         Dim valueList() As String = GetValueList(jsonString)
         Dim dic As New Dictionary(Of String, String)
         For Each row As String In valueList

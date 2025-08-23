@@ -7,7 +7,8 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Text.Json.Serialization
 
 ''' <summary>
-'''   Represents a summary record for pump data, containing a record number, key, value, and message.
+'''   Represents a summary record for pump data, containing a record
+'''   number, key, value, and message.
 '''   Provides multiple constructors for different initialization scenarios and
 '''   implements <see cref="IComparable"/> for sorting.
 ''' </summary>
@@ -15,13 +16,18 @@ Public Class SummaryRecord
     Implements IComparable
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="SummaryRecord"/> class using a key-value pair
+    '''  Initializes a new instance of the <see cref="SummaryRecord"/> class
+    '''  using a key-value pair
     '''  and a message lookup table. Used where the message needs to be translated.
     ''' </summary>
-    ''' <param name="recordNumber">The record number associated with this summary record.</param>
+    ''' <param name="recordNumber">
+    '''  The record number associated with this summary record.
+    ''' </param>
     ''' <param name="kvp">A key-value pair representing the data row.</param>
     ''' <param name="messages">A dictionary containing message translations.</param>
-    ''' <param name="messageTableName">The name of the message table for error reporting.</param>
+    ''' <param name="messageTableName">
+    '''  The name of the message table for error reporting.
+    ''' </param>
     ''' <remarks>Handles messages that are not in the message table.</remarks>
     Protected Friend Sub New(
             recordNumber As Single,
@@ -34,11 +40,12 @@ Public Class SummaryRecord
             If Not messages.TryGetValue(key:=kvp.Value, value:=message) Then
                 If Debugger.IsAttached Then
                     Stop
+                    Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
                     MsgBox(
                         heading:=$"{kvp.Value} is unknown message for {messageTableName}!",
                         prompt:="",
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                        title:=GetTitleFromStack(New StackFrame(skipFrames:=0, needFileInfo:=True)))
+                        title:=GetTitleFromStack(stackFrame))
                 End If
                 message = kvp.Value.ToTitle
             End If

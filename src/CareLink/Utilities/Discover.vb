@@ -122,7 +122,8 @@ Public Module Discover
             JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(json)
         mutableConfig("token_url") =
             JsonSerializer.Deserialize(Of JsonElement)(json:=$"""{tokenUrl}""")
-        json = JsonSerializer.Serialize(value:=mutableConfig, options:=s_jsonSerializerOptions)
+        Dim options As JsonSerializerOptions = s_jsonSerializerOptions
+        json = JsonSerializer.Serialize(value:=mutableConfig, options)
         Return JsonSerializer.Deserialize(Of JsonElement)(json)
     End Function
 

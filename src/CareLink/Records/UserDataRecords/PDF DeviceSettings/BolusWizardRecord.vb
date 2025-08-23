@@ -6,8 +6,10 @@ Public Class BolusWizardRecord
 
     Public Sub New(sTable As StringTable)
         Me.BolusWizard = sTable.GetSingleLineValue(Of String)("Bolus Wizard")
-        Me.Units = New DeviceUnitsRecord(line:=sTable.GetSingleLineValue(Of String)("Units"))
-        Dim value As String = sTable.GetSingleLineValue(Of String)("Active Insulin Time (h:mm)")
+        Me.Units =
+            New DeviceUnitsRecord(line:=sTable.GetSingleLineValue(Of String)("Units"))
+        Dim value As String =
+            sTable.GetSingleLineValue(Of String)("Active Insulin Time (h:mm)")
         Me.ActiveInsulinTime = If(value = "",
                                   2,
                                   s_aitLengths(value)

@@ -7,9 +7,12 @@ Imports System.IO
 Public Module CareLinkUserDataRecordHelpers
 
     ''' <summary>
-    '''  Returns a <see cref="DataGridViewCellStyle"/> configured for the specified column name.
+    '''  Returns a <see cref="DataGridViewCellStyle"/> configured for
+    '''  the specified column name.
     ''' </summary>
-    ''' <param name="columnName">The name of the column for which to get the cell style.</param>
+    ''' <param name="columnName">
+    '''  The name of the column for which to get the cell style.
+    ''' </param>
     ''' <returns>
     '''  A <see cref="DataGridViewCellStyle"/> instance with alignment and padding set
     '''  according to the column's expected content.

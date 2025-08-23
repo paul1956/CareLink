@@ -33,7 +33,8 @@ Friend Module FileUtilities
     ''' <param name="buffer">The byte array to write.</param>
     Friend Sub ByteArrayToFile(path As String, buffer() As Byte)
         Try
-            Using fs As New FileStream(path, mode:=FileMode.Create, access:=FileAccess.Write)
+            Const access As FileAccess = FileAccess.Write
+            Using fs As New FileStream(path, mode:=FileMode.Create, access)
                 fs.Write(buffer, offset:=0, count:=buffer.Length)
             End Using
         Catch ex As Exception
@@ -42,7 +43,8 @@ Friend Module FileUtilities
     End Sub
 
     ''' <summary>
-    '''  Gets the full path for the login data file based on the user name and base file name.
+    '''  Gets the full path for the login data file based on the user name
+    '''  and base file name.
     ''' </summary>
     ''' <param name="userName">The user name.</param>
     ''' <param name="tokenBaseFileName">The base file name for the token data file.</param>

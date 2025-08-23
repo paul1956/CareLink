@@ -3212,7 +3212,8 @@ Public Class Form1
         HideDataGridViewColumnsByName(Of Meal)(dgv:=Me.DgvMeal)
         HideDataGridViewColumnsByName(Of SG)(dgv:=Me.DgvSensorBgReadings)
         HideDataGridViewColumnsByName(Of SG)(dgv:=Me.DgvSGs)
-        HideDataGridViewColumnsByName(Of TherapyAlgorithmState)(dgv:=Me.DgvTherapyAlgorithmState)
+        HideDataGridViewColumnsByName(Of TherapyAlgorithmState)(
+            dgv:=Me.DgvTherapyAlgorithmState)
         HideDataGridViewColumnsByName(Of TimeChange)(dgv:=Me.DgvTimeChange)
     End Sub
 
@@ -3636,8 +3637,9 @@ Public Class Form1
     '''  pages in the application. It fills the background with a solid color
     '''  and draws the tab text centered within the tab rectangle.
     ''' </remarks>
-    Private Sub TabControl_DrawItem(sender As Object, e As DrawItemEventArgs) _
-        Handles TabControlPage1.DrawItem, TabControlPage2.DrawItem
+    Private Sub TabControl_DrawItem(sender As Object, e As DrawItemEventArgs) Handles _
+        TabControlPage1.DrawItem,
+        TabControlPage2.DrawItem
 
         Dim tabControl As TabControl = CType(sender, TabControl)
         Dim rect As Rectangle = tabControl.GetTabRect(e.Index)
@@ -3654,7 +3656,12 @@ Public Class Form1
             Using g As Graphics = e.Graphics
                 g.FillRectangle(brush, rect)
                 Dim s As String = tabControl.TabPages(e.Index).Text
-                g.DrawString(s, tabControl.Font, brush:=textBrush, layoutRectangle:=rect, format)
+                g.DrawString(
+                    s,
+                    tabControl.Font,
+                    brush:=textBrush,
+                    layoutRectangle:=rect,
+                    format)
             End Using
         End Using
     End Sub
@@ -4347,17 +4354,19 @@ Public Class Form1
     Private Sub UpdateNotifyIcon(sgString As String)
         Try
             Dim sg As Single = s_lastSg.sg
+            Dim tipText As String
             Using bitmapText As New Bitmap(width:=16, height:=16)
                 Using g As Graphics = Graphics.FromImage(bitmapText)
                     Dim backColor As Color
                     Select Case sg
                         Case <= GetTirLowLimit()
                             backColor = Color.Yellow
+                            tipText = $"SG below {GetTirLowLimitWithUnits()} {BgUnits}"
                             If _showBalloonTip Then
                                 Me.NotifyIcon1.ShowBalloonTip(
                                     timeout:=10000,
                                     tipTitle:=$"CareLink™ Alert",
-                                    tipText:=$"SG below {GetTirLowLimitWithUnits()} {BgUnits}",
+                                    tipText,
                                     tipIcon:=Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
@@ -4367,18 +4376,21 @@ Public Class Form1
                         Case Else
                             backColor = Color.Red
                             If _showBalloonTip Then
+                                tipText = $"SG above {GetTirHighLimitWithUnits()} {BgUnits}"
                                 Me.NotifyIcon1.ShowBalloonTip(
                                     timeout:=10000,
                                     tipTitle:=$"CareLink™ Alert",
-                                    tipText:=$"SG above {GetTirHighLimitWithUnits()} {BgUnits}",
+                                    tipText,
                                     tipIcon:=Me.ToolTip1.ToolTipIcon)
                             End If
                             _showBalloonTip = False
                     End Select
 
-                    Dim s As String = sgString.PadRight(totalWidth:=3) _
-                                              .Substring(startIndex:=0, length:=3).Trim _
-                                              .PadLeft(totalWidth:=3)
+                    Dim s As String =
+                        sgString.PadRight(totalWidth:=3) _
+                                .Substring(startIndex:=0, length:=3).Trim _
+                                .PadLeft(totalWidth:=3)
+
                     Me.NotifyIcon1.Icon = CreateTextIcon(s, backColor)
                     Dim strBuilder As New StringBuilder(capacity:=100)
                     Dim dateSeparator As String =
@@ -4501,7 +4513,9 @@ Public Class Form1
                     key:=NameOf(TherapyAlgorithmState.AutoModeShieldState))
             Select Case autoModeState
                 Case "AUTO_BASAL"
-                    title = If(Is700Series(), "AutoMode", "SmartGuard")
+                    title = If(Is700Series(),
+                               "AutoMode",
+                               "SmartGuard")
                 Case "SAFE_BASAL"
                     title = autoModeState.ToTitle
                     Dim key As String = NameOf(TherapyAlgorithmState.SafeBasalDuration)
@@ -4994,7 +5008,9 @@ Public Class Form1
                     s_totalBasal = activeBasalRecords(index:=0).UnitsPerHr * 24
                     s_totalDailyDose += s_totalBasal
                 Else
-                    For Each e As IndexClass(Of BasalRateRecord) In activeBasalRecords.WithIndex
+                    For Each e As IndexClass(Of BasalRateRecord) In
+                        activeBasalRecords.WithIndex
+
                         Dim basalRate As BasalRateRecord = e.Value
                         startTime = basalRate.Time
                         endTime = If(e.IsLast,

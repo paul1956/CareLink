@@ -5,7 +5,8 @@
 Imports System.Runtime.CompilerServices
 
 ''' <summary>
-'''  Provides extension methods for working with item indexes related to <see cref="ServerDataIndexes"/>.
+'''  Provides extension methods for working with item indexes related
+'''  to <see cref="ServerDataIndexes"/>.
 ''' </summary>
 Friend Module ItemIndexesModule
 
@@ -33,7 +34,8 @@ Friend Module ItemIndexesModule
             Return CType(result, ServerDataIndexes)
         End If
         Stop
-        Throw New ArgumentException(message:=$"{key} was not found in {NameOf(ServerDataIndexes)}")
+        Dim message As String = $"{key} was not found in {NameOf(ServerDataIndexes)}"
+        Throw New ArgumentException(message)
     End Function
 
 End Module

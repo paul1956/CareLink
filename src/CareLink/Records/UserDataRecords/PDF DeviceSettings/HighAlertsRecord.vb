@@ -57,7 +57,9 @@ Public Class HighAlertsRecord
     Public Property SnoozeOn As String = "Off"
 
     Public Overrides Function ToString() As String
-        Return If(Me.SnoozeOn = "On", $"{_snoozeTime.Hours}:{_snoozeTime.Seconds:D2} hr", "Off")
+        Return If(Me.SnoozeOn = "On",
+                  $"{_snoozeTime.Hours}:{_snoozeTime.Seconds:D2} hr",
+                  "Off")
     End Function
 
 End Class

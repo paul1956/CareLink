@@ -31,7 +31,9 @@ Public Class PdfSettingsRecord
     '''  Initializes a new instance of the <see cref="PdfSettingsRecord"/> class
     '''  by extracting data from the specified PDF file.
     ''' </summary>
-    ''' <param name="pdfFileNameWithPath">The full path to the PDF file containing device settings.</param>
+    ''' <param name="pdfFileNameWithPath">
+    '''  The full path to the PDF file containing device settings.
+    ''' </param>
     ''' <param name="notTesting">
     '''  If set to <see langword="True"/>, WinForms support is required so the cursor
     '''  will change to a wait cursor during processing.
@@ -47,13 +49,13 @@ Public Class PdfSettingsRecord
             allText.Substring(startIndex:=startIndex + DeviceSettings.Length).TrimStart
         Dim length As Integer = tempString.IndexOf(value:="  ")
         Me.UserName = tempString.Trim.Substring(startIndex:=0, length).Trim()
-        If Me.UserName.Contains(", ") Then
+        If Me.UserName.Contains(value:=", ") Then
             Dim split As String() = Me.UserName.Split(separator:=", ")
             If split.Length = 2 Then
                 Me.UserName = $"{split(1)} {split(0)}"
             End If
         End If
-        If allText.Contains("Device Settings(1 of 2)") Then
+        If allText.Contains(value:="Device Settings(1 of 2)") Then
             Me.IsValid = False
             Return
         End If
@@ -75,6 +77,7 @@ Public Class PdfSettingsRecord
                 Dim itemKey As String = kvp.Key
                 Dim sTable As StringTable
                 Dim table As PdfTable = kvp.Value
+                Dim tableHeader As String
                 Select Case True
                     Case String.IsNullOrWhiteSpace(value:=itemKey)
                         Continue For
@@ -83,8 +86,9 @@ Public Class PdfSettingsRecord
                             ConvertPdfTableToStringTable(
                                 table:=tables.Values(index:=0),
                                 tableHeader:=MaximumBasalRateHeader)
+                        Dim key As String = MaximumBasalRateHeader
                         Me.Basal.MaximumBasalRate =
-                            sTable.GetSingleLineValue(Of Single)(key:=MaximumBasalRateHeader)
+                            sTable.GetSingleLineValue(Of Single)(key)
                     Case itemKey.StartsWith(NamedBasalHeader)
                         Dim tableNumber As Integer = ExtractIndex(itemKey)
                         Dim key As String = Me.Basal.NamedBasal.Keys(index:=tableNumber - 1)
@@ -95,12 +99,14 @@ Public Class PdfSettingsRecord
                                 length:=1) = "("c
                         Me.Basal.NamedBasal(key) = New NamedBasalRecord(table, isActive)
                     Case itemKey.StartsWith(value:=BolusWizardHeader)
+                        tableHeader = BolusWizardHeader
                         sTable =
-                            ConvertPdfTableToStringTable(table, tableHeader:=BolusWizardHeader)
+                            ConvertPdfTableToStringTable(table, tableHeader)
                         Me.Bolus.BolusWizard = New BolusWizardRecord(sTable)
                     Case itemKey.StartsWith(value:=EasyBolusHeader)
+                        tableHeader = EasyBolusHeader
                         sTable =
-                            ConvertPdfTableToStringTable(table, tableHeader:=EasyBolusHeader)
+                            ConvertPdfTableToStringTable(table, tableHeader)
                         Me.Bolus.EasyBolus = New EasyBolusRecord(sTable)
                     Case itemKey.StartsWith(value:=CarbohydrateRatiosHeader)
                         sTable =
@@ -108,7 +114,9 @@ Public Class PdfSettingsRecord
                                 table,
                                 tableHeader:=CarbohydrateRatiosHeader)
                         Me.Bolus.DeviceCarbohydrateRatios.Clear()
-                        For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
+                        For Each e As IndexClass(Of StringTable.Row) In
+                            sTable.Rows.WithIndex
+
                             If e.IsFirst Then Continue For
                             Dim item As New DeviceCarbRatioRecord(e.Value)
                             If Not item.IsValid Then Exit For
@@ -120,7 +128,9 @@ Public Class PdfSettingsRecord
                                 table,
                                 tableHeader:=InsulinSensitivityHeader)
                         Me.Bolus.InsulinSensitivity.Clear()
-                        For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
+                        For Each e As IndexClass(Of StringTable.Row) In
+                            sTable.Rows.WithIndex
+
                             If e.IsFirst Then Continue For
                             Dim item As New InsulinSensitivityRecord(e.Value)
                             If Not item.IsValid Then Exit For
@@ -133,17 +143,22 @@ Public Class PdfSettingsRecord
                             table,
                             tableHeader:=BloodGlucoseTargetHeader)
 
-                        For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
+                        For Each e As IndexClass(Of StringTable.Row) In
+                            sTable.Rows.WithIndex
+
                             If e.IsFirst Then Continue For
                             Dim item As New BloodGlucoseTargetRecord(r:=e.Value)
                             If Not item.IsValid Then Exit For
                             Me.Bolus.BloodGlucoseTarget.Add(item)
                         Next
                     Case itemKey.StartsWith(value:=PresetBolusHeader)
+                        tableHeader = PresetBolusHeader
                         sTable =
-                            ConvertPdfTableToStringTable(table, tableHeader:=PresetBolusHeader)
+                            ConvertPdfTableToStringTable(table, tableHeader)
 
-                        For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
+                        For Each e As IndexClass(Of StringTable.Row) In
+                            sTable.Rows.WithIndex
+
                             If e.IsFirst Then Continue For
                             Dim key As String = Me.PresetBolus.Keys(index:=e.Index - 1)
                             Me.PresetBolus(key) = New PresetBolusRecord(e.Value, key)
@@ -163,15 +178,18 @@ Public Class PdfSettingsRecord
                                 table,
                                 tableHeader:=PresetTempHeader)
 
-                        For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
+                        For Each e As IndexClass(Of StringTable.Row) In
+                            sTable.Rows.WithIndex
+
                             If e.IsFirst Then Continue For
                             Dim key As String = Me.PresetTemp.Keys(index:=presetTempKeyIndex)
                             presetTempKeyIndex += 1
-                            Me.PresetTemp(key) = New PresetTempRecord(e.Value, key)
+                            Me.PresetTemp(key) = New PresetTempRecord(r:=e.Value, key)
                         Next
                     Case itemKey.StartsWith(value:=SmartGuardHeader)
+                        tableHeader = SmartGuardHeader
                         sTable =
-                            ConvertPdfTableToStringTable(table, tableHeader:=SmartGuardHeader)
+                            ConvertPdfTableToStringTable(table, tableHeader)
                         If sTable.Rows.Count = 3 Then
                             Dim smartGuard As String =
                                 sTable.GetSingleLineValue(Of String)(key:=SmartGuardHeader)
@@ -180,11 +198,14 @@ Public Class PdfSettingsRecord
                             Dim smartGuard As String = "Off"
                             Const options As StringSplitOptions =
                                 StringSplitOptions.RemoveEmptyEntries
-                            For Each s As IndexClass(Of String) In listOfAllTextLines.WithIndex
+                            For Each s As IndexClass(Of String) In
+                                listOfAllTextLines.WithIndex
+
                                 If s.Value.StartsWith(value:=SmartGuardHeader) Then
                                     s.MoveNext()
                                     smartGuard =
-                                        s.Value.Split(separator:=" ", options).ToList(index:=1)
+                                        s.Value.Split(separator:=" ", options) _
+                                               .ToList(index:=1)
                                     Exit For
                                 End If
                             Next
@@ -217,7 +238,8 @@ Public Class PdfSettingsRecord
                             ConvertPdfTableToStringTable(table, tableHeader:=LowAlertsHeader)
                         Me.LowAlerts = New LowAlertsRecord(sTable, listOfAllTextLines)
                     Case itemKey.StartsWith(value:=SensorHeader)
-                        sTable = ConvertPdfTableToStringTable(table, tableHeader:=SensorHeader)
+                        tableHeader = SensorHeader
+                        sTable = ConvertPdfTableToStringTable(table, tableHeader)
                         Me.Sensor = New SensorRecord(sTable)
                     Case itemKey.StartsWith(value:=PersonalRemindersHeader)
                         sTable =
@@ -259,7 +281,8 @@ Public Class PdfSettingsRecord
     End Sub
 
     ''' <summary>
-    '''  Extract <see langword="Integer"/> index from itemKey in the form of "24 Hour Total({index})"
+    '''  Extract <see langword="Integer"/> index from itemKey in the form
+    '''  of "24 Hour Total({index})"
     ''' </summary>
     ''' <param name="itemKey"></param>
     ''' <returns>index</returns>

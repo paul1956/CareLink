@@ -31,17 +31,25 @@ Partial Public Class CareLinkUserDataRecord
              ._useLocalTimeZone = My.Settings.UseLocalTimeZone,
             ._autoLogin = My.Settings.AutoLogin,
             ._careLinkPartner = My.Settings.CareLinkPartner,
-            ._careLinkPatientUserID = If(._careLinkPartner, My.Settings.CareLinkPatientUserID, "")
+            ._careLinkPatientUserID =
+                If(._careLinkPartner,
+                   My.Settings.CareLinkPatientUserID,
+                   "")
         }
     End Sub
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="CareLinkUserDataRecord"/> class from a CSV row.
+    '''  Initializes a new instance of the <see cref="CareLinkUserDataRecord"/> class
+    '''  from a CSV row.
     ''' </summary>
     ''' <param name="parent">The parent <see cref="CareLinkUserDataList"/>.</param>
     ''' <param name="headerRow">The header row of the CSV file.</param>
     ''' <param name="currentRow">The current data row from the CSV file.</param>
-    Public Sub New(parent As CareLinkUserDataList, headerRow As String(), currentRow As String())
+    Public Sub New(
+        parent As CareLinkUserDataList,
+        headerRow As String(),
+        currentRow As String())
+
         _userData = New CareLinkUserData With {
             ._iD = parent.Count
         }
@@ -208,7 +216,8 @@ Partial Public Class CareLinkUserDataRecord
                 Me.CareLinkPartner = CBool(value)
             Case NameOf(CareLinkPatientUserID)
                 Me.CareLinkPatientUserID = value
-            Case NameOf(My.Settings.TiTrLowThreshold), NameOf(My.Settings.TiTrTreatmentTargetPercent)
+            Case NameOf(My.Settings.TiTrLowThreshold),
+                 NameOf(My.Settings.TiTrTreatmentTargetPercent)
                 ' Ignore as these are not user based settings
             Case Else
                 Stop
@@ -218,32 +227,38 @@ Partial Public Class CareLinkUserDataRecord
 #Region "Implements IEditableObject"
 
     Public Sub BeginEdit() Implements IEditableObject.BeginEdit
-        Debug.WriteLine($"Start EndEdit{_userData._iD}{_userData._careLinkUserName}")
+        Debug.WriteLine(message:=$"Start EndEdit{_userData._iD}{_userData._careLinkUserName}")
         If Not _inTxn Then
             _backupData = _userData
             _inTxn = True
 
-            Debug.WriteLine($"BeginEdit  - {_userData._iD}{_userData._careLinkUserName}")
+            Dim message As String =
+                $"BeginEdit  - {_userData._iD}{_userData._careLinkUserName}"
+            Debug.WriteLine(message)
         End If
     End Sub
 
     Public Sub CancelEdit() Implements IEditableObject.CancelEdit
-        Debug.WriteLine("Start CancelEdit")
+        Debug.WriteLine(message:="Start CancelEdit")
         If _inTxn Then
             _userData = _backupData
-            Debug.WriteLine($"CancelEdit - {_userData._iD}{_userData._careLinkUserName}")
+            Dim message As String =
+                $"CancelEdit - {_userData._iD}{_userData._careLinkUserName}"
+            Debug.WriteLine(message)
         End If
-        Debug.WriteLine("End CancelEdit")
+        Debug.WriteLine(message:="End CancelEdit")
     End Sub
 
     Public Sub EndEdit() Implements IEditableObject.EndEdit
-        Debug.WriteLine($"Start EndEdit{_userData._iD}{_userData._careLinkUserName}")
+        Debug.WriteLine(message:=$"Start EndEdit{_userData._iD}{_userData._careLinkUserName}")
         If _inTxn Then
             _backupData = New CareLinkUserData()
             _inTxn = False
-            Debug.WriteLine($"Done EndEdit - {_userData._iD}{_userData._careLinkUserName}")
+            Dim message As String =
+                $"Done EndEdit - {_userData._iD}{_userData._careLinkUserName}"
+            Debug.WriteLine(message)
         End If
-        Debug.WriteLine("End EndEdit")
+        Debug.WriteLine(message:="End EndEdit")
     End Sub
 
     Public Overrides Function Equals(obj As Object) As Boolean

@@ -12,7 +12,9 @@ Public Class EasyBolusRecord
         End If
         Me.BolusIncrement = sTable.GetSingleLineValue(Of Single)(key:="Bolus Increment")
         Me.BolusSpeed = sTable.GetSingleLineValue(Of String)(key:="Bolus Speed ")
-        Me.DualSquare = New DualSquareRecord(sTable.GetSingleLineValue(Of String)(key:="Dual/Square"))
+
+        Dim line As String = sTable.GetSingleLineValue(Of String)(key:="Dual/Square")
+        Me.DualSquare = New DualSquareRecord(line)
     End Sub
 
     Public Sub New()

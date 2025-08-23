@@ -10,10 +10,8 @@ Imports System.Runtime.CompilerServices
 '''  Module containing helper methods for updating and processing data in <see cref="Form1"/>.
 ''' </summary>
 ''' <remarks>
-'''  <para>
-'''   Provides utility functions for data transformation, file name generation, and summary record handling
-'''   related to pump and sensor data in the application.
-'''  </para>
+'''  Provides utility functions for data transformation, file name generation,
+'''  and summary record handling related to pump and sensor data in the application.
 ''' </remarks>
 Friend Module Form1UpdateHelpers
 
@@ -33,10 +31,14 @@ Friend Module Form1UpdateHelpers
     '''  otherwise, an empty string.
     ''' </returns>
     <Extension>
-    Private Function CDateOrDefault(s As String, key As String, provider As IFormatProvider) As String
-        Dim resultDate As Date
-        Return If(TryParseDate(s, key, resultDate),
-                  resultDate.ToString(provider),
+    Private Function CDateOrDefault(
+        s As String,
+        key As String,
+        provider As IFormatProvider) As String
+
+        Dim result As Date
+        Return If(TryParseDate(s, key, result),
+                  result.ToString(provider),
                   "")
     End Function
 
@@ -174,20 +176,21 @@ Friend Module Form1UpdateHelpers
         Try
             Dim filenameWithoutExtension As String = $"{baseName}({cultureName}){s_userName}"
             Dim filenameWithExtension As String = $"{filenameWithoutExtension}.{extension}"
-            Dim filenameFullPath As String = Path.Join(GetProjectDataDirectory(), filenameWithExtension)
+            Dim withPath As String =
+                Path.Join(GetProjectDataDirectory(), filenameWithExtension)
 
-            If mustBeUnique AndAlso File.Exists(filenameFullPath) Then
+            If mustBeUnique AndAlso File.Exists(path:=withPath) Then
                 'Get unique file name
                 Dim count As Long
                 Do
                     count += 1
                     Dim filename As String = $"{filenameWithoutExtension}{count}.{extension}"
-                    filenameFullPath = Path.Join(GetProjectDataDirectory(), filename)
-                    filenameWithExtension = Path.GetFileName(path:=filenameFullPath)
-                Loop While File.Exists(path:=filenameFullPath)
+                    withPath = Path.Join(GetProjectDataDirectory(), filename)
+                    filenameWithExtension = Path.GetFileName(path:=withPath)
+                Loop While File.Exists(path:=withPath)
             End If
 
-            Return New FileNameStruct(withPath:=filenameFullPath, withoutPath:=filenameWithExtension)
+            Return New FileNameStruct(withPath, withoutPath:=filenameWithExtension)
         Catch ex As Exception
             Stop
         End Try
@@ -196,12 +199,15 @@ Friend Module Form1UpdateHelpers
     End Function
 
     ''' <summary>
-    '''  Handles complex items in a key-value row, splitting and processing values for summary records.
+    '''  Handles complex items in a key-value row, splitting and processing values
+    '''  for summary records.
     ''' </summary>
     ''' <param name="kvp">The key-value pair row to process.</param>
     ''' <param name="recordNumber">The index of the row.</param>
     ''' <param name="key">The key for the summary record.</param>
-    ''' <param name="listOfSummaryRecords">The list to which summary records are added.</param>
+    ''' <param name="listOfSummaryRecords">
+    '''  The list to which summary records are added.
+    ''' </param>
     Friend Sub HandleComplexItems(
         kvp As KeyValuePair(Of String, String),
         recordNumber As Single,
@@ -281,8 +287,10 @@ Friend Module Form1UpdateHelpers
         If RecentData.TryGetValue(key:="therapyAlgorithmState", value) Then
             s_therapyAlgorithmStateValue = LoadIndexedItems(json:=value)
             Dim key As String = NameOf(TherapyAlgorithmState.AutoModeShieldState)
+            Dim basalTypes As IEnumerable(Of String) =
+                {"AUTO_BASAL", "SAFE_BASAL"}
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso
-                {"AUTO_BASAL", "SAFE_BASAL"}.Contains(value:=s_therapyAlgorithmStateValue(key))
+                basalTypes.Contains(value:=s_therapyAlgorithmStateValue(key))
         End If
 
         s_sgRecords = If(RecentData.TryGetValue(key:="sgs", value),
@@ -661,13 +669,15 @@ Friend Module Form1UpdateHelpers
     End Sub
 
     ''' <summary>
-    '''  Updates the marker tabs in the <paramref name="mainForm"/> with the latest marker data.
+    '''  Updates the marker tabs in the <paramref name="mainForm"/>
+    '''  with the latest marker data.
     ''' </summary>
     ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdateMarkerTabs(mainForm As Form1)
         With mainForm
+            Dim classCollection As List(Of AutoBasalDelivery) = s_autoBasalDeliveryMarkers
             .TlpAutoBasalDelivery.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection:=s_autoBasalDeliveryMarkers),
+                table:=ClassCollectionToDataTable(classCollection),
                 className:=NameOf(AutoBasalDelivery), rowIndex:=ServerDataIndexes.markers)
 
             .TlpAutoModeStatus.DisplayDataTableInDGV(
@@ -784,8 +794,9 @@ Friend Module Form1UpdateHelpers
                     Case "WAIT_TO_ENTER_BG"
                         Stop
                     Case Else
+                        Dim stackFrame As StackFrame
                         If Debugger.IsAttached Then
-                            Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
+                            stackFrame = New StackFrame(skipFrames:=0, needFileInfo:=True)
                             MsgBox(
                                 heading:=$"{typeValue} Is unknown banner message!",
                                 prompt:="",
@@ -806,7 +817,8 @@ Friend Module Form1UpdateHelpers
             Dim safeBasalDuration As Integer = CInt(safeBasalDurationStr)
             If safeBasalDuration > 0 Then
                 mainForm.LastSgOrExitTimeLabel.Text =
-                    $"Exit In { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(unit:="hr")}"
+                    $"Exit In { TimeSpan.FromMinutes(safeBasalDuration) _
+                                        .ToFormattedTimeSpan(unit:="hr")}"
                 mainForm.LastSgOrExitTimeLabel.Visible = True
             End If
         End If

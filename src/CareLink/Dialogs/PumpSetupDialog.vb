@@ -46,6 +46,19 @@ Public Class PumpSetupDialog
         Me.Close()
     End Sub
 
+    Private Sub PumpSetupDialog_Load(sender As Object, e As EventArgs) Handles Me.Load
+
+        With Me.RtbMainLeft
+            .ReadOnly = False
+            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings")
+        End With
+
+        With Me.RtbMainRight
+            .ReadOnly = False
+            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings")
+        End With
+    End Sub
+
     ''' <summary>
     '''  Handles the dialog's <see cref="Form.Shown"/> event.
     '''  Populates all UI controls with data from the <see cref="Pdf"/> settings record.
@@ -70,21 +83,13 @@ Public Class PumpSetupDialog
         End If
 
         Me.Text = $"Pump Setup Instructions For {Me.Pdf.UserName}"
-
-
-        With Me.RtbMainRight
-            .ReadOnly = False
-            .Text = ""
-        End With
+        Application.DoEvents()
 
         Dim rtb As RichTextBox = Me.RtbMainLeft
         With rtb
             .AppendTextWithSymbol(
-                text:=$"Menu>{Gear}>Delivery Settings")
-            .AppendTextWithSymbol(
                 text:=$"Menu>{Gear}>Delivery Settings > Bolus Wizard Setup")
             rtb.DeliverySettings1BolusWizardSetup(Me.Pdf)
-            Application.DoEvents()
 
             .AppendTextWithSymbol(
                 text:=$"Menu>{Gear}>Delivery Settings > Basal Pattern Setup")
@@ -126,13 +131,6 @@ Public Class PumpSetupDialog
         rtb = Me.RtbMainRight
         Dim symbol As String
         With rtb
-            .ReadOnly = False
-            .Text = ""
-
-            .AppendTextWithSymbol(
-                text:=$"Menu>{Gear}>Alert Settings")
-            Application.DoEvents()
-
             .AppendTextWithSymbol(
                 text:=$"Menu>{Gear}>Alert Settings > High Alert")
             .AlertSettings1HighAlert(Me.Pdf)
