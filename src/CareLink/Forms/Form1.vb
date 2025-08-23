@@ -975,7 +975,7 @@ Public Class Form1
                                     newValue:=$"{result.TrimEnd(trimChars)}{vbCrLf}")
                                 .HeaderCell.Style.WrapMode = DataGridViewTriState.True
                                 .DefaultCellStyle.WrapMode = DataGridViewTriState.True
-                                If result.StartsWithIgnoreCase(value:="Timestamp") Then
+                                If result.StartsWithNoCase(value:="Timestamp") Then
                                     .MinimumWidth = 130
                                 End If
                             Else
@@ -1109,7 +1109,7 @@ Public Class Form1
             .SortMode = DataGridViewColumnSortMode.NotSortable
             .Visible = Not HideColumn(Of ActiveInsulin)(item:= .Name)
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of ActiveInsulin)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of ActiveInsulin)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1143,7 +1143,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of AutoBasalDelivery)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of AutoBasalDelivery)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1177,7 +1177,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of AutoModeStatus)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of AutoModeStatus)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1211,7 +1211,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of BannerState)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of BannerState)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1245,7 +1245,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of Basal)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of Basal)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1276,7 +1276,7 @@ Public Class Form1
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of InsulinPerHour)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of InsulinPerHour)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1310,7 +1310,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of Calibration)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of Calibration)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1471,7 +1471,7 @@ Public Class Form1
             If String.IsNullOrWhiteSpace(value) Then
                 value = .DataPropertyName.Remove(s:="DgvCareLinkUsers")
             End If
-            If value.ContainsIgnoreCase(value:="DeleteRow") Then
+            If value.ContainsNoCase(value:="DeleteRow") Then
                 value = ""
             Else
                 If .Index > 0 AndAlso
@@ -1670,7 +1670,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of Insulin)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of Insulin)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1739,7 +1739,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of LastAlarm)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of LastAlarm)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1773,7 +1773,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of Limit)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of Limit)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1807,7 +1807,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of LowGlucoseSuspended)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of LowGlucoseSuspended)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1840,7 +1840,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of Meal)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of Meal)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1874,7 +1874,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of BgReading)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of BgReading)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -1960,7 +1960,7 @@ Public Class Form1
             End If
             Dim dgv As DataGridView = CType(sender, DataGridView)
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of SG)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of SG)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
             Select Case .Index
@@ -2290,7 +2290,7 @@ Public Class Form1
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of SummaryRecord)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of SummaryRecord)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -2392,7 +2392,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of BgReading)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of BgReading)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -2426,7 +2426,7 @@ Public Class Form1
                 .Visible = False
             End If
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of TimeChange)(columnName:= .Name),
+                cellStyle:=GetCellStyle(Of TimeChange)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -2466,9 +2466,9 @@ Public Class Form1
             webViewProcess.WaitForExit(milliseconds:=3_000)
         End If
 
-        If Directory.Exists(path:=GetWebViewCacheDirectory()) Then
+        If Directory.Exists(path:=GetWebViewDirectory()) Then
             Try
-                Directory.Delete(path:=GetWebViewCacheDirectory(), recursive:=True)
+                Directory.Delete(path:=GetWebViewDirectory(), recursive:=True)
             Catch
                 Stop
                 ' Ignore errors here
@@ -2534,7 +2534,7 @@ Public Class Form1
         End If
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(index:=1)
-        If String.IsNullOrWhiteSpace(value:=GetWebViewCacheDirectory()) Then
+        If String.IsNullOrWhiteSpace(value:=GetWebViewDirectory()) Then
             s_webView2CacheDirectory =
                 Path.Join(GetProjectWebCache(), Guid.NewGuid().ToString())
             Directory.CreateDirectory(path:=s_webView2CacheDirectory)
@@ -2707,7 +2707,7 @@ Public Class Form1
         Me.MenuStartHereSaveSnapshotFile.Enabled = Not RecentDataEmpty()
         Me.MenuStartHereUseExceptionReport.Visible = AnyMatchingFiles(
             path:=GetProjectDataDirectory(),
-            searchPattern:=$"{BaseNameSavedErrorReport}*.txt")
+            searchPattern:=$"{BaseErrorReportName}*.txt")
 
         Dim userPdfExists As Boolean =
             Not (String.IsNullOrWhiteSpace(s_userName) OrElse
@@ -2856,7 +2856,7 @@ Public Class Form1
 
         If RecentDataEmpty() Then Exit Sub
         Dim path As String = GetUniqueDataFileName(
-            baseName:=BaseNameSavedSnapshot,
+            baseName:=BaseSnapshotName,
             cultureName:=CurrentDateCulture.Name,
             extension:="json",
             mustBeUnique:=True).withPath
@@ -2878,7 +2878,7 @@ Public Class Form1
 
         Dim fileList As String() = Directory.GetFiles(
             path:=GetProjectDataDirectory(),
-            searchPattern:=$"{BaseNameSavedErrorReport}*.txt")
+            searchPattern:=$"{BaseErrorReportName}*.txt")
         Using openFileDialog1 As New System.Windows.Forms.OpenFileDialog With {
             .AddExtension = True,
             .AddToRecent = False,
@@ -2888,7 +2888,7 @@ Public Class Form1
             .FileName = If(fileList.Length > 0,
                            Path.GetFileName(path:=fileList(0)),
                            "CareLink"),
-            .Filter = $"Error files (*.txt)|{BaseNameSavedErrorReport}*.txt",
+            .Filter = $"Error files (*.txt)|{BaseErrorReportName}*.txt",
             .InitialDirectory = GetProjectDataDirectory(),
             .Multiselect = False,
             .ReadOnlyChecked = True,
@@ -3532,7 +3532,7 @@ Public Class Form1
         Dim value As String = If(IsNothing(Expression:=e.NewValue),
                                  "",
                                  e.NewValue.ToString)
-        If EqualsIgnoreCase(My.Settings(propertyName:=e.SettingName), value) Then
+        If EqualsNoCase(My.Settings(propertyName:=e.SettingName), value) Then
             Exit Sub
         End If
         If e.SettingName = "CareLinkUserName" Then
@@ -3793,7 +3793,7 @@ Public Class Form1
             Dim row As DataGridViewRow = dgv.Rows(index)
             Dim message As String = row.Cells(index:=1).FormattedValue.ToString
             Debug.WriteLine(message)
-            If message.EqualsIgnoreCase(tabName) Then
+            If message.EqualsNoCase(tabName) Then
                 Me.TabControlPage1.SelectedIndex = 3
                 dgv.CurrentCell = dgv.Rows(index).Cells(index:=2)
                 s_currentSummaryRow = index

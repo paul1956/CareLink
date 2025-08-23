@@ -8,14 +8,16 @@ Imports System.Text
 Imports System.Text.Json
 
 ''' <summary>
-'''  Provides extension methods for the <see cref="HttpClient"/> class to simplify HTTP requests and
-'''  response handling, including setting default headers, sending GET and POST requests, and
+'''  Provides extension methods for the <see cref="HttpClient"/> class
+'''  to simplify HTTP requests and response handling,
+'''  including setting default headers, sending GET and POST requests, and
 '''  retrieving response content as text or JSON.
 ''' </summary>
 Friend Module HttpClientExtensions
 
     ''' <summary>
-    '''  Sends an asynchronous GET request to the specified URL with the provided authorization parameters
+    '''  Sends an asynchronous GET request to the specified URL
+    '''  with the provided authorization parameters
     '''  and returns the response as a <see cref="JsonElement"/>.
     ''' </summary>
     ''' <param name="httpClient">
@@ -25,12 +27,12 @@ Friend Module HttpClientExtensions
     '''  The URL to which the GET request is sent.
     ''' </param>
     ''' <param name="authParams">
-    '''  A <see cref="Dictionary(Of String, String)"/> containing authorization parameters to be included
-    '''  in the query string.
+    '''  A <see cref="Dictionary(Of String, String)"/> containing authorization
+    '''  parameters to be included in the query string.
     ''' </param>
     ''' <returns>
-    '''  A <see cref="Task(Of JsonElement)"/> representing the asynchronous operation, containing the
-    '''  deserialized JSON response.
+    '''  A <see cref="Task(Of JsonElement)"/> representing the asynchronous operation,
+    '''  containing the deserialized JSON response.
     <Extension>
     Friend Async Function GetRequestAsync(
         httpClient As HttpClient,
@@ -43,7 +45,8 @@ Friend Module HttpClientExtensions
                 Dim escapedValue As String = Uri.EscapeDataString(stringToEscape)
                 Return $"{kvp.Key}={escapedValue}"
             End Function
-        Dim params As String = String.Join(separator:="&", values:=authParams.Select(selector))
+        Dim params As String =
+            String.Join(separator:="&", values:=authParams.Select(selector))
 
         Dim requestUri As String = $"{authorizeUrl}?{params}"
         Dim response As HttpResponseMessage = httpClient.GetAsync(requestUri).Result
@@ -54,8 +57,8 @@ Friend Module HttpClientExtensions
     End Function
 
     ''' <summary>
-    '''  Sets the default request headers for the specified <see cref="HttpClient"/> instance using
-    '''  the common headers defined in <c>s_common_Headers</c>.
+    '''  Sets the default request headers for the specified <see cref="HttpClient"/>
+    '''  instance using the common headers defined in <see cref="s_common_Headers"/>.
     ''' </summary>
     ''' <param name="httpClient">The <see cref="HttpClient"/> instance to configure.</param>
     <Extension>
@@ -67,28 +70,36 @@ Friend Module HttpClientExtensions
     End Sub
 
     ''' <summary>
-    '''  Sends a GET request to the specified URI, optionally including query parameters, and returns the
-    '''  HTTP response. Any error encountered is returned in <paramref name="lastError"/>.
+    '''  Sends a GET request to the specified URI, optionally including query parameters,
+    '''  and returns the HTTP response. Any error encountered is returned in
+    '''  <paramref name="lastError"/>.
     ''' </summary>
-    ''' <param name="httpClient">The <see cref="HttpClient"/> instance used to send the request.</param>
-    ''' <param name="sb">The <see cref="StringBuilder"/> containing the request URI.</param>
+    ''' <param name="httpClient">
+    '''  The <see cref="HttpClient"/> instance used to send the request.
+    ''' </param>
+    ''' <param name="sb">
+    '''  The <see cref="StringBuilder"/> containing the request URI.
+    ''' </param>
     ''' <param name="lastError">
-    '''  When this method returns, contains the error message if an exception occurred; otherwise,
-    '''  <see langword="Nothing"/>.
+    '''  When this method returns, contains the error message if an exception occurred;
+    '''  otherwise, <see langword="Nothing"/>.
     ''' </param>
     ''' <param name="queryParams">
-    '''  Optional. A <see cref="Dictionary(Of String, String)"/> of query parameters to append to the URI.
+    '''  Optional. A <see cref="Dictionary(Of String, String)"/> of
+    '''  query parameters to append to the URI.
     ''' </param>
     ''' <param name="memberName">
-    '''  Optional. The name of the calling member. Automatically supplied by the compiler.
+    '''  Optional. The name of the calling member.
+    '''  Automatically supplied by the compiler.
     ''' </param>
     ''' <param name="sourceLineNumber">
     '''  Optional. The line number in the source file at which the method is called.
     '''  Automatically supplied by the compiler.
     ''' </param>
     ''' <returns>
-    '''  The <see cref="HttpResponseMessage"/> returned by the request, or a response with status
-    '''  <c>NotImplemented</c> if an error occurs.
+    '''  The <see cref="HttpResponseMessage"/> returned by the request,
+    '''  or a response with status <see cref="Net.HttpStatusCode.NotImplemented"/>
+    '''  if an error occurs.
     ''' </returns>
     <Extension>
     Public Function [Get](
@@ -97,7 +108,8 @@ Friend Module HttpClientExtensions
         ByRef lastError As String,
         Optional queryParams As Dictionary(Of String, String) = Nothing,
         <CallerMemberName> Optional memberName As String = Nothing,
-        <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As HttpResponseMessage
+        <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) _
+        As HttpResponseMessage
 
         httpClient.SetDefaultRequestHeaders()
         If queryParams IsNot Nothing Then
@@ -111,7 +123,9 @@ Friend Module HttpClientExtensions
         Try
             lastError = Nothing
             Dim requestUri As String = sb.ToString
-            DebugPrint(message:=$"uri={requestUri} from {memberName}, line {sourceLineNumber}.")
+            Dim message As String =
+                $"uri={requestUri} from {memberName}, line {sourceLineNumber}."
+            DebugPrint(message)
             Return httpClient.GetAsync(requestUri).Result
         Catch ex As Exception
             lastError = ex.DecodeException()
@@ -211,9 +225,12 @@ Friend Module HttpClientExtensions
     End Function
 
     ''' <summary>
-    '''  Retrieves the response content as a string from the specified <see cref="HttpResponseMessage"/>.
+    '''  Retrieves the response content as a string from
+    '''  the specified <see cref="HttpResponseMessage"/>.
     ''' </summary>
-    ''' <param name="client">The <see cref="HttpResponseMessage"/> from which to read the content.</param>
+    ''' <param name="client">
+    '''  The <see cref="HttpResponseMessage"/> from which to read the content.
+    ''' </param>
     ''' <returns>
     '''  A <see langword="String"/> containing the response content.
     ''' </returns>

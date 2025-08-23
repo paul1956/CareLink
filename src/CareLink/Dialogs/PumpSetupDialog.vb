@@ -42,7 +42,9 @@ Public Class PumpSetupDialog
     '''  Sets the dialog result to OK and closes the dialog.
     ''' </summary>
     ''' <param name="sender">The event sender.</param>
-    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <param name="e">The <see cref="EventArgs"/>
+    '''  instance containing the event data.
+    ''' </param>
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
         Me.DialogResult = DialogResult.OK
         Me.Close()
@@ -211,10 +213,10 @@ Public Class PumpSetupDialog
             Dim audioOptions As String = Me.Pdf.Utilities.AudioOptions
             .AppendKeyValue(
                 key:="Sound:",
-                value:=$"{audioOptions.ContainsIgnoreCase(value:="Audio").BoolToOnOff()}")
+                value:=$"{audioOptions.ContainsNoCase(value:="Audio").BoolToOnOff()}")
             .AppendKeyValue(
                 key:="Vibration:",
-                value:=$"{audioOptions.ContainsIgnoreCase(value:="Vibrate").BoolToOnOff()}")
+                value:=$"{audioOptions.ContainsNoCase(value:="Vibrate").BoolToOnOff()}")
 
             .ReadOnly = True
             .SelectionStart = 0

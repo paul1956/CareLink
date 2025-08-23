@@ -57,7 +57,7 @@ Public Module FileIoHelpers
     ''' <returns>The full path to the last download file.</returns>
     Friend Function GetLastDownloadFileWithPath() As String
         Return GetUniqueDataFileName(
-            baseName:=BaseNameSavedLastDownload,
+            baseName:=BaseDownloadName,
             cultureName:=CultureInfo.CurrentUICulture.Name,
             extension:="json",
             mustBeUnique:=False).withPath

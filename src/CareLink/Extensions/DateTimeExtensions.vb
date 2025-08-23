@@ -6,7 +6,8 @@ Imports System.Globalization
 Imports System.Runtime.CompilerServices
 
 ''' <summary>
-'''  Provides extension methods for <see cref="Date"/> and related types, including parsing, formatting,
+'''  Provides extension methods for <see cref="Date"/> and related types,
+'''  including parsing, formatting,
 '''  and conversions between Unix time and DateTime.
 ''' </summary>
 Friend Module DateTimeExtensions
@@ -32,15 +33,19 @@ Friend Module DateTimeExtensions
 
     ''' <summary>
     '''  Parses a date string using culture-specific formats.
-    '''  This method attempts to parse the date string in various cultures, including the current culture,
-    '''  the provider culture, and a list of unique cultures with different date formats.
+    '''  This method attempts to parse the date string in various cultures,
+    '''  including the current culture, the provider culture, and a list of
+    '''  unique cultures with different date formats.
     ''' </summary>
-    ''' <param name="success">Output parameter indicating whether the parsing was successful.</param>
+    ''' <param name="success">
+    '''  Output parameter indicating whether the parsing was successful.
+    ''' </param>
     ''' <param name="s">The date string to parse.</param>
     ''' <param name="defaultCulture">The default culture to use for parsing.</param>
     ''' <param name="styles">The styles to apply during parsing.</param>
     ''' <returns>
-    '''  A <see cref="Date"/> object if parsing is successful; otherwise, <see langword="Nothing"/>.
+    '''  A <see cref="Date"/> object if parsing is successful;
+    '''  otherwise, <see langword="Nothing"/>.
     ''' </returns>
     <Extension>
     Private Function CultureSpecificParse(
@@ -263,19 +268,26 @@ Friend Module DateTimeExtensions
     '''  a <see langword="String"/> formatted as hours and minutes.
     ''' </summary>
     ''' <param name="timeInHours">The number of hours to convert.</param>
-    ''' <returns>A <see langword="String"/> representing the time in "HH:mm" format.</returns>
+    ''' <returns>
+    '''  A <see langword="String"/> representing the time in "HH:mm" format.
+    ''' </returns>
     <Extension>
     Public Function ToHoursMinutes(timeInHours As Single) As String
         Dim hours As Integer = CInt(timeInHours)
-        Return $"{New TimeSpan(hours, minutes:=CInt((timeInHours - hours) * 60), seconds:=0):h\:mm}"
+        Return $"{New TimeSpan(hours,
+                               minutes:=CInt((timeInHours - hours) * 60),
+                               seconds:=0):h\:mm}"
 
     End Function
 
     ''' <summary>
-    '''  Converts a <see langword="TimeOnly"/> to a <see langword="String"/> formatted as "HH:mm".
+    '''  Converts a <see langword="TimeOnly"/> to a <see langword="String"/>
+    '''  formatted as "HH:mm".
     ''' </summary>
     ''' <param name="timeOnly">The <see langword="TimeOnly"/> to convert.</param>
-    ''' <returns>A <see langword="String"/> representing the time in "HH:mm" format.</returns>
+    ''' <returns>
+    '''  A <see langword="String"/> representing the time in "HH:mm" format.
+    ''' </returns>
     <Extension>
     Public Function ToHoursMinutes(timeOnly As TimeOnly) As String
         Dim rawTimeOnly As String = $"{timeOnly.ToString(provider:=CurrentDateCulture)}"

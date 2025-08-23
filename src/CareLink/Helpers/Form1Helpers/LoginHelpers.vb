@@ -168,7 +168,7 @@ Friend Module LoginHelpers
                 Select Case fileToLoad
                     Case FileToLoadOptions.LastSaved
                         owner.Text = $"{SavedTitle} Using Last Saved Data"
-                        fixedPart = BaseNameSavedLastDownload
+                        fixedPart = BaseDownloadName
                         lastDownloadFileWithPath = GetLastDownloadFileWithPath()
                     Case FileToLoadOptions.Snapshot
                         fixedPart = "CareLink"

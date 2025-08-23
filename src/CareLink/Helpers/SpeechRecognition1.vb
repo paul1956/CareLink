@@ -231,12 +231,12 @@ Friend Module SpeechSupport
             End If
 
             Select Case True
-                Case recognizedText.StartsWithIgnoreCase(value:="what is my")
+                Case recognizedText.StartsWithNoCase(value:="what is my")
                     Form1.StatusStripSpeech.Text = message
                     AnnounceSG(recognizedText)
 
-                Case recognizedText.StartsWithIgnoreCase(value:="tell me")
-                    If Not recognizedText.ContainsIgnoreCase(value:=PatientData.FirstName) Then
+                Case recognizedText.StartsWithNoCase(value:="tell me")
+                    If Not recognizedText.ContainsNoCase(value:=PatientData.FirstName) Then
                         Return
                     End If
                     Form1.StatusStripSpeech.Text = message

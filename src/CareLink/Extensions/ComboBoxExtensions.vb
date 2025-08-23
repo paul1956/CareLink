@@ -10,7 +10,8 @@ Imports System.Runtime.CompilerServices
 Public Module ComboBoxExtensions
 
     ''' <summary>
-    '''  Returns the index of the first occurrence of the specified key in the ComboBox.ObjectCollection.
+    '''  Returns the index of the first occurrence of the specified key
+    '''  in the <see cref="ComboBox.ObjectCollection"/>.
     ''' </summary>
     ''' <typeparam name="Tk">The type of the key.</typeparam>
     ''' <typeparam name="Tv">The type of the value.</typeparam>

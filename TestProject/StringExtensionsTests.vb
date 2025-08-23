@@ -24,11 +24,11 @@ Public Class StringExtensionsTests
     Public Sub ContainsIgnoreCase_NothingOrStringEmptyAsInput()
         Dim input As String = Nothing
 
-        Dim result As Boolean = ContainsIgnoreCase(input, value:="world")
+        Dim result As Boolean = ContainsNoCase(input, value:="world")
         result.Should().BeFalse()
 
         input = "Hello World"
-        result = ContainsIgnoreCase(input, value:="")
+        result = ContainsNoCase(input, value:="")
         result.Should().BeTrue()
     End Sub
 
@@ -36,7 +36,7 @@ Public Class StringExtensionsTests
     Public Sub ContainsIgnoreCase_ReturnsTrueIfContains()
         Dim input As String = "Hello World"
 
-        Dim result As Boolean = input.ContainsIgnoreCase(value:="world")
+        Dim result As Boolean = input.ContainsNoCase(value:="world")
 
         result.Should().BeTrue()
     End Sub
@@ -59,7 +59,7 @@ Public Class StringExtensionsTests
         Dim input As String = "Hello World"
         Dim value As String = "WORLD"
 
-        Dim result As Boolean = input.EndsWithIgnoreCase(value)
+        Dim result As Boolean = input.EndsWithNoCase(value)
 
         result.Should().BeTrue()
     End Sub
@@ -69,7 +69,7 @@ Public Class StringExtensionsTests
         Dim a As String = "test"
         Dim b As String = "TEST"
 
-        Dim result As Boolean = a.EqualsIgnoreCase(b)
+        Dim result As Boolean = a.EqualsNoCase(b)
 
         result.Should().BeTrue()
     End Sub
@@ -181,7 +181,7 @@ Public Class StringExtensionsTests
         Dim value As String = "world"
         Dim expected As Integer = 6
 
-        Dim result As Integer = input.IndexOfIgnoreCase(value)
+        Dim result As Integer = input.IndexOfNoCase(value)
 
         result.Should().Be(expected)
     End Sub
@@ -224,7 +224,7 @@ Public Class StringExtensionsTests
         Dim newValue As String = "Universe"
         Dim expected As String = "Hello Universe"
 
-        Dim result As String = input.ReplaceIgnoreCase(oldValue, newValue)
+        Dim result As String = input.ReplaceNoCase(oldValue, newValue)
 
         result.Should().Be(expected)
     End Sub
@@ -234,11 +234,11 @@ Public Class StringExtensionsTests
         Dim input As String = "Hello World"
         Dim value As String = "hello"
 
-        Dim result As Boolean = input.StartsWithIgnoreCase(value)
+        Dim result As Boolean = input.StartsWithNoCase(value)
 
         result.Should().BeTrue()
 
-        result = input.StartsWithIgnoreCase(value:="world")
+        result = input.StartsWithNoCase(value:="world")
         result.Should().BeFalse()
 
     End Sub

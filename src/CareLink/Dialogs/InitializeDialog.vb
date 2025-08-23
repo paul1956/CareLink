@@ -24,7 +24,11 @@ Public Class InitializeDialog
         _fromPdf = False
     End Sub
 
-    Public Sub New(ait As Single, currentTarget As Single, CarbRatios As List(Of CarbRatioRecord))
+    Public Sub New(
+        ait As Single,
+        currentTarget As Single,
+        CarbRatios As List(Of CarbRatioRecord))
+
         MyBase.New
         Me.InitializeComponent()
         Me.CurrentUser = SystemVariables.CurrentUser
@@ -36,7 +40,10 @@ Public Class InitializeDialog
 
     Public Property CurrentUser As CurrentUserRecord
 
-    Private Shared Sub InitializeComboList(comboBoxCell As DataGridViewComboBoxCell, start As Integer)
+    Private Shared Sub InitializeComboList(
+        comboBoxCell As DataGridViewComboBoxCell,
+        start As Integer)
+
         Dim data As New Dictionary(Of String, TimeOnly)
         For i As Integer = start To 47
             Dim value As New TimeOnly(hour:=i \ 2, minute:=(i Mod 2) * 30)
@@ -48,7 +55,9 @@ Public Class InitializeDialog
         comboBoxCell.ValueMember = "Value"
     End Sub
 
-    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
+    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) _
+        Handles Cancel_Button.Click
+
         If _currentUserBackup Is Nothing Then
             If MsgBox(
                 heading:="If you cancel, the program will exit",
@@ -113,7 +122,8 @@ Public Class InitializeDialog
                 End With
 
             Case NameOf(ColumnStart)
-                dgv.CurrentCell = dgv.Rows(index:=e.RowIndex).Cells(columnName:=NameOf(ColumnEnd))
+                dgv.CurrentCell =
+                    dgv.Rows(index:=e.RowIndex).Cells(columnName:=NameOf(ColumnEnd))
 
             Case NameOf(ColumnEnd)
             Case NameOf(ColumnNumericUpDown)
@@ -121,13 +131,15 @@ Public Class InitializeDialog
             Case NameOf(ColumnSave)
                 With Me.InitializeDataGridView
                     columnName = NameOf(ColumnEnd)
-                    cell = Me.InitializeDataGridView.Rows(index:=e.RowIndex).Cells(columnName)
+                    cell =
+                        Me.InitializeDataGridView.Rows(index:=e.RowIndex).Cells(columnName)
                     If cell.Value.ToString = Eleven59Str OrElse .RowCount = 12 Then
                         Me.OK_Button.Enabled = True
                         columnName = NameOf(ColumnSave)
                         index = .RowCount - 1
+                        Dim dgvCell As DataGridViewCell = .Rows(index).Cells(columnName)
                         Dim buttonCell As DataGridViewDisableButtonCell =
-                            CType(.Rows(index).Cells(columnName), DataGridViewDisableButtonCell)
+                            CType(dgvCell, DataGridViewDisableButtonCell)
 
                         buttonCell.ReadOnly = True
                         buttonCell.Enabled = False
@@ -154,7 +166,8 @@ Public Class InitializeDialog
                             CType(.Cells(columnName), DataGridViewComboBoxCell)
                         columnName = NameOf(ColumnEnd)
                         Dim columnEndCell As DataGridViewCell =
-                            Me.InitializeDataGridView.Rows(index:=e.RowIndex).Cells(columnName)
+                            Me.InitializeDataGridView.Rows(index:=e.RowIndex) _
+                                                     .Cells(columnName)
                         columnEndCell.ErrorText = ""
                         Dim timeOnly As TimeOnly =
                             TimeOnly.Parse(columnEndCell.Value.ToString)
@@ -169,7 +182,8 @@ Public Class InitializeDialog
                         columnName = NameOf(ColumnNumericUpDown)
                         .Cells(columnName).Value = 15.0
                         columnName = NameOf(ColumnDeleteRow)
-                        CType(.Cells(columnName), DataGridViewDisableButtonCell).Enabled = True
+                        CType(.Cells(columnName), DataGridViewDisableButtonCell).Enabled =
+                            True
                     End With
 
                 End With
@@ -225,17 +239,18 @@ Public Class InitializeDialog
         Me.ColumnEnd.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
         Me.CurrentUser.CurrentTarget = GetSgTarget()
         With Me.TargetSgComboBox
-            .DataSource = If(NativeMmolL,
-                             If(DecimalSeparator = CareLinkDecimalSeparator,
-                                New BindingSource(dataSource:=MmolLItemsPeriod, dataMember:=Nothing),
-                                New BindingSource(dataSource:=MmolLItemsComma, dataMember:=Nothing)
-                               ),
-                             New BindingSource(dataSource:=MgDlItems, dataMember:=Nothing))
+            .DataSource =
+                If(NativeMmolL,
+                   If(DecimalSeparator = CareLinkDecimalSeparator,
+                      New BindingSource(dataSource:=MmolLItemsPeriod, dataMember:=Nothing),
+                      New BindingSource(dataSource:=MmolLItemsComma, dataMember:=Nothing)),
+                    New BindingSource(dataSource:=MgDlItems, dataMember:=Nothing))
 
             .DisplayMember = "Key"
             .ValueMember = "Value"
             Dim currentTarget As Single = Me.CurrentUser.CurrentTarget
-            .SelectedIndex = Me.TargetSgComboBox.Items.IndexOfY(Of String, Single)(y:=currentTarget)
+            .SelectedIndex =
+                Me.TargetSgComboBox.Items.IndexOfY(Of String, Single)(y:=currentTarget)
             .Enabled = Not (Is700Series() OrElse _fromPdf)
         End With
 
@@ -249,7 +264,8 @@ Public Class InitializeDialog
                 .SelectedIndex = -1
             Else
                 _currentUserBackup = Me.CurrentUser.Clone
-                .SelectedIndex = .Items.IndexOfY(Of String, Single)(y:=Me.CurrentUser.PumpAit)
+                .SelectedIndex =
+                    .Items.IndexOfY(Of String, Single)(y:=Me.CurrentUser.PumpAit)
             End If
             If _fromPdf Then
                 .Enabled = False
@@ -264,11 +280,11 @@ Public Class InitializeDialog
             .DisplayMember = "Key"
             .ValueMember = "Value"
             .Enabled = True
-            Dim insulinTypeName As String = Me.CurrentUser.InsulinTypeName
+            Dim key As String = Me.CurrentUser.InsulinTypeName
             .SelectedIndex =
-                If(String.IsNullOrWhiteSpace(value:=insulinTypeName),
+                If(String.IsNullOrWhiteSpace(value:=key),
                    -1,
-                   .Items.IndexOfKey(Of String, InsulinActivationRecord)(key:=insulinTypeName))
+                   .Items.IndexOfKey(Of String, InsulinActivationRecord)(key))
             If _fromPdf Then
                 .Focus()
             End If
@@ -318,7 +334,8 @@ Public Class InitializeDialog
 
                         With comboBoxCell
                             .Value = value.EndTime
-                            .ReadOnly = i.Index >= 11 OrElse (i.IsLast AndAlso Not i.IsFirst)
+                            .ReadOnly =
+                                i.Index >= 11 OrElse (i.IsLast AndAlso Not i.IsFirst)
                         End With
                         columnName = NameOf(ColumnNumericUpDown)
                         Dim numericCell As DataGridViewNumericUpDownCell =
@@ -344,8 +361,9 @@ Public Class InitializeDialog
                         .Value = MidnightStr
                         .ReadOnly = True
                     End With
+                    columnName = NameOf(ColumnEnd)
                     Dim comboBoxCell As DataGridViewComboBoxCell =
-                        CType(.Cells(columnName:=NameOf(ColumnEnd)), DataGridViewComboBoxCell)
+                        CType(.Cells(columnName), DataGridViewComboBoxCell)
                     InitializeComboList(comboBoxCell, start:=1)
 
                     columnName = NameOf(ColumnEnd)

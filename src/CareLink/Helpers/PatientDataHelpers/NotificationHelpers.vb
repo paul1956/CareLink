@@ -63,7 +63,7 @@ Friend Module NotificationHelpers
     ''' <param name="e">Event arguments containing formatting information.</param>
     Private Sub DgvNotification_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        If e.Value.ToString().StartsWithIgnoreCase(value:="additionalInfo") Then
+        If e.Value.ToString().StartsWithNoCase(value:="additionalInfo") Then
             e.Value = e.Value.ToString.Replace(oldValue:=":", newValue:=" : ")
         End If
         dgv.CellFormattingSetForegroundColor(e)
@@ -88,7 +88,7 @@ Friend Module NotificationHelpers
             Dim cellStyle As DataGridViewCellStyle =
                 ClassPropertiesToColumnAlignment(Of SummaryRecord)(
                     alignmentTable:=s_alignmentTable,
-                    columnName:= .Name)
+                    .Name)
 
             e.DgvColumnAdded(
                 cellStyle,

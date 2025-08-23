@@ -22,7 +22,8 @@ Public Module ControlExtensions
     End Sub
 
     ''' <summary>
-    '''  Centers a <see cref="Label"/> on the left or right half or center of its parent container.
+    '''  Centers a <see cref="Label"/> on the left or right half or
+    '''  center of its parent container.
     ''' </summary>
     ''' <param name="ctrl">The <see cref="Label"/> to be centered.</param>
     ''' <param name="onLeftHalf">
@@ -31,14 +32,18 @@ Public Module ControlExtensions
     '''  if <see langword="Nothing"/>, center in the middle of the parent control.
     ''' </param>
     <Extension>
-    Friend Sub CenterXOnParent(ByRef ctrl As Control, Optional onLeftHalf As Boolean? = Nothing)
+    Friend Sub CenterXOnParent(
+        ByRef ctrl As Control,
+        Optional onLeftHalf As Boolean? = Nothing)
+
         Dim controlWidth As Integer
         Dim parent As Control = ctrl.Parent
         If parent Is Nothing Then
             If Not Debugger.IsAttached Then
                 Exit Sub
             End If
-            Throw New InvalidOperationException(message:="The control must have a parent to center it.")
+            Const message As String = "The control must have a parent to center it."
+            Throw New InvalidOperationException(message)
         End If
 
         If TypeOf ctrl Is Label AndAlso ctrl.AutoSize Then
@@ -83,7 +88,8 @@ Public Module ControlExtensions
             If Not Debugger.IsAttached Then
                 Exit Sub
             End If
-            Throw New InvalidOperationException(message:="The control must have a parent to center it.")
+            Dim message As String = "The control must have a parent to center it."
+            Throw New InvalidOperationException(message)
         End If
         Dim ctrlWidth As Integer = ctrl.Width
         Dim ctrlHeight As Integer = ctrl.Height

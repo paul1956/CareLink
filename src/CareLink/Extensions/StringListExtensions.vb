@@ -27,7 +27,7 @@ Public Module StringListExtensions
         ByRef result As String) As Boolean
 
         For Each value As String In list
-            If headerText.StartsWithIgnoreCase(value) Then
+            If headerText.StartsWithNoCase(value) Then
                 result = value
                 Return True
             End If

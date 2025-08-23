@@ -92,7 +92,8 @@ Friend Module DgvExportHelpers
 
                         Continue For
                     End If
-                    Dim value As String = $"{dgv.Columns(index).HeaderText.Remove(s:=vbCrLf)}"
+                    Dim value As String =
+                        $"{dgv.Columns(index).HeaderText.Remove(s:=vbCrLf)}"
                     Dim fieldSeparator As String = If(index = colHigh, vbCrLf, vbTab)
                     clipboard_string.Append(value:=$"{value}{fieldSeparator}")
                 Next index
@@ -124,7 +125,7 @@ Friend Module DgvExportHelpers
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> to export.</param>
     <Extension>
-    Private Sub ExportToExcelWithFormatting(dgv As DataGridView)
+    Private Sub ToExcelWithFormatting(dgv As DataGridView)
         Dim baseFileName As String = dgv.Name.Remove(s:="dgv")
         Dim saveFileDialog1 As New SaveFileDialog With {
                 .CheckPathExists = True,
@@ -141,7 +142,7 @@ Friend Module DgvExportHelpers
             For j As Integer = 0 To dgv.Columns.Count - 1
                 Dim dgvColumn As DataGridViewColumn = dgv.Columns(j)
                 If dgvColumn.Visible Then
-                    If dgvColumn.Name.EqualsIgnoreCase("dateTime") Then
+                    If dgvColumn.Name.EqualsNoCase("dateTime") Then
                         worksheet.Cell(row:=1, column).Value = "Date"
                         worksheet.Cell(row:=1, column).Style.Alignment.Horizontal =
                             XLAlignmentHorizontalValues.Center
@@ -169,9 +170,10 @@ Friend Module DgvExportHelpers
                         With worksheet.Cell(row:=i + 2, column).Style
                             Dim cellStyle As DataGridViewCellStyle =
                                 dgvCell.GetFormattedStyle()
-                            .Fill.SetBackgroundColor(
-                                value:=XLColor.FromColor(cellStyle.BackColor))
-                            .Font.SetFontColor(value:=XLColor.FromColor(cellStyle.ForeColor))
+                            Call .Fill.SetBackgroundColor(
+                                value:=GetXlColor(cellStyle, ForeGround:=False))
+                            Call .Font.SetFontColor(
+                                value:=GetXlColor(cellStyle, ForeGround:=True))
                             .Font.Bold = cellStyle.Font.Bold
                             .Font.FontName = dgv.Font.Name
                             .Font.FontSize = dgv.Font.Size
@@ -183,7 +185,7 @@ Friend Module DgvExportHelpers
                                 Case NameOf([Int32])
                                     align =
                                         If(dgv.Columns(index:=j).Name _
-                                              .EqualsIgnoreCase("RecordNumber"),
+                                              .EqualsNoCase("RecordNumber"),
                                            XLAlignmentHorizontalValues.Center,
                                            XLAlignmentHorizontalValues.Right)
                                     .Value = CInt(valueObject)
@@ -197,7 +199,9 @@ Friend Module DgvExportHelpers
                                     Else
                                         .Value = $"'{value}"
                                     End If
-                                Case NameOf([Decimal]), NameOf([Double]), NameOf([Single])
+                                Case NameOf([Decimal]),
+                                     NameOf([Double]),
+                                     NameOf([Single])
                                     Dim valueASingle As Single =
                                         ParseSingle(valueObject, digits:=3)
                                     If Single.IsNaN(valueASingle) Then
@@ -207,7 +211,7 @@ Friend Module DgvExportHelpers
                                         .Value = valueASingle
                                         .Style.NumberFormat.Format =
                                             If(dgv.Columns(index:=j).Name _
-                                            .EqualsIgnoreCase("sg"),
+                                            .EqualsNoCase("sg"),
                                                GetSgFormat(withSign:=False),
                                                $"0{DecimalSeparator}000")
 
@@ -227,9 +231,9 @@ Friend Module DgvExportHelpers
                                         .Alignment.Horizontal =
                                             XLAlignmentHorizontalValues.Left
                                         .Fill.SetBackgroundColor(
-                                            value:=XLColor.FromColor(cellStyle.BackColor))
+                                            value:=cellStyle.GetXlColor(ForeGround:=False))
                                         .Font.SetFontColor(
-                                            value:=XLColor.FromColor(cellStyle.ForeColor))
+                                            value:=cellStyle.GetXlColor(ForeGround:=True))
                                         .Font.Bold = cellStyle.Font.Bold
                                         .Font.FontName = dgv.Font.Name
                                         .Font.FontSize = dgv.Font.Size
@@ -251,10 +255,12 @@ Friend Module DgvExportHelpers
                         With worksheet.Cell(row:=i + 2, column).Style
                             Dim cellStyle As DataGridViewCellStyle =
                                 dgvCell.GetFormattedStyle()
+
                             .Alignment.Horizontal = align
                             .Fill.SetBackgroundColor(
-                                value:=XLColor.FromColor(cellStyle.BackColor))
-                            .Font.SetFontColor(value:=XLColor.FromColor(cellStyle.ForeColor))
+                                value:=cellStyle.GetXlColor(ForeGround:=False))
+                            .Font.SetFontColor(
+                                value:=cellStyle.GetXlColor(ForeGround:=True))
                             .Font.Bold = cellStyle.Font.Bold
                             .Font.FontName = dgv.Font.Name
                             .Font.FontSize = dgv.Font.Size
@@ -291,11 +297,30 @@ Friend Module DgvExportHelpers
     ''' </summary>
     ''' <param name="sender">The sender object from the event.</param>
     ''' <returns>The <see cref="DataGridView"/> associated with the context menu.</returns>
-    Private Function GetDgvFromToolStripMenuItem(sender As Object) As DataGridView
+    Private Function GetDgvFromMenuItem(sender As Object) As DataGridView
         Dim menuItem As ToolStripMenuItem = CType(sender, ToolStripMenuItem)
         Dim contextStrip As ContextMenuStrip =
             CType(menuItem.GetCurrentParent, ContextMenuStrip)
         Return CType(contextStrip.SourceControl, DataGridView)
+    End Function
+
+    ''' <summary>
+    '''  Converts a <see cref="Color"/> to an <see cref="XLColor"/>.
+    ''' </summary>
+    ''' <param name="color">The <see cref="Color"/> to convert.</param>
+    ''' <returns>The corresponding <see cref="XLColor"/>.</returns>
+    <Extension>
+    Private Function GetXlColor(
+        cellStyle As DataGridViewCellStyle,
+        ForeGround As Boolean) As XLColor
+
+        Return If(ForeGround,
+                  If(Application.IsDarkModeEnabled,
+                     XLColor.FromColor(cellStyle.BackColor),
+                     XLColor.FromColor(cellStyle.ForeColor)),
+                  If(Application.IsDarkModeEnabled,
+                     XLColor.FromColor(cellStyle.ForeColor),
+                     XLColor.FromColor(cellStyle.BackColor)))
     End Function
 
     ''' <summary>
@@ -305,7 +330,7 @@ Friend Module DgvExportHelpers
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
     Public Sub DgvCopySelectedCellsToClipBoardWithHeaders(sender As Object, e As EventArgs)
-        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(
+        GetDgvFromMenuItem(sender).CopyToClipboard(
             copyHeaders:=DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText,
             copyAll:=False)
     End Sub
@@ -320,7 +345,7 @@ Friend Module DgvExportHelpers
         sender As Object,
         e As EventArgs)
 
-        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(
+        GetDgvFromMenuItem(sender).CopyToClipboard(
             copyHeaders:=DataGridViewClipboardCopyMode.EnableWithoutHeaderText,
             copyAll:=False)
     End Sub
@@ -332,7 +357,7 @@ Friend Module DgvExportHelpers
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
     Public Sub DgvExportToClipBoardWithHeaders(sender As Object, e As EventArgs)
-        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(
+        GetDgvFromMenuItem(sender).CopyToClipboard(
             copyHeaders:=DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText,
             copyAll:=True)
     End Sub
@@ -344,7 +369,7 @@ Friend Module DgvExportHelpers
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
     Public Sub DgvExportToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
-        GetDgvFromToolStripMenuItem(sender).CopyToClipboard(
+        GetDgvFromMenuItem(sender).CopyToClipboard(
             copyHeaders:=DataGridViewClipboardCopyMode.EnableWithoutHeaderText,
             copyAll:=False)
     End Sub
@@ -355,7 +380,7 @@ Friend Module DgvExportHelpers
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
     Public Sub DgvExportToExcel(sender As Object, e As EventArgs)
-        GetDgvFromToolStripMenuItem(sender).ExportToExcelWithFormatting()
+        GetDgvFromMenuItem(sender).ToExcelWithFormatting()
     End Sub
 
 End Module

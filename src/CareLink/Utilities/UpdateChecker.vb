@@ -40,8 +40,8 @@ Friend Module UpdateChecker
         Dim startIndex As Integer
         For Each e As IndexClass(Of String) In responseBody.SplitLines().WithIndex()
             Dim line As String = e.Value
-            If line.ContainsIgnoreCase(s_versionSearchKey) Then
-                startIndex = line.IndexOfIgnoreCase(value:=s_versionSearchKey)
+            If line.ContainsNoCase(s_versionSearchKey) Then
+                startIndex = line.IndexOfNoCase(value:=s_versionSearchKey)
                 If startIndex >= 0 Then
                     startIndex += s_versionSearchKey.Length
 

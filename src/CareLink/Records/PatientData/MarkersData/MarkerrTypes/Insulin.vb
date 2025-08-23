@@ -38,7 +38,7 @@ Public Class Insulin
         Me.ProgrammedDuration = item.GetIntegerFromJson(key:=NameOf(ProgrammedDuration))
         Me.EffectiveDuration = item.GetIntegerFromJson(key:=NameOf(EffectiveDuration))
         Me.InsulinType = item.GetStringFromJson(key:=NameOf(InsulinType))
-        If Me.InsulinType.EqualsIgnoreCase("Unknown") Then
+        If Me.InsulinType.EqualsNoCase("Unknown") Then
             Me.InsulinType = CurrentUser.InsulinTypeName
         End If
     End Sub

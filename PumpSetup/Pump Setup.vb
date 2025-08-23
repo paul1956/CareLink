@@ -35,13 +35,16 @@ Public Class PumpSetup
         While start > 0 AndAlso Not Char.IsWhiteSpace(c:=text(index:=start - 1))
             start -= 1
         End While
-        While finish < text.Length - 1 AndAlso Not Char.IsWhiteSpace(c:=text(index:=finish + 1))
+        While finish < text.Length - 1 AndAlso
+              Not Char.IsWhiteSpace(c:=text(index:=finish + 1))
             finish += 1
         End While
         Return text.Substring(startIndex:=start, length:=finish - start + 1)
     End Function
 
-    Private Sub Accept_Button_Click(sender As Object, e As EventArgs) Handles Accept_Button.Click
+    Private Sub Accept_Button_Click(sender As Object, e As EventArgs) _
+        Handles Accept_Button.Click
+
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
 
@@ -77,7 +80,9 @@ Public Class PumpSetup
         If validPdf Then
             ' If a valid PDF is selected, set the current PDF name with path
             Me.PdfFileNameWithPath =
-                IO.Path.Combine(GetDownloadsDirectory(), Me.ComboBoxPDFs.SelectedItem.ToString())
+                IO.Path.Combine(
+                    GetDownloadsDirectory(),
+                    Me.ComboBoxPDFs.SelectedItem.ToString())
         Else
             ' If "(None)" is selected, clear the current PDF name with path
             Me.PdfFileNameWithPath = ""
@@ -89,13 +94,17 @@ Public Class PumpSetup
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">The EventArgs for the Click event.</param>
-    Private Sub copyUrlMenuItem_Click(sender As Object, e As EventArgs) Handles copyUrlMenuItem.Click
+    Private Sub copyUrlMenuItem_Click(sender As Object, e As EventArgs) _
+        Handles copyUrlMenuItem.Click
+
         If Not String.IsNullOrEmpty(_currentUrlUnderMouse) Then
             Clipboard.SetText(_currentUrlUnderMouse)
         End If
     End Sub
 
-    Private Sub Exit_Button_Click(sender As Object, e As EventArgs) Handles Exit_Button.Click
+    Private Sub Exit_Button_Click(sender As Object, e As EventArgs) _
+        Handles Exit_Button.Click
+
         End
     End Sub
 
@@ -129,7 +138,8 @@ Public Class PumpSetup
     End Sub
 
     ''' <summary>
-    '''  Handles the Load event for the PumpSetup form to initialize the instructions and focus.
+    '''  Handles the Load event for the PumpSetup form to initialize the
+    '''  instructions and focus.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">The EventArgs for the Load event.</param>
@@ -168,11 +178,11 @@ Public Class PumpSetup
 
         Dim step1 As String
         Dim existingUserMessageStart As String =
-            "Since you are an existing CareLink™ for Windows user, you can use your existing" &
-            " Settings file by entering your CareLink™ UserName in the box below then" &
-            $" click Accept.{vbCrLf}Your information will not be saved" &
-            $" or verified locally.{vbCrLf}If instead want to use a new PDF Settings" &
-            " file that you HAVE download from"
+            "Since you are an existing CareLink™ for Windows user, you can use your " &
+            "existing Settings file by entering your CareLink™ UserName in the box below " &
+            $"then click Accept.{vbCrLf}Your information will not be saved " &
+            $"or verified locally.{vbCrLf}If instead want to use a new PDF Settings " &
+            "file that you HAVE download from"
         Dim newUserMessageStart As String =
             $"To start you will need to download your latest CareLink file from"
         step1 = If(settingExist,

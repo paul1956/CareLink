@@ -25,7 +25,8 @@ Public Module BasalListExtensions
     End Function
 
     ''' <summary>
-    '''  Gets the active basal pattern name from the specified list of <see cref="Basal"/> objects.
+    '''  Gets the active basal pattern name from the specified
+    '''  list of <see cref="Basal"/> objects.
     ''' </summary>
     ''' <param name="basalList">The list of <see cref="Basal"/> objects.</param>
     ''' <returns>
@@ -39,7 +40,8 @@ Public Module BasalListExtensions
     End Function
 
     ''' <summary>
-    '''  Gets the basal rate per hour from the specified list of <see cref="Basal"/> objects.
+    '''  Gets the basal rate per hour from the specified list
+    '''  of <see cref="Basal"/> objects.
     ''' </summary>
     ''' <param name="basalList">The list of <see cref="Basal"/> objects.</param>
     ''' <returns>
@@ -53,8 +55,8 @@ Public Module BasalListExtensions
     End Function
 
     ''' <summary>
-    '''  Gets a subtitle string representing the active basal pattern from the specified
-    '''  list of <see cref="Basal"/> objects.
+    '''  Gets a subtitle string representing the active basal pattern from the
+    '''  specified list of <see cref="Basal"/> objects.
     ''' </summary>
     ''' <param name="basalList">The list of <see cref="Basal"/> objects.</param>
     ''' <returns>

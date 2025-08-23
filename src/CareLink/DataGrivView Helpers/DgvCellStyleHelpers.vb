@@ -66,13 +66,13 @@ Public Module DgvCellStyleHelpers
     ''' <typeparam name="T">
     '''  The data record type.
     ''' </typeparam>
-    ''' <param name="columnName">
+    ''' <param name="name">
     '''  The name of the column for which to retrieve the cell style.
     ''' </param>
     ''' <returns>
     '''  The <see cref="DataGridViewCellStyle"/> for the specified column.
     ''' </returns>
-    Public Function GetCellStyle(Of T As Class)(columnName As String) As DataGridViewCellStyle
+    Public Function GetCellStyle(Of T As Class)(name As String) As DataGridViewCellStyle
         Dim key As Type = GetType(T)
         Dim value As Dictionary(Of String, DataGridViewCellStyle) = Nothing
 
@@ -80,7 +80,7 @@ Public Module DgvCellStyleHelpers
             value = New Dictionary(Of String, DataGridViewCellStyle)()
             s_alignmentTable(key) = value
         End If
-        Return ClassPropertiesToColumnAlignment(Of T)(alignmentTable:=value, columnName)
+        Return ClassPropertiesToColumnAlignment(Of T)(alignmentTable:=value, name)
     End Function
 
     ''' <summary>
@@ -101,9 +101,11 @@ Public Module DgvCellStyleHelpers
             Return cell.InheritedStyle
         End If
 
+        Const bindingAttr As BindingFlags =
+            BindingFlags.Instance Or BindingFlags.NonPublic Or BindingFlags.IgnoreCase
         Dim m As MethodInfo = dgv.GetType().GetMethod(
             name:="OnCellFormatting",
-            bindingAttr:=BindingFlags.Instance Or BindingFlags.NonPublic Or BindingFlags.IgnoreCase,
+            bindingAttr,
             binder:=Nothing,
             types:=New Type() {GetType(DataGridViewCellFormattingEventArgs)},
             modifiers:=Nothing)
@@ -132,14 +134,18 @@ Public Module DgvCellStyleHelpers
     End Function
 
     ''' <summary>
-    '''  Hide column based on column name matching name returned by <paramref name="hideColFunc"/>
+    '''  Hide column based on column name matching name returned
+    '''  by <paramref name="hideColFunc"/>
     ''' </summary>
-    ''' <param name="dgv">The <see cref="DataGridView"/> whose columns will be hidden.</param>
+    ''' <param name="dgv">
+    '''  The <see cref="DataGridView"/> whose columns will be hidden.
+    ''' </param>
     ''' <typeparam name="T">The type of the data record.</typeparam>
     Friend Sub HideDataGridViewColumnsByName(Of T)(ByRef dgv As DataGridView)
         Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
         For i As Integer = 0 To lastColumnIndex
-            If i > 0 AndAlso String.IsNullOrWhiteSpace(value:=dgv.Columns(index:=i).DataPropertyName) Then
+            If i > 0 AndAlso
+               String.IsNullOrWhiteSpace(value:=dgv.Columns(index:=i).DataPropertyName) Then
                 Stop
             End If
             Dim item As String = dgv.Columns(index:=i).DataPropertyName
@@ -153,7 +159,11 @@ Public Module DgvCellStyleHelpers
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the column.</param>
     ''' <param name="columnName">The name of the column to check.</param>
     ''' <param name="value">The value to compare against each cell in the column.</param>
-    Friend Sub HideUnneededColumns(ByRef dgv As DataGridView, columnName As String, value As String)
+    Friend Sub HideUnneededColumns(
+        ByRef dgv As DataGridView,
+        columnName As String,
+        value As String)
+
         Dim isColumnNeeded As Boolean = False
         Dim column As DataGridViewColumn = dgv.Columns(columnName)
 
@@ -192,7 +202,9 @@ Public Module DgvCellStyleHelpers
     '''  and returns the modified style.
     ''' </summary>
     ''' <param name="cellStyle">The <see cref="DataGridViewCellStyle"/> to modify.</param>
-    ''' <param name="alignment">The <see cref="DataGridViewContentAlignment"/> to set.</param>
+    ''' <param name="alignment">
+    '''  The <see cref="DataGridViewContentAlignment"/> to set.
+    ''' </param>
     ''' <param name="padding">The <see cref="Padding"/> to set.</param>
     ''' <returns>
     '''  The modified <see cref="DataGridViewCellStyle"/>.
@@ -389,27 +401,47 @@ Public Module DgvCellStyleHelpers
                 Case partialKey
                     e.Value = sensorValue.ToString(format, provider)
                     If sensorValue < GetTirLowLimit() Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(
+                            e,
+                            textColor:=Color.Red,
+                            isUri:=False)
                     ElseIf sensorValue > GetTirHighLimit() Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Yellow, isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(
+                            e,
+                            textColor:=Color.Yellow,
+                            isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case $"{partialKey}MgdL"
                     e.Value = Convert.ToString(e.Value)
                     If sensorValue < GetTirLowLimit(asMmolL:=False) Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(
+                            e,
+                            textColor:=Color.Red,
+                            isUri:=False)
                     ElseIf sensorValue > GetTirHighLimit(asMmolL:=False) Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Yellow, isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(
+                            e,
+                            textColor:=Color.Yellow,
+                            isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case $"{partialKey}MmolL"
                     e.Value = sensorValue.ToString(format:="F1", provider)
-                    If sensorValue.RoundToSingle(digits:=1) < GetTirLowLimit(asMmolL:=True) Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+
+                    Dim tirLowLimit As Single = GetTirLowLimit(asMmolL:=True)
+                    If sensorValue.RoundToSingle(digits:=1) < tirLowLimit Then
+                        dgv.CellFormattingApplyBoldColor(
+                            e,
+                            textColor:=Color.Red,
+                            isUri:=False)
                     ElseIf sensorValue > GetTirHighLimit(asMmolL:=True) Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Yellow, isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(
+                            e,
+                            textColor:=Color.Yellow,
+                            isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
@@ -498,7 +530,8 @@ Public Module DgvCellStyleHelpers
         ByRef e As DataGridViewCellFormattingEventArgs)
 
         e.Value = Convert.ToString(e.Value)
-        Dim cell As DataGridViewCell = dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex)
+        Dim cell As DataGridViewCell =
+            dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex)
         If cell.Equals(obj:=dgv.CurrentCell) Then
             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Purple, isUri:=True)
         Else

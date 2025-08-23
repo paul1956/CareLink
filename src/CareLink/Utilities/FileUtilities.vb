@@ -62,7 +62,7 @@ Friend Module FileUtilities
                 paramName:=NameOf(tokenBaseFileName))
         End If
 
-        If tokenBaseFileName.EqualsIgnoreCase(LOGIN_DATA_FILENAME) Then
+        If tokenBaseFileName.EqualsNoCase(LOGIN_DATA_FILENAME) Then
             Dim settingsPathParent As String =
                 Directory.GetParent(path:=GetSettingsDirectory()).FullName
             Dim loginTokenFileName As String = $"{userName}{LOGIN_DATA_FILENAME}"

@@ -134,7 +134,9 @@ Public Class DataGridViewNumericUpDownCell
     '''  Returns the current DataGridView EditingControl as a
     '''  <see cref="DataGridViewNumericUpDownEditingControl"/> control
     ''' </summary>
-    Private ReadOnly Property EditingNumericUpDown As DataGridViewNumericUpDownEditingControl
+    Private ReadOnly Property EditingNumericUpDown As _
+        DataGridViewNumericUpDownEditingControl
+
         Get
             Return TryCast(
                 Me.DataGridView.EditingControl,
@@ -275,16 +277,19 @@ Public Class DataGridViewNumericUpDownCell
     Public Overrides Sub DetachEditingControl()
         Dim dataGridView As DataGridView = Me.DataGridView
         If dataGridView Is Nothing OrElse dataGridView.EditingControl Is Nothing Then
-            Throw New InvalidOperationException("Cell is detached or its grid has no editing control.")
+            Const message As String = "Cell is detached or its grid has no editing control."
+            Throw New InvalidOperationException(message)
         End If
 
-        Dim numericUpDown As NumericUpDown = TryCast(dataGridView.EditingControl, NumericUpDown)
+        Dim numericUpDown As NumericUpDown =
+            TryCast(dataGridView.EditingControl, NumericUpDown)
         If numericUpDown IsNot Nothing Then
-            ' Editing controls get recycled. Indeed, when a DataGridViewNumericUpDownCell cell gets edited
-            ' after another DataGridViewNumericUpDownCell cell, the same editing control gets reused for
-            ' performance reasons (to avoid an unnecessary control destruction and creation).
-            ' Here the undo buffer of the TextBox inside the NumericUpDown control gets cleared to avoid
-            ' interferences between the editing sessions.
+            ' Editing controls get recycled. Indeed, when a DataGridViewNumericUpDownCell
+            ' cell gets edited after another DataGridViewNumericUpDownCell cell,
+            ' the same editing control gets reused for performance reasons
+            ' (to avoid an unnecessary control destruction and creation).
+            ' Here the undo buffer of the TextBox inside the NumericUpDown control
+            ' gets cleared to avoid interferences between the editing sessions.
             TryCast(numericUpDown.Controls(index:=1), TextBox)?.ClearUndo()
         End If
 
@@ -392,7 +397,8 @@ Public Class DataGridViewNumericUpDownCell
                 ' But depending on the values of ThousandsSeparator and DecimalPlaces,
                 ' this may not be the actual string displayed.
                 ' The real formatted value may be "1,234.500"
-                Dim format As String = $"{If(_thousandsSeparator, "N", "F")}{_decimalPlaces}"
+                Dim format As String =
+                    $"{If(_thousandsSeparator, "N", "F")}{_decimalPlaces}"
                 Return formattedDecimal.ToString(format)
             End If
         End If
@@ -514,7 +520,8 @@ Public Class DataGridViewNumericUpDownCell
 
                 ' TODO: Add code to AutoSize the cell's column, the rows, the column headers
                 ' and the row headers depending on their AutoSize settings.
-                ' The DataGridView control does not expose a public method that takes care of this.
+                ' The DataGridView control does not expose a public method
+                ' that takes care of this.
             End If
         End If
     End Sub
@@ -580,6 +587,10 @@ Public Class DataGridViewNumericUpDownCell
         End If
 
         ' First paint the borders and background of the cell.
+        Const dgvPaintParts As DataGridViewPaintParts =
+            Not (DataGridViewPaintParts.ErrorIcon Or
+                 DataGridViewPaintParts.ContentForeground)
+
         MyBase.Paint(
             graphics,
             clipBounds,
@@ -591,8 +602,7 @@ Public Class DataGridViewNumericUpDownCell
             errorText,
             cellStyle,
             advancedBorderStyle,
-            paintParts:=paintParts And
-            Not (DataGridViewPaintParts.ErrorIcon Or DataGridViewPaintParts.ContentForeground))
+            paintParts:=paintParts And dgvPaintParts)
 
         Dim ptCurrentCell As Point = Me.DataGridView.CurrentCellAddress
         Dim cellCurrent As Boolean =
@@ -747,7 +757,8 @@ Public Class DataGridViewNumericUpDownCell
                 singleHorizontalBorderAdded,
                 isFirstDisplayedColumn,
                 isFirstDisplayedRow)
-        editingControlBounds = GetAdjustedEditingControlBounds(editingControlBounds, cellStyle)
+        editingControlBounds =
+            GetAdjustedEditingControlBounds(editingControlBounds, cellStyle)
         Me.DataGridView.EditingControl.Location =
             New Point(editingControlBounds.X, editingControlBounds.Y)
         Me.DataGridView.EditingControl.Size =
@@ -878,18 +889,23 @@ Public Class DataGridViewNumericUpDownCell
     ''' </summary>
     ''' <returns>A string describing the cell's column and row index.</returns>
     Public Overrides Function ToString() As String
-        Dim columnIndex As String = Me.ColumnIndex.ToString(CultureInfo.CurrentCulture)
-        Dim rowIndex As String = Me.RowIndex.ToString(CultureInfo.CurrentCulture)
-        Return $"DataGridViewNumericUpDownCell {{ ColumnIndex={columnIndex}, RowIndex={rowIndex} }}"
+        Dim col As String =
+            Me.ColumnIndex.ToString(CultureInfo.CurrentCulture)
+        Dim row As String =
+            Me.RowIndex.ToString(CultureInfo.CurrentCulture)
+        Return $"DataGridViewNumericUpDownCell {{ ColumnIndex={col}, RowIndex={row} }}"
     End Function
 
     ''' <summary>
     '''  Little utility function used by both the cell and column types to translate
-    '''  a <see cref="DataGridViewContentAlignment"/> value into a <see cref="HorizontalAlignment"/> value.
+    '''  a <see cref="DataGridViewContentAlignment"/> value into a
+    '''  <see cref="HorizontalAlignment"/> value.
     ''' </summary>
     ''' <param name="align">The content alignment value.</param>
     ''' <returns>The corresponding <see cref="HorizontalAlignment"/>.</returns>
-    Friend Shared Function TranslateAlignment(align As DataGridViewContentAlignment) As HorizontalAlignment
+    Friend Shared Function TranslateAlignment(
+        align As DataGridViewContentAlignment) As HorizontalAlignment
+
         If (align And s_anyRight) <> 0 Then
             Return HorizontalAlignment.Right
         ElseIf (align And s_anyCenter) <> 0 Then

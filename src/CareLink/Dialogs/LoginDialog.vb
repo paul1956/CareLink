@@ -138,9 +138,10 @@ Public Class LoginDialog
     '''  loads user settings, and populates the username and region combo boxes.
     ''' </remarks>
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.Icon = If(Application.IsDarkModeEnabled,
-            PngBitmapToIcon(original:=My.Resources.LoginLight),
-            PngBitmapToIcon(original:=My.Resources.LoginDark))
+        Me.Icon =
+            If(Application.IsDarkModeEnabled,
+               PngBitmapToIcon(original:=My.Resources.LoginLight),
+               PngBitmapToIcon(original:=My.Resources.LoginDark))
         _httpClient = New HttpClient()
         _httpClient.SetDefaultRequestHeaders()
         If _initialHeight = 0 Then
@@ -153,12 +154,12 @@ Public Class LoginDialog
             Dim userRecord As CareLinkUserDataRecord = Nothing
             Dim param As String = commandLineArguments(1)
             Select Case True
-                Case param.StartsWithIgnoreCase(value:="/Safe")
+                Case param.StartsWithNoCase(value:="/Safe")
                     My.Settings.AutoLogin = False
                     My.Settings.Save()
 
                      ' username=name
-                Case param.StartsWithIgnoreCase(value:="UserName")
+                Case param.StartsWithNoCase(value:="UserName")
                     Dim arg As String() = param.Split(separator:="=")
                     If arg.Length = 2 AndAlso
                        s_allUserSettingsData.TryGetValue(key:=arg(1), userRecord) Then
@@ -266,7 +267,9 @@ Public Class LoginDialog
                 fs.Flush()
             End Using
 
-            Dim isUsRegion As Boolean = Me.RegionComboBox.SelectedValue.ToString = "North America"
+            Dim isUsRegion As Boolean =
+                Me.RegionComboBox.SelectedValue.ToString = "North America"
+
             Dim isUsRegionStr As String = If(isUsRegion, "--us", "")
 
             ' Create a temporary file for the JSON output
@@ -348,7 +351,11 @@ Public Class LoginDialog
                 MsgBoxStyle.DefaultButton2 Or
                 MsgBoxStyle.Question
             Dim msgBoxResult As MsgBoxResult =
-                MsgBox(heading, prompt:=networkDownMessage, buttonStyle, title:="Login Failed")
+                MsgBox(
+                    heading,
+                    prompt:=networkDownMessage,
+                    buttonStyle,
+                    title:="Login Failed")
 
             Select Case msgBoxResult
                 Case MsgBoxResult.Abort
@@ -453,7 +460,7 @@ Public Class LoginDialog
 
             Dim userRecord As CareLinkUserDataRecord = Nothing
             If s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.Text, userRecord) Then
-                If userRecord.CareLinkUserName.EqualsIgnoreCase(Me.UsernameComboBox.Text) Then
+                If userRecord.CareLinkUserName.EqualsNoCase(Me.UsernameComboBox.Text) Then
                     Me.UsernameComboBox.Text = userRecord.CareLinkUserName
                 End If
                 s_userName = Me.UsernameComboBox.Text
@@ -488,7 +495,7 @@ Public Class LoginDialog
         If Me.UsernameComboBox.SelectedValue IsNot Nothing AndAlso
            s_allUserSettingsData.TryGetValue(key, userRecord) Then
 
-            If Not userRecord.CareLinkUserName.EqualsIgnoreCase(Me.UsernameComboBox.Text) Then
+            If Not userRecord.CareLinkUserName.EqualsNoCase(Me.UsernameComboBox.Text) Then
                 Me.UsernameComboBox.Text = userRecord.CareLinkUserName
             End If
             My.Settings.CareLinkUserName = Me.UsernameComboBox.Text

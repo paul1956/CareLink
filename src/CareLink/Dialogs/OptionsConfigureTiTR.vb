@@ -24,7 +24,9 @@ Public Class OptionsConfigureTiTR
         End Set
     End Property
 
-    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
+    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) _
+        Handles Cancel_Button.Click
+
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub

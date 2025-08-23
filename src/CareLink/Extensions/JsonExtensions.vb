@@ -11,8 +11,9 @@ Public Module JsonExtensions
     Private Const Format As String = "yyyy-MM-ddTHH:mm:ss"
 
     ''' <summary>
-    '''  Default <see cref="JsonSerializerOptions"/> for deserialization. Ignores null values,
-    '''  writes numbers as strings, uses case-insensitive property names, and disallows unmapped members.
+    '''  Default <see cref="JsonSerializerOptions"/> for deserialization.
+    '''  Ignores null values, writes numbers as strings,
+    '''  uses case-insensitive property names, and disallows unmapped members.
     ''' </summary>
     Public ReadOnly s_jsonDeserializerOptions As New JsonSerializerOptions() With {
         .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -27,7 +28,8 @@ Public Module JsonExtensions
         .WriteIndented = True}
 
     ''' <summary>
-    '''  Converts a list of dictionaries representing JSON objects to a list of <see cref="SG"/> objects.
+    '''  Converts a list of dictionaries representing JSON objects
+    '''  to a list of <see cref="SG"/> objects.
     ''' </summary>
     ''' <param name="json">The list of dictionaries to convert.</param>
     ''' <returns>A list of <see cref="SG"/> objects.</returns>
@@ -49,7 +51,8 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a <see cref="Date"/> to a <see langword="String"/> with the specified format.
+    '''  Converts a <see cref="Date"/> to a <see langword="String"/>
+    '''  with the specified format.
     '''  Defaults to "yyyy-MM-ddTHH:mm:ss" if no format is provided.
     ''' </summary>
     ''' <param name="d">The date to convert.</param>
@@ -294,8 +297,12 @@ Public Module JsonExtensions
     ''' </summary>
     ''' <param name="item">The marker entry containing JSON data.</param>
     ''' <param name="key">The field name to retrieve.</param>
-    ''' <param name="digits">The number of decimal digits to round to. Use -1 for no rounding.</param>
-    ''' <param name="considerValue">Whether to consider the value when rounding.</param>
+    ''' <param name="digits">
+    '''  The number of decimal digits to round to. Use -1 for no rounding.
+    ''' </param>
+    ''' <param name="considerValue">
+    '''  Whether to consider the value when rounding.
+    ''' </param>
     ''' <returns>
     '''  The <see langword="Single"/> value if found;
     '''  otherwise, <see cref="Single.NaN"/>.
@@ -454,7 +461,9 @@ Public Module JsonExtensions
     '''  A <see cref="List(Of Dictionary(Of String, String)"/> representing
     '''  the JSON objects.
     ''' </returns>
-    Public Function JsonToDictionaryList(json As String) As List(Of Dictionary(Of String, String))
+    Public Function JsonToDictionaryList(json As String) As _
+        List(Of Dictionary(Of String, String))
+
         Dim resultListOfDictionary As New List(Of Dictionary(Of String, String))
         If String.IsNullOrWhiteSpace(value:=json) Then
             Return resultListOfDictionary
@@ -464,11 +473,15 @@ Public Module JsonExtensions
             JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object))) _
                 (json, options:=s_jsonDeserializerOptions)
 
+        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
+
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
-            Dim item As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
+            Dim item As New Dictionary(Of String, String)(comparer)
             Dim defaultTime As Date = PumpNow() - Eleven55Span
             Dim index As Integer = -1
-            For Each e1 As IndexClass(Of KeyValuePair(Of String, Object)) In e.Value.WithIndex
+            For Each e1 As IndexClass(Of KeyValuePair(Of String, Object)) In
+                e.Value.WithIndex
+
                 If e1.Value.Value Is Nothing Then
                     item.Add(e1.Value.Key, value:=Nothing)
                 ElseIf e1.Value.Key = "index" Then
@@ -477,14 +490,14 @@ Public Module JsonExtensions
                 ElseIf e1.Value.Key = "sg" Then
                     item.Add(e1.Value.Key, value:=e1.Value.ScaleSgToString)
                 ElseIf e1.Value.Key = "dateTime" Then
-                    Dim d As Date = CType(e1.Value.Value, JsonElement).GetDateTime()
+                    Dim dateValue As Date = CType(e1.Value.Value, JsonElement).GetDateTime()
 
                     ' Prevent Crash but not valid data
-                    If d.Year <= 2001 AndAlso index >= 0 Then
+                    If dateValue.Year <= 2001 AndAlso index >= 0 Then
                         item.Add(e1.Value.Key,
                         value:=s_sgRecords(index).Timestamp.ToStringExact)
                     Else
-                        item.Add(e1.Value.Key, value:=ToShortDateString(d))
+                        item.Add(e1.Value.Key, value:=ToShortDateString(dateValue))
                     End If
                 Else
                     item.Add(e1.Value.Key, value:=e1.Value.jsonItemAsString())
@@ -526,7 +539,8 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Loads indexed items from a JSON string into a <see cref="Dictionary(Of String, String)"/>.
+    '''  Loads indexed items from a JSON string
+    '''  into a <see cref="Dictionary(Of String, String)"/>.
     '''  Handles special cases for certain keys and manages time zone information.
     ''' </summary>
     ''' <param name="json">The JSON string to load.</param>
@@ -543,7 +557,9 @@ Public Module JsonExtensions
         Dim item As KeyValuePair(Of String, Object)
         Dim options As JsonSerializerOptions = s_jsonDeserializerOptions
         Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) =
-            JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json, options).ToList()
+            JsonSerializer.Deserialize(Of Dictionary(Of String, Object)) _
+                (json, options).ToList()
+
         For Each item In rawJsonData
             If item.Value Is Nothing Then
                 resultDictionary.Add(item.Key, value:=Nothing)

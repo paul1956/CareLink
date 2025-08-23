@@ -16,10 +16,12 @@ Friend Module DgvColumnEventArgsExtensions
     '''  <see cref="DataGridView"/>.
     ''' </summary>
     ''' <param name="e">
-    '''  The <see cref="DataGridViewColumnEventArgs"/> containing the column to configure.
+    '''  The <see cref="DataGridViewColumnEventArgs"/> containing the
+    '''  column to configure.
     ''' </param>
     ''' <param name="cellStyle">
-    '''  The <see cref="DataGridViewCellStyle"/> to apply to the column's default cell style.
+    '''  The <see cref="DataGridViewCellStyle"/> to apply to the
+    '''  column's default cell style.
     ''' </param>
     ''' <param name="forceReadOnly">
     '''  If set to <see langword="True"/>, the column will be set as read-only.
@@ -43,7 +45,7 @@ Friend Module DgvColumnEventArgsExtensions
             Dim value As String = .Name
             If .Name.Contains(value:="DeleteRow") Then
                 value = ""
-            ElseIf Not .Name.ContainsIgnoreCase(value:="OADateTime") Then
+            ElseIf Not .Name.ContainsNoCase(value:="OADateTime") Then
                 value = If(.DataPropertyName.Length < 4,
                            .Name,
                            .Name.ToTitleCase())
@@ -60,7 +62,7 @@ Friend Module DgvColumnEventArgsExtensions
             .DefaultCellStyle = cellStyle
             If String.IsNullOrWhiteSpace(value:=caption) Then Return
             .HeaderText = caption.Remove(s:="_")
-            If .DataPropertyName.ContainsIgnoreCase(value:="message") Then
+            If .DataPropertyName.ContainsNoCase(value:="message") Then
                 .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             Else
                 .SortMode = DataGridViewColumnSortMode.NotSortable

@@ -275,7 +275,7 @@ Public Module StringExtensions
         If String.IsNullOrWhiteSpace(value) Then
             Return ""
         End If
-        If value.ContainsIgnoreCase(value:="MmolL") Then
+        If value.ContainsNoCase(value:="MmolL") Then
             Return value
         End If
         Dim result As New StringBuilder(value:=Char.ToUpperInvariant(value(index:=0)))
@@ -307,8 +307,8 @@ Public Module StringExtensions
 
         resultString =
             If(Not resultString.Contains(value:="™"c),
-               resultString.ReplaceIgnoreCase(oldValue:="CareLink", newValue:="CareLink™"),
-               resultString.ReplaceIgnoreCase(oldValue:="CareLink", newValue:="CareLink"))
+               resultString.ReplaceNoCase(oldValue:="CareLink", newValue:="CareLink™"),
+               resultString.ReplaceNoCase(oldValue:="CareLink", newValue:="CareLink"))
         resultString = resultString.Replace(oldValue:="S G", newValue:="Sensor Glucose")
 
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
@@ -359,7 +359,7 @@ Public Module StringExtensions
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension()>
-    Public Function ContainsIgnoreCase(s1 As String, value As String) As Boolean
+    Public Function ContainsNoCase(s1 As String, value As String) As Boolean
         If s1 Is Nothing Then Return False
         Return s1.Contains(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
     End Function
@@ -375,7 +375,7 @@ Public Module StringExtensions
     ''' </returns>
     ''' <remarks>Used for case-insensitive substring checks.</remarks>
     <Extension()>
-    Public Function EndsWithIgnoreCase(s As String, value As String) As Boolean
+    Public Function EndsWithNoCase(s As String, value As String) As Boolean
         If s Is Nothing OrElse value Is Nothing Then Return False
         Return s.EndsWith(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
     End Function
@@ -391,7 +391,7 @@ Public Module StringExtensions
     ''' </returns>
     ''' <remarks>Used for case-insensitive string comparisons.</remarks>
     <Extension()>
-    Public Function EqualsIgnoreCase(a As String, b As String) As Boolean
+    Public Function EqualsNoCase(a As String, b As String) As Boolean
         If a Is Nothing OrElse b Is Nothing Then Return False
         Return String.Equals(a, b, comparisonType:=StringComparison.OrdinalIgnoreCase)
     End Function
@@ -411,9 +411,9 @@ Public Module StringExtensions
     ''' <remarks>
     '''  Used for case-insensitive <see langword="Object"/> to string comparisons.
     ''' </remarks>
-    Public Function EqualsIgnoreCase(a As Object, b As String) As Boolean
+    Public Function EqualsNoCase(a As Object, b As String) As Boolean
         If a Is Nothing OrElse b Is Nothing OrElse TypeOf a IsNot String Then Return False
-        Return EqualsIgnoreCase(a.ToString, b)
+        Return EqualsNoCase(a.ToString, b)
     End Function
 
 
@@ -430,7 +430,7 @@ Public Module StringExtensions
     ''' </returns>
     ''' <remarks>Used for case-insensitive substring searches.</remarks>
     <Extension()>
-    Public Function IndexOfIgnoreCase(s1 As String, value As String) As Integer
+    Public Function IndexOfNoCase(s1 As String, value As String) As Integer
         If s1 Is Nothing OrElse value Is Nothing Then Return -1
         Return s1.IndexOf(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
     End Function
@@ -482,7 +482,7 @@ Public Module StringExtensions
     '''  ensuring that the replacement respects the current UI culture.
     ''' </remarks>
     <Extension()>
-    Public Function ReplaceIgnoreCase(
+    Public Function ReplaceNoCase(
         s As String,
         oldValue As String,
         newValue As String) As String
@@ -504,7 +504,7 @@ Public Module StringExtensions
     ''' </returns>
     ''' <remarks>Used for case-insensitive substring checks.</remarks>
     <Extension()>
-    Public Function StartsWithIgnoreCase(s As String, value As String) As Boolean
+    Public Function StartsWithNoCase(s As String, value As String) As Boolean
         If s Is Nothing OrElse value Is Nothing Then Return False
         Return s.StartsWith(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
     End Function

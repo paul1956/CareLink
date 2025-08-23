@@ -19,12 +19,13 @@ Public Class NameColorComboBox
     End Sub
 
     ''' <summary>
-    '''  Gets or sets the currently selected item as a <see cref="KeyValuePair(Of String, KnownColor)"/>.
-    '''  The key represents the display name, and the value is the associated <see cref="KnownColor"/>.
+    '''  Gets or sets the currently selected item as a
+    '''  <see cref="KeyValuePair(Of String, KnownColor)"/>. The key represents the
+    '''  display name, and the value is the associated <see cref="KnownColor"/>.
     ''' </summary>
     ''' <remarks>
-    '''  This property shadows the base <see cref="ComboBox.SelectedItem"/> property to provide
-    '''  strongly-typed access to the selected color item.
+    '''  This property shadows the base <see cref="ComboBox.SelectedItem"/>
+    '''  property to provide strongly-typed access to the selected color item.
     ''' </remarks>
     Public Shadows Property SelectedItem() As KeyValuePair(Of String, KnownColor)
         Get

@@ -7,7 +7,8 @@ Imports System.Globalization
 Imports System.Text
 
 ''' <summary>
-'''  Custom column type dedicated to the <see cref="DataGridViewNumericUpDownCell"/> cell type.
+'''  Custom column type dedicated to the
+'''  <see cref="DataGridViewNumericUpDownCell"/> cell type.
 ''' </summary>
 Public Class DataGridViewNumericUpDownColumn
     Inherits DataGridViewColumn
@@ -48,7 +49,8 @@ Public Class DataGridViewNumericUpDownColumn
     End Property
 
     ''' <summary>
-    '''  Replicates the DecimalPlaces property of the DataGridViewNumericUpDownCell cell type.
+    '''  Replicates the DecimalPlaces property of the
+    '''  DataGridViewNumericUpDownCell cell type.
     ''' </summary>
     <Category("Appearance"),
         DefaultValue(DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultDecimalPlaces),
@@ -70,7 +72,8 @@ Public Class DataGridViewNumericUpDownColumn
             ' Update the template cell so that subsequent cloned cells use the new value.
             Me.NumericUpDownCellTemplate.DecimalPlaces = value
             If Me.DataGridView IsNot Nothing Then
-                ' Update all the existing DataGridViewNumericUpDownCell cells in the column accordingly.
+                ' Update all the existing DataGridViewNumericUpDownCell cells
+                ' in the column accordingly.
                 Dim dataGridViewRows As DataGridViewRowCollection = Me.DataGridView.Rows
                 Dim rowCount As Integer = dataGridViewRows.Count
                 For rowIndex As Integer = 0 To rowCount - 1
@@ -131,7 +134,9 @@ Public Class DataGridViewNumericUpDownColumn
     '''  Indicates whether the Increment property should be persisted.
     '''  </summary>
     Private Function ShouldSerializeIncrement() As Boolean
-        Return Not Me.Increment.Equals(DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultIncrement)
+        Const value As Decimal =
+            DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultIncrement
+        Return Not Me.Increment.Equals(value)
     End Function
 
     ''' <summary>
@@ -216,9 +221,10 @@ Public Class DataGridViewNumericUpDownColumn
                 Next
 
                 Me.DataGridView.InvalidateColumn(Me.Index)
-                ' TODO: This column and/or grid rows may need to be autosized depending on their
-                '       AutoSize settings. Call the autosizing methods to autosize the column, rows,
-                '       column headers / row headers as needed.
+                ' TODO: This column and/or grid rows may need to be autosized
+                '       depending on their AutoSize settings. Call the autosizing
+                '       methods to autosize the column, rows, column headers / row headers
+                '       as needed.
             End If
         End Set
     End Property
@@ -227,7 +233,8 @@ Public Class DataGridViewNumericUpDownColumn
     '''  Indicates whether the Maximum property should be persisted.
     ''' </summary>
     Private Function ShouldSerializeMinimum() As Boolean
-        Const value As Decimal = DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultMinimum
+        Const value As Decimal =
+            DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultMinimum
         Return Not Me.Minimum.Equals(value)
     End Function
 

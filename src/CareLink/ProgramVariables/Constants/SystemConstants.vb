@@ -7,9 +7,9 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module SystemConstants
 
-    Friend Const BaseNameSavedErrorReport As String = "CareLinkErrorReport"
-    Friend Const BaseNameSavedLastDownload As String = "CareLinkLastDownload"
-    Friend Const BaseNameSavedSnapshot As String = "CareLinkSnapshot"
+    Friend Const BaseDownloadName As String = "CareLinkLastDownload"
+    Friend Const BaseErrorReportName As String = "CareLinkErrorReport"
+    Friend Const BaseSnapshotName As String = "CareLinkSnapshot"
     Friend Const ClickToShowDetails As String = "Click To Show Details"
     Friend Const CurrentSgMsg As String = "Current Sensor Glucose"
     Friend Const ExceptionStartingString As String = "--- Start of Exception ---"

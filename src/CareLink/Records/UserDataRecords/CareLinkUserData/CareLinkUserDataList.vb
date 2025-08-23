@@ -119,7 +119,7 @@ Public Class CareLinkUserDataList
                 For index As Integer = 0 To Me.List.Count - 1
                     Dim entry As CareLinkUserDataRecord =
                         CType(Me.List(index), CareLinkUserDataRecord)
-                    If entry?.CareLinkUserName.EqualsIgnoreCase(itemName) Then
+                    If entry?.CareLinkUserName.EqualsNoCase(itemName) Then
                         Return CType(Me.List(index), CareLinkUserDataRecord)
                     End If
                 Next
@@ -134,7 +134,7 @@ Public Class CareLinkUserDataList
             For index As Integer = 0 To Me.List.Count - 1
                 Dim entry As CareLinkUserDataRecord =
                     CType(Me.List(index), CareLinkUserDataRecord)
-                If entry.CareLinkUserName.EqualsIgnoreCase(itemName) Then
+                If entry.CareLinkUserName.EqualsNoCase(itemName) Then
                     Me.List(index) = Value
                     Exit Property
                 End If
@@ -248,7 +248,7 @@ Public Class CareLinkUserDataList
 
         If Me.List Is Nothing Then Return False
         For Each entry As CareLinkUserDataRecord In Me
-            If EqualsIgnoreCase(a:=entry?.CareLinkUserName, b:=key) Then
+            If EqualsNoCase(a:=entry?.CareLinkUserName, b:=key) Then
                 Return True
             End If
         Next
@@ -319,7 +319,7 @@ Public Class CareLinkUserDataList
         key As String,
         value As String)
 
-        If Not key.EqualsIgnoreCase(NameOf(My.Settings.CareLinkUserName)) Then
+        If Not key.EqualsNoCase(NameOf(My.Settings.CareLinkUserName)) Then
             ' We are changing something other than the user name
             ' Update logged on user and the saved file
             loggedOnUser.UpdateValue(key, value)

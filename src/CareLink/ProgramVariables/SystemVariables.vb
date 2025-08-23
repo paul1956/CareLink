@@ -252,7 +252,7 @@ Public Module SystemVariables
     ''' <returns>
     '''  The WebView2 cache directory path as a string.
     ''' </returns>
-    Public Function GetWebViewCacheDirectory() As String
+    Public Function GetWebViewDirectory() As String
         Return s_webView2CacheDirectory
     End Function
 

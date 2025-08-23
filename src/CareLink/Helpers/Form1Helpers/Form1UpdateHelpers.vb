@@ -218,10 +218,10 @@ Friend Module Form1UpdateHelpers
         For Each e As IndexClass(Of String) In valueList.WithIndex
             Dim message As String = String.Empty
             Dim strings As String() = e.Value.Split(separator:=" = ")
-            If kvp.Key.EqualsIgnoreCase("AdditionalInfo") Then
+            If kvp.Key.EqualsNoCase("AdditionalInfo") Then
                 Dim additionalInfo As Dictionary(Of String, String) =
                     GetAdditionalInformation(jsonString:=kvp.Value)
-                If strings(0).EqualsIgnoreCase("sensorUpdateTime") Then
+                If strings(0).EqualsNoCase("sensorUpdateTime") Then
                     message = GetSensorUpdateTime(key:=strings(1))
                 End If
             End If

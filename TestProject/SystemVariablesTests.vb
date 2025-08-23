@@ -14,7 +14,7 @@ Public Class SystemVariablesTests
         Dim expected As String = "C:\\TestCache"
         s_webView2CacheDirectory = expected
         ' Act
-        Dim result As String = GetWebViewCacheDirectory()
+        Dim result As String = GetWebViewDirectory()
         ' Assert
         result.Should().Be(expected)
     End Sub

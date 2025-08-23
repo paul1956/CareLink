@@ -23,14 +23,19 @@ Public Class CleanupStaleFilesDialog
         Next
     End Sub
 
-    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
+    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) _
+        Handles Cancel_Button.Click
+
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 
-    Private Sub CleanupStaleFilesDialog_Shown(sender As Object, e As EventArgs) Handles Me.Shown
-        Dim searchPattern As String = $"{BaseNameSavedErrorReport}*.txt"
-        Dim fileList As String() = IO.Directory.GetFiles(path:=GetProjectDataDirectory(), searchPattern)
+    Private Sub CleanupStaleFilesDialog_Shown(sender As Object, e As EventArgs) _
+        Handles Me.Shown
+
+        Dim searchPattern As String = $"{BaseErrorReportName}*.txt"
+        Dim fileList As String() =
+            IO.Directory.GetFiles(path:=GetProjectDataDirectory(), searchPattern)
         With Me.TreeView1
             .Nodes.Clear()
             .CheckBoxes = True
@@ -48,7 +53,7 @@ Public Class CleanupStaleFilesDialog
                 Dim webCacheFileName As String = file.Split(separator:="\").Last
                 .Nodes(index:=1).Nodes.Add(text:=webCacheFileName)
                 .Nodes(index:=1).LastNode.Checked =
-                    Not GetWebViewCacheDirectory().EndsWithIgnoreCase(value:=webCacheFileName)
+                    Not GetWebViewDirectory().EndsWithNoCase(value:=webCacheFileName)
             Next
             .ExpandAll()
             .EndUpdate()
@@ -83,9 +88,12 @@ Public Class CleanupStaleFilesDialog
                     End If
                     Select Case msgBoxResult
                         Case MsgBoxResult.Yes
-                            Dim file As String = IO.Path.Join(GetProjectDataDirectory(), node.Text)
-                            Dim showUI As FileIO.UIOption = FileIO.UIOption.OnlyErrorDialogs
-                            Dim recycle As FileIO.RecycleOption = FileIO.RecycleOption.SendToRecycleBin
+                            Dim file As String =
+                                IO.Path.Join(GetProjectDataDirectory(), node.Text)
+                            Dim showUI As FileIO.UIOption =
+                                FileIO.UIOption.OnlyErrorDialogs
+                            Dim recycle As FileIO.RecycleOption =
+                                FileIO.RecycleOption.SendToRecycleBin
                             My.Computer.FileSystem.DeleteFile(file, showUI, recycle)
                         Case MsgBoxResult.Cancel
                             result = DialogResult.Cancel
@@ -98,7 +106,8 @@ Public Class CleanupStaleFilesDialog
             For Each node As TreeNode In .Nodes(index:=1).Nodes
                 If node.Checked Then
                     Try
-                        Dim path As String = IO.Path.Join(GetProjectDataDirectory(), "WebCache", node.Text)
+                        Dim path As String =
+                            IO.Path.Join(GetProjectDataDirectory(), "WebCache", node.Text)
                         IO.Directory.Delete(path, recursive:=True)
                     Catch ex As Exception
                         Stop
@@ -110,11 +119,13 @@ Public Class CleanupStaleFilesDialog
         Return result
     End Function
 
-    Private Sub TreeView1_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterCheck
+    Private Sub TreeView1_AfterCheck(sender As Object, e As TreeViewEventArgs) _
+        Handles TreeView1.AfterCheck
+
         If e.Action <> TreeViewAction.Unknown Then
             If e.Node.Text = "Error Files" Then
                 e.Node.Checked = HasCheckChileNodes(e.Node)
-            ElseIf e.Node.Text.StartsWith(value:=BaseNameSavedErrorReport) Then
+            ElseIf e.Node.Text.StartsWith(value:=BaseErrorReportName) Then
                 e.Node.Parent.Checked = HasCheckChileNodes(node:=e.Node.Parent)
             End If
         End If
@@ -123,7 +134,7 @@ Public Class CleanupStaleFilesDialog
     Private Sub TreeView1_BeforeCheck(sender As Object, e As TreeViewCancelEventArgs) _
         Handles TreeView1.BeforeCheck
 
-        If e.Node.Text.StartsWith(value:=BaseNameSavedErrorReport) Then
+        If e.Node.Text.StartsWith(value:=BaseErrorReportName) Then
             e.Cancel = False
             Exit Sub
         End If

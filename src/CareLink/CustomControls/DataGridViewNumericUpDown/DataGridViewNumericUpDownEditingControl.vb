@@ -5,9 +5,9 @@
 Imports System.Runtime.InteropServices
 
 ''' <summary>
-'''  Defines the editing control for the <see cref="DataGridViewNumericUpDownCell"/> custom cell type.
-'''  This control is hosted within a <see cref="DataGridView"/> when a cell enters edit mode,
-'''  providing numeric up-down editing functionality.
+'''  Defines the editing control for the <see cref="DataGridViewNumericUpDownCell"/>
+'''  custom cell type. This control is hosted within a <see cref="DataGridView"/>
+'''  when a cell enters edit mode, providing numeric up-down editing functionality.
 ''' </summary>
 Friend Class DataGridViewNumericUpDownEditingControl
     Inherits NumericUpDown
@@ -45,7 +45,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
     Private _rowIndex As Integer
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="DataGridViewNumericUpDownEditingControl"/> class.
+    '''  Initializes a new instance of the
+    '''  <see cref="DataGridViewNumericUpDownEditingControl"/> class.
     ''' </summary>
     Public Sub New()
         ' The editing control must not be part of the tabbing loop
@@ -102,7 +103,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Property
 
     ''' <summary>
-    '''  Gets or sets a value indicating whether the value of the editing control has changed.
+    '''  Gets or sets a value indicating whether the value
+    '''  of the editing control has changed.
     ''' </summary>
     Public Overridable Property EditingControl_ValueChanged As Boolean _
         Implements IDataGridViewEditingControl.EditingControlValueChanged
@@ -290,7 +292,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
             ' Prevent the Value from being set to Maximum or Minimum when
             ' the cell is being painted.
             Me.UserEdit = (context And DataGridViewDataErrorContexts.Display) = 0
-            Dim format As String = $"{If(Me.ThousandsSeparator, "N", "F")}{Me.DecimalPlaces}"
+            Dim format As String =
+                $"{If(Me.ThousandsSeparator, "N", "F")}{Me.DecimalPlaces}"
             Return Me.Value.ToString(format)
         Finally
             Me.UserEdit = userEdit
