@@ -198,7 +198,8 @@ Public Class CareLinkUserDataList
     End Sub
 
     ''' <summary>
-    '''  Updates parent references and raises the <see cref="ListChanged"/> event after an item is set.
+    '''  Updates parent references and raises the <see cref="ListChanged"/> event
+    '''  after an item is set.
     ''' </summary>
     ''' <param name="newIndex">The index of the item.</param>
     ''' <param name="oldValue">The old value.</param>
