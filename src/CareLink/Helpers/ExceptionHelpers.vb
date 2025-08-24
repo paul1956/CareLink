@@ -26,7 +26,8 @@ Friend Module ExceptionHelpers
     '''  Automatically supplied by the compiler.
     ''' </param>
     ''' <returns>
-    '''  An <see cref="ArgumentOutOfRangeException"/> describing the unreachable code location.
+    '''  An <see cref="ArgumentOutOfRangeException"/> describing the
+    '''  unreachable code location.
     ''' </returns>
     <ExcludeFromCodeCoverage>
     Public ReadOnly Property UnreachableException(

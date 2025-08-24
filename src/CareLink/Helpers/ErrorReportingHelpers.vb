@@ -78,7 +78,8 @@ Friend Module ErrorReportingHelpers
     End Sub
 
     ''' <summary>
-    '''  Gets a formatted title string from a stack frame, indicating the file and line number.
+    '''  Gets a formatted title string from a stack frame,
+    '''  indicating the file and line number.
     ''' </summary>
     ''' <param name="stackFrame">
     '''  The <see cref="StackFrame"/> to extract information from.</param>

@@ -29,8 +29,10 @@ Public Module FileIoHelpers
     '''  It returns true if at least one file matches the pattern, otherwise false.
     ''' </remarks>
     Friend Function AnyMatchingFiles(path As String, searchPattern As String) As Boolean
-        If String.IsNullOrWhiteSpace(path) Then
-            Throw New ArgumentNullException(paramName:=NameOf(path), message:="Path cannot be null.")
+        If String.IsNullOrWhiteSpace(value:=path) Then
+            Throw New ArgumentNullException(
+                paramName:=NameOf(path),
+                message:="Path cannot be null.")
         End If
         Return Directory.GetFiles(path, searchPattern).Length > 0
     End Function
@@ -82,7 +84,9 @@ Public Module FileIoHelpers
     ''' <summary>
     '''  Gets the full path to the sample user data JSON file for testing.
     ''' </summary>
-    ''' <returns>The full path to "SampleUserV2Data.json" in the application's base directory.</returns>
+    ''' <returns>
+    '''  The full path to "SampleUserV2Data.json" in the application's base directory.
+    ''' </returns>
     Friend Function GetTestDataPath() As String
         Return Path.Join(
         AppDomain.CurrentDomain.BaseDirectory,
@@ -139,8 +143,9 @@ Public Module FileIoHelpers
     '''  Thrown if the path or current directory is null or whitespace.
     ''' </exception>
     ''' <remarks>
-    '''  This method moves all files matching the specified search pattern from the source directory
-    '''  to the destination directory, which is typically the current working directory.
+    '''  This method moves all files matching the specified search pattern
+    '''  from the source directory to the destination directory,
+    '''  which is typically the current working directory.
     ''' </remarks>"
     Friend Sub MoveFiles(path As String, currentDirectory As String, searchPattern As String)
         If String.IsNullOrWhiteSpace(path) Then
@@ -225,7 +230,9 @@ Public Module FileIoHelpers
     '''  Updates the last write time of the specified file to the current UTC time.
     ''' </summary>
     ''' <param name="path">The full path to the file.</param>
-    ''' <exception cref="ArgumentException">Thrown if the file name is null or whitespace.</exception>
+    ''' <exception cref="ArgumentException">
+    '''  Thrown if the file name is null or whitespace.
+    ''' </exception>
     Public Sub TouchFile(path As String)
         If String.IsNullOrWhiteSpace(path) Then
             Throw New ArgumentException(

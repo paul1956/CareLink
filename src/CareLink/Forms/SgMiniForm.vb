@@ -60,7 +60,9 @@ Public Class SgMiniForm
         Me.Hide()
     End Sub
 
-    Private Sub DeltaTextBox_TextChanged(sender As Object, e As EventArgs) Handles DeltaTextBox.TextChanged
+    Private Sub DeltaTextBox_TextChanged(sender As Object, e As EventArgs) _
+        Handles DeltaTextBox.TextChanged
+
         Select Case True
             Case Me.DeltaTextBox.Text = ""
                 Me.DeltaTextBox.BackColor = SystemColors.Window
@@ -87,29 +89,39 @@ Public Class SgMiniForm
         End Using
     End Sub
 
-    Private Sub SgMiniForm_VisibleChanged(sender As Object, e As EventArgs) Handles MyBase.VisibleChanged
+    Private Sub SgMiniForm_VisibleChanged(sender As Object, e As EventArgs) _
+        Handles MyBase.VisibleChanged
+
         If Me.Visible Then
             Me.SgTextBox.SelectionLength = 0
         End If
 
     End Sub
 
-    Private Sub SgMiniForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+    Private Sub SgMiniForm_FormClosing(sender As Object, e As FormClosingEventArgs) _
+        Handles Me.FormClosing
+
         _form1.Visible = True
     End Sub
 
-    Private Sub SgMiniWindow_GotFocus(sender As Object, e As EventArgs) Handles MyBase.GotFocus
+    Private Sub SgMiniWindow_GotFocus(sender As Object, e As EventArgs) _
+        Handles MyBase.GotFocus
+
         Me.HiddenTextBox.Focus()
     End Sub
 
-    Private Sub SgMiniWindow_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+    Private Sub SgMiniWindow_KeyDown(sender As Object, e As KeyEventArgs) _
+        Handles MyBase.KeyDown
+
         If e.Modifiers = Keys.Alt AndAlso e.KeyCode = Keys.W Then
             _form1.Visible = True
             Me.Hide()
         End If
     End Sub
 
-    Private Sub SgTextBox_GotFocus(sender As Object, e As EventArgs) Handles SgTextBox.GotFocus
+    Private Sub SgTextBox_GotFocus(sender As Object, e As EventArgs) _
+        Handles SgTextBox.GotFocus
+
         Me.HiddenTextBox.Focus()
     End Sub
 
@@ -147,16 +159,20 @@ Public Class SgMiniForm
     End Sub
 
     Public Sub SetCurrentDeltaValue(deltaString As String, delta As Single)
-        Me.DeltaTextBox.Text = If(delta.IsSgInvalid OrElse Math.Abs(delta) < 0.001, "", deltaString)
+        Me.DeltaTextBox.Text =
+            If(delta.IsSgInvalid OrElse Math.Abs(value:=delta) < 0.001,
+               "",
+               deltaString)
         _currentDelta = delta
     End Sub
 
-    Public Sub SetCurrentSgString(sgString As String, sgValue As Single)
-        _currentSgValue = sgValue
-        _normalizedSg = sgValue
-        Me.SgTextBox.Text = If(String.IsNullOrWhiteSpace(sgString) OrElse Single.IsNaN(sgValue),
-                               "---",
-                               sgString)
+    Public Sub SetCurrentSgString(sgString As String, f As Single)
+        _currentSgValue = f
+        _normalizedSg = f
+        Me.SgTextBox.Text =
+            If(String.IsNullOrWhiteSpace(value:=sgString) OrElse Single.IsNaN(f),
+               "---",
+               sgString)
         If NativeMmolL Then
             _normalizedSg *= MmolLUnitsDivisor
         End If

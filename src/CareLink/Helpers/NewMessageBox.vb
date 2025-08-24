@@ -207,7 +207,8 @@ Friend Module NewMessageBox
     End Function
 
     ''' <summary>
-    '''  Shows a <see cref="MsgBox"/> with the specified options and no checkbox or auto-close.
+    '''  Shows a <see cref="MsgBox"/> with the specified options and
+    '''  no checkbox or auto-close.
     ''' </summary>
     ''' <param name="heading">The heading text of the message box.</param>
     ''' <param name="prompt">The main message text.</param>
@@ -215,7 +216,9 @@ Friend Module NewMessageBox
     '''  The style and combination of buttons and icons to display.
     ''' </param>
     ''' <param name="title">The window title of the message box.</param>
-    ''' <returns>The <see cref="MsgBoxResult"/> indicating which button was pressed.</returns>
+    ''' <returns>
+    '''  The <see cref="MsgBoxResult"/> indicating which button was pressed.
+    ''' </returns>
     Public Function MsgBox(
         heading As String,
         prompt As String,

@@ -218,7 +218,10 @@ Public Module StringExtensions
     ''' <param name="separateDigits">If true, separates numbers into their own words.</param>
     ''' <returns>A title-cased string.</returns>
     <Extension()>
-    Public Function ToTitle(value As String, Optional separateDigits As Boolean = False) As String
+    Public Function ToTitle(
+        value As String,
+        Optional separateDigits As Boolean = False) As String
+
         If String.IsNullOrWhiteSpace(value) Then
             Return ""
         End If
@@ -261,11 +264,13 @@ Public Module StringExtensions
 
     ''' <summary>
     '''  Converts a string of concatenated words (PascalCase or camelCase)
-    '''  to a title case string,
-    '''  where the first letter of every word is capitalized and words are separated by spaces.
+    '''  to a title case string, where the first letter of every word is capitalized
+    '''  and words are separated by spaces.
     ''' </summary>
     ''' <param name="value">A string like "ThisIsATitle".</param>
-    ''' <param name="separateNumbers">If true, separates numbers into their own words.</param>
+    ''' <param name="separateNumbers">
+    '''  If true, separates numbers into their own words.
+    ''' </param>
     ''' <returns>A title-cased string with spaces between words.</returns>
     <Extension()>
     Public Function ToTitleCase(

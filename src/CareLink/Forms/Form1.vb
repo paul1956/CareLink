@@ -640,7 +640,8 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The DataGridView control.</param>
     ''' <param name="e">
-    '''  A <see cref="DataGridViewCellContextMenuStripNeededEventArgs"/> containing event data.
+    '''  A <see cref="DataGridViewCellContextMenuStripNeededEventArgs"/> containing
+    '''  event data.
     ''' </param>
     ''' <remarks>
     '''  Sets the context menu for copying data.
@@ -753,7 +754,10 @@ Public Class Form1
                     dgv.CellFormattingSetForegroundColor(e)
                 Case NameOf(AutoBasalDelivery.BolusAmount)
                     If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(
+                            e,
+                            textColor:=Color.Red,
+                            isUri:=False)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
@@ -820,7 +824,10 @@ Public Class Form1
                     If Equals(e.Value, "NO_ERROR_MESSAGE") Then
                         dgv.CellFormattingToTitle(e)
                     Else
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(
+                            e,
+                            textColor:=Color.Red,
+                            isUri:=False)
                         dgv.CellFormattingToTitle(e)
                     End If
                 Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
@@ -960,7 +967,8 @@ Public Class Form1
             For Each column As DataGridViewColumn In dgv.Columns
                 With dgv.Columns(column.Index)
                     If .Index = lastColumnIndex Then
-                        dgv.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
+                        dgv.ColumnHeadersDefaultCellStyle.WrapMode =
+                            DataGridViewTriState.False
                         .DefaultCellStyle.WrapMode = DataGridViewTriState.True
                         If .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
                             .DefaultCellStyle.WrapMode = DataGridViewTriState.True
@@ -1409,7 +1417,9 @@ Public Class Form1
             If currentValue = dgv.Tag.ToString Then
                 Exit Sub ' No change, exit early
             End If
-            Dim userRecord As CareLinkUserDataRecord = s_allUserSettingsData(index:=e.RowIndex)
+            Dim userRecord As CareLinkUserDataRecord =
+                s_allUserSettingsData(index:=e.RowIndex)
+
             Select Case dgv.Columns(index:=e.ColumnIndex).Name
                 Case NameOf(CareLinkUserDataRecord.CareLinkUserName)
                     userRecord.CareLinkUserName = currentValue
@@ -1635,10 +1645,12 @@ Public Class Form1
         e As DataGridViewColumnEventArgs) Handles DgvCurrentUser.ColumnAdded
 
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
-        Dim alignment As DataGridViewContentAlignment = DataGridViewContentAlignment.MiddleLeft
-        Dim padding1 As New Padding(all:=1)
+        Dim alignment As DataGridViewContentAlignment =
+            DataGridViewContentAlignment.MiddleLeft
+
+        Dim padding As New Padding(all:=1)
         e.DgvColumnAdded(
-            cellStyle:=New DataGridViewCellStyle().SetCellStyle(alignment, padding:=padding1),
+            cellStyle:=New DataGridViewCellStyle().SetCellStyle(alignment, padding),
             forceReadOnly:=True,
             caption:=Nothing)
     End Sub
@@ -2656,10 +2668,13 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="Button.Click"/> event for
     '''  the <see cref="SerialNumberButton"/> control.
-    '''  It switches to the Serial Number tab and scrolls to the last row in the DataGridView.
-    '''  Highlights the row containing "medicalDeviceInformation" in the second column.
+    '''  It switches to the Serial Number tab and scrolls to the last row
+    '''  in the DataGridView. Highlights the row containing
+    '''  "<see cref="medicalDeviceInformation"/>" in the second column.
     ''' </summary>
-    ''' <param name="sender">The source of the event, typically the SerialNumberButton.</param>
+    ''' <param name="sender">
+    '''  The source of the event, typically the SerialNumberButton.
+    ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     ''' <remarks>
     '''  This event is used to navigate to the Serial Number tab and
@@ -2692,11 +2707,14 @@ Public Class Form1
 #Region "Start Here Menu Events"
 
     ''' <summary>
-    '''  Handles the <see cref="MenuStartHere.DropDownOpening"/> event for the Start Here menu.
-    '''  This event is raised when the Start Here menu is about to be displayed.
-    '''  It enables or disables menu items based on the current state of the application.
+    '''  Handles the <see cref="MenuStartHere.DropDownOpening"/> event for
+    '''  the Start Here menu. This event is raised when the Start Here menu
+    '''  is about to be displayed. It enables or disables menu items
+    '''  based on the current state of the application.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a ToolStripMenuItem control.
+    ''' </param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) _
         Handles MenuStartHere.DropDownOpening
@@ -2790,7 +2808,8 @@ Public Class Form1
             .ValidateNames = True}
 
             If openFileDialog1.ShowDialog(owner:=Me) = DialogResult.OK Then
-                Dim directory As String = Path.GetDirectoryName(path:=openFileDialog1.FileName)
+                Dim directory As String =
+                    Path.GetDirectoryName(path:=openFileDialog1.FileName)
                 Dim destFileName As String = Path.Combine(directory, GetUserPdfPath())
                 File.Move(sourceFileName:=openFileDialog1.FileName, destFileName)
                 My.Computer.FileSystem.MoveFile(
@@ -3112,7 +3131,9 @@ Public Class Form1
     '''  for the <see cref="MenuOptionsAutoLogin"/> checkbox.
     '''  Updates the application's AutoLogin setting based on the checkbox state.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="CheckBox"/> control.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="CheckBox"/> control.
+    ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub MenuOptionsAutoLogin_CheckedChanged(sender As Object, e As EventArgs) _
         Handles MenuOptionsAutoLogin.CheckedChanged
@@ -3466,7 +3487,9 @@ Public Class Form1
     '''  <see cref="CurrentUser.UseAdvancedAitDecay"/> property, then updates
     '''  the active insulin chart.
     ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="CheckBox"/> control.</param>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="CheckBox"/> control.
+    ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(
         sender As Object,
@@ -3480,7 +3503,8 @@ Public Class Form1
                     $"{ .InsulinRealAit} hours While Using { .InsulinTypeName}",
                    $"AIT will decay over { .PumpAit.ToHoursMinutes} While " &
                     $"Using { .InsulinTypeName}")
-            CurrentUser.UseAdvancedAitDecay = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
+            CurrentUser.UseAdvancedAitDecay =
+                Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
         End With
         Me.UpdateActiveInsulinChart()
     End Sub
@@ -3908,7 +3932,10 @@ Public Class Form1
                     End If
                     lastErrorMessage = Client.GetRecentData()
                 End If
-                ReportLoginStatus(Me.LoginStatus, hasErrors:=RecentDataEmpty, lastErrorMessage)
+                ReportLoginStatus(
+                    Me.LoginStatus,
+                    hasErrors:=RecentDataEmpty,
+                    lastErrorMessage)
 
                 Me.Cursor = Cursors.Default
                 Application.DoEvents()
@@ -3931,14 +3958,18 @@ Public Class Form1
                             suffixMessage:="",
                             highLight:=True,
                             isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
-                        _sgMiniDisplay.SetCurrentSgString(sgString:="---", sgValue:=Single.NaN)
+                        _sgMiniDisplay.SetCurrentSgString(
+                            sgString:="---",
+                            f:=Single.NaN)
                     Else
                         Me.SetLastUpdateTime(
                             msg:=Nothing,
                             suffixMessage:="",
                             highLight:=False,
                             isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
-                        _sgMiniDisplay.SetCurrentSgString(s_lastSg?.ToString, s_lastSg.sg)
+                        _sgMiniDisplay.SetCurrentSgString(
+                            sgString:=s_lastSg?.ToString,
+                            f:=s_lastSg.sg)
                     End If
                 Else
                     Me.UpdateAllTabPages(fromFile:=False)
@@ -3948,7 +3979,7 @@ Public Class Form1
             End If
         Else
             ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMessage)
-            _sgMiniDisplay.SetCurrentSgString(sgString:="---", sgValue:=0)
+            _sgMiniDisplay.SetCurrentSgString(sgString:="---", f:=0)
         End If
         SetServerUpdateTimer(Start:=True, interval:=OneMinutesInMilliseconds)
     End Sub
@@ -4834,21 +4865,30 @@ Public Class Form1
                 Me.SensorMessageLabel.Visible = False
                 Dim sgString As String = New SG(PatientData.LastSG).ToString()
                 Me.CurrentSgLabel.Text = sgString
-                Me.CurrentSgLabel.CenterXYOnParent(verticalOffset:=-Me.ShieldUnitsLabel.Height)
+                Me.CurrentSgLabel.CenterXYOnParent(
+                    verticalOffset:=-Me.ShieldUnitsLabel.Height)
                 Me.CurrentSgLabel.Visible = True
                 Me.ShieldUnitsLabel.CenterLabelXOnParent()
                 Me.ShieldUnitsLabel.Top = Me.CurrentSgLabel.Bottom + 2
                 Me.UpdateNotifyIcon(sgString)
-                _sgMiniDisplay.SetCurrentSgString(sgString, sgValue:=s_lastSg.sg)
-                message = SG.FormatSensorMessage(key:=PatientData.SensorState, truncate:=True)
+                _sgMiniDisplay.SetCurrentSgString(
+                    sgString:=sgString,
+                    f:=s_lastSg.sg)
+                message = SG.FormatSensorMessage(
+                    key:=PatientData.SensorState,
+                    truncate:=True)
             Else
-                _sgMiniDisplay.SetCurrentSgString(sgString:="---", sgValue:=s_lastSg.sg)
+                _sgMiniDisplay.SetCurrentSgString(
+                    sgString:="---",
+                    f:=s_lastSg.sg)
                 Me.CurrentSgLabel.Visible = False
                 Me.LastSgOrExitTimeLabel.Visible = False
                 Me.SensorMessageLabel.Visible = True
                 Me.SensorMessageLabel.BackColor = Color.Transparent
 
-                message = SG.FormatSensorMessage(key:=PatientData.SensorState, truncate:=True)
+                message = SG.FormatSensorMessage(
+                    key:=PatientData.SensorState,
+                    truncate:=True)
                 Select Case PatientData.SensorState
                     Case "UNKNOWN"
                         Me.SensorMessageLabel.Text = message
@@ -5437,7 +5477,8 @@ Public Class Form1
                 Math.Sqrt(highDeviations / (elements - lowCount)).RoundToSingle(digits:=1)
             Select Case True
                 Case highDeviation <= 2
-                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}Excellent{Superscript2}"
+                    Me.HighTirComplianceLabel.Text =
+                        $"High{vbCrLf}Excellent{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.LimeGreen
                 Case highDeviation <= 4
                     Me.HighTirComplianceLabel.Text =
@@ -5445,7 +5486,8 @@ Public Class Form1
                     Me.HighTirComplianceLabel.ForeColor = Color.Yellow
                 Case Else
                     Me.HighTirComplianceLabel.Text =
-                        $"High{vbCrLf}({highDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
+                        $"High{vbCrLf}({highDeviation}) " &
+                        $"Needs{vbCrLf}Improvement{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.Red
             End Select
         End If

@@ -371,7 +371,8 @@ Public Class Client2
             If response.IsSuccessStatusCode Then
                 Dim json As String = Await response.Content.ReadAsStringAsync()
                 patients =
-                    JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String)))(json)
+                    JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String))) _
+                        (json)
                 If patients.Count > 0 Then
                     Return patients(index:=0)
                 End If
