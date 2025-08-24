@@ -172,7 +172,8 @@ Friend Module Form1CollectMarkersHelper
         Dim endOADate As OADate
 
         If basalDictionary.Count = 0 Then
-            Dim asDate As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime
+            Dim asDate As Date =
+                PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime
             endOADate = New OADate(asDate)
         Else
             endOADate = basalDictionary.Last.Key
@@ -182,7 +183,9 @@ Friend Module Form1CollectMarkersHelper
         Dim maxBasalPerHour As Double = 0
 
         If basalDictionary.Count > 2 Then
-            While i < basalDictionary.Count AndAlso basalDictionary.Keys(index:=i) <= endOADate
+            While i < basalDictionary.Count AndAlso
+                  basalDictionary.Keys(index:=i) <= endOADate
+
                 Dim sum As Double = 0
                 Dim j As Integer = i
                 Dim startOADate As OADate = basalDictionary.Keys(index:=i)

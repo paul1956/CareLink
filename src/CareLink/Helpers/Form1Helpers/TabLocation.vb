@@ -25,16 +25,23 @@ Friend Structure TabLocation
         Return HashCode.Combine(page, tab)
     End Function
 
+    '''  Deconstructs the TabLocation into its components.
     Public Sub Deconstruct(ByRef page As Integer, ByRef tab As Integer)
         page = Me.page
         tab = Me.tab
     End Sub
 
-    Public Shared Widening Operator CType(value As TabLocation) As (Page As Integer, Tab As Integer)
+    '''  Converts a TabLocation to a tuple (Page As Integer, Tab As Integer).
+    Public Shared Widening Operator CType(value As TabLocation) As _
+        (Page As Integer, Tab As Integer)
+
         Return (value.page, value.tab)
     End Operator
 
-    Public Shared Widening Operator CType(value As (Page As Integer, Tab As Integer)) As TabLocation
+    '''  Converts a tuple (Page As Integer, Tab As Integer) to a TabLocation.
+    Public Shared Widening Operator CType(value As (Page As Integer, Tab As Integer)) As _
+        TabLocation
+
         Return New TabLocation(value.Page, value.Tab)
     End Operator
 

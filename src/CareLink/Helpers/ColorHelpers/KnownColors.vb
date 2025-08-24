@@ -15,10 +15,12 @@ Friend Module KnownColors
     Private ReadOnly s_allKnownColors As New SortedDictionary(Of String, KnownColor)
 
     ''' <summary>
-    '''  Gets a sorted dictionary of all known colors, excluding system and transparent colors.
+    '''  Gets a sorted dictionary of all known colors,
+    '''  excluding system and transparent colors.
     ''' </summary>
     ''' <returns>
-    '''  A <see cref="SortedDictionary(Of String, KnownColor)"/> containing all known colors.
+    '''  A <see cref="SortedDictionary(Of String, KnownColor)"/> containing
+    '''  all known colors.
     ''' </returns>
     Public Function GetAllKnownColors() As SortedDictionary(Of String, KnownColor)
         If s_allKnownColors.Count = 0 Then
@@ -51,7 +53,8 @@ Friend Module KnownColors
     ''' </summary>
     ''' <param name="key">The name of the known color.</param>
     ''' <returns>
-    '''  The corresponding <see cref="KnownColor"/> if found; otherwise, <see cref="KnownColor.Red"/>.
+    '''  The corresponding <see cref="KnownColor"/> if found;
+    '''  otherwise, <see cref="KnownColor.Red"/>.
     ''' </returns>
     Public Function GetKnownColorFromName(key As String) As KnownColor
         Dim value As KnownColor = Nothing

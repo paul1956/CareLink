@@ -27,7 +27,7 @@ Public Module StringListExtensions
         ByRef result As String) As Boolean
 
         For Each value As String In list
-            If headerText.StartsWithIgnoreCase(value) Then
+            If headerText.StartsWithNoCase(value) Then
                 result = value
                 Return True
             End If
@@ -41,7 +41,8 @@ Public Module StringListExtensions
     ''' <param name="lines">The list of lines represented as Strings to search.</param>
     ''' <param name="value">The string to search for within each line.</param>
     ''' <returns>
-    '''  The first line containing the target string, or an empty string if no such line is found.
+    '''  The first line containing the target string,
+    '''  or an empty string if no such line is found.
     ''' </returns>
     <Extension>
     Public Function FindLine(lines As List(Of String), value As String) As String
@@ -58,7 +59,8 @@ Public Module StringListExtensions
     ''' <param name="lines">The list of strings to search.</param>
     ''' <param name="value">The string to search for within each line.</param>
     ''' <returns>
-    '''  The zero-based index of the first line containing the target string, or -1 if not found.
+    '''  The zero-based index of the first line containing the target string;
+    '''  otherwise, -1 if not found.
     ''' </returns>
     <Extension>
     Public Function FindLineNumber(lines As List(Of String), value As String) As Integer

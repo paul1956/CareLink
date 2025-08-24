@@ -57,13 +57,17 @@ Friend Module NotificationHelpers
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event to format notification cell values.
+    '''  Handles the <see cref="DataGridView.CellFormatting"/> event to format notification
+    '''  cell values.
     ''' </summary>
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">Event arguments containing formatting information.</param>
-    Private Sub DgvNotification_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
+    Private Sub DgvNotification_CellFormatting(
+        sender As Object,
+        e As DataGridViewCellFormattingEventArgs)
+
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        If e.Value.ToString().StartsWithIgnoreCase(value:="additionalInfo") Then
+        If e.Value.ToString().StartsWithNoCase(value:="additionalInfo") Then
             e.Value = e.Value.ToString.Replace(oldValue:=":", newValue:=" : ")
         End If
         dgv.CellFormattingSetForegroundColor(e)
@@ -88,7 +92,7 @@ Friend Module NotificationHelpers
             Dim cellStyle As DataGridViewCellStyle =
                 ClassPropertiesToColumnAlignment(Of SummaryRecord)(
                     alignmentTable:=s_alignmentTable,
-                    columnName:= .Name)
+                    .Name)
 
             e.DgvColumnAdded(
                 cellStyle,
@@ -239,8 +243,9 @@ Friend Module NotificationHelpers
         Dim innerJson As List(Of Dictionary(Of String, String))
 
         ' clearedNotifications
+        Dim json As String = s_notificationHistoryValue(key:="clearedNotifications")
         innerJson =
-            JsonToDictionaryList(json:=s_notificationHistoryValue(key:="clearedNotifications"))
+            JsonToDictionaryList(json)
         Dim classCollection As List(Of SummaryRecord)
         If innerJson.Count > 0 Then
             innerJson.Reverse()
@@ -262,7 +267,7 @@ Friend Module NotificationHelpers
 
         ' activeNotifications
         innerJson =
-            JsonToDictionaryList(s_notificationHistoryValue(key:="activeNotifications"))
+            JsonToDictionaryList(json:=s_notificationHistoryValue(key:="activeNotifications"))
         If innerJson.Count > 0 Then
             mainForm.TlpNotificationActive.SetTableName(
                 rowIndex,

@@ -83,7 +83,8 @@ Friend Module UserMessageConstants
         {"61", "Stuck button(triggeredDateTime). Button pressed for more than 3 minutes."},
         {"62", "New Notification Received From Pump"},
         {"66", "No Reservoir Detected During Infusion Set Change"},
-        {"69", "Loading incomplete(triggeredDateTime). Restart the Reservoir & Set procedure"},
+        {"69", "Loading incomplete(triggeredDateTime)." &
+                 " Restart the Reservoir & Set procedure"},
         {"71", "Unknown notification received from pump(triggeredDateTime). " &
                  "Delivered Amount (deliveredAmount)."},
         {"73", "Replace Pump Battery Now"},
@@ -132,9 +133,10 @@ Friend Module UserMessageConstants
         {"798", "Sensor connected(triggeredDateTime). If new sensor, select Start New. " &
                  "If not, select Reconnect."},
         {"801", "Sensor updating(triggeredDateTime), Updating will take (sensorUpdateTime)" &
-                  $" more. Monitor BG.{vbCrLf} Entered BGs will not calibrate the sensor, " &
+                 $" more. Monitor BG.{vbCrLf} Entered BGs will not calibrate the sensor, " &
                  "but can still be used for therapy."},
-        {"802", "Alert on low (sg) (units)(triggeredDateTime). Low sensor glucose. Check BG."},
+        {"802", "Alert on low (sg) (units)(triggeredDateTime)." &
+                 " Low sensor glucose. Check BG."},
         {"803", "Alert on low (sg) (units)(triggeredDateTime). Low sensor glucose. " &
                  "Insulin delivery suspended since (suspendedSince). Check BG."},
         {"805", "Alert before low(triggeredDateTime). " &

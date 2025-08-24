@@ -7,9 +7,11 @@ Imports System.Runtime.CompilerServices
 Friend Module DgvEmptyHelpers
 
     ''' <summary>
-    '''  Displays an empty <see cref="DataGridView"/> in the specified panel if one does not already exist.
+    '''  Displays an empty <see cref="DataGridView"/> in the specified panel
+    '''  if one does not already exist.
     ''' </summary>
-    ''' <param name="realPanel">The <see cref="TableLayoutPanel"/> to add the DataGridView to.</param>
+    ''' <param name="realPanel">
+    '''  The <see cref="TableLayoutPanel"/> to add the DataGridView to.</param>
     ''' <param name="className">The class name to use for naming the DataGridView.</param>
     <Extension>
     Friend Sub DgvNoRecordsFound(realPanel As TableLayoutPanel, className As String)
@@ -44,7 +46,8 @@ Friend Module DgvEmptyHelpers
     End Sub
 
     ''' <summary>
-    '''  Paints a "No records found." message on the <see cref="DataGridView"/> if it contains no rows.
+    '''  Paints a "No records found." message on the <see cref="DataGridView"/>
+    '''  if it contains no rows.
     ''' </summary>
     ''' <param name="sender">The DataGridView being painted.</param>
     ''' <param name="e">The <see cref="PaintEventArgs"/> for the paint event.</param>

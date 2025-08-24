@@ -99,14 +99,20 @@ Friend Module DeliverySettings
     End Sub
 
     <Extension>
-    Friend Sub DeliverySettings2BasalPatternSetup(rtb As RichTextBox, pdf As PdfSettingsRecord)
+    Friend Sub DeliverySettings2BasalPatternSetup(
+        rtb As RichTextBox, pdf As PdfSettingsRecord)
+
         With rtb
-            For Each item As KeyValuePair(Of String, NamedBasalRecord) In pdf.Basal.NamedBasal
+            For Each item As KeyValuePair(Of String, NamedBasalRecord) In
+                pdf.Basal.NamedBasal
+
                 .AppendTextWithFontChange(
                     text:=$"{Indent4}{item.Key}:",
                     newFont:=FixedWidthBoldFont,
                     includeNewLine:=True)
-                For Each e As IndexClass(Of BasalRateRecord) In item.Value.basalRates.WithIndex
+                For Each e As IndexClass(Of BasalRateRecord) In
+                    item.Value.basalRates.WithIndex
+
                     Dim basalRate As BasalRateRecord = e.Value
                     If Not basalRate.IsValid Then
                         Exit For
@@ -117,14 +123,21 @@ Friend Module DeliverySettings
                            Eleven59,
                            item.Value.basalRates(index:=e.Index + 1).Time)
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
-                    .AppendTimeValueRow(startTime, endTime, value, pdf.Utilities.TimeFormat)
+                    .AppendTimeValueRow(
+                        startTime,
+                        endTime,
+                        value,
+                        pdf.Utilities.TimeFormat)
                 Next
             Next
         End With
     End Sub
 
     <Extension>
-    Friend Sub DeliverySettings3MaxBasalBolus(rtb As RichTextBox, pdf As PdfSettingsRecord)
+    Friend Sub DeliverySettings3MaxBasalBolus(
+        rtb As RichTextBox,
+        pdf As PdfSettingsRecord)
+
         With rtb
             .AppendKeyValue(
                 key:="Max Basal:",
@@ -186,9 +199,9 @@ Friend Module DeliverySettings
                     Dim bolusType As String = If(presetBolus.BolusTypeNormal,
                                                  "Normal",
                                                  "Square")
-                    .AppendTextWithFontChange(
-                        text:=$"{Indent4}Bolus: {presetBolus.Bolus}{Indent4}Type: {bolusType}",
-                        newFont:=FixedWidthFont)
+                    Dim text As String =
+                        $"{Indent4}Bolus: {presetBolus.Bolus}{Indent4}Type: {bolusType}"
+                    .AppendTextWithFontChange(text, newFont:=FixedWidthFont)
                     If Not item.Value.BolusTypeNormal Then
                         .AppendTextWithFontChange(
                             text:=$"{Indent4}Duration: {presetBolus.Duration} hr",

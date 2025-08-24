@@ -7,9 +7,9 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module SystemConstants
 
-    Friend Const BaseNameSavedErrorReport As String = "CareLinkErrorReport"
-    Friend Const BaseNameSavedLastDownload As String = "CareLinkLastDownload"
-    Friend Const BaseNameSavedSnapshot As String = "CareLinkSnapshot"
+    Friend Const BaseDownloadName As String = "CareLinkLastDownload"
+    Friend Const BaseErrorReportName As String = "CareLinkErrorReport"
+    Friend Const BaseSnapshotName As String = "CareLinkSnapshot"
     Friend Const ClickToShowDetails As String = "Click To Show Details"
     Friend Const CurrentSgMsg As String = "Current Sensor Glucose"
     Friend Const ExceptionStartingString As String = "--- Start of Exception ---"
@@ -19,16 +19,17 @@ Public Module SystemConstants
     Friend Const MmolLUnitsDivisor As Single = 18
     Friend Const RsaKeySize As Integer = 2048
     Friend Const StackTraceStartingStr As String = "--- Start of stack trace ---"
-    Friend Const StackTraceTerminatingStr As String = "--- End of stack trace from previous location ---"
+    Friend Const StackTraceTerminatingStr As String =
+        "--- End of stack trace from previous location ---"
     Friend Const TimeFormatMilitaryWithMinutes As String = "HH:mm"
     Friend Const TimeFormatMilitaryWithoutMinutes As String = "HH"
     Friend Const TimeFormatTwelveHourWithMinutes As String = " h:mm tt"
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = " h tt"
 
-    Friend ReadOnly s_calloutAnnotations As New Dictionary(Of String, CalloutAnnotation) From {
-        {"SummaryChart", New CalloutAnnotation},
-        {"ActiveInsulinChart", New CalloutAnnotation},
-        {"TreatmentMarkersChart", New CalloutAnnotation}}
+    Friend ReadOnly s_calloutAnnotations As New Dictionary(Of String, CalloutAnnotation) From
+        {{"SummaryChart", New CalloutAnnotation},
+         {"ActiveInsulinChart", New CalloutAnnotation},
+         {"TreatmentMarkersChart", New CalloutAnnotation}}
 
     Friend ReadOnly s_common_Headers As New Dictionary(Of String, String) From {
         {"Accept", "application/json,text/html,application/xhtml+xml,application/" &
@@ -45,18 +46,18 @@ Public Module SystemConstants
         {"EU", "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"},
         {"US", "https://clcloud.minimed.com/connect/carepartner/v11/discover/android/3.2"}}
 
-    Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationRecord) From {
-        {$"Humalog{RegisteredTrademark}",
-         New InsulinActivationRecord(upCount:=8, aitHours:=4)},
-        {$"Novolog{RegisteredTrademark}",
-         New InsulinActivationRecord(upCount:=8, aitHours:=4)},
-        {$"Generic (Insulin Lispro)",
-         New InsulinActivationRecord(upCount:=9, aitHours:=4)},
-        {$"NovoRapid", New InsulinActivationRecord(upCount:=7, aitHours:=4)},
-        {$"FIASP{RegisteredTrademark}",
-         New InsulinActivationRecord(upCount:=4, aitHours:=3)},
-        {$"Lyumjev{RegisteredTrademark}",
-         New InsulinActivationRecord(upCount:=3, aitHours:=3)}}
+    Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationRecord) From
+        {{$"Humalog{RegisteredTrademark}",
+          New InsulinActivationRecord(upCount:=8, aitHours:=4)},
+         {$"Novolog{RegisteredTrademark}",
+          New InsulinActivationRecord(upCount:=8, aitHours:=4)},
+         {$"Generic (Insulin Lispro)",
+          New InsulinActivationRecord(upCount:=9, aitHours:=4)},
+         {$"NovoRapid", New InsulinActivationRecord(upCount:=7, aitHours:=4)},
+         {$"FIASP{RegisteredTrademark}",
+          New InsulinActivationRecord(upCount:=4, aitHours:=3)},
+         {$"Lyumjev{RegisteredTrademark}",
+          New InsulinActivationRecord(upCount:=3, aitHours:=3)}}
 
     Public ReadOnly s_oneToNineteen As New List(Of String) From {
         "zero",
@@ -101,7 +102,9 @@ Public Module SystemConstants
          $"Unit Value{NonBreakingSpace}",
          $"Unit{NonBreakingSpace}Value{NonBreakingSpace}"}
 
-    Friend ReadOnly Property GitHubCareLinkUrl As String = $"https://GitHub.com/{GitOwnerName}/CareLink/"
+    Friend ReadOnly Property GitHubCareLinkUrl As String =
+        $"https://GitHub.com/{GitOwnerName}/CareLink/"
+
     Friend ReadOnly Property SavedTitle As String = "CareLink™ For Windows"
 
 #Region "AIT Constants"
@@ -111,8 +114,7 @@ Public Module SystemConstants
             {"3:00", 3}, {"3:15", 3.25}, {"3:30", 3.5}, {"3:45", 3.75},
             {"4:00", 4}, {"4:15", 4.25}, {"4:30", 4.5}, {"4:45", 4.75},
             {"5:00", 5}, {"5:15", 5.25}, {"5:30", 5.5}, {"5:45", 5.45},
-            {"6:00", 6}
-        }
+            {"6:00", 6}}
 
     Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {
             {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
@@ -123,8 +125,7 @@ Public Module SystemConstants
             {"AIT 4:30", "4:30"}, {"AIT 4:45", "4:45"},
             {"AIT 5:00", "5:00"}, {"AIT 5:15", "5:15"},
             {"AIT 5:30", "5:30"}, {"AIT 5:45", "5:45"},
-            {"AIT 6:00", "6:00"}
-        }
+            {"AIT 6:00", "6:00"}}
 
 #End Region
 

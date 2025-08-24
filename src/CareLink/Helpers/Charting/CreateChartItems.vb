@@ -306,7 +306,8 @@ Friend Module CreateChartItems
 
     ''' <summary>
     '''  Creates a chart legend with specific properties.
-    '''  This method is used to initialize a legend for displaying series information in a chart.
+    '''  This method is used to initialize a legend for displaying series information
+    '''  in a chart.
     ''' </summary>
     ''' <param name="legendName">The name of the legend.</param>
     ''' <returns>A Legend object configured with the specified properties.</returns>

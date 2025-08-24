@@ -5,7 +5,8 @@
 Imports System.Globalization
 
 ''' <summary>
-'''  Provides helper properties and methods for working with culture and localization settings.
+'''  Provides helper properties and methods for working with culture and
+'''  localization settings.
 ''' </summary>
 Friend Module CultureHelpers
 

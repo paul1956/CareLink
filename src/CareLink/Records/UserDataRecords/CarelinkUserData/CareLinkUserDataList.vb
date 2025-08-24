@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.Text
+Imports DocumentFormat.OpenXml.Math
 
 ''' <summary>
 '''  Represents a collection of <see cref="CareLinkUserDataRecord"/> objects
@@ -110,16 +111,18 @@ Public Class CareLinkUserDataList
     ''' </exception>
     Default Public Property Item(itemName As String) As CareLinkUserDataRecord
         Get
+            Const functionName As String =
+                NameOf(CareLinkUserDataList) & NameOf(CareLinkUserDataList.Item)
             Dim message As String
             If String.IsNullOrWhiteSpace(value:=itemName) Then
-                message = "Key may not be Nothing, in CareLinkUserDataList.Item"
+                message = $"Key may not be Nothing, in {functionName}"
                 Throw New KeyNotFoundException(message)
             End If
             Try
                 For index As Integer = 0 To Me.List.Count - 1
                     Dim entry As CareLinkUserDataRecord =
                         CType(Me.List(index), CareLinkUserDataRecord)
-                    If entry?.CareLinkUserName.EqualsIgnoreCase(itemName) Then
+                    If entry?.CareLinkUserName.EqualsNoCase(itemName) Then
                         Return CType(Me.List(index), CareLinkUserDataRecord)
                     End If
                 Next
@@ -127,19 +130,22 @@ Public Class CareLinkUserDataList
                 Return New CareLinkUserDataRecord(parent:=Me)
             End Try
             message =
-                $"Key '{itemName}' Not Present in Dictionary, in CareLinkUserDataList.Item"
+                $"Key '{itemName}' Not Present in Dictionary, in {FunctionName}"
             Throw New KeyNotFoundException(message)
         End Get
         Set(Value As CareLinkUserDataRecord)
             For index As Integer = 0 To Me.List.Count - 1
                 Dim entry As CareLinkUserDataRecord =
                     CType(Me.List(index), CareLinkUserDataRecord)
-                If entry.CareLinkUserName.EqualsIgnoreCase(itemName) Then
+                If entry.CareLinkUserName.EqualsNoCase(itemName) Then
                     Me.List(index) = Value
                     Exit Property
                 End If
             Next
-            Dim message As String = $"Key '{itemName}' Not Present in Dictionary"
+            Const functionName As String =
+                NameOf(CareLinkUserDataList) & NameOf(CareLinkUserDataList.Item)
+            Dim message As String =
+                $"Key '{itemName}' Not Present in Dictionary, in {functionName}"
             Throw New KeyNotFoundException(message)
         End Set
     End Property
@@ -170,7 +176,9 @@ Public Class CareLinkUserDataList
     Protected Overrides Sub OnInsertComplete(newIndex As Integer, value As Object)
         Dim c As CareLinkUserDataRecord = CType(value, CareLinkUserDataRecord)
         c.Parent = Me
-        Dim e As New ListChangedEventArgs(listChangedType:=ListChangedType.ItemAdded, newIndex)
+        Dim e As New ListChangedEventArgs(
+            listChangedType:=ListChangedType.ItemAdded,
+            newIndex)
         Me.OnListChanged(e)
     End Sub
 
@@ -198,7 +206,8 @@ Public Class CareLinkUserDataList
     End Sub
 
     ''' <summary>
-    '''  Updates parent references and raises the <see cref="ListChanged"/> event after an item is set.
+    '''  Updates parent references and raises the <see cref="ListChanged"/> event
+    '''  after an item is set.
     ''' </summary>
     ''' <param name="newIndex">The index of the item.</param>
     ''' <param name="oldValue">The old value.</param>
@@ -247,7 +256,7 @@ Public Class CareLinkUserDataList
 
         If Me.List Is Nothing Then Return False
         For Each entry As CareLinkUserDataRecord In Me
-            If EqualsIgnoreCase(a:=entry?.CareLinkUserName, b:=key) Then
+            If EqualsNoCase(a:=entry?.CareLinkUserName, b:=key) Then
                 Return True
             End If
         Next
@@ -318,7 +327,7 @@ Public Class CareLinkUserDataList
         key As String,
         value As String)
 
-        If Not key.EqualsIgnoreCase(NameOf(My.Settings.CareLinkUserName)) Then
+        If Not key.EqualsNoCase(NameOf(My.Settings.CareLinkUserName)) Then
             ' We are changing something other than the user name
             ' Update logged on user and the saved file
             loggedOnUser.UpdateValue(key, value)

@@ -6,8 +6,8 @@ Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
 
 ''' <summary>
-'''  Represents a carbohydrate ratio record, including start and end times and the carb ratio value.
-'''  Used for configuring insulin pump carbohydrate ratio schedules.
+'''  Represents a carbohydrate ratio record, including start and end times and the
+'''  carb ratio value. Used for configuring insulin pump carbohydrate ratio schedules.
 ''' </summary>
 Public Class CarbRatioRecord
     Implements IEquatable(Of CarbRatioRecord)

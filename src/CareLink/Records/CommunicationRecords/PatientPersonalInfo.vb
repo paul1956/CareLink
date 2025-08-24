@@ -98,13 +98,26 @@ Public Class PatientPersonalInfo
         _hasValue = False
     End Sub
 
+    ''' <summary>
+    ''' Checks if the AccountId has a valid value greater than zero.
+    ''' </summary>
+    ''' <returns>
+    '''  True if AccountId > 0,
+    '''  otherwise False.
+    ''' </returns>
     Public Function HasValue() As Boolean
         _hasValue = Me.AccountId > 0
         Return _hasValue
     End Function
 
+    ''' <summary>
+    ''' Sets the insulin type in the profile dictionary.
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <param name="insulinType">The insulin type to set.</param>
     Public Sub SetInsulinType(insulinType As String)
-        _profileDictionary(NameOf(insulinType).ToTitleCase(separateNumbers:=False)) = insulinType
+        Dim key As String = NameOf(insulinType).ToTitleCase(separateNumbers:=False)
+        _profileDictionary(key) = insulinType
     End Sub
 
 End Class

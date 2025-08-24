@@ -9,15 +9,19 @@ Imports System.Text
 Public Module DictionaryExtensions
 
     ''' <summary>
-    '''  Sets a <see cref="Date"/> property on an object by assigning the string value
-    '''  to a corresponding property with an "AsString" suffix.
+    '''  Sets a <see cref="Date"/> property on an object by assigning the
+    '''   string value to a corresponding property with an "AsString" suffix.
     ''' </summary>
     ''' <typeparam name="T">
     '''  The type of the object, which must be a class with a parameterless constructor.
     ''' </typeparam>
     ''' <param name="obj">The object whose property will be set.</param>
-    ''' <param name="row">The key-value pair containing the property name and value.</param>
-    ''' <param name="[property]">The <see cref="PropertyInfo"/> of the property to set.</param>
+    ''' <param name="row">
+    '''  The key-value pair containing the property name and value.
+    ''' </param>
+    ''' <param name="[property]">
+    '''  The <see cref="PropertyInfo"/> of the property to set.
+    ''' </param>
     Private Sub SetDateProperty(Of T As {Class, New})(
             obj As T,
             row As KeyValuePair(Of String, String),
@@ -35,7 +39,8 @@ Public Module DictionaryExtensions
     End Sub
 
     ''' <summary>
-    '''  Converts a <see cref="Dictionary(Of String, T)"/> to a CSV string representation.
+    '''  Converts a <see cref="Dictionary(Of String, T)"/> to a
+    '''  CSV string representation.
     ''' </summary>
     ''' <typeparam name="T">The type of the values in the dictionary.</typeparam>
     ''' <param name="dic">The dictionary to convert.</param>
@@ -64,15 +69,17 @@ Public Module DictionaryExtensions
     '''  The value for the key, or a <see cref="String.Empty"/> if not found.
     ''' </returns>
     <Extension>
-    Friend Function GetStringValueOrEmpty(item As Dictionary(Of String, String), Key As String) As String
+    Friend Function GetStringValueOrEmpty(
+        item As Dictionary(Of String, String),
+        Key As String) As String
+
         If item Is Nothing Then
             Return ""
         End If
         Dim value As String = String.Empty
         Return If(item.TryGetValue(Key, value),
                   value,
-                  String.Empty
-                 )
+                  String.Empty)
     End Function
 
     ''' <summary>
@@ -183,7 +190,9 @@ Public Module DictionaryExtensions
     ''' </summary>
     ''' <param name="jsonString">The JSON string to convert.</param>
     ''' <returns>A Dictionary with the key-value pairs from the JSON string.</returns>
-    Public Function GetAdditionalInformation(jsonString As String) As Dictionary(Of String, String)
+    Public Function GetAdditionalInformation(
+        jsonString As String) As Dictionary(Of String, String)
+
         Dim valueList() As String = GetValueList(jsonString)
         Dim dic As New Dictionary(Of String, String)
         For Each row As String In valueList

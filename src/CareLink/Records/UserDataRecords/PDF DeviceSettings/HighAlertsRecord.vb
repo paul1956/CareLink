@@ -27,7 +27,7 @@ Public Class HighAlertsRecord
                 Continue For
             End If
 
-            Dim options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
+            Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
             Dim value As String = sTable.Rows(index:=e.Index + 1).Columns(index:=0)
             Dim item As New HighAlertRecord(row, valueUnits) With {
                 .End =
@@ -57,7 +57,9 @@ Public Class HighAlertsRecord
     Public Property SnoozeOn As String = "Off"
 
     Public Overrides Function ToString() As String
-        Return If(Me.SnoozeOn = "On", $"{_snoozeTime.Hours}:{_snoozeTime.Seconds:D2} hr", "Off")
+        Return If(Me.SnoozeOn = "On",
+                  $"{_snoozeTime.Hours}:{_snoozeTime.Seconds:D2} hr",
+                  "Off")
     End Function
 
 End Class

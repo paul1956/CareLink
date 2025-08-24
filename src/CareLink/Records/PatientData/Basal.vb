@@ -65,7 +65,8 @@ Public Class Basal
     End Function
 
     ''' <summary>
-    '''  Gets the basal rate per hour based on the active basal pattern and temporary basal settings.
+    '''  Gets the basal rate per hour based on the active basal pattern and
+    '''  temporary basal settings.
     ''' </summary>
     ''' <returns>
     '''  The basal rate per hour, or NaN if no active basal pattern is set.
@@ -75,7 +76,14 @@ Public Class Basal
             Return Double.NaN
         End If
         Select Case Me.ActiveBasalPattern
-            Case "BASAL1", "BASAL2", "BASAL3", "BASAL4", "BASAL5", "WORKDAY", "DAYOFF", "SICKDAY"
+            Case "BASAL1",
+                 "BASAL2",
+                 "BASAL3",
+                 "BASAL4",
+                 "BASAL5",
+                 "WORKDAY",
+                 "DAYOFF",
+                 "SICKDAY"
                 Return Me.BasalRate
             Case Else
                 Return If(Me.tempBasalPercentage > 0,
@@ -86,7 +94,8 @@ Public Class Basal
     End Function
 
     ''' <summary>
-    '''  Gets the type of basal delivery based on the active basal pattern and temporary basal settings.
+    '''  Gets the type of basal delivery based on the active basal pattern and
+    '''  temporary basal settings.
     ''' </summary>
     ''' <returns>
     '''  A string representing the type of basal delivery.
@@ -122,14 +131,17 @@ Public Class Basal
     End Function
 
     ''' <summary>
-    '''  Determines whether the current instance is equal to another instance of the same type.
+    '''  Determines whether the current instance is equal to another
+    '''  instance of the same type.
     ''' </summary>
     ''' <param name="other">The other instance to compare with.</param>
     ''' <returns>
     '''  <see langword="True"/> if the current instance is equal to the other instance;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Public Overloads Function Equals(other As Basal) As Boolean Implements IEquatable(Of Basal).Equals
+    Public Overloads Function Equals(other As Basal) As Boolean _
+        Implements IEquatable(Of Basal).Equals
+
         Return other IsNot Nothing AndAlso
                Me.ActiveBasalPattern = other.ActiveBasalPattern AndAlso
                Me.BasalRate = other.BasalRate AndAlso

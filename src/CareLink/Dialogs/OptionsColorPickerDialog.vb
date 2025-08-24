@@ -26,7 +26,9 @@ Public Class OptionsColorPickerDialog
     Private Sub KnownColorsComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) _
         Handles KnownColorsComboBox1.SelectedIndexChanged
 
-        If Me.ItemNameComboBox.SelectedIndex < 0 OrElse Me.KnownColorsComboBox1.SelectedIndex < 0 Then
+        If Me.ItemNameComboBox.SelectedIndex < 0 OrElse
+           Me.KnownColorsComboBox1.SelectedIndex < 0 Then
+
             Exit Sub
         End If
 

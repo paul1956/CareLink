@@ -29,12 +29,13 @@ Friend Module FileUtilities
     ''' <summary>
     '''  Writes a byte array to a file.
     ''' </summary>
-    ''' <param name="fileName">The name of the file to write to.</param>
-    ''' <param name="byteArray">The byte array to write.</param>
-    Friend Sub ByteArrayToFile(fileName As String, byteArray() As Byte)
+    ''' <param name="path">The name of the file to write to.</param>
+    ''' <param name="buffer">The byte array to write.</param>
+    Friend Sub ByteArrayToFile(path As String, buffer() As Byte)
         Try
-            Using fs As New FileStream(fileName, FileMode.Create, FileAccess.Write)
-                fs.Write(byteArray, 0, byteArray.Length)
+            Const access As FileAccess = FileAccess.Write
+            Using fs As New FileStream(path, mode:=FileMode.Create, access)
+                fs.Write(buffer, offset:=0, count:=buffer.Length)
             End Using
         Catch ex As Exception
             Stop
@@ -42,7 +43,8 @@ Friend Module FileUtilities
     End Sub
 
     ''' <summary>
-    '''  Gets the full path for the login data file based on the user name and base file name.
+    '''  Gets the full path for the login data file based on the user name
+    '''  and base file name.
     ''' </summary>
     ''' <param name="userName">The user name.</param>
     ''' <param name="tokenBaseFileName">The base file name for the token data file.</param>
@@ -60,7 +62,7 @@ Friend Module FileUtilities
                 paramName:=NameOf(tokenBaseFileName))
         End If
 
-        If tokenBaseFileName.EqualsIgnoreCase(LOGIN_DATA_FILENAME) Then
+        If tokenBaseFileName.EqualsNoCase(LOGIN_DATA_FILENAME) Then
             Dim settingsPathParent As String =
                 Directory.GetParent(path:=GetSettingsDirectory()).FullName
             Dim loginTokenFileName As String = $"{userName}{LOGIN_DATA_FILENAME}"
@@ -91,16 +93,19 @@ Friend Module FileUtilities
         If File.Exists(fileWithPath) Then
             Try
                 Dim json As String = File.ReadAllText(fileWithPath)
-                Dim jsonElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
+                Dim jsonElement As JsonElement =
+                    JsonSerializer.Deserialize(Of JsonElement)(json)
                 For Each propertyName As String In s_requiredFields
                     If Not jsonElement.TryGetProperty(propertyName, value:=Nothing) Then
-                        Debug.WriteLine($"Field {propertyName} is missing from data file")
+                        Dim message As String =
+                            $"Field {propertyName} is missing from data file"
+                        Debug.WriteLine(message)
                         Return Nothing
                     End If
                 Next
                 Return JsonSerializer.Deserialize(Of TokenData)(json)
             Catch ex As JsonException
-                Debug.WriteLine("Failed parsing JSON")
+                Debug.WriteLine(message:="Failed parsing JSON")
             End Try
         End If
         Return Nothing
@@ -128,19 +133,22 @@ Friend Module FileUtilities
         If File.Exists(path) Then
             Try
                 Dim jsonAsText As String = File.ReadAllText(path)
-                Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(jsonAsText)
+                Dim tokenData As JsonElement =
+                    JsonSerializer.Deserialize(Of JsonElement)(jsonAsText)
                 For Each propertyName As String In s_requiredFields
                     If Not tokenData.TryGetProperty(propertyName, value:=Nothing) Then
-                        Debug.WriteLine($"ERROR: field {propertyName} is missing from token file")
+                        Dim message As String =
+                            $"ERROR: field {propertyName} is missing from token file"
+                        Debug.WriteLine(message)
                         Return Nothing
                     End If
                 Next
                 Return tokenData
             Catch ex As JsonException
-                Debug.WriteLine($"ERROR: failed parsing token file {path}")
+                Debug.WriteLine(message:="ERROR: failed parsing token file {path}")
             End Try
         Else
-            Debug.WriteLine($"ERROR: token file {path} not found")
+            Debug.WriteLine(message:="ERROR: token file {path} not found")
         End If
         Return Nothing
     End Function
@@ -151,32 +159,37 @@ Friend Module FileUtilities
     ''' <param name="value">The token data to write.</param>
     ''' <param name="userName">The user name.</param>
     ''' <param name="tokenBaseFileName">
-    '''  The base file name for the token data file. Defaults to <see cref="LOGIN_DATA_FILENAME"/>.
+    '''  The base file name for the token data file.
+    '''  Defaults to <see cref="LOGIN_DATA_FILENAME"/>.
     ''' </param>
     Public Sub WriteTokenDataFile(
             value As TokenData,
             userName As String,
             Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME)
         Dim path As String = GetLoginDataFileName(userName, tokenBaseFileName)
-        Debug.WriteLine("Wrote data file")
-        Dim contents As String = JsonSerializer.Serialize(value, s_jsonSerializerOptions)
+        Debug.WriteLine(message:="Wrote data file")
+        Dim contents As String =
+            JsonSerializer.Serialize(value, options:=s_jsonSerializerOptions)
         File.WriteAllText(path, contents)
     End Sub
 
     ''' <summary>
-    '''  Writes the specified <see cref="JsonElement"/> token data to a file for the given user.
+    '''  Writes the specified <see cref="JsonElement"/> token data
+    '''  to a file for the given user.
     ''' </summary>
     ''' <param name="value">The token data to write.</param>
     ''' <param name="userName">The user name.</param>
     ''' <param name="tokenBaseFileName">
-    '''  The base file name for the token data file. Defaults to <see cref="LOGIN_DATA_FILENAME"/>.
+    '''  The base file name for the token data file.
+    '''  Defaults to <see cref="LOGIN_DATA_FILENAME"/>.
     ''' </param>
     Public Sub WriteTokenFile(value As JsonElement,
             userName As String,
             Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME)
         Dim path As String = GetLoginDataFileName(userName, tokenBaseFileName)
-        Debug.WriteLine(NameOf(WriteTokenFile))
-        Dim contents As String = JsonSerializer.Serialize(value, s_jsonSerializerOptions)
+        Debug.WriteLine(message:=NameOf(WriteTokenFile))
+        Dim contents As String =
+            JsonSerializer.Serialize(value, options:=s_jsonSerializerOptions)
         File.WriteAllText(path, contents)
     End Sub
 

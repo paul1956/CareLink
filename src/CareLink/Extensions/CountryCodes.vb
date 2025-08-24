@@ -329,7 +329,8 @@ Public Module RegionCountryLists
 
         Dim indexOfOpenParenthesis As Integer = filename.IndexOf(value:="("c)
         prompt =
-            $"Filename '{filename}' malformed,{vbCrLf}it must contain '(' after '{FixedPart}'."
+            $"Filename '{filename}' malformed,{vbCrLf}" &
+            $"it must contain '(' after '{FixedPart}'."
         If fuzzy Then
             If indexOfOpenParenthesis < FixedPart.Length Then
                 MsgBox(

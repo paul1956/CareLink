@@ -8,8 +8,8 @@ Friend Module DeviceSettingsExtensions
 
     <Extension>
     Friend Function GetSingleLineValue(Of T)(sTable As StringTable, key As String) As T
-        Dim typeOfT As Type = GetType(T)
         Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
+        Dim typeOfT As Type = GetType(T)
         For Each r As StringTable.Row In sTable.Rows
             Dim v As String = r.Columns(index:=0)
             If v.StartsWith(value:=key) Then

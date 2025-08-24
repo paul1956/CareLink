@@ -7,21 +7,24 @@ Imports System.Runtime.CompilerServices
 Public Module ColorHelpers
 
     ''' <summary>
-    '''  Returns a contrasting color (black or white) based on the brightness of the base color.
-    '''  This is useful for ensuring text is readable against a colored background.
+    '''  Returns a contrasting color (black or white) based on the brightness
+    '''  of the base color. This is useful for ensuring text is readable against
+    '''  a colored background.
     ''' </summary>
     ''' <param name="baseColor">The base color to evaluate.</param>
     ''' <returns>A contrasting color based on the brightness.</returns>
     <Extension>
     Public Function ContrastingColor(baseColor As Color) As Color
         ' Y is the "brightness"
-        Dim y As Double = (0.299 * baseColor.R) + (0.587 * baseColor.G) + (0.114 * baseColor.B)
+        Dim y As Double =
+            (0.299 * baseColor.R) + (0.587 * baseColor.G) + (0.114 * baseColor.B)
         Return If(y < 140, Color.White, Color.Black)
     End Function
 
     ''' <summary>
-    '''  Returns a contrasting color (black or white) based on the brightness of the specified KnownColor.
-    '''  This is useful for ensuring text is readable against a colored background.
+    '''  Returns a contrasting color (black or white) based on the brightness
+    '''  of the specified KnownColor. This is useful for ensuring text is readable
+    '''  against a colored background.
     ''' </summary>
     ''' <param name="knownColor">The KnownColor to evaluate.</param>
     ''' <returns>A contrasting KnownColor based on the brightness.</returns>

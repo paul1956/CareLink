@@ -9,17 +9,22 @@ Public Module ClassHelpers
     ''' <summary>
     '''  Creates a <see cref="Dictionary"/> that maps class property names to
     '''  <see cref="DataGridViewCellStyle"/> for column alignment.
-    '''  Determines alignment and padding based on the <see cref="ColumnAttribute"/> type name.
+    '''  Determines alignment and padding based on the
+    '''  <see cref="ColumnAttribute"/> type name.
     ''' </summary>
-    ''' <typeparam name="T">The type of the class whose properties are mapped.</typeparam>
+    ''' <typeparam name="T">
+    '''  The type of the class whose properties are mapped.
+    ''' </typeparam>
     ''' <param name="alignmentTable">
     '''  A dictionary to populate with property name to cell style mappings.
     ''' </param>
-    ''' <param name="columnName">The column name to retrieve or add alignment for.</param>
-    ''' <returns>The <see cref="DataGridViewCellStyle"/> for the specified column.</returns>
+    ''' <param name="name">The column name to retrieve or add alignment for.</param>
+    ''' <returns>
+    '''  The <see cref="DataGridViewCellStyle"/> for the specified column.
+    ''' </returns>
     Public Function ClassPropertiesToColumnAlignment(Of T As Class)(
             ByRef alignmentTable As Dictionary(Of String, DataGridViewCellStyle),
-            columnName As String) As DataGridViewCellStyle
+            name As String) As DataGridViewCellStyle
 
         Dim classType As Type = GetType(T)
         Dim cellStyle As New DataGridViewCellStyle
@@ -69,10 +74,10 @@ Public Module ClassHelpers
                 alignmentTable.Add(key:=[property].Name, value:=cellStyle)
             Next
         End If
-        If Not alignmentTable.TryGetValue(key:=columnName, value:=cellStyle) Then
+        If Not alignmentTable.TryGetValue(key:=name, value:=cellStyle) Then
             Dim alignMiddle As Boolean =
-                columnName = NameOf(SummaryRecord.RecordNumber) OrElse
-                                columnName = NameOf(Limit.Index)
+                name = NameOf(SummaryRecord.RecordNumber) OrElse
+                                name = NameOf(Limit.Index)
             cellStyle = If(alignMiddle,
                            (New DataGridViewCellStyle).SetCellStyle(
                                alignment:=DataGridViewContentAlignment.MiddleCenter,
@@ -80,7 +85,7 @@ Public Module ClassHelpers
                            (New DataGridViewCellStyle).SetCellStyle(
                                alignment:=DataGridViewContentAlignment.MiddleLeft,
                                padding:=New Padding(all:=1)))
-            alignmentTable.Add(key:=columnName, value:=cellStyle)
+            alignmentTable.Add(key:=name, value:=cellStyle)
         End If
         Return cellStyle
     End Function

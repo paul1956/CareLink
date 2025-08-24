@@ -23,7 +23,9 @@ Public Class PdfTests
         End Get
     End Property
 
-    Private Shared Function GetTestDataPath(<CallerFilePath> Optional path As String = "") As String
+    Private Shared Function GetTestDataPath(
+        <CallerFilePath> Optional path As String = "") As String
+
         ' Get the currently executing assembly location
         Return IO.Path.Combine(IO.Directory.GetParent(path).FullName, "TestData")
     End Function

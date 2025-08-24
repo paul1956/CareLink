@@ -131,7 +131,9 @@ Friend Module TimeZoneExtensions
     ''' <summary>
     '''  Gets the local date and time from the pump's configured time zone.
     ''' </summary>
-    ''' <returns>The pumps current <see cref="Date"/> in the applications local time.</returns>
+    ''' <returns>
+    '''  The pumps current <see cref="Date"/> in the applications local time.
+    ''' </returns>
     Public Function PumpNow() As Date
         Return TimeZoneInfo.ConvertTime(dateTime:=Now, destinationTimeZone:=PumpTimeZoneInfo)
     End Function

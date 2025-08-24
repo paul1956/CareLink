@@ -3,7 +3,8 @@
 ' See the LICENSE file in the project root for more information.
 
 ''' <summary>
-'''  Provides a <see cref="ComboBox"/> that displays all known colors except system and transparent colors.
+'''  Provides a <see cref="ComboBox"/> that displays all known colors except
+'''  system and transparent colors.
 ''' </summary>
 ''' <remarks>
 '''  <para>
@@ -48,15 +49,16 @@ Public Class KnownColorComboBox
     End Sub
 
     ''' <summary>
-    '''  Gets or sets the selected item as a <see cref="KeyValuePair(Of String, KnownColor)"/>.
+    '''  Gets or sets the selected item as a
+    '''  <see cref="KeyValuePair(Of String, KnownColor)"/>.
     ''' </summary>
     ''' <value>
     '''  The selected <see cref="KeyValuePair(Of String, KnownColor)"/> in the combo box.
     ''' </value>
     ''' <remarks>
     '''  <para>
-    '''   This property shadows the base <see cref="ComboBox.SelectedItem"/> property to provide
-    '''   strongly-typed access to the selected color.
+    '''   This property shadows the base <see cref="ComboBox.SelectedItem"/>
+    '''   property to provide strongly-typed access to the selected color.
     '''  </para>
     ''' </remarks>
     Public Shadows Property SelectedItem() As KeyValuePair(Of String, KnownColor)
@@ -92,16 +94,16 @@ Public Class KnownColorComboBox
     '''  The selected <see cref="KnownColor"/> value.
     ''' </value>
     ''' <remarks>
-    '''  <para>
-    '''   Setting this property updates the selected item to match the specified <see cref="KnownColor"/>.
-    '''  </para>
+    '''  Setting this property updates the selected item to match
+    '''  the specified <see cref="KnownColor"/>.
     ''' </remarks>
     Public Shadows Property SelectedValue() As KnownColor
         Get
             Return Me.SelectedItem.Value
         End Get
         Set(item As KnownColor)
-            Me.SelectedItem = KeyValuePair.Create(key:=GetNameFromKnownColor(item), value:=item)
+            Me.SelectedItem =
+                KeyValuePair.Create(key:=GetNameFromKnownColor(item), value:=item)
         End Set
     End Property
 
@@ -110,8 +112,8 @@ Public Class KnownColorComboBox
     ''' </summary>
     ''' <remarks>
     '''  <para>
-    '''   This method is called during control initialization to set up the owner-drawn mode and
-    '''   populate the items list with all known colors.
+    '''   This method is called during control initialization to set up
+    '''   the owner-drawn mode and populate the items list with all known colors.
     '''  </para>
     ''' </remarks>
     Protected Overrides Sub InitLayout()
@@ -147,7 +149,12 @@ Public Class KnownColorComboBox
         Dim eBounds As Rectangle = e.Bounds
         Using b As Brush = New SolidBrush(color:=backColor)
             Dim pt As New Point(x:=eBounds.X, y:=eBounds.Top)
-            e.Graphics.FillRectangle(brush:=b, eBounds.X, eBounds.Y, eBounds.Width, eBounds.Height)
+            e.Graphics.FillRectangle(
+                brush:=b,
+                eBounds.X,
+                eBounds.Y,
+                eBounds.Width,
+                eBounds.Height)
             TextRenderer.DrawText(
                 dc:=e.Graphics,
                 text:=item.Key,

@@ -38,7 +38,7 @@ Public Class Insulin
         Me.ProgrammedDuration = item.GetIntegerFromJson(key:=NameOf(ProgrammedDuration))
         Me.EffectiveDuration = item.GetIntegerFromJson(key:=NameOf(EffectiveDuration))
         Me.InsulinType = item.GetStringFromJson(key:=NameOf(InsulinType))
-        If Me.InsulinType.EqualsIgnoreCase("Unknown") Then
+        If Me.InsulinType.EqualsNoCase("Unknown") Then
             Me.InsulinType = CurrentUser.InsulinTypeName
         End If
     End Sub
@@ -73,7 +73,8 @@ Public Class Insulin
     Public Property TimestampAsString As String
 
     ''' <summary>
-    '''  Gets the timestamp as a <see cref="Date"/> object, parsed from <see cref="TimestampAsString"/>.
+    '''  Gets the timestamp as a <see cref="Date"/> object,
+    '''  parsed from <see cref="TimestampAsString"/>.
     ''' </summary>
     <DisplayName("Timestamp As Date")>
     <Column(Order:=4, TypeName:="Date")>

@@ -9,7 +9,8 @@ Public Module JsonDownloader
 
     ''' <summary>
     '''  Downloads JSON content from the specified URL.
-    '''  This method uses HttpClient to perform the GET request and returns the JSON content as a string.
+    '''  This method uses HttpClient to perform the GET request and
+    '''  returns the JSON content as a string.
     ''' </summary>
     ''' <param name="url">The URL from which to download the JSON content.</param>
     ''' <returns>A string containing the JSON content.</returns>

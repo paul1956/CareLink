@@ -30,7 +30,8 @@ Public Class PostalRecord
     Public Property postalFormat As String
 
     Private Function GetDebuggerDisplay() As String
-        Return $"{NameOf(postalFormat)} = {Me.postalFormat}, {NameOf(regExpStr)} = {Me.regExpStr}"
+        Return $"{NameOf(postalFormat)} = {Me.postalFormat}, " &
+               $"{NameOf(regExpStr)} = {Me.regExpStr}"
     End Function
 
     Public Function ToList() As Dictionary(Of String, String)

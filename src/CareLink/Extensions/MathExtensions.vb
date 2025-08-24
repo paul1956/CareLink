@@ -25,7 +25,9 @@ Friend Module MathExtensions
     ''' </summary>
     ''' <param name="value">The Single value to round.</param>
     ''' <param name="digits">The number of decimal digits to round to.</param>
-    ''' <param name="considerValue">Whether to consider the value for special rounding.</param>
+    ''' <param name="considerValue">
+    '''  Whether to consider the value for special rounding.
+    ''' </param>
     ''' <returns>The rounded Single value.</returns>
     <Extension>
     Friend Function RoundToSingle(

@@ -27,8 +27,10 @@ Public Class PumpSetupDialog
                 .SelectionBackColor = SystemColors.Window
                 .SelectionColor = SystemColors.WindowText
             Else
+
+                Dim autoSuspendTimeSpan As TimeSpan = Me.Pdf.Utilities.AutoSuspend.Time
                 .AppendTextWithFontChange(
-                    text:=$"{Indent4}{Me.Pdf.Utilities.AutoSuspend.Time.ToFormattedTimeSpan(unit:="hr")}",
+                    text:=$"{Indent4}{autoSuspendTimeSpan.ToFormattedTimeSpan(unit:="hr")}",
                     newFont:=FixedWidthFont,
                     includeNewLine:=True)
             End If
@@ -40,10 +42,25 @@ Public Class PumpSetupDialog
     '''  Sets the dialog result to OK and closes the dialog.
     ''' </summary>
     ''' <param name="sender">The event sender.</param>
-    ''' <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    ''' <param name="e">The <see cref="EventArgs"/>
+    '''  instance containing the event data.
+    ''' </param>
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
         Me.DialogResult = DialogResult.OK
         Me.Close()
+    End Sub
+
+    Private Sub PumpSetupDialog_Load(sender As Object, e As EventArgs) Handles Me.Load
+
+        With Me.RtbMainLeft
+            .ReadOnly = False
+            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings")
+        End With
+
+        With Me.RtbMainRight
+            .ReadOnly = False
+            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings")
+        End With
     End Sub
 
     ''' <summary>
@@ -70,21 +87,13 @@ Public Class PumpSetupDialog
         End If
 
         Me.Text = $"Pump Setup Instructions For {Me.Pdf.UserName}"
-
-
-        With Me.RtbMainRight
-            .ReadOnly = False
-            .Text = ""
-        End With
+        Application.DoEvents()
 
         Dim rtb As RichTextBox = Me.RtbMainLeft
         With rtb
             .AppendTextWithSymbol(
-                text:=$"Menu>{Gear}>Delivery Settings")
-            .AppendTextWithSymbol(
                 text:=$"Menu>{Gear}>Delivery Settings > Bolus Wizard Setup")
             rtb.DeliverySettings1BolusWizardSetup(Me.Pdf)
-            Application.DoEvents()
 
             .AppendTextWithSymbol(
                 text:=$"Menu>{Gear}>Delivery Settings > Basal Pattern Setup")
@@ -126,13 +135,6 @@ Public Class PumpSetupDialog
         rtb = Me.RtbMainRight
         Dim symbol As String
         With rtb
-            .ReadOnly = False
-            .Text = ""
-
-            .AppendTextWithSymbol(
-                text:=$"Menu>{Gear}>Alert Settings")
-            Application.DoEvents()
-
             .AppendTextWithSymbol(
                 text:=$"Menu>{Gear}>Alert Settings > High Alert")
             .AlertSettings1HighAlert(Me.Pdf)
@@ -186,7 +188,9 @@ Public Class PumpSetupDialog
             .AppendTextWithSymbol(
                 text:=$"Menu>{Shield}>SmartGuard > SmartGuard Settings", symbol)
 
-            value = $"{Me.Pdf.SmartGuard.Target.RoundToSingle(digits:=0, considerValue:=True)}"
+            value =
+                $"{Me.Pdf.SmartGuard.Target.RoundToSingle(digits:=0, considerValue:=True)}"
+
             .AppendKeyValue(key:="Target:", value)
             .AppendKeyValue(key:="Auto Correction:", value:=$"{Me.Pdf.SmartGuard.SmartGuard}")
 
@@ -209,10 +213,10 @@ Public Class PumpSetupDialog
             Dim audioOptions As String = Me.Pdf.Utilities.AudioOptions
             .AppendKeyValue(
                 key:="Sound:",
-                value:=$"{audioOptions.ContainsIgnoreCase(value:="Audio").BoolToOnOff()}")
+                value:=$"{audioOptions.ContainsNoCase(value:="Audio").BoolToOnOff()}")
             .AppendKeyValue(
                 key:="Vibration:",
-                value:=$"{audioOptions.ContainsIgnoreCase(value:="Vibrate").BoolToOnOff()}")
+                value:=$"{audioOptions.ContainsNoCase(value:="Vibrate").BoolToOnOff()}")
 
             .ReadOnly = True
             .SelectionStart = 0
@@ -229,17 +233,24 @@ Public Class PumpSetupDialog
                     text:=$"{Indent4}{item.Key}:",
                     newFont:=FixedWidthBoldFont,
                     includeNewLine:=True)
-                For Each e As IndexClass(Of BasalRateRecord) In item.Value.basalRates.WithIndex
+                For Each e As IndexClass(Of BasalRateRecord) In
+                    item.Value.basalRates.WithIndex
+
                     Dim basalRate As BasalRateRecord = e.Value
                     If Not basalRate.IsValid Then
                         Exit For
                     End If
                     Dim startTime As TimeOnly = basalRate.Time
-                    Dim endTime As TimeOnly = If(e.IsLast,
-                                                 Eleven59,
-                                                 item.Value.basalRates(index:=e.Index + 1).Time)
+                    Dim endTime As TimeOnly =
+                        If(e.IsLast,
+                           Eleven59,
+                           item.Value.basalRates(index:=e.Index + 1).Time)
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
-                    .AppendTimeValueRow(startTime, endTime, value, Me.Pdf.Utilities.TimeFormat)
+                    .AppendTimeValueRow(
+                        startTime,
+                        endTime,
+                        value,
+                        Me.Pdf.Utilities.TimeFormat)
                 Next
             Next
         End With

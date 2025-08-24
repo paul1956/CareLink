@@ -6,12 +6,14 @@ Imports System.Runtime.CompilerServices
 Imports System.Text.RegularExpressions
 
 ''' <summary>
-'''  Provides debugging support methods for printing debug information and formatted URLs.
+'''  Provides debugging support methods for printing debug information
+'''  and formatted URLs.
 ''' </summary>
 Friend Module DebugSupport
 
     ''' <summary>
-    '''  Prints a debug message to the output window, including the calling member name and line number.
+    '''  Prints a debug message to the output window,
+    '''  including the calling member name and line number.
     '''  If the message starts with '(', only the member name is prepended.
     ''' </summary>
     ''' <param name="message">The message to print.</param>
@@ -30,6 +32,7 @@ Friend Module DebugSupport
         If message.StartsWith(value:="("c) Then
             Debug.Print(message:=$"{memberName}{message}")
         Else
+
             Debug.Print(message:=$"Function:{memberName} Line:{sourceLineNumber,4} {message}")
         End If
     End Sub

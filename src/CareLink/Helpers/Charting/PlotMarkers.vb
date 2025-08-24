@@ -197,7 +197,9 @@ Friend Module PlotMarkers
                         End With
                     Case "INSULIN"
                         Dim key As String
-                        Select Case item.GetStringFromJson(key:=NameOf(Insulin.ActivationType))
+                        Select Case item.GetStringFromJson(
+                            key:=NameOf(Insulin.ActivationType))
+
                             Case "AUTOCORRECTION"
                                 key = "deliveredFastAmount"
                                 Dim autoCorrection As Single =
@@ -271,8 +273,10 @@ Friend Module PlotMarkers
                         End If
                     Case "TIME_CHANGE"
                         With pageChart.Series(name:=TimeChangeSeriesName).Points
-                            lastTimeChangeRecord = New TimeChange(item, recordNumber:=1)
-                            markerOADatetime = New OADate(asDate:=lastTimeChangeRecord.Timestamp)
+                            lastTimeChangeRecord =
+                                New TimeChange(item, recordNumber:=1)
+                            markerOADatetime =
+                                New OADate(asDate:=lastTimeChangeRecord.Timestamp)
                             .AddXY(xValue:=markerOADatetime, yValue:=0)
                             .AddXY(
                                 xValue:=markerOADatetime,
@@ -348,8 +352,8 @@ Friend Module PlotMarkers
         <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
 
         Dim lastTimeChangeRecord As TimeChange = Nothing
-        s_treatmentMarkerInsulinDictionary.Clear()
-        s_treatmentMarkerMealDictionary.Clear()
+        s_treatmentMarkersInsulin.Clear()
+        s_treatmentMarkersMeal.Clear()
         Dim key As String
         For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
             Try
@@ -406,7 +410,7 @@ Friend Module PlotMarkers
                                         tag:=$"Auto Correction: {amount}U")
                                 End With
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                                If s_treatmentMarkerInsulinDictionary.TryAdd(
+                                If s_treatmentMarkersInsulin.TryAdd(
                                     key:=markerOADateTime,
                                     value:=TreatmentInsulinRow) Then
 
@@ -442,7 +446,7 @@ Friend Module PlotMarkers
                     Case "MEAL"
                         Dim value As Single =
                             CSng(TreatmentInsulinRow * 0.95).RoundToSingle(digits:=3)
-                        If s_treatmentMarkerMealDictionary.TryAdd(
+                        If s_treatmentMarkersMeal.TryAdd(
                             key:=markerOADateTime,
                             value) Then
 

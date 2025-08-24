@@ -9,19 +9,23 @@ Friend Module PlotSeriesSg
 
     ''' <summary>
     '''  Plots the SG <see cref="Series"/> on the specified <paramref name="chart"/>,
-    '''  handling missing or out-of-range values and coloring points based on TIR (Time In Range) limits.
+    '''  handling missing or out-of-range values and coloring points
+    '''  based on TIR (Time In Range) limits.
     ''' </summary>
     ''' <param name="chart">The <see cref="Chart"/> control to plot onto.</param>
-    ''' <param name="HomePageMealRow">The Y-value to use for missing or invalid SG data points.</param>
+    ''' <param name="HomePageMealRow">The Y-value to use for missing or
+    ''' invalid SG data points.</param>
     ''' <remarks>
-    '''  This method iterates through the global list of SG records, plotting each value on the chart.
+    '''  This method iterates through the global list of SG records,
+    '''  plotting each value on the chart.
     '''  Points are colored based on their value relative to TIR limits:
     '''  - Yellow if above the high limit
     '''  - Red if below the low limit
     '''  - White if within range
     '''  Missing or invalid values are plotted as transparent and marked as empty.
     '''  If two consecutive valid points are within 6 minutes, a gap is inserted.
-    '''  Exceptions are caught, stopped for debugging, and rethrown as <see cref="ApplicationException"/>.
+    '''  Exceptions are caught, stopped for debugging,
+    '''  and rethrown as <see cref="ApplicationException"/>.
     ''' </remarks>
     <Extension>
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
@@ -38,7 +42,7 @@ Friend Module PlotSeriesSg
                     Else
                         If .Count > 0 AndAlso
                            (Not .Last.IsEmpty) AndAlso
-                           New OADate(oADateAsDouble:= .Last.XValue).Within6Minutes(xValue) Then
+                           New OADate(oADateAsDouble:= .Last.XValue).Within6Min(xValue) Then
 
                             .AddXY(.Last.XValue, yValue:=Double.NaN)
                             .Last().Color = Color.Transparent

@@ -19,10 +19,13 @@ Public Class SensorRecord
     Public Sub UpdateCalibrationReminder(sTable As StringTable)
         ArgumentNullException.ThrowIfNull(sTable)
         If sTable.IsValid Then
-            Me.CalibrationReminder = sTable.GetSingleLineValue(Of String)("Calibration Reminder ")
-            Me.CalibrationReminderTime = sTable.GetSingleLineValue(Of String)("Calibration Reminder Time ")
+            Me.CalibrationReminder =
+                sTable.GetSingleLineValue(Of String)("Calibration Reminder ")
+            Me.CalibrationReminderTime =
+                sTable.GetSingleLineValue(Of String)("Calibration Reminder Time ")
             If sTable.Rows.Count = 3 Then
-                Me.AutoCalibration = sTable.GetSingleLineValue(Of String)("Auto Calibration ")
+                Me.AutoCalibration =
+                    sTable.GetSingleLineValue(Of String)("Auto Calibration ")
             End If
         End If
     End Sub

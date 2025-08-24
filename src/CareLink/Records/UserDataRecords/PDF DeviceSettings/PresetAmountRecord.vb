@@ -13,16 +13,19 @@ Public Class PresetAmountRecord
             _typeIsRate = False
             _percent = Integer.Parse(s:=s.Trim(trimChar:="%"c).Trim)
         Else
+            Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
             _typeIsRate = True
             Dim sSplit As String() =
-                s.Split(separator:=" ", options:=StringSplitOptions.RemoveEmptyEntries)
+                s.Split(separator:=" ", options)
             _rate = sSplit(0).ParseSingleInvariant
             _units = sSplit(1)
         End If
     End Sub
 
     Public Overrides Function ToString() As String
-        Return If(_typeIsRate, $"Rate:  {vbTab}{_rate:F1} {_units}", $"Percent:{vbTab}{_percent}%")
+        Return If(_typeIsRate,
+            $"Rate:  {vbTab}{_rate:F1} {_units}",
+            $"Percent:{vbTab}{_percent}%")
     End Function
 
 End Class

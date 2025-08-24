@@ -27,7 +27,8 @@ Friend Module Form1TransmitterBatteryHelper
             Form1.TransmitterBatteryPictureBox.Image = GetBatteryImage(gstBatteryLevel)
             Form1.TransmitterBatteryPercentLabel.Text = $"{gstBatteryLevel}%"
         Else
-            Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToTransmitterNotOK
+            Form1.TransmitterBatteryPictureBox.Image =
+                My.Resources.PumpConnectivityToTransmitterNotOK
             Form1.TransmitterBatteryPercentLabel.Text = "N/A"
         End If
 

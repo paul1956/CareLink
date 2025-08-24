@@ -6,7 +6,8 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 ''' <summary>
-'''  Provides extension methods and helpers for managing callout annotations on chart controls.
+'''  Provides extension methods and helpers for managing callout annotations
+'''  on chart controls.
 ''' </summary>
 Friend Module CalloutHelpers
 
@@ -105,7 +106,8 @@ Friend Module CalloutHelpers
     ''' <summary>
     '''  Finds the <see cref="CalloutAnnotation"/> associated with the last data point
     '''  in the treatment chart.
-    '''  If no annotation exists for the last data point, it returns <see langword="Nothing"/>.
+    '''  If no annotation exists for the last data point,
+    '''  it returns <see langword="Nothing"/>.
     ''' </summary>
     ''' <param name="treatmentChart">The chart to search for the annotation.</param>
     ''' <param name="lastDataPoint">The data point to find the annotation for.</param>

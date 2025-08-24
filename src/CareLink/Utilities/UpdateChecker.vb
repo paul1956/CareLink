@@ -6,11 +6,12 @@ Imports System.Net.Http
 Imports System.Threading
 
 ''' <summary>
-'''  Provides functionality to check for application updates by comparing the current version
-'''  with the latest release version available on GitHub.
+'''  Provides functionality to check for application updates by comparing the
+'''  current version with the latest release version available on GitHub.
 ''' </summary>
 Friend Module UpdateChecker
-    Private ReadOnly s_versionSearchKey As String = $"<a hRef=""/{GitOwnerName}/CareLink/releases/tag/"
+    Private ReadOnly s_versionSearchKey As String =
+        $"<a hRef=""/{GitOwnerName}/CareLink/releases/tag/"
     Private s_inCheckForUpdate As Integer = 0
     Private s_updateSleepCount As Integer = 0
 
@@ -39,14 +40,15 @@ Friend Module UpdateChecker
         Dim startIndex As Integer
         For Each e As IndexClass(Of String) In responseBody.SplitLines().WithIndex()
             Dim line As String = e.Value
-            If line.ContainsIgnoreCase(s_versionSearchKey) Then
-                startIndex = line.IndexOfIgnoreCase(value:=s_versionSearchKey)
+            If line.ContainsNoCase(s_versionSearchKey) Then
+                startIndex = line.IndexOfNoCase(value:=s_versionSearchKey)
                 If startIndex >= 0 Then
                     startIndex += s_versionSearchKey.Length
 
                     Dim quotePos As Integer = line.IndexOf(value:=""""c, startIndex)
                     If quotePos > startIndex Then
-                        versionStr = line.Substring(startIndex, length:=quotePos - startIndex)
+                        versionStr =
+                            line.Substring(startIndex, length:=quotePos - startIndex)
 
                         ' Skip versions with a dash (e.g., pre-release builds)
                         If Not versionStr.Contains("-"c) Then

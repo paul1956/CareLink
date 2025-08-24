@@ -214,7 +214,8 @@ Public Class Client2
             _httpClient.DefaultRequestHeaders.Add(name:=header.Key, header.Value)
         Next
 
-        Dim response As New HttpResponseMessage With {.StatusCode = HttpStatusCode.GatewayTimeout}
+        Dim response As New HttpResponseMessage With {
+            .StatusCode = HttpStatusCode.GatewayTimeout}
         Try
 
             Dim requestUri As String = CStr(config(key:="token_url"))
@@ -223,8 +224,10 @@ Public Class Client2
             Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
             If response.StatusCode <> HttpStatusCode.OK Then
+                Dim heading As String =
+                    $"ERROR: Failed to refresh token, status {_lastHttpStatusCode}"
                 If MsgBox(
-                    heading:=$"ERROR: Failed to refresh token, status {_lastHttpStatusCode}",
+                    heading:=heading,
                     prompt:="Do you want to try logging in again?",
                     buttonStyle:=MsgBoxStyle.YesNo,
                     title:="New Login Required") <> MsgBoxResult.Yes Then
@@ -245,9 +248,11 @@ Public Class Client2
                         updateAllTabs:=False,
                         fileToLoad:=FileToLoadOptions.Login) Then
 
+                        Const message As String = "Refresh token operation failed."
+                        Dim innerException As New Exception(message)
                         Throw New ApplicationException(
                             message:="ERROR: Failed to refresh token!",
-                            innerException:=New Exception("Refresh token operation failed."))
+                            innerException)
                     End If
                 End If
             End If
@@ -293,7 +298,7 @@ Public Class Client2
 
         Dim value As New Dictionary(Of String, Object) From {{"username", username}}
 
-        If role.ContainsIgnoreCase("Partner") Then
+        If role.ContainsNoCase("Partner") Then
             value("role") = "carepartner"
             value("patientId") = patientId
         Else
@@ -332,19 +337,18 @@ Public Class Client2
     ''' <summary>
     '''  Retrieves the patient information for the current user asynchronously.
     ''' </summary>
-    ''' <param name="configJsonElement">The API configuration as a <see cref="JsonElement"/>.</param>
+    ''' <param name="configJsonElement">
+    '''  The API configuration as a <see cref="JsonElement"/>.
+    ''' </param>
     ''' <param name="token_data">The token data as a <see cref="JsonElement"/>.</param>
     ''' <returns>
-    '''  A <see cref="Task(Of Dictionary(Of String, String))"/> containing the patient information,
-    '''  or <see langword="Nothing"/> if not found.
+    '''  A <see cref="Task(Of Dictionary(Of String, String))"/> containing
+    '''  the patient information, or <see langword="Nothing"/> if not found.
     ''' </returns>
     Private Async Function GetPatient(
         configJsonElement As JsonElement,
         token_data As JsonElement) As Task(Of Dictionary(Of String, String))
 
-        Const key As String = "baseUrlCareLink"
-        Dim url As String =
-            $"{CStr(configJsonElement.ConvertElementToDictionary(key))}/links/patients"
         Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
         headers(key:="mag-identifier") =
             CStr(token_data.ConvertElementToDictionary(key:="mag-identifier"))
@@ -352,18 +356,23 @@ Public Class Client2
             $"Bearer {CStr(token_data.ConvertElementToDictionary(key:="access_token"))}"
 
         For Each header As KeyValuePair(Of String, String) In headers
-            _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
+            _httpClient.DefaultRequestHeaders.Add(name:=header.Key, header.Value)
         Next
 
         _lastHttpStatusCode = 0
-        Using response As HttpResponseMessage = Await _httpClient.GetAsync(url)
+        Const key As String = "baseUrlCareLink"
+        Dim requestUri As String =
+            $"{CStr(configJsonElement.ConvertElementToDictionary(key))}/links/patients"
+        Using response As HttpResponseMessage = Await _httpClient.GetAsync(requestUri)
             _lastHttpStatusCode = response.StatusCode
             Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
+            Dim patients As List(Of Dictionary(Of String, String))
             If response.IsSuccessStatusCode Then
                 Dim json As String = Await response.Content.ReadAsStringAsync()
-                Dim patients As List(Of Dictionary(Of String, String)) =
-                    JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String)))(json)
+                patients =
+                    JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String))) _
+                        (json)
                 If patients.Count > 0 Then
                     Return patients(index:=0)
                 End If
@@ -382,7 +391,10 @@ Public Class Client2
     '''  A <see langword="String"/> containing the user information in JSON format,
     '''  or <see langword="Nothing"/> if the request fails.
     ''' </returns>
-    Private Function GetUserString(config As JsonElement, tokenData As JsonElement) As String
+    Private Function GetUserString(
+        config As JsonElement,
+        tokenData As JsonElement) As String
+
         Dim requestUri As String =
             $"{config.GetProperty(propertyName:="baseUrlCareLink").GetString()}/users/me"
         Dim headers As New Dictionary(Of String, String)
@@ -455,7 +467,7 @@ Public Class Client2
             _PatientPersonalData = JsonSerializer.Deserialize(Of PatientPersonalInfo)(json)
 
             Dim role As String = _PatientPersonalData.role
-            If role.ContainsIgnoreCase(value:="Partner") Then
+            If role.ContainsNoCase(value:="Partner") Then
                 _patientElement =
                     Me.GetPatient(configJsonElement, token_data:=_tokenDataElement).Result
             End If
@@ -628,14 +640,17 @@ Public Class Client2
 
     ''' <summary>
     '''  Retrieves the most recent data from the API.
-    '''  This function checks if the access token is valid, attempts to refresh it if necessary,
+    '''  This function checks if the access token is valid,
+    '''  attempts to refresh it if necessary,
     '''  and then sends a request to the API to obtain the latest patient data.
-    '''  If the access token cannot be refreshed or the API call fails, an error message is returned.
+    '''  If the access token cannot be refreshed or the API call fails,
+    '''  an error message is returned.
     ''' </summary>
     ''' <returns>
-    '''  This function checks if the access token is valid, attempts to refresh it if necessary, and then
-    '''  sends a request to the API to obtain the latest patient data. If the access token cannot be
-    '''  refreshed or the API call fails, an error message is returned.
+    '''  This function checks if the access token is valid, attempts to refresh
+    '''  it if necessary, and then sends a request to the API to obtain the
+    '''  latest patient data. If the access token cannot be refreshed
+    '''  or the API call fails, an error message is returned.
     ''' </returns>
     Public Function GetRecentData() As String
         ' Check if access token is valid
@@ -680,7 +695,8 @@ Public Class Client2
                 lastErrorMessage = $"No Data Found for {data.Keys(index:=0)}"
             Case 2
             Case Else
-                lastErrorMessage = $"No Data Found for {String.Join(separator:=", ", values:=data.Keys)}"
+                lastErrorMessage =
+                    $"No Data Found for {String.Join(separator:=", ", values:=data.Keys)}"
         End Select
         Dim unusedMetaData As JsonElement = CType(data.Values(index:=0), JsonElement)
         Try

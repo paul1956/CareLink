@@ -118,14 +118,14 @@ Public Class ExceptionHandlerDialog
                 "By clicking OK, the Stack Trace, Exception " &
                 "and the CareLink™ data that caused the error will" &
                 $" be package as a text file called{vbCrLf}"
-            Dim uniqueFileNameResult As FileNameStruct = GetUniqueDataFileName(
-                baseName:=BaseNameSavedErrorReport,
+            Dim uniqueFileName As FileNameStruct = GetUniqueDataFileName(
+                baseName:=BaseErrorReportName,
                 cultureName:=CurrentDateCulture.Name,
                 extension:="txt",
                 mustBeUnique:=True)
 
             Dim fileLink As String =
-                $"{uniqueFileNameResult.withoutPath}: file://{uniqueFileNameResult.withPath}"
+                $"{uniqueFileName.withoutPath}: file://{uniqueFileName.withPath}"
             AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
             AppendTextWithFontChange(
                 rtb,
@@ -164,10 +164,10 @@ Public Class ExceptionHandlerDialog
             CreateReportFile(
                 exceptionText:=Me.ExceptionTextBox.Text,
                 stackTraceText:=Me.StackTraceTextBox.Text,
-                UniqueFileNameWithPath:=uniqueFileNameResult.withPath)
+                UniqueFileNameWithPath:=uniqueFileName.withPath)
         Else
             CurrentDateCulture =
-                Me.ReportFileNameWithPath.ExtractCulture(FixedPart:=BaseNameSavedErrorReport)
+                Me.ReportFileNameWithPath.ExtractCulture(FixedPart:=BaseErrorReportName)
             If CurrentDateCulture Is Nothing Then
                 Me.Close()
                 Exit Sub
@@ -178,7 +178,11 @@ Public Class ExceptionHandlerDialog
             Dim fileLink As String =
                 $"{path}: file://{Me.ReportFileNameWithPath}"
             AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
-            AppendTextWithFontChange(rtb, text:="and stored in", newFont:=newFont, padRight:=0)
+            AppendTextWithFontChange(
+                rtb,
+                text:="and stored in",
+                newFont:=newFont,
+                padRight:=0)
             AppendTextWithFontChange(
                 rtb,
                 text:=GetProjectDataDirectory(),
@@ -265,7 +269,10 @@ Public Class ExceptionHandlerDialog
     ''' <param name="exceptionStartingString">
     '''  The expected starting string for the exception section.
     ''' </param>
-    Private Sub ReportInvalidErrorFile(currentLine As String, exceptionStartingString As String)
+    Private Sub ReportInvalidErrorFile(
+        currentLine As String,
+        exceptionStartingString As String)
+
         Throw New NotImplementedException()
     End Sub
 
