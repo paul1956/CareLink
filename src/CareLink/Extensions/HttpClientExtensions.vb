@@ -220,7 +220,8 @@ Friend Module HttpClientExtensions
         Next
 
         Dim content As New FormUrlEncodedContent(nameValueCollection)
-        Dim response As HttpResponseMessage = httpClient.PostAsync(requestUri, content).Result
+        Dim response As HttpResponseMessage =
+            httpClient.PostAsync(requestUri, content).Result
         Return response.Content.ReadAsStringAsync().Result
     End Function
 

@@ -28,7 +28,9 @@ Public Class SystemVariablesTests
         Dim highLimitMgdl As Single = GetTirHighLimit()
         highLimitMgdl.Should().Be(expected:=TirHighMmDl180)
         Dim convertedHighLimit As Single = highLimitMmol * 18.0F
-        convertedHighLimit.Should().BeApproximately(expectedValue:=highLimitMgdl, precision:=0.01F)
+        convertedHighLimit.Should().BeApproximately(
+            expectedValue:=highLimitMgdl,
+            precision:=0.01F)
     End Sub
 
     <Fact>
@@ -40,7 +42,9 @@ Public Class SystemVariablesTests
         Dim lowLimitMgdl As Single = GetTirLowLimit()
         lowLimitMgdl.Should().Be(expected:=TirLowMmol70)
         Dim convertedLowLimit As Single = lowLimitMmol * 18.0F
-        convertedLowLimit.Should().BeApproximately(expectedValue:=lowLimitMgdl, precision:=0.5F)
+        convertedLowLimit.Should().BeApproximately(
+            expectedValue:=lowLimitMgdl,
+            precision:=0.5F)
     End Sub
 
     <Fact>

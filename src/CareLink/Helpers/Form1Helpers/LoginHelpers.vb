@@ -37,7 +37,9 @@ Friend Module LoginHelpers
 
         Dim dataSource As New List(Of KeyValuePair(Of String, String))
         For Each kvp As KeyValuePair(Of String, Object) In dic
-            dataSource.Add(item:=KeyValuePair.Create(kvp.Key, value:=CType(kvp.Value, String)))
+            Dim item As KeyValuePair(Of String, String) =
+                KeyValuePair.Create(kvp.Key, value:=CType(kvp.Value, String))
+            dataSource.Add(item)
         Next
         Return dataSource
     End Function
@@ -156,7 +158,10 @@ Friend Module LoginHelpers
                     ReportLoginStatus(owner.LoginStatus)
                     Return False
                 End If
-                ReportLoginStatus(owner.LoginStatus, hasErrors:=RecentDataEmpty, lastErrorMessage)
+                ReportLoginStatus(
+                    owner.LoginStatus,
+                    hasErrors:=RecentDataEmpty,
+                    lastErrorMessage)
                 owner.MenuShowMiniDisplay.Visible = True
                 fromFile = False
                 owner.TabControlPage1.Visible = True
@@ -251,7 +256,8 @@ Friend Module LoginHelpers
     End Function
 
     ''' <summary>
-    '''  Completes initialization of the <paramref name="mainForm"/> after login and data loading.
+    '''  Completes initialization of the <paramref name="mainForm"/>
+    '''  after login and data loading.
     ''' </summary>
     ''' <param name="mainForm">The main application form.</param>
     Friend Sub FinishInitialization(mainForm As Form1)
@@ -274,7 +280,8 @@ Friend Module LoginHelpers
     End Function
 
     ''' <summary>
-    '''  Converts a PNG <see cref="Bitmap"/> to an <see cref="Icon"/> object (with 32x32 size).
+    '''  Converts a PNG <see cref="Bitmap"/> to an <see cref="Icon"/>
+    '''  object (with 32x32 size).
     ''' </summary>
     ''' <param name="original">The <see cref="Bitmap"/> to convert.</param>
     ''' <returns>

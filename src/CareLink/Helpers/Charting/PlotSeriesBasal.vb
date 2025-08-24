@@ -35,8 +35,10 @@ Friend Module PlotSeriesBasal
         lineColor As Color,
         tag As String)
 
-        If basalSeries.Points.Count > 0 AndAlso (Not basalSeries.Points.Last.IsEmpty) AndAlso
-           New OADate(oADateAsDouble:=basalSeries.Points.Last.XValue).Within6Minutes(xValue) Then
+        If basalSeries.Points.Count > 0 AndAlso
+           (Not basalSeries.Points.Last.IsEmpty) AndAlso
+           New OADate(oADateAsDouble:=basalSeries.Points.Last.XValue).Within6Min(xValue) Then
+
             basalSeries.Points.AddXY(basalSeries.Points.Last, Double.NaN)
             basalSeries.Points.Last().Color = Color.Transparent
             basalSeries.Points.Last().IsEmpty = True

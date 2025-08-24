@@ -8,11 +8,11 @@ Public Module SystemVariables
 
 #Region "Used for painting"
 
-    Friend ReadOnly s_activeInsulinMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
-    Friend ReadOnly s_summaryMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
-    Friend ReadOnly s_summaryMarkerMealDictionary As New Dictionary(Of OADate, Single)
-    Friend ReadOnly s_treatmentMarkerInsulinDictionary As New Dictionary(Of OADate, Single)
-    Friend ReadOnly s_treatmentMarkerMealDictionary As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_activeInsulinMarkers As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_summaryMarkersInsulin As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_summaryMarkersMeal As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_treatmentMarkersInsulin As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_treatmentMarkersMeal As New Dictionary(Of OADate, Single)
 
 #End Region ' Used for painting
 
@@ -70,7 +70,8 @@ Public Module SystemVariables
     '''  Gets the above hyperglycemia limit as a tuple of unsigned integer and string.
     ''' </summary>
     ''' <returns>
-    '''  A tuple containing the above hyper limit as an unsigned integer and its string representation.
+    '''  A tuple containing the above hyper limit as an unsigned integer and
+    '''  its string representation.
     ''' </returns>
     Friend Function GetAboveHyperLimit() As (int As Integer, Str As String)
         Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.RoundToSingle(digits:=1)
@@ -83,7 +84,8 @@ Public Module SystemVariables
     '''  Gets the below hypoglycemia limit as a tuple of unsigned integer and string.
     ''' </summary>
     ''' <returns>
-    '''  A tuple containing the below hypo limit as an unsigned integer and its string representation.
+    '''  A tuple containing the below hypo limit as an unsigned integer and
+    '''  its string representation.
     ''' </returns>
     Friend Function GetBelowHypoLimit() As (Uint As UInteger, Str As String)
         Dim belowHyperLimit As Single = PatientData.BelowHypoLimit.RoundToSingle(digits:=1)
@@ -157,7 +159,8 @@ Public Module SystemVariables
                 Return (0, "  ???")
             End If
             Dim inTightRangeCount As Integer = CountSgInTightRange(sgList:=s_sgRecords)
-            Dim percentInTightRange As UInteger = CUInt(inTightRangeCount / validSgCount * 100)
+            Dim percentInTightRange As UInteger =
+                CUInt(inTightRangeCount / validSgCount * 100)
             Return (percentInTightRange, percentInTightRange.ToString())
         End If
 

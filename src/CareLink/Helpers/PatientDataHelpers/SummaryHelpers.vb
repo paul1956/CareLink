@@ -20,8 +20,8 @@ Friend Module SummaryHelpers
         {"INITIAL_ALERT_LONG", "90 minutes"}}
 
     ''' <summary>
-    '''  Stores extracted variable names (words in parentheses) from notification messages,
-    '''  keyed by the message key.
+    '''  Stores extracted variable names (words in parentheses) from
+    '''  notification messages, keyed by the message key.
     ''' </summary>
     Private s_wordsInParentheses As Dictionary(Of String, List(Of String))
 
@@ -101,133 +101,9 @@ Friend Module SummaryHelpers
         Dim triggeredDate As String = String.Empty
         Dim unitsRemaining As String = Nothing
         Try
-            If s_notificationMessages.TryGetValue(key:=faultId, value:=originalMessage) Then
-                Dim list As List(Of String) = s_wordsInParentheses(key:=faultId)
-                If list.Count = 0 Then
-                    Return originalMessage
-                End If
-                For Each keyWord As String In list
-                    Dim key As String
-                    If keyWord = "triggeredDateTime" Then
-                        key = NameOf(ClearedNotifications.dateTime)
-                        If jsonDictionary.TryGetValue(keyWord, value:=triggeredDate) Then
-                            triggeredDate =
-                                $" { triggeredDate.ParseDate(key).ToNotificationString}"
-                        ElseIf jsonDictionary.TryGetValue(key, value:=triggeredDate) Then
-                            triggeredDate =
-                                $" { triggeredDate.ParseDate(key).ToNotificationString}"
-                        Else
-                            Stop
-                        End If
-                    ElseIf keyWord = "secondaryTime" Then
-                        key = NameOf(ActiveNotification.SecondaryTime)
-                        If jsonDictionary.TryGetValue(key, value:=secondaryTime) Then
-                            secondaryTime =
-                                $" { secondaryTime.ParseDate(key).ToNotificationString}"
-                        Else
-                            Stop
-                        End If
-                    ElseIf keyWord = "dateTime" Then
-                        Stop
-                    Else
-                        Dim jsonString As String = String.Empty
-                        key = "AdditionalInfo"
-                        If jsonDictionary.TryGetValue(key, value:=jsonString) Then
-                            Dim addInfo As Dictionary(Of String, String) =
-                                GetAdditionalInformation(jsonString)
-                            key = keyWord
-                            Select Case keyWord
-                                Case "basalName"
-                                    If addInfo.TryGetValue(key, value:=basalName) Then
-                                        basalName = basalName.ToTitle(separateDigits:=True)
-                                    Else
-                                        Stop
-                                    End If
-                                Case "bgValue"
-                                    If addInfo.TryGetValue(key, value:=bgValue) Then
-                                    Else
-                                        Stop
-                                    End If
-                                Case "criticalLow"
-                                    If addInfo.TryGetValue(key, value:=criticalLow) Then
-                                    Else
-                                        Stop
-                                    End If
-                                Case "deliveredAmount"
-                                    If addInfo.TryGetValue(key, value:=deliveredAmount) Then
-                                    Else
-                                        Stop
-                                    End If
-                                Case "lastSetChange"
-                                    lastSetChange =
-                                        s_oneToNineteen(index:=CInt(addInfo(key))).ToTitle
-                                Case "notDeliveredAmount"
-                                    If addInfo.TryGetValue(key, value:=notDeliveredAmount) Then
-                                    Else
-                                        Stop
-                                    End If
-                                Case "programmedAmount"
-                                    If addInfo.TryGetValue(key, value:=programmedAmount) Then
-                                    Else
-                                        Stop
-                                    End If
-                                    Stop
-                                Case "reminderName"
-                                    If addInfo.TryGetValue(key, value:=reminderName) Then
-                                    Else
-                                        Stop
-                                    End If
-                                Case "sensorUpdateTime"
-                                    If addInfo.TryGetValue(key, value:=sensorUpdateTime) Then
-                                    Else
-                                        sensorUpdateTime =
-                                            GetSensorUpdateTime(key:=sensorUpdateTime)
-                                    End If
-                                Case "sg"
-                                    If addInfo.TryGetValue(key, value:=sg) Then
-                                        If faultId = "827" Then
-                                            lowLimit =
-                                                If(CSng(sg) < 65 AndAlso CSng(sg) > 20,
-                                                   "64",
-                                                   "3.5")
-                                        End If
-                                    Else
-                                        Stop
-                                    End If
-                                Case "units"
-                        ' handled elsewhere
-                                Case "unitsRemaining"
-                                    If addInfo.TryGetValue(key, value:=unitsRemaining) Then
-                                    Else
-                                        unitsRemaining = "0"
-                                    End If
-                            End Select
-                        End If
-                    End If
-                Next
-
-                Return originalMessage _
-                    .Replace(oldValue:="(basalName)", newValue:=basalName) _
-                    .Replace(oldValue:="(bgValue)", newValue:=bgValue) _
-                    .Replace(oldValue:="(criticalLow)", newValue:=criticalLow) _
-                    .Replace(oldValue:="(deliveredAmount)", newValue:=deliveredAmount) _
-                    .Replace(oldValue:="(notDeliveredAmount)", newValue:=notDeliveredAmount) _
-                    .Replace(oldValue:="(programmedAmount)", newValue:=programmedAmount) _
-                    .Replace(oldValue:="(deliveredAmount)", newValue:=deliveredAmount) _
-                    .Replace(oldValue:="(lastSetChange)", newValue:=lastSetChange) _
-                    .Replace(oldValue:="(lowLimit)", newValue:=lowLimit) _
-                    .Replace(oldValue:="(notDeliveredAmount)", newValue:=notDeliveredAmount) _
-                    .Replace(oldValue:="(programmedAmount)", newValue:=programmedAmount) _
-                    .Replace(oldValue:="(reminderName)", newValue:=reminderName) _
-                    .Replace(oldValue:="(secondaryTime)", newValue:=secondaryTime) _
-                    .Replace(oldValue:="(sensorUpdateTime)", newValue:=sensorUpdateTime) _
-                    .Replace(oldValue:="(suspendedSince)", newValue:=s_suspendedSince) _
-                    .Replace(oldValue:="(sg)", newValue:=sg) _
-                    .Replace(oldValue:="(triggeredDateTime)", newValue:=triggeredDate) _
-                    .Replace(oldValue:="(units)", newValue:=BgUnits()) _
-                    .Replace(oldValue:="(unitsRemaining)", newValue:=unitsRemaining) _
-                    .Replace(oldValue:="(vbCrLf)", newValue:=vbCrLf)
-            Else
+            Dim faultIdFound As Boolean =
+                s_notificationMessages.TryGetValue(key:=faultId, value:=originalMessage)
+            If Not faultIdFound Then
                 Dim prompt As String = $"faultId = '{faultId}'"
                 If Debugger.IsAttached Then
                     Stop
@@ -240,6 +116,131 @@ Friend Module SummaryHelpers
                 End If
                 Return prompt
             End If
+            Dim list As List(Of String) = s_wordsInParentheses(key:=faultId)
+            If list.Count = 0 Then
+                Return originalMessage
+            End If
+            For Each keyWord As String In list
+                Dim key As String
+                If keyWord = "triggeredDateTime" Then
+                    key = NameOf(ClearedNotifications.dateTime)
+                    If jsonDictionary.TryGetValue(keyWord, value:=triggeredDate) Then
+                        triggeredDate =
+                            $" { triggeredDate.ParseDate(key).ToNotificationString}"
+                    ElseIf jsonDictionary.TryGetValue(key, value:=triggeredDate) Then
+                        triggeredDate =
+                            $" { triggeredDate.ParseDate(key).ToNotificationString}"
+                    Else
+                        Stop
+                    End If
+                ElseIf keyWord = "secondaryTime" Then
+                    key = NameOf(ActiveNotification.SecondaryTime)
+                    If jsonDictionary.TryGetValue(key, value:=secondaryTime) Then
+                        secondaryTime =
+                            $" { secondaryTime.ParseDate(key).ToNotificationString}"
+                    Else
+                        Stop
+                    End If
+                ElseIf keyWord = "dateTime" Then
+                    Stop
+                Else
+                    Dim jsonString As String = String.Empty
+                    key = "AdditionalInfo"
+                    If jsonDictionary.TryGetValue(key, value:=jsonString) Then
+                        Dim addInfo As Dictionary(Of String, String) =
+                            GetAdditionalInformation(jsonString)
+                        key = keyWord
+                        Select Case keyWord
+                            Case "basalName"
+                                If addInfo.TryGetValue(key, value:=basalName) Then
+                                    basalName = basalName.ToTitle(separateDigits:=True)
+                                Else
+                                    Stop
+                                End If
+                            Case "bgValue"
+                                If addInfo.TryGetValue(key, value:=bgValue) Then
+                                Else
+                                    Stop
+                                End If
+                            Case "criticalLow"
+                                If addInfo.TryGetValue(key, value:=criticalLow) Then
+                                Else
+                                    Stop
+                                End If
+                            Case "deliveredAmount"
+                                If addInfo.TryGetValue(key, value:=deliveredAmount) Then
+                                Else
+                                    Stop
+                                End If
+                            Case "lastSetChange"
+                                lastSetChange =
+                                    s_oneToNineteen(index:=CInt(addInfo(key))).ToTitle
+                            Case "notDeliveredAmount"
+                                If addInfo.TryGetValue(key, value:=notDeliveredAmount) Then
+                                Else
+                                    Stop
+                                End If
+                            Case "programmedAmount"
+                                If addInfo.TryGetValue(key, value:=programmedAmount) Then
+                                Else
+                                    Stop
+                                End If
+                                Stop
+                            Case "reminderName"
+                                If addInfo.TryGetValue(key, value:=reminderName) Then
+                                Else
+                                    Stop
+                                End If
+                            Case "sensorUpdateTime"
+                                If addInfo.TryGetValue(key, value:=sensorUpdateTime) Then
+                                Else
+                                    sensorUpdateTime =
+                                        GetSensorUpdateTime(key:=sensorUpdateTime)
+                                End If
+                            Case "sg"
+                                If addInfo.TryGetValue(key, value:=sg) Then
+                                    If faultId = "827" Then
+                                        lowLimit =
+                                            If(CSng(sg) < 65 AndAlso CSng(sg) > 20,
+                                               "64",
+                                               "3.5")
+                                    End If
+                                Else
+                                    Stop
+                                End If
+                            Case "units"
+                        ' handled elsewhere
+                            Case "unitsRemaining"
+                                If addInfo.TryGetValue(key, value:=unitsRemaining) Then
+                                Else
+                                    unitsRemaining = "0"
+                                End If
+                        End Select
+                    End If
+                End If
+            Next
+
+            Return originalMessage _
+                .Replace(oldValue:="(basalName)", newValue:=basalName) _
+                .Replace(oldValue:="(bgValue)", newValue:=bgValue) _
+                .Replace(oldValue:="(criticalLow)", newValue:=criticalLow) _
+                .Replace(oldValue:="(deliveredAmount)", newValue:=deliveredAmount) _
+                .Replace(oldValue:="(notDeliveredAmount)", newValue:=notDeliveredAmount) _
+                .Replace(oldValue:="(programmedAmount)", newValue:=programmedAmount) _
+                .Replace(oldValue:="(deliveredAmount)", newValue:=deliveredAmount) _
+                .Replace(oldValue:="(lastSetChange)", newValue:=lastSetChange) _
+                .Replace(oldValue:="(lowLimit)", newValue:=lowLimit) _
+                .Replace(oldValue:="(notDeliveredAmount)", newValue:=notDeliveredAmount) _
+                .Replace(oldValue:="(programmedAmount)", newValue:=programmedAmount) _
+                .Replace(oldValue:="(reminderName)", newValue:=reminderName) _
+                .Replace(oldValue:="(secondaryTime)", newValue:=secondaryTime) _
+                .Replace(oldValue:="(sensorUpdateTime)", newValue:=sensorUpdateTime) _
+                .Replace(oldValue:="(suspendedSince)", newValue:=s_suspendedSince) _
+                .Replace(oldValue:="(sg)", newValue:=sg) _
+                .Replace(oldValue:="(triggeredDateTime)", newValue:=triggeredDate) _
+                .Replace(oldValue:="(units)", newValue:=BgUnits()) _
+                .Replace(oldValue:="(unitsRemaining)", newValue:=unitsRemaining) _
+                .Replace(oldValue:="(vbCrLf)", newValue:=vbCrLf)
         Catch ex As Exception
             Stop
         End Try
@@ -316,7 +317,8 @@ Friend Module SummaryHelpers
                                 End If
                             End If
                             If kvp.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
-                                Dim question As String = jsonDictionary(key:="deliveredAmount")
+                                Dim question As String =
+                                    jsonDictionary(key:="deliveredAmount")
                                 If question.StartsWith(value:="3"c) Then
                                     message &= "Did you see drops at the end of the tubing?"
                                 Else
@@ -333,7 +335,8 @@ Friend Module SummaryHelpers
                                 MsgBox(
                                     heading:=$"{kvp.Value} is unknown Notification Messages",
                                     prompt:=String.Empty,
-                                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                                    buttonStyle:=MsgBoxStyle.OkOnly Or
+                                                 MsgBoxStyle.Exclamation,
                                     title:=GetTitleFromStack(stackFrame))
                             End If
                             message = kvp.Value.ToTitle
@@ -406,7 +409,9 @@ Friend Module SummaryHelpers
     ''' <typeparam name="T">The expected type of the value.</typeparam>
     ''' <param name="l">The list of <see cref="SummaryRecord"/> objects.</param>
     ''' <param name="key">The key to search for.</param>
-    ''' <param name="throwError">Whether to throw an exception if the key is not found.</param>
+    ''' <param name="throwError">
+    '''  Whether to throw an exception if the key is not found.
+    ''' </param>
     ''' <param name="defaultValue">
     '''  The default value to return if the key is not found and
     '''  <paramref name="throwError"/> is false.

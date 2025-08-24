@@ -170,7 +170,9 @@ Public Class CareLinkUserDataList
     Protected Overrides Sub OnInsertComplete(newIndex As Integer, value As Object)
         Dim c As CareLinkUserDataRecord = CType(value, CareLinkUserDataRecord)
         c.Parent = Me
-        Dim e As New ListChangedEventArgs(listChangedType:=ListChangedType.ItemAdded, newIndex)
+        Dim e As New ListChangedEventArgs(
+            listChangedType:=ListChangedType.ItemAdded,
+            newIndex)
         Me.OnListChanged(e)
     End Sub
 

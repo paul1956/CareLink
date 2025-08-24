@@ -9,7 +9,8 @@ Friend Module ChartingHelpers
     ''' <summary>
     '''  Check if the amount is the minimum basal rate or 0
     '''  (0.025 units per hour) considering floating-point precision.
-    '''  This is used to determine if the basal rate is effectively zero for charting purposes.
+    '''  This is used to determine if the basal rate is effectively zero
+    '''  for charting purposes.
     ''' </summary>
     ''' <param name="value">The amount to check.</param>
     ''' <returns>

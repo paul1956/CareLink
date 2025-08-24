@@ -6,8 +6,8 @@ Imports System.Globalization
 
 ''' <summary>
 '''  Represents a date and time value stored as an OLE Automation date (OADate).
-'''  Provides arithmetic, comparison, and conversion operators, as well as utility methods
-'''  for working with OADate values.
+'''  Provides arithmetic, comparison, and conversion operators,
+'''  as well as utility methods for working with OADate values.
 ''' </summary>
 <DebuggerDisplay("{GetDebuggerDisplay(),nq}")>
 Public Class OADate
@@ -22,7 +22,9 @@ Public Class OADate
     '''  Initializes a new instance of the <see cref="OADate"/> class
     '''  from a <see cref="Double"/> OADate value.
     ''' </summary>
-    ''' <param name="oADateAsDouble">The OLE Automation date as a <see cref="Double"/>.</param>
+    ''' <param name="oADateAsDouble">
+    '''  The OLE Automation date as a <see cref="Double"/>.
+    ''' </param>
     Public Sub New(oADateAsDouble As Double)
         _oADate = oADateAsDouble
     End Sub
@@ -182,7 +184,7 @@ Public Class OADate
     '''  <see langword="True"/> if within 6 minutes;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Public Function Within6Minutes(xValue As OADate) As Boolean
+    Public Function Within6Min(xValue As OADate) As Boolean
         Return ((Me + SixMinuteOADate) <= xValue) OrElse xValue < Me
     End Function
 

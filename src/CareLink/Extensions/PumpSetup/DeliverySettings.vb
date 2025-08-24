@@ -199,9 +199,9 @@ Friend Module DeliverySettings
                     Dim bolusType As String = If(presetBolus.BolusTypeNormal,
                                                  "Normal",
                                                  "Square")
-                    .AppendTextWithFontChange(
-                        text:=$"{Indent4}Bolus: {presetBolus.Bolus}{Indent4}Type: {bolusType}",
-                        newFont:=FixedWidthFont)
+                    Dim text As String =
+                        $"{Indent4}Bolus: {presetBolus.Bolus}{Indent4}Type: {bolusType}"
+                    .AppendTextWithFontChange(text, newFont:=FixedWidthFont)
                     If Not item.Value.BolusTypeNormal Then
                         .AppendTextWithFontChange(
                             text:=$"{Indent4}Duration: {presetBolus.Duration} hr",

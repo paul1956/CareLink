@@ -14,7 +14,8 @@ Public Class BgReading
         Me.Kind = "Marker"
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
-        Me.UnitValue = item.GetSingleFromJson(key:=NameOf(UnitValue), digits:=0, considerValue:=True)
+        Me.UnitValue =
+            item.GetSingleFromJson(key:=NameOf(UnitValue), digits:=0, considerValue:=True)
         Me.bgUnits = item.GetStringFromJson(key:=NameOf(bgUnits))
     End Sub
 

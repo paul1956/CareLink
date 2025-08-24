@@ -28,7 +28,8 @@ Public Class DataGridViewNumericUpDownColumn
     ''' <summary>
     '''  Represents the implicit cell that gets cloned when adding rows to the grid.
     ''' </summary>
-    <Browsable(Browsable), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
+    <Browsable(Browsable),
+     DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)>
     Public Overrides Property CellTemplate As DataGridViewCell
         Get
             Return MyBase.CellTemplate
@@ -53,8 +54,8 @@ Public Class DataGridViewNumericUpDownColumn
     '''  DataGridViewNumericUpDownCell cell type.
     ''' </summary>
     <Category("Appearance"),
-        DefaultValue(DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultDecimalPlaces),
-        Description("Indicates the number of decimal places to display.")>
+     DefaultValue(DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultDecimalPlaces),
+     Description("Indicates the number of decimal places to display.")>
     Public Property DecimalPlaces As Integer
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then
@@ -101,7 +102,8 @@ Public Class DataGridViewNumericUpDownColumn
     ''' <summary>
     '''  Replicates the Increment property of the DataGridViewNumericUpDownCell cell type.
     ''' </summary>
-    <Category("Data"), Description("Indicates the amount to increment or decrement on each button click.")>
+    <Category("Data"),
+     Description("Indicates the amount to increment/decrement on each button click.")>
     Public Property Increment As Decimal
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then

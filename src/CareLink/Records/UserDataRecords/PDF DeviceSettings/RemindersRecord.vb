@@ -32,15 +32,16 @@ Public Class RemindersRecord
         {"Meal 7", New MealStartEndRecord()},
         {"Meal 8", New MealStartEndRecord()}}
 
-    Public Property PersonalReminders As New Dictionary(Of String, PersonalRemindersRecord) From {
-        {"Reminder 1", New PersonalRemindersRecord()},
-        {"Reminder 2", New PersonalRemindersRecord()},
-        {"Reminder 3", New PersonalRemindersRecord()},
-        {"Reminder 4", New PersonalRemindersRecord()},
-        {"Reminder 5", New PersonalRemindersRecord()},
-        {"Reminder 6", New PersonalRemindersRecord()},
-        {"BG Check", New PersonalRemindersRecord()},
-        {"Medication", New PersonalRemindersRecord()}}
+    Public Property PersonalReminders As New Dictionary(Of String, PersonalRemindersRecord) _
+        From {
+            {"Reminder 1", New PersonalRemindersRecord()},
+            {"Reminder 2", New PersonalRemindersRecord()},
+            {"Reminder 3", New PersonalRemindersRecord()},
+            {"Reminder 4", New PersonalRemindersRecord()},
+            {"Reminder 5", New PersonalRemindersRecord()},
+            {"Reminder 6", New PersonalRemindersRecord()},
+            {"BG Check", New PersonalRemindersRecord()},
+            {"Medication", New PersonalRemindersRecord()}}
 
     Public Property SetChange As String
 End Class

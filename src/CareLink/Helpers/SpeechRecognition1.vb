@@ -121,10 +121,16 @@ Friend Module SpeechSupport
                     s_speechErrorReported = True
                     Dim details As New StringBuilder()
                     details.AppendLine("Details:")
-                    details.AppendLine($"    Audio level:               {e.AudioLevel}")
-                    details.AppendLine($"    Audio position:            {e.AudioPosition}")
-                    details.AppendLine($"    Audio signal problem:      {e.AudioSignalProblem}")
-                    details.AppendLine($"    Recognizer audio position: {e.RecognizerAudioPosition}")
+                    Dim value As String = $"    Audio level:               {e.AudioLevel}"
+                    details.AppendLine(value)
+                    value = $"    Audio signal problem:      {e.AudioSignalProblem}"
+                    details.AppendLine(value)
+                    value = $"    Audio position:            {e.AudioPosition}"
+                    details.AppendLine(value)
+                    value = $"    Audio signal problem:      {e.AudioSignalProblem}"
+                    details.AppendLine(value)
+                    value = $"    Recognizer audio position: {e.RecognizerAudioPosition}"
+                    details.AppendLine(value)
 
                     Dim page As New TaskDialogPage
                     MsgBox(
@@ -178,7 +184,8 @@ Friend Module SpeechSupport
     End Function
 
     ''' <summary>
-    '''  Handles the SpeechRecognized event, processes recognized speech, and triggers appropriate actions.
+    '''  Handles the SpeechRecognized event, processes recognized speech,
+    '''  and triggers appropriate actions.
     ''' </summary>
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">Event arguments containing recognition results.</param>
@@ -201,14 +208,17 @@ Friend Module SpeechSupport
         If recognizedText.StartsWith("carelink") Then
             If confidence >= My.Settings.SystemSpeechRecognitionThreshold Then
                 s_speechWakeWordFound = True
-                message = $"Heard: Wake word {recognizedText} with confidence {confidence}%), waiting.."
+                message =
+                    $"Heard: Wake word {recognizedText} with confidence " &
+                    $"{confidence}%), waiting.."
                 Debug.WriteLine(message)
                 Form1.StatusStripSpeech.Text = message
                 Application.DoEvents()
                 If recognizedText = "carelink" Then
                     Exit Sub
                 End If
-                recognizedText = recognizedText.Replace(oldValue:="carelink", newValue:="").TrimEnd
+                recognizedText =
+                    recognizedText.Replace(oldValue:="carelink", newValue:="").TrimEnd
             Else
                 message = $"Rejected: {recognizedText} with confidence {confidence}%"
                 Debug.WriteLine(message)
@@ -382,7 +392,8 @@ Friend Module SpeechSupport
     End Sub
 
     ''' <summary>
-    '''  Speaks the specified text using the speech synthesizer, with duplicate and timing checks.
+    '''  Speaks the specified text using the speech synthesizer,
+    '''  with duplicate and timing checks.
     ''' </summary>
     ''' <param name="textToSpeak">The text to be spoken.</param>
     Friend Sub PlayText(textToSpeak As String)

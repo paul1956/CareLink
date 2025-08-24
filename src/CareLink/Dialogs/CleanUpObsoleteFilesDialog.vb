@@ -73,6 +73,17 @@ Public Class CleanupStaleFilesDialog
         Me.Close()
     End Sub
 
+    ''' <summary>
+    '''  Deletes the files and directories selected in the TreeView.
+    '''  If 'confirm' is True, prompts the user for confirmation before deleting each file.
+    ''' </summary>
+    ''' <param name="confirm">
+    '''  If True, prompts for confirmation before deleting each file.
+    ''' </param>
+    ''' <returns>
+    '''  DialogResult.OK if all deletions were successful or ignored,
+    '''  DialogResult.Cancel if the operation was cancelled by the user.
+    ''' </returns>
     Private Function OptionalConfirmFileDelete(confirm As Boolean) As DialogResult
         Dim result As DialogResult = DialogResult.OK
         With Me.TreeView1
@@ -119,6 +130,12 @@ Public Class CleanupStaleFilesDialog
         Return result
     End Function
 
+    ''' <summary>
+    '''  Handles the AfterCheck event to update parent node check states
+    '''  based on the checked state of their child nodes.
+    ''' </summary>
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">The event data.</param>
     Private Sub TreeView1_AfterCheck(sender As Object, e As TreeViewEventArgs) _
         Handles TreeView1.AfterCheck
 
@@ -131,6 +148,14 @@ Public Class CleanupStaleFilesDialog
         End If
     End Sub
 
+    ''' <summary>
+    '''  Handles the BeforeCheck event to control which nodes
+    '''  can be checked or unchecked.
+    '''  Prevents checking/unchecking of certain nodes based on their text
+    '''  and the action taken.
+    ''' </summary>
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">The event data.</param>
     Private Sub TreeView1_BeforeCheck(sender As Object, e As TreeViewCancelEventArgs) _
         Handles TreeView1.BeforeCheck
 

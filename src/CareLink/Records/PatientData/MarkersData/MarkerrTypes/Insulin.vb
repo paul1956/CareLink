@@ -73,7 +73,8 @@ Public Class Insulin
     Public Property TimestampAsString As String
 
     ''' <summary>
-    '''  Gets the timestamp as a <see cref="Date"/> object, parsed from <see cref="TimestampAsString"/>.
+    '''  Gets the timestamp as a <see cref="Date"/> object,
+    '''  parsed from <see cref="TimestampAsString"/>.
     ''' </summary>
     <DisplayName("Timestamp As Date")>
     <Column(Order:=4, TypeName:="Date")>

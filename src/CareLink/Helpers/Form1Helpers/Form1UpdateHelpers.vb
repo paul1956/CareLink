@@ -7,7 +7,8 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 
 ''' <summary>
-'''  Module containing helper methods for updating and processing data in <see cref="Form1"/>.
+'''  Module containing helper methods for updating and
+'''  processing data in <see cref="Form1"/>.
 ''' </summary>
 ''' <remarks>
 '''  Provides utility functions for data transformation, file name generation,
@@ -25,7 +26,9 @@ Friend Module Form1UpdateHelpers
     ''' </summary>
     ''' <param name="s">The date string to parse.</param>
     ''' <param name="key">The key associated with the date value.</param>
-    ''' <param name="provider">The format provider to use for formatting the date.</param>
+    ''' <param name="provider">
+    '''  The format provider to use for formatting the date.
+    ''' </param>
     ''' <returns>
     '''  The formatted date string if parsing succeeds;
     '''  otherwise, an empty string.
@@ -377,9 +380,9 @@ Friend Module Form1UpdateHelpers
                         recordNumber,
                         key:="medicalDeviceInformation",
                         listOfSummaryRecords:=s_listOfSummaryRecords)
-                    message =
-                        $"{PatientData.MedicalDeviceInformation.DeviceSerialNumber} Details..."
-                    mainForm.SerialNumberButton.Text = message
+                    Dim deviceSerialNumber As String =
+                        PatientData.MedicalDeviceInformation.DeviceSerialNumber
+                    mainForm.SerialNumberButton.Text = $"{deviceSerialNumber} Details..."
 
                 Case NameOf(ServerDataIndexes.medicalDeviceTime)
                     message = kvp.Value.Epoch2DateTimeString

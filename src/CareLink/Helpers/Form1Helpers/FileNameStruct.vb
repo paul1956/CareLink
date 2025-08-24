@@ -28,7 +28,8 @@ Friend Structure FileNameStruct
     End Sub
 
     ''' <summary>
-    '''  Determines whether the specified object is equal to the current <see cref="FileNameStruct"/>.
+    '''  Determines whether the specified object is equal
+    '''  to the current <see cref="FileNameStruct"/>.
     ''' </summary>
     ''' <param name="obj">The object to compare with the current structure.</param>
     ''' <returns>

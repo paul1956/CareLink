@@ -14,8 +14,9 @@ Public Class Calibration
         Me.Kind = "Marker"
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
-        Me.CalibrationSuccess = item.GetBooleanFromJson(NameOf(CalibrationSuccess))
-        Me.UnitValue = item.GetSingleFromJson(NameOf(UnitValue), digits:=0, considerValue:=True)
+        Me.CalibrationSuccess = item.GetBooleanFromJson(key:=NameOf(CalibrationSuccess))
+        Me.UnitValue =
+            item.GetSingleFromJson(NameOf(UnitValue), digits:=0, considerValue:=True)
         Me.bgUnits = item.GetStringFromJson(NameOf(bgUnits))
     End Sub
 

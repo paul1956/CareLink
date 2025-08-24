@@ -553,7 +553,7 @@ Public Class Form1
             End If
             e.PostPaintSupport(
                 chartRelativePosition:=_activeInsulinChartAbsoluteRectangle,
-                insulinDictionary:=s_activeInsulinMarkerInsulinDictionary,
+                insulinDictionary:=s_activeInsulinMarkers,
                 mealDictionary:=Nothing,
                 offsetInsulinImage:=True,
                 paintOnY2:=True)
@@ -584,8 +584,8 @@ Public Class Form1
             End If
             e.PostPaintSupport(
                 chartRelativePosition:=_summaryChartAbsoluteRectangle,
-                insulinDictionary:=s_summaryMarkerInsulinDictionary,
-                mealDictionary:=s_summaryMarkerMealDictionary,
+                insulinDictionary:=s_summaryMarkersInsulin,
+                mealDictionary:=s_summaryMarkersMeal,
                 offsetInsulinImage:=True,
                 paintOnY2:=True)
         End SyncLock
@@ -618,8 +618,8 @@ Public Class Form1
             End If
             e.PostPaintSupport(
                 chartRelativePosition:=_treatmentMarkerAbsoluteRectangle,
-                insulinDictionary:=s_treatmentMarkerInsulinDictionary,
-                mealDictionary:=s_treatmentMarkerMealDictionary,
+                insulinDictionary:=s_treatmentMarkersInsulin,
+                mealDictionary:=s_treatmentMarkersMeal,
                 offsetInsulinImage:=False,
                 paintOnY2:=False)
         End SyncLock
@@ -4762,7 +4762,7 @@ Public Class Form1
                 .PlotSuspendArea(SuspendSeries:=Me.ActiveInsulinSuspendSeries)
                 .PlotMarkers(
                     timeChangeSeries:=Me.ActiveInsulinTimeChangeSeries,
-                    markerInsulinDictionary:=s_activeInsulinMarkerInsulinDictionary,
+                    markerInsulinDictionary:=s_activeInsulinMarkers,
                     markerMealDictionary:=Nothing)
                 .PlotSgSeries(HomePageMealRow:=GetYMinValueFromNativeMmolL())
                 .PlotHighLowLimitsAndTargetSg(targetSsOnly:=True)
@@ -4805,8 +4805,8 @@ Public Class Form1
                 .PlotSuspendArea(SuspendSeries:=Me.SummarySuspendSeries)
                 .PlotMarkers(
                     timeChangeSeries:=Me.SummaryTimeChangeSeries,
-                    markerInsulinDictionary:=s_summaryMarkerInsulinDictionary,
-                    markerMealDictionary:=s_summaryMarkerMealDictionary)
+                    markerInsulinDictionary:=s_summaryMarkersInsulin,
+                    markerMealDictionary:=s_summaryMarkersMeal)
                 .PlotSgSeries(HomePageMealRow:=GetYMinValueFromNativeMmolL())
                 .PlotHighLowLimitsAndTargetSg(targetSsOnly:=False)
                 Application.DoEvents()

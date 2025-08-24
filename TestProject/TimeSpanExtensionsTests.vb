@@ -16,7 +16,10 @@ Public Class TimeSpanExtensionsTests
     <InlineData(25, "1 day, 1 hour")>
     <InlineData(48, "2 days")>
     <InlineData(49, "2 days, 1 hour")>
-    Public Sub HoursToDaysAndHours_ReturnsExpectedString(hours As Integer, expected As String)
+    Public Sub HoursToDaysAndHours_ReturnsExpectedString(
+        hours As Integer,
+        expected As String)
+
         Dim result As String = HoursToDaysAndHours(hours)
         result.Should().Be(expected)
     End Sub
@@ -33,7 +36,10 @@ Public Class TimeSpanExtensionsTests
     <InlineData(1440, "1 day")>
     <InlineData(1500, "1 day, 1 hour")>
     <InlineData(1501, "1 day, 1 hour, 1 minute")>
-    Public Sub MinutesToDaysHoursMinutes_ReturnsExpectedString(minutes As Integer, expected As String)
+    Public Sub MinutesToDaysHoursMinutes_ReturnsExpectedString(
+        minutes As Integer,
+        expected As String)
+
         Dim result As String = MinutesToDaysHoursMinutes(minutes)
         result.Should().Be(expected)
     End Sub

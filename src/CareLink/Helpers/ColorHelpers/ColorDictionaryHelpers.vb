@@ -19,7 +19,8 @@ Friend Module ColorDictionaryHelpers
         {"Time Change", KnownColor.White}}
 
     ''' <summary>
-    '''  Gets the <see cref="Color"/> for a given legend text, applying transparency for "Suspend".
+    '''  Gets the <see cref="Color"/> for a given legend text,
+    '''  applying transparency for "Suspend".
     ''' </summary>
     ''' <param name="key">The legend text key.</param>
     ''' <returns>The corresponding <see cref="Color"/>.</returns>
@@ -32,15 +33,19 @@ Friend Module ColorDictionaryHelpers
     End Function
 
     ''' <summary>
-    '''  Gets a <see cref="BindingSource"/> for the color dictionary, suitable for data binding.
+    '''  Gets a <see cref="BindingSource"/> for the color dictionary,
+    '''  suitable for data binding.
     ''' </summary>
-    ''' <returns>A <see cref="BindingSource"/> bound to <see cref="GraphColorDictionary"/>.</returns>
+    ''' <returns>
+    '''  A <see cref="BindingSource"/> bound to <see cref="GraphColorDictionary"/>.
+    ''' </returns>
     Public Function GetColorDictionaryBindingSource() As BindingSource
         Return New BindingSource(dataSource:=GraphColorDictionary, dataMember:=Nothing)
     End Function
 
     ''' <summary>
-    '''  Loads the color dictionary from a file, updating <see cref="KnownColor"/> for existing keys.
+    '''  Loads the color dictionary from a file, updating <see cref="KnownColor"/>
+    '''  for existing keys.
     ''' </summary>
     Public Sub GetColorDictionaryFromFile()
 
@@ -66,7 +71,8 @@ Friend Module ColorDictionaryHelpers
     End Sub
 
     ''' <summary>
-    '''  Updates the color dictionary with a new <see cref="KnownColor"/> for the specified key.
+    '''  Updates the color dictionary with a new <see cref="KnownColor"/>
+    '''  for the specified key.
     ''' </summary>
     ''' <param name="key">The legend text key.</param>
     ''' <param name="item">The <see cref="KnownColor"/> to assign.</param>
@@ -75,14 +81,16 @@ Friend Module ColorDictionaryHelpers
     End Sub
 
     ''' <summary>
-    '''  Writes the current color dictionary to a file, including contrasting background colors.
+    '''  Writes the current color dictionary to a file,
+    '''  including contrasting background colors.
     ''' </summary>
     Public Sub WriteColorDictionaryToFile()
         Using stream As FileStream = File.OpenWrite(path:=GetGraphColorsFileNameWithPath())
             Using sw As New StreamWriter(stream)
                 sw.WriteLine($"Key,ForegroundColor,BackgroundColor")
                 For Each kvp As KeyValuePair(Of String, KnownColor) In GraphColorDictionary
-                    Dim contrastingColor As KnownColor = GetContrastingKnownColor(knownColor:=kvp.Value)
+                    Dim contrastingColor As KnownColor =
+                        GetContrastingKnownColor(knownColor:=kvp.Value)
                     sw.WriteLine(value:=$"{kvp.Key},{kvp.Value},{contrastingColor}")
                 Next
                 sw.Flush()

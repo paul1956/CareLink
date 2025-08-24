@@ -81,8 +81,12 @@ Public Class SummaryRecord
     ''' </param>
     ''' <param name="key">The key as a <see cref="ServerDataIndexes"/> enum value.</param>
     ''' <param name="value">The value associated with the key.</param>
-    Protected Friend Sub New(recordNumber As Single, key As ServerDataIndexes, value As String)
-        Me.New(recordNumber, key.ToString, value, "")
+    Protected Friend Sub New(
+        recordNumber As Single,
+        key As ServerDataIndexes,
+        value As String)
+
+        Me.New(recordNumber, key:=key.ToString, value, message:="")
     End Sub
 
     ''' <summary>

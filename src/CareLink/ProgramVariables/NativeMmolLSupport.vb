@@ -18,7 +18,8 @@ Public Module NativeMmolLSupport
     End Property
 
     ''' <summary>
-    '''  Gets the number of Precision Digits for String conversion based on the current mmol/L setting.
+    '''  Gets the number of Precision Digits for String conversion based
+    '''  on the current mmol/L setting.
     ''' </summary>
     ''' <returns>if MmolL 2 or 0 if mg/dL </returns>
     Public Function GetPrecisionDigits() As Integer

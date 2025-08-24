@@ -349,9 +349,6 @@ Public Class Client2
         configJsonElement As JsonElement,
         token_data As JsonElement) As Task(Of Dictionary(Of String, String))
 
-        Const key As String = "baseUrlCareLink"
-        Dim url As String =
-            $"{CStr(configJsonElement.ConvertElementToDictionary(key))}/links/patients"
         Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
         headers(key:="mag-identifier") =
             CStr(token_data.ConvertElementToDictionary(key:="mag-identifier"))
@@ -359,11 +356,14 @@ Public Class Client2
             $"Bearer {CStr(token_data.ConvertElementToDictionary(key:="access_token"))}"
 
         For Each header As KeyValuePair(Of String, String) In headers
-            _httpClient.DefaultRequestHeaders.Add(header.Key, header.Value)
+            _httpClient.DefaultRequestHeaders.Add(name:=header.Key, header.Value)
         Next
 
         _lastHttpStatusCode = 0
-        Using response As HttpResponseMessage = Await _httpClient.GetAsync(url)
+        Const key As String = "baseUrlCareLink"
+        Dim requestUri As String =
+            $"{CStr(configJsonElement.ConvertElementToDictionary(key))}/links/patients"
+        Using response As HttpResponseMessage = Await _httpClient.GetAsync(requestUri)
             _lastHttpStatusCode = response.StatusCode
             Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 

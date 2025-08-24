@@ -46,7 +46,9 @@ Public Class SupportedReportRecord
     <Column(Order:=3, TypeName:=NameOf([String]))>
     Public Property notFor As String
 
-    Private Shared Function kvpToString(forList As List(Of Dictionary(Of String, String))) As StringBuilder
+    Private Shared Function kvpToString(
+        forList As List(Of Dictionary(Of String, String))) As StringBuilder
+
         Dim sb As New StringBuilder
         For Each dic As Dictionary(Of String, String) In forList
             For Each kvp As KeyValuePair(Of String, String) In dic
