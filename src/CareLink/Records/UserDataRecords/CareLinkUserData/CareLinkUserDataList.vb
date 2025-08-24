@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.Text
+Imports DocumentFormat.OpenXml.Math
 
 ''' <summary>
 '''  Represents a collection of <see cref="CareLinkUserDataRecord"/> objects
@@ -112,7 +113,7 @@ Public Class CareLinkUserDataList
         Get
             Dim message As String
             If String.IsNullOrWhiteSpace(value:=itemName) Then
-                message = "Key may not be Nothing, in CareLinkUserDataList.Item"
+                message = $"Key may not be Nothing, in {functionName}"
                 Throw New KeyNotFoundException(message)
             End If
             Try
@@ -126,8 +127,10 @@ Public Class CareLinkUserDataList
             Catch ex As Exception
                 Return New CareLinkUserDataRecord(parent:=Me)
             End Try
+            Const functionName As String =
+                NameOf(CareLinkUserDataList) & NameOf(CareLinkUserDataList.Item)
             message =
-                $"Key '{itemName}' Not Present in Dictionary, in CareLinkUserDataList.Item"
+                $"Key '{itemName}' Not Present in Dictionary, in {functionName}"
             Throw New KeyNotFoundException(message)
         End Get
         Set(Value As CareLinkUserDataRecord)
@@ -139,7 +142,10 @@ Public Class CareLinkUserDataList
                     Exit Property
                 End If
             Next
-            Dim message As String = $"Key '{itemName}' Not Present in Dictionary"
+            Const functionName As String =
+                NameOf(CareLinkUserDataList) & NameOf(CareLinkUserDataList.Item)
+            Dim message As String =
+                $"Key '{itemName}' Not Present in Dictionary, in {functionName}"
             Throw New KeyNotFoundException(message)
         End Set
     End Property
@@ -170,7 +176,9 @@ Public Class CareLinkUserDataList
     Protected Overrides Sub OnInsertComplete(newIndex As Integer, value As Object)
         Dim c As CareLinkUserDataRecord = CType(value, CareLinkUserDataRecord)
         c.Parent = Me
-        Dim e As New ListChangedEventArgs(listChangedType:=ListChangedType.ItemAdded, newIndex)
+        Dim e As New ListChangedEventArgs(
+            listChangedType:=ListChangedType.ItemAdded,
+            newIndex)
         Me.OnListChanged(e)
     End Sub
 
