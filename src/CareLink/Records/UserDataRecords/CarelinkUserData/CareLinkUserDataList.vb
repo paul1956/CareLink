@@ -111,6 +111,8 @@ Public Class CareLinkUserDataList
     ''' </exception>
     Default Public Property Item(itemName As String) As CareLinkUserDataRecord
         Get
+            Const functionName As String =
+                NameOf(CareLinkUserDataList) & NameOf(CareLinkUserDataList.Item)
             Dim message As String
             If String.IsNullOrWhiteSpace(value:=itemName) Then
                 message = $"Key may not be Nothing, in {functionName}"
@@ -127,10 +129,8 @@ Public Class CareLinkUserDataList
             Catch ex As Exception
                 Return New CareLinkUserDataRecord(parent:=Me)
             End Try
-            Const functionName As String =
-                NameOf(CareLinkUserDataList) & NameOf(CareLinkUserDataList.Item)
             message =
-                $"Key '{itemName}' Not Present in Dictionary, in {functionName}"
+                $"Key '{itemName}' Not Present in Dictionary, in {FunctionName}"
             Throw New KeyNotFoundException(message)
         End Get
         Set(Value As CareLinkUserDataRecord)
