@@ -12,6 +12,19 @@
    </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestData\Test01.pdf" />
+    <None Remove="TestData\Test02.PDF" />
+    <None Remove="TestData\Test03.pdf" />
+    <None Remove="TestData\Test04.PDF" />
+    <None Remove="TestData\Test05.PDF" />
+    <None Remove="TestData\Test06.pdf" />
+    <None Remove="TestData\Test07.pdf" />
+    <None Remove="TestData\Test08.PDF" />
+    <None Remove="TestData\Test09.pdf" />
+    <None Remove="TestData\Test10.pdf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>
@@ -32,6 +45,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\CareLink\CareLink.vbproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TestData\" />
   </ItemGroup>
 
 </Project>
