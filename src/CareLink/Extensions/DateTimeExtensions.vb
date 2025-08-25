@@ -7,8 +7,7 @@ Imports System.Runtime.CompilerServices
 
 ''' <summary>
 '''  Provides extension methods for <see cref="Date"/> and related types,
-'''  including parsing, formatting,
-'''  and conversions between Unix time and DateTime.
+'''  including parsing, formatting, and conversions between Unix time and DateTime.
 ''' </summary>
 Friend Module DateTimeExtensions
     Private ReadOnly s_epochLocal As New DateTime(

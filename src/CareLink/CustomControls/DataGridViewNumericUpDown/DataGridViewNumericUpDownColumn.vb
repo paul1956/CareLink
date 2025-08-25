@@ -54,7 +54,8 @@ Public Class DataGridViewNumericUpDownColumn
     '''  DataGridViewNumericUpDownCell cell type.
     ''' </summary>
     <Category("Appearance"),
-     DefaultValue(DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultDecimalPlaces),
+     DefaultValue(
+    DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultDecimalPlaces),
      Description("Indicates the number of decimal places to display.")>
     Public Property DecimalPlaces As Integer
         Get
@@ -103,7 +104,8 @@ Public Class DataGridViewNumericUpDownColumn
     '''  Replicates the Increment property of the DataGridViewNumericUpDownCell cell type.
     ''' </summary>
     <Category("Data"),
-     Description("Indicates the amount to increment/decrement on each button click.")>
+     Description(
+     "Indicates the amount to increment/decrement on each button click.")>
     Public Property Increment As Decimal
         Get
             If Me.NumericUpDownCellTemplate Is Nothing Then
