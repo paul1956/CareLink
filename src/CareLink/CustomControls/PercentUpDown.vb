@@ -6,7 +6,7 @@ Public Class PercentUpDown
     Inherits NumericUpDown
 
     Protected Overrides Sub UpdateEditText()
-        Me.Text = Me.Value.ToString() & " %"
+        Me.Text = $"{Me.Value} %"
     End Sub
 
     Protected Overrides Sub ValidateEditText()

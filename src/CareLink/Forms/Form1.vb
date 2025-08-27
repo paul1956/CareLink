@@ -1717,8 +1717,14 @@ Public Class Form1
             dgv,
             columnName:=NameOf(Insulin.ProgrammedExtendedAmount),
             value:="NaN")
-        HideUnneededColumns(dgv, columnName:=NameOf(Insulin.ProgrammedDuration), value:="0")
-        HideUnneededColumns(dgv, columnName:=NameOf(Insulin.EffectiveDuration), value:="0")
+        HideUnneededColumns(
+            dgv,
+            columnName:=NameOf(Insulin.ProgrammedDuration),
+            value:="0")
+        HideUnneededColumns(
+            dgv,
+            columnName:=NameOf(Insulin.EffectiveDuration),
+            value:="0")
         Me.Dgv_DataBindingComplete(sender, e)
         dgv.ClearSelection()
     End Sub

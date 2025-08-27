@@ -678,9 +678,8 @@ Friend Module Form1UpdateHelpers
     ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdateMarkerTabs(mainForm As Form1)
         With mainForm
-            Dim classCollection As List(Of AutoBasalDelivery) = s_autoBasalDeliveryMarkers
             .TlpAutoBasalDelivery.DisplayDataTableInDGV(
-                table:=ClassCollectionToDataTable(classCollection),
+                table:=ClassCollectionToDataTable(classCollection:=s_autoBasalDeliveryMarkers),
                 className:=NameOf(AutoBasalDelivery), rowIndex:=ServerDataIndexes.markers)
 
             .TlpAutoModeStatus.DisplayDataTableInDGV(

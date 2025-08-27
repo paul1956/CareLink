@@ -488,7 +488,7 @@ Public Module JsonExtensions
                     index = CInt(e1.Value.jsonItemAsString)
                     item.Add(e1.Value.Key, value:=e1.Value.jsonItemAsString)
                 ElseIf e1.Value.Key = "sg" Then
-                    item.Add(e1.Value.Key, value:=e1.Value.ScaleSgToString)
+                    item.Add(e1.Value.Key, value:=e1.Value.ScaleSg)
                 ElseIf e1.Value.Key = "dateTime" Then
                     Dim dateValue As Date = CType(e1.Value.Value, JsonElement).GetDateTime()
 
@@ -527,7 +527,7 @@ Public Module JsonExtensions
                 If item.Value Is Nothing Then
                     resultDictionary.Add(item.Key, value:=Nothing)
                 ElseIf item.Key = "sg" Then
-                    resultDictionary.Add(item.Key, value:=item.ScaleSgToString)
+                    resultDictionary.Add(item.Key, value:=item.ScaleSg)
                 Else
                     resultDictionary.Add(item.Key, value:=item.jsonItemAsString)
                 End If
@@ -631,7 +631,7 @@ Public Module JsonExtensions
                          NameOf(ServerDataIndexes.sgBelowLimit),
                          NameOf(ServerDataIndexes.averageSGFloat)
 
-                        resultDictionary.Add(item.Key, value:=item.ScaleSgToString())
+                        resultDictionary.Add(item.Key, value:=item.ScaleSg())
                     Case Else
                         resultDictionary.Add(item.Key, value:=item.jsonItemAsString)
                 End Select
@@ -641,36 +641,6 @@ Public Module JsonExtensions
             End Try
         Next
         Return resultDictionary
-    End Function
-
-    ''' <summary>
-    '''  Converts a JsonElement to a string representation of the value,
-    '''  scaled according to the NativeMmolL setting.
-    ''' </summary>
-    ''' <param name="item">The JsonElement to convert.</param>
-    ''' <returns>A string representation of the scaled value.</returns>
-    <Extension>
-    Public Function ScaleSgToString(item As JsonElement) As String
-        Dim itemAsSingle As Single
-        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        Select Case item.ValueKind
-            Case JsonValueKind.String
-                itemAsSingle = Single.Parse(item.GetString(), provider)
-            Case JsonValueKind.Null
-                Return String.Empty
-            Case JsonValueKind.Undefined
-                Return String.Empty
-            Case JsonValueKind.Number
-                itemAsSingle = item.GetSingle
-            Case Else
-                Stop
-        End Select
-
-        Dim s As Single =
-            If(NativeMmolL,
-               (itemAsSingle / MmolLUnitsDivisor).RoundToSingle(digits:=GetPrecisionDigits()),
-               itemAsSingle)
-        Return s.ToString(provider)
     End Function
 
 End Module

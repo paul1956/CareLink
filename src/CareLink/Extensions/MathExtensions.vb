@@ -52,7 +52,7 @@ Friend Module MathExtensions
     ''' <returns>The rounded Double value.</returns>
     <Extension>
     Friend Function RoundToSingle(value As Double, digits As Integer) As Single
-        Return CSng(value).RoundToSingle(digits, considerValue:=False)
+        Return CSng(value).RoundToSingle(digits)
     End Function
 
     ''' <summary>
