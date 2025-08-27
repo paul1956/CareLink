@@ -15,7 +15,7 @@ Public Class PostalRecord
                 $"{NameOf(PostalRecord)}({NameOf(jsonData)}) contains {jsonData.Length} " &
                  "entries, 2 expected."
             Dim innerException As New ApplicationException(
-                                message:="Invalid postal record structure.")
+                message:="Invalid postal record structure.")
             Throw New ApplicationException(message, innerException)
         End If
 

@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
@@ -21,14 +22,44 @@ Friend Module Form1CollectMarkersHelper
         If item.Data.DataValues.TryGetValue(key, value) Then
             Select Case True
                 Case TypeOf value Is JsonElement
-                    item.Data.DataValues(key) = CType(value, JsonElement).ScaleSgToString
+                    item.Data.DataValues(key) = CType(value, JsonElement).ScaleSg
                 Case TypeOf value Is String
-                    item.Data.DataValues(key) = CType(value, String).ScaleSgToString
+                    item.Data.DataValues(key) = CType(value, String).ScaleSg
                 Case Else
                     Stop
             End Select
         End If
         Return newMarker
+    End Function
+
+    ''' <summary>
+    '''  Converts a JsonElement to a string representation of the value,
+    '''  scaled according to the NativeMmolL setting.
+    ''' </summary>
+    ''' <param name="item">The JsonElement to convert.</param>
+    ''' <returns>A string representation of the scaled value.</returns>
+    <Extension>
+    Private Function ScaleSg(item As JsonElement) As String
+        Dim itemAsSingle As Single
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+        Select Case item.ValueKind
+            Case JsonValueKind.String
+                itemAsSingle = Single.Parse(item.GetString(), provider)
+            Case JsonValueKind.Null
+                Return String.Empty
+            Case JsonValueKind.Undefined
+                Return String.Empty
+            Case JsonValueKind.Number
+                itemAsSingle = item.GetSingle
+            Case Else
+                Stop
+        End Select
+
+        Dim s As Single =
+            If(NativeMmolL,
+               (itemAsSingle / MmolLUnitsDivisor).RoundToSingle(digits:=GetPrecisionDigits()),
+               itemAsSingle)
+        Return s.ToString(provider)
     End Function
 
     ''' <summary>

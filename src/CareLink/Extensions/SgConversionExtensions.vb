@@ -15,12 +15,39 @@ Friend Module SgConversionExtensions
     ''' <param name="value">The Single value to convert.</param>
     ''' <returns>A string representation of the scaled value.</returns>
     <Extension>
-    Private Function ScaleSgToString(value As Single) As String
-        Dim digits As Integer = GetPrecisionDigits()
+    Private Function ScaleSg(value As Single) As String
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        Return If(NativeMmolL,
-                  (value / MmolLUnitsDivisor).RoundToSingle(digits).ToString(provider),
-                  value.ToString(provider))
+        If NativeMmolL Then
+            value =
+                (value / MmolLUnitsDivisor).RoundToSingle(digits:=1, considerValue:=True)
+        End If
+        Return value.ToString(provider)
+    End Function
+
+    ''' <summary>
+    '''  Converts a JsonElement to a string representation of the value,
+    '''  scaled according to the NativeMmolL setting.
+    ''' </summary>
+    ''' <param name="item">The JsonElement to convert.</param>
+    ''' <returns>A string representation of the scaled value.</returns>
+    <Extension>
+    Private Function ScaleSg(item As JsonElement) As String
+        Dim itemAsSingle As Single
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+        Select Case item.ValueKind
+            Case JsonValueKind.String
+                itemAsSingle = Single.Parse(item.GetString(), provider)
+            Case JsonValueKind.Null
+                Return String.Empty
+            Case JsonValueKind.Undefined
+                Return String.Empty
+            Case JsonValueKind.Number
+                itemAsSingle = item.GetSingle
+            Case Else
+                Stop
+        End Select
+
+        Return itemAsSingle.ScaleSg()
     End Function
 
     ''' <summary>
@@ -30,22 +57,20 @@ Friend Module SgConversionExtensions
     ''' <param name="item">The KeyValuePair to convert.</param>
     ''' <returns>A string representation of the scaled value.</returns>
     <Extension>
-    Public Function ScaleSgToString(item As KeyValuePair(Of String, Object)) As String
-        Dim value As Single = CType(item.Value, JsonElement).ToString.ParseSingle(digits:=2)
-        Return ScaleSgToString(value)
+    Public Function ScaleSg(item As KeyValuePair(Of String, Object)) As String
+        Return CType(item.Value, JsonElement).ScaleSg()
     End Function
 
     ''' <summary>
     '''  Converts a String representation of a value to a
     '''  string representation of the value, scaled according
-    '''  to the <see cref="NativeMmolL"/> setting.
+    '''  to the <see cref="NativeMmolLSupport.NativeMmolL"/> setting.
     ''' </summary>
     ''' <param name="value">The string representation of the value to convert.</param>
     ''' <returns>A <see langword="String"/> representation of the scaled value.</returns>
     <Extension>
-    Public Function ScaleSgToString(value As String) As String
-        Dim digits As Integer = GetPrecisionDigits()
-        Return value.ParseSingle(digits).ScaleSgToString()
+    Public Function ScaleSg(value As String) As String
+        Return value.ParseSingle().ScaleSg()
     End Function
 
 End Module
