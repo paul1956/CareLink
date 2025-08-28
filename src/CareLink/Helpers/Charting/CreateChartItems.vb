@@ -19,12 +19,12 @@ Friend Module CreateChartItems
 
     Private ReadOnly s_mmolLValues As New List(Of Single) From {
         MinMmolL2_8,
-        5,
-        8,
-        11,
-        14,
-        17,
-        20,
+        5.6,
+        8.3,
+        11.1,
+        13.9,
+        16.7,
+        19.4,
         MaxMmolL22_2}
 
     ''' <summary>
@@ -258,23 +258,24 @@ Friend Module CreateChartItems
                 End With
 
                 Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-                Dim format As String = GetSgFormat()
                 For i As Integer = 0 To s_mmolLValues.Count - 1
+                    Dim format As String = GetSgFormat()
                     Dim yMin As Single = GetYMinValueFromNativeMmolL()
                     Dim axisText As String = firstAxis(index:=i).ToString(format, provider)
                     .CustomLabels.Add(
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,
                             toPosition:=firstAxis(index:=i) + yMin,
-                            text:=$"{axisText.Replace(oldValue:=",0", newValue:="")}",
+                            text:=axisText,
                             labelRow:=0,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
+                    format = If(NativeMmolL, "F0", "F1")
                     axisText = secondAxis(index:=i).ToString(format, provider)
                     .CustomLabels.Add(
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,
                             toPosition:=firstAxis(index:=i) + yMin,
-                            text:=$"{axisText.Replace(oldValue:=",0", newValue:="")}",
+                            text:=axisText,
                             labelRow:=1,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
                 Next

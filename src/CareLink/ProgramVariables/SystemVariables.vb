@@ -74,7 +74,8 @@ Public Module SystemVariables
     '''  its string representation.
     ''' </returns>
     Friend Function GetAboveHyperLimit() As (int As Integer, Str As String)
-        Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.RoundToSingle(digits:=1)
+        Dim aboveHyperLimit As Single =
+            PatientData.AboveHyperLimit.RoundToSingle(digits:=1, considerValue:=True)
         Return If(aboveHyperLimit >= 0,
                   (CInt(aboveHyperLimit), aboveHyperLimit.ToString),
                   (CInt(0), "??? "))
@@ -88,7 +89,8 @@ Public Module SystemVariables
     '''  its string representation.
     ''' </returns>
     Friend Function GetBelowHypoLimit() As (Uint As UInteger, Str As String)
-        Dim belowHyperLimit As Single = PatientData.BelowHypoLimit.RoundToSingle(digits:=1)
+        Dim belowHyperLimit As Single =
+            PatientData.BelowHypoLimit.RoundToSingle(digits:=1, considerValue:=True)
         Return If(belowHyperLimit >= 0,
                   (CUInt(belowHyperLimit), belowHyperLimit.ToString),
                   (CUInt(0), "??? "))
