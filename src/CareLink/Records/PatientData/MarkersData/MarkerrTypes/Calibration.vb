@@ -16,7 +16,7 @@ Public Class Calibration
         Me.DisplayTimeAsString = item.DisplayTimeAsString
         Me.CalibrationSuccess = item.GetBooleanFromJson(key:=NameOf(CalibrationSuccess))
         Me.UnitValue =
-            item.GetSingleFromJson(NameOf(UnitValue), digits:=0, considerValue:=True)
+            item.GetSingleFromJson(key:=NameOf(UnitValue), digits:=0, considerValue:=True)
         Me.bgUnits = item.GetStringFromJson(NameOf(bgUnits))
     End Sub
 

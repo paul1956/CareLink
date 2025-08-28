@@ -337,9 +337,7 @@ Public Module JsonExtensions
             End Select
 
             If digits = -1 Then Return result
-            Return If(digits = 3,
-                      result.RoundTo025(),
-                      result.RoundToSingle(digits, considerValue))
+            Return result.RoundToSingle(digits, considerValue)
         Else
             Return Single.NaN
         End If
