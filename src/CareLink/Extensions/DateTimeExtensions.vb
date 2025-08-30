@@ -337,7 +337,7 @@ Friend Module DateTimeExtensions
     ''' </param>
     ''' <param name="result">The output variable for the parsed date.</param>
     ''' <returns>
-    '''  <see langword="True"/> if parsing succeeds,
+    '''  <see langword="True"/> if parsing succeeds;
     '''  otherwise <see langword="False"/>.
     ''' </returns>
     <Extension>

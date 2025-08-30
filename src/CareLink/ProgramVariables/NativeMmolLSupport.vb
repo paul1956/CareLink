@@ -9,7 +9,8 @@ Public Module NativeMmolLSupport
     '''  Gets the string representation of the current blood glucose units.
     ''' </summary>
     ''' <returns>
-    '''  Returns "Mmol/l" if NativeMmolL is True, otherwise returns "mg/dL".
+    '''  "Mmol/l" if <see cref="NativeMmolL"/> is <see langword="True"/>;
+    '''  otherwise returns "mg/dL".
     ''' </returns>
     Public ReadOnly Property BgUnits As String
         Get

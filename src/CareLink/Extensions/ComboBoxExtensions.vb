@@ -46,7 +46,7 @@ Public Module ComboBoxExtensions
     ''' <param name="y">The value to locate in the collection.</param>
     ''' <returns>
     '''  The zero-based index of the first occurrence of the value within the collection;
-    '''  Otherwise -1 if not found.
+    '''  otherwise -1 if not found.
     ''' </returns>
     <Extension>
     Public Function IndexOfY(Of Tk, Tv)(

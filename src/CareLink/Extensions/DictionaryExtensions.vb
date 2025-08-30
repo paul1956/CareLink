@@ -226,7 +226,7 @@ Public Module DictionaryExtensions
     ''' <param name="dic">The SortedDictionary to search.</param>
     ''' <param name="item">The <see cref="KnownColor"/> to find.</param>
     ''' <returns>
-    '''  The index of the item in the <see cref="SortedDictionary"/>,
+    '''  The index of the item in the <see cref="SortedDictionary"/>;
     '''  otherwise -1 if not found.
     ''' </returns>
     <Extension>

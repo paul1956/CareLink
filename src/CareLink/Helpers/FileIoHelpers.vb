@@ -18,16 +18,12 @@ Public Module FileIoHelpers
     ''' <param name="path">The directory to search.</param>
     ''' <param name="searchPattern">The search pattern (e.g., "*.json").</param>
     ''' <returns>
-    '''  True if any matching files are found;
-    '''  otherwise, false.
+    '''  <see langword="True"/> if any matching files are found;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
     ''' <exception cref="ArgumentNullException">
     '''  Thrown if the path is null or whitespace.
     ''' </exception>
-    ''' <remarks>
-    '''  This method checks for files matching the specified pattern in the given directory.
-    '''  It returns true if at least one file matches the pattern, otherwise false.
-    ''' </remarks>
     Friend Function AnyMatchingFiles(path As String, searchPattern As String) As Boolean
         If String.IsNullOrWhiteSpace(value:=path) Then
             Throw New ArgumentNullException(

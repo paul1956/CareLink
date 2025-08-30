@@ -9,22 +9,6 @@ Imports System.Text.Json
 Friend Module SgConversionExtensions
 
     ''' <summary>
-    '''  Converts a Single value to a string representation,
-    '''  scaled according to the NativeMmolL setting.
-    ''' </summary>
-    ''' <param name="value">The Single value to convert.</param>
-    ''' <returns>A string representation of the scaled value.</returns>
-    <Extension>
-    Private Function ScaleSg(value As Single) As String
-        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        If NativeMmolL Then
-            value =
-                (value / MmolLUnitsDivisor).RoundToSingle(digits:=1, considerValue:=True)
-        End If
-        Return value.ToString(provider)
-    End Function
-
-    ''' <summary>
     '''  Converts a JsonElement to a string representation of the value,
     '''  scaled according to the NativeMmolL setting.
     ''' </summary>
@@ -48,6 +32,22 @@ Friend Module SgConversionExtensions
         End Select
 
         Return itemAsSingle.ScaleSg()
+    End Function
+
+    ''' <summary>
+    '''  Converts a Single value to a string representation,
+    '''  scaled according to the NativeMmolL setting.
+    ''' </summary>
+    ''' <param name="value">The Single value to convert.</param>
+    ''' <returns>A string representation of the scaled value.</returns>
+    <Extension>
+    Public Function ScaleSg(value As Single) As String
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+        If NativeMmolL Then
+            value =
+                (value / MmolLUnitsDivisor).RoundToSingle(digits:=1, considerValue:=True)
+        End If
+        Return value.ToString(provider)
     End Function
 
     ''' <summary>

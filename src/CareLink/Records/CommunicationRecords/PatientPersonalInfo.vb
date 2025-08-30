@@ -102,7 +102,7 @@ Public Class PatientPersonalInfo
     ''' Checks if the AccountId has a valid value greater than zero.
     ''' </summary>
     ''' <returns>
-    '''  True if AccountId > 0,
+    '''  True if AccountId > 0;
     '''  otherwise False.
     ''' </returns>
     Public Function HasValue() As Boolean
