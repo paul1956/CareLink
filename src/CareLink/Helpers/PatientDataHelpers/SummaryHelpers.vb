@@ -209,7 +209,7 @@ Friend Module SummaryHelpers
                                             GetSensorUpdateTime(key:=sensorUpdateTime)
                                     End If
                                 Case "sg"
-                                    Dim lowLimitValue As Single
+                                    Dim lowAlertRec As LowAlertRecord
                                     If addInfo.TryGetValue(key, value:=sg) Then
                                         If faultId = "827" Then
                                             lowLimit =
@@ -218,10 +218,12 @@ Friend Module SummaryHelpers
                                                    "3.5")
                                         End If
                                     ElseIf faultId = "787" Then
-                                        lowLimitValue =
-                                        LowAlertsRecord.GetLowAlertRecord(triggerTime).LowLimit
+                                        lowAlertRec =
+                                            LowAlertsRecord.GetLowAlertRecord(triggerTime)
                                         lowLimit =
-                                          $"{lowLimitValue} {BgUnits()}"
+                                          $"{lowAlertRec.LowLimit} {BgUnits()}"
+                                    Else
+                                        Stop
                                     End If
                                 Case "units"
                         ' handled elsewhere
