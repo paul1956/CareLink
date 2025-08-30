@@ -63,6 +63,26 @@ Public Class LowAlertsRecord
         Return Me.ToString()
     End Function
 
+    '/ <summary>
+    '''  Gets the <see cref="LowAlertRecord"/> that applies to the specified time.
+    ''' </summary>
+    ''' <param name="triggerTime">The time to check.</param>
+    ''' <returns>
+    '''  The matching <see cref="LowAlertRecord"/>;
+    '''  otherwise <see langword="Nothing"/> if none found.
+    ''' </returns>
+    Public Shared Function GetLowAlertRecord(triggerTime As TimeOnly) As LowAlertRecord
+        If CurrentPdf.LowAlerts.LowAlert.Count = 1 Then
+            Return CurrentPdf.LowAlerts.LowAlert(index:=0)
+        End If
+        For Each alert As LowAlertRecord In CurrentPdf.LowAlerts.LowAlert
+            If triggerTime.IsBetween(alert.Start, alert.[End]) Then
+                Return alert
+            End If
+        Next
+        Return Nothing
+    End Function
+
     Public Overrides Function ToString() As String
         Return If(Me.SnoozeOn = "On", _snoozeTime.ToFormattedTimeSpan(unit:="hr"), "Off")
     End Function

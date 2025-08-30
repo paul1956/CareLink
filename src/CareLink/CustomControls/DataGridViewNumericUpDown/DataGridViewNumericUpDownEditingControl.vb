@@ -237,16 +237,14 @@ Friend Class DataGridViewNumericUpDownEditingControl
 
             Case Keys.Down
                 ' If the current value hasn't reached its minimum yet,
-                ' handle the key. Otherwise let
-                ' the grid handle it.
+                ' handle the key; otherwise, let the grid handle it.
                 If Me.Value > Me.Minimum Then
                     Return True
                 End If
 
             Case Keys.Up
                 ' If the current value hasn't reached its maximum yet,
-                ' handle the key. Otherwise let
-                ' the grid handle it.
+                ' handle the key; otherwise, let the grid handle it.
                 If Me.Value < Me.Maximum Then
                     Return True
                 End If

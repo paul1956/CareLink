@@ -116,10 +116,13 @@ Friend Module DataTableHelpers
     End Function
 
     ''' <summary>
-    '''  Indicates whether a specified Type can be assigned null.
+    '''  Indicates whether a specified Type can be assigned <see langword="Nothing"/>.
     ''' </summary>
     ''' <param name="nullableType">The Type to check for nullable property.</param>
-    ''' <returns>True if the specified Type can be assigned null, otherwise false.</returns>
+    ''' <returns>
+    '''  <see langword="True"/> if the specified Type can be assigned Nothing;
+    '''  otherwise <see langword="False"/>.
+    ''' </returns>
     Private Function IsNullableType(nullableType As Type) As Boolean
         If Not nullableType.IsValueType Then
             Return True ' Reference Type
@@ -158,17 +161,18 @@ Friend Module DataTableHelpers
     End Function
 
     ''' <summary>
-    '''  Indicates whether a specified DataTable is null, has zero columns,
-    '''  or (optionally) zero rows.
+    '''  Indicates whether a specified <see cref="DataTable"/> is <see langword="Nothing"/>,
+    '''  has zero columns, or (optionally) zero rows.
     ''' </summary>
     ''' <param name="Table">DataTable to check.</param>
     ''' <param name="IgnoreRows">
-    '''  When set to true, the function will return true even if the table's row count
-    '''  is equal to zero.
+    '''  When set to true, the function will return <see langword="True"/> even
+    '''  if the table's row count is equal to zero.
     ''' </param>
     ''' <returns>
-    '''  False if the specified DataTable null, has zero columns,
-    '''  or zero rows, otherwise true.
+    '''  <see langword="False"/> if the specified <see cref="DataTable"/>
+    '''  is <see langword="Nothing"/>, has zero columns or rows;
+    '''  otherwise <see langword="True"/>.
     ''' </returns>
     <Extension>
     Public Function IsValidDataTable(

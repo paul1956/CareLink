@@ -80,7 +80,7 @@ Friend Module TimeZoneExtensions
             Return TimeZoneInfo.Local
         End If
 
-        ' Try to map special known time zones, otherwise use input as ID
+        ' Try to map special known time zones; otherwise use input as ID
         Dim value As String = ""
         value = If(s_specialKnownTimeZones.TryGetValue(key:=timeZoneName, value),
                    value,

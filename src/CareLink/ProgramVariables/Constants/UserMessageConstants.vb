@@ -126,6 +126,8 @@ Friend Module UserMessageConstants
         {"781", "Possible signal interface(triggeredDateTime). " &
                  "Move away from electronic devices. May take 15 minutes to find signal."},
         {"784", "Raise Alert(triggeredDateTime). Sensor glucose raising rapidly."},
+        {"787", "Alert on low (sg) (units)(triggeredDateTime)." &
+                 " Low sensor glucose. Check BG."},
         {"794", "Sensor expired(triggeredDateTime). Insert New sensor."},
         {"795", "Lost Sensor Signal. Check Transmitter"}, _ ' From Java
         {"796", "No Sensor Signal"}, _ ' From Java
