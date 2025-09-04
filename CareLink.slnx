@@ -13,6 +13,9 @@
   <Folder Name="/Solution Items/.GitHub/Copilot/">
     <File Path="copilot-instructions.md" />
   </Folder>
+  <Folder Name="/Solution Items/.GitHub/Prompts/">
+    <File Path="vb.prompt.md file" />
+  </Folder>
   <Project Path="PumpSetup/PumpSetup.vbproj" Id="0eddd319-d9d5-4052-8473-67803297152d" />
   <Project Path="src/CareLink/CareLink.vbproj" />
   <Project Path="TestProject/TestProject.vbproj" />

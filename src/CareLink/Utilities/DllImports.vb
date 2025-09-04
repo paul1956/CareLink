@@ -35,11 +35,26 @@ Friend Module DllImports
     ''' <returns>An integer indicating success or failure.</returns>
     <DllImport("dwmapi.dll")>
     Friend Function DwmSetWindowAttribute(
-        ByVal hwnd As IntPtr,
-        ByVal attr As Integer,
+        hwnd As IntPtr,
+        attr As Integer,
         ByRef attrValue As Integer,
-        ByVal attrSize As Integer
-    ) As Integer
+        attrSize As Integer) As Integer
+    End Function
+
+    ''' <summary>
+    '''  Forwards keyboard messages to the child <see cref="TextBox"/> control.
+    ''' </summary>
+    ''' <param name="hWnd">Handle to the window receiving the message.</param>
+    ''' <param name="msg">Message ID.</param>
+    ''' <param name="wParam">First message parameter.</param>
+    ''' <param name="lParam">Second message parameter.</param>
+    ''' <returns>Result of the message processing.</returns>
+    <DllImport("USER32.DLL", CharSet:=CharSet.Auto)>
+    Friend Function SendMessage(
+        hWnd As IntPtr,
+        msg As Integer,
+        wParam As IntPtr,
+        lParam As IntPtr) As IntPtr
     End Function
 
     ''' <summary>

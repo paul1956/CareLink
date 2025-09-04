@@ -298,6 +298,13 @@ Public Class TextMap
         {"Nalert.receiver.battery.low", "Mobile Device Battery Low"}
     }
 
+    ''' <summary>
+    ''' Returns the error message for the specified device family and error codes.
+    ''' </summary>
+    ''' <param name="deviceFamily">The device family.</param>
+    ''' <param name="guardianErrorCode">The Guardian error code (for Guardian devices).</param>
+    ''' <param name="ngpErrorCode">The NGP error code (for NGP devices).</param>
+    ''' <returns>The error message, or <see langword="Nothing"/> if not found.</returns>
     Private Shared Function GetErrorMessage(
         deviceFamily As String,
         guardianErrorCode As String,
@@ -322,6 +329,12 @@ Public Class TextMap
             s_errorTextMap.TryGetValue(key:=errorTextId, value), value, Nothing)
     End Function
 
+    ''' <summary>
+    ''' Returns the alarm message for the specified device family and alarm.
+    ''' </summary>
+    ''' <param name="deviceFamily">The device family.</param>
+    ''' <param name="alarm">The alarm.</param>
+    ''' <returns>The alarm message.</returns>
     Public Shared Function GetAlarmMessage(deviceFamily As String, alarm As Alarm) As String
         Return GetErrorMessage(
             deviceFamily,
@@ -329,6 +342,12 @@ Public Class TextMap
             ngpErrorCode:=alarm.Code)
     End Function
 
+    '/ <summary>
+    ''' Returns the notification message for the specified device family and cleared notification.
+    ''' </summary>
+    ''' <param name="deviceFamily">The device family.</param>
+    ''' <param name="notification">The cleared notification.</param>
+    ''' <returns>The notification message.</returns>
     Public Shared Function GetNotificationMessage(
         deviceFamily As String,
         notification As ClearedNotification) As String
@@ -339,6 +358,13 @@ Public Class TextMap
             ngpErrorCode:=notification.FaultId)
     End Function
 
+    ''' <summary>
+    ''' Returns the notification message for the specified device family and error codes.
+    ''' </summary>
+    ''' <param name="deviceFamily">The device family.</param>
+    ''' <param name="guardianErrorCode">The Guardian error code (for Guardian devices).</param>
+    ''' <param name="faultId">The NGP fault ID (for NGP devices).</param>
+    ''' <returns>The notification message.</returns>
     Public Shared Function GetNotificationMessage(
         deviceFamily As String,
         guardianErrorCode As String,
@@ -347,11 +373,17 @@ Public Class TextMap
         Return GetErrorMessage(deviceFamily, guardianErrorCode, ngpErrorCode:=faultId)
     End Function
 
+    ''' <summary>
+    ''' Represents an alarm with a code and kind.
+    ''' </summary>
     Public Class Alarm
         Public Property Code As Integer
         Public Property Kind As String
     End Class
 
+    ''' <summary>
+    ''' Represents a cleared notification with a fault ID and message ID.
+    ''' </summary>
     Public Class ClearedNotification
         Public Property FaultId As Integer
         Public Property MessageId As String
