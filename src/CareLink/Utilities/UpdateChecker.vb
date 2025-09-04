@@ -9,10 +9,36 @@ Imports System.Threading
 '''  Provides functionality to check for application updates by comparing the
 '''  current version with the latest release version available on GitHub.
 ''' </summary>
+''' <remarks>
+'''  This module interacts with the GitHub releases page to determine if a newer version
+'''  of the application is available. It updates the UI to notify the user and can prompt
+'''  for installation of the update.
+'''  <para>
+'''   All update checks are performed asynchronously to avoid blocking the UI thread.
+'''  </para>
+''' </remarks>
 Friend Module UpdateChecker
+    ''' <summary>
+    '''  The search key used to locate the version string in the GitHub releases page HTML.
+    ''' </summary>
     Private ReadOnly s_versionSearchKey As String =
         $"<a hRef=""/{GitOwnerName}/CareLink/releases/tag/"
+
+    ''' <summary>
+    '''  Indicates if an update check is currently in progress.
+    ''' </summary>
+    ''' <remarks>
+    '''  Used for thread-safety to prevent concurrent update checks.
+    ''' </remarks>
     Private s_inCheckForUpdate As Integer = 0
+
+    ''' <summary>
+    '''  Controls the frequency of update notifications to the user.
+    ''' </summary>
+    ''' <remarks>
+    '''  When greater than zero, update notifications are suppressed until
+    '''  the count reaches zero.
+    ''' </remarks>
     Private s_updateSleepCount As Integer = 0
 
     ''' <summary>
@@ -20,9 +46,23 @@ Friend Module UpdateChecker
     ''' </summary>
     ''' <returns>
     '''  A <see cref="Task(Of String)"/> representing the asynchronous operation.
-    '''  The result contains the version string, or "0.0.0.0" if the version could not
+    '''  The result contains the version string, or <c>"0.0.0.0"</c> if the version could not
     '''  be determined.
     ''' </returns>
+    ''' <exception cref="HttpRequestException">
+    '''  Thrown if the GitHub releases page cannot be reached.
+    ''' </exception>
+    ''' <exception cref="Exception">
+    '''  Thrown if an unexpected error occurs while retrieving or parsing the version string.
+    ''' </exception>
+    ''' <remarks>
+    '''  Pre-release versions (containing a dash) are ignored.
+    ''' </remarks>
+    ''' <example>
+    '''  <code language="vbNet">
+    '''  Dim latestVersion As String = Await GetVersionString()
+    '''  </code>
+    ''' </example>
     Private Async Function GetVersionString() As Task(Of String)
         Dim versionStr As String = "0.0.0.0"
         Dim responseBody As String
@@ -65,11 +105,28 @@ Friend Module UpdateChecker
     ''' <summary>
     '''  Compares the GitHub version string with the current application version.
     ''' </summary>
-    ''' <param name="gitHubVersion">The version string retrieved from GitHub.</param>
-    ''' <param name="version">The current application version.</param>
+    ''' <param name="gitHubVersion">
+    '''  The version string retrieved from GitHub. See <paramref name="gitHubVersion"/>.
+    ''' </param>
+    ''' <param name="version">
+    '''  The current application version. See <paramref name="version"/>.
+    ''' </param>
     ''' <returns>
-    '''  <see langword="True"/> if application version or converter version is different
+    '''  <see langword="True"/> if the GitHub version is newer than the
+    '''  current application version;
+    '''  otherwise, <see langword="False"/>.
     ''' </returns>
+    ''' <exception cref="FormatException">
+    '''  Thrown if either version string cannot be parsed as a <see cref="Version"/>.
+    ''' </exception>
+    ''' <remarks>
+    '''  Uses <see cref="Version.Parse"/> for comparison.
+    ''' </remarks>
+    ''' <example>
+    '''  <code language="vbNet">
+    '''  Dim isNewer As Boolean = IsNewerVersion("5.1.0.0", My.Application.Info.Version)
+    '''  </code>
+    ''' </example>
     Private Function IsNewerVersion(gitHubVersion As String, version As Version) As Boolean
         Return gitHubVersion IsNot Nothing AndAlso
             Not String.IsNullOrWhiteSpace(value:=gitHubVersion) AndAlso
@@ -84,8 +141,24 @@ Friend Module UpdateChecker
     ''' </summary>
     ''' <param name="reportSuccessfulResult">
     '''  If <see langword="True"/>, always reports the result to the user,
-    '''  even if no update is available.
+    '''  even if no update is available. See <paramref name="reportSuccessfulResult"/>.
     ''' </param>
+    ''' <remarks>
+    '''  Updates the status strip label in the main form to indicate update status.
+    '''  If the user chooses to install the update, the application will exit
+    '''  after opening the releases page. Handles exceptions by displaying
+    '''  an error message if <paramref name="reportSuccessfulResult"/> is
+    '''  <see langword="True"/>.
+    ''' </remarks>
+    ''' <exception cref="Exception">
+    '''  Any exception thrown during the update check is caught and reported to the
+    '''  user if requested.
+    ''' </exception>
+    ''' <example>
+    '''  <code language="vbNet">
+    '''  Await CheckForUpdatesAsync(True)
+    '''  </code>
+    ''' </example>
     Friend Async Sub CheckForUpdatesAsync(reportSuccessfulResult As Boolean)
         Const heading As String =
             "There is a newer version available, do you want to install now?"

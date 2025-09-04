@@ -139,11 +139,11 @@ Public Module Discover
     Public Function GetDiscoveryData() As ConfigRecord
         Try
             Dim region As String = If(s_countryCode.EqualsNoCase("US"), "US", "EU")
-            Return DownloadAndDecodeJson(Of ConfigRecord)(s_discoverUrl(region))
+            Return DownloadAndDecodeJson(Of ConfigRecord)(url:=s_discoverUrl(region))
         Catch ex As HttpRequestException
-            Debug.WriteLine($"Error downloading JSON: {ex.Message}")
+            Debug.WriteLine(message:=$"Error downloading JSON: {ex.Message}")
         Catch ex As JsonException
-            Debug.WriteLine($"Error decoding JSON: {ex.Message}")
+            Debug.WriteLine(message:=$"Error decoding JSON: {ex.Message}")
         End Try
         Return Nothing
     End Function
