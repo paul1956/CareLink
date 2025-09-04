@@ -379,7 +379,7 @@ Partial Class Form1
         ActiveInsulinValue.BackColor = Color.Transparent
         ActiveInsulinValue.BorderStyle = BorderStyle.FixedSingle
         ActiveInsulinValue.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        ActiveInsulinValue.ForeColor = Color.White
+        ActiveInsulinValue.ForeColor = Color.LightGray
         ActiveInsulinValue.Location = New Point(995, 53)
         ActiveInsulinValue.Name = "ActiveInsulinValue"
         ActiveInsulinValue.Size = New Size(128, 48)
@@ -393,7 +393,7 @@ Partial Class Form1
         AverageSGMessageLabel.AutoSize = True
         AverageSGMessageLabel.BackColor = Color.Transparent
         AverageSGMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        AverageSGMessageLabel.ForeColor = Color.White
+        AverageSGMessageLabel.ForeColor = Color.LightGray
         AverageSGMessageLabel.Location = New Point(33, 398)
         AverageSGMessageLabel.Name = "AverageSGMessageLabel"
         AverageSGMessageLabel.Size = New Size(167, 21)
@@ -407,7 +407,7 @@ Partial Class Form1
         AverageSGValueLabel.AutoSize = True
         AverageSGValueLabel.BackColor = Color.Black
         AverageSGValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
-        AverageSGValueLabel.ForeColor = Color.White
+        AverageSGValueLabel.ForeColor = Color.LightGray
         AverageSGValueLabel.Location = New Point(82, 356)
         AverageSGValueLabel.Margin = New Padding(0)
         AverageSGValueLabel.Name = "AverageSGValueLabel"
@@ -517,7 +517,7 @@ Partial Class Form1
         LastSgOrExitTimeLabel.BackColor = Color.Transparent
         LastSgOrExitTimeLabel.Dock = DockStyle.Bottom
         LastSgOrExitTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        LastSgOrExitTimeLabel.ForeColor = Color.White
+        LastSgOrExitTimeLabel.ForeColor = Color.LightGray
         LastSgOrExitTimeLabel.Location = New Point(0, 111)
         LastSgOrExitTimeLabel.Name = "LastSgOrExitTimeLabel"
         LastSgOrExitTimeLabel.Size = New Size(116, 21)
@@ -543,7 +543,7 @@ Partial Class Form1
         ShieldUnitsLabel.AutoSize = True
         ShieldUnitsLabel.BackColor = Color.Transparent
         ShieldUnitsLabel.Font = New Font("Segoe UI", 8.25F, FontStyle.Bold)
-        ShieldUnitsLabel.ForeColor = Color.White
+        ShieldUnitsLabel.ForeColor = Color.LightGray
         ShieldUnitsLabel.Location = New Point(38, 60)
         ShieldUnitsLabel.Name = "ShieldUnitsLabel"
         ShieldUnitsLabel.Size = New Size(40, 13)
@@ -554,7 +554,7 @@ Partial Class Form1
         ' 
         CurrentSgLabel.BackColor = Color.Transparent
         CurrentSgLabel.Font = New Font("Segoe UI", 18.0F, FontStyle.Bold)
-        CurrentSgLabel.ForeColor = Color.White
+        CurrentSgLabel.ForeColor = Color.LightGray
         CurrentSgLabel.Location = New Point(22, 30)
         CurrentSgLabel.Name = "CurrentSgLabel"
         CurrentSgLabel.Size = New Size(72, 32)
@@ -567,7 +567,7 @@ Partial Class Form1
         ' 
         SensorMessageLabel.BackColor = Color.Transparent
         SensorMessageLabel.Font = New Font("Segoe UI", 9.5F, FontStyle.Bold)
-        SensorMessageLabel.ForeColor = Color.White
+        SensorMessageLabel.ForeColor = Color.LightGray
         SensorMessageLabel.Location = New Point(0, 8)
         SensorMessageLabel.Name = "SensorMessageLabel"
         SensorMessageLabel.Size = New Size(116, 57)
@@ -594,7 +594,7 @@ Partial Class Form1
         ' 
         CursorMessage1Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         CursorMessage1Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        CursorMessage1Label.ForeColor = Color.White
+        CursorMessage1Label.ForeColor = Color.LightGray
         CursorMessage1Label.Location = New Point(0, 43)
         CursorMessage1Label.Name = "CursorMessage1Label"
         CursorMessage1Label.Size = New Size(178, 21)
@@ -606,7 +606,7 @@ Partial Class Form1
         ' 
         CursorMessage2Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         CursorMessage2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        CursorMessage2Label.ForeColor = Color.White
+        CursorMessage2Label.ForeColor = Color.LightGray
         CursorMessage2Label.Location = New Point(0, 65)
         CursorMessage2Label.Name = "CursorMessage2Label"
         CursorMessage2Label.Size = New Size(178, 21)
@@ -617,7 +617,7 @@ Partial Class Form1
         ' CursorMessage3Label
         ' 
         CursorMessage3Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        CursorMessage3Label.ForeColor = Color.White
+        CursorMessage3Label.ForeColor = Color.LightGray
         CursorMessage3Label.Location = New Point(0, 86)
         CursorMessage3Label.Name = "CursorMessage3Label"
         CursorMessage3Label.Size = New Size(178, 21)
@@ -628,7 +628,7 @@ Partial Class Form1
         ' CursorMessage4Label
         ' 
         CursorMessage4Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        CursorMessage4Label.ForeColor = Color.White
+        CursorMessage4Label.ForeColor = Color.LightGray
         CursorMessage4Label.Location = New Point(0, 107)
         CursorMessage4Label.Name = "CursorMessage4Label"
         CursorMessage4Label.Size = New Size(178, 21)
@@ -890,7 +890,7 @@ Partial Class Form1
         ' 
         FullNameLabel.BackColor = Color.Transparent
         FullNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        FullNameLabel.ForeColor = Color.White
+        FullNameLabel.ForeColor = Color.LightGray
         FullNameLabel.Location = New Point(1140, 0)
         FullNameLabel.Margin = New Padding(0)
         FullNameLabel.Name = "FullNameLabel"
@@ -954,7 +954,7 @@ Partial Class Form1
         ' InsulinTypeLabel
         ' 
         InsulinTypeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        InsulinTypeLabel.ForeColor = Color.White
+        InsulinTypeLabel.ForeColor = Color.LightGray
         InsulinTypeLabel.Location = New Point(978, 3)
         InsulinTypeLabel.Name = "InsulinTypeLabel"
         InsulinTypeLabel.Size = New Size(162, 21)
@@ -978,7 +978,7 @@ Partial Class Form1
         ' 
         Last24HrAutoCorrectionPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24HrAutoCorrectionPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrAutoCorrectionPercentLabel.ForeColor = Color.White
+        Last24HrAutoCorrectionPercentLabel.ForeColor = Color.LightGray
         Last24HrAutoCorrectionPercentLabel.Location = New Point(200, 43)
         Last24HrAutoCorrectionPercentLabel.Name = "Last24HrAutoCorrectionPercentLabel"
         Last24HrAutoCorrectionPercentLabel.Size = New Size(46, 21)
@@ -990,7 +990,7 @@ Partial Class Form1
         ' 
         Last24HrAutoCorrectionUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24HrAutoCorrectionUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrAutoCorrectionUnitsLabel.ForeColor = Color.White
+        Last24HrAutoCorrectionUnitsLabel.ForeColor = Color.LightGray
         Last24HrAutoCorrectionUnitsLabel.Location = New Point(131, 43)
         Last24HrAutoCorrectionUnitsLabel.Name = "Last24HrAutoCorrectionUnitsLabel"
         Last24HrAutoCorrectionUnitsLabel.Size = New Size(70, 21)
@@ -1014,7 +1014,7 @@ Partial Class Form1
         ' 
         Last24HrBasalPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24HrBasalPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrBasalPercentLabel.ForeColor = Color.White
+        Last24HrBasalPercentLabel.ForeColor = Color.LightGray
         Last24HrBasalPercentLabel.Location = New Point(200, 23)
         Last24HrBasalPercentLabel.Name = "Last24HrBasalPercentLabel"
         Last24HrBasalPercentLabel.Size = New Size(46, 21)
@@ -1026,7 +1026,7 @@ Partial Class Form1
         ' 
         Last24HrBasalUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24HrBasalUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrBasalUnitsLabel.ForeColor = Color.White
+        Last24HrBasalUnitsLabel.ForeColor = Color.LightGray
         Last24HrBasalUnitsLabel.Location = New Point(131, 23)
         Last24HrBasalUnitsLabel.Name = "Last24HrBasalUnitsLabel"
         Last24HrBasalUnitsLabel.Size = New Size(70, 21)
@@ -1051,7 +1051,7 @@ Partial Class Form1
         ' 
         Last24HrCarbsValueLabel.AutoSize = True
         Last24HrCarbsValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrCarbsValueLabel.ForeColor = Color.White
+        Last24HrCarbsValueLabel.ForeColor = Color.LightGray
         Last24HrCarbsValueLabel.Location = New Point(157, 103)
         Last24HrCarbsValueLabel.Name = "Last24HrCarbsValueLabel"
         Last24HrCarbsValueLabel.Size = New Size(95, 21)
@@ -1075,7 +1075,7 @@ Partial Class Form1
         ' 
         Last24HrMealBolusPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24HrMealBolusPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrMealBolusPercentLabel.ForeColor = Color.White
+        Last24HrMealBolusPercentLabel.ForeColor = Color.LightGray
         Last24HrMealBolusPercentLabel.Location = New Point(200, 64)
         Last24HrMealBolusPercentLabel.Name = "Last24HrMealBolusPercentLabel"
         Last24HrMealBolusPercentLabel.Size = New Size(46, 21)
@@ -1087,7 +1087,7 @@ Partial Class Form1
         ' 
         Last24HrMealBolusUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
         Last24HrMealBolusUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrMealBolusUnitsLabel.ForeColor = Color.White
+        Last24HrMealBolusUnitsLabel.ForeColor = Color.LightGray
         Last24HrMealBolusUnitsLabel.Location = New Point(131, 64)
         Last24HrMealBolusUnitsLabel.Name = "Last24HrMealBolusUnitsLabel"
         Last24HrMealBolusUnitsLabel.Size = New Size(70, 21)
@@ -1123,7 +1123,7 @@ Partial Class Form1
         ' Last24HrTotalInsulinUnitsLabel
         ' 
         Last24HrTotalInsulinUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrTotalInsulinUnitsLabel.ForeColor = Color.White
+        Last24HrTotalInsulinUnitsLabel.ForeColor = Color.LightGray
         Last24HrTotalInsulinUnitsLabel.Location = New Point(131, 85)
         Last24HrTotalInsulinUnitsLabel.Name = "Last24HrTotalInsulinUnitsLabel"
         Last24HrTotalInsulinUnitsLabel.Size = New Size(70, 21)
@@ -1187,7 +1187,7 @@ Partial Class Form1
         ' 
         MaxBasalPerHourLabel.AutoSize = True
         MaxBasalPerHourLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        MaxBasalPerHourLabel.ForeColor = Color.White
+        MaxBasalPerHourLabel.ForeColor = Color.LightGray
         MaxBasalPerHourLabel.Location = New Point(978, 108)
         MaxBasalPerHourLabel.Name = "MaxBasalPerHourLabel"
         MaxBasalPerHourLabel.Size = New Size(161, 21)
@@ -1499,7 +1499,7 @@ Partial Class Form1
         ' ModelLabel
         ' 
         ModelLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
-        ModelLabel.ForeColor = Color.White
+        ModelLabel.ForeColor = Color.LightGray
         ModelLabel.Location = New Point(1140, 26)
         ModelLabel.Name = "ModelLabel"
         ModelLabel.Size = New Size(230, 21)
@@ -1514,7 +1514,7 @@ Partial Class Form1
         ' PumpAITLabel
         ' 
         PumpAITLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        PumpAITLabel.ForeColor = Color.White
+        PumpAITLabel.ForeColor = Color.LightGray
         PumpAITLabel.Location = New Point(978, 28)
         PumpAITLabel.Name = "PumpAITLabel"
         PumpAITLabel.Size = New Size(162, 21)
@@ -1536,7 +1536,7 @@ Partial Class Form1
         ' 
         PumpBatteryRemaining2Label.BackColor = Color.Transparent
         PumpBatteryRemaining2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        PumpBatteryRemaining2Label.ForeColor = Color.White
+        PumpBatteryRemaining2Label.ForeColor = Color.LightGray
         PumpBatteryRemaining2Label.Location = New Point(119, 106)
         PumpBatteryRemaining2Label.Name = "PumpBatteryRemaining2Label"
         PumpBatteryRemaining2Label.Size = New Size(87, 21)
@@ -1547,7 +1547,7 @@ Partial Class Form1
         ' 
         PumpBatteryRemainingLabel.BackColor = Color.Transparent
         PumpBatteryRemainingLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        PumpBatteryRemainingLabel.ForeColor = Color.White
+        PumpBatteryRemainingLabel.ForeColor = Color.LightGray
         PumpBatteryRemainingLabel.Location = New Point(119, 89)
         PumpBatteryRemainingLabel.Name = "PumpBatteryRemainingLabel"
         PumpBatteryRemainingLabel.Size = New Size(87, 21)
@@ -1558,7 +1558,7 @@ Partial Class Form1
         ' PumpNameLabel
         ' 
         PumpNameLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
-        PumpNameLabel.ForeColor = Color.White
+        PumpNameLabel.ForeColor = Color.LightGray
         PumpNameLabel.Location = New Point(1140, 52)
         PumpNameLabel.Name = "PumpNameLabel"
         PumpNameLabel.Size = New Size(230, 21)
@@ -1568,7 +1568,7 @@ Partial Class Form1
         ' ReadingsLabel
         ' 
         ReadingsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        ReadingsLabel.ForeColor = Color.White
+        ReadingsLabel.ForeColor = Color.LightGray
         ReadingsLabel.Location = New Point(1140, 106)
         ReadingsLabel.Name = "ReadingsLabel"
         ReadingsLabel.Size = New Size(235, 21)
@@ -1580,7 +1580,7 @@ Partial Class Form1
         ' 
         RemainingInsulinUnits.BackColor = Color.Transparent
         RemainingInsulinUnits.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        RemainingInsulinUnits.ForeColor = Color.White
+        RemainingInsulinUnits.ForeColor = Color.LightGray
         RemainingInsulinUnits.Location = New Point(209, 90)
         RemainingInsulinUnits.Name = "RemainingInsulinUnits"
         RemainingInsulinUnits.Size = New Size(80, 21)
@@ -1592,7 +1592,7 @@ Partial Class Form1
         ' 
         SensorDaysLeftLabel.BackColor = Color.Transparent
         SensorDaysLeftLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
-        SensorDaysLeftLabel.ForeColor = Color.White
+        SensorDaysLeftLabel.ForeColor = Color.LightGray
         SensorDaysLeftLabel.Location = New Point(0, 16)
         SensorDaysLeftLabel.Name = "SensorDaysLeftLabel"
         SensorDaysLeftLabel.Size = New Size(55, 40)
@@ -1605,7 +1605,7 @@ Partial Class Form1
         ' 
         SensorTimeLeftLabel.BackColor = Color.Transparent
         SensorTimeLeftLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        SensorTimeLeftLabel.ForeColor = Color.White
+        SensorTimeLeftLabel.ForeColor = Color.LightGray
         SensorTimeLeftLabel.Location = New Point(0, 89)
         SensorTimeLeftLabel.Name = "SensorTimeLeftLabel"
         SensorTimeLeftLabel.Size = New Size(94, 21)
@@ -1636,7 +1636,7 @@ Partial Class Form1
         ' SerialNumberButton
         ' 
         SerialNumberButton.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        SerialNumberButton.ForeColor = Color.White
+        SerialNumberButton.ForeColor = Color.LightGray
         SerialNumberButton.Location = New Point(1140, 74)
         SerialNumberButton.Name = "SerialNumberButton"
         SerialNumberButton.Size = New Size(230, 29)
@@ -1652,7 +1652,7 @@ Partial Class Form1
         ' 
         SgTrendLabel.BackColor = Color.Black
         SgTrendLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        SgTrendLabel.ForeColor = Color.White
+        SgTrendLabel.ForeColor = Color.LightGray
         SgTrendLabel.Location = New Point(461, 64)
         SgTrendLabel.Name = "SgTrendLabel"
         SgTrendLabel.Size = New Size(84, 21)
@@ -1745,7 +1745,7 @@ Partial Class Form1
         ' TrendValueLabel
         ' 
         TrendValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        TrendValueLabel.ForeColor = Color.White
+        TrendValueLabel.ForeColor = Color.LightGray
         TrendValueLabel.Location = New Point(461, 89)
         TrendValueLabel.Name = "TrendValueLabel"
         TrendValueLabel.Size = New Size(84, 21)
@@ -1756,7 +1756,7 @@ Partial Class Form1
         ' TrendArrowsLabel
         ' 
         TrendArrowsLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
-        TrendArrowsLabel.ForeColor = Color.White
+        TrendArrowsLabel.ForeColor = Color.LightGray
         TrendArrowsLabel.Location = New Point(461, 103)
         TrendArrowsLabel.Name = "TrendArrowsLabel"
         TrendArrowsLabel.Size = New Size(84, 24)
@@ -1768,7 +1768,7 @@ Partial Class Form1
         ' 
         TransmitterBatteryPercentLabel.BackColor = Color.Transparent
         TransmitterBatteryPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        TransmitterBatteryPercentLabel.ForeColor = Color.White
+        TransmitterBatteryPercentLabel.ForeColor = Color.LightGray
         TransmitterBatteryPercentLabel.Location = New Point(549, 89)
         TransmitterBatteryPercentLabel.Name = "TransmitterBatteryPercentLabel"
         TransmitterBatteryPercentLabel.Size = New Size(85, 21)
@@ -1841,7 +1841,7 @@ Partial Class Form1
         TimeInRangeChartLabel.AutoSize = True
         TimeInRangeChartLabel.BackColor = Color.Black
         TimeInRangeChartLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
-        TimeInRangeChartLabel.ForeColor = Color.White
+        TimeInRangeChartLabel.ForeColor = Color.LightGray
         TimeInRangeChartLabel.Location = New Point(82, 74)
         TimeInRangeChartLabel.Name = "TimeInRangeChartLabel"
         TimeInRangeChartLabel.Size = New Size(68, 40)
@@ -1855,7 +1855,7 @@ Partial Class Form1
         TimeInRangeSummaryPercentCharLabel.AutoSize = True
         TimeInRangeSummaryPercentCharLabel.BackColor = Color.Transparent
         TimeInRangeSummaryPercentCharLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
-        TimeInRangeSummaryPercentCharLabel.ForeColor = Color.White
+        TimeInRangeSummaryPercentCharLabel.ForeColor = Color.LightGray
         TimeInRangeSummaryPercentCharLabel.Location = New Point(95, 113)
         TimeInRangeSummaryPercentCharLabel.Name = "TimeInRangeSummaryPercentCharLabel"
         TimeInRangeSummaryPercentCharLabel.Size = New Size(42, 40)
@@ -1910,7 +1910,7 @@ Partial Class Form1
         TirComplianceLabel.AutoSize = True
         TirComplianceLabel.BackColor = Color.Transparent
         TirComplianceLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
-        TirComplianceLabel.ForeColor = Color.Gray
+        TirComplianceLabel.ForeColor = Color.LightGray
         TirComplianceLabel.Location = New Point(38, 448)
         TirComplianceLabel.Name = "TirComplianceLabel"
         TirComplianceLabel.Size = New Size(157, 25)
@@ -2978,7 +2978,7 @@ Partial Class Form1
         ' 
         WebView.AllowExternalDrop = False
         WebView.CreationProperties = Nothing
-        WebView.DefaultBackgroundColor = Color.White
+        WebView.DefaultBackgroundColor = Color.LightGray
         WebView.Dock = DockStyle.Fill
         WebView.Location = New Point(597, 6)
         WebView.Name = "WebView"
