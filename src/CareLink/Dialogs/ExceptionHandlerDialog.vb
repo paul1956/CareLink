@@ -24,14 +24,14 @@ Public Class ExceptionHandlerDialog
     Public Property LocalRawData As String
 
     ''' <summary>
-    '''  Gets or sets the unhandled exception event arguments.
-    ''' </summary>
-    Public Property UnhandledException As UnhandledExceptionEventArgs
-
-    ''' <summary>
     '''  Gets or sets the full path to the generated error report file.
     ''' </summary>
     Public Property ReportFileNameWithPath As String
+
+    ''' <summary>
+    '''  Gets or sets the unhandled exception event arguments.
+    ''' </summary>
+    Public Property UnhandledException As UnhandledExceptionEventArgs
 
     ''' <summary>
     '''  Creates a report file containing exception and stack trace information,
@@ -274,6 +274,16 @@ Public Class ExceptionHandlerDialog
         exceptionStartingString As String)
 
         Throw New NotImplementedException()
+    End Sub
+
+    ''' <summary>
+    '''  Overrides the OnHandleCreated method to enable dark mode
+    '''  for the dialog when its handle is created.
+    ''' </summary>
+    ''' <param name="e">The event data.</param>
+    Protected Overrides Sub OnHandleCreated(e As EventArgs)
+        MyBase.OnHandleCreated(e)
+        EnableDarkMode(hwnd:=Me.Handle)
     End Sub
 
     ''' <summary>

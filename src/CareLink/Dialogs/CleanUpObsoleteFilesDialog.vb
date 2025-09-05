@@ -185,4 +185,14 @@ Public Class CleanupStaleFilesDialog
         e.Cancel = True
     End Sub
 
+    ''' <summary>
+    '''  Overrides the OnHandleCreated method to enable dark mode
+    '''  for the dialog when its handle is created.
+    ''' </summary>
+    ''' <param name="e">The event data.</param>
+    Protected Overrides Sub OnHandleCreated(e As EventArgs)
+        MyBase.OnHandleCreated(e)
+        EnableDarkMode(hwnd:=Me.Handle)
+    End Sub
+
 End Class
