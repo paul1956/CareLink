@@ -5,6 +5,7 @@
 Imports CareLink
 
 Public Class PumpSetup
+
     Private Const CareLinkUrl As String =
         "https://www.medtronicdiabetes.com/products/carelink-personal-diabetes-software"
 
@@ -43,7 +44,7 @@ Public Class PumpSetup
     End Function
 
     Private Sub Accept_Button_Click(sender As Object, e As EventArgs) _
-        Handles Accept_Button.Click
+            Handles Accept_Button.Click
 
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
@@ -103,14 +104,14 @@ Public Class PumpSetup
     End Sub
 
     Private Sub Exit_Button_Click(sender As Object, e As EventArgs) _
-        Handles Exit_Button.Click
+            Handles Exit_Button.Click
 
         End
     End Sub
 
     Private Sub InstructionsRtb_LinkClicked(
-        sender As Object,
-        e As LinkClickedEventArgs) Handles InstructionsRtb.LinkClicked
+            sender As Object,
+            e As LinkClickedEventArgs) Handles InstructionsRtb.LinkClicked
 
         Dim startInfo As New ProcessStartInfo(fileName:=e.LinkText) With {
             .UseShellExecute = True}
@@ -221,7 +222,7 @@ Public Class PumpSetup
     End Sub
 
     Private Sub UserName_TextChanged(sender As Object, e As EventArgs) _
-        Handles UserName.TextChanged
+            Handles UserName.TextChanged
         Dim path As String =
             IO.Path.Combine(GetSettingsDirectory(), $"{Me.UserName.Text}Settings.pdf")
         Dim validPdf As Boolean = IO.File.Exists(path)
@@ -234,6 +235,16 @@ Public Class PumpSetup
             ' If "(None)" is selected, clear the current PDF name with path
             Me.PdfFileNameWithPath = ""
         End If
+    End Sub
+
+    ''' <summary>
+    '''  Handles the <see cref="Form.HandleCreated"/> event.
+    '''  Enables dark mode for the form and its controls.
+    ''' </summary>
+    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    Protected Overrides Sub OnHandleCreated(e As EventArgs)
+        MyBase.OnHandleCreated(e)
+        DarkModeHelpers.EnableDarkMode(hwnd:=Me.Handle)
     End Sub
 
 End Class

@@ -89,19 +89,19 @@ Public Class SgMiniForm
         End Using
     End Sub
 
+    Private Sub SgMiniForm_FormClosing(sender As Object, e As FormClosingEventArgs) _
+        Handles Me.FormClosing
+
+        _form1.Visible = True
+    End Sub
+
     Private Sub SgMiniForm_VisibleChanged(sender As Object, e As EventArgs) _
-        Handles MyBase.VisibleChanged
+            Handles MyBase.VisibleChanged
 
         If Me.Visible Then
             Me.SgTextBox.SelectionLength = 0
         End If
 
-    End Sub
-
-    Private Sub SgMiniForm_FormClosing(sender As Object, e As FormClosingEventArgs) _
-        Handles Me.FormClosing
-
-        _form1.Visible = True
     End Sub
 
     Private Sub SgMiniWindow_GotFocus(sender As Object, e As EventArgs) _
@@ -156,6 +156,16 @@ Public Class SgMiniForm
                 _alarmPlayedLow = False
         End Select
         Me.Text = GetLastUpdateMessage()
+    End Sub
+
+    ''' <summary>
+    '''  Overrides the OnHandleCreated method to enable dark mode
+    '''  for the dialog when its handle is created.
+    ''' </summary>
+    ''' <param name="e">The event data.</param>
+    Protected Overrides Sub OnHandleCreated(e As EventArgs)
+        MyBase.OnHandleCreated(e)
+        EnableDarkMode(hwnd:=Me.Handle)
     End Sub
 
     Public Sub SetCurrentDeltaValue(deltaString As String, delta As Single)
