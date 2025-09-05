@@ -31,17 +31,17 @@ Public Class PdfSettingsRecord
     '''  Initializes a new instance of the <see cref="PdfSettingsRecord"/> class
     '''  by extracting data from the specified PDF file.
     ''' </summary>
-    ''' <param name="pdfFileNameWithPath">
+    ''' <param name="pdfFilePath">
     '''  The full path to the PDF file containing device settings.
     ''' </param>
     ''' <param name="notTesting">
     '''  If set to <see langword="True"/>, WinForms support is required so the cursor
     '''  will change to a wait cursor during processing.
     ''' </param>
-    Public Sub New(pdfFileNameWithPath As String)
+    Public Sub New(pdfFilePath As String)
         Dim allText As String =
             ExtractTextFromPage(
-                filename:=pdfFileNameWithPath,
+                filename:=pdfFilePath,
                 startPageNumber:=0,
                 endPageNumber:=1)
         Dim startIndex As Integer = allText.IndexOf(value:=DeviceSettings)
@@ -60,7 +60,7 @@ Public Class PdfSettingsRecord
             Return
         End If
         Dim tables As Dictionary(Of String, PdfTable) =
-            GetTableList(pdfFileNameWithPath, startPageNumber:=0, endPageNumber:=1)
+            GetTableList(pdfFilePath, startPageNumber:=0, endPageNumber:=1)
         Dim listOfAllTextLines As List(Of String) = allText.SplitLines(Trim:=True)
 
         ' Get Sensor and Basal 4 Line to determine Active Basal later

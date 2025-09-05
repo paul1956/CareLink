@@ -501,7 +501,7 @@ Public Class Client2
     ''' <summary>
     '''  Attempts to download the device settings PDF file for the current user.
     ''' </summary>
-    ''' <param name="pdfFileNameWithPath">The file name to save the PDF as.</param>
+    ''' <param name="pdfFilePath">The file name to save the PDF as.</param>
     ''' <returns>
     '''  <see langword="True"/> if the PDF was successfully downloaded;
     '''  otherwise, <see langword="False"/>.
@@ -510,7 +510,7 @@ Public Class Client2
     '''  This method is not implemented for CareLink™ Partners
     '''  and will always return <see langword="False"/>.
     ''' </remarks>
-    Friend Function TryGetDeviceSettingsPdfFile(pdfFileNameWithPath As String) As Boolean
+    Friend Function TryGetDeviceSettingsPdfFile(pdfFilePath As String) As Boolean
         Dim authToken As String = ""
 
         ' CareLink™ Partners do not support download
