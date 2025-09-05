@@ -371,10 +371,9 @@ Friend Module LoginHelpers
     Friend Sub SetUpCareLinkUser(forceUI As Boolean)
         Dim currentUserUpdateNeeded As Boolean = False
         Dim newPdfFile As Boolean = False
-        Dim pdfFileNameWithPath As String = GetUserPdfPath()
 
-
-        If File.Exists(GetUserSettingsPath()) Then
+        Dim pdfFilePath As String = GetUserPdfPath()
+        If File.Exists(path:=GetUserSettingsPath()) Then
             Dim userSettingsJson As String = File.ReadAllText(path:=GetUserSettingsPath())
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(
                 json:=userSettingsJson,
@@ -387,18 +386,34 @@ Friend Module LoginHelpers
                 CurrentUser.InsulinTypeName = s_insulinTypes.Keys(index:=0)
             End If
 
-            If File.Exists(path:=pdfFileNameWithPath) Then
-                Dim lastWriteTime As Date = File.GetLastWriteTime(GetUserSettingsPath())
+            If File.Exists(path:=pdfFilePath) Then
+                Dim lastWriteTime As Date =
+                    File.GetLastWriteTime(GetUserSettingsPath())
                 newPdfFile = Not IsFileReadOnly(path:=GetUserSettingsPath()) AndAlso
-                      File.GetLastWriteTime(path:=pdfFileNameWithPath) > lastWriteTime
-            End If
+                      File.GetLastWriteTime(path:=pdfFilePath) > lastWriteTime
+            Else
+                While Not File.Exists(path:=pdfFilePath)
+                    If MsgBox(
+                        heading:=$"No Device Setting PDF file exists!",
+                        prompt:="Do you want to load one now, if not the program will exit?",
+                        buttonStyle:=MsgBoxStyle.OkCancel,
+                        title:="Missing PDF Device Settings File") = MsgBoxResult.Cancel Then
+                        End
+                    End If
 
+                    Form1.MenuStartHereManuallyImportDeviceSettings.PerformClick()
+
+                    newPdfFile = True
+                    Stop
+                End While
+            End If
             If Not forceUI Then
                 If Not newPdfFile Then
-                    ' If the PDF file exists and is valid, load it without prompting the user.
+                    ' If the PDF file exists and is valid, load it without prompting
+                    ' the user.
                     Form1.Cursor = Cursors.WaitCursor
                     Application.DoEvents()
-                    CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
+                    CurrentPdf = New PdfSettingsRecord(pdfFilePath)
                 End If
             End If
         Else
@@ -415,11 +430,11 @@ Friend Module LoginHelpers
         Dim carbRatios As New List(Of CarbRatioRecord)
         Dim currentTarget As Single = 120
 
-        If Form1.Client?.TryGetDeviceSettingsPdfFile(pdfFileNameWithPath) OrElse
+        If Form1.Client?.TryGetDeviceSettingsPdfFile(pdfFilePath) OrElse
            newPdfFile OrElse
-           File.Exists(pdfFileNameWithPath) Then
+           File.Exists(path:=pdfFilePath) Then
 
-            CurrentPdf = New PdfSettingsRecord(pdfFileNameWithPath)
+            CurrentPdf = New PdfSettingsRecord(pdfFilePath)
 
             If CurrentPdf.IsValid Then
                 If CurrentUser.PumpAit <> CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime Then

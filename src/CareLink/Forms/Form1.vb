@@ -2702,7 +2702,14 @@ Public Class Form1
                                                 CurrentPdf IsNot Nothing AndAlso
                                                 CurrentPdf.IsValid
 
-        Me.MenuStartHereManuallyImportDeviceSettings.Enabled = Not userPdfExists
+        Dim settingExist As Boolean = Directory.Exists(path:=GetSettingsDirectory)
+
+        Dim downloadFilesExists As Boolean =
+           Directory.GetFiles(path:=GetDownloadsDirectory(),
+                              searchPattern:=$"*.pdf").Length > 0
+
+        Me.MenuStartHereManuallyImportDeviceSettings.Enabled = downloadFilesExists
+
         ' The menu item For cleaning up obsolete files
         ' (MenuStartHereCleanUpObsoleteFiles) is only enabled,
         ' when the application Is the only instance running, as a safety precaution.

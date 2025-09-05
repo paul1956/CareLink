@@ -160,7 +160,8 @@ Friend Module UserMessageConstants
                  "Would you Like to review Auto Mode Readiness Screen?"},
         {"820", "SmartGuard exit(triggeredDateTime). (basalName) started. " &
                  "Would you Like to review SmartGuard Checklist?"},
-        {"821", "Minimum Delivery Timeout. BG Required"}, _ ' From Java
+        {"821", "Enter BG now(triggeredDateTime). SmartGuard has reached the time limit " &
+                 "for minimum delivery rate. Enter BG to continue in SmartGuard."},
         {"822", "SmartGuard maximum delivery. Auto Mode has been at maximum " &
                  "delivery for 4 hours. Enter BG to continue in SmartGuard."},
         {"823", "High Sensor Glucose(triggeredDateTime). BG has been high over 1 hour. " &
@@ -168,7 +169,7 @@ Friend Module UserMessageConstants
         {"827", "Low Sg (sg) (units)(triggeredDateTime) SG is under (lowLimit). " &
                  "Check BG and treat"},
         {"829", "BG required(triggeredDateTime). Enter a New BG for SmartGuard."},
-        {"831", "Enter BG Now(triggeredDateTime). Enter a BG to continue in SmartGuard."},
+        {"831", "Enter BG now(triggeredDateTime). Enter a BG to continue in SmartGuard."},
         {"832", "Calibration Required"}, _ ' From Java
         {"833", "Bolus recommended(triggeredDateTime). For (bgValue) (units) entered, " &
                  "a correction bolus is recommended. Select Bolus to program a bolus."},

@@ -50,18 +50,18 @@ Public Class PdfTests
 
     <Theory>
     <MemberData(NameOf(PdfFiles))>
-    Public Sub PdfFilesHaveContent(pdfFileNameWithPath As String)
+    Public Sub PdfFilesHaveContent(pdfFilePath As String)
         If Not Debugger.IsAttached Then
             Return
         End If
         Dim path As String =
-            IO.Path.GetFileName(path:=pdfFileNameWithPath)
+            IO.Path.GetFileName(path:=pdfFilePath)
         Dim because As String =
             $"File {path} should exist in the TestData directory."
-        IO.File.Exists(path:=pdfFileNameWithPath) _
+        IO.File.Exists(path:=pdfFilePath) _
                .Should() _
                .BeTrue(because)
-        Dim currentPdf As New PdfSettingsRecord(pdfFileNameWithPath)
+        Dim currentPdf As New PdfSettingsRecord(pdfFilePath)
         because =
             $"The PDF settings record for {path} should  " &
             "not be null after loading the file."

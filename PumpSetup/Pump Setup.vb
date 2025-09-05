@@ -19,7 +19,7 @@ Public Class PumpSetup
     ''' </remarks>
     Private _pdfFilesInDownLoadDirectory As String()
 
-    Private Property PdfFileNameWithPath As String = ""
+    Private Property PdfFilePath As String = ""
 
     ''' <summary>
     '''  Gets the word at the specified index in the given text.
@@ -49,7 +49,7 @@ Public Class PumpSetup
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
 
-        Dim currentPdf As New PdfSettingsRecord(Me.PdfFileNameWithPath)
+        Dim currentPdf As New PdfSettingsRecord(Me.PdfFilePath)
         If currentPdf Is Nothing OrElse Not currentPdf.IsValid() Then
             MessageBox.Show(text:="The selected PDF file is not a valid Settings file.",
                             caption:="Invalid PDF File",
@@ -80,13 +80,13 @@ Public Class PumpSetup
         Me.UserName.Enabled = Me.ComboBoxPDFs.SelectedIndex = 0
         If validPdf Then
             ' If a valid PDF is selected, set the current PDF name with path
-            Me.PdfFileNameWithPath =
+            Me.PdfFilePath =
                 IO.Path.Combine(
                     GetDownloadsDirectory(),
                     Me.ComboBoxPDFs.SelectedItem.ToString())
         Else
             ' If "(None)" is selected, clear the current PDF name with path
-            Me.PdfFileNameWithPath = ""
+            Me.PdfFilePath = ""
         End If
     End Sub
 
@@ -230,10 +230,10 @@ Public Class PumpSetup
         Me.ComboBoxPDFs.Enabled = Not validPdf
         If validPdf Then
             ' If a valid PDF is selected, set the current PDF name with path
-            Me.PdfFileNameWithPath = path
+            Me.PdfFilePath = path
         Else
             ' If "(None)" is selected, clear the current PDF name with path
-            Me.PdfFileNameWithPath = ""
+            Me.PdfFilePath = ""
         End If
     End Sub
 
