@@ -6,7 +6,6 @@ Imports System.ComponentModel
 Imports System.Configuration
 Imports System.Globalization
 Imports System.IO
-Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
@@ -2779,17 +2778,33 @@ Public Class Form1
             .Title = $"Select downloaded CareLink™ Settings file.",
             .ValidateNames = True}
 
-            If openFileDialog1.ShowDialog(owner:=Me) = DialogResult.OK Then
-                Dim directory As String =
-                    Path.GetDirectoryName(path:=openFileDialog1.FileName)
-                Dim destFileName As String = Path.Combine(directory, GetUserPdfPath())
-                File.Move(sourceFileName:=openFileDialog1.FileName, destFileName)
-                My.Computer.FileSystem.MoveFile(
-                    sourceFileName:=destFileName,
-                    destinationFileName:=GetUserPdfPath(),
-                    showUI:=FileIO.UIOption.AllDialogs,
-                    onUserCancel:=FileIO.UICancelOption.DoNothing)
+            If openFileDialog1.ShowDialog(owner:=Me) <> DialogResult.OK Then
+                Return
             End If
+            Dim pdfFilePath As String = openFileDialog1.FileName
+            Try
+                Me.Cursor = Cursors.WaitCursor
+                Application.DoEvents()
+                Dim pdfSettingsRecord As New PdfSettingsRecord(pdfFilePath)
+                Me.Cursor = Cursors.Default
+                Application.DoEvents()
+
+                If pdfSettingsRecord.IsValid Then
+                    File.Move(
+                        sourceFileName:=pdfFilePath,
+                        destFileName:=GetUserPdfPath(),
+                        overwrite:=True)
+                    Exit Sub
+                Else
+                    MsgBox(
+                        heading:=$"Device Setting PDF file Is invalid",
+                        prompt:=GetUserPdfPath(),
+                        buttonStyle:=MsgBoxStyle.OkOnly,
+                        title:="Invalid Settings PDF File")
+                End If
+            Catch ex As Exception
+                ' Ignore errors here
+            End Try
         End Using
     End Sub
 

@@ -55,7 +55,7 @@ Public Class PdfSettingsRecord
                 Me.UserName = $"{split(1)} {split(0)}"
             End If
         End If
-        If allText.Contains(value:="Device Settings(1 of 2)") Then
+        If Not allText.Contains(value:="Device Settings(1 of 2)") Then
             Me.IsValid = False
             Return
         End If
