@@ -43,8 +43,9 @@ Public Module SystemVariables
     Friend Function CountSgInTightRange(sgList As IEnumerable(Of SG)) As Integer
         Dim predicate As Func(Of SG, Boolean) =
             Function(sg As SG) As Boolean
+                Dim tiTrLowThreshold As Integer = My.Settings.TiTrLowThreshold
                 Return Not Single.IsNaN(sg.sg) AndAlso
-                       sg.sgMgdL >= OptionsConfigureTiTR.LowThreshold AndAlso
+                       sg.sgMgdL >= tiTrLowThreshold AndAlso
                        sg.sgMgdL <= 140.0
             End Function
         Return CInt(sgList.Count(predicate))

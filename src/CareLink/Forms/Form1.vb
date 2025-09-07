@@ -2490,9 +2490,6 @@ Public Class Form1
 
         Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
-        My.Forms.OptionsConfigureTiTR.TreatmentTargetPercent =
-            My.Settings.TiTrTreatmentTargetPercent
-        My.Forms.OptionsConfigureTiTR.LowThreshold = My.Settings.TiTrLowThreshold
         Me.InitializeDgvCareLinkUsers(dgv:=Me.DgvCareLinkUsers)
         s_formLoaded = True
         Me.MenuOptionsAudioAlerts.Checked = My.Settings.SystemAudioAlertsEnabled
@@ -5335,7 +5332,7 @@ Public Class Form1
 
         Me.TimeInTightRangeValueLabel.Text = $"{_timeInTightRange.Str}%"
         Me.TiTRMgsLabel2.Text = My.Forms.OptionsConfigureTiTR.GetTiTrMsg()
-        If _timeInTightRange.Uint >= OptionsConfigureTiTR.TreatmentTargetPercent Then
+        If _timeInTightRange.Uint >= My.Settings.TiTrTreatmentTargetPercent Then
             Me.TiTRMgsLabel.ForeColor = Color.LimeGreen
             Me.TiTRMgsLabel2.ForeColor = Color.LimeGreen
             Me.TimeInTightRangeValueLabel.ForeColor = Color.LimeGreen
