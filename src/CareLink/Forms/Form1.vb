@@ -2781,17 +2781,16 @@ Public Class Form1
             If openFileDialog1.ShowDialog(owner:=Me) <> DialogResult.OK Then
                 Return
             End If
-            Dim pdfFilePath As String = openFileDialog1.FileName
             Try
                 Me.Cursor = Cursors.WaitCursor
                 Application.DoEvents()
-                Dim pdfSettingsRecord As New PdfSettingsRecord(pdfFilePath)
+                Dim pdfSettingsRecord As New PdfSettingsRecord(openFileDialog1.FileName)
                 Me.Cursor = Cursors.Default
                 Application.DoEvents()
 
                 If pdfSettingsRecord.IsValid Then
                     File.Move(
-                        sourceFileName:=pdfFilePath,
+                        sourceFileName:=openFileDialog1.FileName,
                         destFileName:=GetUserPdfPath(),
                         overwrite:=True)
                     Exit Sub
@@ -2819,7 +2818,7 @@ Public Class Form1
     Private Sub MenuStartHereShowPumpSetup_Click(sender As Object, e As EventArgs) _
         Handles MenuStartHereShowPumpSetup.Click
 
-        If File.Exists(GetUserPdfPath()) Then
+        If File.Exists(path:=GetUserPdfPath()) Then
             If CurrentPdf.IsValid Then
                 SetServerUpdateTimer(Start:=False)
                 Using dialog As New PumpSetupDialog

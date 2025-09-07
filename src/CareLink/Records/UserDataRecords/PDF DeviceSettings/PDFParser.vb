@@ -104,16 +104,16 @@ Public Module PDFParser
     ''' <summary>
     '''  Creates a <see cref="PdfTableExtractor"/> for the specified PDF file.
     ''' </summary>
-    ''' <param name="pdfFileNameWithPath">The path to the PDF file.</param>
+    ''' <param name="filename">The path to the PDF file.</param>
     ''' <returns>
     '''  A <see cref="PdfTableExtractor"/> instance for the loaded PDF document.
     ''' </returns>
-    Public Function GetPdfExtractor(pdfFileNameWithPath As String) As PdfTableExtractor
+    Public Function GetPdfExtractor(filename As String) As PdfTableExtractor
         'Create a PdfDocument object
         Dim document As New PdfDocument()
 
         'Load the PDF file
-        document.LoadFromFile(filename:=pdfFileNameWithPath)
+        document.LoadFromFile(filename)
 
         'Initialize an instance of PdfTableExtractor class
         Dim extractor As New PdfTableExtractor(document)
@@ -124,7 +124,7 @@ Public Module PDFParser
     '''  Extracts all tables from a range of pages in a PDF file and
     '''  returns them in a dictionary with descriptive keys.
     ''' </summary>
-    ''' <param name="pdfFileNameWithPath">The path to the PDF file.</param>
+    ''' <param name="fileName">The path to the PDF file.</param>
     ''' <param name="startPageNumber">The starting page number (zero-based).</param>
     ''' <param name="endPageNumber">
     '''  The ending page number (zero-based). If 0, only the start page is used.
@@ -133,16 +133,16 @@ Public Module PDFParser
     '''  A dictionary mapping descriptive table titles to <see cref="PdfTable"/> objects.
     ''' </returns>
     Public Function GetTableList(
-        pdfFileNameWithPath As String,
+        fileName As String,
         startPageNumber As Integer,
         Optional endPageNumber As Integer = 0) As Dictionary(Of String, PdfTable)
 
         Dim results As New Dictionary(Of String, PdfTable)
-        If Not File.Exists(path:=pdfFileNameWithPath) Then
+        If Not File.Exists(path:=fileName) Then
             Return results
         End If
 
-        Dim extractor As PdfTableExtractor = GetPdfExtractor(pdfFileNameWithPath)
+        Dim extractor As PdfTableExtractor = GetPdfExtractor(fileName)
         'Declare a PdfTable array
         'Extract tableList from a specific page
         Dim sub24HourTotal As Integer = 0

@@ -31,19 +31,16 @@ Public Class PdfSettingsRecord
     '''  Initializes a new instance of the <see cref="PdfSettingsRecord"/> class
     '''  by extracting data from the specified PDF file.
     ''' </summary>
-    ''' <param name="pdfFilePath">
+    ''' <param name="filename">
     '''  The full path to the PDF file containing device settings.
     ''' </param>
     ''' <param name="notTesting">
     '''  If set to <see langword="True"/>, WinForms support is required so the cursor
     '''  will change to a wait cursor during processing.
     ''' </param>
-    Public Sub New(pdfFilePath As String)
+    Public Sub New(filename As String)
         Dim allText As String =
-            ExtractTextFromPage(
-                filename:=pdfFilePath,
-                startPageNumber:=0,
-                endPageNumber:=1)
+            ExtractTextFromPage(filename, startPageNumber:=0, endPageNumber:=1)
         Dim startIndex As Integer = allText.IndexOf(value:=DeviceSettings)
         Dim tempString As String =
             allText.Substring(startIndex:=startIndex + DeviceSettings.Length).TrimStart
@@ -60,7 +57,7 @@ Public Class PdfSettingsRecord
             Return
         End If
         Dim tables As Dictionary(Of String, PdfTable) =
-            GetTableList(pdfFilePath, startPageNumber:=0, endPageNumber:=1)
+            GetTableList(filename, startPageNumber:=0, endPageNumber:=1)
         Dim listOfAllTextLines As List(Of String) = allText.SplitLines(Trim:=True)
 
         ' Get Sensor and Basal 4 Line to determine Active Basal later
@@ -91,7 +88,8 @@ Public Class PdfSettingsRecord
                             sTable.GetSingleLineValue(Of Single)(key)
                     Case itemKey.StartsWith(NamedBasalHeader)
                         Dim tableNumber As Integer = ExtractIndex(itemKey)
-                        Dim key As String = Me.Basal.NamedBasal.Keys(index:=tableNumber - 1)
+                        Dim key As String =
+                            Me.Basal.NamedBasal.Keys(index:=tableNumber - 1)
                         Dim indexOfKey As Integer = allText.IndexOf(value:=key)
                         Dim isActive As Boolean =
                             allText.Substring(
@@ -161,7 +159,7 @@ Public Class PdfSettingsRecord
 
                             If e.IsFirst Then Continue For
                             Dim key As String = Me.PresetBolus.Keys(index:=e.Index - 1)
-                            Me.PresetBolus(key) = New PresetBolusRecord(e.Value, key)
+                            Me.PresetBolus(key) = New PresetBolusRecord(row:=e.Value, key)
                         Next
                     Case itemKey.StartsWith(value:=BasalRatesHeader)
                         Dim index As Integer = ExtractIndex(itemKey) - 1

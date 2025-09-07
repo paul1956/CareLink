@@ -7,29 +7,29 @@ Public Class PresetBolusRecord
     Public Sub New()
     End Sub
 
-    Public Sub New(r As StringTable.Row, key As String)
-        If r.Columns.Count <> 3 OrElse r.Columns(index:=0).Length = 0 Then
+    Public Sub New(row As StringTable.Row, key As String)
+        If row.Columns.Count <> 3 OrElse row.Columns(index:=0).Length = 0 Then
             Exit Sub
         End If
         Dim column0Trim As String =
-            r.Columns(index:=0).Replace(oldValue:=key, newValue:="").Trim
+            row.Columns(index:=0).Replace(oldValue:=key, newValue:="").Trim
         If column0Trim.Length = 0 Then
-            If r.Columns(index:=1).Length = 0 AndAlso r.Columns(index:=1).Length = 0 Then
+            If row.Columns(index:=1).Length = 0 AndAlso row.Columns(index:=1).Length = 0 Then
                 Exit Sub
             End If
-            If r.Columns(index:=1).Contains(value:="-"c) Then
+            If row.Columns(index:=1).Contains(value:="-"c) Then
                 Me.BolusTypeNormal = True
                 Me.Bolus = column0Trim
             Else
                 Me.BolusTypeNormal = False
-                Dim squareSplit() As String = r.Columns(index:=1).Split(separator:="-"c)
+                Dim squareSplit() As String = row.Columns(index:=1).Split(separator:="-"c)
                 Me.Bolus = squareSplit(0)
                 Me.Duration = squareSplit(1)
             End If
         Else
             Me.BolusTypeNormal = True
             Me.Bolus = column0Trim
-            Me.Square = r.Columns(index:=1)
+            Me.Square = row.Columns(index:=1)
         End If
         Me.IsValid = True
 
