@@ -162,11 +162,10 @@ Friend Module DateTimeExtensions
     Friend Function GetCurrentDateCulture(countryCode As String) As CultureInfo
         Dim code As String = $"en-{countryCode}"
 
-        Dim predicate As Func(Of CultureInfo, Boolean) =
-            Function(c As CultureInfo) As Boolean
-                Return c.Name = code
-            End Function
-        Dim culture As CultureInfo = CultureInfoList.FirstOrDefault(predicate)
+        Dim culture As CultureInfo = CultureInfoList.FirstOrDefault(
+           predicate:=Function(c As CultureInfo) As Boolean
+                          Return c.Name = code
+                      End Function)
         Return If(culture, New CultureInfo(name:="en-US"))
     End Function
 
