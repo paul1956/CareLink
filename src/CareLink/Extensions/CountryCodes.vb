@@ -368,11 +368,9 @@ Public Module RegionCountryLists
         Dim length As Integer = indexOfClosedParenthesis - indexOfOpenParenthesis - 1
         Dim cultureName As String = filename.Substring(startIndex, length)
 
-        Dim predicate As Func(Of CultureInfo, Boolean) =
-            Function(c As CultureInfo) As Boolean
-                Return c.Name = cultureName
-            End Function
-        Dim fileNameInvalid As Boolean = Not CultureInfoList.Any(predicate)
+        Dim fileNameInvalid As Boolean = Not CultureInfoList.Any(
+            predicate:=Function(c As CultureInfo) c.Name = cultureName)
+
         If fileNameInvalid Then
             MsgBox(
                 heading:="Invalid Filename",

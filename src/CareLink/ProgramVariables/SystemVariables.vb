@@ -48,23 +48,7 @@ Public Module SystemVariables
                        sg.sgMgdL >= tiTrLowThreshold AndAlso
                        sg.sgMgdL <= 140.0
             End Function
-        Return CInt(sgList.Count(predicate))
-    End Function
-
-    ''' <summary>
-    '''  Counts the number of valid SG records in the specified list.
-    '''  A valid SG record is one where sg is not NaN and sgMgdL is not zero.
-    ''' </summary>
-    ''' <param name="sgList">The list of SG records to evaluate.</param>
-    ''' <returns>
-    '''  The count of valid SG records.
-    ''' </returns>
-    Friend Function CountValidSg(sgList As IEnumerable(Of SG)) As Integer
-        Dim predicate As Func(Of SG, Boolean) =
-            Function(sg As SG) As Boolean
-                Return Not Single.IsNaN(sg.sg) AndAlso sg.sgMgdL <> 0.0
-            End Function
-        Return CInt(sgList.Count(predicate))
+        Return sgList.Count(predicate)
     End Function
 
     ''' <summary>
@@ -79,7 +63,7 @@ Public Module SystemVariables
             PatientData.AboveHyperLimit.RoundToSingle(digits:=1, considerValue:=True)
         Return If(aboveHyperLimit >= 0,
                   (CInt(aboveHyperLimit), aboveHyperLimit.ToString),
-                  (CInt(0), "??? "))
+                  (0, "??? "))
     End Function
 
     ''' <summary>
@@ -113,7 +97,9 @@ Public Module SystemVariables
             End Function
         Dim maxYScaled As Single = s_sgRecords.Max(Of Single)(selector) + 2
         If Single.IsNaN(maxYScaled) Then
-            Return If(NativeMmolL, mmoLInsulinYValue, mmDlInsulinYValue)
+            Return If(NativeMmolL,
+                      mmoLInsulinYValue,
+                      mmDlInsulinYValue)
         End If
 
         Dim noRecords As Boolean = s_sgRecords.Count = 0
@@ -123,7 +109,9 @@ Public Module SystemVariables
         Dim mgdlValue As Single = If(noRecords OrElse maxYScaled > mmDlInsulinYValue,
                                      342,
                                      Math.Max(maxYScaled, 260))
-        Return If(NativeMmolL, mmolValue, mgdlValue)
+        Return If(NativeMmolL,
+                  mmolValue,
+                  mgdlValue)
     End Function
 
     ''' <summary>
@@ -135,7 +123,9 @@ Public Module SystemVariables
     Friend Function GetSgTarget() As Single
         Return If(CurrentUser.CurrentTarget <> 0,
                   CurrentUser.CurrentTarget,
-                  If(NativeMmolL, MmolLItemsPeriod.Last.Value, MgDlItems.Last.Value))
+                  If(NativeMmolL,
+                     MmolLItemsPeriod.Last.Value,
+                     MgDlItems.Last.Value))
     End Function
 
     ''' <summary>
@@ -157,7 +147,7 @@ Public Module SystemVariables
                 Return (0, "  ???")
             End If
 
-            Dim validSgCount As Integer = CountValidSg(sgList:=s_sgRecords)
+            Dim validSgCount As Integer = GetValidSgRecords().Count()
             If validSgCount = 0 Then
                 Return (0, "  ???")
             End If
@@ -189,7 +179,9 @@ Public Module SystemVariables
         If asMmolL = Nothing Then
             asMmolL = NativeMmolL
         End If
-        Return If(asMmolL, TirHighMmol10, TirHighMmDl180)
+        Return If(asMmolL,
+                  TirHighMmol10,
+                  TirHighMmDl180)
     End Function
 
     ''' <summary>
@@ -218,7 +210,9 @@ Public Module SystemVariables
         If asMmolL = Nothing Then
             asMmolL = NativeMmolL
         End If
-        Return If(asMmolL, TirLowMmDl3_9, TirLowMmol70)
+        Return If(asMmolL,
+                  TirLowMmDl3_9,
+                  TirLowMmol70)
     End Function
 
     ''' <summary>
@@ -239,7 +233,9 @@ Public Module SystemVariables
     '''  The maximum Y value for plotting.
     ''' </returns>
     Friend Function GetYMaxValueFromNativeMmolL() As Single
-        Return If(NativeMmolL, MaxMmolL22_2, MaxMmDl400)
+        Return If(NativeMmolL,
+                  MaxMmolL22_2,
+                  MaxMmDl400)
     End Function
 
     ''' <summary>
@@ -249,7 +245,9 @@ Public Module SystemVariables
     '''  The minimum Y value for plotting in the selected units.
     ''' </returns>
     Friend Function GetYMinValueFromNativeMmolL() As Single
-        Return If(NativeMmolL, MinMmolL2_8, MinMmDl50)
+        Return If(NativeMmolL,
+                  MinMmolL2_8,
+                  MinMmDl50)
     End Function
 
     ''' <summary>

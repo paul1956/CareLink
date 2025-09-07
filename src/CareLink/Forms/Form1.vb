@@ -191,11 +191,7 @@ Public Class Form1
             homeChartLegend:=_summaryChartLegend,
             treatmentMarkersChartLegend:=_treatmentMarkersChartLegend)
 
-        Dim predicate As Func(Of LowGlucoseSuspended, Boolean) =
-            Function(s As LowGlucoseSuspended) As Boolean
-                Return s.deliverySuspended
-            End Function
-        showLegend = s_suspendedMarkers.Any(predicate)
+        showLegend = s_suspendedMarkers.Any(predicate:=Function(s) s.deliverySuspended)
 
         ShowHideLegendItem(
             showLegend,
@@ -5409,12 +5405,7 @@ Public Class Form1
             (GetYMaxValueFromNativeMmolL() - GetTirHighLimit()) /
             (GetTirLowLimit() - GetYMinValueFromNativeMmolL())
 
-        Dim predicate As Func(Of SG, Boolean) =
-            Function(entry As SG) As Boolean
-                Return entry.sg.IsSgValid
-            End Function
-
-        For Each sg As SG In s_sgRecords.Where(predicate)
+        For Each sg As SG In GetValidSgRecords()
             elements += 1
             If sg.sgMgdL < 70 Then
                 lowCount += 1
@@ -5671,13 +5662,7 @@ Public Class Form1
         Me.ModelLabel.Text = $"{mdi.ModelNumber} HW Version = {mdi.HardwareRevision}"
         Me.PumpNameLabel.Text = GetPumpName(mdi.ModelNumber)
 
-        Dim predicate As Func(Of SG, Boolean) =
-            Function(entry As SG) As Boolean
-                Return Not Single.IsNaN(entry.sg)
-            End Function
-        Dim nonZeroRecords As IEnumerable(Of SG) = s_sgRecords.Where(predicate)
-
-        Me.ReadingsLabel.Text = $"{nonZeroRecords.Count()}/{288} SG Readings"
+        Me.ReadingsLabel.Text = $"{GetValidSgRecords().Count()}/{288} SG Readings"
 
         Me.TlpLastSG.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:={s_lastSg}.ToList),

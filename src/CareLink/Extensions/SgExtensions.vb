@@ -6,7 +6,7 @@ Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
-Friend Module SgConversionExtensions
+Friend Module SgExtensions
 
     ''' <summary>
     '''  Converts a JsonElement to a string representation of the value,
@@ -32,6 +32,14 @@ Friend Module SgConversionExtensions
         End Select
 
         Return itemAsSingle.ScaleSg()
+    End Function
+
+    ''' <summary>
+    '''  Retrieves all valid <see cref="SG"/> records from the global list.
+    ''' </summary>
+    ''' <returns>An <see cref="enumerable"/> of valid <see cref="SG"/> records.</returns>
+    Public Function GetValidSgRecords() As IEnumerable(Of SG)
+        Return s_sgRecords.Where(predicate:=Function(entry) entry.sg.IsSgValid)
     End Function
 
     ''' <summary>

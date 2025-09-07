@@ -43,11 +43,9 @@ Public Module StringExtensions
     ''' </returns>
     <Extension()>
     Public Function Count(s As String, c As Char) As Integer
-        Dim predicate As Func(Of Char, Boolean) =
-            Function(c1 As Char) As Boolean
-                Return c1 = c
-            End Function
-        Return s.Count(predicate)
+        Return s.Count(predicate:=Function(c1 As Char) As Boolean
+                                      Return c1 = c
+                                  End Function)
     End Function
 
     ''' <summary>
@@ -178,7 +176,9 @@ Public Module StringExtensions
         Dim unitOnly As String = If(totalUnits = 1,
                                     unit,
                                     $"{unit}s")
-        Return If(includeValue, $"{totalUnits:N0} {unitOnly}", unitOnly)
+        Return If(includeValue,
+                  $"{totalUnits:N0} {unitOnly}",
+                  unitOnly)
     End Function
 
     ''' <summary>

@@ -114,13 +114,13 @@ Friend Module Form1UpdateHelpers
     ''' <summary>
     '''  Gets the display name of a pump model based on its model number.
     ''' </summary>
-    ''' <param name="value">The model number of the pump.</param>
+    ''' <param name="modelNumber">The model number of the pump.</param>
     ''' <returns>
     '''  The display name of the pump if recognized;
     '''  otherwise, "Unknown".
     ''' </returns>
-    Friend Function GetPumpName(value As String) As String
-        Select Case value
+    Friend Function GetPumpName(modelNumber As String) As String
+        Select Case modelNumber
             Case "MMT-1812"
                 Return "Medtronic MiniMed™ 740G--mg/dL"
             Case "MMT-1880"
