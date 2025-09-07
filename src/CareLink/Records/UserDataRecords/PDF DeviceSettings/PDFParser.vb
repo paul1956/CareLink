@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.IO
+Imports System.Runtime.CompilerServices
 Imports Spire.Pdf
 Imports Spire.Pdf.Texts
 Imports Spire.Pdf.Utilities
@@ -19,6 +20,7 @@ Public Module PDFParser
     ''' </summary>
     ''' <param name="table">The PDF table to extract text from.</param>
     ''' <returns>A <see cref="StringTable"/> containing the extracted text.</returns>
+    <Extension>
     Friend Function ExtractTableText(table As PdfTable) As StringTable
         'Get row number and column number of a certain table
 
@@ -49,11 +51,12 @@ Public Module PDFParser
     '''  A <see cref="StringTable"/> if the header matches;
     '''  otherwise, a new empty <see cref="StringTable"/>.
     ''' </returns>
-    Public Function ConvertPdfTableToStringTable(
+    <Extension>
+    Public Function PdfTableToStringTable(
         table As PdfTable,
         tableHeader As String) As StringTable
 
-        Dim sTable As StringTable = ExtractTableText(table)
+        Dim sTable As StringTable = table.ExtractTableText()
         If sTable.IsValid AndAlso
            sTable.Rows(index:=0).Columns(index:=0).StartsWith(value:=tableHeader) Then
             Return sTable
@@ -104,16 +107,16 @@ Public Module PDFParser
     ''' <summary>
     '''  Creates a <see cref="PdfTableExtractor"/> for the specified PDF file.
     ''' </summary>
-    ''' <param name="pdfFileNameWithPath">The path to the PDF file.</param>
+    ''' <param name="filename">The path to the PDF file.</param>
     ''' <returns>
     '''  A <see cref="PdfTableExtractor"/> instance for the loaded PDF document.
     ''' </returns>
-    Public Function GetPdfExtractor(pdfFileNameWithPath As String) As PdfTableExtractor
+    Public Function GetPdfExtractor(filename As String) As PdfTableExtractor
         'Create a PdfDocument object
         Dim document As New PdfDocument()
 
         'Load the PDF file
-        document.LoadFromFile(filename:=pdfFileNameWithPath)
+        document.LoadFromFile(filename)
 
         'Initialize an instance of PdfTableExtractor class
         Dim extractor As New PdfTableExtractor(document)
@@ -124,7 +127,7 @@ Public Module PDFParser
     '''  Extracts all tables from a range of pages in a PDF file and
     '''  returns them in a dictionary with descriptive keys.
     ''' </summary>
-    ''' <param name="pdfFileNameWithPath">The path to the PDF file.</param>
+    ''' <param name="fileName">The path to the PDF file.</param>
     ''' <param name="startPageNumber">The starting page number (zero-based).</param>
     ''' <param name="endPageNumber">
     '''  The ending page number (zero-based). If 0, only the start page is used.
@@ -133,16 +136,16 @@ Public Module PDFParser
     '''  A dictionary mapping descriptive table titles to <see cref="PdfTable"/> objects.
     ''' </returns>
     Public Function GetTableList(
-        pdfFileNameWithPath As String,
+        fileName As String,
         startPageNumber As Integer,
         Optional endPageNumber As Integer = 0) As Dictionary(Of String, PdfTable)
 
         Dim results As New Dictionary(Of String, PdfTable)
-        If Not File.Exists(path:=pdfFileNameWithPath) Then
+        If Not File.Exists(path:=fileName) Then
             Return results
         End If
 
-        Dim extractor As PdfTableExtractor = GetPdfExtractor(pdfFileNameWithPath)
+        Dim extractor As PdfTableExtractor = GetPdfExtractor(fileName)
         'Declare a PdfTable array
         'Extract tableList from a specific page
         Dim sub24HourTotal As Integer = 0
@@ -150,52 +153,52 @@ Public Module PDFParser
         Dim subNameRate As Integer = 0
         For i As Integer = startPageNumber To endPageNumber
             For Each table As PdfTable In extractor.ExtractTable(pageIndex:=i).ToList()
-                Dim sTable As StringTable = ExtractTableText(table)
+                Dim sTable As StringTable = table.ExtractTableText()
                 Dim value As String = sTable.Rows(index:=0).Columns(index:=0)
                 Dim key As String
                 Select Case True
-                    Case value.StartsWith("Maximum Basal Rate")
+                    Case value.StartsWith(value:="Maximum Basal Rate")
                         key = "Maximum Basal Rate"
-                    Case value.StartsWith("24-Hour Total")
+                    Case value.StartsWith(value:="24-Hour Total")
                         sub24HourTotal += 1
                         key = $"24 Hour Total({sub24HourTotal})"
-                    Case value.StartsWith("Bolus Wizard")
+                    Case value.StartsWith(value:="Bolus Wizard")
                         key = "Bolus Wizard"
-                    Case value.StartsWith("Easy Bolus")
+                    Case value.StartsWith(value:="Easy Bolus")
                         key = "Easy Bolus"
-                    Case value.StartsWith("Time Ratio")
+                    Case value.StartsWith(value:="Time Ratio")
                         key = "Time Ratio"
-                    Case value.StartsWith("Time Sensitivity")
+                    Case value.StartsWith(value:="Time Sensitivity")
                         key = "Time Sensitivity"
-                    Case value.StartsWith("Time Low")
+                    Case value.StartsWith(value:="Time Low")
                         key = "Time Low"
-                    Case value.StartsWith("Name Normal")
+                    Case value.StartsWith(value:="Name Normal")
                         key = "Name Normal"
-                    Case value.StartsWith("Time U/Hr")
+                    Case value.StartsWith(value:="Time U/Hr")
                         subTime += 1
                         key = $"Time U/Hr({subTime})"
-                    Case value.StartsWith("Name Rate")
+                    Case value.StartsWith(value:="Name Rate")
                         subNameRate += 1
                         key = $"Name Rate({subNameRate})"
-                    Case value.StartsWith("Sensor")
+                    Case value.StartsWith(value:="Sensor")
                         key = "Sensor"
-                    Case value.StartsWith("SmartGuard")
+                    Case value.StartsWith(value:="SmartGuard")
                         key = "SmartGuard"
-                    Case value.StartsWith("Low Reservoir")
+                    Case value.StartsWith(value:="Low Reservoir")
                         key = "Low Reservoir"
-                    Case value.StartsWith("Start High")
+                    Case value.StartsWith(value:="Start High")
                         key = "Start High"
-                    Case value.StartsWith("Start Low")
+                    Case value.StartsWith(value:="Start Low")
                         key = "Start Low"
-                    Case value.StartsWith("Auto Calibration")
+                    Case value.StartsWith(value:="Auto Calibration")
                         key = "Auto Calibration"
-                    Case value.StartsWith("Name Start")
+                    Case value.StartsWith(value:="Name Start")
                         key = "Name Start"
-                    Case value.StartsWith("Name Time")
+                    Case value.StartsWith(value:="Name Time")
                         key = "Name Time"
-                    Case value.StartsWith("Calibration Reminder")
+                    Case value.StartsWith(value:="Calibration Reminder")
                         key = "Calibration Reminder"
-                    Case value.StartsWith("Block Mode")
+                    Case value.StartsWith(value:="Block Mode")
                         key = "Block Mode"
                     Case String.IsNullOrWhiteSpace(value)
                         Continue For
@@ -235,18 +238,18 @@ Public Module PDFParser
         doc.LoadFromFile(fileName)
 
         'Get the second page
-        Dim page As PdfPageBase = doc.Pages(startPageNumber)
+        Dim page As PdfPageBase = doc.Pages(index:=startPageNumber)
 
         'Create a PdfTextExtractor object
         Dim textExtractor As New PdfTextExtractor(page)
 
         'Create a PdfTextExtractOptions object
         'Set the rectangle area
-        Dim extractOptions As New PdfTextExtractOptions With {.ExtractArea =
-            New RectangleF(x, y, Width, Height)}
+        Dim extractOptions As New PdfTextExtractOptions With {
+            .ExtractArea = New RectangleF(x, y, Width, Height)}
 
         'Extract text from the rectangle
-        Return textExtractor.ExtractText(extractOptions)
+        Return textExtractor.ExtractText(options:=extractOptions)
 
     End Function
 
@@ -256,7 +259,10 @@ Public Module PDFParser
     ''' <param name="filename">The path to the PDF file.</param>
     ''' <param name="startPageNumber">The page number (zero-based) to extract from.</param>
     ''' <returns>The extracted text from the specified page.</returns>
-    Public Function SimpleExtraction(filename As String, startPageNumber As Integer) As String
+    Public Function SimpleExtraction(
+        filename As String,
+        startPageNumber As Integer) As String
+
         'Create a PdfDocument object
         Dim doc As New PdfDocument()
 
@@ -264,17 +270,18 @@ Public Module PDFParser
         doc.LoadFromFile(filename)
 
         'Get the first page
-        Dim page As PdfPageBase = doc.Pages(startPageNumber)
+        Dim page As PdfPageBase = doc.Pages(index:=startPageNumber)
 
         'Create a PdfTextExtractor object
         Dim textExtractor As New PdfTextExtractor(page)
 
         'Create a PdfTextExtractOptions object
         'Set IsSimpleExtraction to true
-        Dim extractOptions As New PdfTextExtractOptions With {.IsSimpleExtraction = True}
+        Dim extractOptions As New PdfTextExtractOptions With {
+            .IsSimpleExtraction = True}
 
         'Extract text from the selected page
-        Return textExtractor.ExtractText(extractOptions)
+        Return textExtractor.ExtractText(options:=extractOptions)
 
     End Function
 #End If
