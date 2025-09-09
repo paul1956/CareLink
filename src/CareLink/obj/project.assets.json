@@ -235,7 +235,7 @@
           }
         }
       },
-      "Microsoft.Web.WebView2/1.0.3477-prerelease": {
+      "Microsoft.Web.WebView2/1.0.3530-prerelease": {
         "type": "package",
         "build": {
           "buildTransitive/Microsoft.Web.WebView2.targets": {}
@@ -345,7 +345,7 @@
           }
         }
       },
-      "System.Speech/10.0.0-preview.7.25380.108": {
+      "System.Speech/10.0.0-rc.1.25451.107": {
         "type": "package",
         "compile": {
           "lib/net10.0/System.Speech.dll": {
@@ -681,10 +681,10 @@
         "microsoft.extensions.primitives.nuspec"
       ]
     },
-    "Microsoft.Web.WebView2/1.0.3477-prerelease": {
-      "sha512": "DhNaJxaGEpz4IKycu8zHjCLaODteJdQPj6tA5anYsMHt2JrA5wedI+QC+MxDItbp/ljAfP2cInlinbMmkhrCfg==",
+    "Microsoft.Web.WebView2/1.0.3530-prerelease": {
+      "sha512": "a2pOt2sA6aRx3XBoEmALaBhZf9kuxyA8AbcFg8b41k+Q022utedCe7buzZPSkQ/gSaQmnxCuzuDCdJtnQjqfkw==",
       "type": "package",
-      "path": "microsoft.web.webview2/1.0.3477-prerelease",
+      "path": "microsoft.web.webview2/1.0.3530-prerelease",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -734,7 +734,7 @@
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.WinForms.xml",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.dll",
         "lib_manual/netcoreapp3.0/Microsoft.Web.WebView2.Wpf.xml",
-        "microsoft.web.webview2.1.0.3477-prerelease.nupkg.sha512",
+        "microsoft.web.webview2.1.0.3530-prerelease.nupkg.sha512",
         "microsoft.web.webview2.nuspec",
         "runtimes/win-arm64/native/WebView2Loader.dll",
         "runtimes/win-arm64/native_uap/Microsoft.Web.WebView2.Core.dll",
@@ -896,10 +896,10 @@
         "xamarin.interactive/SkiaSharp.Workbooks.dll"
       ]
     },
-    "System.Speech/10.0.0-preview.7.25380.108": {
-      "sha512": "vzKEug9WbOhCWkrrLhcHbecXwst7v+pDMPPLlHoe2Hy488cCo2dUv1gXaaUReztNDvYsOI7BQAjQOqbaDLQtbA==",
+    "System.Speech/10.0.0-rc.1.25451.107": {
+      "sha512": "/UGv3h4k7AkatVvPO0TvDxJkaZtYPRxHpW1D8guc26gPZIbJMG3/M6CrH8nOkhhjWNs0V6h2WTxNq/7zR2JUng==",
       "type": "package",
-      "path": "system.speech/10.0.0-preview.7.25380.108",
+      "path": "system.speech/10.0.0-rc.1.25451.107",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -923,7 +923,7 @@
         "runtimes/win/lib/net8.0/System.Speech.xml",
         "runtimes/win/lib/net9.0/System.Speech.dll",
         "runtimes/win/lib/net9.0/System.Speech.xml",
-        "system.speech.10.0.0-preview.7.25380.108.nupkg.sha512",
+        "system.speech.10.0.0-rc.1.25451.107.nupkg.sha512",
         "system.speech.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -1023,9 +1023,9 @@
       "ClosedXML >= 0.105.0",
       "DataGridViewDisableButtonColumnEx >= 1.0.8",
       "FreeSpire.PDF >= 10.2.0",
-      "Microsoft.Web.WebView2 >= 1.0.3477-prerelease",
+      "Microsoft.Web.WebView2 >= 1.0.3530-prerelease",
       "Octokit >= 14.0.0",
-      "System.Speech >= 10.0.0-preview.7.25380.108",
+      "System.Speech >= 10.0.0-rc.1.25451.107",
       "TableLayputPanelTop >= 1.0.0.3",
       "ToolStripComboBoxEx >= 1.0.8",
       "WebView2.DevTools.Dom >= 5.0.0",
@@ -1094,7 +1094,7 @@
           },
           "Microsoft.Web.WebView2": {
             "target": "Package",
-            "version": "[1.0.3477-prerelease, )"
+            "version": "[1.0.3530-prerelease, )"
           },
           "Octokit": {
             "target": "Package",
@@ -1102,7 +1102,7 @@
           },
           "System.Speech": {
             "target": "Package",
-            "version": "[10.0.0-preview.7.25380.108, )"
+            "version": "[10.0.0-rc.1.25451.107, )"
           },
           "TableLayputPanelTop": {
             "target": "Package",

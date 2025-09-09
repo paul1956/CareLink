@@ -18,7 +18,7 @@ Public Class SupportedReportRecord
                          $"{Values.Count} entries, 3 expected.",
                 innerException)
         End If
-        Me.recordNumber = recordNumber
+        Me.RecordNumber = recordNumber
         Me.report = Values(key:=NameOf(report))
         Dim forList As List(Of Dictionary(Of String, String)) =
             JsonToDictionaryList(json:=Values(key:=NameOf(onlyFor)))
@@ -31,8 +31,8 @@ Public Class SupportedReportRecord
     End Sub
 
     <DisplayName("Record Number")>
-    <Column(Order:=0, TypeName:=NameOf(recordNumber))>
-    Public Property recordNumber As Integer
+    <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
+    Public Property RecordNumber As Integer
 
     <DisplayName("Report")>
     <Column(Order:=1, TypeName:=NameOf([String]))>
