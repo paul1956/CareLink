@@ -315,7 +315,7 @@ Public Module DgvCellStyleHelpers
         Dim value As String = Convert.ToString(e.Value)
         If value <> String.Empty Then
             Try
-                e.Value = value.ParseDate("").ToShortDateString
+                e.Value = value.ParseDate(key:="")
             Catch ex As Exception
                 e.Value = value
             End Try

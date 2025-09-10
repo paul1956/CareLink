@@ -6,19 +6,19 @@
 Public Class NumberFormatRecord
     Private ReadOnly _asList As New Dictionary(Of String, String)
 
-    Public Sub New(jsonData As String)
-        _asList = JsonToDictionary(jsonData)
+    Public Sub New(json As String)
+        _asList = JsonToDictionary(json)
         If _asList.Count <> 2 Then
             Dim innerException As New ApplicationException(
                 message:="Invalid number format record structure.")
 
             Throw New ApplicationException(
-                message:=$"{NameOf(NumberFormatRecord)}({NameOf(jsonData)})" &
-                         $" contains {jsonData.Length} entries.",
+                message:=$"{NameOf(NumberFormatRecord)}({NameOf(json)})" &
+                         $" contains {json.Length} entries.",
                 innerException)
         End If
-        Me.decimalSeparator = _asList(NameOf(decimalSeparator))
-        Me.groupsSeparator = _asList(NameOf(groupsSeparator))
+        Me.decimalSeparator = _asList(key:=NameOf(decimalSeparator))
+        Me.groupsSeparator = _asList(key:=NameOf(groupsSeparator))
     End Sub
 
     Public Property decimalSeparator As String

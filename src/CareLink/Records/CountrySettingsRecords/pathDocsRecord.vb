@@ -5,9 +5,9 @@
 Public Class PathDocsRecord
     Public Property pathDoc As New Dictionary(Of String, String)
 
-    Public Sub New(jsonData As String)
-        If Not String.IsNullOrWhiteSpace(jsonData) Then
-            Me.pathDoc = JsonToDictionary(jsonData)
+    Public Sub New(json As String)
+        If Not String.IsNullOrWhiteSpace(value:=json) Then
+            Me.pathDoc = JsonToDictionary(json)
         End If
     End Sub
 

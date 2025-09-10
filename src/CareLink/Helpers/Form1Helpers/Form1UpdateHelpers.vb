@@ -217,13 +217,13 @@ Friend Module Form1UpdateHelpers
         key As String,
         listOfSummaryRecords As List(Of SummaryRecord))
 
-        Dim valueList As String() = GetValueList(kvp.Value)
+        Dim valueList As String() = GetValueList(json:=kvp.Value)
         For Each e As IndexClass(Of String) In valueList.WithIndex
             Dim message As String = String.Empty
             Dim strings As String() = e.Value.Split(separator:=" = ")
             If kvp.Key.EqualsNoCase("AdditionalInfo") Then
                 Dim additionalInfo As Dictionary(Of String, String) =
-                    GetAdditionalInformation(jsonString:=kvp.Value)
+                    GetAdditionalInformation(json:=kvp.Value)
                 If strings(0).EqualsNoCase("sensorUpdateTime") Then
                     message = GetSensorUpdateTime(key:=strings(1))
                 End If
@@ -484,7 +484,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.pumpBannerState)
-                    s_pumpBannerStateValue = JsonToDictionaryList(kvp.Value)
+                    s_pumpBannerStateValue = JsonToDictionaryList(json:=kvp.Value)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     mainForm.PumpBannerStateLabel.Visible = s_pumpBannerStateValue.Count > 0
@@ -609,6 +609,14 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.limits)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
+                    s_limitRecords = New List(Of Limit)
+                    If PatientData.Limits.Count > 0 Then
+                        For Each limit As Limit In PatientData.Limits
+                            If limit.Kind IsNot Nothing Then
+                                s_limitRecords.Add(item:=limit)
+                            End If
+                        Next
+                    End If
                     s_limitRecords = PatientData.Limits
 
                 Case NameOf(ServerDataIndexes.belowHypoLimit)

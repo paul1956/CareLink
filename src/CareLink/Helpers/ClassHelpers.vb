@@ -27,67 +27,76 @@ Public Module ClassHelpers
             name As String) As DataGridViewCellStyle
 
         Dim classType As Type = GetType(T)
-        Dim cellStyle As New DataGridViewCellStyle
         If alignmentTable.Count = 0 Then
+            Dim leftAlignedTypes As New HashSet(Of String) From {
+                "additionalInfo",
+                "AdditionalInfo",
+                "Date",
+                "DateTime",
+                NameOf(OADate),
+                "RecordNumber",
+                NameOf([String]),
+                "Version"}
+
+            Dim rightAlignedTypes As New HashSet(Of String) From {
+                "CustomProperty",
+                NameOf([Decimal]),
+                NameOf([Double]),
+                NameOf([Int32]),
+                NameOf([Single]),
+                NameOf([TimeSpan])}
+
+            Dim centerAlignedTypes As New HashSet(Of String) From {
+                NameOf([Boolean]), "DeleteRow"}
+
             For Each [property] As PropertyInfo In classType.GetProperties()
-                cellStyle = New DataGridViewCellStyle
-                Dim typeName As String = [property].GetCustomAttributes(
-                    attributeType:=GetType(ColumnAttribute),
-                    inherit:=True).Cast(Of ColumnAttribute)().SingleOrDefault()?.TypeName
+                Dim cellStyle As New DataGridViewCellStyle
+                Dim objects As Object() =
+                    [property].GetCustomAttributes(
+                        attributeType:=GetType(ColumnAttribute),
+                        inherit:=True)
+                Dim typeName As String =
+                    objects.Cast(Of ColumnAttribute)().SingleOrDefault()?.TypeName
 
-                Select Case typeName
-                    Case "additionalInfo",
-                         "Date",
-                         "DateTime",
-                         NameOf(OADate),
-                         "RecordNumber",
-                         NameOf([String]),
-                         "Version"
-
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleLeft,
-                            padding:=New Padding(all:=1))
-                    Case "AdditionalInfo"
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleLeft,
-                            padding:=New Padding(all:=1))
-                    Case NameOf([Decimal]),
-                         NameOf([Double]),
-                         NameOf([Int32]),
-                         NameOf([Single]),
-                         NameOf([TimeSpan])
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleRight,
-                            padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
-                    Case NameOf([Boolean]),
-                         "DeleteRow"
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleCenter,
-                            padding:=New Padding(all:=0))
-                    Case "CustomProperty"
-                        cellStyle = cellStyle.SetCellStyle(
-                            alignment:=DataGridViewContentAlignment.MiddleRight,
-                            padding:=New Padding(left:=0, top:=2, right:=2, bottom:=2))
-                    Case Else
-                        Throw UnreachableException(paramName:=[property].PropertyType.Name)
-                End Select
-                alignmentTable.Add(key:=[property].Name, value:=cellStyle)
+                If typeName Is Nothing Then
+                    cellStyle = cellStyle.SetCellStyle(
+                        alignment:=DataGridViewContentAlignment.MiddleLeft,
+                        padding:=New Padding(all:=1))
+                ElseIf leftAlignedTypes.Contains(item:=typeName) Then
+                    cellStyle = cellStyle.SetCellStyle(
+                        alignment:=DataGridViewContentAlignment.MiddleLeft,
+                        padding:=New Padding(all:=1))
+                ElseIf rightAlignedTypes.Contains(item:=typeName) Then
+                    cellStyle = cellStyle.SetCellStyle(
+                        alignment:=DataGridViewContentAlignment.MiddleRight,
+                        padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                ElseIf centerAlignedTypes.Contains(item:=typeName) Then
+                    cellStyle = cellStyle.SetCellStyle(
+                        alignment:=DataGridViewContentAlignment.MiddleCenter,
+                        padding:=New Padding(all:=0))
+                Else
+                    cellStyle = cellStyle.SetCellStyle(
+                        alignment:=DataGridViewContentAlignment.MiddleLeft,
+                        padding:=New Padding(all:=1))
+                End If
+                alignmentTable(key:=[property].Name) = cellStyle
             Next
         End If
-        If Not alignmentTable.TryGetValue(key:=name, value:=cellStyle) Then
-            Dim alignMiddle As Boolean =
-                name = NameOf(SummaryRecord.RecordNumber) OrElse
-                                name = NameOf(Limit.Index)
-            cellStyle = If(alignMiddle,
-                           (New DataGridViewCellStyle).SetCellStyle(
-                               alignment:=DataGridViewContentAlignment.MiddleCenter,
-                               padding:=New Padding(all:=0)),
-                           (New DataGridViewCellStyle).SetCellStyle(
-                               alignment:=DataGridViewContentAlignment.MiddleLeft,
-                               padding:=New Padding(all:=1)))
-            alignmentTable.Add(key:=name, value:=cellStyle)
-        End If
-        Return cellStyle
-    End Function
 
+        Dim resultStyle As DataGridViewCellStyle = Nothing
+        If Not alignmentTable.TryGetValue(key:=name, value:=resultStyle) Then
+            Dim alignMiddle As Boolean =
+                name = NameOf(SummaryRecord.RecordNumber) OrElse name = NameOf(Limit.Index)
+
+            resultStyle = If(alignMiddle,
+                             (New DataGridViewCellStyle).SetCellStyle(
+                                alignment:=DataGridViewContentAlignment.MiddleCenter,
+                                padding:=New Padding(all:=0)),
+                             (New DataGridViewCellStyle).SetCellStyle(
+                                alignment:=DataGridViewContentAlignment.MiddleLeft,
+                                padding:=New Padding(all:=1)))
+            alignmentTable(key:=name) = resultStyle
+        End If
+        Return resultStyle
+    End Function
 End Module

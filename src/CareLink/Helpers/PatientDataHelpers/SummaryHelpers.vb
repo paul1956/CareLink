@@ -339,8 +339,8 @@ Friend Module SummaryHelpers
                                 If question.StartsWith(value:="3"c) Then
                                     message &= "Did you see drops at the end of the tubing?"
                                 Else
-                                    message &= "Remove reservoir and " &
-                                        "select rewind, restart New reservoir procedure."
+                                    message &=
+                                        "Remove reservoir and select rewind, restart New reservoir procedure."
                                 End If
                             End If
                         Else
@@ -369,28 +369,32 @@ Friend Module SummaryHelpers
                                 kvp,
                                 messages:=s_sensorMessages,
                                 messageTableName:=NameOf(s_sensorMessages))
-                        listOfSummaryRecords.Add(item:=s_autoModeReadinessState)
+                        item = s_autoModeReadinessState
+                        listOfSummaryRecords.Add(item)
                     Case "autoModeShieldState"
                         recordNumber = listOfSummaryRecords.Count
-                        item = New SummaryRecord(
+                        item =
+                            New SummaryRecord(
                             recordNumber,
-                            kvp,
-                            messages:=s_autoModeShieldMessages,
-                            messageTableName:=NameOf(s_autoModeShieldMessages))
+                                kvp,
+                                messages:=s_autoModeShieldMessages,
+                                messageTableName:=NameOf(s_autoModeShieldMessages))
                         listOfSummaryRecords.Add(item)
                     Case "plgmLgsState"
-                        item = New SummaryRecord(
-                            recordNumber:=listOfSummaryRecords.Count,
-                            kvp,
-                            messages:=s_plgmLgsMessages,
-                            messageTableName:=NameOf(s_plgmLgsMessages))
+                        item =
+                            New SummaryRecord(
+                                recordNumber:=listOfSummaryRecords.Count,
+                                kvp,
+                                messages:=s_plgmLgsMessages,
+                                messageTableName:=NameOf(s_plgmLgsMessages))
                         listOfSummaryRecords.Add(item)
                     Case NameOf(ClearedNotifications.dateTime)
                         Dim key As String = NameOf(ClearedNotifications.dateTime)
-                        item = New SummaryRecord(
-                            recordNumber:=listOfSummaryRecords.Count,
-                            kvp,
-                            message:=kvp.Value.ParseDate(key).ToShortDateString)
+                        item =
+                            New SummaryRecord(
+                                recordNumber:=listOfSummaryRecords.Count,
+                                kvp,
+                                message:=kvp.Value.ParseDate(key).ToShortDateString)
                         listOfSummaryRecords.Add(item)
                     Case "additionalInfo"
                         recordNumber = CType(listOfSummaryRecords.Count, ServerDataIndexes)
