@@ -60,7 +60,6 @@ Public Class CountrySettingsRecord
     '{""report"":""OVERVIEW"",""onlyFor"":[],""notFor"":[]},
     '{""report"":""WEEKLY_REVIEW"",""onlyFor"":[],""notFor"":[]}]"
 
-
 #End Region
 
     Public Sub Clear()

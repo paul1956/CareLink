@@ -5,9 +5,9 @@
 Imports CareLink
 Imports FluentAssertions
 Imports Xunit
-Imports System.Globalization
 
 Public Class SystemVariablesTests
+
     <Fact>
     Public Sub GetWebViewCacheDirectory_ReturnsSetValue()
         ' Arrange

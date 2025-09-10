@@ -6,6 +6,7 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Reflection
 
 Public Module ClassHelpers
+
     ''' <summary>
     '''  Creates a <see cref="Dictionary"/> that maps class property names to
     '''  <see cref="DataGridViewCellStyle"/> for column alignment.
@@ -99,4 +100,5 @@ Public Module ClassHelpers
         End If
         Return resultStyle
     End Function
+
 End Module

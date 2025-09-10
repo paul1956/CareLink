@@ -6,6 +6,7 @@ Imports System.Globalization
 Imports CareLink
 
 Public Module SupportFunctions
+
     Public Sub RestoreDefaults()
         NativeMmolL = False
         DecimalSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator

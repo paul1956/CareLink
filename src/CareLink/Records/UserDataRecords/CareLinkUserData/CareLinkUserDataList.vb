@@ -4,7 +4,6 @@
 
 Imports System.ComponentModel
 Imports System.Text
-Imports DocumentFormat.OpenXml.Math
 
 ''' <summary>
 '''  Represents a collection of <see cref="CareLinkUserDataRecord"/> objects
@@ -22,6 +21,7 @@ Public Class CareLinkUserDataList
     Implements IBindingList
 
     Private ReadOnly _onListChanged1 As ListChangedEventHandler
+
     Private ReadOnly _resetEvent As _
         New ListChangedEventArgs(listChangedType:=ListChangedType.Reset, newIndex:=-1)
 
@@ -62,6 +62,7 @@ Public Class CareLinkUserDataList
     ''' </summary>
     Public ReadOnly Property SupportsChangeNotification() As Boolean _
         Implements IBindingList.SupportsChangeNotification
+
         Get
             Return True
         End Get
@@ -70,8 +71,7 @@ Public Class CareLinkUserDataList
     ''' <summary>
     '''  Gets a value indicating whether the list supports searching.
     ''' </summary>
-    Public ReadOnly Property SupportsSearching() As Boolean _
-        Implements IBindingList.SupportsSearching
+    Public ReadOnly Property SupportsSearching() As Boolean Implements IBindingList.SupportsSearching
 
         Get
             Return False
@@ -81,8 +81,7 @@ Public Class CareLinkUserDataList
     ''' <summary>
     '''  Gets a value indicating whether the list supports sorting.
     ''' </summary>
-    Public ReadOnly Property SupportsSorting() As Boolean _
-        Implements IBindingList.SupportsSorting
+    Public ReadOnly Property SupportsSorting() As Boolean Implements IBindingList.SupportsSorting
 
         Get
             Return False
@@ -112,7 +111,7 @@ Public Class CareLinkUserDataList
     Default Public Property Item(itemName As String) As CareLinkUserDataRecord
         Get
             Const functionName As String =
-                NameOf(CareLinkUserDataList) & NameOf(CareLinkUserDataList.Item)
+                NameOf(CareLinkUserDataList) & "." & NameOf(CareLinkUserDataList.Item)
             Dim message As String
             If String.IsNullOrWhiteSpace(value:=itemName) Then
                 message = $"Key may not be Nothing, in {functionName}"
@@ -130,7 +129,7 @@ Public Class CareLinkUserDataList
                 Return New CareLinkUserDataRecord(parent:=Me)
             End Try
             message =
-                $"Key '{itemName}' Not Present in Dictionary, in {FunctionName}"
+                $"Key '{itemName}' Not Present in Dictionary, in {functionName}"
             Throw New KeyNotFoundException(message)
         End Get
         Set(Value As CareLinkUserDataRecord)

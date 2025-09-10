@@ -19,8 +19,7 @@ Public Module SystemConstants
     Friend Const MmolLUnitsDivisor As Single = 18
     Friend Const RsaKeySize As Integer = 2048
     Friend Const StackTraceStartingStr As String = "--- Start of stack trace ---"
-    Friend Const StackTraceTerminatingStr As String =
-        "--- End of stack trace from previous location ---"
+    Friend Const StackTraceTerminatingStr As String = "--- End of stack trace from previous location ---"
     Friend Const TimeFormatMilitaryWithMinutes As String = "HH:mm"
     Friend Const TimeFormatMilitaryWithoutMinutes As String = "HH"
     Friend Const TimeFormatTwelveHourWithMinutes As String = " h:mm tt"

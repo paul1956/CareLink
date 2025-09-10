@@ -79,7 +79,6 @@ Public Class Form1
         MyBase.ScaleControl(factor, specified)
     End Sub
 
-
     ''' <summary>
     '''  Overloaded System Windows Handler.
     ''' </summary>

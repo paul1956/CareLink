@@ -18,6 +18,7 @@ Imports System.Threading
 '''  </para>
 ''' </remarks>
 Friend Module UpdateChecker
+
     ''' <summary>
     '''  The search key used to locate the version string in the GitHub releases page HTML.
     ''' </summary>

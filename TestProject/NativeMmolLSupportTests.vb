@@ -2,10 +2,10 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
 Imports CareLink
 Imports FluentAssertions
 Imports Xunit
-Imports System.Globalization
 
 <Collection("Sequential")>
 <UISettings(MaxAttempts:=10)>
