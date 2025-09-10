@@ -28,7 +28,7 @@ Public Module DictionaryExtensions
             [property] As PropertyInfo)
         Try
             Dim propertyInfo As PropertyInfo =
-                obj.GetType.GetProperty($"{[property].Name}AsString")
+                obj.GetType.GetProperty(name:=$"{[property].Name}AsString")
             If propertyInfo Is Nothing Then
                 Stop
             End If
@@ -94,9 +94,7 @@ Public Module DictionaryExtensions
     '''  the same key-value pairs.
     ''' </returns>
     <Extension>
-    Public Function Clone(Of T)(dictionary As Dictionary(Of String, T)) As _
-        Dictionary(Of String, T)
-
+    Public Function Clone(Of T)(dictionary As Dictionary(Of String, T)) As Dictionary(Of String, T)
         Return New Dictionary(Of String, T)(dictionary)
     End Function
 
@@ -188,12 +186,10 @@ Public Module DictionaryExtensions
     ''' <summary>
     '''  Converts a JSON string to a <see cref="Dictionary(Of String, String)"/>.
     ''' </summary>
-    ''' <param name="jsonString">The JSON string to convert.</param>
+    ''' <param name="json">The JSON string to convert.</param>
     ''' <returns>A Dictionary with the key-value pairs from the JSON string.</returns>
-    Public Function GetAdditionalInformation(
-        jsonString As String) As Dictionary(Of String, String)
-
-        Dim valueList() As String = GetValueList(jsonString)
+    Public Function GetAdditionalInformation(json As String) As Dictionary(Of String, String)
+        Dim valueList() As String = GetValueList(json)
         Dim dic As New Dictionary(Of String, String)
         For Each row As String In valueList
             Dim value() As String = row.Split(separator:=" = ")
@@ -205,19 +201,17 @@ Public Module DictionaryExtensions
     ''' <summary>
     '''  Converts a JSON string to a Dictionary.
     ''' </summary>
-    ''' <param name="jsonString">The JSON string to convert.</param>
+    ''' <param name="json">The JSON string to convert.</param>
     ''' <returns>A Dictionary with the key-value pairs from the JSON string.
-    Public Function GetValueList(jsonString As String) As String()
-        Dim valueList As String() = JsonToDictionary(jsonString).ToCsv _
-            .Replace(oldValue:="{", newValue:="").Trim _
-            .Replace(oldValue:="}", newValue:="").Trim _
-            .Split(separator:=",")
+    Public Function GetValueList(json As String) As String()
+        Dim values As String() =
+            JsonToDictionary(json).ToCsv.Remove(s:="{").Trim.Remove(s:="}").Trim.Split(separator:=",")
 
         Dim selector As Func(Of String, String) =
             Function(s As String) As String
                 Return s.Trim()
             End Function
-        Return valueList.Select(selector).ToArray
+        Return values.Select(selector).ToArray
     End Function
 
     ''' <summary>

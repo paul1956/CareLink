@@ -18,15 +18,14 @@ Friend Module PlotSeriesLimits
     ''' </returns>
     Private Function GetLimitsList(count As Integer) As Integer()
         Dim limitsIndexList(count) As Integer
-        Dim index As Integer = 0
-        For i As Integer = 0 To s_limitRecords.Count - 1
-            s_limitRecords(i).Index = i
+        Dim index As Integer
+        For index = 0 To s_limitRecords.Count - 1
+            s_limitRecords(index).Index = index
         Next
 
+        index = 0
         For i As Integer = 0 To limitsIndexList.GetUpperBound(dimension:=0)
-            If index + 1 < s_limitRecords.Count AndAlso
-               s_limitRecords(index:=index + 1).Index < i Then
-
+            If index + 1 < s_limitRecords.Count AndAlso s_limitRecords(index:=index + 1).Index < i Then
                 index += 1
             End If
             limitsIndexList(i) = index
@@ -71,12 +70,12 @@ Friend Module PlotSeriesLimits
                 Dim limitsHighValue As Single =
                     s_limitRecords(index:=limitsIndexList(sgListIndex.Index)).HighLimit
                 If limitsHighValue <> 0 Then
-                    chart.Series(HighLimitSeriesName).Points.AddXY(
+                    chart.Series(name:=HighLimitSeriesName).Points.AddXY(
                         xValue,
                         yValue:=limitsHighValue)
                 End If
                 If limitsLowValue <> 0 Then
-                    chart.Series(LowLimitSeriesName).Points.AddXY(
+                    chart.Series(name:=LowLimitSeriesName).Points.AddXY(
                         xValue,
                         yValue:=limitsLowValue)
                 End If

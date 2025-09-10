@@ -3863,7 +3863,7 @@ Public Class Form1
                 SetServerUpdateTimer(Start:=True, interval:=ThirtySecondInMilliseconds \ 3)
                 Dim name As String = NameOf(ServerUpdateTimer)
                 Dim message As String =
-                    $"restarted after wake. {name} started at {Now.ToLongTimeString}"
+                    $"restarted after wake. {name} started at {Now:T}"
                 DebugPrint(message)
         End Select
 
@@ -5622,7 +5622,7 @@ Public Class Form1
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
             Else
                 Me.SetLastUpdateTime(
-                    msg:=$"Last Update Time: {PumpNow.ToShortDateString}",
+                    msg:=$"Last Update Time: {PumpNow():d}",
                     suffixMessage:="",
                     highLight:=False,
                     isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)

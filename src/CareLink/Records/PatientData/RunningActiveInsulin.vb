@@ -15,7 +15,7 @@ Friend Class RunningActiveInsulin
         Me.OaDateTime = firstNotSkippedOaTime
         Me.EventDate = Date.FromOADate(firstNotSkippedOaTime)
 
-        _incrementUpCount = s_insulinTypes(currentUser.InsulinTypeName).UpCount
+        _incrementUpCount = s_insulinTypes(key:=currentUser.InsulinTypeName).UpCount
         _incrementDownCount = currentUser.GetActiveInsulinIncrements - _incrementUpCount
         _adjustmentValue = initialInsulinLevel / currentUser.GetActiveInsulinIncrements
         Me.CurrentInsulinLevel = _adjustmentValue * _incrementDownCount
@@ -41,8 +41,7 @@ Friend Class RunningActiveInsulin
     End Function
 
     Public Overrides Function ToString() As String
-        Return $"{Me.EventDate.ToShortTimeString()} " &
-               $"{Me.CurrentInsulinLevel.RoundToSingle(digits:=3)}"
+        Return $"{Me.EventDate:t} {Me.CurrentInsulinLevel.RoundToSingle(digits:=3)}"
     End Function
 
 End Class

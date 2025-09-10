@@ -115,7 +115,7 @@ Friend Module DateTimeExtensions
         Dim timeStr As String = If(pumpTime.ToString = localTime.ToString,
                                    $"Local & Pump Time = {localTime}",
                                    $"Local Time = {localTime}, Pump Time = {pumpTime}")
-        Dim unixTimeStr As String = $"{unixTime.ToShortDateString} UTC"
+        Dim unixTimeStr As String = $"{unixTime} UTC"
         Return $"{unixTimeStr,30}{Space(Number:=15)}{timeStr}"
     End Function
 
@@ -322,7 +322,7 @@ Friend Module DateTimeExtensions
     ''' </returns>
     <Extension>
     Public Function ToShortDateString(dateValue As Date) As String
-        Return $"{dateValue.ToShortDateString()} {dateValue.ToLongTimeString()}"
+        Return $"{dateValue:d} {dateValue:T}"
     End Function
 
     ''' <summary>

@@ -88,12 +88,9 @@ Friend Module ErrorReportingHelpers
     '''  or a default message if unavailable.
     ''' </returns>
     Public Function GetTitleFromStack(stackFrame As StackFrame) As String
-        With stackFrame
-            Return If(stackFrame?.GetFileName Is Nothing,
+        Return If(stackFrame Is Nothing OrElse stackFrame.GetFileName Is Nothing,
                   "Error Location External Code",
-                  $"{ .GetFileName.Split(separator:="\").Last} line:{ .GetFileLineNumber()}")
-
-        End With
+                  $"{stackFrame.GetFileName.Split(separator:="\"c).Last} line:{stackFrame.GetFileLineNumber()}")
     End Function
 
 End Module
