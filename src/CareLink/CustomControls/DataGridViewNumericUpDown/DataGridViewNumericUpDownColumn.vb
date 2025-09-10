@@ -14,6 +14,7 @@ Public Class DataGridViewNumericUpDownColumn
     Inherits DataGridViewColumn
 
     Private Const Browsable As Boolean = False
+
     Private ReadOnly Property Message As String =
         "Operation cannot be completed because this " &
         NameOf(DataGridViewColumn) & " does not have a CellTemplate."

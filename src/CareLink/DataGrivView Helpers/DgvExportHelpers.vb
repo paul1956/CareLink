@@ -139,8 +139,8 @@ Friend Module DgvExportHelpers
             Dim workbook As New XLWorkbook()
             Dim worksheet As IXLWorksheet = workbook.Worksheets.Add(sheetName:=baseFileName)
             Dim column As Integer = 1
-            For j As Integer = 0 To dgv.Columns.Count - 1
-                Dim dgvColumn As DataGridViewColumn = dgv.Columns(j)
+            For index As Integer = 0 To dgv.Columns.Count - 1
+                Dim dgvColumn As DataGridViewColumn = dgv.Columns(index)
                 If dgvColumn.Visible Then
                     If dgvColumn.Name.EqualsNoCase("dateTime") Then
                         worksheet.Cell(row:=1, column).Value = "Date"
@@ -156,13 +156,13 @@ Friend Module DgvExportHelpers
                         XLAlignmentHorizontalValues.Center
                     column += 1
                 End If
-            Next j
+            Next index
 
             For i As Integer = 0 To dgv.Rows.Count - 1
                 column = 1
-                For j As Integer = 0 To dgv.Columns.Count - 1
-                    If Not dgv.Columns(index:=j).Visible Then Continue For
-                    Dim dgvCell As DataGridViewCell = dgv.Rows(index:=i).Cells(index:=j)
+                For index As Integer = 0 To dgv.Columns.Count - 1
+                    If Not dgv.Columns(index).Visible Then Continue For
+                    Dim dgvCell As DataGridViewCell = dgv.Rows(index:=i).Cells(index)
                     Dim valueObject As Object = dgvCell.Value
                     Dim value As String = valueObject?.ToString
                     If String.IsNullOrWhiteSpace(value) Then
@@ -184,8 +184,7 @@ Friend Module DgvExportHelpers
                             Select Case dgvCell.ValueType.Name
                                 Case NameOf([Int32])
                                     align =
-                                        If(dgv.Columns(index:=j).Name _
-                                              .EqualsNoCase("RecordNumber"),
+                                        If(dgv.Columns(index).Name.EqualsNoCase("RecordNumber"),
                                            XLAlignmentHorizontalValues.Center,
                                            XLAlignmentHorizontalValues.Right)
                                     .Value = CInt(valueObject)
@@ -203,15 +202,14 @@ Friend Module DgvExportHelpers
                                      NameOf([Double]),
                                      NameOf([Single])
                                     Dim valueASingle As Single =
-                                        ParseSingle(valueObject, digits:=3)
+                                        ParseSingle(value:=valueObject, digits:=3)
                                     If Single.IsNaN(valueASingle) Then
                                         .Value = "'Infinity"
                                         align = XLAlignmentHorizontalValues.Center
                                     Else
                                         .Value = valueASingle
                                         .Style.NumberFormat.Format =
-                                            If(dgv.Columns(index:=j).Name _
-                                            .EqualsNoCase("sg"),
+                                            If(dgv.Columns(index).Name.EqualsNoCase("sg"),
                                                GetSgFormat(withSign:=False),
                                                $"0{DecimalSeparator}000")
 
@@ -225,8 +223,7 @@ Friend Module DgvExportHelpers
                                     .Value = value
                                 Case NameOf([DateTime])
                                     .Value = CDate(valueObject).Date
-                                    Dim cellStyle As DataGridViewCellStyle =
-                                        dgvCell.GetFormattedStyle()
+                                    Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
                                     With .Style
                                         .Alignment.Horizontal =
                                             XLAlignmentHorizontalValues.Left
@@ -268,7 +265,7 @@ Friend Module DgvExportHelpers
 
                     End If
                     column += 1
-                Next j
+                Next index
             Next i
             worksheet.Columns().AdjustToContents()
             Try

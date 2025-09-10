@@ -458,7 +458,7 @@ Friend Module PlotMarkers
                             CreateCallout(
                                 treatmentChart,
                                 lastDataPoint:=markerSeriesPoints.Last,
-                                markerBorderColor:=markerBorderColor,
+                                markerBorderColor,
                                 tagText:=$"Meal {amount} grams")
                         End If
                     Case "BG_READING"

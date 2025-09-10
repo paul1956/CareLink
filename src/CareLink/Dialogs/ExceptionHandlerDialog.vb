@@ -130,7 +130,7 @@ Public Class ExceptionHandlerDialog
             AppendTextWithFontChange(
                 rtb,
                 text:="and stored in",
-                newFont:=newFont,
+                newFont,
                 padRight:=0)
             AppendTextWithFontChange(
                 rtb,
@@ -141,25 +141,25 @@ Public Class ExceptionHandlerDialog
                 rtb,
                 text:="You can review what is being stored and" &
                       " then attach it to a new issue at",
-                newFont:=newFont,
+                newFont,
                 padRight:=0)
             AppendTextWithFontChange(
                 rtb,
                 text:="You can review what is being stored and" &
                       " then attach it to a new issue at",
-                newFont:=newFont,
+                newFont,
                 padRight:=0)
             AppendTextWithFontChange(
                 rtb,
                 text:=$"{_gitClient.Repository.Get(
                             owner:=GitOwnerName,
                             name:="CareLink").Result.HtmlUrl}/issues.",
-                newFont:=newFont,
+                newFont,
                 padRight:=0)
             AppendTextWithFontChange(
                 rtb,
                 text:="This will help me isolate issues quickly.",
-                newFont:=newFont,
+                newFont,
                 padRight:=0)
             CreateReportFile(
                 exceptionText:=Me.ExceptionTextBox.Text,
@@ -181,7 +181,7 @@ Public Class ExceptionHandlerDialog
             AppendTextWithFontChange(
                 rtb,
                 text:="and stored in",
-                newFont:=newFont,
+                newFont,
                 padRight:=0)
             AppendTextWithFontChange(
                 rtb,

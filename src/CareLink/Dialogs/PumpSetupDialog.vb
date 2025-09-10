@@ -82,8 +82,7 @@ Public Class PumpSetupDialog
         End If
 
         If Not Me.Pdf.IsValid Then
-            Const message As String = "The PDF settings record is not valid."
-            Throw New InvalidOperationException(message:=message)
+            Throw New InvalidOperationException(message:="The PDF settings record is not valid.")
         End If
 
         Me.Text = $"Pump Setup Instructions For {Me.Pdf.UserName}"
