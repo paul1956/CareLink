@@ -7,6 +7,7 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 
 Public Module RegionCountryLists
+
     Private ReadOnly s_countryCodeToCountry As New Dictionary(Of String, String) _
         (comparer:=StringComparer.OrdinalIgnoreCase)
 

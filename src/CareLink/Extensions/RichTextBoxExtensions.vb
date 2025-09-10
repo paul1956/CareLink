@@ -9,6 +9,7 @@ Public Module RichTextBoxExtensions
     Private Const TotalWidth As Integer = 28
     Public Const Indent4 As String = "    "
     Public Const Indent8 As String = "        "
+
     Public ReadOnly Property FixedWidthBoldFont As New Font(
         familyName:="Consolas",
         emSize:=14,
