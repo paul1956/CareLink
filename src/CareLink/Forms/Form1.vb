@@ -79,7 +79,6 @@ Public Class Form1
         MyBase.ScaleControl(factor, specified)
     End Sub
 
-
     ''' <summary>
     '''  Overloaded System Windows Handler.
     ''' </summary>
@@ -4827,7 +4826,6 @@ Public Class Form1
                     Case "WARM_UP"
                         Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield_Disabled
                     Case "UNKNOWN"
-                        Stop
                     Case Else
                         Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
                 End Select
@@ -4851,7 +4849,7 @@ Public Class Form1
                 Me.ShieldUnitsLabel.Top = Me.CurrentSgLabel.Bottom + 2
                 Me.UpdateNotifyIcon(sgString)
                 _sgMiniDisplay.SetCurrentSgString(
-                    sgString:=sgString,
+                    sgString,
                     f:=s_lastSg.sg)
                 message = SG.FormatSensorMessage(
                     key:=PatientData.SensorState,

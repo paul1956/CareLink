@@ -5,6 +5,7 @@
 Imports Microsoft.VisualBasic.ApplicationServices
 
 Namespace My
+
     Partial Friend Class MyApplication
 
         ' The following events are available for MyApplication:
@@ -34,7 +35,6 @@ Namespace My
             ' If a splash dialog is used, this sets the minimum display time:
             e.MinimumSplashScreenDisplayTime = 4000
         End Sub
-
 
     End Class
 End Namespace

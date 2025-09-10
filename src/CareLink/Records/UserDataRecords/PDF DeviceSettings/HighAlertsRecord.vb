@@ -45,7 +45,6 @@ Public Class HighAlertsRecord
         Next
     End Sub
 
-
     Public Property HighAlert As New List(Of HighAlertRecord)
 
     Public WriteOnly Property SnoozeTime As TimeSpan

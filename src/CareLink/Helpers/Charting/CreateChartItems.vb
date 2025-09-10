@@ -7,6 +7,7 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module CreateChartItems
+
     Private ReadOnly s_mgdLValues As New List(Of Single) From {
         MinMmDl50,
         100,

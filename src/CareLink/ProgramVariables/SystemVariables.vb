@@ -26,10 +26,8 @@ Public Module SystemVariables
     Friend s_webView2CacheDirectory As String
     Friend ReadOnly Property CareLinkDecimalSeparator As Char = "."c
     Friend Property CurrentUser As CurrentUserRecord
-    Friend Property DecimalSeparator As String =
-        CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator
+    Friend Property DecimalSeparator As String = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator
     Friend Property MaxBasalPerDose As Double
-
     Friend Property TreatmentInsulinRow As Single
 
     ''' <summary>

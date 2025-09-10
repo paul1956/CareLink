@@ -227,7 +227,7 @@ Public Class Client2
                 Dim heading As String =
                     $"ERROR: Failed to refresh token, status {_lastHttpStatusCode}"
                 If MsgBox(
-                    heading:=heading,
+                    heading,
                     prompt:="Do you want to try logging in again?",
                     buttonStyle:=MsgBoxStyle.YesNo,
                     title:="New Login Required") <> MsgBoxResult.Yes Then

@@ -10,6 +10,7 @@ Imports System.Runtime.CompilerServices
 '''  including parsing, formatting, and conversions between Unix time and DateTime.
 ''' </summary>
 Friend Module DateTimeExtensions
+
     Private ReadOnly s_epochLocal As New DateTime(
         year:=1970,
         month:=1,

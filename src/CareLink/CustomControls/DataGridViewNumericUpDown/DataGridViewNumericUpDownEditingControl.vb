@@ -2,8 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Runtime.InteropServices
-
 ''' <summary>
 '''  Defines the editing control for the <see cref="DataGridViewNumericUpDownCell"/>
 '''  custom cell type. This control is hosted within a <see cref="DataGridView"/>

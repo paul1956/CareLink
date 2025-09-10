@@ -60,7 +60,7 @@ Public Class OADate
     ''' <param name="v2">The subtrahend.</param>
     ''' <returns>A new <see cref="OADate"/> representing the difference.</returns>
     Public Shared Operator -(v1 As OADate, v2 As OADate) As OADate
-        Return New OADate(v1._oADate - v2._oADate)
+        Return New OADate(oADateAsDouble:=v1._oADate - v2._oADate)
     End Operator
 
     ''' <summary>
@@ -70,7 +70,7 @@ Public Class OADate
     ''' <param name="v2">The second operand.</param>
     ''' <returns>A new <see cref="OADate"/> representing the sum.</returns>
     Public Shared Operator +(v1 As OADate, v2 As OADate) As OADate
-        Return New OADate(v1._oADate + v2._oADate)
+        Return New OADate(oADateAsDouble:=v1._oADate + v2._oADate)
     End Operator
 
     ''' <summary>
@@ -144,7 +144,7 @@ Public Class OADate
     Public Function CompareTo(other As OADate) As Integer _
         Implements IComparable(Of OADate).CompareTo
 
-        Return _oADate.CompareTo(other._oADate)
+        Return _oADate.CompareTo(value:=other._oADate)
     End Function
 
     ''' <summary>
@@ -171,8 +171,7 @@ Public Class OADate
     ''' </summary>
     ''' <returns>A string representation of the OADate value.</returns>
     Public Overrides Function ToString() As String
-        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        Return _oADate.ToString("F37", Provider)
+        Return _oADate.ToString(format:="F37", provider:=CultureInfo.CurrentUICulture)
     End Function
 
     ''' <summary>

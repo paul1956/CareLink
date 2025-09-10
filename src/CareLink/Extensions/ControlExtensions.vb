@@ -60,7 +60,6 @@ Public Module ControlExtensions
             controlWidth = ctrl.Width
         End If
 
-
         If onLeftHalf.HasValue Then
             Dim halfWidth As Integer = parent.Width \ 2
             If onLeftHalf.Value Then

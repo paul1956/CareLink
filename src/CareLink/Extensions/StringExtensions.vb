@@ -401,7 +401,6 @@ Public Module StringExtensions
         Return String.Equals(a, b, comparisonType:=StringComparison.OrdinalIgnoreCase)
     End Function
 
-
     ''' <summary>
     '''  Checks if an object is equal to a string, ignoring case.
     '''  This method is useful for comparing an object that may be a string
@@ -420,7 +419,6 @@ Public Module StringExtensions
         If a Is Nothing OrElse b Is Nothing OrElse TypeOf a IsNot String Then Return False
         Return EqualsNoCase(a.ToString, b)
     End Function
-
 
     ''' <summary>
     '''  Finds the index of the first occurrence of a string within another string,
@@ -498,6 +496,7 @@ Public Module StringExtensions
         Dim culture As CultureInfo = CultureInfo.CurrentUICulture
         Return s.Replace(oldValue, newValue, ignoreCase:=True, culture)
     End Function
+
     ''' <summary>
     '''  Checks if a string starts with another string, ignoring case.
     ''' </summary>

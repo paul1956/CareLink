@@ -63,12 +63,16 @@ Public Class DataGridViewNumericUpDownCell
 
     ' Caches the value of the DecimalPlaces property
     Private _decimalPlaces As Integer
+
     ' Caches the value of the Increment property
     Private _increment As Decimal
+
     ' Caches the value of the Minimum property
     Private _minimum As Decimal
+
     ' Caches the value of the Maximum property
     Private _maximum As Decimal
+
     ' Caches the value of the ThousandsSeparator property
     Private _thousandsSeparator As Boolean
 
