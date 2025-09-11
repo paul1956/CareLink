@@ -259,7 +259,7 @@ Public Module DgvCellStyleHelpers
         dgv As DataGridView,
         ByRef e As DataGridViewCellFormattingEventArgs,
         textColor As Color,
-        isUri As Boolean,
+        Optional isUri As Boolean = False,
         Optional emIncrease As Integer = 0)
 
         Dim value As String = Convert.ToString(e.Value)
@@ -390,7 +390,7 @@ Public Module DgvCellStyleHelpers
         Dim sensorValue As Single = ParseSingle(e.Value, digits:=1)
         If Single.IsNaN(sensorValue) Then
             e.Value = "NaN"
-            dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+            dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
         Else
             Dim provider As CultureInfo = CultureInfo.CurrentUICulture
             Dim format As String = GetSgFormat()
@@ -398,30 +398,18 @@ Public Module DgvCellStyleHelpers
                 Case partialKey
                     e.Value = sensorValue.ToString(format, provider)
                     If sensorValue < GetTirLowLimit() Then
-                        dgv.CellFormattingApplyBoldColor(
-                            e,
-                            textColor:=Color.Red,
-                            isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
                     ElseIf sensorValue > GetTirHighLimit() Then
-                        dgv.CellFormattingApplyBoldColor(
-                            e,
-                            textColor:=Color.Yellow,
-                            isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Yellow)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case $"{partialKey}MgdL"
                     e.Value = Convert.ToString(e.Value)
                     If sensorValue < GetTirLowLimit(asMmolL:=False) Then
-                        dgv.CellFormattingApplyBoldColor(
-                            e,
-                            textColor:=Color.Red,
-                            isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
                     ElseIf sensorValue > GetTirHighLimit(asMmolL:=False) Then
-                        dgv.CellFormattingApplyBoldColor(
-                            e,
-                            textColor:=Color.Yellow,
-                            isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Yellow)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
@@ -430,15 +418,9 @@ Public Module DgvCellStyleHelpers
 
                     Dim tirLowLimit As Single = GetTirLowLimit(asMmolL:=True)
                     If sensorValue.RoundToSingle(digits:=1) < tirLowLimit Then
-                        dgv.CellFormattingApplyBoldColor(
-                            e,
-                            textColor:=Color.Red,
-                            isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
                     ElseIf sensorValue > GetTirHighLimit(asMmolL:=True) Then
-                        dgv.CellFormattingApplyBoldColor(
-                            e,
-                            textColor:=Color.Yellow,
-                            isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Yellow)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
@@ -537,10 +519,8 @@ Public Module DgvCellStyleHelpers
         If cell.Equals(obj:=dgv.CurrentCell) Then
             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Purple, isUri:=True)
         Else
-            dgv.CellFormattingApplyBoldColor(
-                e,
-                textColor:=Color.FromArgb(red:=0, green:=160, blue:=204),
-                isUri:=True)
+            Dim textColor As Color = Color.FromArgb(red:=0, green:=160, blue:=204)
+            dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=True)
         End If
         e.FormattingApplied = True
     End Sub

@@ -674,7 +674,7 @@ Public Class Form1
                         Case "AUTOCORRECTION"
                             e.Value = "Auto Correction"
                             Dim textColor As Color = GetGraphLineColor(key:="Auto Correction")
-                            dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=False)
+                            dgv.CellFormattingApplyBoldColor(e, textColor)
                         Case "FAST", "RECOMMENDED", "UNDETERMINED"
                             dgv.CellFormattingToTitle(e)
                         Case Else
@@ -708,7 +708,7 @@ Public Class Form1
 
                 Case NameOf(AutoBasalDelivery.BolusAmount)
                     If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
@@ -763,7 +763,7 @@ Public Class Form1
                     dgv.CellFormattingToTitle(e)
                 Case NameOf(Insulin.SafeMealReduction)
                     If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.OrangeRed, isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.OrangeRed)
                     Else
                         e.Value = ""
                         dgv.CellFormattingSetForegroundColor(e)
@@ -772,7 +772,7 @@ Public Class Form1
                     If Equals(e.Value, "NO_ERROR_MESSAGE") Then
                         dgv.CellFormattingToTitle(e)
                     Else
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red, isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
                         dgv.CellFormattingToTitle(e)
                     End If
 
@@ -2149,11 +2149,7 @@ Public Class Form1
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleCenter,
                                 padding:=New Padding(all:=1))
-                            dgv.CellFormattingApplyBoldColor(
-                                e,
-                                textColor:=Color.Black,
-                                isUri:=False,
-                                emIncrease:=1)
+                            dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Black, emIncrease:=1)
                         Case Else
                             Stop
                     End Select
@@ -4409,9 +4405,7 @@ Public Class Form1
                                 deltaString =
                                     If(Math.Abs(value:=delta) < 0.001,
                                        "0",
-                                       delta.ToString(
-                                            format:=GetSgFormat(withSign:=True),
-                                            provider))
+                                       delta.ToString(format:=GetSgFormat(withSign:=True), provider))
                                 Me.TrendValueLabel.Text = deltaString
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta)
                             End If
@@ -5087,36 +5081,39 @@ Public Class Form1
     '''  level percentage, and the remaining insulin units are displayed accordingly.
     ''' </remarks>
     Private Sub UpdateInsulinLevel()
-
-        Me.InsulinLevelPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
-        If Not PatientData.ConduitInRange Then
-            Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=8)
-            Me.RemainingInsulinUnits.Text = "???U"
-        Else
-            Dim key As String = NameOf(ServerDataIndexes.reservoirRemainingUnits)
-            Dim remainingUnits As String = s_listOfSummaryRecords.GetValue(Of String)(key)
-            Me.RemainingInsulinUnits.Text =
-                $"{remainingUnits.ParseSingle(digits:=1):N1} U"
-            Select Case PatientData.ReservoirLevelPercent
-                Case >= 85
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=7)
-                Case >= 71
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=6)
-                Case >= 57
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=5)
-                Case >= 43
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=4)
-                Case >= 29
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=3)
-                Case >= 15
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=2)
-                Case >= 1
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=1)
-                Case Else
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=0)
-            End Select
-        End If
-        Application.DoEvents()
+        ' This function is subject to crash if the ImageList is disposed on exit.
+        Try
+            Me.InsulinLevelPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+            If Not PatientData.ConduitInRange Then
+                Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=8)
+                Me.RemainingInsulinUnits.Text = "???U"
+            Else
+                Dim key As String = NameOf(ServerDataIndexes.reservoirRemainingUnits)
+                Dim remainingUnits As String = s_listOfSummaryRecords.GetValue(Of String)(key)
+                Me.RemainingInsulinUnits.Text =
+                    $"{remainingUnits.ParseSingle(digits:=1):N1} U"
+                Select Case PatientData.ReservoirLevelPercent
+                    Case >= 85
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=7)
+                    Case >= 71
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=6)
+                    Case >= 57
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=5)
+                    Case >= 43
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=4)
+                    Case >= 29
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=3)
+                    Case >= 15
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=2)
+                    Case >= 1
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=1)
+                    Case Else
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=0)
+                End Select
+            End If
+        Finally
+            Application.DoEvents()
+        End Try
     End Sub
 
     ''' <summary>

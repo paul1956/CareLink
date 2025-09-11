@@ -101,30 +101,29 @@ Public Module SystemConstants
          $"Unit Value{NonBreakingSpace}",
          $"Unit{NonBreakingSpace}Value{NonBreakingSpace}"}
 
-    Friend ReadOnly Property GitHubCareLinkUrl As String =
-        $"https://GitHub.com/{GitOwnerName}/CareLink/"
+    Friend ReadOnly Property GitHubCareLinkUrl As String = $"https://GitHub.com/{GitOwnerName}/CareLink/"
 
     Friend ReadOnly Property SavedTitle As String = "CareLink™ For Windows"
 
 #Region "AIT Constants"
 
     Friend ReadOnly s_aitLengths As New Dictionary(Of String, Single) From {
-            {"2:00", 2}, {"2:15", 2.25}, {"2:30", 2.5}, {"2:45", 2.75},
-            {"3:00", 3}, {"3:15", 3.25}, {"3:30", 3.5}, {"3:45", 3.75},
-            {"4:00", 4}, {"4:15", 4.25}, {"4:30", 4.5}, {"4:45", 4.75},
-            {"5:00", 5}, {"5:15", 5.25}, {"5:30", 5.5}, {"5:45", 5.45},
-            {"6:00", 6}}
+        {"2:00", 2}, {"2:15", 2.25}, {"2:30", 2.5}, {"2:45", 2.75},
+        {"3:00", 3}, {"3:15", 3.25}, {"3:30", 3.5}, {"3:45", 3.75},
+        {"4:00", 4}, {"4:15", 4.25}, {"4:30", 4.5}, {"4:45", 4.75},
+        {"5:00", 5}, {"5:15", 5.25}, {"5:30", 5.5}, {"5:45", 5.45},
+        {"6:00", 6}}
 
     Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {
-            {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
-            {"AIT 2:30", "2:30"}, {"AIT 2:45", "2:45"},
-            {"AIT 3:00", "3:00"}, {"AIT 3:15", "3:15"},
-            {"AIT 3:30", "3:30"}, {"AIT 3:45", "3:45"},
-            {"AIT 4:00", "4:00"}, {"AIT 4:15", "4:15"},
-            {"AIT 4:30", "4:30"}, {"AIT 4:45", "4:45"},
-            {"AIT 5:00", "5:00"}, {"AIT 5:15", "5:15"},
-            {"AIT 5:30", "5:30"}, {"AIT 5:45", "5:45"},
-            {"AIT 6:00", "6:00"}}
+        {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
+        {"AIT 2:30", "2:30"}, {"AIT 2:45", "2:45"},
+        {"AIT 3:00", "3:00"}, {"AIT 3:15", "3:15"},
+        {"AIT 3:30", "3:30"}, {"AIT 3:45", "3:45"},
+        {"AIT 4:00", "4:00"}, {"AIT 4:15", "4:15"},
+        {"AIT 4:30", "4:30"}, {"AIT 4:45", "4:45"},
+        {"AIT 5:00", "5:00"}, {"AIT 5:15", "5:15"},
+        {"AIT 5:30", "5:30"}, {"AIT 5:45", "5:45"},
+        {"AIT 6:00", "6:00"}}
 
 #End Region
 
@@ -168,12 +167,12 @@ Public Module SystemConstants
 
     <Extension>
     Private Function ToCommaDelimited(s As Single) As String
-        Return s.ToString.Replace(".", ",")
+        Return s.ToString.Replace(oldValue:=".", newValue:=",")
     End Function
 
     <Extension>
     Private Function ToPeriodDelimited(s As Single) As String
-        Return s.ToString.Replace(",", ".")
+        Return s.ToString.Replace(oldValue:=",", newValue:=".")
     End Function
 
 #End Region

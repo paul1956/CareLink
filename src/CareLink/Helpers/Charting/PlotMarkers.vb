@@ -269,7 +269,7 @@ Friend Module PlotMarkers
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
                             Dim amount As Integer =
                                 CInt(item.GetSingleFromJson(key:="amount", digits:=0))
-                            markerSeriesPoints.Last.Tag = $"Meal:{amount} grams"
+                            markerSeriesPoints.Last.Tag = $"Meal:{amount} {GetCarbDefaultUnit()}"
                         End If
                     Case "TIME_CHANGE"
                         With pageChart.Series(name:=TimeChangeSeriesName).Points
@@ -459,7 +459,7 @@ Friend Module PlotMarkers
                                 treatmentChart,
                                 lastDataPoint:=markerSeriesPoints.Last,
                                 markerBorderColor,
-                                tagText:=$"Meal {amount} grams")
+                                tagText:=$"Meal {amount} {GetCarbDefaultUnit()}")
                         End If
                     Case "BG_READING"
                     Case "CALIBRATION"
