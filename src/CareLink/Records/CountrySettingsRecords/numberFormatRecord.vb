@@ -13,8 +13,7 @@ Public Class NumberFormatRecord
                 message:="Invalid number format record structure.")
 
             Throw New ApplicationException(
-                message:=$"{NameOf(NumberFormatRecord)}({NameOf(json)})" &
-                         $" contains {json.Length} entries.",
+                message:=$"{NameOf(NumberFormatRecord)}({NameOf(json)}) contains {json.Length} entries.",
                 innerException)
         End If
         Me.decimalSeparator = _asList(key:=NameOf(decimalSeparator))
@@ -26,8 +25,7 @@ Public Class NumberFormatRecord
     Public Property groupsSeparator As String
 
     Private Function GetDebuggerDisplay() As String
-        Return $"{NameOf(decimalSeparator)} = {Me.decimalSeparator}," &
-                $"{NameOf(groupsSeparator)} = {Me.groupsSeparator}"
+        Return $"{NameOf(decimalSeparator)} = {Me.decimalSeparator},{NameOf(groupsSeparator)} = {Me.groupsSeparator}"
     End Function
 
     Public Function ToList() As Dictionary(Of String, String)

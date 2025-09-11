@@ -104,7 +104,7 @@ Friend Module LoginHelpers
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path)
                 owner.SetLastUpdateTime(
-                    msg:=fileDate.ToShortDateString,
+                    msg:=fileDate.ToShortDateTimeString,
                     suffixMessage:="from file",
                     highLight:=False,
                     isDaylightSavingTime:=fileDate.IsDaylightSavingTime)
@@ -232,7 +232,7 @@ Friend Module LoginHelpers
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path:=lastDownloadFileWithPath)
                 owner.SetLastUpdateTime(
-                    msg:=fileDate.ToShortDateString,
+                    msg:=fileDate.ToShortDateTimeString,
                     suffixMessage:="from file",
                     highLight:=False,
                     isDaylightSavingTime:=fileDate.IsDaylightSavingTime)

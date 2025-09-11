@@ -394,7 +394,7 @@ Friend Module SummaryHelpers
                             New SummaryRecord(
                                 recordNumber:=listOfSummaryRecords.Count,
                                 kvp,
-                                message:=kvp.Value.ParseDate(key).ToShortDateString)
+                                message:=kvp.Value.ParseDate(key).ToShortDateTimeString)
                         listOfSummaryRecords.Add(item)
                     Case "additionalInfo"
                         recordNumber = CType(listOfSummaryRecords.Count, ServerDataIndexes)

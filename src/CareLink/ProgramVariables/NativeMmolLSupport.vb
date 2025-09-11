@@ -3,7 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Module NativeMmolLSupport
-    Public Property NativeMmolL As Boolean = False
 
     ''' <summary>
     '''  Gets the string representation of the current blood glucose units.
@@ -18,6 +17,42 @@ Public Module NativeMmolLSupport
         End Get
     End Property
 
+    Public Property NativeMmolL As Boolean = False
+
+    ''' <summary>
+    '''  Gets the current SG target value.
+    ''' </summary>
+    ''' <returns>
+    '''  The current SG target value.
+    ''' </returns>
+    Friend Function GetSgTarget() As Single
+        Return If(CurrentUser.CurrentTarget <> 0,
+                  CurrentUser.CurrentTarget,
+                  If(NativeMmolL,
+                     MmolLItemsPeriod.Last.Value,
+                     MgDlItems.Last.Value))
+    End Function
+
+    ''' <summary>
+    '''  Gets the maximum Y value for plotting, based on <see cref="NativeMmolL"/> setting.
+    ''' </summary>
+    ''' <returns>
+    '''  The maximum Y value for plotting.
+    ''' </returns>
+    Friend Function GetYMaxValueFromNativeMmolL() As Single
+        Return If(NativeMmolL, MaxMmolL22_2, MaxMmDl400)
+    End Function
+
+    ''' <summary>
+    '''  Gets the minimum Y value for plotting, based on <see cref="NativeMmolL"/> setting.
+    ''' </summary>
+    ''' <returns>
+    '''  The minimum Y value for plotting in the selected units.
+    ''' </returns>
+    Friend Function GetYMinValueFromNativeMmolL() As Single
+        Return If(NativeMmolL, MinMmolL2_8, MinMmDl50)
+    End Function
+
     ''' <summary>
     '''  Gets the number of Precision Digits for String conversion based
     '''  on the current mmol/L setting.
@@ -28,32 +63,23 @@ Public Module NativeMmolLSupport
     End Function
 
     ''' <summary>
-    '''  Gets the Format for String conversion based on the current mmol/L setting.
+    '''  Gets the standard format string for blood glucose values
+    '''  based on the current mmol/L setting.
     ''' </summary>
-    ''' <returns>if MmolL "F1" or "F0" if mg/dL </returns>
-    Public Function GetSgFormat() As String
-        Return If(NativeMmolL, "F1", "F0")
-    End Function
-
-    ''' <summary>
-    '''  Gets the format string for SG values, optionally with sign.
-    ''' </summary>
-    ''' <param name="withSign">Whether to include a sign in the format.</param>
+    ''' <param name="withSign">
+    '''  If <see langword="True"/>, includes a sign (+ or -) in the format;
+    '''  if <see langword="False"/>, no sign is included;
+    '''  if <see langword="Nothing"/>, uses "F1" for mmol/L and "F0" for mg/dL.
+    ''' </param>
     ''' <returns>
-    '''  The format string for SG values.
+    '''  The standard format string for blood glucose values.
     ''' </returns>
-    ''' <remarks>
-    '''  The format string is based on the current UI culture's decimal separator
-    '''  and whether the values are in mmol/L or mg/dL.
-    ''' </remarks>
-    Public Function GetSgFormat(withSign As Boolean) As String
-        Return If(withSign,
-                  If(NativeMmolL,
-                     $"+0{DecimalSeparator}0;-#{DecimalSeparator}0",
-                     "+0;-#"),
-                  If(NativeMmolL,
-                     $"0{DecimalSeparator}0",
-                     "0"))
+    Public Function GetSgFormat(Optional withSign As Boolean? = Nothing) As String
+        Return If(withSign Is Nothing,
+                  If(NativeMmolL, "F1", "F0"),
+                  If(withSign,
+                     If(NativeMmolL, $"+0{DecimalSeparator}0;-#{DecimalSeparator}0", "+0;-#"),
+                     If(NativeMmolL, $"0{DecimalSeparator}0", "0")))
     End Function
 
 End Module

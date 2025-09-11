@@ -674,28 +674,28 @@ Public Class Form1
                         Case "AUTOCORRECTION"
                             e.Value = "Auto Correction"
                             Dim textColor As Color = GetGraphLineColor(key:="Auto Correction")
-                            dgv.CellFormattingApplyBoldColor(e, textColor, isUri:=False)
+                            dgv.CellFormattingApplyBoldColor(e, textColor)
                         Case "FAST", "RECOMMENDED", "UNDETERMINED"
                             dgv.CellFormattingToTitle(e)
                         Case Else
                             dgv.CellFormattingSetForegroundColor(e)
                     End Select
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+
                 Case "Amount"
                     Select Case dgv.Name
                         Case NameOf(DgvActiveInsulin)
-                            e.Value = $"{dgv.CellFormattingSingleValue(e, digits:=3)} U"
+                            dgv.CellFormattingSingleValue(e, digits:=3, TrailingText:=" U")
                         Case NameOf(DgvMeal)
                             dgv.CellFormattingInteger(e, message:=GetCarbDefaultUnit)
                     End Select
-                Case NameOf(BasalPerHour.BasalRate),
-                     NameOf(BasalPerHour.BasalRate2)
 
+                Case NameOf(BasalPerHour.BasalRate), NameOf(BasalPerHour.BasalRate2)
                     If dgv.Name = NameOf(DgvBasalPerHour) Then
-                        e.Value = $"{dgv.CellFormattingSingleValue(e, digits:=3)} U/h"
-                        e.CellStyle.Font =
-                            New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
+                        dgv.CellFormattingSingleValue(e, digits:=3, TrailingText:=" U/h")
+                        e.CellStyle.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
                     End If
+
                 Case NameOf(Calibration.bgUnits)
                     Dim key As String = Convert.ToString(e.Value)
                     Try
@@ -705,34 +705,33 @@ Public Class Form1
                         e.Value = key ' Key becomes value if its unknown
                     End Try
                     dgv.CellFormattingSetForegroundColor(e)
+
                 Case NameOf(AutoBasalDelivery.BolusAmount)
                     If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
-                        dgv.CellFormattingApplyBoldColor(
-                            e,
-                            textColor:=Color.Red,
-                            isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
-                Case NameOf(Insulin.BolusType),
-                     NameOf(Insulin.InsulinType)
 
+                Case NameOf(Insulin.BolusType), NameOf(Insulin.InsulinType)
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     dgv.CellFormattingToTitle(e)
+
                 Case NameOf(ActiveInsulin.DateTime),
                      NameOf(AutoModeStatus.DisplayTime),
                      NameOf(AutoModeStatus.Timestamp)
-
                     dgv.CellFormattingDateTime(e)
+
                 Case NameOf(Limit.HighLimit),
                      NameOf(Limit.HighLimitMgdL),
                      NameOf(Limit.HighLimitMmolL)
-
                     dgv.CellFormattingSgValue(e, partialKey:=NameOf(Limit.HighLimit))
+
                 Case NameOf(Limit.LowLimit),
                      NameOf(Limit.lowLimitMgdL),
                      NameOf(Limit.lowLimitMmolL)
                     dgv.CellFormattingSgValue(e, partialKey:=NameOf(Limit.LowLimit))
+
                 Case NameOf(InsulinPerHour.Hour),
                      NameOf(InsulinPerHour.Hour2)
                     Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
@@ -744,8 +743,8 @@ Public Class Form1
                         minute:=0,
                         second:=0)
                     e.Value = time.ToString(format:=s_timeWithoutMinuteFormat)
-                    e.CellStyle.Font =
-                        New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
+                    e.CellStyle.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
+
                 Case NameOf(BannerState.Message)
                     Select Case dgv.Name
                         Case NameOf(DgvPumpBannerState)
@@ -757,18 +756,14 @@ Public Class Form1
                             dgv.CellFormattingSetForegroundColor(e)
                         Case Else
                             e.Value =
-                                Convert.ToString(e.Value).
-                                    Replace(oldValue:=vbCrLf, newValue:=" ")
-                            dgv.CellFormattingToTitle(e)
+                                Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ")
+                            dgv.CellFormattingSetForegroundColor(e)
                     End Select
                 Case NameOf(ActiveInsulin.Precision)
                     dgv.CellFormattingToTitle(e)
                 Case NameOf(Insulin.SafeMealReduction)
                     If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
-                        dgv.CellFormattingApplyBoldColor(
-                            e,
-                            textColor:=Color.OrangeRed,
-                            isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.OrangeRed)
                     Else
                         e.Value = ""
                         dgv.CellFormattingSetForegroundColor(e)
@@ -777,27 +772,29 @@ Public Class Form1
                     If Equals(e.Value, "NO_ERROR_MESSAGE") Then
                         dgv.CellFormattingToTitle(e)
                     Else
-                        dgv.CellFormattingApplyBoldColor(
-                            e,
-                            textColor:=Color.Red,
-                            isUri:=False)
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
                         dgv.CellFormattingToTitle(e)
                     End If
+
                 Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
                     dgv.CellFormattingSgValue(e, partialKey:=NameOf(SG.sg))
+
                 Case NameOf(BannerState.TimeRemaining)
                     e.CellFormatting0Value()
+
                 Case NameOf(SG.Timestamp)
                     dgv.CellFormattingDateTime(e)
+
                 Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
                     dgv.CellFormattingSgValue(e, partialKey:=NameOf(SG.sg))
+
                 Case NameOf(Calibration.UnitValue),
                      NameOf(Calibration.UnitValueMgdL),
                      NameOf(Calibration.UnitValueMmolL)
-
                     dgv.CellFormattingSgValue(e, partialKey:=NameOf(Calibration.UnitValue))
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
                     dgv.CellFormattingSetForegroundColor(e)
+
                 Case Else
                     Dim valueType As Type = dgv.Columns(index:=e.ColumnIndex).ValueType
                     If valueType = GetType(Single) Then
@@ -867,9 +864,10 @@ Public Class Form1
         MessageBox.Show(
             text,
             caption:="Input Error",
-            buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)
+            buttons:=MessageBoxButtons.OK,
+            icon:=MessageBoxIcon.Warning)
 
-        Debug.WriteLine($"Context: {e.Context}")
+        Debug.WriteLine(message:=$"Context: {e.Context}")
 
         ' Prevent the exception from being thrown again
         e.ThrowException = False
@@ -2151,11 +2149,7 @@ Public Class Form1
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleCenter,
                                 padding:=New Padding(all:=1))
-                            dgv.CellFormattingApplyBoldColor(
-                                e,
-                                textColor:=Color.Black,
-                                isUri:=False,
-                                emIncrease:=1)
+                            dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Black, emIncrease:=1)
                         Case Else
                             Stop
                     End Select
@@ -2927,7 +2921,7 @@ Public Class Form1
                             Dim epochDateTime As Date =
                                 s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
                             Me.SetLastUpdateTime(
-                                msg:=epochDateTime.ToShortDateString,
+                                msg:=epochDateTime.ToShortDateTimeString,
                                 suffixMessage:="from file",
                                 highLight:=False,
                                 isDaylightSavingTime:=epochDateTime.IsDaylightSavingTime)
@@ -3475,14 +3469,13 @@ Public Class Form1
 
         ' Update the checkbox text based on the current state and insulin type.
         With CurrentUser
+            Dim checkState As CheckState = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
+            Dim whileUsing As String = $" hours, while using { .InsulinTypeName}"
             Me.TemporaryUseAdvanceAITDecayCheckBox.Text =
-                If(Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState = CheckState.Checked,
-                   "Advanced Decay, AIT will decay over " &
-                    $"{ .InsulinRealAit} hours While Using { .InsulinTypeName}",
-                   $"AIT will decay over { .PumpAit.ToHoursMinutes} While " &
-                    $"Using { .InsulinTypeName}")
-            CurrentUser.UseAdvancedAitDecay =
-                Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
+                If(checkState = CheckState.Checked,
+                   $"Advanced Decay, AIT will decay over { .InsulinRealAit}{ whileUsing}",
+                   $"AIT will decay over { .PumpAit.ToHoursMinutes}{ whileUsing}")
+            CurrentUser.UseAdvancedAitDecay = checkState
         End With
         Me.UpdateActiveInsulinChart()
     End Sub
@@ -3570,13 +3563,9 @@ Public Class Form1
     Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) _
         Handles CalibrationDueImage.MouseHover
 
-        If s_timeToNextCalibrationMinutes > 0 AndAlso
-           s_timeToNextCalibrationMinutes < 1440 Then
-
-            Dim due As String =
-                PumpNow.AddMinutes(value:=s_timeToNextCalibrationMinutes).ToShortTimeString()
-            Dim caption As String =
-                $"Calibration Due {due}"
+        If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
+            Dim due As String = PumpNow.AddMinutes(value:=s_timeToNextCalibrationMinutes).ToShortTimeString()
+            Dim caption As String = $"Calibration Due {due}"
             _calibrationToolTip.SetToolTip(control:=Me.CalibrationDueImage, caption)
         End If
     End Sub
@@ -3658,12 +3647,7 @@ Public Class Form1
             Using g As Graphics = e.Graphics
                 g.FillRectangle(brush, rect)
                 Dim s As String = tabControl.TabPages(e.Index).Text
-                g.DrawString(
-                    s,
-                    tabControl.Font,
-                    brush:=textBrush,
-                    layoutRectangle:=rect,
-                    format)
+                g.DrawString(s, tabControl.Font, brush:=textBrush, layoutRectangle:=rect, format)
             End Using
         End Using
     End Sub
@@ -3727,8 +3711,7 @@ Public Class Form1
             Case NameOf(TabPage11AllUsers)
                 Me.DgvCareLinkUsers.DataSource = s_allUserSettingsData
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
-                    c.Visible =
-                        Not HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
+                    c.Visible = Not HideColumn(Of CareLinkUserDataRecord)(item:=c.DataPropertyName)
                 Next
             Case Else
                 Const tabPageName As String = NameOf(TabPage09BasalPerHour)
@@ -3821,9 +3804,9 @@ Public Class Form1
     '''  and the cursor position is set to NaN.
     ''' </remarks>
     Private Sub CursorTimer_Tick(sender As Object, e As EventArgs) Handles CursorTimer.Tick
-        If Not Me.SummaryChart.ChartAreas(NameOf(ChartArea)).AxisX.ScaleView.IsZoomed Then
+        If Not Me.SummaryChart.ChartAreas(name:=NameOf(ChartArea)).AxisX.ScaleView.IsZoomed Then
             Me.CursorTimer.Enabled = False
-            Me.SummaryChart.ChartAreas(NameOf(ChartArea)).CursorX.Position = Double.NaN
+            Me.SummaryChart.ChartAreas(name:=NameOf(ChartArea)).CursorX.Position = Double.NaN
         End If
     End Sub
 
@@ -3860,9 +3843,7 @@ Public Class Form1
                     isDaylightSavingTime:=Nothing)
                 s_shuttingDown = False
                 SetServerUpdateTimer(Start:=True, interval:=ThirtySecondInMilliseconds \ 3)
-                Dim name As String = NameOf(ServerUpdateTimer)
-                Dim message As String =
-                    $"restarted after wake. {name} started at {Now:T}"
+                Dim message As String = $"restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now:T}"
                 DebugPrint(message)
         End Select
 
@@ -4023,27 +4004,27 @@ Public Class Form1
 
         With Me.SummaryChart
             With .Series
-                .Add(Me.SummarySuspendSeries)
+                .Add(item:=Me.SummarySuspendSeries)
 
-                .Add(Me.SummaryHighLimitSeries)
-                .Add(Me.SummaryTargetSgSeries)
-                .Add(Me.SummaryLowLimitSeries)
-                .Add(Me.SummaryTimeChangeSeries)
+                .Add(item:=Me.SummaryHighLimitSeries)
+                .Add(item:=Me.SummaryTargetSgSeries)
+                .Add(item:=Me.SummaryLowLimitSeries)
+                .Add(item:=Me.SummaryTimeChangeSeries)
 
-                .Add(Me.SummaryAutoCorrectionSeries)
-                .Add(Me.SummaryBasalSeries)
-                .Add(Me.SummaryMinBasalSeries)
+                .Add(item:=Me.SummaryAutoCorrectionSeries)
+                .Add(item:=Me.SummaryBasalSeries)
+                .Add(item:=Me.SummaryMinBasalSeries)
 
-                .Add(Me.SummarySgSeries)
-                .Add(Me.SummaryMarkerSeries)
+                .Add(item:=Me.SummarySgSeries)
+                .Add(item:=Me.SummaryMarkerSeries)
 
             End With
-            With .Series(SgSeriesName).EmptyPointStyle
+            With .Series(name:=SgSeriesName).EmptyPointStyle
                 .BorderWidth = 4
                 .Color = Color.Transparent
             End With
-            .Legends.Add(_summaryChartLegend)
-            .Titles.Add(summaryTitle)
+            .Legends.Add(item:=_summaryChartLegend)
+            .Titles.Add(item:=summaryTitle)
         End With
         Application.DoEvents()
     End Sub
@@ -4079,15 +4060,14 @@ Public Class Form1
                 .ChartAreas.Add(timeInRangeChartArea)
                 Dim chartLabel As Label = Me.TimeInRangeChartLabel
                 Dim x As Integer = chartLabel.FindHorizontalMidpoint - (.Width \ 2)
-                Dim y As Integer =
-                    CInt(chartLabel.FindVerticalMidpoint() - Math.Round(.Height / 2.5))
+                Dim y As Integer = CInt(chartLabel.FindVerticalMidpoint() - Math.Round(.Height / 2.5))
                 .Location = New Point(x, y)
                 .Name = NameOf(TimeInRangeChart)
                 Me.TimeInRangeSeries = New Series(NameOf(TimeInRangeSeries)) With {
                     .ChartArea = NameOf(timeInRangeChartArea),
                     .ChartType = SeriesChartType.Doughnut}
-                .Series.Add(Me.TimeInRangeSeries)
-                .Series(NameOf(TimeInRangeSeries))("DoughnutRadius") = "17"
+                .Series.Add(item:=Me.TimeInRangeSeries)
+                .Series(name:=NameOf(TimeInRangeSeries))(name:="DoughnutRadius") = "17"
             End With
             Me.SplitContainer3.Panel2.Controls.Add(Me.TimeInRangeChart)
         End If
@@ -4140,13 +4120,13 @@ Public Class Form1
             .TitleFont = New Font(family:=labelFont.FontFamily, emSize:=14)
             .TitleForeColor = labelColor
         End With
-        Me.ActiveInsulinChart.ChartAreas.Add(activeInsulinChartArea)
+        Me.ActiveInsulinChart.ChartAreas.Add(item:=activeInsulinChartArea)
         _activeInsulinChartLegend =
             CreateChartLegend(legendName:=NameOf(_activeInsulinChartLegend))
         Me.ActiveInsulinChartTitle = CreateTitle(
             chartTitle:=$"Running Insulin On Board (IOB)",
             name:=NameOf(ActiveInsulinChartTitle),
-            foreColor:=GetGraphLineColor("Active Insulin"))
+            foreColor:=GetGraphLineColor(key:="Active Insulin"))
         Me.ActiveInsulinActiveInsulinSeries = CreateSeriesActiveInsulin()
         Me.ActiveInsulinTargetSeries = CreateSeriesLimitsAndTarget(
             limitsLegend:=_activeInsulinChartLegend,
@@ -4179,28 +4159,28 @@ Public Class Form1
 
         With Me.ActiveInsulinChart
             With .Series
-                .Add(Me.ActiveInsulinTargetSeries)
-                .Add(Me.ActiveInsulinTimeChangeSeries)
+                .Add(item:=Me.ActiveInsulinTargetSeries)
+                .Add(item:=Me.ActiveInsulinTimeChangeSeries)
 
-                .Add(Me.ActiveInsulinActiveInsulinSeries)
+                .Add(item:=Me.ActiveInsulinActiveInsulinSeries)
 
-                .Add(Me.ActiveInsulinAutoCorrectionSeries)
-                .Add(Me.ActiveInsulinBasalSeries)
-                .Add(Me.ActiveInsulinMinBasalSeries)
+                .Add(item:=Me.ActiveInsulinAutoCorrectionSeries)
+                .Add(item:=Me.ActiveInsulinBasalSeries)
+                .Add(item:=Me.ActiveInsulinMinBasalSeries)
 
-                .Add(Me.ActiveInsulinSgSeries)
-                .Add(Me.ActiveInsulinSuspendSeries)
-                .Add(Me.ActiveInsulinMarkerSeries)
+                .Add(item:=Me.ActiveInsulinSgSeries)
+                .Add(item:=Me.ActiveInsulinSuspendSeries)
+                .Add(item:=Me.ActiveInsulinMarkerSeries)
             End With
-            .Series(SgSeriesName).EmptyPointStyle.BorderWidth = 4
-            .Series(SgSeriesName).EmptyPointStyle.Color = Color.Transparent
-            .Series(ActiveInsulinSeriesName).EmptyPointStyle.BorderWidth = 4
-            .Series(ActiveInsulinSeriesName).EmptyPointStyle.Color = Color.Transparent
-            .Legends.Add(_activeInsulinChartLegend)
+            .Series(name:=SgSeriesName).EmptyPointStyle.BorderWidth = 4
+            .Series(name:=SgSeriesName).EmptyPointStyle.Color = Color.Transparent
+            .Series(name:=ActiveInsulinSeriesName).EmptyPointStyle.BorderWidth = 4
+            .Series(name:=ActiveInsulinSeriesName).EmptyPointStyle.Color = Color.Transparent
+            .Legends.Add(item:=_activeInsulinChartLegend)
         End With
 
-        Me.ActiveInsulinChart.Titles.Add(Me.ActiveInsulinChartTitle)
-        Me.SplitContainer1.Panel2.Controls.Add(Me.ActiveInsulinChart)
+        Me.ActiveInsulinChart.Titles.Add(item:=Me.ActiveInsulinChartTitle)
+        Me.SplitContainer1.Panel2.Controls.Add(value:=Me.ActiveInsulinChart)
         Application.DoEvents()
 
     End Sub
@@ -4405,7 +4385,7 @@ Public Class Form1
                     Dim dateSeparator As String =
                         CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator
                     strBuilder.AppendLine(
-                        value:=Date.Now().ToShortDateString _
+                        value:=Date.Now().ToShortDateTimeString _
                                    .Remove(s:=$"{dateSeparator}{Now.Year}"))
                     strBuilder.AppendLine(value:=$"Last SG {sgString} {BgUnits}")
                     If PatientData.ConduitInRange Then
@@ -4425,9 +4405,7 @@ Public Class Form1
                                 deltaString =
                                     If(Math.Abs(value:=delta) < 0.001,
                                        "0",
-                                       delta.ToString(
-                                            format:=GetSgFormat(withSign:=True),
-                                            provider))
+                                       delta.ToString(format:=GetSgFormat(withSign:=True), provider))
                                 Me.TrendValueLabel.Text = deltaString
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta)
                             End If
@@ -5103,36 +5081,39 @@ Public Class Form1
     '''  level percentage, and the remaining insulin units are displayed accordingly.
     ''' </remarks>
     Private Sub UpdateInsulinLevel()
-
-        Me.InsulinLevelPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
-        If Not PatientData.ConduitInRange Then
-            Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=8)
-            Me.RemainingInsulinUnits.Text = "???U"
-        Else
-            Dim key As String = NameOf(ServerDataIndexes.reservoirRemainingUnits)
-            Dim remainingUnits As String = s_listOfSummaryRecords.GetValue(Of String)(key)
-            Me.RemainingInsulinUnits.Text =
-                $"{remainingUnits.ParseSingle(digits:=1):N1} U"
-            Select Case PatientData.ReservoirLevelPercent
-                Case >= 85
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=7)
-                Case >= 71
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=6)
-                Case >= 57
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=5)
-                Case >= 43
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=4)
-                Case >= 29
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=3)
-                Case >= 15
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=2)
-                Case >= 1
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=1)
-                Case Else
-                    Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=0)
-            End Select
-        End If
-        Application.DoEvents()
+        ' This function is subject to crash if the ImageList is disposed on exit.
+        Try
+            Me.InsulinLevelPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+            If Not PatientData.ConduitInRange Then
+                Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=8)
+                Me.RemainingInsulinUnits.Text = "???U"
+            Else
+                Dim key As String = NameOf(ServerDataIndexes.reservoirRemainingUnits)
+                Dim remainingUnits As String = s_listOfSummaryRecords.GetValue(Of String)(key)
+                Me.RemainingInsulinUnits.Text =
+                    $"{remainingUnits.ParseSingle(digits:=1):N1} U"
+                Select Case PatientData.ReservoirLevelPercent
+                    Case >= 85
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=7)
+                    Case >= 71
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=6)
+                    Case >= 57
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=5)
+                    Case >= 43
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=4)
+                    Case >= 29
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=3)
+                    Case >= 15
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=2)
+                    Case >= 1
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=1)
+                    Case Else
+                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=0)
+                End Select
+            End If
+        Finally
+            Application.DoEvents()
+        End Try
     End Sub
 
     ''' <summary>
@@ -5620,7 +5601,7 @@ Public Class Form1
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
             Else
                 Me.SetLastUpdateTime(
-                    msg:=$"Last Update Time: {PumpNow():d}",
+                    msg:=$"Last Update Time: {PumpNow()}",
                     suffixMessage:="",
                     highLight:=False,
                     isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)

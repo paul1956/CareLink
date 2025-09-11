@@ -201,7 +201,7 @@ Friend Module UserMessageConstants
         {"NO_DELIVERY", $"No{vbCrLf}Delivery"},
         {"NO_ERROR_MESSAGE", "---"},
         {"NO_SENSOR_SIGNAL", "Lost Sensor Signal... Move pump closer to transmitter. " &
-                               "May take 15 minutes to find signal"},
+                              "May take 15 minutes to find signal"},
         {"PROCESSING_BG", $"Processing{vbCrLf}BG"},
         {"PUMP_PAIRING_LOST", "Pump Pairing Lost"},
         {"RECONNECTING_TO_PUMP", $"Reconnecting{vbCrLf}To Pump"},
@@ -223,7 +223,6 @@ Friend Module UserMessageConstants
                     $"notified {If(PumpModel < 1884, "When", "If")} calibration is needed."}}
 
     Private ReadOnly Property PumpModel As Integer =
-            CInt(PatientData.MedicalDeviceInformation.ModelNumber.
-                            Replace(oldValue:="MMT-", newValue:=""))
+            CInt(PatientData.MedicalDeviceInformation.ModelNumber.Replace(oldValue:="MMT-", newValue:=""))
 
 End Module

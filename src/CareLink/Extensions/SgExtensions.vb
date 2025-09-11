@@ -35,6 +35,26 @@ Friend Module SgExtensions
     End Function
 
     ''' <summary>
+    '''  Counts the number of SG.sg values in the specified range
+    '''  [OptionsConfigureTiTR.LowThreshold, 140], excluding Single.NaN.
+    ''' </summary>
+    ''' <param name="sgList">The list of SG records to evaluate.</param>
+    ''' <returns>
+    '''  The count of SG.sg values within the range and not NaN.
+    ''' </returns>
+    <Extension>
+    Friend Function CountSgInTightRange(sgList As IEnumerable(Of SG)) As Integer
+        Dim predicate As Func(Of SG, Boolean) =
+            Function(sg As SG) As Boolean
+                Dim tiTrLowThreshold As Integer = My.Settings.TiTrLowThreshold
+                Return Not Single.IsNaN(sg.sg) AndAlso
+                       sg.sgMgdL >= tiTrLowThreshold AndAlso
+                       sg.sgMgdL <= 140.0
+            End Function
+        Return sgList.Count(predicate)
+    End Function
+
+    ''' <summary>
     '''  Retrieves all valid <see cref="SG"/> records from the global list.
     ''' </summary>
     ''' <returns>An <see cref="enumerable"/> of valid <see cref="SG"/> records.</returns>

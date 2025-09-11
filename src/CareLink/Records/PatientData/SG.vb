@@ -198,9 +198,7 @@ Public Class SG
     '''  A format string for displaying the sensor glucose value.
     ''' </returns>
     Public Overrides Function ToString() As String
-        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        Dim format As String = GetSgFormat()
-        Return Me.sg.ToString(format, provider)
+        Return Me.sg.ToString(format:=GetSgFormat(), provider:=CultureInfo.CurrentUICulture)
     End Function
 
 End Class
