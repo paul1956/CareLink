@@ -308,7 +308,7 @@ Friend Module DateTimeExtensions
     ''' </returns>
     <Extension>
     Public Function ToNotificationString(triggeredDateTime As Date) As String
-        Return triggeredDateTime.ToString(format:=$"ddd, MMM d {s_timeWithMinuteFormat}")
+        Return triggeredDateTime.ToString(format:=$"ddd, MMM d,{s_timeWithMinuteFormat}")
     End Function
 
     ''' <summary>
@@ -322,7 +322,7 @@ Friend Module DateTimeExtensions
     '''  A <see langword="String"/> representing the date in "MM/dd/yyyy HH:mm:ss" format.
     ''' </returns>
     <Extension>
-    Public Function ToShortDateString(dateValue As Date) As String
+    Public Function ToShortDateTimeString(dateValue As Date) As String
         Return $"{dateValue:d} {dateValue:T}"
     End Function
 

@@ -259,7 +259,9 @@ Public Module StringExtensions
             End If
         Next
         Return result.ToString.Replace(oldValue:="Bg ", newValue:="BG ") _
-                              .Replace(oldValue:="Sg ", newValue:="SG ")
+                              .Replace(oldValue:="Sg ", newValue:="SG ") _
+                              .Replace(oldValue:=" Am.", newValue:=" AM.") _
+                              .Replace(oldValue:=" Pm.", newValue:=" PM.")
     End Function
 
     ''' <summary>

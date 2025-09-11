@@ -223,7 +223,6 @@ Friend Module UserMessageConstants
                     $"notified {If(PumpModel < 1884, "When", "If")} calibration is needed."}}
 
     Private ReadOnly Property PumpModel As Integer =
-            CInt(PatientData.MedicalDeviceInformation.ModelNumber.
-                            Replace(oldValue:="MMT-", newValue:=""))
+            CInt(PatientData.MedicalDeviceInformation.ModelNumber.Replace(oldValue:="MMT-", newValue:=""))
 
 End Module

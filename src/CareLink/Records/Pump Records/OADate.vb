@@ -50,7 +50,7 @@ Public Class OADate
     ''' </summary>
     ''' <returns>A string representation of the OADate value.</returns>
     Private Function GetDebuggerDisplay() As String
-        Return Date.FromOADate(_oADate).ToShortDateString
+        Return Date.FromOADate(_oADate).ToShortDateTimeString
     End Function
 
     ''' <summary>

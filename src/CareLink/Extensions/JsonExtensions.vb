@@ -495,7 +495,7 @@ Public Module JsonExtensions
                         item.Add(e1.Value.Key,
                         value:=s_sgRecords(index).Timestamp.ToStringExact)
                     Else
-                        item.Add(e1.Value.Key, value:=ToShortDateString(dateValue))
+                        item.Add(e1.Value.Key, value:=dateValue.ToShortDateTimeString())
                     End If
                 Else
                     item.Add(e1.Value.Key, value:=e1.Value.jsonItemAsString())
@@ -555,8 +555,7 @@ Public Module JsonExtensions
         Dim item As KeyValuePair(Of String, Object)
         Dim options As JsonSerializerOptions = s_jsonDeserializerOptions
         Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) =
-            JsonSerializer.Deserialize(Of Dictionary(Of String, Object)) _
-                (json, options).ToList()
+            JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json, options).ToList()
 
         For Each item In rawJsonData
             If item.Value Is Nothing Then

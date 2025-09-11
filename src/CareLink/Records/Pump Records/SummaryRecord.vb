@@ -108,23 +108,6 @@ Public Class SummaryRecord
     End Sub
 
     ''' <summary>
-    '''  Initializes a new instance of the <see cref="SummaryRecord"/> class
-    '''  using a record number, key, value, and message.
-    ''' </summary>
-    ''' <param name="recordNumber">
-    '''  The record number associated with this summary record.
-    ''' </param>
-    ''' <param name="value">The value associated with the key.</param>
-    ''' <param name="message">The message for the record.</param>
-    Protected Friend Sub New(recordNumber As Single, value As String, message As String)
-        Me.New(
-            recordNumber,
-            key:=CType(recordNumber, ServerDataIndexes).ToString,
-            value,
-            message)
-    End Sub
-
-    ''' <summary>
     ''' Initializes a new instance of the <see cref="SummaryRecord"/> class
     ''' using a record number, key, value, and message.
     ''' </summary>

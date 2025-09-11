@@ -268,30 +268,28 @@ Public Module DgvCellStyleHelpers
             e.FormattingApplied = True
             Return
         End If
+
         If value = ClickToShowDetails Then
             e.Value = value
             Dim row As DataGridViewRow = dgv.Rows(index:=e.RowIndex)
-            row.Cells(index:=e.ColumnIndex).ToolTipText =
-                $"{ClickToShowDetails} for {row.Cells(index:=1).Value}."
+            row.Cells(index:=e.ColumnIndex).ToolTipText = $"{ClickToShowDetails} for {row.Cells(index:=1).Value}."
         End If
+
+        Dim rowRef As DataGridViewRow = dgv.Rows(index:=e.RowIndex)
         With e.CellStyle
             If isUri Then
-                Dim foregroundColor As Color =
-                    dgv.Rows(index:=e.RowIndex).GetTextColor(textColor:=Color.Purple)
-                If dgv.Rows(index:=e.RowIndex).IsDarkRow() Then
-                    .SelectionBackColor = foregroundColor.ContrastingColor()
-                    .SelectionForeColor = foregroundColor
+                Dim uriColor As Color = rowRef.GetTextColor(textColor:=Color.Purple)
+                If rowRef.IsDarkRow() Then
+                    .SelectionBackColor = uriColor.ContrastingColor()
+                    .SelectionForeColor = uriColor
                 Else
-                    .SelectionBackColor = foregroundColor
-                    .SelectionForeColor = foregroundColor.ContrastingColor()
+                    .SelectionBackColor = uriColor
+                    .SelectionForeColor = uriColor.ContrastingColor()
                 End If
             Else
-                .ForeColor = dgv.Rows(index:=e.RowIndex).GetTextColor(textColor)
+                .ForeColor = rowRef.GetTextColor(textColor)
             End If
-            .Font = New Font(
-                family:= .Font.FontFamily,
-                emSize:= .Font.Size + emIncrease,
-                style:=FontStyle.Italic)
+            .Font = New Font(family:= .Font.FontFamily, emSize:= .Font.Size + emIncrease, style:=FontStyle.Italic)
         End With
         e.FormattingApplied = True
     End Sub
@@ -462,15 +460,20 @@ Public Module DgvCellStyleHelpers
     ''' </param>
     ''' <param name="digits">The number of decimal digits to display.</param>
     ''' <returns>The parsed single value.</returns>
+    ''' <param name="TrailingText"></param>
     <Extension>
     Public Function CellFormattingSingleValue(
         dgv As DataGridView,
         ByRef e As DataGridViewCellFormattingEventArgs,
-        digits As Integer) As Single
+        digits As Integer,
+        Optional TrailingText As String = "") As Single
 
         Dim amount As Single = ParseSingle(e.Value, digits)
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        e.Value = amount.ToString(format:=$"F{digits}", provider)
+        If TrailingText <> "" Then
+            TrailingText = $" {TrailingText}"
+        End If
+        e.Value = $"{amount.ToString(format:=$"F{digits}", provider)}{TrailingText}"
         dgv.CellFormattingSetForegroundColor(e)
         Return amount
     End Function
