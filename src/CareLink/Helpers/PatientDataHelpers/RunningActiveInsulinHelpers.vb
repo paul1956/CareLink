@@ -9,8 +9,7 @@ Friend Module RunningActiveInsulinHelpers
     ''' <summary>
     '''  Adjusts the insulin levels in a list of RunningActiveInsulin objects.
     '''  This method iterates through the specified range of indices in
-    '''  the list and adjusts each
-    '''  RunningActiveInsulin object by calling its Adjust method.
+    '''  the list and adjusts each RunningActiveInsulin object by calling its Adjust method.
     ''' </summary>
     ''' <param name="myList">The list of RunningActiveInsulin objects to adjust.</param>
     ''' <param name="start">

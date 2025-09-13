@@ -224,13 +224,13 @@ Public Class Form1
     Private Property SummaryTargetSgSeries As Series
     Private Property SummaryTimeChangeSeries As Series
     Private Property TimeInRangeSeries As New Series
-    Private Property TreatmentMarkerAutoCorrectionSeries As Series
-    Private Property TreatmentMarkerBasalSeries As Series
-    Private Property TreatmentMarkerMarkersSeries As Series
-    Private Property TreatmentMarkerMinBasalSeries As Series
-    Private Property TreatmentMarkerSgSeries As Series
-    Private Property TreatmentMarkerSuspendSeries As Series
-    Private Property TreatmentMarkerTimeChangeSeries As Series
+    Private Property TreatmentAutoCorrectionSeries As Series
+    Private Property TreatmentBasalSeries As Series
+    Private Property TreatmentMarkersSeries As Series
+    Private Property TreatmentMinBasalSeries As Series
+    Private Property TreatmentSgSeries As Series
+    Private Property TreatmentSuspendSeries As Series
+    Private Property TreatmentTimeChangeSeries As Series
     Private Property TreatmentTargetSeries As Series
 
 #End Region 'Common Series
@@ -4274,42 +4274,42 @@ Public Class Form1
         Me.TreatmentTargetSeries = CreateSeriesLimitsAndTarget(
             limitsLegend:=_treatmentMarkersChartLegend,
             seriesName:=TargetSgSeriesName)
-        Me.TreatmentMarkerAutoCorrectionSeries = CreateSeriesBasal(
+        Me.TreatmentAutoCorrectionSeries = CreateSeriesBasal(
             name:=AutoCorrectionSeriesName,
             basalLegend:=_treatmentMarkersChartLegend,
             legendText:="Auto Correction",
             yAxisType:=AxisType.Primary)
-        Me.TreatmentMarkerBasalSeries = CreateSeriesBasal(
+        Me.TreatmentBasalSeries = CreateSeriesBasal(
             name:=BasalSeriesName,
             basalLegend:=_treatmentMarkersChartLegend,
             legendText:="Basal Series",
             yAxisType:=AxisType.Primary)
-        Me.TreatmentMarkerMinBasalSeries = CreateSeriesBasal(
+        Me.TreatmentMinBasalSeries = CreateSeriesBasal(
             name:=MinBasalSeriesName,
             basalLegend:=_treatmentMarkersChartLegend,
             legendText:="Min Basal",
             yAxisType:=AxisType.Primary)
 
-        Me.TreatmentMarkerSgSeries = CreateSeriesSg(sgLegend:=_treatmentMarkersChartLegend)
-        Me.TreatmentMarkerMarkersSeries =
+        Me.TreatmentSgSeries = CreateSeriesSg(sgLegend:=_treatmentMarkersChartLegend)
+        Me.TreatmentMarkersSeries =
             CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Primary)
-        Me.TreatmentMarkerTimeChangeSeries =
+        Me.TreatmentTimeChangeSeries =
             CreateSeriesTimeChange(basalLegend:=_treatmentMarkersChartLegend)
-        Me.TreatmentMarkerSuspendSeries =
+        Me.TreatmentSuspendSeries =
             CreateSeriesSuspend(basalLegend:=_treatmentMarkersChartLegend)
 
         With Me.TreatmentMarkersChart
             With .Series
                 .Add(item:=Me.TreatmentTargetSeries)
-                .Add(item:=Me.TreatmentMarkerSuspendSeries)
-                .Add(item:=Me.TreatmentMarkerTimeChangeSeries)
+                .Add(item:=Me.TreatmentSuspendSeries)
+                .Add(item:=Me.TreatmentTimeChangeSeries)
 
-                .Add(item:=Me.TreatmentMarkerAutoCorrectionSeries)
-                .Add(item:=Me.TreatmentMarkerBasalSeries)
-                .Add(item:=Me.TreatmentMarkerMinBasalSeries)
+                .Add(item:=Me.TreatmentAutoCorrectionSeries)
+                .Add(item:=Me.TreatmentBasalSeries)
+                .Add(item:=Me.TreatmentMinBasalSeries)
 
-                .Add(item:=Me.TreatmentMarkerSgSeries)
-                .Add(item:=Me.TreatmentMarkerMarkersSeries)
+                .Add(item:=Me.TreatmentSgSeries)
+                .Add(item:=Me.TreatmentMarkersSeries)
             End With
             .Legends.Add(item:=_treatmentMarkersChartLegend)
             .Series(name:=SgSeriesName).EmptyPointStyle.Color = Color.Transparent
@@ -4582,8 +4582,7 @@ Public Class Form1
         End If
 
         Try
-            Me.TemporaryUseAdvanceAITDecayCheckBox.Checked =
-                CurrentUser.UseAdvancedAitDecay = CheckState.Checked
+            Me.TemporaryUseAdvanceAITDecayCheckBox.Checked = CurrentUser.UseAdvancedAitDecay = CheckState.Checked
             If Me.ActiveInsulinChart Is Nothing Then
                 Return
             End If
@@ -4678,24 +4677,18 @@ Public Class Form1
                         initialInsulinLevel += timeOrderedMarkers.Values(index:=currentMarker)
                         currentMarker += 1
                     End While
-                    Dim item As New RunningActiveInsulin(
-                        firstNotSkippedOaTime,
-                        initialInsulinLevel, CurrentUser)
-
+                    Dim item As New RunningActiveInsulin(firstNotSkippedOaTime, initialInsulinLevel, CurrentUser)
                     remainingInsulinList.Add(item)
                 Next
 
-                .ChartAreas(name:=NameOf(ChartArea)).AxisY2.Maximum =
-                    GetYMaxValueFromNativeMmolL()
+                .ChartAreas(name:=NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValueFromNativeMmolL()
                 ' walk all markers, adjust active insulin and then add new markerWithIndex
                 Dim maxActiveInsulin As Double = 0
                 Dim count As Integer = CurrentUser.GetActiveInsulinIncrements
                 For i As Integer = 0 To remainingInsulinList.Count - 1
                     If i < count Then
                         With Me.ActiveInsulinActiveInsulinSeries
-                            .Points.AddXY(
-                                xValue:=remainingInsulinList(index:=i).OaDateTime,
-                                yValue:=Double.NaN)
+                            .Points.AddXY(xValue:=remainingInsulinList(index:=i).OaDateTime, yValue:=Double.NaN)
                             .Points.Last.IsEmpty = True
                         End With
                         If i > 0 Then
@@ -4704,8 +4697,7 @@ Public Class Form1
                         Continue For
                     End If
                     Dim start As Integer = i - count + 1
-                    Dim sum As Double =
-                        remainingInsulinList.ConditionalSum(index:=start, count)
+                    Dim sum As Double = remainingInsulinList.ConditionalSum(index:=start, count)
                     maxActiveInsulin = Math.Max(sum, maxActiveInsulin)
                     Me.ActiveInsulinActiveInsulinSeries.Points.AddXY(
                         xValue:=remainingInsulinList(index:=i).OaDateTime,
@@ -4713,8 +4705,7 @@ Public Class Form1
                     remainingInsulinList.AdjustList(start, count)
                 Next
 
-                .ChartAreas(name:=NameOf(ChartArea)).AxisY.Maximum =
-                    Math.Ceiling(maxActiveInsulin) + 1
+                .ChartAreas(name:=NameOf(ChartArea)).AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
                 .PlotSuspendArea(SuspendSeries:=Me.ActiveInsulinSuspendSeries)
                 .PlotMarkers(
                     timeChangeSeries:=Me.ActiveInsulinTimeChangeSeries,
@@ -5513,11 +5504,10 @@ Public Class Form1
         Try
             Me.InitializeTreatmentMarkersChart()
             With Me.TreatmentMarkersChart
-                .Titles(name:=NameOf(TreatmentMarkersChartTitle)).Text =
-                    $"Treatment Details{s_basalList.Subtitle()}"
+                .Titles(name:=NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details{s_basalList.Subtitle()}"
                 .ChartAreas(name:=NameOf(ChartArea)).UpdateChartAreaSgAxisX()
-                .PlotSuspendArea(SuspendSeries:=Me.TreatmentMarkerSuspendSeries)
-                .PlotTreatmentMarkers(Me.TreatmentMarkerTimeChangeSeries)
+                .PlotSuspendArea(SuspendSeries:=Me.TreatmentSuspendSeries)
+                .PlotTreatmentMarkers(Me.TreatmentTimeChangeSeries)
                 .PlotSgSeries(HomePageMealRow:=GetYMinValueFromNativeMmolL())
                 .PlotHighLowLimitsAndTargetSg(targetSsOnly:=True)
             End With
