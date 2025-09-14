@@ -1003,7 +1003,7 @@ Public Class Form1
             onClick:=AddressOf DgvExportToExcel)
 
         ' Set Cancel to false.
-        ' It is optimized to true based on empty entry.
+        ' It is optimized to true based on empty key.
         e.Cancel = False
     End Sub
 
@@ -1036,7 +1036,7 @@ Public Class Form1
             onClick:=AddressOf DgvCopySelectedCellsToClipBoardWithoutHeaders)
 
         ' Set Cancel to false.
-        ' It is optimized to true based on empty entry.
+        ' It is optimized to true based on empty key.
         e.Cancel = False
     End Sub
 
@@ -4589,6 +4589,7 @@ Public Class Form1
             For Each s As Series In Me.ActiveInsulinChart?.Series
                 s.Points.Clear()
             Next
+
             With Me.ActiveInsulinChart
                 .Titles(name:=NameOf(ActiveInsulinChartTitle)).Text =
                     $"Running Insulin On Board (IOB){s_basalList.Subtitle()}"
