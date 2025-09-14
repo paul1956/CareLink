@@ -390,13 +390,13 @@ FodyWeavers.xsd
 *.cache
 
 /src/CareLink/obj/
-/PumpSetup/obj/
-/TestProject/obj/
 /src/CareLink/SampleUserDataScratch.json
 /src/CareLink/SampleUserV2Data.json
 /src/CareLink/SamepleUserDataWanda.json
 /src/CareLink/SampleUserDataWanda.json
 /src/CareLink/SsoConfig.json
+/PumpSetup/obj/
+/TestProject/obj/
 /TestProject/TestData/Test01.pdf
 /TestProject/TestData/Test02.pdf
 /TestProject/TestData/Test03.pdf
