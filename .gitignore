@@ -389,7 +389,7 @@ FodyWeavers.xsd
 /TestProject1
 *.cache
 
-/src/CareLink/obj/CareLink.vbproj.nuget.dgspec.json
+/src/CareLink/obj/
 /src/CareLink/SampleUserDataScratch.json
 /src/CareLink/SampleUserV2Data.json
 /src/CareLink/SamepleUserDataWanda.json
@@ -407,4 +407,3 @@ FodyWeavers.xsd
 /TestProject/TestData/Test08.pdf
 /TestProject/TestData/Test09.pdf
 /TestProject/TestData/Test10.pdf
-/src/CareLink/obj/project.assets.json
