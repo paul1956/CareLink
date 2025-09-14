@@ -2652,7 +2652,7 @@ Public Class Form1
 
 #End Region ' Form Events
 
-#Region "Form Menu Events"
+#Region "Form1 Menu Events"
 
 #Region "Start Here Menu Events"
 
@@ -3431,7 +3431,7 @@ Public Class Form1
 
 #End Region ' Help Menu Events
 
-#End Region 'Form Menu Events
+#End Region 'Form1 Menu Events
 
 #Region "Form Misc Events"
 
