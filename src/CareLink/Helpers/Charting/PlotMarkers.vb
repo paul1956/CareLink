@@ -334,7 +334,7 @@ Friend Module PlotMarkers
     '''  including insulin and meal markers.
     ''' </summary>
     ''' <param name="treatmentChart">The chart to plot treatment markers on.</param>
-    ''' <param name="treatmentMarkerTimeChangeSeries">
+    ''' <param name="treatmentTimeChangeSeries">
     '''  The series used for time change markers in the treatment chart.
     ''' </param>
     ''' <param name="memberName">
@@ -347,7 +347,7 @@ Friend Module PlotMarkers
     <Extension>
     Friend Sub PlotTreatmentMarkers(
         treatmentChart As Chart,
-        treatmentMarkerTimeChangeSeries As Series,
+        treatmentTimeChangeSeries As Series,
         <CallerMemberName> Optional memberName As String = Nothing,
         <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
 
@@ -510,12 +510,12 @@ Friend Module PlotMarkers
         treatmentChart.Annotations.Last.BringToFront()
 
         If s_timeChangeMarkers.Count <> 0 Then
-            treatmentMarkerTimeChangeSeries.IsVisibleInLegend = True
+            treatmentTimeChangeSeries.IsVisibleInLegend = True
             treatmentChart.ChartAreas(name:=NameOf(ChartArea)).AxisX _
                           .AdjustXAxisStartTime(lastTimeChangeRecord)
             treatmentChart.Legends(index:=0).CustomItems.Last.Enabled = True
         Else
-            treatmentMarkerTimeChangeSeries.IsVisibleInLegend = False
+            treatmentTimeChangeSeries.IsVisibleInLegend = False
             treatmentChart.Legends(index:=0).CustomItems.Last.Enabled = False
         End If
     End Sub
