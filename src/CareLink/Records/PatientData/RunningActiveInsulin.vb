@@ -8,16 +8,17 @@ Friend Class RunningActiveInsulin
     Private _incrementUpCount As Integer
 
     Public Sub New(
-        firstNotSkippedOaTime As OADate,
+        firstValidOaTime As OADate,
         initialInsulinLevel As Single,
-        currentUser As CurrentUserRecord)
+        insulinIncrements As Integer,
+        upCount As Integer)
 
-        Me.OaDateTime = firstNotSkippedOaTime
-        Me.EventDate = Date.FromOADate(firstNotSkippedOaTime)
+        Me.OaDateTime = firstValidOaTime
+        Me.EventDate = Date.FromOADate(firstValidOaTime)
 
-        _incrementUpCount = s_insulinTypes(key:=currentUser.InsulinTypeName).UpCount
-        _incrementDownCount = currentUser.GetActiveInsulinIncrements - _incrementUpCount
-        _adjustmentValue = initialInsulinLevel / currentUser.GetActiveInsulinIncrements
+        _incrementUpCount = upCount
+        _incrementDownCount = insulinIncrements - upCount
+        _adjustmentValue = initialInsulinLevel / insulinIncrements
         Me.CurrentInsulinLevel = _adjustmentValue * _incrementDownCount
     End Sub
 

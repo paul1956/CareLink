@@ -4665,19 +4665,25 @@ Public Class Form1
                 Dim remainingInsulinList As New List(Of RunningActiveInsulin)
                 Dim currentMarker As Integer = 0
 
+                Dim insulinIncrements As Integer = CurrentUser.GetActiveInsulinIncrements
+                Dim upCount As Integer = s_insulinTypes(key:=CurrentUser.InsulinTypeName).UpCount
+                Dim timestamp As Date = s_sgRecords(index:=0).Timestamp
                 For i As Integer = 0 To 287
                     Dim initialInsulinLevel As Single = 0
-                    Dim timestamp As Date = s_sgRecords(index:=0).Timestamp
                     Dim timeSpan As TimeSpan = FiveMinuteSpan * i
-                    Dim firstNotSkippedOaTime As _
+                    Dim firstValidOaTime As _
                         New OADate(asDate:=(timestamp + timeSpan).RoundDownToMinute())
                     While currentMarker < timeOrderedMarkers.Count AndAlso
-                        timeOrderedMarkers.Keys(index:=currentMarker) <= firstNotSkippedOaTime
+                        timeOrderedMarkers.Keys(index:=currentMarker) <= firstValidOaTime
 
                         initialInsulinLevel += timeOrderedMarkers.Values(index:=currentMarker)
                         currentMarker += 1
                     End While
-                    Dim item As New RunningActiveInsulin(firstNotSkippedOaTime, initialInsulinLevel, CurrentUser)
+                    Dim item As New RunningActiveInsulin(
+                        firstValidOaTime,
+                        initialInsulinLevel,
+                        insulinIncrements,
+                        upCount)
                     remainingInsulinList.Add(item)
                 Next
 
@@ -4688,7 +4694,9 @@ Public Class Form1
                 For i As Integer = 0 To remainingInsulinList.Count - 1
                     If i < count Then
                         With Me.ActiveInsulinActiveInsulinSeries
-                            .Points.AddXY(xValue:=remainingInsulinList(index:=i).OaDateTime, yValue:=Double.NaN)
+                            .Points.AddXY(
+                                xValue:=remainingInsulinList(index:=i).OaDateTime,
+                                yValue:=Double.NaN)
                             .Points.Last.IsEmpty = True
                         End With
                         If i > 0 Then
