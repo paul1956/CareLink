@@ -152,7 +152,7 @@ Friend Module LoginHelpers
                 Dim lastErrorMessage As String = LoginDialog.Client.GetRecentData()
 
                 SetUpCareLinkUser(forceUI:=False)
-                SetServerUpdateTimer(Start:=True, interval:=OneMinutesInMilliseconds)
+                SetServerUpdateTimer(Start:=True, interval:=OneMinuteInMilliseconds)
 
                 If NetworkUnavailable() Then
                     ReportLoginStatus(owner.LoginStatus)

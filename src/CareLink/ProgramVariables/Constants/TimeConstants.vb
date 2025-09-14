@@ -15,7 +15,9 @@ Friend Module TimeConstants
 
 #Region "TimeSpan Constants"
 
-    Friend ReadOnly Property ZeroTickSpan As New TimeSpan(ticks:=0)
+    Public ReadOnly Property FiveMinutesInSeconds As Integer = CInt(FiveMinuteSpan.TotalSeconds)
+    Public ReadOnly Property OneHourSpan As New TimeSpan(hours:=1, minutes:=0, seconds:=0)
+    Public ReadOnly Property ZeroTickSpan As New TimeSpan(ticks:=0)
 
 #Region "Minute Spans"
 
@@ -27,7 +29,6 @@ Friend Module TimeConstants
 
 #End Region
 
-    Public ReadOnly Property OneHourSpan As New TimeSpan(hours:=1, minutes:=0, seconds:=0)
 
 #Region "Day Spans"
 
@@ -45,9 +46,11 @@ Friend Module TimeConstants
 
 #Region "Millisecond Constants"
 
-    Public ReadOnly Property OneMinutesInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds)
+    Public ReadOnly Property OneMinuteInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds)
 
-    Public ReadOnly Property ThirtySecondInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds / 2)
+    Public ReadOnly Property TwentySecondsInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds / 3)
+
+    Public ReadOnly Property ThirtySecondsInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds / 2)
 
     Public ReadOnly Property FiveMinutesInMilliseconds As Integer = CInt(FiveMinuteSpan.TotalMilliseconds)
 

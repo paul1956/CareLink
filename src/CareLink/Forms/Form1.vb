@@ -263,7 +263,7 @@ Public Class Form1
             Exit Sub
         End If
 
-        Me.CursorTimer.Interval = ThirtySecondInMilliseconds
+        Me.CursorTimer.Interval = ThirtySecondsInMilliseconds
         Me.CursorTimer.Start()
     End Sub
 
@@ -3842,7 +3842,7 @@ Public Class Form1
                     highLight:=True,
                     isDaylightSavingTime:=Nothing)
                 s_shuttingDown = False
-                SetServerUpdateTimer(Start:=True, interval:=ThirtySecondInMilliseconds \ 3)
+                SetServerUpdateTimer(Start:=True, interval:=TwentySecondsInMilliseconds)
                 Dim message As String = $"restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now:T}"
                 DebugPrint(message)
         End Select
@@ -3940,7 +3940,7 @@ Public Class Form1
             ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMessage)
             _sgMiniDisplay.SetCurrentSgString(sgString:="---", f:=0)
         End If
-        SetServerUpdateTimer(Start:=True, interval:=OneMinutesInMilliseconds)
+        SetServerUpdateTimer(Start:=True, interval:=OneMinuteInMilliseconds)
     End Sub
 
 #End Region ' Timer Events
@@ -4602,6 +4602,7 @@ Public Class Form1
                     Exit Sub
                 End If
 
+                Dim insulinIncrements As Integer = CurrentUser.GetActiveInsulinIncrements
                 For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
                     Dim item As Marker = markerWithIndex.Value
                     Dim markerOADateTime As New OADate(asDate:=item.GetMarkerTimestamp)
@@ -4643,9 +4644,7 @@ Public Class Form1
                                CurrentPdf?.IsValid AndAlso
                                Not InAutoMode Then
 
-                                For Each kvp As KeyValuePair(Of OADate, Single) In
-                                    GetManualBasalValues(markerWithIndex)
-
+                                For Each kvp As KeyValuePair(Of OADate, Single) In GetManualBasalValues(markerWithIndex)
                                     If timeOrderedMarkers.ContainsKey(kvp.Key) Then
                                         timeOrderedMarkers(kvp.Key) += kvp.Value
                                     Else
@@ -4665,7 +4664,6 @@ Public Class Form1
                 Dim remainingInsulinList As New List(Of RunningActiveInsulin)
                 Dim currentMarker As Integer = 0
 
-                Dim insulinIncrements As Integer = CurrentUser.GetActiveInsulinIncrements
                 Dim upCount As Integer = s_insulinTypes(key:=CurrentUser.InsulinTypeName).UpCount
                 Dim timestamp As Date = s_sgRecords(index:=0).Timestamp
                 For i As Integer = 0 To 287
