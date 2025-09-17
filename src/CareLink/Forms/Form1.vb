@@ -31,6 +31,7 @@ Public Class Form1
     Private _lastMarkerTabLocation As (Page As Integer, Tab As Integer) = (Page:=0, Tab:=0)
     Private _lastSummaryTabIndex As Integer = 0
     Private _previousLoc As Point
+    Private _remainingInsulinList As New List(Of RunningActiveInsulin)
     Private _showBalloonTip As Boolean = True
     Private _summaryChartAbsoluteRectangle As RectangleF
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
@@ -3477,6 +3478,7 @@ Public Class Form1
                    $"AIT will decay over { .PumpAit.ToHoursMinutes}{ whileUsing}")
             CurrentUser.UseAdvancedAitDecay = checkState
         End With
+        If _remainingInsulinList.Count = 0 Then Exit Sub
         Me.UpdateActiveInsulinChart()
     End Sub
 
@@ -4595,55 +4597,34 @@ Public Class Form1
                     $"Running Insulin On Board (IOB){s_basalList.Subtitle()}"
                 .ChartAreas(name:=NameOf(ChartArea)).UpdateChartAreaSgAxisX()
 
-                ' Order all markers by time
-                Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
-
-                Dim lastTimeChangeRecord As TimeChange = Nothing
                 If s_markers.Count = 0 Then
                     Exit Sub
                 End If
 
-                Dim insulinIncrements As Integer = CurrentUser.GetActiveInsulinIncrements
-                For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
-                    Dim item As Marker = markerWithIndex.Value
-                    Dim markerOADateTime As New OADate(asDate:=item.GetMarkerTimestamp)
 
-                    Dim key As String
-                    Select Case item.Type
-                        Case "AUTO_BASAL_DELIVERY"
-                            key = NameOf(AutoBasalDelivery.BolusAmount)
-                            Dim bolusAmount As Single = item.GetSingleFromJson(key)
-                            If timeOrderedMarkers.ContainsKey(key:=markerOADateTime) Then
-                                timeOrderedMarkers(key:=markerOADateTime) += bolusAmount
-                            Else
-                                timeOrderedMarkers.Add(
-                                    key:=markerOADateTime,
-                                    value:=bolusAmount)
-                            End If
-                        Case "MANUAL_BASAL_DELIVERY"
-                            key = NameOf(AutoBasalDelivery.BolusAmount)
-                            Dim bolusAmount As Single = item.GetSingleFromJson(key)
-                            If timeOrderedMarkers.ContainsKey(key:=markerOADateTime) Then
-                                timeOrderedMarkers(key:=markerOADateTime) += bolusAmount
-                            Else
-                                timeOrderedMarkers.Add(
-                                    key:=markerOADateTime,
-                                    value:=bolusAmount)
-                            End If
+                ' Order all markers by time and sum bolus amounts for the same key
+                Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
+
+                For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
+                    Dim marker As Marker = markerWithIndex.Value
+                    Dim key As New OADate(asDate:=marker.GetMarkerTimestamp)
+
+                    Dim bolusAmount As Single = 0
+                    Dim shouldAdd As Boolean = False
+
+                    Select Case marker.Type
+                        Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
+                            bolusAmount = marker.GetSingleFromJson(NameOf(AutoBasalDelivery.BolusAmount))
+                            shouldAdd = True
+
                         Case "INSULIN"
-                            key = NameOf(Insulin.DeliveredFastAmount)
-                            Dim bolusAmount As Single = item.GetSingleFromJson(key)
-                            If timeOrderedMarkers.ContainsKey(key:=markerOADateTime) Then
-                                timeOrderedMarkers(key:=markerOADateTime) += bolusAmount
-                            Else
-                                timeOrderedMarkers.Add(
-                                    key:=markerOADateTime,
-                                    value:=bolusAmount)
-                            End If
+                            bolusAmount = marker.GetSingleFromJson(NameOf(Insulin.DeliveredFastAmount))
+                            shouldAdd = True
+
                         Case "LOW_GLUCOSE_SUSPENDED"
                             If PatientData.ConduitSensorInRange AndAlso
-                               CurrentPdf?.IsValid AndAlso
-                               Not InAutoMode Then
+                                CurrentPdf?.IsValid AndAlso
+                                Not InAutoMode Then
 
                                 For Each kvp As KeyValuePair(Of OADate, Single) In GetManualBasalValues(markerWithIndex)
                                     If timeOrderedMarkers.ContainsKey(kvp.Key) Then
@@ -4653,20 +4634,35 @@ Public Class Form1
                                     End If
                                 Next
                             End If
-                        Case "BG_READING"
-                        Case "CALIBRATION"
-                        Case "MEAL"
-                        Case "TIME_CHANGE"
+
+                        Case "BG_READING", "CALIBRATION", "MEAL", "TIME_CHANGE"
+                            ' Ignored marker types
+
                         Case Else
                             Stop
                     End Select
-                Next
-                ' set up table that holds active insulin for every 5 minutes
-                Dim remainingInsulinList As New List(Of RunningActiveInsulin)
-                Dim currentMarker As Integer = 0
 
+                    If shouldAdd Then
+                        If timeOrderedMarkers.ContainsKey(key) Then
+                            timeOrderedMarkers(key) += bolusAmount
+                        Else
+                            timeOrderedMarkers.Add(key, bolusAmount)
+                        End If
+                    End If
+                Next
                 Dim upCount As Integer = s_insulinTypes(key:=CurrentUser.InsulinTypeName).UpCount
+                Dim windowSize As Integer = CInt(s_insulinTypes(key:=CurrentUser.InsulinTypeName).AitHours * 12)
                 Dim timestamp As Date = s_sgRecords(index:=0).Timestamp
+                Dim insulinIncrements As Integer = CurrentUser.GetActiveInsulinIncrements
+                ' set up table that holds active insulin for every 5 minutes
+                If _remainingInsulinList.Count >= 288 Then
+                    If _remainingInsulinList.Count > 288 + insulinIncrements Then
+                        _remainingInsulinList.RemoveAt(index:=0)
+                    End If
+                    Dim n As Integer = _remainingInsulinList.Count - 287
+                    _remainingInsulinList = _remainingInsulinList.Take(count:=n).ToList()
+                End If
+                Dim currentMarker As Integer = 0
                 For i As Integer = 0 To 287
                     Dim initialInsulinLevel As Single = 0
                     Dim timeSpan As TimeSpan = FiveMinuteSpan * i
@@ -4683,33 +4679,34 @@ Public Class Form1
                         initialInsulinLevel,
                         insulinIncrements,
                         upCount)
-                    remainingInsulinList.Add(item)
+                    _remainingInsulinList.Add(item)
                 Next
 
                 .ChartAreas(name:=NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValueFromNativeMmolL()
                 ' walk all markers, adjust active insulin and then add new markerWithIndex
                 Dim maxActiveInsulin As Double = 0
                 Dim count As Integer = CurrentUser.GetActiveInsulinIncrements
-                For i As Integer = 0 To remainingInsulinList.Count - 1
-                    If i < count Then
+                Dim startIndex As Integer = _remainingInsulinList.Count - 288
+                For i As Integer = startIndex To startIndex + 287
+                    If i < windowSize - 1 Then
                         With Me.ActiveInsulinActiveInsulinSeries
                             .Points.AddXY(
-                                xValue:=remainingInsulinList(index:=i).OaDateTime,
+                                xValue:=_remainingInsulinList(index:=i).OaDateTime,
                                 yValue:=Double.NaN)
                             .Points.Last.IsEmpty = True
                         End With
                         If i > 0 Then
-                            remainingInsulinList.AdjustList(start:=0, count:=i)
+                            _remainingInsulinList.AdjustList(start:=0, count)
                         End If
                         Continue For
                     End If
                     Dim start As Integer = i - count + 1
-                    Dim sum As Double = remainingInsulinList.ConditionalSum(index:=start, count)
+                    Dim sum As Double = _remainingInsulinList.ConditionalSum(index:=start, count)
                     maxActiveInsulin = Math.Max(sum, maxActiveInsulin)
                     Me.ActiveInsulinActiveInsulinSeries.Points.AddXY(
-                        xValue:=remainingInsulinList(index:=i).OaDateTime,
+                        xValue:=_remainingInsulinList(index:=i).OaDateTime,
                         yValue:=sum)
-                    remainingInsulinList.AdjustList(start, count)
+                    _remainingInsulinList.AdjustList(start, count)
                 Next
 
                 .ChartAreas(name:=NameOf(ChartArea)).AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1

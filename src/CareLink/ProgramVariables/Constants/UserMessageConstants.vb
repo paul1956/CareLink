@@ -58,7 +58,8 @@ Friend Module UserMessageConstants
         {"5", "Pump battery depleted. Insulin delivery stopped"},
         {"6", "Insert battery(triggeredDateTime). Delivery stopped." &
                " Insert a new battery now."},
-        {"7", "Delivery Stopped. Check BG"}, _ ' From Java
+        {"7", "Insulin flow blocked(triggeredDateTime). Check BG. Consider testing keytones.  " &
+               "Check reservior and infusion set."},
         {"11", "Battery failed(triggeredDateTime). Replace Pump Battery Now."},
         {"12", "Auto suspend Limit reached(triggeredDateTime). " &
                "Insulin delivery suspended. No buttons pressed within " &

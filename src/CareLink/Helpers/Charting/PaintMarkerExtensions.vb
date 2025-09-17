@@ -150,20 +150,22 @@ Friend Module PaintMarkerExtensions
             ChartAreaName,
             axis:=AxisName.Y2,
             axisValue:=GetYMinValueFromNativeMmolL()))
-        Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(
-                rectangle:=New RectangleF(
-                    chartRelativePosition.X,
-                    chartRelativePosition.Y,
-                    chartRelativePosition.Width,
-                    height:=highLimitY - chartRelativePosition.Y))
-        Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(
-                rectangle:=New RectangleF(
-                    chartRelativePosition.X,
-                    y:=lowLimitY,
-                    width:=chartRelativePosition.Width,
-                    height:=criticalLowLimitY - lowLimitY))
 
-        Using brush As New SolidBrush(Color.FromArgb(alpha:=5, baseColor:=Color.Black))
+        Dim rectangle As New RectangleF(
+            chartRelativePosition.X,
+            chartRelativePosition.Y,
+            chartRelativePosition.Width,
+            height:=highLimitY - chartRelativePosition.Y)
+        Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(rectangle)
+
+        rectangle = New RectangleF(
+            chartRelativePosition.X,
+            y:=lowLimitY,
+            width:=chartRelativePosition.Width,
+            height:=criticalLowLimitY - lowLimitY)
+        Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(rectangle)
+
+        Using brush As New SolidBrush(color:=Color.FromArgb(alpha:=5, baseColor:=Color.Black))
             e.ChartGraphics.Graphics.FillRectangle(brush, rect:=chartAbsoluteHighRectangle)
             e.ChartGraphics.Graphics.FillRectangle(brush, rect:=chartAbsoluteLowRectangle)
         End Using
