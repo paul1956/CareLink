@@ -125,15 +125,6 @@ Public Class OADate
     End Operator
 
     ''' <summary>
-    '''  Converts a <see cref="Byte"/> to an <see cref="OADate"/>.
-    ''' </summary>
-    ''' <param name="b">The <see cref="Byte"/> value to convert.</param>
-    ''' <returns>A new <see cref="OADate"/> instance.</returns>
-    Public Shared Narrowing Operator CType(b As Byte) As OADate
-        Return New OADate(oADateAsDouble:=b)
-    End Operator
-
-    ''' <summary>
     '''  Compares the current <see cref="OADate"/> with another <see cref="OADate"/>.
     ''' </summary>
     ''' <param name="other">The other <see cref="OADate"/> to compare to.</param>
@@ -186,5 +177,6 @@ Public Class OADate
     Public Function Within6Min(xValue As OADate) As Boolean
         Return ((Me + SixMinuteOADate) <= xValue) OrElse xValue < Me
     End Function
+
 
 End Class

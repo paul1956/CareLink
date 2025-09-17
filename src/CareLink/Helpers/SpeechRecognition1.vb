@@ -403,7 +403,7 @@ Friend Module SpeechSupport
         End If
 
         Dim diff As Long = DateDiff(Interval:=DateInterval.Minute, Now, s_timeOfLastAlert)
-        If s_lastSpokenMessage = textToSpeak AndAlso diff < ThirtySecondInMilliseconds Then
+        If s_lastSpokenMessage = textToSpeak AndAlso diff < ThirtySecondsInMilliseconds Then
             Form1.StatusStripSpeech.Text = $"Rejected: '{textToSpeak}' too soon, Listening"
             s_statusStripSpeechText = textToSpeak
         End If
