@@ -2,7 +2,16 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Drawing.Printing
+Imports System.Runtime.InteropServices
+Imports System.Text.RegularExpressions
+
 Public Class PumpSetupDialog
+
+    Private _charFrom As Integer
+    Private _charTo As Integer
+    Private _printFont As Font
+    Private _printRtb As RichTextBox
 
     ''' <summary>
     '''  Sets the PDF settings record used to populate the dialog.
@@ -46,8 +55,130 @@ Public Class PumpSetupDialog
     '''  instance containing the event data.
     ''' </param>
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
+        Me.PrintToolStripMenuItem.Enabled = False
+        Application.DoEvents()
         Me.DialogResult = DialogResult.OK
+        Me.PrintToolStripMenuItem.Enabled = True
         Me.Close()
+    End Sub
+
+    ' Prepare the RichTextBox for printing: white background and convert white text to black
+    Private Sub PreparePrintRichTextBox(originalRtb As RichTextBox)
+        _printRtb = New RichTextBox With {
+            .Rtf = originalRtb.Rtf,
+            .BackColor = Color.White}
+
+        Dim start As Integer = 0
+        While start < _printRtb.TextLength
+            _printRtb.Select(start, length:=1)
+            Dim selBack As Color = _printRtb.SelectionBackColor
+            Dim selColor As Color = _printRtb.SelectionColor
+
+            ' Adjust colors for printing
+            If selBack = SystemColors.Window Then
+                ' Background is white; no change needed
+            Else
+                ' If you want to enforce white background
+                _printRtb.SelectionBackColor = Color.White
+            End If
+
+            If selColor.ToArgb = SystemColors.GrayText.ToArgb Then
+                _printRtb.SelectionColor = Color.Black
+            ElseIf selColor.ToArgb = SystemColors.WindowText.ToArgb Then
+                _printRtb.SelectionColor = Color.Black
+            ElseIf selColor.ToArgb = Color.White.ToArgb Then
+                ' If text is white (dark mode), convert to black for printing
+                _printRtb.SelectionColor = Color.Black
+            End If
+
+            start += 1
+        End While
+        Me.ReduceFontSizes(rtb:=_printRtb, reductionFactor:=0.53)
+    End Sub
+
+    ' PrintPage event handler: render RichTextBox content to graphics page
+    Private Sub PrintPageHandler(sender As Object, e As PrintPageEventArgs)
+        Dim printArea As STRUCT_RECT
+        Dim pageArea As STRUCT_RECT
+
+        ' 14.4 = pixels to twips conversion (96 dpi * 15)
+        printArea.Top = CInt(e.MarginBounds.Top * 14.4)
+        printArea.Bottom = CInt(e.MarginBounds.Bottom * 14.4)
+        printArea.Left = CInt(e.MarginBounds.Left * 14.4)
+        printArea.Right = CInt(e.MarginBounds.Right * 14.4)
+
+        pageArea.Top = CInt(e.PageBounds.Top * 14.4)
+        pageArea.Bottom = CInt(e.PageBounds.Bottom * 14.4)
+        pageArea.Left = CInt(e.PageBounds.Left * 14.4)
+        pageArea.Right = CInt(e.PageBounds.Right * 14.4)
+
+        Dim fmtRange As STRUCT_FORMATRANGE
+        fmtRange.chrg.cpMin = _charFrom
+        fmtRange.chrg.cpMax = _charTo
+        fmtRange.hdc = e.Graphics.GetHdc()
+        fmtRange.hdcTarget = fmtRange.hdc
+        fmtRange.rc = printArea
+        fmtRange.rcPage = pageArea
+
+        Dim res As IntPtr =
+            SendMessage(
+                hWnd:=_printRtb.Handle,
+                msg:=EM_FORMATRANGE,
+                wParam:=CType(1, IntPtr),
+                lParam:=fmtRange)
+        e.Graphics.ReleaseHdc(fmtRange.hdc)
+
+        Dim charsPrinted As Integer = res.ToInt32()
+        If charsPrinted < _charTo Then
+            _charFrom = charsPrinted
+            e.HasMorePages = True
+        Else
+            e.HasMorePages = False
+            ' Free cached memory after printing
+            SendMessage(
+                hWnd:=_printRtb.Handle,
+                msg:=EM_FORMATRANGE,
+                wParam:=CType(0, IntPtr),
+                lParam:=fmtRange)
+        End If
+    End Sub
+
+    Private Sub PrintRichTextBox(originalRtb As RichTextBox)
+        Me.PreparePrintRichTextBox(originalRtb)
+
+        Using pd As New PrintDocument()
+            AddHandler pd.PrintPage, AddressOf Me.PrintPageHandler
+
+            Using printDialog As New PrintDialog()
+                printDialog.Document = pd
+                printDialog.AllowSomePages = True
+                printDialog.AllowSelection = False
+                printDialog.UseEXDialog = True
+
+                If printDialog.ShowDialog() = DialogResult.OK Then
+                    pd.PrinterSettings = printDialog.PrinterSettings
+                    _charFrom = 0
+                    _charTo = _printRtb.TextLength
+                    Try
+                        pd.Print()
+                    Catch ex As Exception
+                        ' ignore printing errors
+                    End Try
+                End If
+            End Using
+        End Using
+    End Sub
+
+    Private Sub PrintToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+        Handles PrintToolStripMenuItem.Click
+
+        _printRtb = New RichTextBox With {.Rtf = Me.RtbMainLeft.Rtf}
+
+        _printRtb.Select(start:=_printRtb.TextLength, length:=0) ' Move caret to end
+        ' Append second RichTextBox content preserving formatting
+        _printRtb.SelectedRtf = Me.RtbMainRight.Rtf
+
+        Me.PrintRichTextBox(originalRtb:=_printRtb)
     End Sub
 
     Private Sub PumpSetupDialog_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -61,6 +192,7 @@ Public Class PumpSetupDialog
             .ReadOnly = False
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings")
         End With
+
     End Sub
 
     ''' <summary>
@@ -220,6 +352,45 @@ Public Class PumpSetupDialog
             .ReadOnly = True
             .SelectionStart = 0
         End With
+    End Sub
+
+    Private Sub ReduceFontSizes(rtb As RichTextBox, reductionFactor As Single)
+        Dim start As Integer = 0
+        Dim textLength As Integer = rtb.TextLength
+
+        While start < textLength
+            rtb.Select(start, length:=1)
+            Dim currentFont As Font = rtb.SelectionFont
+
+            ' Find the range with the same font
+            Dim endIndex As Integer = start + 1
+            While endIndex < textLength
+                rtb.Select(start:=endIndex, length:=1)
+                If rtb.SelectionFont Is Nothing OrElse
+                    Not rtb.SelectionFont.Equals(obj:=currentFont) Then
+                    Exit While
+                End If
+                endIndex += 1
+            End While
+
+            ' Select the whole range with the same font
+            Dim length As Integer = endIndex - start
+            rtb.Select(start, length)
+
+            ' Calculate new smaller font size keeping minimum font size limit
+            Dim newSize As Single = Math.Max(1.0F, currentFont.Size * reductionFactor)
+
+            ' Create and apply new font with reduced size
+            Dim newFont As New Font(
+                family:=currentFont.FontFamily,
+                emSize:=newSize,
+                style:=currentFont.Style)
+            rtb.SelectionFont = newFont
+
+            start = endIndex
+        End While
+
+        rtb.DeselectAll()
     End Sub
 
     Private Sub SettingsAlert(rtb As RichTextBox)

@@ -25,6 +25,18 @@ Friend Module DllImports
     Friend Const DWMWA_USE_IMMERSIVE_DARK_MODE As Integer = 20
 
     ''' <summary>
+    '''  Message to format a range of text in a RichTextBox control.
+    '''  This is used to apply formatting to a specified range of text.
+    ''' </summary>
+    Friend Const EM_FORMATRANGE As Integer = WM_USER + 57
+
+    ''' <summary>
+    '''  Base message for user-defined messages.
+    '''  This is used as a starting point for defining custom messages.
+    ''' </summary>
+    Friend Const WM_USER As Integer = &H400
+
+    ''' <summary>
     '''  Sets a window attribute for the specified window handle.
     '''  This function is used to set various attributes of a window, such as border color.
     ''' </summary>
@@ -58,6 +70,19 @@ Friend Module DllImports
     End Function
 
     ''' <summary>
+    '''  Structure used to define the range of text to be formatted in a RichTextBox control.
+    ''' </summary>
+    ''' <param name="hWnd">Handle to the window receiving the message.</param>
+    ''' <param name="msg">Message ID.</param>
+    <DllImport("USER32.dll")>
+    Friend Function SendMessage(
+        hWnd As IntPtr,
+        msg As Integer,
+        wParam As IntPtr,
+        ByRef lParam As STRUCT_FORMATRANGE) As IntPtr
+    End Function
+
+    ''' <summary>
     '''  Retrieves the current state of the specified key.
     ''' </summary>
     ''' <param name="key">The virtual-key code of the key to be checked.</param>
@@ -66,4 +91,27 @@ Friend Module DllImports
     Friend Function VkKeyScan(key As Char) As Short
     End Function
 
+    <StructLayout(LayoutKind.Sequential)>
+    Friend Structure STRUCT_CHARRANGE
+        Public cpMin As Integer
+        Public cpMax As Integer
+    End Structure
+
+    <StructLayout(LayoutKind.Sequential)>
+    Friend Structure STRUCT_FORMATRANGE
+        Public hdc As IntPtr
+        Public hdcTarget As IntPtr
+        Public rc As STRUCT_RECT
+        Public rcPage As STRUCT_RECT
+        Public chrg As STRUCT_CHARRANGE
+    End Structure
+
+    ' Windows API for printing RichTextBox content with formatting
+    <StructLayout(LayoutKind.Sequential)>
+    Friend Structure STRUCT_RECT
+        Public Left As Integer
+        Public Top As Integer
+        Public Right As Integer
+        Public Bottom As Integer
+    End Structure
 End Module
