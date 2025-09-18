@@ -5040,11 +5040,13 @@ Public Class Form1
                 totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
             End If
             Me.Last24HrAutoCorrectionLabel.Visible = True
+            Me.Last24HrAutoCorrectionUnitsLabel.ForeColor = Color.DarkGray
             Me.Last24HrAutoCorrectionUnitsLabel.Text =
                 String.Format(provider, format:=$"{s_totalAutoCorrection:F1} U")
             Me.Last24HrAutoCorrectionUnitsLabel.Visible = True
-            Me.Last24HrAutoCorrectionPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24HrAutoCorrectionLabel.ForeColor = Color.Gray
             Me.Last24HrAutoCorrectionPercentLabel.Visible = True
+            Me.Last24HrAutoCorrectionPercentLabel.Text = $"{totalPercent}%"
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
@@ -5052,9 +5054,15 @@ Public Class Form1
                 String.Format(provider, format:=$"{s_totalManualBolus:F1} U")
             Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         Else
-            Me.Last24HrAutoCorrectionLabel.Visible = False
-            Me.Last24HrAutoCorrectionUnitsLabel.Visible = False
-            Me.Last24HrAutoCorrectionPercentLabel.Visible = False
+            Me.Last24HrAutoCorrectionLabel.ForeColor = Color.FromArgb(red:=64, green:=64, blue:=64)
+            If s_autoModeStatusMarkers.Count = 0 Then
+                Me.Last24HrAutoCorrectionUnitsLabel.Visible = False
+                Me.Last24HrAutoCorrectionPercentLabel.Visible = False
+            Else
+                Me.Last24HrAutoCorrectionUnitsLabel.ForeColor = Color.DarkGray
+                Me.Last24HrAutoCorrectionPercentLabel.ForeColor = Color.DarkGray
+                Me.Last24HrAutoCorrectionPercentLabel.Text = "0%"
+            End If
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
@@ -5062,6 +5070,8 @@ Public Class Form1
                 String.Format(provider, format:=$"{s_totalManualBolus:F1} U")
             Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         End If
+        Me.Last24HrAutoCorrectionUnitsLabel.Text =
+                String.Format(provider, format:=$"{s_totalAutoCorrection:F1} U")
         Me.Last24HrCarbsValueLabel.Text =
             $"{s_totalCarbs} {GetCarbDefaultUnit()}{Superscript3}"
     End Sub
