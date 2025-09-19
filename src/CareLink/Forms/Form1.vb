@@ -5023,30 +5023,30 @@ Public Class Form1
             End If
         End If
 
-        Dim totalPercent As String =
-            If(s_totalDailyDose = 0,
-               "???",
-               $"{CInt(s_totalBasal / s_totalDailyDose * 100)}")
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        Me.Last24HrBasalUnitsLabel.Text =
-            String.Format(provider, format:=$"{s_totalBasal:F1} U")
+        Dim totalPercent As String = If(s_totalDailyDose = 0,
+                                        "???",
+                                        $"{CInt(s_totalBasal / s_totalDailyDose * 100)}")
+        Me.Last24HrBasalUnitsLabel.Text = String.Format(Provider, format:=$"{s_totalBasal:F1} U")
         Me.Last24HrBasalPercentLabel.Text = $"{totalPercent}%"
 
         Me.Last24HrTotalInsulinUnitsLabel.Text =
             String.Format(provider, format:=$"{s_totalDailyDose:F1} U")
 
         If s_totalAutoCorrection > 0 Then
+            Me.Last24HrAutoCorrectionLabel.Visible = True
+            Me.Last24HrAutoCorrectionUnitsLabel.ForeColor = Color.LightGray
+            Me.Last24HrAutoCorrectionUnitsLabel.Text =
+                String.Format(provider, format:=$"{s_totalAutoCorrection:F1} U")
+            Me.Last24HrAutoCorrectionLabel.ForeColor = Color.Gray
+            Me.Last24HrAutoCorrectionUnitsLabel.Visible = True
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24HrAutoCorrectionLabel.Visible = True
-            Me.Last24HrAutoCorrectionUnitsLabel.ForeColor = Color.DarkGray
-            Me.Last24HrAutoCorrectionUnitsLabel.Text =
-                String.Format(provider, format:=$"{s_totalAutoCorrection:F1} U")
-            Me.Last24HrAutoCorrectionUnitsLabel.Visible = True
-            Me.Last24HrAutoCorrectionLabel.ForeColor = Color.Gray
+            Me.Last24HrAutoCorrectionPercentLabel.ForeColor = Color.LightGray
             Me.Last24HrAutoCorrectionPercentLabel.Visible = True
             Me.Last24HrAutoCorrectionPercentLabel.Text = $"{totalPercent}%"
+            Me.Last24HrAutoCorrectionPercentLabel.ForeColor = Color.LightGray
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
