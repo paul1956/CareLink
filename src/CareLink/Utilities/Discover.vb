@@ -94,10 +94,10 @@ Public Module Discover
 
         Debug.WriteLine(NameOf(GetConfigElement))
         Dim isUsRegion As Boolean = country.EqualsNoCase(b:="US")
-        Dim requestUri As String =
-            If(isUsRegion,
-               s_discoverUrl(key:="US"),
-               s_discoverUrl(key:="EU"))
+        Dim requestUri As String = If(isUsRegion,
+                                      s_discoverUrl(key:="US"),
+                                      s_discoverUrl(key:="EU"))
+
         Dim json As String = httpClient.GetStringAsync(requestUri).Result
         Dim jsonElementData As JsonElement =
             JsonSerializer.Deserialize(Of JsonElement)(json)
@@ -138,7 +138,10 @@ Public Module Discover
     ''' </returns>
     Public Function GetDiscoveryData() As ConfigRecord
         Try
-            Dim region As String = If(s_countryCode.EqualsNoCase("US"), "US", "EU")
+            Dim region As String = If(s_countryCode.EqualsNoCase("US"),
+                                      "US",
+                                      "EU")
+
             Return DownloadAndDecodeJson(Of ConfigRecord)(url:=s_discoverUrl(region))
         Catch ex As HttpRequestException
             Debug.WriteLine(message:=$"Error downloading JSON: {ex.Message}")

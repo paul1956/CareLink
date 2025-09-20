@@ -55,16 +55,15 @@ Friend Module DeliverySettings
                 End If
 
                 Dim startTime As TimeOnly = item.Time
-                Dim endTime As TimeOnly =
-                If(e.IsLast,
-                   Midnight,
-                   pdf.Bolus.InsulinSensitivity(index:=e.Index + 1).Time)
-                Dim sensitivity As String =
-                If(item.Sensitivity < 0.01,
-                   "0.00",
-                   item.Sensitivity.RoundTo025.ToString(format:="F3"))
-                Dim value As String =
-                $"{sensitivity} {pdf.Bolus.BolusWizard.Units.CarbUnits}/U"
+                Dim endTime As TimeOnly = If(e.IsLast,
+                                             Midnight,
+                                             pdf.Bolus.InsulinSensitivity(index:=e.Index + 1).Time)
+
+                Dim sensitivity As String = If(item.Sensitivity < 0.01,
+                                               "0.00",
+                                               item.Sensitivity.RoundTo025.ToString(format:="F3"))
+
+                Dim value As String = $"{sensitivity} {pdf.Bolus.BolusWizard.Units.CarbUnits}/U"
                 .AppendTimeValueRow(startTime, endTime, value, pdf.Utilities.TimeFormat)
             Next
             .AppendNewLine
@@ -86,12 +85,11 @@ Friend Module DeliverySettings
                 End If
 
                 Dim startTime As TimeOnly = item.Time
-                Dim endTime As TimeOnly =
-                If(e.IsLast,
-                   Eleven59,
-                   pdf.Bolus.BloodGlucoseTarget(index:=e.Index + 1).Time)
-                Dim value As String =
-                $"{item.Low}-{item.High} {pdf.Bolus.BolusWizard.Units.BgUnits}"
+                Dim endTime As TimeOnly = If(e.IsLast,
+                                             Eleven59,
+                                             pdf.Bolus.BloodGlucoseTarget(index:=e.Index + 1).Time)
+
+                Dim value As String = $"{item.Low}-{item.High} {pdf.Bolus.BolusWizard.Units.BgUnits}"
                 .AppendTimeValueRow(startTime, endTime, value, pdf.Utilities.TimeFormat)
             Next
             .AppendNewLine
@@ -118,10 +116,10 @@ Friend Module DeliverySettings
                         Exit For
                     End If
                     Dim startTime As TimeOnly = basalRate.Time
-                    Dim endTime As TimeOnly =
-                        If(e.IsLast,
-                           Eleven59,
-                           item.Value.basalRates(index:=e.Index + 1).Time)
+                    Dim endTime As TimeOnly = If(e.IsLast,
+                                                 Eleven59,
+                                                 item.Value.basalRates(index:=e.Index + 1).Time)
+
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
                     .AppendTimeValueRow(
                         startTime,

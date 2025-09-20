@@ -88,8 +88,7 @@ Public Class Basal
             Case Else
                 Return If(Me.tempBasalPercentage > 0,
                           Math.Max(Me.BasalRate, Me.TempBasalRate),
-                          Math.Min(Me.BasalRate, Me.TempBasalRate)
-                         )
+                          Math.Min(Me.BasalRate, Me.TempBasalRate))
         End Select
     End Function
 

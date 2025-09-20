@@ -138,10 +138,10 @@ Public Class LoginDialog
     '''  loads user settings, and populates the username and region combo boxes.
     ''' </remarks>
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.Icon =
-            If(Application.IsDarkModeEnabled,
-               PngBitmapToIcon(original:=My.Resources.LoginLight),
-               PngBitmapToIcon(original:=My.Resources.LoginDark))
+        Me.Icon = If(Application.IsDarkModeEnabled,
+                     PngBitmapToIcon(original:=My.Resources.LoginLight),
+                     PngBitmapToIcon(original:=My.Resources.LoginDark))
+
         _httpClient = New HttpClient()
         _httpClient.SetDefaultRequestHeaders()
         If _initialHeight = 0 Then
@@ -188,8 +188,8 @@ Public Class LoginDialog
                 .SelectedIndex = -1
                 .Text = s_userName
             End If
-            Me.PasswordTextBox.Text = If(s_allUserSettingsData?.ContainsKey(.Text),
-                                         s_allUserSettingsData(.Text).CareLinkPassword,
+            Me.PasswordTextBox.Text = If(s_allUserSettingsData?.ContainsKey(key:= .Text),
+                                         s_allUserSettingsData(itemName:= .Text).CareLinkPassword,
                                          "")
         End With
 
@@ -197,7 +197,7 @@ Public Class LoginDialog
             New BindingSource(dataSource:=s_regionList, dataMember:=Nothing)
         Me.RegionComboBox.DisplayMember = "Key"
         Me.RegionComboBox.ValueMember = "Value"
-        If String.IsNullOrEmpty(My.Settings.CountryCode) Then
+        If String.IsNullOrEmpty(value:=My.Settings.CountryCode) Then
             My.Settings.CountryCode = "US"
         End If
         Me.RegionComboBox.SelectedValue = My.Settings.CountryCode.GetRegionFromCode
@@ -267,10 +267,11 @@ Public Class LoginDialog
                 fs.Flush()
             End Using
 
-            Dim isUsRegion As Boolean =
-                Me.RegionComboBox.SelectedValue.ToString = "North America"
+            Dim isUsRegion As Boolean = Me.RegionComboBox.SelectedValue.ToString = "North America"
 
-            Dim isUsRegionStr As String = If(isUsRegion, "--us", "")
+            Dim isUsRegionStr As String = If(isUsRegion,
+                                             "--us",
+                                             "")
 
             ' Create a temporary file for the JSON output
             Dim sourceFileName As String = $"{Path.GetTempFileName()}.json"
@@ -340,12 +341,11 @@ Public Class LoginDialog
                 End If
             End If
 
-            Dim networkDownMessage As String =
-                If(NetworkUnavailable(),
-                   "due to network being unavailable",
-                   $"Response Code = {Me.Client.GetHttpStatusCode}")
-            Dim heading As String =
-                $"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!"
+            Dim networkDownMessage As String = If(NetworkUnavailable(),
+                                                  "due to network being unavailable",
+                                                  $"Response Code = {Me.Client.GetHttpStatusCode}")
+
+            Dim heading As String = $"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!"
             Const buttonStyle As MsgBoxStyle =
                 MsgBoxStyle.AbortRetryIgnore Or
                 MsgBoxStyle.DefaultButton2 Or
@@ -446,8 +446,7 @@ Public Class LoginDialog
         Handles ShowPasswordCheckBox.CheckedChanged
         Me.PasswordTextBox.PasswordChar = If(Me.ShowPasswordCheckBox.Checked,
                                              Nothing,
-                                             "*"c
-                                            )
+                                             "*"c)
     End Sub
 
     ''' <summary>

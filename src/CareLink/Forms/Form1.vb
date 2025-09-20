@@ -366,8 +366,7 @@ Public Class Form1
                         Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
                         Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                         Me.CursorPictureBox.Visible = True
-                        Me.CursorMessage2Label.Font =
-                            New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
+                        Me.CursorMessage2Label.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
                         Select Case markerTag.Length
                             Case 2
                                 Me.CursorMessage1Label.Text = markerTag(0)
@@ -375,8 +374,7 @@ Public Class Form1
                                 Me.CursorMessage2Label.Text = markerTag(1).Trim
                                 Me.CursorMessage2Label.Visible = True
                                 Me.CursorMessage3Label.Text =
-                                    Date.FromOADate(currentDataPoint.XValue) _
-                                        .ToString(format:=s_timeWithMinuteFormat)
+                                    Date.FromOADate(currentDataPoint.XValue).ToString(format:=s_timeWithMinuteFormat)
                                 Me.CursorMessage3Label.Visible = True
                                 Me.CursorMessage4Label.Visible = False
                                 Select Case markerTag(0)
@@ -432,6 +430,7 @@ Public Class Form1
                                     If(NativeMmolL,
                                        $"{CInt(sgValue * MmolLUnitsDivisor)} mg/dL",
                                        $"{sgValue / MmolLUnitsDivisor:F1} mmol/L")
+
                                 Me.CursorMessage4Label.Visible = True
                                 Me.CursorPanel.Visible = True
                             Case Else
@@ -451,10 +450,10 @@ Public Class Form1
                         If(NativeMmolL,
                            $"{CInt(currentDataPoint.YValues(0) * MmolLUnitsDivisor)} mg/dL",
                            $"{currentDataPoint.YValues(0) / MmolLUnitsDivisor:F1} mmol/L")
+
                     Me.CursorMessage3Label.Visible = True
                     Dim format As String = s_timeWithMinuteFormat
-                    Me.CursorMessage4Label.Text =
-                        Date.FromOADate(currentDataPoint.XValue).ToString(format)
+                    Me.CursorMessage4Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(format)
                     Me.CursorMessage4Label.Visible = True
                     Me.CursorPictureBox.Image = Nothing
                     Me.CursorPanel.Visible = True
@@ -1889,12 +1888,8 @@ Public Class Form1
                     Dim y As Integer = e.CellBounds.Top + (e.CellBounds.Height \ 2) - 4
                     Dim points() As Point =
                         If(glyphDir = SortOrder.Ascending,
-                           {New Point(x, y:=y + 6),
-                            New Point(x:=x + 8, y:=y + 6),
-                            New Point(x:=x + 4, y)},
-                           {New Point(x, y),
-                            New Point(x:=x + 8, y),
-                            New Point(x:=x + 4, y:=y + 6)})
+                           {New Point(x, y:=y + 6), New Point(x:=x + 8, y:=y + 6), New Point(x:=x + 4, y)},
+                           {New Point(x, y), New Point(x:=x + 8, y), New Point(x:=x + 4, y:=y + 6)})
 
                     Dim g As Graphics = e.Graphics
                     g.FillPolygon(brush:=New SolidBrush(color), points)
@@ -2006,6 +2001,7 @@ Public Class Form1
                   SortOrder.Ascending,
                   SortOrder.Descending),
                SortOrder.None)
+
         dgv.ClearSelection()
     End Sub
 
@@ -2191,37 +2187,27 @@ Public Class Form1
                     dgv.Rows(index:=e.RowIndex).Cells(columnName:="key").Value.ToString
                 Select Case key.GetItemIndex()
                     Case ServerDataIndexes.activeInsulin
-                        .SelectedIndex =
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage05ActiveInsulin))
+                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage05ActiveInsulin))
                     Case ServerDataIndexes.basal
-                        .SelectedIndex =
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage06Basal))
+                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage06Basal))
                     Case ServerDataIndexes.lastAlarm
-                        .SelectedIndex =
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage07LastAlarm))
+                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage07LastAlarm))
                     Case ServerDataIndexes.lastSG
-                        .SelectedIndex =
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage08LastSG))
+                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage08LastSG))
                     Case ServerDataIndexes.limits
-                        .SelectedIndex =
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage09Limits))
+                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage09Limits))
                     Case ServerDataIndexes.notificationHistory
                         .SelectedIndex =
                             If(key = "activeNotification",
-                                GetTabIndexFromName(
-                                    tabPageName:=NameOf(TabPage10NotificationActive)),
-                                GetTabIndexFromName(
-                                    tabPageName:=NameOf(TabPage11NotificationsCleared)))
+                               GetTabIndexFromName(tabPageName:=NameOf(TabPage10NotificationActive)),
+                               GetTabIndexFromName(tabPageName:=NameOf(TabPage11NotificationsCleared)))
+
                     Case ServerDataIndexes.pumpBannerState
-                        .SelectedIndex =
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage12PumpBannerState))
+                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage12PumpBannerState))
                     Case ServerDataIndexes.sgs
-                        .SelectedIndex =
-                            GetTabIndexFromName(tabPageName:=NameOf(TabPage13SensorGlucose))
+                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage13SensorGlucose))
                     Case ServerDataIndexes.therapyAlgorithmState
-                        .SelectedIndex =
-                            GetTabIndexFromName(
-                                tabPageName:=NameOf(TabPage14TherapyAlgorithmState))
+                        .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage14TherapyAlgorithmState))
                     Case ServerDataIndexes.markers
                         Dim page As Integer = _lastMarkerTabLocation.Page
                         Dim tab As Integer = _lastMarkerTabLocation.Tab
@@ -3476,6 +3462,7 @@ Public Class Form1
                 If(checkState = CheckState.Checked,
                    $"Advanced Decay, AIT will decay over { .InsulinRealAit}{ whileUsing}",
                    $"AIT will decay over { .PumpAit.ToHoursMinutes}{ whileUsing}")
+
             CurrentUser.UseAdvancedAitDecay = checkState
         End With
         If _remainingInsulinList.Count = 0 Then Exit Sub
@@ -3526,27 +3513,19 @@ Public Class Form1
     Private Sub MySettings_SettingChanging(sender As Object, e As SettingChangingEventArgs)
         If e.SettingName.StartsWith(value:="System") Then Exit Sub
 
-        Dim value As String = If(IsNothing(Expression:=e.NewValue),
-                                 "",
-                                 e.NewValue.ToString)
-        If EqualsNoCase(My.Settings(propertyName:=e.SettingName), value) Then
-            Exit Sub
-        End If
+        Dim value As String = Convert.ToString(value:=e.NewValue)
+        If EqualsNoCase(My.Settings(propertyName:=e.SettingName), value) Then Exit Sub
+
         If e.SettingName = "CareLinkUserName" Then
-            If s_allUserSettingsData?.ContainsKey(key:=e.NewValue.ToString) Then
-                LoginHelpers.LoginDialog.LoggedOnUser =
-                    s_allUserSettingsData(itemName:=e.NewValue.ToString)
+            If s_allUserSettingsData?.ContainsKey(key:=value) Then
+                LoginHelpers.LoginDialog.LoggedOnUser = s_allUserSettingsData(itemName:=value)
                 Exit Sub
-            Else
-                Dim userSettings As New CareLinkUserDataRecord(parent:=s_allUserSettingsData)
-                userSettings.UpdateValue(key:=e.SettingName, value:=e.NewValue.ToString)
-                s_allUserSettingsData.Add(value:=userSettings)
             End If
+            Dim userSettings As New CareLinkUserDataRecord(parent:=s_allUserSettingsData)
+            userSettings.UpdateValue(key:=e.SettingName, value)
+            s_allUserSettingsData.Add(value:=userSettings)
         End If
-        s_allUserSettingsData.SaveAllUserRecords(
-            LoginHelpers.LoginDialog.LoggedOnUser,
-            key:=e.SettingName,
-            value:=(e.NewValue?.ToString))
+        s_allUserSettingsData.SaveAllUserRecords(LoginHelpers.LoginDialog.LoggedOnUser, key:=e.SettingName, value)
     End Sub
 
 #End Region ' Settings Events
@@ -3642,8 +3621,8 @@ Public Class Form1
 
         ' Highlight selected tab
         Dim color As Color = If(tabControl.SelectedIndex = e.Index,
-                                   Color.Black,
-                                   SystemColors.ControlDark)
+                                Color.Black,
+                                SystemColors.ControlDark)
 
         Using brush As New SolidBrush(color), textBrush As New SolidBrush(color:=Color.White)
             Using g As Graphics = e.Graphics
@@ -3769,6 +3748,7 @@ Public Class Form1
             tabName = If(panelTop.Name.Contains(value:="Active"),
                          NameOf(ActiveNotification),
                          NameOf(ClearedNotifications))
+
         ElseIf tabName = "LastSensorGlucose" Then
             tabName = "LastSG"
         ElseIf tabName = "SensorGlucoseValues" Then
@@ -4408,6 +4388,7 @@ Public Class Form1
                                     If(Math.Abs(value:=delta) < 0.001,
                                        "0",
                                        delta.ToString(format:=GetSgFormat(withSign:=True), provider))
+
                                 Me.TrendValueLabel.Text = deltaString
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta)
                             End If
@@ -4451,6 +4432,7 @@ Public Class Form1
         Dim sc As Single = If(sp.Orientation = Orientation.Vertical,
                               _formScale.Width,
                               _formScale.Height)
+
         If sp.FixedPanel = FixedPanel.Panel1 Then
             sp.SplitterDistance =
                 CInt(Math.Truncate(Math.Round(sp.SplitterDistance * sc)))
@@ -4458,6 +4440,7 @@ Public Class Form1
             Dim cs As Integer = If(sp.Orientation = Orientation.Vertical,
                                    sp.Panel2.ClientSize.Width,
                                    sp.Panel2.ClientSize.Height)
+
             sp.SplitterDistance -= CInt(Math.Truncate(cs * sc)) - cs
         End If
     End Sub
@@ -4505,6 +4488,7 @@ Public Class Form1
                     title = If(Is700Series(),
                                "AutoMode",
                                "SmartGuard")
+
                 Case "SAFE_BASAL"
                     title = autoModeState.ToTitle
                     Dim key As String = NameOf(TherapyAlgorithmState.SafeBasalDuration)
@@ -5010,6 +4994,7 @@ Public Class Form1
                                         second:=59,
                                         millisecond:=999),
                                      activeBasalRecords(index:=e.Index + 1).Time)
+
                         Dim theTimeSpan As TimeSpan = endTime - startTime
                         Dim periodInHours As Double =
                             theTimeSpan.Hours +
@@ -5027,11 +5012,11 @@ Public Class Form1
         Dim totalPercent As String = If(s_totalDailyDose = 0,
                                         "???",
                                         $"{CInt(s_totalBasal / s_totalDailyDose * 100)}")
-        Me.Last24HrBasalUnitsLabel.Text = String.Format(Provider, format:=$"{s_totalBasal:F1} U")
+
+        Me.Last24HrBasalUnitsLabel.Text = String.Format(provider, format:=$"{s_totalBasal:F1} U")
         Me.Last24HrBasalPercentLabel.Text = $"{totalPercent}%"
 
-        Me.Last24HrTotalInsulinUnitsLabel.Text =
-            String.Format(provider, format:=$"{s_totalDailyDose:F1} U")
+        Me.Last24HrTotalInsulinUnitsLabel.Text = String.Format(provider, format:=$"{s_totalDailyDose:F1} U")
 
         If s_totalAutoCorrection > 0 Then
             Me.Last24HrAutoCorrectionLabel.Visible = True
@@ -5329,6 +5314,7 @@ Public Class Form1
         Me.AverageSGValueLabel.Text = If(NativeMmolL,
                                          averageSgStr.TruncateSingle(digits:=2),
                                          averageSgStr)
+
         Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnits}"
 
         ' Calculate Time in AutoMode
@@ -5370,10 +5356,10 @@ Public Class Form1
                         End If
                     End If
                 Next
-                Me.SmartGuardLabel.Text =
-                    If(timeInAutoMode >= OneDaySpan,
-                        "SmartGuard 100%",
-                        $"SmartGuard {CInt(timeInAutoMode / OneDaySpan * 100)}%")
+                Me.SmartGuardLabel.Text = If(timeInAutoMode >= OneDaySpan,
+                                             "SmartGuard 100%",
+                                             $"SmartGuard {CInt(timeInAutoMode / OneDaySpan * 100)}%")
+
             Catch ex As Exception
                 Me.SmartGuardLabel.Text = "SmartGuard ???%"
             End Try
@@ -5550,14 +5536,13 @@ Public Class Form1
         If PatientData.ConduitInRange Then
             Dim value As String = Nothing
             If s_trends.TryGetValue(key, value) Then
-                Me.TrendArrowsLabel.Font =
-                    If(key = "NONE",
-                       New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold),
-                       New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold))
+                Me.TrendArrowsLabel.Font = If(key = "NONE",
+                                              New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold),
+                                              New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold))
+
                 Me.TrendArrowsLabel.Text = s_trends(key)
             Else
-                Me.TrendArrowsLabel.Font =
-                    New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold)
+                Me.TrendArrowsLabel.Font = New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold)
                 Me.TrendArrowsLabel.Text = key
             End If
         End If

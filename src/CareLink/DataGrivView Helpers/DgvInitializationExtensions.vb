@@ -19,7 +19,10 @@ Public Module DgvInitializationExtensions
     ''' </param>
     <Extension>
     Friend Sub InitializeDgv(dgv As DataGridView)
-        Dim emSize As Single = If(dgv.Name = NameOf(Form1.DgvBasalPerHour), 12.0!, 10.0!)
+        Dim emSize As Single = If(dgv.Name = NameOf(Form1.DgvBasalPerHour),
+                                  12.0!,
+                                  10.0!)
+
         With dgv
             .AllowUserToAddRows = False
             .AllowUserToDeleteRows = False

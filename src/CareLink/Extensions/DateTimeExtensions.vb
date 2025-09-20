@@ -116,6 +116,7 @@ Friend Module DateTimeExtensions
         Dim timeStr As String = If(pumpTime.ToString = localTime.ToString,
                                    $"Local & Pump Time = {localTime}",
                                    $"Local Time = {localTime}, Pump Time = {pumpTime}")
+
         Dim unixTimeStr As String = $"{unixTime} UTC"
         Return $"{unixTimeStr,30}{Space(Number:=15)}{timeStr}"
     End Function

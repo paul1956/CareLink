@@ -416,8 +416,8 @@ Public Class Client2
         Debug.WriteLine($"   status: {_lastHttpStatusCode}")
 
         Return If(response.IsSuccessStatusCode,
-            response.Content.ReadAsStringAsync().Result,
-            Nothing)
+                  response.Content.ReadAsStringAsync().Result,
+                  Nothing)
     End Function
 
     ''' <summary>

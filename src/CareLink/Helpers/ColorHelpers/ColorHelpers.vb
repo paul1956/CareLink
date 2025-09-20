@@ -16,9 +16,10 @@ Public Module ColorHelpers
     <Extension>
     Public Function ContrastingColor(baseColor As Color) As Color
         ' Y is the "brightness"
-        Dim y As Double =
-            (0.299 * baseColor.R) + (0.587 * baseColor.G) + (0.114 * baseColor.B)
-        Return If(y < 140, Color.White, Color.Black)
+        Dim y As Double = (0.299 * baseColor.R) + (0.587 * baseColor.G) + (0.114 * baseColor.B)
+        Return If(y < 140,
+                  Color.White,
+                  Color.Black)
     End Function
 
     ''' <summary>
@@ -32,7 +33,9 @@ Public Module ColorHelpers
         Dim clrBase As Color = knownColor.ToColor
         ' Y is the "brightness"
         Dim y As Double = (0.299 * clrBase.R) + (0.587 * clrBase.G) + (0.114 * clrBase.B)
-        Return If(y < 140, KnownColor.White, KnownColor.Black)
+        Return If(y < 140,
+                  KnownColor.White,
+                  KnownColor.Black)
     End Function
 
     ''' <summary>

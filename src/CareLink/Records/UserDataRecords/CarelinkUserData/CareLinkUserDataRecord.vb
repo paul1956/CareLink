@@ -34,8 +34,7 @@ Partial Public Class CareLinkUserDataRecord
             ._careLinkPatientUserID =
                 If(._careLinkPartner,
                    My.Settings.CareLinkPatientUserID,
-                   "")
-        }
+                   "")}
     End Sub
 
     ''' <summary>

@@ -8,9 +8,9 @@ Public Class AutoSuspendRecord
     End Sub
 
     Public Sub New(sTable As StringTable)
-        Me.Alarm = sTable.GetSingleLineValue(Of String)("Auto Suspend ")
+        Me.Alarm = sTable.GetSingleLineValue(Of String)(key:="Auto Suspend ")
         If Me.Alarm <> "Off" Then
-            Me.Time = sTable.GetSingleLineValue(Of TimeSpan)("Time ")
+            Me.Time = sTable.GetSingleLineValue(Of TimeSpan)(key:="Time ")
         End If
 
     End Sub

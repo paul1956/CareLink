@@ -30,7 +30,10 @@ Friend Module ErrorReportingHelpers
             ' No change in memory usage, no need to report
             Return
         End If
-        Dim upDown As String = If(diff > 0, "↑", "↓")
+        Dim upDown As String = If(diff > 0,
+                                  "↑",
+                                  "↓")
+
         Dim message As String =
             $"Current process memory usage: {memInMB:F2} MB, from last: " &
             $"{upDown} {Math.Abs(value:=diff):F2} MB"
@@ -66,10 +69,10 @@ Friend Module ErrorReportingHelpers
             Optional lastErrorMessage As String = "")
 
         If hasErrors Then
-            loginStatus.ForeColor =
-                If(lastErrorMessage = "OK",
-                   Form1.MenuStrip1.ForeColor,
-                   Color.Red)
+            loginStatus.ForeColor = If(lastErrorMessage = "OK",
+                                       Form1.MenuStrip1.ForeColor,
+                                       Color.Red)
+
             loginStatus.Text = $"Login Status: {lastErrorMessage}"
         Else
             loginStatus.ForeColor = Form1.MenuStrip1.ForeColor

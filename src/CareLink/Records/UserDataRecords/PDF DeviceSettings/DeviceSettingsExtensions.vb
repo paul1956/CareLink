@@ -25,35 +25,30 @@ Friend Module DeviceSettingsExtensions
                     value = value.Replace(oldChar:=","c, newChar:=CareLinkDecimalSeparator)
                     Return If(IsNumeric(Expression:=value),
                               CType(CObj(value), T),
-                              CType(CObj(Single.NaN), T)
-                             )
+                              CType(CObj(Single.NaN), T))
                 End If
                 If typeOfT Is GetType(Integer) Then
                     Return If(IsNumeric(Expression:=value),
                               CType(CObj(value), T),
-                              CType(CObj(0), T)
-                             )
+                              CType(CObj(0), T))
                 End If
                 If typeOfT Is GetType(TimeOnly) Then
                     Dim timeOnly As TimeOnly = Nothing
                     Return If(TimeOnly.TryParse(s:=value, result:=timeOnly),
                               CType(CObj(timeOnly), T),
-                              CType(CObj(Eleven59), T)
-                             )
+                              CType(CObj(Eleven59), T))
                 End If
                 If typeOfT Is GetType(TimeSpan) Then
                     Dim timeSpan As TimeSpan = Nothing
                     Return If(TimeSpan.TryParse(s:=value, result:=timeSpan),
                               CType(CObj(timeSpan), T),
-                              CType(CObj(ZeroTickSpan), T)
-                             )
+                              CType(CObj(ZeroTickSpan), T))
                 End If
                 If typeOfT Is GetType(Boolean) Then
                     Dim bol As Boolean = Nothing
                     Return If(Boolean.TryParse(value, result:=bol),
                               CType(CObj(bol), T),
-                              CType(CObj(False), T)
-                             )
+                              CType(CObj(False), T))
                 End If
                 Stop
             End If
@@ -106,13 +101,12 @@ Friend Module DeviceSettingsExtensions
         Dim carbRatios As New List(Of CarbRatioRecord)
         For Each e As IndexClass(Of DeviceCarbRatioRecord) In deviceCarbRatios.WithIndex
             Dim deviceCarbRatio As DeviceCarbRatioRecord = e.Value
-            carbRatios.Add(New CarbRatioRecord With {
-                            .StartTime = deviceCarbRatio.Time,
-                            .CarbRatio = deviceCarbRatio.Ratio,
-                            .EndTime = If(e.IsLast,
-                                          Eleven59,
-                                          deviceCarbRatios(e.Index + 1).Time)
-            })
+            carbRatios.Add(item:=New CarbRatioRecord With {
+                .StartTime = deviceCarbRatio.Time,
+                .CarbRatio = deviceCarbRatio.Ratio,
+                .EndTime = If(e.IsLast,
+                                Eleven59,
+                                deviceCarbRatios(index:=e.Index + 1).Time)})
         Next
         Return carbRatios
     End Function

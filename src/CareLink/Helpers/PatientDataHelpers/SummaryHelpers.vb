@@ -59,7 +59,7 @@ Friend Module SummaryHelpers
         For Each kvp As KeyValuePair(Of String, String) In s_notificationMessages
             Dim value As New List(Of String)
             ' Find matches for parentheses
-            For Each match As Match In parenthesesRegex.Matches(kvp.Value)
+            For Each match As Match In parenthesesRegex.Matches(input:=kvp.Value)
                 Dim word As String = match.Groups(groupnum:=1).Value
                 Dim item As String =
                     match.Value.TrimStart(trimChar:="("c).TrimEnd(trimChar:=")"c)
@@ -205,31 +205,26 @@ Friend Module SummaryHelpers
                                 Case "sensorUpdateTime"
                                     If addInfo.TryGetValue(key, value:=sensorUpdateTime) Then
                                     Else
-                                        sensorUpdateTime =
-                                            GetSensorUpdateTime(key:=sensorUpdateTime)
+                                        sensorUpdateTime = GetSensorUpdateTime(key:=sensorUpdateTime)
                                     End If
                                 Case "sg"
                                     Dim lowAlertRec As LowAlertRecord
                                     If addInfo.TryGetValue(key, value:=sg) Then
                                         If faultId = "827" Then
-                                            lowLimit =
-                                                If(CSng(sg) < 65 AndAlso CSng(sg) > 20,
-                                                   "64",
-                                                   "3.5")
+                                            lowLimit = If(CSng(sg) < 65 AndAlso CSng(sg) > 20,
+                                                          "64",
+                                                          "3.5")
                                         End If
                                     ElseIf faultId = "787" Then
-                                        lowAlertRec =
-                                            LowAlertsRecord.GetLowAlertRecord(triggerTime)
-                                        lowLimit =
-                                          $"{lowAlertRec.LowLimit} {BgUnits()}"
+                                        lowAlertRec = LowAlertsRecord.GetLowAlertRecord(triggerTime)
+                                        lowLimit = $"{lowAlertRec.LowLimit} {BgUnits()}"
                                     Else
                                         Stop
                                     End If
                                 Case "units"
                         ' handled elsewhere
                                 Case "unitsRemaining"
-                                    If addInfo.TryGetValue(key, value:=unitsRemaining) Then
-                                    Else
+                                    If Not addInfo.TryGetValue(key, value:=unitsRemaining) Then
                                         unitsRemaining = "0"
                                     End If
                             End Select
@@ -327,10 +322,9 @@ Friend Module SummaryHelpers
 
                                     Dim result As Date = Nothing
                                     key = NameOf(ActiveNotification.triggeredDateTime)
-                                    s_suspendedSince =
-                                        If(s_suspendedSince.TryParseDate(key, result),
-                                           result.ToString(format:=s_timeWithMinuteFormat),
-                                           "???")
+                                    s_suspendedSince = If(s_suspendedSince.TryParseDate(key, result),
+                                                          result.ToString(format:=s_timeWithMinuteFormat),
+                                                          "???")
                                 End If
                             End If
                             If kvp.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then

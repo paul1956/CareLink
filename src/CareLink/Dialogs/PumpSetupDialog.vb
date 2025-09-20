@@ -3,14 +3,11 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Drawing.Printing
-Imports System.Runtime.InteropServices
-Imports System.Text.RegularExpressions
 
 Public Class PumpSetupDialog
 
     Private _charFrom As Integer
     Private _charTo As Integer
-    Private _printFont As Font
     Private _printRtb As RichTextBox
 
     ''' <summary>
@@ -18,6 +15,41 @@ Public Class PumpSetupDialog
     ''' </summary>
     ''' <value>The <see cref="PdfSettingsRecord"/> containing pump configuration data.</value>
     Public Property Pdf As PdfSettingsRecord
+
+    Private Shared Sub ReduceFontSizes(rtb As RichTextBox, reductionFactor As Single)
+        Dim start As Integer = 0
+        Dim textLength As Integer = rtb.TextLength
+
+        While start < textLength
+            rtb.Select(start, length:=1)
+            Dim currentFont As Font = rtb.SelectionFont
+
+            ' Find the range with the same font
+            Dim endIndex As Integer = start + 1
+            While endIndex < textLength
+                rtb.Select(start:=endIndex, length:=1)
+                If rtb.SelectionFont Is Nothing OrElse
+                    Not rtb.SelectionFont.Equals(obj:=currentFont) Then
+                    Exit While
+                End If
+                endIndex += 1
+            End While
+
+            ' Select the whole range with the same font
+            rtb.Select(start, length:=endIndex - start)
+
+            ' Create and apply new font with reduced size
+            Dim newFont As New Font(
+                family:=currentFont.FontFamily,
+                emSize:=Math.Max(1.0F, currentFont.Size * reductionFactor),
+                style:=currentFont.Style)
+            rtb.SelectionFont = newFont
+
+            start = endIndex
+        End While
+
+        rtb.DeselectAll()
+    End Sub
 
     Private Sub DeliverySettingsAutoSuspend(rtb As RichTextBox)
         With rtb
@@ -64,9 +96,7 @@ Public Class PumpSetupDialog
 
     ' Prepare the RichTextBox for printing: white background and convert white text to black
     Private Sub PreparePrintRichTextBox(originalRtb As RichTextBox)
-        _printRtb = New RichTextBox With {
-            .Rtf = originalRtb.Rtf,
-            .BackColor = Color.White}
+        _printRtb = New RichTextBox With {.Rtf = originalRtb.Rtf, .BackColor = Color.White}
 
         Dim start As Integer = 0
         While start < _printRtb.TextLength
@@ -93,20 +123,19 @@ Public Class PumpSetupDialog
 
             start += 1
         End While
-        Me.ReduceFontSizes(rtb:=_printRtb, reductionFactor:=0.53)
+        ReduceFontSizes(rtb:=_printRtb, reductionFactor:=0.53)
     End Sub
 
     ' PrintPage event handler: render RichTextBox content to graphics page
     Private Sub PrintPageHandler(sender As Object, e As PrintPageEventArgs)
         Dim printArea As STRUCT_RECT
-        Dim pageArea As STRUCT_RECT
-
         ' 14.4 = pixels to twips conversion (96 dpi * 15)
         printArea.Top = CInt(e.MarginBounds.Top * 14.4)
         printArea.Bottom = CInt(e.MarginBounds.Bottom * 14.4)
         printArea.Left = CInt(e.MarginBounds.Left * 14.4)
         printArea.Right = CInt(e.MarginBounds.Right * 14.4)
 
+        Dim pageArea As STRUCT_RECT
         pageArea.Top = CInt(e.PageBounds.Top * 14.4)
         pageArea.Bottom = CInt(e.PageBounds.Bottom * 14.4)
         pageArea.Left = CInt(e.PageBounds.Left * 14.4)
@@ -121,11 +150,7 @@ Public Class PumpSetupDialog
         fmtRange.rcPage = pageArea
 
         Dim res As IntPtr =
-            SendMessage(
-                hWnd:=_printRtb.Handle,
-                msg:=EM_FORMATRANGE,
-                wParam:=CType(1, IntPtr),
-                lParam:=fmtRange)
+            SendMessage(hWnd:=_printRtb.Handle, msg:=EM_FORMATRANGE, wParam:=CType(1, IntPtr), lParam:=fmtRange)
         e.Graphics.ReleaseHdc(fmtRange.hdc)
 
         Dim charsPrinted As Integer = res.ToInt32()
@@ -135,11 +160,7 @@ Public Class PumpSetupDialog
         Else
             e.HasMorePages = False
             ' Free cached memory after printing
-            SendMessage(
-                hWnd:=_printRtb.Handle,
-                msg:=EM_FORMATRANGE,
-                wParam:=CType(0, IntPtr),
-                lParam:=fmtRange)
+            SendMessage(hWnd:=_printRtb.Handle, msg:=EM_FORMATRANGE, wParam:=CType(0, IntPtr), lParam:=fmtRange)
         End If
     End Sub
 
@@ -169,12 +190,11 @@ Public Class PumpSetupDialog
         End Using
     End Sub
 
-    Private Sub PrintToolStripMenuItem_Click(sender As Object, e As EventArgs) _
-        Handles PrintToolStripMenuItem.Click
+    Private Sub PrintToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintToolStripMenuItem.Click
 
         _printRtb = New RichTextBox With {.Rtf = Me.RtbMainLeft.Rtf}
-
-        _printRtb.Select(start:=_printRtb.TextLength, length:=0) ' Move caret to end
+        ' Move caret to end
+        _printRtb.Select(start:=_printRtb.TextLength, length:=0)
         ' Append second RichTextBox content preserving formatting
         _printRtb.SelectedRtf = Me.RtbMainRight.Rtf
 
@@ -206,8 +226,7 @@ Public Class PumpSetupDialog
     ''' <exception cref="NullReferenceException">
     '''  Thrown if <see cref="Pdf"/> is not set.
     ''' </exception>
-    Private Sub PumpSetupDialog_Shown(sender As Object, e1 As EventArgs) _
-        Handles MyBase.Shown
+    Private Sub PumpSetupDialog_Shown(sender As Object, e1 As EventArgs) Handles MyBase.Shown
 
         If Me.Pdf Is Nothing Then
             Throw New NullReferenceException(message:=NameOf(Pdf))
@@ -354,73 +373,23 @@ Public Class PumpSetupDialog
         End With
     End Sub
 
-    Private Sub ReduceFontSizes(rtb As RichTextBox, reductionFactor As Single)
-        Dim start As Integer = 0
-        Dim textLength As Integer = rtb.TextLength
-
-        While start < textLength
-            rtb.Select(start, length:=1)
-            Dim currentFont As Font = rtb.SelectionFont
-
-            ' Find the range with the same font
-            Dim endIndex As Integer = start + 1
-            While endIndex < textLength
-                rtb.Select(start:=endIndex, length:=1)
-                If rtb.SelectionFont Is Nothing OrElse
-                    Not rtb.SelectionFont.Equals(obj:=currentFont) Then
-                    Exit While
-                End If
-                endIndex += 1
-            End While
-
-            ' Select the whole range with the same font
-            Dim length As Integer = endIndex - start
-            rtb.Select(start, length)
-
-            ' Calculate new smaller font size keeping minimum font size limit
-            Dim newSize As Single = Math.Max(1.0F, currentFont.Size * reductionFactor)
-
-            ' Create and apply new font with reduced size
-            Dim newFont As New Font(
-                family:=currentFont.FontFamily,
-                emSize:=newSize,
-                style:=currentFont.Style)
-            rtb.SelectionFont = newFont
-
-            start = endIndex
-        End While
-
-        rtb.DeselectAll()
-    End Sub
-
     Private Sub SettingsAlert(rtb As RichTextBox)
         With rtb
-            For Each index As IndexClass(Of KeyValuePair(Of String, NamedBasalRecord)) In
-                Me.Pdf.Basal.NamedBasal.WithIndex
-
-                Dim item As KeyValuePair(Of String, NamedBasalRecord) = index.Value
-                .AppendTextWithFontChange(
-                    text:=$"{Indent4}{item.Key}:",
-                    newFont:=FixedWidthBoldFont,
-                    includeNewLine:=True)
-                For Each e As IndexClass(Of BasalRateRecord) In
-                    item.Value.basalRates.WithIndex
-
+            For Each item As KeyValuePair(Of String, NamedBasalRecord) In Me.Pdf.Basal.NamedBasal
+                Dim text As String = $"{Indent4}{item.Key}:"
+                .AppendTextWithFontChange(text, newFont:=FixedWidthBoldFont, includeNewLine:=True)
+                For Each e As IndexClass(Of BasalRateRecord) In item.Value.basalRates.WithIndex
                     Dim basalRate As BasalRateRecord = e.Value
                     If Not basalRate.IsValid Then
                         Exit For
                     End If
                     Dim startTime As TimeOnly = basalRate.Time
-                    Dim endTime As TimeOnly =
-                        If(e.IsLast,
-                           Eleven59,
-                           item.Value.basalRates(index:=e.Index + 1).Time)
+                    Dim endTime As TimeOnly = If(e.IsLast,
+                                                 Eleven59,
+                                                 item.Value.basalRates(index:=e.Index + 1).Time)
+
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
-                    .AppendTimeValueRow(
-                        startTime,
-                        endTime,
-                        value,
-                        Me.Pdf.Utilities.TimeFormat)
+                    .AppendTimeValueRow(startTime, endTime, value, Me.Pdf.Utilities.TimeFormat)
                 Next
             Next
         End With
