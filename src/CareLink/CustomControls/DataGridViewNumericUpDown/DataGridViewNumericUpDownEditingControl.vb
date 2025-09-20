@@ -135,8 +135,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
     '''  and it may include properties such as font, back color, fore color,
     '''  and text alignment that should be applied to the control.
     ''' </param>
-    Public Overridable Sub ApplyCellStyleToEditingControl(
-        dataGridViewCellStyle As DataGridViewCellStyle) _
+    Public Overridable Sub ApplyCellStyleToEditingControl(dataGridViewCellStyle As DataGridViewCellStyle) _
         Implements IDataGridViewEditingControl.ApplyCellStyleToEditingControl
 
         Me.Font = dataGridViewCellStyle.Font
@@ -272,8 +271,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
             ' Prevent the Value from being set to Maximum or Minimum when
             ' the cell is being painted.
             Me.UserEdit = (context And DataGridViewDataErrorContexts.Display) = 0
-            Dim format As String =
-                $"{If(Me.ThousandsSeparator, "N", "F")}{Me.DecimalPlaces}"
+            Dim format As String = $"{If(Me.ThousandsSeparator, "N", "F")}{Me.DecimalPlaces}"
             Return Me.Value.ToString(format)
         Finally
             Me.UserEdit = userEdit

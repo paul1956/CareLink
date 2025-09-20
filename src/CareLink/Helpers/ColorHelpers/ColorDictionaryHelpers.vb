@@ -28,8 +28,7 @@ Friend Module ColorDictionaryHelpers
         Dim baseColor As Color = GraphColorDictionary(key).ToColor
         Return If(key = "Suspend",
                   Color.FromArgb(alpha:=128, baseColor),
-                  baseColor
-                 )
+                  baseColor)
     End Function
 
     ''' <summary>

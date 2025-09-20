@@ -513,16 +513,12 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.reservoirRemainingUnits)
-                    message =
-                        $"Reservoir has {PatientData.ReservoirRemainingUnits}U remaining."
+                    message = $"Reservoir has {PatientData.ReservoirRemainingUnits}U remaining."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.conduitInRange)
-                    message =
-                        $"Phone {If(PatientData.ConduitInRange,
-                                 "is",
-                                 "is not")} in range of pump."
+                    message = $"Phone {If(PatientData.ConduitInRange, "is", "is not")} in range of pump."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
@@ -532,10 +528,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataIndexes.conduitSensorInRange)
-                    message =
-                        $"Transmitter {If(PatientData.ConduitSensorInRange,
-                                          "is",
-                                          "is not")} in range of pump."
+                    message = $"Transmitter {If(PatientData.ConduitSensorInRange, "is", "is not")} in range of pump."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
@@ -593,8 +586,10 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataIndexes.basal)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
-                    s_basalList(index:=0) =
-                        If(String.IsNullOrWhiteSpace(kvp.Value), New Basal, PatientData.Basal)
+                    s_basalList(index:=0) = If(String.IsNullOrWhiteSpace(kvp.Value),
+                                               New Basal,
+                                               PatientData.Basal)
+
                 Case NameOf(ServerDataIndexes.lastSensorTime)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
@@ -750,9 +745,11 @@ Friend Module Form1UpdateHelpers
                         mainForm.PumpBannerStateLabel.BackColor = Color.Lime
                         mainForm.PumpBannerStateLabel.ForeColor =
                             mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
-                        Dim target150 As String = If(NativeMmolL, "8.3", "150")
-                        mainForm.PumpBannerStateLabel.Text =
-                            $"Target {target150} {minutes.ToHoursMinutes}/hr"
+                        Dim target150 As String = If(NativeMmolL,
+                                                     "8.3",
+                                                     "150")
+
+                        mainForm.PumpBannerStateLabel.Text = $"Target {target150} {minutes.ToHoursMinutes}/hr"
                         mainForm.PumpBannerStateLabel.Visible = True
                         mainForm.PumpBannerStateLabel.Dock = DockStyle.Top
                     Case "BG_REQUIRED"

@@ -7,9 +7,10 @@ Public NotInheritable Class AboutBox1
     Private Sub AboutBox1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ' Set the title of the form.
         Dim applicationTitle As String =
-            If(My.Application.Info.Title <> "",
-               My.Application.Info.Title,
-               IO.Path.GetFileNameWithoutExtension(path:=My.Application.Info.AssemblyName))
+            If(My.Application.Info.Title = "",
+               IO.Path.GetFileNameWithoutExtension(path:=My.Application.Info.AssemblyName),
+               My.Application.Info.Title)
+
         Me.Text = $"About {applicationTitle}"
         Me.LabelProductName.Text = My.Application.Info.ProductName
         Me.LabelVersion.Text =

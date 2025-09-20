@@ -73,11 +73,12 @@ Friend Module GetManualBasalPoints
             For Each e As IndexClass(Of BasalRateRecord) In basalRateRecords.WithIndex
                 Dim basalRecord As BasalRateRecord = e.Value
                 Dim start As TimeOnly = basalRecord.Time
-                Dim [end] As TimeOnly = If(e.IsLast,
-                                           Eleven59.AddMinutes(value:=1),
-                                           basalRateRecords(index:=e.Index + 1).Time)
-                Dim currentTimeOnly As TimeOnly =
-                    TimeOnly.FromDateTime(Date.FromOADate(currentMarkerTime))
+                Dim [end] As TimeOnly =
+                    If(e.IsLast,
+                       Eleven59.AddMinutes(value:=1),
+                       basalRateRecords(index:=e.Index + 1).Time)
+
+                Dim currentTimeOnly As TimeOnly = TimeOnly.FromDateTime(Date.FromOADate(currentMarkerTime))
 
                 If currentTimeOnly.IsBetween(start, [end]) Then
                     Dim rate As Single = basalRecord.UnitsPerHr / 12
@@ -100,8 +101,7 @@ Friend Module GetManualBasalPoints
                             timeOrderedMarkers.Add(key:=currentMarkerTime, value:=rate)
                         End If
                         Dim oaBaseDate As Date = Date.FromOADate(currentMarkerTime)
-                        currentMarkerTime =
-                            New OADate(asDate:=oaBaseDate.Add(value:=FiveMinuteSpan))
+                        currentMarkerTime = New OADate(asDate:=oaBaseDate.Add(value:=FiveMinuteSpan))
                     End If
                     Exit For
                 End If

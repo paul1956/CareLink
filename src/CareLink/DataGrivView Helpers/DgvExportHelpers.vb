@@ -70,6 +70,7 @@ Friend Module DgvExportHelpers
             Dim colLow As Integer = If(copyAll,
                                        0,
                                        dataGridViewCells.Min(selector))
+
             Dim colHigh As Integer = If(copyAll,
                                         dgv.Columns.Count - 1,
                                         dataGridViewCells.Max(selector))
@@ -80,6 +81,7 @@ Friend Module DgvExportHelpers
             Dim rowLow As Integer = If(copyAll,
                                        0,
                                        dataGridViewCells.Min(selector))
+
             Dim rowHigh As Integer = If(copyAll,
                                         dgv.RowCount - 1,
                                         dataGridViewCells.Max(selector))
@@ -87,14 +89,15 @@ Friend Module DgvExportHelpers
             Dim clipboard_string As New StringBuilder()
             If copyHeaders <> DataGridViewClipboardCopyMode.EnableWithoutHeaderText Then
                 For index As Integer = colLow To colHigh
-                    If Not (dgv.Columns(index).Visible AndAlso
-                       (copyAll OrElse dgv.AnyCellSelected(index))) Then
-
+                    If Not (dgv.Columns(index).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(index))) Then
                         Continue For
                     End If
-                    Dim value As String =
-                        $"{dgv.Columns(index).HeaderText.Remove(s:=vbCrLf)}"
-                    Dim fieldSeparator As String = If(index = colHigh, vbCrLf, vbTab)
+
+                    Dim value As String = $"{dgv.Columns(index).HeaderText.Remove(s:=vbCrLf)}"
+                    Dim fieldSeparator As String = If(index = colHigh,
+                                                      vbCrLf,
+                                                      vbTab)
+
                     clipboard_string.Append(value:=$"{value}{fieldSeparator}")
                 Next index
             End If
@@ -107,11 +110,14 @@ Friend Module DgvExportHelpers
                         Continue For
                     End If
                     Dim currentCell As DataGridViewCell = row.Cells(index)
-                    Dim cellValue As Object =
-                        If(copyAll OrElse currentCell.Selected,
-                           currentCell.Value,
-                           "")
-                    Dim fieldSeparator As String = If(index = colHigh, vbCrLf, vbTab)
+                    Dim cellValue As Object = If(copyAll OrElse currentCell.Selected,
+                                                 currentCell.Value,
+                                                 "")
+
+                    Dim fieldSeparator As String = If(index = colHigh,
+                                                      vbCrLf,
+                                                      vbTab)
+
                     clipboard_string.Append(value:=$"{cellValue}{fieldSeparator}")
                 Next index
             Next
@@ -183,10 +189,10 @@ Friend Module DgvExportHelpers
                         With worksheet.Cell(row:=i + 2, column)
                             Select Case dgvCell.ValueType.Name
                                 Case NameOf([Int32])
-                                    align =
-                                        If(dgv.Columns(index).Name.EqualsNoCase("RecordNumber"),
-                                           XLAlignmentHorizontalValues.Center,
-                                           XLAlignmentHorizontalValues.Right)
+                                    align = If(dgv.Columns(index).Name.EqualsNoCase("RecordNumber"),
+                                               XLAlignmentHorizontalValues.Center,
+                                               XLAlignmentHorizontalValues.Right)
+
                                     .Value = CInt(valueObject)
                                 Case NameOf(OADate)
                                     align = XLAlignmentHorizontalValues.Left
@@ -208,10 +214,9 @@ Friend Module DgvExportHelpers
                                         align = XLAlignmentHorizontalValues.Center
                                     Else
                                         .Value = valueASingle
-                                        .Style.NumberFormat.Format =
-                                            If(dgv.Columns(index).Name.EqualsNoCase("sg"),
-                                               GetSgFormat(withSign:=False),
-                                               $"0{DecimalSeparator}000")
+                                        .Style.NumberFormat.Format = If(dgv.Columns(index).Name.EqualsNoCase("sg"),
+                                                                        GetSgFormat(withSign:=False),
+                                                                        $"0{DecimalSeparator}000")
 
                                         align = XLAlignmentHorizontalValues.Right
                                     End If

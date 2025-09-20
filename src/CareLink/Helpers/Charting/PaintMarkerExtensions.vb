@@ -45,35 +45,36 @@ Friend Module PaintMarkerExtensions
         paintOnY2 As Boolean)
 
         ' Draw the cloned portion of the Bitmap object.
-        Dim halfHeight As Single = CSng(If(noImageOffset, 0, markerImage.Height / 2))
+        Dim halfHeight As Single = CSng(If(noImageOffset,
+                                           0,
+                                           markerImage.Height / 2))
+
         Dim halfWidth As Single = CSng(markerImage.Width / 2)
         For Each markerKvp As KeyValuePair(Of OADate, Single) In markerDictionary
-            Dim imagePosition As RectangleF = RectangleF.Empty
-            imagePosition.X =
-                CSng(e.ChartGraphics.GetPositionFromAxis(
-                            ChartAreaName,
-                            axis:=AxisName.X,
-                            axisValue:=markerKvp.Key))
-            imagePosition.Y =
-                If(paintOnY2,
-                   CSng(e.ChartGraphics.GetPositionFromAxis(
-                            ChartAreaName,
-                            axis:=AxisName.Y2,
-                            axisValue:=markerKvp.Value)),
-                   CSng(e.ChartGraphics.GetPositionFromAxis(
-                            ChartAreaName,
-                            axis:=AxisName.Y,
-                            axisValue:=markerKvp.Value)))
-            imagePosition.Width = markerImage.Width
-            imagePosition.Height = markerImage.Height
-            imagePosition = e.ChartGraphics.GetAbsoluteRectangle(rectangle:=imagePosition)
+            Dim rectangle As RectangleF = RectangleF.Empty
+            rectangle.X = CSng(e.ChartGraphics.GetPositionFromAxis(
+                                ChartAreaName,
+                                axis:=AxisName.X,
+                                axisValue:=markerKvp.Key))
+
+            rectangle.Y = If(paintOnY2,
+                             CSng(e.ChartGraphics.GetPositionFromAxis(
+                                ChartAreaName,
+                                axis:=AxisName.Y2,
+                                axisValue:=markerKvp.Value)),
+                             CSng(e.ChartGraphics.GetPositionFromAxis(
+                                ChartAreaName,
+                                axis:=AxisName.Y,
+                                axisValue:=markerKvp.Value)))
+
+            rectangle.Width = markerImage.Width
+            rectangle.Height = markerImage.Height
+
+            Dim imagePosition As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(rectangle)
             imagePosition.Y -= halfHeight
             imagePosition.X -= halfWidth
             ' Draw image
-            e.ChartGraphics.Graphics.DrawImage(
-                image:=markerImage,
-                imagePosition.X,
-                imagePosition.Y)
+            e.ChartGraphics.Graphics.DrawImage(image:=markerImage, imagePosition.X, imagePosition.Y)
         Next
     End Sub
 

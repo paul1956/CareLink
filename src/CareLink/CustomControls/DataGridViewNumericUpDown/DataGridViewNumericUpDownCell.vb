@@ -350,12 +350,11 @@ Public Class DataGridViewNumericUpDownCell
             rowIndex As Integer) As Rectangle
         Const buttonsWidth As Integer = 16
 
-        Dim errorIconBounds As Rectangle =
-            MyBase.GetErrorIconBounds(graphics, cellStyle, rowIndex)
-        errorIconBounds.X =
-            If(Me.DataGridView.RightToLeft = RightToLeft.Yes,
-               errorIconBounds.Left + buttonsWidth,
-               errorIconBounds.Left - buttonsWidth)
+        Dim errorIconBounds As Rectangle = MyBase.GetErrorIconBounds(graphics, cellStyle, rowIndex)
+        errorIconBounds.X = If(Me.DataGridView.RightToLeft = RightToLeft.Yes,
+                               errorIconBounds.Left + buttonsWidth,
+                               errorIconBounds.Left - buttonsWidth)
+
         Return errorIconBounds
     End Function
 
@@ -401,8 +400,7 @@ Public Class DataGridViewNumericUpDownCell
                 ' But depending on the values of ThousandsSeparator and DecimalPlaces,
                 ' this may not be the actual string displayed.
                 ' The real formatted value may be "1,234.500"
-                Dim format As String =
-                    $"{If(_thousandsSeparator, "N", "F")}{_decimalPlaces}"
+                Dim format As String = $"{If(_thousandsSeparator, "N", "F")}{_decimalPlaces}"
                 Return formattedDecimal.ToString(format)
             End If
         End If
@@ -673,10 +671,9 @@ Public Class DataGridViewNumericUpDownCell
 
                 Dim parts As DataGridViewPaintParts =
                     paintParts And DataGridViewPaintParts.SelectionBackground
-                Dim baseColor As Color =
-                    If(parts <> 0 AndAlso cellSelected,
-                       cellStyle.SelectionBackColor,
-                       cellStyle.BackColor)
+                Dim baseColor As Color = If(parts <> 0 AndAlso cellSelected,
+                                            cellStyle.SelectionBackColor,
+                                            cellStyle.BackColor)
 
                 If (paintParts And DataGridViewPaintParts.Background) <> 0 Then
                     If baseColor.A < 255 Then

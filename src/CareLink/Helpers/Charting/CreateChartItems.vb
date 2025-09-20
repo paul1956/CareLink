@@ -270,7 +270,9 @@ Friend Module CreateChartItems
                             text:=axisText,
                             labelRow:=0,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
-                    format = If(NativeMmolL, "F0", "F1")
+                    format = If(NativeMmolL,
+                                "F0",
+                                "F1")
                     axisText = secondAxis(index:=i).ToString(format, provider)
                     .CustomLabels.Add(
                         item:=New CustomLabel(
@@ -550,7 +552,9 @@ Friend Module CreateChartItems
         Return New Title With {
             .BackColor = foreColor.ContrastingColor(),
             .Font = New Font(FamilyName, emSize:=14.0F, style:=FontStyle.Bold),
-            .ForeColor = If(foreColor = Color.White, Color.Gray, foreColor),
+            .ForeColor = If(foreColor = Color.White,
+                            Color.Gray,
+                            foreColor),
             .Name = name,
             .ShadowColor = Color.FromArgb(alpha:=32, baseColor:=Color.Black),
             .ShadowOffset = 3,
@@ -582,12 +586,16 @@ Friend Module CreateChartItems
                 Else
                     Dim func As Func(Of SG, SG, SG) =
                         Function(i1 As SG, i2 As SG) As SG
-                            Return If(i1.OaDateTime > i2.OaDateTime, i1, i2)
+                            Return If(i1.OaDateTime > i2.OaDateTime,
+                                      i1,
+                                      i2)
                         End Function
 
                     c.AxisX.Maximum = s_sgRecords.Aggregate(func).OaDateTime
                     func = Function(i1 As SG, i2 As SG) As SG
-                               Return If(i1.OaDateTime < i2.OaDateTime, i1, i2)
+                               Return If(i1.OaDateTime < i2.OaDateTime,
+                                         i1,
+                                         i2)
                            End Function
                     c.AxisX.Minimum = s_sgRecords.Aggregate(func).OaDateTime
                 End If

@@ -15,8 +15,7 @@ Public Class Calibration
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
         Me.CalibrationSuccess = item.GetBooleanFromJson(key:=NameOf(CalibrationSuccess))
-        Me.UnitValue =
-            item.GetSingleFromJson(key:=NameOf(UnitValue), digits:=0, considerValue:=True)
+        Me.UnitValue = item.GetSingleFromJson(key:=NameOf(UnitValue), digits:=0, considerValue:=True)
         Me.bgUnits = item.GetStringFromJson(NameOf(bgUnits))
     End Sub
 
@@ -71,8 +70,7 @@ Public Class Calibration
             If Single.IsNaN(Me.UnitValue) Then Return Me.UnitValue
             Return If(NativeMmolL,
                       CSng(Math.Round(Me.UnitValue * MmolLUnitsDivisor)),
-                      Me.UnitValue
-                     )
+                      Me.UnitValue)
         End Get
     End Property
 

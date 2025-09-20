@@ -341,6 +341,7 @@ Friend Module LoginHelpers
                     Dim dst As String = If(isDaylightSavingTime,
                                            timeZoneInfo.DaylightName,
                                            timeZoneInfo.StandardName)
+
                     .Text = $"{dst} {suffixMessage}".Trim
                 End If
             End If
@@ -417,8 +418,10 @@ Friend Module LoginHelpers
                 End If
             End If
         Else
-            Dim useAdvancedAitDecay As CheckState =
-                If(Is700Series(), CheckState.Indeterminate, CheckState.Checked)
+            Dim useAdvancedAitDecay As CheckState = If(Is700Series(),
+                                                       CheckState.Indeterminate,
+                                                       CheckState.Checked)
+
             CurrentUser = New CurrentUserRecord(userName:=s_userName, useAdvancedAitDecay)
             currentUserUpdateNeeded = True
         End If

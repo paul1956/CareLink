@@ -59,6 +59,7 @@ Friend Module DataTableHelpers
             Dim key As Integer = If(colAttribute Is Nothing,
                                     fallbackOrder,
                                     colAttribute.Order)
+
             While propertyOrder.ContainsKey(key)
                 key += 1 ' Avoid duplicate keys
             End While
@@ -79,8 +80,7 @@ Friend Module DataTableHelpers
                 .ColumnName = [property].Name,
                 .Caption = GetColumnDisplayName([property]),
                 .DataType =
-                If(IsNullableType(nullableType:=propertyType) AndAlso
-                        propertyType.IsGenericType,
+                If(IsNullableType(nullableType:=propertyType) AndAlso propertyType.IsGenericType,
                    propertyType.GenericTypeArguments.FirstOrDefault(),
                    propertyType)
             }
