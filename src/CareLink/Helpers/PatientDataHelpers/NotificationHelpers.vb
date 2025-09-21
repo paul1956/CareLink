@@ -226,7 +226,7 @@ Friend Module NotificationHelpers
     ''' </summary>
     ''' <param name="mainForm">The main form containing notification panels.</param>
     Friend Sub UpdateNotificationTabs(mainForm As Form1)
-        Const rowIndex As ServerDataIndexes = ServerDataIndexes.notificationHistory
+        Const rowIndex As ServerDataEnum = ServerDataEnum.notificationHistory
 
         mainForm.TlpNotificationsCleared.SetTableName(rowIndex, isClearedNotifications:=True)
         mainForm.TlpNotificationsCleared.Controls.Clear()

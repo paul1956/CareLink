@@ -135,9 +135,8 @@ Friend Module UserMessageConstants
         {"797", "Sensor connected(triggeredDateTime). Start new sensor."},
         {"798", "Sensor connected(triggeredDateTime). If new sensor, select Start New. " &
                  "If not, select Reconnect."},
-        {"801", "Sensor updating(triggeredDateTime), Updating will take (sensorUpdateTime)" &
-                 $" more. Monitor BG.{vbCrLf} Entered BGs will not calibrate the sensor, " &
-                 "but can still be used for therapy."},
+        {"801", "Sensor updating(triggeredDateTime), Updating will take (sensorUpdateTime) more. " &
+                 $"Monitor BG.{vbCrLf} Entered BGs will not calibrate the sensor, but can still be used for therapy."},
         {"802", "Alert on low (sg) (units)(triggeredDateTime)." &
                  " Low sensor glucose. Check BG."},
         {"803", "Alert on low (sg) (units)(triggeredDateTime). Low sensor glucose. " &

@@ -46,7 +46,7 @@ Public Module Discover
             message = $"ERROR: country code {country} is not supported"
             Throw New ApplicationException(message)
         End If
-        Debug.WriteLine($"   region: {region}")
+        Debug.WriteLine(message:=$"   region: {region}")
         Dim json As String = JsonSerializer.Serialize(value:=region)
         Dim countryInfo As CountryInfo =
             JsonSerializer.Deserialize(Of CountryInfo)(json)
@@ -120,10 +120,8 @@ Public Module Discover
         json = configJson.GetRawText()
         Dim mutableConfig As Dictionary(Of String, JsonElement) =
             JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(json)
-        mutableConfig("token_url") =
-            JsonSerializer.Deserialize(Of JsonElement)(json:=$"""{tokenUrl}""")
-        Dim options As JsonSerializerOptions = s_jsonSerializerOptions
-        json = JsonSerializer.Serialize(value:=mutableConfig, options)
+        mutableConfig("token_url") = JsonSerializer.Deserialize(Of JsonElement)(json:=$"""{tokenUrl}""")
+        json = JsonSerializer.Serialize(value:=mutableConfig, options:=s_jsonSerializerOptions)
         Return JsonSerializer.Deserialize(Of JsonElement)(json)
     End Function
 

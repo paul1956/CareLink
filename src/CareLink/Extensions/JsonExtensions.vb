@@ -24,8 +24,7 @@ Public Module JsonExtensions
     ''' <summary>
     '''  Default <see cref="JsonSerializerOptions"/> for serialization with indented output.
     ''' </summary>
-    Public ReadOnly s_jsonSerializerOptions As New JsonSerializerOptions With {
-        .WriteIndented = True}
+    Public ReadOnly s_jsonSerializerOptions As New JsonSerializerOptions With {.WriteIndented = True}
 
     ''' <summary>
     '''  Converts a list of dictionaries representing JSON objects
@@ -565,18 +564,17 @@ Public Module JsonExtensions
             Try
                 Select Case item.Key
                     Case "additionalInfo"
+                        Dim jsonItem As String = item.jsonItemAsString
                         Dim additionalInfo As Dictionary(Of String, Object) =
-                            JsonSerializer.Deserialize(Of Dictionary(Of String, Object)) _
-                                (json:=item.jsonItemAsString, options)
+                            JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json:=jsonItem, options)
                         For Each kvp As KeyValuePair(Of String, Object) In additionalInfo
                             resultDictionary.Add(kvp.Key, value:=kvp.Value.ToString)
                         Next
-                    Case NameOf(ServerDataIndexes.clientTimeZoneName)
+                    Case NameOf(ServerDataEnum.clientTimeZoneName)
                         If s_useLocalTimeZone Then
                             PumpTimeZoneInfo = TimeZoneInfo.Local
                         Else
-                            PumpTimeZoneInfo =
-                                CalculateTimeZone(timeZoneName:=item.Value.ToString)
+                            PumpTimeZoneInfo = CalculateTimeZone(timeZoneName:=item.Value.ToString)
                             Dim text As String
                             Dim messageButtons As MessageBoxButtons
                             If PumpTimeZoneInfo Is Nothing Then
@@ -584,25 +582,23 @@ Public Module JsonExtensions
                                 If String.IsNullOrWhiteSpace(value) Then
                                     text =
                                         "Your pump appears To be off-line, some " &
-                                        "values will be wrong do you want to continue?" &
-                                        $" If you select OK '{TimeZoneInfo.Local.Id}'" &
-                                        " will be used as you local time and you will" &
-                                        " not be prompted further. Cancel will Exit."
+                                        "values will be wrong do you want to continue? " &
+                                        $"If you select OK '{TimeZoneInfo.Local.Id}' " &
+                                        "will be used as you local time and you will " &
+                                        "not be prompted further. Cancel will Exit."
                                     messageButtons = MessageBoxButtons.OKCancel
                                 Else
                                     text = $"Your pump TimeZone '{item.Value}' " &
-                                        "is not recognized, do you want to exit?" &
-                                        " If you select No permanently use" &
-                                        $" '{TimeZoneInfo.Local.Id}''? If you select" &
-                                        $" Yes '{TimeZoneInfo.Local.Id}'" &
-                                        $" will be used and you will not be prompted" &
-                                        " further. No will use" &
-                                        $" '{TimeZoneInfo.Local.Id}' until you restart" &
-                                        " program. Cancel will exit program." &
-                                        " Please open an issue and provide the name" &
-                                        $" '{item.Value}'. After selecting 'Yes'" &
-                                        " you can change the behavior under" &
-                                        " the Options Menu."
+                                        "is not recognized, do you want to exit? " &
+                                        "If you select No permanently use " &
+                                        $"'{TimeZoneInfo.Local.Id}''? If you select " &
+                                        $"Yes '{TimeZoneInfo.Local.Id}' " &
+                                        "will be used and you will not be prompted further. No will use " &
+                                        $"'{TimeZoneInfo.Local.Id}' until you restart " &
+                                        "program. Cancel will exit program. " &
+                                        "Please open an issue and provide the name " &
+                                        $"'{item.Value}'. After selecting 'Yes' " &
+                                        "you can change the behavior under the Options Menu."
                                     messageButtons = MessageBoxButtons.YesNoCancel
                                 End If
                                 Dim result As DialogResult = MessageBox.Show(
@@ -624,9 +620,9 @@ Public Module JsonExtensions
                         resultDictionary.Add(item.Key, value:=item.jsonItemAsString)
                     Case "Sg",
                          "sg",
-                         NameOf(ServerDataIndexes.averageSG),
-                         NameOf(ServerDataIndexes.sgBelowLimit),
-                         NameOf(ServerDataIndexes.averageSGFloat)
+                         NameOf(ServerDataEnum.averageSG),
+                         NameOf(ServerDataEnum.sgBelowLimit),
+                         NameOf(ServerDataEnum.averageSGFloat)
 
                         resultDictionary.Add(item.Key, value:=item.ScaleSg())
                     Case Else

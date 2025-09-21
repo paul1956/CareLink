@@ -166,10 +166,9 @@ Friend Module FileUtilities
             value As TokenData,
             userName As String,
             Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME)
-        Dim path As String = GetLoginDataFileName(userName, tokenBaseFileName)
         Debug.WriteLine(message:="Wrote data file")
-        Dim contents As String =
-            JsonSerializer.Serialize(value, options:=s_jsonSerializerOptions)
+        Dim contents As String = JsonSerializer.Serialize(value, options:=s_jsonSerializerOptions)
+        Dim path As String = GetLoginDataFileName(userName, tokenBaseFileName)
         File.WriteAllText(path, contents)
     End Sub
 
@@ -188,8 +187,7 @@ Friend Module FileUtilities
             Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME)
         Dim path As String = GetLoginDataFileName(userName, tokenBaseFileName)
         Debug.WriteLine(message:=NameOf(WriteTokenFile))
-        Dim contents As String =
-            JsonSerializer.Serialize(value, options:=s_jsonSerializerOptions)
+        Dim contents As String = JsonSerializer.Serialize(value, options:=s_jsonSerializerOptions)
         File.WriteAllText(path, contents)
     End Sub
 

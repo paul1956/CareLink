@@ -313,68 +313,68 @@ Friend Module Form1UpdateHelpers
                 kvp = KeyValuePair.Create(kvp.Key, value:="")
             End If
 
-            Dim key As ServerDataIndexes = CType(c.Index, ServerDataIndexes)
+            Dim key As ServerDataEnum = CType(c.Index, ServerDataEnum)
             Dim recordNumber As Single = c.Index
             Dim message As String
             Dim item As SummaryRecord
             Select Case kvp.Key
-                Case NameOf(ServerDataIndexes.clientTimeZoneName)
+                Case NameOf(ServerDataEnum.clientTimeZoneName)
                     item = New SummaryRecord(recordNumber, key, kvp.Value)
                     s_listOfSummaryRecords.Add(item)
                     SetupPumpTimeZoneInfo(mainForm, kvp)
-                Case NameOf(ServerDataIndexes.lastName)
+                Case NameOf(ServerDataEnum.lastName)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.firstName)
+                Case NameOf(ServerDataEnum.firstName)
                     item = New SummaryRecord(
                         recordNumber,
                         key,
                         value:=PatientData.FirstName)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.appModelType)
+                Case NameOf(ServerDataEnum.appModelType)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.appModelNumber)
+                Case NameOf(ServerDataEnum.appModelNumber)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.currentServerTime)
+                Case NameOf(ServerDataEnum.currentServerTime)
                     message = kvp.Value.Epoch2DateTimeString
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.conduitSerialNumber)
+                Case NameOf(ServerDataEnum.conduitSerialNumber)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.conduitBatteryLevel)
+                Case NameOf(ServerDataEnum.conduitBatteryLevel)
                     message = $"Phone battery is at {kvp.Value}%."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.conduitBatteryStatus)
+                Case NameOf(ServerDataEnum.conduitBatteryStatus)
                     message = $"Phone battery status is {kvp.Value.ToLower()}."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.lastConduitDateTime)
+                Case NameOf(ServerDataEnum.lastConduitDateTime)
                     Dim provider As CultureInfo = CultureInfo.CurrentUICulture
                     kvp = New KeyValuePair(Of String, String)(
-                        key:=NameOf(ServerDataIndexes.lastConduitDateTime),
+                        key:=NameOf(ServerDataEnum.lastConduitDateTime),
                         value:=kvp.Value.CDateOrDefault(kvp.Key, provider))
                     message = $"Phone time is {kvp.Value}"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.lastConduitUpdateServerDateTime)
+                Case NameOf(ServerDataEnum.lastConduitUpdateServerDateTime)
                     message = kvp.Value.Epoch2DateTimeString
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.medicalDeviceFamily)
+                Case NameOf(ServerDataEnum.medicalDeviceFamily)
                     item = New SummaryRecord(recordNumber, kvp)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.medicalDeviceInformation)
+                Case NameOf(ServerDataEnum.medicalDeviceInformation)
                     HandleComplexItems(
                         kvp,
                         recordNumber,
@@ -384,27 +384,27 @@ Friend Module Form1UpdateHelpers
                         PatientData.MedicalDeviceInformation.DeviceSerialNumber
                     mainForm.SerialNumberButton.Text = $"{deviceSerialNumber} Details..."
 
-                Case NameOf(ServerDataIndexes.medicalDeviceTime)
+                Case NameOf(ServerDataEnum.medicalDeviceTime)
                     message = kvp.Value.Epoch2DateTimeString
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime)
+                Case NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime)
                     message = kvp.Value.Epoch2DateTimeString
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.cgmInfo)
+                Case NameOf(ServerDataEnum.cgmInfo)
                     HandleComplexItems(
                         kvp,
                         recordNumber,
                         key:="cgmInfo",
                         listOfSummaryRecords:=s_listOfSummaryRecords)
 
-                Case NameOf(ServerDataIndexes.calFreeSensor)
+                Case NameOf(ServerDataEnum.calFreeSensor)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.calibStatus)
+                Case NameOf(ServerDataEnum.calibStatus)
                     Dim messageTableName As String = NameOf(s_calibrationMessages)
                     item = New SummaryRecord(
                         recordNumber,
@@ -413,10 +413,10 @@ Friend Module Form1UpdateHelpers
                         messageTableName)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.calibrationIconId)
+                Case NameOf(ServerDataEnum.calibrationIconId)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.timeToNextEarlyCalibrationMinutes)
+                Case NameOf(ServerDataEnum.timeToNextEarlyCalibrationMinutes)
                     If kvp.Value = "15555" Then
                         message = "Calibration Free Sensor"
                         item = New SummaryRecord(recordNumber, kvp, message)
@@ -426,8 +426,8 @@ Friend Module Form1UpdateHelpers
                         s_listOfSummaryRecords.Add(item)
                     End If
 
-                Case NameOf(ServerDataIndexes.timeToNextCalibrationMinutes),
-                     NameOf(ServerDataIndexes.timeToNextCalibrationRecommendedMinutes)
+                Case NameOf(ServerDataEnum.timeToNextCalibrationMinutes),
+                     NameOf(ServerDataEnum.timeToNextCalibrationRecommendedMinutes)
                     If kvp.Value = "-1" Then
                         message = "Calibration Free Sensor"
                         item = New SummaryRecord(recordNumber, kvp, message)
@@ -437,7 +437,7 @@ Friend Module Form1UpdateHelpers
                         s_listOfSummaryRecords.Add(item)
                     End If
 
-                Case NameOf(ServerDataIndexes.timeToNextCalibHours)
+                Case NameOf(ServerDataEnum.timeToNextCalibHours)
                     Dim timeToNextCalibrationHours As Byte = Byte.Parse(kvp.Value)
                     If timeToNextCalibrationHours = Byte.MaxValue Then
                         message = "Calibration Free Sensor"
@@ -449,28 +449,28 @@ Friend Module Form1UpdateHelpers
                         s_listOfSummaryRecords.Add(item)
                     End If
 
-                Case NameOf(ServerDataIndexes.finalCalibration)
+                Case NameOf(ServerDataEnum.finalCalibration)
                     If Boolean.Parse(kvp.Value) Then
                         s_timeToNextCalibrationMinutes = -1
                     End If
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.sensorDurationMinutes)
+                Case NameOf(ServerDataEnum.sensorDurationMinutes)
                     Dim sensorDurationMinutes As Integer = CInt(kvp.Value)
                     message = sensorDurationMinutes.MinutesToDaysHoursMinutes
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.sensorDurationHours)
+                Case NameOf(ServerDataEnum.sensorDurationHours)
                     Dim sensorDurationHours As Integer = CInt(kvp.Value)
                     message = sensorDurationHours.HoursToDaysAndHours
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.transmitterPairedTime)
+                Case NameOf(ServerDataEnum.transmitterPairedTime)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.systemStatusTimeRemaining)
+                Case NameOf(ServerDataEnum.systemStatusTimeRemaining)
                     s_systemStatusTimeRemaining =
                         New TimeSpan(
                         hours:=0,
@@ -478,61 +478,61 @@ Friend Module Form1UpdateHelpers
                         seconds:=0)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.gstBatteryLevel)
+                Case NameOf(ServerDataEnum.gstBatteryLevel)
                     message = $"Transmitter battery is at {kvp.Value}%."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.pumpBannerState)
+                Case NameOf(ServerDataEnum.pumpBannerState)
                     s_pumpBannerStateValue = JsonToDictionaryList(json:=kvp.Value)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     mainForm.PumpBannerStateLabel.Visible = s_pumpBannerStateValue.Count > 0
 
-                Case NameOf(ServerDataIndexes.therapyAlgorithmState)
+                Case NameOf(ServerDataEnum.therapyAlgorithmState)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.reservoirLevelPercent)
+                Case NameOf(ServerDataEnum.reservoirLevelPercent)
                     message = $"Reservoir is {PatientData.ReservoirLevelPercent}% full."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.reservoirAmount)
+                Case NameOf(ServerDataEnum.reservoirAmount)
                     message = $"Full reservoir holds {PatientData.ReservoirAmount}U."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.pumpSuspended)
+                Case NameOf(ServerDataEnum.pumpSuspended)
                     item = New SummaryRecord(recordNumber, kvp)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.pumpBatteryLevelPercent)
+                Case NameOf(ServerDataEnum.pumpBatteryLevelPercent)
                     message = $"Pump battery is at {kvp.Value}%."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.reservoirRemainingUnits)
+                Case NameOf(ServerDataEnum.reservoirRemainingUnits)
                     message = $"Reservoir has {PatientData.ReservoirRemainingUnits}U remaining."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.conduitInRange)
+                Case NameOf(ServerDataEnum.conduitInRange)
                     message = $"Phone {If(PatientData.ConduitInRange, "is", "is not")} in range of pump."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.conduitMedicalDeviceInRange)
+                Case NameOf(ServerDataEnum.conduitMedicalDeviceInRange)
                     message = $"Pump {If(CBool(kvp.Value), "is", "is not")} in range of phone"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.conduitSensorInRange)
+                Case NameOf(ServerDataEnum.conduitSensorInRange)
                     message = $"Transmitter {If(PatientData.ConduitSensorInRange, "is", "is not")} in range of pump."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.systemStatusMessage)
+                Case NameOf(ServerDataEnum.systemStatusMessage)
                     Dim messageTableName As String = NameOf(s_sensorMessages)
                     item = New SummaryRecord(
                         recordNumber,
@@ -541,7 +541,7 @@ Friend Module Form1UpdateHelpers
                         messageTableName)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.sensorState)
+                Case NameOf(ServerDataEnum.sensorState)
                     item = New SummaryRecord(
                         recordNumber,
                         kvp,
@@ -549,59 +549,59 @@ Friend Module Form1UpdateHelpers
                         messageTableName:=NameOf(s_sensorMessages))
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.gstCommunicationState)
+                Case NameOf(ServerDataEnum.gstCommunicationState)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.pumpCommunicationState)
+                Case NameOf(ServerDataEnum.pumpCommunicationState)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.timeFormat)
+                Case NameOf(ServerDataEnum.timeFormat)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
-                Case NameOf(ServerDataIndexes.bgUnits)
+                Case NameOf(ServerDataEnum.bgUnits)
                     item = New SummaryRecord(recordNumber, kvp, message:=bgUnits)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.maxAutoBasalRate)
+                Case NameOf(ServerDataEnum.maxAutoBasalRate)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.maxBolusAmount)
+                Case NameOf(ServerDataEnum.maxBolusAmount)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.sgBelowLimit)
+                Case NameOf(ServerDataEnum.sgBelowLimit)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.approvedForTreatment)
+                Case NameOf(ServerDataEnum.approvedForTreatment)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.lastAlarm)
+                Case NameOf(ServerDataEnum.lastAlarm)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     s_lastAlarmValue = LoadIndexedItems(json:=kvp.Value)
 
-                Case NameOf(ServerDataIndexes.activeInsulin)
+                Case NameOf(ServerDataEnum.activeInsulin)
                     s_activeInsulin = PatientData.ActiveInsulin
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.basal)
+                Case NameOf(ServerDataEnum.basal)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     s_basalList(index:=0) = If(String.IsNullOrWhiteSpace(kvp.Value),
                                                New Basal,
                                                PatientData.Basal)
 
-                Case NameOf(ServerDataIndexes.lastSensorTime)
+                Case NameOf(ServerDataEnum.lastSensorTime)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.lastSG)
+                Case NameOf(ServerDataEnum.lastSG)
                     s_lastSg = New SG(PatientData.LastSG)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.lastSGTrend)
+                Case NameOf(ServerDataEnum.lastSGTrend)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.limits)
+                Case NameOf(ServerDataEnum.limits)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     s_limitRecords = New List(Of Limit)
@@ -617,35 +617,35 @@ Friend Module Form1UpdateHelpers
                     End If
                     s_limitRecords = PatientData.Limits
 
-                Case NameOf(ServerDataIndexes.belowHypoLimit)
+                Case NameOf(ServerDataEnum.belowHypoLimit)
                     message =
                         $"Time below limit = {PercentOf24HoursToString(kvp.Value)}"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.aboveHyperLimit)
+                Case NameOf(ServerDataEnum.aboveHyperLimit)
                     message =
                         $"Time above limit = {PercentOf24HoursToString(kvp.Value)}"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.timeInRange)
+                Case NameOf(ServerDataEnum.timeInRange)
                     message =
                         $"Time in range = {PercentOf24HoursToString(kvp.Value)}"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.averageSGFloat)
+                Case NameOf(ServerDataEnum.averageSGFloat)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.averageSG)
+                Case NameOf(ServerDataEnum.averageSG)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.markers)
+                Case NameOf(ServerDataEnum.markers)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataIndexes.sgs)
+                Case NameOf(ServerDataEnum.sgs)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     s_lastSgValue = 0
@@ -653,7 +653,7 @@ Friend Module Form1UpdateHelpers
                         s_lastSgValue = s_sgRecords.Item(index:=s_sgRecords.Count - 2).sg
                     End If
 
-                Case NameOf(ServerDataIndexes.notificationHistory)
+                Case NameOf(ServerDataEnum.notificationHistory)
                     item = New SummaryRecord(
                         recordNumber:=CSng(c.Index + 0.1),
                         key:="activeNotification")
@@ -664,10 +664,10 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
                     s_notificationHistoryValue = LoadIndexedItems(json:=kvp.Value)
 
-                Case NameOf(ServerDataIndexes.sensorLifeText)
+                Case NameOf(ServerDataEnum.sensorLifeText)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataIndexes.sensorLifeIcon)
+                Case NameOf(ServerDataEnum.sensorLifeIcon)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case Else
@@ -686,35 +686,35 @@ Friend Module Form1UpdateHelpers
         With mainForm
             .TlpAutoBasalDelivery.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(classCollection:=s_autoBasalDeliveryMarkers),
-                className:=NameOf(AutoBasalDelivery), rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(AutoBasalDelivery), rowIndex:=ServerDataEnum.markers)
 
             .TlpAutoModeStatus.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(classCollection:=s_autoModeStatusMarkers),
-                className:=NameOf(AutoModeStatus), rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(AutoModeStatus), rowIndex:=ServerDataEnum.markers)
 
             .TlpBgReadings.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(classCollection:=s_bgReadingMarkers),
-                className:=NameOf(BgReading), rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(BgReading), rowIndex:=ServerDataEnum.markers)
 
             .TlpInsulin.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(classCollection:=s_insulinMarkers),
-                className:=NameOf(Insulin), rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(Insulin), rowIndex:=ServerDataEnum.markers)
 
             .TlpMeal.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(classCollection:=s_mealMarkers),
-                className:=NameOf(Meal), rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(Meal), rowIndex:=ServerDataEnum.markers)
 
             .TlpCalibration.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(classCollection:=s_calibrationMarkers),
-                className:=NameOf(Calibration), rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(Calibration), rowIndex:=ServerDataEnum.markers)
 
             .TlpLowGlucoseSuspended.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(classCollection:=s_suspendedMarkers),
-                className:=NameOf(LowGlucoseSuspended), rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(LowGlucoseSuspended), rowIndex:=ServerDataEnum.markers)
 
             .TlpTimeChange.DisplayDataTableInDGV(
                 table:=ClassCollectionToDataTable(classCollection:=s_timeChangeMarkers),
-                className:=NameOf(TimeChange), rowIndex:=ServerDataIndexes.markers)
+                className:=NameOf(TimeChange), rowIndex:=ServerDataEnum.markers)
 
             DisplayDataTableInDGV(
                 realPanel:=Nothing,
@@ -834,7 +834,7 @@ Friend Module Form1UpdateHelpers
         End If
         mainForm.TlpPumpBannerState.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:=listOfBannerState),
-            className:=NameOf(BannerState), rowIndex:=ServerDataIndexes.pumpBannerState)
+            className:=NameOf(BannerState), rowIndex:=ServerDataEnum.pumpBannerState)
     End Sub
 
 End Module

@@ -7,17 +7,6 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
-''' <summary>
-'''  Specifies the options for which file to load during login or data initialization.
-''' </summary>
-Public Enum FileToLoadOptions As Integer
-    LastSaved = 0
-    Login = 1
-    NewUser = 2
-    Snapshot = 3
-    TestData = 4
-End Enum
-
 Friend Module LoginHelpers
 
     Public Property CurrentPdf As PdfSettingsRecord
@@ -37,8 +26,7 @@ Friend Module LoginHelpers
 
         Dim dataSource As New List(Of KeyValuePair(Of String, String))
         For Each kvp As KeyValuePair(Of String, Object) In dic
-            Dim item As KeyValuePair(Of String, String) =
-                KeyValuePair.Create(kvp.Key, value:=CType(kvp.Value, String))
+            Dim item As KeyValuePair(Of String, String) = KeyValuePair.Create(kvp.Key, value:=CType(kvp.Value, String))
             dataSource.Add(item)
         Next
         Return dataSource
@@ -49,9 +37,8 @@ Friend Module LoginHelpers
     ''' </summary>
     Friend Sub DeserializePatientElement()
         Try
-            PatientData = JsonSerializer.Deserialize(Of PatientDataInfo) _
-                (element:=PatientDataElement, options:=s_jsonDeserializerOptions)
-
+            Dim options As JsonSerializerOptions = s_jsonDeserializerOptions
+            PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(element:=PatientDataElement, options)
             RecentData = PatientDataElement.ConvertJsonElementToStringDictionary()
         Catch ex As Exception
             MessageBox.Show(
@@ -130,15 +117,10 @@ Friend Module LoginHelpers
                 Loop
 
                 If Form1.Client Is Nothing OrElse Not Form1.Client.LoggedIn Then
-                    SetServerUpdateTimer(
-                        Start:=True,
-                        interval:=FiveMinutesInMilliseconds)
+                    SetServerUpdateTimer(Start:=True, interval:=FiveMinutesInMilliseconds)
 
                     If NetworkUnavailable() Then
-                        ReportLoginStatus(
-                            owner.LoginStatus,
-                            hasErrors:=True,
-                            lastErrorMessage:="Network Unavailable")
+                        ReportLoginStatus(owner.LoginStatus, hasErrors:=True, lastErrorMessage:="Network Unavailable")
                         Return False
                     End If
 
@@ -158,10 +140,7 @@ Friend Module LoginHelpers
                     ReportLoginStatus(owner.LoginStatus)
                     Return False
                 End If
-                ReportLoginStatus(
-                    owner.LoginStatus,
-                    hasErrors:=RecentDataEmpty,
-                    lastErrorMessage)
+                ReportLoginStatus(owner.LoginStatus, hasErrors:=RecentDataEmpty, lastErrorMessage)
                 owner.MenuShowMiniDisplay.Visible = True
                 fromFile = False
                 owner.TabControlPage1.Visible = True
@@ -190,10 +169,10 @@ Friend Module LoginHelpers
                                 Return f.Name
                             End Function
 
-                        Dim fileList As String() = New DirectoryInfo(path) _
-                            .EnumerateFiles(searchPattern:=$"CareLinkSnapshot*.json") _
-                            .OrderBy(keySelector) _
-                            .Select(selector).ToArray
+                        Dim fileList As String() =
+                            New DirectoryInfo(path).EnumerateFiles(searchPattern:=$"CareLinkSnapshot*.json") _
+                                                   .OrderBy(keySelector) _
+                                                   .Select(selector).ToArray
 
                         Using openFileDialog1 As New OpenFileDialog With {
                             .AddExtension = True,
@@ -224,8 +203,7 @@ Friend Module LoginHelpers
                 End Select
                 owner.TabControlPage1.Visible = True
                 owner.TabControlPage2.Visible = True
-                CurrentDateCulture =
-                    lastDownloadFileWithPath.ExtractCulture(fixedPart, fuzzy:=True)
+                CurrentDateCulture = lastDownloadFileWithPath.ExtractCulture(fixedPart, fuzzy:=True)
                 Dim json As String = File.ReadAllText(path:=lastDownloadFileWithPath)
                 PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
                 DeserializePatientElement()
@@ -290,8 +268,7 @@ Friend Module LoginHelpers
     Public Function PngBitmapToIcon(original As Bitmap) As Icon
         ' Optionally resize to 32x32 for best icon compatibility
         Using resizedBmp As New Bitmap(original, newSize:=New Size(width:=32, height:=32))
-            Dim hIcon As IntPtr = resizedBmp.GetHicon()
-            Return Icon.FromHandle(hIcon)
+            Return Icon.FromHandle(handle:=resizedBmp.GetHicon())
         End Using
     End Function
 
@@ -335,7 +312,7 @@ Friend Module LoginHelpers
             .ForeColor = form1.MenuStrip1.ForeColor
             If isDaylightSavingTime IsNot Nothing Then
                 Dim timeZoneName As String = Nothing
-                Const key As String = NameOf(ServerDataIndexes.clientTimeZoneName)
+                Const key As String = NameOf(ServerDataEnum.clientTimeZoneName)
                 If RecentData?.TryGetValue(key, value:=timeZoneName) Then
                     Dim timeZoneInfo As TimeZoneInfo = CalculateTimeZone(timeZoneName)
                     Dim dst As String = If(isDaylightSavingTime,
@@ -355,10 +332,7 @@ Friend Module LoginHelpers
     Friend Sub SetUpCareLinkUser()
         Dim path As String = GetUserSettingsPath()
         Dim json As String = File.ReadAllText(path)
-        CurrentUser =
-            JsonSerializer.Deserialize(Of CurrentUserRecord)(
-                json,
-                options:=s_jsonDeserializerOptions)
+        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonDeserializerOptions)
     End Sub
 
     ''' <summary>
@@ -375,10 +349,8 @@ Friend Module LoginHelpers
 
         Dim pdfFilePath As String = GetUserPdfPath()
         If File.Exists(path:=GetUserSettingsPath()) Then
-            Dim userSettingsJson As String = File.ReadAllText(path:=GetUserSettingsPath())
-            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(
-                json:=userSettingsJson,
-                options:=s_jsonSerializerOptions)
+            Dim json As String = File.ReadAllText(path:=GetUserSettingsPath())
+            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonSerializerOptions)
 
             If CurrentUser.InsulinRealAit = 0 Then
                 CurrentUser.InsulinRealAit = s_insulinTypes.Values(index:=0).AitHours
@@ -470,10 +442,8 @@ Friend Module LoginHelpers
         End If
         If currentUserUpdateNeeded Then
             File.WriteAllTextAsync(
-             path:=GetUserSettingsPath(),
-                contents:=JsonSerializer.Serialize(
-                    value:=CurrentUser,
-                    options:=s_jsonSerializerOptions))
+                path:=GetUserSettingsPath(),
+                contents:=JsonSerializer.Serialize(value:=CurrentUser, options:=s_jsonSerializerOptions))
         Else
             TouchFile(GetUserSettingsPath())
         End If
@@ -495,10 +465,7 @@ Friend Module LoginHelpers
     '''  <see langword="True"/> if the timer was running before the call;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Friend Function SetServerUpdateTimer(
-        Start As Boolean,
-        Optional interval As Integer = -1) As Boolean
-
+    Friend Function SetServerUpdateTimer(Start As Boolean, Optional interval As Integer = -1) As Boolean
         GC.Collect()
         GC.WaitForPendingFinalizers()
         ReportMemory()

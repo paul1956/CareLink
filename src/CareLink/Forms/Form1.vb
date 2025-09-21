@@ -2043,46 +2043,46 @@ Public Class Form1
                 If e.Value IsNot Nothing Then
                     Select Case GetItemIndex(key)
                         ' Not Clickable Cells - Left
-                        Case ServerDataIndexes.conduitSerialNumber,
-                             ServerDataIndexes.lastConduitDateTime,
-                             ServerDataIndexes.systemStatusMessage,
-                             ServerDataIndexes.sensorState,
-                             ServerDataIndexes.timeFormat,
-                             ServerDataIndexes.bgUnits,
-                             ServerDataIndexes.lastSGTrend,
-                             ServerDataIndexes.sensorLifeText,
-                             ServerDataIndexes.sensorLifeIcon
+                        Case ServerDataEnum.conduitSerialNumber,
+                             ServerDataEnum.lastConduitDateTime,
+                             ServerDataEnum.systemStatusMessage,
+                             ServerDataEnum.sensorState,
+                             ServerDataEnum.timeFormat,
+                             ServerDataEnum.bgUnits,
+                             ServerDataEnum.lastSGTrend,
+                             ServerDataEnum.sensorLifeText,
+                             ServerDataEnum.sensorLifeIcon
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleLeft,
                                 padding:=New Padding(all:=1))
 
                         ' Not Clickable Cells - Center
-                        Case ServerDataIndexes.clientTimeZoneName,
-                             ServerDataIndexes.lastName,
-                             ServerDataIndexes.firstName,
-                             ServerDataIndexes.appModelType,
-                             ServerDataIndexes.conduitBatteryStatus,
-                             ServerDataIndexes.medicalDeviceFamily,
-                             ServerDataIndexes.medicalDeviceInformation,
-                             ServerDataIndexes.cgmInfo,
-                             ServerDataIndexes.approvedForTreatment,
-                             ServerDataIndexes.calibStatus,
-                             ServerDataIndexes.calFreeSensor,
-                             ServerDataIndexes.calibrationIconId,
-                             ServerDataIndexes.finalCalibration,
-                             ServerDataIndexes.pumpSuspended,
-                             ServerDataIndexes.conduitInRange,
-                             ServerDataIndexes.conduitMedicalDeviceInRange,
-                             ServerDataIndexes.conduitSensorInRange,
-                             ServerDataIndexes.gstCommunicationState,
-                             ServerDataIndexes.pumpCommunicationState
+                        Case ServerDataEnum.clientTimeZoneName,
+                             ServerDataEnum.lastName,
+                             ServerDataEnum.firstName,
+                             ServerDataEnum.appModelType,
+                             ServerDataEnum.conduitBatteryStatus,
+                             ServerDataEnum.medicalDeviceFamily,
+                             ServerDataEnum.medicalDeviceInformation,
+                             ServerDataEnum.cgmInfo,
+                             ServerDataEnum.approvedForTreatment,
+                             ServerDataEnum.calibStatus,
+                             ServerDataEnum.calFreeSensor,
+                             ServerDataEnum.calibrationIconId,
+                             ServerDataEnum.finalCalibration,
+                             ServerDataEnum.pumpSuspended,
+                             ServerDataEnum.conduitInRange,
+                             ServerDataEnum.conduitMedicalDeviceInRange,
+                             ServerDataEnum.conduitSensorInRange,
+                             ServerDataEnum.gstCommunicationState,
+                             ServerDataEnum.pumpCommunicationState
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleCenter,
                                 padding:=New Padding(all:=1))
 
                         ' Not Clickable - Data Dependent
-                        Case ServerDataIndexes.appModelNumber,
-                             ServerDataIndexes.transmitterPairedTime
+                        Case ServerDataEnum.appModelNumber,
+                             ServerDataEnum.transmitterPairedTime
                             If eValue = "NA" Then
                                 e.CellStyle = e.CellStyle.SetCellStyle(
                                     alignment:=DataGridViewContentAlignment.MiddleCenter,
@@ -2096,53 +2096,53 @@ Public Class Form1
                             End If
 
                         ' Not Clickable Cells - Right
-                        Case ServerDataIndexes.currentServerTime,
-                             ServerDataIndexes.conduitBatteryLevel,
-                             ServerDataIndexes.lastConduitUpdateServerDateTime,
-                             ServerDataIndexes.medicalDeviceTime,
-                             ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime,
-                             ServerDataIndexes.timeToNextCalibrationMinutes,
-                             ServerDataIndexes.timeToNextCalibrationRecommendedMinutes,
-                             ServerDataIndexes.timeToNextCalibHours,
-                             ServerDataIndexes.sensorDurationHours,
-                             ServerDataIndexes.systemStatusTimeRemaining,
-                             ServerDataIndexes.gstBatteryLevel,
-                             ServerDataIndexes.reservoirLevelPercent,
-                             ServerDataIndexes.reservoirAmount,
-                             ServerDataIndexes.pumpBatteryLevelPercent,
-                             ServerDataIndexes.reservoirRemainingUnits,
-                             ServerDataIndexes.maxAutoBasalRate,
-                             ServerDataIndexes.maxBolusAmount,
-                             ServerDataIndexes.sgBelowLimit,
-                             ServerDataIndexes.lastSensorTime,
-                             ServerDataIndexes.averageSGFloat,
-                             ServerDataIndexes.averageSG,
-                             ServerDataIndexes.belowHypoLimit,
-                             ServerDataIndexes.aboveHyperLimit,
-                             ServerDataIndexes.timeInRange
+                        Case ServerDataEnum.currentServerTime,
+                             ServerDataEnum.conduitBatteryLevel,
+                             ServerDataEnum.lastConduitUpdateServerDateTime,
+                             ServerDataEnum.medicalDeviceTime,
+                             ServerDataEnum.lastMedicalDeviceDataUpdateServerTime,
+                             ServerDataEnum.timeToNextCalibrationMinutes,
+                             ServerDataEnum.timeToNextCalibrationRecommendedMinutes,
+                             ServerDataEnum.timeToNextCalibHours,
+                             ServerDataEnum.sensorDurationHours,
+                             ServerDataEnum.systemStatusTimeRemaining,
+                             ServerDataEnum.gstBatteryLevel,
+                             ServerDataEnum.reservoirLevelPercent,
+                             ServerDataEnum.reservoirAmount,
+                             ServerDataEnum.pumpBatteryLevelPercent,
+                             ServerDataEnum.reservoirRemainingUnits,
+                             ServerDataEnum.maxAutoBasalRate,
+                             ServerDataEnum.maxBolusAmount,
+                             ServerDataEnum.sgBelowLimit,
+                             ServerDataEnum.lastSensorTime,
+                             ServerDataEnum.averageSGFloat,
+                             ServerDataEnum.averageSG,
+                             ServerDataEnum.belowHypoLimit,
+                             ServerDataEnum.aboveHyperLimit,
+                             ServerDataEnum.timeInRange
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleRight,
                                 padding:=New Padding(all:=1))
 
                          ' Not Clickable Cells - Integer with comma, align Right
-                        Case ServerDataIndexes.timeToNextEarlyCalibrationMinutes,
-                             ServerDataIndexes.sensorDurationMinutes
+                        Case ServerDataEnum.timeToNextEarlyCalibrationMinutes,
+                             ServerDataEnum.sensorDurationMinutes
                             e.Value = $"{CInt(e.Value):N0}"
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleRight,
                                 padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
 
                             ' Clickable Cells - Center
-                        Case ServerDataIndexes.pumpBannerState,
-                             ServerDataIndexes.therapyAlgorithmState,
-                             ServerDataIndexes.lastAlarm,
-                             ServerDataIndexes.activeInsulin,
-                             ServerDataIndexes.basal,
-                             ServerDataIndexes.lastSG,
-                             ServerDataIndexes.limits,
-                             ServerDataIndexes.markers,
-                             ServerDataIndexes.sgs,
-                             ServerDataIndexes.notificationHistory
+                        Case ServerDataEnum.pumpBannerState,
+                             ServerDataEnum.therapyAlgorithmState,
+                             ServerDataEnum.lastAlarm,
+                             ServerDataEnum.activeInsulin,
+                             ServerDataEnum.basal,
+                             ServerDataEnum.lastSG,
+                             ServerDataEnum.limits,
+                             ServerDataEnum.markers,
+                             ServerDataEnum.sgs,
+                             ServerDataEnum.notificationHistory
                             e.CellStyle = e.CellStyle.SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleCenter,
                                 padding:=New Padding(all:=1))
@@ -2186,29 +2186,29 @@ Public Class Form1
                 Dim key As String =
                     dgv.Rows(index:=e.RowIndex).Cells(columnName:="key").Value.ToString
                 Select Case key.GetItemIndex()
-                    Case ServerDataIndexes.activeInsulin
+                    Case ServerDataEnum.activeInsulin
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage05ActiveInsulin))
-                    Case ServerDataIndexes.basal
+                    Case ServerDataEnum.basal
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage06Basal))
-                    Case ServerDataIndexes.lastAlarm
+                    Case ServerDataEnum.lastAlarm
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage07LastAlarm))
-                    Case ServerDataIndexes.lastSG
+                    Case ServerDataEnum.lastSG
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage08LastSG))
-                    Case ServerDataIndexes.limits
+                    Case ServerDataEnum.limits
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage09Limits))
-                    Case ServerDataIndexes.notificationHistory
+                    Case ServerDataEnum.notificationHistory
                         .SelectedIndex =
                             If(key = "activeNotification",
                                GetTabIndexFromName(tabPageName:=NameOf(TabPage10NotificationActive)),
                                GetTabIndexFromName(tabPageName:=NameOf(TabPage11NotificationsCleared)))
 
-                    Case ServerDataIndexes.pumpBannerState
+                    Case ServerDataEnum.pumpBannerState
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage12PumpBannerState))
-                    Case ServerDataIndexes.sgs
+                    Case ServerDataEnum.sgs
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage13SensorGlucose))
-                    Case ServerDataIndexes.therapyAlgorithmState
+                    Case ServerDataEnum.therapyAlgorithmState
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage14TherapyAlgorithmState))
-                    Case ServerDataIndexes.markers
+                    Case ServerDataEnum.markers
                         Dim page As Integer = _lastMarkerTabLocation.Page
                         Dim tab As Integer = _lastMarkerTabLocation.Tab
                         If page = 0 Then
@@ -3155,10 +3155,7 @@ Public Class Form1
 
         SetUpCareLinkUser(forceUI:=True)
         Dim json As String = File.ReadAllText(path:=GetUserSettingsPath())
-        CurrentUser =
-            JsonSerializer.Deserialize(Of CurrentUserRecord)(
-                json,
-                options:=s_jsonSerializerOptions)
+        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonSerializerOptions)
     End Sub
 
     ''' <summary>
@@ -3296,7 +3293,7 @@ Public Class Form1
             PumpTimeZoneInfo = TimeZoneInfo.Local
             My.Settings.UseLocalTimeZone = True
         Else
-            Const key As String = NameOf(ServerDataIndexes.clientTimeZoneName)
+            Const key As String = NameOf(ServerDataEnum.clientTimeZoneName)
             Dim timeZoneName As String = RecentData(key)
             PumpTimeZoneInfo = CalculateTimeZone(timeZoneName)
             My.Settings.UseLocalTimeZone = False
@@ -3887,7 +3884,7 @@ Public Class Form1
         Dim lastMedicalDeviceDataUpdateServerEpochString As String = ""
         If Not RecentDataEmpty() Then
             If RecentData.TryGetValue(
-                    key:=NameOf(ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime),
+                    key:=NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime),
                     value:=lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) =
                     s_lastMedicalDeviceDataUpdateServerEpoch Then
@@ -5062,7 +5059,7 @@ Public Class Form1
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=8)
                 Me.RemainingInsulinUnits.Text = "???U"
             Else
-                Dim key As String = NameOf(ServerDataIndexes.reservoirRemainingUnits)
+                Dim key As String = NameOf(ServerDataEnum.reservoirRemainingUnits)
                 Dim remainingUnits As String = s_listOfSummaryRecords.GetValue(Of String)(key)
                 Me.RemainingInsulinUnits.Text =
                     $"{remainingUnits.ParseSingle(digits:=1):N1} U"
@@ -5107,7 +5104,7 @@ Public Class Form1
             Exit Sub
         End If
 
-        Const key As String = NameOf(ServerDataIndexes.pumpBatteryLevelPercent)
+        Const key As String = NameOf(ServerDataEnum.pumpBatteryLevelPercent)
         Dim batteryLeftPercent As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(key)
         Me.PumpBatteryRemaining2Label.Text = $"{Math.Abs(batteryLeftPercent)}%"
         Select Case batteryLeftPercent
@@ -5164,7 +5161,7 @@ Public Class Form1
                     Me.SensorTimeLeftLabel.Text = $"{PatientData.SensorDurationHours} Hours"
                 Case Is = 0
                     Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(
-                        key:=NameOf(ServerDataIndexes.sensorDurationMinutes),
+                        key:=NameOf(ServerDataEnum.sensorDurationMinutes),
                         throwError:=False,
                         defaultValue:=-1)
 
@@ -5294,7 +5291,7 @@ Public Class Form1
         Me.BelowLowLimitValueLabel.Text = $"{GetBelowHypoLimit.Str}%"
         Me.BelowLowLimitMessageLabel.Text = $"Below {GetTirLowLimitWithUnits()} {BgUnits}"
         Dim averageSgStr As String =
-            RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.averageSG))
+            RecentData.GetStringValueOrEmpty(NameOf(ServerDataEnum.averageSG))
         Me.AverageSGValueLabel.Text = If(NativeMmolL,
                                          averageSgStr.TruncateSingle(digits:=2),
                                          averageSgStr)
@@ -5515,7 +5512,7 @@ Public Class Form1
     ''' </remarks>
     Private Sub UpdateTrendArrows()
         Dim key As String =
-            RecentData.GetStringValueOrEmpty(NameOf(ServerDataIndexes.lastSGTrend))
+            RecentData.GetStringValueOrEmpty(NameOf(ServerDataEnum.lastSGTrend))
         If PatientData.ConduitInRange Then
             Dim value As String = Nothing
             If s_trends.TryGetValue(key, value) Then
@@ -5549,7 +5546,7 @@ Public Class Form1
             Exit Sub
         End If
         Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = ""
-        Dim key As String = NameOf(ServerDataIndexes.lastMedicalDeviceDataUpdateServerTime)
+        Dim key As String = NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime)
         If RecentData.TryGetValue(key, value:=lastMedicalDeviceDataUpdateServerTimeEpoch) Then
             If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) =
                 s_lastMedicalDeviceDataUpdateServerEpoch Then
@@ -5560,7 +5557,7 @@ Public Class Form1
             End If
         End If
 
-        If RecentData.Count > ServerDataIndexes.sensorLifeIcon + 1 Then
+        If RecentData.Count > ServerDataEnum.sensorLifeIcon + 1 Then
             Stop
         End If
 
@@ -5605,7 +5602,7 @@ Public Class Form1
         Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
 
-        key = NameOf(ServerDataIndexes.lastName)
+        key = NameOf(ServerDataEnum.lastName)
         Me.FullNameLabel.Text =
             $"{PatientData.FirstName} {RecentData.GetStringValueOrEmpty(key)}"
 
@@ -5617,7 +5614,7 @@ Public Class Form1
 
         Me.TlpLastSG.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:={s_lastSg}.ToList),
-            className:=NameOf(LastSG), rowIndex:=ServerDataIndexes.lastSG,
+            className:=NameOf(LastSG), rowIndex:=ServerDataEnum.lastSG,
             hideRecordNumberColumn:=True)
 
         UpdateSummaryTab(
@@ -5628,7 +5625,7 @@ Public Class Form1
 
         Me.TlpActiveInsulin.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:={s_activeInsulin}.ToList),
-            className:=NameOf(ActiveInsulin), rowIndex:=ServerDataIndexes.activeInsulin,
+            className:=NameOf(ActiveInsulin), rowIndex:=ServerDataEnum.activeInsulin,
             hideRecordNumberColumn:=True)
 
         Dim keySelector As Func(Of SG, Integer) =
@@ -5640,13 +5637,13 @@ Public Class Form1
         Me.TlpSgs.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection),
             dgv:=Me.DgvSGs,
-            rowIndex:=ServerDataIndexes.sgs)
+            rowIndex:=ServerDataEnum.sgs)
         Me.DgvSGs.AutoSize = True
         Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
         Me.TlpLimits.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:=s_limitRecords),
-            className:=NameOf(Limit), rowIndex:=ServerDataIndexes.limits)
+            className:=NameOf(Limit), rowIndex:=ServerDataEnum.limits)
 
         UpdateSummaryTab(
             dgv:=Me.DgvTherapyAlgorithmState,
@@ -5657,7 +5654,7 @@ Public Class Form1
         Me.DgvLastAlarm.Columns(index:=0).Visible = False
         Me.TlpBasal.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(s_basalList.ClassCollection),
-            className:=NameOf(Basal), rowIndex:=ServerDataIndexes.basal,
+            className:=NameOf(Basal), rowIndex:=ServerDataEnum.basal,
             hideRecordNumberColumn:=True)
 
         UpdateMarkerTabs(mainForm:=Me)

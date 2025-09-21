@@ -125,11 +125,9 @@ Friend Module SummaryHelpers
             If list.Contains(item:=key) Then
                 key = NameOf(ClearedNotifications.dateTime)
                 If jsonDictionary.TryGetValue(key, value:=triggeredDate) Then
-                    triggeredDate =
-                            $" { triggeredDate.ParseDate(key).ToNotificationString}"
+                    triggeredDate = $" { triggeredDate.ParseDate(key).ToNotificationString}"
                 ElseIf jsonDictionary.TryGetValue(key, value:=triggeredDate) Then
-                    triggeredDate =
-                            $" { triggeredDate.ParseDate(key).ToNotificationString}"
+                    triggeredDate = $" { triggeredDate.ParseDate(key).ToNotificationString}"
                 Else
                     Stop
                 End If
@@ -144,10 +142,8 @@ Friend Module SummaryHelpers
                     Case "secondaryTime"
                         key = NameOf(ActiveNotification.SecondaryTime)
                         If jsonDictionary.TryGetValue(key, value:=secondaryTime) Then
-                            triggerTime =
-                               TimeOnly.FromDateTime(secondaryTime.ParseDate(key))
-                            secondaryTime =
-                                $" { secondaryTime.ParseDate(key).ToNotificationString}"
+                            triggerTime = TimeOnly.FromDateTime(secondaryTime.ParseDate(key))
+                            secondaryTime = $" { secondaryTime.ParseDate(key).ToNotificationString}"
                         Else
                             Stop
                         End If
@@ -158,8 +154,7 @@ Friend Module SummaryHelpers
                         Dim jsonString As String = String.Empty
                         key = "AdditionalInfo"
                         If jsonDictionary.TryGetValue(key, value:=jsonString) Then
-                            Dim addInfo As Dictionary(Of String, String) =
-                                GetAdditionalInformation(jsonString)
+                            Dim addInfo As Dictionary(Of String, String) = GetAdditionalInformation(json:=jsonString)
                             key = keyWord
                             Select Case keyWord
                                 Case "basalName"
@@ -391,7 +386,7 @@ Friend Module SummaryHelpers
                                 message:=kvp.Value.ParseDate(key).ToShortDateTimeString)
                         listOfSummaryRecords.Add(item)
                     Case "additionalInfo"
-                        recordNumber = CType(listOfSummaryRecords.Count, ServerDataIndexes)
+                        recordNumber = CType(listOfSummaryRecords.Count, ServerDataEnum)
 
                         HandleComplexItems(
                             kvp,

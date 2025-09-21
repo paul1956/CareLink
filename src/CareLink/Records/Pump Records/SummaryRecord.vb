@@ -74,18 +74,14 @@ Public Class SummaryRecord
 
     ''' <summary>
     '''  Initializes a new instance of the <see cref="SummaryRecord"/> class
-    '''  using a <see cref="ServerDataIndexes"/> key and value.
+    '''  using a <see cref="ServerDataEnum"/> key and value.
     ''' </summary>
     ''' <param name="recordNumber">
     '''  The record number associated with this summary record.
     ''' </param>
-    ''' <param name="key">The key as a <see cref="ServerDataIndexes"/> enum value.</param>
+    ''' <param name="key">The key as a <see cref="ServerDataEnum"/> enum value.</param>
     ''' <param name="value">The value associated with the key.</param>
-    Protected Friend Sub New(
-        recordNumber As Single,
-        key As ServerDataIndexes,
-        value As String)
-
+    Protected Friend Sub New(recordNumber As Single, key As ServerDataEnum, value As String)
         Me.New(recordNumber, key:=key.ToString, value, message:="")
     End Sub
 

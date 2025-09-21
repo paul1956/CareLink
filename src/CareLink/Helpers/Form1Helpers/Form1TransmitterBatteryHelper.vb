@@ -22,7 +22,7 @@ Friend Module Form1TransmitterBatteryHelper
     Friend Sub UpdateTransmitterBattery()
         If PatientData.ConduitSensorInRange Then
             Dim gstBatteryLevel As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(
-                key:=NameOf(ServerDataIndexes.gstBatteryLevel),
+                key:=NameOf(ServerDataEnum.gstBatteryLevel),
                 throwError:=False)
             Form1.TransmitterBatteryPictureBox.Image = GetBatteryImage(gstBatteryLevel)
             Form1.TransmitterBatteryPercentLabel.Text = $"{gstBatteryLevel}%"

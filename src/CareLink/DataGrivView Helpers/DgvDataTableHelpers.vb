@@ -31,14 +31,14 @@ Friend Module DgvDataTableHelpers
     ''' <param name="table">The <see cref="DataTable"/> to display.</param>
     ''' <param name="dgv">The <see cref="DataGridView"/> to display the data in.</param>
     ''' <param name="rowIndex">
-    '''  The row index in the panel, typically of type <see cref="ServerDataIndexes"/>.
+    '''  The row index in the panel, typically of type <see cref="ServerDataEnum"/>.
     ''' </param>
     <Extension>
     Friend Sub DisplayDataTableInDGV(
         realPanel As TableLayoutPanel,
         table As DataTable,
         dgv As DataGridView,
-        rowIndex As ServerDataIndexes)
+        rowIndex As ServerDataEnum)
 
         realPanel?.SetTableName(rowIndex, isClearedNotifications:=False)
         dgv.InitializeDgv()
@@ -59,7 +59,7 @@ Friend Module DgvDataTableHelpers
     ''' <param name="table">The <see cref="DataTable"/> to display.</param>
     ''' <param name="className">The class name context for the data.</param>
     ''' <param name="rowIndex">
-    '''  The row index in the panel, typically of type <see cref="ServerDataIndexes"/>.
+    '''  The row index in the panel, typically of type <see cref="ServerDataEnum"/>.
     ''' </param>
     ''' <param name="hideRecordNumberColumn">
     '''  If <see langword="True"/>, hides the "RecordNumber" column if present.
@@ -69,7 +69,7 @@ Friend Module DgvDataTableHelpers
         realPanel As TableLayoutPanel,
         table As DataTable,
         className As String,
-        rowIndex As ServerDataIndexes,
+        rowIndex As ServerDataEnum,
         Optional hideRecordNumberColumn As Boolean = False)
 
         realPanel.SetTableName(rowIndex, isClearedNotifications:=False)

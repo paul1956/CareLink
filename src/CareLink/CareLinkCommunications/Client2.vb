@@ -253,17 +253,13 @@ Public Class Client2
                 End If
             End If
             Dim responseBody As String = response.Content.ReadAsStringAsync().Result
-            Dim newData As JsonElement =
-                JsonSerializer.Deserialize(Of JsonElement)(responseBody)
-            tokenData(key:="access_token") =
-                newData.GetProperty(propertyName:="access_token").GetString()
-            tokenData(key:="refresh_token") =
-                newData.GetProperty(propertyName:="refresh_token").GetString()
-            Dim json As String =
-                JsonSerializer.Serialize(tokenData, s_jsonSerializerOptions)
+            Dim newData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=responseBody)
+            tokenData(key:="access_token") = newData.GetProperty(propertyName:="access_token").GetString()
+            tokenData(key:="refresh_token") = newData.GetProperty(propertyName:="refresh_token").GetString()
+            Dim json As String = JsonSerializer.Serialize(value:=tokenData, options:=s_jsonSerializerOptions)
             Return Task.FromResult(JsonSerializer.Deserialize(Of JsonElement)(json))
         Catch ex As Exception
-            Debug.WriteLine($"ERROR: {ex.DecodeException()} in {NameOf(DoRefresh)}")
+            Debug.WriteLine(message:=$"ERROR: {ex.DecodeException()} in {NameOf(DoRefresh)}")
             Stop
         Finally
             response.Dispose()
@@ -318,7 +314,7 @@ Public Class Client2
                 _httpClient.PostAsync(requestUri, content).Result
 
                 _lastHttpStatusCode = response.StatusCode
-                Debug.WriteLine($"   status: {_lastHttpStatusCode}")
+                Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
                 If response.IsSuccessStatusCode Then
                     Dim json As String = response.Content.ReadAsStringAsync().Result
@@ -409,11 +405,9 @@ Public Class Client2
         ' Send the request
         Dim response As HttpResponseMessage = _httpClient.SendAsync(request).Result
         _lastHttpStatusCode = response.StatusCode
-        Debug.WriteLine($"   status: {_lastHttpStatusCode}")
+        Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
-        Return If(response.IsSuccessStatusCode,
-                  response.Content.ReadAsStringAsync().Result,
-                  Nothing)
+        Return If(response.IsSuccessStatusCode, response.Content.ReadAsStringAsync().Result, Nothing)
     End Function
 
     ''' <summary>
@@ -700,9 +694,7 @@ Public Class Client2
             DeserializePatientElement()
             File.WriteAllTextAsync(
                 path:=GetLastDownloadFileWithPath(),
-                contents:=JsonSerializer.Serialize(
-                    value:=PatientDataElement,
-                    options:=s_jsonSerializerOptions))
+                contents:=JsonSerializer.Serialize(value:=PatientDataElement, options:=s_jsonSerializerOptions))
         Catch ex As Exception
             Stop
             Return ex.DecodeException()

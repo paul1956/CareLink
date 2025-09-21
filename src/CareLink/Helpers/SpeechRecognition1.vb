@@ -115,13 +115,14 @@ Friend Module SpeechSupport
             Exit Sub
         End If
         Dim errorMsg As String = "Listening"
+        Dim value As String
         Select Case e.AudioSignalProblem
             Case AudioSignalProblem.NoSignal
                 If Not s_speechErrorReported Then
                     s_speechErrorReported = True
                     Dim details As New StringBuilder()
                     details.AppendLine("Details:")
-                    Dim value As String = $"    Audio level:               {e.AudioLevel}"
+                    value = $"    Audio level:               {e.AudioLevel}"
                     details.AppendLine(value)
                     value = $"    Audio signal problem:      {e.AudioSignalProblem}"
                     details.AppendLine(value)

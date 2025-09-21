@@ -79,7 +79,7 @@ Friend Module TableLayoutPanelExtensions
     ''' </summary>
     ''' <param name="panel">The <see cref="TableLayoutPanel"/> to update.</param>
     ''' <param name="rowIndex">
-    '''  The <see cref="ServerDataIndexes"/> value representing the table's data type.
+    '''  The <see cref="ServerDataEnum"/> value representing the table's data type.
     ''' </param>
     ''' <param name="isClearedNotifications">
     '''  Indicates if the table represents cleared notifications.
@@ -87,7 +87,7 @@ Friend Module TableLayoutPanelExtensions
     <Extension>
     Friend Sub SetTableName(
         panel As TableLayoutPanel,
-        rowIndex As ServerDataIndexes,
+        rowIndex As ServerDataEnum,
         isClearedNotifications As Boolean)
 
         Dim tableName As String = rowIndex.ToString.ToTitleCase
