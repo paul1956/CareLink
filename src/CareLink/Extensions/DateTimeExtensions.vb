@@ -348,10 +348,10 @@ Friend Module DateTimeExtensions
             Case ""
                 result =
                     s.CultureSpecificParse(styles:=DateTimeStyles.AssumeLocal, success)
-            Case NameOf(ServerDataIndexes.lastConduitDateTime)
+            Case NameOf(ServerDataEnum.lastConduitDateTime)
                 result =
                     s.CultureSpecificParse(styles:=DateTimeStyles.AssumeLocal, success)
-            Case NameOf(ServerDataIndexes.medicalDeviceTime)
+            Case NameOf(ServerDataEnum.medicalDeviceTime)
                 result =
                     s.CultureSpecificParse(
                         styles:=DateTimeStyles.AdjustToUniversal,

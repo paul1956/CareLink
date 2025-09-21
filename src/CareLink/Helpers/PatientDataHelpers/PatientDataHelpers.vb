@@ -7,9 +7,9 @@ Imports System.Text.Json
 Public Module PatientDataHelpers
 
     Private ReadOnly s_keyDictionary As New Dictionary(Of String, String) From {
-        {$"""{NameOf(ServerDataIndexes.firstName)}"": ", """First"""},
-        {$"""{NameOf(ServerDataIndexes.lastName)}"": ", """Last"""},
-        {$"""{NameOf(ServerDataIndexes.conduitSerialNumber)}"": ", $"""{New Guid()}"""},
+        {$"""{NameOf(ServerDataEnum.firstName)}"": ", """First"""},
+        {$"""{NameOf(ServerDataEnum.lastName)}"": ", """Last"""},
+        {$"""{NameOf(ServerDataEnum.conduitSerialNumber)}"": ", $"""{New Guid()}"""},
         {$"""{NameOf(MedicalDeviceInformation.SystemId)}"": ", """40000000000 0000"""},
         {$"""{NameOf(MedicalDeviceInformation.DeviceSerialNumber)}"": ", """NG4000000H"""}}
 
@@ -18,10 +18,7 @@ Public Module PatientDataHelpers
     ''' </summary>
     ''' <returns>String without any personal information</returns>
     Public Function CleanPatientData() As String
-        Dim value As String =
-            JsonSerializer.Serialize(
-                value:=PatientDataElement,
-                options:=s_jsonSerializerOptions)
+        Dim value As String = JsonSerializer.Serialize(value:=PatientDataElement, options:=s_jsonSerializerOptions)
         If String.IsNullOrWhiteSpace(value) Then
             Return value
         End If

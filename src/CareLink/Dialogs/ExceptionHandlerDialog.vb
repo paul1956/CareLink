@@ -114,9 +114,8 @@ Public Class ExceptionHandlerDialog
                 TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
 
             rtb.Text =
-                "By clicking OK, the Stack Trace, Exception " &
-                "and the CareLink™ data that caused the error will" &
-                $" be package as a text file called{vbCrLf}"
+                "By clicking OK, the Stack Trace, Exception and the CareLink™ data that caused the error will " &
+                $"be package as a text file called{vbCrLf}"
             Dim uniqueFileName As FileNameStruct = GetUniqueDataFileName(
                 baseName:=BaseErrorReportName,
                 cultureName:=CurrentDateCulture.Name,

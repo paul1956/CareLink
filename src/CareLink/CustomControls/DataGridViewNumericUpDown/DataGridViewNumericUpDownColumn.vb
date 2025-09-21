@@ -41,8 +41,8 @@ Public Class DataGridViewNumericUpDownColumn
                 TryCast(value, DataGridViewNumericUpDownCell)
             If value IsNot Nothing AndAlso dataGridViewNumericUpDownCell1 Is Nothing Then
                 Dim message As String =
-                    $"Value provided for {NameOf(CellTemplate)} must be of type" &
-                    $" {NameOf(DataGridViewNumericUpDownCell)} or derive from it."
+                    $"Value provided for {NameOf(CellTemplate)} must be of type " &
+                    $"{NameOf(DataGridViewNumericUpDownCell)} or derive from it."
                 Throw New InvalidCastException(message)
             End If
 
@@ -55,8 +55,7 @@ Public Class DataGridViewNumericUpDownColumn
     '''  DataGridViewNumericUpDownCell cell type.
     ''' </summary>
     <Category("Appearance"),
-     DefaultValue(
-    DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultDecimalPlaces),
+     DefaultValue(DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultDecimalPlaces),
      Description("Indicates the number of decimal places to display.")>
     Public Property DecimalPlaces As Integer
         Get

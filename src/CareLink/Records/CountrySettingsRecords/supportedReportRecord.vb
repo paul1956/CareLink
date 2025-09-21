@@ -23,10 +23,10 @@ Public Class SupportedReportRecord
         Dim forList As List(Of Dictionary(Of String, String)) =
             JsonToDictionaryList(json:=Values(key:=NameOf(onlyFor)))
         Me.onlyFor =
-            kvpToString(forList).ToString.TrimStart(trimChar:=" "c).TrimEnd(trimChar:=","c)
+            KvpToString(forList).ToString.TrimStart(trimChar:=" "c).TrimEnd(trimChar:=","c)
         forList = JsonToDictionaryList(json:=Values(key:=NameOf(notFor)))
         Me.notFor =
-            kvpToString(forList).ToString.TrimStart(trimChar:=" "c).TrimEnd(trimChar:=","c)
+            KvpToString(forList).ToString.TrimStart(trimChar:=" "c).TrimEnd(trimChar:=","c)
 
     End Sub
 
@@ -46,13 +46,11 @@ Public Class SupportedReportRecord
     <Column(Order:=3, TypeName:=NameOf([String]))>
     Public Property notFor As String
 
-    Private Shared Function kvpToString(
-        forList As List(Of Dictionary(Of String, String))) As StringBuilder
-
+    Private Shared Function KvpToString(forList As List(Of Dictionary(Of String, String))) As StringBuilder
         Dim sb As New StringBuilder
         For Each dic As Dictionary(Of String, String) In forList
             For Each kvp As KeyValuePair(Of String, String) In dic
-                sb.Append($" {kvp.Key}={kvp.Value},")
+                sb.Append(value:=$" {kvp.Key}={kvp.Value},")
             Next
         Next
 

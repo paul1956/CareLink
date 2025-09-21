@@ -72,13 +72,13 @@ Friend Module SpeechSupport
     Private Sub AnnounceSG(recognizedText As String)
         Dim sgName As String
         Select Case True
-            Case recognizedText.Contains("bg")
+            Case recognizedText.Contains(value:="bg")
                 sgName = "bg"
-            Case recognizedText.Contains("blood glucose")
+            Case recognizedText.Contains(value:="blood glucose")
                 sgName = "blood glucose"
-            Case recognizedText.Contains("blood sugar")
+            Case recognizedText.Contains(value:="blood sugar")
                 sgName = "blood sugar"
-            Case recognizedText.Contains("sg")
+            Case recognizedText.Contains(value:="sg")
                 sgName = "sg"
             Case Else
                 Exit Sub
@@ -115,13 +115,14 @@ Friend Module SpeechSupport
             Exit Sub
         End If
         Dim errorMsg As String = "Listening"
+        Dim value As String
         Select Case e.AudioSignalProblem
             Case AudioSignalProblem.NoSignal
                 If Not s_speechErrorReported Then
                     s_speechErrorReported = True
                     Dim details As New StringBuilder()
-                    details.AppendLine("Details:")
-                    Dim value As String = $"    Audio level:               {e.AudioLevel}"
+                    details.AppendLine(value:="Details:")
+                    value = $"    Audio level:               {e.AudioLevel}"
                     details.AppendLine(value)
                     value = $"    Audio signal problem:      {e.AudioSignalProblem}"
                     details.AppendLine(value)
@@ -155,7 +156,7 @@ Friend Module SpeechSupport
                 errorMsg = "Speech: Please speak louder"
             Case Else
         End Select
-        If Not Form1.StatusStripSpeech.Text.StartsWith("Speech:") Then
+        If Not Form1.StatusStripSpeech.Text.StartsWith(value:="Speech:") Then
             Form1.StatusStripSpeech.Text = errorMsg
         End If
 
