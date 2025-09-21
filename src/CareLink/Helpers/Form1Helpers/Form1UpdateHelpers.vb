@@ -607,7 +607,10 @@ Friend Module Form1UpdateHelpers
                     s_limitRecords = New List(Of Limit)
                     If PatientData.Limits.Count > 0 Then
                         For Each limit As Limit In PatientData.Limits
-                            If limit.Kind IsNot Nothing Then
+                            If PatientData.Limits.Count > 2 Then
+                                Stop
+                            End If
+                            If limit.Kind IsNot Nothing AndAlso (limit.HighLimit > 0 OrElse limit.LowLimit > 0) Then
                                 s_limitRecords.Add(item:=limit)
                             End If
                         Next

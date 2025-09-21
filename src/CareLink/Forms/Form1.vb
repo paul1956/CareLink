@@ -4534,15 +4534,13 @@ Public Class Form1
                 _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin --- U"
             End If
         Catch ex As ArithmeticException
-            Dim str As String = ex.DecodeException()
             Stop
             Throw New ArithmeticException(
-                message:=$"{str} exception in {NameOf(UpdateActiveInsulin)}")
+                message:=$"{ex.DecodeException()} exception in {NameOf(UpdateActiveInsulin)}")
         Catch innerException As Exception
-            Dim str As String = innerException.DecodeException()
             Stop
             Throw New ApplicationException(
-                message:=$"{str} exception in {NameOf(UpdateActiveInsulin)}",
+                message:=$"{innerException.DecodeException()} exception in {NameOf(UpdateActiveInsulin)}",
                 innerException)
         End Try
     End Sub
@@ -4700,14 +4698,13 @@ Public Class Form1
                     markerInsulinDictionary:=s_activeInsulinMarkers,
                     markerMealDictionary:=Nothing)
                 .PlotSgSeries(HomePageMealRow:=GetYMinValueFromNativeMmolL())
-                .PlotHighLowLimitsAndTargetSg(targetSsOnly:=True)
+                .PlotHighLowLimitsAndTargetSg(targetSgOnly:=True)
             End With
             Application.DoEvents()
         Catch innerException As Exception
             Stop
-            Dim str As String = innerException.DecodeException()
             Throw New ApplicationException(
-                message:=$"{str} exception in {NameOf(UpdateActiveInsulinChart)}",
+                message:=$"{innerException.DecodeException()} exception in {NameOf(UpdateActiveInsulinChart)}",
                 innerException)
         End Try
     End Sub
@@ -4743,7 +4740,7 @@ Public Class Form1
                     markerInsulinDictionary:=s_summaryMarkersInsulin,
                     markerMealDictionary:=s_summaryMarkersMeal)
                 .PlotSgSeries(HomePageMealRow:=GetYMinValueFromNativeMmolL())
-                .PlotHighLowLimitsAndTargetSg(targetSsOnly:=False)
+                .PlotHighLowLimitsAndTargetSg(targetSgOnly:=False)
                 Application.DoEvents()
             End With
         Catch innerException As Exception
@@ -4767,8 +4764,7 @@ Public Class Form1
     ''' </remarks>
     Private Sub UpdateAutoModeShield()
         Try
-            Dim lastSgTimestamp As String =
-                s_lastSg.Timestamp.ToString(format:=s_timeWithMinuteFormat)
+            Dim lastSgTimestamp As String = s_lastSg.Timestamp.ToString(format:=s_timeWithMinuteFormat)
             Me.LastSgOrExitTimeLabel.Text = lastSgTimestamp
             Me.ShieldUnitsLabel.Text = BgUnits
 
@@ -4805,24 +4801,16 @@ Public Class Form1
                 Me.ShieldUnitsLabel.CenterLabelXOnParent()
                 Me.ShieldUnitsLabel.Top = Me.CurrentSgLabel.Bottom + 2
                 Me.UpdateNotifyIcon(sgString)
-                _sgMiniDisplay.SetCurrentSgString(
-                    sgString,
-                    f:=s_lastSg.sg)
-                message = SG.FormatSensorMessage(
-                    key:=PatientData.SensorState,
-                    truncate:=True)
+                _sgMiniDisplay.SetCurrentSgString(sgString, f:=s_lastSg.sg)
+                message = SG.FormatSensorMessage(key:=PatientData.SensorState, truncate:=True)
             Else
-                _sgMiniDisplay.SetCurrentSgString(
-                    sgString:="---",
-                    f:=s_lastSg.sg)
+                _sgMiniDisplay.SetCurrentSgString(sgString:="---", f:=s_lastSg.sg)
                 Me.CurrentSgLabel.Visible = False
                 Me.LastSgOrExitTimeLabel.Visible = False
                 Me.SensorMessageLabel.Visible = True
                 Me.SensorMessageLabel.BackColor = Color.Transparent
 
-                message = SG.FormatSensorMessage(
-                    key:=PatientData.SensorState,
-                    truncate:=True)
+                message = SG.FormatSensorMessage(key:=PatientData.SensorState, truncate:=True)
                 Select Case PatientData.SensorState
                     Case "UNKNOWN"
                         Me.SensorMessageLabel.Text = message
@@ -4830,10 +4818,8 @@ Public Class Form1
                     Case "WARM_UP"
                         Dim timeRemaining As String = ""
                         If s_systemStatusTimeRemaining.TotalMilliseconds > 0 Then
-                            timeRemaining =
-                                s_systemStatusTimeRemaining.ToFormattedTimeSpan(unit:="hr")
-                            Me.SensorMessageLabel.Text =
-                                $"{message.Remove(s:="...")}{vbCrLf}{timeRemaining}"
+                            timeRemaining = s_systemStatusTimeRemaining.ToFormattedTimeSpan(unit:="hr")
+                            Me.SensorMessageLabel.Text = $"{message.Remove(s:="...")}{vbCrLf}{timeRemaining}"
                             Me.SensorMessageLabel.CenterXYOnParent(verticalOffset:=-5)
                         Else
                             Me.SensorMessageLabel.Text = message
@@ -4849,9 +4835,8 @@ Public Class Form1
             End If
         Catch innerException As Exception
             Stop
-            Dim str As String = innerException.DecodeException()
             Throw New ApplicationException(
-                message:=$"{str} exception in {NameOf(UpdateAutoModeShield)}",
+                message:=$"{innerException.DecodeException()} exception in {NameOf(UpdateAutoModeShield)}",
                 innerException)
         End Try
         Application.DoEvents()
@@ -4905,9 +4890,8 @@ Public Class Form1
             Me.CalibrationDueImage.Visible = PatientData.ConduitInRange
         Catch innerException As Exception
             Stop
-            Dim str As String = innerException.DecodeException()
             Throw New ApplicationException(
-                message:=$"{str} exception in {NameOf(UpdateCalibrationTimeRemaining)}",
+                message:=$"{innerException.DecodeException()} exception in {NameOf(UpdateCalibrationTimeRemaining)}",
                 innerException)
         End Try
 
@@ -5509,13 +5493,12 @@ Public Class Form1
                 .PlotSuspendArea(SuspendSeries:=Me.TreatmentSuspendSeries)
                 .PlotTreatmentMarkers(Me.TreatmentTimeChangeSeries)
                 .PlotSgSeries(HomePageMealRow:=GetYMinValueFromNativeMmolL())
-                .PlotHighLowLimitsAndTargetSg(targetSsOnly:=True)
+                .PlotHighLowLimitsAndTargetSg(targetSgOnly:=True)
             End With
         Catch innerException As Exception
             Stop
-            Dim message As String = innerException.DecodeException()
             Throw New ApplicationException(
-                message:=$"{message} exception in {NameOf(UpdateTreatmentChart)}",
+                message:=$"{innerException.DecodeException()} exception in {NameOf(UpdateTreatmentChart)}",
                 innerException)
         End Try
         Application.DoEvents()

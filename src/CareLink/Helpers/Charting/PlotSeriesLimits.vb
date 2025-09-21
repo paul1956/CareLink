@@ -38,7 +38,7 @@ Friend Module PlotSeriesLimits
     '''  the high and low limit lines on the specified chart.
     ''' </summary>
     ''' <param name="chart">The <see cref="Chart"/> control to plot onto.</param>
-    ''' <param name="targetSsOnly">
+    ''' <param name="targetSgOnly">
     '''  If <see langword="True"/>, only the target SG line is plotted;
     '''  if <see langword="False"/>, high and low limits are also plotted.
     ''' </param>
@@ -49,7 +49,7 @@ Friend Module PlotSeriesLimits
     ''' </remarks>
     ''' <exception cref="ApplicationException">If an error occurs while plotting.</exception>
     <Extension>
-    Friend Sub PlotHighLowLimitsAndTargetSg(chart As Chart, targetSsOnly As Boolean)
+    Friend Sub PlotHighLowLimitsAndTargetSg(chart As Chart, targetSgOnly As Boolean)
         If s_limitRecords.Count = 0 Then Exit Sub
         Dim limitsIndexList() As Integer = GetLimitsList(count:=s_sgRecords.Count - 1)
         Dim yValue As Single = If(CurrentUser Is Nothing, 0, CurrentUser.CurrentTarget)
@@ -61,30 +61,23 @@ Friend Module PlotSeriesLimits
                 xValue:=s_sgRecords.Last.OaDateTime(),
                 yValue)
         End If
-        If targetSsOnly Then Exit Sub
+        If targetSgOnly Then Exit Sub
         For Each sgListIndex As IndexClass(Of SG) In s_sgRecords.WithIndex()
             Dim xValue As OADate = sgListIndex.Value.OaDateTime()
             Try
-                Dim limitsLowValue As Single =
-                    s_limitRecords(index:=limitsIndexList(sgListIndex.Index)).LowLimit
-                Dim limitsHighValue As Single =
-                    s_limitRecords(index:=limitsIndexList(sgListIndex.Index)).HighLimit
+                Dim limitsLowValue As Single = s_limitRecords(index:=limitsIndexList(sgListIndex.Index)).LowLimit
+                Dim limitsHighValue As Single = s_limitRecords(index:=limitsIndexList(sgListIndex.Index)).HighLimit
                 If limitsHighValue <> 0 Then
-                    chart.Series(name:=HighLimitSeriesName).Points.AddXY(
-                        xValue,
-                        yValue:=limitsHighValue)
+                    chart.Series(name:=HighLimitSeriesName).Points.AddXY(xValue, yValue:=limitsHighValue)
                 End If
                 If limitsLowValue <> 0 Then
-                    chart.Series(name:=LowLimitSeriesName).Points.AddXY(
-                        xValue,
-                        yValue:=limitsLowValue)
+                    chart.Series(name:=LowLimitSeriesName).Points.AddXY(xValue, yValue:=limitsLowValue)
                 End If
             Catch innerException As Exception
                 Stop
                 Dim str As String = innerException.DecodeException()
                 Dim local As String = NameOf(PlotHighLowLimitsAndTargetSg)
-                Dim message As String =
-                    $"{str} exception while plotting Limits in {local}"
+                Dim message As String = $"{str} exception while plotting Limits in {local}"
                 Throw New ApplicationException(message, innerException)
             End Try
         Next

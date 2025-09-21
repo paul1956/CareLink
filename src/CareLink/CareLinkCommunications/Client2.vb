@@ -156,15 +156,11 @@ Public Class Client2
             Dim authTokenValidTo As String =
                 DateTimeOffset.FromUnixTimeSeconds(seconds:=unixTimeToValidate) _
                               .ToString(format:="ddd MMM dd HH:mm:ss UTC yyyy")
-            message =
-                $"In {NameOf(IsTokenValid)} access token expires in {tDiff} seconds " &
-                $"at {authTokenValidTo}"
+            message = $"In {NameOf(IsTokenValid)} access token expires in {tDiff} seconds at {authTokenValidTo}"
             Debug.WriteLine(message)
             Return True
         Catch ex As Exception
-            Dim str As String = ex.DecodeException()
-            Dim location As String = NameOf(IsTokenValid)
-            Debug.WriteLine(message:=$"In {location} missing data in access token. {str}")
+            Debug.WriteLine(message:=$"In {NameOf(IsTokenValid)} missing data in access token. {ex.DecodeException()}")
             Return False
         End Try
     End Function
