@@ -13,26 +13,6 @@ Friend Module LoginHelpers
     Public ReadOnly Property LoginDialog As New LoginDialog
 
     ''' <summary>
-    '''  Converts a <see cref="Dictionary(Of String, Object)"/> to a
-    '''  <see cref="List(Of KeyValuePair(Of String, String))"/>.
-    ''' </summary>
-    ''' <param name="dic">The <see cref="Dictionary(Of String, Object)"/> to convert.</param>
-    ''' <returns>
-    '''  A list of key-value pairs where the value is converted to a <see langword="String"/>.
-    ''' </returns>
-    <Extension>
-    Private Function ToDataSource(dic As Dictionary(Of String, Object)) As _
-        List(Of KeyValuePair(Of String, String))
-
-        Dim dataSource As New List(Of KeyValuePair(Of String, String))
-        For Each kvp As KeyValuePair(Of String, Object) In dic
-            Dim item As KeyValuePair(Of String, String) = KeyValuePair.Create(kvp.Key, value:=CType(kvp.Value, String))
-            dataSource.Add(item)
-        Next
-        Return dataSource
-    End Function
-
-    ''' <summary>
     '''  Deserializes the patient data element and updates related global variables.
     ''' </summary>
     Friend Sub DeserializePatientElement()
@@ -258,21 +238,6 @@ Friend Module LoginHelpers
     End Function
 
     ''' <summary>
-    '''  Converts a PNG <see cref="Bitmap"/> to an <see cref="Icon"/>
-    '''  object (with 32x32 size).
-    ''' </summary>
-    ''' <param name="original">The <see cref="Bitmap"/> to convert.</param>
-    ''' <returns>
-    '''  An <see cref="Icon"/> object created from the bitmap.
-    ''' </returns>
-    Public Function PngBitmapToIcon(original As Bitmap) As Icon
-        ' Optionally resize to 32x32 for best icon compatibility
-        Using resizedBmp As New Bitmap(original, newSize:=New Size(width:=32, height:=32))
-            Return Icon.FromHandle(handle:=resizedBmp.GetHicon())
-        End Using
-    End Function
-
-    ''' <summary>
     '''  Sets the last update time and time zone information on the main form's status bar.
     ''' </summary>
     ''' <param name="form1">The main application form.</param>
@@ -325,6 +290,42 @@ Friend Module LoginHelpers
         End With
 
     End Sub
+
+    ''' <summary>
+    '''  Starts or stops the server update timer.
+    ''' </summary>
+    ''' <param name="Start">
+    '''  <see langword="True"/> to start the timer;
+    '''  otherwise, <see langword="False"/> to stop it.
+    ''' </param>
+    ''' <param name="interval">
+    '''  The timer interval in milliseconds. Default is -1 (no change).
+    ''' </param>
+    ''' <returns>
+    '''  <see langword="True"/> if the timer was running before the call;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    Friend Function SetServerUpdateTimer(Start As Boolean, Optional interval As Integer = -1) As Boolean
+        GC.Collect()
+        GC.WaitForPendingFinalizers()
+        ReportMemory()
+
+        If Start Then
+            If interval > -1 Then
+                Form1.ServerUpdateTimer.Interval = interval
+            End If
+            Form1.ServerUpdateTimer.Start()
+            DebugPrint(message:=$"started at {Now:T}")
+            Return True
+        Else
+            If Form1.ServerUpdateTimer.Enabled Then
+                Form1.ServerUpdateTimer.Stop()
+                DebugPrint(message:=$"stopped at {Now:T}")
+                Return True
+            End If
+        End If
+        Return False
+    End Function
 
     ''' <summary>
     '''  Loads and deserializes the user settings from JSON file.
@@ -452,39 +453,36 @@ Friend Module LoginHelpers
     End Sub
 
     ''' <summary>
-    '''  Starts or stops the server update timer.
+    '''  Converts a <see cref="Dictionary(Of String, Object)"/> to a
+    '''  <see cref="List(Of KeyValuePair(Of String, String))"/>.
     ''' </summary>
-    ''' <param name="Start">
-    '''  <see langword="True"/> to start the timer;
-    '''  otherwise, <see langword="False"/> to stop it.
-    ''' </param>
-    ''' <param name="interval">
-    '''  The timer interval in milliseconds. Default is -1 (no change).
-    ''' </param>
+    ''' <param name="dic">The <see cref="Dictionary(Of String, Object)"/> to convert.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the timer was running before the call;
-    '''  otherwise, <see langword="False"/>.
+    '''  A list of key-value pairs where the value is converted to a <see langword="String"/>.
     ''' </returns>
-    Friend Function SetServerUpdateTimer(Start As Boolean, Optional interval As Integer = -1) As Boolean
-        GC.Collect()
-        GC.WaitForPendingFinalizers()
-        ReportMemory()
+    <Extension>
+    Friend Function ToDataSource(dic As Dictionary(Of String, Object)) As List(Of KeyValuePair(Of String, String))
+        Dim dataSource As New List(Of KeyValuePair(Of String, String))
+        For Each kvp As KeyValuePair(Of String, Object) In dic
+            Dim item As KeyValuePair(Of String, String) = KeyValuePair.Create(kvp.Key, value:=CType(kvp.Value, String))
+            dataSource.Add(item)
+        Next
+        Return dataSource
+    End Function
 
-        If Start Then
-            If interval > -1 Then
-                Form1.ServerUpdateTimer.Interval = interval
-            End If
-            Form1.ServerUpdateTimer.Start()
-            DebugPrint(message:=$"started at {Now:T}")
-            Return True
-        Else
-            If Form1.ServerUpdateTimer.Enabled Then
-                Form1.ServerUpdateTimer.Stop()
-                DebugPrint(message:=$"stopped at {Now:T}")
-                Return True
-            End If
-        End If
-        Return False
+    ''' <summary>
+    '''  Converts a PNG <see cref="Bitmap"/> to an <see cref="Icon"/>
+    '''  object (with 32x32 size).
+    ''' </summary>
+    ''' <param name="original">The <see cref="Bitmap"/> to convert.</param>
+    ''' <returns>
+    '''  An <see cref="Icon"/> object created from the bitmap.
+    ''' </returns>
+    Public Function PngBitmapToIcon(original As Bitmap) As Icon
+        ' Optionally resize to 32x32 for best icon compatibility
+        Using resizedBmp As New Bitmap(original, newSize:=New Size(width:=32, height:=32))
+            Return Icon.FromHandle(handle:=resizedBmp.GetHicon())
+        End Using
     End Function
 
 End Module

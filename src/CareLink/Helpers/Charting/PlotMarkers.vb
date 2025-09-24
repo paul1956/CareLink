@@ -333,7 +333,7 @@ Friend Module PlotMarkers
     '''  Plots treatment markers on the specified treatment chart,
     '''  including insulin and meal markers.
     ''' </summary>
-    ''' <param name="treatmentChart">The chart to plot treatment markers on.</param>
+    ''' <param name="chart">The chart to plot treatment markers on.</param>
     ''' <param name="treatmentTimeChangeSeries">
     '''  The series used for time change markers in the treatment chart.
     ''' </param>
@@ -346,7 +346,7 @@ Friend Module PlotMarkers
     ''' </param>
     <Extension>
     Friend Sub PlotTreatmentMarkers(
-        treatmentChart As Chart,
+        chart As Chart,
         treatmentTimeChangeSeries As Series,
         <CallerMemberName> Optional memberName As String = Nothing,
         <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
@@ -361,14 +361,13 @@ Friend Module PlotMarkers
                 Dim markerDateTime As Date = item.GetMarkerTimestamp
                 Dim markerOADate As New OADate(asDate:=markerDateTime)
                 Dim markerOADateTime As New OADate(asDate:=item.GetMarkerTimestamp)
-                Dim markerSeriesPoints As DataPointCollection =
-                    treatmentChart.Series(name:=MarkerSeriesName).Points
+                Dim markerSeriesPoints As DataPointCollection = chart.Series(name:=MarkerSeriesName).Points
                 Dim markerBorderColor As Color
                 Select Case item.Type
                     Case "AUTO_BASAL_DELIVERY"
                         key = NameOf(AutoBasalDelivery.BolusAmount)
                         Dim amount As Single = item.GetSingleFromJson(key, digits:=3)
-                        With treatmentChart.Series(name:=BasalSeriesName)
+                        With chart.Series(name:=BasalSeriesName)
                             .PlotBasalSeries(
                                 markerOADateTime,
                                 amount,
@@ -382,7 +381,7 @@ Friend Module PlotMarkers
                     Case "MANUAL_BASAL_DELIVERY"
                         key = NameOf(AutoBasalDelivery.BolusAmount)
                         Dim amount As Single = item.GetSingleFromJson(key, digits:=3)
-                        With treatmentChart.Series(name:=BasalSeriesName)
+                        With chart.Series(name:=BasalSeriesName)
                             .PlotBasalSeries(
                                 markerOADateTime,
                                 amount,
@@ -399,7 +398,7 @@ Friend Module PlotMarkers
                             Case "AUTOCORRECTION"
                                 key = NameOf(Insulin.DeliveredFastAmount)
                                 Dim amount As Single = item.GetSingleFromJson(key, digits:=3)
-                                With treatmentChart.Series(name:=BasalSeriesName)
+                                With chart.Series(name:=BasalSeriesName)
                                     .PlotBasalSeries(
                                         markerOADateTime,
                                         amount,
@@ -414,28 +413,21 @@ Friend Module PlotMarkers
                                     key:=markerOADateTime,
                                     value:=TreatmentInsulinRow) Then
 
-                                    markerSeriesPoints.AddXY(
-                                        xValue:=markerOADateTime,
-                                        yValue:=TreatmentInsulinRow)
+                                    markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=TreatmentInsulinRow)
                                     Dim lastDataPoint As DataPoint = markerSeriesPoints.Last
                                     If Double.IsNaN(GetInsulinYValue()) Then
                                         lastDataPoint.Color = Color.Transparent
                                         lastDataPoint.MarkerSize = 0
                                     Else
-                                        lastDataPoint.Color =
-                                            Color.FromArgb(
-                                                alpha:=30,
-                                                baseColor:=Color.LightBlue)
+                                        lastDataPoint.Color = Color.FromArgb(alpha:=30, baseColor:=Color.LightBlue)
                                         key = NameOf(Insulin.DeliveredFastAmount)
-                                        markerBorderColor =
-                                            Color.FromArgb(alpha:=10, baseColor:=Color.Black)
-                                        Dim singleValue As Single =
-                                            item.GetSingleFromJson(key, digits:=3)
+                                        markerBorderColor = Color.FromArgb(alpha:=10, baseColor:=Color.Black)
+                                        Dim singleValue As Single = item.GetSingleFromJson(key, digits:=3)
                                         CreateCallout(
-                                            treatmentChart,
+                                            chart,
                                             lastDataPoint,
                                             markerBorderColor,
-                                            tagText:=$"Bolus {singleValue}U")
+                                            text:=$"Bolus {singleValue}U")
                                     End If
                                 Else
                                     Stop
@@ -444,30 +436,23 @@ Friend Module PlotMarkers
                                 Stop
                         End Select
                     Case "MEAL"
-                        Dim value As Single =
-                            CSng(TreatmentInsulinRow * 0.95).RoundToSingle(digits:=3)
-                        If s_treatmentMarkersMeal.TryAdd(
-                            key:=markerOADateTime,
-                            value) Then
-
+                        Dim value As Single = CSng(TreatmentInsulinRow * 0.95).RoundToSingle(digits:=3)
+                        If s_treatmentMarkersMeal.TryAdd(key:=markerOADateTime, value) Then
                             markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=value)
-                            markerBorderColor =
-                                Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
-                            Dim amount As Integer =
-                                CInt(item.GetSingleFromJson(key:="amount", digits:=0))
+                            markerBorderColor = Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
+                            Dim amount As Integer = CInt(item.GetSingleFromJson(key:="amount", digits:=0))
                             CreateCallout(
-                                treatmentChart,
+                                chart,
                                 lastDataPoint:=markerSeriesPoints.Last,
                                 markerBorderColor,
-                                tagText:=$"Meal {amount} {GetCarbDefaultUnit()}")
+                                text:=$"Meal {amount} {GetCarbDefaultUnit()}")
                         End If
                     Case "BG_READING"
                     Case "CALIBRATION"
                     Case "TIME_CHANGE"
-                        With treatmentChart.Series(name:=TimeChangeSeriesName).Points
+                        With chart.Series(name:=TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChange(item, recordNumber:=1)
-                            markerOADateTime =
-                                New OADate(asDate:=lastTimeChangeRecord.Timestamp)
+                            markerOADateTime = New OADate(asDate:=lastTimeChangeRecord.Timestamp)
                             .AddXY(xValue:=markerOADateTime, yValue:=0)
                             .AddXY(xValue:=markerOADateTime, yValue:=TreatmentInsulinRow)
                             .AddXY(xValue:=markerOADateTime, yValue:=Double.NaN)
@@ -481,9 +466,8 @@ Friend Module PlotMarkers
                                 GetManualBasalValues(markerWithIndex)
 
                             For Each kvp As KeyValuePair(Of OADate, Single) In orderedMarkers
-                                With treatmentChart.Series(name:=BasalSeriesName)
-                                    Dim tag As String =
-                                        $"Manual Basal: {kvp.Value.RoundToSingle(digits:=3)}U"
+                                With chart.Series(name:=BasalSeriesName)
+                                    Dim tag As String = $"Manual Basal: {kvp.Value.RoundToSingle(digits:=3)}U"
                                     .PlotBasalSeries(
                                         markerOADateTime:=kvp.Key,
                                         amount:=kvp.Value,
@@ -502,21 +486,19 @@ Friend Module PlotMarkers
                 Stop
                 Dim str As String = innerException.DecodeException()
                 Dim local As String = NameOf(PlotTreatmentMarkers)
-                Dim message As String =
-                    $"{str} exception in {local} at {memberName} line {sourceLineNumber}"
+                Dim message As String = $"{str} exception in {local} at {memberName} line {sourceLineNumber}"
                 Throw New ApplicationException(message, innerException)
             End Try
         Next
-        treatmentChart.Annotations.Last.BringToFront()
+        chart.Annotations.Last.BringToFront()
 
         If s_timeChangeMarkers.Count <> 0 Then
             treatmentTimeChangeSeries.IsVisibleInLegend = True
-            treatmentChart.ChartAreas(name:=NameOf(ChartArea)).AxisX _
-                          .AdjustXAxisStartTime(lastTimeChangeRecord)
-            treatmentChart.Legends(index:=0).CustomItems.Last.Enabled = True
+            chart.ChartAreas(name:=NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
+            chart.Legends(index:=0).CustomItems.Last.Enabled = True
         Else
             treatmentTimeChangeSeries.IsVisibleInLegend = False
-            treatmentChart.Legends(index:=0).CustomItems.Last.Enabled = False
+            chart.Legends(index:=0).CustomItems.Last.Enabled = False
         End If
     End Sub
 

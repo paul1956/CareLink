@@ -37,8 +37,7 @@ Friend Module ExceptionHelpers
 
         Get
             Dim message As String =
-                $"The program location {memberName} line {sourceLineNumber}" &
-                " is thought to be unreachable."
+                $"The program location {memberName} line {sourceLineNumber} is thought to be unreachable."
             Return New ArgumentOutOfRangeException(paramName, message)
         End Get
     End Property
@@ -55,15 +54,13 @@ Friend Module ExceptionHelpers
     <Extension>
     Public Function DecodeException(ex As Exception) As String
         Dim errorMsg As String = ex.Message
-        If errorMsg.Contains(InnerExceptionMessage) Then
+        If errorMsg.Contains(value:=InnerExceptionMessage) Then
             Dim innerExMessage As String = ex.InnerException.Message
             If innerExMessage.Contains(value:=InnerExceptionMessage) Then
-                errorMsg = DecodeException(ex.InnerException)
+                errorMsg = DecodeException(ex:=ex.InnerException)
             Else
-                Dim shortMsg As String =
-                    $"{errorMsg.Replace(oldValue:=InnerExceptionMessage, newValue:=".")}"
-                errorMsg =
-                    $"{shortMsg}{vbCrLf}{innerExMessage}"
+                Dim shortMsg As String = $"{errorMsg.Replace(oldValue:=InnerExceptionMessage, newValue:=".")}"
+                errorMsg = $"{shortMsg}{vbCrLf}{innerExMessage}"
             End If
         End If
 

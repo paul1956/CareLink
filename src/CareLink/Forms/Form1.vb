@@ -344,40 +344,37 @@ Public Class Form1
                 Exit Sub
             End If
 
-            Dim annotationText As String
             Select Case result.Series.Name
                 Case HighLimitSeriesName, LowLimitSeriesName, TargetSgSeriesName
                     Me.CursorPanel.Visible = False
                 Case MarkerSeriesName, BasalSeriesName
-                    Dim markerTag() As String =
-                        currentDataPoint.Tag.ToString.Split(separator:=":"c)
-                    If markerTag.Length <= 1 Then
+                    Dim markerTags() As String = currentDataPoint.Tag.ToString.Split(separator:=":"c)
+                    If markerTags.Length <= 1 Then
                         If chart1.Name = NameOf(TreatmentMarkersChart) Then
-                            Dim callout As CalloutAnnotation =
-                                chart1.FindAnnotation(lastDataPoint:=currentDataPoint)
+                            Dim callout As CalloutAnnotation = chart1.FindAnnotation(lastDataPoint:=currentDataPoint)
                             callout.BringToFront()
                         Else
                             Me.CursorPanel.Visible = True
                         End If
                         Exit Sub
                     End If
-                    markerTag(0) = markerTag(0).Trim
+                    markerTags(0) = markerTags(0).Trim
                     If isHomePage Then
                         Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
                         Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                         Me.CursorPictureBox.Visible = True
                         Me.CursorMessage2Label.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
-                        Select Case markerTag.Length
+                        Select Case markerTags.Length
                             Case 2
-                                Me.CursorMessage1Label.Text = markerTag(0)
+                                Me.CursorMessage1Label.Text = markerTags(0)
                                 Me.CursorMessage1Label.Visible = True
-                                Me.CursorMessage2Label.Text = markerTag(1).Trim
+                                Me.CursorMessage2Label.Text = markerTags(1).Trim
                                 Me.CursorMessage2Label.Visible = True
                                 Me.CursorMessage3Label.Text =
                                     Date.FromOADate(currentDataPoint.XValue).ToString(format:=s_timeWithMinuteFormat)
                                 Me.CursorMessage3Label.Visible = True
                                 Me.CursorMessage4Label.Visible = False
-                                Select Case markerTag(0)
+                                Select Case markerTags(0)
                                     Case "Auto Correction",
                                          "Auto Basal",
                                          "Manual Basal",
@@ -398,34 +395,26 @@ Public Class Form1
                                 End Select
                                 Me.CursorPanel.Visible = True
                             Case 3
-                                Select Case markerTag(1).Trim
-                                    Case "Calibration accepted",
-                                         "Calibration not accepted"
-                                        Me.CursorPictureBox.Image =
-                                            My.Resources.CalibrationDotRed
+                                Select Case markerTags(1).Trim
+                                    Case "Calibration accepted", "Calibration not accepted"
+                                        Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
                                     Case "Not used for calibration"
-                                        Me.CursorPictureBox.Image =
-                                            My.Resources.CalibrationDot
+                                        Me.CursorPictureBox.Image = My.Resources.CalibrationDot
                                         Dim style As FontStyle = FontStyle.Bold
-                                        Me.CursorMessage2Label.Font =
-                                            New Font(FamilyName, emSize:=11.0F, style)
+                                        Me.CursorMessage2Label.Font = New Font(FamilyName, emSize:=11.0F, style)
                                     Case Else
                                         Stop
                                 End Select
                                 Me.CursorMessage1Label.Text =
-                                    $"{markerTag(0)}@{xValue.
-                                        ToString(format:=s_timeWithMinuteFormat)}"
+                                    $"{markerTags(0)}@{xValue.ToString(format:=s_timeWithMinuteFormat)}"
                                 Me.CursorMessage1Label.Visible = True
                                 Me.CursorMessage2Label.Text =
-                                    markerTag(1).Replace(
-                                        oldValue:="Calibration not",
-                                        newValue:="Cal. not").Trim
+                                    markerTags(1).Replace(oldValue:="Calibration not", newValue:="Cal. not").Trim
                                 Me.CursorMessage2Label.Visible = True
-                                Me.CursorMessage3Label.Text = markerTag(2).Trim
+                                Me.CursorMessage3Label.Text = markerTags(2).Trim
                                 Me.CursorMessage3Label.Visible = True
                                 Dim sgValue As Single =
-                                    markerTag(2).Trim.Split(separator:=" ")(0).
-                                        ParseSingle(digits:=2)
+                                    markerTags(2).Trim.Split(separator:=" ")(0).ParseSingle(digits:=2)
                                 Me.CursorMessage4Label.Text =
                                     If(NativeMmolL,
                                        $"{CInt(sgValue * MmolLUnitsDivisor)} mg/dL",
@@ -438,13 +427,12 @@ Public Class Form1
                                 Me.CursorPanel.Visible = False
                         End Select
                     End If
-                    chart1.SetUpCallout(currentDataPoint, markerTag)
+                    chart1.SetUpCallout(currentDataPoint, markerTags)
 
                 Case SgSeriesName
                     Me.CursorMessage1Label.Text = "Sensor Glucose"
                     Me.CursorMessage1Label.Visible = True
-                    Me.CursorMessage2Label.Text =
-                        $"{currentDataPoint.YValues(0).RoundToSingle(digits:=3)} {BgUnits}"
+                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(digits:=3)} {BgUnits}"
                     Me.CursorMessage2Label.Visible = True
                     Me.CursorMessage3Label.Text =
                         If(NativeMmolL,
@@ -457,16 +445,12 @@ Public Class Form1
                     Me.CursorMessage4Label.Visible = True
                     Me.CursorPictureBox.Image = Nothing
                     Me.CursorPanel.Visible = True
-                    annotationText = $"Sensor Glucose {Me.CursorMessage2Label.Text}"
-                    chart1.SetupCallout(currentDataPoint, annotationText)
+                    chart1.SetupCallout(currentDataPoint, $"Sensor Glucose {Me.CursorMessage2Label.Text}")
                 Case SuspendSeriesName, TimeChangeSeriesName
                     Me.CursorPanel.Visible = False
                 Case ActiveInsulinSeriesName
-                    Dim yValue As Single =
-                        currentDataPoint.YValues.FirstOrDefault().RoundToSingle(digits:=3)
-                    annotationText =
-                        $"Theoretical Active Insulin {yValue:F3} U"
-                    chart1.SetupCallout(currentDataPoint, annotationText)
+                    Dim yValue As Single = currentDataPoint.YValues.FirstOrDefault().RoundToSingle(digits:=3)
+                    chart1.SetupCallout(currentDataPoint, text:=$"Theoretical Active Insulin {yValue:F3} U")
                 Case Else
                     Stop
             End Select
@@ -4792,8 +4776,7 @@ Public Class Form1
                 Me.SensorMessageLabel.Visible = False
                 Dim sgString As String = New SG(PatientData.LastSG).ToString()
                 Me.CurrentSgLabel.Text = sgString
-                Me.CurrentSgLabel.CenterXYOnParent(
-                    verticalOffset:=-Me.ShieldUnitsLabel.Height)
+                Me.CurrentSgLabel.CenterXYOnParent(verticalOffset:=-Me.ShieldUnitsLabel.Height)
                 Me.CurrentSgLabel.Visible = True
                 Me.ShieldUnitsLabel.CenterLabelXOnParent()
                 Me.ShieldUnitsLabel.Top = Me.CurrentSgLabel.Bottom + 2

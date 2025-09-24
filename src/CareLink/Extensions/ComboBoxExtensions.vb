@@ -22,9 +22,7 @@ Public Module ComboBoxExtensions
     '''  or -1 if not found.
     ''' </returns>
     <Extension>
-    Public Function IndexOfKey(Of Tk, Tv)(
-        objCollection As ComboBox.ObjectCollection,
-        key As Tk) As Integer
+    Public Function IndexOfKey(Of Tk, Tv)(objCollection As ComboBox.ObjectCollection, key As Tk) As Integer
 
         For i As Integer = 0 To objCollection.Count - 1
             Dim obj As Object = objCollection(index:=i)
@@ -49,9 +47,7 @@ Public Module ComboBoxExtensions
     '''  otherwise -1 if not found.
     ''' </returns>
     <Extension>
-    Public Function IndexOfY(Of Tk, Tv)(
-        objCollection As ComboBox.ObjectCollection,
-        y As Tv) As Integer
+    Public Function IndexOfY(Of Tk, Tv)(objCollection As ComboBox.ObjectCollection, y As Tv) As Integer
         ' If valueObject is Nothing and Tv is a class type, return -1 early
         If y Is Nothing Then
             Return -1

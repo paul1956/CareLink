@@ -48,7 +48,7 @@ Friend Module DataTableHelpers
     ''' </returns>
     Private Function ClassToDataTable(Of T As Class)() As DataTable
         Dim classType As Type = GetType(T)
-        Dim result As New DataTable(classType.UnderlyingSystemType.Name)
+        Dim result As New DataTable(tableName:=classType.UnderlyingSystemType.Name)
         Dim propertyOrder As New SortedDictionary(Of Integer, PropertyInfo)
         Dim fallbackOrder As Integer = 1000
 
@@ -104,11 +104,9 @@ Friend Module DataTableHelpers
         If displayNameAttribute Is Nothing Then
             Return [property].Name
         Else
-
             ' Non-breaking space for better display
             Dim displayName As String = displayNameAttribute.DisplayName
-            If displayName.Contains(value:="From Pump") OrElse
-                    displayName.Contains(value:="As Date") Then
+            If displayName.Contains(value:="From Pump") OrElse displayName.Contains(value:="As Date") Then
                 displayName = displayName.Replace(oldValue:=" ", newValue:=NonBreakingSpace)
             End If
             Return displayName
@@ -134,33 +132,6 @@ Friend Module DataTableHelpers
     End Function
 
     ''' <summary>
-    '''  Creates a <see cref="DataTable"/> from a class type's public properties and
-    '''  adds a new <see cref="DataRow"/> to the table for each class passed as a parameter.
-    '''  The DataColumns of the table will match the name and type of the public properties.
-    ''' </summary>
-    ''' <param name="classCollection">A List(Of class) to fill the DataTable with.</param>
-    ''' <returns>
-    '''  A DataTable who's DataColumns match the name and type of
-    '''  each class T's public properties.
-    ''' </returns>
-    Public Function ClassCollectionToDataTable(Of T As Class)(classCollection As List(Of T)) _
-        As DataTable
-
-        Dim result As DataTable = ClassToDataTable(Of T)()
-
-        If Not IsValidDataTable(result, IgnoreRows:=True) Then
-            Return New DataTable()
-        End If
-        If classCollection?.Count > 0 Then
-            For Each obj As T In classCollection
-                result.Add(obj)
-            Next
-        End If
-
-        Return result
-    End Function
-
-    ''' <summary>
     '''  Indicates whether a specified <see cref="DataTable"/> is <see langword="Nothing"/>,
     '''  has zero columns, or (optionally) zero rows.
     ''' </summary>
@@ -174,14 +145,34 @@ Friend Module DataTableHelpers
     '''  is <see langword="Nothing"/>, has zero columns or rows;
     '''  otherwise <see langword="True"/>.
     ''' </returns>
-    <Extension>
-    Public Function IsValidDataTable(
-        Table As DataTable,
-        Optional IgnoreRows As Boolean = False) As Boolean
-
+    Private Function IsValidDataTable(Table As DataTable, Optional IgnoreRows As Boolean = False) As Boolean
         Return Table IsNot Nothing AndAlso
                Table.Columns.Count <> 0 AndAlso
                (IgnoreRows OrElse Table.Rows.Count <> 0)
+    End Function
+
+    ''' <summary>
+    '''  Creates a <see cref="DataTable"/> from a class type's public properties and
+    '''  adds a new <see cref="DataRow"/> to the table for each class passed as a parameter.
+    '''  The DataColumns of the table will match the name and type of the public properties.
+    ''' </summary>
+    ''' <param name="classCollection">A List(Of class) to fill the DataTable with.</param>
+    ''' <returns>
+    '''  A DataTable who's DataColumns match the name and type of
+    '''  each class T's public properties.
+    ''' </returns>
+    Public Function ClassCollectionToDataTable(Of T As Class)(classCollection As List(Of T)) As DataTable
+        Dim table As DataTable = ClassToDataTable(Of T)()
+        If Not IsValidDataTable(table, IgnoreRows:=True) Then
+            Return New DataTable()
+        End If
+        If classCollection?.Count > 0 Then
+            For Each obj As T In classCollection
+                table.Add(obj)
+            Next
+        End If
+
+        Return table
     End Function
 
 End Module
