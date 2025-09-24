@@ -32,18 +32,12 @@ Public Module ControlExtensions
     '''  if <see langword="Nothing"/>, center in the middle of the parent control.
     ''' </param>
     <Extension>
-    Friend Sub CenterXOnParent(
-        ByRef ctrl As Control,
-        Optional onLeftHalf As Boolean? = Nothing)
-
+    Friend Sub CenterXOnParent(ByRef ctrl As Control, Optional onLeftHalf As Boolean? = Nothing)
         Dim controlWidth As Integer
-        Dim parent As Control = ctrl.Parent
+        Dim parent As Control = ctrl?.Parent
         If parent Is Nothing Then
-            If Not Debugger.IsAttached Then
-                Exit Sub
-            End If
-            Const message As String = "The control must have a parent to center it."
-            Throw New InvalidOperationException(message)
+            ' happens when exiting the form sometimes
+            Exit Sub
         End If
 
         If TypeOf ctrl Is Label AndAlso ctrl.AutoSize Then
@@ -82,13 +76,9 @@ Public Module ControlExtensions
     ''' <param name="verticalOffset">Vertical offset to apply when centering.</param>
     <Extension>
     Friend Sub CenterXYOnParent(ByRef ctrl As Label, verticalOffset As Integer)
-        Dim parent As Control = ctrl.Parent
+        Dim parent As Control = ctrl?.Parent
         If parent Is Nothing Then
-            If Not Debugger.IsAttached Then
-                Exit Sub
-            End If
-            Dim message As String = "The control must have a parent to center it."
-            Throw New InvalidOperationException(message)
+            Exit Sub
         End If
         Dim ctrlWidth As Integer = ctrl.Width
         Dim ctrlHeight As Integer = ctrl.Height
@@ -114,10 +104,7 @@ Public Module ControlExtensions
     '''  The control with the specified name, or <see langword="Nothing"/> if not found.
     ''' </returns>
     <Extension>
-    Friend Function FindControlByName(
-        controls As Control.ControlCollection,
-        controlName As String) As Control
-
+    Friend Function FindControlByName(controls As Control.ControlCollection, controlName As String) As Control
         For Each ctrl As Control In controls
             If ctrl.Name = controlName Then
                 Return ctrl

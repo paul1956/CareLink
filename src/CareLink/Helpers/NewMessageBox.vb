@@ -13,9 +13,9 @@ Friend Module NewMessageBox
     ''' <param name="remainingTenthSeconds">The remaining time in tenths of a second.</param>
     ''' <returns>The prompt text with countdown if applicable.</returns>
     Private Function GetPrompt(
-            prompt As String,
-            autoCloseTimeOut As Integer,
-            remainingTenthSeconds As Integer) As String
+        prompt As String,
+        autoCloseTimeOut As Integer,
+        remainingTenthSeconds As Integer) As String
 
         If autoCloseTimeOut < 0 Then Return prompt
         Return $"{prompt}{vbCrLf}Closing in { (remainingTenthSeconds + 9) \ 10} seconds..."

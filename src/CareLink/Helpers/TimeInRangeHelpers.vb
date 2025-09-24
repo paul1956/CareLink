@@ -16,7 +16,6 @@ Friend Module TimeInRangeHelpers
     '''  and its string representation.
     ''' </returns>
     Friend Function GetTIR(Optional tight As Boolean = False) As (Percent As UInteger, AsString As String)
-
         If tight Then
             If s_sgRecords Is Nothing Then
                 Return (0, "  ???")
@@ -62,8 +61,7 @@ Friend Module TimeInRangeHelpers
     '''  The high limit for TIR in the selected units.
     ''' </returns>
     Friend Function GetTirHighLimitWithUnits() As String
-        Return $"{GetTirHighLimit()} {BgUnits}".
-            Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
+        Return $"{GetTirHighLimit()} {BgUnits}".Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
     End Function
 
     ''' <summary>
@@ -93,8 +91,7 @@ Friend Module TimeInRangeHelpers
     '''  The low limit for TIR with units.
     ''' </returns>
     Friend Function GetTirLowLimitWithUnits() As String
-        Return $"{GetTirLowLimit()} {BgUnits}".
-            Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
+        Return $"{GetTirLowLimit()} {BgUnits}".Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
     End Function
 
 End Module
