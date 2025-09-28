@@ -32,6 +32,7 @@ Partial Class PumpSetupDialog
         OK_Button = New Button()
         MenuStrip1 = New MenuStrip()
         PrintToolStripMenuItem = New ToolStripMenuItem()
+        PrintDocument1 = New Printing.PrintDocument()
         CType(SplitContainer1, ComponentModel.ISupportInitialize).BeginInit()
         SplitContainer1.Panel1.SuspendLayout()
         SplitContainer1.Panel2.SuspendLayout()
@@ -101,13 +102,18 @@ Partial Class PumpSetupDialog
         ' PrintToolStripMenuItem
         ' 
         PrintToolStripMenuItem.Name = "PrintToolStripMenuItem"
+        PrintToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.P
+        PrintToolStripMenuItem.ShowShortcutKeys = False
         PrintToolStripMenuItem.Size = New Size(44, 20)
         PrintToolStripMenuItem.Text = "Print"
+        ' 
+        ' PrintDocument1
+        ' 
         ' 
         ' PumpSetupDialog
         ' 
         Me.AcceptButton = OK_Button
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.ClientSize = New Size(1174, 976)
         Me.Controls.Add(SplitContainer1)
@@ -130,10 +136,11 @@ Partial Class PumpSetupDialog
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
+    Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents OK_Button As Button
+    Friend WithEvents PrintDocument1 As Drawing.Printing.PrintDocument
+    Friend WithEvents PrintToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents RtbMainLeft As RichTextBox
     Friend WithEvents RtbMainRight As RichTextBox
     Friend WithEvents SplitContainer1 As SplitContainer
-    Friend WithEvents MenuStrip1 As MenuStrip
-    Friend WithEvents PrintToolStripMenuItem As ToolStripMenuItem
 End Class
