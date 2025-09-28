@@ -107,7 +107,7 @@ Partial Class PumpSetupDialog
         ' PumpSetupDialog
         ' 
         Me.AcceptButton = OK_Button
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.ClientSize = New Size(1174, 976)
         Me.Controls.Add(SplitContainer1)
