@@ -33,7 +33,6 @@ Public Class PumpSetupDialog
                 .SelectionBackColor = SystemColors.Window
                 .SelectionColor = SystemColors.WindowText
             Else
-
                 Dim autoSuspendTimeSpan As TimeSpan = Me.Pdf.Utilities.AutoSuspend.Time
                 .AppendTextWithFontChange(
                     text:=$"{Indent4}{autoSuspendTimeSpan.ToFormattedTimeSpan(unit:="hr")}",
@@ -85,13 +84,12 @@ Public Class PumpSetupDialog
                 _printRtb.SelectionBackColor = Color.White
             End If
 
-            If selColor.ToArgb = SystemColors.GrayText.ToArgb Then
+            If selColor.ToArgb = SystemColors.GrayText.ToArgb OrElse
+               selColor.ToArgb = SystemColors.WindowText.ToArgb OrElse
+               selColor.ToArgb = Color.White.ToArgb Then
                 _printRtb.SelectionColor = Color.Black
-            ElseIf selColor.ToArgb = SystemColors.WindowText.ToArgb Then
-                _printRtb.SelectionColor = Color.Black
-            ElseIf selColor.ToArgb = Color.White.ToArgb Then
-                ' If text is white (dark mode), convert to black for printing
-                _printRtb.SelectionColor = Color.Black
+            ElseIf selColor.ToArgb = Color.Yellow.ToArgb Then
+                _printRtb.SelectionColor = Color.DarkGoldenrod
             End If
 
             start += 1
@@ -100,7 +98,7 @@ Public Class PumpSetupDialog
     End Sub
 
     ' PrintPage event handler: render RichTextBox content to graphics page
-    Private Sub PrintPageHandler(sender As Object, e As PrintPageEventArgs)
+    Private Sub PrintDocument1_PrintPage(sender As Object, e As PrintPageEventArgs) Handles PrintDocument1.PrintPage
         Dim printArea As STRUCT_RECT
         ' 14.4 = pixels to twips conversion (96 dpi * 15)
         printArea.Top = CInt(e.MarginBounds.Top * 14.4)
@@ -140,36 +138,31 @@ Public Class PumpSetupDialog
     Private Sub PrintRichTextBox()
         Me.PreparePrintRichTextBox()
 
-        Using pd As New PrintDocument()
-            AddHandler pd.PrintPage, AddressOf Me.PrintPageHandler
+        Using printDialog As New PrintDialog() With {
+            .AllowPrintToFile = True,
+            .AllowSelection = False,
+            .AllowSomePages = True,
+            .Document = Me.PrintDocument1,
+            .UseEXDialog = False}
 
-            Using printDialog As New PrintDialog()
-                printDialog.Document = pd
-                printDialog.AllowSomePages = True
-                printDialog.AllowSelection = False
-                printDialog.UseEXDialog = True
-
-                If printDialog.ShowDialog() = DialogResult.OK Then
-                    pd.PrinterSettings = printDialog.PrinterSettings
-                    _charFrom = 0
-                    _charTo = _printRtb.TextLength
-                    Try
-                        pd.Print()
-                    Catch ex As Exception
-                        ' ignore printing errors
-                    End Try
-                End If
-            End Using
+            If printDialog.ShowDialog() = DialogResult.OK Then
+                Me.PrintDocument1.PrinterSettings = printDialog.PrinterSettings
+                _charFrom = 0
+                _charTo = _printRtb.TextLength
+                Try
+                    Me.PrintDocument1.Print()
+                Catch ex As Exception
+                    ' ignore printing errors
+                End Try
+            End If
         End Using
     End Sub
 
     Private Sub PrintToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintToolStripMenuItem.Click
-
         Me.PrintRichTextBox()
     End Sub
 
     Private Sub PumpSetupDialog_Load(sender As Object, e As EventArgs) Handles Me.Load
-
         With Me.RtbMainLeft
             .ReadOnly = False
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings")
