@@ -105,14 +105,33 @@ Friend Module DateTimeExtensions
     ''' </summary>
     ''' <param name="unixTimeSpan">In Milliseconds As String</param>
     ''' <returns>DateTime String in UTC and local Times</returns>
+    ''' <param name="isLocalTime"></param>
     <Extension>
-    Friend Function Epoch2DateTimeString(unixTimeSpan As String) As String
+    Friend Function Epoch2DateTimeString(unixTimeSpan As String, Optional isLocalTime As Boolean = False) As String
         If unixTimeSpan = "0" Then
             Return ""
         End If
-        Dim unixTime As Date = unixTimeSpan.FromUnixTime
-        Dim localTime As Date = unixTime.ToLocalTime
-        Dim pumpTime As Date = unixTimeSpan.Epoch2PumpDateTime
+        Dim localTime As Date
+        Dim unixTime As Date
+        Dim pumpTime As Date
+        If isLocalTime Then
+            pumpTime = Date.SpecifyKind(value:=unixTimeSpan.FromUnixTime, kind:=DateTimeKind.Local)
+            Dim pumpTimeOffset As New DateTimeOffset(dateTime:=pumpTime, offset:=TimeZoneInfo.Local.GetUtcOffset(dateTime:=pumpTime))
+            Dim localTimeOffset As New DateTimeOffset(dateTime:=Now, offset:=TimeZoneInfo.Local.GetUtcOffset(dateTime:=Now))
+
+            If pumpTimeOffset.Offset = localTimeOffset.Offset Then
+                localTime = pumpTime
+            Else
+                ' They are in different zones or observed at different offsets (e.g., due to DST).
+                ' Convert pumpTime to local
+                Dim pumpAsLocal As Date = TimeZoneInfo.ConvertTime(dateTime:=pumpTime, destinationTimeZone:=TimeZoneInfo.Local)
+            End If
+            unixTime = localTime.ToUniversalTime
+        Else
+            unixTime = unixTimeSpan.FromUnixTime
+            localTime = unixTime.ToLocalTime
+            pumpTime = unixTimeSpan.Epoch2PumpDateTime
+        End If
         Dim timeStr As String = If(pumpTime.ToString = localTime.ToString,
                                    $"Local & Pump Time = {localTime}",
                                    $"Local Time = {localTime}, Pump Time = {pumpTime}")
@@ -354,7 +373,7 @@ Friend Module DateTimeExtensions
             Case NameOf(ServerDataEnum.medicalDeviceTime)
                 result =
                     s.CultureSpecificParse(
-                        styles:=DateTimeStyles.AdjustToUniversal,
+                        styles:=DateTimeStyles.AssumeLocal,
                         success)
             Case "loginDateUTC"
                 result =
