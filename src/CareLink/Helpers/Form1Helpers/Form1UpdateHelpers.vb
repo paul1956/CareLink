@@ -339,7 +339,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataEnum.currentServerTime)
-                    message = kvp.Value.Epoch2DateTimeString
+                    message = kvp.Value.Epoch2DateTimeString()
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
@@ -385,7 +385,8 @@ Friend Module Form1UpdateHelpers
                     mainForm.SerialNumberButton.Text = $"{deviceSerialNumber} Details..."
 
                 Case NameOf(ServerDataEnum.medicalDeviceTime)
-                    message = kvp.Value.Epoch2DateTimeString
+                    ' In Local Time
+                    message = kvp.Value.Epoch2DateTimeString(isLocalTime:=True)
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
