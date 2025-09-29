@@ -124,7 +124,7 @@ Friend Module DateTimeExtensions
             Else
                 ' They are in different zones or observed at different offsets (e.g., due to DST).
                 ' Convert pumpTime to local
-                Dim pumpAsLocal As Date = TimeZoneInfo.ConvertTime(dateTime:=pumpTime, destinationTimeZone:=TimeZoneInfo.Local)
+                localTime = TimeZoneInfo.ConvertTime(dateTime:=pumpTime, destinationTimeZone:=TimeZoneInfo.Local)
             End If
             unixTime = localTime.ToUniversalTime
         Else
