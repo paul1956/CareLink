@@ -132,12 +132,12 @@ Friend Module DateTimeExtensions
             localTime = unixTime.ToLocalTime
             pumpTime = unixTimeSpan.Epoch2PumpDateTime
         End If
-        Dim timeStr As String = If(pumpTime.ToString = localTime.ToString,
-                                   $"Local & Pump Time = {localTime}",
-                                   $"Local Time = {localTime}, Pump Time = {pumpTime}")
+        Dim localAndPumpTimeEqual As Boolean = pumpTime.ToString = localTime.ToString
+        Dim timeStr As String = If(localAndPumpTimeEqual,
+                                   $"Local & Pump = {localTime}",
+                                   $"Local = {localTime}, Pump = {pumpTime}")
 
-        Dim unixTimeStr As String = $"{unixTime} UTC"
-        Return $"{unixTimeStr,30}{Space(Number:=15)}{timeStr}"
+        Return $"{$"{unixTime} UTC"}, {timeStr}"
     End Function
 
     ''' <summary>
