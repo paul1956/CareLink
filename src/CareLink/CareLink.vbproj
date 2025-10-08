@@ -80,7 +80,7 @@
     <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.8" />
     <PackageReference Include="FreeSpire.PDF" Version="10.2.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3530-prerelease" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3537.50" />
     <PackageReference Include="Octokit" Version="14.0.0" />
     <PackageReference Include="System.Speech" Version="10.0.0-rc.1.25451.107" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.3" />
