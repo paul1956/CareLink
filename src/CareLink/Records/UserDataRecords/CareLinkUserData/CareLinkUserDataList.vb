@@ -321,11 +321,7 @@ Public Class CareLinkUserDataList
     ''' <param name="loggedOnUser">The user to update.</param>
     ''' <param name="key">The key to update.</param>
     ''' <param name="value">The value to set.</param>
-    Friend Sub SaveAllUserRecords(
-        loggedOnUser As CareLinkUserDataRecord,
-        key As String,
-        value As String)
-
+    Friend Sub SaveAllUserRecords(loggedOnUser As CareLinkUserDataRecord, key As String, value As String)
         If Not key.EqualsNoCase(NameOf(My.Settings.CareLinkUserName)) Then
             ' We are changing something other than the user name
             ' Update logged on user and the saved file
@@ -483,8 +479,7 @@ Public Class CareLinkUserDataList
     '''  Not supported. Required by <see cref="IBindingList"/>.
     ''' </summary>
     ''' <param name="propertyDescriptor">The property descriptor.</param>
-    Public Sub AddIndex(propertyDescriptor As PropertyDescriptor) _
-        Implements IBindingList.AddIndex
+    Public Sub AddIndex(propertyDescriptor As PropertyDescriptor) Implements IBindingList.AddIndex
         ' No index support
     End Sub
 
@@ -493,9 +488,8 @@ Public Class CareLinkUserDataList
     ''' </summary>
     ''' <param name="propertyDescriptor">The property descriptor.</param>
     ''' <param name="direction">The sort direction.</param>
-    Public Sub ApplySort(
-            propertyDescriptor As PropertyDescriptor,
-            direction As ListSortDirection) Implements IBindingList.ApplySort
+    Public Sub ApplySort(propertyDescriptor As PropertyDescriptor, direction As ListSortDirection) _
+        Implements IBindingList.ApplySort
 
         ' No sorting support
     End Sub
@@ -520,8 +514,7 @@ Public Class CareLinkUserDataList
     '''  Not supported. Required by <see cref="IBindingList"/>.
     ''' </summary>
     ''' <param name="propertyDescriptor">The property descriptor.</param>
-    Public Sub RemoveIndex(propertyDescriptor As PropertyDescriptor) _
-        Implements IBindingList.RemoveIndex
+    Public Sub RemoveIndex(propertyDescriptor As PropertyDescriptor) Implements IBindingList.RemoveIndex
         ' No index support
     End Sub
 

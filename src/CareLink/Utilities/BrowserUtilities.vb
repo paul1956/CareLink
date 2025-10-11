@@ -31,8 +31,6 @@ Friend Module BrowserUtilities
             mainForm.Cursor = Cursors.AppStarting
             Application.DoEvents()
             LaunchBrowser(url)
-        Catch ex As Exception
-            Throw
         Finally
             mainForm.Cursor = Cursors.Default
             Application.DoEvents()

@@ -43,9 +43,7 @@ Public Class PumpSetup
         Return text.Substring(startIndex:=start, length:=finish - start + 1)
     End Function
 
-    Private Sub Accept_Button_Click(sender As Object, e As EventArgs) _
-            Handles Accept_Button.Click
-
+    Private Sub Accept_Button_Click(sender As Object, e As EventArgs) Handles Accept_Button.Click
         Me.Cursor = Cursors.WaitCursor
         Application.DoEvents()
 
@@ -95,23 +93,19 @@ Public Class PumpSetup
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">The EventArgs for the Click event.</param>
-    Private Sub copyUrlMenuItem_Click(sender As Object, e As EventArgs) _
-        Handles copyUrlMenuItem.Click
-
+    Private Sub copyUrlMenuItem_Click(sender As Object, e As EventArgs) Handles copyUrlMenuItem.Click
         If Not String.IsNullOrEmpty(_currentUrlUnderMouse) Then
             Clipboard.SetText(_currentUrlUnderMouse)
         End If
     End Sub
 
-    Private Sub Exit_Button_Click(sender As Object, e As EventArgs) _
-            Handles Exit_Button.Click
+    Private Sub Exit_Button_Click(sender As Object, e As EventArgs) Handles Exit_Button.Click
 
         End
     End Sub
 
-    Private Sub InstructionsRtb_LinkClicked(
-            sender As Object,
-            e As LinkClickedEventArgs) Handles InstructionsRtb.LinkClicked
+    Private Sub InstructionsRtb_LinkClicked(sender As Object, e As LinkClickedEventArgs) _
+        Handles InstructionsRtb.LinkClicked
 
         Dim startInfo As New ProcessStartInfo(fileName:=e.LinkText) With {
             .UseShellExecute = True}
@@ -125,6 +119,7 @@ Public Class PumpSetup
     ''' <param name="e">The MouseEventArgs for the MouseDown event.</param>
     Private Sub InstructionsRtb_MouseDown(sender As Object, e As MouseEventArgs) _
         Handles InstructionsRtb.MouseDown
+
         If e.Button = MouseButtons.Right Then
             Dim idx As Integer = Me.InstructionsRtb.GetCharIndexFromPosition(pt:=e.Location)
             Dim word As String = GetWordAtIndex(Me.InstructionsRtb.Text, idx)
@@ -221,8 +216,7 @@ Public Class PumpSetup
         End If
     End Sub
 
-    Private Sub UserName_TextChanged(sender As Object, e As EventArgs) _
-            Handles UserName.TextChanged
+    Private Sub UserName_TextChanged(sender As Object, e As EventArgs) Handles UserName.TextChanged
         Dim path As String =
             IO.Path.Combine(GetSettingsDirectory(), $"{Me.UserName.Text}Settings.pdf")
         Dim validPdf As Boolean = IO.File.Exists(path)

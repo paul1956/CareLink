@@ -19,26 +19,13 @@ Friend Module ColorDictionaryHelpers
         {"Time Change", KnownColor.White}}
 
     ''' <summary>
-    '''  Gets the <see cref="Color"/> for a given legend text,
-    '''  applying transparency for "Suspend".
-    ''' </summary>
-    ''' <param name="key">The legend text key.</param>
-    ''' <returns>The corresponding <see cref="Color"/>.</returns>
-    Friend Function GetGraphLineColor(key As String) As Color
-        Dim baseColor As Color = GraphColorDictionary(key).ToColor
-        Return If(key = "Suspend",
-                  Color.FromArgb(alpha:=128, baseColor),
-                  baseColor)
-    End Function
-
-    ''' <summary>
     '''  Gets a <see cref="BindingSource"/> for the color dictionary,
     '''  suitable for data binding.
     ''' </summary>
     ''' <returns>
     '''  A <see cref="BindingSource"/> bound to <see cref="GraphColorDictionary"/>.
     ''' </returns>
-    Public Function GetColorDictionaryBindingSource() As BindingSource
+    Friend Function GetColorDictionaryBindingSource() As BindingSource
         Return New BindingSource(dataSource:=GraphColorDictionary, dataMember:=Nothing)
     End Function
 
@@ -46,7 +33,7 @@ Friend Module ColorDictionaryHelpers
     '''  Loads the color dictionary from a file, updating <see cref="KnownColor"/>
     '''  for existing keys.
     ''' </summary>
-    Public Sub GetColorDictionaryFromFile()
+    Friend Sub GetColorDictionaryFromFile()
 
         Using stream As FileStream = File.OpenRead(path:=GetGraphColorsFileNameWithPath())
             Using sr As New StreamReader(stream)
@@ -70,12 +57,25 @@ Friend Module ColorDictionaryHelpers
     End Sub
 
     ''' <summary>
+    '''  Gets the <see cref="Color"/> for a given legend text,
+    '''  applying transparency for "Suspend".
+    ''' </summary>
+    ''' <param name="key">The legend text key.</param>
+    ''' <returns>The corresponding <see cref="Color"/>.</returns>
+    Friend Function GetGraphLineColor(key As String) As Color
+        Dim baseColor As Color = GraphColorDictionary(key).ToColor
+        Return If(key = "Suspend",
+                  Color.FromArgb(alpha:=128, baseColor),
+                  baseColor)
+    End Function
+
+    ''' <summary>
     '''  Updates the color dictionary with a new <see cref="KnownColor"/>
     '''  for the specified key.
     ''' </summary>
     ''' <param name="key">The legend text key.</param>
     ''' <param name="item">The <see cref="KnownColor"/> to assign.</param>
-    Public Sub UpdateColorDictionary(key As String, item As KnownColor)
+    Friend Sub UpdateColorDictionary(key As String, item As KnownColor)
         GraphColorDictionary(key) = item
     End Sub
 
@@ -83,7 +83,7 @@ Friend Module ColorDictionaryHelpers
     '''  Writes the current color dictionary to a file,
     '''  including contrasting background colors.
     ''' </summary>
-    Public Sub WriteColorDictionaryToFile()
+    Friend Sub WriteColorDictionaryToFile()
         Using stream As FileStream = File.OpenWrite(path:=GetGraphColorsFileNameWithPath())
             Using sw As New StreamWriter(stream)
                 sw.WriteLine($"Key,ForegroundColor,BackgroundColor")

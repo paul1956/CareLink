@@ -68,9 +68,7 @@ Public Class LoginDialog
     '''  This method sets a flag to indicate that the operation was cancelled
     '''  and hides the dialog.
     ''' </remarks>
-    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) _
-        Handles Cancel_Button.Click
-
+    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         _doCancel = True
         Me.DialogResult = DialogResult.Cancel
         Me.Hide()
@@ -380,9 +378,7 @@ Public Class LoginDialog
     '''  If the password is empty, it cancels the event and focuses on the PasswordTextBox.
     '''  If a username is selected, it enables the OK button.
     ''' </remarks>
-    Private Sub PasswordTextBox_Validating(sender As Object, e As CancelEventArgs) _
-        Handles PasswordTextBox.Validating
-
+    Private Sub PasswordTextBox_Validating(sender As Object, e As CancelEventArgs) Handles PasswordTextBox.Validating
         If String.IsNullOrWhiteSpace(Me.PasswordTextBox.Text) Then
             e.Cancel = True
             Me.PasswordTextBox.Focus()
@@ -444,6 +440,7 @@ Public Class LoginDialog
     ''' </remarks>
     Private Sub ShowPasswordCheckBox_CheckedChanged(sender As Object, e As EventArgs) _
         Handles ShowPasswordCheckBox.CheckedChanged
+
         Me.PasswordTextBox.PasswordChar = If(Me.ShowPasswordCheckBox.Checked,
                                              Nothing,
                                              "*"c)
@@ -453,8 +450,7 @@ Public Class LoginDialog
     '''  Handles the <see cref="UsernameComboBox"/> leave event,
     '''  loads user settings for the entered username.
     ''' </summary>
-    Private Sub UsernameComboBox_Leave(sender As Object, e As EventArgs) _
-        Handles UsernameComboBox.Leave
+    Private Sub UsernameComboBox_Leave(sender As Object, e As EventArgs) Handles UsernameComboBox.Leave
         Try
 
             Dim userRecord As CareLinkUserDataRecord = Nothing
@@ -511,8 +507,7 @@ Public Class LoginDialog
     '''  Handles the <see cref="UsernameComboBox"/> validating event,
     '''  ensures username is not empty.
     ''' </summary>
-    Private Sub UsernameComboBox_Validating(sender As Object, e As CancelEventArgs) _
-        Handles UsernameComboBox.Validating
+    Private Sub UsernameComboBox_Validating(sender As Object, e As CancelEventArgs) Handles UsernameComboBox.Validating
 
         If String.IsNullOrWhiteSpace(value:=Me.UsernameComboBox.Text) Then
             e.Cancel = True

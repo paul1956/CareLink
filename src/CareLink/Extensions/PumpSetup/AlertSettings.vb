@@ -7,7 +7,7 @@ Imports System.Runtime.CompilerServices
 Public Module AlertSettings
 
     <Extension>
-    Public Sub AlertSettings1HighAlert(rtb As RichTextBox, pdf As PdfSettingsRecord)
+    Friend Sub AlertSettings1HighAlert(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
             For Each h As HighAlertRecord In pdf.HighAlerts.HighAlert
                 .AppendTimeValueRow(
@@ -37,7 +37,7 @@ Public Module AlertSettings
     End Sub
 
     <Extension>
-    Public Sub AlertSettings2LowAlert(rtb As RichTextBox, pdf As PdfSettingsRecord)
+    Friend Sub AlertSettings2LowAlert(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
             For Each l As LowAlertRecord In pdf.LowAlerts.LowAlert
                 rtb.AppendTimeValueRow(
@@ -63,7 +63,7 @@ Public Module AlertSettings
     End Sub
 
     <Extension>
-    Public Sub AlertSettings4Reminders(rtb As RichTextBox, pdf As PdfSettingsRecord)
+    Friend Sub AlertSettings4Reminders(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
             Dim symbol As String = Gear
             .AppendKeyValue(

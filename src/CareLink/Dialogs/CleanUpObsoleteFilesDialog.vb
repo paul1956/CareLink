@@ -23,16 +23,12 @@ Public Class CleanupStaleFilesDialog
         Next
     End Sub
 
-    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) _
-        Handles Cancel_Button.Click
-
+    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 
-    Private Sub CleanupStaleFilesDialog_Shown(sender As Object, e As EventArgs) _
-        Handles Me.Shown
-
+    Private Sub CleanupStaleFilesDialog_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Dim searchPattern As String = $"{BaseErrorReportName}*.txt"
         Dim fileList As String() =
             IO.Directory.GetFiles(path:=GetProjectDataDirectory(), searchPattern)
@@ -66,9 +62,7 @@ Public Class CleanupStaleFilesDialog
         Me.Close()
     End Sub
 
-    Private Sub OkDoNotConfirm_Button_Click(sender As Object, e As EventArgs) _
-        Handles OkDoNotConfirm_Button.Click
-
+    Private Sub OkDoNotConfirm_Button_Click(sender As Object, e As EventArgs) Handles OkDoNotConfirm_Button.Click
         Me.DialogResult = Me.OptionalConfirmFileDelete(confirm:=False)
         Me.Close()
     End Sub
@@ -136,9 +130,7 @@ Public Class CleanupStaleFilesDialog
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">The event data.</param>
-    Private Sub TreeView1_AfterCheck(sender As Object, e As TreeViewEventArgs) _
-        Handles TreeView1.AfterCheck
-
+    Private Sub TreeView1_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles TreeView1.AfterCheck
         If e.Action <> TreeViewAction.Unknown Then
             If e.Node.Text = "Error Files" Then
                 e.Node.Checked = HasCheckChileNodes(e.Node)
@@ -156,9 +148,7 @@ Public Class CleanupStaleFilesDialog
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">The event data.</param>
-    Private Sub TreeView1_BeforeCheck(sender As Object, e As TreeViewCancelEventArgs) _
-        Handles TreeView1.BeforeCheck
-
+    Private Sub TreeView1_BeforeCheck(sender As Object, e As TreeViewCancelEventArgs) Handles TreeView1.BeforeCheck
         If e.Node.Text.StartsWith(value:=BaseErrorReportName) Then
             e.Cancel = False
             Exit Sub

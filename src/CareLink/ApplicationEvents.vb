@@ -10,15 +10,12 @@ Namespace My
     ' Startup: Raised when the application starts, before the startup form is created.
     ' Shutdown: Raised after all application forms are closed.
     '           This event is not raised if the application terminates abnormally.
-    ' StartupNextInstance: Raised when launching a single-instance application and
-    '                      the application is already active.
-    ' NetworkAvailabilityChanged: Raised when the network connection
-    '                             is connected or disconnected.
+    ' StartupNextInstance: Raised when launching a single-instance application and the application is already active.
+    ' NetworkAvailabilityChanged: Raised when the network connection is connected or disconnected.
     Partial Friend Class MyApplication
 
-        Private Sub MyApplication_ApplyApplicationDefaults(
-            sender As Object,
-            e As ApplyApplicationDefaultsEventArgs) Handles Me.ApplyApplicationDefaults
+        Private Sub Me_ApplyApplicationDefaults(sender As Object, e As ApplyApplicationDefaultsEventArgs) _
+            Handles Me.ApplyApplicationDefaults
 
             ' Setting the application-wide default Font:
             ' e.Font = New Font(FontFamily.GenericSansSerif, 9, FontStyle.Regular)
@@ -30,9 +27,8 @@ Namespace My
             '    e.MinimumSplashScreenDisplayTime = 4000
         End Sub
 
-        Private Sub MyApplication_UnhandledException(
-            sender As Object,
-            e As UnhandledExceptionEventArgs) Handles Me.UnhandledException
+        Private Sub Me_UnhandledException(sender As Object, e As UnhandledExceptionEventArgs) _
+            Handles Me.UnhandledException
 
             ExceptionHandlerDialog.UnhandledException = e
             ExceptionHandlerDialog.ShowDialog()

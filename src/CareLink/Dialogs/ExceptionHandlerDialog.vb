@@ -97,9 +97,7 @@ Public Class ExceptionHandlerDialog
     ''' <param name="sender">The sender of the event.</param>
     ''' <param name="e">The event arguments.</param>
     ''' <remarks>This method is called when the dialog is loaded.</remarks>
-    Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) _
-        Handles MyBase.Load
-
+    Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetServerUpdateTimer(Start:=False)
         Dim rtb As RichTextBox = Me.InstructionsRichTextBox
         Dim newFont As Font = rtb.Font
@@ -203,9 +201,7 @@ Public Class ExceptionHandlerDialog
     ''' <remarks>
     '''  This is used to ensure the dialog is displayed above other forms.
     ''' </remarks>
-    Private Sub ExceptionHandlerForm_Shown(sender As Object, e As EventArgs) _
-        Handles MyBase.Shown
-
+    Private Sub ExceptionHandlerForm_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         My.Forms.SgMiniForm.Hide()
         My.Forms.Form1.Show()
         Me.TopMost = True
@@ -220,9 +216,8 @@ Public Class ExceptionHandlerDialog
     ''' <remarks>
     '''  This method is called when a link in the instructions rich text box is clicked.
     ''' </remarks>
-    Private Sub InstructionsRichTextBox_LinkClicked(
-            sender As Object,
-            e As LinkClickedEventArgs) Handles InstructionsRichTextBox.LinkClicked
+    Private Sub InstructionsRichTextBox_LinkClicked(sender As Object, e As LinkClickedEventArgs) _
+        Handles InstructionsRichTextBox.LinkClicked
 
         Const value As String = "file://"
         Dim startIndex As Integer = value.Length

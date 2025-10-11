@@ -16,18 +16,7 @@ Public Class InitializeDialog
 
     Private _currentUserBackup As CurrentUserRecord = Nothing
 
-    Public Sub New()
-        MyBase.New
-        Me.InitializeComponent()
-        Me.CurrentUser = SystemVariables.CurrentUser
-        _fromPdf = False
-    End Sub
-
-    Public Sub New(
-        ait As Single,
-        currentTarget As Single,
-        CarbRatios As List(Of CarbRatioRecord))
-
+    Public Sub New(ait As Single, currentTarget As Single, CarbRatios As List(Of CarbRatioRecord))
         MyBase.New
         Me.InitializeComponent()
         Me.CurrentUser = SystemVariables.CurrentUser
@@ -39,10 +28,7 @@ Public Class InitializeDialog
 
     Public Property CurrentUser As CurrentUserRecord
 
-    Private Shared Sub InitializeComboList(
-            comboBoxCell As DataGridViewComboBoxCell,
-            start As Integer)
-
+    Private Shared Sub InitializeComboList(comboBoxCell As DataGridViewComboBoxCell, start As Integer)
         Dim data As New Dictionary(Of String, TimeOnly)
         For i As Integer = start To 47
             Dim value As New TimeOnly(hour:=i \ 2, minute:=(i Mod 2) * 30)
@@ -54,9 +40,7 @@ Public Class InitializeDialog
         comboBoxCell.ValueMember = "Value"
     End Sub
 
-    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) _
-            Handles Cancel_Button.Click
-
+    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         If _currentUserBackup Is Nothing Then
             If MsgBox(
                 heading:="If you cancel, the program will exit",
@@ -77,9 +61,8 @@ Public Class InitializeDialog
         End If
     End Sub
 
-    Private Sub InitializeDataGridView_CellContentClick(
-            sender As Object,
-            e As DataGridViewCellEventArgs) Handles InitializeDataGridView.CellContentClick
+    Private Sub InitializeDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) _
+        Handles InitializeDataGridView.CellContentClick
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim cell As DataGridViewCell
@@ -187,25 +170,20 @@ Public Class InitializeDialog
 
                 End With
         End Select
-
     End Sub
 
-    Private Sub InitializeDataGridView_DataError(
-            sender As Object,
-            e As DataGridViewDataErrorEventArgs) Handles InitializeDataGridView.DataError
+    Private Sub InitializeDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) _
+        Handles InitializeDataGridView.DataError
 
         Stop
     End Sub
 
-    Private Sub InitializeDataGridView_Enter(sender As Object, e As EventArgs) _
-            Handles InitializeDataGridView.Enter
-
+    Private Sub InitializeDataGridView_Enter(sender As Object, e As EventArgs) Handles InitializeDataGridView.Enter
         Me.InitializeDataGridView.CausesValidation = True
     End Sub
 
-    Private Sub InitializeDataGridView_Validating(
-            sender As Object,
-            e As CancelEventArgs) Handles InitializeDataGridView.Validating
+    Private Sub InitializeDataGridView_Validating(sender As Object, e As CancelEventArgs) _
+        Handles InitializeDataGridView.Validating
 
         Dim index As Integer = Me.InitializeDataGridView.RowCount - 1
         Dim cell As DataGridViewCell =
@@ -378,20 +356,17 @@ Public Class InitializeDialog
         Me.OK_Button.Enabled = _fromPdf AndAlso Me.InsulinTypeComboBox.SelectedIndex >= 0
     End Sub
 
-    Private Sub InsulinTypeComboBox_Enter(sender As Object, e As EventArgs) _
-            Handles InsulinTypeComboBox.Enter
-
+    Private Sub InsulinTypeComboBox_Enter(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.Enter
         Me.InsulinTypeComboBox.CausesValidation = True
     End Sub
 
-    Private Sub InsulinTypeComboBox_Leave(sender As Object, e As EventArgs) _
-            Handles InsulinTypeComboBox.Leave
-
+    Private Sub InsulinTypeComboBox_Leave(sender As Object, e As EventArgs) Handles InsulinTypeComboBox.Leave
         CType(sender, ComboBox).Enabled = False
     End Sub
 
     Private Sub InsulinTypeComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) _
-            Handles InsulinTypeComboBox.SelectedIndexChanged
+        Handles InsulinTypeComboBox.SelectedIndexChanged
+
         Dim comboBox As ComboBox = CType(sender, ComboBox)
         If Is700Series() Then
             Me.UseAITAdvancedDecayCheckBox.Enabled = comboBox.SelectedIndex > -1
@@ -405,7 +380,7 @@ Public Class InitializeDialog
     End Sub
 
     Private Sub InsulinTypeComboBox_Validating(sender As Object, e As CancelEventArgs) _
-            Handles InsulinTypeComboBox.Validating
+        Handles InsulinTypeComboBox.Validating
 
         Dim control As ComboBox = CType(sender, ComboBox)
         If control.SelectedIndex > -1 Then
@@ -463,21 +438,18 @@ Public Class InitializeDialog
         Me.Close()
     End Sub
 
-    Private Sub PumpAitComboBoxComboBox_Leave(sender As Object, e As EventArgs) _
-            Handles PumpAitComboBox.Leave
-
+    Private Sub PumpAitComboBoxComboBox_Leave(sender As Object, e As EventArgs) Handles PumpAitComboBox.Leave
         CType(sender, Control).Enabled = False
     End Sub
 
-    Private Sub PumpAitComboBoxComboBox_SelectedIndexChanged(
-            sender As Object, e As EventArgs) Handles PumpAitComboBox.SelectedIndexChanged
+    Private Sub PumpAitComboBoxComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) _
+        Handles PumpAitComboBox.SelectedIndexChanged
 
-        Dim comboBox As ComboBox = CType(sender, ComboBox)
-        Me.InsulinTypeComboBox.Enabled = comboBox.SelectedIndex > -1
+        Me.InsulinTypeComboBox.Enabled = CType(sender, ComboBox).SelectedIndex > -1
     End Sub
 
-    Private Sub PumpAitComboBoxComboBox_Validating(
-            sender As Object, e As CancelEventArgs) Handles PumpAitComboBox.Validating
+    Private Sub PumpAitComboBoxComboBox_Validating(sender As Object, e As CancelEventArgs) _
+        Handles PumpAitComboBox.Validating
 
         Dim control As ComboBox = CType(sender, ComboBox)
         If control.SelectedIndex > -1 Then
@@ -491,7 +463,7 @@ Public Class InitializeDialog
     End Sub
 
     Private Sub UseAITAdvancedDecayCheckBox_Click(sender As Object, e As EventArgs) _
-            Handles UseAITAdvancedDecayCheckBox.Click
+        Handles UseAITAdvancedDecayCheckBox.Click
 
         Dim chkBox As CheckBox = CType(sender, CheckBox)
         Select Case chkBox.CheckState
@@ -510,13 +482,13 @@ Public Class InitializeDialog
     End Sub
 
     Private Sub UseAITAdvancedDecayCheckBox_Enter(sender As Object, e As EventArgs) _
-            Handles UseAITAdvancedDecayCheckBox.Enter
+        Handles UseAITAdvancedDecayCheckBox.Enter
 
         Me.UseAITAdvancedDecayCheckBox.CausesValidation = True
     End Sub
 
     Private Sub UseAITAdvancedDecayCheckBox_Leave(sender As Object, e As EventArgs) _
-            Handles UseAITAdvancedDecayCheckBox.Leave
+        Handles UseAITAdvancedDecayCheckBox.Leave
 
         If Me.UseAITAdvancedDecayCheckBox.CheckState <> CheckState.Indeterminate Then
             Me.InitializeDataGridView.Enabled = True

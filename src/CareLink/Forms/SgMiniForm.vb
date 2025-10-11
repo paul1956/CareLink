@@ -60,9 +60,7 @@ Public Class SgMiniForm
         Me.Hide()
     End Sub
 
-    Private Sub DeltaTextBox_TextChanged(sender As Object, e As EventArgs) _
-        Handles DeltaTextBox.TextChanged
-
+    Private Sub DeltaTextBox_TextChanged(sender As Object, e As EventArgs) Handles DeltaTextBox.TextChanged
         Select Case True
             Case Me.DeltaTextBox.Text = ""
                 Me.DeltaTextBox.BackColor = SystemColors.Window
@@ -89,15 +87,11 @@ Public Class SgMiniForm
         End Using
     End Sub
 
-    Private Sub SgMiniForm_FormClosing(sender As Object, e As FormClosingEventArgs) _
-        Handles Me.FormClosing
-
+    Private Sub SgMiniForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         _form1.Visible = True
     End Sub
 
-    Private Sub SgMiniForm_VisibleChanged(sender As Object, e As EventArgs) _
-            Handles MyBase.VisibleChanged
-
+    Private Sub SgMiniForm_VisibleChanged(sender As Object, e As EventArgs) Handles MyBase.VisibleChanged
         If Me.Visible Then
             Me.SgTextBox.SelectionLength = 0
         End If
@@ -168,7 +162,7 @@ Public Class SgMiniForm
         EnableDarkMode(hwnd:=Me.Handle)
     End Sub
 
-    Public Sub SetCurrentDeltaValue(deltaString As String, delta As Single)
+    Friend Sub SetCurrentDeltaValue(deltaString As String, delta As Single)
         Me.DeltaTextBox.Text =
             If(delta.IsSgInvalid OrElse Math.Abs(value:=delta) < 0.001,
                "",
@@ -176,7 +170,7 @@ Public Class SgMiniForm
         _currentDelta = delta
     End Sub
 
-    Public Sub SetCurrentSgString(sgString As String, f As Single)
+    Friend Sub SetCurrentSgString(sgString As String, f As Single)
         _currentSgValue = f
         _normalizedSg = f
         Me.SgTextBox.Text =
