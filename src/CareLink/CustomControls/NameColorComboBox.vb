@@ -87,7 +87,7 @@ Public Class NameColorComboBox
         Dim item As KeyValuePair(Of String, KnownColor) =
             CType(Me.Items(e.Index), KeyValuePair(Of String, KnownColor))
         Dim key As String = item.Key
-        Using b As Brush = New SolidBrush(SystemColors.Control)
+        Using b As New SolidBrush(SystemColors.Control)
             Dim pt As New Point(eBounds.X, eBounds.Top)
             e.Graphics.FillRectangle(
                 brush:=b,

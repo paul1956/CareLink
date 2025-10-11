@@ -187,7 +187,6 @@ Public Class PumpSetupDialog
     '''  Thrown if <see cref="Pdf"/> is not set.
     ''' </exception>
     Private Sub PumpSetupDialog_Shown(sender As Object, e1 As EventArgs) Handles MyBase.Shown
-
         If Me.Pdf Is Nothing Then
             Throw New NullReferenceException(message:=NameOf(Pdf))
         End If
