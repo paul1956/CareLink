@@ -16,6 +16,7 @@ Public Class SG
     End Sub
 
     Public Sub New(lastSg As LastSG)
+        Me.isBackfill = lastSg.IsBackfill
         Me.Kind = lastSg.Kind
         Me.RecordNumber = 0
         _sensorState = lastSg.SensorState
@@ -42,6 +43,8 @@ Public Class SG
             Else
                 Me.sg = Single.NaN
             End If
+            Dim isBackfillString As String = Nothing
+            Me.isBackfill = json.TryGetValue(NameOf(isBackfill), isBackfillString) AndAlso CBool(isBackfillString)
             Me.Kind = json(key:=NameOf(Kind))
             Me.RecordNumber = index + 1
             Me.Version = CInt(json(key:=NameOf(Version)))
@@ -146,6 +149,10 @@ Public Class SG
             Return FormatSensorMessage(key:=PatientData.SensorState, truncate:=False)
         End Get
     End Property
+
+    <DisplayName("Is Backfill")>
+    <Column(Order:=12, TypeName:=NameOf([Boolean]))>
+    Public Property isBackfill As Boolean
 
     ''' <summary>
     '''  Translates the sensor state message based on the <see langword="key"/>.

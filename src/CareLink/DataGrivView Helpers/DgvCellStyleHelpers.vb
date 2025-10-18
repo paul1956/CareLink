@@ -51,7 +51,6 @@ Public Module DgvCellStyleHelpers
             NameOf(Meal.Kind),
             NameOf(Meal.Type)}},
         {GetType(SG), New List(Of String) From {
-            NameOf(SG.Kind),
             NameOf(SG.OaDateTime),
             NameOf(SG.Version)}},
         {GetType(TherapyAlgorithmState), New List(Of String) From {}},

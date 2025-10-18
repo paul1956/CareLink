@@ -7,6 +7,10 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 Friend Module PlotSeriesSg
 
+    Private Function Midpoint(start As Double, [end] As Double) As Double
+        Return (start + [end]) / 2
+    End Function
+
     ''' <summary>
     '''  Plots the SG <see cref="Series"/> on the specified <paramref name="chart"/>,
     '''  handling missing or out-of-range values and coloring points
@@ -31,6 +35,7 @@ Friend Module PlotSeriesSg
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
         For Each sgRecordWithIndex As IndexClass(Of SG) In s_sgRecords.WithIndex()
             Try
+
                 With chart.Series(name:=SgSeriesName).Points
                     Dim sgRecord As SG = sgRecordWithIndex.Value
                     Dim xValue As OADate = sgRecord.OaDateTime()
@@ -49,14 +54,24 @@ Friend Module PlotSeriesSg
                             .Last().IsEmpty = True
                         End If
                         .AddXY(xValue, yValue:=f)
+                        Dim lineColor As Color
                         If f > GetTirHighLimit() Then
-                            .Last.Color = Color.Yellow
+                            lineColor = Color.Yellow
                         ElseIf f < GetTirLowLimit() Then
-                            .Last.Color = Color.Red
+                            lineColor = Color.Red
                         Else
-                            .Last.Color = Color.White
+                            lineColor = Color.White
                         End If
 
+                        If sgRecord.isBackfill Then
+                            Dim nextXValue As Date =
+                                If(sgRecordWithIndex.IsLast,
+                                   sgRecord.Timestamp,
+                                   s_sgRecords(sgRecordWithIndex.Index + 1).Timestamp)
+                            .Last().Color = Color.Transparent
+                            .AddXY(Midpoint(xValue, nextXValue.ToOADate), yValue:=f)
+                        End If
+                        .Last.Color = lineColor
                     End If
                 End With
             Catch innerException As Exception
