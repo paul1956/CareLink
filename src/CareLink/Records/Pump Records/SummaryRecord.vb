@@ -30,27 +30,41 @@ Public Class SummaryRecord
     ''' </param>
     ''' <remarks>Handles messages that are not in the message table.</remarks>
     Protected Friend Sub New(
-            recordNumber As Single,
-            kvp As KeyValuePair(Of String, String),
-            messages As Dictionary(Of String, String),
-            messageTableName As String)
+        recordNumber As Single,
+        kvp As KeyValuePair(Of String, String),
+        messages As Dictionary(Of String, String),
+        messageTableName As String)
+
         Me.New(recordNumber, kvp)
         Dim message As String = ""
         If Not String.IsNullOrWhiteSpace(kvp.Value) Then
             If Not messages.TryGetValue(key:=kvp.Value, value:=message) Then
-                If Debugger.IsAttached Then
-                    Stop
-                    Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
-                    MsgBox(
+                Select Case kvp.Key
+                    Case "SG_ABOVE_400_MGDL"
+                        message = $"SG Above{vbCrLf}{GetTirHighLimitWithUnits()}"
+                    Case "SG_BELOW_40_MGDL"
+                        message = $"SG Below{vbCrLf}{GetTirLowLimitWithUnits()}"
+                    Case "WARM_UP"
+                        Dim timeRemaining As String
+                        message = "Warm Up..."
+                        If s_systemStatusTimeRemaining.TotalMilliseconds > 0 Then
+                            timeRemaining = s_systemStatusTimeRemaining.ToFormattedTimeSpan(unit:="hr")
+                            message = $"{message.Remove(s:="...")} time remaining {vbCrLf}{timeRemaining}"
+                        End If
+                    Case Else
+                        If Debugger.IsAttached Then
+                            Stop
+                            Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
+                            MsgBox(
                         heading:=$"{kvp.Value} is unknown message for {messageTableName}!",
                         prompt:="",
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                         title:=GetTitleFromStack(stackFrame))
-                End If
-                message = kvp.Value.ToTitle
+                        End If
+                        message = kvp.Value.ToTitle
+                End Select
             End If
         End If
-
         Me.Message = message.Replace(vbCrLf, " ")
     End Sub
 

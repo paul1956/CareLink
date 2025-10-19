@@ -201,15 +201,13 @@ Friend Module UserMessageConstants
         {"NO_DELIVERY", $"No{vbCrLf}Delivery"},
         {"NO_ERROR_MESSAGE", "---"},
         {"NO_SENSOR_SIGNAL", "Lost Sensor Signal... Move pump closer to transmitter. " &
-                              "May take 15 minutes to find signal"},
+                             "May take 15 minutes to find signal"},
         {"PROCESSING_BG", $"Processing{vbCrLf}BG"},
         {"PUMP_PAIRING_LOST", "Pump Pairing Lost"},
         {"RECONNECTING_TO_PUMP", $"Reconnecting{vbCrLf}To Pump"},
         {"SEARCHING_FOR_SENSOR_SIGNAL", $"Searching For{vbCrLf}Sensor Signal"},
         {"SENSOR_DISCONNECTED", $"Sensor{vbCrLf}Disconnected"},
         {"SENSOR_OFF", $"Sensor{vbCrLf}Off"},
-        {"SG_ABOVE_400_MGDL", $"SG Above{vbCrLf}{GetTirHighLimitWithUnits()} {BgUnits}"},
-        {"SG_BELOW_40_MGDL", $"SG Below{vbCrLf}{GetTirLowLimitWithUnits()} {BgUnits}"},
         {"SQUARE_BOLUS", $"Square{vbCrLf}Bolus"},
         {"SUSPENDED_BEFORE_LOW", $"Suspended{vbCrLf}Before Low"},
         {"SUSPENDED_ON_LOW", $"Suspended{vbCrLf}On Low"},
@@ -218,9 +216,7 @@ Friend Module UserMessageConstants
         {"UNKNOWN", "Unknown"},
         {"UPDATING", $"Sensor{vbCrLf}Updating"},
         {"WAIT_TO_CALIBRATE", $"Wait To{vbCrLf}Calibrate..."},
-        {"WAIT_TO_ENTER_BG", $"Wait To{vbCrLf}Enter BG..."},
-        {"WARM_UP", $"Sensor{vbCrLf}Warm Up... Warm-up takes up to 2 hours. You will be " &
-                    $"notified {If(PumpModel < 1884, "When", "If")} calibration is needed."}}
+        {"WAIT_TO_ENTER_BG", $"Wait To{vbCrLf}Enter BG..."}}
 
     Private ReadOnly Property PumpModel As Integer =
             CInt(PatientData.MedicalDeviceInformation.ModelNumber.Replace(oldValue:="MMT-", newValue:=""))

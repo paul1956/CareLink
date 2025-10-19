@@ -516,7 +516,9 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataEnum.gstBatteryLevel)
-                    message = $"Transmitter battery is at {kvp.Value}%."
+                    message = If(kvp.Value = "255",
+                                 $"Integrated Transmitter so N/A.",
+                                 $"Transmitter battery is at {kvp.Value}%.")
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
@@ -569,16 +571,7 @@ Friend Module Form1UpdateHelpers
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.systemStatusMessage)
-                    Dim messageTableName As String = NameOf(s_sensorMessages)
-                    item = New SummaryRecord(
-                        recordNumber,
-                        kvp,
-                        messages:=s_sensorMessages,
-                        messageTableName)
-                    s_listOfSummaryRecords.Add(item)
-
-                Case NameOf(ServerDataEnum.sensorState)
+                Case NameOf(ServerDataEnum.systemStatusMessage), NameOf(ServerDataEnum.sensorState)
                     item = New SummaryRecord(
                         recordNumber,
                         kvp,
