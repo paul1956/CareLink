@@ -146,8 +146,20 @@ Friend Module SummaryHelpers
                             secondaryTime = $" { secondaryTime.ParseDate(key).ToNotificationString}"
                         Else
                             Stop
+                            Dim jsonString As String = String.Empty
+                            key = "AdditionalInfo"
+                            If jsonDictionary.TryGetValue(key, value:=jsonString) Then
+                                Dim addInfo As Dictionary(Of String, String) = GetAdditionalInformation(json:=jsonString)
+                                If addInfo.TryGetValue("secondaryTime", value:=secondaryTime) Then
+                                    secondaryTime = secondaryTime.FormatTimeText()
+                                Else
+                                    Stop
+                                End If
+                                Stop
+                            Else
+                                Stop
+                            End If
                         End If
-
                     Case "dateTime"
                         Stop
                     Case Else
