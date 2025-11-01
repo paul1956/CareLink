@@ -43,6 +43,11 @@ Public Class LastSG
         End Get
     End Property
 
+    <DisplayName("Is Backfill")>
+    <Column(Order:=5, TypeName:="Boolean")>
+    <JsonPropertyName("isBackfill")>
+    Public Property IsBackfill As Boolean
+
     Public Overrides Function ToString() As String
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Dim format As String = GetSgFormat()

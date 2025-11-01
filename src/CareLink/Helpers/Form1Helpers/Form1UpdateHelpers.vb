@@ -5,6 +5,7 @@
 Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
+Imports System.Text.Json
 
 ''' <summary>
 '''  Module containing helper methods for updating and
@@ -217,16 +218,51 @@ Friend Module Form1UpdateHelpers
         key As String,
         listOfSummaryRecords As List(Of SummaryRecord))
 
+        ' First try to parse the value as JSON object and enumerate properties.
+        If Not String.IsNullOrWhiteSpace(kvp.Value) Then
+            Try
+                Using doc As JsonDocument = JsonDocument.Parse(kvp.Value)
+                    If doc.RootElement.ValueKind = JsonValueKind.Object Then
+                        Dim idx As Integer = 0
+                        For Each prop As JsonProperty In doc.RootElement.EnumerateObject()
+                            Dim childKey As String = prop.Name
+                            Dim childValue As String = If(prop.Value.ValueKind = JsonValueKind.Null,
+                                                          String.Empty,
+                                                          If(prop.Value.ValueKind = JsonValueKind.String,
+                                                             prop.Value.GetString(),
+                                                             prop.Value.GetRawText()))
+                            Dim message As String = String.Empty
+                            If kvp.Key.EqualsNoCase("AdditionalInfo") AndAlso childKey.EqualsNoCase("sensorUpdateTime") Then
+                                message = GetSensorUpdateTime(key:=childValue)
+                            End If
+                            Dim item As New SummaryRecord(
+                                recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
+                                key:=$"{key}:{childKey.Trim}",
+                                value:=childValue?.Trim,
+                                message)
+                            listOfSummaryRecords.Add(item)
+                            idx += 1
+                        Next
+                        Return
+                    End If
+                End Using
+            Catch ex As JsonException
+                ' Not JSON or malformed; fall through to legacy parsing.
+            End Try
+        End If
+
+        ' Legacy fallback: defensive handling of "key = value" style entries.
         Dim valueList As String() = GetValueList(json:=kvp.Value)
+        Dim separator As String() = New String() {" = "}
         For Each e As IndexClass(Of String) In valueList.WithIndex
             Dim message As String = String.Empty
-            Dim strings As String() = e.Value.Split(separator:=" = ")
-            If kvp.Key.EqualsNoCase("AdditionalInfo") Then
-                Dim additionalInfo As Dictionary(Of String, String) =
-                    GetAdditionalInformation(json:=kvp.Value)
-                If strings(0).EqualsNoCase("sensorUpdateTime") Then
-                    message = GetSensorUpdateTime(key:=strings(1))
-                End If
+            Dim strings As String() = e.Value.Split(separator, StringSplitOptions.None)
+            If strings.Length < 2 Then
+                ' Skip malformed entry
+                Continue For
+            End If
+            If kvp.Key.EqualsNoCase("AdditionalInfo") AndAlso strings(0).EqualsNoCase("sensorUpdateTime") Then
+                message = GetSensorUpdateTime(key:=strings(1))
             End If
             Dim item As New SummaryRecord(
                 recordNumber:=CSng(recordNumber + ((e.Index + 1) / 10)),
@@ -473,14 +509,13 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataEnum.systemStatusTimeRemaining)
                     s_systemStatusTimeRemaining =
-                        New TimeSpan(
-                        hours:=0,
-                        minutes:=PatientData.SystemStatusTimeRemaining,
-                        seconds:=0)
+                        New TimeSpan(hours:=0, minutes:=PatientData.SystemStatusTimeRemaining, seconds:=0)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataEnum.gstBatteryLevel)
-                    message = $"Transmitter battery is at {kvp.Value}%."
+                    message = If(kvp.Value = "255",
+                                 "Integrated Transmitter so N/A.",
+                                 $"Transmitter battery is at {kvp.Value}%.")
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
@@ -533,16 +568,7 @@ Friend Module Form1UpdateHelpers
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.systemStatusMessage)
-                    Dim messageTableName As String = NameOf(s_sensorMessages)
-                    item = New SummaryRecord(
-                        recordNumber,
-                        kvp,
-                        messages:=s_sensorMessages,
-                        messageTableName)
-                    s_listOfSummaryRecords.Add(item)
-
-                Case NameOf(ServerDataEnum.sensorState)
+                Case NameOf(ServerDataEnum.systemStatusMessage), NameOf(ServerDataEnum.sensorState)
                     item = New SummaryRecord(
                         recordNumber,
                         kvp,

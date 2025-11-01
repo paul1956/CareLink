@@ -5,6 +5,30 @@
 Imports System.Runtime.CompilerServices
 
 Public Module TimeSpanExtensions
+    ''' <summary>
+    '''  Formats a time string in "HH:MM" format into a human-readable string.
+    ''' </summary>
+    ''' <param name="timeStr">The time string in "HH:MM" format.</param>
+    ''' <returns>
+    '''  A formatted string representing the time in hours and minutes.
+    ''' </returns>
+    <Extension>
+    Public Function FormatTimeText(timeStr As String) As String
+        Dim parts() As String = timeStr.Split(":"c)
+        Dim hours As Integer = Integer.Parse(parts(0))
+        Dim minutes As Integer = Integer.Parse(parts(1))
+
+        If hours > 0 And minutes = 0 Then
+            Return If(hours = 1, "1 Hour", $"{hours} Hours")
+        ElseIf hours = 0 And minutes > 0 Then
+            Return $"{minutes} Minutes"
+        ElseIf hours > 0 And minutes > 0 Then
+            Dim hourLabel As String = If(hours = 1, "Hour", "Hours")
+            Return $"{hours} {hourLabel} {minutes} Minutes"
+        Else
+            Return "0 Minutes"
+        End If
+    End Function
 
     '''' <summary>
     '''  Converts a number of hours into a human-readable string representing days and hours.

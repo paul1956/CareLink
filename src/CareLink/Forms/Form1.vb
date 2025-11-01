@@ -4991,10 +4991,8 @@ Public Class Form1
                 Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=8)
                 Me.RemainingInsulinUnits.Text = "???U"
             Else
-                Dim key As String = NameOf(ServerDataEnum.reservoirRemainingUnits)
-                Dim remainingUnits As String = s_listOfSummaryRecords.GetValue(Of String)(key)
-                Me.RemainingInsulinUnits.Text =
-                    $"{remainingUnits.ParseSingle(digits:=1):N1} U"
+                Dim remainingUnits As Double = PatientData.ReservoirRemainingUnits
+                Me.RemainingInsulinUnits.Text = $"{remainingUnits:N1} U"
                 Select Case PatientData.ReservoirLevelPercent
                     Case >= 85
                         Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=7)
@@ -5036,8 +5034,7 @@ Public Class Form1
             Exit Sub
         End If
 
-        Const key As String = NameOf(ServerDataEnum.pumpBatteryLevelPercent)
-        Dim batteryLeftPercent As Integer = s_listOfSummaryRecords.GetValue(Of Integer)(key)
+        Dim batteryLeftPercent As Integer = PatientData.PumpBatteryLevelPercent
         Me.PumpBatteryRemaining2Label.Text = $"{Math.Abs(batteryLeftPercent)}%"
         Select Case batteryLeftPercent
             Case > 90
@@ -5082,21 +5079,17 @@ Public Class Form1
                     Me.SensorTimeLeftLabel.Text = "7 Days"
 
                 Case Is >= 24
-                    Me.SensorDaysLeftLabel.Text =
-                        Math.Ceiling(PatientData.SensorDurationHours / 24).ToString()
+                    Me.SensorDaysLeftLabel.Text = Math.Ceiling(PatientData.SensorDurationHours / 24).ToString()
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
                     Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
                 Case Is > 0
-                    Me.SensorDaysLeftLabel.Text =
-                        $"<{Math.Ceiling(PatientData.SensorDurationHours / 24)}"
+                    Me.SensorDaysLeftLabel.Text = $"<{Math.Ceiling(PatientData.SensorDurationHours / 24)}"
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                     Me.SensorTimeLeftLabel.Text = $"{PatientData.SensorDurationHours} Hours"
                 Case Is = 0
-                    Dim sensorDurationMinutes As Integer = s_listOfSummaryRecords.GetValue(
-                        key:=NameOf(ServerDataEnum.sensorDurationMinutes),
-                        throwError:=False,
-                        defaultValue:=-1)
-
+                    Dim sensorDurationMinutes As Integer = If(PatientData.SensorDurationMinutes Is Nothing,
+                                                              -1,
+                                                              CInt(PatientData.SensorDurationMinutes))
                     Select Case sensorDurationMinutes
                         Case Is > 0
                             Me.SensorDaysLeftLabel.Text = "0"
@@ -5518,10 +5511,7 @@ Public Class Form1
 
         FinishInitialization(mainForm:=Me)
         Me.UpdateTrendArrows()
-        UpdateSummaryTab(
-            dgv:=Me.DgvSummary,
-            classCollection:=s_listOfSummaryRecords,
-            sort:=True)
+        UpdateSummaryTab(dgv:=Me.DgvSummary, classCollection:=s_listOfSummaryRecords, sort:=True)
         Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()

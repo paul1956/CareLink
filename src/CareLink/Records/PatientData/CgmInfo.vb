@@ -9,4 +9,15 @@ Public Class CgmInfo
     <JsonPropertyName("sensorType")>
     Public Property SensorType As String
 
+    <JsonPropertyName("sensorSerialNumber")>
+    Public Property SensorSerialNumber As String
+
+    <JsonPropertyName("sensorSoftwareRevision")>
+    Public Property SensorSoftwareRevision As String
+
+    <JsonPropertyName("sensorFirmwareRevision")>
+    Public Property SensorFirmwareRevision As String
+
+    <JsonPropertyName("sensorProductModel")>
+    Public Property SensorProductModel As String
 End Class

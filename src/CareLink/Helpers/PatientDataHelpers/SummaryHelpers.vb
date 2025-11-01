@@ -146,8 +146,20 @@ Friend Module SummaryHelpers
                             secondaryTime = $" { secondaryTime.ParseDate(key).ToNotificationString}"
                         Else
                             Stop
+                            Dim jsonString As String = String.Empty
+                            key = "AdditionalInfo"
+                            If jsonDictionary.TryGetValue(key, value:=jsonString) Then
+                                Dim addInfo As Dictionary(Of String, String) = GetAdditionalInformation(json:=jsonString)
+                                If addInfo.TryGetValue("secondaryTime", value:=secondaryTime) Then
+                                    secondaryTime = secondaryTime.FormatTimeText()
+                                Else
+                                    Stop
+                                End If
+                                Stop
+                            Else
+                                Stop
+                            End If
                         End If
-
                     Case "dateTime"
                         Stop
                     Case Else
@@ -291,30 +303,20 @@ Friend Module SummaryHelpers
                     Continue For
                 End If
                 If rowsToHide IsNot Nothing AndAlso
-                    rowsToHide.Contains(
-                        value:=kvp.Key,
-                        comparer:=StringComparer.OrdinalIgnoreCase) Then
+                   rowsToHide.Contains(value:=kvp.Key, comparer:=StringComparer.OrdinalIgnoreCase) Then
+
                     Continue For
                 End If
                 Dim recordNumber As Integer
-                Dim item As SummaryRecord
+                Dim item As SummaryRecord = Nothing
                 Select Case kvp.Key
                     Case "faultId"
                         Dim message As String = String.Empty
-                        If s_notificationMessages.TryGetValue(
-                            key:=kvp.Value,
-                            value:=message) Then
-
-                            message = TranslateNotificationMessageId(
-                                jsonDictionary,
-                                faultId:=kvp.Value)
+                        If s_notificationMessages.TryGetValue(key:=kvp.Value, value:=message) Then
+                            message = TranslateNotificationMessageId(jsonDictionary, faultId:=kvp.Value)
                             If kvp.Value = "811" Then
-                                Dim key As String =
-                                    NameOf(ActiveNotification.triggeredDateTime)
-                                If jsonDictionary.TryGetValue(
-                                    key,
-                                    value:=s_suspendedSince) Then
-
+                                Dim key As String = NameOf(ActiveNotification.triggeredDateTime)
+                                If jsonDictionary.TryGetValue(key, value:=s_suspendedSince) Then
                                     Dim result As Date = Nothing
                                     key = NameOf(ActiveNotification.triggeredDateTime)
                                     s_suspendedSince = If(s_suspendedSince.TryParseDate(key, result),
@@ -323,33 +325,27 @@ Friend Module SummaryHelpers
                                 End If
                             End If
                             If kvp.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
-                                Dim question As String =
-                                    jsonDictionary(key:="deliveredAmount")
+                                Dim question As String = jsonDictionary(key:="deliveredAmount")
                                 If question.StartsWith(value:="3"c) Then
                                     message &= "Did you see drops at the end of the tubing?"
                                 Else
-                                    message &=
-                                        "Remove reservoir and select rewind, restart New reservoir procedure."
+                                    message &= "Remove reservoir and select rewind, restart New reservoir procedure."
                                 End If
                             End If
                         Else
                             Dim stackFrame As StackFrame
-                            If Debugger.IsAttached AndAlso
-                                Not String.IsNullOrWhiteSpace(kvp.Value) Then
-
+                            If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(kvp.Value) Then
                                 stackFrame = New StackFrame(skipFrames:=0, needFileInfo:=True)
                                 MsgBox(
                                     heading:=$"{kvp.Value} is unknown Notification Messages",
                                     prompt:=String.Empty,
-                                    buttonStyle:=MsgBoxStyle.OkOnly Or
-                                                 MsgBoxStyle.Exclamation,
+                                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                                     title:=GetTitleFromStack(stackFrame))
                             End If
                             message = kvp.Value.ToTitle
                         End If
                         recordNumber = listOfSummaryRecords.Count
                         item = New SummaryRecord(recordNumber, kvp, message)
-                        listOfSummaryRecords.Add(item)
                     Case "autoModeReadinessState"
                         recordNumber = listOfSummaryRecords.Count
                         s_autoModeReadinessState =
@@ -358,17 +354,15 @@ Friend Module SummaryHelpers
                                 kvp,
                                 messages:=s_sensorMessages,
                                 messageTableName:=NameOf(s_sensorMessages))
-                        item = s_autoModeReadinessState
-                        listOfSummaryRecords.Add(item)
+                        listOfSummaryRecords.Add(s_autoModeReadinessState)
                     Case "autoModeShieldState"
                         recordNumber = listOfSummaryRecords.Count
                         item =
                             New SummaryRecord(
-                            recordNumber,
+                                recordNumber,
                                 kvp,
                                 messages:=s_autoModeShieldMessages,
                                 messageTableName:=NameOf(s_autoModeShieldMessages))
-                        listOfSummaryRecords.Add(item)
                     Case "plgmLgsState"
                         item =
                             New SummaryRecord(
@@ -376,7 +370,6 @@ Friend Module SummaryHelpers
                                 kvp,
                                 messages:=s_plgmLgsMessages,
                                 messageTableName:=NameOf(s_plgmLgsMessages))
-                        listOfSummaryRecords.Add(item)
                     Case NameOf(ClearedNotifications.dateTime)
                         Dim key As String = NameOf(ClearedNotifications.dateTime)
                         item =
@@ -384,10 +377,8 @@ Friend Module SummaryHelpers
                                 recordNumber:=listOfSummaryRecords.Count,
                                 kvp,
                                 message:=kvp.Value.ParseDate(key).ToShortDateTimeString)
-                        listOfSummaryRecords.Add(item)
                     Case "additionalInfo"
                         recordNumber = CType(listOfSummaryRecords.Count, ServerDataEnum)
-
                         HandleComplexItems(
                             kvp,
                             recordNumber,
@@ -395,8 +386,11 @@ Friend Module SummaryHelpers
                             listOfSummaryRecords)
                     Case Else
                         recordNumber = listOfSummaryRecords.Count
-                        listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
+                        item = New SummaryRecord(recordNumber, kvp)
                 End Select
+                If item IsNot Nothing Then
+                    listOfSummaryRecords.Add(item)
+                End If
             Next
         End If
         Return listOfSummaryRecords
