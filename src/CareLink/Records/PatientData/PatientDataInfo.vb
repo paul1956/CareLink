@@ -79,7 +79,7 @@ Public Class PatientDataInfo
     Public Property FinalCalibration As Boolean
 
     <JsonPropertyName("sensorDurationMinutes")>
-    Public Property SensorDurationMinutes As Integer
+    Public Property SensorDurationMinutes As Integer? = Nothing
 
     <JsonPropertyName("sensorDurationHours")>
     Public Property SensorDurationHours As Integer

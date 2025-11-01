@@ -509,15 +509,12 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataEnum.systemStatusTimeRemaining)
                     s_systemStatusTimeRemaining =
-                        New TimeSpan(
-                        hours:=0,
-                        minutes:=PatientData.SystemStatusTimeRemaining,
-                        seconds:=0)
+                        New TimeSpan(hours:=0, minutes:=PatientData.SystemStatusTimeRemaining, seconds:=0)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataEnum.gstBatteryLevel)
                     message = If(kvp.Value = "255",
-                                 $"Integrated Transmitter so N/A.",
+                                 "Integrated Transmitter so N/A.",
                                  $"Transmitter battery is at {kvp.Value}%.")
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
