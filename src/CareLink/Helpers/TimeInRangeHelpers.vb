@@ -32,7 +32,9 @@ Friend Module TimeInRangeHelpers
         End If
 
         Dim timeInRange As Integer = PatientData.TimeInRange
-        Return If(timeInRange > 0, (CUInt(timeInRange), timeInRange.ToString()), (CUInt(0), "  ???"))
+        Return If(timeInRange > 0,
+                  (CUInt(timeInRange), timeInRange.ToString()),
+                  (0UI, "  ???"))
     End Function
 
     ''' <summary>

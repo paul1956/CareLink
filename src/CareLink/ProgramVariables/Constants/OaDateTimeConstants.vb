@@ -7,9 +7,6 @@ Friend Module OaDateTimeConstants
     Public ReadOnly Property TwoMinutes30SecondsOADate As _
         New OADate(asDate:=Date.MinValue + New TimeSpan(hours:=0, minutes:=2, seconds:=30))
 
-    Public ReadOnly Property FiveMinuteOADate As _
-        New OADate(asDate:=Date.MinValue + FiveMinuteSpan)
-
     Public ReadOnly Property SixMinuteOADate As _
         New OADate(asDate:=Date.MinValue + New TimeSpan(hours:=0, minutes:=6, seconds:=0))
 

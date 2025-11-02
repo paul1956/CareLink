@@ -5,12 +5,12 @@
 Friend Module SettingsConstants
 
     Friend ReadOnly s_headerColumns As New List(Of String) From {
-            NameOf(My.Settings.CareLinkUserName),
-            NameOf(My.Settings.CareLinkPassword),
-            NameOf(My.Settings.CountryCode),
-            NameOf(My.Settings.UseLocalTimeZone),
-            NameOf(My.Settings.AutoLogin),
-            NameOf(My.Settings.CareLinkPartner),
-            NameOf(My.Settings.CareLinkPatientUserID)}
+        NameOf(My.Settings.CareLinkUserName),
+        NameOf(My.Settings.CareLinkPassword),
+        NameOf(My.Settings.CountryCode),
+        NameOf(My.Settings.UseLocalTimeZone),
+        NameOf(My.Settings.AutoLogin),
+        NameOf(My.Settings.CareLinkPartner),
+        NameOf(My.Settings.CareLinkPatientUserID)}
 
 End Module

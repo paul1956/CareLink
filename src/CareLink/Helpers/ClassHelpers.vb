@@ -24,8 +24,8 @@ Public Module ClassHelpers
     '''  The <see cref="DataGridViewCellStyle"/> for the specified column.
     ''' </returns>
     Public Function ClassPropertiesToColumnAlignment(Of T As Class)(
-            ByRef alignmentTable As Dictionary(Of String, DataGridViewCellStyle),
-            name As String) As DataGridViewCellStyle
+        ByRef alignmentTable As Dictionary(Of String, DataGridViewCellStyle),
+        name As String) As DataGridViewCellStyle
 
         Dim classType As Type = GetType(T)
         If alignmentTable.Count = 0 Then

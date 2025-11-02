@@ -158,8 +158,7 @@ Public Module FileIoHelpers
     ''' </value>
     Public Function GetDownloadsDirectory() As String
         Dim folder As Environment.SpecialFolder = Environment.SpecialFolder.UserProfile
-        Dim downloadsPath As String = Path.Combine(Environment.GetFolderPath(folder), "Downloads")
-        Return downloadsPath
+        Return Path.Combine(Environment.GetFolderPath(folder), "Downloads")
     End Function
 
     ''' <summary>
@@ -178,8 +177,7 @@ Public Module FileIoHelpers
     '''  under "CareLink\Settings".
     ''' </remarks>
     Public Function GetSettingsDirectory() As String
-        Dim folder As Environment.SpecialFolder = Environment.SpecialFolder.MyDocuments
-        Return Path.Combine(Environment.GetFolderPath(folder), "CareLink", "Settings")
+        Return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLink", "Settings")
     End Function
 
     ''' <summary>
@@ -195,8 +193,7 @@ Public Module FileIoHelpers
     ''' </exception>
     Public Function IsFileReadOnly(path As String) As Boolean
         If String.IsNullOrWhiteSpace(path) Then
-            Dim message As String = $"'{NameOf(path)}' cannot be null or whitespace."
-            Throw New ArgumentException(message, paramName:=NameOf(path))
+            Throw New ArgumentException($"'{NameOf(path)}' cannot be null or whitespace.", paramName:=NameOf(path))
         End If
 
         Try
@@ -219,22 +216,15 @@ Public Module FileIoHelpers
     ''' </exception>
     Public Sub TouchFile(path As String)
         If String.IsNullOrWhiteSpace(value:=path) Then
-            Dim message As String = $"'{NameOf(path)}' cannot be null or whitespace."
-            Throw New ArgumentException(message, paramName:=NameOf(path))
+            Throw New ArgumentException($"'{NameOf(path)}' cannot be null or whitespace.", paramName:=NameOf(path))
         End If
         If File.Exists(path) Then
-            Using myFileStream As FileStream = File.Open(
-                path,
-                mode:=FileMode.OpenOrCreate,
-                access:=FileAccess.ReadWrite,
-                share:=FileShare.ReadWrite)
-
+            Using myFileStream As FileStream =
+                File.Open(path, mode:=FileMode.OpenOrCreate, access:=FileAccess.ReadWrite, share:=FileShare.ReadWrite)
             End Using
             File.SetLastWriteTimeUtc(path, lastWriteTimeUtc:=Date.UtcNow)
         Else
-            Throw New FileNotFoundException(
-                message:="The specified file does not exist.",
-                fileName:=path)
+            Throw New FileNotFoundException(message:="The specified file does not exist.", fileName:=path)
         End If
     End Sub
 

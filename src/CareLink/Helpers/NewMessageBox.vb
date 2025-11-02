@@ -56,13 +56,11 @@ Friend Module NewMessageBox
         page.Heading = heading
         page.Text = GetPrompt(prompt, autoCloseTimeOut, remainingTenthSeconds)
         If Not String.IsNullOrWhiteSpace(value:=checkBoxPrompt) Then
-            page.Verification = New TaskDialogVerificationCheckBox() With
-                {.Text = checkBoxPrompt, .Checked = True}
+            page.Verification = New TaskDialogVerificationCheckBox() With {.Text = checkBoxPrompt, .Checked = True}
         End If
 
         If autoCloseTimeOut > -1 Then
-            page.ProgressBar = New TaskDialogProgressBar() With
-                {.State = TaskDialogProgressBarState.Paused}
+            page.ProgressBar = New TaskDialogProgressBar() With {.State = TaskDialogProgressBarState.Paused}
         End If
         Dim buttonCollection As New TaskDialogButtonCollection
         Dim okButton As New TaskDialogButton(text:="Ok")
