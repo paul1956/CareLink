@@ -1133,7 +1133,7 @@ Partial Class Form1
         ' 
         ' Last24HrTotalsPanel
         ' 
-        Last24HrTotalsPanel.BorderStyle = BorderStyle.FixedSingle
+        Last24HrTotalsPanel.BorderStyle = BorderStyle.None
         Last24HrTotalsPanel.Controls.Add(Last24HrCarbsValueLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrAutoCorrectionLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrAutoCorrectionPercentLabel)

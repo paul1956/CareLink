@@ -88,8 +88,10 @@ Friend Module LoginHelpers
                         Case DialogResult.OK
                             Exit Do
                         Case DialogResult.Cancel
-                            owner.TabControlPage1.Visible = False
-                            owner.TabControlPage2.Visible = False
+                            If Not Debugger.IsAttached Then
+                                owner.TabControlPage1.Visible = False
+                                owner.TabControlPage2.Visible = False
+                            End If
                             SetServerUpdateTimer(Start:=serverTimerEnabled)
                             Return False
                         Case DialogResult.Retry
