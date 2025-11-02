@@ -13,9 +13,7 @@ Public Class PdfTests
     Public Shared ReadOnly Property PdfFiles As IEnumerable(Of Object())
         Get
             Dim path As String = GetTestDataPath()
-            Dim files As String() =
-                IO.Directory.GetFiles(path,
-                                      searchPattern:="test??.pdf")
+            Dim files As String() = IO.Directory.GetFiles(path, searchPattern:="test??.pdf")
             Array.Sort(array:=files)
             Dim selector As Func(Of String, Object()) =
                 Function(f)
@@ -25,13 +23,9 @@ Public Class PdfTests
         End Get
     End Property
 
-    Private Shared Function GetTestDataPath(
-        <CallerFilePath> Optional path As String = "") As String
-
+    Private Shared Function GetTestDataPath(<CallerFilePath> Optional path As String = "") As String
         ' Get the currently executing assembly location
-        Return IO.Path.Combine(
-            IO.Directory.GetParent(path).FullName,
-            "TestData")
+        Return IO.Path.Combine(IO.Directory.GetParent(path).FullName, "TestData")
     End Function
 
     <Fact>
@@ -39,10 +33,8 @@ Public Class PdfTests
         If Not Debugger.IsAttached Then
             Return
         End If
-        Dim path As String =
-            IO.Path.Combine(GetTestDataPath(), "Test01.pdf")
-        Dim because As String =
-            "The Test01.pdf should exist in TestData directory."
+        Dim path As String = IO.Path.Combine(GetTestDataPath(), "Test01.pdf")
+        Dim because As String = "The Test01.pdf should exist in TestData directory."
 
         ' Use the file path in your test
         IO.File.Exists(path).Should().BeTrue(because)
