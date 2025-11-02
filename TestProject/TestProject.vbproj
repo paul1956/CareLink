@@ -46,6 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="My Project\" />
     <Folder Include="TestData\" />
   </ItemGroup>
 
