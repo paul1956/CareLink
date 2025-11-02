@@ -232,7 +232,9 @@ Friend Module Form1UpdateHelpers
                                                              prop.Value.GetString(),
                                                              prop.Value.GetRawText()))
                             Dim message As String = String.Empty
-                            If kvp.Key.EqualsNoCase("AdditionalInfo") AndAlso childKey.EqualsNoCase("sensorUpdateTime") Then
+                            If kvp.Key.EqualsNoCase("AdditionalInfo") AndAlso
+                               childKey.EqualsNoCase("sensorUpdateTime") Then
+
                                 message = GetSensorUpdateTime(key:=childValue)
                             End If
                             Dim item As New SummaryRecord(
