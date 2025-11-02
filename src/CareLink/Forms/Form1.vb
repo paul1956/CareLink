@@ -3369,9 +3369,11 @@ Public Class Form1
 
         ControlPaint.DrawBorder(
             e.Graphics,
-            bounds:=e.ClipRectangle,
-            color:=Color.LimeGreen,
-            style:=ButtonBorderStyle.Solid)
+            e.ClipRectangle,
+            Color.LimeGreen, 3, ButtonBorderStyle.Solid,
+            Color.LimeGreen, 3, ButtonBorderStyle.Solid,
+            Color.LimeGreen, 3, ButtonBorderStyle.Solid,
+            Color.LimeGreen, 3, ButtonBorderStyle.Solid)
     End Sub
 
     ''' <summary>
