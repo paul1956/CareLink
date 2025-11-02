@@ -522,7 +522,7 @@ Partial Class Form1
         LastSgOrExitTimeLabel.Name = "LastSgOrExitTimeLabel"
         LastSgOrExitTimeLabel.Size = New Size(116, 21)
         LastSgOrExitTimeLabel.TabIndex = 55
-        LastSgOrExitTimeLabel.Text = "Exit in 4:27"
+        LastSgOrExitTimeLabel.Text = "Exit in 3:27"
         LastSgOrExitTimeLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' PumpBannerStateLabel

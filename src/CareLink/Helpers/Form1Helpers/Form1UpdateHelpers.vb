@@ -761,85 +761,70 @@ Friend Module Form1UpdateHelpers
             Dim typeValue As String = ""
             If dic.TryGetValue(key:="type", value:=typeValue) Then
                 Dim recordNumber As Integer = listOfBannerState.Count + 1
-                Dim bannerStateRecord1 As BannerState =
-                    DictionaryToClass(Of BannerState)(dic, recordNumber)
+                Dim bannerStateRecord1 As BannerState = DictionaryToClass(Of BannerState)(dic, recordNumber)
                 listOfBannerState.Add(bannerStateRecord1)
-                mainForm.PumpBannerStateLabel.Font =
-                    New Font(FamilyName, emSize:=8.25F, style:=FontStyle.Bold)
-                Select Case typeValue
-                    Case "TEMP_TARGET"
-                        Dim minutes As Integer = bannerStateRecord1.TimeRemaining
-                        mainForm.PumpBannerStateLabel.BackColor = Color.Lime
-                        mainForm.PumpBannerStateLabel.ForeColor =
-                            mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
-                        Dim target150 As String = If(NativeMmolL,
-                                                     "8.3",
-                                                     "150")
-
-                        mainForm.PumpBannerStateLabel.Text = $"Target {target150} {minutes.ToHoursMinutes}/hr"
-                        mainForm.PumpBannerStateLabel.Visible = True
-                        mainForm.PumpBannerStateLabel.Dock = DockStyle.Top
-                    Case "BG_REQUIRED"
-                        mainForm.PumpBannerStateLabel.BackColor = Color.CadetBlue
-                        mainForm.PumpBannerStateLabel.ForeColor =
-                            mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
-
-                        mainForm.PumpBannerStateLabel.Text = "Enter BG Now"
-                        mainForm.PumpBannerStateLabel.Visible = True
-                        mainForm.PumpBannerStateLabel.Dock = DockStyle.Top
-                    Case "DELIVERY_SUSPEND"
-                        mainForm.PumpBannerStateLabel.BackColor = Color.IndianRed
-                        mainForm.PumpBannerStateLabel.ForeColor =
-                            mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
-                        mainForm.PumpBannerStateLabel.Text = "Delivery Suspended"
-                        mainForm.PumpBannerStateLabel.Visible = True
-                        mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
-                    Case "LOAD_RESERVOIR"
-                        mainForm.PumpBannerStateLabel.BackColor = Color.Yellow
-                        mainForm.PumpBannerStateLabel.ForeColor =
-                            mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
-                        mainForm.PumpBannerStateLabel.Text = "Load Reservoir"
-                        mainForm.PumpBannerStateLabel.Visible = True
-                        mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
-                    Case "PROCESSING_BG"
-                        Stop
-                    Case "SUSPENDED_BEFORE_LOW", "SUSPENDED_ON_LOW"
-                        mainForm.PumpBannerStateLabel.BackColor = Color.IndianRed
-                        mainForm.PumpBannerStateLabel.ForeColor =
-                            mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
-                        mainForm.PumpBannerStateLabel.Text = typeValue.ToTitle()
-                        mainForm.PumpBannerStateLabel.Visible = True
-                        mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
-                        mainForm.PumpBannerStateLabel.Font =
-                            New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
-                    Case "TEMP_BASAL"
-                        mainForm.PumpBannerStateLabel.BackColor = Color.Lime
-                        mainForm.PumpBannerStateLabel.ForeColor =
-                            mainForm.PumpBannerStateLabel.BackColor.ContrastingColor
-                        Dim bannerState As BannerState =
-                            PatientData.PumpBannerState(index:=0)
-                        Dim hours As String =
-                            bannerState.TimeRemaining.ToHoursMinutes
-                        mainForm.PumpBannerStateLabel.Text = $"Temp Basal {hours} hr"
-                        mainForm.PumpBannerStateLabel.Visible = True
-                        mainForm.PumpBannerStateLabel.Dock = DockStyle.Bottom
-                        mainForm.PumpBannerStateLabel.Font =
-                            New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
-                    Case "WAIT_TO_ENTER_BG"
-                        Stop
-                    Case Else
-                        Dim stackFrame As StackFrame
-                        If Debugger.IsAttached Then
-                            stackFrame = New StackFrame(skipFrames:=0, needFileInfo:=True)
-                            MsgBox(
-                                heading:=$"{typeValue} Is unknown banner message!",
-                                prompt:="",
-                                buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                                title:=GetTitleFromStack(stackFrame))
-                        End If
-                End Select
-                mainForm.PumpBannerStateLabel.ForeColor =
-                    ContrastingColor(baseColor:=mainForm.PumpBannerStateLabel.BackColor)
+                With mainForm
+                    .PumpBannerStateLabel.Font = New Font(FamilyName, emSize:=8.25F, style:=FontStyle.Bold)
+                    Select Case typeValue
+                        Case "TEMP_TARGET"
+                            Dim minutes As Integer = bannerStateRecord1.TimeRemaining
+                            .PumpBannerStateLabel.BackColor = Color.Lime
+                            .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
+                            Dim target150 As String = If(NativeMmolL, "8.3", "150")
+                            .PumpBannerStateLabel.Text = $"Target {target150} {minutes.ToHoursMinutes}/hr"
+                            .PumpBannerStateLabel.Visible = True
+                            .PumpBannerStateLabel.Dock = DockStyle.Top
+                        Case "BG_REQUIRED"
+                            .PumpBannerStateLabel.BackColor = Color.CadetBlue
+                            .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
+                            .PumpBannerStateLabel.Text = "Enter BG Now"
+                            .PumpBannerStateLabel.Visible = True
+                            .PumpBannerStateLabel.Dock = DockStyle.Top
+                        Case "DELIVERY_SUSPEND"
+                            .PumpBannerStateLabel.BackColor = Color.IndianRed
+                            .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
+                            .PumpBannerStateLabel.Text = "Delivery Suspended"
+                            .PumpBannerStateLabel.Visible = True
+                            .PumpBannerStateLabel.Dock = DockStyle.Bottom
+                        Case "LOAD_RESERVOIR"
+                            .PumpBannerStateLabel.BackColor = Color.Yellow
+                            .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
+                            .PumpBannerStateLabel.Text = "Load Reservoir"
+                            .PumpBannerStateLabel.Visible = True
+                            .PumpBannerStateLabel.Dock = DockStyle.Bottom
+                        Case "PROCESSING_BG"
+                            Stop
+                        Case "SUSPENDED_BEFORE_LOW", "SUSPENDED_ON_LOW"
+                            .PumpBannerStateLabel.BackColor = Color.IndianRed
+                            .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
+                            .PumpBannerStateLabel.Text = typeValue.ToTitle()
+                            .PumpBannerStateLabel.Visible = True
+                            .PumpBannerStateLabel.Dock = DockStyle.Bottom
+                            .PumpBannerStateLabel.Font = New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
+                        Case "TEMP_BASAL"
+                            .PumpBannerStateLabel.BackColor = Color.Lime
+                            .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
+                            Dim bannerState As BannerState = PatientData.PumpBannerState(index:=0)
+                            Dim hours As String = bannerState.TimeRemaining.ToHoursMinutes
+                            .PumpBannerStateLabel.Text = $"Temp Basal {hours} hr"
+                            .PumpBannerStateLabel.Visible = True
+                            .PumpBannerStateLabel.Dock = DockStyle.Bottom
+                            .PumpBannerStateLabel.Font = New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
+                        Case "WAIT_TO_ENTER_BG"
+                            Stop
+                        Case Else
+                            Dim stackFrame As StackFrame
+                            If Debugger.IsAttached Then
+                                stackFrame = New StackFrame(skipFrames:=0, needFileInfo:=True)
+                                MsgBox(
+                                    heading:=$"{typeValue} Is unknown banner message!",
+                                    prompt:="",
+                                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                                    title:=GetTitleFromStack(stackFrame))
+                            End If
+                    End Select
+                    .PumpBannerStateLabel.ForeColor = ContrastingColor(baseColor:= .PumpBannerStateLabel.BackColor)
+                End With
             Else
                 Stop
             End If
@@ -851,8 +836,7 @@ Friend Module Form1UpdateHelpers
             Dim safeBasalDuration As Integer = CInt(safeBasalDurationStr)
             If safeBasalDuration > 0 Then
                 mainForm.LastSgOrExitTimeLabel.Text =
-                    $"Exit In { TimeSpan.FromMinutes(safeBasalDuration) _
-                                        .ToFormattedTimeSpan(unit:="hr")}"
+                    $"Exit In { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(unit:="hr")}"
                 mainForm.LastSgOrExitTimeLabel.Visible = True
             End If
         End If
