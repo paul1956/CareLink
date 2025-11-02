@@ -70,7 +70,6 @@ Friend Module ErrorReportingHelpers
             loginStatus.ForeColor = If(lastErrorMessage = "OK",
                                        Form1.MenuStrip1.ForeColor,
                                        Color.Red)
-
             loginStatus.Text = $"Login Status: {lastErrorMessage}"
         Else
             loginStatus.ForeColor = Form1.MenuStrip1.ForeColor
