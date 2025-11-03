@@ -19,13 +19,23 @@ Friend Module Form1TransmitterBatteryHelper
         End Select
     End Function
 
-    Friend Sub UpdateTransmitterBattery()
+    ''' <summary>
+    ''' Updates the sensor status on Form1.
+    ''' </summary>
+    Friend Sub UpdateSensorData()
         If PatientData.ConduitSensorInRange Then
-            Form1.TransmitterBatteryPictureBox.Image = GetBatteryImage(PatientData.GstBatteryLevel)
-            Form1.TransmitterBatteryPercentLabel.Text = $"{PatientData.GstBatteryLevel}%"
+            If PatientData.CgmInfo.SensorProductModel.TrimEnd = "MMT-5120" Then
+                Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToSimpleraOK
+                Form1.TransmitterBatteryPercentLabel.Text = "Connected"
+            ElseIf PatientData.CgmInfo.sensorType = "DURABLE" Then
+                Form1.TransmitterBatteryPictureBox.Image = GetBatteryImage(PatientData.GstBatteryLevel)
+                Form1.TransmitterBatteryPercentLabel.Text = $"{PatientData.GstBatteryLevel}%"
+            Else
+                ' Its Instinct
+                Stop
+            End If
         Else
-            Form1.TransmitterBatteryPictureBox.Image =
-                My.Resources.PumpConnectivityToTransmitterNotOK
+            Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToTransmitterNotOK
             Form1.TransmitterBatteryPercentLabel.Text = "N/A"
         End If
 

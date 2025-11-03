@@ -1765,15 +1765,16 @@ Partial Class Form1
         TrendArrowsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TransmitterBatteryPercentLabel
-        ' 
+        '
+        TransmitterBatteryPercentLabel.AutoSize = True
         TransmitterBatteryPercentLabel.BackColor = Color.Transparent
         TransmitterBatteryPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         TransmitterBatteryPercentLabel.ForeColor = Color.LightGray
-        TransmitterBatteryPercentLabel.Location = New Point(549, 89)
+        TransmitterBatteryPercentLabel.Location = New Point(547, 89)
         TransmitterBatteryPercentLabel.Name = "TransmitterBatteryPercentLabel"
         TransmitterBatteryPercentLabel.Size = New Size(85, 21)
         TransmitterBatteryPercentLabel.TabIndex = 13
-        TransmitterBatteryPercentLabel.Text = "???"
+        TransmitterBatteryPercentLabel.Text = "Connected"
         TransmitterBatteryPercentLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TransmitterBatteryPictureBox
