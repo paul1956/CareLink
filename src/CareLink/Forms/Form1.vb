@@ -5520,7 +5520,7 @@ Public Class Form1
         Me.UpdateInsulinLevel()
         Me.UpdatePumpBattery()
         Me.UpdateSensorLife()
-        UpdateTransmitterBattery()
+        UpdateSensorData()
         Me.UpdateTimeInRange()
         Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
