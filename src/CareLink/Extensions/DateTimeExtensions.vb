@@ -48,20 +48,14 @@ Friend Module DateTimeExtensions
     '''  otherwise, <see langword="Nothing"/>.
     ''' </returns>
     <Extension>
-    Private Function CultureSpecificParse(
-        s As String,
-        styles As DateTimeStyles,
-        ByRef success As Boolean) As Date
-
+    Private Function CultureSpecificParse(s As String, styles As DateTimeStyles, ByRef success As Boolean) As Date
         If s_dateTimeFormatUniqueCultures.Count = 0 Then
             s_dateTimeFormatUniqueCultures.Add(item:=CurrentDateCulture)
-            Dim formatList As New List(Of String) From {
-                CurrentDateCulture.DateTimeFormat.FullDateTimePattern}
+            Dim formatList As New List(Of String) From {CurrentDateCulture.DateTimeFormat.FullDateTimePattern}
             For Each item As CultureInfo In CultureInfoList
                 If formatList.Contains(item:=item.DateTimeFormat.FullDateTimePattern) OrElse
                    String.IsNullOrWhiteSpace(value:=item.Name) OrElse
                    Not item.Name.Contains(value:="-"c) Then
-
                     Continue For
                 End If
                 s_dateTimeFormatUniqueCultures.Add(item)
@@ -116,8 +110,10 @@ Friend Module DateTimeExtensions
         Dim pumpTime As Date
         If isLocalTime Then
             pumpTime = Date.SpecifyKind(value:=unixTimeSpan.FromUnixTime, kind:=DateTimeKind.Local)
-            Dim pumpTimeOffset As New DateTimeOffset(dateTime:=pumpTime, offset:=TimeZoneInfo.Local.GetUtcOffset(dateTime:=pumpTime))
-            Dim localTimeOffset As New DateTimeOffset(dateTime:=Now, offset:=TimeZoneInfo.Local.GetUtcOffset(dateTime:=Now))
+            Dim offset As TimeSpan = TimeZoneInfo.Local.GetUtcOffset(dateTime:=pumpTime)
+            Dim pumpTimeOffset As New DateTimeOffset(dateTime:=pumpTime, offset)
+            offset = TimeZoneInfo.Local.GetUtcOffset(dateTime:=Now)
+            Dim localTimeOffset As New DateTimeOffset(dateTime:=Now, offset)
 
             If pumpTimeOffset.Offset = localTimeOffset.Offset Then
                 localTime = pumpTime
@@ -157,9 +153,7 @@ Friend Module DateTimeExtensions
     ''' <returns>Local DateTime</returns>
     <Extension>
     Friend Function Epoch2PumpDateTime(epoch As String) As Date
-        Return TimeZoneInfo.ConvertTimeFromUtc(
-            dateTime:=epoch.FromUnixTime(),
-            destinationTimeZone:=PumpTimeZoneInfo)
+        Return TimeZoneInfo.ConvertTimeFromUtc(dateTime:=epoch.FromUnixTime(), destinationTimeZone:=PumpTimeZoneInfo)
     End Function
 
     ''' <summary>
@@ -182,11 +176,10 @@ Friend Module DateTimeExtensions
     <Extension>
     Friend Function GetCurrentDateCulture(countryCode As String) As CultureInfo
         Dim code As String = $"en-{countryCode}"
-
-        Dim culture As CultureInfo = CultureInfoList.FirstOrDefault(
-           predicate:=Function(c As CultureInfo) As Boolean
-                          Return c.Name = code
-                      End Function)
+        Dim predicate As Func(Of CultureInfo, Boolean) = Function(c As CultureInfo) As Boolean
+                                                             Return c.Name = code
+                                                         End Function
+        Dim culture As CultureInfo = CultureInfoList.FirstOrDefault(predicate)
         Return If(culture, New CultureInfo(name:="en-US"))
     End Function
 
@@ -276,10 +269,7 @@ Friend Module DateTimeExtensions
     ''' </returns>
     <Extension>
     Public Function ToHoursMinutes(minutes As Integer) As String
-        Return New TimeSpan(
-            hours:=0,
-            minutes:=minutes \ 60,
-            seconds:=minutes Mod 60).ToString.Substring(startIndex:=4)
+        Return New TimeSpan(hours:=0, minutes:=minutes \ 60, seconds:=minutes Mod 60).ToString.Substring(startIndex:=4)
     End Function
 
     ''' <summary>
@@ -293,10 +283,7 @@ Friend Module DateTimeExtensions
     <Extension>
     Public Function ToHoursMinutes(timeInHours As Single) As String
         Dim hours As Integer = CInt(timeInHours)
-        Return $"{New TimeSpan(hours,
-                               minutes:=CInt((timeInHours - hours) * 60),
-                               seconds:=0):h\:mm}"
-
+        Return $"{New TimeSpan(hours, minutes:=CInt((timeInHours - hours) * 60), seconds:=0):h\:mm}"
     End Function
 
     ''' <summary>
@@ -365,47 +352,25 @@ Friend Module DateTimeExtensions
         Dim success As Boolean
         Select Case key
             Case ""
-                result =
-                    s.CultureSpecificParse(styles:=DateTimeStyles.AssumeLocal, success)
+                result = s.CultureSpecificParse(styles:=DateTimeStyles.AssumeLocal, success)
             Case NameOf(ServerDataEnum.lastConduitDateTime)
-                result =
-                    s.CultureSpecificParse(styles:=DateTimeStyles.AssumeLocal, success)
+                result = s.CultureSpecificParse(styles:=DateTimeStyles.AssumeLocal, success)
             Case NameOf(ServerDataEnum.medicalDeviceTime)
-                result =
-                    s.CultureSpecificParse(
-                        styles:=DateTimeStyles.AssumeLocal,
-                        success)
+                result = s.CultureSpecificParse(styles:=DateTimeStyles.AssumeLocal, success)
             Case "loginDateUTC"
-                result =
-                    s.CultureSpecificParse(styles:=DateTimeStyles.AssumeUniversal, success)
+                result = s.CultureSpecificParse(styles:=DateTimeStyles.AssumeUniversal, success)
             Case NameOf(SG.Timestamp)
-                result =
-                    s.CultureSpecificParse(
-                        styles:=DateTimeStyles.AdjustToUniversal,
-                        success)
+                result = s.CultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case NameOf(TimeChange.Timestamp), NameOf(ClearedNotifications.dateTime)
-                result =
-                    s.CultureSpecificParse(
-                        styles:=DateTimeStyles.AdjustToUniversal,
-                        success)
+                result = s.CultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case NameOf(ActiveNotification.SecondaryTime)
-                result =
-                    s.CultureSpecificParse(
-                        styles:=DateTimeStyles.NoCurrentDateDefault,
-                        success)
+                result = s.CultureSpecificParse(styles:=DateTimeStyles.NoCurrentDateDefault, success)
             Case NameOf(ActiveNotification.triggeredDateTime)
-                result =
-                    s.CultureSpecificParse(
-                        styles:=DateTimeStyles.AdjustToUniversal,
-                        success)
+                result = s.CultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case "dateTime"
-                result =
-                    s.CultureSpecificParse(
-                        styles:=DateTimeStyles.AdjustToUniversal,
-                        success)
+                result = s.CultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case Else
         End Select
-
         Return success
     End Function
 

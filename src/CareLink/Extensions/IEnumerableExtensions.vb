@@ -41,16 +41,13 @@ Public Module IEnumerableExtensions
             If result.Length <> 0 Then
                 result.Append(value:=Delimiter) ' Add comma
             End If
-
             result.Append(value:=EscapeSingleQuotes(Input:=TryCast(item, String)))
         Next item
         If result.Length < 1 Then
             Return String.Empty
         End If
-
         result.Insert(index:=0, value:=Prefix)
         result.Append(value:=Postfix)
-
         Return result.ToString()
     End Function
 

@@ -655,19 +655,23 @@ Public Class Client2
                 Return lastErrorMessage
             End If
         End If
-        Dim data As New Dictionary(Of String, Object)(StringComparer.OrdinalIgnoreCase)
+        Dim data As Dictionary(Of String, Object)
         Try
-            Dim tempData As Dictionary(Of String, Object) = Me.GetData(
-                username:=s_userName,
-                role:=CStr(_userElementDictionary("role")),
-                patientId:="")
-            For Each kvp As KeyValuePair(Of String, Object) In tempData
-                data(kvp.Key) = kvp.Value
-            Next kvp
+            Dim tempData As Dictionary(Of String, Object) =
+                Me.GetData(username:=s_userName, role:=CStr(_userElementDictionary("role")), patientId:="")
+
+            If tempData Is Nothing OrElse tempData.Count = 0 Then
+                PatientData = Nothing
+                RecentData = Nothing
+                Debug.WriteLine($"{NameOf(GetRecentData)}: No data returned from GetData for user {s_userName}")
+                Return "No data received from server"
+            End If
+
+            data = New Dictionary(Of String, Object)(tempData, StringComparer.OrdinalIgnoreCase)
         Catch ex As Exception
             PatientData = Nothing
             RecentData = Nothing
-            Stop
+            Debug.WriteLine(ex.DecodeException())
             Return ex.DecodeException()
         End Try
 
@@ -678,6 +682,7 @@ Public Class Client2
             _accessTokenPayload = GetAccessTokenPayload(_tokenDataElement)
             WriteTokenFile(_tokenDataElement, s_userName)
         End If
+
         Select Case data.Keys.Count
             Case 0
                 lastErrorMessage = "No Data Found"
@@ -685,18 +690,22 @@ Public Class Client2
                 lastErrorMessage = $"No Data Found for {data.Keys(index:=0)}"
             Case 2
             Case Else
-                lastErrorMessage =
-                    $"No Data Found for {String.Join(separator:=", ", values:=data.Keys)}"
+                lastErrorMessage = $"No Data Found for {String.Join(separator:=", ", values:=data.Keys)}"
         End Select
+
+        If data.Values.Count < 2 Then
+            Return lastErrorMessage
+        End If
+
         Dim unusedMetaData As JsonElement = CType(data.Values(index:=0), JsonElement)
         Try
             PatientDataElement = CType(data.Values(index:=1), JsonElement)
             DeserializePatientElement()
-            File.WriteAllTextAsync(
+            File.WriteAllText(
                 path:=GetLastDownloadFileWithPath(),
                 contents:=JsonSerializer.Serialize(value:=PatientDataElement, options:=s_jsonSerializerOptions))
         Catch ex As Exception
-            Stop
+            Debug.WriteLine(ex.DecodeException())
             Return ex.DecodeException()
         End Try
 

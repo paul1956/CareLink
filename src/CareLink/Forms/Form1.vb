@@ -191,7 +191,11 @@ Public Class Form1
             homeChartLegend:=_summaryChartLegend,
             treatmentMarkersChartLegend:=_treatmentMarkersChartLegend)
 
-        showLegend = s_suspendedMarkers.Any(predicate:=Function(s) s.deliverySuspended)
+        Dim predicate As Func(Of LowGlucoseSuspended, Boolean) = Function(s As LowGlucoseSuspended) As Boolean
+                                                                     Return s.deliverySuspended
+                                                                 End Function
+
+        showLegend = s_suspendedMarkers.Any(predicate)
 
         ShowHideLegendItem(
             showLegend,

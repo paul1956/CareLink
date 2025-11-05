@@ -23,12 +23,19 @@ Public Module ComboBoxExtensions
     ''' </returns>
     <Extension>
     Public Function IndexOfKey(Of Tk, Tv)(objCollection As ComboBox.ObjectCollection, key As Tk) As Integer
+        Dim count As Integer = objCollection.Count
+        If count = 0 Then
+            Return -1
+        End If
 
-        For i As Integer = 0 To objCollection.Count - 1
+        Dim comparer As EqualityComparer(Of Tk) = EqualityComparer(Of Tk).Default
+        For i As Integer = 0 To count - 1
             Dim obj As Object = objCollection(index:=i)
-            If TypeOf obj Is KeyValuePair(Of Tk, Tv) AndAlso
-               Equals(CType(obj, KeyValuePair(Of Tk, Tv)).Key, key) Then
-                Return i
+            If TypeOf obj Is KeyValuePair(Of Tk, Tv) Then
+                Dim pair As KeyValuePair(Of Tk, Tv) = DirectCast(obj, KeyValuePair(Of Tk, Tv))
+                If comparer.Equals(pair.Key, key) Then
+                    Return i
+                End If
             End If
         Next
         Return -1
@@ -49,15 +56,23 @@ Public Module ComboBoxExtensions
     <Extension>
     Public Function IndexOfY(Of Tk, Tv)(objCollection As ComboBox.ObjectCollection, y As Tv) As Integer
         ' If valueObject is Nothing and Tv is a class type, return -1 early
-        If y Is Nothing Then
+        If y Is Nothing AndAlso Not GetType(Tv).IsValueType Then
             Return -1
         End If
 
-        For index As Integer = 0 To objCollection.Count - 1
-            Dim item As KeyValuePair(Of Tk, Tv) =
-                DirectCast(objCollection(index), KeyValuePair(Of Tk, Tv))
-            If EqualityComparer(Of Tv).Default.Equals(x:=item.Value, y) Then
-                Return index
+        Dim count As Integer = objCollection.Count
+        If count = 0 Then
+            Return -1
+        End If
+
+        Dim comparer As EqualityComparer(Of Tv) = EqualityComparer(Of Tv).Default
+        For index As Integer = 0 To count - 1
+            Dim obj As Object = objCollection(index)
+            If TypeOf obj Is KeyValuePair(Of Tk, Tv) Then
+                Dim item As KeyValuePair(Of Tk, Tv) = DirectCast(obj, KeyValuePair(Of Tk, Tv))
+                If comparer.Equals(x:=item.Value, y) Then
+                    Return index
+                End If
             End If
         Next
         Return -1

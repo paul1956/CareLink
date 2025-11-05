@@ -292,10 +292,8 @@ Public Module RegionCountryLists
         FixedPart As String,
         Optional fuzzy As Boolean = False) As CultureInfo
 
-        Dim filename As String =
-            Path.GetFileNameWithoutExtension(ReportFileNameWithPath)
+        Dim filename As String = Path.GetFileNameWithoutExtension(ReportFileNameWithPath)
         Dim prompt As String
-
         If filename.Count(c:="("c) = 0 Then
             prompt = $"'{filename}' malformed,{vbCrLf}it must contain at least one '('."
             MsgBox(
@@ -307,8 +305,7 @@ Public Module RegionCountryLists
         End If
 
         If filename.Count(")"c) = 0 Then
-            prompt =
-                $"Filename '{filename}' malformed,{vbCrLf}it must contain at least one ')'."
+            prompt = $"Filename '{filename}' malformed,{vbCrLf}it must contain at least one ')'."
             MsgBox(
                 heading:="Invalid Filename",
                 prompt,
@@ -318,8 +315,7 @@ Public Module RegionCountryLists
         End If
 
         If Not filename.StartsWith(value:=FixedPart) Then
-            prompt =
-                $"Filename '{filename}' malformed,{vbCrLf}it must start with '{FixedPart}'."
+            prompt = $"Filename '{filename}' malformed,{vbCrLf}it must start with '{FixedPart}'."
             MsgBox(
                 heading:="Invalid Filename",
                 prompt,
@@ -329,9 +325,7 @@ Public Module RegionCountryLists
         End If
 
         Dim indexOfOpenParenthesis As Integer = filename.IndexOf(value:="("c)
-        prompt =
-            $"Filename '{filename}' malformed,{vbCrLf}" &
-            $"it must contain '(' after '{FixedPart}'."
+        prompt = $"Filename '{filename}' malformed,{vbCrLf}it must contain '(' after '{FixedPart}'."
         If fuzzy Then
             If indexOfOpenParenthesis < FixedPart.Length Then
                 MsgBox(
@@ -342,9 +336,7 @@ Public Module RegionCountryLists
                 Return Nothing
             End If
         Else
-            prompt =
-                $"Filename '{filename}' malformed," &
-                $"{vbCrLf}it must contain '(' immediately after '{FixedPart}'."
+            prompt = $"Filename '{filename}' malformed,{vbCrLf}it must contain '(' immediately after '{FixedPart}'."
             If indexOfOpenParenthesis <> FixedPart.Length Then
                 MsgBox(
                     heading:="Invalid Filename",
@@ -369,8 +361,10 @@ Public Module RegionCountryLists
         Dim length As Integer = indexOfClosedParenthesis - indexOfOpenParenthesis - 1
         Dim cultureName As String = filename.Substring(startIndex, length)
 
-        Dim fileNameInvalid As Boolean = Not CultureInfoList.Any(
-            predicate:=Function(c As CultureInfo) c.Name = cultureName)
+        Dim predicate As Func(Of CultureInfo, Boolean) = Function(c As CultureInfo) As Boolean
+                                                             Return c.Name = cultureName
+                                                         End Function
+        Dim fileNameInvalid As Boolean = Not CultureInfoList.Any(predicate)
 
         If fileNameInvalid Then
             MsgBox(

@@ -27,8 +27,7 @@ Public Module DictionaryExtensions
             row As KeyValuePair(Of String, String),
             [property] As PropertyInfo)
         Try
-            Dim propertyInfo As PropertyInfo =
-                obj.GetType.GetProperty(name:=$"{[property].Name}AsString")
+            Dim propertyInfo As PropertyInfo = obj.GetType.GetProperty(name:=$"{[property].Name}AsString")
             If propertyInfo Is Nothing Then
                 Stop
             End If
@@ -69,10 +68,7 @@ Public Module DictionaryExtensions
     '''  The value for the key, or a <see cref="String.Empty"/> if not found.
     ''' </returns>
     <Extension>
-    Friend Function GetStringValueOrEmpty(
-        item As Dictionary(Of String, String),
-        Key As String) As String
-
+    Friend Function GetStringValueOrEmpty(item As Dictionary(Of String, String), Key As String) As String
         If item Is Nothing Then
             Return ""
         End If
@@ -129,11 +125,10 @@ Public Module DictionaryExtensions
         Dim columnNames As List(Of String) = dic.Keys.ToList()
         Dim obj As New T
         For Each row As KeyValuePair(Of String, String) In dic
-            Dim [property] As PropertyInfo = classType.GetProperty(
-                name:=row.Key,
-                bindingAttr:=BindingFlags.Public Or
-                             BindingFlags.Instance Or
-                             BindingFlags.IgnoreCase)
+            Dim [property] As PropertyInfo =
+                classType.GetProperty(
+                    name:=row.Key,
+                    bindingAttr:=BindingFlags.Public Or BindingFlags.Instance Or BindingFlags.IgnoreCase)
 
             If [property] IsNot Nothing Then
                 If [property].CanWrite Then ' Make sure property isn't read only
@@ -178,8 +173,7 @@ Public Module DictionaryExtensions
             End If
         Next row
 
-        obj.GetType.GetProperty(name:="RecordNumber")?. _
-            SetValue(obj, value:=recordNumber, index:=Nothing)
+        obj.GetType.GetProperty(name:="RecordNumber")?.SetValue(obj, value:=recordNumber, index:=Nothing)
         Return obj
     End Function
 
@@ -207,10 +201,9 @@ Public Module DictionaryExtensions
         Dim values As String() =
             JsonToDictionary(json).ToCsv.Remove(s:="{").Trim.Remove(s:="}").Trim.Split(separator:=",")
 
-        Dim selector As Func(Of String, String) =
-            Function(s As String) As String
-                Return s.Trim()
-            End Function
+        Dim selector As Func(Of String, String) = Function(s As String) As String
+                                                      Return s.Trim()
+                                                  End Function
         Return values.Select(selector).ToArray
     End Function
 
@@ -224,10 +217,7 @@ Public Module DictionaryExtensions
     '''  otherwise -1 if not found.
     ''' </returns>
     <Extension>
-    Public Function IndexOfValue(
-        dic As SortedDictionary(Of String, KnownColor),
-        item As KnownColor) As Integer
-
+    Public Function IndexOfValue(dic As SortedDictionary(Of String, KnownColor), item As KnownColor) As Integer
         Return dic.Values.ToList.IndexOf(item)
     End Function
 
@@ -249,10 +239,9 @@ Public Module DictionaryExtensions
             Function(p As KeyValuePair(Of String, T)) As String
                 Return p.Key
             End Function
-        Dim elementSelector As Func(Of KeyValuePair(Of String, T), T) =
-            Function(p As KeyValuePair(Of String, T)) As T
-                Return p.Value
-            End Function
+        Dim elementSelector As Func(Of KeyValuePair(Of String, T), T) = Function(p As KeyValuePair(Of String, T)) As T
+                                                                            Return p.Value
+                                                                        End Function
         Return (From x In sortDic Select x).ToDictionary(keySelector, elementSelector)
     End Function
 
