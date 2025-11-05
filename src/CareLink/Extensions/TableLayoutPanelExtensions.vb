@@ -50,11 +50,9 @@ Friend Module TableLayoutPanelExtensions
                 Case TypeOf c Is Button
                     Dim helpString As String
                     If s_tablesSupportingExportToExcel.Contains(item:=panel.Name) Then
-                        helpString =
-                            ": Right Click on Table for Export Options including Excel"
+                        helpString = ": Right Click on Table for Export Options including Excel"
                     ElseIf s_tablesSupportingCopyToClipboard.Contains(item:=panel.Name) Then
-                        helpString =
-                            ": Right Click on Table for cell(s) Export Options"
+                        helpString = ": Right Click on Table for cell(s) Export Options"
                     Else
                         helpString = ""
                     End If
@@ -85,16 +83,10 @@ Friend Module TableLayoutPanelExtensions
     '''  Indicates if the table represents cleared notifications.
     ''' </param>
     <Extension>
-    Friend Sub SetTableName(
-        panel As TableLayoutPanel,
-        rowIndex As ServerDataEnum,
-        isClearedNotifications As Boolean)
-
+    Friend Sub SetTableName(panel As TableLayoutPanel, rowIndex As ServerDataEnum, isClearedNotifications As Boolean)
         Dim tableName As String = rowIndex.ToString.ToTitleCase
         If tableName = "Notification History" Then
-            tableName = If(isClearedNotifications,
-                           "Cleared Notifications",
-                           "Active Notification")
+            tableName = If(isClearedNotifications, "Cleared Notifications", "Active Notification")
         ElseIf tableName = "Sgs" Then
             tableName = "Sensor Glucose Values"
         End If
@@ -104,8 +96,7 @@ Friend Module TableLayoutPanelExtensions
             Dim c As Control
             Select Case True
                 Case TypeOf panel.Parent Is SplitterPanel
-                    Dim splitContainer As SplitContainer =
-                        CType(panel.Parent.Parent, SplitContainer)
+                    Dim splitContainer As SplitContainer = CType(panel.Parent.Parent, SplitContainer)
                     c = splitContainer.Panel1.Controls(index:=0)
                     SetTableName(panel:=CType(c, TableLayoutPanel), tableName)
                 Case TypeOf panel.Parent Is TabPage
@@ -115,8 +106,7 @@ Friend Module TableLayoutPanelExtensions
                     c = panel.Controls(index:=0)
                     SetTableName(panel:=CType(c, TableLayoutPanel), tableName)
                 Case TypeOf panel.Controls(index:=0) Is Label
-                    CType(panel.Controls(index:=0), Label).Text =
-                        $"{CInt(rowIndex)} {rowIndex}"
+                    CType(panel.Controls(index:=0), Label).Text = $"{CInt(rowIndex)} {rowIndex}"
                 Case Else
                     Stop
             End Select

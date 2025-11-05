@@ -24,11 +24,8 @@ Public Module ForEachExtensions
     '''  Thrown if <paramref name="argument"/> is <see langword="Nothing"/>.
     ''' </exception>
     <Extension>
-    Public Iterator Function WithIndex(Of T)(argument As IEnumerable(Of T)) _
-        As IEnumerable(Of IndexClass(Of T))
-
+    Public Iterator Function WithIndex(Of T)(argument As IEnumerable(Of T)) As IEnumerable(Of IndexClass(Of T))
         ArgumentNullException.ThrowIfNull(argument)
-
         Using enumerator As IEnumerator(Of T) = argument.GetEnumerator
             Dim hasNext As Boolean = enumerator.MoveNext
             Dim index As Integer = -1

@@ -35,15 +35,13 @@ Public Module JsonExtensions
     <Extension>
     Private Function ToSgList(json As List(Of Dictionary(Of String, String))) As List(Of SG)
         Dim sGs As New List(Of SG)
-        Dim yesterday As Date =
-            PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - Eleven55Span
+        Dim yesterday As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - Eleven55Span
         For index As Integer = 0 To json.Count - 1
             sGs.Add(item:=New SG(json:=json(index), index))
             If sGs.Last.Timestamp.Equals(value:=New DateTime) Then
-                sGs.Last.TimestampAsString =
-                    If(index = 0,
-                       yesterday.RoundDownToMinute().ToStringExact(),
-                       (sGs(index:=0).Timestamp + (FiveMinuteSpan * index)).ToStringExact())
+                sGs.Last.TimestampAsString = If(index = 0,
+                                                yesterday.RoundDownToMinute().ToStringExact(),
+                                                (sGs(index:=0).Timestamp + (FiveMinuteSpan * index)).ToStringExact())
             End If
         Next
         Return sGs
@@ -80,7 +78,6 @@ Public Module JsonExtensions
                     result.Add(item:=ConvertJsonValue(jsonElement))
             End Select
         Next
-
         Return result
     End Function
 
@@ -92,9 +89,7 @@ Public Module JsonExtensions
     ''' <param name="json">The JsonElement representing a JSON object.</param>
     ''' <returns>A dictionary representing the JSON object.</returns>
     <Extension>
-    Public Function ConvertElementToDictionary(json As JsonElement) _
-        As Dictionary(Of String, Object)
-
+    Public Function ConvertElementToDictionary(json As JsonElement) As Dictionary(Of String, Object)
         Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
         Dim result As New Dictionary(Of String, Object)(comparer)
 
@@ -103,21 +98,14 @@ Public Module JsonExtensions
                 Dim key As String = [property].Name
                 Select Case [property].Value.ValueKind
                     Case JsonValueKind.Object
-                        result.Add(
-                            key,
-                            value:=ConvertElementToDictionary(json:=[property].Value))
+                        result.Add(key, value:=ConvertElementToDictionary(json:=[property].Value))
                     Case JsonValueKind.Array
-                        result.Add(
-                            key,
-                            value:=ConvertJsonArrayToList(jsonArray:=[property].Value))
+                        result.Add(key, value:=ConvertJsonArrayToList(jsonArray:=[property].Value))
                     Case Else
-                        result.Add(
-                            key,
-                            value:=ConvertJsonValue(jsonElement:=[property].Value))
+                        result.Add(key, value:=ConvertJsonValue(jsonElement:=[property].Value))
                 End Select
             Next
         End If
-
         Return result
     End Function
 
@@ -133,9 +121,7 @@ Public Module JsonExtensions
     '''  A <see cref="Dictionary(Of String, String)"/> representing the JSON object.
     ''' </returns>
     <Extension>
-    Public Function ConvertJsonElementToStringDictionary(jsonElement As JsonElement) _
-        As Dictionary(Of String, String)
-
+    Public Function ConvertJsonElementToStringDictionary(jsonElement As JsonElement) As Dictionary(Of String, String)
         Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
         Dim result As New Dictionary(Of String, String)(comparer)
 
@@ -163,9 +149,7 @@ Public Module JsonExtensions
                     Case JsonValueKind.False
                         result.Add(key, value:="False")
                     Case Else
-                        result.Add(
-                            key,
-                            value:=ConvertJsonValue(jsonElement:=[property].Value).ToString)
+                        result.Add(key, value:=ConvertJsonValue(jsonElement:=[property].Value).ToString)
                 End Select
             Next
         End If

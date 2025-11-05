@@ -10,25 +10,13 @@ Public Module RichTextBoxExtensions
     Public Const Indent4 As String = "    "
     Public Const Indent8 As String = "        "
 
-    Public ReadOnly Property FixedWidthBoldFont As New Font(
-        familyName:="Consolas",
-        emSize:=14,
-        style:=FontStyle.Bold)
+    Public ReadOnly Property FixedWidthBoldFont As New Font(familyName:="Consolas", emSize:=14, style:=FontStyle.Bold)
 
-    Public ReadOnly Property FixedWidthFont As New Font(
-        familyName:="Consolas",
-        emSize:=14,
-        style:=FontStyle.Regular)
+    Public ReadOnly Property FixedWidthFont As New Font(familyName:="Consolas", emSize:=14, style:=FontStyle.Regular)
 
-    Public ReadOnly Property HeadingBoldFont As New Font(
-        familyName:="Segoe UI",
-        emSize:=16,
-        style:=FontStyle.Bold)
+    Public ReadOnly Property HeadingBoldFont As New Font(familyName:="Segoe UI", emSize:=16, style:=FontStyle.Bold)
 
-    Public ReadOnly Property HeadingFont As New Font(
-        familyName:="Segoe UI",
-        emSize:=16,
-        style:=FontStyle.Regular)
+    Public ReadOnly Property HeadingFont As New Font(familyName:="Segoe UI", emSize:=16, style:=FontStyle.Regular)
 
     ''' <summary>
     '''  Returns a string representation of a <see cref="TimeOnly"/> value,
@@ -77,19 +65,9 @@ Public Module RichTextBoxExtensions
     ''' </param>
     ''' <param name="singleIndent"></param>
     <Extension>
-    Friend Sub AppendKeyValue(
-        rtb As RichTextBox,
-        key As String,
-        value As String,
-        Optional indent As String = Indent4)
-
-        rtb.AppendTextWithFontChange(
-            text:=$"{indent}{key}",
-            newFont:=FixedWidthBoldFont)
-        rtb.AppendTextWithFontChange(
-            text:=value.AlignCenter(),
-            newFont:=FixedWidthFont,
-            includeNewLine:=True)
+    Friend Sub AppendKeyValue(rtb As RichTextBox, key As String, value As String, Optional indent As String = Indent4)
+        rtb.AppendTextWithFontChange(text:=$"{indent}{key}", newFont:=FixedWidthBoldFont)
+        rtb.AppendTextWithFontChange(text:=value.AlignCenter(), newFont:=FixedWidthFont, includeNewLine:=True)
     End Sub
 
     ''' <summary>
@@ -159,12 +137,8 @@ Public Module RichTextBoxExtensions
         Optional symbol As String = Gear,
         Optional includeNewLine As Boolean = True)
 
-        Dim splitText() As String =
-            text.Split(separator:=symbol, options:=StringSplitOptions.None)
-        rtb.AppendTextWithFontChange(
-            text:=splitText(0),
-            newFont:=HeadingBoldFont,
-            padRight:=0)
+        Dim splitText() As String = text.Split(separator:=symbol, options:=StringSplitOptions.None)
+        rtb.AppendTextWithFontChange(text:=splitText(0), newFont:=HeadingBoldFont, padRight:=0)
         If splitText.Length > 1 Then
             Dim bufferLength As Integer = rtb.Text.Length
             rtb.AppendTextWithFontChange(text:=symbol, newFont:=HeadingBoldFont, padRight:=0)
@@ -284,8 +258,7 @@ Public Module RichTextBoxExtensions
         Dim start As Integer = 0
         Dim length As Integer = str.Length
         While start < rtb.TextLength - 1
-            Dim wordStartIndex As Integer =
-                rtb.Find(str, start, [end]:=rtb.TextLength - 1, options)
+            Dim wordStartIndex As Integer = rtb.Find(str, start, [end]:=rtb.TextLength - 1, options)
             If wordStartIndex = -1 Then
                 Exit While ' No more occurrences found
             Else

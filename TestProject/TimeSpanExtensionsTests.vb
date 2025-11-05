@@ -9,6 +9,20 @@ Imports Xunit
 Public Class TimeSpanExtensionsTests
 
     <Theory>
+    <InlineData("01:00", "1 Hour")>
+    <InlineData("1:00", "1 Hour")>
+    <InlineData("02:00", "2 Hours")>
+    <InlineData("00:15", "15 Minutes")>
+    <InlineData("0:5", "5 Minutes")>
+    <InlineData("01:30", "1 Hour 30 Minutes")>
+    <InlineData("2:05", "2 Hours 5 Minutes")>
+    <InlineData("00:00", "0 Minutes")>
+    Public Sub FormatTimeText_ReturnsExpectedString(timeStr As String, expected As String)
+        Dim result As String = FormatTimeText(timeStr)
+        result.Should().Be(expected)
+    End Sub
+
+    <Theory>
     <InlineData(0, "0 hours")>
     <InlineData(1, "1 hour")>
     <InlineData(23, "23 hours")>
@@ -16,10 +30,7 @@ Public Class TimeSpanExtensionsTests
     <InlineData(25, "1 day, 1 hour")>
     <InlineData(48, "2 days")>
     <InlineData(49, "2 days, 1 hour")>
-    Public Sub HoursToDaysAndHours_ReturnsExpectedString(
-        hours As Integer,
-        expected As String)
-
+    Public Sub HoursToDaysAndHours_ReturnsExpectedString(hours As Integer, expected As String)
         Dim result As String = HoursToDaysAndHours(hours)
         result.Should().Be(expected)
     End Sub
@@ -36,10 +47,7 @@ Public Class TimeSpanExtensionsTests
     <InlineData(1440, "1 day")>
     <InlineData(1500, "1 day, 1 hour")>
     <InlineData(1501, "1 day, 1 hour, 1 minute")>
-    Public Sub MinutesToDaysHoursMinutes_ReturnsExpectedString(
-        minutes As Integer,
-        expected As String)
-
+    Public Sub MinutesToDaysHoursMinutes_ReturnsExpectedString(minutes As Integer, expected As String)
         Dim result As String = MinutesToDaysHoursMinutes(minutes)
         result.Should().Be(expected)
     End Sub

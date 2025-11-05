@@ -8,11 +8,7 @@ Imports System.Runtime.CompilerServices
 Friend Module MathExtensions
     Public Const Tolerance As Single = 0.000001F
 
-    Private Function GetDigits(
-        value As Double,
-        digits As Integer,
-        considerValue As Boolean) As Integer
-
+    Private Function GetDigits(value As Double, digits As Integer, considerValue As Boolean) As Integer
         Return If(considerValue AndAlso value < 10, 2, digits)
     End Function
 
@@ -111,7 +107,7 @@ Friend Module MathExtensions
     ''' </returns>
     <Extension>
     Public Function IsSgInvalid(f As Single) As Boolean
-        Return Single.IsNaN(f) OrElse Single.IsInfinity(f) OrElse f <= 0
+        Return Not Single.IsFinite(f) OrElse f <= 0
     End Function
 
     ''' <summary>
@@ -238,6 +234,10 @@ Friend Module MathExtensions
     ''' <returns>
     '''  The rounded value as Single, or <see cref="Single.NaN"/> if the input is NaN.
     ''' </returns>
+    ''' <remarks>
+    '''  Uses an inverse multiplier of 1/0.025 (40) to scale the value, perform integer
+    '''  rounding, then rescale back to the original magnitude.
+    ''' </remarks>
     <Extension>
     Public Function RoundTo025(d As Double) As Single
         If Double.IsNaN(d) Then

@@ -42,32 +42,26 @@ Friend Module DrawingExtensions
     '''  A new bitmap with the drawn arc.
     ''' </returns>
     <Extension>
-    Friend Function DrawCenteredArc(
-        backImage As Bitmap,
-        minutesToNextCalibration As Integer) As Bitmap
-
+    Friend Function DrawCenteredArc(backImage As Bitmap, minutesToNextCalibration As Integer) As Bitmap
+        ArgumentNullException.ThrowIfNull(backImage)
         If minutesToNextCalibration = 0 Then
             Return backImage
         End If
-        Dim targetImage As Bitmap = backImage
-        Dim myGraphics As Graphics = Graphics.FromImage(targetImage)
-        myGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-        Dim hoursToNextCalibration As Double = minutesToNextCalibration / 60
-        Dim pen As New Pen(
-            color:=GetColorFromTimeToNextCalib(hoursToNextCalibration),
-            width:=4)
 
-        Dim rect As New Rectangle(
-            x:=4,
-            y:=2,
-            width:=backImage.Width - 6,
-            height:=backImage.Height - 6)
+        Dim hoursToNextCalibration As Double = minutesToNextCalibration / 60.0
+        Dim clampedMinutes As Integer = Math.Min(Math.Max(minutesToNextCalibration, 0), 720)
 
-        Dim sweepAngle As Integer =
-            CInt(30 + (Math.Min(minutesToNextCalibration, 720) / 720.0 * (360 - 30)))
-        myGraphics.DrawArc(pen, rect, startAngle:=-90, sweepAngle:=-sweepAngle)
-        myGraphics.Dispose()
-        Return targetImage
+        Using myGraphics As Graphics = Graphics.FromImage(backImage)
+            myGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+
+            Using pen As New Pen(color:=GetColorFromTimeToNextCalib(hoursToNextCalibration), width:=4)
+                Dim rect As New Rectangle(x:=4, y:=2, width:=backImage.Width - 6, height:=backImage.Height - 6)
+                Dim sweepAngle As Integer = CInt(30 + (clampedMinutes / 720.0 * (360 - 30)))
+                myGraphics.DrawArc(pen, rect, startAngle:=-90, sweepAngle)
+            End Using
+        End Using
+
+        Return backImage
     End Function
 
     ''' <summary>
