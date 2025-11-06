@@ -838,7 +838,7 @@ Friend Module Form1UpdateHelpers
             Dim safeBasalDuration As Integer = CInt(safeBasalDurationStr)
             If safeBasalDuration > 0 Then
                 mainForm.LastSgOrExitTimeLabel.Text =
-                    $"Exit In { TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(unit:="hr")}"
+                    $"Exit In:{ TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(unit:="hr")}"
                 mainForm.LastSgOrExitTimeLabel.Visible = True
             End If
         End If
