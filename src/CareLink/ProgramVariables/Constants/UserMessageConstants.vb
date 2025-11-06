@@ -114,7 +114,7 @@ Friend Module UserMessageConstants
                  "To ensure insulin delivery, change reservoir."},
         {"117", "Active Insulin Cleared"},
         {"128", "Sensor grace period starting soon(triggeredDateTime). " &
-                 "Less than (secondaryTime) before grace periods starts. Change sensor soon."},
+                 "Less than (secondaryTimeReminder) before grace periods starts.{vbCrLf}Change sensor soon."},
         {"130", "Rewind Required(triggeredDateTime). Delivery stopped. " &
                  "Rewind was required due to pump error. Select OK to continue."},
         {"140", "Delivery Suspended. Connect Infusion Set"}, _ ' From Java
@@ -138,7 +138,7 @@ Friend Module UserMessageConstants
         {"798", "Sensor connected(triggeredDateTime). If new sensor, select Start New. " &
                  "If not, select Reconnect."},
         {"801", "Sensor updating(triggeredDateTime), Updating will take (sensorUpdateTime) more. " &
-                 $"Monitor BG.{vbCrLf} Entered BGs will not calibrate the sensor, but can still be used for therapy."},
+                 $"Monitor BG.{vbCrLf}Entered BGs will not calibrate the sensor, but can still be used for therapy."},
         {"802", "Alert on low (sg) (units)(triggeredDateTime)." &
                  " Low sensor glucose. Check BG."},
         {"803", "Alert on low (sg) (units)(triggeredDateTime). Low sensor glucose. " &

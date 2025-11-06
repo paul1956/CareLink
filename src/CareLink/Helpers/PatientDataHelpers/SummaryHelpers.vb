@@ -19,6 +19,8 @@ Friend Module SummaryHelpers
         {"INITIAL_ALERT_MEDIUM", "60 minutes"},
         {"INITIAL_ALERT_LONG", "90 minutes"}}
 
+    Private s_secondaryTimeReminder As String
+
     ''' <summary>
     '''  Stores extracted variable names (words in parentheses) from
     '''  notification messages, keyed by the message key.
@@ -139,23 +141,21 @@ Friend Module SummaryHelpers
                 Select Case keyWord
                     Case "triggeredDateTime"
                        ' handled above
-                    Case "secondaryTime"
+                    Case "secondaryTime", "secondaryTimeReminder"
                         key = NameOf(ActiveNotification.SecondaryTime)
                         If jsonDictionary.TryGetValue(key, value:=secondaryTime) Then
                             triggerTime = TimeOnly.FromDateTime(secondaryTime.ParseDate(key))
                             secondaryTime = $" { secondaryTime.ParseDate(key).ToNotificationString}"
                         Else
-                            Stop
                             Dim jsonString As String = String.Empty
                             key = "AdditionalInfo"
                             If jsonDictionary.TryGetValue(key, value:=jsonString) Then
                                 Dim addInfo As Dictionary(Of String, String) = GetAdditionalInformation(json:=jsonString)
                                 If addInfo.TryGetValue("secondaryTime", value:=secondaryTime) Then
-                                    secondaryTime = secondaryTime.FormatTimeText()
+                                    s_secondaryTimeReminder = secondaryTime.FormatTimeText()
                                 Else
                                     Stop
                                 End If
-                                Stop
                             Else
                                 Stop
                             End If
@@ -253,6 +253,7 @@ Friend Module SummaryHelpers
                 .Replace(oldValue:="(programmedAmount)", newValue:=programmedAmount) _
                 .Replace(oldValue:="(reminderName)", newValue:=reminderName) _
                 .Replace(oldValue:="(secondaryTime)", newValue:=secondaryTime) _
+                .Replace(oldValue:="(secondaryTimeReminder)", newValue:=s_secondaryTimeReminder) _
                 .Replace(oldValue:="(sensorUpdateTime)", newValue:=sensorUpdateTime) _
                 .Replace(oldValue:="(suspendedSince)", newValue:=s_suspendedSince) _
                 .Replace(oldValue:="(sg)", newValue:=sg) _

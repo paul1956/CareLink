@@ -12,6 +12,8 @@ Friend Module Chart_Constants
 
     Friend Const HighLimitSeriesName As String = NameOf(HighLimitSeriesName)
 
+    Friend Const HighTiTRSeriesName As String = NameOf(HighTiTRSeriesName)
+
     Friend Const LowLimitSeriesName As String = NameOf(LowLimitSeriesName)
 
     Friend Const MarkerSeriesName As String = NameOf(MarkerSeriesName)

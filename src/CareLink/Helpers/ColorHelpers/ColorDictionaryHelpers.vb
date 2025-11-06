@@ -16,7 +16,8 @@ Friend Module ColorDictionaryHelpers
         {"SG Series", KnownColor.White},
         {"SG Target", KnownColor.Blue},
         {"Suspend", KnownColor.Red},
-        {"Time Change", KnownColor.White}}
+        {"Time Change", KnownColor.White},
+        {"Tight Range High", KnownColor.LimeGreen}}
 
     ''' <summary>
     '''  Gets a <see cref="BindingSource"/> for the color dictionary,
@@ -88,8 +89,7 @@ Friend Module ColorDictionaryHelpers
             Using sw As New StreamWriter(stream)
                 sw.WriteLine($"Key,ForegroundColor,BackgroundColor")
                 For Each kvp As KeyValuePair(Of String, KnownColor) In GraphColorDictionary
-                    Dim contrastingColor As KnownColor =
-                        GetContrastingKnownColor(knownColor:=kvp.Value)
+                    Dim contrastingColor As KnownColor = GetContrastingKnownColor(knownColor:=kvp.Value)
                     sw.WriteLine(value:=$"{kvp.Key},{kvp.Value},{contrastingColor}")
                 Next
                 sw.Flush()

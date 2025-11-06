@@ -73,6 +73,8 @@ Friend Module PlotSeriesLimits
                 If limitsLowValue <> 0 Then
                     chart.Series(name:=LowLimitSeriesName).Points.AddXY(xValue, yValue:=limitsLowValue)
                 End If
+                yValue = If(NativeMmolL, 7.8F, 140.0F)
+                chart.Series(name:=HighTiTRSeriesName).Points.AddXY(xValue, yValue)
             Catch innerException As Exception
                 Stop
                 Dim str As String = innerException.DecodeException()
