@@ -33,6 +33,7 @@ Partial Class OptionsConfigureTiTR
         ThresholdNumericUpDown = New NumericUpDown()
         TreatmentTargetPercentLabel = New Label()
         TreatmentTargetPercentUpDown = New PercentUpDown()
+        UnitsComboBox = New ComboBox()
         TableLayoutPanel1.SuspendLayout()
         CType(ThresholdNumericUpDown, ComponentModel.ISupportInitialize).BeginInit()
         CType(TreatmentTargetPercentUpDown, ComponentModel.ISupportInitialize).BeginInit()
@@ -42,15 +43,15 @@ Partial Class OptionsConfigureTiTR
         ' 
         TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         TableLayoutPanel1.ColumnCount = 2
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
         TableLayoutPanel1.Controls.Add(OK_Button, 0, 0)
         TableLayoutPanel1.Controls.Add(Cancel_Button, 1, 0)
-        TableLayoutPanel1.Location = New Point(121, 68)
+        TableLayoutPanel1.Location = New Point(204, 89)
         TableLayoutPanel1.Margin = New Padding(4, 3, 4, 3)
         TableLayoutPanel1.Name = "TableLayoutPanel1"
         TableLayoutPanel1.RowCount = 1
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
         TableLayoutPanel1.Size = New Size(170, 33)
         TableLayoutPanel1.TabIndex = 0
         ' 
@@ -77,16 +78,16 @@ Partial Class OptionsConfigureTiTR
         ' LowThresholdLabel
         ' 
         LowThresholdLabel.AutoSize = True
-        LowThresholdLabel.Location = New Point(2, 6)
+        LowThresholdLabel.Location = New Point(2, 9)
         LowThresholdLabel.Name = "LowThresholdLabel"
-        LowThresholdLabel.Size = New Size(230, 15)
+        LowThresholdLabel.Size = New Size(198, 15)
         LowThresholdLabel.TabIndex = 1
-        LowThresholdLabel.Text = "Time In Tight Range Low Threshold: 60-70"
+        LowThresholdLabel.Text = "Time In Tight Range Low Threshold:"
         ' 
         ' ThresholdNumericUpDown
         ' 
         ThresholdNumericUpDown.Increment = New Decimal(New Integer() {5, 0, 0, 0})
-        ThresholdNumericUpDown.Location = New Point(246, 2)
+        ThresholdNumericUpDown.Location = New Point(252, 5)
         ThresholdNumericUpDown.Maximum = New Decimal(New Integer() {70, 0, 0, 0})
         ThresholdNumericUpDown.Minimum = New Decimal(New Integer() {60, 0, 0, 0})
         ThresholdNumericUpDown.Name = "ThresholdNumericUpDown"
@@ -99,7 +100,7 @@ Partial Class OptionsConfigureTiTR
         ' TreatmentTargetPercentLabel
         ' 
         TreatmentTargetPercentLabel.AutoSize = True
-        TreatmentTargetPercentLabel.Location = New Point(2, 35)
+        TreatmentTargetPercentLabel.Location = New Point(2, 58)
         TreatmentTargetPercentLabel.Name = "TreatmentTargetPercentLabel"
         TreatmentTargetPercentLabel.Size = New Size(182, 15)
         TreatmentTargetPercentLabel.TabIndex = 1
@@ -108,7 +109,7 @@ Partial Class OptionsConfigureTiTR
         ' TreatmentTargetPercentUpDown
         ' 
         TreatmentTargetPercentUpDown.Increment = New Decimal(New Integer() {5, 0, 0, 0})
-        TreatmentTargetPercentUpDown.Location = New Point(246, 31)
+        TreatmentTargetPercentUpDown.Location = New Point(325, 54)
         TreatmentTargetPercentUpDown.Maximum = New Decimal(New Integer() {70, 0, 0, 0})
         TreatmentTargetPercentUpDown.Minimum = New Decimal(New Integer() {45, 0, 0, 0})
         TreatmentTargetPercentUpDown.Name = "TreatmentTargetPercentUpDown"
@@ -118,13 +119,25 @@ Partial Class OptionsConfigureTiTR
         TreatmentTargetPercentUpDown.UpDownAlign = LeftRightAlignment.Left
         TreatmentTargetPercentUpDown.Value = New Decimal(New Integer() {70, 0, 0, 0})
         ' 
+        ' UnitsComboBox
+        ' 
+        UnitsComboBox.DropDownStyle = ComboBoxStyle.DropDownList
+        UnitsComboBox.FormattingEnabled = True
+        UnitsComboBox.Items.AddRange(New Object() {"mg/dl", "mmol/L"})
+        UnitsComboBox.Location = New Point(318, 5)
+        UnitsComboBox.MaxDropDownItems = 2
+        UnitsComboBox.Name = "UnitsComboBox"
+        UnitsComboBox.Size = New Size(56, 23)
+        UnitsComboBox.TabIndex = 3
+        ' 
         ' OptionsConfigureTiTR
         ' 
         Me.AcceptButton = OK_Button
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = Cancel_Button
-        Me.ClientSize = New Size(305, 115)
+        Me.ClientSize = New Size(388, 136)
+        Me.Controls.Add(UnitsComboBox)
         Me.Controls.Add(TreatmentTargetPercentUpDown)
         Me.Controls.Add(TreatmentTargetPercentLabel)
         Me.Controls.Add(ThresholdNumericUpDown)
@@ -152,5 +165,6 @@ Partial Class OptionsConfigureTiTR
     Friend WithEvents ThresholdNumericUpDown As NumericUpDown
     Friend WithEvents TreatmentTargetPercentLabel As Label
     Friend WithEvents TreatmentTargetPercentUpDown As PercentUpDown
+    Friend WithEvents UnitsComboBox As ComboBox
 
 End Class
