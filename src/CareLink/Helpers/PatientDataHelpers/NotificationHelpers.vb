@@ -234,18 +234,13 @@ Friend Module NotificationHelpers
         mainForm.TlpNotificationsCleared.RowCount = 0
 
         ' Force a full garbage collection and allow background GC if enabled
-        GC.Collect(
-            generation:=GC.MaxGeneration,
-            mode:=GCCollectionMode.Optimized,
-            blocking:=False,
-            compacting:=False)
+        GC.Collect(generation:=GC.MaxGeneration, mode:=GCCollectionMode.Optimized, blocking:=False, compacting:=False)
 
         Dim innerJson As List(Of Dictionary(Of String, String))
 
         ' clearedNotifications
         Dim json As String = s_notificationHistoryValue(key:="clearedNotifications")
-        innerJson =
-            JsonToDictionaryList(json)
+        innerJson = JsonToDictionaryList(json)
         Dim classCollection As List(Of SummaryRecord)
         If innerJson.Count > 0 Then
             innerJson.Reverse()
@@ -266,12 +261,9 @@ Friend Module NotificationHelpers
         End If
 
         ' activeNotifications
-        innerJson =
-            JsonToDictionaryList(json:=s_notificationHistoryValue(key:="activeNotifications"))
+        innerJson = JsonToDictionaryList(json:=s_notificationHistoryValue(key:="activeNotifications"))
         If innerJson.Count > 0 Then
-            mainForm.TlpNotificationActive.SetTableName(
-                rowIndex,
-                isClearedNotifications:=False)
+            mainForm.TlpNotificationActive.SetTableName(rowIndex, isClearedNotifications:=False)
             If mainForm.TlpNotificationActive.Controls.Count > 1 Then
                 mainForm.TlpNotificationActive.Controls.RemoveAt(index:=1)
                 mainForm.TlpNotificationActive.RowStyles.RemoveAt(index:=1)

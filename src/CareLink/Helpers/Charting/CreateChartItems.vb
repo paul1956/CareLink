@@ -401,11 +401,14 @@ Friend Module CreateChartItems
         Select Case seriesName
             Case HighLimitSeriesName
                 key = "High Alert"
+            Case HighTiTRSeriesName
+                key = "Tight Range High"
+                borderWidth = 1
             Case LowLimitSeriesName
                 key = "Low Alert"
             Case Else
                 key = "SG Target"
-                borderWidth = 4
+                borderWidth = 2
         End Select
 
         Dim lineColor As Color = GetGraphLineColor(key)

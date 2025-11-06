@@ -221,6 +221,7 @@ Public Class Form1
     Private Property SummaryAutoCorrectionSeries As Series
     Private Property SummaryBasalSeries As Series
     Private Property SummaryHighLimitSeries As Series
+    Private Property SummaryHighTiTRSeries As Series
     Private Property SummaryLowLimitSeries As Series
     Private Property SummaryMarkerSeries As Series
     Private Property SummaryMinBasalSeries As Series
@@ -349,7 +350,7 @@ Public Class Form1
             End If
 
             Select Case result.Series.Name
-                Case HighLimitSeriesName, LowLimitSeriesName, TargetSgSeriesName
+                Case HighLimitSeriesName, HighTiTRSeriesName, LowLimitSeriesName, TargetSgSeriesName
                     Me.CursorPanel.Visible = False
                 Case MarkerSeriesName, BasalSeriesName
                     Dim markerTags() As String = currentDataPoint.Tag.ToString.Split(separator:=":"c)
@@ -3909,6 +3910,9 @@ Public Class Form1
         Me.SummaryHighLimitSeries = CreateSeriesLimitsAndTarget(
             limitsLegend:=_summaryChartLegend,
             seriesName:=HighLimitSeriesName)
+        Me.SummaryHighTiTRSeries = CreateSeriesLimitsAndTarget(
+            limitsLegend:=_summaryChartLegend,
+            seriesName:=HighTiTRSeriesName)
         Me.SummarySuspendSeries = CreateSeriesSuspend(basalLegend:=_summaryChartLegend)
         Me.SummaryTargetSgSeries = CreateSeriesLimitsAndTarget(
             limitsLegend:=_summaryChartLegend,
@@ -3929,6 +3933,7 @@ Public Class Form1
                 .Add(item:=Me.SummarySuspendSeries)
 
                 .Add(item:=Me.SummaryHighLimitSeries)
+                .Add(item:=Me.SummaryHighTiTRSeries)
                 .Add(item:=Me.SummaryTargetSgSeries)
                 .Add(item:=Me.SummaryLowLimitSeries)
                 .Add(item:=Me.SummaryTimeChangeSeries)
@@ -5164,21 +5169,21 @@ Public Class Form1
                     .AddXY(
                         $"{GetTIR.AsString}% In Range",
                         (tir - _timeInTightRange.Uint) / 100)
-                    .Last().Color = Color.Green
+                    .Last().Color = Color.DarkGreen
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
 
                     .AddXY(
                         $"{_timeInTightRange.Str}% In Tight Range",
                         _timeInTightRange.Uint / 100)
-                    .Last().Color = Color.LimeGreen
+                    .Last().Color = Color.LawnGreen
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
                 Else
                     .AddXY(
                         $"{_timeInTightRange.Str}% In Tight Range",
                         _timeInTightRange.Uint / 100)
-                    .Last().Color = Color.LimeGreen
+                    .Last().Color = Color.LawnGreen
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
 
