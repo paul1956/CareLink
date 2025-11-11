@@ -5083,7 +5083,7 @@ Public Class Form1
     ''' </remarks>
     Private Sub UpdateSensorLife()
         If PatientData.ConduitInRange Then
-            Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 12.0F)
+            Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 12.0F, FontStyle.Bold)
             Select Case PatientData.CgmInfo.SensorProductModel?.Trim
                 Case "MMT-5120"
                     Dim durationWithoutGrace As Integer = PatientData.SensorDurationHours - 24
@@ -5185,7 +5185,7 @@ Public Class Form1
     End Sub
 
     Private Function GetSensorTimeLeftTag() As String
-        Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F)
+        Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F, FontStyle.Bold)
         Dim sensorDurationHours As Integer = PatientData.SensorDurationHours
         Return If(sensorDurationHours <= 24,
                   $"{sensorDurationHours} hr grace period",
