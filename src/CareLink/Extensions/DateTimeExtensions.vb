@@ -50,37 +50,49 @@ Friend Module DateTimeExtensions
     <Extension>
     Private Function CultureSpecificParse(s As String, styles As DateTimeStyles, ByRef success As Boolean) As Date
         If s_dateTimeFormatUniqueCultures.Count = 0 Then
-            s_dateTimeFormatUniqueCultures.Add(item:=CurrentDateCulture)
-            Dim formatList As New List(Of String) From {CurrentDateCulture.DateTimeFormat.FullDateTimePattern}
-            For Each item As CultureInfo In CultureInfoList
-                If formatList.Contains(item:=item.DateTimeFormat.FullDateTimePattern) OrElse
-                   String.IsNullOrWhiteSpace(value:=item.Name) OrElse
-                   Not item.Name.Contains(value:="-"c) Then
-                    Continue For
+            SyncLock s_dateTimeFormatUniqueCultures
+                If s_dateTimeFormatUniqueCultures.Count = 0 Then
+                    s_dateTimeFormatUniqueCultures.Add(item:=CurrentDateCulture)
+                    Dim formatList As New List(Of String) From {CurrentDateCulture.DateTimeFormat.FullDateTimePattern}
+                    For Each item As CultureInfo In CultureInfoList
+                        If formatList.Contains(item:=item.DateTimeFormat.FullDateTimePattern) OrElse
+                           String.IsNullOrWhiteSpace(value:=item.Name) OrElse
+                           Not item.Name.Contains(value:="-"c) Then
+
+                            Continue For
+                        End If
+                        s_dateTimeFormatUniqueCultures.Add(item)
+                        formatList.Add(item:=item.DateTimeFormat.FullDateTimePattern)
+                    Next
                 End If
-                s_dateTimeFormatUniqueCultures.Add(item)
-                formatList.Add(item:=item.DateTimeFormat.FullDateTimePattern)
-            Next
+            End SyncLock
         End If
         Dim result As Date
-        success = True
-        If Date.TryParse(s, provider:=CurrentDateCulture, styles, result) Then
-            Return result
-        End If
-        If CurrentDateCulture.Name <> CultureInfo.CurrentUICulture.Name AndAlso
-            Date.TryParse(s, provider:=CultureInfo.CurrentUICulture, styles, result) Then
+        success = False
+        Dim currentCultureLocal As CultureInfo = CurrentDateCulture
+        Dim uiCultureLocal As CultureInfo = CultureInfo.CurrentUICulture
+        Dim usCultureLocal As CultureInfo = usDataCulture
 
+        If Date.TryParse(s, provider:=currentCultureLocal, styles, result) Then
+            success = True
             Return result
         End If
-        If Date.TryParse(s, provider:=usDataCulture, styles, result) Then
+        If currentCultureLocal.Name <> uiCultureLocal.Name AndAlso
+            Date.TryParse(s, provider:=uiCultureLocal, styles, result) Then
+
+            success = True
+            Return result
+        End If
+        If Date.TryParse(s, provider:=usCultureLocal, styles, result) Then
+            success = True
             Return result
         End If
         For Each provider As CultureInfo In s_dateTimeFormatUniqueCultures
             If Date.TryParse(s, provider, styles, result) Then
+                success = True
                 Return result
             End If
         Next
-        success = False
         Return Nothing
     End Function
 

@@ -47,16 +47,9 @@ Public Module AlertSettings
                     timeFormat:=pdf.Utilities.TimeFormat,
                     indent:=Indent4, heading:=True)
                 .AppendKeyValue(key:=$"Suspend:", value:=$"{l.Suspend}", indent:=Indent8)
-                .AppendKeyValue(
-                    key:="Alert Before Low:",
-                    value:=l.AlertBeforeLow.BoolToOnOff(),
-                    indent:=Indent8)
-                .AppendKeyValue(key:="Alert on Low:",
-                    value:=l.AlertOnLow.BoolToOnOff(),
-                    indent:=Indent8)
-                .AppendKeyValue(key:="Resume Basal Alert:",
-                    value:=$"{l.ResumeBasalAlert}",
-                    indent:=Indent8)
+                .AppendKeyValue(key:="Alert Before Low:", value:=l.AlertBeforeLow.BoolToOnOff(), indent:=Indent8)
+                .AppendKeyValue(key:="Alert on Low:", value:=l.AlertOnLow.BoolToOnOff(), indent:=Indent8)
+                .AppendKeyValue(key:="Resume Basal Alert:", value:=$"{l.ResumeBasalAlert}", indent:=Indent8)
             Next
             .AppendNewLine
         End With
@@ -66,29 +59,22 @@ Public Module AlertSettings
     Friend Sub AlertSettings4Reminders(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
             Dim symbol As String = Gear
-            .AppendKeyValue(
-                    key:="Low Reservoir Warning:",
-                    value:=$"{pdf.Reminders.LowReservoirWarning}")
+            .AppendKeyValue(key:="Low Reservoir Warning:", value:=$"{pdf.Reminders.LowReservoirWarning}")
             .AppendKeyValue(key:="Type:", value:="Units")
             .AppendKeyValue(key:="Units:", value:=$"{pdf.Reminders.Amount}")
             .AppendNewLine
 
-            .AppendTextWithSymbol(
-            text:=$"Menu>{Gear}>Alert Settings>Reminders > Set Change", symbol)
+            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings>Reminders > Set Change", symbol)
             .AppendKeyValue(key:="Set Change:", value:=$"{pdf.Reminders.SetChange}")
 
             .AppendNewLine
-            .AppendTextWithSymbol(
-            text:=$"Menu>{Gear}>Alert Settings>Reminders > Bolus BG Check", symbol)
+            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings>Reminders > Bolus BG Check", symbol)
             .AppendKeyValue(key:="Reminder:", value:=$"{pdf.Reminders.BolusBgCheck}")
 
             .AppendNewLine
-            .AppendTextWithSymbol(
-            text:=$"Menu>{Gear}>Alert Settings>Reminders > Missed Meal", symbol)
+            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings>Reminders > Missed Meal", symbol)
 
-            For Each item As KeyValuePair(Of String, MealStartEndRecord) In
-            pdf.Reminders.MissedMealBolus
-
+            For Each item As KeyValuePair(Of String, MealStartEndRecord) In pdf.Reminders.MissedMealBolus
                 Dim startTime As String = item.Value.Start
                 Dim endTime As String = item.Value.End
                 .AppendTimeValueRow(item.Key, startTime, endTime)
@@ -97,9 +83,7 @@ Public Module AlertSettings
             .AppendNewLine
             .AppendTextWithSymbol(
             text:=$"Menu>{Gear}>Alert Settings>Reminders > Personal", symbol)
-            For Each item As KeyValuePair(Of String, PersonalRemindersRecord) In
-                pdf.Reminders.PersonalReminders
-
+            For Each item As KeyValuePair(Of String, PersonalRemindersRecord) In pdf.Reminders.PersonalReminders
                 .AppendTimeValueRow(key:=item.Key, startTime:=item.Value.Time)
             Next
             .AppendNewLine

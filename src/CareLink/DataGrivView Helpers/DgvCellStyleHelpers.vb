@@ -69,7 +69,7 @@ Public Module DgvCellStyleHelpers
     '''  being formatted.
     ''' </param>
     <Extension>
-    Friend Sub CellFormatting0Value(ByRef e As DataGridViewCellFormattingEventArgs)
+    Friend Sub CellFormatting0Value(e As DataGridViewCellFormattingEventArgs)
         Dim value As String = Convert.ToString(e.Value)
         If value = String.Empty OrElse value = "0" Then
             e.Value = String.Empty
@@ -96,7 +96,7 @@ Public Module DgvCellStyleHelpers
     <Extension>
     Friend Sub CellFormattingApplyBoldColor(
         dgv As DataGridView,
-        ByRef e As DataGridViewCellFormattingEventArgs,
+        e As DataGridViewCellFormattingEventArgs,
         textColor As Color,
         Optional isUri As Boolean = False,
         Optional emIncrease As Integer = 0)
@@ -144,7 +144,7 @@ Public Module DgvCellStyleHelpers
     '''  the cell being formatted.
     ''' </param>
     <Extension>
-    Friend Sub CellFormattingDateTime(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Friend Sub CellFormattingDateTime(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs)
         Dim value As String = Convert.ToString(e.Value)
         If value <> String.Empty Then
             Try
@@ -168,11 +168,7 @@ Public Module DgvCellStyleHelpers
     ''' </param>
     ''' <param name="message">The message to append to the value.</param>
     <Extension>
-    Friend Sub CellFormattingInteger(
-        dgv As DataGridView,
-        ByRef e As DataGridViewCellFormattingEventArgs,
-        message As String)
-
+    Friend Sub CellFormattingInteger(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs, message As String)
         e.Value = $"{e.Value} {message}"
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
@@ -186,12 +182,8 @@ Public Module DgvCellStyleHelpers
     '''  the cell being formatted.
     ''' </param>
     <Extension>
-    Friend Sub CellFormattingSetForegroundColor(
-        dgv As DataGridView,
-        ByRef e As DataGridViewCellFormattingEventArgs)
-        Dim col As DataGridViewTextBoxColumn =
-            TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
-
+    Friend Sub CellFormattingSetForegroundColor(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs)
+        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
         If col IsNot Nothing Then
             e.Value = $"{e.Value}"
             Dim textColor As Color = e.CellStyle.ForeColor
@@ -199,8 +191,7 @@ Public Module DgvCellStyleHelpers
             If argb <> Color.Black.ToArgb() AndAlso argb <> Color.White.ToArgb() Then
                 e.CellStyle.ForeColor = dgv.Rows(index:=e.RowIndex).GetTextColor(textColor)
             End If
-            e.CellStyle.Font =
-                New Font(prototype:=e.CellStyle.Font, newStyle:=FontStyle.Regular)
+            e.CellStyle.Font = New Font(prototype:=e.CellStyle.Font, newStyle:=FontStyle.Regular)
             e.FormattingApplied = True
         End If
     End Sub
@@ -218,11 +209,7 @@ Public Module DgvCellStyleHelpers
     '''  The partial column name key to match for formatting.
     ''' </param>
     <Extension>
-    Friend Sub CellFormattingSgValue(
-        dgv As DataGridView,
-        ByRef e As DataGridViewCellFormattingEventArgs,
-        partialKey As String)
-
+    Friend Sub CellFormattingSg(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs, partialKey As String)
         Dim sgColumnName As String = dgv.Columns(index:=e.ColumnIndex).Name
         Dim sensorValue As Single = ParseSingle(e.Value, digits:=1)
         If Single.IsNaN(sensorValue) Then
@@ -278,11 +265,9 @@ Public Module DgvCellStyleHelpers
     '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.
     ''' </param>
     <Extension>
-    Friend Sub CellFormattingSingleWord(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Friend Sub CellFormattingSingleWord(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs)
         Dim input As String = Convert.ToString(e.Value)
-        If e.ColumnIndex > 0 AndAlso
-           Text.RegularExpressions.Regex.IsMatch(input, pattern:="^[A-Za-z]+$") Then
-
+        If e.ColumnIndex > 0 AndAlso Text.RegularExpressions.Regex.IsMatch(input, pattern:="^[A-Za-z]+$") Then
             e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
         End If
         dgv.CellFormattingSetForegroundColor(e)
@@ -297,7 +282,7 @@ Public Module DgvCellStyleHelpers
     '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.
     ''' </param>
     <Extension>
-    Friend Sub CellFormattingToTitle(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Friend Sub CellFormattingToTitle(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs)
         e.Value = Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ").ToTitle
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
@@ -310,10 +295,9 @@ Public Module DgvCellStyleHelpers
     '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell being formatted.
     ''' </param>
     <Extension>
-    Friend Sub CellFormattingUrl(dgv As DataGridView, ByRef e As DataGridViewCellFormattingEventArgs)
+    Friend Sub CellFormattingUrl(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs)
         e.Value = Convert.ToString(e.Value)
-        Dim cell As DataGridViewCell =
-            dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex)
+        Dim cell As DataGridViewCell = dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex)
         If cell.Equals(obj:=dgv.CurrentCell) Then
             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Purple, isUri:=True)
         Else
@@ -472,7 +456,7 @@ Public Module DgvCellStyleHelpers
     <Extension>
     Public Function CellFormattingSingleValue(
         dgv As DataGridView,
-        ByRef e As DataGridViewCellFormattingEventArgs,
+        e As DataGridViewCellFormattingEventArgs,
         digits As Integer,
         Optional TrailingText As String = "") As Single
 
