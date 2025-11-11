@@ -52,21 +52,14 @@ Friend Module DgvExportHelpers
     '''  otherwise, only selected cells.
     ''' </param>
     <Extension>
-    Private Sub CopyToClipboard(
-        dgv As DataGridView,
-        copyHeaders As DataGridViewClipboardCopyMode,
-        copyAll As Boolean)
-
-        If copyAll OrElse
-           dgv.GetCellCount(includeFilter:=DataGridViewElementStates.Selected) > 0 Then
-
+    Private Sub CopyToClipboard(dgv As DataGridView, copyHeaders As DataGridViewClipboardCopyMode, copyAll As Boolean)
+        If copyAll OrElse dgv.GetCellCount(includeFilter:=DataGridViewElementStates.Selected) > 0 Then
             Dim dataGridViewCells As List(Of DataGridViewCell) =
                 dgv.SelectedCells.Cast(Of DataGridViewCell).ToList()
 
-            Dim selector As Func(Of DataGridViewCell, Integer) =
-                Function(c As DataGridViewCell) As Integer
-                    Return c.ColumnIndex
-                End Function
+            Dim selector As Func(Of DataGridViewCell, Integer) = Function(c As DataGridViewCell) As Integer
+                                                                     Return c.ColumnIndex
+                                                                 End Function
             Dim colLow As Integer = If(copyAll,
                                        0,
                                        dataGridViewCells.Min(selector))
@@ -104,9 +97,7 @@ Friend Module DgvExportHelpers
             For rowIndex As Integer = rowLow To rowHigh
                 Dim row As DataGridViewRow = dgv.Rows(index:=rowIndex)
                 For index As Integer = colLow To colHigh
-                    If Not (dgv.Columns(index).Visible AndAlso
-                       (copyAll OrElse dgv.AnyCellSelected(index))) Then
-
+                    If Not (dgv.Columns(index).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(index))) Then
                         Continue For
                     End If
                     Dim currentCell As DataGridViewCell = row.Cells(index)
@@ -150,16 +141,13 @@ Friend Module DgvExportHelpers
                 If dgvColumn.Visible Then
                     If dgvColumn.Name.EqualsNoCase("dateTime") Then
                         worksheet.Cell(row:=1, column).Value = "Date"
-                        worksheet.Cell(row:=1, column).Style.Alignment.Horizontal =
-                            XLAlignmentHorizontalValues.Center
+                        worksheet.Cell(row:=1, column).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center
                         column += 1
                         worksheet.Cell(row:=1, column).Value = "Time"
                     Else
-                        worksheet.Cell(row:=1, column).Value =
-                            dgvColumn.HeaderCell.Value.ToString
+                        worksheet.Cell(row:=1, column).Value = dgvColumn.HeaderCell.Value.ToString
                     End If
-                    worksheet.Cell(row:=1, column).Style.Alignment.Horizontal =
-                        XLAlignmentHorizontalValues.Center
+                    worksheet.Cell(row:=1, column).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center
                     column += 1
                 End If
             Next index

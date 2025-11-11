@@ -32,7 +32,7 @@ Friend Module DgvColumnEventArgsExtensions
     ''' </param>
     <Extension>
     Public Sub DgvColumnAdded(
-        ByRef e As DataGridViewColumnEventArgs,
+        e As DataGridViewColumnEventArgs,
         cellStyle As DataGridViewCellStyle,
         forceReadOnly As Boolean,
         caption As String)

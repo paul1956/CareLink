@@ -69,7 +69,7 @@ Public Class TimeSpanExtensionsTests
 
     <Theory>
     <InlineData(1, 0, 0, "hr", " 1:00 hr")>
-    <InlineData(1, 30, 0, "hr", " 1:30 hrs")>
+    <InlineData(1, 30, 0, "hr", " 1:30 hr")>
     <InlineData(2, 0, 0, "hr", " 2:00 hrs")>
     <InlineData(0, 45, 0, "min", "45 mins")>
     <InlineData(0, 0, 0, "hr", " 0 hrs")>

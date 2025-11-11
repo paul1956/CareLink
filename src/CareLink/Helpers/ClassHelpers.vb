@@ -86,9 +86,7 @@ Public Module ClassHelpers
 
         Dim resultStyle As DataGridViewCellStyle = Nothing
         If Not alignmentTable.TryGetValue(key:=name, value:=resultStyle) Then
-            Dim alignMiddle As Boolean =
-                name = NameOf(SummaryRecord.RecordNumber) OrElse name = NameOf(Limit.Index)
-
+            Dim alignMiddle As Boolean = name = NameOf(SummaryRecord.RecordNumber) OrElse name = NameOf(Limit.Index)
             resultStyle = If(alignMiddle,
                              (New DataGridViewCellStyle).SetCellStyle(
                                 alignment:=DataGridViewContentAlignment.MiddleCenter,

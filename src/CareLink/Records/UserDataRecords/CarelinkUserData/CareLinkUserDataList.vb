@@ -370,10 +370,7 @@ Public Class CareLinkUserDataList
     '''  <see langword="True"/> if the user was found;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Friend Function TryGetValue(
-        key As String,
-        ByRef userRecord As CareLinkUserDataRecord) As Boolean
-
+    Friend Function TryGetValue(key As String, ByRef userRecord As CareLinkUserDataRecord) As Boolean
         For Each entry As CareLinkUserDataRecord In Me
             If entry.CareLinkUserName = key Then
                 userRecord = entry

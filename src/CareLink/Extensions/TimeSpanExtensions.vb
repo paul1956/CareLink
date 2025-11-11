@@ -98,7 +98,7 @@ Public Module TimeSpanExtensions
             Case unit = "hr"
                 If tSpan.Hours > 0 Then
                     r = $"{tSpan.Hours,2}:{tSpan.Minutes:D2}"
-                    unitOut = If(tSpan.Minutes > 0,
+                    unitOut = If(tSpan.Hours > 1,
                                  "hrs",
                                  tSpan.Hours.ToUnits(unit:="hr", includeValue:=False))
                 ElseIf tSpan.Minutes > 0 Then

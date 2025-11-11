@@ -20,7 +20,7 @@ Public Module ControlExtensions
     '''  is used to determine the drawn width. The method does not change parent layout or anchors.
     ''' </remarks>
     <Extension>
-    Friend Sub CenterLabelXOnParent(ByRef lbl As Label)
+    Friend Sub CenterLabelXOnParent(lbl As Label)
         If lbl Is Nothing OrElse lbl.IsDisposed Then
             Exit Sub
         End If
@@ -54,7 +54,7 @@ Public Module ControlExtensions
     '''    anchors, or layout settings.
     ''' </remarks>
     <Extension>
-    Friend Sub CenterXOnParent(ByRef ctrl As Control, Optional onLeftHalf As Boolean? = Nothing)
+    Friend Sub CenterXOnParent(ctrl As Control, Optional onLeftHalf As Boolean? = Nothing)
         If ctrl Is Nothing OrElse ctrl.IsDisposed Then
             Exit Sub
         End If
@@ -115,7 +115,7 @@ Public Module ControlExtensions
     '''  The routine is defensive against null or disposed parents to improve reliability when called during form teardown.
     ''' </remarks>
     <Extension>
-    Friend Sub CenterXYOnParent(ByRef ctrl As Label, verticalOffset As Integer)
+    Friend Sub CenterXYOnParent(ctrl As Label, verticalOffset As Integer)
         If ctrl Is Nothing OrElse ctrl.IsDisposed Then
             Exit Sub
         End If

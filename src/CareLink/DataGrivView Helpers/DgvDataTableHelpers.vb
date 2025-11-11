@@ -87,9 +87,7 @@ Friend Module DgvDataTableHelpers
             dgv.DataSource = Nothing
             dgv.DataSource = table
             dgv.RowHeadersVisible = False
-            If hideRecordNumberColumn AndAlso
-               dgv.Columns(index:=0).Name = "RecordNumber" Then
-
+            If hideRecordNumberColumn AndAlso dgv.Columns(index:=0).Name = "RecordNumber" Then
                 dgv.Columns(columnName:="RecordNumber").Visible = False
             End If
         Else

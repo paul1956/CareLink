@@ -712,12 +712,12 @@ Public Class Form1
                 Case NameOf(Limit.HighLimit),
                      NameOf(Limit.HighLimitMgdL),
                      NameOf(Limit.HighLimitMmolL)
-                    dgv.CellFormattingSgValue(e, partialKey:=NameOf(Limit.HighLimit))
+                    dgv.CellFormattingSg(e, partialKey:=NameOf(Limit.HighLimit))
 
                 Case NameOf(Limit.LowLimit),
                      NameOf(Limit.lowLimitMgdL),
                      NameOf(Limit.lowLimitMmolL)
-                    dgv.CellFormattingSgValue(e, partialKey:=NameOf(Limit.LowLimit))
+                    dgv.CellFormattingSg(e, partialKey:=NameOf(Limit.LowLimit))
 
                 Case NameOf(InsulinPerHour.Hour),
                      NameOf(InsulinPerHour.Hour2)
@@ -764,7 +764,7 @@ Public Class Form1
                     End If
 
                 Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
-                    dgv.CellFormattingSgValue(e, partialKey:=NameOf(SG.sg))
+                    dgv.CellFormattingSg(e, partialKey:=NameOf(SG.sg))
 
                 Case NameOf(BannerState.TimeRemaining)
                     e.CellFormatting0Value()
@@ -773,12 +773,12 @@ Public Class Form1
                     dgv.CellFormattingDateTime(e)
 
                 Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
-                    dgv.CellFormattingSgValue(e, partialKey:=NameOf(SG.sg))
+                    dgv.CellFormattingSg(e, partialKey:=NameOf(SG.sg))
 
                 Case NameOf(Calibration.UnitValue),
                      NameOf(Calibration.UnitValueMgdL),
                      NameOf(Calibration.UnitValueMmolL)
-                    dgv.CellFormattingSgValue(e, partialKey:=NameOf(Calibration.UnitValue))
+                    dgv.CellFormattingSg(e, partialKey:=NameOf(Calibration.UnitValue))
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
                     dgv.CellFormattingSetForegroundColor(e)
 

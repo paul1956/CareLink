@@ -218,7 +218,9 @@ Friend Module UserMessageConstants
         {"UNKNOWN", "Unknown"},
         {"UPDATING", $"Sensor{vbCrLf}Updating"},
         {"WAIT_TO_CALIBRATE", $"Wait To{vbCrLf}Calibrate..."},
-        {"WAIT_TO_ENTER_BG", $"Wait To{vbCrLf}Enter BG..."}}
+        {"WAIT_TO_ENTER_BG", $"Wait To{vbCrLf}Enter BG..."},
+        {"WAITING_WARM_UP", $"Waiting For warm up{vbCrLf}to start..."},
+        {"WARM_UP", "Sensor warm up"}}
 
     Private ReadOnly Property PumpModel As Integer =
             CInt(PatientData.MedicalDeviceInformation.ModelNumber.Replace(oldValue:="MMT-", newValue:=""))

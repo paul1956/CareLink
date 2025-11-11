@@ -509,20 +509,21 @@ Partial Class Form1
         CalibrationShieldPanel.Location = New Point(0, 0)
         CalibrationShieldPanel.Margin = New Padding(0)
         CalibrationShieldPanel.Name = "CalibrationShieldPanel"
-        CalibrationShieldPanel.Size = New Size(116, 132)
+        CalibrationShieldPanel.Size = New Size(120, 132)
         CalibrationShieldPanel.TabIndex = 64
         ' 
         ' LastSgOrExitTimeLabel
         ' 
+        LastSgOrExitTimeLabel.AutoSize = True
         LastSgOrExitTimeLabel.BackColor = Color.Transparent
         LastSgOrExitTimeLabel.Dock = DockStyle.Bottom
         LastSgOrExitTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         LastSgOrExitTimeLabel.ForeColor = Color.LightGray
-        LastSgOrExitTimeLabel.Location = New Point(0, 111)
+        LastSgOrExitTimeLabel.Location = New Point(0, 90)
         LastSgOrExitTimeLabel.Name = "LastSgOrExitTimeLabel"
-        LastSgOrExitTimeLabel.Size = New Size(116, 21)
+        LastSgOrExitTimeLabel.Size = New Size(124, 21)
         LastSgOrExitTimeLabel.TabIndex = 55
-        LastSgOrExitTimeLabel.Text = "Exit in 3:27"
+        LastSgOrExitTimeLabel.Text = "Exit in: 3:27 hrs"
         LastSgOrExitTimeLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' PumpBannerStateLabel
@@ -533,7 +534,7 @@ Partial Class Form1
         PumpBannerStateLabel.ForeColor = Color.Black
         PumpBannerStateLabel.Location = New Point(0, 0)
         PumpBannerStateLabel.Name = "PumpBannerStateLabel"
-        PumpBannerStateLabel.Size = New Size(116, 15)
+        PumpBannerStateLabel.Size = New Size(120, 15)
         PumpBannerStateLabel.TabIndex = 56
         PumpBannerStateLabel.Text = "Target 150 2:00 Hr"
         PumpBannerStateLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1103,7 +1104,7 @@ Partial Class Form1
         Last24HrSummaryLabel.ForeColor = Color.Black
         Last24HrSummaryLabel.Location = New Point(0, 0)
         Last24HrSummaryLabel.Name = "Last24HrSummaryLabel"
-        Last24HrSummaryLabel.Size = New Size(251, 23)
+        Last24HrSummaryLabel.Size = New Size(253, 23)
         Last24HrSummaryLabel.TabIndex = 65
         Last24HrSummaryLabel.Text = "Last 24 Hr Summary"
         Last24HrSummaryLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1133,7 +1134,6 @@ Partial Class Form1
         ' 
         ' Last24HrTotalsPanel
         ' 
-        Last24HrTotalsPanel.BorderStyle = BorderStyle.None
         Last24HrTotalsPanel.Controls.Add(Last24HrCarbsValueLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrAutoCorrectionLabel)
         Last24HrTotalsPanel.Controls.Add(Last24HrAutoCorrectionPercentLabel)
@@ -1765,14 +1765,14 @@ Partial Class Form1
         TrendArrowsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TransmitterBatteryPercentLabel
-        '
+        ' 
         TransmitterBatteryPercentLabel.AutoSize = True
         TransmitterBatteryPercentLabel.BackColor = Color.Transparent
         TransmitterBatteryPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         TransmitterBatteryPercentLabel.ForeColor = Color.LightGray
         TransmitterBatteryPercentLabel.Location = New Point(547, 89)
         TransmitterBatteryPercentLabel.Name = "TransmitterBatteryPercentLabel"
-        TransmitterBatteryPercentLabel.Size = New Size(85, 21)
+        TransmitterBatteryPercentLabel.Size = New Size(92, 21)
         TransmitterBatteryPercentLabel.TabIndex = 13
         TransmitterBatteryPercentLabel.Text = "Connected"
         TransmitterBatteryPercentLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -2648,7 +2648,7 @@ Partial Class Form1
         TabPage04Calibration.Text = "Calibration"
         TabPage04Calibration.UseVisualStyleBackColor = True
         ' 
-        ' TableLayoutPanelCalibration
+        ' TlpCalibration
         ' 
         TlpCalibration.AutoScroll = True
         TlpCalibration.AutoSize = True
@@ -2660,7 +2660,7 @@ Partial Class Form1
         TlpCalibration.Controls.Add(DgvCalibration, 0, 1)
         TlpCalibration.Dock = DockStyle.Fill
         TlpCalibration.Location = New Point(0, 0)
-        TlpCalibration.Name = "TableLayoutPanelCalibration"
+        TlpCalibration.Name = "TlpCalibration"
         TlpCalibration.RowCount = 2
         TlpCalibration.RowStyles.Add(New RowStyle())
         TlpCalibration.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
