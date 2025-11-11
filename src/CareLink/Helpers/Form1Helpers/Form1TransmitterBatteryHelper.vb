@@ -24,14 +24,16 @@ Friend Module Form1TransmitterBatteryHelper
     ''' </summary>
     Friend Sub UpdateSensorData()
         If PatientData.ConduitSensorInRange Then
-            If PatientData.CgmInfo.SensorProductModel.TrimEnd = "MMT-5120" Then
-                Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToSimpleraOK
-                Form1.TransmitterBatteryPercentLabel.Text = "Connected"
-            ElseIf PatientData.CgmInfo.sensorType = "DURABLE" Then
+            If PatientData.CgmInfo.SensorType = "DURABLE" Then
                 Form1.TransmitterBatteryPictureBox.Image = GetBatteryImage(PatientData.GstBatteryLevel)
                 Form1.TransmitterBatteryPercentLabel.Text = $"{PatientData.GstBatteryLevel}%"
+            ElseIf PatientData.CgmInfo.SensorProductModel.TrimEnd = "MMT-5120" Then
+                Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToSimpleraOK
+                Form1.TransmitterBatteryPercentLabel.Text = $"Simplera{vbCrLf}Connected"
+            ElseIf PatientData.CgmInfo.SensorProductModel.TrimEnd = "MMT-1894" Then
+                Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToInstinctOK
+                Form1.TransmitterBatteryPercentLabel.Text = $"Instinct{vbCrLf}Connected"
             Else
-                ' Its Instinct
                 Stop
             End If
         Else

@@ -26,15 +26,15 @@ Friend Module CalloutHelpers
     <Extension>
     Private Sub AddOrUpdateAnnotation(chart As Chart, lastDataPoint As DataPoint, text As String)
         Dim annotation As CalloutAnnotation = chart.FindAnnotation(lastDataPoint)
-        With annotation
-            If annotation IsNot Nothing Then
+        If annotation IsNot Nothing Then
+            With annotation
                 .Text = $"{text}{vbCrLf}{annotation.Text}"
                 Dim yValues0 As Double = lastDataPoint.YValues(0)
                 Dim yValue As Double = yValues0 - ((yValues0 - annotation.AnchorDataPoint.YValues(0)) / 2)
                 .AnchorDataPoint.SetValueXY(lastDataPoint.XValue, yValue)
                 Exit Sub
-            End If
-        End With
+            End With
+        End If
         Dim item As New CalloutAnnotation With {
             .Alignment = ContentAlignment.BottomCenter,
             .AnchorDataPoint = lastDataPoint,
@@ -129,8 +129,8 @@ Friend Module CalloutHelpers
     <Extension>
     Friend Sub SetupCallout(chart As Chart, currentDataPoint As DataPoint, text As String)
         If chart.Name = "TreatmentMarkersChart" AndAlso
-            (text.StartsWith(value:="Bolus ") OrElse
-             text.StartsWith(value:="Meal ")) Then
+            (text.StartsWith(value:="Bolus ") OrElse text.StartsWith(value:="Meal ")) Then
+
             Return
         End If
         With s_calloutAnnotations(key:=chart.Name)

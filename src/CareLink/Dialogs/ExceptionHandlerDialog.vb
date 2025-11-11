@@ -99,7 +99,7 @@ Public Class ExceptionHandlerDialog
     ''' <remarks>This method is called when the dialog is loaded.</remarks>
     Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetServerUpdateTimer(Start:=False)
-        Dim rtb As RichTextBox = Me.InstructionsRichTextBox
+        Dim rtb As RichTextBox = Me.InstructionRtb
         Dim newFont As Font = rtb.Font
         _gitClient = New GitHubClient(
             productInformation:=New ProductHeaderValue(name:="CareLink.Issues"),
@@ -216,15 +216,11 @@ Public Class ExceptionHandlerDialog
     ''' <remarks>
     '''  This method is called when a link in the instructions rich text box is clicked.
     ''' </remarks>
-    Private Sub InstructionsRichTextBox_LinkClicked(sender As Object, e As LinkClickedEventArgs) _
-        Handles InstructionsRichTextBox.LinkClicked
-
+    Private Sub InstructionRtb_LinkClicked(sender As Object, e As LinkClickedEventArgs) Handles InstructionRtb.LinkClicked
         Const value As String = "file://"
         Dim startIndex As Integer = value.Length
         If e.LinkText.StartsWith(value) Then
-            Process.Start(
-                fileName:="Explorer.exe",
-                arguments:=e.LinkText.Substring(startIndex))
+            Process.Start(fileName:="Explorer.exe", arguments:=e.LinkText.Substring(startIndex))
         Else
             OpenUrlInBrowser(url:=e.LinkText)
         End If
@@ -262,10 +258,7 @@ Public Class ExceptionHandlerDialog
     ''' <param name="exceptionStartingString">
     '''  The expected starting string for the exception section.
     ''' </param>
-    Private Sub ReportInvalidErrorFile(
-        currentLine As String,
-        exceptionStartingString As String)
-
+    Private Sub ReportInvalidErrorFile(currentLine As String, exceptionStartingString As String)
         Throw New NotImplementedException()
     End Sub
 
@@ -304,17 +297,13 @@ Public Class ExceptionHandlerDialog
             ' read exception trailer
             currentLine = stream.ReadLine
             If currentLine <> ExceptionTerminatingString Then
-                Me.ReportInvalidErrorFile(
-                    currentLine,
-                    exceptionStartingString:=ExceptionTerminatingString)
+                Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=ExceptionTerminatingString)
             End If
 
             ' read stack trace header
             currentLine = stream.ReadLine
             If currentLine <> StackTraceStartingStr Then
-                Me.ReportInvalidErrorFile(
-                    currentLine,
-                    exceptionStartingString:=StackTraceStartingStr)
+                Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=StackTraceStartingStr)
             End If
 
             ' read stack trace
@@ -329,9 +318,7 @@ Public Class ExceptionHandlerDialog
                 currentLine = ""
             End While
             If currentLine <> StackTraceTerminatingStr Then
-                Me.ReportInvalidErrorFile(
-                    currentLine,
-                    exceptionStartingString:=StackTraceTerminatingStr)
+                Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=StackTraceTerminatingStr)
             End If
             stackTraceTextBox.Text = sb.ToString
             Return stream.ReadToEnd

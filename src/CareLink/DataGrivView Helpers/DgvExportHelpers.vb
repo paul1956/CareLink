@@ -162,12 +162,9 @@ Friend Module DgvExportHelpers
                     If String.IsNullOrWhiteSpace(value) Then
                         worksheet.Cell(row:=i + 2, column).Value = ""
                         With worksheet.Cell(row:=i + 2, column).Style
-                            Dim cellStyle As DataGridViewCellStyle =
-                                dgvCell.GetFormattedStyle()
-                            Call .Fill.SetBackgroundColor(
-                                value:=GetXlColor(cellStyle, ForeGround:=False))
-                            Call .Font.SetFontColor(
-                                value:=GetXlColor(cellStyle, ForeGround:=True))
+                            Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
+                            .Fill.SetBackgroundColor(value:=GetXlColor(cellStyle, ForeGround:=False))
+                            .Font.SetFontColor(value:=GetXlColor(cellStyle, ForeGround:=True))
                             .Font.Bold = cellStyle.Font.Bold
                             .Font.FontName = dgv.Font.Name
                             .Font.FontSize = dgv.Font.Size
@@ -195,6 +192,7 @@ Friend Module DgvExportHelpers
                                 Case NameOf([Decimal]),
                                      NameOf([Double]),
                                      NameOf([Single])
+
                                     Dim valueASingle As Single =
                                         ParseSingle(value:=valueObject, digits:=3)
                                     If Single.IsNaN(valueASingle) Then
@@ -231,8 +229,7 @@ Friend Module DgvExportHelpers
                                     column += 1
 
                                     align = XLAlignmentHorizontalValues.Right
-                                    worksheet.Cell(row:=i + 2, column).Value =
-                                        CDate(valueObject).TimeOfDay
+                                    worksheet.Cell(row:=i + 2, column).Value = CDate(valueObject).TimeOfDay
                                     worksheet.Cell(row:=i + 2, column).Style.DateFormat _
                                              .SetFormat(value:="[$-x-systime]h:mm:ss AM/PM")
                                 Case Else
@@ -247,10 +244,8 @@ Friend Module DgvExportHelpers
                                 dgvCell.GetFormattedStyle()
 
                             .Alignment.Horizontal = align
-                            .Fill.SetBackgroundColor(
-                                value:=cellStyle.GetXlColor(ForeGround:=False))
-                            .Font.SetFontColor(
-                                value:=cellStyle.GetXlColor(ForeGround:=True))
+                            .Fill.SetBackgroundColor(value:=cellStyle.GetXlColor(ForeGround:=False))
+                            .Font.SetFontColor(value:=cellStyle.GetXlColor(ForeGround:=True))
                             .Font.Bold = cellStyle.Font.Bold
                             .Font.FontName = dgv.Font.Name
                             .Font.FontSize = dgv.Font.Size
@@ -289,8 +284,7 @@ Friend Module DgvExportHelpers
     ''' <returns>The <see cref="DataGridView"/> associated with the context menu.</returns>
     Private Function GetDgvFromMenuItem(sender As Object) As DataGridView
         Dim menuItem As ToolStripMenuItem = CType(sender, ToolStripMenuItem)
-        Dim contextStrip As ContextMenuStrip =
-            CType(menuItem.GetCurrentParent, ContextMenuStrip)
+        Dim contextStrip As ContextMenuStrip = CType(menuItem.GetCurrentParent, ContextMenuStrip)
         Return CType(contextStrip.SourceControl, DataGridView)
     End Function
 
@@ -300,10 +294,7 @@ Friend Module DgvExportHelpers
     ''' <param name="color">The <see cref="Color"/> to convert.</param>
     ''' <returns>The corresponding <see cref="XLColor"/>.</returns>
     <Extension>
-    Private Function GetXlColor(
-        cellStyle As DataGridViewCellStyle,
-        ForeGround As Boolean) As XLColor
-
+    Private Function GetXlColor(cellStyle As DataGridViewCellStyle, ForeGround As Boolean) As XLColor
         Return If(ForeGround,
                   If(Application.IsDarkModeEnabled,
                      XLColor.FromColor(cellStyle.BackColor),
@@ -331,10 +322,7 @@ Friend Module DgvExportHelpers
     ''' </summary>
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
-    Public Sub DgvCopySelectedCellsToClipBoardWithoutHeaders(
-        sender As Object,
-        e As EventArgs)
-
+    Public Sub DgvCopySelectedCellsToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
         GetDgvFromMenuItem(sender).CopyToClipboard(
             copyHeaders:=DataGridViewClipboardCopyMode.EnableWithoutHeaderText,
             copyAll:=False)

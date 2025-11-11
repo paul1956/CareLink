@@ -127,21 +127,21 @@ Partial Class Form1
         MenuOptionsEditPumpSettings = New ToolStripMenuItem()
         MenuShowMiniDisplay = New ToolStripMenuItem()
         MenuStartHere = New ToolStripMenuItem()
-        MenuStartHereUserLogin = New ToolStripMenuItem()
+        MenuStartUserLogin = New ToolStripMenuItem()
         ToolStripSeparator8 = New ToolStripSeparator()
-        MenuStartHereManuallyImportDeviceSettings = New ToolStripMenuItem()
-        MenuStartHereShowPumpSetup = New ToolStripMenuItem()
+        MenuStartManuallyImportDeviceSettings = New ToolStripMenuItem()
+        MenuStartShowPumpSetup = New ToolStripMenuItem()
         ToolStripSeparator1 = New ToolStripSeparator()
-        MenuStartHereLoadSavedDataFile = New ToolStripMenuItem()
-        MenuStartHereUseExceptionReport = New ToolStripMenuItem()
+        MenuStartLoadDataFile = New ToolStripMenuItem()
+        MenuStartLoadExceptionReport = New ToolStripMenuItem()
         ToolStripSeparator4 = New ToolStripSeparator()
-        MenuStartHereUseLastSavedFile = New ToolStripMenuItem()
-        MenuStartHereUseTestData = New ToolStripMenuItem()
+        MenuStartUseLastFile = New ToolStripMenuItem()
+        MenuStartUseTestData = New ToolStripMenuItem()
         ToolStripSeparator2 = New ToolStripSeparator()
-        MenuStartHereSaveSnapshotFile = New ToolStripMenuItem()
-        MenuStartHereCleanUpObsoleteFiles = New ToolStripMenuItem()
+        MenuStartSaveSnapshot = New ToolStripMenuItem()
+        MenuStartCleanUpObsoleteFiles = New ToolStripMenuItem()
         ToolStripSeparator3 = New ToolStripSeparator()
-        MenuStartHereExit = New ToolStripMenuItem()
+        MenuStartExit = New ToolStripMenuItem()
         MenuStrip1 = New MenuStrip()
         ModelLabel = New Label()
         NotifyIcon1 = New NotifyIcon(components)
@@ -251,7 +251,6 @@ Partial Class Form1
         TimeChangeLabel = New Label()
         TimeInTightRangeLabel = New Label()
         ToolTip1 = New ToolTip(components)
-        WebView = New Microsoft.Web.WebView2.WinForms.WebView2()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
         CType(SmartGuardShieldPictureBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -343,7 +342,6 @@ Partial Class Form1
         TabPage11AllUsers.SuspendLayout()
         TabControlPage1.SuspendLayout()
         TabControlPage2.SuspendLayout()
-        CType(WebView, ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
         ' AboveHighLimitMessageLabel
@@ -1393,99 +1391,99 @@ Partial Class Form1
         ' 
         ' MenuStartHere
         ' 
-        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartHereUserLogin, ToolStripSeparator8, MenuStartHereManuallyImportDeviceSettings, MenuStartHereShowPumpSetup, ToolStripSeparator1, MenuStartHereLoadSavedDataFile, MenuStartHereUseExceptionReport, ToolStripSeparator4, MenuStartHereUseLastSavedFile, MenuStartHereUseTestData, ToolStripSeparator2, MenuStartHereSaveSnapshotFile, MenuStartHereCleanUpObsoleteFiles, ToolStripSeparator3, MenuStartHereExit})
+        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartUserLogin, ToolStripSeparator8, MenuStartManuallyImportDeviceSettings, MenuStartShowPumpSetup, ToolStripSeparator1, MenuStartLoadDataFile, MenuStartLoadExceptionReport, ToolStripSeparator4, MenuStartUseLastFile, MenuStartUseTestData, ToolStripSeparator2, MenuStartSaveSnapshot, MenuStartCleanUpObsoleteFiles, ToolStripSeparator3, MenuStartExit})
         MenuStartHere.Name = "MenuStartHere"
         MenuStartHere.Size = New Size(71, 20)
         MenuStartHere.Text = "Start Here"
         ' 
-        ' MenuStartHereUserLogin
+        ' MenuStartUserLogin
         ' 
-        MenuStartHereUserLogin.Name = "MenuStartHereUserLogin"
-        MenuStartHereUserLogin.Size = New Size(245, 22)
-        MenuStartHereUserLogin.Text = "Login"
+        MenuStartUserLogin.Name = "MenuStartUserLogin"
+        MenuStartUserLogin.Size = New Size(245, 22)
+        MenuStartUserLogin.Text = "Login"
         ' 
         ' ToolStripSeparator8
         ' 
         ToolStripSeparator8.Name = "ToolStripSeparator8"
         ToolStripSeparator8.Size = New Size(242, 6)
         ' 
-        ' MenuStartHereManuallyImportDeviceSettings
+        ' MenuStartManuallyImportDeviceSettings
         ' 
-        MenuStartHereManuallyImportDeviceSettings.Name = "MenuStartHereManuallyImportDeviceSettings"
-        MenuStartHereManuallyImportDeviceSettings.Size = New Size(245, 22)
-        MenuStartHereManuallyImportDeviceSettings.Text = "Manually Import Device Settings"
+        MenuStartManuallyImportDeviceSettings.Name = "MenuStartManuallyImportDeviceSettings"
+        MenuStartManuallyImportDeviceSettings.Size = New Size(245, 22)
+        MenuStartManuallyImportDeviceSettings.Text = "Manually Import Device Settings"
         ' 
-        ' MenuStartHereShowPumpSetup
+        ' MenuStartShowPumpSetup
         ' 
-        MenuStartHereShowPumpSetup.Enabled = False
-        MenuStartHereShowPumpSetup.Name = "MenuStartHereShowPumpSetup"
-        MenuStartHereShowPumpSetup.Size = New Size(245, 22)
-        MenuStartHereShowPumpSetup.Text = "Show Pump Setup"
+        MenuStartShowPumpSetup.Enabled = False
+        MenuStartShowPumpSetup.Name = "MenuStartShowPumpSetup"
+        MenuStartShowPumpSetup.Size = New Size(245, 22)
+        MenuStartShowPumpSetup.Text = "Show Pump Setup"
         ' 
         ' ToolStripSeparator1
         ' 
         ToolStripSeparator1.Name = "ToolStripSeparator1"
         ToolStripSeparator1.Size = New Size(242, 6)
         ' 
-        ' MenuStartHereLoadSavedDataFile
+        ' MenuStartLoadDataFile
         ' 
-        MenuStartHereLoadSavedDataFile.Name = "MenuStartHereLoadSavedDataFile"
-        MenuStartHereLoadSavedDataFile.Size = New Size(245, 22)
-        MenuStartHereLoadSavedDataFile.Text = "Load Saved Data File"
+        MenuStartLoadDataFile.Name = "MenuStartLoadDataFile"
+        MenuStartLoadDataFile.Size = New Size(245, 22)
+        MenuStartLoadDataFile.Text = "Load Saved Data File"
         ' 
-        ' MenuStartHereUseExceptionReport
+        ' MenuStartLoadExceptionReport
         ' 
-        MenuStartHereUseExceptionReport.Name = "MenuStartHereUseExceptionReport"
-        MenuStartHereUseExceptionReport.Size = New Size(245, 22)
-        MenuStartHereUseExceptionReport.Text = "Load An Exception Report"
+        MenuStartLoadExceptionReport.Name = "MenuStartLoadExceptionReport"
+        MenuStartLoadExceptionReport.Size = New Size(245, 22)
+        MenuStartLoadExceptionReport.Text = "Load An Exception Report"
         ' 
         ' ToolStripSeparator4
         ' 
         ToolStripSeparator4.Name = "ToolStripSeparator4"
         ToolStripSeparator4.Size = New Size(242, 6)
         ' 
-        ' MenuStartHereUseLastSavedFile
+        ' MenuStartUseLastFile
         ' 
-        MenuStartHereUseLastSavedFile.Name = "MenuStartHereUseLastSavedFile"
-        MenuStartHereUseLastSavedFile.Size = New Size(245, 22)
-        MenuStartHereUseLastSavedFile.Text = "Use Last Data File"
+        MenuStartUseLastFile.Name = "MenuStartUseLastFile"
+        MenuStartUseLastFile.Size = New Size(245, 22)
+        MenuStartUseLastFile.Text = "Use Last Data File"
         ' 
-        ' MenuStartHereUseTestData
+        ' MenuStartUseTestData
         ' 
-        MenuStartHereUseTestData.Name = "MenuStartHereUseTestData"
-        MenuStartHereUseTestData.Size = New Size(245, 22)
-        MenuStartHereUseTestData.Text = "Use Test Data"
+        MenuStartUseTestData.Name = "MenuStartUseTestData"
+        MenuStartUseTestData.Size = New Size(245, 22)
+        MenuStartUseTestData.Text = "Use Test Data"
         ' 
         ' ToolStripSeparator2
         ' 
         ToolStripSeparator2.Name = "ToolStripSeparator2"
         ToolStripSeparator2.Size = New Size(242, 6)
         ' 
-        ' MenuStartHereSaveSnapshotFile
+        ' MenuStartSaveSnapshot
         ' 
-        MenuStartHereSaveSnapshotFile.Name = "MenuStartHereSaveSnapshotFile"
-        MenuStartHereSaveSnapshotFile.ShortcutKeys = Keys.Control Or Keys.S
-        MenuStartHereSaveSnapshotFile.Size = New Size(245, 22)
-        MenuStartHereSaveSnapshotFile.Text = "&Save Snapshot File"
+        MenuStartSaveSnapshot.Name = "MenuStartSaveSnapshot"
+        MenuStartSaveSnapshot.ShortcutKeys = Keys.Control Or Keys.S
+        MenuStartSaveSnapshot.Size = New Size(245, 22)
+        MenuStartSaveSnapshot.Text = "&Save Snapshot File"
         ' 
-        ' MenuStartHereCleanUpObsoleteFiles
+        ' MenuStartCleanUpObsoleteFiles
         ' 
-        MenuStartHereCleanUpObsoleteFiles.Name = "MenuStartHereCleanUpObsoleteFiles"
-        MenuStartHereCleanUpObsoleteFiles.Size = New Size(245, 22)
-        MenuStartHereCleanUpObsoleteFiles.Text = "Clean Up Obsolete Files"
+        MenuStartCleanUpObsoleteFiles.Name = "MenuStartCleanUpObsoleteFiles"
+        MenuStartCleanUpObsoleteFiles.Size = New Size(245, 22)
+        MenuStartCleanUpObsoleteFiles.Text = "Clean Up Obsolete Files"
         ' 
         ' ToolStripSeparator3
         ' 
         ToolStripSeparator3.Name = "ToolStripSeparator3"
         ToolStripSeparator3.Size = New Size(242, 6)
         ' 
-        ' MenuStartHereExit
+        ' MenuStartExit
         ' 
-        MenuStartHereExit.Image = My.Resources.Resources.AboutBox
-        MenuStartHereExit.Name = "MenuStartHereExit"
-        MenuStartHereExit.ShortcutKeys = Keys.Alt Or Keys.X
-        MenuStartHereExit.Size = New Size(245, 22)
-        MenuStartHereExit.Text = "E&xit"
+        MenuStartExit.Image = My.Resources.Resources.AboutBox
+        MenuStartExit.Name = "MenuStartExit"
+        MenuStartExit.ShortcutKeys = Keys.Alt Or Keys.X
+        MenuStartExit.Size = New Size(245, 22)
+        MenuStartExit.Text = "E&xit"
         ' 
         ' MenuStrip1
         ' 
@@ -2976,18 +2974,6 @@ Partial Class Form1
         TimeInTightRangeLabel.Size = New Size(100, 23)
         TimeInTightRangeLabel.TabIndex = 0
         ' 
-        ' WebView
-        ' 
-        WebView.AllowExternalDrop = False
-        WebView.CreationProperties = Nothing
-        WebView.DefaultBackgroundColor = Color.LightGray
-        WebView.Dock = DockStyle.Fill
-        WebView.Location = New Point(597, 6)
-        WebView.Name = "WebView"
-        WebView.Size = New Size(767, 643)
-        WebView.TabIndex = 3
-        WebView.ZoomFactor = 1.0R
-        ' 
         ' Form1
         ' 
         Me.AutoScaleDimensions = New SizeF(96.0F, 96.0F)
@@ -3139,7 +3125,6 @@ Partial Class Form1
         TabPage11AllUsers.ResumeLayout(False)
         TabControlPage1.ResumeLayout(False)
         TabControlPage2.ResumeLayout(False)
-        CType(WebView, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
@@ -3238,16 +3223,16 @@ Partial Class Form1
     Friend WithEvents MenuOptionsUseLocalTimeZone As ToolStripMenuItem
     Friend WithEvents MenuShowMiniDisplay As ToolStripMenuItem
     Friend WithEvents MenuStartHere As ToolStripMenuItem
-    Friend WithEvents MenuStartHereCleanUpObsoleteFiles As ToolStripMenuItem
-    Friend WithEvents MenuStartHereExit As ToolStripMenuItem
-    Friend WithEvents MenuStartHereLoadSavedDataFile As ToolStripMenuItem
-    Friend WithEvents MenuStartHereManuallyImportDeviceSettings As ToolStripMenuItem
-    Friend WithEvents MenuStartHereSaveSnapshotFile As ToolStripMenuItem
-    Friend WithEvents MenuStartHereShowPumpSetup As ToolStripMenuItem
-    Friend WithEvents MenuStartHereUseExceptionReport As ToolStripMenuItem
-    Friend WithEvents MenuStartHereUseLastSavedFile As ToolStripMenuItem
-    Friend WithEvents MenuStartHereUserLogin As ToolStripMenuItem
-    Friend WithEvents MenuStartHereUseTestData As ToolStripMenuItem
+    Friend WithEvents MenuStartCleanUpObsoleteFiles As ToolStripMenuItem
+    Friend WithEvents MenuStartExit As ToolStripMenuItem
+    Friend WithEvents MenuStartLoadDataFile As ToolStripMenuItem
+    Friend WithEvents MenuStartManuallyImportDeviceSettings As ToolStripMenuItem
+    Friend WithEvents MenuStartSaveSnapshot As ToolStripMenuItem
+    Friend WithEvents MenuStartShowPumpSetup As ToolStripMenuItem
+    Friend WithEvents MenuStartLoadExceptionReport As ToolStripMenuItem
+    Friend WithEvents MenuStartUseLastFile As ToolStripMenuItem
+    Friend WithEvents MenuStartUserLogin As ToolStripMenuItem
+    Friend WithEvents MenuStartUseTestData As ToolStripMenuItem
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents ModelLabel As Label
     Friend WithEvents NotifyIcon1 As NotifyIcon
@@ -3369,5 +3354,4 @@ Partial Class Form1
     Friend WithEvents TrendArrowsLabel As Label
     Friend WithEvents TrendValueLabel As Label
     Friend WithEvents UpdateAvailableStatusStripLabel As ToolStripStatusLabel
-    Friend WithEvents WebView As Microsoft.Web.WebView2.WinForms.WebView2
 End Class

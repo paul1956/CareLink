@@ -377,7 +377,7 @@ Friend Module LoginHelpers
                         End
                     End If
 
-                    Form1.MenuStartHereManuallyImportDeviceSettings.PerformClick()
+                    Form1.MenuStartManuallyImportDeviceSettings.PerformClick()
 
                     newPdfFile = True
                     Stop

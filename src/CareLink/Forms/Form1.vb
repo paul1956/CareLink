@@ -37,13 +37,6 @@ Public Class Form1
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _timeInTightRange As (Uint As UInteger, Str As String)
     Private _updating As Boolean
-    Private _webView2ProcessId As Integer = -1
-
-    Public WriteOnly Property WebView2ProcessId As Integer
-        Set
-            _webView2ProcessId = Value
-        End Set
-    End Property
 
     Public Shared Property Client As Client2
         Get
@@ -1141,7 +1134,7 @@ Public Class Form1
     ''' <param name="e">
     '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
     ''' </param>
-    Private Sub DgvBannerState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
+    Private Sub DgvPumpBannerState_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
         Handles DgvPumpBannerState.ColumnAdded
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -1654,7 +1647,7 @@ Public Class Form1
     ''' <param name="e">
     '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
     ''' </param>
-    Friend Sub DgvLastAlarm_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
+    Private Sub DgvLastAlarm_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
         Handles DgvLastAlarm.ColumnAdded
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -1687,7 +1680,7 @@ Public Class Form1
     ''' <param name="e">
     '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
     ''' </param>
-    Private Sub DataGridView_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
+    Private Sub DgvLimits_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
         Handles DgvLimits.ColumnAdded
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -1720,7 +1713,7 @@ Public Class Form1
     ''' <param name="e">
     '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
     ''' </param>
-    Friend Sub DgvLowGlucoseSuspended_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
+    Private Sub DgvLowGlucoseSuspended_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
         Handles DgvLowGlucoseSuspended.ColumnAdded
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -1864,7 +1857,7 @@ Public Class Form1
     ''' <param name="e">
     '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
     ''' </param>
-    Private Sub DgvSGs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
+    Private Sub DgvSensorGlucose_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
         Handles DgvLastSensorGlucose.ColumnAdded, DgvSGs.ColumnAdded
 
         With e.Column
@@ -1927,7 +1920,7 @@ Public Class Form1
     '''  Handles the <see cref="DataGridView.DataBindingComplete"/> event for the
     '''  <see cref="DgvSGs"/> DataGridView.
     '''  This event is raised when the data binding operation is complete.
-    '''  It sets the column autosize modes and sort glyphs,
+    '''  It sets the column <see cref="autosize"/> modes and sort glyphs,
     '''  and ensures the last column is filled and wrapped.
     ''' </summary>
     ''' <param name="sender">
@@ -2207,6 +2200,7 @@ Public Class Form1
     ''' <param name="e">A <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub DgvSummary_SelectionChanged(sender As Object, e As EventArgs) _
         Handles DgvSummary.SelectionChanged
+
         Dim dgv As DataGridView = DirectCast(sender, DataGridView)
         If dgv.CurrentCell IsNot Nothing AndAlso
             dgv.CurrentCell.RowIndex >= 0 AndAlso
@@ -2233,8 +2227,7 @@ Public Class Form1
     ''' </param>
     Private Sub DgvTherapyAlgorithmState_CellFormatting(
         sender As Object,
-        e As DataGridViewCellFormattingEventArgs) _
-        Handles DgvTherapyAlgorithmState.CellFormatting
+        e As DataGridViewCellFormattingEventArgs) Handles DgvTherapyAlgorithmState.CellFormatting
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim key As String
@@ -2337,40 +2330,17 @@ Public Class Form1
 
     ''' <summary>
     '''  Handles the <see cref="Form.FormClosing"/> event for the main form.
-    '''  Performs cleanup tasks such as disposing of the notification icon,
-    '''  terminating the <see cref="WebView2"/> process, and deleting the WebView2
-    '''  cache directory when the form is closing.
+    '''  Performs cleanup tasks such as disposing of the notification icon
     ''' </summary>
     ''' <param name="sender">The source of the event, <see cref="Form"/>.</param>
     ''' <param name="e">
     '''  A <see cref="FormClosingEventArgs"/> that contains the event data.
     ''' </param>
     ''' <remarks>
-    '''  Ensures proper resource cleanup before the application exits,
-    '''  including killing the WebView2 process
-    '''  and removing its cache directory if present.
+    '''  Ensures proper resource cleanup before the application exits
     ''' </remarks>
-    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) _
-        Handles MyBase.FormClosing
-
+    Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Me.NotifyIcon1?.Dispose()
-        If _webView2ProcessId > 0 Then
-            Dim webViewProcess As Process =
-                Process.GetProcessById(processId:=_webView2ProcessId)
-            ' TODO: dispose of the WebView2 control
-            'LoginDialog.WebView21.Dispose()
-            webViewProcess.Kill()
-            webViewProcess.WaitForExit(milliseconds:=3_000)
-        End If
-
-        If Directory.Exists(path:=GetWebViewDirectory()) Then
-            Try
-                Directory.Delete(path:=GetWebViewDirectory(), recursive:=True)
-            Catch
-                Stop
-                ' Ignore errors here
-            End Try
-        End If
     End Sub
 
     ''' <summary>
@@ -2428,11 +2398,6 @@ Public Class Form1
         End If
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(index:=1)
-        If String.IsNullOrWhiteSpace(value:=GetWebViewDirectory()) Then
-            s_webView2CacheDirectory =
-                Path.Join(GetProjectWebCache(), Guid.NewGuid().ToString())
-            Directory.CreateDirectory(path:=s_webView2CacheDirectory)
-        End If
 
         Dim style As FontStyle = FontStyle.Bold
         Dim emSize As Single = 12.0F
@@ -2598,40 +2563,34 @@ Public Class Form1
     '''  The source of the event, a ToolStripMenuItem control.
     ''' </param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
-    Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) _
-        Handles MenuStartHere.DropDownOpening
+    Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
+        Dim searchPattern As String = $"CareLink*.json"
+        Dim path As String = GetProjectDataDirectory()
+        Me.MenuStartLoadDataFile.Enabled = AnyMatchingFiles(path, searchPattern)
 
-        Me.MenuStartHereLoadSavedDataFile.Enabled =
-            AnyMatchingFiles(path:=GetProjectDataDirectory(),
-            searchPattern:=$"CareLink*.json")
-        Me.MenuStartHereSaveSnapshotFile.Enabled = Not RecentDataEmpty()
-        Me.MenuStartHereUseExceptionReport.Visible = AnyMatchingFiles(
-            path:=GetProjectDataDirectory(),
-            searchPattern:=$"{BaseErrorReportName}*.txt")
+        Me.MenuStartSaveSnapshot.Enabled = Not RecentDataEmpty()
 
+        searchPattern = $"{BaseErrorReportName}*.txt"
+        Me.MenuStartLoadExceptionReport.Visible = AnyMatchingFiles(path, searchPattern)
+
+        searchPattern = $"{s_userName}Settings.pdf"
         Dim userPdfExists As Boolean =
             Not (String.IsNullOrWhiteSpace(s_userName) OrElse
-            Not AnyMatchingFiles(
-                path:=GetSettingsDirectory(),
-                searchPattern:=$"{s_userName}Settings.pdf"))
+            Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern))
 
-        Me.MenuStartHereShowPumpSetup.Enabled = userPdfExists AndAlso
-                                                CurrentPdf IsNot Nothing AndAlso
-                                                CurrentPdf.IsValid
+        Me.MenuStartShowPumpSetup.Enabled = userPdfExists AndAlso CurrentPdf IsNot Nothing AndAlso CurrentPdf.IsValid
 
         Dim settingExist As Boolean = Directory.Exists(path:=GetSettingsDirectory)
 
         Dim downloadFilesExists As Boolean =
-           Directory.GetFiles(path:=GetDownloadsDirectory(),
-                              searchPattern:=$"*.pdf").Length > 0
+            Directory.GetFiles(path:=GetDownloadsDirectory(), searchPattern:=$"*.pdf").Length > 0
 
-        Me.MenuStartHereManuallyImportDeviceSettings.Enabled = downloadFilesExists
+        Me.MenuStartManuallyImportDeviceSettings.Enabled = downloadFilesExists
 
         ' The menu item For cleaning up obsolete files
-        ' (MenuStartHereCleanUpObsoleteFiles) is only enabled,
+        ' (MenuStartCleanUpObsoleteFiles) is only enabled,
         ' when the application Is the only instance running, as a safety precaution.
-        Me.MenuStartHereCleanUpObsoleteFiles.Enabled =
-            Process.GetProcessesByName(processName:=_processName).Length = 1
+        Me.MenuStartCleanUpObsoleteFiles.Enabled = Process.GetProcessesByName(processName:=_processName).Length = 1
     End Sub
 
     ''' <summary>
@@ -2641,8 +2600,8 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
-    Private Sub MenuStartHereCleanUpObsoleteFiles_Click(sender As Object, e As EventArgs) _
-        Handles MenuStartHereCleanUpObsoleteFiles.Click
+    Private Sub MenuStartCleanUpObsoleteFiles_Click(sender As Object, e As EventArgs) _
+        Handles MenuStartCleanUpObsoleteFiles.Click
 
         ' Opens a dialog to clean up obsolete files.
         Using dialog As New CleanupStaleFilesDialog With {.Text = $"Cleanup Obsolete Files"}
@@ -2657,9 +2616,7 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
-    Private Sub MenuStartHereExit_Click(sender As Object, e As EventArgs) _
-        Handles MenuStartHereExit.Click
-
+    Private Sub MenuStartExit_Click(sender As Object, e As EventArgs) Handles MenuStartExit.Click
         Me.Close()
     End Sub
 
@@ -2672,8 +2629,8 @@ Public Class Form1
     '''  The source of the event, a <see cref="ToolStripMenuItem"/> control.
     ''' </param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
-    Private Sub MenuStartHereManuallyImportDeviceSettings_Click(sender As Object, e As EventArgs) _
-        Handles MenuStartHereManuallyImportDeviceSettings.Click
+    Private Sub MenuStartManuallyImportDeviceSettings_Click(sender As Object, e As EventArgs) _
+        Handles MenuStartManuallyImportDeviceSettings.Click
 
         Dim folder As String =
             Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
@@ -2731,11 +2688,9 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
-    Private Sub MenuStartHereShowPumpSetup_Click(sender As Object, e As EventArgs) _
-        Handles MenuStartHereShowPumpSetup.Click
-
+    Private Sub MenuStartShowPumpSetup_Click(sender As Object, e As EventArgs) Handles MenuStartShowPumpSetup.Click
         If File.Exists(path:=GetUserPdfPath()) Then
-            If CurrentPdf.IsValid Then
+            If CurrentPdf IsNot Nothing AndAlso CurrentPdf.IsValid Then
                 SetServerUpdateTimer(Start:=False)
                 Using dialog As New PumpSetupDialog
                     dialog.Pdf = CurrentPdf
@@ -2772,9 +2727,7 @@ Public Class Form1
     ''' <remarks>
     '''  The saved file will have a unique name based on the current date and time.
     ''' </remarks>
-    Private Sub MenuStartHereSnapshotSave_Click(sender As Object, e As EventArgs) _
-        Handles MenuStartHereSaveSnapshotFile.Click
-
+    Private Sub MenuStartSaveSnapshot_Click(sender As Object, e As EventArgs) Handles MenuStartSaveSnapshot.Click
         If RecentDataEmpty() Then Exit Sub
         Dim path As String = GetUniqueDataFileName(
             baseName:=BaseSnapshotName,
@@ -2794,8 +2747,8 @@ Public Class Form1
     ''' <remarks>
     '''  The user can select an error report file to load and process.
     ''' </remarks>
-    Private Sub MenuStartHereUseExceptionReport_Click(sender As Object, e As EventArgs) _
-        Handles MenuStartHereUseExceptionReport.Click
+    Private Sub MenuStartLoadExceptionReport_Click(sender As Object, e As EventArgs) _
+        Handles MenuStartLoadExceptionReport.Click
 
         Dim fileList As String() = Directory.GetFiles(
             path:=GetProjectDataDirectory(),
@@ -2891,14 +2844,12 @@ Public Class Form1
     ''' <remarks>
     '''  The last saved file will be loaded and processed to update the application state.
     ''' </remarks>
-    Private Sub MenuStartHereUseLastSavedFile_Click(sender As Object, e As EventArgs) _
-        Handles MenuStartHereUseLastSavedFile.Click
-
+    Private Sub MenuStartUseLastSaved_Click(sender As Object, e As EventArgs) Handles MenuStartUseLastFile.Click
         Dim success As Boolean = DoOptionalLoginAndUpdateData(
             owner:=Me,
             updateAllTabs:=True,
             fileToLoad:=FileToLoadOptions.LastSaved)
-        Me.MenuStartHereSaveSnapshotFile.Enabled = Not success
+        Me.MenuStartSaveSnapshot.Enabled = Not success
     End Sub
 
     ''' <summary>
@@ -2913,9 +2864,7 @@ Public Class Form1
     '''  The user will be prompted to log in, and their data will be updated
     '''  based on their account information.
     ''' </remarks>
-    Private Sub MenuStartHereUserLogin_Click(sender As Object, e As EventArgs) _
-        Handles MenuStartHereUserLogin.Click
-
+    Private Sub MenuStartUserLogin_Click(sender As Object, e As EventArgs) Handles MenuStartUserLogin.Click
         Dim success As Boolean = DoOptionalLoginAndUpdateData(
             owner:=Me,
             updateAllTabs:=True,
@@ -2933,14 +2882,12 @@ Public Class Form1
     ''' <remarks>
     '''  The user can select a saved data file to load and process.
     ''' </remarks>
-    Private Sub MenuStartHereUseSavedDataFile_Click(sender As Object, e As EventArgs) _
-        Handles MenuStartHereLoadSavedDataFile.Click
-
+    Private Sub MenuStartUseDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartLoadDataFile.Click
         Dim success As Boolean = DoOptionalLoginAndUpdateData(
             owner:=Me,
             updateAllTabs:=True,
             fileToLoad:=FileToLoadOptions.Snapshot)
-        Me.MenuStartHereLoadSavedDataFile.Enabled = Not success
+        Me.MenuStartLoadDataFile.Enabled = Not success
     End Sub
 
     ''' <summary>
@@ -2953,14 +2900,12 @@ Public Class Form1
     ''' <remarks>
     '''  The test data will be loaded and processed to simulate a CareLink™ environment.
     ''' </remarks>
-    Private Sub MenuStartHereUseTestData_Click(sender As Object, e As EventArgs) _
-        Handles MenuStartHereUseTestData.Click
-
+    Private Sub MenuStartUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartUseTestData.Click
         Dim success As Boolean = DoOptionalLoginAndUpdateData(
             owner:=Me,
             updateAllTabs:=True,
             fileToLoad:=FileToLoadOptions.TestData)
-        Me.MenuStartHereSaveSnapshotFile.Enabled = Not success
+        Me.MenuStartSaveSnapshot.Enabled = Not success
     End Sub
 
 #End Region ' Start Here Menu Events
@@ -3335,9 +3280,7 @@ Public Class Form1
     '''  The source of the event, a <see cref="ToolStripMenuItem"/> control.
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuHelpCheckForUpdates_Click(sender As Object, e As EventArgs) _
-        Handles MenuHelpCheckForUpdates.Click
-
+    Private Sub MenuHelpCheckForUpdates_Click(sender As Object, e As EventArgs) Handles MenuHelpCheckForUpdates.Click
         CheckForUpdatesAsync(reportSuccessfulResult:=True)
     End Sub
 
@@ -3350,9 +3293,7 @@ Public Class Form1
     '''  The source of the event, a <see cref="ToolStripMenuItem"/> control.
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuHelpReportAnIssue_Click(sender As Object, e As EventArgs) _
-        Handles MenuHelpReportAnIssue.Click
-
+    Private Sub MenuHelpReportAnIssue_Click(sender As Object, e As EventArgs) Handles MenuHelpReportAnIssue.Click
         OpenUrlInBrowser(url:=$"{GitHubCareLinkUrl}issues")
     End Sub
 
@@ -3369,9 +3310,7 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, the ActiveInsulinValue label.</param>
     ''' <param name="e">A <see cref="PaintEventArgs"/> that contains the event data.</param>
-    Private Sub ActiveInsulinValue_Paint(sender As Object, e As PaintEventArgs) _
-        Handles ActiveInsulinValue.Paint
-
+    Private Sub ActiveInsulinValue_Paint(sender As Object, e As PaintEventArgs) Handles ActiveInsulinValue.Paint
         ControlPaint.DrawBorder(
             e.Graphics,
             bounds:=e.ClipRectangle,
@@ -3423,8 +3362,7 @@ Public Class Form1
     '''  The source of the event, a <see cref="NotifyIcon"/> control.
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub NotifyIcon1_DoubleClick(sender As Object, e As EventArgs) _
-        Handles NotifyIcon1.DoubleClick
+    Private Sub NotifyIcon1_DoubleClick(sender As Object, e As EventArgs) Handles NotifyIcon1.DoubleClick
 
         Me.ShowInTaskbar = True
         Me.WindowState = FormWindowState.Normal
@@ -3482,9 +3420,7 @@ Public Class Form1
     '''  The source of the event, typically the CalibrationDueImage control.
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) _
-        Handles CalibrationDueImage.MouseHover
-
+    Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
         If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
             Dim due As String = PumpNow.AddMinutes(value:=s_timeToNextCalibrationMinutes).ToShortTimeString()
             Dim caption As String = $"Calibration Due {due}"
@@ -3501,12 +3437,12 @@ Public Class Form1
     '''  The source of the event, typically the SensorDaysLeftLabel control.
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub Last24HrCarbLabel_MouseHover(sender As Object, e As EventArgs) _
-        Handles Last24HrCarbsLabel.MouseHover, Last24HrCarbsValueLabel.MouseHover
+    Private Sub Last24HrCarbLabel_MouseHover(sender As Object, e As EventArgs) Handles _
+        Last24HrCarbsLabel.MouseHover,
+        Last24HrCarbsValueLabel.MouseHover
 
-        _carbRatio.SetToolTip(
-            control:=DirectCast(sender, Label),
-            caption:=$"Carb Ratio {CDbl(s_totalCarbs / s_totalManualBolus):N1}")
+        Dim caption As String = $"Carb Ratio {CDbl(s_totalCarbs / s_totalManualBolus):N1}"
+        _carbRatio.SetToolTip(control:=DirectCast(sender, Label), caption)
     End Sub
 
     ''' <summary>
@@ -3518,8 +3454,7 @@ Public Class Form1
     '''  The source of the event, <see cref="SensorDaysLeftLabel"/> control.
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub SensorDaysLeftLabel_MouseHover(sender As Object, e As EventArgs) _
-        Handles SensorDaysLeftLabel.MouseHover
+    Private Sub SensorDaysLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
 
         Dim caption As String = $"Sensor will expire In {PatientData.SensorDurationHours} hours"
         If PatientData.CgmInfo.SensorProductModel?.Trim = "MMT-5120" Then
@@ -3604,10 +3539,9 @@ Public Class Form1
                     c.Visible =
                         Not HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
                 Next
-                Me.TabControlPage2.SelectedIndex =
-                    If(_lastMarkerTabLocation.Page = 0,
-                       0,
-                       _lastMarkerTabLocation.Tab)
+                Me.TabControlPage2.SelectedIndex = If(_lastMarkerTabLocation.Page = 0,
+                                                      0,
+                                                      _lastMarkerTabLocation.Tab)
                 Me.TabControlPage1.Visible = False
                 Exit Sub
         End Select
@@ -5361,16 +5295,14 @@ Public Class Form1
             If sg.sgMgdL < 70 Then
                 lowCount += 1
                 If NativeMmolL Then
-                    lowDeviations +=
-                        ((GetTirLowLimit() - sg.sgMmolL) * MmolLUnitsDivisor) ^ 2
+                    lowDeviations += ((GetTirLowLimit() - sg.sgMmolL) * MmolLUnitsDivisor) ^ 2
                 Else
                     lowDeviations += (GetTirLowLimit() - sg.sgMgdL) ^ 2
                 End If
             ElseIf sg.sgMgdL > 180 Then
                 highCount += 1
                 If NativeMmolL Then
-                    highDeviations +=
-                        ((sg.sgMmolL - GetTirHighLimit()) * MmolLUnitsDivisor) ^ 2
+                    highDeviations += ((sg.sgMmolL - GetTirHighLimit()) * MmolLUnitsDivisor) ^ 2
                 Else
                     highDeviations += (sg.sgMgdL - GetTirHighLimit()) ^ 2
                 End If
@@ -5382,37 +5314,30 @@ Public Class Form1
             Me.LowTirComplianceLabel.Text = ""
             Me.HighTirComplianceLabel.Text = ""
         Else
-            Dim lowDeviation As Single =
-                Math.Sqrt(lowDeviations / (elements - highCount)).RoundToSingle(digits:=1)
+            Dim lowDeviation As Single = Math.Sqrt(lowDeviations / (elements - highCount)).RoundToSingle(digits:=1)
             Select Case True
                 Case lowDeviation <= 2
                     Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}Excellent{Superscript2}"
                     Me.LowTirComplianceLabel.ForeColor = Color.LimeGreen
                 Case lowDeviation <= 4
-                    Me.LowTirComplianceLabel.Text =
-                        $"Low{vbCrLf}({lowDeviation}) OK{Superscript2}"
+                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}({lowDeviation}) OK{Superscript2}"
                     Me.LowTirComplianceLabel.ForeColor = Color.Yellow
                 Case Else
-                    Me.LowTirComplianceLabel.Text =
-                        $"Low{vbCrLf}({lowDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
+                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}({lowDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
                     Me.LowTirComplianceLabel.ForeColor = Color.Red
             End Select
 
-            Dim highDeviation As Single =
-                Math.Sqrt(highDeviations / (elements - lowCount)).RoundToSingle(digits:=1)
+            Dim highDeviation As Single = Math.Sqrt(highDeviations / (elements - lowCount)).RoundToSingle(digits:=1)
             Select Case True
                 Case highDeviation <= 2
-                    Me.HighTirComplianceLabel.Text =
-                        $"High{vbCrLf}Excellent{Superscript2}"
+                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}Excellent{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.LimeGreen
                 Case highDeviation <= 4
-                    Me.HighTirComplianceLabel.Text =
-                        $"High{vbCrLf}({highDeviation}) OK{Superscript2}"
+                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) OK{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.Yellow
                 Case Else
                     Me.HighTirComplianceLabel.Text =
-                        $"High{vbCrLf}({highDeviation}) " &
-                        $"Needs{vbCrLf}Improvement{Superscript2}"
+                        $"High{vbCrLf}({highDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.Red
             End Select
         End If
@@ -5548,12 +5473,10 @@ Public Class Form1
         Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = ""
         Dim key As String = NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime)
         If RecentData.TryGetValue(key, value:=lastMedicalDeviceDataUpdateServerTimeEpoch) Then
-            If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) =
-                s_lastMedicalDeviceDataUpdateServerEpoch Then
+            If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                 Exit Sub
             Else
-                s_lastMedicalDeviceDataUpdateServerEpoch =
-                    CLng(lastMedicalDeviceDataUpdateServerTimeEpoch)
+                s_lastMedicalDeviceDataUpdateServerEpoch = CLng(lastMedicalDeviceDataUpdateServerTimeEpoch)
             End If
         End If
 
@@ -5600,8 +5523,7 @@ Public Class Form1
         Me.UpdateDosingAndCarbs()
 
         key = NameOf(ServerDataEnum.lastName)
-        Me.FullNameLabel.Text =
-            $"{PatientData.FirstName} {RecentData.GetStringValueOrEmpty(key)}"
+        Me.FullNameLabel.Text = $"{PatientData.FirstName} {RecentData.GetStringValueOrEmpty(key)}"
 
         Dim mdi As MedicalDeviceInformation = PatientData.MedicalDeviceInformation
         Me.ModelLabel.Text = $"{mdi.ModelNumber} HW Version = {mdi.HardwareRevision}"
@@ -5625,12 +5547,10 @@ Public Class Form1
             className:=NameOf(ActiveInsulin), rowIndex:=ServerDataEnum.activeInsulin,
             hideRecordNumberColumn:=True)
 
-        Dim keySelector As Func(Of SG, Integer) =
-            Function(x As SG) As Integer
-                Return x.RecordNumber
-            End Function
-        Dim classCollection As List(Of SG) =
-            s_sgRecords.OrderByDescending(keySelector).ToList()
+        Dim keySelector As Func(Of SG, Integer) = Function(x As SG) As Integer
+                                                      Return x.RecordNumber
+                                                  End Function
+        Dim classCollection As List(Of SG) = s_sgRecords.OrderByDescending(keySelector).ToList()
         Me.TlpSgs.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection),
             dgv:=Me.DgvSGs,
@@ -5665,8 +5585,7 @@ Public Class Form1
 
         Me.ShowHideLegends()
 
-        If My.Settings.SystemAudioAlertsEnabled AndAlso
-           My.Settings.SystemSpeechRecognitionThreshold <> 1 Then
+        If My.Settings.SystemAudioAlertsEnabled AndAlso My.Settings.SystemSpeechRecognitionThreshold <> 1 Then
             InitializeSpeechRecognition()
         Else
             CancelSpeechRecognition()

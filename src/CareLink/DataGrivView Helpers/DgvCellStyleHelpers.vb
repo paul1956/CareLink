@@ -368,8 +368,7 @@ Public Module DgvCellStyleHelpers
     Friend Sub HideDataGridViewColumnsByName(Of T)(ByRef dgv As DataGridView)
         Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
         For i As Integer = 0 To lastColumnIndex
-            If i > 0 AndAlso
-               String.IsNullOrWhiteSpace(value:=dgv.Columns(index:=i).DataPropertyName) Then
+            If i > 0 AndAlso String.IsNullOrWhiteSpace(value:=dgv.Columns(index:=i).DataPropertyName) Then
                 Stop
             End If
             Dim item As String = dgv.Columns(index:=i).DataPropertyName
