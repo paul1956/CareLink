@@ -12,8 +12,7 @@ Friend Module BrowserUtilities
     ''' </summary>
     ''' <param name="url">The web address (URL) to open.</param>
     Private Sub LaunchBrowser(url As String)
-        Process.Start(startInfo:=New ProcessStartInfo(fileName:=url) With {
-            .UseShellExecute = True})
+        Process.Start(startInfo:=New ProcessStartInfo(fileName:=url) With {.UseShellExecute = True})
     End Sub
 
     ''' <summary>

@@ -11,17 +11,6 @@ Imports Xunit
 Public Class SystemVariablesTests
 
     <Fact>
-    Public Sub GetWebViewCacheDirectory_ReturnsSetValue()
-        ' Arrange
-        Dim expected As String = "C:\\TestCache"
-        s_webView2CacheDirectory = expected
-        ' Act
-        Dim result As String = GetWebViewDirectory()
-        ' Assert
-        result.Should().Be(expected)
-    End Sub
-
-    <Fact>
     Public Sub GetTirHighLimit_ReturnsCorrectValue_ForUnits()
         NativeMmolL = True
         Dim highLimitMmol As Single = GetTirHighLimit()

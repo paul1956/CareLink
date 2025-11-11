@@ -42,15 +42,6 @@ Public Class CleanupStaleFilesDialog
                 .Nodes(index:=0).Nodes.Add(text:=file.Split(separator:="\").Last)
                 .Nodes(index:=0).LastNode.Checked = True
             Next
-            .Nodes.Add(text:="WebCaches")
-            Dim path As String = IO.Path.Join(GetProjectDataDirectory(), "WebCache")
-            fileList = IO.Directory.GetDirectories(path)
-            For Each file As String In fileList
-                Dim webCacheFileName As String = file.Split(separator:="\").Last
-                .Nodes(index:=1).Nodes.Add(text:=webCacheFileName)
-                .Nodes(index:=1).LastNode.Checked =
-                    Not GetWebViewDirectory().EndsWithNoCase(value:=webCacheFileName)
-            Next
             .ExpandAll()
             .EndUpdate()
         End With
@@ -108,18 +99,6 @@ Public Class CleanupStaleFilesDialog
                     End Select
                 End If
             Next
-            For Each node As TreeNode In .Nodes(index:=1).Nodes
-                If node.Checked Then
-                    Try
-                        Dim path As String =
-                            IO.Path.Join(GetProjectDataDirectory(), "WebCache", node.Text)
-                        IO.Directory.Delete(path, recursive:=True)
-                    Catch ex As Exception
-                        Stop
-                        ' Ignore ones I can't delete
-                    End Try
-                End If
-            Next
         End With
         Return result
     End Function
@@ -158,19 +137,11 @@ Public Class CleanupStaleFilesDialog
             Exit Sub
         End If
         If e.Node.Text = "Error Files" Then
-            If e.Action = TreeViewAction.ByKeyboard OrElse
-               e.Action = TreeViewAction.ByMouse Then
-
+            If e.Action = TreeViewAction.ByKeyboard OrElse e.Action = TreeViewAction.ByMouse Then
                 SetChildNodes(e.Node.Nodes, newValue:=Not e.Node.Checked)
                 e.Cancel = False
                 Exit Sub
             End If
-            e.Cancel = True
-            Exit Sub
-        End If
-        If e.Node.Text = "WebCaches" Then
-            e.Cancel = True
-            Exit Sub
         End If
         e.Cancel = True
     End Sub

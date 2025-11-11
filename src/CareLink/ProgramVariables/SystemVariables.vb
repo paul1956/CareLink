@@ -23,7 +23,6 @@ Public Module SystemVariables
     Friend s_password As String = ""
     Friend s_useLocalTimeZone As Boolean
     Friend s_userName As String = My.Settings.CareLinkUserName
-    Friend s_webView2CacheDirectory As String
     Friend ReadOnly Property CareLinkDecimalSeparator As Char = "."c
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property DecimalSeparator As String = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator
@@ -91,16 +90,6 @@ Public Module SystemVariables
         Return If(NativeMmolL,
                   mmolValue,
                   mgdlValue)
-    End Function
-
-    ''' <summary>
-    '''  Gets the directory path for the WebView2 cache.
-    ''' </summary>
-    ''' <returns>
-    '''  The WebView2 cache directory path as a string.
-    ''' </returns>
-    Public Function GetWebViewDirectory() As String
-        Return s_webView2CacheDirectory
     End Function
 
 End Module

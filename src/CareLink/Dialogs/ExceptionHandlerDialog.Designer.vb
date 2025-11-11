@@ -35,7 +35,7 @@ Partial Class ExceptionHandlerDialog
         AutoModeStatusLabel = New Label()
         ExceptionTextBox = New TextBox()
         BgReadingLabel = New Label()
-        InstructionsRichTextBox = New RichTextBox()
+        InstructionRtb = New RichTextBox()
         Me.SuspendLayout()
         ' 
         ' OK
@@ -91,14 +91,14 @@ Partial Class ExceptionHandlerDialog
         BgReadingLabel.TabIndex = 9
         BgReadingLabel.Text = "Stack Trace:"
         ' 
-        ' InstructionsRichTextBox
+        ' InstructionRtb
         ' 
-        InstructionsRichTextBox.Anchor = AnchorStyles.Top Or AnchorStyles.Right
-        InstructionsRichTextBox.Location = New Point(1147, 60)
-        InstructionsRichTextBox.Name = "InstructionsRichTextBox"
-        InstructionsRichTextBox.Size = New Size(261, 282)
-        InstructionsRichTextBox.TabIndex = 10
-        InstructionsRichTextBox.Text = ""
+        InstructionRtb.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        InstructionRtb.Location = New Point(1147, 60)
+        InstructionRtb.Name = "InstructionRtb"
+        InstructionRtb.Size = New Size(261, 282)
+        InstructionRtb.TabIndex = 10
+        InstructionRtb.Text = ""
         ' 
         ' ExceptionHandlerDialog
         ' 
@@ -106,7 +106,7 @@ Partial Class ExceptionHandlerDialog
         Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.ClientSize = New Size(1417, 383)
-        Me.Controls.Add(InstructionsRichTextBox)
+        Me.Controls.Add(InstructionRtb)
         Me.Controls.Add(BgReadingLabel)
         Me.Controls.Add(ExceptionTextBox)
         Me.Controls.Add(AutoModeStatusLabel)
@@ -128,5 +128,5 @@ Partial Class ExceptionHandlerDialog
     Friend WithEvents AutoModeStatusLabel As Label
     Friend WithEvents ExceptionTextBox As TextBox
     Friend WithEvents BgReadingLabel As Label
-    Friend WithEvents InstructionsRichTextBox As RichTextBox
+    Friend WithEvents InstructionRtb As RichTextBox
 End Class

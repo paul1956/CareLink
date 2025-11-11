@@ -485,11 +485,8 @@ Public Class LoginDialog
         Handles UsernameComboBox.SelectionChangeCommitted
 
         Dim userRecord As CareLinkUserDataRecord = Nothing
-
         Dim key As String = Me.UsernameComboBox.SelectedValue.ToString
-        If Me.UsernameComboBox.SelectedValue IsNot Nothing AndAlso
-           s_allUserSettingsData.TryGetValue(key, userRecord) Then
-
+        If Me.UsernameComboBox.SelectedValue IsNot Nothing AndAlso s_allUserSettingsData.TryGetValue(key, userRecord) Then
             If Not userRecord.CareLinkUserName.EqualsNoCase(Me.UsernameComboBox.Text) Then
                 Me.UsernameComboBox.Text = userRecord.CareLinkUserName
             End If

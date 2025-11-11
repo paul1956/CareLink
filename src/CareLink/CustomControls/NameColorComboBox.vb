@@ -105,7 +105,7 @@ Public Class NameColorComboBox
         End Using
 
         Dim paintColor As Color = item.Value.ToColor
-        Using b As Brush = New SolidBrush(color:=paintColor)
+        Using b As New SolidBrush(color:=paintColor)
             e.Graphics.FillRectangle(
                 brush:=b,
                 x:=eBounds.X + (eBounds.Width \ 2),
