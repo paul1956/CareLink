@@ -271,18 +271,39 @@ Friend Module DateTimeExtensions
         Return New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, second:=0)
     End Function
 
-    ''' <summary>
-    '''  Converts an <see langword="Integer"/> representing minutes into
-    '''  a <see langword="String"/> formatted as hours and minutes.
-    ''' </summary>
-    ''' <param name="minutes">The number of minutes to convert.</param>
-    ''' <returns>
-    '''  A <see langword="String"/> representing the time in "HH:mm" format.
-    ''' </returns>
+    Public Function ToDaysHours(hours As Integer) As String
+        ' Hours must be positive and non-zero
+        If hours <= 0 Then
+            Throw New ArgumentOutOfRangeException(paramName:=NameOf(hours), message:="hours must be positive and non-zero")
+        End If
+
+        Dim days As Integer = hours \ 24
+        Dim hrs As Integer = hours Mod 24
+
+        Dim parts As New List(Of String)
+        If days > 0 Then
+            parts.Add($"{days} {If(days = 1, "day", "days")}")
+        End If
+        If hrs > 0 Then
+            parts.Add($"{hrs} {If(hrs = 1, "hr", "hrs")}")
+        End If
+
+        If parts.Count = 0 Then
+            ' This should not happen because hours > 0, but handle defensively
+            Return "0 hrs"
+        ElseIf parts.Count = 1 Then
+            Return parts(0)
+        Else
+            Return $"{parts(0)} and {parts(1)}"
+        End If
+    End Function
+
     <Extension>
     Public Function ToHoursMinutes(minutes As Integer) As String
         Return New TimeSpan(hours:=0, minutes:=minutes \ 60, seconds:=minutes Mod 60).ToString.Substring(startIndex:=4)
     End Function
+
+
 
     ''' <summary>
     '''  Converts a <see langword="Single"/> representing hours into
