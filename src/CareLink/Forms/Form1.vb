@@ -4238,17 +4238,13 @@ Public Class Form1
                     End Select
 
                     Dim s As String =
-                        sgString.PadRight(totalWidth:=3) _
-                                .Substring(startIndex:=0, length:=3).Trim _
-                                .PadLeft(totalWidth:=3)
+                        sgString.PadRight(totalWidth:=3).Substring(startIndex:=0, length:=3).Trim.PadLeft(totalWidth:=3)
 
                     Me.NotifyIcon1.Icon = CreateTextIcon(s, backColor)
                     Dim strBuilder As New StringBuilder(capacity:=100)
-                    Dim dateSeparator As String =
-                        CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator
+                    Dim dateSeparator As String = CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator
                     strBuilder.AppendLine(
-                        value:=Date.Now().ToShortDateTimeString _
-                                   .Remove(s:=$"{dateSeparator}{Now.Year}"))
+                        value:=Date.Now().ToShortDateTimeString.Remove(s:=$"{dateSeparator}{Now.Year}"))
                     strBuilder.AppendLine(value:=$"Last SG {sgString} {BgUnits}")
                     If PatientData.ConduitInRange Then
                         If s_lastSgValue.IsSgInvalid Then
