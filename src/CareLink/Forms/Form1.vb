@@ -5064,6 +5064,7 @@ Public Class Form1
                     End Select
 
                 Case Nothing ' Guardian 4
+                    Dim sensorDurationDays As Integer = CInt(Math.Ceiling(PatientData.SensorDurationHours / 24))
                     Select Case PatientData.SensorDurationHours
                         Case Is >= 255
                             Me.SensorDaysLeftLabel.Text = ""
@@ -5074,11 +5075,11 @@ Public Class Form1
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
                             Me.SensorTimeLeftLabel.Text = "7 Days"
                         Case Is >= 24
-                            Me.SensorDaysLeftLabel.Text = Math.Ceiling(PatientData.SensorDurationHours / 24).ToString()
+                            Me.SensorDaysLeftLabel.Text = sensorDurationDays.ToString()
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
-                            Me.SensorTimeLeftLabel.Text = $"{Me.SensorDaysLeftLabel.Text} Days"
+                            Me.SensorTimeLeftLabel.Text = $"{sensorDurationDays} Days"
                         Case Is > 0
-                            Me.SensorDaysLeftLabel.Text = $"<{Math.Ceiling(PatientData.SensorDurationHours / 24)}"
+                            Me.SensorDaysLeftLabel.Text = $"<{sensorDurationDays}"
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                             Me.SensorTimeLeftLabel.Text = $"{PatientData.SensorDurationHours} Hours"
                         Case Is = 0
@@ -5096,19 +5097,20 @@ Public Class Form1
                                     Me.SensorTimeLeftLabel.Text = "Expired"
                                 Case Else
                                     Me.SensorDaysLeftLabel.Text = ""
-                                    Me.SensorTimeLeftPictureBox.Image =
-                                My.Resources.SensorExpirationUnknown
+                                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
                                     Me.SensorTimeLeftLabel.Text = "Unknown"
                             End Select
 
                         Case Else
-                            Me.SensorDaysLeftLabel.Text = Math.Ceiling(PatientData.SensorDurationHours / 24).ToString()
+                            Me.SensorDaysLeftLabel.Text = sensorDurationDays.ToString()
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
                             Me.SensorTimeLeftLabel.Text = "Unknown"
                     End Select
                 Case Else ' Instinct
-                    Me.SensorDaysLeftLabel.Text = ""
-                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
+                    Me.SensorTimeLeftPictureBox.Image = If(PatientData.SensorDurationHours > 24,
+                                                           My.Resources.SensorLifeOK,
+                                                           My.Resources.SensorLifeNotOK)
+                    Me.SensorDaysLeftLabel.Text = PatientData.SensorDurationHours.HoursToDaysAndHours
                     Me.SensorTimeLeftLabel.Text = "Unknown"
             End Select
         Else
