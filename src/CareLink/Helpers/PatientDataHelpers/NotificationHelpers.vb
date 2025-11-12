@@ -242,9 +242,10 @@ Friend Module NotificationHelpers
         Dim json As String = s_notificationHistoryValue(key:="clearedNotifications")
         innerJson = JsonToDictionaryList(json)
         Dim classCollection As List(Of SummaryRecord)
+        Dim jsonDictionary As Dictionary(Of String, String)
         If innerJson.Count > 0 Then
             innerJson.Reverse()
-            For Each jsonDictionary As Dictionary(Of String, String) In innerJson
+            For Each jsonDictionary In innerJson
                 classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
                 DisplayNotificationDataTableInDGV(
                     realPanel:=mainForm.TlpNotificationsCleared,
@@ -269,10 +270,8 @@ Friend Module NotificationHelpers
                 mainForm.TlpNotificationActive.RowStyles.RemoveAt(index:=1)
                 mainForm.TlpNotificationActive.RowCount = 1
             End If
-            For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In
-                innerJson.WithIndex()
-
-                Dim jsonDictionary As Dictionary(Of String, String) = innerDictionary.Value
+            For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
+                jsonDictionary = innerDictionary.Value
                 classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
                 DisplayNotificationDataTableInDGV(
                     realPanel:=mainForm.TlpNotificationActive,

@@ -114,7 +114,7 @@ Friend Module UserMessageConstants
                  "To ensure insulin delivery, change reservoir."},
         {"117", "Active Insulin Cleared"},
         {"128", "Sensor grace period starting soon(triggeredDateTime). " &
-                 "Less than (secondaryTimeReminder) before grace periods starts.{vbCrLf}Change sensor soon."},
+                 $"Less than (secondaryTimeReminder) before grace periods starts.{vbCrLf}Change sensor soon."},
         {"130", "Rewind Required(triggeredDateTime). Delivery stopped. " &
                  "Rewind was required due to pump error. Select OK to continue."},
         {"140", "Delivery Suspended. Connect Infusion Set"}, _ ' From Java
