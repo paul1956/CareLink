@@ -2449,6 +2449,7 @@ Public Class Form1
         Me.ShieldUnitsLabel.Parent = Me.SmartGuardShieldPictureBox
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
+        Me.SensorTimeLeftPictureBox.CenterXOnParent()
         Me.SensorMessageLabel.Parent = Me.SmartGuardShieldPictureBox
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
@@ -5014,28 +5015,29 @@ Public Class Form1
     '''  and the sensor time left picture box is updated accordingly.
     ''' </remarks>
     Private Sub UpdateSensorLife()
-        If PatientData.ConduitInRange Then
+        Dim haveCGM As Boolean = PatientData.ConduitInRange AndAlso PatientData.CgmInfo IsNot Nothing
+        If haveCGM Then
             Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 12.0F, FontStyle.Bold)
             Select Case PatientData.CgmInfo.SensorProductModel?.Trim
-                Case "MMT-5120"
+                Case "MMT-5120" ' Simplera
                     Dim durationWithoutGrace As Integer = PatientData.SensorDurationHours - 24
                     Select Case PatientData.SensorDurationHours
                         Case Is >= 255
                             Me.SensorDaysLeftLabel.Text = ""
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
                             Me.SensorTimeLeftLabel.Text = "Unknown"
-                        Case Is > 144
-                            Me.SensorDaysLeftLabel.Text = CStr(durationWithoutGrace \ 24)
+                        Case Is >= 48
+                            Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(durationWithoutGrace / 24))
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
                             Me.SensorTimeLeftLabel.Text = Me.GetSensorTimeLeftMessage()
-                        Case Is >= 24
+                        Case Is > 24
                             Me.SensorDaysLeftLabel.Text = Math.Ceiling(durationWithoutGrace / 24).ToString()
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
                             Me.SensorTimeLeftLabel.Text = Me.GetSensorTimeLeftMessage()
                         Case Is > 0 ' Grace
-                            Me.SensorDaysLeftLabel.Text = $"<{Math.Ceiling(durationWithoutGrace / 24)}"
-                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
-                            Me.SensorTimeLeftLabel.Text = $"{PatientData.SensorDurationHours} hours"
+                            Me.SensorDaysLeftLabel.Text = ""
+                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpiringSoon
+                            Me.SensorTimeLeftLabel.Text = Me.GetSensorTimeLeftMessage()
                         Case Is = 0
                             Dim sensorDurationMinutes As Integer = If(PatientData.SensorDurationMinutes Is Nothing,
                                                                       -1,
@@ -5051,8 +5053,7 @@ Public Class Form1
                                     Me.SensorTimeLeftLabel.Text = "Expired"
                                 Case Else
                                     Me.SensorDaysLeftLabel.Text = ""
-                                    Me.SensorTimeLeftPictureBox.Image =
-                                My.Resources.SensorExpirationUnknown
+                                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
                                     Me.SensorTimeLeftLabel.Text = "Unknown"
                             End Select
 
@@ -5110,18 +5111,22 @@ Public Class Form1
                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
                     Me.SensorTimeLeftLabel.Text = "Unknown"
             End Select
-
-            Me.SensorDaysLeftLabel.Visible = True
+        Else
+            Me.SensorDaysLeftLabel.Text = ""
+            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
+            Me.SensorTimeLeftLabel.Text = "Unknown"
+            Me.SensorTimeLeftPanel.Visible = True
         End If
+        Me.SensorDaysLeftLabel.Visible = Me.SensorDaysLeftLabel.Text <> String.Empty
         Me.SensorTimeLeftPanel.Visible = PatientData.ConduitInRange
     End Sub
 
     Private Function GetSensorTimeLeftMessage() As String
-        Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F, FontStyle.Bold)
         Dim sensorDurationHours As Integer = PatientData.SensorDurationHours
+        Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F, FontStyle.Bold)
         Select Case sensorDurationHours
             Case Is <= 24
-                Return $"{sensorDurationHours.HoursToDaysAndHours} grace period"
+                Return $"Expiring soon{vbCrLf}(Remaining{vbCrLf}grace period:{vbCrLf}{sensorDurationHours.HoursToDaysAndHours})"
             Case Is < 48
                 Return $"{(sensorDurationHours - 24).HoursToDaysAndHours} (Followed{vbCrLf}by 24 hr grace{vbCrLf}period)"
             Case Else  ' sensorDurationHours >= 48
