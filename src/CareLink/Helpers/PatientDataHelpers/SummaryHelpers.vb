@@ -156,8 +156,6 @@ Friend Module SummaryHelpers
                                 Else
                                     Stop
                                 End If
-                            Else
-                                Stop
                             End If
                         End If
                     Case "dateTime"
@@ -308,7 +306,7 @@ Friend Module SummaryHelpers
 
                     Continue For
                 End If
-                Dim recordNumber As Integer
+                Dim recordNumber As Integer = listOfSummaryRecords.Count
                 Dim item As SummaryRecord = Nothing
                 Select Case kvp.Key
                     Case "faultId"
@@ -345,48 +343,40 @@ Friend Module SummaryHelpers
                             End If
                             message = kvp.Value.ToTitle
                         End If
-                        recordNumber = listOfSummaryRecords.Count
                         item = New SummaryRecord(recordNumber, kvp, message)
                     Case "autoModeReadinessState"
-                        recordNumber = listOfSummaryRecords.Count
-                        s_autoModeReadinessState =
-                            New SummaryRecord(
-                                recordNumber,
-                                kvp,
-                                messages:=s_sensorMessages,
-                                messageTableName:=NameOf(s_sensorMessages))
+                        s_autoModeReadinessState = New SummaryRecord(
+                                                        recordNumber,
+                                                        kvp,
+                                                        messages:=s_sensorMessages,
+                                                        messageTableName:=NameOf(s_sensorMessages))
                         listOfSummaryRecords.Add(s_autoModeReadinessState)
                     Case "autoModeShieldState"
-                        recordNumber = listOfSummaryRecords.Count
-                        item =
-                            New SummaryRecord(
-                                recordNumber,
-                                kvp,
-                                messages:=s_autoModeShieldMessages,
-                                messageTableName:=NameOf(s_autoModeShieldMessages))
+                        item = New SummaryRecord(
+                                    recordNumber,
+                                    kvp,
+                                    messages:=s_autoModeShieldMessages,
+                                    messageTableName:=NameOf(s_autoModeShieldMessages))
                     Case "plgmLgsState"
-                        item =
-                            New SummaryRecord(
-                                recordNumber:=listOfSummaryRecords.Count,
-                                kvp,
-                                messages:=s_plgmLgsMessages,
-                                messageTableName:=NameOf(s_plgmLgsMessages))
+                        item = New SummaryRecord(
+                                    recordNumber,
+                                    kvp,
+                                    messages:=s_plgmLgsMessages,
+                                    messageTableName:=NameOf(s_plgmLgsMessages))
                     Case NameOf(ClearedNotifications.dateTime)
                         Dim key As String = NameOf(ClearedNotifications.dateTime)
                         item =
                             New SummaryRecord(
-                                recordNumber:=listOfSummaryRecords.Count,
+                                recordNumber,
                                 kvp,
                                 message:=kvp.Value.ParseDate(key).ToShortDateTimeString)
                     Case "additionalInfo"
-                        recordNumber = CType(listOfSummaryRecords.Count, ServerDataEnum)
                         HandleComplexItems(
                             kvp,
                             recordNumber,
                             key:="additionalInfo",
                             listOfSummaryRecords)
                     Case Else
-                        recordNumber = listOfSummaryRecords.Count
                         item = New SummaryRecord(recordNumber, kvp)
                 End Select
                 If item IsNot Nothing Then

@@ -9149,7 +9149,23 @@
     }
   ],
   "notificationHistory": {
-    "activeNotifications": [],
+    "activeNotifications": [
+      {
+        "faultId": "128",
+        "version": "1",
+        "referenceGUID": "880F0000-8000-0000-E70D-C42E00000000",
+        "dateTime": "2025-11-11T19:46:34",
+        "type": "REMINDER",
+        "triggeredDateTime": "2025-11-11T19:35:51",
+        "additionalInfo": {
+          "pumpDeliverySuspendState": false,
+          "pnpId": "1.3",
+          "alertSilenced": false,
+          "resourceBundleKey": "page.connect.sms.content.ble.780.alarm.128",
+          "secondaryTime": "08:00"
+        }
+      }
+    ],
     "clearedNotifications": [
       {
         "faultId": "817",
