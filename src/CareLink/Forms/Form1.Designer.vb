@@ -1595,19 +1595,20 @@ Partial Class Form1
         SensorDaysLeftLabel.Name = "SensorDaysLeftLabel"
         SensorDaysLeftLabel.Size = New Size(55, 40)
         SensorDaysLeftLabel.TabIndex = 45
-        SensorDaysLeftLabel.Text = "<1"
+        SensorDaysLeftLabel.Text = "2"
         SensorDaysLeftLabel.TextAlign = ContentAlignment.MiddleCenter
-        SensorDaysLeftLabel.Visible = False
+        SensorDaysLeftLabel.Visible = True
         ' 
         ' SensorTimeLeftLabel
         ' 
+        SensorTimeLeftLabel.AutoSize = True
         SensorTimeLeftLabel.BackColor = Color.Transparent
         SensorTimeLeftLabel.BorderStyle = BorderStyle.None
         SensorTimeLeftLabel.Font = New Font("Segoe UI", 8.0F, FontStyle.Bold)
         SensorTimeLeftLabel.ForeColor = Color.LightGray
-        SensorTimeLeftLabel.Location = New Point(0, 77)
+        SensorTimeLeftLabel.Location = New Point(0, 76)
         SensorTimeLeftLabel.Name = "SensorTimeLeftLabel"
-        SensorTimeLeftLabel.Size = New Size(94, 60)
+        SensorTimeLeftLabel.Size = New Size(92, 41)
         SensorTimeLeftLabel.TabIndex = 46
         SensorTimeLeftLabel.Text = "1 day 2 hrs" & vbCrLf & "(Followed by 24" & vbCrLf & "hr grace period)"
         SensorTimeLeftLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1625,7 +1626,7 @@ Partial Class Form1
         ' SensorTimeLeftPictureBox
         ' 
         SensorTimeLeftPictureBox.ErrorImage = Nothing
-        SensorTimeLeftPictureBox.Image = My.Resources.Resources.SensorExpirationUnknown
+        SensorTimeLeftPictureBox.Image = My.Resources.Resources.SensorLifeOK
         SensorTimeLeftPictureBox.Location = New Point(15, 0)
         SensorTimeLeftPictureBox.Name = "SensorTimeLeftPictureBox"
         SensorTimeLeftPictureBox.Size = New Size(74, 84)
