@@ -1506,7 +1506,7 @@ Partial Class Form1
         ' 
         ' NotifyIcon1
         ' 
-        NotifyIcon1.Icon = CType(resources.GetObject("NotifyIcon1.Icon"), Icon)
+        NotifyIcon1.Icon = CType(resources.GetObject("IconImage.Icon"), Icon)
         NotifyIcon1.Text = "CareLink™ For Windows"
         ' 
         ' PumpAITLabel
