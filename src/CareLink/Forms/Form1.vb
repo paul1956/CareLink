@@ -3458,9 +3458,7 @@ Public Class Form1
 
         Dim caption As String = $"Sensor will expire In {PatientData.SensorDurationHours} hours"
         If PatientData.CgmInfo.SensorProductModel?.Trim = "MMT-5120" Then
-            _sensorLifeToolTip.SetToolTip(
-                control:=Me.SensorDaysLeftLabel,
-                Me.GetSensorTimeLeftTag())
+            _sensorLifeToolTip.SetToolTip(control:=Me.SensorDaysLeftLabel, Me.GetSensorTimeLeftMessage())
         Else
             If PatientData.SensorDurationHours < 24 Then
                 _sensorLifeToolTip.SetToolTip(control:=Me.SensorDaysLeftLabel, caption)
@@ -5029,11 +5027,11 @@ Public Class Form1
                         Case Is > 144
                             Me.SensorDaysLeftLabel.Text = CStr(durationWithoutGrace \ 24)
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
-                            Me.SensorTimeLeftLabel.Text = Me.GetSensorTimeLeftTag()
+                            Me.SensorTimeLeftLabel.Text = Me.GetSensorTimeLeftMessage()
                         Case Is >= 24
                             Me.SensorDaysLeftLabel.Text = Math.Ceiling(durationWithoutGrace / 24).ToString()
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
-                            Me.SensorTimeLeftLabel.Text = Me.GetSensorTimeLeftTag()
+                            Me.SensorTimeLeftLabel.Text = Me.GetSensorTimeLeftMessage()
                         Case Is > 0 ' Grace
                             Me.SensorDaysLeftLabel.Text = $"<{Math.Ceiling(durationWithoutGrace / 24)}"
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
@@ -5118,12 +5116,17 @@ Public Class Form1
         Me.SensorTimeLeftPanel.Visible = PatientData.ConduitInRange
     End Sub
 
-    Private Function GetSensorTimeLeftTag() As String
+    Private Function GetSensorTimeLeftMessage() As String
         Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F, FontStyle.Bold)
         Dim sensorDurationHours As Integer = PatientData.SensorDurationHours
-        Return If(sensorDurationHours <= 24,
-                  $"{sensorDurationHours} hr grace period",
-                  $"{(sensorDurationHours - 24).HoursToDaysAndHours}{vbCrLf}(Followed by 24{vbCrLf}hr grace period)")
+        Select Case sensorDurationHours
+            Case Is <= 24
+                Return $"{sensorDurationHours.HoursToDaysAndHours} grace period"
+            Case Is < 48
+                Return $"{(sensorDurationHours - 24).HoursToDaysAndHours} (Followed{vbCrLf}by 24 hr grace{vbCrLf}period)"
+            Case Else  ' sensorDurationHours >= 48
+                Return $"{(sensorDurationHours - 24).HoursToDaysAndHours}{vbCrLf}(Followed by 24{vbCrLf}hr grace period)"
+        End Select
     End Function
 
     ''' <summary>
