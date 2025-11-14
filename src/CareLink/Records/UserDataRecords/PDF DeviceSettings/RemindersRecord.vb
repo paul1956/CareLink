@@ -8,8 +8,7 @@ Public Class RemindersRecord
     End Sub
 
     Public Sub New(sTable As StringTable)
-        Me.LowReservoirWarning =
-            sTable.GetSingleLineValue(Of String)(key:="Low Reservoir Warning ")
+        Me.LowReservoirWarning = sTable.GetSingleLineValue(Of String)(key:="Low Reservoir Warning ")
         Me.Amount = sTable.GetSingleLineValue(Of String)(key:="Amount ")
         Me.BolusBgCheck = sTable.GetSingleLineValue(Of String)(key:="Bolus BG Check ")
         Me.SetChange = sTable.GetSingleLineValue(Of String)(key:="Set Change ")

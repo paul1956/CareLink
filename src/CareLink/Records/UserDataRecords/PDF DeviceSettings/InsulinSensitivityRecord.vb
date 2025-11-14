@@ -9,8 +9,7 @@ Public Class InsulinSensitivityRecord
             Exit Sub
         End If
         Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
-        Dim s() As String =
-            r.Columns(index:=0).Split(separator:=" ", options)
+        Dim s() As String = r.Columns(index:=0).Split(separator:=" ", options)
         If s.Length <> 2 Then
             Stop
             Exit Sub

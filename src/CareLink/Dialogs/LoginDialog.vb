@@ -113,13 +113,12 @@ Public Class LoginDialog
     Private Sub CountryComboBox_SelectedValueChanged(sender As Object, e As EventArgs) _
         Handles CountryComboBox.SelectedValueChanged
 
-        Dim selectedValue As Object = Me.CountryComboBox.SelectedValue
-        If TypeOf selectedValue Is String Then
-            CurrentDateCulture = selectedValue.ToString.GetCurrentDateCulture
+        Dim selectedValueObj As Object = Me.CountryComboBox.SelectedValue
+        If TypeOf selectedValueObj Is String Then
+            CurrentDateCulture = selectedValueObj.ToString.GetCurrentDateCulture
         Else
-            Dim selectedValue1 As KeyValuePair(Of String, String) =
-                CType(selectedValue, KeyValuePair(Of String, String))
-            CurrentDateCulture = selectedValue1.Value.GetCurrentDateCulture
+            Dim selectedKVP As KeyValuePair(Of String, String) = CType(selectedValueObj, KeyValuePair(Of String, String))
+            CurrentDateCulture = selectedKVP.Value.GetCurrentDateCulture
         End If
     End Sub
 
@@ -191,8 +190,7 @@ Public Class LoginDialog
                                          "")
         End With
 
-        Me.RegionComboBox.DataSource =
-            New BindingSource(dataSource:=s_regionList, dataMember:=Nothing)
+        Me.RegionComboBox.DataSource = New BindingSource(dataSource:=s_regionList, dataMember:=Nothing)
         Me.RegionComboBox.DisplayMember = "Key"
         Me.RegionComboBox.ValueMember = "Value"
         If String.IsNullOrEmpty(value:=My.Settings.CountryCode) Then
@@ -313,9 +311,8 @@ Public Class LoginDialog
             My.Settings.CareLinkUserName = s_userName
             My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
             My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-            My.Settings.CareLinkPartner =
-                Me.CarePartnerCheckBox.Checked OrElse
-                Not String.IsNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text)
+            Dim checked As Boolean = Me.CarePartnerCheckBox.Checked
+            My.Settings.CareLinkPartner = checked OrElse Not String.IsNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text)
             My.Settings.Save()
             Dim key As String = s_userName
             If Not s_allUserSettingsData.TryGetValue(key, userRecord:=Me.LoggedOnUser) Then
@@ -344,16 +341,12 @@ Public Class LoginDialog
                                                   $"Response Code = {Me.Client.GetHttpStatusCode}")
 
             Dim heading As String = $"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!"
-            Const buttonStyle As MsgBoxStyle =
-                MsgBoxStyle.AbortRetryIgnore Or
-                MsgBoxStyle.DefaultButton2 Or
-                MsgBoxStyle.Question
-            Dim msgBoxResult As MsgBoxResult =
-                MsgBox(
-                    heading,
-                    prompt:=networkDownMessage,
-                    buttonStyle,
-                    title:="Login Failed")
+            Const buttonStyle As MsgBoxStyle = MsgBoxStyle.AbortRetryIgnore Or
+                                               MsgBoxStyle.DefaultButton2 Or
+                                               MsgBoxStyle.Question
+
+            Const title As String = "Login Failed"
+            Dim msgBoxResult As MsgBoxResult = MsgBox(heading, prompt:=networkDownMessage, buttonStyle, title)
 
             Select Case msgBoxResult
                 Case MsgBoxResult.Abort
@@ -407,17 +400,14 @@ Public Class LoginDialog
         Handles RegionComboBox.SelectedIndexChanged
 
         Dim countriesInRegion As New Dictionary(Of String, String)
-        Dim selectedRegion As String =
-            s_regionList.Values(index:=Me.RegionComboBox.SelectedIndex)
+        Dim selectedRegion As String = s_regionList.Values(index:=Me.RegionComboBox.SelectedIndex)
         For Each kvp As KeyValuePair(Of String, String) In s_regionCountryList
-
             If kvp.Value = selectedRegion Then
                 countriesInRegion.Add(kvp.Key, value:=s_countryCodeList(kvp.Key))
             End If
         Next
         If countriesInRegion.Count > 0 Then
-            Me.CountryComboBox.DataSource =
-                New BindingSource(dataSource:=countriesInRegion, dataMember:=Nothing)
+            Me.CountryComboBox.DataSource = New BindingSource(dataSource:=countriesInRegion, dataMember:=Nothing)
             Me.CountryComboBox.DisplayMember = "Key"
             Me.CountryComboBox.ValueMember = "Value"
             Me.CountryComboBox.Enabled = True

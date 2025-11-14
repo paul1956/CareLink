@@ -182,10 +182,9 @@ Friend Module CreateChartItems
                 .IntervalType = DateTimeIntervalType.Hours
                 .IsInterlaced = True
                 .IsMarginVisible = True
-                .LabelAutoFitStyle =
-                    LabelAutoFitStyles.IncreaseFont Or
-                    LabelAutoFitStyles.DecreaseFont Or
-                    LabelAutoFitStyles.WordWrap
+                .LabelAutoFitStyle = LabelAutoFitStyles.IncreaseFont Or
+                                     LabelAutoFitStyles.DecreaseFont Or
+                                     LabelAutoFitStyles.WordWrap
                 With .LabelStyle
                     .Font = labelFont
                     .ForeColor = baseColor
@@ -261,7 +260,7 @@ Friend Module CreateChartItems
                 Dim provider As CultureInfo = CultureInfo.CurrentUICulture
                 For i As Integer = 0 To s_mmolLValues.Count - 1
                     Dim format As String = GetSgFormat()
-                    Dim yMin As Single = GetYMinValueFromNativeMmolL()
+                    Dim yMin As Single = GetYMinNativeMmolL()
                     Dim axisText As String = firstAxis(index:=i).ToString(format, provider)
                     .CustomLabels.Add(
                         item:=New CustomLabel(
@@ -587,12 +586,11 @@ Friend Module CreateChartItems
                     c.AxisX.Maximum = New OADate(asDate:=PumpNow)
                     c.AxisX.Minimum = New OADate(asDate:=PumpNow.AddDays(value:=-1))
                 Else
-                    Dim func As Func(Of SG, SG, SG) =
-                        Function(i1 As SG, i2 As SG) As SG
-                            Return If(i1.OaDateTime > i2.OaDateTime,
-                                      i1,
-                                      i2)
-                        End Function
+                    Dim func As Func(Of SG, SG, SG) = Function(i1 As SG, i2 As SG) As SG
+                                                          Return If(i1.OaDateTime > i2.OaDateTime,
+                                                                    i1,
+                                                                    i2)
+                                                      End Function
 
                     c.AxisX.Maximum = s_sgRecords.Aggregate(func).OaDateTime
                     func = Function(i1 As SG, i2 As SG) As SG

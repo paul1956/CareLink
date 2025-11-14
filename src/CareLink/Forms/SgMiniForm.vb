@@ -29,14 +29,10 @@ Public Class SgMiniForm
             Return "User Unknown!"
         End If
         Dim firstName As String = PatientData.FirstName
-        Dim lastConduitUpdateServerDateTime As Long =
-            PatientData.LastConduitUpdateServerDateTime
-        Dim epoch2PumpDateTime As Date =
-            lastConduitUpdateServerDateTime.Epoch2PumpDateTime
+        Dim lastConduitUpdateServerDateTime As Long = PatientData.LastConduitUpdateServerDateTime
+        Dim epoch2PumpDateTime As Date = lastConduitUpdateServerDateTime.Epoch2PumpDateTime
         If lastConduitUpdateServerDateTime > 0 Then
-            Dim minutes As UInteger =
-                CUInt(Math.Round(value:=(PumpNow() - epoch2PumpDateTime).TotalMinutes,
-                                 digits:=0))
+            Dim minutes As UInteger = CUInt(Math.Round(value:=(PumpNow() - epoch2PumpDateTime).TotalMinutes, digits:=0))
             Return $"{firstName}'s Data Updated {minutes.ToUnits(unit:="Minute")} Ago"
         Else
             Return $"{firstName}'s Data Last Update Time Unknown"
@@ -123,8 +119,7 @@ Public Class SgMiniForm
         Handles SgTextBox.TextChanged
 
         Dim firstName As String = If(PatientData?.FirstName, "Patient")
-        Dim textToSpeak As String =
-            $"alarm for {firstName}, {CurrentSgMsg} {_currentSgValue}. Please check levels."
+        Dim textToSpeak As String = $"alarm for {firstName}, {CurrentSgMsg} {_currentSgValue}. Please check levels."
         Select Case True
             Case Single.IsNaN(_normalizedSg), _normalizedSg = 0
                 Me.SgTextBox.ForeColor = SystemColors.ControlText
@@ -163,20 +158,18 @@ Public Class SgMiniForm
     End Sub
 
     Friend Sub SetCurrentDeltaValue(deltaString As String, delta As Single)
-        Me.DeltaTextBox.Text =
-            If(delta.IsSgInvalid OrElse Math.Abs(value:=delta) < 0.001,
-               "",
-               deltaString)
+        Me.DeltaTextBox.Text = If(delta.IsSgInvalid OrElse Math.Abs(value:=delta) < 0.001,
+                                  "",
+                                  deltaString)
         _currentDelta = delta
     End Sub
 
     Friend Sub SetCurrentSgString(sgString As String, f As Single)
         _currentSgValue = f
         _normalizedSg = f
-        Me.SgTextBox.Text =
-            If(String.IsNullOrWhiteSpace(value:=sgString) OrElse Single.IsNaN(f),
-               "---",
-               sgString)
+        Me.SgTextBox.Text = If(String.IsNullOrWhiteSpace(value:=sgString) OrElse Single.IsNaN(f),
+                               "---",
+                               sgString)
         If NativeMmolL Then
             _normalizedSg *= MmolLUnitsDivisor
         End If

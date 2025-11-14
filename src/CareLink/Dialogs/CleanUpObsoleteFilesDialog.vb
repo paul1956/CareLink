@@ -30,8 +30,7 @@ Public Class CleanupStaleFilesDialog
 
     Private Sub CleanupStaleFilesDialog_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Dim searchPattern As String = $"{BaseErrorReportName}*.txt"
-        Dim fileList As String() =
-            IO.Directory.GetFiles(path:=GetProjectDataDirectory(), searchPattern)
+        Dim fileList As String() = IO.Directory.GetFiles(path:=GetProjectDataDirectory(), searchPattern)
         With Me.TreeView1
             .Nodes.Clear()
             .CheckBoxes = True
@@ -84,12 +83,9 @@ Public Class CleanupStaleFilesDialog
                     End If
                     Select Case msgBoxResult
                         Case MsgBoxResult.Yes
-                            Dim file As String =
-                                IO.Path.Join(GetProjectDataDirectory(), node.Text)
-                            Dim showUI As FileIO.UIOption =
-                                FileIO.UIOption.OnlyErrorDialogs
-                            Dim recycle As FileIO.RecycleOption =
-                                FileIO.RecycleOption.SendToRecycleBin
+                            Dim file As String = IO.Path.Join(GetProjectDataDirectory(), node.Text)
+                            Dim showUI As FileIO.UIOption = FileIO.UIOption.OnlyErrorDialogs
+                            Dim recycle As FileIO.RecycleOption = FileIO.RecycleOption.SendToRecycleBin
                             My.Computer.FileSystem.DeleteFile(file, showUI, recycle)
                         Case MsgBoxResult.Cancel
                             result = DialogResult.Cancel

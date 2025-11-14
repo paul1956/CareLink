@@ -110,8 +110,7 @@ Public Class CareLinkUserDataList
     ''' </exception>
     Default Public Property Item(itemName As String) As CareLinkUserDataRecord
         Get
-            Const functionName As String =
-                NameOf(CareLinkUserDataList) & "." & NameOf(CareLinkUserDataList.Item)
+            Const functionName As String = NameOf(CareLinkUserDataList) & "." & NameOf(CareLinkUserDataList.Item)
             Dim message As String
             If String.IsNullOrWhiteSpace(value:=itemName) Then
                 message = $"Key may not be Nothing, in {functionName}"
@@ -119,8 +118,7 @@ Public Class CareLinkUserDataList
             End If
             Try
                 For index As Integer = 0 To Me.List.Count - 1
-                    Dim entry As CareLinkUserDataRecord =
-                        CType(Me.List(index), CareLinkUserDataRecord)
+                    Dim entry As CareLinkUserDataRecord = CType(Me.List(index), CareLinkUserDataRecord)
                     If entry?.CareLinkUserName.EqualsNoCase(itemName) Then
                         Return CType(Me.List(index), CareLinkUserDataRecord)
                     End If
@@ -128,23 +126,19 @@ Public Class CareLinkUserDataList
             Catch ex As Exception
                 Return New CareLinkUserDataRecord(parent:=Me)
             End Try
-            message =
-                $"Key '{itemName}' Not Present in Dictionary, in {functionName}"
+            message = $"Key '{itemName}' Not Present in Dictionary, in {functionName}"
             Throw New KeyNotFoundException(message)
         End Get
         Set(Value As CareLinkUserDataRecord)
             For index As Integer = 0 To Me.List.Count - 1
-                Dim entry As CareLinkUserDataRecord =
-                    CType(Me.List(index), CareLinkUserDataRecord)
+                Dim entry As CareLinkUserDataRecord = CType(Me.List(index), CareLinkUserDataRecord)
                 If entry.CareLinkUserName.EqualsNoCase(itemName) Then
                     Me.List(index) = Value
                     Exit Property
                 End If
             Next
-            Const functionName As String =
-                NameOf(CareLinkUserDataList) & NameOf(CareLinkUserDataList.Item)
-            Dim message As String =
-                $"Key '{itemName}' Not Present in Dictionary, in {functionName}"
+            Const functionName As String = NameOf(CareLinkUserDataList) & NameOf(CareLinkUserDataList.Item)
+            Dim message As String = $"Key '{itemName}' Not Present in Dictionary, in {functionName}"
             Throw New KeyNotFoundException(message)
         End Set
     End Property

@@ -17,8 +17,7 @@ Public Class OptionsColorPickerDialog
     Private Sub ItemNameComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) _
         Handles ItemNameComboBox.SelectedIndexChanged
 
-        Me.KnownColorsComboBox1.SelectedIndex =
-            GetIndexOfKnownColor(item:=Me.ItemNameComboBox.SelectedValue)
+        Me.KnownColorsComboBox1.SelectedIndex = GetIndexOfKnownColor(item:=Me.ItemNameComboBox.SelectedValue)
         Me.UpdateForegroundButton.Enabled = False
         Application.DoEvents()
     End Sub
@@ -76,8 +75,7 @@ Public Class OptionsColorPickerDialog
         Me.ItemNameComboBox.ValueMember = "Value"
 
         Me.ItemNameComboBox.SelectedIndex = 0
-        Me.KnownColorsComboBox1.SelectedIndex =
-            GetIndexOfKnownColor(Me.ItemNameComboBox.SelectedValue)
+        Me.KnownColorsComboBox1.SelectedIndex = GetIndexOfKnownColor(Me.ItemNameComboBox.SelectedValue)
     End Sub
 
     Private Sub UpdateForegroundButton_Click(sender As Object, e As EventArgs) _

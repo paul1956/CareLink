@@ -25,16 +25,12 @@ Public Class Insulin
         Me.ActivationType = item.GetStringFromJson(key:=NameOf(ActivationType))
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
-        Me.ProgrammedFastAmount =
-            item.GetSingleFromJson(key:=NameOf(ProgrammedFastAmount), digits:=3)
-        Me.DeliveredFastAmount =
-            item.GetSingleFromJson(key:=NameOf(DeliveredFastAmount), digits:=3)
+        Me.ProgrammedFastAmount = item.GetSingleFromJson(key:=NameOf(ProgrammedFastAmount), digits:=3)
+        Me.DeliveredFastAmount = item.GetSingleFromJson(key:=NameOf(DeliveredFastAmount), digits:=3)
         Me.Completed = item.GetBooleanFromJson(key:=NameOf(Completed))
         Me.BolusType = item.GetStringFromJson(key:=NameOf(BolusType))
-        Me.ProgrammedExtendedAmount =
-            item.GetSingleFromJson(key:=NameOf(ProgrammedExtendedAmount), digits:=3)
-        Me.DeliveredExtendedAmount =
-            item.GetSingleFromJson(key:=NameOf(DeliveredExtendedAmount), digits:=3)
+        Me.ProgrammedExtendedAmount = item.GetSingleFromJson(key:=NameOf(ProgrammedExtendedAmount), digits:=3)
+        Me.DeliveredExtendedAmount = item.GetSingleFromJson(key:=NameOf(DeliveredExtendedAmount), digits:=3)
         Me.ProgrammedDuration = item.GetIntegerFromJson(key:=NameOf(ProgrammedDuration))
         Me.EffectiveDuration = item.GetIntegerFromJson(key:=NameOf(EffectiveDuration))
         Me.InsulinType = item.GetStringFromJson(key:=NameOf(InsulinType))

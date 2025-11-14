@@ -253,10 +253,9 @@ Friend Module DateTimeExtensions
             Return resultDate
         End If
         Stop
-        Dim message As String =
-            $"String '{dateAsString}' with {NameOf(key)} = {key} from " &
-            $"{memberName} line {sourceLineNumber} was not recognized as a valid " &
-            "DateTime in any supported culture."
+        Dim message As String = $"String '{dateAsString}' with {NameOf(key)} = {key} from " &
+                                $"{memberName} line {sourceLineNumber} was not recognized as a valid " &
+                                "DateTime in any supported culture."
         Throw New FormatException(message)
     End Function
 

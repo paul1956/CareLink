@@ -66,8 +66,8 @@ Public Module RichTextBoxExtensions
     ''' <param name="singleIndent"></param>
     <Extension>
     Friend Sub AppendKeyValue(rtb As RichTextBox, key As String, value As String, Optional indent As String = Indent4)
-        rtb.AppendTextWithFontChange(text:=$"{indent}{key}", newFont:=FixedWidthBoldFont)
-        rtb.AppendTextWithFontChange(text:=value.AlignCenter(), newFont:=FixedWidthFont, includeNewLine:=True)
+        rtb.AppendTextNewFont(text:=$"{indent}{key}", newFont:=FixedWidthBoldFont)
+        rtb.AppendTextNewFont(text:=value.AlignCenter(), newFont:=FixedWidthFont, includeNewLine:=True)
     End Sub
 
     ''' <summary>
@@ -94,7 +94,7 @@ Public Module RichTextBoxExtensions
     '''  The <see cref="Font"/> to use for future appended text.
     ''' </param>
     <Extension>
-    Friend Sub AppendTextWithFontChange(
+    Friend Sub AppendTextNewFont(
         rtb As RichTextBox,
         text As String,
         newFont As Font,
@@ -138,10 +138,10 @@ Public Module RichTextBoxExtensions
         Optional includeNewLine As Boolean = True)
 
         Dim splitText() As String = text.Split(separator:=symbol, options:=StringSplitOptions.None)
-        rtb.AppendTextWithFontChange(text:=splitText(0), newFont:=HeadingBoldFont, padRight:=0)
+        rtb.AppendTextNewFont(text:=splitText(0), newFont:=HeadingBoldFont, padRight:=0)
         If splitText.Length > 1 Then
             Dim bufferLength As Integer = rtb.Text.Length
-            rtb.AppendTextWithFontChange(text:=symbol, newFont:=HeadingBoldFont, padRight:=0)
+            rtb.AppendTextNewFont(text:=symbol, newFont:=HeadingBoldFont, padRight:=0)
             rtb.Select(start:=bufferLength, length:=symbol.Length)
             rtb.SelectionBackColor = SystemColors.Window
             Select Case symbol
@@ -155,7 +155,7 @@ Public Module RichTextBoxExtensions
             rtb.SelectionStart = rtb.Text.Length
             rtb.SelectionBackColor = SystemColors.Window
             rtb.SelectionColor = SystemColors.WindowText
-            rtb.AppendTextWithFontChange(
+            rtb.AppendTextNewFont(
                 text:=splitText(1),
                 newFont:=HeadingBoldFont,
                 padRight:=0)
@@ -195,9 +195,9 @@ Public Module RichTextBoxExtensions
         Dim timeRange As String = $"{startTimeStr} - {endTimeStr}"
         Dim newFont As Font = If(heading, FixedWidthBoldFont, FixedWidthFont)
 
-        rtb.AppendTextWithFontChange(text:=$"{indent}{timeRange}", newFont)
+        rtb.AppendTextNewFont(text:=$"{indent}{timeRange}", newFont)
         Dim text As String = $"{value}".AlignCenter()
-        rtb.AppendTextWithFontChange(text, newFont:=FixedWidthFont, includeNewLine:=True)
+        rtb.AppendTextNewFont(text, newFont:=FixedWidthFont, includeNewLine:=True)
     End Sub
 
     ' <summary>
@@ -218,7 +218,7 @@ Public Module RichTextBoxExtensions
         Optional endTime As String = "")
 
         Dim text As String = $"{Indent4}{key}".PadRight(TotalWidth)
-        rtb.AppendTextWithFontChange(text, newFont:=FixedWidthFont)
+        rtb.AppendTextNewFont(text, newFont:=FixedWidthFont)
 
         Dim separator As String
         If endTime = String.Empty Then
@@ -232,42 +232,7 @@ Public Module RichTextBoxExtensions
         End If
 
         text = $"{startTime}{separator}{endTime}".AlignCenter()
-        rtb.AppendTextWithFontChange(text, newFont:=FixedWidthFont, includeNewLine:=True)
-    End Sub
-
-    ''' <summary>
-    '''  Makes all occurrences of a specified string in a <see cref="RichTextBox"/> bold.
-    ''' </summary>
-    ''' <param name="rtb">
-    '''  The <see cref="RichTextBox"/> to modify.
-    ''' </param>
-    ''' <param name="str">
-    '''  The string to make bold.
-    ''' </param>
-    ''' <remarks>
-    '''  This method searches for all occurrences of the specified string
-    '''  and applies bold formatting to them.
-    ''' </remarks>
-    <Extension>
-    Public Sub BoldText(
-        rtb As RichTextBox,
-        str As String,
-        Optional options As RichTextBoxFinds = RichTextBoxFinds.MatchCase)
-
-        Const newStyle As FontStyle = FontStyle.Bold
-        Dim start As Integer = 0
-        Dim length As Integer = str.Length
-        While start < rtb.TextLength - 1
-            Dim wordStartIndex As Integer = rtb.Find(str, start, [end]:=rtb.TextLength - 1, options)
-            If wordStartIndex = -1 Then
-                Exit While ' No more occurrences found
-            Else
-                rtb.Select(start:=wordStartIndex, length)
-                rtb.SelectionFont = New Font(prototype:=rtb.SelectionFont, newStyle)
-                start = wordStartIndex + length
-            End If
-        End While
-        rtb.SelectionLength = 0
+        rtb.AppendTextNewFont(text, newFont:=FixedWidthFont, includeNewLine:=True)
     End Sub
 
     ''' <summary>
@@ -279,5 +244,34 @@ Public Module RichTextBoxExtensions
     Friend Function BoolToOnOff(boolValue As Boolean) As String
         Return If(boolValue, "On", "Off")
     End Function
+
+    ''' <summary>
+    '''  Makes all occurrences of a specified string in a <see cref="RichTextBox"/> bold.
+    ''' </summary>
+    ''' <param name="rtb">
+    '''  The <see cref="RichTextBox"/> to modify.
+    ''' </param>
+    ''' <param name="str">
+    '''  The string to make bold.
+    ''' </param>
+    ''' <remarks>
+    '''  This method searches for all occurrences of the specified string and applies bold formatting to them.
+    ''' </remarks>
+    <Extension>
+    Public Sub BoldText(rtb As RichTextBox, str As String)
+        Dim start As Integer = 0
+        Dim length As Integer = str.Length
+        While start < rtb.TextLength - 1
+            Dim wordStartIndex As Integer = rtb.Find(str, start, [end]:=rtb.TextLength - 1, RichTextBoxFinds.MatchCase)
+            If wordStartIndex = -1 Then
+                Exit While ' No more occurrences found
+            Else
+                rtb.Select(start:=wordStartIndex, length)
+                rtb.SelectionFont = New Font(prototype:=rtb.SelectionFont, FontStyle.Bold)
+                start = wordStartIndex + length
+            End If
+        End While
+        rtb.SelectionLength = 0
+    End Sub
 
 End Module

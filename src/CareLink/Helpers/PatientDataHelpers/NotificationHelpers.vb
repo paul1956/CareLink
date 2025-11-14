@@ -90,9 +90,7 @@ Friend Module NotificationHelpers
                 .Visible = False
             End If
             Dim cellStyle As DataGridViewCellStyle =
-                ClassPropertiesToColumnAlignment(Of SummaryRecord)(
-                    alignmentTable:=s_alignmentTable,
-                    .Name)
+                ClassPropertiesToColumnAlignment(Of SummaryRecord)(alignmentTable:=s_alignmentTable, .Name)
 
             e.DgvColumnAdded(
                 cellStyle,
@@ -123,8 +121,7 @@ Friend Module NotificationHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.ColumnCount > 0 Then
             dgv.ScrollBars = ScrollBars.None
-            Dim dataGridViewLastColumn As DataGridViewColumn =
-                dgv.Columns(index:=dgv.ColumnCount - 1)
+            Dim dataGridViewLastColumn As DataGridViewColumn = dgv.Columns(index:=dgv.ColumnCount - 1)
             If dataGridViewLastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
                 dataGridViewLastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
             End If

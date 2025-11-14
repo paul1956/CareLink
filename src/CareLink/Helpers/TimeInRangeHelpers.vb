@@ -26,8 +26,7 @@ Friend Module TimeInRangeHelpers
                 Return (0, "  ???")
             End If
             Dim inTightRangeCount As Integer = s_sgRecords.CountSgInTightRange()
-            Dim percentInTightRange As UInteger =
-                CUInt(inTightRangeCount / validSgCount * 100)
+            Dim percentInTightRange As UInteger = CUInt(inTightRangeCount / validSgCount * 100)
             Return (percentInTightRange, percentInTightRange.ToString())
         End If
 

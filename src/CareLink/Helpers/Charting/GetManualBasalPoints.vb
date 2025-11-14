@@ -32,8 +32,7 @@ Friend Module GetManualBasalPoints
         Dim nextPumpSuspendTime As OADate
         Dim markerDateTime? As Date
         If s_markers.Count > 1 AndAlso markerWithIndex.Index = s_markers.Count - 2 Then
-            Dim activationType As String =
-                s_markers.Last().GetStringFromJson(NameOf(Insulin.ActivationType))
+            Dim activationType As String = s_markers.Last().GetStringFromJson(NameOf(Insulin.ActivationType))
             If activationType = "MANUAL" Then
                 markerDateTime = s_markers.Last().GetMarkerTimestamp
                 If markerDateTime Is Nothing Then
@@ -73,10 +72,9 @@ Friend Module GetManualBasalPoints
             For Each e As IndexClass(Of BasalRateRecord) In basalRateRecords.WithIndex
                 Dim basalRecord As BasalRateRecord = e.Value
                 Dim start As TimeOnly = basalRecord.Time
-                Dim [end] As TimeOnly =
-                    If(e.IsLast,
-                       Eleven59.AddMinutes(value:=1),
-                       basalRateRecords(index:=e.Index + 1).Time)
+                Dim [end] As TimeOnly = If(e.IsLast,
+                                           Eleven59.AddMinutes(value:=1),
+                                           basalRateRecords(index:=e.Index + 1).Time)
 
                 Dim currentTimeOnly As TimeOnly = TimeOnly.FromDateTime(Date.FromOADate(currentMarkerTime))
 
@@ -90,8 +88,7 @@ Friend Module GetManualBasalPoints
                             timeOrderedMarkers.Add(key:=currentMarkerTime, value:=0.025)
                         End If
                         Dim oaBaseDate As Date = Date.FromOADate(currentMarkerTime)
-                        Dim increments As Integer =
-                            CInt(Math.Ceiling((basalRecord.UnitsPerHr / 0.025).RoundTo025))
+                        Dim increments As Integer = CInt(Math.Ceiling((basalRecord.UnitsPerHr / 0.025).RoundTo025))
                         value = New TimeSpan(hours:=0, minutes:=60 \ increments, seconds:=0)
                         currentMarkerTime = New OADate(asDate:=oaBaseDate.Add(value))
                     Else

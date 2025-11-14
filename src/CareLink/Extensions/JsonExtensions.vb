@@ -420,9 +420,10 @@ Public Module JsonExtensions
         End If
 
         Dim item As KeyValuePair(Of String, Object)
+        Dim options As JsonSerializerOptions = s_jsonDeserializerOptions
         Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) =
-            JsonSerializer.Deserialize(Of Dictionary(Of String, Object)) _
-                (json, options:=s_jsonDeserializerOptions).ToList()
+            JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json, options).ToList()
+
         For Each item In rawJsonData
             If item.Value Is Nothing Then
                 resultDictionary.Add(item.Key, value:=Nothing)
@@ -450,9 +451,9 @@ Public Module JsonExtensions
             Return resultListOfDictionary
         End If
 
+        Dim options As JsonSerializerOptions = s_jsonDeserializerOptions
         Dim jsonList As List(Of Dictionary(Of String, Object)) =
-            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object))) _
-                (json, options:=s_jsonDeserializerOptions)
+            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(json, options)
 
         Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
 
@@ -497,9 +498,9 @@ Public Module JsonExtensions
     ''' <param name="json">The JSON string to convert.</param>
     ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
     Public Function JsonToListOfSgs(json As String) As List(Of SG)
+        Dim options As JsonSerializerOptions = s_jsonDeserializerOptions
         Dim jsonList As List(Of Dictionary(Of String, Object)) =
-            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object))) _
-                (json, options:=s_jsonDeserializerOptions)
+            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(json, options)
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex

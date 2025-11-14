@@ -65,7 +65,7 @@ Friend Module UnicodeConstants
     '''  Represents the superscript two character, commonly used
     '''  in mathematical expressions or to denote squared measurements.
     ''' </summary>
-    Public Const Superscript2 As Char = ChrW(&HB2)
+    Public Const Superscript2 As Char = ChrW(CharCode:=&HB2)
 
     ''' <summary>
     '''  Superscript3, U+B3

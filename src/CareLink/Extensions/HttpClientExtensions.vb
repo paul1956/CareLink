@@ -45,9 +45,7 @@ Friend Module HttpClientExtensions
                 Dim escapedValue As String = Uri.EscapeDataString(stringToEscape)
                 Return $"{kvp.Key}={escapedValue}"
             End Function
-        Dim params As String =
-            String.Join(separator:="&", values:=authParams.Select(selector))
-
+        Dim params As String = String.Join(separator:="&", values:=authParams.Select(selector))
         Dim requestUri As String = $"{authorizeUrl}?{params}"
         Dim response As HttpResponseMessage = httpClient.GetAsync(requestUri).Result
         ' This will handle the redirect automatically
@@ -123,8 +121,7 @@ Friend Module HttpClientExtensions
         Try
             lastError = Nothing
             Dim requestUri As String = sb.ToString
-            Dim message As String =
-                $"uri={requestUri} from {memberName}, line {sourceLineNumber}."
+            Dim message As String = $"uri={requestUri} from {memberName}, line {sourceLineNumber}."
             DebugPrint(message)
             Return httpClient.GetAsync(requestUri).Result
         Catch ex As Exception
@@ -220,8 +217,7 @@ Friend Module HttpClientExtensions
         Next
 
         Dim content As New FormUrlEncodedContent(nameValueCollection)
-        Dim response As HttpResponseMessage =
-            httpClient.PostAsync(requestUri, content).Result
+        Dim response As HttpResponseMessage = httpClient.PostAsync(requestUri, content).Result
         Return response.Content.ReadAsStringAsync().Result
     End Function
 

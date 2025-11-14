@@ -141,15 +141,13 @@ Friend Module LoginHelpers
                         owner.Text = $"{SavedTitle} Using Snapshot Data"
                         Dim path As String = GetProjectDataDirectory()
                         Dim di As New DirectoryInfo(path)
-                        Dim keySelector As Func(Of FileInfo, Date) =
-                            Function(f As FileInfo) As Date
-                                Return f.LastWriteTime
-                            End Function
+                        Dim keySelector As Func(Of FileInfo, Date) = Function(f As FileInfo) As Date
+                                                                         Return f.LastWriteTime
+                                                                     End Function
 
-                        Dim selector As Func(Of FileInfo, String) =
-                            Function(f As FileInfo) As String
-                                Return f.Name
-                            End Function
+                        Dim selector As Func(Of FileInfo, String) = Function(f As FileInfo) As String
+                                                                        Return f.Name
+                                                                    End Function
 
                         Dim fileList As String() =
                             New DirectoryInfo(path).EnumerateFiles(searchPattern:=$"CareLinkSnapshot*.json") _
@@ -363,8 +361,7 @@ Friend Module LoginHelpers
             End If
 
             If File.Exists(path:=pdfFilePath) Then
-                Dim lastWriteTime As Date =
-                    File.GetLastWriteTime(GetUserSettingsPath())
+                Dim lastWriteTime As Date = File.GetLastWriteTime(GetUserSettingsPath())
                 newPdfFile = Not IsFileReadOnly(path:=GetUserSettingsPath()) AndAlso
                       File.GetLastWriteTime(path:=pdfFilePath) > lastWriteTime
             Else
@@ -423,8 +420,7 @@ Friend Module LoginHelpers
                     currentUserUpdateNeeded = True
                 End If
                 currentTarget = CurrentPdf.SmartGuard.Target
-                Dim deviceCarbRatios As List(Of DeviceCarbRatioRecord) =
-                    CurrentPdf.Bolus.DeviceCarbohydrateRatios
+                Dim deviceCarbRatios As List(Of DeviceCarbRatioRecord) = CurrentPdf.Bolus.DeviceCarbohydrateRatios
 
                 If Not deviceCarbRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
                     currentUserUpdateNeeded = True
@@ -436,9 +432,7 @@ Friend Module LoginHelpers
             Using f As New InitializeDialog(ait, currentTarget, carbRatios)
                 Dim result As DialogResult = f.ShowDialog(owner:=My.Forms.Form1)
                 If result = DialogResult.OK Then
-                    currentUserUpdateNeeded =
-                        currentUserUpdateNeeded OrElse
-                        Not CurrentUser.Equals(other:=f.CurrentUser)
+                    currentUserUpdateNeeded = currentUserUpdateNeeded OrElse Not CurrentUser.Equals(other:=f.CurrentUser)
                     CurrentUser = f.CurrentUser.Clone
                 End If
             End Using

@@ -84,8 +84,7 @@ Public Class NameColorComboBox
         MyBase.OnDrawItem(e)
         If e.Index = -1 Then Exit Sub
         Dim eBounds As Rectangle = e.Bounds
-        Dim item As KeyValuePair(Of String, KnownColor) =
-            CType(Me.Items(e.Index), KeyValuePair(Of String, KnownColor))
+        Dim item As KeyValuePair(Of String, KnownColor) = CType(Me.Items(e.Index), KeyValuePair(Of String, KnownColor))
         Dim key As String = item.Key
         Using b As New SolidBrush(SystemColors.Control)
             Dim pt As New Point(eBounds.X, eBounds.Top)

@@ -31,9 +31,9 @@ Partial Class ExceptionHandlerDialog
     Private Sub InitializeComponent()
         OK = New Button()
         Cancel = New Button()
-        StackTraceTextBox = New TextBox()
+        traceTextBox = New TextBox()
         AutoModeStatusLabel = New Label()
-        ExceptionTextBox = New TextBox()
+        exTextBox = New TextBox()
         BgReadingLabel = New Label()
         InstructionRtb = New RichTextBox()
         Me.SuspendLayout()
@@ -58,13 +58,13 @@ Partial Class ExceptionHandlerDialog
         Cancel.TabIndex = 4
         Cancel.Text = "&Cancel"
         ' 
-        ' StackTraceTextBox
+        ' traceTextBox
         ' 
-        StackTraceTextBox.Location = New Point(5, 63)
-        StackTraceTextBox.Multiline = True
-        StackTraceTextBox.Name = "StackTraceTextBox"
-        StackTraceTextBox.Size = New Size(1136, 308)
-        StackTraceTextBox.TabIndex = 6
+        traceTextBox.Location = New Point(5, 63)
+        traceTextBox.Multiline = True
+        traceTextBox.Name = "traceTextBox"
+        traceTextBox.Size = New Size(1136, 308)
+        traceTextBox.TabIndex = 6
         ' 
         ' AutoModeStatusLabel
         ' 
@@ -75,12 +75,12 @@ Partial Class ExceptionHandlerDialog
         AutoModeStatusLabel.TabIndex = 7
         AutoModeStatusLabel.Text = "Exception:"
         ' 
-        ' ExceptionTextBox
+        ' exTextBox
         ' 
-        ExceptionTextBox.Location = New Point(75, 2)
-        ExceptionTextBox.Name = "ExceptionTextBox"
-        ExceptionTextBox.Size = New Size(1330, 23)
-        ExceptionTextBox.TabIndex = 8
+        exTextBox.Location = New Point(75, 2)
+        exTextBox.Name = "exTextBox"
+        exTextBox.Size = New Size(1330, 23)
+        exTextBox.TabIndex = 8
         ' 
         ' BgReadingLabel
         ' 
@@ -108,9 +108,9 @@ Partial Class ExceptionHandlerDialog
         Me.ClientSize = New Size(1417, 383)
         Me.Controls.Add(InstructionRtb)
         Me.Controls.Add(BgReadingLabel)
-        Me.Controls.Add(ExceptionTextBox)
+        Me.Controls.Add(exTextBox)
         Me.Controls.Add(AutoModeStatusLabel)
-        Me.Controls.Add(StackTraceTextBox)
+        Me.Controls.Add(traceTextBox)
         Me.Controls.Add(OK)
         Me.Controls.Add(Cancel)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
@@ -124,9 +124,9 @@ Partial Class ExceptionHandlerDialog
         Me.PerformLayout()
     End Sub
 
-    Friend WithEvents StackTraceTextBox As TextBox
+    Friend WithEvents traceTextBox As TextBox
     Friend WithEvents AutoModeStatusLabel As Label
-    Friend WithEvents ExceptionTextBox As TextBox
+    Friend WithEvents exTextBox As TextBox
     Friend WithEvents BgReadingLabel As Label
     Friend WithEvents InstructionRtb As RichTextBox
 End Class

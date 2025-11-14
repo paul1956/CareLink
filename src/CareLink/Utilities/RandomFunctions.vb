@@ -17,13 +17,11 @@ Public Module RandomFunctions
     ''' <returns>A random Base64-encoded string of the specified length.</returns>
     Public Function GenerateRandomBase64String(count As Integer) As String
         Dim random As New Random()
-        Dim element As String =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+        Dim element As String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 
-        Dim selector As Func(Of String, Char) =
-            Function(str As String) As Char
-                Return str(index:=random.Next(maxValue:=str.Length))
-            End Function
+        Dim selector As Func(Of String, Char) = Function(str As String) As Char
+                                                    Return str(index:=random.Next(maxValue:=str.Length))
+                                                End Function
         Dim value As Char() = Enumerable.Repeat(element, count:=count + 10) _
                                         .Select(selector).ToArray()
         Dim s As New String(value)

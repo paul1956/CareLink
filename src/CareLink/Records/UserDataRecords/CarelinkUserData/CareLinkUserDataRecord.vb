@@ -31,10 +31,9 @@ Partial Public Class CareLinkUserDataRecord
              ._useLocalTimeZone = My.Settings.UseLocalTimeZone,
             ._autoLogin = My.Settings.AutoLogin,
             ._careLinkPartner = My.Settings.CareLinkPartner,
-            ._careLinkPatientUserID =
-                If(._careLinkPartner,
-                   My.Settings.CareLinkPatientUserID,
-                   "")}
+            ._careLinkPatientUserID = If(._careLinkPartner,
+                                         My.Settings.CareLinkPatientUserID,
+                                         "")}
     End Sub
 
     ''' <summary>
@@ -231,8 +230,7 @@ Partial Public Class CareLinkUserDataRecord
             _backupData = _userData
             _inTxn = True
 
-            Dim message As String =
-                $"BeginEdit  - {_userData._iD}{_userData._careLinkUserName}"
+            Dim message As String = $"BeginEdit  - {_userData._iD}{_userData._careLinkUserName}"
             Debug.WriteLine(message)
         End If
     End Sub
@@ -241,8 +239,7 @@ Partial Public Class CareLinkUserDataRecord
         Debug.WriteLine(message:="Start CancelEdit")
         If _inTxn Then
             _userData = _backupData
-            Dim message As String =
-                $"CancelEdit - {_userData._iD}{_userData._careLinkUserName}"
+            Dim message As String = $"CancelEdit - {_userData._iD}{_userData._careLinkUserName}"
             Debug.WriteLine(message)
         End If
         Debug.WriteLine(message:="End CancelEdit")
@@ -253,8 +250,7 @@ Partial Public Class CareLinkUserDataRecord
         If _inTxn Then
             _backupData = New CareLinkUserData()
             _inTxn = False
-            Dim message As String =
-                $"Done EndEdit - {_userData._iD}{_userData._careLinkUserName}"
+            Dim message As String = $"Done EndEdit - {_userData._iD}{_userData._careLinkUserName}"
             Debug.WriteLine(message)
         End If
         Debug.WriteLine(message:="End EndEdit")

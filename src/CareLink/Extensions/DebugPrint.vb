@@ -56,8 +56,7 @@ Friend Module DebugSupport
                     message = $"{Space(Number:=label.Length + 8)}{lines(0)} = {lines(1)}"
                     Debug.Print(message)
                 Else
-                    Dim mc As MatchCollection =
-                        Regex.Matches(input:=lines(1), pattern:=$".{{1,{width}}}")
+                    Dim mc As MatchCollection = Regex.Matches(input:=lines(1), pattern:=$".{{1,{width}}}")
                     For Each e As IndexClass(Of Match) In mc.WithIndex
                         Dim m As Match = e.Value
                         Dim spaces As String

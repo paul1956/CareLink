@@ -53,11 +53,9 @@ Public Module ClassHelpers
             For Each [property] As PropertyInfo In classType.GetProperties()
                 Dim cellStyle As New DataGridViewCellStyle
                 Dim objects As Object() =
-                    [property].GetCustomAttributes(
-                        attributeType:=GetType(ColumnAttribute),
-                        inherit:=True)
-                Dim typeName As String =
-                    objects.Cast(Of ColumnAttribute)().SingleOrDefault()?.TypeName
+                    [property].GetCustomAttributes(attributeType:=GetType(ColumnAttribute), inherit:=True)
+
+                Dim typeName As String = objects.Cast(Of ColumnAttribute)().SingleOrDefault()?.TypeName
 
                 If typeName Is Nothing Then
                     cellStyle = cellStyle.SetCellStyle(

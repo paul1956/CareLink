@@ -42,8 +42,7 @@ Public Class NativeMmolLSupportTests
 
     <Fact>
     Public Sub GetSgFormat_WithoutSign_ReturnsCorrectFormat_WithCulture()
-        Dim separator As String =
-            CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
+        Dim separator As String = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
         NativeMmolL = True
         GetSgFormat(withSign:=False).Should().Be(expected:=$"0{separator}0")
         NativeMmolL = False
@@ -53,8 +52,7 @@ Public Class NativeMmolLSupportTests
 
     <Fact>
     Public Sub GetSgFormat_WithSign_ReturnsCorrectFormat()
-        Dim separator As String =
-            CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
+        Dim separator As String = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
         NativeMmolL = True
         GetSgFormat(withSign:=True).Should().Be(expected:=$"+0{separator}0;-#{separator}0")
         NativeMmolL = False

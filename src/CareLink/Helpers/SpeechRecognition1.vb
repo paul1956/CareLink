@@ -204,17 +204,14 @@ Friend Module SpeechSupport
         If recognizedText.StartsWith("carelink") Then
             If confidence >= My.Settings.SystemSpeechRecognitionThreshold Then
                 s_speechWakeWordFound = True
-                message =
-                    $"Heard: Wake word {recognizedText} with confidence " &
-                    $"{confidence}%), waiting.."
+                message = $"Heard: Wake word {recognizedText} with confidence {confidence}%), waiting.."
                 Debug.WriteLine(message)
                 Form1.StatusStripSpeech.Text = message
                 Application.DoEvents()
                 If recognizedText = "carelink" Then
                     Exit Sub
                 End If
-                recognizedText =
-                    recognizedText.Replace(oldValue:="carelink", newValue:="").TrimEnd
+                recognizedText = recognizedText.Replace(oldValue:="carelink", newValue:="").TrimEnd
             Else
                 message = $"Rejected: {recognizedText} with confidence {confidence}%"
                 Debug.WriteLine(message)

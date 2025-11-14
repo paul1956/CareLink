@@ -320,8 +320,7 @@ Public Class TextMap
             End If
         ElseIf deviceFamily = DEVICE_FAMILY_NGP Then
             Dim formattedEC As String = ngpErrorCode.ToString(format:="D3")
-            internalEC =
-                If(s_errorCodeMap.TryGetValue(key:=formattedEC, value), value, formattedEC)
+            internalEC = If(s_errorCodeMap.TryGetValue(key:=formattedEC, value), value, formattedEC)
             errorTextId = $"{ERROR_TEXT_PREFIX_NGP}{internalEC}"
         End If
 

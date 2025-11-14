@@ -16,8 +16,7 @@ Public Class DataGridViewNumericUpDownColumn
     Private Const Browsable As Boolean = False
 
     Private ReadOnly Property Message As String =
-        "Operation cannot be completed because this " &
-        NameOf(DataGridViewColumn) & " does not have a CellTemplate."
+        $"Operation cannot be completed because this {NameOf(DataGridViewColumn)} does not have a CellTemplate."
 
     ''' <summary>
     '''  Constructor for the <see cref="DataGridViewNumericUpDownColumn"/> class.
@@ -37,12 +36,10 @@ Public Class DataGridViewNumericUpDownColumn
         End Get
 
         Set(value As DataGridViewCell)
-            Dim dataGridViewNumericUpDownCell1 As DataGridViewNumericUpDownCell =
-                TryCast(value, DataGridViewNumericUpDownCell)
-            If value IsNot Nothing AndAlso dataGridViewNumericUpDownCell1 Is Nothing Then
-                Dim message As String =
-                    $"Value provided for {NameOf(CellTemplate)} must be of type " &
-                    $"{NameOf(DataGridViewNumericUpDownCell)} or derive from it."
+            If value IsNot Nothing AndAlso TryCast(value, DataGridViewNumericUpDownCell) Is Nothing Then
+                Dim message As String = $"Value provided for {NameOf(CellTemplate)} must be of type " &
+                                        $"{NameOf(DataGridViewNumericUpDownCell)} or derive from it."
+
                 Throw New InvalidCastException(message)
             End If
 
@@ -81,9 +78,7 @@ Public Class DataGridViewNumericUpDownColumn
                 For rowIndex As Integer = 0 To rowCount - 1
                     ' Be careful not to unshare rows unnecessarily.
                     ' This could have severe performance repercussions.
-                    Dim dgvRow As DataGridViewRow =
-                        dataGridViewRows.SharedRow(rowIndex)
-
+                    Dim dgvRow As DataGridViewRow = dataGridViewRows.SharedRow(rowIndex)
                     Dim dataGridViewCell1 As DataGridViewNumericUpDownCell =
                         TryCast(dgvRow.Cells(Me.Index), DataGridViewNumericUpDownCell)
                     ' Call the internal SetDecimalPlaces method instead of
@@ -138,8 +133,7 @@ Public Class DataGridViewNumericUpDownColumn
     '''  Indicates whether the Increment property should be persisted.
     '''  </summary>
     Private Function ShouldSerializeIncrement() As Boolean
-        Const value As Decimal =
-            DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultIncrement
+        Const value As Decimal = DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultIncrement
         Return Not Me.Increment.Equals(value)
     End Function
 
@@ -168,8 +162,7 @@ Public Class DataGridViewNumericUpDownColumn
                 Dim dataGridViewRows As DataGridViewRowCollection = Me.DataGridView.Rows
                 Dim rowCount As Integer = dataGridViewRows.Count
                 For rowIndex As Integer = 0 To rowCount - 1
-                    Dim dgvRow As DataGridViewRow =
-                        dataGridViewRows.SharedRow(rowIndex)
+                    Dim dgvRow As DataGridViewRow = dataGridViewRows.SharedRow(rowIndex)
                     Dim dgvCell As DataGridViewNumericUpDownCell =
                         TryCast(dgvRow.Cells(Me.Index), DataGridViewNumericUpDownCell)
                     dgvCell?.SetMaximum(rowIndex, value)
@@ -188,8 +181,7 @@ Public Class DataGridViewNumericUpDownColumn
     '''  Indicates whether the Maximum property should be persisted.
     ''' </summary>
     Private Function ShouldSerializeMaximum() As Boolean
-        Const value As Decimal =
-            DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultMaximum
+        Const value As Decimal = DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultMaximum
         Return Not Me.Maximum.Equals(value)
     End Function
 
@@ -237,8 +229,7 @@ Public Class DataGridViewNumericUpDownColumn
     '''  Indicates whether the Maximum property should be persisted.
     ''' </summary>
     Private Function ShouldSerializeMinimum() As Boolean
-        Const value As Decimal =
-            DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultMinimum
+        Const value As Decimal = DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultMinimum
         Return Not Me.Minimum.Equals(value)
     End Function
 
@@ -268,9 +259,7 @@ Public Class DataGridViewNumericUpDownColumn
                 Dim dataGridViewRows As DataGridViewRowCollection = Me.DataGridView.Rows
                 Dim rowCount As Integer = dataGridViewRows.Count
                 For rowIndex As Integer = 0 To rowCount - 1
-                    Dim dataGridViewRow1 As DataGridViewRow =
-                        dataGridViewRows.SharedRow(rowIndex)
-
+                    Dim dataGridViewRow1 As DataGridViewRow = dataGridViewRows.SharedRow(rowIndex)
                     Dim cell As DataGridViewCell = dataGridViewRow1.Cells(Me.Index)
                     Dim dataGridViewCell1 As DataGridViewNumericUpDownCell =
                         TryCast(cell, DataGridViewNumericUpDownCell)

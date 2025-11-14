@@ -24,17 +24,13 @@ Public Module PatientDataHelpers
         End If
         Dim charList As New List(Of Char) From {","c, CChar(vbCr)}
         For Each kvp As KeyValuePair(Of String, String) In s_keyDictionary
-            Dim startIndex As Integer =
-                value.IndexOfNoCase(value:=kvp.Key) + kvp.Key.Length
+            Dim startIndex As Integer = value.IndexOfNoCase(value:=kvp.Key) + kvp.Key.Length
             If startIndex = -1 Then
                 Continue For
             End If
-            Dim endPos As Integer =
-                FindIndexOfAnyChar(inputString:=value, chars:=charList, startIndex)
+            Dim endPos As Integer = FindIndexOfAnyChar(inputString:=value, chars:=charList, startIndex)
             Dim length As Integer = endPos - startIndex
-            value = value.Replace(
-                oldValue:=value.Substring(startIndex, length),
-                newValue:=kvp.Value)
+            value = value.Replace(oldValue:=value.Substring(startIndex, length), newValue:=kvp.Value)
         Next
         Return value
     End Function

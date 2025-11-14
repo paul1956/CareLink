@@ -22,8 +22,7 @@ Friend Module UpdateChecker
     ''' <summary>
     '''  The search key used to locate the version string in the GitHub releases page HTML.
     ''' </summary>
-    Private ReadOnly s_versionSearchKey As String =
-        $"<a hRef=""/{GitOwnerName}/CareLink/releases/tag/"
+    Private ReadOnly s_versionSearchKey As String = $"<a hRef=""/{GitOwnerName}/CareLink/releases/tag/"
 
     ''' <summary>
     '''  Indicates if an update check is currently in progress.
@@ -88,8 +87,7 @@ Friend Module UpdateChecker
 
                     Dim quotePos As Integer = line.IndexOf(value:=""""c, startIndex)
                     If quotePos > startIndex Then
-                        versionStr =
-                            line.Substring(startIndex, length:=quotePos - startIndex)
+                        versionStr = line.Substring(startIndex, length:=quotePos - startIndex)
 
                         ' Skip versions with a dash (e.g., pre-release builds)
                         If Not versionStr.Contains("-"c) Then
@@ -161,38 +159,29 @@ Friend Module UpdateChecker
     '''  </code>
     ''' </example>
     Friend Async Sub CheckForUpdatesAsync(reportSuccessfulResult As Boolean)
-        Const heading As String =
-            "There is a newer version available, do you want to install now?"
+        Const heading As String = "There is a newer version available, do you want to install now?"
         Try
             If reportSuccessfulResult Then
                 s_updateSleepCount = 0
             End If
             Dim gitHubVersion As String = Await GetVersionString()
+            Dim prompt As String = $"Current version {My.Application.Info.Version}" & vbCrLf &
+                                   $"New version {gitHubVersion}"
             If IsNewerVersion(gitHubVersion, My.Application.Info.Version) Then
                 If s_updateSleepCount > 0 Then
                     s_updateSleepCount -= 1
                 Else
-                    Form1.UpdateAvailableStatusStripLabel.Text =
-                        $"Update {gitHubVersion} available"
+                    Form1.UpdateAvailableStatusStripLabel.Text = $"Update {gitHubVersion} available"
 
-                    Form1.UpdateAvailableStatusStripLabel.DisplayStyle =
-                        ToolStripItemDisplayStyle.ImageAndText
+                    Form1.UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
 
-                    Form1.UpdateAvailableStatusStripLabel.Image =
-                        My.Resources.NotificationAlertRed_16x
+                    Form1.UpdateAvailableStatusStripLabel.Image = My.Resources.NotificationAlertRed_16x
 
-                    Form1.UpdateAvailableStatusStripLabel.ImageAlign =
-                        ContentAlignment.MiddleLeft
+                    Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
 
                     Form1.UpdateAvailableStatusStripLabel.ForeColor = Color.Red
                     If reportSuccessfulResult Then
-                        If Interlocked.Exchange(
-                                location1:=s_inCheckForUpdate,
-                                value:=1) = 0 Then
-                            Dim prompt As String =
-                                $"Current version {My.Application.Info.Version}" & vbCrLf &
-                                $"New version {gitHubVersion}"
-
+                        If Interlocked.Exchange(location1:=s_inCheckForUpdate, value:=1) = 0 Then
                             If MsgBox(
                                 heading,
                                 prompt,
@@ -208,14 +197,10 @@ Friend Module UpdateChecker
                     End If
                 End If
             Else
-                Form1.UpdateAvailableStatusStripLabel.DisplayStyle =
-                    ToolStripItemDisplayStyle.Text
-                Form1.UpdateAvailableStatusStripLabel.Text =
-                    $"Current version {My.Application.Info.Version}"
-                Form1.UpdateAvailableStatusStripLabel.ImageAlign =
-                    ContentAlignment.MiddleLeft
-                Form1.UpdateAvailableStatusStripLabel.ForeColor =
-                    Form1.MenuStrip1.ForeColor
+                Form1.UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
+                Form1.UpdateAvailableStatusStripLabel.Text = $"Current version {My.Application.Info.Version}"
+                Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
+                Form1.UpdateAvailableStatusStripLabel.ForeColor = Form1.MenuStrip1.ForeColor
                 If reportSuccessfulResult Then
                     MsgBox(
                         heading:="You are running the latest version",

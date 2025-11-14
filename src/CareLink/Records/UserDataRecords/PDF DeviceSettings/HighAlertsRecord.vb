@@ -20,22 +20,18 @@ Public Class HighAlertsRecord
             Dim row As StringTable.Row = e.Value
             If e.IsFirst Then
                 Dim oldValue As String = "Start High Time ("
-                valueUnits =
-                    row.Columns(index:=0) _
-                       .Replace(oldValue, newValue:="") _
-                       .Trim(trimChar:=")"c)
+                valueUnits = row.Columns(index:=0).Replace(oldValue, newValue:="").Trim(trimChar:=")"c)
                 Continue For
             End If
 
             Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
             Dim value As String = sTable.Rows(index:=e.Index + 1).Columns(index:=0)
             Dim item As New HighAlertRecord(row, valueUnits) With {
-                .End =
-                    If(e.IsLast OrElse String.IsNullOrWhiteSpace(value),
-                        Midnight,
-                        TimeOnly.Parse(s:=sTable.Rows(index:=e.Index + 1) _
-                                                .Columns(index:=0) _
-                                                .Split(separator:=" ", options)(0)))}
+                .End = If(e.IsLast OrElse String.IsNullOrWhiteSpace(value),
+                          Midnight,
+                          TimeOnly.Parse(s:=sTable.Rows(index:=e.Index + 1) _
+                                                  .Columns(index:=0) _
+                                                  .Split(separator:=" ", options)(0)))}
             If item.IsValid Then
                 Me.HighAlert.Add(item)
             Else

@@ -31,9 +31,7 @@ Public Module PDFParser
             For columnIndex As Integer = 0 To table.GetColumnCount() - 1
                 'Get text from the specific cell
                 'Add text to the string builder
-                Dim item As String =
-                    table.GetText(rowIndex, columnIndex).
-                        Replace(oldValue:=vbLf, newValue:=" ")
+                Dim item As String = table.GetText(rowIndex, columnIndex).Replace(oldValue:=vbLf, newValue:=" ")
                 columns.Add(item)
             Next
             builder.Rows.Add(item:=New StringTable.Row(columns))

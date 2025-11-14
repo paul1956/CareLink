@@ -44,8 +44,7 @@ Public Class DataGridViewNumericUpDownCell
     Friend Const DefaultThousandsSeparator As Boolean = False
 
     ' Type of this cell's editing control
-    Private Shared ReadOnly s_defaultEditType As Type =
-        GetType(DataGridViewNumericUpDownEditingControl)
+    Private Shared ReadOnly s_defaultEditType As Type = GetType(DataGridViewNumericUpDownEditingControl)
 
     ' Type of this cell's value. The formatted value type is string,
     ' the same as the base class DataGridViewTextBoxCell
@@ -117,13 +116,9 @@ Public Class DataGridViewNumericUpDownCell
         End Get
 
         Set(value As Integer)
-            Const message As String =
-                    "The DecimalPlaces property cannot be smaller" &
-                    "than 0 or larger than 99."
+            Const message As String = "The DecimalPlaces property cannot be smaller than 0 or larger than 99."
             If value < 0 OrElse value > 99 Then
-                Throw New ArgumentOutOfRangeException(
-                  paramName:=NameOf(value),
-                    message)
+                Throw New ArgumentOutOfRangeException(paramName:=NameOf(value), message)
             End If
 
             If _decimalPlaces <> value Then
@@ -243,8 +238,7 @@ Public Class DataGridViewNumericUpDownCell
     '''  A new <see cref="DataGridViewNumericUpDownCell"/> with the same property values.
     ''' </returns>
     Public Overrides Function Clone() As Object
-        Dim dataGridViewCell As DataGridViewNumericUpDownCell =
-            TryCast(MyBase.Clone(), DataGridViewNumericUpDownCell)
+        Dim dataGridViewCell As DataGridViewNumericUpDownCell = TryCast(MyBase.Clone(), DataGridViewNumericUpDownCell)
         If dataGridViewCell IsNot Nothing Then
             dataGridViewCell.DecimalPlaces = _decimalPlaces
             dataGridViewCell.Increment = _increment
@@ -285,8 +279,7 @@ Public Class DataGridViewNumericUpDownCell
             Throw New InvalidOperationException(message)
         End If
 
-        Dim numericUpDown As NumericUpDown =
-            TryCast(dataGridView.EditingControl, NumericUpDown)
+        Dim numericUpDown As NumericUpDown = TryCast(dataGridView.EditingControl, NumericUpDown)
         If numericUpDown IsNot Nothing Then
             ' Editing controls get recycled. Indeed, when a DataGridViewNumericUpDownCell
             ' cell gets edited after another DataGridViewNumericUpDownCell cell,
@@ -323,8 +316,7 @@ Public Class DataGridViewNumericUpDownCell
                      DataGridViewContentAlignment.MiddleCenter,
                      DataGridViewContentAlignment.MiddleRight
 
-                    editingControlBounds.Y +=
-                        CInt((editingControlBounds.Height - preferredHeight) / 2)
+                    editingControlBounds.Y += CInt((editingControlBounds.Height - preferredHeight) / 2)
                 Case DataGridViewContentAlignment.BottomLeft,
                      DataGridViewContentAlignment.BottomCenter,
                      DataGridViewContentAlignment.BottomRight
@@ -426,8 +418,7 @@ Public Class DataGridViewNumericUpDownCell
             Return New Size(-1, -1)
         End If
 
-        Dim preferredSize As Size =
-            MyBase.GetPreferredSize(graphics, cellStyle, rowIndex, constraintSize)
+        Dim preferredSize As Size = MyBase.GetPreferredSize(graphics, cellStyle, rowIndex, constraintSize)
         If constraintSize.Width = 0 Then
             ' Account for the width of the up/down buttons.
             Const buttonsWidth As Integer = 16
@@ -453,12 +444,8 @@ Public Class DataGridViewNumericUpDownCell
         initialFormattedValue As Object,
         dataGridViewCellStyle As DataGridViewCellStyle)
 
-        MyBase.InitializeEditingControl(
-            rowIndex,
-            initialFormattedValue,
-            dataGridViewCellStyle)
-        Dim numericUpDown As NumericUpDown =
-            TryCast(Me.DataGridView.EditingControl, NumericUpDown)
+        MyBase.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle)
+        Dim numericUpDown As NumericUpDown = TryCast(Me.DataGridView.EditingControl, NumericUpDown)
 
         If numericUpDown IsNot Nothing Then
             numericUpDown.BorderStyle = BorderStyle.None
@@ -545,8 +532,9 @@ Public Class DataGridViewNumericUpDownCell
         End If
         Dim upDownEditingControl As DataGridViewNumericUpDownEditingControl =
             TryCast(Me.DataGridView.EditingControl, DataGridViewNumericUpDownEditingControl)
-        Return upDownEditingControl IsNot Nothing AndAlso rowIndex =
+        Dim editingControlRowIndex As Integer =
             CType(upDownEditingControl, IDataGridViewEditingControl).EditingControlRowIndex
+        Return upDownEditingControl IsNot Nothing AndAlso rowIndex = editingControlRowIndex
     End Function
 
     ''' <summary>
@@ -590,8 +578,7 @@ Public Class DataGridViewNumericUpDownCell
 
         ' First paint the borders and background of the cell.
         Const dgvPaintParts As DataGridViewPaintParts =
-            Not (DataGridViewPaintParts.ErrorIcon Or
-                 DataGridViewPaintParts.ContentForeground)
+            Not (DataGridViewPaintParts.ErrorIcon Or DataGridViewPaintParts.ContentForeground)
 
         MyBase.Paint(
             graphics,
@@ -607,10 +594,8 @@ Public Class DataGridViewNumericUpDownCell
             paintParts:=paintParts And dgvPaintParts)
 
         Dim ptCurrentCell As Point = Me.DataGridView.CurrentCellAddress
-        Dim cellCurrent As Boolean =
-            ptCurrentCell.X = Me.ColumnIndex AndAlso ptCurrentCell.Y = rowIndex
-        Dim cellEdited As Boolean =
-            cellCurrent AndAlso Me.DataGridView.EditingControl IsNot Nothing
+        Dim cellCurrent As Boolean = ptCurrentCell.X = Me.ColumnIndex AndAlso ptCurrentCell.Y = rowIndex
+        Dim cellEdited As Boolean = cellCurrent AndAlso Me.DataGridView.EditingControl IsNot Nothing
 
         ' If the cell is in editing mode, there is nothing else to paint
         If Not cellEdited Then
@@ -637,18 +622,15 @@ Public Class DataGridViewNumericUpDownCell
                     editingControlBounds.Height -= cellStyle.Padding.Vertical
                 End If
                 ' Determine the NumericUpDown control location
-                editingControlBounds =
-                    GetAdjustedEditingControlBounds(editingControlBounds, cellStyle)
+                editingControlBounds = GetAdjustedEditingControlBounds(editingControlBounds, cellStyle)
 
-                Dim cellSelected As Boolean =
-                    (cellState And DataGridViewElementStates.Selected) <> 0
+                Dim cellSelected As Boolean = (cellState And DataGridViewElementStates.Selected) <> 0
 
                 If s_renderingBitmap.Width < editingControlBounds.Width OrElse
                     s_renderingBitmap.Height < editingControlBounds.Height Then
                     ' The static bitmap is too small, a bigger one needs to be allocated.
                     s_renderingBitmap.Dispose()
-                    s_renderingBitmap =
-                        New Bitmap(editingControlBounds.Width, editingControlBounds.Height)
+                    s_renderingBitmap = New Bitmap(editingControlBounds.Width, editingControlBounds.Height)
                 End If
                 ' Make sure the NumericUpDown control is parented to a visible control
                 If s_paintingNumericUpDown.Parent Is Nothing OrElse
@@ -657,20 +639,17 @@ Public Class DataGridViewNumericUpDownCell
                     s_paintingNumericUpDown.Parent = Me.DataGridView
                 End If
                 ' Set all the relevant properties
-                s_paintingNumericUpDown.TextAlign =
-                    TranslateAlignment(align:=cellStyle.Alignment)
+                s_paintingNumericUpDown.TextAlign = TranslateAlignment(align:=cellStyle.Alignment)
                 s_paintingNumericUpDown.DecimalPlaces = Me.DecimalPlaces
                 s_paintingNumericUpDown.ThousandsSeparator = Me.ThousandsSeparator
                 s_paintingNumericUpDown.Font = cellStyle.Font
                 s_paintingNumericUpDown.Width = editingControlBounds.Width
                 s_paintingNumericUpDown.Height = editingControlBounds.Height
                 s_paintingNumericUpDown.RightToLeft = Me.DataGridView.RightToLeft
-                s_paintingNumericUpDown.Location =
-                    New Point(x:=0, y:=-s_paintingNumericUpDown.Height - 100)
+                s_paintingNumericUpDown.Location = New Point(x:=0, y:=-s_paintingNumericUpDown.Height - 100)
                 s_paintingNumericUpDown.Text = TryCast(formattedValue, String)
 
-                Dim parts As DataGridViewPaintParts =
-                    paintParts And DataGridViewPaintParts.SelectionBackground
+                Dim parts As DataGridViewPaintParts = paintParts And DataGridViewPaintParts.SelectionBackground
                 Dim baseColor As Color = If(parts <> 0 AndAlso cellSelected,
                                             cellStyle.SelectionBackColor,
                                             cellStyle.BackColor)
@@ -689,13 +668,10 @@ Public Class DataGridViewNumericUpDownCell
                     editingControlBounds.Width,
                     editingControlBounds.Height)
                 If targetBounds.Width > 0 AndAlso targetBounds.Height > 0 Then
-                    s_paintingNumericUpDown.DrawToBitmap(
-                        bitmap:=s_renderingBitmap, targetBounds)
+                    s_paintingNumericUpDown.DrawToBitmap(bitmap:=s_renderingBitmap, targetBounds)
                     graphics.DrawImage(
                         image:=s_renderingBitmap,
-                        destRect:=New Rectangle(
-                            editingControlBounds.Location,
-                            editingControlBounds.Size),
+                        destRect:=New Rectangle(editingControlBounds.Location, editingControlBounds.Size),
                         srcRect:=targetBounds,
                         srcUnit:=GraphicsUnit.Pixel)
                 End If
@@ -749,21 +725,18 @@ Public Class DataGridViewNumericUpDownCell
         isFirstDisplayedColumn As Boolean,
         isFirstDisplayedRow As Boolean)
 
-        Dim editingControlBounds As Rectangle =
-            Me.PositionEditingPanel(
-                cellBounds,
-                cellClip,
-                cellStyle,
-                singleVerticalBorderAdded,
-                singleHorizontalBorderAdded,
-                isFirstDisplayedColumn,
-                isFirstDisplayedRow)
-        editingControlBounds =
-            GetAdjustedEditingControlBounds(editingControlBounds, cellStyle)
-        Me.DataGridView.EditingControl.Location =
-            New Point(editingControlBounds.X, editingControlBounds.Y)
-        Me.DataGridView.EditingControl.Size =
-            New Size(editingControlBounds.Width, editingControlBounds.Height)
+        Dim editingControlBounds As Rectangle = Me.PositionEditingPanel(
+                                                        cellBounds,
+                                                        cellClip,
+                                                        cellStyle,
+                                                        singleVerticalBorderAdded,
+                                                        singleHorizontalBorderAdded,
+                                                        isFirstDisplayedColumn,
+                                                        isFirstDisplayedRow)
+
+        editingControlBounds = GetAdjustedEditingControlBounds(editingControlBounds, cellStyle)
+        Me.DataGridView.EditingControl.Location = New Point(editingControlBounds.X, editingControlBounds.Y)
+        Me.DataGridView.EditingControl.Size = New Size(editingControlBounds.Width, editingControlBounds.Height)
     End Sub
 
     ''' <summary>
@@ -890,10 +863,8 @@ Public Class DataGridViewNumericUpDownCell
     ''' </summary>
     ''' <returns>A string describing the cell's column and row index.</returns>
     Public Overrides Function ToString() As String
-        Dim col As String =
-            Me.ColumnIndex.ToString(CultureInfo.CurrentCulture)
-        Dim row As String =
-            Me.RowIndex.ToString(CultureInfo.CurrentCulture)
+        Dim col As String = Me.ColumnIndex.ToString(CultureInfo.CurrentCulture)
+        Dim row As String = Me.RowIndex.ToString(CultureInfo.CurrentCulture)
         Return $"DataGridViewNumericUpDownCell {{ ColumnIndex={col}, RowIndex={row} }}"
     End Function
 

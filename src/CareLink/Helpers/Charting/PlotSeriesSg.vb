@@ -64,10 +64,9 @@ Friend Module PlotSeriesSg
                         End If
 
                         If sgRecord.isBackfill Then
-                            Dim nextXValue As Date =
-                                If(sgRecordWithIndex.IsLast,
-                                   sgRecord.Timestamp,
-                                   s_sgRecords(sgRecordWithIndex.Index + 1).Timestamp)
+                            Dim nextXValue As Date = If(sgRecordWithIndex.IsLast,
+                                                        sgRecord.Timestamp,
+                                                        s_sgRecords(sgRecordWithIndex.Index + 1).Timestamp)
                             .Last().Color = Color.Transparent
                             .AddXY(Midpoint(xValue, nextXValue.ToOADate), yValue:=f)
                         End If
