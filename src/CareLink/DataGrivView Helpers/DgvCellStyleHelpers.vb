@@ -424,19 +424,15 @@ Public Module DgvCellStyleHelpers
     '''  The <see cref="DataGridViewContentAlignment"/> to set.
     ''' </param>
     ''' <param name="pad">The <see cref="Padding"/> to set.</param>
-    ''' <returns>
-    '''  The modified <see cref="DataGridViewCellStyle"/>.
-    ''' </returns>
     <Extension>
-    Friend Function SetCellStyle(
+    Friend Sub SetCellStyle(
         cellStyle As DataGridViewCellStyle,
         align As DataGridViewContentAlignment,
-        pad As Padding) As DataGridViewCellStyle
+        pad As Padding)
 
         cellStyle.Alignment = align
         cellStyle.Padding = pad
-        Return cellStyle
-    End Function
+    End Sub
 
     ''' <summary>
     '''  Formats the cell value as a single-precision floating point

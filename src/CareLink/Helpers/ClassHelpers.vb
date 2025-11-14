@@ -28,6 +28,7 @@ Public Module ClassHelpers
         name As String) As DataGridViewCellStyle
 
         Dim classType As Type = GetType(T)
+        Dim cellStyle As New DataGridViewCellStyle
         If alignmentTable.Count = 0 Then
             Dim leftAlignedTypes As New HashSet(Of String) From {
                 "additionalInfo",
@@ -51,7 +52,6 @@ Public Module ClassHelpers
                 NameOf([Boolean]), "DeleteRow"}
 
             For Each [property] As PropertyInfo In classType.GetProperties()
-                Dim cellStyle As New DataGridViewCellStyle
                 Dim objects As Object() =
                     [property].GetCustomAttributes(attributeType:=GetType(ColumnAttribute), inherit:=True)
 
@@ -74,19 +74,17 @@ Public Module ClassHelpers
             Next
         End If
 
-        Dim resultStyle As DataGridViewCellStyle = Nothing
-        If Not alignmentTable.TryGetValue(key:=name, value:=resultStyle) Then
+        If Not alignmentTable.TryGetValue(key:=name, value:=cellStyle) Then
+            cellStyle = New DataGridViewCellStyle()
             Dim alignMiddle As Boolean = name = NameOf(SummaryRecord.RecordNumber) OrElse name = NameOf(Limit.Index)
-            resultStyle = If(alignMiddle,
-                             (New DataGridViewCellStyle).SetCellStyle(
-                                align:=DataGridViewContentAlignment.MiddleCenter,
-                                pad:=New Padding(all:=0)),
-                             (New DataGridViewCellStyle).SetCellStyle(
-                                align:=DataGridViewContentAlignment.MiddleLeft,
-                                pad:=New Padding(all:=1)))
-            alignmentTable(key:=name) = resultStyle
+            If alignMiddle Then
+                cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleCenter, pad:=New Padding(all:=0))
+            Else
+                cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleLeft, pad:=New Padding(all:=1))
+            End If
+            alignmentTable(key:=name) = cellStyle
         End If
-        Return resultStyle
+        Return cellStyle
     End Function
 
 End Module

@@ -1546,12 +1546,11 @@ Public Class Form1
         Handles DgvCurrentUser.ColumnAdded
 
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
-        Dim alignment As DataGridViewContentAlignment = DataGridViewContentAlignment.MiddleLeft
+        Dim align As DataGridViewContentAlignment = DataGridViewContentAlignment.MiddleLeft
         Dim padding As New Padding(all:=1)
-        e.DgvColumnAdded(
-            cellStyle:=New DataGridViewCellStyle().SetCellStyle(alignment, padding),
-            forceReadOnly:=True,
-            caption:=Nothing)
+        Dim cellStyle As New DataGridViewCellStyle()
+        cellStyle.SetCellStyle(align, padding)
+        e.DgvColumnAdded(cellStyle, forceReadOnly:=True, caption:=Nothing)
     End Sub
 
 #End Region ' Dgv Current User Events
@@ -1965,6 +1964,7 @@ Public Class Form1
                 e.Value = eValue.Replace(oldValue:=":", newValue:=" : ")
             Case 2
                 If e.Value IsNot Nothing Then
+                    Dim align As DataGridViewContentAlignment
                     Select Case GetItemIndex(key)
                         ' Not Clickable Cells - Left
                         Case ServerDataEnum.conduitSerialNumber,
@@ -1976,9 +1976,9 @@ Public Class Form1
                              ServerDataEnum.lastSGTrend,
                              ServerDataEnum.sensorLifeText,
                              ServerDataEnum.sensorLifeIcon
-                            e.CellStyle = e.CellStyle.SetCellStyle(
-                                align:=DataGridViewContentAlignment.MiddleLeft,
-                                pad:=New Padding(all:=1))
+
+                            align = DataGridViewContentAlignment.MiddleLeft
+                            e.CellStyle.SetCellStyle(align, pad:=New Padding(all:=1))
 
                         ' Not Clickable Cells - Center
                         Case ServerDataEnum.clientTimeZoneName,
@@ -2000,10 +2000,9 @@ Public Class Form1
                              ServerDataEnum.conduitSensorInRange,
                              ServerDataEnum.gstCommunicationState,
                              ServerDataEnum.pumpCommunicationState
-                            e.CellStyle = e.CellStyle.SetCellStyle(
-                                align:=DataGridViewContentAlignment.MiddleCenter,
-                                pad:=New Padding(all:=1))
 
+                            align = DataGridViewContentAlignment.MiddleCenter
+                            e.CellStyle.SetCellStyle(align, pad:=New Padding(all:=1))
                         ' Not Clickable - Data Dependent
                         Case ServerDataEnum.appModelNumber,
                              ServerDataEnum.transmitterPairedTime
@@ -2014,7 +2013,7 @@ Public Class Form1
                             Else
                                 alignment = DataGridViewContentAlignment.MiddleRight
                             End If
-                            e.CellStyle = e.CellStyle.SetCellStyle(alignment, pad:=New Padding(all:=1))
+                            e.CellStyle.SetCellStyle(alignment, pad:=New Padding(all:=1))
 
                         ' Not Clickable Cells - Right
                         Case ServerDataEnum.currentServerTime,
@@ -2041,17 +2040,16 @@ Public Class Form1
                              ServerDataEnum.belowHypoLimit,
                              ServerDataEnum.aboveHyperLimit,
                              ServerDataEnum.timeInRange
-                            e.CellStyle = e.CellStyle.SetCellStyle(
-                                align:=DataGridViewContentAlignment.MiddleRight,
-                                pad:=New Padding(all:=1))
+
+                            align = DataGridViewContentAlignment.MiddleRight
+                            e.CellStyle.SetCellStyle(align, pad:=New Padding(all:=1))
 
                          ' Not Clickable Cells - Integer with comma, align Right
                         Case ServerDataEnum.timeToNextEarlyCalibrationMinutes,
                              ServerDataEnum.sensorDurationMinutes
                             e.Value = $"{CInt(e.Value):N0}"
-                            e.CellStyle = e.CellStyle.SetCellStyle(
-                                align:=DataGridViewContentAlignment.MiddleRight,
-                                pad:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                            align = DataGridViewContentAlignment.MiddleRight
+                            e.CellStyle.SetCellStyle(align, pad:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
 
                             ' Clickable Cells - Center
                         Case ServerDataEnum.pumpBannerState,
@@ -2064,7 +2062,7 @@ Public Class Form1
                              ServerDataEnum.markers,
                              ServerDataEnum.sgs,
                              ServerDataEnum.notificationHistory
-                            e.CellStyle = e.CellStyle.SetCellStyle(
+                            e.CellStyle.SetCellStyle(
                                 align:=DataGridViewContentAlignment.MiddleCenter,
                                 pad:=New Padding(all:=1))
                             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Black, emIncrease:=1)
@@ -2214,7 +2212,7 @@ Public Class Form1
                      NameOf(TherapyAlgorithmState.AutoModeShieldState),
                      NameOf(TherapyAlgorithmState.PlgmLgsState)
 
-                    e.CellStyle = e.CellStyle.SetCellStyle(
+                    e.CellStyle.SetCellStyle(
                         align:=DataGridViewContentAlignment.MiddleLeft,
                         pad:=New Padding(all:=1))
 
@@ -2224,7 +2222,7 @@ Public Class Form1
                     Dim hours As Integer = totalMinutes \ 60
                     Dim minutes As Integer = totalMinutes Mod 60
                     e.Value = $"{hours}:{minutes:D2}"
-                    e.CellStyle = e.CellStyle.SetCellStyle(
+                    e.CellStyle.SetCellStyle(
                         align:=DataGridViewContentAlignment.MiddleRight,
                         pad:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
 
