@@ -497,7 +497,7 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataEnum.sensorDurationHours)
                     Dim sensorDurationHours As Integer = CInt(kvp.Value)
-                    message = sensorDurationHours.HoursToDaysAndHours
+                    message = sensorDurationHours.HoursToDaysAndHours(shortHr:=False)
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 

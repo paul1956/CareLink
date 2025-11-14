@@ -23,15 +23,15 @@ Public Class TimeSpanExtensionsTests
     End Sub
 
     <Theory>
-    <InlineData(0, "0 hours")>
-    <InlineData(1, "1 hour")>
-    <InlineData(23, "23 hours")>
+    <InlineData(0, "0 hrs")>
+    <InlineData(1, "1 hr")>
+    <InlineData(23, "23 hrs")>
     <InlineData(24, "1 day")>
-    <InlineData(25, "1 day, 1 hour")>
+    <InlineData(25, "1 day, 1 hr")>
     <InlineData(48, "2 days")>
-    <InlineData(49, "2 days, 1 hour")>
+    <InlineData(49, "2 days, 1 hr")>
     Public Sub HoursToDaysAndHours_ReturnsExpectedString(hours As Integer, expected As String)
-        Dim result As String = HoursToDaysAndHours(hours)
+        Dim result As String = HoursToDaysAndHours(hours, shortHr:=True)
         result.Should().Be(expected)
     End Sub
 

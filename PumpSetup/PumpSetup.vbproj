@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows10.0.17763.0</TargetFramework>
+    <TargetFramework>net9.0-windows10.0.17763.0</TargetFramework>
     <RootNamespace>CareLink</RootNamespace>
     <StartupObject>CareLink.My.MyApplication</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>

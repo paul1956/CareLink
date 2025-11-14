@@ -4284,13 +4284,17 @@ Public Class Form1
     Private Function GetSensorTimeLeftMessage() As String
         Dim sensorDurationHours As Integer = PatientData.SensorDurationHours
         Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F, FontStyle.Bold)
+        Dim hoursStr As String
         Select Case sensorDurationHours
             Case Is <= 24
-                Return $"Expiring soon{vbCrLf}(Remaining{vbCrLf}grace period:{vbCrLf}{sensorDurationHours.HoursToDaysAndHours})"
+                hoursStr = sensorDurationHours.HoursToDaysAndHours(shortHr:=True)
+                Return $"Expiring soon{vbCrLf}(Remaining{vbCrLf}grace period:{vbCrLf}{hoursStr})"
             Case Is < 48
-                Return $"{(sensorDurationHours - 24).HoursToDaysAndHours} (Followed{vbCrLf}by 24 hr grace{vbCrLf}period)"
+                hoursStr = (sensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
+                Return $"{hoursStr} (Followed{vbCrLf}by 24 hr grace{vbCrLf}period)"
             Case Else  ' sensorDurationHours >= 48
-                Return $"{(sensorDurationHours - 24).HoursToDaysAndHours}{vbCrLf}(Followed by 24{vbCrLf}hr grace period)"
+                hoursStr = (sensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
+                Return $"{hoursStr}{vbCrLf}(Followed by 24{vbCrLf}hr grace period)"
         End Select
     End Function
 
@@ -5079,7 +5083,7 @@ Public Class Form1
                     Me.SensorTimeLeftPictureBox.Image = If(PatientData.SensorDurationHours > 24,
                                                            My.Resources.SensorLifeOK,
                                                            My.Resources.SensorLifeNotOK)
-                    Me.SensorDaysLeftLabel.Text = PatientData.SensorDurationHours.HoursToDaysAndHours
+                    Me.SensorDaysLeftLabel.Text = PatientData.SensorDurationHours.HoursToDaysAndHours(shortHr:=False)
                     Me.SensorTimeLeftLabel.Text = "Unknown"
             End Select
         Else

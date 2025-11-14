@@ -38,12 +38,16 @@ Public Module TimeSpanExtensions
     '''  A string formatted as "X days, Y hours" or "X days" or "Y hours",
     '''  depending on the values.
     ''' </returns>
+    ''' <param name="shortHr"></param>
     <Extension>
-    Public Function HoursToDaysAndHours(hours As Integer) As String
+    Public Function HoursToDaysAndHours(hours As Integer, shortHr As Boolean) As String
+        Dim hourStr As String = If(shortHr,
+                                   "hr",
+                                   "hour")
         Dim days As Integer = hours \ 24
         Dim remHours As Integer = hours Mod 24
         Dim dayPart As String = If(days = 1, "1 day", $"{days} days")
-        Dim hourPart As String = If(remHours = 1, "1 hr", $"{remHours} hrs")
+        Dim hourPart As String = If(remHours = 1, $"1 {hourStr}", $"{remHours} {hourStr}s")
         If days > 0 And remHours > 0 Then
             Return $"{dayPart}, {hourPart}"
         ElseIf days > 0 Then
