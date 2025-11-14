@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
+
 ''' <summary>
 '''  Defines the editing control for the <see cref="DataGridViewNumericUpDownCell"/>
 '''  custom cell type. This control is hosted within a <see cref="DataGridView"/>
@@ -59,8 +61,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
         Implements IDataGridViewEditingControl.EditingControlFormattedValue
 
         Get
-            Const context As DataGridViewDataErrorContexts =
-                DataGridViewDataErrorContexts.Formatting
+            Const context As DataGridViewDataErrorContexts = DataGridViewDataErrorContexts.Formatting
             Return Me.GetEditingControlFormattedValue(context)
         End Get
 
@@ -141,8 +142,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
         Me.Font = dataGridViewCellStyle.Font
         If dataGridViewCellStyle.BackColor.A < 255 Then
             ' The NumericUpDown control does not support transparent back colors
-            Dim opaqueBackColor As Color =
-                Color.FromArgb(alpha:=255, baseColor:=dataGridViewCellStyle.BackColor)
+            Dim opaqueBackColor As Color = Color.FromArgb(alpha:=255, baseColor:=dataGridViewCellStyle.BackColor)
             Me.BackColor = opaqueBackColor
             _dataGridView.EditingPanel.BackColor = opaqueBackColor
         Else
@@ -151,8 +151,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
         Me.ForeColor = dataGridViewCellStyle.ForeColor
 
         Dim align As DataGridViewContentAlignment = dataGridViewCellStyle.Alignment
-        Me.TextAlign =
-            DataGridViewNumericUpDownCell.TranslateAlignment(align)
+        Me.TextAlign = DataGridViewNumericUpDownCell.TranslateAlignment(align)
     End Sub
 
     ''' <summary>
@@ -178,23 +177,19 @@ Friend Class DataGridViewNumericUpDownEditingControl
                     ' If the end of the selection is at the end of the string,
                     ' let the DataGridView treat the key message
                     Dim isRTL As Boolean = Me.RightToLeft = RightToLeft.Yes
-                    Dim hasSelectionAtEnd As Boolean =
-                        textBox.SelectionLength = 0 AndAlso
-                        textBox.SelectionStart = textBox.Text.Length
-                    Dim hasSelectionAtStart As Boolean =
-                        textBox.SelectionLength = 0 AndAlso
-                        textBox.SelectionStart = 0
+                    Dim hasSelectionAtEnd As Boolean = textBox.SelectionLength = 0 AndAlso
+                                                       textBox.SelectionStart = textBox.Text.Length
 
-                    If (Not isRTL AndAlso Not hasSelectionAtEnd) OrElse
-                        (isRTL AndAlso Not hasSelectionAtStart) Then
+                    Dim hasSelectionAtStart As Boolean = textBox.SelectionLength = 0 AndAlso textBox.SelectionStart = 0
+                    If (Not isRTL AndAlso Not hasSelectionAtEnd) OrElse (isRTL AndAlso Not hasSelectionAtStart) Then
                         Return True
                     End If
                 End If
                 Exit Select
 
             Case Keys.Left
-                Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
-                If textBox IsNot Nothing Then
+                Dim txtBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
+                If txtBox IsNot Nothing Then
                     ' If the end of the selection is at the beginning of the string
                     ' or if the entire text is selected and we did not start editing,
                     ' send this character to the DataGridView, else process the key message.
@@ -202,12 +197,9 @@ Friend Class DataGridViewNumericUpDownEditingControl
                     Dim isLtr As Boolean = Me.RightToLeft = RightToLeft.No
                     Dim isRtl As Boolean = Me.RightToLeft = RightToLeft.Yes
 
-                    Dim atStart As Boolean =
-                        textBox.SelectionLength = 0 AndAlso textBox.SelectionStart = 0
+                    Dim atStart As Boolean = txtBox.SelectionLength = 0 AndAlso txtBox.SelectionStart = 0
 
-                    Dim atEnd As Boolean =
-                        textBox.SelectionLength = 0 AndAlso
-                        textBox.SelectionStart = textBox.Text.Length
+                    Dim atEnd As Boolean = txtBox.SelectionLength = 0 AndAlso txtBox.SelectionStart = txtBox.Text.Length
 
                     If (isLtr AndAlso Not atStart) OrElse (isRtl AndAlso Not atEnd) Then
                         Return True
@@ -325,27 +317,21 @@ Friend Class DataGridViewNumericUpDownEditingControl
         If Char.IsDigit(e.KeyChar) Then
             notifyValueChange = True
         Else
-            Dim numberFormatInfo As Globalization.NumberFormatInfo =
-                Globalization.CultureInfo.CurrentCulture.NumberFormat
-            Dim decimalSeparatorStr As String = numberFormatInfo.NumberDecimalSeparator
-            Dim groupSeparatorStr As String = numberFormatInfo.NumberGroupSeparator
-            Dim negativeSignStr As String = numberFormatInfo.NegativeSign
-            If Not String.IsNullOrEmpty(decimalSeparatorStr) AndAlso
-               decimalSeparatorStr.Length = 1 Then
-
-                notifyValueChange = decimalSeparatorStr(index:=0) = e.KeyChar
+            Dim numberFormatInfo As NumberFormatInfo = CultureInfo.CurrentCulture.NumberFormat
+            Dim decimalSeparator As String = numberFormatInfo.NumberDecimalSeparator
+            Dim groupSeparator As String = numberFormatInfo.NumberGroupSeparator
+            Dim negativeSign As String = numberFormatInfo.NegativeSign
+            If Not String.IsNullOrEmpty(decimalSeparator) AndAlso decimalSeparator.Length = 1 Then
+                notifyValueChange = decimalSeparator(index:=0) = e.KeyChar
             End If
-            If Not notifyValueChange AndAlso
-               Not String.IsNullOrEmpty(value:=groupSeparatorStr) AndAlso
-               groupSeparatorStr.Length = 1 Then
-
-                notifyValueChange = groupSeparatorStr(index:=0) = e.KeyChar
+            Dim validGroupSeparator As Boolean = Not String.IsNullOrEmpty(value:=groupSeparator)
+            If Not notifyValueChange AndAlso validGroupSeparator AndAlso groupSeparator.Length = 1 Then
+                notifyValueChange = groupSeparator(index:=0) = e.KeyChar
             End If
-            If Not notifyValueChange AndAlso
-               Not String.IsNullOrEmpty(value:=negativeSignStr) AndAlso
-               negativeSignStr.Length = 1 Then
 
-                notifyValueChange = negativeSignStr(index:=0) = e.KeyChar
+            Dim validnegativeSign As Boolean = Not String.IsNullOrEmpty(value:=negativeSign)
+            If Not notifyValueChange AndAlso validnegativeSign AndAlso negativeSign.Length = 1 Then
+                notifyValueChange = negativeSign(index:=0) = e.KeyChar
             End If
         End If
 

@@ -26,7 +26,7 @@ Public Class ExceptionHandlerDialog
     ''' <summary>
     '''  Gets or sets the full path to the generated error report file.
     ''' </summary>
-    Public Property ReportFileNameWithPath As String
+    Public Property reportNameWithPath As String
 
     ''' <summary>
     '''  Gets or sets the unhandled exception event arguments.
@@ -41,9 +41,9 @@ Public Class ExceptionHandlerDialog
     ''' <param name="stackTraceText">The stack trace text.</param>
     ''' <param name="UniqueFileNameWithPath">The full path for the report file.</param>
     Private Shared Sub CreateReportFile(
-            exceptionText As String,
-            stackTraceText As String,
-            UniqueFileNameWithPath As String)
+        exceptionText As String,
+        stackTraceText As String,
+        UniqueFileNameWithPath As String)
 
         Using stream As IO.StreamWriter = IO.File.CreateText(UniqueFileNameWithPath)
             ' write exception header
@@ -83,8 +83,8 @@ Public Class ExceptionHandlerDialog
     ''' <param name="e">The event arguments.</param>
     ''' <remarks>This method is called when the Cancel button is clicked.</remarks>
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
-        If Not String.IsNullOrWhiteSpace(value:=Me.ReportFileNameWithPath) Then
-            IO.File.Delete(path:=Me.ReportFileNameWithPath)
+        If Not String.IsNullOrWhiteSpace(value:=Me.reportNameWithPath) Then
+            IO.File.Delete(path:=Me.reportNameWithPath)
         End If
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
@@ -105,90 +105,48 @@ Public Class ExceptionHandlerDialog
             productInformation:=New ProductHeaderValue(name:="CareLink.Issues"),
             baseAddress:=New Uri(uriString:=GitHubCareLinkUrl))
         Dim fontBold As New Font(prototype:=rtb.Font, newStyle:=FontStyle.Bold)
-        If String.IsNullOrWhiteSpace(value:=Me.ReportFileNameWithPath) Then
+        If String.IsNullOrWhiteSpace(value:=Me.reportNameWithPath) Then
             ' Create error report and issue
-            Me.ExceptionTextBox.Text = Me.UnhandledException.Exception.Message
-            Me.StackTraceTextBox.Text =
-                TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
+            Me.exTextBox.Text = Me.UnhandledException.Exception.Message
+            Me.traceTextBox.Text = TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
 
-            rtb.Text =
-                "By clicking OK, the Stack Trace, Exception and the CareLink™ data that caused the error will " &
-                $"be package as a text file called{vbCrLf}"
+            rtb.Text = "By clicking OK, the Stack Trace, Exception and the CareLink™ data that caused the error will " &
+                       $"be package as a text file called{vbCrLf}"
             Dim uniqueFileName As FileNameStruct = GetUniqueDataFileName(
-                baseName:=BaseErrorReportName,
-                cultureName:=CurrentDateCulture.Name,
-                extension:="txt",
-                mustBeUnique:=True)
+                                                        baseName:=BaseErrorReportName,
+                                                        cultureName:=CurrentDateCulture.Name,
+                                                        extension:="txt",
+                                                        mustBeUnique:=True)
 
-            Dim fileLink As String =
-                $"{uniqueFileName.withoutPath}: file://{uniqueFileName.withPath}"
-            AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
-            AppendTextWithFontChange(
-                rtb,
-                text:="and stored in",
-                newFont,
-                padRight:=0)
-            AppendTextWithFontChange(
-                rtb,
-                text:=GetProjectDataDirectory(),
-                newFont:=fontBold,
-                padRight:=0)
-            AppendTextWithFontChange(
-                rtb,
-                text:="You can review what is being stored and" &
-                      " then attach it to a new issue at",
-                newFont,
-                padRight:=0)
-            AppendTextWithFontChange(
-                rtb,
-                text:="You can review what is being stored and" &
-                      " then attach it to a new issue at",
-                newFont,
-                padRight:=0)
-            AppendTextWithFontChange(
-                rtb,
-                text:=$"{_gitClient.Repository.Get(
-                            owner:=GitOwnerName,
-                            name:="CareLink").Result.HtmlUrl}/issues.",
-                newFont,
-                padRight:=0)
-            AppendTextWithFontChange(
-                rtb,
-                text:="This will help me isolate issues quickly.",
-                newFont,
-                padRight:=0)
+            Dim fileLink As String = $"{uniqueFileName.withoutPath}: file://{uniqueFileName.withPath}"
+            AppendTextNewFont(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
+            AppendTextNewFont(rtb, text:="and stored in", newFont, padRight:=0)
+            AppendTextNewFont(rtb, text:=GetProjectDataDirectory(), newFont:=fontBold, padRight:=0)
+            Dim text As String = "You can review what is being stored and then attach it to a new issue at"
+            AppendTextNewFont(rtb, text, newFont, padRight:=0)
+            text = "You can review what is being stored and then attach it to a new issue at"
+            AppendTextNewFont(rtb, text, newFont, padRight:=0)
+            text = $"{_gitClient.Repository.Get(owner:=GitOwnerName, name:="CareLink").Result.HtmlUrl}/issues."
+            AppendTextNewFont(rtb, text, newFont, padRight:=0)
+            text = "This will help me isolate issues quickly."
+            AppendTextNewFont(rtb, text, newFont, padRight:=0)
             CreateReportFile(
-                exceptionText:=Me.ExceptionTextBox.Text,
-                stackTraceText:=Me.StackTraceTextBox.Text,
-                UniqueFileNameWithPath:=uniqueFileName.withPath)
+                exceptionText:=Me.exTextBox.Text,
+                stackTraceText:=Me.traceTextBox.Text,
+                uniqueFileName.withPath)
         Else
-            CurrentDateCulture =
-                Me.ReportFileNameWithPath.ExtractCulture(FixedPart:=BaseErrorReportName)
+            CurrentDateCulture = Me.reportNameWithPath.ExtractCulture(FixedPart:=BaseErrorReportName)
             If CurrentDateCulture Is Nothing Then
                 Me.Close()
                 Exit Sub
             End If
             rtb.Text = $"Clicking OK will rerun the data file that caused the error{vbCrLf}"
-            Dim path As String =
-                IO.Path.GetFileName(path:=Me.ReportFileNameWithPath)
-            Dim fileLink As String =
-                $"{path}: file://{Me.ReportFileNameWithPath}"
-            AppendTextWithFontChange(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
-            AppendTextWithFontChange(
-                rtb,
-                text:="and stored in",
-                newFont,
-                padRight:=0)
-            AppendTextWithFontChange(
-                rtb,
-                text:=GetProjectDataDirectory(),
-                newFont:=fontBold,
-                padRight:=0)
-            Me.LocalRawData =
-                Me.DecomposeReportFile(
-                    Me.ExceptionTextBox,
-                    Me.StackTraceTextBox,
-                    Me.ReportFileNameWithPath)
+            Dim path As String = IO.Path.GetFileName(path:=Me.reportNameWithPath)
+            Dim fileLink As String = $"{path}: file://{Me.reportNameWithPath}"
+            AppendTextNewFont(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
+            AppendTextNewFont(rtb, text:="and stored in", newFont, padRight:=0)
+            AppendTextNewFont(rtb, text:=GetProjectDataDirectory(), newFont:=fontBold, padRight:=0)
+            Me.LocalRawData = Me.ReportFile(Me.exTextBox, Me.traceTextBox, Me.reportNameWithPath)
         End If
     End Sub
 
@@ -216,7 +174,9 @@ Public Class ExceptionHandlerDialog
     ''' <remarks>
     '''  This method is called when a link in the instructions rich text box is clicked.
     ''' </remarks>
-    Private Sub InstructionRtb_LinkClicked(sender As Object, e As LinkClickedEventArgs) Handles InstructionRtb.LinkClicked
+    Private Sub InstructionRtb_LinkClicked(sender As Object, e As LinkClickedEventArgs) _
+        Handles InstructionRtb.LinkClicked
+
         Const value As String = "file://"
         Dim startIndex As Integer = value.Length
         If e.LinkText.StartsWith(value) Then
@@ -236,7 +196,7 @@ Public Class ExceptionHandlerDialog
     Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
         Me.OK.Enabled = False
         Me.Cancel.Enabled = False
-        If String.IsNullOrWhiteSpace(value:=Me.ReportFileNameWithPath) Then
+        If String.IsNullOrWhiteSpace(value:=Me.reportNameWithPath) Then
             ' This branch creates a new report and will exit
             ' program upon return
 
@@ -275,16 +235,12 @@ Public Class ExceptionHandlerDialog
     ''' <summary>
     '''  Decomposes a report file into its exception, stack trace, and data components.
     ''' </summary>
-    ''' <param name="ExceptionTextBox">The TextBox to receive the exception message.</param>
-    ''' <param name="stackTraceTextBox">The TextBox to receive the stack trace.</param>
-    ''' <param name="ReportFileNameWithPath">The full path to the report file.</param>
+    ''' <param name="exTextBox">The TextBox to receive the exception message.</param>
+    ''' <param name="traceTextBox">The TextBox to receive the stack trace.</param>
+    ''' <param name="reportNameWithPath">The full path to the report file.</param>
     ''' <returns>The raw data portion of the report file.</returns>
-    Friend Function DecomposeReportFile(
-        ExceptionTextBox As TextBox,
-        stackTraceTextBox As TextBox,
-        ReportFileNameWithPath As String) As String
-
-        Using stream As IO.StreamReader = IO.File.OpenText(ReportFileNameWithPath)
+    Friend Function ReportFile(exTextBox As TextBox, traceTextBox As TextBox, reportNameWithPath As String) As String
+        Using stream As IO.StreamReader = IO.File.OpenText(reportNameWithPath)
             ' read exception header
             Dim currentLine As String = stream.ReadLine()
             If currentLine <> ExceptionStartingString Then
@@ -292,7 +248,7 @@ Public Class ExceptionHandlerDialog
             End If
 
             ' read exception
-            ExceptionTextBox.Text = stream.ReadLine
+            exTextBox.Text = stream.ReadLine
 
             ' read exception trailer
             currentLine = stream.ReadLine
@@ -320,7 +276,7 @@ Public Class ExceptionHandlerDialog
             If currentLine <> StackTraceTerminatingStr Then
                 Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=StackTraceTerminatingStr)
             End If
-            stackTraceTextBox.Text = sb.ToString
+            traceTextBox.Text = sb.ToString
             Return stream.ReadToEnd
         End Using
     End Function

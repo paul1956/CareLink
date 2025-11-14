@@ -79,10 +79,9 @@ Friend Module DataTableHelpers
             Dim column As New DataColumn With {
                 .ColumnName = [property].Name,
                 .Caption = GetColumnDisplayName([property]),
-                .DataType =
-                If(IsNullableType(nullableType:=propertyType) AndAlso propertyType.IsGenericType,
-                   propertyType.GenericTypeArguments.FirstOrDefault(),
-                   propertyType)
+                .DataType = If(IsNullableType(nullableType:=propertyType) AndAlso propertyType.IsGenericType,
+                               propertyType.GenericTypeArguments.FirstOrDefault(),
+                               propertyType)
             }
             result.Columns.Add(column)
         Next

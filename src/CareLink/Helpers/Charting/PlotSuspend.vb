@@ -41,20 +41,19 @@ Friend Module PlotSuspend
                     suspended = True
                     .AddXY(xValue, 0)
                     .Last.Color = lineColor
-                    .AddXY(xValue, GetYMaxValueFromNativeMmolL())
+                    .AddXY(xValue, GetYMaxNativeMmolL())
                     Dim stopTimeSpan As TimeSpan =
                         If(e.IsLast,
                             PumpNow() - xValue,
                             s_suspendedMarkers(index:=e.Index + 1).Timestamp - xValue)
 
-                    Dim incrementSpans As Integer =
-                        CInt(Math.Ceiling(stopTimeSpan.TotalMinutes / 5)) - 1
+                    Dim incrementSpans As Integer = CInt(Math.Ceiling(stopTimeSpan.TotalMinutes / 5)) - 1
                     For i As Long = 1 To incrementSpans
                         .AddXY(xValue.AddMinutes(value:=i * 5), 0)
                         .Last.Color = lineColor
                         .AddXY(
                             xValue.AddMinutes(value:=i * 5),
-                            GetYMaxValueFromNativeMmolL())
+                            GetYMaxNativeMmolL())
                         .Last.Color = lineColor
                     Next
 

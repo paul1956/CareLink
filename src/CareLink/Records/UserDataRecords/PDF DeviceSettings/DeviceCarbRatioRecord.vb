@@ -6,8 +6,7 @@ Public Class DeviceCarbRatioRecord
 
     Public Sub New(r As StringTable.Row)
         Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
-        Dim s() As String =
-            r.Columns(index:=0).Split(separator:=" ", options)
+        Dim s() As String = r.Columns(index:=0).Split(separator:=" ", options)
         If s.Length <> 2 Then
             Exit Sub
         End If

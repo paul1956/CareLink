@@ -180,8 +180,7 @@ Friend Module Form1UpdateHelpers
         Try
             Dim filenameWithoutExtension As String = $"{baseName}({cultureName}){s_userName}"
             Dim filenameWithExtension As String = $"{filenameWithoutExtension}.{extension}"
-            Dim withPath As String =
-                Path.Join(GetProjectDataDirectory(), filenameWithExtension)
+            Dim withPath As String = Path.Join(GetProjectDataDirectory(), filenameWithExtension)
 
             If mustBeUnique AndAlso File.Exists(path:=withPath) Then
                 'Get unique file name
@@ -328,8 +327,7 @@ Friend Module Form1UpdateHelpers
         If RecentData.TryGetValue(key:="therapyAlgorithmState", value) Then
             s_therapyAlgorithmStateValue = LoadIndexedItems(json:=value)
             Dim key As String = NameOf(TherapyAlgorithmState.AutoModeShieldState)
-            Dim basalTypes As IEnumerable(Of String) =
-                {"AUTO_BASAL", "SAFE_BASAL"}
+            Dim basalTypes As IEnumerable(Of String) = {"AUTO_BASAL", "SAFE_BASAL"}
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso
                 basalTypes.Contains(value:=s_therapyAlgorithmStateValue(key))
         End If
@@ -338,14 +336,12 @@ Friend Module Form1UpdateHelpers
                          JsonToListOfSgs(json:=value),
                          New List(Of SG))
 
-        mainForm.MaxBasalPerHourLabel.Text =
-            If(RecentData.TryGetValue(key:="markers", value),
-               CollectMarkers(),
-               String.Empty)
+        mainForm.MaxBasalPerHourLabel.Text = If(RecentData.TryGetValue(key:="markers", value),
+                                                CollectMarkers(),
+                                                String.Empty)
 
         s_systemStatusTimeRemaining = Nothing
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In RecentData.WithIndex()
-
             Dim kvp As KeyValuePair(Of String, String) = c.Value
             If kvp.Value Is Nothing Then
                 kvp = KeyValuePair.Create(kvp.Key, value:="")
@@ -418,8 +414,7 @@ Friend Module Form1UpdateHelpers
                         recordNumber,
                         key:="medicalDeviceInformation",
                         listOfSummaryRecords:=s_listOfSummaryRecords)
-                    Dim deviceSerialNumber As String =
-                        PatientData.MedicalDeviceInformation.DeviceSerialNumber
+                    Dim deviceSerialNumber As String = PatientData.MedicalDeviceInformation.DeviceSerialNumber
                     mainForm.SerialNumberButton.Text = $"{deviceSerialNumber} Details..."
 
                 Case NameOf(ServerDataEnum.medicalDeviceTime)
@@ -650,14 +645,12 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataEnum.aboveHyperLimit)
-                    message =
-                        $"Time above limit = {PercentOf24HoursToString(kvp.Value)}"
+                    message = $"Time above limit = {PercentOf24HoursToString(kvp.Value)}"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataEnum.timeInRange)
-                    message =
-                        $"Time in range = {PercentOf24HoursToString(kvp.Value)}"
+                    message = $"Time in range = {PercentOf24HoursToString(kvp.Value)}"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 

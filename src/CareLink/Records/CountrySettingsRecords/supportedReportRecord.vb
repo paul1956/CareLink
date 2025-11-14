@@ -20,13 +20,10 @@ Public Class SupportedReportRecord
         End If
         Me.RecordNumber = recordNumber
         Me.report = Values(key:=NameOf(report))
-        Dim forList As List(Of Dictionary(Of String, String)) =
-            JsonToDictionaryList(json:=Values(key:=NameOf(onlyFor)))
-        Me.onlyFor =
-            KvpToString(forList).ToString.TrimStart(trimChar:=" "c).TrimEnd(trimChar:=","c)
+        Dim forList As List(Of Dictionary(Of String, String)) = JsonToDictionaryList(json:=Values(key:=NameOf(onlyFor)))
+        Me.onlyFor = KvpToString(forList).ToString.TrimStart(trimChar:=" "c).TrimEnd(trimChar:=","c)
         forList = JsonToDictionaryList(json:=Values(key:=NameOf(notFor)))
-        Me.notFor =
-            KvpToString(forList).ToString.TrimStart(trimChar:=" "c).TrimEnd(trimChar:=","c)
+        Me.notFor = KvpToString(forList).ToString.TrimStart(trimChar:=" "c).TrimEnd(trimChar:=","c)
 
     End Sub
 

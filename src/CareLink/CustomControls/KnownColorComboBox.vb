@@ -102,8 +102,7 @@ Public Class KnownColorComboBox
             Return Me.SelectedItem.Value
         End Get
         Set(item As KnownColor)
-            Me.SelectedItem =
-                KeyValuePair.Create(key:=GetNameFromKnownColor(item), value:=item)
+            Me.SelectedItem = KeyValuePair.Create(key:=GetNameFromKnownColor(item), value:=item)
         End Set
     End Property
 
@@ -143,8 +142,7 @@ Public Class KnownColorComboBox
         MyBase.OnDrawItem(e)
         If e.Index = -1 Then Exit Sub
 
-        Dim item As KeyValuePair(Of String, KnownColor) =
-            CType(Me.Items(e.Index), KeyValuePair(Of String, KnownColor))
+        Dim item As KeyValuePair(Of String, KnownColor) = CType(Me.Items(e.Index), KeyValuePair(Of String, KnownColor))
         Dim backColor As Color = Color.FromKnownColor(color:=item.Value)
         Dim eBounds As Rectangle = e.Bounds
         Using b As New SolidBrush(color:=backColor)

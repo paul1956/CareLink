@@ -7,12 +7,10 @@ Public Class LanguageRecord
 
     Public Sub New(values As Dictionary(Of String, String))
         If values.Count <> 2 Then
-            Dim message As String =
-                $"{NameOf(LanguageRecord)}({values}) contains {values.Count} entries."
+            Dim message As String = $"{NameOf(LanguageRecord)}({values}) contains {values.Count} entries."
             Throw New ApplicationException(
                 message,
-                innerException:=New ApplicationException(
-                   message:="Invalid Language record structure."))
+                innerException:=New ApplicationException(message:="Invalid Language record structure."))
         End If
         Me.name = values(key:=NameOf(name))
         Me.code = values(key:=NameOf(code))

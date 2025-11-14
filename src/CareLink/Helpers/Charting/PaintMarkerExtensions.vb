@@ -125,7 +125,7 @@ Friend Module PaintMarkerExtensions
             chartRelativePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(
                 ChartAreaName,
                 axis:=AxisName.Y2,
-                axisValue:=GetYMaxValueFromNativeMmolL()))
+                axisValue:=GetYMaxNativeMmolL()))
             chartRelativePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(
                 ChartAreaName,
                 axis:=AxisName.Y2,
@@ -150,7 +150,7 @@ Friend Module PaintMarkerExtensions
         Dim criticalLowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(
             ChartAreaName,
             axis:=AxisName.Y2,
-            axisValue:=GetYMinValueFromNativeMmolL()))
+            axisValue:=GetYMinNativeMmolL()))
 
         Dim rectangle As New RectangleF(
             chartRelativePosition.X,

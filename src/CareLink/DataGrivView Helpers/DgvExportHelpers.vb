@@ -54,30 +54,28 @@ Friend Module DgvExportHelpers
     <Extension>
     Private Sub CopyToClipboard(dgv As DataGridView, copyHeaders As DataGridViewClipboardCopyMode, copyAll As Boolean)
         If copyAll OrElse dgv.GetCellCount(includeFilter:=DataGridViewElementStates.Selected) > 0 Then
-            Dim dataGridViewCells As List(Of DataGridViewCell) =
-                dgv.SelectedCells.Cast(Of DataGridViewCell).ToList()
-
+            Dim dgvCells As List(Of DataGridViewCell) = dgv.SelectedCells.Cast(Of DataGridViewCell).ToList()
             Dim selector As Func(Of DataGridViewCell, Integer) = Function(c As DataGridViewCell) As Integer
                                                                      Return c.ColumnIndex
                                                                  End Function
             Dim colLow As Integer = If(copyAll,
                                        0,
-                                       dataGridViewCells.Min(selector))
+                                       dgvCells.Min(selector))
 
             Dim colHigh As Integer = If(copyAll,
                                         dgv.Columns.Count - 1,
-                                        dataGridViewCells.Max(selector))
+                                        dgvCells.Max(selector))
 
             selector = Function(c As DataGridViewCell) As Integer
                            Return c.RowIndex
                        End Function
             Dim rowLow As Integer = If(copyAll,
                                        0,
-                                       dataGridViewCells.Min(selector))
+                                       dgvCells.Min(selector))
 
             Dim rowHigh As Integer = If(copyAll,
                                         dgv.RowCount - 1,
-                                        dataGridViewCells.Max(selector))
+                                        dgvCells.Max(selector))
 
             Dim clipboard_string As New StringBuilder()
             If copyHeaders <> DataGridViewClipboardCopyMode.EnableWithoutHeaderText Then
@@ -193,8 +191,7 @@ Friend Module DgvExportHelpers
                                      NameOf([Double]),
                                      NameOf([Single])
 
-                                    Dim valueASingle As Single =
-                                        ParseSingle(value:=valueObject, digits:=3)
+                                    Dim valueASingle As Single = ParseSingle(value:=valueObject, digits:=3)
                                     If Single.IsNaN(valueASingle) Then
                                         .Value = "'Infinity"
                                         align = XLAlignmentHorizontalValues.Center
@@ -216,12 +213,9 @@ Friend Module DgvExportHelpers
                                     .Value = CDate(valueObject).Date
                                     Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
                                     With .Style
-                                        .Alignment.Horizontal =
-                                            XLAlignmentHorizontalValues.Left
-                                        .Fill.SetBackgroundColor(
-                                            value:=cellStyle.GetXlColor(ForeGround:=False))
-                                        .Font.SetFontColor(
-                                            value:=cellStyle.GetXlColor(ForeGround:=True))
+                                        .Alignment.Horizontal = XLAlignmentHorizontalValues.Left
+                                        .Fill.SetBackgroundColor(value:=cellStyle.GetXlColor(ForeGround:=False))
+                                        .Font.SetFontColor(value:=cellStyle.GetXlColor(ForeGround:=True))
                                         .Font.Bold = cellStyle.Font.Bold
                                         .Font.FontName = dgv.Font.Name
                                         .Font.FontSize = dgv.Font.Size
@@ -240,9 +234,7 @@ Friend Module DgvExportHelpers
                         End With
 
                         With worksheet.Cell(row:=i + 2, column).Style
-                            Dim cellStyle As DataGridViewCellStyle =
-                                dgvCell.GetFormattedStyle()
-
+                            Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
                             .Alignment.Horizontal = align
                             .Fill.SetBackgroundColor(value:=cellStyle.GetXlColor(ForeGround:=False))
                             .Font.SetFontColor(value:=cellStyle.GetXlColor(ForeGround:=True))

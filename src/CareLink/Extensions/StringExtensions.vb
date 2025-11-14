@@ -102,8 +102,7 @@ Public Module StringExtensions
         End If
 
         For Each value As String In strings
-            Dim index As Integer =
-                inputString.IndexOf(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
+            Dim index As Integer = inputString.IndexOf(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
             If index <> -1 Then
                 Return (Units:=UnitsStrings(key:=value.ToUpperInvariant), index)
             End If
@@ -311,21 +310,14 @@ Public Module StringExtensions
                 lastWasNumeric = False
             End If
         Next
-        Dim resultString As String =
-            result.Replace(oldValue:="Care Link", newValue:="CareLink").ToString
-
-        resultString =
-            If(Not resultString.Contains(value:="™"c),
-               resultString.ReplaceNoCase(oldValue:="CareLink", newValue:="CareLink™"),
-               resultString.ReplaceNoCase(oldValue:="CareLink", newValue:="CareLink"))
+        Dim resultString As String = result.Replace(oldValue:="Care Link", newValue:="CareLink").ToString
+        resultString = If(Not resultString.Contains(value:="™"c),
+                          resultString.ReplaceNoCase(oldValue:="CareLink", newValue:="CareLink™"),
+                          resultString.ReplaceNoCase(oldValue:="CareLink", newValue:="CareLink"))
         resultString = resultString.Replace(oldValue:="S G", newValue:="Sensor Glucose")
 
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        Return resultString.Replace(
-            oldValue:="time",
-            newValue:=" Time",
-            ignoreCase:=False,
-            culture:=provider)
+        Return resultString.Replace(oldValue:="time", newValue:=" Time", ignoreCase:=False, culture:=provider)
     End Function
 
     ''' <summary>

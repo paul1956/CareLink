@@ -55,10 +55,9 @@ Friend Module Form1CollectMarkersHelper
                 Stop
         End Select
 
-        Dim s As Single =
-            If(NativeMmolL,
-               (itemAsSingle / MmolLUnitsDivisor).RoundToSingle(digits:=GetPrecisionDigits()),
-               itemAsSingle)
+        Dim s As Single = If(NativeMmolL,
+                             (itemAsSingle / MmolLUnitsDivisor).RoundToSingle(digits:=GetPrecisionDigits()),
+                             itemAsSingle)
         Return s.ToString(provider)
     End Function
 
@@ -111,24 +110,19 @@ Friend Module Form1CollectMarkersHelper
         MaxBasalPerDose = 0
 
         Dim markers As List(Of Marker) = PatientData.Markers
-
-        Dim basalDictionary As New SortedDictionary(Of OADate, Double)
+        Dim basalDic As New SortedDictionary(Of OADate, Double)
         For Each e As IndexClass(Of Marker) In markers.WithIndex
             Dim item As Marker = e.Value
             Select Case item.Type
                 Case "AUTO_BASAL_DELIVERY"
                     s_markers.Add(item)
-                    Dim basalDeliveryMarker As New AutoBasalDelivery(
+                    Dim basalDelMarker As New AutoBasalDelivery(
                         item,
                         recordNumber:=s_autoBasalDeliveryMarkers.Count + 1)
-                    InsulinPerHour.AddBasalAmountToInsulinPerHour(basalDeliveryMarker)
-                    s_autoBasalDeliveryMarkers.Add(item:=basalDeliveryMarker)
-                    If Not basalDictionary.TryAdd(
-                        key:=basalDeliveryMarker.OAdateTime,
-                        value:=basalDeliveryMarker.BolusAmount) Then
-
-                        basalDictionary(key:=basalDeliveryMarker.OAdateTime) +=
-                            basalDeliveryMarker.BolusAmount
+                    InsulinPerHour.AddBasalAmountToInsulinPerHour(basalDelMarker)
+                    s_autoBasalDeliveryMarkers.Add(item:=basalDelMarker)
+                    If Not basalDic.TryAdd(key:=basalDelMarker.OAdateTime, value:=basalDelMarker.BolusAmount) Then
+                        basalDic(key:=basalDelMarker.OAdateTime) += basalDelMarker.BolusAmount
                     End If
                     s_suspendedMarkers.Add(item:=New LowGlucoseSuspended(
                        item,
@@ -163,8 +157,8 @@ Friend Module Form1CollectMarkersHelper
                         Case "AUTOCORRECTION"
                             Dim key As OADate = lastInsulinRecord.OAdateTime
                             Dim value As Single = lastInsulinRecord.DeliveredFastAmount
-                            If Not basalDictionary.TryAdd(key, value) Then
-                                basalDictionary(key) += value
+                            If Not basalDic.TryAdd(key, value) Then
+                                basalDic(key) += value
                             End If
                         Case "MANUAL"
                             Stop
@@ -202,32 +196,31 @@ Friend Module Form1CollectMarkersHelper
         SortAndFilterListOfLowGlucoseSuspendedMarkers()
         Dim endOADate As OADate
 
-        If basalDictionary.Count = 0 Then
-            Dim asDate As Date =
-                PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime
+        If basalDic.Count = 0 Then
+            Dim asDate As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime
             endOADate = New OADate(asDate)
         Else
-            endOADate = basalDictionary.Last.Key
+            endOADate = basalDic.Last.Key
         End If
 
         Dim i As Integer = 0
         Dim maxBasalPerHour As Double = 0
 
-        If basalDictionary.Count > 2 Then
-            While i < basalDictionary.Count AndAlso
-                  basalDictionary.Keys(index:=i) <= endOADate
+        If basalDic.Count > 2 Then
+            While i < basalDic.Count AndAlso
+                  basalDic.Keys(index:=i) <= endOADate
 
                 Dim sum As Double = 0
                 Dim j As Integer = i
-                Dim startOADate As OADate = basalDictionary.Keys(index:=i)
-                While j < basalDictionary.Count AndAlso
-                      basalDictionary.Keys(index:=j) <= startOADate + OneHourAsOADate
+                Dim startOADate As OADate = basalDic.Keys(index:=i)
+                While j < basalDic.Count AndAlso
+                      basalDic.Keys(index:=j) <= startOADate + OneHourAsOADate
 
-                    sum += basalDictionary.Values(index:=j)
+                    sum += basalDic.Values(index:=j)
                     j += 1
                 End While
                 maxBasalPerHour = Math.Max(maxBasalPerHour, sum)
-                MaxBasalPerDose = Math.Max(MaxBasalPerDose, basalDictionary.Values(index:=i))
+                MaxBasalPerDose = Math.Max(MaxBasalPerDose, basalDic.Values(index:=i))
                 MaxBasalPerDose = Math.Min(MaxBasalPerDose, 25)
                 i += 1
             End While

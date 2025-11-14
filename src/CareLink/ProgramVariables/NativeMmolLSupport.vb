@@ -39,7 +39,7 @@ Public Module NativeMmolLSupport
     ''' <returns>
     '''  The maximum Y value for plotting.
     ''' </returns>
-    Friend Function GetYMaxValueFromNativeMmolL() As Single
+    Friend Function GetYMaxNativeMmolL() As Single
         Return If(NativeMmolL, MaxMmolL22_2, MaxMmDl400)
     End Function
 
@@ -49,7 +49,7 @@ Public Module NativeMmolLSupport
     ''' <returns>
     '''  The minimum Y value for plotting in the selected units.
     ''' </returns>
-    Friend Function GetYMinValueFromNativeMmolL() As Single
+    Friend Function GetYMinNativeMmolL() As Single
         Return If(NativeMmolL, MinMmolL2_8, MinMmDl50)
     End Function
 

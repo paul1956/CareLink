@@ -37,9 +37,7 @@ Public Class SG
                 Me.SensorState = json(key:=NameOf(SensorState))
                 Me.sg = json(key:=NameOf(sg)).ParseSingle(digits:=2)
                 Dim value As String = "False"
-                Me.timeChange =
-                    json.TryGetValue(key:=NameOf(timeChange), value) AndAlso
-                    Boolean.Parse(value)
+                Me.timeChange = json.TryGetValue(key:=NameOf(timeChange), value) AndAlso Boolean.Parse(value)
             Else
                 Me.sg = Single.NaN
             End If

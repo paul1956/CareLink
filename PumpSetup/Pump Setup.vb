@@ -6,9 +6,7 @@ Imports CareLink
 
 Public Class PumpSetup
 
-    Private Const CareLinkUrl As String =
-        "https://www.medtronicdiabetes.com/products/carelink-personal-diabetes-software"
-
+    Private Const CareLinkUrl As String = "https://www.medtronicdiabetes.com/products/carelink-personal-diabetes-software"
     Private _currentUrlUnderMouse As String = ""
 
     ''' <summary>
@@ -78,10 +76,7 @@ Public Class PumpSetup
         Me.UserName.Enabled = Me.ComboBoxPDFs.SelectedIndex = 0
         If validPdf Then
             ' If a valid PDF is selected, set the current PDF name with path
-            Me.PdfFilePath =
-                IO.Path.Combine(
-                    GetDownloadsDirectory(),
-                    Me.ComboBoxPDFs.SelectedItem.ToString())
+            Me.PdfFilePath = IO.Path.Combine(GetDownloadsDirectory(), Me.ComboBoxPDFs.SelectedItem.ToString())
         Else
             ' If "(None)" is selected, clear the current PDF name with path
             Me.PdfFilePath = ""
@@ -141,36 +136,24 @@ Public Class PumpSetup
     ''' <param name="e">The EventArgs for the Load event.</param>
     Private Sub PumpSetup_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim settingExist As Boolean = IO.Directory.Exists(path:=GetSettingsDirectory)
-        _pdfFilesInDownLoadDirectory =
-            IO.Directory.GetFiles(path:=GetDownloadsDirectory(), searchPattern:=$"*.pdf")
+        _pdfFilesInDownLoadDirectory = IO.Directory.GetFiles(path:=GetDownloadsDirectory(), searchPattern:=$"*.pdf")
 
         Dim downloadFilesExist As Boolean = _pdfFilesInDownLoadDirectory.Length = 0
+        Dim caption As String = "CareLink PDF Settings File Required"
         If downloadFilesExist AndAlso Not settingExist Then
-            Dim text As String =
-                $"No PDF files exist, " &
-                $"Please download from {CareLinkUrl} and restart program."
-            MessageBox.Show(text,
-                            caption:="CareLink PDF Settings File Required",
-                            buttons:=MessageBoxButtons.OK,
-                            icon:=MessageBoxIcon.Warning)
+            Dim text As String = $"No PDF files exist, Please download from {CareLinkUrl} and restart program."
+            MessageBox.Show(text, caption, buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)
             Me.Close()
         End If
         If downloadFilesExist Then
             Dim text As String =
-                $"No PDF files exist in download directory," &
-                $" Please download from {CareLinkUrl} and restart program."
-            MessageBox.Show(
-                text,
-                caption:="CareLink PDF Settings File Required",
-                buttons:=MessageBoxButtons.OK,
-                icon:=MessageBoxIcon.Warning)
+                $"No PDF files exist in download directory, Please download from {CareLinkUrl} and restart program."
+            MessageBox.Show(text, caption, buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)
             Me.Close()
         End If
 
-        Dim keySelector As Func(Of String, Date) =
-            Function(path) IO.File.GetLastWriteTime(path)
-        _pdfFilesInDownLoadDirectory =
-            _pdfFilesInDownLoadDirectory.OrderByDescending(keySelector).ToArray()
+        Dim keySelector As Func(Of String, Date) = Function(path) IO.File.GetLastWriteTime(path)
+        _pdfFilesInDownLoadDirectory = _pdfFilesInDownLoadDirectory.OrderByDescending(keySelector).ToArray()
 
         Dim step1 As String
         Dim existingUserMessageStart As String =
@@ -179,15 +162,13 @@ Public Class PumpSetup
             $"then click Accept.{vbCrLf}Your information will not be saved " &
             $"or verified locally.{vbCrLf}If instead want to use a new PDF Settings " &
             "file that you HAVE download from"
-        Dim newUserMessageStart As String =
-            $"To start you will need to download your latest CareLink file from"
+        Dim newUserMessageStart As String = $"To start you will need to download your latest CareLink file from"
         step1 = If(settingExist,
                    existingUserMessageStart,
                    newUserMessageStart)
         Me.UserName.Visible = settingExist
 
-        step1 &= $"{vbCr}{CareLinkUrl}.{vbCr}" &
-            $"Select it from the dropdown then click Accept."
+        step1 &= $"{vbCr}{CareLinkUrl}.{vbCr}Select it from the dropdown then click Accept."
         Me.InstructionsRtb.Text = step1
         Me.InstructionsRtb.BoldText(str:="Accept")
 
@@ -217,8 +198,7 @@ Public Class PumpSetup
     End Sub
 
     Private Sub UserName_TextChanged(sender As Object, e As EventArgs) Handles UserName.TextChanged
-        Dim path As String =
-            IO.Path.Combine(GetSettingsDirectory(), $"{Me.UserName.Text}Settings.pdf")
+        Dim path As String = IO.Path.Combine(GetSettingsDirectory(), $"{Me.UserName.Text}Settings.pdf")
         Dim validPdf As Boolean = IO.File.Exists(path)
         Me.Accept_Button.Enabled = validPdf
         Me.ComboBoxPDFs.Enabled = Not validPdf

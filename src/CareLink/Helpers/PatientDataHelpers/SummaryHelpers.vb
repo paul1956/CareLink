@@ -63,8 +63,7 @@ Friend Module SummaryHelpers
             ' Find matches for parentheses
             For Each match As Match In parenthesesRegex.Matches(input:=kvp.Value)
                 Dim word As String = match.Groups(groupnum:=1).Value
-                Dim item As String =
-                    match.Value.TrimStart(trimChar:="("c).TrimEnd(trimChar:=")"c)
+                Dim item As String = match.Value.TrimStart(trimChar:="("c).TrimEnd(trimChar:=")"c)
                 value.Add(item)
                 's_variablesUsedInMessages.Add(item)
             Next
@@ -103,8 +102,7 @@ Friend Module SummaryHelpers
         Dim triggeredDate As String = String.Empty
         Dim unitsRemaining As String = Nothing
         Try
-            Dim faultIdFound As Boolean =
-                s_notificationMessages.TryGetValue(key:=faultId, value:=originalMessage)
+            Dim faultIdFound As Boolean = s_notificationMessages.TryGetValue(key:=faultId, value:=originalMessage)
             If Not faultIdFound Then
                 Dim prompt As String = $"faultId = '{faultId}'"
                 If Debugger.IsAttached Then
@@ -189,8 +187,7 @@ Friend Module SummaryHelpers
                                         Stop
                                     End If
                                 Case "lastSetChange"
-                                    lastSetChange =
-                                        s_oneToNineteen(index:=CInt(addInfo(key))).ToTitle
+                                    lastSetChange = s_oneToNineteen(index:=CInt(addInfo(key))).ToTitle
                                 Case "notDeliveredAmount"
                                     If addInfo.TryGetValue(key, value:=notDeliveredAmount) Then
                                     Else
@@ -365,11 +362,10 @@ Friend Module SummaryHelpers
                                     messageTableName:=NameOf(s_plgmLgsMessages))
                     Case NameOf(ClearedNotifications.dateTime)
                         Dim key As String = NameOf(ClearedNotifications.dateTime)
-                        item =
-                            New SummaryRecord(
-                                recordNumber,
-                                kvp,
-                                message:=kvp.Value.ParseDate(key).ToShortDateTimeString)
+                        item = New SummaryRecord(
+                                    recordNumber,
+                                    kvp,
+                                    message:=kvp.Value.ParseDate(key).ToShortDateTimeString)
                     Case "additionalInfo"
                         HandleComplexItems(
                             kvp,

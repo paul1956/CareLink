@@ -39,11 +39,9 @@ Public Class PdfSettingsRecord
     '''  will change to a wait cursor during processing.
     ''' </param>
     Public Sub New(filename As String)
-        Dim allText As String =
-            ExtractTextFromPage(filename, startPageNumber:=0, endPageNumber:=1)
+        Dim allText As String = ExtractTextFromPage(filename, startPageNumber:=0, endPageNumber:=1)
         Dim startIndex As Integer = allText.IndexOf(value:=DeviceSettings)
-        Dim tempString As String =
-            allText.Substring(startIndex:=startIndex + DeviceSettings.Length).TrimStart
+        Dim tempString As String = allText.Substring(startIndex:=startIndex + DeviceSettings.Length).TrimStart
         Dim length As Integer = tempString.IndexOf(value:="  ")
         Me.UserName = tempString.Trim.Substring(startIndex:=0, length).Trim()
         If Me.UserName.Contains(value:=", ") Then
@@ -56,8 +54,7 @@ Public Class PdfSettingsRecord
             Me.IsValid = False
             Return
         End If
-        Dim tables As Dictionary(Of String, PdfTable) =
-            GetTableList(filename, startPageNumber:=0, endPageNumber:=1)
+        Dim tables As Dictionary(Of String, PdfTable) = GetTableList(filename, startPageNumber:=0, endPageNumber:=1)
         Dim listOfAllTextLines As List(Of String) = allText.SplitLines(Trim:=True)
 
         ' Get Sensor and Basal 4 Line to determine Active Basal later
@@ -84,18 +81,13 @@ Public Class PdfSettingsRecord
                         sTable = tables.Values(index:=0).PdfTableToStringTable(tableHeader)
 
                         Dim key As String = MaximumBasalRateHeader
-                        Me.Basal.MaximumBasalRate =
-                            sTable.GetSingleLineValue(Of Single)(key)
+                        Me.Basal.MaximumBasalRate = sTable.GetSingleLineValue(Of Single)(key)
 
                     Case itemKey.StartsWith(NamedBasalHeader)
                         Dim tableNumber As Integer = ExtractIndex(itemKey)
-                        Dim key As String =
-                            Me.Basal.NamedBasal.Keys(index:=tableNumber - 1)
-                        Dim indexOfKey As Integer = allText.IndexOf(value:=key)
-                        Dim isActive As Boolean =
-                            allText.Substring(
-                                startIndex:=indexOfKey + key.Length + 2,
-                                length:=1) = "("c
+                        Dim key As String = Me.Basal.NamedBasal.Keys(index:=tableNumber - 1)
+                        Dim indexOfKey As Integer = allText.IndexOf(value:=key) + key.Length + 2
+                        Dim isActive As Boolean = allText.Substring(startIndex:=indexOfKey, length:=1) = "("c
                         Me.Basal.NamedBasal(key) = New NamedBasalRecord(table, isActive)
 
                     Case itemKey.StartsWith(value:=BolusWizardHeader)
@@ -185,21 +177,17 @@ Public Class PdfSettingsRecord
                         tableHeader = SmartGuardHeader
                         sTable = table.PdfTableToStringTable(tableHeader)
                         If sTable.Rows.Count = 3 Then
-                            Dim smartGuard As String =
-                                sTable.GetSingleLineValue(Of String)(key:=SmartGuardHeader)
+                            Dim smartGuard As String = sTable.GetSingleLineValue(Of String)(key:=SmartGuardHeader)
                             Me.SmartGuard = New SmartGuardRecord(sTable, smartGuard)
                         Else
                             Dim smartGuard As String = "Off"
-                            Const options As StringSplitOptions =
-                                StringSplitOptions.RemoveEmptyEntries
+                            Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
                             For Each s As IndexClass(Of String) In
                                 listOfAllTextLines.WithIndex
 
                                 If s.Value.StartsWith(value:=SmartGuardHeader) Then
                                     s.MoveNext()
-                                    smartGuard =
-                                        s.Value.Split(separator:=" ", options) _
-                                               .ToList(index:=1)
+                                    smartGuard = s.Value.Split(separator:=" ", options).ToList()(1)
                                     Exit For
                                 End If
                             Next
@@ -221,10 +209,8 @@ Public Class PdfSettingsRecord
                         sTable = table.PdfTableToStringTable(tableHeader)
                         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                             If e.IsFirst Then Continue For
-                            Dim key As String =
-                                Me.Reminders.MissedMealBolus.Keys(index:=e.Index - 1)
-                            Me.Reminders.MissedMealBolus(key) =
-                                New MealStartEndRecord(r:=e.Value, key)
+                            Dim key As String = Me.Reminders.MissedMealBolus.Keys(index:=e.Index - 1)
+                            Me.Reminders.MissedMealBolus(key) = New MealStartEndRecord(r:=e.Value, key)
                         Next
 
                     Case itemKey.StartsWith(value:=LowAlertsHeader)
@@ -242,10 +228,8 @@ Public Class PdfSettingsRecord
                         sTable = table.PdfTableToStringTable(tableHeader)
                         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                             If e.IsFirst Then Continue For
-                            Dim key As String =
-                                Me.Reminders.PersonalReminders.Keys(index:=e.Index - 1)
-                            Me.Reminders.PersonalReminders(key) =
-                                New PersonalRemindersRecord(row:=e.Value, key)
+                            Dim key As String = Me.Reminders.PersonalReminders.Keys(index:=e.Index - 1)
+                            Me.Reminders.PersonalReminders(key) = New PersonalRemindersRecord(row:=e.Value, key)
                         Next
 
                     Case itemKey.StartsWith(value:=CalibrationRemindersHeader)
@@ -341,8 +325,7 @@ Public Class PdfSettingsRecord
             index = snoozeLine.IndexOf(value:="Snooze ")
             snoozeLine = snoozeLine.Substring(startIndex:=index).Trim(trimChar:=")"c)
             Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
-            Dim splitSnoozeLine As String() =
-                snoozeLine.Split(separator:=" ", options)
+            Dim splitSnoozeLine As String() = snoozeLine.Split(separator:=" ", options)
             If splitSnoozeLine.Length = 2 Then
                 snoozeOn = "On"
                 If Not TimeSpan.TryParse(s:=splitSnoozeLine(1), result:=snoozeTime) Then

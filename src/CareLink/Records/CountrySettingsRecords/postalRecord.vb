@@ -11,11 +11,8 @@ Public Class PostalRecord
     Public Sub New(<StringSyntax(StringSyntaxAttribute.Json)> json As String)
         _asList = JsonToDictionary(json)
         If _asList.Keys.Count <> 2 Then
-            Dim message As String =
-                $"{NameOf(PostalRecord)}({NameOf(json)}) contains {json.Length} " &
-                "entries, 2 expected."
-            Dim innerException As New ApplicationException(
-                message:="Invalid postal record structure.")
+            Dim message As String = $"{NameOf(PostalRecord)}({NameOf(json)}) contains {json.Length} entries, 2 expected."
+            Dim innerException As New ApplicationException(message:="Invalid postal record structure.")
             Throw New ApplicationException(message, innerException)
         End If
 

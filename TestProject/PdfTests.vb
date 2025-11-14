@@ -15,10 +15,9 @@ Public Class PdfTests
             Dim path As String = GetTestDataPath()
             Dim files As String() = IO.Directory.GetFiles(path, searchPattern:="test??.pdf")
             Array.Sort(array:=files)
-            Dim selector As Func(Of String, Object()) =
-                Function(f)
-                    Return New Object() {f}
-                End Function
+            Dim selector As Func(Of String, Object()) = Function(f)
+                                                            Return New Object() {f}
+                                                        End Function
             Return files.Select(selector)
         End Get
     End Property

@@ -30,8 +30,7 @@ Friend Module RunningActiveInsulinHelpers
         ArgumentNullException.ThrowIfNull(argument:=myList)
 
         If start < 0 OrElse count < 0 Then
-            Dim message As String =
-                $"{NameOf(start)} and {NameOf(count)} must be non-negative."
+            Dim message As String = $"{NameOf(start)} and {NameOf(count)} must be non-negative."
             Throw New ArgumentOutOfRangeException(paramName:=NameOf(start), message)
         End If
 
@@ -68,10 +67,9 @@ Friend Module RunningActiveInsulinHelpers
             count = list.Count - index
         End If
 
-        Dim selector As Func(Of RunningActiveInsulin, Single) =
-            Function(i As RunningActiveInsulin) As Single
-                Return i.CurrentInsulinLevel
-            End Function
+        Dim selector As Func(Of RunningActiveInsulin, Single) = Function(i As RunningActiveInsulin) As Single
+                                                                    Return i.CurrentInsulinLevel
+                                                                End Function
         Dim sum As Single = list.GetRange(index, count).Sum(selector)
         If sum < 0 Then
             sum = 0

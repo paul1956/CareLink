@@ -39,7 +39,7 @@ Friend Module CultureHelpers
     '''  Gets a list of all available cultures on the system.
     ''' </summary>
     Public ReadOnly Property CultureInfoList As List(Of CultureInfo) =
-        CultureInfo.GetCultures(CultureTypes.AllCultures).ToList
+        CultureInfo.GetCultures(CultureTypes.AllCultures).ToList()
 
     ''' <summary>
     '''  Gets the US English culture ("en-US").

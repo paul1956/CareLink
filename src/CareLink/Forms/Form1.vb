@@ -24,8 +24,8 @@ Public Class Form1
     Private ReadOnly _updatingLock As New Object()
 
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
-    Private _dgvSummaryPrevRowIndex As Integer = -1
     Private _dgvSummaryPrevColIndex As Integer = -1
+    Private _dgvSummaryPrevRowIndex As Integer = -1
     Private _formScale As New SizeF(width:=1.0F, height:=1.0F)
     Private _inMouseMove As Boolean = False
     Private _lastMarkerTabLocation As (Page As Integer, Tab As Integer) = (Page:=0, Tab:=0)
@@ -35,8 +35,9 @@ Public Class Form1
     Private _showBalloonTip As Boolean = True
     Private _summaryChartAbsoluteRectangle As RectangleF
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
-    Private _timeInTightRange As (Uint As UInteger, Str As String)
     Private _updating As Boolean
+
+    Private Shared Property TimeInTightRange As (Uint As UInteger, Str As String)
 
     Public Shared Property Client As Client2
         Get
@@ -229,8 +230,8 @@ Public Class Form1
     Private Property TreatmentMinBasalSeries As Series
     Private Property TreatmentSgSeries As Series
     Private Property TreatmentSuspendSeries As Series
-    Private Property TreatmentTimeChangeSeries As Series
     Private Property TreatmentTargetSeries As Series
+    Private Property TreatmentTimeChangeSeries As Series
 
 #End Region 'Common Series
 
@@ -316,9 +317,7 @@ Public Class Form1
         Dim chart1 As Chart = CType(sender, Chart)
         Dim isHomePage As Boolean = chart1.Name = NameOf(SummaryChart)
         Try
-            yInPixels =
-                chart1.ChartAreas(name:=NameOf(ChartArea)).AxisY2 _
-                    .ValueToPixelPosition(axisValue:=e.Y)
+            yInPixels = chart1.ChartAreas(name:=NameOf(ChartArea)).AxisY2.ValueToPixelPosition(axisValue:=e.Y)
         Catch ex As Exception
             yInPixels = Double.NaN
         End Try
@@ -382,8 +381,7 @@ Public Class Form1
                                     Case "Bolus"
                                         Me.CursorPictureBox.Image = My.Resources.InsulinVial
                                     Case "Meal"
-                                        Me.CursorPictureBox.Image =
-                                            My.Resources.MealImageLarge
+                                        Me.CursorPictureBox.Image = My.Resources.MealImageLarge
                                     Case Else
                                         Stop
                                         Me.CursorMessage1Label.Visible = False
@@ -411,12 +409,10 @@ Public Class Form1
                                 Me.CursorMessage2Label.Visible = True
                                 Me.CursorMessage3Label.Text = markerTags(2).Trim
                                 Me.CursorMessage3Label.Visible = True
-                                Dim sgValue As Single =
-                                    markerTags(2).Trim.Split(separator:=" ")(0).ParseSingle(digits:=2)
-                                Me.CursorMessage4Label.Text =
-                                    If(NativeMmolL,
-                                       $"{CInt(sgValue * MmolLUnitsDivisor)} mg/dL",
-                                       $"{sgValue / MmolLUnitsDivisor:F1} mmol/L")
+                                Dim sgVal As Single = markerTags(2).Trim.Split(separator:=" ")(0).ParseSingle(digits:=2)
+                                Me.CursorMessage4Label.Text = If(NativeMmolL,
+                                                                 $"{CInt(sgVal * MmolLUnitsDivisor)} mg/dL",
+                                                                 $"{sgVal / MmolLUnitsDivisor:F1} mmol/L")
 
                                 Me.CursorMessage4Label.Visible = True
                                 Me.CursorPanel.Visible = True
@@ -569,48 +565,6 @@ Public Class Form1
 #Region "DGV Global Event Helper"
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellContextMenuStripNeeded"/> event
-    '''  for multiple <see cref="DataGridView"/>. Assigns the context menu
-    '''  for copying data if the row index is valid.
-    ''' </summary>
-    ''' <param name="sender">The DataGridView control.</param>
-    ''' <param name="e">
-    '''  A <see cref="DataGridViewCellContextMenuStripNeededEventArgs"/> containing
-    '''  event data.
-    ''' </param>
-    ''' <remarks>
-    '''  Sets the context menu for copying data.
-    ''' </remarks>
-    Private Sub DgvCellContextMenuStripNeededWithExcel(
-        sender As Object,
-        e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
-            DgvActiveInsulin.CellContextMenuStripNeeded,
-            DgvAutoBasalDelivery.CellContextMenuStripNeeded,
-            DgvAutoModeStatus.CellContextMenuStripNeeded,
-            DgvPumpBannerState.CellContextMenuStripNeeded,
-            DgvBasal.CellContextMenuStripNeeded,
-            DgvBasalPerHour.CellContextMenuStripNeeded,
-            DgvCalibration.CellContextMenuStripNeeded,
-            DgvCareLinkUsers.CellContextMenuStripNeeded,
-            DgvCurrentUser.CellContextMenuStripNeeded,
-            DgvInsulin.CellContextMenuStripNeeded,
-            DgvLastAlarm.CellContextMenuStripNeeded,
-            DgvLastSensorGlucose.CellContextMenuStripNeeded,
-            DgvLimits.CellContextMenuStripNeeded,
-            DgvLowGlucoseSuspended.CellContextMenuStripNeeded,
-            DgvMeal.CellContextMenuStripNeeded,
-            DgvSensorBgReadings.CellContextMenuStripNeeded,
-            DgvSGs.CellContextMenuStripNeeded,
-            DgvSummary.CellContextMenuStripNeeded,
-            DgvTherapyAlgorithmState.CellContextMenuStripNeeded,
-            DgvTimeChange.CellContextMenuStripNeeded
-
-        If e.RowIndex >= 0 Then
-            e.ContextMenuStrip = Me.DgvCopyWithExcelMenuStrip
-        End If
-    End Sub
-
-    ''' <summary>
     '''  Handles the <see cref="DataGridView.CellFormatting"/> event
     '''  for multiple <see cref="DataGridView"/>.
     '''  Formats the cell values based on their type and applies specific styles.
@@ -730,13 +684,10 @@ Public Class Form1
                         Case NameOf(DgvPumpBannerState)
                             dgv.CellFormattingToTitle(e)
                         Case NameOf(DgvSGs)
-                            e.Value =
-                                Convert.ToString(e.Value).
-                                    Replace(oldValue:=vbCrLf, newValue:=" ")
+                            e.Value = Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ")
                             dgv.CellFormattingSetForegroundColor(e)
                         Case Else
-                            e.Value =
-                                Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ")
+                            e.Value = Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ")
                             dgv.CellFormattingSetForegroundColor(e)
                     End Select
                 Case NameOf(ActiveInsulin.Precision)
@@ -834,8 +785,7 @@ Public Class Form1
             For Each column As DataGridViewColumn In dgv.Columns
                 With dgv.Columns(column.Index)
                     If .Index = lastColumnIndex Then
-                        dgv.ColumnHeadersDefaultCellStyle.WrapMode =
-                            DataGridViewTriState.False
+                        dgv.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
                         .DefaultCellStyle.WrapMode = DataGridViewTriState.True
                         If .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
                             .DefaultCellStyle.WrapMode = DataGridViewTriState.True
@@ -871,8 +821,7 @@ Public Class Form1
 
             ' Restore the previous selection in the Summary DataGridView
             ' if its not empty or Row(0).Cell(0).
-            dgv.CurrentCell =
-                dgv.Rows(index:=_dgvSummaryPrevRowIndex).Cells(index:=_dgvSummaryPrevColIndex)
+            dgv.CurrentCell = dgv.Rows(index:=_dgvSummaryPrevRowIndex).Cells(index:=_dgvSummaryPrevColIndex)
             dgv.Rows(index:=_dgvSummaryPrevRowIndex).Selected = True
             dgv.FirstDisplayedScrollingRowIndex = _dgvSummaryPrevRowIndex
         Else
@@ -941,6 +890,48 @@ Public Class Form1
         ' Prevent the exception from being thrown again
         e.ThrowException = False
         Stop
+    End Sub
+
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.CellContextMenuStripNeeded"/> event
+    '''  for multiple <see cref="DataGridView"/>. Assigns the context menu
+    '''  for copying data if the row index is valid.
+    ''' </summary>
+    ''' <param name="sender">The DataGridView control.</param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewCellContextMenuStripNeededEventArgs"/> containing
+    '''  event data.
+    ''' </param>
+    ''' <remarks>
+    '''  Sets the context menu for copying data.
+    ''' </remarks>
+    Private Sub DgvCellContextMenuStripNeededWithExcel(
+        sender As Object,
+        e As DataGridViewCellContextMenuStripNeededEventArgs) Handles _
+            DgvActiveInsulin.CellContextMenuStripNeeded,
+            DgvAutoBasalDelivery.CellContextMenuStripNeeded,
+            DgvAutoModeStatus.CellContextMenuStripNeeded,
+            DgvPumpBannerState.CellContextMenuStripNeeded,
+            DgvBasal.CellContextMenuStripNeeded,
+            DgvBasalPerHour.CellContextMenuStripNeeded,
+            DgvCalibration.CellContextMenuStripNeeded,
+            DgvCareLinkUsers.CellContextMenuStripNeeded,
+            DgvCurrentUser.CellContextMenuStripNeeded,
+            DgvInsulin.CellContextMenuStripNeeded,
+            DgvLastAlarm.CellContextMenuStripNeeded,
+            DgvLastSensorGlucose.CellContextMenuStripNeeded,
+            DgvLimits.CellContextMenuStripNeeded,
+            DgvLowGlucoseSuspended.CellContextMenuStripNeeded,
+            DgvMeal.CellContextMenuStripNeeded,
+            DgvSensorBgReadings.CellContextMenuStripNeeded,
+            DgvSGs.CellContextMenuStripNeeded,
+            DgvSummary.CellContextMenuStripNeeded,
+            DgvTherapyAlgorithmState.CellContextMenuStripNeeded,
+            DgvTimeChange.CellContextMenuStripNeeded
+
+        If e.RowIndex >= 0 Then
+            e.ContextMenuStrip = Me.DgvCopyWithExcelMenuStrip
+        End If
     End Sub
 
 #Region "ContextMenuStrip Menu Events"
@@ -1297,10 +1288,9 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim cell As DataGridViewCell = dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex)
-        Dim dataGridViewDisableButtonCell As DataGridViewDisableButtonCell =
-            TryCast(cell, DataGridViewDisableButtonCell)
-        If dataGridViewDisableButtonCell IsNot Nothing Then
-            If Not dataGridViewDisableButtonCell.Enabled Then
+        Dim dgvDisableButtonCell As DataGridViewDisableButtonCell = TryCast(cell, DataGridViewDisableButtonCell)
+        If dgvDisableButtonCell IsNot Nothing Then
+            If Not dgvDisableButtonCell.Enabled Then
                 Exit Sub
             End If
 
@@ -1336,9 +1326,7 @@ Public Class Form1
             If currentValue = dgv.Tag.ToString Then
                 Exit Sub ' No change, exit early
             End If
-            Dim userRecord As CareLinkUserDataRecord =
-                s_allUserSettingsData(index:=e.RowIndex)
-
+            Dim userRecord As CareLinkUserDataRecord = s_allUserSettingsData(index:=e.RowIndex)
             Select Case dgv.Columns(index:=e.ColumnIndex).Name
                 Case NameOf(CareLinkUserDataRecord.CareLinkUserName)
                     userRecord.CareLinkUserName = currentValue
@@ -1444,10 +1432,8 @@ Public Class Form1
             Dim disableButtonCell As DataGridViewDisableButtonCell =
                 CType(dgv.Rows(index:=i).Cells(columnName), DataGridViewDisableButtonCell)
 
-            Dim careLinkUserName As String =
-                LoginHelpers.LoginDialog.LoggedOnUser.CareLinkUserName
-            disableButtonCell.Enabled =
-                s_allUserSettingsData(index:=i).CareLinkUserName <> careLinkUserName
+            Dim careLinkUserName As String = LoginHelpers.LoginDialog.LoggedOnUser.CareLinkUserName
+            disableButtonCell.Enabled = s_allUserSettingsData(index:=i).CareLinkUserName <> careLinkUserName
         Next
     End Sub
 
@@ -1560,9 +1546,7 @@ Public Class Form1
         Handles DgvCurrentUser.ColumnAdded
 
         e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
-        Dim alignment As DataGridViewContentAlignment =
-            DataGridViewContentAlignment.MiddleLeft
-
+        Dim alignment As DataGridViewContentAlignment = DataGridViewContentAlignment.MiddleLeft
         Dim padding As New Padding(all:=1)
         e.DgvColumnAdded(
             cellStyle:=New DataGridViewCellStyle().SetCellStyle(alignment, padding),
@@ -1800,6 +1784,48 @@ Public Class Form1
 #Region "Dgv SGs Events"
 
     ''' <summary>
+    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event
+    '''  for the <see cref="DgvSGs"/> DataGridView.
+    '''  This event is raised when a new column is added to the DataGridView.
+    '''  It sets the properties of the newly added column, such as sort mode,
+    '''  visibility, and cell style.
+    ''' </summary>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
+    ''' </param>
+    Private Sub DgvSensorGlucose_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
+        Handles DgvLastSensorGlucose.ColumnAdded, DgvSGs.ColumnAdded
+
+        With e.Column
+            .AutoSizeMode = If(e.Column.Name = "Message",
+                               DataGridViewAutoSizeColumnMode.Fill,
+                               DataGridViewAutoSizeColumnMode.AllCells)
+
+            If HideColumn(Of SG)(item:= .Name) Then
+                .Visible = False
+            End If
+            Dim dgv As DataGridView = CType(sender, DataGridView)
+            e.DgvColumnAdded(
+                cellStyle:=GetCellStyle(Of SG)(.Name),
+                forceReadOnly:=True,
+                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+            Select Case .Index
+                Case 0
+                    .SortMode = DataGridViewColumnSortMode.Programmatic
+                    .HeaderCell.SortGlyphDirection = SortOrder.Descending
+                Case 1
+                    .SortMode = DataGridViewColumnSortMode.Automatic
+                    .HeaderCell.SortGlyphDirection = SortOrder.None
+                Case Else
+                    .SortMode = DataGridViewColumnSortMode.NotSortable
+            End Select
+        End With
+    End Sub
+
+    ''' <summary>
     '''  Handles the <see cref="DataGridView.CellPainting"/> event
     '''  for the <see cref="DgvSGs"/> DataGridView.
     '''  This event is raised when a cell is painted, allowing custom rendering
@@ -1842,48 +1868,6 @@ Public Class Form1
                 e.Handled = True
             End If
         End If
-    End Sub
-
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.ColumnAdded"/> event
-    '''  for the <see cref="DgvSGs"/> DataGridView.
-    '''  This event is raised when a new column is added to the DataGridView.
-    '''  It sets the properties of the newly added column, such as sort mode,
-    '''  visibility, and cell style.
-    ''' </summary>
-    ''' <param name="sender">
-    '''  The source of the event, a <see cref="DataGridView"/> control.
-    ''' </param>
-    ''' <param name="e">
-    '''  A <see cref="DataGridViewColumnEventArgs"/> that contains the event data.
-    ''' </param>
-    Private Sub DgvSensorGlucose_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
-        Handles DgvLastSensorGlucose.ColumnAdded, DgvSGs.ColumnAdded
-
-        With e.Column
-            .AutoSizeMode = If(e.Column.Name = "Message",
-                               DataGridViewAutoSizeColumnMode.Fill,
-                               DataGridViewAutoSizeColumnMode.AllCells)
-
-            If HideColumn(Of SG)(item:= .Name) Then
-                .Visible = False
-            End If
-            Dim dgv As DataGridView = CType(sender, DataGridView)
-            e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of SG)(.Name),
-                forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
-            Select Case .Index
-                Case 0
-                    .SortMode = DataGridViewColumnSortMode.Programmatic
-                    .HeaderCell.SortGlyphDirection = SortOrder.Descending
-                Case 1
-                    .SortMode = DataGridViewColumnSortMode.Automatic
-                    .HeaderCell.SortGlyphDirection = SortOrder.None
-                Case Else
-                    .SortMode = DataGridViewColumnSortMode.NotSortable
-            End Select
-        End With
     End Sub
 
     ''' <summary>
@@ -1936,8 +1920,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
         dgv.Columns(index:=lastColumnIndex).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        dgv.Columns(index:=lastColumnIndex).DefaultCellStyle.WrapMode =
-            DataGridViewTriState.True
+        dgv.Columns(index:=lastColumnIndex).DefaultCellStyle.WrapMode = DataGridViewTriState.True
         dgv.Columns(index:=0).HeaderCell.SortGlyphDirection =
             If(dgv.RowCount > 0,
                If(String.Equals(dgv.Rows(index:=0).Cells(index:=0).Value.ToString(), "1"),
@@ -1967,8 +1950,7 @@ Public Class Form1
         Handles DgvSummary.CellFormatting
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim key As String =
-            dgv.Rows(index:=e.RowIndex).Cells(columnName:="key").Value.ToString
+        Dim key As String = dgv.Rows(index:=e.RowIndex).Cells(columnName:="key").Value.ToString
         Dim eValue As String = Convert.ToString(e.Value)
 
         Select Case e.ColumnIndex
@@ -2025,17 +2007,14 @@ Public Class Form1
                         ' Not Clickable - Data Dependent
                         Case ServerDataEnum.appModelNumber,
                              ServerDataEnum.transmitterPairedTime
+                            Dim alignment As DataGridViewContentAlignment
                             If eValue = "NA" Then
-                                e.CellStyle = e.CellStyle.SetCellStyle(
-                                    alignment:=DataGridViewContentAlignment.MiddleCenter,
-                                    padding:=New Padding(all:=1))
+                                alignment = DataGridViewContentAlignment.MiddleCenter
                                 e.Value = "N/A"
                             Else
-                                e.CellStyle =
-                                    e.CellStyle.SetCellStyle(
-                                    alignment:=DataGridViewContentAlignment.MiddleRight,
-                                    padding:=New Padding(all:=1))
+                                alignment = DataGridViewContentAlignment.MiddleRight
                             End If
+                            e.CellStyle = e.CellStyle.SetCellStyle(alignment, padding:=New Padding(all:=1))
 
                         ' Not Clickable Cells - Right
                         Case ServerDataEnum.currentServerTime,
@@ -2120,12 +2099,10 @@ Public Class Form1
 
         If e.RowIndex < 0 OrElse _updating Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim value As String =
-            dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex).Value.ToString
+        Dim value As String = dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex).Value.ToString
         If value.StartsWith(value:=ClickToShowDetails) Then
             With Me.TabControlPage1
-                Dim key As String =
-                    dgv.Rows(index:=e.RowIndex).Cells(columnName:="key").Value.ToString
+                Dim key As String = dgv.Rows(index:=e.RowIndex).Cells(columnName:="key").Value.ToString
                 Select Case key.GetItemIndex()
                     Case ServerDataEnum.activeInsulin
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage05ActiveInsulin))
@@ -2138,10 +2115,9 @@ Public Class Form1
                     Case ServerDataEnum.limits
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage09Limits))
                     Case ServerDataEnum.notificationHistory
-                        .SelectedIndex =
-                            If(key = "activeNotification",
-                               GetTabIndexFromName(tabPageName:=NameOf(TabPage10NotificationActive)),
-                               GetTabIndexFromName(tabPageName:=NameOf(TabPage11NotificationsCleared)))
+                        .SelectedIndex = If(key = "activeNotification",
+                                            GetTabIndexFromName(tabPageName:=NameOf(TabPage10NotificationActive)),
+                                            GetTabIndexFromName(tabPageName:=NameOf(TabPage11NotificationsCleared)))
 
                     Case ServerDataEnum.pumpBannerState
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage12PumpBannerState))
@@ -2384,11 +2360,9 @@ Public Class Form1
         Me.InitializeDgvCareLinkUsers(dgv:=Me.DgvCareLinkUsers)
         s_formLoaded = True
         Me.MenuOptionsAudioAlerts.Checked = My.Settings.SystemAudioAlertsEnabled
-        Me.MenuOptionsSpeechRecognitionEnabled.Checked =
-            My.Settings.SystemSpeechRecognitionThreshold < 1
+        Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitionThreshold < 1
         Me.SetSpeechRecognitionConfidenceThreshold()
-        Me.MenuOptionsConfigureTiTR.Text =
-            $"Configure TiTR ({My.Forms.OptionsConfigureTiTR.GetTiTrMsg()})..."
+        Me.MenuOptionsConfigureTiTR.Text = $"Configure TiTR ({My.Forms.OptionsConfigureTiTR.GetTiTrMsg()})..."
         AddHandler My.Settings.SettingChanging, AddressOf Me.MySettings_SettingChanging
 
         If File.Exists(path:=GetGraphColorsFileNameWithPath()) Then
@@ -2402,8 +2376,7 @@ Public Class Form1
         Dim style As FontStyle = FontStyle.Bold
         Dim emSize As Single = 12.0F
         Me.DgvBasalPerHour.Font = New Font(FamilyName, emSize, style)
-        Dim currentHeaderStyle As DataGridViewCellStyle =
-            Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle.Clone
+        Dim currentHeaderStyle As DataGridViewCellStyle = Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle.Clone
         currentHeaderStyle.Font = New Font(FamilyName, emSize, style)
         Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle = currentHeaderStyle
         Me.DgvBasalPerHour.DefaultCellStyle = New DataGridViewCellStyle With {
@@ -2510,7 +2483,6 @@ Public Class Form1
 
             Me.UpdateAllTabPages(fromFile:=False)
         End If
-
     End Sub
 
     ''' <summary>
@@ -2533,11 +2505,9 @@ Public Class Form1
 
         Me.TabControlPage1.SelectedIndex = 3
         Me.TabControlPage1.Visible = True
-        Dim dgv As DataGridView =
-            CType(Me.TabControlPage1.TabPages(index:=3).Controls(index:=0), DataGridView)
+        Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(index:=3).Controls(index:=0), DataGridView)
         For Each row As DataGridViewRow In dgv.Rows
-            If row.Cells(index:=1).FormattedValue.ToString _
-                  .StartsWith(value:="medicalDeviceInformation") Then
+            If row.Cells(index:=1).FormattedValue.ToString.StartsWith(value:="medicalDeviceInformation") Then
                 dgv.CurrentCell = dgv.Rows(row.Index).Cells(index:=1)
                 _dgvSummaryPrevRowIndex = dgv.CurrentCell.RowIndex
                 _dgvSummaryPrevColIndex = dgv.CurrentCell.ColumnIndex
@@ -2553,46 +2523,6 @@ Public Class Form1
 #Region "Form1 Menu Events"
 
 #Region "Start Here Menu Events"
-
-    ''' <summary>
-    '''  Handles the <see cref="MenuStartHere.DropDownOpening"/> event for
-    '''  the Start Here menu. This event is raised when the Start Here menu
-    '''  is about to be displayed. It enables or disables menu items
-    '''  based on the current state of the application.
-    ''' </summary>
-    ''' <param name="sender">
-    '''  The source of the event, a ToolStripMenuItem control.
-    ''' </param>
-    ''' <param name="e">An EventArgs that contains the event data.</param>
-    Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
-        Dim searchPattern As String = $"CareLink*.json"
-        Dim path As String = GetProjectDataDirectory()
-        Me.MenuStartLoadDataFile.Enabled = AnyMatchingFiles(path, searchPattern)
-
-        Me.MenuStartSaveSnapshot.Enabled = Not RecentDataEmpty()
-
-        searchPattern = $"{BaseErrorReportName}*.txt"
-        Me.MenuStartLoadExceptionReport.Visible = AnyMatchingFiles(path, searchPattern)
-
-        searchPattern = $"{s_userName}Settings.pdf"
-        Dim userPdfExists As Boolean =
-            Not (String.IsNullOrWhiteSpace(s_userName) OrElse
-            Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern))
-
-        Me.MenuStartShowPumpSetup.Enabled = userPdfExists AndAlso CurrentPdf IsNot Nothing AndAlso CurrentPdf.IsValid
-
-        Dim settingExist As Boolean = Directory.Exists(path:=GetSettingsDirectory)
-
-        Dim downloadFilesExists As Boolean =
-            Directory.GetFiles(path:=GetDownloadsDirectory(), searchPattern:=$"*.pdf").Length > 0
-
-        Me.MenuStartManuallyImportDeviceSettings.Enabled = downloadFilesExists
-
-        ' The menu item For cleaning up obsolete files
-        ' (MenuStartCleanUpObsoleteFiles) is only enabled,
-        ' when the application Is the only instance running, as a safety precaution.
-        Me.MenuStartCleanUpObsoleteFiles.Enabled = Process.GetProcessesByName(processName:=_processName).Length = 1
-    End Sub
 
     ''' <summary>
     '''  Handles the <see cref="Form.Click"/> event for the Start Here menu item.
@@ -2622,6 +2552,138 @@ Public Class Form1
     End Sub
 
     ''' <summary>
+    '''  Handles the <see cref="MenuStartHere.DropDownOpening"/> event for
+    '''  the Start Here menu. This event is raised when the Start Here menu
+    '''  is about to be displayed. It enables or disables menu items
+    '''  based on the current state of the application.
+    ''' </summary>
+    ''' <param name="sender">
+    '''  The source of the event, a ToolStripMenuItem control.
+    ''' </param>
+    ''' <param name="e">An EventArgs that contains the event data.</param>
+    Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
+        Dim searchPattern As String = $"CareLink*.json"
+        Dim path As String = GetProjectDataDirectory()
+        Me.MenuStartLoadDataFile.Enabled = AnyMatchingFiles(path, searchPattern)
+
+        Me.MenuStartSaveSnapshot.Enabled = Not RecentDataEmpty()
+
+        searchPattern = $"{BaseErrorReportName}*.txt"
+        Me.MenuStartLoadExceptionReport.Visible = AnyMatchingFiles(path, searchPattern)
+
+        searchPattern = $"{s_userName}Settings.pdf"
+        Dim validUser As Boolean = String.IsNullOrWhiteSpace(s_userName)
+        Dim userPdfExists As Boolean =
+            Not (validUser OrElse Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern))
+
+        Me.MenuStartShowPumpSetup.Enabled = userPdfExists AndAlso CurrentPdf IsNot Nothing AndAlso CurrentPdf.IsValid
+
+        Dim settingExist As Boolean = Directory.Exists(path:=GetSettingsDirectory)
+
+        Dim downloadFilesExists As Boolean =
+            Directory.GetFiles(path:=GetDownloadsDirectory(), searchPattern:=$"*.pdf").Length > 0
+
+        Me.MenuStartManuallyImportDeviceSettings.Enabled = downloadFilesExists
+
+        ' The menu item For cleaning up obsolete files
+        ' (MenuStartCleanUpObsoleteFiles) is only enabled,
+        ' when the application Is the only instance running, as a safety precaution.
+        Me.MenuStartCleanUpObsoleteFiles.Enabled = Process.GetProcessesByName(processName:=_processName).Length = 1
+    End Sub
+
+    ''' <summary>
+    '''  Handles the <see cref="Form.Click"/> event for the Use Exception Report menu item.
+    '''  This event is raised when the Use Exception Report menu item is clicked.
+    '''  It allows the user to load a saved error report file and process it.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
+    ''' <param name="e">An EventArgs that contains the event data.</param>
+    ''' <remarks>
+    '''  The user can select an error report file to load and process.
+    ''' </remarks>
+    Private Sub MenuStartLoadExceptionReport_Click(sender As Object, e As EventArgs) _
+        Handles MenuStartLoadExceptionReport.Click
+
+        Dim fileList As String() = Directory.GetFiles(
+            path:=GetProjectDataDirectory(),
+            searchPattern:=$"{BaseErrorReportName}*.txt")
+        Using openFileDialog1 As New System.Windows.Forms.OpenFileDialog With {
+            .AddExtension = True,
+            .AddToRecent = False,
+            .CheckFileExists = True,
+            .CheckPathExists = True,
+            .DefaultExt = "txt",
+            .FileName = If(fileList.Length > 0,
+                           Path.GetFileName(path:=fileList(0)),
+                           "CareLink"),
+            .Filter = $"Error files (*.txt)|{BaseErrorReportName}*.txt",
+            .InitialDirectory = GetProjectDataDirectory(),
+            .Multiselect = False,
+            .ReadOnlyChecked = True,
+            .RestoreDirectory = True,
+            .ShowPreview = False,
+            .SupportMultiDottedExtensions = False,
+            .Title = $"Select CareLink™ saved snapshot to load",
+            .ValidateNames = True}
+
+            If openFileDialog1.ShowDialog(owner:=Me) = DialogResult.OK Then
+                Try
+                    Dim fileNameWithPath As String = openFileDialog1.FileName
+                    SetServerUpdateTimer(Start:=False)
+                    If File.Exists(fileNameWithPath) Then
+                        RecentData = New Dictionary(Of String, String)
+                        ExceptionHandlerDialog.reportNameWithPath = fileNameWithPath
+                        If ExceptionHandlerDialog.ShowDialog(owner:=Me) = DialogResult.OK Then
+                            ExceptionHandlerDialog.reportNameWithPath = ""
+                            Try
+                                Dim json As String = ExceptionHandlerDialog.LocalRawData
+                                PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
+                                DeserializePatientElement()
+                                Me.TabControlPage2.Visible = True
+                                Me.TabControlPage1.Visible = True
+                            Catch ex As Exception
+                                Dim str As String = ex.DecodeException()
+                                MessageBox.Show(
+                                    text:=$"Error reading data file. Original error: {str}")
+                            End Try
+                            Const fuzzy As Boolean = True
+                            CurrentDateCulture = openFileDialog1.FileName.ExtractCulture(FixedPart:="CareLink", fuzzy)
+                            Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
+                            Dim file As String = Path.GetFileName(fileNameWithPath)
+                            Me.Text = $"{SavedTitle} Using file {file}"
+                            Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
+                            Me.SetLastUpdateTime(
+                                msg:=epochDateTime.ToShortDateTimeString,
+                                suffixMessage:="from file",
+                                highLight:=False,
+                                isDaylightSavingTime:=epochDateTime.IsDaylightSavingTime)
+                            SetUpCareLinkUser()
+
+                            Dim subName As String = NameOf(UpdateAllTabPages)
+                            Try
+                                Me.UpdateAllTabPages(fromFile:=True)
+                            Catch ex As Exception
+                                MessageBox.Show(
+                                    text:=$"Error in {subName}. Original error: {ex.Message}")
+                            End Try
+                            Try
+                                Me.UpdateAllTabPages(fromFile:=True)
+                            Catch ex As Exception
+                                MessageBox.Show(
+                                    text:=$"Error in {subName}. Original error: {ex.Message}")
+                            End Try
+                        End If
+                    End If
+                Catch ex As Exception
+                    Dim str As String = ex.DecodeException()
+                    MessageBox.Show(
+                        text:=$"Cannot read file from disk. Original error: {str}")
+                End Try
+            End If
+        End Using
+    End Sub
+
+    ''' <summary>
     '''  Handles the <see cref="Form.Click"/> event for the
     '''  Manually Import Device Settings menu item.
     '''  This event is used to prompt the user to select a settings PDF file for import.
@@ -2633,8 +2695,7 @@ Public Class Form1
     Private Sub MenuStartManuallyImportDeviceSettings_Click(sender As Object, e As EventArgs) _
         Handles MenuStartManuallyImportDeviceSettings.Click
 
-        Dim folder As String =
-            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
+        Dim folder As String = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)
         Dim initialDirectory As String = $"{folder}\Downloads\"
         Using openFileDialog1 As New System.Windows.Forms.OpenFileDialog With {
             .AddExtension = True,
@@ -2682,6 +2743,26 @@ Public Class Form1
     End Sub
 
     ''' <summary>
+    '''  Handles the <see cref="Form.Click"/> event for the Save Snapshot File menu item.
+    '''  This event is raised when the Save Snapshot File menu item is clicked.
+    '''  It saves the current patient data to a JSON file.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
+    ''' <param name="e">An EventArgs that contains the event data.</param>
+    ''' <remarks>
+    '''  The saved file will have a unique name based on the current date and time.
+    ''' </remarks>
+    Private Sub MenuStartSaveSnapshot_Click(sender As Object, e As EventArgs) Handles MenuStartSaveSnapshot.Click
+        If RecentDataEmpty() Then Exit Sub
+        Dim path As String = GetUniqueDataFileName(
+            baseName:=BaseSnapshotName,
+            cultureName:=CurrentDateCulture.Name,
+            extension:="json",
+            mustBeUnique:=True).withPath
+        File.WriteAllTextAsync(path, contents:=CleanPatientData())
+    End Sub
+
+    ''' <summary>
     '''  Handles the <see cref="Form.Click"/> event for the Show Pump Setup menu item.
     '''  This event is raised when the Show Pump Setup menu item is clicked.
     '''  It opens a dialog to display the pump setup information from
@@ -2719,120 +2800,22 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="Form.Click"/> event for the Save Snapshot File menu item.
-    '''  This event is raised when the Save Snapshot File menu item is clicked.
-    '''  It saves the current patient data to a JSON file.
+    '''  Handles the <see cref="Form.Click"/> event for the Use Saved Data File menu item.
+    '''  This event is raised when the Use Saved Data File menu item is clicked.
+    '''  It allows the user to load a saved data file and update the application
+    '''  state accordingly.
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
     ''' <remarks>
-    '''  The saved file will have a unique name based on the current date and time.
+    '''  The user can select a saved data file to load and process.
     ''' </remarks>
-    Private Sub MenuStartSaveSnapshot_Click(sender As Object, e As EventArgs) Handles MenuStartSaveSnapshot.Click
-        If RecentDataEmpty() Then Exit Sub
-        Dim path As String = GetUniqueDataFileName(
-            baseName:=BaseSnapshotName,
-            cultureName:=CurrentDateCulture.Name,
-            extension:="json",
-            mustBeUnique:=True).withPath
-        File.WriteAllTextAsync(path, contents:=CleanPatientData())
-    End Sub
-
-    ''' <summary>
-    '''  Handles the <see cref="Form.Click"/> event for the Use Exception Report menu item.
-    '''  This event is raised when the Use Exception Report menu item is clicked.
-    '''  It allows the user to load a saved error report file and process it.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
-    ''' <param name="e">An EventArgs that contains the event data.</param>
-    ''' <remarks>
-    '''  The user can select an error report file to load and process.
-    ''' </remarks>
-    Private Sub MenuStartLoadExceptionReport_Click(sender As Object, e As EventArgs) _
-        Handles MenuStartLoadExceptionReport.Click
-
-        Dim fileList As String() = Directory.GetFiles(
-            path:=GetProjectDataDirectory(),
-            searchPattern:=$"{BaseErrorReportName}*.txt")
-        Using openFileDialog1 As New System.Windows.Forms.OpenFileDialog With {
-            .AddExtension = True,
-            .AddToRecent = False,
-            .CheckFileExists = True,
-            .CheckPathExists = True,
-            .DefaultExt = "txt",
-            .FileName = If(fileList.Length > 0,
-                           Path.GetFileName(path:=fileList(0)),
-                           "CareLink"),
-            .Filter = $"Error files (*.txt)|{BaseErrorReportName}*.txt",
-            .InitialDirectory = GetProjectDataDirectory(),
-            .Multiselect = False,
-            .ReadOnlyChecked = True,
-            .RestoreDirectory = True,
-            .ShowPreview = False,
-            .SupportMultiDottedExtensions = False,
-            .Title = $"Select CareLink™ saved snapshot to load",
-            .ValidateNames = True}
-
-            If openFileDialog1.ShowDialog(owner:=Me) = DialogResult.OK Then
-                Try
-                    Dim fileNameWithPath As String = openFileDialog1.FileName
-                    SetServerUpdateTimer(Start:=False)
-                    If File.Exists(fileNameWithPath) Then
-                        RecentData = New Dictionary(Of String, String)
-                        ExceptionHandlerDialog.ReportFileNameWithPath = fileNameWithPath
-                        If ExceptionHandlerDialog.ShowDialog(owner:=Me) = DialogResult.OK Then
-                            ExceptionHandlerDialog.ReportFileNameWithPath = ""
-                            Try
-                                Dim json As String = ExceptionHandlerDialog.LocalRawData
-                                PatientDataElement =
-                                    JsonSerializer.Deserialize(Of JsonElement)(json)
-                                DeserializePatientElement()
-                                Me.TabControlPage2.Visible = True
-                                Me.TabControlPage1.Visible = True
-                            Catch ex As Exception
-                                Dim str As String = ex.DecodeException()
-                                MessageBox.Show(
-                                    text:=$"Error reading data file. Original error: {str}")
-                            End Try
-                            CurrentDateCulture =
-                                openFileDialog1.FileName.ExtractCulture(
-                                    FixedPart:="CareLink",
-                                    fuzzy:=True)
-                            Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
-                            Dim file As String =
-                                Path.GetFileName(fileNameWithPath)
-                            Me.Text = $"{SavedTitle} Using file {file}"
-                            Dim epochDateTime As Date =
-                                s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
-                            Me.SetLastUpdateTime(
-                                msg:=epochDateTime.ToShortDateTimeString,
-                                suffixMessage:="from file",
-                                highLight:=False,
-                                isDaylightSavingTime:=epochDateTime.IsDaylightSavingTime)
-                            SetUpCareLinkUser()
-
-                            Dim subName As String = NameOf(UpdateAllTabPages)
-                            Try
-                                Me.UpdateAllTabPages(fromFile:=True)
-                            Catch ex As Exception
-                                MessageBox.Show(
-                                    text:=$"Error in {subName}. Original error: {ex.Message}")
-                            End Try
-                            Try
-                                Me.UpdateAllTabPages(fromFile:=True)
-                            Catch ex As Exception
-                                MessageBox.Show(
-                                    text:=$"Error in {subName}. Original error: {ex.Message}")
-                            End Try
-                        End If
-                    End If
-                Catch ex As Exception
-                    Dim str As String = ex.DecodeException()
-                    MessageBox.Show(
-                        text:=$"Cannot read file from disk. Original error: {str}")
-                End Try
-            End If
-        End Using
+    Private Sub MenuStartUseDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartLoadDataFile.Click
+        Dim success As Boolean = DoOptionalLoginAndUpdateData(
+            owner:=Me,
+            updateAllTabs:=True,
+            fileToLoad:=FileToLoadOptions.Snapshot)
+        Me.MenuStartLoadDataFile.Enabled = Not success
     End Sub
 
     ''' <summary>
@@ -2873,25 +2856,6 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="Form.Click"/> event for the Use Saved Data File menu item.
-    '''  This event is raised when the Use Saved Data File menu item is clicked.
-    '''  It allows the user to load a saved data file and update the application
-    '''  state accordingly.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
-    ''' <param name="e">An EventArgs that contains the event data.</param>
-    ''' <remarks>
-    '''  The user can select a saved data file to load and process.
-    ''' </remarks>
-    Private Sub MenuStartUseDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartLoadDataFile.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(
-            owner:=Me,
-            updateAllTabs:=True,
-            fileToLoad:=FileToLoadOptions.Snapshot)
-        Me.MenuStartLoadDataFile.Enabled = Not success
-    End Sub
-
-    ''' <summary>
     '''  Handles the <see cref="Form.Click"/> event for the Use Test Data menu item.
     '''  This event is raised when the Use Test Data menu item is clicked.
     '''  It loads test data into the application and updates the state accordingly.
@@ -2921,9 +2885,7 @@ Public Class Form1
     '''  Returns 100 if no item is checked or no numeric value is found.
     ''' </returns>
     Private Function GetSpeechConfidenceValue() As Double
-        For Each item As ToolStripMenuItem In
-            Me.MenuOptionsSpeechRecognitionEnabled.DropDownItems
-
+        For Each item As ToolStripMenuItem In Me.MenuOptionsSpeechRecognitionEnabled.DropDownItems
             If IsNumeric(Expression:=item.Text) AndAlso item.Checked Then
                 Return CDbl(item.Text)
             End If
@@ -2943,8 +2905,7 @@ Public Class Form1
     Handles MenuOptions.DropDownOpening
 
         Me.MenuOptionsEditPumpSettings.Enabled =
-            Debugger.IsAttached OrElse
-            Not String.IsNullOrWhiteSpace(value:=CurrentUser?.UserName)
+            Debugger.IsAttached OrElse Not String.IsNullOrWhiteSpace(value:=CurrentUser?.UserName)
     End Sub
 
     ''' <summary>
@@ -2967,8 +2928,7 @@ Public Class Form1
                 InitializeSpeechRecognition()
             End If
         Else
-            Me.MenuOptionsSpeechRecognitionEnabled.Checked =
-                My.Settings.SystemSpeechRecognitionThreshold < 1
+            Me.MenuOptionsSpeechRecognitionEnabled.Checked = My.Settings.SystemSpeechRecognitionThreshold < 1
             Me.MenuOptionsSpeechRecognitionEnabled.Enabled = False
             CancelSpeechRecognition()
         End If
@@ -3021,8 +2981,7 @@ Public Class Form1
 
         Dim result As DialogResult = OptionsConfigureTiTR.ShowDialog(owner:=Me)
         If result = DialogResult.OK Then
-            Me.MenuOptionsConfigureTiTR.Text =
-                $"Configure TiTR ({OptionsConfigureTiTR.GetTiTrMsg()})..."
+            Me.MenuOptionsConfigureTiTR.Text = $"Configure TiTR ({OptionsConfigureTiTR.GetTiTrMsg()})..."
             Me.TiTRMgsLabel2.Text = OptionsConfigureTiTR.GetTiTrMsg()
 
             ' Update the TiTR compliance values based on the user's configuration.
@@ -3176,8 +3135,7 @@ Public Class Form1
         Handles MenuOptionsUseLocalTimeZone.Click
 
         ' Toggle the UseLocalTimeZone setting and update the PumpTimeZoneInfo accordingly.
-        Dim saveRequired As Boolean =
-            Me.MenuOptionsUseLocalTimeZone.Checked <> My.Settings.UseLocalTimeZone
+        Dim saveRequired As Boolean = Me.MenuOptionsUseLocalTimeZone.Checked <> My.Settings.UseLocalTimeZone
         If Me.MenuOptionsUseLocalTimeZone.Checked Then
             PumpTimeZoneInfo = TimeZoneInfo.Local
             My.Settings.UseLocalTimeZone = True
@@ -3229,8 +3187,7 @@ Public Class Form1
                 Me.MenuOptionsSpeechRecognition90.Checked = False
                 Me.MenuOptionsSpeechRecognition95.Checked = True
         End Select
-        Me.MenuOptionsSpeechRecognitionEnabled.Checked =
-            Me.MenuOptionsSpeechRecognitionDisabled.Checked = False
+        Me.MenuOptionsSpeechRecognitionEnabled.Checked = Not Me.MenuOptionsSpeechRecognitionDisabled.Checked
     End Sub
 
 #End Region ' Menus Options
@@ -3533,10 +3490,8 @@ Public Class Form1
         Select Case e.TabPage.Name
             Case NameOf(TabPage15More)
                 Me.DgvCareLinkUsers.InitializeDgv
-
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
-                    c.Visible =
-                        Not HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
+                    c.Visible = Not HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
                 Next
                 Me.TabControlPage2.SelectedIndex = If(_lastMarkerTabLocation.Page = 0,
                                                       0,
@@ -3633,8 +3588,7 @@ Public Class Form1
         ElseIf tabName = "SensorGlucoseValues" Then
             tabName = "Sgs"
         End If
-        Dim dgv As DataGridView =
-            CType(Me.TabControlPage1.TabPages(index:=3).Controls(index:=0), DataGridView)
+        Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(index:=3).Controls(index:=0), DataGridView)
         For index As Integer = 0 To dgv.RowCount - 1
             Dim row As DataGridViewRow = dgv.Rows(index)
             Dim message As String = row.Cells(index:=1).FormattedValue.ToString
@@ -3768,10 +3722,8 @@ Public Class Form1
             If RecentData.TryGetValue(
                     key:=NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime),
                     value:=lastMedicalDeviceDataUpdateServerEpochString) Then
-                If CLng(lastMedicalDeviceDataUpdateServerEpochString) =
-                    s_lastMedicalDeviceDataUpdateServerEpoch Then
-                    Dim epochAsLocalDate As Date =
-                        lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
+                If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
+                    Dim epochAsLocalDate As Date = lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
                     If epochAsLocalDate + FiveMinuteSpan < Now() Then
                         Me.SetLastUpdateTime(
                             msg:=Nothing,
@@ -3859,8 +3811,7 @@ Public Class Form1
         Me.SummaryLowLimitSeries = CreateSeriesLimitsAndTarget(
             limitsLegend:=_summaryChartLegend,
             seriesName:=LowLimitSeriesName)
-        Me.SummaryMarkerSeries =
-            CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Secondary)
+        Me.SummaryMarkerSeries = CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Secondary)
         Me.SummaryTimeChangeSeries = CreateSeriesTimeChange(basalLegend:=_summaryChartLegend)
 
         Me.SplitContainer3.Panel1.Controls.Add(Me.SummaryChart)
@@ -3959,8 +3910,7 @@ Public Class Form1
     Friend Sub InitializeActiveInsulinTabChart()
         Me.SplitContainer1.Panel2.Controls.Clear()
         Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
-        Dim activeInsulinChartArea As ChartArea =
-            CreateChartArea(containingChart:=Me.ActiveInsulinChart)
+        Dim activeInsulinChartArea As ChartArea = CreateChartArea(containingChart:=Me.ActiveInsulinChart)
         Dim labelColor As Color = Me.ActiveInsulinChart.BackColor.ContrastingColor()
         Dim labelFont As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
 
@@ -3983,8 +3933,7 @@ Public Class Form1
             .TitleForeColor = labelColor
         End With
         Me.ActiveInsulinChart.ChartAreas.Add(item:=activeInsulinChartArea)
-        _activeInsulinChartLegend =
-            CreateChartLegend(legendName:=NameOf(_activeInsulinChartLegend))
+        _activeInsulinChartLegend = CreateChartLegend(legendName:=NameOf(_activeInsulinChartLegend))
         Me.ActiveInsulinChartTitle = CreateTitle(
             chartTitle:=$"Running Insulin On Board (IOB)",
             name:=NameOf(ActiveInsulinChartTitle),
@@ -4010,14 +3959,11 @@ Public Class Form1
             legendText:="Min Basal",
             yAxisType:=AxisType.Secondary)
 
-        Me.ActiveInsulinSuspendSeries =
-            CreateSeriesSuspend(basalLegend:=_activeInsulinChartLegend)
+        Me.ActiveInsulinSuspendSeries = CreateSeriesSuspend(basalLegend:=_activeInsulinChartLegend)
 
         Me.ActiveInsulinSgSeries = CreateSeriesSg(sgLegend:=_activeInsulinChartLegend)
-        Me.ActiveInsulinMarkerSeries =
-            CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Secondary)
-        Me.ActiveInsulinTimeChangeSeries =
-            CreateSeriesTimeChange(basalLegend:=_activeInsulinChartLegend)
+        Me.ActiveInsulinMarkerSeries = CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Secondary)
+        Me.ActiveInsulinTimeChangeSeries = CreateSeriesTimeChange(basalLegend:=_activeInsulinChartLegend)
 
         With Me.ActiveInsulinChart
             With .Series
@@ -4081,10 +4027,8 @@ Public Class Form1
     ''' </remarks>
     Private Sub InitializeTreatmentMarkersChart()
         Me.TabPage03TreatmentDetails.Controls.Clear()
-
         Me.TreatmentMarkersChart = CreateChart(key:=NameOf(TreatmentMarkersChart))
-        Dim treatmentMarkersChartArea As ChartArea =
-            CreateChartArea(containingChart:=Me.TreatmentMarkersChart)
+        Dim treatmentMarkersChartArea As ChartArea = CreateChartArea(containingChart:=Me.TreatmentMarkersChart)
 
         Select Case MaxBasalPerDose
             Case < 0.5
@@ -4153,12 +4097,9 @@ Public Class Form1
             yAxisType:=AxisType.Primary)
 
         Me.TreatmentSgSeries = CreateSeriesSg(sgLegend:=_treatmentMarkersChartLegend)
-        Me.TreatmentMarkersSeries =
-            CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Primary)
-        Me.TreatmentTimeChangeSeries =
-            CreateSeriesTimeChange(basalLegend:=_treatmentMarkersChartLegend)
-        Me.TreatmentSuspendSeries =
-            CreateSeriesSuspend(basalLegend:=_treatmentMarkersChartLegend)
+        Me.TreatmentMarkersSeries = CreateSeriesWithoutVisibleLegend(YAxisType:=AxisType.Primary)
+        Me.TreatmentTimeChangeSeries = CreateSeriesTimeChange(basalLegend:=_treatmentMarkersChartLegend)
+        Me.TreatmentSuspendSeries = CreateSeriesSuspend(basalLegend:=_treatmentMarkersChartLegend)
 
         With Me.TreatmentMarkersChart
             With .Series
@@ -4260,10 +4201,9 @@ Public Class Form1
                                 Me.TrendValueLabel.Text = ""
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta:=0)
                             Else
-                                deltaString =
-                                    If(Math.Abs(value:=delta) < 0.001,
-                                       "0",
-                                       delta.ToString(format:=GetSgFormat(withSign:=True), provider))
+                                deltaString = If(Math.Abs(value:=delta) < 0.001,
+                                                 "0",
+                                                 delta.ToString(format:=GetSgFormat(withSign:=True), provider))
 
                                 Me.TrendValueLabel.Text = deltaString
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta)
@@ -4310,8 +4250,7 @@ Public Class Form1
                               _formScale.Height)
 
         If sp.FixedPanel = FixedPanel.Panel1 Then
-            sp.SplitterDistance =
-                CInt(Math.Truncate(Math.Round(sp.SplitterDistance * sc)))
+            sp.SplitterDistance = CInt(Math.Truncate(Math.Round(sp.SplitterDistance * sc)))
         ElseIf sp.FixedPanel = FixedPanel.Panel2 Then
             Dim cs As Integer = If(sp.Orientation = Orientation.Vertical,
                                    sp.Panel2.ClientSize.Width,
@@ -4344,6 +4283,19 @@ Public Class Form1
 
 #Region "Update Home Tab"
 
+    Private Function GetSensorTimeLeftMessage() As String
+        Dim sensorDurationHours As Integer = PatientData.SensorDurationHours
+        Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F, FontStyle.Bold)
+        Select Case sensorDurationHours
+            Case Is <= 24
+                Return $"Expiring soon{vbCrLf}(Remaining{vbCrLf}grace period:{vbCrLf}{sensorDurationHours.HoursToDaysAndHours})"
+            Case Is < 48
+                Return $"{(sensorDurationHours - 24).HoursToDaysAndHours} (Followed{vbCrLf}by 24 hr grace{vbCrLf}period)"
+            Case Else  ' sensorDurationHours >= 48
+                Return $"{(sensorDurationHours - 24).HoursToDaysAndHours}{vbCrLf}(Followed by 24{vbCrLf}hr grace period)"
+        End Select
+    End Function
+
     ''' <summary>
     '''  Returns a subtitle string for the summary chart based on the
     '''  current AutoMode state and basal pattern. If in AutoMode, the subtitle
@@ -4357,8 +4309,7 @@ Public Class Form1
         Dim title As String = ""
         If InAutoMode Then
             Dim autoModeState As String =
-                s_therapyAlgorithmStateValue(
-                    key:=NameOf(TherapyAlgorithmState.AutoModeShieldState))
+                s_therapyAlgorithmStateValue(key:=NameOf(TherapyAlgorithmState.AutoModeShieldState))
             Select Case autoModeState
                 Case "AUTO_BASAL"
                     title = If(Is700Series(),
@@ -4368,8 +4319,7 @@ Public Class Form1
                 Case "SAFE_BASAL"
                     title = autoModeState.ToTitle
                     Dim key As String = NameOf(TherapyAlgorithmState.SafeBasalDuration)
-                    Dim safeBasalDuration As UInteger =
-                        CUInt(s_therapyAlgorithmStateValue(key))
+                    Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(key))
                     If safeBasalDuration > 0 Then
                         title &= $", {TimeSpan.FromMinutes(safeBasalDuration):h\:mm} left."
                     End If
@@ -4380,6 +4330,54 @@ Public Class Form1
         End If
         Return title
     End Function
+
+    ''' <summary>
+    '''  Positions the controls in the panel of the home tab.
+    ''' </summary>
+    ''' <remarks>
+    '''  This method centers the labels in the panel based on their names
+    '''  and adjusts their positions accordingly.
+    ''' </remarks>
+    Private Sub PositionControlsInPanel()
+        For Each ctrl As Control In Me.SplitContainer3.Panel2.Controls
+            Dim parent As Control = ctrl.Parent
+            If parent Is Nothing Then
+                If Not Debugger.IsAttached Then
+                    Exit Sub
+                End If
+                Const message As String = "The control must have a parent to center it."
+                Throw New InvalidOperationException(message)
+            End If
+            If TypeOf ctrl Is Label Then
+                Select Case ctrl.Name
+                    Case NameOf(Me.LowTirComplianceLabel)
+                        ctrl.CenterXOnParent(onLeftHalf:=True)
+
+                    Case NameOf(Me.HighTirComplianceLabel)
+                        ctrl.CenterXOnParent(onLeftHalf:=False)
+
+                    Case NameOf(Me.TimeInRangeMessageLabel)
+                        ctrl.CenterXOnParent(onLeftHalf:=True)
+
+                    Case NameOf(Me.TimeInRangeValueLabel)
+                        ctrl.CenterXOnParent(onLeftHalf:=True)
+
+                    Case NameOf(Me.TiTRMgsLabel)
+                        ctrl.CenterXOnParent(onLeftHalf:=False)
+
+                    Case NameOf(Me.TimeInTightRangeValueLabel)
+                        ctrl.CenterXOnParent(onLeftHalf:=False)
+
+                    Case NameOf(Me.TiTRMgsLabel2)
+                        With Me.TiTRMgsLabel2
+                            .Left = parent.Width - .Width - .Margin.Right
+                        End With
+                    Case Else
+                        ctrl.CenterXOnParent()
+                End Select
+            End If
+        Next
+    End Sub
 
     ''' <summary>
     '''  Updates the Active Insulin value display on the main form
@@ -4401,8 +4399,7 @@ Public Class Form1
             If PatientData.ActiveInsulin IsNot Nothing AndAlso
                PatientData.ActiveInsulin.Amount >= 0 Then
 
-                Dim activeInsulinStr As String =
-                    $"Active Insulin {$"{PatientData.ActiveInsulin.Amount:N3}"} U"
+                Dim activeInsulinStr As String = $"Active Insulin {$"{PatientData.ActiveInsulin.Amount:N3}"} U"
                 Me.ActiveInsulinValue.Text = activeInsulinStr
                 _sgMiniDisplay.ActiveInsulinTextBox.Text = activeInsulinStr
             Else
@@ -4451,8 +4448,8 @@ Public Class Form1
             Next
 
             With Me.ActiveInsulinChart
-                .Titles(name:=NameOf(ActiveInsulinChartTitle)).Text =
-                    $"Running Insulin On Board (IOB){s_basalList.Subtitle()}"
+                Const name As String = NameOf(ActiveInsulinChartTitle)
+                .Titles(name).Text = $"Running Insulin On Board (IOB){s_basalList.Subtitle()}"
                 .ChartAreas(name:=NameOf(ChartArea)).UpdateChartAreaSgAxisX()
 
                 If s_markers.Count = 0 Then
@@ -4465,7 +4462,6 @@ Public Class Form1
                 For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
                     Dim marker As Marker = markerWithIndex.Value
                     Dim key As New OADate(asDate:=marker.GetMarkerTimestamp)
-
                     Dim bolusAmount As Single = 0
                     Dim shouldAdd As Boolean = False
 
@@ -4539,7 +4535,7 @@ Public Class Form1
                     _remainingInsulinList.Add(item)
                 Next
 
-                .ChartAreas(name:=NameOf(ChartArea)).AxisY2.Maximum = GetYMaxValueFromNativeMmolL()
+                .ChartAreas(name:=NameOf(ChartArea)).AxisY2.Maximum = GetYMaxNativeMmolL()
                 ' walk all markers, adjust active insulin and then add new markerWithIndex
                 Dim maxActiveInsulin As Double = 0
                 Dim count As Integer = CurrentUser.GetActiveInsulinIncrements
@@ -4547,9 +4543,7 @@ Public Class Form1
                 For i As Integer = startIndex To startIndex + 287
                     If i < windowSize - 1 Then
                         With Me.ActiveInsulinActiveInsulinSeries
-                            .Points.AddXY(
-                                xValue:=_remainingInsulinList(index:=i).OaDateTime,
-                                yValue:=Double.NaN)
+                            .Points.AddXY(xValue:=_remainingInsulinList(index:=i).OaDateTime, yValue:=Double.NaN)
                             .Points.Last.IsEmpty = True
                         End With
                         If i > 0 Then
@@ -4560,9 +4554,9 @@ Public Class Form1
                     Dim start As Integer = i - count + 1
                     Dim sum As Double = _remainingInsulinList.ConditionalSum(index:=start, count)
                     maxActiveInsulin = Math.Max(sum, maxActiveInsulin)
-                    Me.ActiveInsulinActiveInsulinSeries.Points.AddXY(
-                        xValue:=_remainingInsulinList(index:=i).OaDateTime,
-                        yValue:=sum)
+                    With Me.ActiveInsulinActiveInsulinSeries
+                        .Points.AddXY(xValue:=_remainingInsulinList(index:=i).OaDateTime, yValue:=sum)
+                    End With
                     _remainingInsulinList.AdjustList(start, count)
                 Next
 
@@ -4572,7 +4566,7 @@ Public Class Form1
                     timeChangeSeries:=Me.ActiveInsulinTimeChangeSeries,
                     markerInsulinDictionary:=s_activeInsulinMarkers,
                     markerMealDictionary:=Nothing)
-                .PlotSgSeries(HomePageMealRow:=GetYMinValueFromNativeMmolL())
+                .PlotSgSeries(HomePageMealRow:=GetYMinNativeMmolL())
                 .PlotHighLowLimitsAndTargetSg(targetSgOnly:=True)
             End With
             Application.DoEvents()
@@ -4614,15 +4608,14 @@ Public Class Form1
                     timeChangeSeries:=Me.SummaryTimeChangeSeries,
                     markerInsulinDictionary:=s_summaryMarkersInsulin,
                     markerMealDictionary:=s_summaryMarkersMeal)
-                .PlotSgSeries(HomePageMealRow:=GetYMinValueFromNativeMmolL())
+                .PlotSgSeries(HomePageMealRow:=GetYMinNativeMmolL())
                 .PlotHighLowLimitsAndTargetSg(targetSgOnly:=False)
                 Application.DoEvents()
             End With
         Catch innerException As Exception
             Stop
             Dim str As String = innerException.DecodeException()
-            Dim message As String =
-                $"{str} exception while plotting Markers in {NameOf(UpdateAllSummarySeries)}"
+            Dim message As String = $"{str} exception while plotting Markers in {NameOf(UpdateAllSummarySeries)}"
             Throw New ApplicationException(message, innerException)
         End Try
 
@@ -4738,8 +4731,7 @@ Public Class Form1
             If PatientData.ConduitInRange Then
                 If PatientData.TimeToNextCalibHours >= Byte.MaxValue Then
                     Dim calibrationDot As Bitmap = My.Resources.CalibrationDot
-                    Me.CalibrationDueImage.Image =
-                        calibrationDot.DrawCenteredArc(minutesToNextCalibration:=720)
+                    Me.CalibrationDueImage.Image = calibrationDot.DrawCenteredArc(minutesToNextCalibration:=720)
                 ElseIf PatientData.TimeToNextCalibHours = 0 Then
                     Dim notReady As Boolean =
                         PatientData.SystemStatusMessage = "WAIT_TO_CALIBRATE" OrElse
@@ -4750,15 +4742,13 @@ Public Class Form1
                     Else
                         Dim minutesToNextCalibration As Short = s_timeToNextCalibrationMinutes
                         Dim calibrationDotRed As Bitmap = My.Resources.CalibrationDotRed
-                        Me.CalibrationDueImage.Image =
-                            calibrationDotRed.DrawCenteredArc(minutesToNextCalibration)
+                        Me.CalibrationDueImage.Image = calibrationDotRed.DrawCenteredArc(minutesToNextCalibration)
                     End If
                 ElseIf s_timeToNextCalibrationMinutes = -1 Then
                     Me.CalibrationDueImage.Image = Nothing
                 Else
                     Dim minutesToNextCalibration As Short = s_timeToNextCalibrationMinutes
-                    Me.CalibrationDueImage.Image =
-                        My.Resources.CalibrationDot.DrawCenteredArc(minutesToNextCalibration)
+                    Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(minutesToNextCalibration)
                 End If
             End If
             Me.CalibrationDueImage.Visible = PatientData.ConduitInRange
@@ -4840,25 +4830,15 @@ Public Class Form1
                     s_totalBasal = activeBasalRecords(index:=0).UnitsPerHr * 24
                     s_totalDailyDose += s_totalBasal
                 Else
-                    For Each e As IndexClass(Of BasalRateRecord) In
-                        activeBasalRecords.WithIndex
-
+                    For Each e As IndexClass(Of BasalRateRecord) In activeBasalRecords.WithIndex
                         Dim basalRate As BasalRateRecord = e.Value
                         startTime = basalRate.Time
                         endTime = If(e.IsLast,
-                                     New TimeOnly(
-                                        hour:=23,
-                                        minute:=59,
-                                        second:=59,
-                                        millisecond:=999),
+                                     New TimeOnly(hour:=23, minute:=59, second:=59, millisecond:=999),
                                      activeBasalRecords(index:=e.Index + 1).Time)
 
-                        Dim theTimeSpan As TimeSpan = endTime - startTime
-                        Dim periodInHours As Double =
-                            theTimeSpan.Hours +
-                            (theTimeSpan.Minutes / 60) +
-                            (theTimeSpan.Seconds / 3600)
-
+                        Dim theTS As TimeSpan = endTime - startTime
+                        Dim periodInHours As Double = theTS.Hours + (theTS.Minutes / 60) + (theTS.Seconds / 3600)
                         s_totalBasal += CSng(periodInHours * basalRate.UnitsPerHr)
                     Next
                     s_totalDailyDose += s_totalBasal
@@ -4879,8 +4859,7 @@ Public Class Form1
         If s_totalAutoCorrection > 0 Then
             Me.Last24HrAutoCorrectionLabel.Visible = True
             Me.Last24HrAutoCorrectionUnitsLabel.ForeColor = Color.LightGray
-            Me.Last24HrAutoCorrectionUnitsLabel.Text =
-                String.Format(provider, format:=$"{s_totalAutoCorrection:F1} U")
+            Me.Last24HrAutoCorrectionUnitsLabel.Text = String.Format(provider, format:=$"{s_totalAutoCorrection:F1} U")
             Me.Last24HrAutoCorrectionLabel.ForeColor = Color.Gray
             Me.Last24HrAutoCorrectionUnitsLabel.Visible = True
             If s_totalDailyDose > 0 Then
@@ -4893,8 +4872,7 @@ Public Class Form1
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24HrMealBolusUnitsLabel.Text =
-                String.Format(provider, format:=$"{s_totalManualBolus:F1} U")
+            Me.Last24HrMealBolusUnitsLabel.Text = String.Format(provider, format:=$"{s_totalManualBolus:F1} U")
             Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         Else
             Me.Last24HrAutoCorrectionLabel.ForeColor = Color.FromArgb(red:=64, green:=64, blue:=64)
@@ -4909,14 +4887,11 @@ Public Class Form1
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalManualBolus / s_totalDailyDose * 100).ToString
             End If
-            Me.Last24HrMealBolusUnitsLabel.Text =
-                String.Format(provider, format:=$"{s_totalManualBolus:F1} U")
+            Me.Last24HrMealBolusUnitsLabel.Text = String.Format(provider, format:=$"{s_totalManualBolus:F1} U")
             Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         End If
-        Me.Last24HrAutoCorrectionUnitsLabel.Text =
-                String.Format(provider, format:=$"{s_totalAutoCorrection:F1} U")
-        Me.Last24HrCarbsValueLabel.Text =
-            $"{s_totalCarbs} {GetCarbDefaultUnit()}{Superscript3}"
+        Me.Last24HrAutoCorrectionUnitsLabel.Text = String.Format(provider, format:=$"{s_totalAutoCorrection:F1} U")
+        Me.Last24HrCarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}{Superscript3}"
     End Sub
 
     ''' <summary>
@@ -5119,19 +5094,6 @@ Public Class Form1
         Me.SensorTimeLeftPanel.Visible = PatientData.ConduitInRange
     End Sub
 
-    Private Function GetSensorTimeLeftMessage() As String
-        Dim sensorDurationHours As Integer = PatientData.SensorDurationHours
-        Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F, FontStyle.Bold)
-        Select Case sensorDurationHours
-            Case Is <= 24
-                Return $"Expiring soon{vbCrLf}(Remaining{vbCrLf}grace period:{vbCrLf}{sensorDurationHours.HoursToDaysAndHours})"
-            Case Is < 48
-                Return $"{(sensorDurationHours - 24).HoursToDaysAndHours} (Followed{vbCrLf}by 24 hr grace{vbCrLf}period)"
-            Case Else  ' sensorDurationHours >= 48
-                Return $"{(sensorDurationHours - 24).HoursToDaysAndHours}{vbCrLf}(Followed by 24{vbCrLf}hr grace period)"
-        End Select
-    End Function
-
     ''' <summary>
     '''  Updates the Time in Range chart with the latest data and settings.
     ''' </summary>
@@ -5145,60 +5107,46 @@ Public Class Form1
             Exit Sub
         End If
 
-        _timeInTightRange = GetTIR(tight:=True)
+        TimeInTightRange = GetTIR(tight:=True)
         Me.TimeInRangeChartLabel.Text = GetTIR.AsString
+
         With Me.TimeInRangeChart
             With .Series(name:=NameOf(TimeInRangeSeries)).Points
                 .Clear()
-                .AddXY(
-                    $"{GetBelowHypoLimit.Str}% Below {GetTirLowLimitWithUnits()}",
-                    PatientData.BelowHypoLimit.RoundToSingle(digits:=1) / 100)
+                Dim yValue As Single = PatientData.BelowHypoLimit.RoundToSingle(digits:=1) / 100
+                .AddXY($"{GetBelowHypoLimit.Str}% Below {GetTirLowLimitWithUnits()}", yValue)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                .AddXY(
-                    $"{GetAboveHyperLimit.Str}% Above {GetTirHighLimitWithUnits()}",
-                    PatientData.AboveHyperLimit.RoundToSingle(digits:=1) / 100)
+                yValue = PatientData.AboveHyperLimit.RoundToSingle(digits:=1) / 100
+                .AddXY($"{GetAboveHyperLimit.Str}% Above {GetTirHighLimitWithUnits()}", yValue)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
                 Dim tir As UInteger = GetTIR.Percent
-                If _timeInTightRange.Uint = tir Then
-                    .AddXY(
-                        $"{_timeInTightRange.Str}% In Tight Range = TIR",
-                        _timeInTightRange.Uint / 100)
+                If TimeInTightRange.Uint = tir Then
+                    .AddXY($"{TimeInTightRange.Str}% In Tight Range = TIR", TimeInTightRange.Uint / 100)
                     .Last().Color = Color.LimeGreen
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
-                ElseIf _timeInTightRange.Uint < tir Then
-                    .AddXY(
-                        $"{GetTIR.AsString}% In Range",
-                        (tir - _timeInTightRange.Uint) / 100)
+                ElseIf TimeInTightRange.Uint < tir Then
+                    .AddXY($"{GetTIR.AsString}% In Range", (tir - TimeInTightRange.Uint) / 100)
                     .Last().Color = Color.DarkGreen
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
-
-                    .AddXY(
-                        $"{_timeInTightRange.Str}% In Tight Range",
-                        _timeInTightRange.Uint / 100)
+                    .AddXY($"{TimeInTightRange.Str}% In Tight Range", TimeInTightRange.Uint / 100)
                     .Last().Color = Color.LawnGreen
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
                 Else
-                    .AddXY(
-                        $"{_timeInTightRange.Str}% In Tight Range",
-                        _timeInTightRange.Uint / 100)
+                    .AddXY($"{TimeInTightRange.Str}% In Tight Range", TimeInTightRange.Uint / 100)
                     .Last().Color = Color.LawnGreen
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
-
-                    .AddXY(
-                        $"{GetTIR.AsString}% In Range",
-                        (_timeInTightRange.Uint - tir) / 100)
+                    .AddXY($"{GetTIR.AsString}% In Range", (TimeInTightRange.Uint - tir) / 100)
                     .Last().Color = Color.Green
                     .Last().BorderColor = Color.Black
                     .Last().BorderWidth = 2
-
                 End If
             End With
             .Series(NameOf(TimeInRangeSeries))("PieLabelStyle") = "Disabled"
@@ -5207,7 +5155,6 @@ Public Class Form1
 
         Me.AboveHighLimitValueLabel.Text = $"{GetAboveHyperLimit.Str}%"
         Me.AboveHighLimitMessageLabel.Text = $"Above {GetTirHighLimitWithUnits()} {BgUnits}"
-
         Me.TimeInRangeValueLabel.Text = $"{GetTIR.AsString}%"
         If GetTIR.Percent >= 70 Then
             Me.TimeInRangeMessageLabel.ForeColor = Color.DarkGreen
@@ -5217,9 +5164,9 @@ Public Class Form1
             Me.TimeInRangeValueLabel.ForeColor = Color.Red
         End If
 
-        Me.TimeInTightRangeValueLabel.Text = $"{_timeInTightRange.Str}%"
+        Me.TimeInTightRangeValueLabel.Text = $"{TimeInTightRange.Str}%"
         Me.TiTRMgsLabel2.Text = My.Forms.OptionsConfigureTiTR.GetTiTrMsg()
-        If _timeInTightRange.Uint >= My.Settings.TiTrTreatmentTargetPercent Then
+        If TimeInTightRange.Uint >= My.Settings.TiTrTreatmentTargetPercent Then
             Me.TiTRMgsLabel.ForeColor = Color.LimeGreen
             Me.TiTRMgsLabel2.ForeColor = Color.LimeGreen
             Me.TimeInTightRangeValueLabel.ForeColor = Color.LimeGreen
@@ -5231,8 +5178,7 @@ Public Class Form1
 
         Me.BelowLowLimitValueLabel.Text = $"{GetBelowHypoLimit.Str}%"
         Me.BelowLowLimitMessageLabel.Text = $"Below {GetTirLowLimitWithUnits()} {BgUnits}"
-        Dim averageSgStr As String =
-            RecentData.GetStringValueOrEmpty(NameOf(ServerDataEnum.averageSG))
+        Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataEnum.averageSG))
         Me.AverageSGValueLabel.Text = If(NativeMmolL,
                                          averageSgStr.TruncateSingle(digits:=2),
                                          averageSgStr)
@@ -5242,9 +5188,7 @@ Public Class Form1
         ' Calculate Time in AutoMode
         If s_autoModeStatusMarkers.Count = 0 Then
             Me.SmartGuardLabel.Text = "SmartGuard 0%"
-        ElseIf s_autoModeStatusMarkers.Count = 1 AndAlso
-               s_autoModeStatusMarkers.First.AutoModeOn Then
-
+        ElseIf s_autoModeStatusMarkers.Count = 1 AndAlso s_autoModeStatusMarkers.First.AutoModeOn Then
             Me.SmartGuardLabel.Text = "SmartGuard 100%"
         Else
             Try
@@ -5252,23 +5196,18 @@ Public Class Form1
                 Dim autoModeStartTime As New Date
                 Dim timeInAutoMode As TimeSpan = ZeroTickSpan
                 Dim timestamp As Date
-                For Each r As IndexClass(Of AutoModeStatus) In
-                    s_autoModeStatusMarkers.WithIndex
-
+                For Each r As IndexClass(Of AutoModeStatus) In s_autoModeStatusMarkers.WithIndex
                     If r.IsFirst Then
                         If r.Value.AutoModeOn OrElse s_autoModeStatusMarkers.Count = 1 Then
                             autoModeStartTime = r.Value.Timestamp
                             timestamp = s_autoModeStatusMarkers.First.Timestamp
                             timeInAutoMode += timestamp.AddDays(value:=1) - autoModeStartTime
-                        Else
-
                         End If
                     Else
                         If r.Value.AutoModeOn Then
                             If r.IsLast Then
                                 timestamp = s_autoModeStatusMarkers.First.Timestamp
-                                timeInAutoMode +=
-                                    timestamp.AddDays(value:=1) - r.Value.Timestamp
+                                timeInAutoMode += timestamp.AddDays(value:=1) - r.Value.Timestamp
                             Else
                                 autoModeStartTime = r.Value.Timestamp
                             End If
@@ -5292,9 +5231,7 @@ Public Class Form1
         Dim lowCount As Integer = 0
         Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
-        Dim highScale As Single =
-            (GetYMaxValueFromNativeMmolL() - GetTirHighLimit()) /
-            (GetTirLowLimit() - GetYMinValueFromNativeMmolL())
+        Dim highScale As Single = (GetYMaxNativeMmolL() - GetTirHighLimit()) / (GetTirLowLimit() - GetYMinNativeMmolL())
 
         For Each sg As SG In GetValidSgRecords()
             elements += 1
@@ -5342,60 +5279,11 @@ Public Class Form1
                     Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) OK{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.Yellow
                 Case Else
-                    Me.HighTirComplianceLabel.Text =
-                        $"High{vbCrLf}({highDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
+                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.Red
             End Select
         End If
         Me.PositionControlsInPanel()
-    End Sub
-
-    ''' <summary>
-    '''  Positions the controls in the panel of the home tab.
-    ''' </summary>
-    ''' <remarks>
-    '''  This method centers the labels in the panel based on their names
-    '''  and adjusts their positions accordingly.
-    ''' </remarks>
-    Private Sub PositionControlsInPanel()
-        For Each ctrl As Control In Me.SplitContainer3.Panel2.Controls
-            Dim parent As Control = ctrl.Parent
-            If parent Is Nothing Then
-                If Not Debugger.IsAttached Then
-                    Exit Sub
-                End If
-                Const message As String = "The control must have a parent to center it."
-                Throw New InvalidOperationException(message)
-            End If
-            If TypeOf ctrl Is Label Then
-                Select Case ctrl.Name
-                    Case NameOf(Me.LowTirComplianceLabel)
-                        ctrl.CenterXOnParent(onLeftHalf:=True)
-
-                    Case NameOf(Me.HighTirComplianceLabel)
-                        ctrl.CenterXOnParent(onLeftHalf:=False)
-
-                    Case NameOf(Me.TimeInRangeMessageLabel)
-                        ctrl.CenterXOnParent(onLeftHalf:=True)
-
-                    Case NameOf(Me.TimeInRangeValueLabel)
-                        ctrl.CenterXOnParent(onLeftHalf:=True)
-
-                    Case NameOf(Me.TiTRMgsLabel)
-                        ctrl.CenterXOnParent(onLeftHalf:=False)
-
-                    Case NameOf(Me.TimeInTightRangeValueLabel)
-                        ctrl.CenterXOnParent(onLeftHalf:=False)
-
-                    Case NameOf(Me.TiTRMgsLabel2)
-                        With Me.TiTRMgsLabel2
-                            .Left = parent.Width - .Width - .Margin.Right
-                        End With
-                    Case Else
-                        ctrl.CenterXOnParent()
-                End Select
-            End If
-        Next
     End Sub
 
     ''' <summary>
@@ -5420,7 +5308,7 @@ Public Class Form1
                 .ChartAreas(name:=NameOf(ChartArea)).UpdateChartAreaSgAxisX()
                 .PlotSuspendArea(SuspendSeries:=Me.TreatmentSuspendSeries)
                 .PlotTreatmentMarkers(Me.TreatmentTimeChangeSeries)
-                .PlotSgSeries(HomePageMealRow:=GetYMinValueFromNativeMmolL())
+                .PlotSgSeries(HomePageMealRow:=GetYMinNativeMmolL())
                 .PlotHighLowLimitsAndTargetSg(targetSgOnly:=True)
             End With
         Catch innerException As Exception
@@ -5442,8 +5330,7 @@ Public Class Form1
     '''  value and is styled accordingly.
     ''' </remarks>
     Private Sub UpdateTrendArrows()
-        Dim key As String =
-            RecentData.GetStringValueOrEmpty(NameOf(ServerDataEnum.lastSGTrend))
+        Dim key As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataEnum.lastSGTrend))
         If PatientData.ConduitInRange Then
             Dim value As String = Nothing
             If s_trends.TryGetValue(key, value) Then

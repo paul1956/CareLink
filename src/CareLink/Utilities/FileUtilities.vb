@@ -63,8 +63,7 @@ Friend Module FileUtilities
         End If
 
         If tokenBaseFileName.EqualsNoCase(LOGIN_DATA_FILENAME) Then
-            Dim settingsPathParent As String =
-                Directory.GetParent(path:=GetSettingsDirectory()).FullName
+            Dim settingsPathParent As String = Directory.GetParent(path:=GetSettingsDirectory()).FullName
             Dim loginTokenFileName As String = $"{userName}{LOGIN_DATA_FILENAME}"
             Return Path.Join(settingsPathParent, loginTokenFileName)
         Else
@@ -93,12 +92,10 @@ Friend Module FileUtilities
         If File.Exists(fileWithPath) Then
             Try
                 Dim json As String = File.ReadAllText(fileWithPath)
-                Dim jsonElement As JsonElement =
-                    JsonSerializer.Deserialize(Of JsonElement)(json)
+                Dim jsonElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
                 For Each propertyName As String In s_requiredFields
                     If Not jsonElement.TryGetProperty(propertyName, value:=Nothing) Then
-                        Dim message As String =
-                            $"Field {propertyName} is missing from data file"
+                        Dim message As String = $"Field {propertyName} is missing from data file"
                         Debug.WriteLine(message)
                         Return Nothing
                     End If
@@ -133,12 +130,10 @@ Friend Module FileUtilities
         If File.Exists(path) Then
             Try
                 Dim jsonAsText As String = File.ReadAllText(path)
-                Dim tokenData As JsonElement =
-                    JsonSerializer.Deserialize(Of JsonElement)(jsonAsText)
+                Dim tokenData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(jsonAsText)
                 For Each propertyName As String In s_requiredFields
                     If Not tokenData.TryGetProperty(propertyName, value:=Nothing) Then
-                        Dim message As String =
-                            $"ERROR: field {propertyName} is missing from token file"
+                        Dim message As String = $"ERROR: field {propertyName} is missing from token file"
                         Debug.WriteLine(message)
                         Return Nothing
                     End If

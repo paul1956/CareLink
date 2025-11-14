@@ -15,8 +15,7 @@ Public Class PresetAmountRecord
         Else
             Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
             _typeIsRate = True
-            Dim sSplit As String() =
-                s.Split(separator:=" ", options)
+            Dim sSplit As String() = s.Split(separator:=" ", options)
             _rate = sSplit(0).ParseSingleInvariant
             _units = sSplit(1)
         End If

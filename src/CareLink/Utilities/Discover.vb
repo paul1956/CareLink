@@ -48,15 +48,11 @@ Public Module Discover
         End If
         Debug.WriteLine(message:=$"   region: {region}")
         Dim json As String = JsonSerializer.Serialize(value:=region)
-        Dim countryInfo As CountryInfo =
-            JsonSerializer.Deserialize(Of CountryInfo)(json)
-        For Each value As JsonElement In
-            jsonElementData.GetProperty(propertyName:="CP").EnumerateArray()
-
+        Dim countryInfo As CountryInfo = JsonSerializer.Deserialize(Of CountryInfo)(json)
+        For Each value As JsonElement In jsonElementData.GetProperty(propertyName:="CP").EnumerateArray()
             Try
                 Dim json1 As String = JsonSerializer.Serialize(value)
-                Dim cpInfo As CPInfo =
-                    JsonSerializer.Deserialize(Of CPInfo)(json:=json1)
+                Dim cpInfo As CPInfo = JsonSerializer.Deserialize(Of CPInfo)(json:=json1)
                 If countryInfo.Region = cpInfo.Region Then
                     config = value
                     Exit For
@@ -99,23 +95,16 @@ Public Module Discover
                                       s_discoverUrl(key:="EU"))
 
         Dim json As String = httpClient.GetStringAsync(requestUri).Result
-        Dim jsonElementData As JsonElement =
-            JsonSerializer.Deserialize(Of JsonElement)(json)
-        Dim configurationData As ConfigRecord =
-            JsonSerializer.Deserialize(Of ConfigRecord)(json)
+        Dim jsonElementData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
+        Dim configurationData As ConfigRecord = JsonSerializer.Deserialize(Of ConfigRecord)(json)
         Dim configJson As JsonElement = GetConfigJson(country, jsonElementData)
 
-        Dim requestUri1 As String =
-            configJson.GetProperty(propertyName:="SSOConfiguration").GetString()
-        Dim ssoConfigResponse As String =
-            httpClient.GetStringAsync(requestUri:=requestUri1).Result
-        Dim ssoConfig As SsoConfig =
-            JsonSerializer.Deserialize(Of SsoConfig)(ssoConfigResponse)
+        Dim requestUri1 As String = configJson.GetProperty(propertyName:="SSOConfiguration").GetString()
+        Dim ssoConfigResponse As String = httpClient.GetStringAsync(requestUri:=requestUri1).Result
+        Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(ssoConfigResponse)
         Dim hostname As String = ssoConfig.Server.Hostname
-        Dim ssoBaseUrl As String =
-            $"https://{hostname}:{ssoConfig.Server.Port}/{ssoConfig.Server.Prefix}"
-        Dim tokenUrl As String =
-            $"{ssoBaseUrl}{ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath}"
+        Dim ssoBaseUrl As String = $"https://{hostname}:{ssoConfig.Server.Port}/{ssoConfig.Server.Prefix}"
+        Dim tokenUrl As String = $"{ssoBaseUrl}{ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath}"
 
         json = configJson.GetRawText()
         Dim mutableConfig As Dictionary(Of String, JsonElement) =

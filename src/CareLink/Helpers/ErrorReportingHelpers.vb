@@ -35,8 +35,7 @@ Friend Module ErrorReportingHelpers
                                   "↓")
 
         Dim message As String =
-            $"Current process memory usage: {memInMB:F2} MB, from last: " &
-            $"{upDown} {Math.Abs(value:=diff):F2} MB"
+            $"Current process memory usage: {memInMB:F2} MB, from last: {upDown} {Math.Abs(value:=diff):F2} MB"
         Debug.WriteLine(message)
         My.Forms.Form1.StatusStripSpacerRight.Text = message
 

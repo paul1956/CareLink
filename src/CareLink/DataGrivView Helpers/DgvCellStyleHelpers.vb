@@ -325,8 +325,7 @@ Public Module DgvCellStyleHelpers
             Return cell.InheritedStyle
         End If
 
-        Const bindingAttr As BindingFlags =
-            BindingFlags.Instance Or BindingFlags.NonPublic Or BindingFlags.IgnoreCase
+        Const bindingAttr As BindingFlags = BindingFlags.Instance Or BindingFlags.NonPublic Or BindingFlags.IgnoreCase
         Dim m As MethodInfo = dgv.GetType().GetMethod(
             name:="OnCellFormatting",
             bindingAttr,
