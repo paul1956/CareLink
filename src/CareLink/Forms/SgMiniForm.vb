@@ -58,10 +58,10 @@ Public Class SgMiniForm
 
     Private Sub DeltaTextBox_TextChanged(sender As Object, e As EventArgs) Handles DeltaTextBox.TextChanged
         Select Case True
-            Case Me.DeltaTextBox.Text = ""
+            Case Me.DeltaTextBox.Text = EmptyString
                 Me.DeltaTextBox.BackColor = SystemColors.Window
             Case Math.Abs(_currentDelta) < 0.001
-                Me.DeltaTextBox.Text = ""
+                Me.DeltaTextBox.Text = EmptyString
                 Me.DeltaTextBox.BackColor = SystemColors.Window
 
             Case _currentDelta > 0
@@ -159,7 +159,7 @@ Public Class SgMiniForm
 
     Friend Sub SetCurrentDeltaValue(deltaString As String, delta As Single)
         Me.DeltaTextBox.Text = If(delta.IsSgInvalid OrElse Math.Abs(value:=delta) < 0.001,
-                                  "",
+                                  EmptyString,
                                   deltaString)
         _currentDelta = delta
     End Sub

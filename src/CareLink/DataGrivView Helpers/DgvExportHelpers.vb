@@ -101,7 +101,7 @@ Friend Module DgvExportHelpers
                     Dim currentCell As DataGridViewCell = row.Cells(index)
                     Dim cellValue As Object = If(copyAll OrElse currentCell.Selected,
                                                  currentCell.Value,
-                                                 "")
+                                                 EmptyString)
 
                     Dim fieldSeparator As String = If(index = colHigh,
                                                       vbCrLf,
@@ -158,7 +158,7 @@ Friend Module DgvExportHelpers
                     Dim valueObject As Object = dgvCell.Value
                     Dim value As String = valueObject?.ToString
                     If String.IsNullOrWhiteSpace(value) Then
-                        worksheet.Cell(row:=i + 2, column).Value = ""
+                        worksheet.Cell(row:=i + 2, column).Value = EmptyString
                         With worksheet.Cell(row:=i + 2, column).Style
                             Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()
                             .Fill.SetBackgroundColor(value:=GetXlColor(cellStyle, ForeGround:=False))

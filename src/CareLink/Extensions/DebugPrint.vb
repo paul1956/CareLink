@@ -26,7 +26,7 @@ Friend Module DebugSupport
     ''' </param>
     Public Sub DebugPrint(
             message As String,
-            <CallerMemberName> Optional memberName As String = "",
+            <CallerMemberName> Optional memberName As String = EmptyString,
             <CallerLineNumber> Optional sourceLineNumber As Integer = 0)
 
         If message.StartsWith(value:="("c) Then

@@ -28,7 +28,7 @@ Public Module StringExtensions
     <Extension>
     Public Function CleanSpaces(input As String) As String
         Return If(String.IsNullOrWhiteSpace(value:=input),
-                  "",
+                  String.Empty,
                   Regex.Replace(input, pattern:="\s+", replacement:=" ").Trim)
     End Function
 
@@ -61,11 +61,7 @@ Public Module StringExtensions
     '''  The index of the first occurrence of any character in the list, or -1 if not found.
     ''' </returns>
     <Extension>
-    Public Function FindIndexOfAnyChar(
-        inputString As String,
-        chars As List(Of Char),
-        startIndex As Integer) As Integer
-
+    Public Function FindIndexOfAnyChar(inputString As String, chars As List(Of Char), startIndex As Integer) As Integer
         If inputString Is Nothing Then
             Return -1
         End If
@@ -79,35 +75,6 @@ Public Module StringExtensions
             End If
         Next
         Return -1 ' Return -1 if no character is found
-    End Function
-
-    ''' <summary>
-    '''  Find the index of the first occurrence of any character
-    '''  in the <paramref name="chars"/> list
-    ''' </summary>
-    ''' <param name="inputString">The string to search.</param>
-    ''' <param name="strings">The list of strings to find.</param>
-    ''' <returns>The String found or String.Empty if not found.</returns>
-    <Extension>
-    Public Function FindAnyStringInInput(
-        inputString As String,
-        strings As List(Of String)) As (Units As String, Index As Integer)
-
-        If strings Is Nothing Then
-            Throw New ArgumentException(message:="Invalid input parameters.")
-        End If
-
-        If inputString Is Nothing Then
-            Return (Units:=String.Empty, Index:=-1)
-        End If
-
-        For Each value As String In strings
-            Dim index As Integer = inputString.IndexOf(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
-            If index <> -1 Then
-                Return (Units:=UnitsStrings(key:=value.ToUpperInvariant), index)
-            End If
-        Next
-        Return (Units:=String.Empty, Index:=-1)
     End Function
 
     ''' <summary>
@@ -150,7 +117,7 @@ Public Module StringExtensions
     <Extension()>
     Public Function ToLowerCamelCase(value As String) As String
         If String.IsNullOrWhiteSpace(value) Then
-            Return ""
+            Return String.Empty
         End If
 
         Dim result As New StringBuilder(value:=Char.ToLowerInvariant(value(index:=0)))
@@ -169,11 +136,7 @@ Public Module StringExtensions
     ''' <returns>A formatted string representing the total units.</returns>
     ''' <param name="includeValue"></param>
     <Extension>
-    Public Function ToUnits(
-        totalUnits As UInteger,
-        unit As String,
-        Optional includeValue As Boolean = True) As String
-
+    Public Function ToUnits(totalUnits As UInteger, unit As String, Optional includeValue As Boolean = True) As String
         Dim unitOnly As String = If(totalUnits = 1,
                                     unit,
                                     $"{unit}s")
@@ -201,11 +164,13 @@ Public Module StringExtensions
     Public Function ToUnits(
         totalUnits As Integer,
         unit As String,
-        Optional prefix As String = "",
-        Optional suffix As String = "",
+        Optional prefix As String = EmptyString,
+        Optional suffix As String = EmptyString,
         Optional includeValue As Boolean = True) As String
 
-        Dim unitOnly As String = If(totalUnits = 1, unit, $"{unit}s")
+        Dim unitOnly As String = If(totalUnits = 1,
+                                    unit,
+                                    $"{unit}s")
         Return If(includeValue,
                   $"{prefix}{totalUnits:N0}{unitOnly}{suffix}",
                   $"{prefix}{unitOnly}{suffix}")
@@ -219,12 +184,9 @@ Public Module StringExtensions
     ''' <param name="separateDigits">If true, separates numbers into their own words.</param>
     ''' <returns>A title-cased string.</returns>
     <Extension()>
-    Public Function ToTitle(
-        value As String,
-        Optional separateDigits As Boolean = False) As String
-
+    Public Function ToTitle(value As String, Optional separateDigits As Boolean = False) As String
         If String.IsNullOrWhiteSpace(value) Then
-            Return ""
+            Return String.Empty
         End If
 
         Dim c As Char = value(index:=0)
@@ -276,12 +238,9 @@ Public Module StringExtensions
     ''' </param>
     ''' <returns>A title-cased string with spaces between words.</returns>
     <Extension()>
-    Public Function ToTitleCase(
-        value As String,
-        Optional separateNumbers As Boolean = True) As String
-
+    Public Function ToTitleCase(value As String, Optional separateNumbers As Boolean = True) As String
         If String.IsNullOrWhiteSpace(value) Then
-            Return ""
+            Return String.Empty
         End If
         If value.ContainsNoCase(value:="MmolL") Then
             Return value

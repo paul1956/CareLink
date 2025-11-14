@@ -41,7 +41,7 @@ Friend Module SpeechSupport
     ''' <summary>
     '''  Stores the name of the user for whom speech recognition is enabled.
     ''' </summary>
-    Private s_speechUserName As String = ""
+    Private s_speechUserName As String = EmptyString
 
     ''' <summary>
     '''  Indicates whether the speech wake word has been detected.
@@ -51,7 +51,7 @@ Friend Module SpeechSupport
     ''' <summary>
     '''  Stores the current status text for the speech status strip.
     ''' </summary>
-    Private s_statusStripSpeechText As String = ""
+    Private s_statusStripSpeechText As String = EmptyString
 
     ''' <summary>
     '''  Stores the time of the last alert spoken.
@@ -187,11 +187,11 @@ Friend Module SpeechSupport
     ''' <param name="e">Event arguments containing recognition results.</param>
     Private Sub SpeechRecognized(sender As Object, e As SpeechRecognizedEventArgs)
         If My.Settings.SystemSpeechRecognitionThreshold >= 1 Then
-            Form1.StatusStripSpeech.Text = ""
+            Form1.StatusStripSpeech.Text = EmptyString
             Exit Sub
         End If
 
-        Dim message As String = ""
+        Dim message As String = EmptyString
         Dim recognizedText As String = e.Result.Text.ToLower
         Dim confidence As Single = e.Result.Confidence.RoundToSingle(digits:=2)
         If confidence < 0.8 Then
@@ -211,7 +211,7 @@ Friend Module SpeechSupport
                 If recognizedText = "carelink" Then
                     Exit Sub
                 End If
-                recognizedText = recognizedText.Replace(oldValue:="carelink", newValue:="").TrimEnd
+                recognizedText = recognizedText.Replace(oldValue:="carelink", newValue:=EmptyString).TrimEnd
             Else
                 message = $"Rejected: {recognizedText} with confidence {confidence}%"
                 Debug.WriteLine(message)
@@ -263,10 +263,10 @@ Friend Module SpeechSupport
                     sb.AppendLine()
                     sb.AppendLine("Tell me name's SG/BG/Blood Glucose/Blood Sugar:")
                     sb.AppendLine("    Used when you support more than 1 user")
-                    sb.AppendLine("    Example ""Tell me John's Sensor Glucose""")
+                    sb.AppendLine($"    Example {Quote}Tell me John's Sensor Glucose{Quote}")
                     Dim page As New TaskDialogPage
                     MsgBox(
-                        heading:="",
+                        heading:=EmptyString,
                         prompt:=sb.ToString,
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Information,
                         title:="Speech Recognition Help",
@@ -294,8 +294,8 @@ Friend Module SpeechSupport
             s_speechRecognitionEngine.RecognizeAsyncCancel()
             s_speechRecognitionEngine.Dispose()
             s_speechRecognitionEngine = Nothing
-            s_speechUserName = ""
-            Form1.StatusStripSpeech.Text = ""
+            s_speechUserName = EmptyString
+            Form1.StatusStripSpeech.Text = EmptyString
             Form1.MenuOptionsSpeechRecognitionEnabled.Checked = False
         End If
     End Sub

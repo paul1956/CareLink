@@ -60,6 +60,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Records\CountrySettingsRecords\**" />
+    <EmbeddedResource Remove="Records\CountrySettingsRecords\**" />
+    <None Remove="Records\CountrySettingsRecords\**" />
+    <Page Remove="Records\CountrySettingsRecords\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="CareLinkCommunications\CareLinkClientHelpers.vb" />
     <Compile Remove="Dialogs\Captcha.Designer.vb" />
     <Compile Remove="Dialogs\Captcha.vb" />

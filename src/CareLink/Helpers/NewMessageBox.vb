@@ -225,7 +225,7 @@ Friend Module NewMessageBox
             title,
             autoCloseTimeOut:=-1,
             page:=New TaskDialogPage,
-            checkBoxPrompt:="")
+            checkBoxPrompt:=String.Empty)
     End Function
 
 End Module

@@ -150,7 +150,7 @@ Public Class TextMap
     }
 
     Public Shared ReadOnly s_errorTextMap As New Dictionary(Of String, String) From {
-        {"", ""},
+        {EmptyString, EmptyString},
         {"3", "Battery out limit"},
         {"4", "Delivery stopped. Check BG"},
         {"5", "Pump battery depleted. Insulin delivery stopped"},

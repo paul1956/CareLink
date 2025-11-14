@@ -136,7 +136,7 @@ Public Class InitializeDialog
                         colName = NameOf(ColumnEnd)
                         Dim colEndCell As DataGridViewCell = Me.InitializeDataGridView.Rows(index:=e.RowIndex) _
                                                                                       .Cells(colName)
-                        colEndCell.ErrorText = ""
+                        colEndCell.ErrorText = String.Empty
                         Dim timeOnly As TimeOnly = TimeOnly.Parse(colEndCell.Value.ToString)
                         Dim item As String = timeOnly.ToHoursMinutes
                         comboBoxCell.Items.Add(item)
@@ -172,12 +172,12 @@ Public Class InitializeDialog
         Dim index As Integer = Me.InitializeDataGridView.RowCount - 1
         Dim cell As DataGridViewCell = Me.InitializeDataGridView.Rows(index).Cells(columnName:=NameOf(ColumnEnd))
         If cell.Value.ToString = MidnightStr Then
-            cell.ErrorText = ""
+            cell.ErrorText = String.Empty
         Else
             With Me.InitializeDataGridView
                 If .RowCount = 12 Then
                     cell.Value = Eleven59Str
-                    cell.ErrorText = ""
+                    cell.ErrorText = String.Empty
                     Dim obj As Object = .Rows(index).Cells(columnName:=NameOf(ColumnSave))
                     Dim buttonCell As DataGridViewDisableButtonCell = CType(obj, DataGridViewDisableButtonCell)
                     buttonCell.ReadOnly = True
@@ -354,7 +354,7 @@ Public Class InitializeDialog
 
         Dim control As ComboBox = CType(sender, ComboBox)
         If control.SelectedIndex > -1 Then
-            Me.ErrorProvider1.SetError(control, value:="")
+            Me.ErrorProvider1.SetError(control, value:=String.Empty)
         Else
             Me.ErrorProvider1.SetError(control, value:=$"Value must be {MidnightStr}")
             e.Cancel = True
@@ -365,7 +365,7 @@ Public Class InitializeDialog
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
         Dim index As Integer = Me.InitializeDataGridView.RowCount - 1
         Dim cell As DataGridViewCell = Me.InitializeDataGridView.Rows(index).Cells(columnName:=NameOf(ColumnEnd))
-        cell.ErrorText = ""
+        cell.ErrorText = String.Empty
         Me.DialogResult = DialogResult.OK
 
         Me.CurrentUser.PumpAit = ParseSingle(value:=Me.PumpAitComboBox.SelectedValue, digits:=2)
@@ -414,7 +414,7 @@ Public Class InitializeDialog
 
         Dim control As ComboBox = CType(sender, ComboBox)
         If control.SelectedIndex > -1 Then
-            Me.ErrorProvider1.SetError(control, value:="")
+            Me.ErrorProvider1.SetError(control, value:=String.Empty)
             Me.InsulinTypeComboBox.Enabled = True
         Else
             Me.ErrorProvider1.SetError(control, value:="You must select an AIT Value!")

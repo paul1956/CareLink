@@ -14,12 +14,12 @@ Public Class LowAlertsRecord
             Me.SnoozeOn,
             snoozeTime:=_snoozeTime)
 
-        Dim valueUnits As String = ""
+        Dim valueUnits As String = EmptyString
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             Dim s As StringTable.Row = e.Value
             If e.IsFirst Then
                 valueUnits = s.Columns(index:=0) _
-                              .Replace(oldValue:="Start Low Time (", newValue:="") _
+                              .Replace(oldValue:="Start Low Time (", newValue:=EmptyString) _
                               .Trim(trimChar:=")"c)
                 Continue For
             End If

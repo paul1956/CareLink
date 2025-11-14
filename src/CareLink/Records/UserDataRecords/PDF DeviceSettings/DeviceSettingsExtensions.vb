@@ -55,7 +55,7 @@ Friend Module DeviceSettingsExtensions
         Next
         Stop
         If typeOfT Is GetType(String) Then
-            Return CType(CObj(""), T)
+            Return CType(CObj(EmptyString), T)
         End If
         If typeOfT Is GetType(Single) Then
             Return CType(CObj(Single.NaN), T)

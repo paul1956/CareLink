@@ -22,7 +22,7 @@ Friend Module UpdateChecker
     ''' <summary>
     '''  The search key used to locate the version string in the GitHub releases page HTML.
     ''' </summary>
-    Private ReadOnly s_versionSearchKey As String = $"<a hRef=""/{GitOwnerName}/CareLink/releases/tag/"
+    Private ReadOnly s_versionSearchKey As String = $"<a hRef={Quote}/{GitOwnerName}/CareLink/releases/tag/"
 
     ''' <summary>
     '''  Indicates if an update check is currently in progress.
@@ -85,7 +85,7 @@ Friend Module UpdateChecker
                 If startIndex >= 0 Then
                     startIndex += s_versionSearchKey.Length
 
-                    Dim quotePos As Integer = line.IndexOf(value:=""""c, startIndex)
+                    Dim quotePos As Integer = line.IndexOf(value:=Quote, startIndex)
                     If quotePos > startIndex Then
                         versionStr = line.Substring(startIndex, length:=quotePos - startIndex)
 
@@ -204,7 +204,7 @@ Friend Module UpdateChecker
                 If reportSuccessfulResult Then
                     MsgBox(
                         heading:="You are running the latest version",
-                        prompt:="",
+                        prompt:=String.Empty,
                         buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Information,
                         title:="No Updates Available")
                 End If

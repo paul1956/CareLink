@@ -467,7 +467,7 @@ Public Class Client2
     '''  and will always return <see langword="False"/>.
     ''' </remarks>
     Friend Function TryGetDeviceSettingsPdfFile(pdfFilePath As String) As Boolean
-        Dim authToken As String = ""
+        Dim authToken As String = EmptyString
 
         ' CareLink™ Partners do not support download
         If My.Settings.CareLinkPartner Then Return False
@@ -509,7 +509,7 @@ Public Class Client2
             End If
         Catch ex As Exception
             Dim lastErrorMessage As String = ex.DecodeException()
-            Dim msg As String = lastErrorMessage.Replace(oldValue:=vbCrLf, newValue:="")
+            Dim msg As String = lastErrorMessage.Replace(oldValue:=vbCrLf, newValue:=EmptyString)
             Dim message As String = $"{msg}, status {response?.StatusCode}"
             DebugPrint(message)
             Return False
@@ -569,7 +569,7 @@ Public Class Client2
             If NetworkUnavailable() Then
                 DebugPrint($"has no Internet Connection!")
             End If
-            DebugPrint($"failed {ex.DecodeException().Replace(vbCrLf, "")}")
+            DebugPrint($"failed {ex.DecodeException().Replace(vbCrLf, EmptyString)}")
         End Try
         Stop
 #End If
@@ -616,7 +616,8 @@ Public Class Client2
         Dim data As Dictionary(Of String, Object)
         Try
             Dim role As String = CStr(_userElementDictionary("role"))
-            Dim tempData As Dictionary(Of String, Object) = Me.GetData(username:=s_userName, role:=role, patientId:="")
+            Dim tempData As Dictionary(Of String, Object) =
+                Me.GetData(username:=s_userName, role:=role, patientId:=EmptyString)
 
             If tempData Is Nothing OrElse tempData.Count = 0 Then
                 PatientData = Nothing

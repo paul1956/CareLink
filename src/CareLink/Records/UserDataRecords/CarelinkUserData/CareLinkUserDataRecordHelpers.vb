@@ -14,7 +14,7 @@ Public Module CareLinkUserDataRecordHelpers
     '''  The name of the column for which to get the cell style.
     ''' </param>
     ''' <returns>
-    '''  A <see cref="DataGridViewCellStyle"/> instance with alignment and padding set
+    '''  A <see cref="DataGridViewCellStyle"/> instance with align and pad set
     '''  according to the column's expected content.
     ''' </returns>
     Friend Function GetCellStyleForCareLinkUser(columnName As String) As DataGridViewCellStyle
@@ -25,26 +25,24 @@ Public Module CareLinkUserDataRecordHelpers
                  NameOf(CareLinkUserDataRecord.CareLinkUserName),
                  NameOf(CareLinkUserDataRecord.CareLinkPassword),
                  NameOf(CareLinkUserDataRecord.CareLinkPatientUserID)
-                cellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleLeft,
-                    padding:=New Padding(all:=1))
+
+                cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleLeft, pad:=New Padding(all:=1))
             Case NameOf(CareLinkUserDataRecord.AutoLogin),
                  NameOf(CareLinkUserDataRecord.CareLinkPartner),
                  NameOf(CareLinkUserDataRecord.CountryCode),
                  NameOf(CareLinkUserDataRecord.UseLocalTimeZone),
                  "DeleteRow"
-                cellStyle = cellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleCenter,
-                    padding:=New Padding(all:=0))
-            Case ""
-                cellStyle = cellStyle.SetCellStyle(
-                    alignment:=DataGridViewContentAlignment.MiddleRight,
-                    padding:=New Padding(all:=1))
+
+                cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleCenter, pad:=New Padding(all:=0))
             Case Else
-                Stop
-                Throw UnreachableException(
-                    paramName:=$"Column {NameOf(columnName)} = {columnName}",
-                    memberName:=NameOf(CareLinkUserDataRecordHelpers))
+                If String.IsNullOrWhiteSpace(columnName) Then
+                    cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleRight, pad:=New Padding(all:=1))
+                Else
+                    Stop
+                    Throw UnreachableException(
+                        paramName:=$"Column {NameOf(columnName)} = {columnName}",
+                        memberName:=NameOf(CareLinkUserDataRecordHelpers))
+                End If
         End Select
         Return cellStyle
     End Function

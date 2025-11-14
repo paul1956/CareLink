@@ -109,7 +109,7 @@ Public Module Discover
         json = configJson.GetRawText()
         Dim mutableConfig As Dictionary(Of String, JsonElement) =
             JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(json)
-        mutableConfig("token_url") = JsonSerializer.Deserialize(Of JsonElement)(json:=$"""{tokenUrl}""")
+        mutableConfig("token_url") = JsonSerializer.Deserialize(Of JsonElement)(json:=$"{Quote}{tokenUrl}{Quote}")
         json = JsonSerializer.Serialize(value:=mutableConfig, options:=s_jsonSerializerOptions)
         Return JsonSerializer.Deserialize(Of JsonElement)(json)
     End Function

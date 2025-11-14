@@ -43,7 +43,7 @@ Friend Module Form1UpdateHelpers
         Dim result As Date
         Return If(TryParseDate(s, key, result),
                   result.ToString(provider),
-                  "")
+                  String.Empty)
     End Function
 
     ''' <summary>
@@ -311,7 +311,7 @@ Friend Module Form1UpdateHelpers
 
         s_listOfSummaryRecords.Clear()
 
-        Dim value As String = ""
+        Dim value As String = String.Empty
         If RecentData.TryGetValue(key:="clientTimeZoneName", value) Then
             PumpTimeZoneInfo = CalculateTimeZone(timeZoneName:=value)
         End If
@@ -344,7 +344,7 @@ Friend Module Form1UpdateHelpers
         For Each c As IndexClass(Of KeyValuePair(Of String, String)) In RecentData.WithIndex()
             Dim kvp As KeyValuePair(Of String, String) = c.Value
             If kvp.Value Is Nothing Then
-                kvp = KeyValuePair.Create(kvp.Key, value:="")
+                kvp = KeyValuePair.Create(kvp.Key, value:=String.Empty)
             End If
 
             Dim key As ServerDataEnum = CType(c.Index, ServerDataEnum)
@@ -753,7 +753,7 @@ Friend Module Form1UpdateHelpers
     Friend Sub UpdatePumpBannerStateTab(mainForm As Form1)
         Dim listOfBannerState As New List(Of BannerState)
         For Each dic As Dictionary(Of String, String) In s_pumpBannerStateValue
-            Dim typeValue As String = ""
+            Dim typeValue As String = String.Empty
             If dic.TryGetValue(key:="type", value:=typeValue) Then
                 Dim recordNumber As Integer = listOfBannerState.Count + 1
                 Dim bannerStateRecord1 As BannerState = DictionaryToClass(Of BannerState)(dic, recordNumber)
@@ -813,7 +813,7 @@ Friend Module Form1UpdateHelpers
                                 stackFrame = New StackFrame(skipFrames:=0, needFileInfo:=True)
                                 MsgBox(
                                     heading:=$"{typeValue} Is unknown banner message!",
-                                    prompt:="",
+                                    prompt:=String.Empty,
                                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                                     title:=GetTitleFromStack(stackFrame))
                             End If
@@ -825,7 +825,7 @@ Friend Module Form1UpdateHelpers
             End If
         Next
 
-        Dim safeBasalDurationStr As String = ""
+        Dim safeBasalDurationStr As String = String.Empty
         Dim key As String = NameOf(TherapyAlgorithmState.SafeBasalDuration)
         If s_therapyAlgorithmStateValue?.TryGetValue(key, value:=safeBasalDurationStr) Then
             Dim safeBasalDuration As Integer = CInt(safeBasalDurationStr)

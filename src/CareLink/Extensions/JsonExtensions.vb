@@ -138,7 +138,7 @@ Public Module JsonExtensions
                     Case JsonValueKind.Array
                         result.Add(key, value)
                     Case JsonValueKind.Null
-                        result.Add(key, value:="")
+                        result.Add(key, value:=String.Empty)
                     Case JsonValueKind.Undefined
                         Stop
                         Exit Select
@@ -347,13 +347,13 @@ Public Module JsonExtensions
                     Return element.GetString
                 Case JsonValueKind.Undefined
                     Stop
-                    Return ""
+                    Return String.Empty
                 Case JsonValueKind.Object
                     Stop
-                    Return ""
+                    Return String.Empty
                 Case JsonValueKind.Array
                     Stop
-                    Return ""
+                    Return String.Empty
                 Case JsonValueKind.Number
                     Return element.ToString
                 Case JsonValueKind.True
@@ -361,7 +361,7 @@ Public Module JsonExtensions
                 Case JsonValueKind.False
                     Return "False"
                 Case JsonValueKind.Null
-                    Return ""
+                    Return String.Empty
             End Select
         End If
         Return String.Empty
@@ -395,7 +395,7 @@ Public Module JsonExtensions
             Case JsonValueKind.False
                 Return "False"
             Case JsonValueKind.Null
-                Return ""
+                Return String.Empty
             Case JsonValueKind.Number
                 Return valueAsString
             Case JsonValueKind.True

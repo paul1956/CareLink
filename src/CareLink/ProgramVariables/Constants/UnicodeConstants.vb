@@ -18,11 +18,24 @@ Friend Module UnicodeConstants
     '''  Gear, U+2699
     '''  Represents a gear symbol, often used to indicate settings or configuration options.
     ''' </summary>
-    Public Const Gear As Char = ChrW(CharCode:=&H2699)
+    Public Const Gear As String = "⚙️"
 
-    Public Const Shield As Char = ChrW(CharCode:=&H26E8)
+    ''' <summary>
+    '''  Shield, U+26E8
+    '''  Represents a shield symbol, typically used to indicate protection, security, or safety.
+    ''' </summary>
+    Public Const Shield As String = "⛨"
 
+    ''' <summary>
+    '''  Speaker, U+1F50A
+    '''  Represents a speaker symbol, often used to indicate audio, volume, or sound output.
+    ''' </summary>
     Public Const Speaker As String = "🔊"
+
+    ''' <summary>
+    '''  Constant representing an empty string literal for better code readability and maintainability
+    ''' </summary>
+    Public Const EmptyString As String = ""
 
     ''' <summary>
     '''  Line Feed, U+000A
@@ -49,30 +62,31 @@ Friend Module UnicodeConstants
     ''' </summary>
     Public Const Ps As Char = ChrW(CharCode:=&H2029)
 
-    ''' <summary>
-    '''  Registered Trademark, U+00AE
-    ''' </summary>
-    Public Const RegisteredTrademark As Char = ChrW(CharCode:=&HAE)
+    Public Const Quote As String = """"
 
     ''' <summary>
-    '''  Superscript1, U+B9
-    '''  Represents the superscript one character.
+    '''  Registered trademark, U+00AE
+    '''  Represents the registered trademark symbol.
     ''' </summary>
-    Public Const Superscript1 As Char = ChrW(CharCode:=&HB9)
+    Public Const RegisteredTrademark As Char = "®"c
 
     ''' <summary>
-    '''  Superscript2, U+B2
-    '''  Represents the superscript two character, commonly used
-    '''  in mathematical expressions or to denote squared measurements.
+    '''  Superscript one, U+00B9
+    '''  Represents the superscript 1 character.
     ''' </summary>
-    Public Const Superscript2 As Char = ChrW(CharCode:=&HB2)
+    Public Const Superscript1 As Char = "¹"c
 
     ''' <summary>
-    '''  Superscript3, U+B3
-    '''  Represents the superscript three character, commonly used
-    '''  in mathematical expressions or to denote cubic measurements.
+    '''  Superscript two, U+00B2
+    '''  Represents the superscript 2 character.
     ''' </summary>
-    Public Const Superscript3 As Char = ChrW(CharCode:=&HB3)
+    Public Const Superscript2 As Char = "²"c
+
+    ''' <summary>
+    '''  Superscript three, U+00B3
+    '''  Represents the superscript 3 character.
+    ''' </summary>
+    Public Const Superscript3 As Char = "³"c
 
     '''  Vertical Tab, U+000B
     ''' </summary>

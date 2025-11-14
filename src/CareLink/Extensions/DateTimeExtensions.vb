@@ -115,7 +115,7 @@ Friend Module DateTimeExtensions
     <Extension>
     Friend Function Epoch2DateTimeString(unixTimeSpan As String, Optional isLocalTime As Boolean = False) As String
         If unixTimeSpan = "0" Then
-            Return ""
+            Return String.Empty
         End If
         Dim localTime As Date
         Dim unixTime As Date
@@ -383,7 +383,7 @@ Friend Module DateTimeExtensions
     Public Function TryParseDate(s As String, key As String, ByRef result As Date) As Boolean
         Dim success As Boolean
         Select Case key
-            Case ""
+            Case String.Empty
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.AssumeLocal, success)
             Case NameOf(ServerDataEnum.lastConduitDateTime)
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.AssumeLocal, success)

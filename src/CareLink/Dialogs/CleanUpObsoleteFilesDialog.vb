@@ -76,7 +76,7 @@ Public Class CleanupStaleFilesDialog
                 If node.Checked Then
                     If confirm Then
                         msgBoxResult = MsgBox(
-                            heading:="",
+                            heading:=EmptyString,
                             prompt:=$"File {node.Text} will be deleted are you sure?",
                             buttonStyle:=MsgBoxStyle.YesNoCancel,
                             title:="File Deletion")

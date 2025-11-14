@@ -6,7 +6,7 @@ Public Class GetReportsSettingsRecord
     Public Property clientTime As String = $"{Now:O}"
     Public Property dailyDetailReportDays As New List(Of String)
     Public Property endDate As String = $"{Now.Year}-{Now.Month:D2}-{Now.Day:D2}"
-    Public Property patientId As String = ""
+    Public Property patientId As String = EmptyString
     Public Property reportFileFormat As String = "PDF"
     Public Property reportShowAdherence As Boolean = False
     Public Property reportShowAssessmentAndProgress As Boolean = False

@@ -63,7 +63,7 @@ Friend Module ErrorReportingHelpers
     Friend Sub ReportLoginStatus(
         loginStatus As ToolStripStatusLabel,
         hasErrors As Boolean,
-        Optional lastErrorMessage As String = "")
+        Optional lastErrorMessage As String = EmptyString)
 
         If hasErrors Then
             loginStatus.ForeColor = If(lastErrorMessage = "OK",

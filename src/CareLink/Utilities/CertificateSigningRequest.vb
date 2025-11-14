@@ -58,15 +58,15 @@ Public Module CertificateSigningRequest
     ''' </returns>
     Public Function ReformatCertificateSigningRequest(csr As String) As String
         ' Remove footer & header, re-encode with URL-safe base64
-        csr = csr.Replace(oldValue:=vbCrLf, newValue:="")
-        csr = csr.Replace(oldValue:="-----BEGIN CERTIFICATE REQUEST-----", newValue:="")
-        csr = csr.Replace(oldValue:="-----END CERTIFICATE REQUEST-----", newValue:="")
+        csr = csr.Replace(oldValue:=vbCrLf, newValue:=EmptyString)
+        csr = csr.Replace(oldValue:="-----BEGIN CERTIFICATE REQUEST-----", newValue:=EmptyString)
+        csr = csr.Replace(oldValue:="-----END CERTIFICATE REQUEST-----", newValue:=EmptyString)
 
         Dim inArray As Byte() = Convert.FromBase64String(csr)
         csr = Convert.ToBase64String(inArray) _
                      .Replace(oldValue:="+", newValue:="-") _
                      .Replace(oldValue:="/", newValue:="_") _
-                     .Replace(oldValue:="=", newValue:="")
+                     .Replace(oldValue:="=", newValue:=EmptyString)
 
         Return csr
     End Function

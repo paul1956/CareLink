@@ -70,7 +70,7 @@ Public Module DictionaryExtensions
     <Extension>
     Friend Function GetStringValueOrEmpty(item As Dictionary(Of String, String), Key As String) As String
         If item Is Nothing Then
-            Return ""
+            Return EmptyString
         End If
         Dim value As String = String.Empty
         Return If(item.TryGetValue(Key, value),

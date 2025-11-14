@@ -45,7 +45,7 @@ Public Class OptionsColorPickerDialog
         If MsgBox(
                 heading:="Are you sure you want to continue?",
                 prompt:=$"Yes will save changes and application will restart{vbCrLf}" &
-                    "If you select ""No"" changes will be lost.",
+                        $"If you select {Quote}No{Quote} changes will be lost.",
                 buttonStyle:=MsgBoxStyle.YesNo Or MsgBoxStyle.Exclamation,
                 title:="Color Options") = MsgBoxResult.Yes Then
             WriteColorDictionaryToFile()

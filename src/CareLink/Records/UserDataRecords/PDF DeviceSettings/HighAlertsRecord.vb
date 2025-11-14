@@ -15,12 +15,12 @@ Public Class HighAlertsRecord
             target:="High Alerts",
             Me.SnoozeOn,
             snoozeTime:=_snoozeTime)
-        Dim valueUnits As String = ""
+        Dim valueUnits As String = EmptyString
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
             Dim row As StringTable.Row = e.Value
             If e.IsFirst Then
                 Dim oldValue As String = "Start High Time ("
-                valueUnits = row.Columns(index:=0).Replace(oldValue, newValue:="").Trim(trimChar:=")"c)
+                valueUnits = row.Columns(index:=0).Replace(oldValue, newValue:=EmptyString).Trim(trimChar:=")"c)
                 Continue For
             End If
 

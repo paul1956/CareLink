@@ -264,7 +264,7 @@ Public Class PdfSettingsRecord
     ''' <returns>index</returns>
     Private Shared Function ExtractIndex(itemKey As String) As Integer
         Dim startIndex As Integer = itemKey.IndexOf("("c) + 1
-        Return CInt(itemKey.Substring(startIndex).Replace(oldValue:=")", newValue:=""))
+        Return CInt(itemKey.Substring(startIndex).Replace(oldValue:=")", newValue:=String.Empty))
     End Function
 
     Public Property Basal As New PumpBasalRecord

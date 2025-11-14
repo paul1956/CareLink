@@ -10,7 +10,7 @@ Public Class PercentUpDown
     End Sub
 
     Protected Overrides Sub ValidateEditText()
-        Dim s As String = Me.Text.Replace(oldValue:=" %", newValue:="")
+        Dim s As String = Me.Text.Replace(oldValue:=" %", newValue:=EmptyString)
         Dim result As Decimal
         If Decimal.TryParse(s, result) Then
             Me.Value = result

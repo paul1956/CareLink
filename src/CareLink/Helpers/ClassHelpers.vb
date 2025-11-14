@@ -9,8 +9,8 @@ Public Module ClassHelpers
 
     ''' <summary>
     '''  Creates a <see cref="Dictionary"/> that maps class property names to
-    '''  <see cref="DataGridViewCellStyle"/> for column alignment.
-    '''  Determines alignment and padding based on the
+    '''  <see cref="DataGridViewCellStyle"/> for column align.
+    '''  Determines align and pad based on the
     '''  <see cref="ColumnAttribute"/> type name.
     ''' </summary>
     ''' <typeparam name="T">
@@ -19,7 +19,7 @@ Public Module ClassHelpers
     ''' <param name="alignmentTable">
     '''  A dictionary to populate with property name to cell style mappings.
     ''' </param>
-    ''' <param name="name">The column name to retrieve or add alignment for.</param>
+    ''' <param name="name">The column name to retrieve or add align for.</param>
     ''' <returns>
     '''  The <see cref="DataGridViewCellStyle"/> for the specified column.
     ''' </returns>
@@ -58,25 +58,17 @@ Public Module ClassHelpers
                 Dim typeName As String = objects.Cast(Of ColumnAttribute)().SingleOrDefault()?.TypeName
 
                 If typeName Is Nothing Then
-                    cellStyle = cellStyle.SetCellStyle(
-                        alignment:=DataGridViewContentAlignment.MiddleLeft,
-                        padding:=New Padding(all:=1))
+                    cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleLeft, pad:=New Padding(all:=1))
                 ElseIf leftAlignedTypes.Contains(item:=typeName) Then
-                    cellStyle = cellStyle.SetCellStyle(
-                        alignment:=DataGridViewContentAlignment.MiddleLeft,
-                        padding:=New Padding(all:=1))
+                    cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleLeft, pad:=New Padding(all:=1))
                 ElseIf rightAlignedTypes.Contains(item:=typeName) Then
-                    cellStyle = cellStyle.SetCellStyle(
-                        alignment:=DataGridViewContentAlignment.MiddleRight,
-                        padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                    cellStyle.SetCellStyle(
+                        align:=DataGridViewContentAlignment.MiddleRight,
+                        pad:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
                 ElseIf centerAlignedTypes.Contains(item:=typeName) Then
-                    cellStyle = cellStyle.SetCellStyle(
-                        alignment:=DataGridViewContentAlignment.MiddleCenter,
-                        padding:=New Padding(all:=0))
+                    cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleCenter, pad:=New Padding(all:=0))
                 Else
-                    cellStyle = cellStyle.SetCellStyle(
-                        alignment:=DataGridViewContentAlignment.MiddleLeft,
-                        padding:=New Padding(all:=1))
+                    cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleLeft, pad:=New Padding(all:=1))
                 End If
                 alignmentTable(key:=[property].Name) = cellStyle
             Next
@@ -87,11 +79,11 @@ Public Module ClassHelpers
             Dim alignMiddle As Boolean = name = NameOf(SummaryRecord.RecordNumber) OrElse name = NameOf(Limit.Index)
             resultStyle = If(alignMiddle,
                              (New DataGridViewCellStyle).SetCellStyle(
-                                alignment:=DataGridViewContentAlignment.MiddleCenter,
-                                padding:=New Padding(all:=0)),
+                                align:=DataGridViewContentAlignment.MiddleCenter,
+                                pad:=New Padding(all:=0)),
                              (New DataGridViewCellStyle).SetCellStyle(
-                                alignment:=DataGridViewContentAlignment.MiddleLeft,
-                                padding:=New Padding(all:=1)))
+                                align:=DataGridViewContentAlignment.MiddleLeft,
+                                pad:=New Padding(all:=1)))
             alignmentTable(key:=name) = resultStyle
         End If
         Return resultStyle

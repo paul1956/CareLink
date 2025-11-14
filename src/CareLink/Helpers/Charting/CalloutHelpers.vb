@@ -54,7 +54,7 @@ Friend Module CalloutHelpers
     ''' <param name="markerTags">An array of strings representing the marker tags.</param>
     ''' <returns>A formatted annotation text string.</returns>
     Private Function GetAnnotationText(markerTags() As String) As String
-        Dim annotationText As String = ""
+        Dim annotationText As String = EmptyString
         Select Case markerTags.Length
             Case 1
                 annotationText = $"{markerTags(0)}"

@@ -120,7 +120,7 @@ Friend Module PlotMarkers
     ''' <param name="amount">The amount delivered.</param>
     ''' <returns>A formatted tooltip string.</returns>
     Private Function GetToolTip(type As String, amount As Single) As String
-        Dim minBasalMsg As String = ""
+        Dim minBasalMsg As String = EmptyString
         If amount.IsMinBasal() Then
             minBasalMsg = "Min "
         End If
@@ -196,7 +196,7 @@ Friend Module PlotMarkers
                             DrawFromBottom:=False,
                             tag:=GetToolTip(item.Type, amount))
                     Case "MANUAL_BASAL_DELIVERY"
-                        Dim amount As Single = item.GetSingleFromJson(key:="", digits:=3)
+                        Dim amount As Single = item.GetSingleFromJson(key:=EmptyString, digits:=3)
                         pageChart.Series(name:=BasalSeriesName).PlotBasalSeries(
                             markerOA,
                             amount,

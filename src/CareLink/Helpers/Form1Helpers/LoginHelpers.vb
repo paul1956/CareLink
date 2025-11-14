@@ -273,7 +273,7 @@ Friend Module LoginHelpers
         End With
 
         With form1.TimeZoneToolStripStatusLabel
-            .Text = ""
+            .Text = String.Empty
             .ForeColor = form1.MenuStrip1.ForeColor
             If isDaylightSavingTime IsNot Nothing Then
                 Dim timeZoneName As String = Nothing

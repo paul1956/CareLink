@@ -271,7 +271,7 @@ Public Class ExceptionHandlerDialog
                 Else
                     Exit While
                 End If
-                currentLine = ""
+                currentLine = String.Empty
             End While
             If currentLine <> StackTraceTerminatingStr Then
                 Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=StackTraceTerminatingStr)

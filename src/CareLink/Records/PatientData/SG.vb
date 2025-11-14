@@ -135,7 +135,7 @@ Public Class SG
             Return _sensorState
         End Get
         Set
-            _sensorState = If(Value, "")
+            _sensorState = If(Value, EmptyString)
         End Set
     End Property
 
@@ -143,7 +143,7 @@ Public Class SG
     <Column(Order:=11, TypeName:=NameOf([String]))>
     Public ReadOnly Property Message As String
         Get
-            _sensorState = If(_sensorState, "")
+            _sensorState = If(_sensorState, EmptyString)
             Return FormatSensorMessage(key:=PatientData.SensorState, truncate:=False)
         End Get
     End Property
@@ -171,7 +171,7 @@ Public Class SG
         key As String,
         Optional truncate As Boolean = False) As String
 
-        Dim value As String = ""
+        Dim value As String = EmptyString
         If s_sensorMessages.TryGetValue(key, value) Then
             If Not truncate Then
                 Return value
@@ -186,7 +186,7 @@ Public Class SG
                 Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
                 MsgBox(
                     heading:=$"{PatientData.SensorState} is unknown sensor message",
-                    prompt:="",
+                    prompt:=EmptyString,
                     buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
                     title:=GetTitleFromStack(stackFrame))
             End If

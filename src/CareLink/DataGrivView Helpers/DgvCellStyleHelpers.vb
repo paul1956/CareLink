@@ -148,7 +148,7 @@ Public Module DgvCellStyleHelpers
         Dim value As String = Convert.ToString(e.Value)
         If value <> String.Empty Then
             Try
-                e.Value = value.ParseDate(key:="")
+                e.Value = value.ParseDate(key:=EmptyString)
             Catch ex As Exception
                 ' Leave value unchanged if parsing fails
                 e.Value = value
@@ -343,11 +343,11 @@ Public Module DgvCellStyleHelpers
     End Function
 
     ''' <summary>
-    '''  Sets the alignment for a specific column in a DataGridView.
+    '''  Sets the align for a specific column in a DataGridView.
     ''' </summary>
     ''' <typeparam name="T">The data record type.</typeparam>
-    ''' <param name="columnName">The name of the column to set the alignment for.</param>
-    ''' <param name="alignment">The desired alignment for the column.</param>
+    ''' <param name="columnName">The name of the column to set the align for.</param>
+    ''' <param name="alignment">The desired align for the column.</param>
     Friend Function HideColumn(Of T)(item As String) As Boolean
         Dim key As Type = GetType(T)
         Return s_filterJsonData AndAlso
@@ -420,21 +420,21 @@ Public Module DgvCellStyleHelpers
     '''  and returns the modified style.
     ''' </summary>
     ''' <param name="cellStyle">The <see cref="DataGridViewCellStyle"/> to modify.</param>
-    ''' <param name="alignment">
+    ''' <param name="align">
     '''  The <see cref="DataGridViewContentAlignment"/> to set.
     ''' </param>
-    ''' <param name="padding">The <see cref="Padding"/> to set.</param>
+    ''' <param name="pad">The <see cref="Padding"/> to set.</param>
     ''' <returns>
     '''  The modified <see cref="DataGridViewCellStyle"/>.
     ''' </returns>
     <Extension>
     Friend Function SetCellStyle(
         cellStyle As DataGridViewCellStyle,
-        alignment As DataGridViewContentAlignment,
-        padding As Padding) As DataGridViewCellStyle
+        align As DataGridViewContentAlignment,
+        pad As Padding) As DataGridViewCellStyle
 
-        cellStyle.Alignment = alignment
-        cellStyle.Padding = padding
+        cellStyle.Alignment = align
+        cellStyle.Padding = pad
         Return cellStyle
     End Function
 
@@ -456,11 +456,11 @@ Public Module DgvCellStyleHelpers
         dgv As DataGridView,
         e As DataGridViewCellFormattingEventArgs,
         digits As Integer,
-        Optional TrailingText As String = "") As Single
+        Optional TrailingText As String = EmptyString) As Single
 
         Dim amount As Single = ParseSingle(e.Value, digits)
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        If TrailingText <> "" Then
+        If TrailingText <> EmptyString Then
             TrailingText = $" {TrailingText}"
         End If
         e.Value = $"{amount.ToString(format:=$"F{digits}", provider)}{TrailingText}"

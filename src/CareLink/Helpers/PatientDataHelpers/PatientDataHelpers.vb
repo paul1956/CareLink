@@ -7,11 +7,11 @@ Imports System.Text.Json
 Public Module PatientDataHelpers
 
     Private ReadOnly s_keyDictionary As New Dictionary(Of String, String) From {
-        {$"""{NameOf(ServerDataEnum.firstName)}"": ", """First"""},
-        {$"""{NameOf(ServerDataEnum.lastName)}"": ", """Last"""},
-        {$"""{NameOf(ServerDataEnum.conduitSerialNumber)}"": ", $"""{New Guid()}"""},
-        {$"""{NameOf(MedicalDeviceInformation.SystemId)}"": ", """40000000000 0000"""},
-        {$"""{NameOf(MedicalDeviceInformation.DeviceSerialNumber)}"": ", """NG4000000H"""}}
+        {$"{Quote}{NameOf(ServerDataEnum.firstName)}{Quote}: ", $"{Quote}First{Quote}"},
+        {$"{Quote}{NameOf(ServerDataEnum.lastName)}{Quote}: ", $"{Quote}Last{Quote}"},
+        {$"{Quote}{NameOf(ServerDataEnum.conduitSerialNumber)}{Quote}: ", $"{Quote}{New Guid()}{Quote}"},
+        {$"{Quote}{NameOf(MedicalDeviceInformation.SystemId)}{Quote}: ", $"{Quote}40000000000 0000{Quote}"},
+        {$"{Quote}{NameOf(MedicalDeviceInformation.DeviceSerialNumber)}{Quote}: ", $"{Quote}NG4000000H{Quote}"}}
 
     ''' <summary>
     '''  Serialize <see cref="PatientDataElement"/> while removing any personal information

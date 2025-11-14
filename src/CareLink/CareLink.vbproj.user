@@ -51,6 +51,12 @@
     <EmbeddedResource Update="Dialogs\CleanUpObsoleteFilesDialog.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Update="Dialogs\OptionsConfigureTiTR.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Dialogs\PumpSetupDialog.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Update="Forms\AboutBox1.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

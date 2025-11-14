@@ -18,8 +18,8 @@ Public Class MealStartEndRecord
     ''' </remarks>
     ''' <exception cref="ArgumentNullException">Thrown if the row is null.</exception>
     Public Sub New(r As StringTable.Row, key As String)
-        Me.Start = r.Columns(index:=0).Replace(oldValue:=key, newValue:="").CleanSpaces
-        Me.End = r.Columns(index:=1).Replace(oldValue:=key, newValue:="").CleanSpaces
+        Me.Start = r.Columns(index:=0).Replace(oldValue:=key, newValue:=EmptyString).CleanSpaces
+        Me.End = r.Columns(index:=1).Replace(oldValue:=key, newValue:=EmptyString).CleanSpaces
     End Sub
 
     Public Property [End] As String = "Off"

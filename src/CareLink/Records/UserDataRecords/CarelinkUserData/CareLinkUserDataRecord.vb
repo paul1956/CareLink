@@ -25,15 +25,15 @@ Partial Public Class CareLinkUserDataRecord
         Me.Parent = parent
         _userData = New CareLinkUserData With {
             ._iD = parent.Count,
-            ._careLinkUserName = If(My.Settings.CareLinkUserName, ""),
-            ._careLinkPassword = If(My.Settings.CareLinkPassword, ""),
-            ._countryCode = If(My.Settings.CountryCode, ""),
+            ._careLinkUserName = If(My.Settings.CareLinkUserName, EmptyString),
+            ._careLinkPassword = If(My.Settings.CareLinkPassword, EmptyString),
+            ._countryCode = If(My.Settings.CountryCode, EmptyString),
              ._useLocalTimeZone = My.Settings.UseLocalTimeZone,
             ._autoLogin = My.Settings.AutoLogin,
             ._careLinkPartner = My.Settings.CareLinkPartner,
             ._careLinkPatientUserID = If(._careLinkPartner,
                                          My.Settings.CareLinkPatientUserID,
-                                         "")}
+                                         EmptyString)}
     End Sub
 
     ''' <summary>
@@ -52,7 +52,7 @@ Partial Public Class CareLinkUserDataRecord
             ._iD = parent.Count
         }
         For Each e As IndexClass(Of String) In currentRow.WithIndex
-            Dim value As String = If(e.Value, "")
+            Dim value As String = If(e.Value, EmptyString)
             Me.UpdateValue(headerRow(e.Index), value)
         Next
     End Sub

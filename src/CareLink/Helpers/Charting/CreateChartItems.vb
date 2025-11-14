@@ -364,14 +364,14 @@ Friend Module CreateChartItems
         Select Case legendText
             Case "Min Basal"
                 lineColor = Color.FromArgb(alpha:=150, baseColor:=lineColor)
-                item = New LegendItem(name:=legendText, color:=lineColor, image:="")
+                item = New LegendItem(name:=legendText, color:=lineColor, image:=EmptyString)
                 basalLegend.CustomItems.Add(item)
             Case "Auto Correction"
-                item = New LegendItem(name:=legendText, color:=lineColor, image:="")
+                item = New LegendItem(name:=legendText, color:=lineColor, image:=EmptyString)
                 basalLegend.CustomItems.Add(item)
                 basalLegend.CustomItems.Last.Enabled = False
             Case "Basal Series"
-                item = New LegendItem(name:=legendText, color:=lineColor, image:="")
+                item = New LegendItem(name:=legendText, color:=lineColor, image:=EmptyString)
                 basalLegend.CustomItems.Add(item)
             Case Else
                 Stop
@@ -418,7 +418,7 @@ Friend Module CreateChartItems
             yAxisType:=AxisType.Secondary)
         s.IsVisibleInLegend = False
         s.EmptyPointStyle.Color = Color.Transparent
-        Dim item As New LegendItem(name:=key, color:=GetGraphLineColor(key), image:="")
+        Dim item As New LegendItem(name:=key, color:=GetGraphLineColor(key), image:=EmptyString)
         limitsLegend.CustomItems.Add(item)
         Return s
     End Function
@@ -438,7 +438,7 @@ Friend Module CreateChartItems
             yAxisType:=AxisType.Secondary)
         s.IsVisibleInLegend = False
         Dim color As Color = GetGraphLineColor(key:=legendText)
-        sgLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color, image:=""))
+        sgLegend.CustomItems.Add(item:=New LegendItem(name:=legendText, color, image:=EmptyString))
         Return s
     End Function
 
@@ -466,7 +466,7 @@ Friend Module CreateChartItems
         Dim item As New LegendItem(
             name:=legendText,
             color:=Color.FromArgb(alpha:=128, baseColor:=Color.Red),
-            image:="")
+            image:=EmptyString)
         basalLegend.CustomItems.Add(item)
         With s.EmptyPointStyle
             .BorderWidth = 4
@@ -493,7 +493,7 @@ Friend Module CreateChartItems
         Dim item As New LegendItem(
             name:=legendText,
             color:=GetGraphLineColor(key:=legendText),
-            image:="")
+            image:=EmptyString)
         basalLegend.CustomItems.Add(item)
 
         With s.EmptyPointStyle

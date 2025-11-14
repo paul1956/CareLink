@@ -215,7 +215,7 @@ Public Module RichTextBoxExtensions
         rtb As RichTextBox,
         key As String,
         startTime As String,
-        Optional endTime As String = "")
+        Optional endTime As String = EmptyString)
 
         Dim text As String = $"{Indent4}{key}".PadRight(TotalWidth)
         rtb.AppendTextNewFont(text, newFont:=FixedWidthFont)

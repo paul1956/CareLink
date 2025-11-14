@@ -17,7 +17,7 @@ Public Class NamedBasalRecord
 
     Public Property Active As Boolean = False
     Public Property basalRates As New List(Of BasalRateRecord)
-    Public Property Total24Hour As String = ""
+    Public Property Total24Hour As String = EmptyString
 
     Public Sub UpdateBasalRates(sTable As StringTable)
         For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex

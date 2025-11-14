@@ -44,7 +44,7 @@ Friend Module DgvColumnEventArgsExtensions
             Dim title As New StringBuilder
             Dim value As String = .Name
             If .Name.Contains(value:="DeleteRow") Then
-                value = ""
+                value = EmptyString
             ElseIf Not .Name.ContainsNoCase(value:="OADateTime") Then
                 value = If(.DataPropertyName.Length < 4,
                            .Name,

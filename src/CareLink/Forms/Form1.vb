@@ -696,7 +696,7 @@ Public Class Form1
                     If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
                         dgv.CellFormattingApplyBoldColor(e, textColor:=Color.OrangeRed)
                     Else
-                        e.Value = ""
+                        e.Value = EmptyString
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
                 Case NameOf(SG.SensorState)
@@ -1387,7 +1387,7 @@ Public Class Form1
                 value = .DataPropertyName.Remove(s:="DgvCareLinkUsers")
             End If
             If value.ContainsNoCase(value:="DeleteRow") Then
-                value = ""
+                value = EmptyString
             Else
                 If .Index > 0 AndAlso
                     String.IsNullOrWhiteSpace(value:= .DataPropertyName) AndAlso
@@ -1454,7 +1454,7 @@ Public Class Form1
 
         Dim dgvCareLinkUsersDeleteRow As New DataGridViewDisableButtonColumn With {
             .DataPropertyName = "DeleteRow",
-            .HeaderText = "",
+            .HeaderText = EmptyString,
             .Name = NameOf(dgvCareLinkUsersDeleteRow),
             .ReadOnly = True,
             .Text = "Delete Row",
@@ -1977,8 +1977,8 @@ Public Class Form1
                              ServerDataEnum.sensorLifeText,
                              ServerDataEnum.sensorLifeIcon
                             e.CellStyle = e.CellStyle.SetCellStyle(
-                                alignment:=DataGridViewContentAlignment.MiddleLeft,
-                                padding:=New Padding(all:=1))
+                                align:=DataGridViewContentAlignment.MiddleLeft,
+                                pad:=New Padding(all:=1))
 
                         ' Not Clickable Cells - Center
                         Case ServerDataEnum.clientTimeZoneName,
@@ -2001,8 +2001,8 @@ Public Class Form1
                              ServerDataEnum.gstCommunicationState,
                              ServerDataEnum.pumpCommunicationState
                             e.CellStyle = e.CellStyle.SetCellStyle(
-                                alignment:=DataGridViewContentAlignment.MiddleCenter,
-                                padding:=New Padding(all:=1))
+                                align:=DataGridViewContentAlignment.MiddleCenter,
+                                pad:=New Padding(all:=1))
 
                         ' Not Clickable - Data Dependent
                         Case ServerDataEnum.appModelNumber,
@@ -2014,7 +2014,7 @@ Public Class Form1
                             Else
                                 alignment = DataGridViewContentAlignment.MiddleRight
                             End If
-                            e.CellStyle = e.CellStyle.SetCellStyle(alignment, padding:=New Padding(all:=1))
+                            e.CellStyle = e.CellStyle.SetCellStyle(alignment, pad:=New Padding(all:=1))
 
                         ' Not Clickable Cells - Right
                         Case ServerDataEnum.currentServerTime,
@@ -2042,16 +2042,16 @@ Public Class Form1
                              ServerDataEnum.aboveHyperLimit,
                              ServerDataEnum.timeInRange
                             e.CellStyle = e.CellStyle.SetCellStyle(
-                                alignment:=DataGridViewContentAlignment.MiddleRight,
-                                padding:=New Padding(all:=1))
+                                align:=DataGridViewContentAlignment.MiddleRight,
+                                pad:=New Padding(all:=1))
 
                          ' Not Clickable Cells - Integer with comma, align Right
                         Case ServerDataEnum.timeToNextEarlyCalibrationMinutes,
                              ServerDataEnum.sensorDurationMinutes
                             e.Value = $"{CInt(e.Value):N0}"
                             e.CellStyle = e.CellStyle.SetCellStyle(
-                                alignment:=DataGridViewContentAlignment.MiddleRight,
-                                padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                                align:=DataGridViewContentAlignment.MiddleRight,
+                                pad:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
 
                             ' Clickable Cells - Center
                         Case ServerDataEnum.pumpBannerState,
@@ -2065,8 +2065,8 @@ Public Class Form1
                              ServerDataEnum.sgs,
                              ServerDataEnum.notificationHistory
                             e.CellStyle = e.CellStyle.SetCellStyle(
-                                alignment:=DataGridViewContentAlignment.MiddleCenter,
-                                padding:=New Padding(all:=1))
+                                align:=DataGridViewContentAlignment.MiddleCenter,
+                                pad:=New Padding(all:=1))
                             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Black, emIncrease:=1)
                         Case Else
                             Stop
@@ -2215,8 +2215,8 @@ Public Class Form1
                      NameOf(TherapyAlgorithmState.PlgmLgsState)
 
                     e.CellStyle = e.CellStyle.SetCellStyle(
-                        alignment:=DataGridViewContentAlignment.MiddleLeft,
-                        padding:=New Padding(all:=1))
+                        align:=DataGridViewContentAlignment.MiddleLeft,
+                        pad:=New Padding(all:=1))
 
                 Case NameOf(TherapyAlgorithmState.SafeBasalDuration),
                      NameOf(TherapyAlgorithmState.WaitToCalibrateDuration)
@@ -2225,8 +2225,8 @@ Public Class Form1
                     Dim minutes As Integer = totalMinutes Mod 60
                     e.Value = $"{hours}:{minutes:D2}"
                     e.CellStyle = e.CellStyle.SetCellStyle(
-                        alignment:=DataGridViewContentAlignment.MiddleRight,
-                        padding:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
+                        align:=DataGridViewContentAlignment.MiddleRight,
+                        pad:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
 
                 Case Else
                     Stop
@@ -2634,7 +2634,7 @@ Public Class Form1
                         RecentData = New Dictionary(Of String, String)
                         ExceptionHandlerDialog.reportNameWithPath = fileNameWithPath
                         If ExceptionHandlerDialog.ShowDialog(owner:=Me) = DialogResult.OK Then
-                            ExceptionHandlerDialog.reportNameWithPath = ""
+                            ExceptionHandlerDialog.reportNameWithPath = EmptyString
                             Try
                                 Dim json As String = ExceptionHandlerDialog.LocalRawData
                                 PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
@@ -3647,13 +3647,13 @@ Public Class Form1
                 s_shuttingDown = True
                 Me.SetLastUpdateTime(
                     msg:="System Sleeping",
-                    suffixMessage:="",
+                    suffixMessage:=EmptyString,
                     highLight:=True,
                     isDaylightSavingTime:=Nothing)
             Case PowerModes.Resume
                 Me.SetLastUpdateTime(
                     msg:="System Awake",
-                    suffixMessage:="",
+                    suffixMessage:=EmptyString,
                     highLight:=True,
                     isDaylightSavingTime:=Nothing)
                 s_shuttingDown = False
@@ -3717,7 +3717,7 @@ Public Class Form1
             _updating = False
         End SyncLock
 
-        Dim lastMedicalDeviceDataUpdateServerEpochString As String = ""
+        Dim lastMedicalDeviceDataUpdateServerEpochString As String = EmptyString
         If Not RecentDataEmpty() Then
             If RecentData.TryGetValue(
                     key:=NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime),
@@ -3727,7 +3727,7 @@ Public Class Form1
                     If epochAsLocalDate + FiveMinuteSpan < Now() Then
                         Me.SetLastUpdateTime(
                             msg:=Nothing,
-                            suffixMessage:="",
+                            suffixMessage:=EmptyString,
                             highLight:=True,
                             isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString(
@@ -3736,7 +3736,7 @@ Public Class Form1
                     Else
                         Me.SetLastUpdateTime(
                             msg:=Nothing,
-                            suffixMessage:="",
+                            suffixMessage:=EmptyString,
                             highLight:=False,
                             isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString(
@@ -4189,16 +4189,16 @@ Public Class Form1
                     strBuilder.AppendLine(value:=$"Last SG {sgString} {BgUnits}")
                     If PatientData.ConduitInRange Then
                         If s_lastSgValue.IsSgInvalid Then
-                            Me.TrendValueLabel.Text = ""
+                            Me.TrendValueLabel.Text = EmptyString
                             Me.TrendValueLabel.Visible = False
-                            _sgMiniDisplay.SetCurrentDeltaValue(deltaString:="", delta:=0)
+                            _sgMiniDisplay.SetCurrentDeltaValue(deltaString:=EmptyString, delta:=0)
                         Else
                             Dim delta As Single = sg - s_lastSgValue
-                            Dim deltaString As String = ""
+                            Dim deltaString As String = EmptyString
                             Dim provider As CultureInfo = CultureInfo.InvariantCulture
 
                             If sg.IsSgInvalid Then
-                                Me.TrendValueLabel.Text = ""
+                                Me.TrendValueLabel.Text = EmptyString
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta:=0)
                             Else
                                 deltaString = If(Math.Abs(value:=delta) < 0.001,
@@ -4306,7 +4306,7 @@ Public Class Form1
     '''  A string representing the current subtitle for the summary chart.
     ''' </returns>
     Private Function GetSubTitle() As String
-        Dim title As String = ""
+        Dim title As String = EmptyString
         If InAutoMode Then
             Dim autoModeState As String =
                 s_therapyAlgorithmStateValue(key:=NameOf(TherapyAlgorithmState.AutoModeShieldState))
@@ -4658,7 +4658,7 @@ Public Class Form1
                 Me.LastSgOrExitTimeLabel.Visible = False
             End If
 
-            Dim message As String = ""
+            Dim message As String = EmptyString
             If s_lastSg.sg.IsSgValid Then
                 Me.SensorMessageLabel.Visible = False
                 Dim sgString As String = New SG(PatientData.LastSG).ToString()
@@ -4683,7 +4683,7 @@ Public Class Form1
                         Me.SensorMessageLabel.Text = message
                         Me.SensorMessageLabel.CenterXYOnParent(verticalOffset:=-5)
                     Case "WARM_UP"
-                        Dim timeRemaining As String = ""
+                        Dim timeRemaining As String = EmptyString
                         If s_systemStatusTimeRemaining.TotalMilliseconds > 0 Then
                             timeRemaining = s_systemStatusTimeRemaining.ToFormattedTimeSpan(unit:="hr")
                             Me.SensorMessageLabel.Text = $"{message.Remove(s:="...")}{vbCrLf}{timeRemaining}"
@@ -4994,7 +4994,7 @@ Public Class Form1
                     Dim durationWithoutGrace As Integer = PatientData.SensorDurationHours - 24
                     Select Case PatientData.SensorDurationHours
                         Case Is >= 255
-                            Me.SensorDaysLeftLabel.Text = ""
+                            Me.SensorDaysLeftLabel.Text = EmptyString
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
                             Me.SensorTimeLeftLabel.Text = "Unknown"
                         Case Is >= 48
@@ -5006,7 +5006,7 @@ Public Class Form1
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
                             Me.SensorTimeLeftLabel.Text = Me.GetSensorTimeLeftMessage()
                         Case Is > 0 ' Grace
-                            Me.SensorDaysLeftLabel.Text = ""
+                            Me.SensorDaysLeftLabel.Text = EmptyString
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpiringSoon
                             Me.SensorTimeLeftLabel.Text = Me.GetSensorTimeLeftMessage()
                         Case Is = 0
@@ -5019,17 +5019,17 @@ Public Class Form1
                                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                                     Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
                                 Case Is = 0
-                                    Me.SensorDaysLeftLabel.Text = ""
+                                    Me.SensorDaysLeftLabel.Text = EmptyString
                                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
                                     Me.SensorTimeLeftLabel.Text = "Expired"
                                 Case Else
-                                    Me.SensorDaysLeftLabel.Text = ""
+                                    Me.SensorDaysLeftLabel.Text = EmptyString
                                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
                                     Me.SensorTimeLeftLabel.Text = "Unknown"
                             End Select
 
                         Case Else
-                            Me.SensorDaysLeftLabel.Text = ""
+                            Me.SensorDaysLeftLabel.Text = EmptyString
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
                             Me.SensorTimeLeftLabel.Text = "Unknown"
                     End Select
@@ -5038,7 +5038,7 @@ Public Class Form1
                     Dim sensorDurationDays As Integer = CInt(Math.Ceiling(PatientData.SensorDurationHours / 24))
                     Select Case PatientData.SensorDurationHours
                         Case Is >= 255
-                            Me.SensorDaysLeftLabel.Text = ""
+                            Me.SensorDaysLeftLabel.Text = EmptyString
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
                             Me.SensorTimeLeftLabel.Text = "Unknown"
                         Case Is >= 168
@@ -5063,11 +5063,11 @@ Public Class Form1
                                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
                                     Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
                                 Case Is = 0
-                                    Me.SensorDaysLeftLabel.Text = ""
+                                    Me.SensorDaysLeftLabel.Text = EmptyString
                                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
                                     Me.SensorTimeLeftLabel.Text = "Expired"
                                 Case Else
-                                    Me.SensorDaysLeftLabel.Text = ""
+                                    Me.SensorDaysLeftLabel.Text = EmptyString
                                     Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
                                     Me.SensorTimeLeftLabel.Text = "Unknown"
                             End Select
@@ -5085,7 +5085,7 @@ Public Class Form1
                     Me.SensorTimeLeftLabel.Text = "Unknown"
             End Select
         Else
-            Me.SensorDaysLeftLabel.Text = ""
+            Me.SensorDaysLeftLabel.Text = EmptyString
             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
             Me.SensorTimeLeftLabel.Text = "Unknown"
             Me.SensorTimeLeftPanel.Visible = True
@@ -5254,8 +5254,8 @@ Public Class Form1
         highDeviations /= 11
 
         If elements = 0 Then
-            Me.LowTirComplianceLabel.Text = ""
-            Me.HighTirComplianceLabel.Text = ""
+            Me.LowTirComplianceLabel.Text = EmptyString
+            Me.HighTirComplianceLabel.Text = EmptyString
         Else
             Dim lowDeviation As Single = Math.Sqrt(lowDeviations / (elements - highCount)).RoundToSingle(digits:=1)
             Select Case True
@@ -5363,7 +5363,7 @@ Public Class Form1
             DebugPrint($"exiting, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If
-        Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = ""
+        Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = EmptyString
         Dim key As String = NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime)
         If RecentData.TryGetValue(key, value:=lastMedicalDeviceDataUpdateServerTimeEpoch) Then
             If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) = s_lastMedicalDeviceDataUpdateServerEpoch Then
@@ -5387,7 +5387,7 @@ Public Class Form1
             Else
                 Me.SetLastUpdateTime(
                     msg:=$"Last Update Time: {PumpNow()}",
-                    suffixMessage:="",
+                    suffixMessage:=EmptyString,
                     highLight:=False,
                     isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)
             End If

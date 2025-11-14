@@ -17,10 +17,10 @@ Public Module SystemVariables
 #End Region ' Used for painting
 
     Friend s_allUserSettingsData As New CareLinkUserDataList
-    Friend s_countryCode As String = ""
+    Friend s_countryCode As String = String.Empty
     Friend s_currentSummaryRow As Integer = 0
     Friend s_formLoaded As Boolean = False
-    Friend s_password As String = ""
+    Friend s_password As String = String.Empty
     Friend s_useLocalTimeZone As Boolean
     Friend s_userName As String = My.Settings.CareLinkUserName
     Friend ReadOnly Property CareLinkDecimalSeparator As Char = "."c

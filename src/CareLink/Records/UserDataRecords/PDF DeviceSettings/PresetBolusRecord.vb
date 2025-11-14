@@ -11,7 +11,7 @@ Public Class PresetBolusRecord
         If row.Columns.Count <> 3 OrElse row.Columns(index:=0).Length = 0 Then
             Exit Sub
         End If
-        Dim column0Trim As String = row.Columns(index:=0).Replace(oldValue:=key, newValue:="").Trim
+        Dim column0Trim As String = row.Columns(index:=0).Replace(oldValue:=key, newValue:=EmptyString).Trim
         If column0Trim.Length = 0 Then
             If row.Columns(index:=1).Length = 0 AndAlso row.Columns(index:=1).Length = 0 Then
                 Exit Sub

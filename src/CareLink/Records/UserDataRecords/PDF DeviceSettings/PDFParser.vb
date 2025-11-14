@@ -83,7 +83,7 @@ Public Module PDFParser
 
         'Load a PDF file
         doc.LoadFromFile(filename)
-        Dim text As String = ""
+        Dim text As String = String.Empty
         For i As Integer = startPageNumber To endPageNumber
 
             'Get the page

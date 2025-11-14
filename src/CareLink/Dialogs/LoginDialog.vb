@@ -173,13 +173,13 @@ Public Class LoginDialog
             Me.UsernameComboBox.Text = My.Settings.CareLinkUserName
         Else
             _mySource.Clear()
-            Me.UsernameComboBox.Text = ""
+            Me.UsernameComboBox.Text = String.Empty
         End If
         With Me.UsernameComboBox
             .AutoCompleteCustomSource = _mySource
             .AutoCompleteMode = AutoCompleteMode.SuggestAppend
             .AutoCompleteSource = AutoCompleteSource.CustomSource
-            If s_userName = "" Then
+            If s_userName = String.Empty Then
                 .Text = My.Settings.CareLinkUserName
             Else
                 .SelectedIndex = -1
@@ -187,7 +187,7 @@ Public Class LoginDialog
             End If
             Me.PasswordTextBox.Text = If(s_allUserSettingsData?.ContainsKey(key:= .Text),
                                          s_allUserSettingsData(itemName:= .Text).CareLinkPassword,
-                                         "")
+                                         String.Empty)
         End With
 
         Me.RegionComboBox.DataSource = New BindingSource(dataSource:=s_regionList, dataMember:=Nothing)
@@ -267,13 +267,13 @@ Public Class LoginDialog
 
             Dim isUsRegionStr As String = If(isUsRegion,
                                              "--us",
-                                             "")
+                                             String.Empty)
 
             ' Create a temporary file for the JSON output
             Dim sourceFileName As String = $"{Path.GetTempFileName()}.json"
             Dim startInfo As New ProcessStartInfo With {
                 .FileName = exePath,
-                .Arguments = $"{If(isUsRegion, "--us ", "")} --output {sourceFileName}",
+                .Arguments = $"{If(isUsRegion, "--us ", String.Empty)} --output {sourceFileName}",
                 .RedirectStandardOutput = True,
                 .RedirectStandardError = True,
                 .UseShellExecute = False}
@@ -329,7 +329,7 @@ Public Class LoginDialog
                 lastErrorMessage,
                 lastHttpStatusCode:=Me.Client.GetHttpStatusCode)
             If Client2.Auth_Error_Codes.Contains(value:=Me.Client.GetHttpStatusCode) Then
-                Me.PasswordTextBox.Text = ""
+                Me.PasswordTextBox.Text = String.Empty
                 Dim userRecord As CareLinkUserDataRecord = Nothing
                 If s_allUserSettingsData.TryGetValue(s_userName, userRecord) Then
                     s_allUserSettingsData.Remove(userRecord)
@@ -455,10 +455,10 @@ Public Class LoginDialog
                 Me.CountryComboBox.Text = userRecord.CountryCode.GetCountryFromCode
                 Me.CarePartnerCheckBox.Checked = userRecord.CareLinkPartner
             Else
-                Me.PasswordTextBox.Text = ""
+                Me.PasswordTextBox.Text = String.Empty
                 Me.RegionComboBox.SelectedIndex = 0
-                Me.PatientUserIDTextBox.Text = ""
-                Me.CountryComboBox.Text = ""
+                Me.PatientUserIDTextBox.Text = String.Empty
+                Me.CountryComboBox.Text = String.Empty
                 Me.CarePartnerCheckBox.Checked = False
             End If
         Catch ex As Exception
