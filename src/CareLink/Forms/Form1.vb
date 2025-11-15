@@ -3411,7 +3411,7 @@ Public Class Form1
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub SensorDaysLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
-
+        If PatientData Is Nothing Then Exit Sub
         Dim caption As String = $"Sensor will expire In {PatientData.SensorDurationHours} hours"
         If PatientData.CgmInfo.SensorProductModel?.Trim = "MMT-5120" Then
             _sensorLifeToolTip.SetToolTip(control:=Me.SensorDaysLeftLabel, Me.GetSensorTimeLeftMessage())
