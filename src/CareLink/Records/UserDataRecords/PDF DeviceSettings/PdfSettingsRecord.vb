@@ -73,7 +73,7 @@ Public Class PdfSettingsRecord
                 Dim table As PdfTable = kvp.Value
                 Dim tableHeader As String
                 Select Case True
-                    Case String.IsNullOrWhiteSpace(value:=itemKey)
+                    Case IsNullOrWhiteSpace(value:=itemKey)
                         Continue For
 
                     Case itemKey.StartsWith(value:=MaximumBasalRateHeader)

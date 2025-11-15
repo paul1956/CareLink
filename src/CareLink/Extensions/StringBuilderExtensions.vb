@@ -23,7 +23,7 @@ Friend Module StringBuilderExtensions
     ''' </returns>
     <Extension>
     Public Function TrimEnd(sb As StringBuilder, value As String) As StringBuilder
-        If sb Is Nothing OrElse sb.Length = 0 OrElse String.IsNullOrEmpty(value) Then
+        If sb Is Nothing OrElse sb.Length = 0 OrElse IsNullOrEmpty(value) Then
             Return sb
         End If
 

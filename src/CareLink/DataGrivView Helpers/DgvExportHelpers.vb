@@ -157,7 +157,7 @@ Friend Module DgvExportHelpers
                     Dim dgvCell As DataGridViewCell = dgv.Rows(index:=i).Cells(index)
                     Dim valueObject As Object = dgvCell.Value
                     Dim value As String = valueObject?.ToString
-                    If String.IsNullOrWhiteSpace(value) Then
+                    If IsNullOrWhiteSpace(value) Then
                         worksheet.Cell(row:=i + 2, column).Value = EmptyString
                         With worksheet.Cell(row:=i + 2, column).Style
                             Dim cellStyle As DataGridViewCellStyle = dgvCell.GetFormattedStyle()

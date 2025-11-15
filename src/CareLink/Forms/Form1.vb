@@ -1383,16 +1383,13 @@ Public Class Form1
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             Dim value As String = dgv.Columns(.Index).HeaderText
-            If String.IsNullOrWhiteSpace(value) Then
+            If IsNullOrWhiteSpace(value) Then
                 value = .DataPropertyName.Remove(s:="DgvCareLinkUsers")
             End If
             If value.ContainsNoCase(value:="DeleteRow") Then
                 value = EmptyString
             Else
-                If .Index > 0 AndAlso
-                    String.IsNullOrWhiteSpace(value:= .DataPropertyName) AndAlso
-                    String.IsNullOrWhiteSpace(value) Then
-
+                If .Index > 0 AndAlso IsNullOrWhiteSpace(value:= .DataPropertyName) AndAlso IsNullOrWhiteSpace(value) Then
                     .DataPropertyName = s_headerColumns(index:= .Index - 2)
                 End If
             End If
@@ -2570,7 +2567,7 @@ Public Class Form1
         Me.MenuStartLoadExceptionReport.Visible = AnyMatchingFiles(path, searchPattern)
 
         searchPattern = $"{s_userName}Settings.pdf"
-        Dim validUser As Boolean = String.IsNullOrWhiteSpace(s_userName)
+        Dim validUser As Boolean = IsNullOrWhiteSpace(s_userName)
         Dim userPdfExists As Boolean =
             Not (validUser OrElse Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern))
 
@@ -2630,9 +2627,9 @@ Public Class Form1
                     SetServerUpdateTimer(Start:=False)
                     If File.Exists(fileNameWithPath) Then
                         RecentData = New Dictionary(Of String, String)
-                        ExceptionHandlerDialog.reportNameWithPath = fileNameWithPath
+                        ExceptionHandlerDialog.ReportNameWithPath = fileNameWithPath
                         If ExceptionHandlerDialog.ShowDialog(owner:=Me) = DialogResult.OK Then
-                            ExceptionHandlerDialog.reportNameWithPath = EmptyString
+                            ExceptionHandlerDialog.ReportNameWithPath = EmptyString
                             Try
                                 Dim json As String = ExceptionHandlerDialog.LocalRawData
                                 PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
@@ -2651,7 +2648,7 @@ Public Class Form1
                             Me.Text = $"{SavedTitle} Using file {file}"
                             Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
                             Me.SetLastUpdateTime(
-                                msg:=epochDateTime.ToShortDateTimeString,
+                                msg:=epochDateTime.ToShortDateTime,
                                 suffixMessage:="from file",
                                 highLight:=False,
                                 isDaylightSavingTime:=epochDateTime.IsDaylightSavingTime)
@@ -2899,11 +2896,9 @@ Public Class Form1
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">The event data.</param>
     <DebuggerNonUserCode()>
-    Private Sub MenuOptions_DropDownOpening(sender As Object, e As EventArgs) _
-    Handles MenuOptions.DropDownOpening
-
-        Me.MenuOptionsEditPumpSettings.Enabled =
-            Debugger.IsAttached OrElse Not String.IsNullOrWhiteSpace(value:=CurrentUser?.UserName)
+    Private Sub MenuOptions_DropDownOpening(sender As Object, e As EventArgs) Handles MenuOptions.DropDownOpening
+        Me.MenuOptionsEditPumpSettings.Enabled = Debugger.IsAttached OrElse
+                                                 IsNotNullOrWhiteSpace(value:=CurrentUser?.UserName)
     End Sub
 
     ''' <summary>
@@ -4182,8 +4177,7 @@ Public Class Form1
                     Me.NotifyIcon1.Icon = CreateTextIcon(s, backColor)
                     Dim strBuilder As New StringBuilder(capacity:=100)
                     Dim dateSeparator As String = CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator
-                    strBuilder.AppendLine(
-                        value:=Date.Now().ToShortDateTimeString.Remove(s:=$"{dateSeparator}{Now.Year}"))
+                    strBuilder.AppendLine(value:=Date.Now().ToShortDateTime.Remove(s:=$"{dateSeparator}{Now.Year}"))
                     strBuilder.AppendLine(value:=$"Last SG {sgString} {BgUnits}")
                     If PatientData.ConduitInRange Then
                         If s_lastSgValue.IsSgInvalid Then
@@ -4213,8 +4207,7 @@ Public Class Form1
                     Else
                         Me.TrendValueLabel.Visible = False
                     End If
-                    strBuilder.Append(
-                        value:=$"Active ins. {PatientData.ActiveInsulin?.Amount:N3} U")
+                    strBuilder.Append(value:=$"Active ins. {PatientData.ActiveInsulin?.Amount:N3} U")
                     Me.NotifyIcon1.Text = strBuilder.ToString()
                     Me.NotifyIcon1.Visible = True
                     s_lastSgValue = sg

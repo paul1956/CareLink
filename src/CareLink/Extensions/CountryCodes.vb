@@ -407,7 +407,7 @@ Public Module RegionCountryLists
     ''' </returns>
     <Extension>
     Public Function GetRegionFromCode(countryCode As String) As String
-        If String.IsNullOrWhiteSpace(countryCode) Then
+        If IsNullOrWhiteSpace(countryCode) Then
             countryCode = "US"
         End If
         Return s_regionCountryList(GetCountryFromCode(countryCode))

@@ -167,7 +167,7 @@ Public Class SgMiniForm
     Friend Sub SetCurrentSgString(sgString As String, f As Single)
         _currentSgValue = f
         _normalizedSg = f
-        Me.SgTextBox.Text = If(String.IsNullOrWhiteSpace(value:=sgString) OrElse Single.IsNaN(f),
+        Me.SgTextBox.Text = If(IsNullOrWhiteSpace(value:=sgString) OrElse Single.IsNaN(f),
                                "---",
                                sgString)
         If NativeMmolL Then

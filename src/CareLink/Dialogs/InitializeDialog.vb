@@ -237,7 +237,7 @@ Public Class InitializeDialog
             .ValueMember = "Value"
             .Enabled = True
             Dim key As String = Me.CurrentUser.InsulinTypeName
-            .SelectedIndex = If(String.IsNullOrWhiteSpace(value:=key),
+            .SelectedIndex = If(IsNullOrWhiteSpace(value:=key),
                                 -1,
                                .Items.IndexOfKey(Of String, InsulinActivationRecord)(key))
             If _fromPdf Then

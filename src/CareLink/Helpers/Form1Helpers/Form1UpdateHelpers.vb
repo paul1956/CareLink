@@ -74,7 +74,7 @@ Friend Module Form1UpdateHelpers
             Dim messageButtons As MessageBoxButtons
             If PumpTimeZoneInfo Is Nothing Then
                 Dim text As String
-                If String.IsNullOrWhiteSpace(kvp.Value) Then
+                If IsNullOrWhiteSpace(kvp.Value) Then
                     text = $"Your pump appears To be off-line, " &
                         "some values will be wrong do you want to continue? " &
                         $"If you select OK '{TimeZoneInfo.Local.Id}' will be " &
@@ -162,17 +162,17 @@ Friend Module Form1UpdateHelpers
         extension As String,
         mustBeUnique As Boolean) As FileNameStruct
         Dim message As String
-        If String.IsNullOrWhiteSpace(baseName) Then
+        If IsNullOrWhiteSpace(baseName) Then
             message = $"'{NameOf(baseName)}' cannot be null or whitespace."
             Throw New ArgumentException(message, paramName:=NameOf(baseName))
         End If
 
-        If String.IsNullOrWhiteSpace(cultureName) Then
+        If IsNullOrWhiteSpace(cultureName) Then
             message = $"'{NameOf(cultureName)}' cannot be null or whitespace."
             Throw New ArgumentException(message, paramName:=NameOf(cultureName))
         End If
 
-        If String.IsNullOrWhiteSpace(extension) Then
+        If IsNullOrWhiteSpace(extension) Then
             message = $"'{NameOf(extension)}' cannot be null or whitespace."
             Throw New ArgumentException(message, paramName:=NameOf(extension))
         End If
@@ -218,7 +218,7 @@ Friend Module Form1UpdateHelpers
         listOfSummaryRecords As List(Of SummaryRecord))
 
         ' First try to parse the value as JSON object and enumerate properties.
-        If Not String.IsNullOrWhiteSpace(kvp.Value) Then
+        If IsNotNullOrWhiteSpace(kvp.Value) Then
             Try
                 Using doc As JsonDocument = JsonDocument.Parse(kvp.Value)
                     If doc.RootElement.ValueKind = JsonValueKind.Object Then
@@ -610,7 +610,7 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataEnum.basal)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
-                    s_basalList(index:=0) = If(String.IsNullOrWhiteSpace(kvp.Value),
+                    s_basalList(index:=0) = If(IsNullOrWhiteSpace(kvp.Value),
                                                New Basal,
                                                PatientData.Basal)
 

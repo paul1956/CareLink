@@ -324,8 +324,9 @@ Public Class TextMap
             errorTextId = $"{ERROR_TEXT_PREFIX_NGP}{internalEC}"
         End If
 
-        Return If(Not String.IsNullOrEmpty(value:=errorTextId) AndAlso
-            s_errorTextMap.TryGetValue(key:=errorTextId, value), value, Nothing)
+        Return If(IsNotNullOrEmpty(value:=errorTextId) AndAlso s_errorTextMap.TryGetValue(key:=errorTextId, value),
+                  value,
+                  Nothing)
     End Function
 
     ''' <summary>

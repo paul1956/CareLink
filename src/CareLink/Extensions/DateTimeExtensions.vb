@@ -56,7 +56,7 @@ Friend Module DateTimeExtensions
                     Dim formatList As New List(Of String) From {CurrentDateCulture.DateTimeFormat.FullDateTimePattern}
                     For Each item As CultureInfo In CultureInfoList
                         If formatList.Contains(item:=item.DateTimeFormat.FullDateTimePattern) OrElse
-                           String.IsNullOrWhiteSpace(value:=item.Name) OrElse
+                           IsNullOrWhiteSpace(value:=item.Name) OrElse
                            Not item.Name.Contains(value:="-"c) Then
 
                             Continue For
@@ -175,7 +175,7 @@ Friend Module DateTimeExtensions
     ''' <returns>UTC Date</returns>
     <Extension>
     Friend Function FromUnixTime(value As String) As Date
-        Return If(String.IsNullOrWhiteSpace(value),
+        Return If(IsNullOrWhiteSpace(value),
                   s_epochLocal,
                   value.ParseDoubleInvariant.FromUnixTime)
     End Function
@@ -361,7 +361,7 @@ Friend Module DateTimeExtensions
     '''  A <see langword="String"/> representing the date in "MM/dd/yyyy HH:mm:ss" format.
     ''' </returns>
     <Extension>
-    Public Function ToShortDateTimeString(dateValue As Date) As String
+    Public Function ToShortDateTime(dateValue As Date) As String
         Return $"{dateValue:d} {dateValue:T}"
     End Function
 
@@ -421,7 +421,7 @@ Friend Module DateTimeExtensions
     <Extension>
     Public Function TryParseDateStr(s As String) As Date
         Dim provider As IFormatProvider = CultureInfo.InvariantCulture
-        Return If(Not String.IsNullOrWhiteSpace(value:=s),
+        Return If(IsNotNullOrWhiteSpace(value:=s),
                   Date.ParseExact(s, format:="yyyy-MM-ddTHH:mm:ss", provider),
                   Nothing)
     End Function

@@ -60,7 +60,7 @@ Friend Module DgvColumnEventArgsExtensions
 
             .HeaderText = title.TrimEnd(value:=vbCrLf).ToString
             .DefaultCellStyle = cellStyle
-            If String.IsNullOrWhiteSpace(value:=caption) Then Return
+            If IsNullOrWhiteSpace(value:=caption) Then Return
             .HeaderText = caption.Remove(s:="_")
             If .DataPropertyName.ContainsNoCase(value:="message") Then
                 .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill

@@ -198,7 +198,7 @@ Public Module PDFParser
                         key = "Calibration Reminder"
                     Case value.StartsWith(value:="Block Mode")
                         key = "Block Mode"
-                    Case String.IsNullOrWhiteSpace(value)
+                    Case IsNullOrWhiteSpace(value)
                         Continue For
                     Case Else
                         key = value

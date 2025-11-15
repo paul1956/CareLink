@@ -5,7 +5,7 @@
 Public Class InsulinSensitivityRecord
 
     Public Sub New(r As StringTable.Row)
-        If String.IsNullOrWhiteSpace(value:=r.Columns(index:=0)) Then
+        If IsNullOrWhiteSpace(value:=r.Columns(index:=0)) Then
             Exit Sub
         End If
         Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries

@@ -352,9 +352,9 @@ Friend Module SpeechSupport
 
             Form1.Cursor = Cursors.WaitCursor
             Application.DoEvents()
-            If String.IsNullOrWhiteSpace(s_speechUserName) Then
+            If IsNullOrWhiteSpace(s_speechUserName) Then
                 Dim textToSpeak As String = $"Speech recognition enabled for {PatientData.FirstName}"
-                If String.IsNullOrWhiteSpace(value:=oldUserName) Then
+                If IsNullOrWhiteSpace(value:=oldUserName) Then
                     textToSpeak &= " for a list of commands say, CareLink what can I say"
                 End If
 
