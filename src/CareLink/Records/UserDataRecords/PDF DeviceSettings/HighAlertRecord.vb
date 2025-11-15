@@ -27,12 +27,12 @@ Public Class HighAlertRecord
         End If
 
         Me.HighLimit = s1(1).ParseSingleInvariant
-        If Not String.IsNullOrWhiteSpace(value:=row.Columns(index:=1)) Then
+        If IsNotNullOrWhiteSpace(value:=row.Columns(index:=1)) Then
             Me.AlertBeforeHigh = True
             Me.TimeBeforeHigh &= " *Verify!"
         End If
-        Me.AlertOnHigh = Not String.IsNullOrWhiteSpace(value:=row.Columns(index:=2))
-        If String.IsNullOrWhiteSpace(value:=row.Columns(index:=3)) Then
+        Me.AlertOnHigh = IsNotNullOrWhiteSpace(value:=row.Columns(index:=2))
+        If IsNullOrWhiteSpace(value:=row.Columns(index:=3)) Then
             Me.RiseAlert = False
         Else
             Me.RiseAlert = True

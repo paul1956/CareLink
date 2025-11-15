@@ -321,15 +321,15 @@ Friend Class DataGridViewNumericUpDownEditingControl
             Dim decimalSeparator As String = numberFormatInfo.NumberDecimalSeparator
             Dim groupSeparator As String = numberFormatInfo.NumberGroupSeparator
             Dim negativeSign As String = numberFormatInfo.NegativeSign
-            If Not String.IsNullOrEmpty(decimalSeparator) AndAlso decimalSeparator.Length = 1 Then
+            If IsNotNullOrEmpty(decimalSeparator) AndAlso decimalSeparator.Length = 1 Then
                 notifyValueChange = decimalSeparator(index:=0) = e.KeyChar
             End If
-            Dim validGroupSeparator As Boolean = Not String.IsNullOrEmpty(value:=groupSeparator)
+            Dim validGroupSeparator As Boolean = IsNotNullOrEmpty(value:=groupSeparator)
             If Not notifyValueChange AndAlso validGroupSeparator AndAlso groupSeparator.Length = 1 Then
                 notifyValueChange = groupSeparator(index:=0) = e.KeyChar
             End If
 
-            Dim validnegativeSign As Boolean = Not String.IsNullOrEmpty(value:=negativeSign)
+            Dim validnegativeSign As Boolean = IsNotNullOrEmpty(value:=negativeSign)
             If Not notifyValueChange AndAlso validnegativeSign AndAlso negativeSign.Length = 1 Then
                 notifyValueChange = negativeSign(index:=0) = e.KeyChar
             End If

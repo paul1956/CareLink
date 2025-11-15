@@ -330,7 +330,7 @@ Friend Module SummaryHelpers
                             End If
                         Else
                             Dim stackFrame As StackFrame
-                            If Debugger.IsAttached AndAlso Not String.IsNullOrWhiteSpace(kvp.Value) Then
+                            If Debugger.IsAttached AndAlso IsNotNullOrWhiteSpace(kvp.Value) Then
                                 stackFrame = New StackFrame(skipFrames:=0, needFileInfo:=True)
                                 MsgBox(
                                     heading:=$"{kvp.Value} is unknown Notification Messages",
@@ -365,7 +365,7 @@ Friend Module SummaryHelpers
                         item = New SummaryRecord(
                                     recordNumber,
                                     kvp,
-                                    message:=kvp.Value.ParseDate(key).ToShortDateTimeString)
+                                    message:=kvp.Value.ParseDate(key).ToShortDateTime)
                     Case "additionalInfo"
                         HandleComplexItems(
                             kvp,

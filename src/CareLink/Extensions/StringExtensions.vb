@@ -27,7 +27,7 @@ Public Module StringExtensions
     ''' </returns>
     <Extension>
     Public Function CleanSpaces(input As String) As String
-        Return If(String.IsNullOrWhiteSpace(value:=input),
+        Return If(IsNullOrWhiteSpace(value:=input),
                   String.Empty,
                   Regex.Replace(input, pattern:="\s+", replacement:=" ").Trim)
     End Function
@@ -108,6 +108,57 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
+    '''  Indicates whether the specified string is <see langword="nothing"/> or an empty string("").
+    ''' </summary>
+    ''' <param name="value">The string to check.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the value parameter is <see langword="nothing"/> or an empty string("");
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    Public Function IsNullOrEmpty(value As String) As Boolean
+        Return String.IsNullOrEmpty(value)
+    End Function
+
+    ''' <summary>
+    '''  Indicates whether the specified string is <see langword="Not"/>
+    '''  <see langword="nothing"/> or an empty string("").
+    ''' </summary>
+    ''' <param name="value">The string to check.</param>
+    ''' <returns>
+    '''  <see langword="False"/> if the value parameter is <see langword="nothing"/> or an empty string("");
+    '''  otherwise, <see langword="True"/>.
+    ''' </returns>
+    Public Function IsNotNullOrEmpty(value As String) As Boolean
+        Return Not String.IsNullOrEmpty(value)
+    End Function
+
+    ''' <summary>
+    '''  Indicates whether the specified string is <see langword="nothing"/> or an empty string("").
+    ''' </summary>
+    ''' <param name="value">The string to check.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the value parameter is <see langword="nothing"/> or <see cref="String.Empty"/>
+    '''  or if the value consists exclusively of white-space characters; otherwise, <see langword="False"/>.
+    ''' </returns>
+    Public Function IsNullOrWhiteSpace(value As String) As Boolean
+        Return String.IsNullOrWhiteSpace(value)
+    End Function
+
+    ''' <summary>
+    '''  Indicates whether the specified string is <see langword="Not"/>
+    '''  <see langword="nothing"/> or an empty or consists only of non-whitespace characters.
+    ''' </summary>
+    ''' <param name="value">The string to check.</param>
+    ''' <returns>
+    '''  <see langword="False"/> if the value parameter is <see langword="nothing"/> or <see cref="String.Empty"/>
+    '''  or if the value consists exclusively of white-space characters; otherwise, <see langword="True"/>.
+    ''' </returns>
+    Public Function IsNotNullOrWhiteSpace(value As String) As Boolean
+        Return Not String.IsNullOrWhiteSpace(value)
+    End Function
+
+
+    ''' <summary>
     '''  Converts a string where the first letter of the string is not capitalized
     ''' </summary>
     ''' <param name="value">A <see langword="String"/> like THIS_IS A TITLE</param>
@@ -116,7 +167,7 @@ Public Module StringExtensions
     ''' <example>doNotCapitalizedFirstLetterString</example>
     <Extension()>
     Public Function ToLowerCamelCase(value As String) As String
-        If String.IsNullOrWhiteSpace(value) Then
+        If IsNullOrWhiteSpace(value) Then
             Return String.Empty
         End If
 
@@ -185,7 +236,7 @@ Public Module StringExtensions
     ''' <returns>A title-cased string.</returns>
     <Extension()>
     Public Function ToTitle(value As String, Optional separateDigits As Boolean = False) As String
-        If String.IsNullOrWhiteSpace(value) Then
+        If IsNullOrWhiteSpace(value) Then
             Return String.Empty
         End If
 
@@ -239,7 +290,7 @@ Public Module StringExtensions
     ''' <returns>A title-cased string with spaces between words.</returns>
     <Extension()>
     Public Function ToTitleCase(value As String, Optional separateNumbers As Boolean = True) As String
-        If String.IsNullOrWhiteSpace(value) Then
+        If IsNullOrWhiteSpace(value) Then
             Return String.Empty
         End If
         If value.ContainsNoCase(value:="MmolL") Then

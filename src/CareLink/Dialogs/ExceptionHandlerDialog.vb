@@ -26,7 +26,7 @@ Public Class ExceptionHandlerDialog
     ''' <summary>
     '''  Gets or sets the full path to the generated error report file.
     ''' </summary>
-    Public Property reportNameWithPath As String
+    Public Property ReportNameWithPath As String
 
     ''' <summary>
     '''  Gets or sets the unhandled exception event arguments.
@@ -83,8 +83,8 @@ Public Class ExceptionHandlerDialog
     ''' <param name="e">The event arguments.</param>
     ''' <remarks>This method is called when the Cancel button is clicked.</remarks>
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
-        If Not String.IsNullOrWhiteSpace(value:=Me.reportNameWithPath) Then
-            IO.File.Delete(path:=Me.reportNameWithPath)
+        If IsNotNullOrWhiteSpace(value:=Me.ReportNameWithPath) Then
+            IO.File.Delete(path:=Me.ReportNameWithPath)
         End If
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
@@ -105,7 +105,7 @@ Public Class ExceptionHandlerDialog
             productInformation:=New ProductHeaderValue(name:="CareLink.Issues"),
             baseAddress:=New Uri(uriString:=GitHubCareLinkUrl))
         Dim fontBold As New Font(prototype:=rtb.Font, newStyle:=FontStyle.Bold)
-        If String.IsNullOrWhiteSpace(value:=Me.reportNameWithPath) Then
+        If IsNullOrWhiteSpace(value:=Me.ReportNameWithPath) Then
             ' Create error report and issue
             Me.exTextBox.Text = Me.UnhandledException.Exception.Message
             Me.traceTextBox.Text = TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
@@ -135,18 +135,18 @@ Public Class ExceptionHandlerDialog
                 stackTraceText:=Me.traceTextBox.Text,
                 uniqueFileName.withPath)
         Else
-            CurrentDateCulture = Me.reportNameWithPath.ExtractCulture(FixedPart:=BaseErrorReportName)
+            CurrentDateCulture = Me.ReportNameWithPath.ExtractCulture(FixedPart:=BaseErrorReportName)
             If CurrentDateCulture Is Nothing Then
                 Me.Close()
                 Exit Sub
             End If
             rtb.Text = $"Clicking OK will rerun the data file that caused the error{vbCrLf}"
-            Dim path As String = IO.Path.GetFileName(path:=Me.reportNameWithPath)
-            Dim fileLink As String = $"{path}: file://{Me.reportNameWithPath}"
+            Dim path As String = IO.Path.GetFileName(path:=Me.ReportNameWithPath)
+            Dim fileLink As String = $"{path}: file://{Me.ReportNameWithPath}"
             AppendTextNewFont(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
             AppendTextNewFont(rtb, text:="and stored in", newFont, padRight:=0)
             AppendTextNewFont(rtb, text:=GetProjectDataDirectory(), newFont:=fontBold, padRight:=0)
-            Me.LocalRawData = Me.ReportFile(Me.exTextBox, Me.traceTextBox, Me.reportNameWithPath)
+            Me.LocalRawData = Me.ReportFile(Me.exTextBox, Me.traceTextBox, Me.ReportNameWithPath)
         End If
     End Sub
 
@@ -196,7 +196,7 @@ Public Class ExceptionHandlerDialog
     Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
         Me.OK.Enabled = False
         Me.Cancel.Enabled = False
-        If String.IsNullOrWhiteSpace(value:=Me.reportNameWithPath) Then
+        If IsNullOrWhiteSpace(value:=Me.ReportNameWithPath) Then
             ' This branch creates a new report and will exit
             ' program upon return
 

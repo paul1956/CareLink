@@ -71,7 +71,7 @@ Friend Module LoginHelpers
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path)
                 owner.SetLastUpdateTime(
-                    msg:=fileDate.ToShortDateTimeString,
+                    msg:=fileDate.ToShortDateTime,
                     suffixMessage:="from file",
                     highLight:=False,
                     isDaylightSavingTime:=fileDate.IsDaylightSavingTime)
@@ -190,7 +190,7 @@ Friend Module LoginHelpers
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path:=lastDownloadFileWithPath)
                 owner.SetLastUpdateTime(
-                    msg:=fileDate.ToShortDateTimeString,
+                    msg:=fileDate.ToShortDateTime,
                     suffixMessage:="from file",
                     highLight:=False,
                     isDaylightSavingTime:=fileDate.IsDaylightSavingTime)
@@ -260,7 +260,7 @@ Friend Module LoginHelpers
         isDaylightSavingTime? As Boolean)
 
         With form1.LastUpdateTimeToolStripStatusLabel
-            If Not String.IsNullOrWhiteSpace(msg) Then
+            If IsNotNullOrWhiteSpace(msg) Then
                 .Text = $"{msg}"
             End If
             If highLight Then
@@ -356,7 +356,7 @@ Friend Module LoginHelpers
             If CurrentUser.InsulinRealAit = 0 Then
                 CurrentUser.InsulinRealAit = s_insulinTypes.Values(index:=0).AitHours
             End If
-            If String.IsNullOrEmpty(CurrentUser.InsulinTypeName) Then
+            If IsNullOrEmpty(CurrentUser.InsulinTypeName) Then
                 CurrentUser.InsulinTypeName = s_insulinTypes.Keys(index:=0)
             End If
 

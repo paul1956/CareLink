@@ -112,7 +112,7 @@ Public Class CareLinkUserDataList
         Get
             Const functionName As String = NameOf(CareLinkUserDataList) & "." & NameOf(CareLinkUserDataList.Item)
             Dim message As String
-            If String.IsNullOrWhiteSpace(value:=itemName) Then
+            If IsNullOrWhiteSpace(value:=itemName) Then
                 message = $"Key may not be Nothing, in {functionName}"
                 Throw New KeyNotFoundException(message)
             End If
@@ -243,7 +243,7 @@ Public Class CareLinkUserDataList
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function ContainsKey(key As String) As Boolean
-        If String.IsNullOrWhiteSpace(value:=key) Then
+        If IsNullOrWhiteSpace(value:=key) Then
             Return False
         End If
 

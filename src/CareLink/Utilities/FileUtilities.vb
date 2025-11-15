@@ -56,7 +56,7 @@ Friend Module FileUtilities
             userName As String,
             Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As String
 
-        If String.IsNullOrWhiteSpace(tokenBaseFileName) Then
+        If IsNullOrWhiteSpace(tokenBaseFileName) Then
             Throw New ArgumentException(
                 message:=$"'{NameOf(tokenBaseFileName)}' cannot be null or whitespace.",
                 paramName:=NameOf(tokenBaseFileName))

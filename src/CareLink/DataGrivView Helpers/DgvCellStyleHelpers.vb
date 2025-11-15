@@ -102,7 +102,7 @@ Public Module DgvCellStyleHelpers
         Optional emIncrease As Integer = 0)
 
         Dim value As String = Convert.ToString(e.Value)
-        If String.IsNullOrEmpty(value) Then
+        If IsNullOrEmpty(value) Then
             e.Value = String.Empty
             e.FormattingApplied = True
             Return
@@ -351,9 +351,9 @@ Public Module DgvCellStyleHelpers
     Friend Function HideColumn(Of T)(item As String) As Boolean
         Dim key As Type = GetType(T)
         Return s_filterJsonData AndAlso
-            Not String.IsNullOrWhiteSpace(value:=item) AndAlso
-            s_columnsToHide.ContainsKey(key) AndAlso
-            s_columnsToHide(key).Contains(item)
+               IsNotNullOrWhiteSpace(value:=item) AndAlso
+               s_columnsToHide.ContainsKey(key) AndAlso
+               s_columnsToHide(key).Contains(item)
     End Function
 
     ''' <summary>
@@ -367,7 +367,7 @@ Public Module DgvCellStyleHelpers
     Friend Sub HideDataGridViewColumnsByName(Of T)(ByRef dgv As DataGridView)
         Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
         For i As Integer = 0 To lastColumnIndex
-            If i > 0 AndAlso String.IsNullOrWhiteSpace(value:=dgv.Columns(index:=i).DataPropertyName) Then
+            If i > 0 AndAlso IsNullOrWhiteSpace(value:=dgv.Columns(index:=i).DataPropertyName) Then
                 Stop
             End If
             Dim item As String = dgv.Columns(index:=i).DataPropertyName

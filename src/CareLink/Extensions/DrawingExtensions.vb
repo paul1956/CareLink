@@ -71,7 +71,7 @@ Friend Module DrawingExtensions
     ''' <param name="backColor">The background color of the icon.</param>
     ''' <returns>An <see cref="Icon"/> containing the text.</returns>
     Public Function CreateTextIcon(s As String, backColor As Color) As Icon
-        Dim brush As Brush = New SolidBrush(color:=backColor.ContrastingColor())
+        Dim brush As New SolidBrush(color:=backColor.ContrastingColor())
         Dim bitmapText As New Bitmap(width:=16, height:=16)
         Using g As Graphics = Graphics.FromImage(bitmapText)
             g.Clear(color:=backColor)

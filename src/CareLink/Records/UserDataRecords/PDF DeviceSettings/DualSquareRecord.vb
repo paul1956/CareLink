@@ -6,7 +6,7 @@
 Public Class DualSquareRecord
 
     Public Sub New(line As String)
-        If String.IsNullOrWhiteSpace(value:=line) Then
+        If IsNullOrWhiteSpace(value:=line) Then
             Me.Dual = "Off"
             Me.Square = "Off"
             Exit Sub

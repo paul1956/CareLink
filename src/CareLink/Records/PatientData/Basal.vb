@@ -101,11 +101,11 @@ Public Class Basal
     ''' </returns>
     Public Function GetBasalType() As String
         Select Case True
-            Case Not String.IsNullOrWhiteSpace(Me.ActiveBasalPattern)
+            Case IsNotNullOrWhiteSpace(Me.ActiveBasalPattern)
                 Return Me.ActiveBasalPattern
-            Case Not String.IsNullOrWhiteSpace(Me.presetTempName)
+            Case IsNotNullOrWhiteSpace(Me.presetTempName)
                 Return Me.presetTempName
-            Case Not String.IsNullOrWhiteSpace(Me.presetTempName)
+            Case IsNotNullOrWhiteSpace(Me.tempBasalType)
                 Return Me.tempBasalType
             Case Else
                 Return "MANUAL_BASAL_DELIVERY"

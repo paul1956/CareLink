@@ -418,7 +418,7 @@ Public Class Client2
             configJsonElement = GetConfigElement(httpClient:=_httpClient, payload.Country)
             Me.Config = configJsonElement.ConvertElementToDictionary()
             Dim json As String = Me.GetUserString(config:=configJsonElement, tokenData:=_tokenDataElement)
-            If String.IsNullOrWhiteSpace(value:=json) Then
+            If IsNullOrWhiteSpace(value:=json) Then
                 Throw New UnauthorizedAccessException
             End If
             _userElementDictionary = JsonSerializer.Deserialize(Of JsonElement)(json).ConvertElementToDictionary()

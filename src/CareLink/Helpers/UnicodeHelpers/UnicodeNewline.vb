@@ -102,7 +102,7 @@ Public Module UnicodeNewline
     ''' </remarks>
     <Extension>
     Friend Function IsNewLine(str As String) As Boolean
-        If String.IsNullOrEmpty(str) Then
+        If IsNullOrEmpty(str) Then
             Return False
         End If
         Dim ch As Char = str.Chars(index:=0)
