@@ -10,7 +10,6 @@ Imports System.Text.Json
 '''  for supported countries and regions.
 ''' </summary>
 Public Module Discover
-
     ''' <summary>
     '''  Retrieves the configuration JSON element for a specific country
     '''  from the provided JSON data.
@@ -27,10 +26,7 @@ Public Module Discover
     '''  Thrown if the country code is not supported or if the configuration
     '''  cannot be found.
     ''' </exception>
-    Private Function GetConfigJson(
-        country As String,
-        jsonElementData As JsonElement) As JsonElement
-
+    Private Function GetConfigJson(country As String, jsonElementData As JsonElement) As JsonElement
         Dim config As JsonElement
         Dim region As JsonElement
         Dim arrayEnumerator As JsonElement.ArrayEnumerator =
@@ -84,9 +80,7 @@ Public Module Discover
     '''  Thrown if the country code is not supported or if configuration
     '''  data cannot be retrieved.
     ''' </exception>
-    Public Function GetConfigElement(
-        httpClient As HttpClient,
-        country As String) As JsonElement
+    Public Function GetConfigElement(httpClient As HttpClient, country As String) As JsonElement
 
         Debug.WriteLine(NameOf(GetConfigElement))
         Dim isUsRegion As Boolean = country.EqualsNoCase(b:="US")
@@ -115,26 +109,70 @@ Public Module Discover
     End Function
 
     ''' <summary>
-    '''  Downloads and decodes the discovery configuration data for a given country.
+    ''' Downloads and decodes the discovery configuration data for a given country,
+    ''' capturing the HTTP status code and any error messages.
     ''' </summary>
-    ''' <param name="country">The country code to retrieve discovery data for.</param>
+    ''' <param name="lastErrorMessage">Output parameter to receive the last error message if any.</param>
+    ''' <param name="httpStatusCode">Output parameter to receive the HTTP status code of the response.</param>
     ''' <returns>
-    '''  A <see cref="ConfigRecord"/> containing the configuration data
-    '''  for the specified country,
-    '''  or <see langword="Nothing"/> if an error occurs.
+    ''' A <see cref="ConfigRecord"/> containing the configuration data for the specified country,
+    ''' or <see langword="Nothing"/> if an error occurs.
     ''' </returns>
-    Public Function GetDiscoveryData() As ConfigRecord
+    Public Function GetDiscoveryData(ByRef lastErrorMessage As String, ByRef httpStatusCode As Integer) As ConfigRecord
+        Dim url As String = s_discoverUrl(If(s_countryCode.EqualsNoCase("US"), "US", "EU"))
+        httpStatusCode = 0 ' Default value meaning no response received yet
         Try
-            Dim region As String = If(s_countryCode.EqualsNoCase("US"),
-                                      "US",
-                                      "EU")
+            Using client As New HttpClient()
+                Dim response As HttpResponseMessage = client.GetAsync(url).Result
+                httpStatusCode = CType(response.StatusCode, Integer)
 
-            Return DownloadAndDecodeJson(Of ConfigRecord)(url:=s_discoverUrl(region))
+                If Not response.IsSuccessStatusCode Then
+                    lastErrorMessage = $"HTTP request failed: {response.StatusCode} - {response.ReasonPhrase}"
+                    Debug.WriteLine(lastErrorMessage)
+                    Return Nothing
+                End If
+
+                Dim json As String = response.Content.ReadAsStringAsync().Result
+                Dim result As ConfigRecord =
+                    JsonSerializer.Deserialize(Of ConfigRecord)(json, options:=s_jsonDeserializerOptions)
+                Return result
+            End Using
+
+        Catch ex As AggregateException
+            ' AggregateException is common for .Result on async methods when faulted
+            Dim messages As New List(Of String)
+
+            If ex.InnerExceptions.Count = 1 Then
+                lastErrorMessage = ex.InnerExceptions(0).Message
+                If lastErrorMessage.Contains("No such host is known") Then
+                    httpStatusCode = 1
+                End If
+            Else
+                For Each innerEx As Exception In ex.InnerExceptions
+                    messages.Add(innerEx.Message)
+                Next
+                lastErrorMessage = $"Multiple errors: {String.Join("; ", messages)}"
+            End If
+            Debug.WriteLine(lastErrorMessage)
+
         Catch ex As HttpRequestException
-            Debug.WriteLine(message:=$"Error downloading JSON: {ex.Message}")
+            lastErrorMessage = $"HTTP request error: {ex.Message}"
+            Debug.WriteLine(lastErrorMessage)
+
+        Catch ex As TaskCanceledException
+            lastErrorMessage = "The request timed out."
+            Debug.WriteLine(lastErrorMessage)
+
         Catch ex As JsonException
-            Debug.WriteLine(message:=$"Error decoding JSON: {ex.Message}")
+            lastErrorMessage = $"JSON deserialization error: {ex.Message}"
+            Debug.WriteLine(lastErrorMessage)
+
+        Catch ex As Exception
+            lastErrorMessage = $"Unexpected error: {ex.Message}"
+            Debug.WriteLine(lastErrorMessage)
+            Stop
         End Try
+
         Return Nothing
     End Function
 

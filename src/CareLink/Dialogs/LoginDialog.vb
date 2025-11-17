@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
+Imports System.Reflection.Metadata
 
 Public Class LoginDialog
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
@@ -40,7 +41,7 @@ Public Class LoginDialog
 
         If hasErrors Then
             loginStatus.ForeColor = Color.Red
-            loginStatus.Text = "Unknown Login Issue"
+            loginStatus.Text = If(lastErrorMessage, "Unknown Login Issue")
             My.Settings.AutoLogin = False
         Else
             loginStatus.ForeColor = Color.Black
@@ -238,59 +239,60 @@ Public Class LoginDialog
         s_password = Me.PasswordTextBox.Text
         s_countryCode = Me.CountryComboBox.SelectedValue.ToString
 
-        Me.ClientDiscover = GetDiscoveryData()
-        Me.Ok_Button.Enabled = False
+        Dim lastErrorMessage As String = String.Empty
+        Dim lastHttpStatusCode As Integer = 0
+        Me.ClientDiscover = GetDiscoveryData(lastErrorMessage, lastHttpStatusCode)
+        If Me.ClientDiscover IsNot Nothing Then
+            Me.Ok_Button.Enabled = False
+            Dim tokenData As TokenData = ReadTokenDataFile(s_userName)
+            If tokenData Is Nothing Then
+                ' Get the embedded EXE as a byte array
+                Dim buffer() As Byte = My.Resources.carelink_carepartner_api_login
+                ' Create a temporary file for the EXE
+                Dim exePath As String = $"{Path.GetTempFileName()}.exe"
+                ' Write the EXE to the temporary file
+                Using fs As New FileStream(path:=exePath, mode:=FileMode.Create)
+                    fs.Write(buffer, offset:=0, count:=buffer.Length)
+                    fs.Flush()
+                End Using
 
-        Dim tokenData As TokenData = ReadTokenDataFile(s_userName)
+                Dim isUsRegion As Boolean = Me.RegionComboBox.SelectedValue.ToString = "North America"
+                Dim isUsRegionStr As String = If(isUsRegion,
+                                                 "--us",
+                                                 String.Empty)
 
-        If tokenData Is Nothing Then
-            ' Get the embedded EXE as a byte array
-            Dim buffer() As Byte = My.Resources.carelink_carepartner_api_login
-            ' Create a temporary file for the EXE
-            Dim exePath As String = $"{Path.GetTempFileName()}.exe"
-            ' Write the EXE to the temporary file
-            Using fs As New FileStream(path:=exePath, mode:=FileMode.Create)
-                fs.Write(buffer, offset:=0, count:=buffer.Length)
-                fs.Flush()
-            End Using
+                ' Create a temporary file for the JSON output
+                Dim sourceFileName As String = $"{Path.GetTempFileName()}.json"
+                Dim startInfo As New ProcessStartInfo With {
+                    .FileName = exePath,
+                    .Arguments = $"{If(isUsRegion, "--us ", String.Empty)} --output {sourceFileName}",
+                    .RedirectStandardOutput = True,
+                    .RedirectStandardError = True,
+                    .UseShellExecute = False}
 
-            Dim isUsRegion As Boolean = Me.RegionComboBox.SelectedValue.ToString = "North America"
+                Dim process As New Process With {.StartInfo = startInfo}
+                process.Start()
 
-            Dim isUsRegionStr As String = If(isUsRegion,
-                                             "--us",
-                                             String.Empty)
+                Dim outputText As String = process.StandardOutput.ReadToEnd()
+                Dim standardError As String = process.StandardError.ReadToEnd()
+                process.WaitForExit()
 
-            ' Create a temporary file for the JSON output
-            Dim sourceFileName As String = $"{Path.GetTempFileName()}.json"
-            Dim startInfo As New ProcessStartInfo With {
-                .FileName = exePath,
-                .Arguments = $"{If(isUsRegion, "--us ", String.Empty)} --output {sourceFileName}",
-                .RedirectStandardOutput = True,
-                .RedirectStandardError = True,
-                .UseShellExecute = False}
-
-            Dim process As New Process With {.StartInfo = startInfo}
-            process.Start()
-
-            Dim outputText As String = process.StandardOutput.ReadToEnd()
-            Dim standardError As String = process.StandardError.ReadToEnd()
-            process.WaitForExit()
-
-            If process.ExitCode = 0 Then
-                Dim destFileName As String = GetLoginDataFileName(s_userName)
-                If File.Exists(path:=destFileName) Then
-                    File.Delete(path:=destFileName)
+                If process.ExitCode = 0 Then
+                    Dim destFileName As String = GetLoginDataFileName(s_userName)
+                    If File.Exists(path:=destFileName) Then
+                        File.Delete(path:=destFileName)
+                    End If
+                    File.Move(sourceFileName, destFileName)
                 End If
-                File.Move(sourceFileName, destFileName)
+                File.Delete(exePath)
             End If
-            File.Delete($"{Path.GetTempFileName()}.exe")
+
+            'DoLogin(_httpClient, s_userName, isUsRegion)
+            Me.Client = New Client2()
+            Me.Client.Init()
+
+            lastErrorMessage = Me.Client.GetRecentData()
         End If
-
-        'DoLogin(_httpClient, s_userName, isUsRegion)
-        Me.Client = New Client2()
-        Me.Client.Init()
-
-        Dim lastErrorMessage As String = Me.Client.GetRecentData()
         If IsNullOrWhiteSpace(lastErrorMessage) Then
             s_lastMedicalDeviceDataUpdateServerEpoch = 0
             ReportLoginStatus(Me.LoginStatus, hasErrors:=False, lastErrorMessage)
@@ -314,12 +316,12 @@ Public Class LoginDialog
             Me.DialogResult = DialogResult.OK
             Me.Hide()
         Else
-            ReportLoginStatus(
-                Me.LoginStatus,
-                hasErrors:=True,
-                lastErrorMessage,
-                lastHttpStatusCode:=Me.Client.GetHttpStatusCode)
-            If Client2.Auth_Error_Codes.Contains(value:=Me.Client.GetHttpStatusCode) Then
+            lastHttpStatusCode = If(lastHttpStatusCode <> 0,
+                                    lastHttpStatusCode,
+                                    Me.Client.GetHttpStatusCode)
+            Me.LoginStatus.Text = lastErrorMessage
+            ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMessage, lastHttpStatusCode)
+            If Client2.Auth_Error_Codes.Contains(value:=lastHttpStatusCode) Then
                 Me.PasswordTextBox.Text = String.Empty
                 Dim userRecord As CareLinkUserDataRecord = Nothing
                 If s_allUserSettingsData.TryGetValue(s_userName, userRecord) Then
@@ -328,13 +330,22 @@ Public Class LoginDialog
             End If
 
             Dim networkDownMessage As String = If(NetworkUnavailable(),
-                                                  "due to network being unavailable",
-                                                  $"Response Code = {Me.Client.GetHttpStatusCode}")
+                                                  "Due to network being unavailable",
+                                                  $"Network unavailable Response Code = {lastHttpStatusCode}")
 
-            Dim heading As String = $"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!"
-            Const buttonStyle As MsgBoxStyle = MsgBoxStyle.AbortRetryIgnore Or
-                                               MsgBoxStyle.DefaultButton2 Or
-                                               MsgBoxStyle.Question
+            Dim heading As String
+
+            Dim buttonsAvailable As MsgBoxStyle
+            Dim buttonStyle As MsgBoxStyle
+            If lastHttpStatusCode <> 1 Then
+                buttonsAvailable = MsgBoxStyle.AbortRetryIgnore
+                buttonStyle = buttonsAvailable Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question
+                heading = $"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!"
+            Else
+                buttonsAvailable = MsgBoxStyle.Critical
+                buttonStyle = buttonsAvailable Or MsgBoxStyle.DefaultButton1 Or MsgBoxStyle.Critical
+                heading = $"Network down?{vbCrLf}Ok, will exit program!"
+            End If
 
             Const title As String = "Login Failed"
             Dim msgBoxResult As MsgBoxResult = MsgBox(heading, prompt:=networkDownMessage, buttonStyle, title)
@@ -346,6 +357,10 @@ Public Class LoginDialog
                     Me.DialogResult = DialogResult.Ignore
                 Case MsgBoxResult.Retry
                     Me.DialogResult = DialogResult.Retry
+                Case MsgBoxResult.Ok
+                    Me.DialogResult = DialogResult.OK
+                Case MsgBoxResult.Cancel
+                    Me.DialogResult = DialogResult.Cancel
             End Select
         End If
         Me.Cancel_Button.Enabled = True

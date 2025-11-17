@@ -2638,8 +2638,7 @@ Public Class Form1
                                 Me.TabControlPage1.Visible = True
                             Catch ex As Exception
                                 Dim str As String = ex.DecodeException()
-                                MessageBox.Show(
-                                    text:=$"Error reading data file. Original error: {str}")
+                                MessageBox.Show(text:=$"Error reading data file. Original error: {str}")
                             End Try
                             Const fuzzy As Boolean = True
                             CurrentDateCulture = openFileDialog1.FileName.ExtractCulture(FixedPart:="CareLink", fuzzy)
@@ -2647,11 +2646,8 @@ Public Class Form1
                             Dim file As String = Path.GetFileName(fileNameWithPath)
                             Me.Text = $"{SavedTitle} Using file {file}"
                             Dim epochDateTime As Date = s_lastMedicalDeviceDataUpdateServerEpoch.Epoch2PumpDateTime
-                            Me.SetLastUpdateTime(
-                                msg:=epochDateTime.ToShortDateTime,
-                                suffixMessage:="from file",
-                                highLight:=False,
-                                isDaylightSavingTime:=epochDateTime.IsDaylightSavingTime)
+                            Dim msg As String = epochDateTime.ToShortDateTime
+                            Me.SetLastUpdateTime(msg, suffixMessage:="from file", epochDateTime.IsDaylightSavingTime)
                             SetUpCareLinkUser()
 
                             Dim subName As String = NameOf(UpdateAllTabPages)
@@ -2719,10 +2715,7 @@ Public Class Form1
                 Application.DoEvents()
 
                 If pdfSettingsRecord.IsValid Then
-                    File.Move(
-                        sourceFileName:=openFileDialog1.FileName,
-                        destFileName:=GetUserPdfPath(),
-                        overwrite:=True)
+                    File.Move(sourceFileName:=openFileDialog1.FileName, destFileName:=GetUserPdfPath(), overwrite:=True)
                     Exit Sub
                 Else
                     MsgBox(
@@ -3638,17 +3631,9 @@ Public Class Form1
             Case PowerModes.Suspend
                 SetServerUpdateTimer(Start:=False)
                 s_shuttingDown = True
-                Me.SetLastUpdateTime(
-                    msg:="System Sleeping",
-                    suffixMessage:=EmptyString,
-                    highLight:=True,
-                    isDaylightSavingTime:=Nothing)
+                Me.SetLastUpdateTime(msg:="System Sleeping", highLight:=True)
             Case PowerModes.Resume
-                Me.SetLastUpdateTime(
-                    msg:="System Awake",
-                    suffixMessage:=EmptyString,
-                    highLight:=True,
-                    isDaylightSavingTime:=Nothing)
+                Me.SetLastUpdateTime(msg:="System Awake", highLight:=True)
                 s_shuttingDown = False
                 SetServerUpdateTimer(Start:=True, interval:=TwentySecondsInMilliseconds)
                 Dim message As String = $"restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now:T}"
@@ -3718,20 +3703,12 @@ Public Class Form1
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
                     Dim epochAsLocalDate As Date = lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
                     If epochAsLocalDate + FiveMinuteSpan < Now() Then
-                        Me.SetLastUpdateTime(
-                            msg:=Nothing,
-                            suffixMessage:=EmptyString,
-                            highLight:=True,
-                            isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
+                        Me.SetLastUpdateTime(highLight:=True, isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString(
                             sgString:="---",
                             f:=Single.NaN)
                     Else
-                        Me.SetLastUpdateTime(
-                            msg:=Nothing,
-                            suffixMessage:=EmptyString,
-                            highLight:=False,
-                            isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
+                        Me.SetLastUpdateTime(isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString(
                             sgString:=s_lastSg?.ToString,
                             f:=s_lastSg.sg)
@@ -5380,11 +5357,8 @@ Public Class Form1
             If fromFile Then
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
             Else
-                Me.SetLastUpdateTime(
-                    msg:=$"Last Update Time: {PumpNow()}",
-                    suffixMessage:=EmptyString,
-                    highLight:=False,
-                    isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)
+                Dim msg As String = $"Last Update Time: {PumpNow()}"
+                Me.SetLastUpdateTime(msg, isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)
             End If
             Me.CursorPanel.Visible = False
 
