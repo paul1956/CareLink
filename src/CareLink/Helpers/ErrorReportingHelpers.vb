@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Runtime.CompilerServices
+
 ''' <summary>
 '''  Provides helper methods for error reporting and login status updates.
 ''' </summary>
@@ -60,6 +62,7 @@ Friend Module ErrorReportingHelpers
     ''' <param name="lastErrorMessage">
     '''  The last error message to display. Defaults to empty string.
     ''' </param>
+    <Extension>
     Friend Sub ReportLoginStatus(
         loginStatus As ToolStripStatusLabel,
         hasErrors As Boolean,

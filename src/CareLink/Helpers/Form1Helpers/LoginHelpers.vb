@@ -70,11 +70,9 @@ Friend Module LoginHelpers
                 DeserializePatientElement()
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path)
-                owner.SetLastUpdateTime(
-                    msg:=fileDate.ToShortDateTime,
-                    suffixMessage:="from file",
-                    highLight:=False,
-                    isDaylightSavingTime:=fileDate.IsDaylightSavingTime)
+                Dim msg As String = fileDate.ToShortDateTime
+                Dim isDaylightSavingTime As Boolean = fileDate.IsDaylightSavingTime
+                owner.SetLastUpdateTime(msg, suffixMessage:="from file", isDaylightSavingTime)
                 SetUpCareLinkUser()
                 fromFile = True
                 owner.TabControlPage1.Visible = True
@@ -100,17 +98,17 @@ Friend Module LoginHelpers
 
                 If Form1.Client Is Nothing OrElse Not Form1.Client.LoggedIn Then
                     SetServerUpdateTimer(Start:=True, interval:=FiveMinutesInMilliseconds)
-
+                    Dim hasErrors As Boolean = True
                     If NetworkUnavailable() Then
-                        ReportLoginStatus(owner.LoginStatus, hasErrors:=True, lastErrorMessage:="Network Unavailable")
+                        owner.LoginStatus.ReportLoginStatus(hasErrors, lastErrorMessage:="Network Unavailable")
+                        Return False
+                    ElseIf IsNullOrWhiteSpace(LoginDialog.LoginStatus.Text) Then
+                        owner.LoginStatus.ReportLoginStatus(hasErrors, lastErrorMessage:=LoginDialog.LoginStatus.Text)
                         Return False
                     End If
 
-                    owner.SetLastUpdateTime(
-                        msg:="Last Update time is unknown!",
-                        suffixMessage:=String.Empty,
-                        highLight:=True,
-                        isDaylightSavingTime:=Nothing)
+                    Const msg As String = "Last Update time is unknown!"
+                    owner.SetLastUpdateTime(msg, suffixMessage:=EmptyString, highLight:=True)
                     Return False
                 End If
                 Dim lastErrorMessage As String = LoginDialog.Client.GetRecentData()
@@ -189,11 +187,8 @@ Friend Module LoginHelpers
                 DeserializePatientElement()
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path:=lastDownloadFileWithPath)
-                owner.SetLastUpdateTime(
-                    msg:=fileDate.ToShortDateTime,
-                    suffixMessage:="from file",
-                    highLight:=False,
-                    isDaylightSavingTime:=fileDate.IsDaylightSavingTime)
+                Dim isDaylightSavingTime As Boolean = fileDate.IsDaylightSavingTime
+                owner.SetLastUpdateTime(msg:=fileDate.ToShortDateTime, suffixMessage:="from file", isDaylightSavingTime)
                 SetUpCareLinkUser()
                 fromFile = True
         End Select
@@ -254,14 +249,14 @@ Friend Module LoginHelpers
     <Extension>
     Friend Sub SetLastUpdateTime(
         form1 As Form1,
-        msg As String,
-        suffixMessage As String,
-        highLight As Boolean,
-        isDaylightSavingTime? As Boolean)
+        Optional msg As String = Nothing,
+        Optional suffixMessage As String = EmptyString,
+        Optional highLight As Boolean = False,
+        Optional isDaylightSavingTime? As Boolean = Nothing)
 
         With form1.LastUpdateTimeToolStripStatusLabel
             If IsNotNullOrWhiteSpace(msg) Then
-                .Text = $"{msg}"
+                .Text = msg
             End If
             If highLight Then
                 .ForeColor = GetGraphLineColor(key:="High Alert")
