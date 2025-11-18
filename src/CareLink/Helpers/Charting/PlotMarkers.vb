@@ -167,15 +167,17 @@ Friend Module PlotMarkers
         markerMealDictionary?.Clear()
         Dim bolusRow As Single = GetYMaxNativeMmolL()
         Dim insulinRow As Single = GetInsulinYValue()
+        Dim yMinNativeMmolL As Single = GetYMinNativeMmolL()
         For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
             Dim item As Marker = markerWithIndex.Value
             Try
                 Dim markerDateTimestamp As Date = item.GetMarkerTimestamp
                 Dim markerOA As New OADate(asDate:=markerDateTimestamp)
                 Dim f As Single = item.GetSingleFromJson(key:="unitValue")
+
                 If Not Single.IsNaN(f) Then
-                    f = Math.Min(bolusRow, f)
-                    f = Math.Max(GetYMinNativeMmolL(), f)
+                    f = Math.Min(val1:=bolusRow, val2:=f)
+                    f = Math.Max(val1:=yMinNativeMmolL, val2:=f)
                 End If
                 Dim markerSeriesPoints As DataPointCollection = pageChart.Series(name:=MarkerSeriesName).Points
                 Select Case item.Type
@@ -246,11 +248,11 @@ Friend Module PlotMarkers
                         End Select
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then Continue For
-                        If markerMealDictionary.TryAdd(key:=markerOA, value:=GetYMinNativeMmolL()) Then
+                        If markerMealDictionary.TryAdd(key:=markerOA, value:=yMinNativeMmolL) Then
                             Dim height As Double = If(NativeMmolL,
                                                       s_mealImage.Height / 2 / MmolLUnitsDivisor,
                                                       s_mealImage.Height / 2)
-                            markerSeriesPoints.AddXY(xValue:=markerOA, yValue:=GetYMinNativeMmolL() + height)
+                            markerSeriesPoints.AddXY(xValue:=markerOA, yValue:=yMinNativeMmolL + height)
                             Dim markerColor As Color = Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
                             markerSeriesPoints.Last.Color = markerColor
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
