@@ -2984,6 +2984,7 @@ Partial Class Form1
         Me.Controls.Add(TabControlPage2)
         Me.Controls.Add(MenuStrip1)
         Me.Controls.Add(StatusStrip1)
+        Me.FormBorderStyle = FormBorderStyle.FixedSingle
         Me.Icon = CType(resources.GetObject("$this.Icon"), Icon)
         Me.MainMenuStrip = MenuStrip1
         Me.Margin = New Padding(0, 3, 0, 3)
