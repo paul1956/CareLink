@@ -2478,6 +2478,19 @@ Public Class Form1
 
             Me.UpdateAllTabPages(fromFile:=False)
         End If
+        If Debugger.IsAttached Then
+            Me.ShowControlPositions()
+        End If
+    End Sub
+
+    Private Sub ShowControlPositions()
+        Dim data As List(Of ControlInfo) = ControlInspector.GetAllControls(Me.SplitContainer2)
+
+        Dim f As New PositionForm()
+        f.DataGridView1.AutoGenerateColumns = True
+        f.DataGridView1.DataSource = data
+        f.DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+        f.Show()
     End Sub
 
     ''' <summary>
