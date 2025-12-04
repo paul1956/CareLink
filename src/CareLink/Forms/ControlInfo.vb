@@ -10,6 +10,7 @@ Public Class ControlInfo
     Public Property Width As Integer
     Public Property Height As Integer
     Public Property AnchorStyle As String
+    Public Property BorderStyle As String
 
     Public Shared Function FormatAnchor(a As AnchorStyles) As String
         If a = AnchorStyles.None Then

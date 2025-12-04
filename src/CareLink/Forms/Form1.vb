@@ -2484,7 +2484,7 @@ Public Class Form1
     End Sub
 
     Private Sub ShowControlPositions()
-        Dim data As List(Of ControlInfo) = ControlInspector.GetAllControls(Me.TabControlPage1)
+        Dim data As List(Of ControlInfo) = ControlInspector.GetAllControlsAndNative(Me.TabControlPage1)
 
         Dim f As New PositionForm()
         f.DataGridView1.AutoGenerateColumns = True
