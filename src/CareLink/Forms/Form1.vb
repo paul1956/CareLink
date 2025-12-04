@@ -961,15 +961,15 @@ Public Class Form1
         mnuStrip.Items.Add(
             text:="Copy with Header",
             image:=My.Resources.Copy,
-            onClick:=AddressOf DgvExportToClipBoardWithHeaders)
+            onClick:=AddressOf CopyToClipboardWithHeaders)
         mnuStrip.Items.Add(
             text:="Copy without Header",
             image:=My.Resources.Copy,
-            onClick:=AddressOf DgvExportToClipBoardWithoutHeaders)
+            onClick:=AddressOf CopyToClipboardWithoutHeaders)
         mnuStrip.Items.Add(
             text:="Save To Excel",
             image:=My.Resources.ExportData,
-            onClick:=AddressOf DgvExportToExcel)
+            onClick:=AddressOf CopyDataToExcel)
 
         ' Set Cancel to false.
         ' It is optimized to true based on empty key.
@@ -998,11 +998,11 @@ Public Class Form1
         mnuStrip.Items.Add(
             text:="Copy Selected Cells with Header",
             image:=My.Resources.Copy,
-            onClick:=AddressOf DgvCopySelectedCellsToClipBoardWithHeaders)
+            onClick:=AddressOf CopySelectedCellsToClipBoardWithHeaders)
         mnuStrip.Items.Add(
             text:="Copy Selected Cells without headers",
             image:=My.Resources.Copy,
-            onClick:=AddressOf DgvCopySelectedCellsToClipBoardWithoutHeaders)
+            onClick:=AddressOf CopySelectedCellsToClipboardNoHeaders)
 
         ' Set Cancel to false.
         ' It is optimized to true based on empty key.
@@ -2484,7 +2484,7 @@ Public Class Form1
     End Sub
 
     Private Sub ShowControlPositions()
-        Dim data As List(Of ControlInfo) = ControlInspector.GetAllControls(Me.SplitContainer2)
+        Dim data As List(Of ControlInfo) = ControlInspector.GetAllControls(Me.TabControlPage1)
 
         Dim f As New PositionForm()
         f.DataGridView1.AutoGenerateColumns = True

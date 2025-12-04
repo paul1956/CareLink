@@ -591,7 +591,7 @@ Partial Class Form1
         ' 
         ' CursorMessage1Label
         ' 
-        CursorMessage1Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        CursorMessage1Label.Anchor = AnchorStyles.Top
         CursorMessage1Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         CursorMessage1Label.ForeColor = Color.LightGray
         CursorMessage1Label.Location = New Point(0, 43)
@@ -603,7 +603,7 @@ Partial Class Form1
         ' 
         ' CursorMessage2Label
         ' 
-        CursorMessage2Label.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        CursorMessage2Label.Anchor = AnchorStyles.Top
         CursorMessage2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         CursorMessage2Label.ForeColor = Color.LightGray
         CursorMessage2Label.Location = New Point(0, 65)
@@ -650,7 +650,7 @@ Partial Class Form1
         ' 
         ' CursorPictureBox
         ' 
-        CursorPictureBox.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        CursorPictureBox.Anchor = AnchorStyles.Top
         CursorPictureBox.Image = CType(resources.GetObject("CursorPictureBox.Image"), Image)
         CursorPictureBox.InitialImage = Nothing
         CursorPictureBox.Location = New Point(72, 0)
@@ -963,7 +963,7 @@ Partial Class Form1
         ' 
         ' Last24HrAutoCorrectionLabel
         ' 
-        Last24HrAutoCorrectionLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
+        Last24HrAutoCorrectionLabel.Anchor = AnchorStyles.Top
         Last24HrAutoCorrectionLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrAutoCorrectionLabel.ForeColor = Color.Gray
         Last24HrAutoCorrectionLabel.Location = New Point(0, 43)
@@ -975,7 +975,7 @@ Partial Class Form1
         ' 
         ' Last24HrAutoCorrectionPercentLabel
         ' 
-        Last24HrAutoCorrectionPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
+        Last24HrAutoCorrectionPercentLabel.Anchor = AnchorStyles.Top
         Last24HrAutoCorrectionPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrAutoCorrectionPercentLabel.ForeColor = Color.LightGray
         Last24HrAutoCorrectionPercentLabel.Location = New Point(200, 43)
@@ -987,7 +987,7 @@ Partial Class Form1
         ' 
         ' Last24HrAutoCorrectionUnitsLabel
         ' 
-        Last24HrAutoCorrectionUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
+        Last24HrAutoCorrectionUnitsLabel.Anchor = AnchorStyles.Top
         Last24HrAutoCorrectionUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrAutoCorrectionUnitsLabel.ForeColor = Color.LightGray
         Last24HrAutoCorrectionUnitsLabel.Location = New Point(131, 43)
@@ -999,7 +999,7 @@ Partial Class Form1
         ' 
         ' Last24HrBasalLabel
         ' 
-        Last24HrBasalLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
+        Last24HrBasalLabel.Anchor = AnchorStyles.Top
         Last24HrBasalLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrBasalLabel.ForeColor = Color.Gray
         Last24HrBasalLabel.Location = New Point(0, 23)
@@ -1011,7 +1011,7 @@ Partial Class Form1
         ' 
         ' Last24HrBasalPercentLabel
         ' 
-        Last24HrBasalPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
+        Last24HrBasalPercentLabel.Anchor = AnchorStyles.Top
         Last24HrBasalPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrBasalPercentLabel.ForeColor = Color.LightGray
         Last24HrBasalPercentLabel.Location = New Point(200, 23)
@@ -1023,7 +1023,7 @@ Partial Class Form1
         ' 
         ' Last24HrBasalUnitsLabel
         ' 
-        Last24HrBasalUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
+        Last24HrBasalUnitsLabel.Anchor = AnchorStyles.Top
         Last24HrBasalUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrBasalUnitsLabel.ForeColor = Color.LightGray
         Last24HrBasalUnitsLabel.Location = New Point(131, 23)
@@ -1035,7 +1035,7 @@ Partial Class Form1
         ' 
         ' Last24HrCarbsLabel
         ' 
-        Last24HrCarbsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24HrCarbsLabel.Anchor = AnchorStyles.Top
         Last24HrCarbsLabel.AutoSize = True
         Last24HrCarbsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrCarbsLabel.ForeColor = Color.Gray
@@ -1048,7 +1048,7 @@ Partial Class Form1
         ' 
         ' Last24HrCarbsValueLabel
         '
-        Last24HrCarbsValueLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
+        Last24HrCarbsValueLabel.Anchor = AnchorStyles.Top
         Last24HrCarbsValueLabel.AutoSize = True
         Last24HrCarbsValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrCarbsValueLabel.ForeColor = Color.LightGray
@@ -1061,7 +1061,7 @@ Partial Class Form1
         ' 
         ' Last24HrMealBolusLabel
         ' 
-        Last24HrMealBolusLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24HrMealBolusLabel.Anchor = AnchorStyles.Top
         Last24HrMealBolusLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrMealBolusLabel.ForeColor = Color.Gray
         Last24HrMealBolusLabel.Location = New Point(0, 64)
@@ -1073,7 +1073,7 @@ Partial Class Form1
         ' 
         ' Last24HrMealBolusPercentLabel
         ' 
-        Last24HrMealBolusPercentLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24HrMealBolusPercentLabel.Anchor = AnchorStyles.Top
         Last24HrMealBolusPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrMealBolusPercentLabel.ForeColor = Color.LightGray
         Last24HrMealBolusPercentLabel.Location = New Point(200, 64)
@@ -1085,7 +1085,7 @@ Partial Class Form1
         ' 
         ' Last24HrMealBolusUnitsLabel
         ' 
-        Last24HrMealBolusUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        Last24HrMealBolusUnitsLabel.Anchor = AnchorStyles.Top
         Last24HrMealBolusUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrMealBolusUnitsLabel.ForeColor = Color.LightGray
         Last24HrMealBolusUnitsLabel.Location = New Point(131, 64)
@@ -1110,7 +1110,7 @@ Partial Class Form1
         ' 
         ' Last24HrTotalInsulinLabel
         ' 
-        Last24HrTotalInsulinLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
+        Last24HrTotalInsulinLabel.Anchor = AnchorStyles.Top
         Last24HrTotalInsulinLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrTotalInsulinLabel.ForeColor = Color.Gray
         Last24HrTotalInsulinLabel.Location = New Point(0, 85)
@@ -1122,7 +1122,7 @@ Partial Class Form1
         ' 
         ' Last24HrTotalInsulinUnitsLabel
         ' 
-        Last24HrTotalInsulinUnitsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
+        Last24HrTotalInsulinUnitsLabel.Anchor = AnchorStyles.Top
         Last24HrTotalInsulinUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrTotalInsulinUnitsLabel.ForeColor = Color.LightGray
         Last24HrTotalInsulinUnitsLabel.Location = New Point(131, 85)

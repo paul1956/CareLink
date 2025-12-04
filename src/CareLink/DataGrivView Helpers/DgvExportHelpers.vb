@@ -2,9 +2,11 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.ComponentModel
 Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text
+Imports System.Linq
 Imports ClosedXML.Excel
 
 ''' <summary>
@@ -40,8 +42,7 @@ Friend Module DgvExportHelpers
 
     ''' <summary>
     '''  Copies the selected cells or all cells from the <see cref="DataGridView"/>
-    '''  to the <see cref="Clipboard"/>,
-    '''  with optional headers.
+    '''  to the <see cref="Clipboard"/>, with optional headers.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> to copy from.</param>
     ''' <param name="copyHeaders">
@@ -54,7 +55,7 @@ Friend Module DgvExportHelpers
     <Extension>
     Private Sub CopyToClipboard(dgv As DataGridView, copyHeaders As DataGridViewClipboardCopyMode, copyAll As Boolean)
         If copyAll OrElse dgv.GetCellCount(includeFilter:=DataGridViewElementStates.Selected) > 0 Then
-            Dim dgvCells As List(Of DataGridViewCell) = dgv.SelectedCells.Cast(Of DataGridViewCell).ToList()
+            Dim dgvCells As List(Of DataGridViewCell) = dgv.SelectedCells.Cast(Of DataGridViewCell)().ToList()
             Dim selector As Func(Of DataGridViewCell, Integer) = Function(c As DataGridViewCell) As Integer
                                                                      Return c.ColumnIndex
                                                                  End Function
@@ -77,7 +78,7 @@ Friend Module DgvExportHelpers
                                         dgv.RowCount - 1,
                                         dgvCells.Max(selector))
 
-            Dim clipboard_string As New StringBuilder()
+            Dim clipboardSB As New StringBuilder()
             If copyHeaders <> DataGridViewClipboardCopyMode.EnableWithoutHeaderText Then
                 For index As Integer = colLow To colHigh
                     If Not (dgv.Columns(index).Visible AndAlso (copyAll OrElse dgv.AnyCellSelected(index))) Then
@@ -89,7 +90,7 @@ Friend Module DgvExportHelpers
                                                       vbCrLf,
                                                       vbTab)
 
-                    clipboard_string.Append(value:=$"{value}{fieldSeparator}")
+                    clipboardSB.Append(value:=$"{value}{fieldSeparator}")
                 Next index
             End If
             For rowIndex As Integer = rowLow To rowHigh
@@ -107,12 +108,40 @@ Friend Module DgvExportHelpers
                                                       vbCrLf,
                                                       vbTab)
 
-                    clipboard_string.Append(value:=$"{cellValue}{fieldSeparator}")
+                    clipboardSB.Append(value:=$"{cellValue}{fieldSeparator}")
                 Next index
             Next
-            Clipboard.SetText(clipboard_string.ToString())
+            Clipboard.SetText(clipboardSB.ToString())
         End If
     End Sub
+
+    ''' <summary>
+    '''  Retrieves the <see cref="DataGridView"/> associated with the sender
+    '''  of a <see cref="ToolStripMenuItem"/> event.
+    ''' </summary>
+    ''' <param name="sender">The sender object from the event.</param>
+    ''' <returns>The <see cref="DataGridView"/> associated with the context menu.</returns>
+    Private Function GetDgvFromMenuItem(sender As Object) As DataGridView
+        Dim menuItem As ToolStripMenuItem = CType(sender, ToolStripMenuItem)
+        Dim contextStrip As ContextMenuStrip = CType(menuItem.GetCurrentParent, ContextMenuStrip)
+        Return CType(contextStrip.SourceControl, DataGridView)
+    End Function
+
+    ''' <summary>
+    '''  Converts a <see cref="Color"/> to an <see cref="XLColor"/>.
+    ''' </summary>
+    ''' <param name="color">The <see cref="Color"/> to convert.</param>
+    ''' <returns>The corresponding <see cref="XLColor"/>.</returns>
+    <Extension>
+    Private Function GetXlColor(cellStyle As DataGridViewCellStyle, ForeGround As Boolean) As XLColor
+        Return If(ForeGround,
+                  If(Application.IsDarkModeEnabled,
+                     XLColor.FromColor(cellStyle.BackColor),
+                     XLColor.FromColor(cellStyle.ForeColor)),
+                  If(Application.IsDarkModeEnabled,
+                     XLColor.FromColor(cellStyle.ForeColor),
+                     XLColor.FromColor(cellStyle.BackColor)))
+    End Function
 
     ''' <summary>
     '''  Exports the contents of the <see cref="DataGridView"/> to an
@@ -269,43 +298,12 @@ Friend Module DgvExportHelpers
     End Sub
 
     ''' <summary>
-    '''  Retrieves the <see cref="DataGridView"/> associated with the sender
-    '''  of a <see cref="ToolStripMenuItem"/> event.
-    ''' </summary>
-    ''' <param name="sender">The sender object from the event.</param>
-    ''' <returns>The <see cref="DataGridView"/> associated with the context menu.</returns>
-    Private Function GetDgvFromMenuItem(sender As Object) As DataGridView
-        Dim menuItem As ToolStripMenuItem = CType(sender, ToolStripMenuItem)
-        Dim contextStrip As ContextMenuStrip = CType(menuItem.GetCurrentParent, ContextMenuStrip)
-        Return CType(contextStrip.SourceControl, DataGridView)
-    End Function
-
-    ''' <summary>
-    '''  Converts a <see cref="Color"/> to an <see cref="XLColor"/>.
-    ''' </summary>
-    ''' <param name="color">The <see cref="Color"/> to convert.</param>
-    ''' <returns>The corresponding <see cref="XLColor"/>.</returns>
-    <Extension>
-    Private Function GetXlColor(cellStyle As DataGridViewCellStyle, ForeGround As Boolean) As XLColor
-        Return If(ForeGround,
-                  If(Application.IsDarkModeEnabled,
-                     XLColor.FromColor(cellStyle.BackColor),
-                     XLColor.FromColor(cellStyle.ForeColor)),
-                  If(Application.IsDarkModeEnabled,
-                     XLColor.FromColor(cellStyle.ForeColor),
-                     XLColor.FromColor(cellStyle.BackColor)))
-    End Function
-
-    ''' <summary>
-    '''  Copies the selected cells of a <see cref="DataGridView"/>
-    '''  to the <see cref="Clipboard"/>, including headers.
+    '''  Exports the contents of a <see cref="DataGridView"/> to an Excel file.
     ''' </summary>
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
-    Public Sub DgvCopySelectedCellsToClipBoardWithHeaders(sender As Object, e As EventArgs)
-        GetDgvFromMenuItem(sender).CopyToClipboard(
-            copyHeaders:=DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText,
-            copyAll:=False)
+    Public Sub CopyDataToExcel(sender As Object, e As EventArgs)
+        GetDgvFromMenuItem(sender).ToExcelWithFormatting()
     End Sub
 
     ''' <summary>
@@ -314,9 +312,21 @@ Friend Module DgvExportHelpers
     ''' </summary>
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
-    Public Sub DgvCopySelectedCellsToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
+    Public Sub CopySelectedCellsToClipboardNoHeaders(sender As Object, e As EventArgs)
         GetDgvFromMenuItem(sender).CopyToClipboard(
             copyHeaders:=DataGridViewClipboardCopyMode.EnableWithoutHeaderText,
+            copyAll:=False)
+    End Sub
+
+    ''' <summary>
+    '''  Copies the selected cells of a <see cref="DataGridView"/>
+    '''  to the <see cref="Clipboard"/>, including headers.
+    ''' </summary>
+    ''' <param name="sender">The sender object from the event.</param>
+    ''' <param name="e">The event arguments.</param>
+    Public Sub CopySelectedCellsToClipboardWithHeaders(sender As Object, e As EventArgs)
+        GetDgvFromMenuItem(sender).CopyToClipboard(
+            copyHeaders:=DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText,
             copyAll:=False)
     End Sub
 
@@ -326,7 +336,7 @@ Friend Module DgvExportHelpers
     ''' </summary>
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
-    Public Sub DgvExportToClipBoardWithHeaders(sender As Object, e As EventArgs)
+    Public Sub CopyToClipboardWithHeaders(sender As Object, e As EventArgs)
         GetDgvFromMenuItem(sender).CopyToClipboard(
             copyHeaders:=DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText,
             copyAll:=True)
@@ -338,19 +348,92 @@ Friend Module DgvExportHelpers
     ''' </summary>
     ''' <param name="sender">The sender object from the event.</param>
     ''' <param name="e">The event arguments.</param>
-    Public Sub DgvExportToClipBoardWithoutHeaders(sender As Object, e As EventArgs)
+    Public Sub CopyToClipboardWithoutHeaders(sender As Object, e As EventArgs)
         GetDgvFromMenuItem(sender).CopyToClipboard(
             copyHeaders:=DataGridViewClipboardCopyMode.EnableWithoutHeaderText,
             copyAll:=False)
     End Sub
 
     ''' <summary>
-    '''  Exports the contents of a <see cref="DataGridView"/> to an Excel file.
+    '''  Sorts the <see cref="DataGridView"/> by the specified column index.
+    '''  Creates a string-based snapshot of the visible grid, sorts and rebinds it.
+    '''  This keeps sorting behavior deterministic for grids bound to lists.
     ''' </summary>
-    ''' <param name="sender">The sender object from the event.</param>
-    ''' <param name="e">The event arguments.</param>
-    Public Sub DgvExportToExcel(sender As Object, e As EventArgs)
-        GetDgvFromMenuItem(sender).ToExcelWithFormatting()
+    ''' <param name="dgv">The DataGridView to sort.</param>
+    ''' <param name="columnIndex">The column index to sort by.</param>
+    <Extension>
+    Public Sub SortByColumn(dgv As DataGridView, columnIndex As Integer)
+        If dgv Is Nothing Then Return
+        If columnIndex < 0 OrElse columnIndex >= dgv.Columns.Count Then Return
+
+        Dim col As DataGridViewColumn = dgv.Columns(columnIndex)
+        If Not col.Visible Then Return
+
+        ' Determine direction (toggle)
+        Dim direction As ListSortDirection = ListSortDirection.Ascending
+        Select Case col.HeaderCell.SortGlyphDirection
+            Case SortOrder.None, SortOrder.Descending
+                direction = ListSortDirection.Ascending
+            Case SortOrder.Ascending
+                direction = ListSortDirection.Descending
+        End Select
+
+        ' Build a DataTable snapshot with string values (keeps things simple and safe)
+        Dim dt As New DataTable()
+        For Each c As DataGridViewColumn In dgv.Columns
+            ' Use column Name as data column name to allow matching after rebind.
+            dt.Columns.Add(c.Name, GetType(String))
+        Next
+
+        For Each row As DataGridViewRow In dgv.Rows
+            If row.IsNewRow Then Continue For
+            Dim dr As DataRow = dt.NewRow()
+            For Each c As DataGridViewColumn In dgv.Columns
+                Dim cellValue As Object = row.Cells(c.Index).FormattedValue
+                dr(c.Name) = If(cellValue Is Nothing, String.Empty, cellValue.ToString())
+            Next
+            dt.Rows.Add(dr)
+        Next
+
+        Dim dv As DataView = dt.DefaultView
+        Dim sortDir As String = If(direction = ListSortDirection.Ascending,
+                                  "ASC",
+                                  "DESC")
+        dv.Sort = $"{col.Name} {sortDir}"
+
+        ' Rebind to the DataView (preserves the view semantics and avoids an extra ToTable allocation).
+        ' Perform UI updates on the DataGridView's thread.
+        Dim updateAction As Action =
+            Sub()
+                dgv.DataSource = dv
+                ' Clear previous glyphs
+                For Each c As DataGridViewColumn In dgv.Columns
+                    c.HeaderCell.SortGlyphDirection = SortOrder.None
+                Next
+
+                ' Try to locate the new column by Name or DataPropertyName
+                Dim predicate As Func(Of DataGridViewColumn, Boolean) =
+                    Function(c As DataGridViewColumn)
+                        Return c.Name = col.Name OrElse c.DataPropertyName = col.DataPropertyName
+                    End Function
+
+                Dim newCol As DataGridViewColumn =
+                    dgv.Columns.Cast(Of DataGridViewColumn)().FirstOrDefault(predicate)
+
+                If newCol IsNot Nothing Then
+                    newCol.HeaderCell.SortGlyphDirection = If(direction = ListSortDirection.Ascending,
+                                                              SortOrder.Ascending,
+                                                              SortOrder.Descending)
+                End If
+
+                dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+            End Sub
+
+        If dgv.InvokeRequired Then
+            dgv.Invoke(updateAction)
+        Else
+            updateAction()
+        End If
     End Sub
 
 End Module

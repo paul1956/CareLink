@@ -34,11 +34,15 @@ Partial Class PositionForm
         ' 
         DataGridView1.AllowUserToAddRows = False
         DataGridView1.AllowUserToDeleteRows = False
+        DataGridView1.AutoGenerateColumns = True
+        DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         DataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DataGridView1.Dock = DockStyle.Fill
         DataGridView1.Location = New Point(0, 0)
         DataGridView1.Name = "DataGridView1"
+        DataGridView1.Name = NameOf(DataGridView1)
         DataGridView1.ReadOnly = True
+        DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         DataGridView1.Size = New Size(800, 450)
         DataGridView1.TabIndex = 0
         ' 
@@ -46,10 +50,10 @@ Partial Class PositionForm
         ' 
         Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
-        Me.ClientSize = New Size(800, 450)
+        Me.ClientSize = New Size(900, 500)
         Me.Controls.Add(DataGridView1)
         Me.Name = "PositionForm"
-        Me.Text = "PositionForm"
+        Me.Text = "Control Positions"
         CType(DataGridView1, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
     End Sub
