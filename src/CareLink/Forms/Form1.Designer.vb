@@ -33,8 +33,6 @@ Partial Class Form1
         ActiveInsulinValue = New Label()
         AverageSGMessageLabel = New Label()
         AverageSGValueLabel = New Label()
-        BannerStateButton = New Button()
-        BannerStateLabel = New Label()
         BasalButton = New Button()
         BasalLabel = New Label()
         BelowLowLimitMessageLabel = New Label()
@@ -413,48 +411,6 @@ Partial Class Form1
         AverageSGValueLabel.TabIndex = 1
         AverageSGValueLabel.Text = "100"
         AverageSGValueLabel.TextAlign = ContentAlignment.MiddleCenter
-        ' 
-        ' BannerStateButton
-        ' 
-        BannerStateButton.AutoSize = True
-        BannerStateButton.Location = New Point(6, 6)
-        BannerStateButton.Name = "BannerStateButton"
-        BannerStateButton.Size = New Size(142, 25)
-        BannerStateButton.TabIndex = 0
-        BannerStateButton.Text = "Return To 'Summary Data' Tab"
-        ' 
-        ' BannerStateLabel
-        ' 
-        BannerStateLabel.AutoSize = True
-        BannerStateLabel.Dock = DockStyle.Fill
-        BannerStateLabel.Location = New Point(157, 6)
-        BannerStateLabel.Margin = New Padding(3)
-        BannerStateLabel.Name = "BannerStateLabel"
-        BannerStateLabel.Size = New Size(1201, 25)
-        BannerStateLabel.TabIndex = 0
-        BannerStateLabel.Text = "Banner State"
-        BannerStateLabel.TextAlign = ContentAlignment.MiddleCenter
-        ' 
-        ' BasalButton
-        ' 
-        BasalButton.AutoSize = True
-        BasalButton.Location = New Point(6, 6)
-        BasalButton.Name = "BasalButton"
-        BasalButton.Size = New Size(142, 25)
-        BasalButton.TabIndex = 0
-        BasalButton.Text = "Return To 'Summary Data' Tab"
-        ' 
-        ' BasalLabel
-        ' 
-        BasalLabel.AutoSize = True
-        BasalLabel.Dock = DockStyle.Fill
-        BasalLabel.Location = New Point(157, 6)
-        BasalLabel.Margin = New Padding(3)
-        BasalLabel.Name = "BasalLabel"
-        BasalLabel.Size = New Size(1201, 25)
-        BasalLabel.TabIndex = 1
-        BasalLabel.Text = "Basal"
-        BasalLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' BelowLowLimitMessageLabel
         ' 
@@ -3138,8 +3094,6 @@ Partial Class Form1
     Friend WithEvents ActiveInsulinValue As Label
     Friend WithEvents AverageSGMessageLabel As Label
     Friend WithEvents AverageSGValueLabel As Label
-    Friend WithEvents BannerStateButton As Button
-    Friend WithEvents BannerStateLabel As Label
     Friend WithEvents BasalButton As Button
     Friend WithEvents BasalLabel As Label
     Friend WithEvents BelowLowLimitMessageLabel As Label
