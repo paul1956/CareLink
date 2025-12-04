@@ -3279,7 +3279,7 @@ Public Class Form1
 
     ''' <summary>
     '''  Handles the <see cref="CheckBox.CheckedChanged"/> event for
-    '''  the <see cref="TemporaryUseAdvanceAITDecayCheckBox"/>.
+    '''  the <see cref="TempUseAdvanceAITDecayCheckBox"/>.
     '''  Updates the checkbox text and the
     '''  <see cref="CurrentUser.UseAdvancedAitDecay"/> property, then updates
     '''  the active insulin chart.
@@ -3289,13 +3289,13 @@ Public Class Form1
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(sender As Object, e As EventArgs) _
-        Handles TemporaryUseAdvanceAITDecayCheckBox.CheckedChanged
+        Handles TempUseAdvanceAITDecayCheckBox.CheckedChanged
 
         ' Update the checkbox text based on the current state and insulin type.
         With CurrentUser
-            Dim checkState As CheckState = Me.TemporaryUseAdvanceAITDecayCheckBox.CheckState
+            Dim checkState As CheckState = Me.TempUseAdvanceAITDecayCheckBox.CheckState
             Dim whileUsing As String = $" hours, while using { .InsulinTypeName}"
-            Me.TemporaryUseAdvanceAITDecayCheckBox.Text =
+            Me.TempUseAdvanceAITDecayCheckBox.Text =
                 If(checkState = CheckState.Checked,
                    $"Advanced Decay, AIT will decay over { .InsulinRealAit}{ whileUsing}",
                    $"AIT will decay over { .PumpAit.ToHoursMinutes}{ whileUsing}")
@@ -3854,7 +3854,7 @@ Public Class Form1
                     .Name = NameOf(timeInRangeChartArea),
                     .BackColor = Color.Black}
                 .ChartAreas.Add(timeInRangeChartArea)
-                Dim chartLabel As Label = Me.TimeInRangeChartLabel
+                Dim chartLabel As Label = Me.TirChartLabel
                 Dim x As Integer = chartLabel.FindHorizontalMidpoint - (.Width \ 2)
                 Dim y As Integer = CInt(chartLabel.FindVerticalMidpoint() - Math.Round(.Height / 2.5))
                 .Location = New Point(x, y)
@@ -4341,16 +4341,16 @@ Public Class Form1
                     Case NameOf(Me.HighTirComplianceLabel)
                         ctrl.CenterXOnParent(onLeftHalf:=False)
 
-                    Case NameOf(Me.TimeInRangeMessageLabel)
+                    Case NameOf(Me.TirMsgLabel)
                         ctrl.CenterXOnParent(onLeftHalf:=True)
 
-                    Case NameOf(Me.TimeInRangeValueLabel)
+                    Case NameOf(Me.TirValueLabel)
                         ctrl.CenterXOnParent(onLeftHalf:=True)
 
                     Case NameOf(Me.TiTRMgsLabel)
                         ctrl.CenterXOnParent(onLeftHalf:=False)
 
-                    Case NameOf(Me.TimeInTightRangeValueLabel)
+                    Case NameOf(Me.TiTRValueLabel)
                         ctrl.CenterXOnParent(onLeftHalf:=False)
 
                     Case NameOf(Me.TiTRMgsLabel2)
@@ -4424,7 +4424,7 @@ Public Class Form1
         End If
 
         Try
-            Me.TemporaryUseAdvanceAITDecayCheckBox.Checked = CurrentUser.UseAdvancedAitDecay = CheckState.Checked
+            Me.TempUseAdvanceAITDecayCheckBox.Checked = CurrentUser.UseAdvancedAitDecay = CheckState.Checked
             If Me.ActiveInsulinChart Is Nothing Then
                 Return
             End If
@@ -5093,7 +5093,7 @@ Public Class Form1
         End If
 
         TimeInTightRange = GetTIR(tight:=True)
-        Me.TimeInRangeChartLabel.Text = GetTIR.AsString
+        Me.TirChartLabel.Text = GetTIR.AsString
 
         With Me.TimeInRangeChart
             With .Series(name:=NameOf(TimeInRangeSeries)).Points
@@ -5140,25 +5140,25 @@ Public Class Form1
 
         Me.AboveHighLimitValueLabel.Text = $"{GetAboveHyperLimit.Str}%"
         Me.AboveHighLimitMessageLabel.Text = $"Above {GetTirHighLimitWithUnits()} {BgUnits}"
-        Me.TimeInRangeValueLabel.Text = $"{GetTIR.AsString}%"
+        Me.TirValueLabel.Text = $"{GetTIR.AsString}%"
         If GetTIR.Percent >= 70 Then
-            Me.TimeInRangeMessageLabel.ForeColor = Color.DarkGreen
-            Me.TimeInRangeValueLabel.ForeColor = Color.DarkGreen
+            Me.TirMsgLabel.ForeColor = Color.DarkGreen
+            Me.TirValueLabel.ForeColor = Color.DarkGreen
         Else
-            Me.TimeInRangeMessageLabel.ForeColor = Color.Red
-            Me.TimeInRangeValueLabel.ForeColor = Color.Red
+            Me.TirMsgLabel.ForeColor = Color.Red
+            Me.TirValueLabel.ForeColor = Color.Red
         End If
 
-        Me.TimeInTightRangeValueLabel.Text = $"{TimeInTightRange.Str}%"
+        Me.TiTRValueLabel.Text = $"{TimeInTightRange.Str}%"
         Me.TiTRMgsLabel2.Text = My.Forms.OptionsConfigureTiTR.GetTiTrMsg()
         If TimeInTightRange.Uint >= My.Settings.TiTrTreatmentTargetPercent Then
             Me.TiTRMgsLabel.ForeColor = Color.LimeGreen
             Me.TiTRMgsLabel2.ForeColor = Color.LimeGreen
-            Me.TimeInTightRangeValueLabel.ForeColor = Color.LimeGreen
+            Me.TiTRValueLabel.ForeColor = Color.LimeGreen
         Else
             Me.TiTRMgsLabel.ForeColor = Color.Red
             Me.TiTRMgsLabel2.ForeColor = Color.Red
-            Me.TimeInTightRangeValueLabel.ForeColor = Color.Red
+            Me.TiTRValueLabel.ForeColor = Color.Red
         End If
 
         Me.BelowLowLimitValueLabel.Text = $"{GetBelowHypoLimit.Str}%"
