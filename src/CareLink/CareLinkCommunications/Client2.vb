@@ -12,7 +12,7 @@ Imports System.Text.Json
 Public Class Client2
 
     ' Constants
-    Private Const TokenBaseFileName As String = "logindata.json"
+    Private Const TokenBaseFileName As String = "loginData.json"
 
     Private ReadOnly _httpClient As HttpClient
     Private ReadOnly _tokenBaseFileName As String
@@ -22,14 +22,13 @@ Public Class Client2
     Private _lastHttpStatusCode As HttpStatusCode
     Private _patientElement As Dictionary(Of String, String)
     Private _tokenDataElement As JsonElement
-    Private _userElementDictionary As Dictionary(Of String, Object)
 
     ''' <summary>
     '''  Initializes a new instance of the <see cref="Client2"/> class.
     ''' </summary>
     ''' <param name="tokenFile">
     '''  Optional. The token file name to use for authentication.
-    '''  Defaults to <c>logindata.json</c>.
+    '''  Defaults to <c>loginData.json</c>.
     ''' </param>
     ''' <remarks>
     '''  The constructor sets up the <see cref="HttpClient"/>,
@@ -71,13 +70,6 @@ Public Class Client2
     Public Property PatientPersonalData As New PatientPersonalInfo
 
     Public Property UserElementDictionary As Dictionary(Of String, Object)
-        Get
-            Return _userElementDictionary
-        End Get
-        Set
-            _userElementDictionary = Value
-        End Set
-    End Property
 
     ''' <summary>
     '''  Extracts the access token payload from the given token data.
@@ -257,7 +249,7 @@ Public Class Client2
     '''  Sends a request to the API to retrieve data for the specified user and role.
     ''' </summary>
     ''' <param name="username">The username for which to retrieve data.</param>
-    ''' <param name="role">The role of the user (e.g., "patient" or "carepartner").</param>
+    ''' <param name="role">The role of the user (e.g., "patient" or "carePartner".ToLower).</param>
     ''' <param name="patientId">The patient ID, if applicable.</param>
     ''' <returns>
     '''  A <see cref="Dictionary(Of String, Object)"/> containing the retrieved data,
@@ -274,7 +266,7 @@ Public Class Client2
         Dim value As New Dictionary(Of String, Object) From {{"username", username}}
 
         If role.ContainsNoCase("Partner") Then
-            value("role") = "carepartner"
+            value("role") = "carePartner".ToLower
             value("patientId") = patientId
         Else
             value("role") = "patient"
@@ -412,16 +404,16 @@ Public Class Client2
             Application.DoEvents()
             Dim element As JsonElement = CType(_accessTokenPayload(key:="token_details"), JsonElement)
 
-            Dim options As JsonSerializerOptions = s_jsonDeserializerOptions
+            Dim options As JsonSerializerOptions = s_jsonDesterilizeOptions
             Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, options)
-            _country = payload.Country
-            configJsonElement = GetConfigElement(httpClient:=_httpClient, payload.Country)
+            _country = If(payload.Country, s_countryCode)
+            configJsonElement = GetConfigElement(httpClient:=_httpClient, country:=_country)
             Me.Config = configJsonElement.ConvertElementToDictionary()
             Dim json As String = Me.GetUserString(config:=configJsonElement, tokenData:=_tokenDataElement)
             If IsNullOrWhiteSpace(value:=json) Then
                 Throw New UnauthorizedAccessException
             End If
-            _userElementDictionary = JsonSerializer.Deserialize(Of JsonElement)(json).ConvertElementToDictionary()
+            Me.UserElementDictionary = JsonSerializer.Deserialize(Of JsonElement)(json).ConvertElementToDictionary()
             _PatientPersonalData = JsonSerializer.Deserialize(Of PatientPersonalInfo)(json)
 
             Dim role As String = _PatientPersonalData.role
@@ -615,7 +607,7 @@ Public Class Client2
         End If
         Dim data As Dictionary(Of String, Object)
         Try
-            Dim role As String = CStr(_userElementDictionary("role"))
+            Dim role As String = CStr(Me.UserElementDictionary("role"))
             Dim tempData As Dictionary(Of String, Object) =
                 Me.GetData(username:=s_userName, role:=role, patientId:=EmptyString)
 

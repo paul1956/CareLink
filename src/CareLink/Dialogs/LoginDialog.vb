@@ -278,11 +278,11 @@ Public Class LoginDialog
                 process.WaitForExit()
 
                 If process.ExitCode = 0 Then
-                    Dim destFileName As String = GetLoginDataFileName(s_userName)
-                    If File.Exists(path:=destFileName) Then
-                        File.Delete(path:=destFileName)
+                    Dim destinationFileName As String = GetLoginDataFileName(s_userName)
+                    If File.Exists(path:=destinationFileName) Then
+                        File.Delete(path:=destinationFileName)
                     End If
-                    File.Move(sourceFileName, destFileName)
+                    File.Move(sourceFileName, destinationFileName)
                 End If
                 File.Delete(exePath)
             End If

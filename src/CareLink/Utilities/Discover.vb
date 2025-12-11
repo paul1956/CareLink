@@ -134,7 +134,7 @@ Public Module Discover
 
                 Dim json As String = response.Content.ReadAsStringAsync().Result
                 Dim result As ConfigRecord =
-                    JsonSerializer.Deserialize(Of ConfigRecord)(json, options:=s_jsonDeserializerOptions)
+                    JsonSerializer.Deserialize(Of ConfigRecord)(json, options:=s_jsonDesterilizeOptions)
                 Return result
             End Using
 

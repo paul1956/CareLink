@@ -17,7 +17,7 @@ Friend Module LoginHelpers
     ''' </summary>
     Friend Sub DeserializePatientElement()
         Try
-            Dim options As JsonSerializerOptions = s_jsonDeserializerOptions
+            Dim options As JsonSerializerOptions = s_jsonDesterilizeOptions
             PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(element:=PatientDataElement, options)
             RecentData = PatientDataElement.ConvertJsonElementToStringDictionary()
         Catch ex As Exception
@@ -328,7 +328,7 @@ Friend Module LoginHelpers
     Friend Sub SetUpCareLinkUser()
         Dim path As String = GetUserSettingsPath()
         Dim json As String = File.ReadAllText(path)
-        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonDeserializerOptions)
+        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonDesterilizeOptions)
     End Sub
 
     ''' <summary>
