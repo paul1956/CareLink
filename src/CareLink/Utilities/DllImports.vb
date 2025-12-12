@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.InteropServices
+Imports System.Text
 
 Friend Module DllImports
 
@@ -45,12 +46,26 @@ Friend Module DllImports
     ''' <param name="attrValue">The value of the attribute.</param>
     ''' <param name="attrSize">The size of the attribute value.</param>
     ''' <returns>An integer indicating success or failure.</returns>
-    <DllImport("dwmapi.dll")>
+    <DllImport("dwmapi.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
     Friend Function DwmSetWindowAttribute(
         hwnd As IntPtr,
         attr As Integer,
         ByRef attrValue As Integer,
         attrSize As Integer) As Integer
+    End Function
+
+    ''' <summary>
+    '''  Retrieves the class name of the specified window.
+    ''' </summary>
+    ''' <param name="hWnd">A handle to the window.</param>
+    ''' <param name="lpClassName">A StringBuilder to receive the class name.</param>
+    ''' <param name="nMaxCount">The maximum number of characters to copy to the StringBuilder.</param>
+    ''' <returns>The length of the class name string, in characters.</returns>
+    <DllImport("user32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+    Friend Function GetClassName(
+        hWnd As IntPtr,
+        <Out(), MarshalAs(UnmanagedType.LPWStr)> lpClassName As StringBuilder,
+        nMaxCount As Integer) As Integer
     End Function
 
     ''' <summary>
@@ -61,7 +76,7 @@ Friend Module DllImports
     ''' <param name="wParam">First message parameter.</param>
     ''' <param name="lParam">Second message parameter.</param>
     ''' <returns>Result of the message processing.</returns>
-    <DllImport("USER32.DLL", CharSet:=CharSet.Auto)>
+    <DllImport("user32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
     Friend Function SendMessage(
         hWnd As IntPtr,
         msg As Integer,
@@ -74,7 +89,7 @@ Friend Module DllImports
     ''' </summary>
     ''' <param name="hWnd">Handle to the window receiving the message.</param>
     ''' <param name="msg">Message ID.</param>
-    <DllImport("USER32.dll")>
+    <DllImport("user32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
     Friend Function SendMessage(
         hWnd As IntPtr,
         msg As Integer,
@@ -87,7 +102,7 @@ Friend Module DllImports
     ''' </summary>
     ''' <param name="key">The virtual-key code of the key to be checked.</param>
     ''' <returns>The state of the key.</returns>
-    <DllImport("USER32.DLL", CharSet:=CharSet.Auto)>
+    <DllImport("user32.dll", CharSet:=CharSet.Auto, SetLastError:=True)>
     Friend Function VkKeyScan(key As Char) As Short
     End Function
 

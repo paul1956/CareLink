@@ -43,6 +43,9 @@
     <Compile Update="Forms\Form1.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Forms\PositionForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\SgMiniForm.vb">
       <SubType>Form</SubType>
     </Compile>
