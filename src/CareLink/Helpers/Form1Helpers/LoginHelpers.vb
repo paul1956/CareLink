@@ -6,6 +6,7 @@ Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
+Imports Windows.Devices.AllJoyn
 
 Friend Module LoginHelpers
 
@@ -344,8 +345,10 @@ Friend Module LoginHelpers
         Dim newPdfFile As Boolean = False
 
         Dim pdfFilePath As String = GetUserPdfPath()
-        If File.Exists(path:=GetUserSettingsPath()) Then
-            Dim json As String = File.ReadAllText(path:=GetUserSettingsPath())
+        Dim userSettingsFileFullPath As String = GetUserSettingsPath()
+
+        If File.Exists(path:=userSettingsFileFullPath) Then
+            Dim json As String = File.ReadAllText(path:=userSettingsFileFullPath)
             CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonSerializerOptions)
 
             If CurrentUser.InsulinRealAit = 0 Then
@@ -356,8 +359,9 @@ Friend Module LoginHelpers
             End If
 
             If File.Exists(path:=pdfFilePath) Then
-                Dim lastWriteTime As Date = File.GetLastWriteTime(GetUserSettingsPath())
-                newPdfFile = Not IsFileReadOnly(path:=GetUserSettingsPath()) AndAlso
+                Dim lastWriteTime As Date = File.GetLastWriteTime(userSettingsFileFullPath)
+                newPdfFile =
+                    Not IsFileReadOnly(path:=userSettingsFileFullPath) AndAlso
                       File.GetLastWriteTime(path:=pdfFilePath) > lastWriteTime
             Else
                 While Not File.Exists(path:=pdfFilePath)
@@ -400,10 +404,7 @@ Friend Module LoginHelpers
         Dim carbRatios As New List(Of CarbRatioRecord)
         Dim currentTarget As Single = 120
 
-        If Form1.Client?.TryGetDeviceSettingsPdfFile(pdfFilePath) OrElse
-           newPdfFile OrElse
-           File.Exists(path:=pdfFilePath) Then
-
+        If (Form1.Client IsNot Nothing AndAlso Not My.Settings.CareLinkPartner) OrElse newPdfFile Then
             CurrentPdf = New PdfSettingsRecord(pdfFilePath)
 
             If CurrentPdf.IsValid Then
@@ -427,17 +428,18 @@ Friend Module LoginHelpers
             Using f As New InitializeDialog(ait, currentTarget, carbRatios)
                 Dim result As DialogResult = f.ShowDialog(owner:=My.Forms.Form1)
                 If result = DialogResult.OK Then
-                    currentUserUpdateNeeded = currentUserUpdateNeeded OrElse Not CurrentUser.Equals(other:=f.CurrentUser)
+                    currentUserUpdateNeeded =
+                        currentUserUpdateNeeded OrElse Not CurrentUser.Equals(other:=f.CurrentUser)
                     CurrentUser = f.CurrentUser.Clone
                 End If
             End Using
         End If
         If currentUserUpdateNeeded Then
             File.WriteAllTextAsync(
-                path:=GetUserSettingsPath(),
+                path:=userSettingsFileFullPath,
                 contents:=JsonSerializer.Serialize(value:=CurrentUser, options:=s_jsonSerializerOptions))
         Else
-            TouchFile(GetUserSettingsPath())
+            TouchFile(userSettingsFileFullPath)
         End If
         Form1.Cursor = Cursors.Default
         Application.DoEvents()

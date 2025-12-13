@@ -126,11 +126,22 @@ Public Module Discover
                 Dim response As HttpResponseMessage = client.GetAsync(url).Result
                 httpStatusCode = CType(response.StatusCode, Integer)
 
-                If Not response.IsSuccessStatusCode Then
-                    lastErrorMessage = $"HTTP request failed: {response.StatusCode} - {response.ReasonPhrase}"
+                ' Use centralized response inspection to ensure common statuses are surfaced.
+                Try
+                    response.ThrowIfFailure()
+                Catch uaEx As UnauthorizedAccessException
+                    lastErrorMessage = $"Unauthorized access when fetching discovery data: {uaEx.Message}"
                     Debug.WriteLine(lastErrorMessage)
                     Return Nothing
-                End If
+                Catch argEx As ArgumentException
+                    lastErrorMessage = $"Bad request fetching discovery data: {argEx.Message}"
+                    Debug.WriteLine(lastErrorMessage)
+                    Return Nothing
+                Catch httpEx As HttpRequestException
+                    lastErrorMessage = $"HTTP request failed: {httpEx.Message}"
+                    Debug.WriteLine(lastErrorMessage)
+                    Return Nothing
+                End Try
 
                 Dim json As String = response.Content.ReadAsStringAsync().Result
                 Dim result As ConfigRecord =
