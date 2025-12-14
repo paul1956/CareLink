@@ -398,9 +398,8 @@ Public Class Client2
                 ' Start refresh task without Await inside Catch
                 Try
                     If Not configJsonElement.ValueKind = JsonValueKind.Undefined Then
-                        refreshTask = Me.DoRefreshAsync(
-                            config:=configJsonElement.ToObjectDictionary,
-                            element:=_tokenDataElement)
+                        refreshTask = Me.DoRefreshAsync(config:=configJsonElement.ToObjectDictionary(),
+                                                        element:=_tokenDataElement)
                     End If
                 Catch innerEx As Exception
                     Debug.WriteLine(innerEx.ToString())
