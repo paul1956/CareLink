@@ -33,6 +33,7 @@ Friend Module HttpClientExtensions
     ''' <returns>
     '''  A <see cref="Task(Of JsonElement)"/> representing the asynchronous operation,
     '''  containing the deserialized JSON response.
+    ''' </returns>
     <Extension>
     Friend Async Function GetRequestAsync(
         httpClient As HttpClient,
@@ -47,11 +48,15 @@ Friend Module HttpClientExtensions
             End Function
         Dim params As String = String.Join(separator:="&", values:=authParams.Select(selector))
         Dim requestUri As String = $"{authorizeUrl}?{params}"
-        Dim response As HttpResponseMessage = httpClient.GetAsync(requestUri).Result
-        ' This will handle the redirect automatically
-        Dim json As String = Await response.Content.ReadAsStringAsync()
-        Dim providers As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
-        Return providers
+
+        Using response As HttpResponseMessage = Await httpClient.GetAsync(requestUri).ConfigureAwait(False)
+            ' Centralized response inspection
+            response.ThrowIfFailure()
+
+            Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+            Dim providers As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
+            Return providers
+        End Using
     End Function
 
     ''' <summary>
@@ -123,7 +128,10 @@ Friend Module HttpClientExtensions
             Dim requestUri As String = sb.ToString
             Dim message As String = $"uri={requestUri} from {memberName}, line {sourceLineNumber}."
             DebugPrint(message)
-            Return httpClient.GetAsync(requestUri).Result
+            Dim response As HttpResponseMessage = httpClient.GetAsync(requestUri).Result
+            ' Centralized inspection (sync)
+            response.ThrowIfFailure()
+            Return response
         Catch ex As Exception
             lastError = ex.DecodeException()
             Return New HttpResponseMessage(statusCode:=Net.HttpStatusCode.NotImplemented)
@@ -184,56 +192,69 @@ Friend Module HttpClientExtensions
                 End If
             Next
         End If
-        Return httpClient.PostAsync(requestUri:=uriBuilder.ToString(), content).Result
+
+        Dim response As HttpResponseMessage = httpClient.PostAsync(requestUri:=uriBuilder.ToString(), content).Result
+        response.ThrowIfFailure()
+        Return response
     End Function
 
     ''' <summary>
-    '''  Sends a POST request to the specified URL with the given form data and headers,
+    '''  Sends an asynchronous POST request to the specified URI
+    '''  with the provided form data and headers,
     '''  and returns the response content as a string.
     ''' </summary>
     ''' <param name="httpClient">
     '''  The <see cref="HttpClient"/> instance used to send the request.
     ''' </param>
-    ''' <param name="requestUri">The URL to which the POST request is sent.</param>
+    ''' <param name="requestUri">
+    '''  The URI to which the POST request is sent.
+    ''' </param>
     ''' <param name="nameValueCollection">
-    '''  A <see cref="Dictionary(Of String, String)"/> containing the form data
-    '''  to include in the request body.
+    '''  A <see cref="Dictionary(Of String, String)"/> containing form data
+    '''  to be included in the request body.
     ''' </param>
     ''' <param name="headers">
-    '''  A <see cref="Dictionary(Of String, String)"/> of headers to include in the request.
+    '''  A <see cref="Dictionary(Of String, String)"/> containing headers
+    '''  to be included in the request.
     ''' </param>
     ''' <returns>
-    '''  A <see langword="String"/> containing the response content.
+    '''  A <see cref="Task(Of String)"/> representing the asynchronous operation,
+    '''  containing the response content as a string.
     ''' </returns>
     <Extension>
-    Public Function PostRequest(
-        ByRef httpClient As HttpClient,
-        requestUri As String,
-        nameValueCollection As Dictionary(Of String, String),
-        headers As Dictionary(Of String, String)) As String
+    Public Async Function PostRequestAsync(httpClient As HttpClient,
+                                           requestUri As String,
+                                           nameValueCollection As Dictionary(Of String, String),
+                                           headers As Dictionary(Of String, String)) As Task(Of String)
 
         For Each header As KeyValuePair(Of String, String) In headers
-            httpClient.DefaultRequestHeaders.Add(name:=header.Key, header.Value)
+            If Not httpClient.DefaultRequestHeaders.Contains(header.Key) Then
+                httpClient.DefaultRequestHeaders.Add(name:=header.Key, header.Value)
+            End If
         Next
 
         Dim content As New FormUrlEncodedContent(nameValueCollection)
-        Dim response As HttpResponseMessage = httpClient.PostAsync(requestUri, content).Result
-        Return response.Content.ReadAsStringAsync().Result
+        Using response As HttpResponseMessage = Await httpClient.PostAsync(requestUri, content).ConfigureAwait(False)
+            response.ThrowIfFailure()
+            Return Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+        End Using
     End Function
 
     ''' <summary>
-    '''  Retrieves the response content as a string from
-    '''  the specified <see cref="HttpResponseMessage"/>.
+    '''  Asynchronously retrieves the response content as a string
+    '''  after ensuring the response indicates success.
     ''' </summary>
     ''' <param name="client">
     '''  The <see cref="HttpResponseMessage"/> from which to read the content.
     ''' </param>
     ''' <returns>
-    '''  A <see langword="String"/> containing the response content.
+    '''  A <see cref="Task(Of String)"/> representing the asynchronous operation,
+    '''  containing the response content as a string.
     ''' </returns>
     <Extension>
-    Public Function ResultText(client As HttpResponseMessage) As String
-        Return client.Content.ReadAsStringAsync().Result
+    Public Async Function ResultTextAsync(client As HttpResponseMessage) As Task(Of String)
+        client.ThrowIfFailure()
+        Return Await client.Content.ReadAsStringAsync().ConfigureAwait(False)
     End Function
 
 End Module
