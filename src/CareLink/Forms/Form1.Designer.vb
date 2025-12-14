@@ -349,9 +349,9 @@ Partial Class Form1
         AboveHighLimitMessageLabel.BackColor = Color.Transparent
         AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         AboveHighLimitMessageLabel.ForeColor = Color.Yellow
-        AboveHighLimitMessageLabel.Location = New Point(44, 211)
+        AboveHighLimitMessageLabel.Location = New Point(17, 211)
         AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
-        AboveHighLimitMessageLabel.Size = New Size(144, 21)
+        AboveHighLimitMessageLabel.Size = New Size(198, 21)
         AboveHighLimitMessageLabel.TabIndex = 28
         AboveHighLimitMessageLabel.Text = "Above XXX XX/XX"
         AboveHighLimitMessageLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -363,7 +363,7 @@ Partial Class Form1
         AboveHighLimitValueLabel.BackColor = Color.Black
         AboveHighLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         AboveHighLimitValueLabel.ForeColor = Color.Yellow
-        AboveHighLimitValueLabel.Location = New Point(87, 169)
+        AboveHighLimitValueLabel.Location = New Point(86, 169)
         AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
         AboveHighLimitValueLabel.Size = New Size(59, 40)
         AboveHighLimitValueLabel.TabIndex = 22
@@ -390,9 +390,9 @@ Partial Class Form1
         AverageSGMessageLabel.BackColor = Color.Transparent
         AverageSGMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         AverageSGMessageLabel.ForeColor = Color.LightGray
-        AverageSGMessageLabel.Location = New Point(33, 398)
+        AverageSGMessageLabel.Location = New Point(31, 398)
         AverageSGMessageLabel.Name = "AverageSGMessageLabel"
-        AverageSGMessageLabel.Size = New Size(167, 21)
+        AverageSGMessageLabel.Size = New Size(170, 21)
         AverageSGMessageLabel.TabIndex = 0
         AverageSGMessageLabel.Text = "Average SG in XX/XX"
         AverageSGMessageLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -419,9 +419,9 @@ Partial Class Form1
         BelowLowLimitMessageLabel.BackColor = Color.Transparent
         BelowLowLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         BelowLowLimitMessageLabel.ForeColor = Color.Red
-        BelowLowLimitMessageLabel.Location = New Point(45, 333)
+        BelowLowLimitMessageLabel.Location = New Point(22, 333)
         BelowLowLimitMessageLabel.Name = "BelowLowLimitMessageLabel"
-        BelowLowLimitMessageLabel.Size = New Size(142, 21)
+        BelowLowLimitMessageLabel.Size = New Size(187, 21)
         BelowLowLimitMessageLabel.TabIndex = 32
         BelowLowLimitMessageLabel.Text = "Below XXX XX/XX"
         BelowLowLimitMessageLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -433,7 +433,7 @@ Partial Class Form1
         BelowLowLimitValueLabel.BackColor = Color.Black
         BelowLowLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         BelowLowLimitValueLabel.ForeColor = Color.Red
-        BelowLowLimitValueLabel.Location = New Point(87, 291)
+        BelowLowLimitValueLabel.Location = New Point(86, 291)
         BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
         BelowLowLimitValueLabel.Size = New Size(59, 40)
         BelowLowLimitValueLabel.TabIndex = 26
@@ -868,11 +868,12 @@ Partial Class Form1
         GraphLast24HoursLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' HighTirComplianceLabel
-        ' 
+        '
+        HighTirComplianceLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
         HighTirComplianceLabel.AutoSize = True
         HighTirComplianceLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
         HighTirComplianceLabel.ForeColor = Color.LimeGreen
-        HighTirComplianceLabel.Location = New Point(142, 479)
+        HighTirComplianceLabel.Location = New Point(140, 479)
         HighTirComplianceLabel.Name = "HighTirComplianceLabel"
         HighTirComplianceLabel.Size = New Size(68, 34)
         HighTirComplianceLabel.TabIndex = 37
@@ -1128,13 +1129,14 @@ Partial Class Form1
         LoginStatus.Text = "Login Status: Unknown"
         ' 
         ' LowTirComplianceLabel
-        ' 
+        '
+        LowTirComplianceLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
         LowTirComplianceLabel.AutoSize = True
         LowTirComplianceLabel.Font = New Font("Segoe UI", 9.75F, FontStyle.Bold)
         LowTirComplianceLabel.ForeColor = Color.Red
-        LowTirComplianceLabel.Location = New Point(3, 479)
+        LowTirComplianceLabel.Location = New Point(24, 479)
         LowTirComplianceLabel.Name = "LowTirComplianceLabel"
-        LowTirComplianceLabel.Size = New Size(138, 34)
+        LowTirComplianceLabel.Size = New Size(68, 34)
         LowTirComplianceLabel.TabIndex = 36
         LowTirComplianceLabel.Text = "(6.3) Low" & vbCrLf & "Needs Improvement²"
         LowTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1829,9 +1831,9 @@ Partial Class Form1
         TirValueLabel.BackColor = Color.Black
         TirValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TirValueLabel.ForeColor = Color.DarkGreen
-        TirValueLabel.Location = New Point(16, 234)
+        TirValueLabel.Location = New Point(11, 234)
         TirValueLabel.Name = "TirValueLabel"
-        TirValueLabel.Size = New Size(84, 40)
+        TirValueLabel.Size = New Size(93, 40)
         TirValueLabel.TabIndex = 24
         TirValueLabel.Text = " 90%"
         TirValueLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -1843,15 +1845,16 @@ Partial Class Form1
         TiTRValueLabel.BackColor = Color.Black
         TiTRValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TiTRValueLabel.ForeColor = Color.Red
-        TiTRValueLabel.Location = New Point(135, 234)
+        TiTRValueLabel.Location = New Point(136, 234)
         TiTRValueLabel.Name = "TiTRValueLabel"
-        TiTRValueLabel.Size = New Size(84, 40)
+        TiTRValueLabel.Size = New Size(76, 40)
         TiTRValueLabel.TabIndex = 24
         TiTRValueLabel.Text = " 50%"
         TiTRValueLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TirMsgLabel
-        ' 
+        '
+        TirMsgLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
         TirMsgLabel.AutoSize = True
         TirMsgLabel.BackColor = Color.Transparent
         TirMsgLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
@@ -1870,7 +1873,7 @@ Partial Class Form1
         TirComplianceLabel.BackColor = Color.Transparent
         TirComplianceLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
         TirComplianceLabel.ForeColor = Color.LightGray
-        TirComplianceLabel.Location = New Point(38, 448)
+        TirComplianceLabel.Location = New Point(37, 448)
         TirComplianceLabel.Name = "TirComplianceLabel"
         TirComplianceLabel.Size = New Size(157, 25)
         TirComplianceLabel.TabIndex = 35
@@ -1878,12 +1881,13 @@ Partial Class Form1
         TirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' TiTRMgsLabel
-        ' 
+        '
+        TiTRMgsLabel.Anchor = AnchorStyles.Left Or AnchorStyles.Top
         TiTRMgsLabel.AutoSize = True
         TiTRMgsLabel.BackColor = Color.Transparent
         TiTRMgsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         TiTRMgsLabel.ForeColor = Color.Red
-        TiTRMgsLabel.Location = New Point(125, 270)
+        TiTRMgsLabel.Location = New Point(123, 270)
         TiTRMgsLabel.Name = "TiTRMgsLabel"
         TiTRMgsLabel.Size = New Size(102, 21)
         TiTRMgsLabel.TabIndex = 30
@@ -1892,11 +1896,12 @@ Partial Class Form1
         ' 
         ' TiTRMgsLabel2
         ' 
+        TiTRMgsLabel2.Anchor = AnchorStyles.Left Or AnchorStyles.Top
         TiTRMgsLabel2.AutoSize = True
         TiTRMgsLabel2.BackColor = Color.Transparent
         TiTRMgsLabel2.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         TiTRMgsLabel2.ForeColor = Color.Red
-        TiTRMgsLabel2.Location = New Point(157, 291)
+        TiTRMgsLabel2.Location = New Point(162, 291)
         TiTRMgsLabel2.Name = "TiTRMgsLabel2"
         TiTRMgsLabel2.Size = New Size(67, 21)
         TiTRMgsLabel2.TabIndex = 30
