@@ -20,7 +20,7 @@ Friend Module LoginHelpers
         Try
             Dim options As JsonSerializerOptions = s_jsonDesterilizeOptions
             PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(element:=PatientDataElement, options)
-            RecentData = PatientDataElement.ConvertJsonElementToStringDictionary()
+            RecentData = PatientDataElement.ToStringDictionary()
         Catch ex As Exception
             MessageBox.Show(
                 text:=$"Error deserializing patient data: {ex.Message}",

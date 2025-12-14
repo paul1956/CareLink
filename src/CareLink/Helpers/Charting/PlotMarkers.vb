@@ -21,10 +21,10 @@ Friend Module PlotMarkers
     <Extension>
     Private Sub AddCalibrationPt(seriesPts As DataPointCollection, markerOA As OADate, f As Single, item As Marker)
         seriesPts.AddMarkerPt(markerOA, f, markerColor:=Color.Red)
-        Dim status As Boolean = CBool(item.GetStringFromJson(key:="calibrationSuccess"))
+        Dim status As Boolean = CBool(item.GetString(key:="calibrationSuccess"))
         Dim calibrationStatus As String = If(status, "accepted", "not accepted")
         Dim key As String = "unitValue"
-        Dim unitValue As String = item.GetSingleFromJson(key, digits:=2, considerValue:=True).ToString
+        Dim unitValue As String = item.GetSingle(key, digits:=2, considerValue:=True).ToString
         seriesPts.Last.Tag = $"Blood Glucose: Calibration {calibrationStatus}: {unitValue} {BgUnits}"
     End Sub
 
@@ -173,7 +173,7 @@ Friend Module PlotMarkers
             Try
                 Dim markerDateTimestamp As Date = item.GetMarkerTimestamp
                 Dim markerOA As New OADate(asDate:=markerDateTimestamp)
-                Dim f As Single = item.GetSingleFromJson(key:="unitValue")
+                Dim f As Single = item.GetSingle(key:="unitValue")
 
                 If Not Single.IsNaN(f) Then
                     f = Math.Min(val1:=bolusRow, val2:=f)
@@ -188,7 +188,7 @@ Friend Module PlotMarkers
                     Case "CALIBRATION"
                         markerSeriesPoints.AddCalibrationPt(markerOA, f, item)
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim amount As Single = item.GetSingleFromJson(key:="bolusAmount", digits:=3)
+                        Dim amount As Single = item.GetSingle(key:="bolusAmount", digits:=3)
                         pageChart.Series(name:=BasalSeriesName).PlotBasalSeries(
                             markerOA,
                             amount,
@@ -198,7 +198,7 @@ Friend Module PlotMarkers
                             DrawFromBottom:=False,
                             tag:=GetToolTip(item.Type, amount))
                     Case "MANUAL_BASAL_DELIVERY"
-                        Dim amount As Single = item.GetSingleFromJson(key:=EmptyString, digits:=3)
+                        Dim amount As Single = item.GetSingle(key:=EmptyString, digits:=3)
                         pageChart.Series(name:=BasalSeriesName).PlotBasalSeries(
                             markerOA,
                             amount,
@@ -209,17 +209,17 @@ Friend Module PlotMarkers
                             tag:=GetToolTip(item.Type, amount))
                     Case "INSULIN"
                         Dim key As String
-                        Select Case item.GetStringFromJson(key:=NameOf(Insulin.ActivationType))
+                        Select Case item.GetString(key:=NameOf(Insulin.ActivationType))
                             Case "AUTOCORRECTION"
                                 key = "deliveredFastAmount"
                                 pageChart.Series(name:=BasalSeriesName).PlotBasalSeries(
                                     markerOA,
-                                    amount:=item.GetSingleFromJson(key, digits:=3),
+                                    amount:=item.GetSingle(key, digits:=3),
                                     bolusRow,
                                     insulinRow,
                                     legendText:="Auto Correction",
                                     DrawFromBottom:=False,
-                                    tag:=$"Auto Correction: {item.GetSingleFromJson(key, digits:=3)}U")
+                                    tag:=$"Auto Correction: {item.GetSingle(key, digits:=3)}U")
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 Dim baseColor As Color
                                 If markerInsulinDictionary.TryAdd(key:=markerOA, value:=CInt(GetInsulinYValue())) Then
@@ -237,7 +237,7 @@ Friend Module PlotMarkers
                                         baseColor = Color.LightBlue
                                         markerSeriesPoints.Last.Color = Color.FromArgb(alpha:=30, baseColor)
                                         key = "deliveredFastAmount"
-                                        Dim autoCorrection As Single = item.GetSingleFromJson(key, digits:=3)
+                                        Dim autoCorrection As Single = item.GetSingle(key, digits:=3)
                                         markerSeriesPoints.Last.Tag = $"Bolus: {autoCorrection}U"
                                     End If
                                 Else
@@ -259,7 +259,7 @@ Friend Module PlotMarkers
                             markerSeriesPoints.Last.MarkerBorderColor = markerColor
                             markerSeriesPoints.Last.MarkerSize = 20
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                            Dim amount As Integer = CInt(item.GetSingleFromJson(key:="amount", digits:=0))
+                            Dim amount As Integer = CInt(item.GetSingle(key:="amount", digits:=0))
                             markerSeriesPoints.Last.Tag = $"Meal:{amount} {GetCarbDefaultUnit()}"
                         End If
                     Case "TIME_CHANGE"
@@ -343,7 +343,7 @@ Friend Module PlotMarkers
                 Select Case item.Type
                     Case "AUTO_BASAL_DELIVERY"
                         key = NameOf(AutoBasalDelivery.BolusAmount)
-                        Dim amount As Single = item.GetSingleFromJson(key, digits:=3)
+                        Dim amount As Single = item.GetSingle(key, digits:=3)
                         With chart.Series(name:=BasalSeriesName)
                             .PlotBasalSeries(
                                 markerOADateTime,
@@ -357,7 +357,7 @@ Friend Module PlotMarkers
                         End With
                     Case "MANUAL_BASAL_DELIVERY"
                         key = NameOf(AutoBasalDelivery.BolusAmount)
-                        Dim amount As Single = item.GetSingleFromJson(key, digits:=3)
+                        Dim amount As Single = item.GetSingle(key, digits:=3)
                         chart.Series(name:=BasalSeriesName).PlotBasalSeries(
                             markerOADateTime,
                             amount,
@@ -369,10 +369,10 @@ Friend Module PlotMarkers
 
                     Case "INSULIN"
                         key = NameOf(Insulin.ActivationType)
-                        Select Case item.GetStringFromJson(key)
+                        Select Case item.GetString(key)
                             Case "AUTOCORRECTION"
                                 key = NameOf(Insulin.DeliveredFastAmount)
-                                Dim amount As Single = item.GetSingleFromJson(key, digits:=3)
+                                Dim amount As Single = item.GetSingle(key, digits:=3)
                                 chart.Series(name:=BasalSeriesName).PlotBasalSeries(
                                     markerOADateTime,
                                     amount,
@@ -395,7 +395,7 @@ Friend Module PlotMarkers
                                         lastDataPoint.Color = Color.FromArgb(alpha:=30, baseColor:=Color.LightBlue)
                                         key = NameOf(Insulin.DeliveredFastAmount)
                                         markerBorderColor = Color.FromArgb(alpha:=10, baseColor:=Color.Black)
-                                        Dim singleValue As Single = item.GetSingleFromJson(key, digits:=3)
+                                        Dim singleValue As Single = item.GetSingle(key, digits:=3)
                                         CreateCallout(
                                             chart,
                                             lastDataPoint,
@@ -413,7 +413,7 @@ Friend Module PlotMarkers
                         If s_treatmentMarkersMeal.TryAdd(key:=markerOADateTime, value) Then
                             markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=value)
                             markerBorderColor = Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
-                            Dim amount As Integer = CInt(item.GetSingleFromJson(key:="amount", digits:=0))
+                            Dim amount As Integer = CInt(item.GetSingle(key:="amount", digits:=0))
                             CreateCallout(
                                 chart,
                                 lastDataPoint:=markerSeriesPoints.Last,

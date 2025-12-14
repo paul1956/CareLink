@@ -10,6 +10,9 @@ Imports System.Runtime.CompilerServices
 '''  including parsing, formatting, and conversions between Unix time and DateTime.
 ''' </summary>
 Friend Module DateTimeExtensions
+    Private Const Format As String = "yyyy-MM-ddTHH:mm:ss"
+
+    Private ReadOnly s_dateTimeFormatUniqueCultures As New List(Of CultureInfo)
 
     Private ReadOnly s_epochLocal As New DateTime(
         year:=1970,
@@ -28,8 +31,6 @@ Friend Module DateTimeExtensions
         minute:=0,
         second:=0,
         kind:=DateTimeKind.Utc)
-
-    Private ReadOnly s_dateTimeFormatUniqueCultures As New List(Of CultureInfo)
 
     ''' <summary>
     '''  Parses a date string using culture-specific formats.
@@ -302,8 +303,6 @@ Friend Module DateTimeExtensions
         Return New TimeSpan(hours:=0, minutes:=minutes \ 60, seconds:=minutes Mod 60).ToString.Substring(startIndex:=4)
     End Function
 
-
-
     ''' <summary>
     '''  Converts a <see langword="Single"/> representing hours into
     '''  a <see langword="String"/> formatted as hours and minutes.
@@ -363,6 +362,18 @@ Friend Module DateTimeExtensions
     <Extension>
     Public Function ToShortDateTime(dateValue As Date) As String
         Return $"{dateValue:d} {dateValue:T}"
+    End Function
+
+    ''' <summary>
+    '''  Converts a <see cref="Date"/> to a <see langword="String"/>
+    '''  with the specified format.
+    '''  Defaults to "yyyy-MM-ddTHH:mm:ss" if no format is provided.
+    ''' </summary>
+    ''' <param name="d">The date to convert.</param>
+    ''' <returns>The formatted date as a string.</returns>
+    <Extension>
+    Public Function ToStringExact(d As Date) As String
+        Return d.ToString(Format, provider:=CultureInfo.InvariantCulture)
     End Function
 
     ''' <summary>

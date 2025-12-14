@@ -4452,11 +4452,11 @@ Public Class Form1
 
                     Select Case marker.Type
                         Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
-                            bolusAmount = marker.GetSingleFromJson(NameOf(AutoBasalDelivery.BolusAmount))
+                            bolusAmount = marker.GetSingle(NameOf(AutoBasalDelivery.BolusAmount))
                             shouldAdd = True
 
                         Case "INSULIN"
-                            bolusAmount = marker.GetSingleFromJson(NameOf(Insulin.DeliveredFastAmount))
+                            bolusAmount = marker.GetSingle(NameOf(Insulin.DeliveredFastAmount))
                             shouldAdd = True
 
                         Case "LOW_GLUCOSE_SUSPENDED"
@@ -4768,10 +4768,10 @@ Public Class Form1
             Dim marker As Marker = markerWithIndex.Value
             Select Case marker.Type
                 Case "INSULIN"
-                    Dim deliveredAmount As String = marker.GetSingleFromJson(
+                    Dim deliveredAmount As String = marker.GetSingle(
                         key:=NameOf(Insulin.DeliveredFastAmount)).ToString
                     s_totalDailyDose += deliveredAmount.ParseSingle(digits:=3)
-                    Select Case marker.GetStringFromJson(key:=NameOf(Insulin.ActivationType))
+                    Select Case marker.GetString(key:=NameOf(Insulin.ActivationType))
                         Case "AUTOCORRECTION"
                             s_totalAutoCorrection += deliveredAmount.ParseSingle(digits:=3)
                         Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
@@ -4779,19 +4779,19 @@ Public Class Form1
                     End Select
 
                 Case "AUTO_BASAL_DELIVERY"
-                    Dim amount As Single = marker.GetSingleFromJson(
+                    Dim amount As Single = marker.GetSingle(
                         key:=NameOf(AutoBasalDelivery.BolusAmount),
                         digits:=3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MANUAL_BASAL_DELIVERY"
-                    Dim amount As Single = marker.GetSingleFromJson(
+                    Dim amount As Single = marker.GetSingle(
                         key:=NameOf(AutoBasalDelivery.BolusAmount),
                         digits:=3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MEAL"
-                    s_totalCarbs += CInt(marker.GetSingleFromJson(key:="amount"))
+                    s_totalCarbs += CInt(marker.GetSingle(key:="amount"))
                 Case "CALIBRATION"
                     ' IGNORE HERE
                 Case "BG_READING"
