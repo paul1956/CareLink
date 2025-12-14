@@ -153,7 +153,7 @@ Friend Module Form1CollectMarkersHelper
                     s_suspendedMarkers.Add(item:=New LowGlucoseSuspended(
                         item,
                         recordNumber:=s_suspendedMarkers.Count + 1))
-                    Select Case item.GetStringFromJson(key:=NameOf(Insulin.ActivationType))
+                    Select Case item.GetString(key:=NameOf(Insulin.ActivationType))
                         Case "AUTOCORRECTION"
                             Dim key As OADate = lastInsulinRecord.OAdateTime
                             Dim value As Single = lastInsulinRecord.DeliveredFastAmount

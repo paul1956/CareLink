@@ -22,18 +22,18 @@ Public Class Insulin
         Me.RecordNumber = recordNumber
         Me.Type = item.Type
         Me.Kind = "Marker"
-        Me.ActivationType = item.GetStringFromJson(key:=NameOf(ActivationType))
+        Me.ActivationType = item.GetString(key:=NameOf(ActivationType))
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
-        Me.ProgrammedFastAmount = item.GetSingleFromJson(key:=NameOf(ProgrammedFastAmount), digits:=3)
-        Me.DeliveredFastAmount = item.GetSingleFromJson(key:=NameOf(DeliveredFastAmount), digits:=3)
-        Me.Completed = item.GetBooleanFromJson(key:=NameOf(Completed))
-        Me.BolusType = item.GetStringFromJson(key:=NameOf(BolusType))
-        Me.ProgrammedExtendedAmount = item.GetSingleFromJson(key:=NameOf(ProgrammedExtendedAmount), digits:=3)
-        Me.DeliveredExtendedAmount = item.GetSingleFromJson(key:=NameOf(DeliveredExtendedAmount), digits:=3)
-        Me.ProgrammedDuration = item.GetIntegerFromJson(key:=NameOf(ProgrammedDuration))
-        Me.EffectiveDuration = item.GetIntegerFromJson(key:=NameOf(EffectiveDuration))
-        Me.InsulinType = item.GetStringFromJson(key:=NameOf(InsulinType))
+        Me.ProgrammedFastAmount = item.GetSingle(key:=NameOf(ProgrammedFastAmount), digits:=3)
+        Me.DeliveredFastAmount = item.GetSingle(key:=NameOf(DeliveredFastAmount), digits:=3)
+        Me.Completed = item.GetBoolean(key:=NameOf(Completed))
+        Me.BolusType = item.GetString(key:=NameOf(BolusType))
+        Me.ProgrammedExtendedAmount = item.GetSingle(key:=NameOf(ProgrammedExtendedAmount), digits:=3)
+        Me.DeliveredExtendedAmount = item.GetSingle(key:=NameOf(DeliveredExtendedAmount), digits:=3)
+        Me.ProgrammedDuration = item.GetInteger(key:=NameOf(ProgrammedDuration))
+        Me.EffectiveDuration = item.GetInteger(key:=NameOf(EffectiveDuration))
+        Me.InsulinType = item.GetString(key:=NameOf(InsulinType))
         If Me.InsulinType.EqualsNoCase("Unknown") Then
             Me.InsulinType = CurrentUser.InsulinTypeName
         End If

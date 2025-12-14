@@ -325,7 +325,7 @@ Friend Module Form1UpdateHelpers
         End If
 
         If RecentData.TryGetValue(key:="therapyAlgorithmState", value) Then
-            s_therapyAlgorithmStateValue = LoadIndexedItems(json:=value)
+            s_therapyAlgorithmStateValue = DeserializeJsonAsDictionary(json:=value)
             Dim key As String = NameOf(TherapyAlgorithmState.AutoModeShieldState)
             Dim basalTypes As IEnumerable(Of String) = {"AUTO_BASAL", "SAFE_BASAL"}
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso
@@ -600,7 +600,7 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataEnum.lastAlarm)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
-                    s_lastAlarmValue = LoadIndexedItems(json:=kvp.Value)
+                    s_lastAlarmValue = DeserializeJsonAsDictionary(json:=kvp.Value)
 
                 Case NameOf(ServerDataEnum.activeInsulin)
                     s_activeInsulin = PatientData.ActiveInsulin
@@ -681,7 +681,7 @@ Friend Module Form1UpdateHelpers
                         recordNumber:=CSng(c.Index + 0.2),
                         key:="clearedNotifications")
                     s_listOfSummaryRecords.Add(item)
-                    s_notificationHistoryValue = LoadIndexedItems(json:=kvp.Value)
+                    s_notificationHistoryValue = DeserializeJsonAsDictionary(json:=kvp.Value)
 
                 Case NameOf(ServerDataEnum.sensorLifeText)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))

@@ -26,13 +26,13 @@ Friend Module GetManualBasalPoints
         Debug.Assert(condition:=CurrentPdf.IsValid)
         Dim item As Marker = markerWithIndex.Value
         Dim key As String = NameOf(LowGlucoseSuspended.deliverySuspended)
-        If item.GetBooleanFromJson(key) Then
+        If item.GetBoolean(key) Then
             Return New SortedDictionary(Of OADate, Single)
         End If
         Dim nextPumpSuspendTime As OADate
         Dim markerDateTime? As Date
         If s_markers.Count > 1 AndAlso markerWithIndex.Index = s_markers.Count - 2 Then
-            Dim activationType As String = s_markers.Last().GetStringFromJson(NameOf(Insulin.ActivationType))
+            Dim activationType As String = s_markers.Last().GetString(NameOf(Insulin.ActivationType))
             If activationType = "MANUAL" Then
                 markerDateTime = s_markers.Last().GetMarkerTimestamp
                 If markerDateTime Is Nothing Then
