@@ -104,7 +104,8 @@ Friend Module LoginHelpers
                         owner.LoginStatus.ReportLoginStatus(hasErrors, lastErrorMessage:="Network Unavailable")
                         Return False
                     ElseIf IsNullOrWhiteSpace(LoginDialog.LoginStatus.Text) Then
-                        owner.LoginStatus.ReportLoginStatus(hasErrors, lastErrorMessage:=LoginDialog.LoginStatus.Text)
+                        owner.LoginStatus.ReportLoginStatus(hasErrors,
+                                                            lastErrorMessage:=LoginDialog.LoginStatus.Text)
                         Return False
                     End If
 
@@ -189,7 +190,9 @@ Friend Module LoginHelpers
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path:=lastDownloadFileWithPath)
                 Dim isDaylightSavingTime As Boolean = fileDate.IsDaylightSavingTime
-                owner.SetLastUpdateTime(msg:=fileDate.ToShortDateTime, suffixMessage:="from file", isDaylightSavingTime)
+                owner.SetLastUpdateTime(msg:=fileDate.ToShortDateTime,
+                                        suffixMessage:="from file",
+                                        isDaylightSavingTime)
                 SetUpCareLinkUser()
                 fromFile = True
         End Select
@@ -457,7 +460,8 @@ Friend Module LoginHelpers
     Friend Function ToDataSource(dic As Dictionary(Of String, Object)) As List(Of KeyValuePair(Of String, String))
         Dim dataSource As New List(Of KeyValuePair(Of String, String))
         For Each kvp As KeyValuePair(Of String, Object) In dic
-            Dim item As KeyValuePair(Of String, String) = KeyValuePair.Create(kvp.Key, value:=CType(kvp.Value, String))
+            Dim item As KeyValuePair(Of String, String) =
+                KeyValuePair.Create(kvp.Key, value:=CType(kvp.Value, String))
             dataSource.Add(item)
         Next
         Return dataSource

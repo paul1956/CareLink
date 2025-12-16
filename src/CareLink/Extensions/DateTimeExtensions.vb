@@ -54,7 +54,9 @@ Friend Module DateTimeExtensions
             SyncLock s_dateTimeFormatUniqueCultures
                 If s_dateTimeFormatUniqueCultures.Count = 0 Then
                     s_dateTimeFormatUniqueCultures.Add(item:=CurrentDateCulture)
-                    Dim formatList As New List(Of String) From {CurrentDateCulture.DateTimeFormat.FullDateTimePattern}
+                    Dim formatList As New List(Of String) From {
+                        CurrentDateCulture.DateTimeFormat.FullDateTimePattern}
+
                     For Each item As CultureInfo In CultureInfoList
                         If formatList.Contains(item:=item.DateTimeFormat.FullDateTimePattern) OrElse
                            IsNullOrWhiteSpace(value:=item.Name) OrElse
@@ -274,7 +276,8 @@ Friend Module DateTimeExtensions
     Public Function ToDaysHours(hours As Integer) As String
         ' Hours must be positive and non-zero
         If hours <= 0 Then
-            Throw New ArgumentOutOfRangeException(paramName:=NameOf(hours), message:="hours must be positive and non-zero")
+            Const message As String = "hours must be positive and non-zero"
+            Throw New ArgumentOutOfRangeException(paramName:=NameOf(hours), message)
         End If
 
         Dim days As Integer = hours \ 24
@@ -300,7 +303,9 @@ Friend Module DateTimeExtensions
 
     <Extension>
     Public Function ToHoursMinutes(minutes As Integer) As String
-        Return New TimeSpan(hours:=0, minutes:=minutes \ 60, seconds:=minutes Mod 60).ToString.Substring(startIndex:=4)
+        Return New TimeSpan(hours:=0,
+                            minutes:=minutes \ 60,
+                            seconds:=minutes Mod 60).ToString.Substring(startIndex:=4)
     End Function
 
     ''' <summary>

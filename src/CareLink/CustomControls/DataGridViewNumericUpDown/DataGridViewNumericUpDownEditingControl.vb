@@ -166,8 +166,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
     '''  <see langword="True"/> if the editing control wants the key;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Public Overridable Function EditingControlWantsInputKey(
-        keyData As Keys, dataGridViewWantsInputKey As Boolean) As Boolean _
+    Public Overridable Function EditingControlWantsInputKey(keyData As Keys,
+                                                            dataGridViewWantsInputKey As Boolean) As Boolean _
         Implements IDataGridViewEditingControl.EditingControlWantsInputKey
 
         Select Case keyData And Keys.KeyCode
@@ -180,7 +180,9 @@ Friend Class DataGridViewNumericUpDownEditingControl
                     Dim hasSelectionAtEnd As Boolean = textBox.SelectionLength = 0 AndAlso
                                                        textBox.SelectionStart = textBox.Text.Length
 
-                    Dim hasSelectionAtStart As Boolean = textBox.SelectionLength = 0 AndAlso textBox.SelectionStart = 0
+                    Dim hasSelectionAtStart As Boolean =
+                        textBox.SelectionLength = 0 AndAlso textBox.SelectionStart = 0
+
                     If (Not isRTL AndAlso Not hasSelectionAtEnd) OrElse (isRTL AndAlso Not hasSelectionAtStart) Then
                         Return True
                     End If
@@ -199,7 +201,8 @@ Friend Class DataGridViewNumericUpDownEditingControl
 
                     Dim atStart As Boolean = txtBox.SelectionLength = 0 AndAlso txtBox.SelectionStart = 0
 
-                    Dim atEnd As Boolean = txtBox.SelectionLength = 0 AndAlso txtBox.SelectionStart = txtBox.Text.Length
+                    Dim atEnd As Boolean = txtBox.SelectionLength = 0 AndAlso
+                                           txtBox.SelectionStart = txtBox.Text.Length
 
                     If (isLtr AndAlso Not atStart) OrElse (isRtl AndAlso Not atEnd) Then
                         Return True
@@ -254,8 +257,7 @@ Friend Class DataGridViewNumericUpDownEditingControl
     '''  values that specifies the context in which the data is needed.
     ''' </param>
     ''' <returns>The formatted value of the editing control.</returns>
-    Public Overridable Function GetEditingControlFormattedValue(
-        context As DataGridViewDataErrorContexts) As Object _
+    Public Overridable Function GetEditingControlFormattedValue(context As DataGridViewDataErrorContexts) As Object _
         Implements IDataGridViewEditingControl.GetEditingControlFormattedValue
 
         Dim userEdit As Boolean = Me.UserEdit

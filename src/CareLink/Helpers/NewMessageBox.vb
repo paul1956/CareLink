@@ -147,7 +147,8 @@ Friend Module NewMessageBox
                             ' Update the remaining time and progress bar.
                             page.Text = GetPrompt(prompt, autoCloseTimeOut, remainingTenthSeconds)
                             Dim autoCloseTimeoutTenthSeconds As Integer = autoCloseTimeOut * 10
-                            page.ProgressBar.Value = CInt(100 * (remainingTenthSeconds / autoCloseTimeoutTenthSeconds))
+                            page.ProgressBar.Value =
+                                CInt(100 * (remainingTenthSeconds / autoCloseTimeoutTenthSeconds))
                         Else
                             ' Stop the timer and click the "Reconnect" button - this will
                             ' close the dialog.

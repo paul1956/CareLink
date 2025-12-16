@@ -168,7 +168,9 @@ Public Module DgvCellStyleHelpers
     ''' </param>
     ''' <param name="message">The message to append to the value.</param>
     <Extension>
-    Friend Sub CellFormattingInteger(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs, message As String)
+    Friend Sub CellFormattingInteger(dgv As DataGridView,
+                                     e As DataGridViewCellFormattingEventArgs,
+                                     message As String)
         e.Value = $"{e.Value} {message}"
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
@@ -325,7 +327,10 @@ Public Module DgvCellStyleHelpers
             Return cell.InheritedStyle
         End If
 
-        Const bindingAttr As BindingFlags = BindingFlags.Instance Or BindingFlags.NonPublic Or BindingFlags.IgnoreCase
+        Const bindingAttr As BindingFlags = BindingFlags.IgnoreCase Or
+                                            BindingFlags.Instance Or
+                                            BindingFlags.NonPublic
+
         Dim m As MethodInfo = dgv.GetType().GetMethod(
             name:="OnCellFormatting",
             bindingAttr,

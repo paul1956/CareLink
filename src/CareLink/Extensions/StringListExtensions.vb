@@ -21,7 +21,10 @@ Public Module StringListExtensions
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
-    Friend Function TryGetPrefixMatch(list As List(Of String), headerText As String, ByRef result As String) As Boolean
+    Friend Function TryGetPrefixMatch(list As List(Of String),
+                                      headerText As String,
+                                      ByRef result As String) As Boolean
+
         For Each value As String In list
             If headerText.StartsWithNoCase(value) Then
                 result = value

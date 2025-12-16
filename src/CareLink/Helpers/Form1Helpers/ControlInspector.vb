@@ -49,7 +49,7 @@ Friend Module ControlInspector
                 Else
                     ' Handle unnamed controls specially: include SplitterPanel children so we can
                     ' show which panel (Panel1/Panel2) they are instead of stopping in the debugger.
-                    Dim sc As System.Windows.Forms.SplitContainer = TryCast(current.Parent, System.Windows.Forms.SplitContainer)
+                    Dim sc As SplitContainer = TryCast(current.Parent, SplitContainer)
                     If sc IsNot Nothing Then
                         Dim panelLabel As String = current.GetType().Name
                         If Object.ReferenceEquals(sc.Panel1, current) Then
@@ -58,7 +58,9 @@ Friend Module ControlInspector
                             panelLabel = "Panel2"
                         End If
 
-                        Dim displayName As String = If(IsNotNullOrWhiteSpace(sc.Name), $"{sc.Name}.{panelLabel}", panelLabel)
+                        Dim displayName As String = If(IsNotNullOrWhiteSpace(sc.Name),
+                                                       $"{sc.Name}.{panelLabel}",
+                                                       panelLabel)
                         result.Add(New ControlInfo With {
                             .ControlName = displayName,
                             .ParentName = If(IsNotNullOrWhiteSpace(sc.Name), sc.Name, sc.GetType().Name),
@@ -70,7 +72,8 @@ Friend Module ControlInspector
                             .BorderStyle = GetBorderStyle(current)})
                     Else
                         ' Ignore native scrollbar windows created by other controls (e.g., DataGridView).
-                        ' If the unnamed control is not a native ScrollBar or other native window, break into debugger.
+                        ' If the unnamed control is not a native ScrollBar or other native window,
+                        ' break into debugger.
                         If Not IsNativeControl(current) Then
                             Stop
                         End If

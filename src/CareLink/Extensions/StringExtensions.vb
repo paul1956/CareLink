@@ -61,7 +61,10 @@ Public Module StringExtensions
     '''  The index of the first occurrence of any character in the list, or -1 if not found.
     ''' </returns>
     <Extension>
-    Public Function FindIndexOfAnyChar(inputString As String, chars As List(Of Char), startIndex As Integer) As Integer
+    Public Function FindIndexOfAnyChar(inputString As String,
+                                       chars As List(Of Char),
+                                       startIndex As Integer) As Integer
+
         If inputString Is Nothing Then
             Return -1
         End If
@@ -187,7 +190,10 @@ Public Module StringExtensions
     ''' <returns>A formatted string representing the total units.</returns>
     ''' <param name="includeValue"></param>
     <Extension>
-    Public Function ToUnits(totalUnits As UInteger, unit As String, Optional includeValue As Boolean = True) As String
+    Public Function ToUnits(totalUnits As UInteger,
+                            unit As String,
+                            Optional includeValue As Boolean = True) As String
+
         Dim unitOnly As String = If(totalUnits = 1,
                                     unit,
                                     $"{unit}s")

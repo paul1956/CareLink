@@ -238,7 +238,9 @@ Public Class DataGridViewNumericUpDownCell
     '''  A new <see cref="DataGridViewNumericUpDownCell"/> with the same property values.
     ''' </returns>
     Public Overrides Function Clone() As Object
-        Dim dataGridViewCell As DataGridViewNumericUpDownCell = TryCast(MyBase.Clone(), DataGridViewNumericUpDownCell)
+        Dim dataGridViewCell As DataGridViewNumericUpDownCell =
+            TryCast(MyBase.Clone(), DataGridViewNumericUpDownCell)
+
         If dataGridViewCell IsNot Nothing Then
             dataGridViewCell.DecimalPlaces = _decimalPlaces
             dataGridViewCell.Increment = _increment

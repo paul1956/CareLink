@@ -231,7 +231,10 @@ Friend Module NotificationHelpers
         mainForm.TlpNotificationsCleared.RowCount = 0
 
         ' Force a full garbage collection and allow background GC if enabled
-        GC.Collect(generation:=GC.MaxGeneration, mode:=GCCollectionMode.Optimized, blocking:=False, compacting:=False)
+        GC.Collect(generation:=GC.MaxGeneration,
+                   mode:=GCCollectionMode.Optimized,
+                   blocking:=False,
+                   compacting:=False)
 
         Dim innerJson As List(Of Dictionary(Of String, String))
 

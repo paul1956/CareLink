@@ -13,7 +13,9 @@ Friend Module DeliverySettings
             .AppendNewLine
 
             Dim count As Integer = pdf.Bolus.DeviceCarbohydrateRatios.Count
-            Dim text As String = count.ToUnits(unit:=$"{Indent4}Carbohydrate Ratio", suffix:=":", includeValue:=False)
+            Dim text As String =
+                count.ToUnits(unit:=$"{Indent4}Carbohydrate Ratio", suffix:=":", includeValue:=False)
+
             .AppendTextNewFont(text, newFont:=FixedWidthBoldFont, includeNewLine:=True)
 
             Dim timeFormat As String = pdf.Utilities.TimeFormat

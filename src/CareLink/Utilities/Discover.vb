@@ -112,13 +112,14 @@ Public Module Discover
     ''' Downloads and decodes the discovery configuration data for a given country,
     ''' capturing the HTTP status code and any error messages.
     ''' </summary>
-    ''' <param name="lastErrorMessage">Output parameter to receive the last error message if any.</param>
+    ''' <param name="lastErrorMsg">Output parameter to receive the last error message if any.</param>
     ''' <param name="httpStatusCode">Output parameter to receive the HTTP status code of the response.</param>
     ''' <returns>
     ''' A <see cref="ConfigRecord"/> containing the configuration data for the specified country,
     ''' or <see langword="Nothing"/> if an error occurs.
     ''' </returns>
-    Public Function GetDiscoveryData(ByRef lastErrorMessage As String, ByRef httpStatusCode As Integer) As ConfigRecord
+    Public Function GetDiscoveryData(ByRef lastErrorMsg As String, ByRef httpStatusCode As Integer) As ConfigRecord
+
         Dim url As String = s_discoverUrl(If(s_countryCode.EqualsNoCase("US"), "US", "EU"))
         httpStatusCode = 0 ' Default value meaning no response received yet
         Try
@@ -130,16 +131,16 @@ Public Module Discover
                 Try
                     response.ThrowIfFailure()
                 Catch uaEx As UnauthorizedAccessException
-                    lastErrorMessage = $"Unauthorized access when fetching discovery data: {uaEx.Message}"
-                    Debug.WriteLine(lastErrorMessage)
+                    lastErrorMsg = $"Unauthorized access when fetching discovery data: {uaEx.Message}"
+                    Debug.WriteLine(lastErrorMsg)
                     Return Nothing
                 Catch argEx As ArgumentException
-                    lastErrorMessage = $"Bad request fetching discovery data: {argEx.Message}"
-                    Debug.WriteLine(lastErrorMessage)
+                    lastErrorMsg = $"Bad request fetching discovery data: {argEx.Message}"
+                    Debug.WriteLine(lastErrorMsg)
                     Return Nothing
                 Catch httpEx As HttpRequestException
-                    lastErrorMessage = $"HTTP request failed: {httpEx.Message}"
-                    Debug.WriteLine(lastErrorMessage)
+                    lastErrorMsg = $"HTTP request failed: {httpEx.Message}"
+                    Debug.WriteLine(lastErrorMsg)
                     Return Nothing
                 End Try
 
@@ -154,33 +155,33 @@ Public Module Discover
             Dim messages As New List(Of String)
 
             If ex.InnerExceptions.Count = 1 Then
-                lastErrorMessage = ex.InnerExceptions(0).Message
-                If lastErrorMessage.Contains("No such host is known") Then
+                lastErrorMsg = ex.InnerExceptions(0).Message
+                If lastErrorMsg.Contains("No such host is known") Then
                     httpStatusCode = 1
                 End If
             Else
                 For Each innerEx As Exception In ex.InnerExceptions
                     messages.Add(innerEx.Message)
                 Next
-                lastErrorMessage = $"Multiple errors: {String.Join("; ", messages)}"
+                lastErrorMsg = $"Multiple errors: {String.Join("; ", messages)}"
             End If
-            Debug.WriteLine(lastErrorMessage)
+            Debug.WriteLine(lastErrorMsg)
 
         Catch ex As HttpRequestException
-            lastErrorMessage = $"HTTP request error: {ex.Message}"
-            Debug.WriteLine(lastErrorMessage)
+            lastErrorMsg = $"HTTP request error: {ex.Message}"
+            Debug.WriteLine(lastErrorMsg)
 
         Catch ex As TaskCanceledException
-            lastErrorMessage = "The request timed out."
-            Debug.WriteLine(lastErrorMessage)
+            lastErrorMsg = "The request timed out."
+            Debug.WriteLine(lastErrorMsg)
 
         Catch ex As JsonException
-            lastErrorMessage = $"JSON deserialization error: {ex.Message}"
-            Debug.WriteLine(lastErrorMessage)
+            lastErrorMsg = $"JSON deserialization error: {ex.Message}"
+            Debug.WriteLine(lastErrorMsg)
 
         Catch ex As Exception
-            lastErrorMessage = $"Unexpected error: {ex.Message}"
-            Debug.WriteLine(lastErrorMessage)
+            lastErrorMsg = $"Unexpected error: {ex.Message}"
+            Debug.WriteLine(lastErrorMsg)
             Stop
         End Try
 
