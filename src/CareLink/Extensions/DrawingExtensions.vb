@@ -82,9 +82,8 @@ Friend Module DrawingExtensions
                 style:=FontStyle.Regular,
                 unit:=GraphicsUnit.Pixel)
             g.DrawString(s, font:=fontToUse, brush, x:=-2, y:=0)
+            Return Icon.FromHandle(bitmapText.GetHicon())
         End Using
-
-        Return Icon.FromHandle(bitmapText.GetHicon())
     End Function
 
 End Module
