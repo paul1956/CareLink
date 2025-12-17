@@ -6,7 +6,8 @@ Imports CareLink
 
 Public Class PumpSetup
 
-    Private Const CareLinkUrl As String = "https://www.medtronicdiabetes.com/products/carelink-personal-diabetes-software"
+    Private Const CareLinkUrl As String =
+        "https://www.medtronicdiabetes.com/products/carelink-personal-diabetes-software"
     Private _currentUrlUnderMouse As String = ""
 
     ''' <summary>

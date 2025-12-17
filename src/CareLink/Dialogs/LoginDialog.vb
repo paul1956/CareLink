@@ -109,7 +109,8 @@ Public Class LoginDialog
         If TypeOf selectedValueObj Is String Then
             CurrentDateCulture = selectedValueObj.ToString.GetCurrentDateCulture
         Else
-            Dim selectedKVP As KeyValuePair(Of String, String) = CType(selectedValueObj, KeyValuePair(Of String, String))
+            Dim selectedKVP As KeyValuePair(Of String, String) =
+                CType(selectedValueObj, KeyValuePair(Of String, String))
             CurrentDateCulture = selectedKVP.Value.GetCurrentDateCulture
         End If
     End Sub
@@ -239,9 +240,9 @@ Public Class LoginDialog
         s_password = Me.PasswordTextBox.Text
         s_countryCode = Me.CountryComboBox.SelectedValue.ToString
 
-        Dim lastErrorMessage As String = String.Empty
+        Dim lastErrorMsg As String = String.Empty
         Dim lastHttpStatusCode As Integer = 0
-        Me.ClientDiscover = GetDiscoveryData(lastErrorMessage, lastHttpStatusCode)
+        Me.ClientDiscover = GetDiscoveryData(lastErrorMsg, lastHttpStatusCode)
         If Me.ClientDiscover IsNot Nothing Then
             Me.Ok_Button.Enabled = False
             Dim tokenData As TokenData = ReadTokenDataFile(s_userName)
@@ -291,11 +292,11 @@ Public Class LoginDialog
             Me.Client = New Client2()
             Me.Client.Init()
 
-            lastErrorMessage = Me.Client.GetRecentData()
+            lastErrorMsg = Me.Client.GetRecentData()
         End If
-        If IsNullOrWhiteSpace(lastErrorMessage) Then
+        If IsNullOrWhiteSpace(lastErrorMsg) Then
             s_lastMedicalDeviceDataUpdateServerEpoch = 0
-            ReportLoginStatus(Me.LoginStatus, hasErrors:=False, lastErrorMessage)
+            ReportLoginStatus(Me.LoginStatus, hasErrors:=False, lastErrorMsg)
 
             Me.Ok_Button.Enabled = True
             Me.Cancel_Button.Enabled = True
@@ -319,8 +320,8 @@ Public Class LoginDialog
             lastHttpStatusCode = If(lastHttpStatusCode <> 0,
                                     lastHttpStatusCode,
                                     Me.Client.GetHttpStatusCode)
-            Me.LoginStatus.Text = lastErrorMessage
-            ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMessage, lastHttpStatusCode)
+            Me.LoginStatus.Text = lastErrorMsg
+            ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMsg, lastHttpStatusCode)
             If Client2.Auth_Error_Codes.Contains(value:=lastHttpStatusCode) Then
                 Me.PasswordTextBox.Text = String.Empty
                 Dim userRecord As CareLinkUserDataRecord = Nothing
@@ -482,7 +483,9 @@ Public Class LoginDialog
 
         Dim userRecord As CareLinkUserDataRecord = Nothing
         Dim key As String = Me.UsernameComboBox.SelectedValue.ToString
-        If Me.UsernameComboBox.SelectedValue IsNot Nothing AndAlso s_allUserSettingsData.TryGetValue(key, userRecord) Then
+        If Me.UsernameComboBox.SelectedValue IsNot Nothing AndAlso
+           s_allUserSettingsData.TryGetValue(key, userRecord) Then
+
             If Not userRecord.CareLinkUserName.EqualsNoCase(Me.UsernameComboBox.Text) Then
                 Me.UsernameComboBox.Text = userRecord.CareLinkUserName
             End If
@@ -500,7 +503,9 @@ Public Class LoginDialog
     '''  Handles the <see cref="UsernameComboBox"/> validating event,
     '''  ensures username is not empty.
     ''' </summary>
-    Private Sub UsernameComboBox_Validating(sender As Object, e As CancelEventArgs) Handles UsernameComboBox.Validating
+    Private Sub UsernameComboBox_Validating(sender As Object, e As CancelEventArgs) _
+        Handles UsernameComboBox.Validating
+
         If IsNullOrWhiteSpace(value:=Me.UsernameComboBox.Text) Then
             e.Cancel = True
             Me.UsernameComboBox.Focus()

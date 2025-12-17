@@ -283,7 +283,8 @@ Public Class PumpSetupDialog
 
             Dim audioOptions As String = Me.Pdf.Utilities.AudioOptions
             .AppendKeyValue(key:="Sound:", value:=$"{audioOptions.ContainsNoCase(value:="Audio").BoolToOnOff()}")
-            .AppendKeyValue(key:="Vibration:", value:=$"{audioOptions.ContainsNoCase(value:="Vibrate").BoolToOnOff()}")
+            value = $"{audioOptions.ContainsNoCase(value:="Vibrate").BoolToOnOff()}"
+            .AppendKeyValue(key:="Vibration:", value)
 
             .ReadOnly = True
             .SelectionStart = 0

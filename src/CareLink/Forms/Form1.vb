@@ -409,7 +409,10 @@ Public Class Form1
                                 Me.CursorMessage2Label.Visible = True
                                 Me.CursorMessage3Label.Text = markerTags(2).Trim
                                 Me.CursorMessage3Label.Visible = True
-                                Dim sgVal As Single = markerTags(2).Trim.Split(separator:=" ")(0).ParseSingle(digits:=2)
+                                Dim sgVal As Single = markerTags(2).Trim _
+                                                                   .Split(separator:=" ")(0) _
+                                                                   .ParseSingle(digits:=2)
+
                                 Me.CursorMessage4Label.Text = If(NativeMmolL,
                                                                  $"{CInt(sgVal * MmolLUnitsDivisor)} mg/dL",
                                                                  $"{sgVal / MmolLUnitsDivisor:F1} mmol/L")
@@ -1389,7 +1392,10 @@ Public Class Form1
             If value.ContainsNoCase(value:="DeleteRow") Then
                 value = EmptyString
             Else
-                If .Index > 0 AndAlso IsNullOrWhiteSpace(value:= .DataPropertyName) AndAlso IsNullOrWhiteSpace(value) Then
+                If .Index > 0 AndAlso
+                   IsNullOrWhiteSpace(value:= .DataPropertyName) AndAlso
+                   IsNullOrWhiteSpace(value) Then
+
                     .DataPropertyName = s_headerColumns(index:= .Index - 2)
                 End If
             End If
@@ -2654,7 +2660,9 @@ Public Class Form1
                                 MessageBox.Show(text:=$"Error reading data file. Original error: {str}")
                             End Try
                             Const fuzzy As Boolean = True
-                            CurrentDateCulture = openFileDialog1.FileName.ExtractCulture(FixedPart:="CareLink", fuzzy)
+                            CurrentDateCulture =
+                                openFileDialog1.FileName.ExtractCulture(FixedPart:="CareLink", fuzzy)
+
                             Me.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                             Dim file As String = Path.GetFileName(fileNameWithPath)
                             Me.Text = $"{SavedTitle} Using file {file}"
@@ -2728,7 +2736,9 @@ Public Class Form1
                 Application.DoEvents()
 
                 If pdfSettingsRecord.IsValid Then
-                    File.Move(sourceFileName:=openFileDialog1.FileName, destFileName:=GetUserPdfPath(), overwrite:=True)
+                    File.Move(sourceFileName:=openFileDialog1.FileName,
+                              destFileName:=GetUserPdfPath(),
+                              overwrite:=True)
                     Exit Sub
                 Else
                     MsgBox(
@@ -3377,7 +3387,9 @@ Public Class Form1
     '''  The source of the event, typically the CalibrationDueImage control.
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) Handles CalibrationDueImage.MouseHover
+    Private Sub CalibrationDueImage_MouseHover(sender As Object, e As EventArgs) _
+        Handles CalibrationDueImage.MouseHover
+
         If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
             Dim due As String = PumpNow.AddMinutes(value:=s_timeToNextCalibrationMinutes).ToShortTimeString()
             Dim caption As String = $"Calibration Due {due}"
@@ -3411,7 +3423,9 @@ Public Class Form1
     '''  The source of the event, <see cref="SensorDaysLeftLabel"/> control.
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub SensorDaysLeftLabel_MouseHover(sender As Object, e As EventArgs) Handles SensorDaysLeftLabel.MouseHover
+    Private Sub SensorDaysLeftLabel_MouseHover(sender As Object, e As EventArgs) _
+        Handles SensorDaysLeftLabel.MouseHover
+
         If PatientData Is Nothing Then Exit Sub
         Dim caption As String = $"Sensor will expire In {PatientData.SensorDurationHours} hours"
         If PatientData.CgmInfo.SensorProductModel?.Trim = "MMT-5120" Then
@@ -3714,9 +3728,12 @@ Public Class Form1
                     key:=NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime),
                     value:=lastMedicalDeviceDataUpdateServerEpochString) Then
                 If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                    Dim epochAsLocalDate As Date = lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
+                    Dim epochAsLocalDate As Date =
+                        lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
+
                     If epochAsLocalDate + FiveMinuteSpan < Now() Then
-                        Me.SetLastUpdateTime(highLight:=True, isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
+                        Me.SetLastUpdateTime(highLight:=True,
+                                             isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString(
                             sgString:="---",
                             f:=Single.NaN)
@@ -4844,7 +4861,8 @@ Public Class Form1
         If s_totalAutoCorrection > 0 Then
             Me.Last24HrAutoCorrectionLabel.Visible = True
             Me.Last24HrAutoCorrectionUnitsLabel.ForeColor = Color.LightGray
-            Me.Last24HrAutoCorrectionUnitsLabel.Text = String.Format(provider, format:=$"{s_totalAutoCorrection:F1} U")
+            Me.Last24HrAutoCorrectionUnitsLabel.Text =
+                String.Format(provider, format:=$"{s_totalAutoCorrection:F1} U")
             Me.Last24HrAutoCorrectionLabel.ForeColor = Color.Gray
             Me.Last24HrAutoCorrectionUnitsLabel.Visible = True
             If s_totalDailyDose > 0 Then
@@ -5216,7 +5234,8 @@ Public Class Form1
         Dim lowCount As Integer = 0
         Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
-        Dim highScale As Single = (GetYMaxNativeMmolL() - GetTirHighLimit()) / (GetTirLowLimit() - GetYMinNativeMmolL())
+        Dim highScale As Single =
+            (GetYMaxNativeMmolL() - GetTirHighLimit()) / (GetTirLowLimit() - GetYMinNativeMmolL())
 
         For Each sg As SG In GetValidSgRecords()
             elements += 1
@@ -5251,7 +5270,8 @@ Public Class Form1
                     Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}({lowDeviation}) OK{Superscript2}"
                     Me.LowTirComplianceLabel.ForeColor = Color.Yellow
                 Case Else
-                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}({lowDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
+                    Me.LowTirComplianceLabel.Text =
+                        $"Low{vbCrLf}({lowDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
                     Me.LowTirComplianceLabel.ForeColor = Color.Red
             End Select
 
@@ -5264,7 +5284,8 @@ Public Class Form1
                     Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) OK{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.Yellow
                 Case Else
-                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
+                    Me.HighTirComplianceLabel.Text =
+                        $"High{vbCrLf}({highDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
                     Me.HighTirComplianceLabel.ForeColor = Color.Red
             End Select
         End If

@@ -32,7 +32,9 @@ Public Class SgMiniForm
         Dim lastConduitUpdateServerDateTime As Long = PatientData.LastConduitUpdateServerDateTime
         Dim epoch2PumpDateTime As Date = lastConduitUpdateServerDateTime.Epoch2PumpDateTime
         If lastConduitUpdateServerDateTime > 0 Then
-            Dim minutes As UInteger = CUInt(Math.Round(value:=(PumpNow() - epoch2PumpDateTime).TotalMinutes, digits:=0))
+            Dim minutes As UInteger =
+                CUInt(Math.Round(value:=(PumpNow() - epoch2PumpDateTime).TotalMinutes, digits:=0))
+
             Return $"{firstName}'s Data Updated {minutes.ToUnits(unit:="Minute")} Ago"
         Else
             Return $"{firstName}'s Data Last Update Time Unknown"

@@ -10,8 +10,6 @@ Imports System.Text
 Imports System.Text.Json
 
 Public Class Client2
-
-    ' Constants
     Private Const TokenBaseFileName As String = "loginData.json"
 
     Private ReadOnly _httpClient As HttpClient
@@ -85,11 +83,11 @@ Public Class Client2
     ''' <returns>True if the token is valid; otherwise, false.</returns>
     Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, Object)) As Boolean
         Debug.WriteLine(NameOf(IsTokenValid))
+        Dim message As String
         Try
             Dim unixTime As Long = CType(access_token_payload("exp"), JsonElement).GetInt64()
             Dim unixCurrentTime As Long = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             Dim tDiff As Long = unixTime - unixCurrentTime
-            Dim message As String
             If tDiff < 0 Then
                 Dim absDiff As Long = Math.Abs(tDiff)
                 message = $"In {NameOf(IsTokenValid)} access token has expired {absDiff}s ago"
@@ -109,7 +107,9 @@ Public Class Client2
             Debug.WriteLine(message)
             Return True
         Catch ex As Exception
-            Debug.WriteLine(message:=$"In {NameOf(IsTokenValid)} missing nameValueCollection in access token. {ex.DecodeException()}")
+            message =
+                $"In {NameOf(IsTokenValid)} missing nameValueCollection in access token. {ex.DecodeException()}"
+            Debug.WriteLine(message)
             Return False
         End Try
     End Function
@@ -151,7 +151,9 @@ Public Class Client2
         Next
 
         Dim requestUri As String = CStr(config(key:="token_url"))
-        Using response As HttpResponseMessage = Await _httpClient.PostAsync(requestUri, content).ConfigureAwait(False)
+        Using response As HttpResponseMessage =
+            Await _httpClient.PostAsync(requestUri, content).ConfigureAwait(False)
+
             _lastHttpStatusCode = response.StatusCode
             Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
@@ -174,7 +176,8 @@ Public Class Client2
     ''' <param name="role">The role of the user (e.g., patient, carePartner).</param>
     ''' <param name="patientId">The patient ID, if applicable.</param>
     ''' <returns>
-    '''  A task representing the asynchronous operation, containing the requested nameValueCollection as a dictionary.
+    '''  A task representing the asynchronous operation, containing the requested
+    '''  nameValueCollection as a dictionary.
     ''' </returns>
     Private Async Function GetDataAsync(
         username As String,
@@ -398,9 +401,8 @@ Public Class Client2
                 ' Start refresh task without Await inside Catch
                 Try
                     If Not configJsonElement.ValueKind = JsonValueKind.Undefined Then
-                        refreshTask = Me.DoRefreshAsync(
-                            config:=configJsonElement.ToObjectDictionary,
-                            element:=_tokenDataElement)
+                        refreshTask = Me.DoRefreshAsync(config:=configJsonElement.ToObjectDictionary(),
+                                                        element:=_tokenDataElement)
                     End If
                 Catch innerEx As Exception
                     Debug.WriteLine(innerEx.ToString())
@@ -518,9 +520,9 @@ Public Class Client2
                 End Try
             End If
 
-            If data Is Nothing OrElse
-               data.Count = 0 OrElse
-               (data.Count = 2 AndAlso CType(data("patientData"), JsonElement).ValueKind <> JsonValueKind.Object) Then
+            If data Is Nothing OrElse data.Count = 0 OrElse
+               (data.Count = 2 AndAlso
+                CType(data("patientData"), JsonElement).ValueKind = JsonValueKind.Array) Then
 
                 PatientData = Nothing
                 RecentData = Nothing
@@ -589,7 +591,8 @@ Public Class Client2
     '''  Asynchronous initialization function that prepares the client for use.
     ''' </summary>
     ''' <returns>
-    '''  A task representing the asynchronous operation, containing True if initialization succeeded; otherwise, False.
+    '''  A task representing the asynchronous operation, containing True if initialization succeeded;
+    '''  otherwise, False.
     ''' </returns>
     Public Async Function InitAsync() As Task(Of Boolean)
         If Not Await Me.internalInit().ConfigureAwait(False) Then

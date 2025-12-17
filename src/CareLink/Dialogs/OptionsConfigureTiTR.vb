@@ -69,7 +69,9 @@ Public Class OptionsConfigureTiTR
         e.Handled = True
     End Sub
 
-    Private Sub UnitsComboBox_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles UnitsComboBox.SelectionChangeCommitted
+    Private Sub UnitsComboBox_SelectionChangeCommitted(sender As Object, e As EventArgs) _
+        Handles UnitsComboBox.SelectionChangeCommitted
+
         ' revert any user selection back to the programmatic value
         CType(sender, ComboBox).SelectedIndex = _unitsDesiredIndex
     End Sub

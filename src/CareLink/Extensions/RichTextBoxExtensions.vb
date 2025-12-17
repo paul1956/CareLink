@@ -262,7 +262,11 @@ Public Module RichTextBoxExtensions
         Dim start As Integer = 0
         Dim length As Integer = str.Length
         While start < rtb.TextLength - 1
-            Dim wordStartIndex As Integer = rtb.Find(str, start, [end]:=rtb.TextLength - 1, RichTextBoxFinds.MatchCase)
+            Dim wordStartIndex As Integer = rtb.Find(str,
+                                                     start,
+                                                     [end]:=rtb.TextLength - 1,
+                                                     RichTextBoxFinds.MatchCase)
+
             If wordStartIndex = -1 Then
                 Exit While ' No more occurrences found
             Else

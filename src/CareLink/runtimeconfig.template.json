@@ -1,5 +1,6 @@
 {
   "configProperties": {
-    "System.Windows.Forms.AnchorLayoutV2": true
+    "System.Windows.Forms.AnchorLayoutV2": true,
+    "System.Windows.Forms.MirrorTopMostForModalDialogs": true
   }
 }

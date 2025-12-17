@@ -80,7 +80,8 @@ Public Class InitializeDialog
                 index -= 1
                 With dgv.Rows(index)
                     colName = NameOf(ColumnDeleteRow)
-                    Dim btnCell As DataGridViewDisableButtonCell = CType(.Cells(colName), DataGridViewDisableButtonCell)
+                    Dim btnCell As DataGridViewDisableButtonCell =
+                        CType(.Cells(colName), DataGridViewDisableButtonCell)
                     btnCell.Enabled = False
                     btnCell.ReadOnly = True
                     colName = NameOf(ColumnEnd)
@@ -113,7 +114,8 @@ Public Class InitializeDialog
                         colName = NameOf(ColumnSave)
                         index = .RowCount - 1
                         Dim dgvCell As DataGridViewCell = .Rows(index).Cells(colName)
-                        Dim buttonCell As DataGridViewDisableButtonCell = CType(dgvCell, DataGridViewDisableButtonCell)
+                        Dim buttonCell As DataGridViewDisableButtonCell =
+                            CType(dgvCell, DataGridViewDisableButtonCell)
 
                         buttonCell.ReadOnly = True
                         buttonCell.Enabled = False
@@ -132,7 +134,8 @@ Public Class InitializeDialog
                     With .Rows(index:= .Rows.Count - 1)
                         Me.OK_Button.Enabled = False
                         colName = NameOf(ColumnStart)
-                        Dim comboBoxCell As DataGridViewComboBoxCell = CType(.Cells(colName), DataGridViewComboBoxCell)
+                        Dim comboBoxCell As DataGridViewComboBoxCell =
+                            CType(.Cells(colName), DataGridViewComboBoxCell)
                         colName = NameOf(ColumnEnd)
                         Dim colEndCell As DataGridViewCell = Me.InitializeDataGridView.Rows(index:=e.RowIndex) _
                                                                                       .Cells(colName)
@@ -268,7 +271,8 @@ Public Class InitializeDialog
                     .Rows.Add()
                     With .Rows(i.Index)
                         Dim colName As String = NameOf(ColumnDeleteRow)
-                        Dim cell As DataGridViewDisableButtonCell = CType(.Cells(colName), DataGridViewDisableButtonCell)
+                        Dim cell As DataGridViewDisableButtonCell =
+                            CType(.Cells(colName), DataGridViewDisableButtonCell)
                         cell.Enabled = i.IsLast
                         colName = NameOf(ColumnStart)
                         With CType(.Cells(colName), DataGridViewComboBoxCell)
@@ -280,14 +284,16 @@ Public Class InitializeDialog
                                                      minutes:=value.StartTime.Minute,
                                                      seconds:=0)
                         colName = NameOf(ColumnEnd)
-                        Dim comboBoxCell As DataGridViewComboBoxCell = CType(.Cells(colName), DataGridViewComboBoxCell)
+                        Dim comboBoxCell As DataGridViewComboBoxCell =
+                            CType(.Cells(colName), DataGridViewComboBoxCell)
                         InitializeComboList(comboBoxCell, start:=CInt((timeSpan / ThirtyMinuteSpan) + 1))
                         With comboBoxCell
                             .Value = value.EndTime
                             .ReadOnly = i.Index >= 11 OrElse (i.IsLast AndAlso Not i.IsFirst)
                         End With
                         colName = NameOf(ColumnNumericUpDown)
-                        Dim numericCell As DataGridViewNumericUpDownCell = CType(.Cells(colName), DataGridViewNumericUpDownCell)
+                        Dim numericCell As DataGridViewNumericUpDownCell =
+                            CType(.Cells(colName), DataGridViewNumericUpDownCell)
                         numericCell.Value = value.CarbRatio
                         numericCell.ReadOnly = False
                         colName = NameOf(ColumnSave)
@@ -389,7 +395,8 @@ Public Class InitializeDialog
             cell = row.Cells(colName)
             carbRecord.EndTime = TimeOnly.Parse(cell.Value.ToString, provider:=CurrentDateCulture)
             colName = NameOf(ColumnNumericUpDown)
-            Dim numericCell As DataGridViewNumericUpDownCell = CType(row.Cells(colName), DataGridViewNumericUpDownCell)
+            Dim numericCell As DataGridViewNumericUpDownCell =
+                CType(row.Cells(colName), DataGridViewNumericUpDownCell)
             carbRecord.CarbRatio = ParseSingle(numericCell.Value, digits:=1)
             Me.CurrentUser.CarbRatios.Add(carbRecord)
         Next

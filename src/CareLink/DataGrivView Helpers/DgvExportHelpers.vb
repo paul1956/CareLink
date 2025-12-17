@@ -53,7 +53,10 @@ Friend Module DgvExportHelpers
     '''  otherwise, only selected cells.
     ''' </param>
     <Extension>
-    Private Sub CopyToClipboard(dgv As DataGridView, copyHeaders As DataGridViewClipboardCopyMode, copyAll As Boolean)
+    Private Sub CopyToClipboard(dgv As DataGridView,
+                                copyHeaders As DataGridViewClipboardCopyMode,
+                                copyAll As Boolean)
+
         If copyAll OrElse dgv.GetCellCount(includeFilter:=DataGridViewElementStates.Selected) > 0 Then
             Dim dgvCells As List(Of DataGridViewCell) = dgv.SelectedCells.Cast(Of DataGridViewCell)().ToList()
             Dim selector As Func(Of DataGridViewCell, Integer) = Function(c As DataGridViewCell) As Integer
@@ -168,7 +171,9 @@ Friend Module DgvExportHelpers
                 If dgvColumn.Visible Then
                     If dgvColumn.Name.EqualsNoCase("dateTime") Then
                         worksheet.Cell(row:=1, column).Value = "Date"
-                        worksheet.Cell(row:=1, column).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center
+                        worksheet.Cell(row:=1, column).Style.Alignment.Horizontal =
+                            XLAlignmentHorizontalValues.Center
+
                         column += 1
                         worksheet.Cell(row:=1, column).Value = "Time"
                     Else

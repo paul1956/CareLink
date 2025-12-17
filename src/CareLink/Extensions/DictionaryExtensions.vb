@@ -125,7 +125,10 @@ Public Module DictionaryExtensions
         Dim columnNames As List(Of String) = dic.Keys.ToList()
         Dim obj As New T
         For Each row As KeyValuePair(Of String, String) In dic
-            Const bindingAttr As BindingFlags = BindingFlags.Public Or BindingFlags.Instance Or BindingFlags.IgnoreCase
+            Const bindingAttr As BindingFlags = BindingFlags.IgnoreCase Or
+                                                BindingFlags.Instance Or
+                                                BindingFlags.Public
+
             Dim [property] As PropertyInfo = classType.GetProperty(name:=row.Key, bindingAttr)
             If [property] IsNot Nothing Then
                 If [property].CanWrite Then ' Make sure property isn't read only
@@ -233,13 +236,15 @@ Public Module DictionaryExtensions
             sortDic.Add(kvp.Key, kvp.Value)
         Next
 
-        Dim keySelector As Func(Of KeyValuePair(Of String, T), String) = Function(p As KeyValuePair(Of String, T)) As String
-                                                                             Return p.Key
-                                                                         End Function
+        Dim keySelector As Func(Of KeyValuePair(Of String, T), String) =
+            Function(p As KeyValuePair(Of String, T)) As String
+                Return p.Key
+            End Function
 
-        Dim elementSelector As Func(Of KeyValuePair(Of String, T), T) = Function(p As KeyValuePair(Of String, T)) As T
-                                                                            Return p.Value
-                                                                        End Function
+        Dim elementSelector As Func(Of KeyValuePair(Of String, T), T) =
+            Function(p As KeyValuePair(Of String, T)) As T
+                Return p.Value
+            End Function
 
         Return (From x In sortDic Select x).ToDictionary(keySelector, elementSelector)
     End Function

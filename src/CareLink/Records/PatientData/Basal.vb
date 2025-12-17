@@ -138,8 +138,7 @@ Public Class Basal
     '''  <see langword="True"/> if the current instance is equal to the other instance;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Public Overloads Function Equals(other As Basal) As Boolean _
-        Implements IEquatable(Of Basal).Equals
+    Public Overloads Function Equals(other As Basal) As Boolean Implements IEquatable(Of Basal).Equals
 
         Return other IsNot Nothing AndAlso
                Me.ActiveBasalPattern = other.ActiveBasalPattern AndAlso

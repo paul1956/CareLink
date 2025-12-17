@@ -38,6 +38,7 @@ Public Class CurrentUserRecord
 
     Public Overloads Function Equals(other As CurrentUserRecord) As Boolean _
         Implements IEquatable(Of CurrentUserRecord).Equals
+
         If other Is Nothing Then
             Return False
         End If

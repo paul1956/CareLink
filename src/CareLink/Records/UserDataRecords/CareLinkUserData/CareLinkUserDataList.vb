@@ -449,8 +449,7 @@ Public Class CareLinkUserDataList
     ''' <summary>
     '''  Not supported. Always returns <see cref="ListSortDirection.Ascending"/>.
     ''' </summary>
-    Public ReadOnly Property SortDirection As ListSortDirection _
-        Implements IBindingList.SortDirection
+    Public ReadOnly Property SortDirection As ListSortDirection Implements IBindingList.SortDirection
         Get
             Return ListSortDirection.Ascending
         End Get
@@ -459,8 +458,7 @@ Public Class CareLinkUserDataList
     ''' <summary>
     '''  Not supported. Always returns <see langword="Nothing"/>.
     ''' </summary>
-    Public ReadOnly Property SortProperty As PropertyDescriptor _
-        Implements IBindingList.SortProperty
+    Public ReadOnly Property SortProperty As PropertyDescriptor Implements IBindingList.SortProperty
         Get
             Return Nothing
         End Get
@@ -493,9 +491,8 @@ Public Class CareLinkUserDataList
     ''' <returns>
     '''  Always returns -1.
     ''' </returns>
-    Public Function Find(
-        propertyDescriptor As PropertyDescriptor,
-        key As Object) As Integer Implements IBindingList.Find
+    Public Function Find(propertyDescriptor As PropertyDescriptor, key As Object) As Integer _
+        Implements IBindingList.Find
 
         ' No searching support
         Return -1

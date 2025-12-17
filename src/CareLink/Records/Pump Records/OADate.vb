@@ -132,9 +132,7 @@ Public Class OADate
     '''  A value less than zero if this instance is less than <paramref name="other"/>,
     '''  zero if they are equal, or greater than zero if this instance is greater.
     ''' </returns>
-    Public Function CompareTo(other As OADate) As Integer _
-        Implements IComparable(Of OADate).CompareTo
-
+    Public Function CompareTo(other As OADate) As Integer Implements IComparable(Of OADate).CompareTo
         Return _oADate.CompareTo(value:=other._oADate)
     End Function
 

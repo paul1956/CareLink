@@ -102,7 +102,8 @@ Public Module ControlExtensions
     '''  Centers a <see cref="Label"/> on its parent container, applying an optional vertical offset.
     ''' </summary>
     ''' <param name="ctrl">
-    '''  The <see cref="Label"/> to be centered. If <see langword="Nothing"/> or disposed, the method exits without action.
+    '''  The <see cref="Label"/> to be centered. If <see langword="Nothing"/> or disposed,
+    '''  the method exits without action.
     ''' </param>
     ''' <param name="verticalOffset">
     '''  Vertical offset to apply when centering. Positive values move the control down; negative values move it up.
@@ -112,7 +113,8 @@ Public Module ControlExtensions
     '''  When <see cref="Label.AutoSize"/> is <see langword="True"/>, preferred dimensions are used
     '''  for both width and height.
     '''  Only <see cref="Control.Left"/> and <see cref="Control.Top"/> are modified.
-    '''  The routine is defensive against null or disposed parents to improve reliability when called during form teardown.
+    '''  The routine is defensive against null or disposed parents to improve reliability
+    '''  when called during form teardown.
     ''' </remarks>
     <Extension>
     Friend Sub CenterXYOnParent(ctrl As Label, verticalOffset As Integer)
@@ -221,8 +223,9 @@ Public Module ControlExtensions
     ''' </param>
     ''' <remarks>
     '''  The method traverses the immediate child controls recursively and sets header visual styles
-    '''  and colors directly on each <see cref="DataGridView"/> instance; it does not replace or clone existing styles.
-    '''  This routine is defensive against null/disposed parents to improve reliability when called during form teardown.
+    '''  and colors directly on each <see cref="DataGridView"/> instance;
+    '''  it does not replace or clone existing styles. This routine is defensive against null/disposed
+    '''  parents to improve reliability when called during form teardown.
     ''' </remarks>
     <Extension>
     Friend Sub SetDgvCustomHeadersVisualStyles(ctrl As Control)

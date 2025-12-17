@@ -148,7 +148,9 @@ Friend Module SummaryHelpers
                             Dim jsonString As String = String.Empty
                             key = "AdditionalInfo"
                             If jsonDictionary.TryGetValue(key, value:=jsonString) Then
-                                Dim addInfo As Dictionary(Of String, String) = GetAdditionalInformation(json:=jsonString)
+                                Dim addInfo As Dictionary(Of String, String) =
+                                    GetAdditionalInformation(json:=jsonString)
+
                                 If addInfo.TryGetValue("secondaryTime", value:=secondaryTime) Then
                                     s_secondaryTimeReminder = secondaryTime.FormatTimeText()
                                 Else
