@@ -1566,7 +1566,7 @@ Partial Class Form1
         SensorTimeLeftLabel.BorderStyle = BorderStyle.None
         SensorTimeLeftLabel.Font = New Font("Segoe UI", 8.0F, FontStyle.Bold)
         SensorTimeLeftLabel.ForeColor = Color.LightGray
-        SensorTimeLeftLabel.Location = New Point(0, 84)
+        SensorTimeLeftLabel.Location = New Point(0, 80)
         SensorTimeLeftLabel.Name = "SensorTimeLeftLabel"
         SensorTimeLeftLabel.Size = New Size(92, 41)
         SensorTimeLeftLabel.TabIndex = 46
