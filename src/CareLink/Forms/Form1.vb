@@ -4283,17 +4283,18 @@ Public Class Form1
 
     Private Function GetSensorTimeLeftMessage() As String
         Dim sensorDurationHours As Integer = PatientData.SensorDurationHours
-        Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F, FontStyle.Bold)
-        Me.SensorTimeLeftLabel.Top = 84
         Dim hoursStr As String
         Select Case sensorDurationHours
             Case Is <= 24
+                Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 7.0F, FontStyle.Bold)
                 hoursStr = sensorDurationHours.HoursToDaysAndHours(shortHr:=True)
                 Return $"Expiring soon{vbCrLf}(Remaining{vbCrLf}grace period:{vbCrLf}{hoursStr})"
             Case Is < 48
+                Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F, FontStyle.Bold)
                 hoursStr = (sensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
                 Return $"{hoursStr} (Followed{vbCrLf}by 24 hr grace{vbCrLf}period)"
             Case Else  ' sensorDurationHours >= 48
+                Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F, FontStyle.Bold)
                 hoursStr = (sensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
                 Return $"{hoursStr}{vbCrLf}(Followed by 24{vbCrLf}hr grace period)"
         End Select
@@ -4993,7 +4994,6 @@ Public Class Form1
         Dim haveCGM As Boolean = PatientData.ConduitInRange AndAlso PatientData.CgmInfo IsNot Nothing
         If haveCGM Then
             Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 12.0F, FontStyle.Bold)
-            Me.SensorTimeLeftLabel.Top = 84
             Select Case PatientData.CgmInfo.SensorProductModel?.Trim
                 Case "MMT-5120" ' Simplera
                     Dim durationWithoutGrace As Integer = PatientData.SensorDurationHours - 24
