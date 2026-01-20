@@ -12,6 +12,18 @@ Public Class CPInfo
     <JsonPropertyName("SSOConfiguration")>
     Public Property SSOConfiguration As String
 
+    <JsonPropertyName("Layer7SSOConfiguration")>
+    Public Property Layer7SSOConfiguration As String
+
+    <JsonPropertyName("Auth0SSOConfiguration")>
+    Public Property Auth0SSOConfiguration As String
+
+    <JsonPropertyName("UseSSOConfiguration")>
+    Public Property UseSSOConfiguration As String
+
+    <JsonPropertyName("baseUrlCms")>
+    Public Property baseUrlCms As String
+
     <JsonPropertyName("baseUrlCareLink")>
     Public Property BaseUrlCareLink As String
 

@@ -27,17 +27,16 @@ Public Class Client2TransientErrorsTests
 
         Dim httpClient As New HttpClient(handler)
         Dim client As New Client2(httpClient:=httpClient) With {
-            .Config = New Dictionary(Of String, Object) From {{"baseUrlCumulus", "https://example.com"}}
-        }
+            .Config = New Dictionary(Of String, String) From {{"baseUrlCumulus", "https://example.com"}}}
         client.GetType().GetProperty("UserElementDictionary").SetValue(client, New Dictionary(Of String, Object) From {{"role", "patient"}})
 
-        Dim tokenJson As String = "{""access_token"":""aaa.bbb.ccc"",""refresh_token"":""r"",""client_id"":""cid"",""client_secret"":""cs"",""mag-identifier"":""m""}"
-        Dim tokenElement As System.Text.Json.JsonElement = System.Text.Json.JsonSerializer.Deserialize(Of System.Text.Json.JsonElement)(tokenJson)
-        Dim tokenField As Reflection.FieldInfo = client.GetType().GetField("_tokenDataElement", Reflection.BindingFlags.NonPublic Or Reflection.BindingFlags.Instance)
+        Dim tokenJson As String = "{""access_token"":""aaa.bbb.ccc"",""refresh_token"":""r"",""client_id"":""cid"",""mag-identifier"":""m""}"
+        Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(tokenJson)
+        Dim tokenField As FieldInfo = client.GetType().GetField("_tokenDataElement", BindingFlags.NonPublic Or BindingFlags.Instance)
         tokenField.SetValue(client, tokenElement)
 
-        Dim accessPayload As New Dictionary(Of String, Object) From {{"exp", System.Text.Json.JsonDocument.Parse("10000000000").RootElement}}
-        Dim accessField As Reflection.FieldInfo = client.GetType().GetField("_accessTokenPayload", Reflection.BindingFlags.NonPublic Or Reflection.BindingFlags.Instance)
+        Dim accessPayload As New Dictionary(Of String, Object) From {{"exp", JsonDocument.Parse("10000000000").RootElement}}
+        Dim accessField As FieldInfo = client.GetType().GetField("_accessTokenPayload", BindingFlags.NonPublic Or BindingFlags.Instance)
         accessField.SetValue(client, CType(accessPayload, Object))
 
         Dim result As String = Nothing
@@ -73,10 +72,10 @@ Public Class Client2TransientErrorsTests
 
             If _responses.Count > 0 Then
                 Dim factory As Func(Of HttpResponseMessage) = _responses.Dequeue()
-                Return Task.FromResult(Of HttpResponseMessage)(factory.Invoke())
+                Return Task.FromResult(factory.Invoke())
             End If
 
-            Return Task.FromResult(Of HttpResponseMessage)(New HttpResponseMessage(HttpStatusCode.NotFound))
+            Return Task.FromResult(New HttpResponseMessage(HttpStatusCode.NotFound))
         End Function
 
         Public Sub EnqueueException(ex As Exception)

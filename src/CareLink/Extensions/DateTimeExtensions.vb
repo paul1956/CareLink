@@ -14,7 +14,7 @@ Friend Module DateTimeExtensions
 
     Private ReadOnly s_dateTimeFormatUniqueCultures As New List(Of CultureInfo)
 
-    Private ReadOnly s_epochLocal As New DateTime(
+    Private ReadOnly s_epochLocal As New Date(
         year:=1970,
         month:=1,
         day:=1,
@@ -23,7 +23,7 @@ Friend Module DateTimeExtensions
         second:=0,
         kind:=DateTimeKind.Utc)
 
-    Private ReadOnly s_epochUTC As New DateTime(
+    Private ReadOnly s_epochUTC As New Date(
         year:=1970,
         month:=1,
         day:=1,
@@ -270,7 +270,7 @@ Friend Module DateTimeExtensions
     ''' <returns>A new <see cref="Date"/> with seconds set to zero.</returns>
     <Extension>
     Public Function RoundDownToMinute(d As Date) As Date
-        Return New DateTime(d.Year, d.Month, d.Day, d.Hour, d.Minute, second:=0)
+        Return New Date(d.Year, d.Month, d.Day, d.Hour, d.Minute, second:=0)
     End Function
 
     Public Function ToDaysHours(hours As Integer) As String

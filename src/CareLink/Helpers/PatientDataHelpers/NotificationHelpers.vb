@@ -62,10 +62,7 @@ Friend Module NotificationHelpers
     ''' </summary>
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">Event arguments containing formatting information.</param>
-    Private Sub DgvNotification_CellFormatting(
-        sender As Object,
-        e As DataGridViewCellFormattingEventArgs)
-
+    Private Sub DgvNotification_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If e.Value.ToString().StartsWithNoCase(value:="additionalInfo") Then
             e.Value = e.Value.ToString.Replace(oldValue:=":", newValue:=" : ")
@@ -79,10 +76,7 @@ Friend Module NotificationHelpers
     ''' </summary>
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">Event arguments containing column information.</param>
-    Private Sub DgvNotification_ColumnAdded(
-        sender As Object,
-        e As DataGridViewColumnEventArgs)
-
+    Private Sub DgvNotification_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -137,15 +131,16 @@ Friend Module NotificationHelpers
     ''' <param name="e">Layout event arguments.</param>
     Private Sub DgvNotification_Layout(sender As Object, e As LayoutEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        dgv.AutoSize = False
 
         ' Calculate total height of rows and headers
-        Dim height As Integer = 5
-        For Each row As DataGridViewRow In dgv.Rows
-            If row.Visible Then
-                height += row.Height
+        Dim height As Integer = 0
+        For i As Integer = 0 To dgv.Rows.Count - 1
+            Dim dgvRow As DataGridViewRow = dgv.Rows(i)
+            If dgvRow.Visible Then
+                height += dgvRow.Height
             End If
         Next
+
         ' Adjust DataGridView size if necessary
         If dgv.ClientSize.Height <> height Then
             dgv.ClientSize = New Size(dgv.ClientSize.Width, height)
@@ -154,8 +149,9 @@ Friend Module NotificationHelpers
         ' Set panel row to absolute height
         Dim index As Integer = dgv.Parent.Controls.IndexOf(control:=dgv)
         Dim panel As TableLayoutPanel = CType(dgv.Parent, TableLayoutPanel)
-        panel.RowStyles(index).SizeType = SizeType.Absolute
-        panel.RowStyles(index).Height = dgv.ClientSize.Height + 5
+        'panel.RowStyles(index).SizeType = SizeType.Absolute
+        'panel.RowStyles(index).Height = dgv.ClientSize.Height
+        panel.BackColor = Color.PeachPuff
     End Sub
 
     ''' <summary>

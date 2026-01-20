@@ -15,7 +15,7 @@ Public Module Discover
     '''  from the provided JSON data.
     ''' </summary>
     ''' <param name="country">The country code to look up.</param>
-    ''' <param name="jsonElementData">
+    ''' <param name="discoveryElement">
     '''  The root JSON element containing supported countries and configuration data.
     ''' </param>
     ''' <returns>
@@ -26,11 +26,11 @@ Public Module Discover
     '''  Thrown if the country code is not supported or if the configuration
     '''  cannot be found.
     ''' </exception>
-    Private Function GetConfigJson(country As String, jsonElementData As JsonElement) As JsonElement
+    Private Function GetConfigJson(country As String, discoveryElement As JsonElement) As JsonElement
         Dim config As JsonElement
         Dim region As JsonElement
         Dim arrayEnumerator As JsonElement.ArrayEnumerator =
-            jsonElementData.GetProperty(propertyName:="supportedCountries").EnumerateArray()
+            discoveryElement.GetProperty(propertyName:="supportedCountries").EnumerateArray()
 
         For Each c As JsonElement In arrayEnumerator
             If c.TryGetProperty(propertyName:=country.ToUpper(), value:=region) Then
@@ -38,14 +38,14 @@ Public Module Discover
             End If
         Next
         Dim message As String
-        If region.ValueKind.IsNullOrUndefined Then
+        If region.IsNullOrUndefined Then
             message = $"ERROR: country code {country} is not supported"
             Throw New ApplicationException(message)
         End If
         Debug.WriteLine(message:=$"   region: {region}")
         Dim json As String = JsonSerializer.Serialize(value:=region)
         Dim countryInfo As CountryInfo = JsonSerializer.Deserialize(Of CountryInfo)(json)
-        For Each value As JsonElement In jsonElementData.GetProperty(propertyName:="CP").EnumerateArray()
+        For Each value As JsonElement In discoveryElement.GetProperty(propertyName:="CP").EnumerateArray()
             Try
                 Dim json1 As String = JsonSerializer.Serialize(value)
                 Dim cpInfo As CPInfo = JsonSerializer.Deserialize(Of CPInfo)(json:=json1)
@@ -57,7 +57,7 @@ Public Module Discover
                 ' ignore here error will be handled outside the loop
             End Try
         Next
-        If config.ValueKind.IsNullOrUndefined Then
+        If config.IsNullOrUndefined Then
             message = $"ERROR: failed to get config base URLs for region {region}"
             Throw New ApplicationException(message)
         End If
@@ -71,7 +71,7 @@ Public Module Discover
     ''' <param name="httpClient">
     '''  The <see cref="HttpClient"/> used to fetch configuration data.
     ''' </param>
-    ''' <param name="country">The country code to retrieve configuration for.</param>
+    ''' <param name="discoveryUrl"></param>
     ''' <returns>
     '''  A <see cref="JsonElement"/> containing the configuration for the
     '''  specified country, including a computed token URL.
@@ -80,25 +80,24 @@ Public Module Discover
     '''  Thrown if the country code is not supported or if configuration
     '''  data cannot be retrieved.
     ''' </exception>
-    Public Function GetConfigElement(httpClient As HttpClient, country As String) As JsonElement
+    ''' <param name="country">The country code to retrieve configuration for.</param>
+    Public Function GetConfig(httpClient As HttpClient, discoveryUrl As String, country As String) As JsonElement
+        Debug.WriteLine(NameOf(GetConfig))
 
-        Debug.WriteLine(NameOf(GetConfigElement))
-        Dim isUsRegion As Boolean = country.EqualsNoCase(b:="US")
-        Dim requestUri As String = If(isUsRegion,
-                                      s_discoverUrl(key:="US"),
-                                      s_discoverUrl(key:="EU"))
+        Dim json As String = httpClient.GetStringAsync(requestUri:=discoveryUrl).Result
+        Dim discoveryElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
+        Dim configJson As JsonElement = GetConfigJson(country, discoveryElement)
 
-        Dim json As String = httpClient.GetStringAsync(requestUri).Result
-        Dim jsonElementData As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
-        Dim configurationData As ConfigRecord = JsonSerializer.Deserialize(Of ConfigRecord)(json)
-        Dim configJson As JsonElement = GetConfigJson(country, jsonElementData)
-
-        Dim requestUri1 As String = configJson.GetProperty(propertyName:="SSOConfiguration").GetString()
+        Dim ssoConfigurationKey As String = configJson.GetProperty(propertyName:="UseSSOConfiguration").GetString()
+        Dim requestUri1 As String = configJson.GetProperty(propertyName:=ssoConfigurationKey).GetString()
         Dim ssoConfigResponse As String = httpClient.GetStringAsync(requestUri:=requestUri1).Result
         Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(ssoConfigResponse)
         Dim hostname As String = ssoConfig.Server.Hostname
         Dim ssoBaseUrl As String = $"https://{hostname}:{ssoConfig.Server.Port}/{ssoConfig.Server.Prefix}"
-        Dim tokenUrl As String = $"{ssoBaseUrl}{ssoConfig.OAuth.SystemEndpoints.TokenEndpointPath}"
+        If ssoBaseUrl.EndsWith("/"c) Then
+            ssoBaseUrl = ssoBaseUrl.TrimEnd("/"c)
+        End If
+        Dim tokenUrl As String = $"{ssoBaseUrl}{ssoConfig.OAuth.UserInfoEndpointPath}"
 
         json = configJson.GetRawText()
         Dim mutableConfig As Dictionary(Of String, JsonElement) =
@@ -115,16 +114,17 @@ Public Module Discover
     ''' <param name="lastErrorMsg">Output parameter to receive the last error message if any.</param>
     ''' <param name="httpStatusCode">Output parameter to receive the HTTP status code of the response.</param>
     ''' <returns>
-    ''' A <see cref="ConfigRecord"/> containing the configuration data for the specified country,
+    ''' A <see cref="DiscoveryRecord"/> containing the configuration data for the specified country,
     ''' or <see langword="Nothing"/> if an error occurs.
     ''' </returns>
-    Public Function GetDiscoveryData(ByRef lastErrorMsg As String, ByRef httpStatusCode As Integer) As ConfigRecord
-
-        Dim url As String = s_discoverUrl(If(s_countryCode.EqualsNoCase("US"), "US", "EU"))
+    Public Function GetDiscoveryData(ByRef lastErrorMsg As String, ByRef httpStatusCode As Integer) As DiscoveryRecord
+        Dim discoveryUrl As String = If(s_countryCode.EqualsNoCase("US"),
+                                        s_discoverUrl(key:="US"),
+                                        s_discoverUrl(key:="EU"))
         httpStatusCode = 0 ' Default value meaning no response received yet
         Try
             Using client As New HttpClient()
-                Dim response As HttpResponseMessage = client.GetAsync(url).Result
+                Dim response As HttpResponseMessage = client.GetAsync(discoveryUrl).Result
                 httpStatusCode = CType(response.StatusCode, Integer)
 
                 ' Use centralized response inspection to ensure common statuses are surfaced.
@@ -145,8 +145,13 @@ Public Module Discover
                 End Try
 
                 Dim json As String = response.Content.ReadAsStringAsync().Result
-                Dim result As ConfigRecord =
-                    JsonSerializer.Deserialize(Of ConfigRecord)(json, options:=s_jsonDesterilizeOptions)
+                Dim result As DiscoveryRecord
+                Try
+                    result = JsonSerializer.Deserialize(Of DiscoveryRecord)(json, options:=s_jsonDesterilizeOptions)
+                Catch ex As Exception
+                    Stop
+                    Throw
+                End Try
                 Return result
             End Using
 

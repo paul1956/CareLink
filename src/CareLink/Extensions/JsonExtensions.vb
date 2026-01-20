@@ -37,7 +37,7 @@ Public Module JsonExtensions
         Dim yesterday As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - Eleven55Span
         For index As Integer = 0 To json.Count - 1
             sGs.Add(item:=New SG(json:=json(index), index))
-            If sGs.Last.Timestamp.Equals(value:=New DateTime) Then
+            If sGs.Last.Timestamp.Equals(value:=New Date) Then
                 sGs.Last.TimestampAsString = If(index = 0,
                                                 yesterday.RoundDownToMinute().ToStringExact(),
                                                 (sGs(index:=0).Timestamp + (FiveMinuteSpan * index)).ToStringExact())
@@ -180,7 +180,8 @@ Public Module JsonExtensions
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
     <Extension>
-    Public Function IsNullOrUndefined(kind As JsonValueKind) As Boolean
+    Public Function IsNullOrUndefined(element As JsonElement) As Boolean
+        Dim kind As JsonValueKind = element.ValueKind
         Return kind = JsonValueKind.Null OrElse kind = JsonValueKind.Undefined
     End Function
 
@@ -416,6 +417,25 @@ Public Module JsonExtensions
         End If
 
         Return result
+    End Function
+
+    ''' <summary>
+    ''' Try to get a string property from a JsonElement safely.
+    ''' </summary>
+    <Extension>
+    Public Function TryGetStringProperty(element As JsonElement, propertyName As String, ByRef value As String) As Boolean
+        value = Nothing
+        If element.IsNullOrUndefined Then
+            Return False
+        End If
+
+        Dim prop As JsonElement
+        If element.TryGetProperty(propertyName, prop) AndAlso Not prop.IsNullOrUndefined Then
+            value = prop.GetString()
+            Return True
+        End If
+
+        Return False
     End Function
 
 End Module

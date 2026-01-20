@@ -22,9 +22,7 @@ Friend Module FileUtilities
         "access_token",
         "refresh_token",
         "scope",
-        "client_id",
-        "client_secret",
-        "mag-identifier"}
+        "client_id"}
 
     ''' <summary>
     '''  Writes a byte array to a file.
@@ -147,25 +145,6 @@ Friend Module FileUtilities
         End If
         Return Nothing
     End Function
-
-    ''' <summary>
-    '''  Writes the specified <see cref="TokenData"/> to a file for the given user.
-    ''' </summary>
-    ''' <param name="value">The token data to write.</param>
-    ''' <param name="userName">The user name.</param>
-    ''' <param name="tokenBaseFileName">
-    '''  The base file name for the token data file.
-    '''  Defaults to <see cref="LOGIN_DATA_FILENAME"/>.
-    ''' </param>
-    Public Sub WriteTokenDataFile(
-            value As TokenData,
-            userName As String,
-            Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME)
-        Debug.WriteLine(message:="Wrote data file")
-        Dim contents As String = JsonSerializer.Serialize(value, options:=s_jsonSerializerOptions)
-        Dim path As String = GetLoginDataFileName(userName, tokenBaseFileName)
-        File.WriteAllText(path, contents)
-    End Sub
 
     ''' <summary>
     '''  Writes the specified <see cref="JsonElement"/> token data

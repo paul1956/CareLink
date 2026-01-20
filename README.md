@@ -44,9 +44,14 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-12/10/2025
+1/20/2026
 
 ## What's New
+New in 5.2.1.0
+Fixes new login process that broke login.
+Temporary fix until I can figure out how to handle the new
+  login process.
+
 New in 5.2.0.0
 - Introduced new data visualization for Pump Setting for better user
   experience. These new visualizations provide a more intuitive and
