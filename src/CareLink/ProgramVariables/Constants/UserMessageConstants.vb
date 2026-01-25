@@ -179,6 +179,7 @@ Friend Module UserMessageConstants
         {"838", "Calibration not accepted(triggeredDateTime).Sensor information is " &
                  "unavailable for up to 2 hours. Entered BGs may not calibrate the " &
                  "sensor but can be used for therapy."},
+        {"841", "Enter BG now(triggeredDateTime). Enter a BG to continue in SmartGuard."},
         {"869", "Reminder time to take (reminderName)."},
         {"870", "Recharge transmitter within 24 hours(triggeredDateTime)."}}
 

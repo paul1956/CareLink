@@ -672,7 +672,7 @@ Public Class Form1
                 Case NameOf(InsulinPerHour.Hour),
                      NameOf(InsulinPerHour.Hour2)
                     Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
-                    Dim time As New DateTime(
+                    Dim time As New Date(
                         year:=1,
                         month:=1,
                         day:=1,

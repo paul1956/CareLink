@@ -89,9 +89,10 @@ Public Module Discover
         Dim configJson As JsonElement = GetConfigJson(country, discoveryElement)
 
         Dim ssoConfigurationKey As String = configJson.GetProperty(propertyName:="UseSSOConfiguration").GetString()
-        Dim requestUri1 As String = configJson.GetProperty(propertyName:=ssoConfigurationKey).GetString()
-        Dim ssoConfigResponse As String = httpClient.GetStringAsync(requestUri:=requestUri1).Result
-        Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(ssoConfigResponse)
+        Dim resp As String =
+            httpClient.GetStringAsync(configJson.GetProperty(propertyName:=ssoConfigurationKey).GetString()).Result
+        Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(resp)
+
         Dim hostname As String = ssoConfig.Server.Hostname
         Dim ssoBaseUrl As String = $"https://{hostname}:{ssoConfig.Server.Port}/{ssoConfig.Server.Prefix}"
         If ssoBaseUrl.EndsWith("/"c) Then
