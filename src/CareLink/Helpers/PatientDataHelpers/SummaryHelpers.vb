@@ -17,7 +17,9 @@ Friend Module SummaryHelpers
     Friend ReadOnly s_sensorUpdateTimes As New Dictionary(Of String, String) From {
         {"INITIAL_ALERT_SHORT", "30 minutes"},
         {"INITIAL_ALERT_MEDIUM", "60 minutes"},
-        {"INITIAL_ALERT_LONG", "90 minutes"}}
+        {"INITIAL_ALERT_LONG", "90 more minutes"},
+        {"DURATION_CHANGED_TO_MEDIUM", "90 more minutes"},
+        {"DURATION_CHANGED_TO_LONG", "2 hours"}}
 
     Private s_secondaryTimeReminder As String
 
@@ -208,8 +210,9 @@ Friend Module SummaryHelpers
                                     End If
                                 Case "sensorUpdateTime"
                                     If addInfo.TryGetValue(key, value:=sensorUpdateTime) Then
+                                        sensorUpdateTime = GetSensorUpdateTime(sensorUpdateTime)
                                     Else
-                                        sensorUpdateTime = GetSensorUpdateTime(key:=sensorUpdateTime)
+                                        Stop
                                     End If
                                 Case "sg"
                                     Dim lowAlertRec As LowAlertRecord

@@ -6,16 +6,29 @@ Imports System.Text.Json.Serialization
 
 Public Class ConfigRecord
 
-    <JsonPropertyName("config")>
-    Public Property Config As String
+    <JsonPropertyName("region")>
+    Public Property Region As String
 
-    <JsonPropertyName("supportedCountries")>
-    Public Property SupportedCountries As List(Of Dictionary(Of String, CountryInfo))
+    Public Property SSOConfiguration As String
+    Public Property Layer7SSOConfiguration As String
+    Public Property Auth0SSOConfiguration As String
+    Public Property UseSSOConfiguration As String
 
-    <JsonPropertyName("CP")>
-    Public Property CP As List(Of CPInfo)
+    <JsonPropertyName("baseUrlCms")>
+    Public Property BaseUrlCms As String
 
-    <JsonPropertyName("certificates")>
-    Public Property Certificates As List(Of CertificateInfo)
+    Public Property BaseUrlCareLink As String
+
+    <JsonPropertyName("baseUrlCumulus")>
+    Public Property BaseUrlCumulus As String
+
+    <JsonPropertyName("baseUrlPde")>
+    Public Property BaseUrlPdePublic As String
+
+    <JsonPropertyName("baseUrlAem")>
+    Public Property BaseUrlAemPublic As String
+
+    <JsonPropertyName("token_url")>
+    Public Property TokenUrl As String
 
 End Class

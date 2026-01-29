@@ -41,8 +41,8 @@ Public Module SystemConstants
          " (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/120.0.0.0"}}
 
     Friend ReadOnly s_discoverUrl As New Dictionary(Of String, String) From {
-        {"EU", "https://clcloud.minimed.eu/connect/carepartner/v11/discover/android/3.2"},
-        {"US", "https://clcloud.minimed.com/connect/carepartner/v11/discover/android/3.2"}}
+        {"EU", "https://clcloud.minimed.eu/connect/carepartner/v13/discover/android/3.6"},
+        {"US", "https://clcloud.minimed.com/connect/carepartner/v13/discover/android/3.6"}}
 
     Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationRecord) From {
         {$"Humalog{RegisteredTrademark}", New InsulinActivationRecord(upCount:=8, aitHours:=4)},

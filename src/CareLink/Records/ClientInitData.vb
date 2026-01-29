@@ -4,6 +4,5 @@
 
 Public Class ClientInitData
     Public Property client_id As String
-    Public Property client_secret As String
     Public Property client_expiration As Integer
 End Class

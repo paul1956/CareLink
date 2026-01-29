@@ -137,7 +137,7 @@ Friend Module UserMessageConstants
         {"797", "Sensor connected(triggeredDateTime). Start new sensor."},
         {"798", "Sensor connected(triggeredDateTime). If new sensor, select Start New. " &
                  "If not, select Reconnect."},
-        {"801", "Sensor updating(triggeredDateTime), Updating will take (sensorUpdateTime) more. " &
+        {"801", "Sensor updating(triggeredDateTime), Updating will take (sensorUpdateTime). " &
                  $"Monitor BG.{vbCrLf}Entered BGs will not calibrate the sensor, " &
                  "but can still be used for therapy."},
         {"802", "Alert on low (sg) (units)(triggeredDateTime)." &
@@ -179,6 +179,7 @@ Friend Module UserMessageConstants
         {"838", "Calibration not accepted(triggeredDateTime).Sensor information is " &
                  "unavailable for up to 2 hours. Entered BGs may not calibrate the " &
                  "sensor but can be used for therapy."},
+        {"841", "Enter BG now(triggeredDateTime). Enter a BG to continue in SmartGuard."},
         {"869", "Reminder time to take (reminderName)."},
         {"870", "Recharge transmitter within 24 hours(triggeredDateTime)."}}
 

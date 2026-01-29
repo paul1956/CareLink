@@ -25,13 +25,13 @@ Public Class ControlExtensionsTests
     <Fact>
     Public Sub CenterLabelXOnParent_NullOrDisposed_DoesNotThrow()
         ' Null
-        Dim subCallNull As Action = Sub() ControlExtensions.CenterLabelXOnParent(Nothing)
+        Dim subCallNull As Action = Sub() CenterLabelXOnParent(Nothing)
         subCallNull.Should().NotThrow()
 
         ' Disposed
         Dim lbl As New Label()
         lbl.Dispose()
-        Dim subCallDisposed As Action = Sub() ControlExtensions.CenterLabelXOnParent(lbl)
+        Dim subCallDisposed As Action = Sub() CenterLabelXOnParent(lbl)
         subCallDisposed.Should().NotThrow()
     End Sub
 
@@ -66,7 +66,7 @@ Public Class ControlExtensionsTests
             .Width = 30,
             .Left = 5}
 
-        Dim actNoParent As Action = Sub() ControlExtensions.CenterXOnParent(c)
+        Dim actNoParent As Action = Sub() CenterXOnParent(c)
         actNoParent.Should().NotThrow()
         c.Left.Should().Be(5)
 
@@ -74,7 +74,7 @@ Public Class ControlExtensionsTests
         Dim d As New Control() With {.Width = 20}
         d.Dispose()
         d.Left = 7
-        Dim actDisposed As Action = Sub() ControlExtensions.CenterXOnParent(d)
+        Dim actDisposed As Action = Sub() CenterXOnParent(d)
         actDisposed.Should().NotThrow()
         d.Left.Should().Be(7)
     End Sub
@@ -144,7 +144,7 @@ Public Class ControlExtensionsTests
 
     <Fact>
     Public Sub FindControlByName_NullControls_ReturnsNothing()
-        Dim result As Control = ControlExtensions.FindControlByName(Nothing, "anything")
+        Dim result As Control = FindControlByName(Nothing, "anything")
         result.Should().BeNull()
     End Sub
 
@@ -185,21 +185,21 @@ Public Class ControlExtensionsTests
             ' Assert
             dgv1.EnableHeadersVisualStyles.Should().BeFalse()
             dgv2.EnableHeadersVisualStyles.Should().BeFalse()
-            dgv1.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(System.Drawing.Color.Black)
-            dgv1.ColumnHeadersDefaultCellStyle.ForeColor.Should().Be(System.Drawing.Color.White)
-            dgv2.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(System.Drawing.Color.Black)
-            dgv2.ColumnHeadersDefaultCellStyle.ForeColor.Should().Be(System.Drawing.Color.White)
+            dgv1.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(Drawing.Color.Black)
+            dgv1.ColumnHeadersDefaultCellStyle.ForeColor.Should().Be(Drawing.Color.White)
+            dgv2.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(Drawing.Color.Black)
+            dgv2.ColumnHeadersDefaultCellStyle.ForeColor.Should().Be(Drawing.Color.White)
         End Using
     End Sub
 
     <Fact>
     Public Sub SetDgvCustomHeadersVisualStyles_NullOrDisposed_DoesNotThrow()
-        Dim actNull As Action = Sub() ControlExtensions.SetDgvCustomHeadersVisualStyles(Nothing)
+        Dim actNull As Action = Sub() SetDgvCustomHeadersVisualStyles(Nothing)
         actNull.Should().NotThrow()
 
         Dim p As New Panel()
         p.Dispose()
-        Dim actDisposed As Action = Sub() ControlExtensions.SetDgvCustomHeadersVisualStyles(p)
+        Dim actDisposed As Action = Sub() SetDgvCustomHeadersVisualStyles(p)
         actDisposed.Should().NotThrow()
     End Sub
 

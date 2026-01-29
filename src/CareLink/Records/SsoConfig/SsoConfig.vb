@@ -9,13 +9,14 @@ Public Class SsoConfig
     <JsonPropertyName("server")>
     Public Property Server As ServerConfig
 
-    <JsonPropertyName("oauth")>
-    Public Property OAuth As OAuthConfig
+    <JsonPropertyName("client")>
+    Public Property Client As ClientConfig
 
-    <JsonPropertyName("mag")>
-    Public Property Mag As MagConfig
+    <JsonPropertyName("system_endpoints")>
+    Public Property system_Endpoints As SystemEndpoints
 
-    <JsonPropertyName("custom")>
-    Public Property Custom As CustomConfig
+    <JsonPropertyName("oauth_protected_endpoints")>
+    Public Property OAuth As OAuthProtectedEndpoints
+
 
 End Class

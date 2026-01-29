@@ -672,7 +672,7 @@ Public Class Form1
                 Case NameOf(InsulinPerHour.Hour),
                      NameOf(InsulinPerHour.Hour2)
                     Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
-                    Dim time As New DateTime(
+                    Dim time As New Date(
                         year:=1,
                         month:=1,
                         day:=1,
@@ -3502,7 +3502,7 @@ Public Class Form1
 
         Select Case e.TabPage.Name
             Case NameOf(TabPage15More)
-                Me.DgvCareLinkUsers.InitializeDgv
+                Me.DgvCareLinkUsers.InitializeDgv()
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
                 Next
@@ -3723,6 +3723,7 @@ Public Class Form1
         End SyncLock
 
         Dim lastMedicalDeviceDataUpdateServerEpochString As String = EmptyString
+        Dim sgString As String = "---"
         If Not RecentDataEmpty() Then
             If RecentData.TryGetValue(
                     key:=NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime),
@@ -3734,14 +3735,13 @@ Public Class Form1
                     If epochAsLocalDate + FiveMinuteSpan < Now() Then
                         Me.SetLastUpdateTime(highLight:=True,
                                              isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
-                        _sgMiniDisplay.SetCurrentSgString(
-                            sgString:="---",
-                            f:=Single.NaN)
+                        _sgMiniDisplay.SetCurrentSgString(sgString, f:=Single.NaN)
                     Else
                         Me.SetLastUpdateTime(isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
-                        _sgMiniDisplay.SetCurrentSgString(
-                            sgString:=s_lastSg?.ToString,
-                            f:=s_lastSg.sg)
+                        If s_lastSg IsNot Nothing Then
+                            sgString = s_lastSg.ToString
+                        End If
+                        _sgMiniDisplay.SetCurrentSgString(sgString, f:=s_lastSg.sg)
                     End If
                 Else
                     Me.UpdateAllTabPages(fromFile:=False)
@@ -3751,7 +3751,7 @@ Public Class Form1
             End If
         Else
             ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMessage)
-            _sgMiniDisplay.SetCurrentSgString(sgString:="---", f:=0)
+            _sgMiniDisplay.SetCurrentSgString(sgString, f:=0)
         End If
         SetServerUpdateTimer(Start:=True, interval:=OneMinuteInMilliseconds)
     End Sub

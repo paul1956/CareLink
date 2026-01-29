@@ -154,14 +154,12 @@ Friend Module Form1CollectMarkersHelper
                         item,
                         recordNumber:=s_suspendedMarkers.Count + 1))
                     Select Case item.GetString(key:=NameOf(Insulin.ActivationType))
-                        Case "AUTOCORRECTION"
+                        Case "AUTOCORRECTION", "MANUAL"
                             Dim key As OADate = lastInsulinRecord.OAdateTime
                             Dim value As Single = lastInsulinRecord.DeliveredFastAmount
                             If Not basalDic.TryAdd(key, value) Then
                                 basalDic(key) += value
                             End If
-                        Case "MANUAL"
-                            Stop
                         Case "UNDETERMINED"
                             Stop
                         Case "RECOMMENDED"

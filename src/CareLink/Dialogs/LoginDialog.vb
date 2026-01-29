@@ -7,6 +7,7 @@ Imports System.IO
 Imports System.Net
 Imports System.Net.Http
 Imports System.Reflection.Metadata
+Imports System.Text
 
 Public Class LoginDialog
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
@@ -15,7 +16,7 @@ Public Class LoginDialog
     Private _initialHeight As Integer = 0
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
     Public Property Client As Client2
-    Public Property ClientDiscover As ConfigRecord
+    Public Property ClientDiscover As DiscoveryRecord
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
     Public Property LoginSourceAutomatic As FileToLoadOptions = FileToLoadOptions.NewUser
 
@@ -246,6 +247,9 @@ Public Class LoginDialog
         If Me.ClientDiscover IsNot Nothing Then
             Me.Ok_Button.Enabled = False
             Dim tokenData As TokenData = ReadTokenDataFile(s_userName)
+#If True Then ' REFRESH LOGIN TOKEN EVERY TIME Workaround for token expiry issues
+            tokenData = Nothing
+#End If
             If tokenData Is Nothing Then
                 ' Get the embedded EXE as a byte array
                 Dim buffer() As Byte = My.Resources.carelink_carepartner_api_login
@@ -272,25 +276,68 @@ Public Class LoginDialog
                     .UseShellExecute = False}
 
                 Dim process As New Process With {.StartInfo = startInfo}
+
+                Dim outputBuilder As New StringBuilder()
+                Dim errorBuilder As New System.Text.StringBuilder()
+
+                AddHandler process.OutputDataReceived, Sub(sender2 As Object, args2 As DataReceivedEventArgs)
+                                                           If args2.Data IsNot Nothing Then
+                                                               Debug.WriteLine(args2.Data)
+                                                               outputBuilder.AppendLine(args2.Data)
+                                                           End If
+                                                       End Sub
+
+                AddHandler process.ErrorDataReceived, Sub(sender2 As Object, args2 As DataReceivedEventArgs)
+                                                          If args2.Data IsNot Nothing Then
+                                                              Debug.WriteLine($"ERR: {args2.Data}")
+                                                              errorBuilder.AppendLine(args2.Data)
+                                                          End If
+                                                      End Sub
+
                 process.Start()
+                process.BeginOutputReadLine()
+                process.BeginErrorReadLine()
 
-                Dim outputText As String = process.StandardOutput.ReadToEnd()
-                Dim standardError As String = process.StandardError.ReadToEnd()
-                process.WaitForExit()
+                ' Wait until either the process exits or the source file is created.
+                While Not process.HasExited AndAlso Not File.Exists(sourceFileName)
+                    Threading.Thread.Sleep(200)
+                    Application.DoEvents()
+                End While
 
-                If process.ExitCode = 0 Then
+                Dim outputText As String = outputBuilder.ToString()
+                Dim standardError As String = errorBuilder.ToString()
+
+                If File.Exists(sourceFileName) Then
+                    ' If the helper created the file, stop the process and proceed to move the file.
+                    Try
+                        If Not process.HasExited Then
+                            process.Kill()
+                            process.WaitForExit()
+                        End If
+                    Catch ex As Exception
+                        Debug.WriteLine($"Failed to kill process: {ex.Message}")
+                    End Try
+
                     Dim destinationFileName As String = GetLoginDataFileName(s_userName)
                     If File.Exists(path:=destinationFileName) Then
                         File.Delete(path:=destinationFileName)
                     End If
                     File.Move(sourceFileName, destinationFileName)
+                Else
+                    ' Process exited without creating the file — nothing to do.
+                    Try
+                        If Not process.HasExited Then
+                            process.WaitForExit()
+                        End If
+                    Catch
+                    End Try
                 End If
+
                 File.Delete(exePath)
             End If
 
-            'DoLogin(_httpClient, s_userName, isUsRegion)
             Me.Client = New Client2()
-            Me.Client.Init()
+            Dim success As Boolean = Me.Client.Init()
 
             lastErrorMsg = Me.Client.GetRecentData()
         End If
