@@ -44,9 +44,12 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-1/25/2026
+1/29/2026
 
 ## What's New
+New in 5.2.2.0
+Make .Net 10.0 the default target framework.
+
 New in 5.2.1.1
 Force FireFox to close after login to prevent
   multiple instances running.
