@@ -3502,7 +3502,7 @@ Public Class Form1
 
         Select Case e.TabPage.Name
             Case NameOf(TabPage15More)
-                Me.DgvCareLinkUsers.InitializeDgv
+                Me.DgvCareLinkUsers.InitializeDgv()
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
                 Next

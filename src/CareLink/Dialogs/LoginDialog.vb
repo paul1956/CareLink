@@ -313,14 +313,6 @@ Public Class LoginDialog
                         If Not process.HasExited Then
                             process.Kill()
                             process.WaitForExit()
-                        Else
-                            ' Once the Python process has exited, attempt to close Firefox.
-                            ' Caution: This will close ALL Firefox windows.
-                            Dim tskKill_Firefox As New ProcessStartInfo("Taskkill.exe") With {
-                                .Arguments = "/F /IM firefox.exe /T",
-                                .WindowStyle = ProcessWindowStyle.Hidden ' Hide the taskkill command window
-                                }
-                            Process.Start(tskKill_Firefox)
                         End If
                     Catch ex As Exception
                         Debug.WriteLine($"Failed to kill process: {ex.Message}")

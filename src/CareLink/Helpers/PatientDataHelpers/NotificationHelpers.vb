@@ -191,7 +191,7 @@ Friend Module NotificationHelpers
         Else
             realPanel.Controls.Add(control:=dgv, column:=0, row:=realPanel.RowCount - 1)
         End If
-        dgv.InitializeDgv()
+        dgv.InitializeDgv(DockStyle.Top)
         dgv.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         attachHandlers?(dgv)
         For Each column As DataGridViewColumn In dgv.Columns

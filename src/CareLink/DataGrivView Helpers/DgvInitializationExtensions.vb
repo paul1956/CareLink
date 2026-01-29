@@ -17,8 +17,9 @@ Public Module DgvInitializationExtensions
     ''' <param name="dgv">
     '''  The <see cref="DataGridView"/> to initialize.
     ''' </param>
+    ''' <param name="dock"></param>
     <Extension>
-    Friend Sub InitializeDgv(dgv As DataGridView)
+    Friend Sub InitializeDgv(dgv As DataGridView, Optional dock As DockStyle = DockStyle.Fill)
         Dim emSize As Single = If(dgv.Name = NameOf(Form1.DgvBasalPerHour),
                                   12.0!,
                                   10.0!)
@@ -41,7 +42,7 @@ Public Module DgvInitializationExtensions
                 .WrapMode = DataGridViewTriState.True}
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .DataSource = Nothing
-            .Dock = DockStyle.Fill
+            .Dock = dock
             .Location = New Point(x:=0, y:=0)
             .Padding = New Padding(all:=0)
             .ReadOnly = True
