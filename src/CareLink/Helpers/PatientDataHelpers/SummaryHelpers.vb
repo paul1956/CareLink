@@ -18,6 +18,7 @@ Friend Module SummaryHelpers
         {"INITIAL_ALERT_SHORT", "30 minutes"},
         {"INITIAL_ALERT_MEDIUM", "60 minutes"},
         {"INITIAL_ALERT_LONG", "90 more minutes"},
+        {"DURATION_CHANGED_TO_SHORT", "30 minutes"},
         {"DURATION_CHANGED_TO_MEDIUM", "90 more minutes"},
         {"DURATION_CHANGED_TO_LONG", "2 hours"}}
 

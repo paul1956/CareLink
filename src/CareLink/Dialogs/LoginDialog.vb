@@ -319,9 +319,7 @@ Public Class LoginDialog
                     End Try
 
                     Dim destinationFileName As String = GetLoginDataFileName(s_userName)
-                    If File.Exists(path:=destinationFileName) Then
-                        File.Delete(path:=destinationFileName)
-                    End If
+                    SafeDeleteFile(path:=destinationFileName)
                     File.Move(sourceFileName, destinationFileName)
                 Else
                     ' Process exited without creating the file — nothing to do.
@@ -332,8 +330,7 @@ Public Class LoginDialog
                     Catch
                     End Try
                 End If
-
-                File.Delete(exePath)
+                SafeDeleteFile(exePath)
             End If
 
             Me.Client = New Client2()

@@ -83,9 +83,7 @@ Public Class ExceptionHandlerDialog
     ''' <param name="e">The event arguments.</param>
     ''' <remarks>This method is called when the Cancel button is clicked.</remarks>
     Private Sub Cancel_Click(sender As Object, e As EventArgs) Handles Cancel.Click
-        If IsNotNullOrWhiteSpace(value:=Me.ReportNameWithPath) Then
-            IO.File.Delete(path:=Me.ReportNameWithPath)
-        End If
+        SafeDeleteFile(path:=Me.ReportNameWithPath)
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub

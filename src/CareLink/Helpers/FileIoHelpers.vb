@@ -135,7 +135,7 @@ Public Module FileIoHelpers
     '''  This method moves all files matching the specified search pattern
     '''  from the source directory to the destination directory,
     '''  which is typically the current working directory.
-    ''' </remarks>"
+    ''' </remarks>
     Friend Sub MoveFiles(path As String, currentDirectory As String, searchPattern As String)
         If IsNullOrWhiteSpace(value:=path) Then
             Throw New ArgumentNullException(paramName:=NameOf(path), message:="Path cannot be null or whitespace.")
@@ -181,12 +181,12 @@ Public Module FileIoHelpers
     End Function
 
     ''' <summary>
-    '''  Determines whether the specified file is read-only.
+    '''  Determines whether the specified file is marked as read-only.
     ''' </summary>
-    ''' <param name="path">The full path to the file.</param>
+    ''' <param name="path">Full path to the file to check.</param>
     ''' <returns>
-    '''  <see langword="True"/> if the file is read-only; otherwise,
-    '''  <see langword="False"/>.
+    '''  <see langword="True"/> if the file exists and is read-only;
+    '''  otherwise <see langword="False"/>.
     ''' </returns>
     ''' <exception cref="ArgumentException">
     '''  Thrown if the file name is null or whitespace.
@@ -201,11 +201,47 @@ Public Module FileIoHelpers
                 Return File.GetAttributes(path).HasFlag(flag:=FileAttributes.ReadOnly)
             End If
         Catch e As Exception
-            Stop
-            Debug.WriteLine(message:="Error: {0}", category:=e.Message)
+            Debug.WriteLine(message:=$"IsFileReadOnly error: {e.Message}")
         End Try
         Return False
     End Function
+
+    ''' <summary>
+    ''' Attempts to delete the specified file safely.
+    ''' The method will normalize file attributes and retry on transient errors.
+    ''' All exceptions are caught and logged instead of being propagated.
+    ''' </summary>
+    ''' <param name="path">Full path to the file to delete.</param>
+    Public Sub SafeDeleteFile(path As String)
+        Try
+            If String.IsNullOrWhiteSpace(path) Then Return
+            If Not File.Exists(path) Then Return
+            ' try to clear read-only attribute
+            Try
+                File.SetAttributes(path, FileAttributes.Normal)
+            Catch
+            End Try
+            ' attempt delete with a couple of retries for transient locks
+            Dim attempts As Integer = 0
+            While attempts < 3
+                Try
+                    File.Delete(path)
+                    Exit While
+                Catch ex As IOException
+                    attempts += 1
+                    Threading.Thread.Sleep(100)
+                Catch ex As UnauthorizedAccessException
+                    attempts += 1
+                    Threading.Thread.Sleep(100)
+                Catch ex As Exception
+                    Debug.WriteLine($"SafeDeleteFile failed: {ex.Message}")
+                    Exit While
+                End Try
+            End While
+        Catch ex As Exception
+            Debug.WriteLine($"SafeDeleteFile outer: {ex.Message}")
+        End Try
+    End Sub
 
     ''' <summary>
     '''  Updates the last write time of the specified file to the current UTC time.
