@@ -18,6 +18,7 @@ Public Class RemindersRecord
     '''  Amount of Units in Reservoir when alert happens
     ''' </summary>
     Public Property Amount As String
+
     Public Property BolusBgCheck As String
     Public Property LowReservoirWarning As String
 

@@ -10,6 +10,7 @@ Imports System.Text.Json
 '''  for supported countries and regions.
 ''' </summary>
 Public Module Discover
+
     ''' <summary>
     '''  Retrieves the configuration JSON element for a specific country
     '''  from the provided JSON data.
@@ -155,7 +156,6 @@ Public Module Discover
                 End Try
                 Return result
             End Using
-
         Catch ex As AggregateException
             ' AggregateException is common for .Result on async methods when faulted
             Dim messages As New List(Of String)
@@ -172,19 +172,15 @@ Public Module Discover
                 lastErrorMsg = $"Multiple errors: {String.Join("; ", messages)}"
             End If
             Debug.WriteLine(lastErrorMsg)
-
         Catch ex As HttpRequestException
             lastErrorMsg = $"HTTP request error: {ex.Message}"
             Debug.WriteLine(lastErrorMsg)
-
         Catch ex As TaskCanceledException
             lastErrorMsg = "The request timed out."
             Debug.WriteLine(lastErrorMsg)
-
         Catch ex As JsonException
             lastErrorMsg = $"JSON deserialization error: {ex.Message}"
             Debug.WriteLine(lastErrorMsg)
-
         Catch ex As Exception
             lastErrorMsg = $"Unexpected error: {ex.Message}"
             Debug.WriteLine(lastErrorMsg)

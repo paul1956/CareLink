@@ -18,5 +18,4 @@ Public Class SsoConfig
     <JsonPropertyName("oauth_protected_endpoints")>
     Public Property OAuth As OAuthProtectedEndpoints
 
-
 End Class

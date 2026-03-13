@@ -34,4 +34,5 @@ Public Class ControlInfo
 
         Return String.Join(" or ", parts)
     End Function
+
 End Class

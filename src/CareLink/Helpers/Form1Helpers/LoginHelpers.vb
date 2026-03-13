@@ -6,7 +6,6 @@ Imports System.Globalization
 Imports System.IO
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
-Imports Windows.Devices.AllJoyn
 
 Friend Module LoginHelpers
 

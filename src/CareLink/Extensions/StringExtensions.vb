@@ -160,7 +160,6 @@ Public Module StringExtensions
         Return Not String.IsNullOrWhiteSpace(value)
     End Function
 
-
     ''' <summary>
     '''  Converts a string where the first letter of the string is not capitalized
     ''' </summary>

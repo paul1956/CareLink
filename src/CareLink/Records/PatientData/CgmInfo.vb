@@ -20,4 +20,5 @@ Public Class CgmInfo
 
     <JsonPropertyName("sensorProductModel")>
     Public Property SensorProductModel As String
+
 End Class

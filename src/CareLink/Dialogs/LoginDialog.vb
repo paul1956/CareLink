@@ -6,7 +6,6 @@ Imports System.ComponentModel
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
-Imports System.Reflection.Metadata
 Imports System.Text
 
 Public Class LoginDialog

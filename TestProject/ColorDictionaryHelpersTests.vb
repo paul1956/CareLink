@@ -1,6 +1,6 @@
-﻿Imports System.IO
+﻿Imports System.Drawing
+Imports System.IO
 Imports System.Windows.Forms
-Imports System.Drawing
 Imports CareLink
 Imports FluentAssertions
 Imports Xunit
@@ -104,4 +104,5 @@ Public Class ColorDictionaryHelpersTests
             ' Best effort - ignore errors
         End Try
     End Sub
+
 End Class

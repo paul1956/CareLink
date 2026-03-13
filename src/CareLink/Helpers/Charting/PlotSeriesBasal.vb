@@ -9,6 +9,7 @@ Imports System.Windows.Forms.DataVisualization.Charting
 '''  Provides extension methods for plotting basal insulin data points and series on a chart.
 ''' </summary>
 Friend Module PlotSeriesBasal
+
     ''' <summary>
     '''  Adds a basal data point to the specified <see cref="Series"/> for charting.
     ''' </summary>

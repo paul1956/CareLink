@@ -176,5 +176,4 @@ Public Class OADate
         Return ((Me + SixMinuteOADate) <= xValue) OrElse xValue < Me
     End Function
 
-
 End Class

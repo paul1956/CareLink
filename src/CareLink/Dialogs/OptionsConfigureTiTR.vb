@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class OptionsConfigureTiTR
+
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) _
         Handles Cancel_Button.Click
 

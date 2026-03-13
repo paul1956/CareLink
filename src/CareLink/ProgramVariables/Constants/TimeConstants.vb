@@ -29,7 +29,6 @@ Friend Module TimeConstants
 
 #End Region
 
-
 #Region "Day Spans"
 
     Friend ReadOnly Property Eleven30Span As TimeSpan = New TimeSpan(hours:=23, minutes:=30, seconds:=0)

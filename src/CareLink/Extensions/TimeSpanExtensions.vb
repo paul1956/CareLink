@@ -5,6 +5,7 @@
 Imports System.Runtime.CompilerServices
 
 Public Module TimeSpanExtensions
+
     ''' <summary>
     '''  Formats a time string in "HH:MM" format into a human-readable string.
     ''' </summary>

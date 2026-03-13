@@ -1,5 +1,4 @@
-﻿Imports System.Collections.Generic
-Imports CareLink
+﻿Imports CareLink
 Imports FluentAssertions
 Imports Xunit
 

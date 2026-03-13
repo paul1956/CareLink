@@ -179,12 +179,12 @@ Public Class Client2
 
         ' Prepare form data
         Dim data As New Dictionary(Of String, String) From {
-            {"refresh_token", TokenData(key:="refresh_token").ToString()},
-            {"client_id", TokenData(key:="client_id").ToString()},
+            {"refresh_token", tokenData(key:="refresh_token").ToString()},
+            {"client_id", tokenData(key:="client_id").ToString()},
             {"grant_type", "refresh_token"}}
 
         Dim clientSecret As Object = Nothing
-        If TokenData.TryGetValue("client_secret", clientSecret) Then
+        If tokenData.TryGetValue("client_secret", clientSecret) Then
             data("client_secret") = clientSecret.ToString
         End If
 

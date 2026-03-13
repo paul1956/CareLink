@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module TirLimitHelpers
+
     ''' <summary>
     '''  Gets the above hyperglycemia limit as a tuple of unsigned integer and string.
     ''' </summary>

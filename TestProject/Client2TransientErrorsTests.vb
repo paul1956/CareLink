@@ -1,9 +1,8 @@
 ﻿Imports System.Net
 Imports System.Net.Http
-Imports System.Threading
-Imports System.Threading.Tasks
 Imports System.Reflection
 Imports System.Text.Json
+Imports System.Threading
 Imports CareLink
 Imports FluentAssertions
 Imports Xunit
