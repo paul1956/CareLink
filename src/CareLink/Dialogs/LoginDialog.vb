@@ -246,9 +246,6 @@ Public Class LoginDialog
         If Me.ClientDiscover IsNot Nothing Then
             Me.Ok_Button.Enabled = False
             Dim tokenData As TokenData = ReadTokenDataFile(s_userName)
-#If True Then ' REFRESH LOGIN TOKEN EVERY TIME Workaround for token expiry issues
-            tokenData = Nothing
-#End If
             If tokenData Is Nothing Then
                 ' Get the embedded EXE as a byte array
                 Dim buffer() As Byte = My.Resources.carelink_carepartner_api_login

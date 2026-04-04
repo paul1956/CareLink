@@ -190,7 +190,7 @@ Public Class Client2
 
         Dim magIdentifier As Object = Nothing
 
-        Dim headers As New Dictionary(Of String, String)
+        Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
         ' Prepare optional headers
         If tokenData.TryGetValue("mag-identifier", magIdentifier) Then
             headers("mag-identifier") = magIdentifier.ToString

@@ -44,9 +44,13 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-2/17/2026
+4/4/2026
 
 ## What's New
+New in 5.2.3.0
+Remove .Net 9.0 workarounds and make .Net 10.0 the minimum target framework.
+Fix some issues with the new login process and improve error handling.
+
 New in 5.2.2.1
 Add SafeDeleteFile to handle deleting files that are in use by another process, such as the login file that may be left behind if the login process is interrupted. This will help prevent issues with stale login files and improve the overall user experience.
 Add new sensor message DURATION_CHANGED_TO_SHORT
