@@ -4,8 +4,6 @@
 
 Imports System.Net.Http
 Imports System.Runtime.CompilerServices
-Imports System.Text
-Imports System.Text.Json
 
 ''' <summary>
 '''  Provides extension methods for the <see cref="HttpClient"/> class
@@ -14,6 +12,7 @@ Imports System.Text.Json
 '''  retrieving response content as text or JSON.
 ''' </summary>
 Friend Module HttpClientExtensions
+#If False Then
 
     ''' <summary>
     '''  Sends an asynchronous GET request to the specified URL
@@ -58,19 +57,6 @@ Friend Module HttpClientExtensions
             Return providers
         End Using
     End Function
-
-    ''' <summary>
-    '''  Sets the default request headers for the specified <see cref="HttpClient"/>
-    '''  instance using the common headers defined in <see cref="s_common_Headers"/>.
-    ''' </summary>
-    ''' <param name="httpClient">The <see cref="HttpClient"/> instance to configure.</param>
-    <Extension>
-    Friend Sub SetDefaultRequestHeaders(ByRef httpClient As HttpClient)
-        httpClient.DefaultRequestHeaders.Clear()
-        For Each header As KeyValuePair(Of String, String) In s_common_Headers.Sort
-            httpClient.DefaultRequestHeaders.Add(name:=header.Key, header.Value)
-        Next
-    End Sub
 
     ''' <summary>
     '''  Sends a GET request to the specified URI, optionally including query parameters,
@@ -256,5 +242,19 @@ Friend Module HttpClientExtensions
         client.ThrowIfFailure()
         Return Await client.Content.ReadAsStringAsync().ConfigureAwait(False)
     End Function
+#End If
+
+    ''' <summary>
+    '''  Sets the default request headers for the specified <see cref="HttpClient"/>
+    '''  instance using the common headers defined in <see cref="s_common_Headers"/>.
+    ''' </summary>
+    ''' <param name="httpClient">The <see cref="HttpClient"/> instance to configure.</param>
+    <Extension>
+    Public Sub SetDefaultRequestHeaders(ByRef httpClient As HttpClient)
+        httpClient.DefaultRequestHeaders.Clear()
+        For Each header As KeyValuePair(Of String, String) In s_common_Headers.Sort
+            httpClient.DefaultRequestHeaders.Add(name:=header.Key, header.Value)
+        Next
+    End Sub
 
 End Module

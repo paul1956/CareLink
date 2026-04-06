@@ -1338,7 +1338,7 @@ Partial Class Form1
         ' 
         ' MenuShowMiniDisplay
         ' 
-        MenuShowMiniDisplay.ForeColor = Color.Red
+        MenuShowMiniDisplay.ForeColor = Color.Green
         MenuShowMiniDisplay.Image = My.Resources.Resources.ExitFullScreen
         MenuShowMiniDisplay.Name = "MenuShowMiniDisplay"
         MenuShowMiniDisplay.Padding = New Padding(10, 0, 10, 0)

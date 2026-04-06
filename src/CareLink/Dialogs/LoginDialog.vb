@@ -245,92 +245,11 @@ Public Class LoginDialog
         Me.ClientDiscover = GetDiscoveryData(lastErrorMsg, lastHttpStatusCode)
         If Me.ClientDiscover IsNot Nothing Then
             Me.Ok_Button.Enabled = False
-            Dim tokenData As TokenData = ReadTokenDataFile(s_userName)
-            If tokenData Is Nothing Then
-                ' Get the embedded EXE as a byte array
-                Dim buffer() As Byte = My.Resources.carelink_carepartner_api_login
-                ' Create a temporary file for the EXE
-                Dim exePath As String = $"{Path.GetTempFileName()}.exe"
-                ' Write the EXE to the temporary file
-                Using fs As New FileStream(path:=exePath, mode:=FileMode.Create)
-                    fs.Write(buffer, offset:=0, count:=buffer.Length)
-                    fs.Flush()
-                End Using
 
-                Dim isUsRegion As Boolean = Me.RegionComboBox.SelectedValue.ToString = "North America"
-                Dim isUsRegionStr As String = If(isUsRegion,
-                                                 "--us",
-                                                 String.Empty)
-
-                ' Create a temporary file for the JSON output
-                Dim sourceFileName As String = $"{Path.GetTempFileName()}.json"
-                Dim startInfo As New ProcessStartInfo With {
-                    .FileName = exePath,
-                    .Arguments = $"{If(isUsRegion, "--us ", String.Empty)} --output {sourceFileName}",
-                    .RedirectStandardOutput = True,
-                    .RedirectStandardError = True,
-                    .UseShellExecute = False}
-
-                Dim process As New Process With {.StartInfo = startInfo}
-
-                Dim outputBuilder As New StringBuilder()
-                Dim errorBuilder As New System.Text.StringBuilder()
-
-                AddHandler process.OutputDataReceived, Sub(sender2 As Object, args2 As DataReceivedEventArgs)
-                                                           If args2.Data IsNot Nothing Then
-                                                               Debug.WriteLine(args2.Data)
-                                                               outputBuilder.AppendLine(args2.Data)
-                                                           End If
-                                                       End Sub
-
-                AddHandler process.ErrorDataReceived, Sub(sender2 As Object, args2 As DataReceivedEventArgs)
-                                                          If args2.Data IsNot Nothing Then
-                                                              Debug.WriteLine($"ERR: {args2.Data}")
-                                                              errorBuilder.AppendLine(args2.Data)
-                                                          End If
-                                                      End Sub
-
-                process.Start()
-                process.BeginOutputReadLine()
-                process.BeginErrorReadLine()
-
-                ' Wait until either the process exits or the source file is created.
-                While Not process.HasExited AndAlso Not File.Exists(sourceFileName)
-                    Threading.Thread.Sleep(200)
-                    Application.DoEvents()
-                End While
-
-                Dim outputText As String = outputBuilder.ToString()
-                Dim standardError As String = errorBuilder.ToString()
-
-                If File.Exists(sourceFileName) Then
-                    ' If the helper created the file, stop the process and proceed to move the file.
-                    Try
-                        If Not process.HasExited Then
-                            process.Kill()
-                            process.WaitForExit()
-                        End If
-                    Catch ex As Exception
-                        Debug.WriteLine($"Failed to kill process: {ex.Message}")
-                    End Try
-
-                    Dim destinationFileName As String = GetLoginDataFileName(s_userName)
-                    SafeDeleteFile(path:=destinationFileName)
-                    File.Move(sourceFileName, destinationFileName)
-                Else
-                    ' Process exited without creating the file — nothing to do.
-                    Try
-                        If Not process.HasExited Then
-                            process.WaitForExit()
-                        End If
-                    Catch
-                    End Try
-                End If
-                SafeDeleteFile(exePath)
-            End If
-
+            Dim isUsRegion As Boolean = Me.RegionComboBox.SelectedValue.ToString = "North America"
+            GetLoginData(isUsRegion, ReadTokenDataFile(s_userName))
             Me.Client = New Client2()
-            Dim success As Boolean = Me.Client.Init()
+            Dim success As Boolean = Me.Client.Init(isUsRegion)
 
             lastErrorMsg = Me.Client.GetRecentData()
         End If

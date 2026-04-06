@@ -201,24 +201,26 @@ Public Class Client2
                 client.DefaultRequestHeaders.Add(name:=header.Key, header.Value)
             Next
 
-            Dim content As New FormUrlEncodedContent(nameValueCollection:=data)
+            Using content As New FormUrlEncodedContent(nameValueCollection:=data)
+                ' POST request
+                Using response As HttpResponseMessage = Await client.PostAsync(tokenUrl, content).ConfigureAwait(False)
+                    _lastHttpStatusCode = response.StatusCode
+                    Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
-            ' POST request
-            Dim response As HttpResponseMessage = client.PostAsync(tokenUrl, content).Result
+                    response.ThrowIfFailure()
 
-            Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
+                    Dim responseBody As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+                    Dim newData As Dictionary(Of String, String) =
+                        JsonSerializer.Deserialize(Of Dictionary(Of String, String))(json:=responseBody)
 
-            response.ThrowIfFailure()
-
-            Dim responseBody As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
-            Dim newData As Dictionary(Of String, String) =
-                JsonSerializer.Deserialize(Of Dictionary(Of String, String))(json:=responseBody)
-
-            tokenData(key:="access_token") = newData("access_token")
-            tokenData(key:="refresh_token") = newData("refresh_token")
-            Dim json As String = JsonSerializer.Serialize(value:=tokenData, options:=s_jsonSerializerOptions)
-            Return JsonSerializer.Deserialize(Of JsonElement)(json)
+                    tokenData(key:="access_token") = newData("access_token")
+                    tokenData(key:="refresh_token") = newData("refresh_token")
+                End Using
+            End Using
         End Using
+
+        Dim json As String = JsonSerializer.Serialize(value:=tokenData, options:=s_jsonSerializerOptions)
+        Return JsonSerializer.Deserialize(Of JsonElement)(json)
     End Function
 
     ''' <summary>
@@ -272,25 +274,25 @@ Public Class Client2
                 Dim needRetry As Boolean = False
                 Dim retryDelayMs As Integer = 0
                 Try
-                    Dim request As New HttpRequestMessage(HttpMethod.Post, requestUri) With {
-                        .Content = content
-                    }
-                    For Each header As KeyValuePair(Of String, String) In headers
-                        request.Headers.TryAddWithoutValidation(header.Key, header.Value)
-                    Next
+                    Using request As New HttpRequestMessage(HttpMethod.Post, requestUri) With {.Content = content}
+                        For Each header As KeyValuePair(Of String, String) In headers
+                            request.Headers.TryAddWithoutValidation(header.Key, header.Value)
+                        Next
 
-                    Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).ConfigureAwait(False)
+                        Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).ConfigureAwait(False)
 
-                        _lastHttpStatusCode = response.StatusCode
-                        Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
+                            _lastHttpStatusCode = response.StatusCode
+                            Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
-                        ' Centralized response inspection; may throw UnauthorizedAccessException,
-                        ' ArgumentException (bad request) or HttpRequestException (transient/server).
-                        response.ThrowIfFailure()
+                            ' Centralized response inspection; may throw UnauthorizedAccessException,
+                            ' ArgumentException (bad request) or HttpRequestException (transient/server).
+                            response.ThrowIfFailure()
 
-                        Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
-                        Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json)
+                            Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+                            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json)
+                        End Using
                     End Using
+
                 Catch hex As HttpRequestException
                     lastEx = hex
                     ' Prepare retry information; do not Await inside Catch.
@@ -339,29 +341,31 @@ Public Class Client2
         _lastHttpStatusCode = 0
         Const key As String = "baseUrlCareLink"
         Dim requestUri As String = $"{CStr(configJsonElement.ToObjectDictionary(key))}/links/patients"
-        Dim request As New HttpRequestMessage(HttpMethod.Get, requestUri)
-        For Each header As KeyValuePair(Of String, String) In headers
-            request.Headers.TryAddWithoutValidation(header.Key, header.Value)
-        Next
+        Using request As New HttpRequestMessage(HttpMethod.Get, requestUri)
+            For Each header As KeyValuePair(Of String, String) In headers
+                request.Headers.TryAddWithoutValidation(header.Key, header.Value)
+            Next
 
-        Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).ConfigureAwait(False)
-            _lastHttpStatusCode = response.StatusCode
-            Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
+            Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).ConfigureAwait(False)
+                _lastHttpStatusCode = response.StatusCode
+                Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
-            ' Ensure non-success status codes are not silently ignored.
-            Try
-                response.ThrowIfFailure()
-            Catch ex As Exception
-                Debug.WriteLine($"GetPatient HTTP failure: {ex.Message}")
-                Return Nothing
-            End Try
+                ' Ensure non-success status codes are not silently ignored.
+                Try
+                    response.ThrowIfFailure()
+                Catch ex As Exception
+                    response.Dispose()
+                    Debug.WriteLine($"GetPatient HTTP failure: {ex.Message}")
+                    Return Nothing
+                End Try
 
-            Dim patients As List(Of Dictionary(Of String, String))
-            Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
-            patients = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String)))(json)
-            If patients.Count > 0 Then
-                Return patients(index:=0)
-            End If
+                Dim patients As List(Of Dictionary(Of String, String))
+                Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(False)
+                patients = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String)))(json)
+                If patients.Count > 0 Then
+                    Return patients(index:=0)
+                End If
+            End Using
         End Using
 
         Return Nothing
@@ -383,32 +387,34 @@ Public Class Client2
         headers("Authorization") = $"Bearer {tokenData.GetProperty(propertyName:="access_token").GetString()}"
         headers("Accept-Language") = "en-US"
 
-        Dim request As New HttpRequestMessage(HttpMethod.Get, requestUri)
-        Dim item As New MediaTypeWithQualityHeaderValue("application/json")
-        request.Headers.Accept.Add(item)
-        For Each header As KeyValuePair(Of String, String) In headers.Sort
-            request.Headers.Add(header.Key, header.Value)
-        Next
+        Using request As New HttpRequestMessage(HttpMethod.Get, requestUri)
+            request.Headers.Accept.Add(New MediaTypeWithQualityHeaderValue("application/json"))
+            For Each header As KeyValuePair(Of String, String) In headers.Sort
+                request.Headers.Add(header.Key, header.Value)
+            Next
 
-        Dim response As HttpResponseMessage = _httpClient.SendAsync(request).Result
-        _lastHttpStatusCode = response.StatusCode
-        Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
+            Using response As HttpResponseMessage = _httpClient.SendAsync(request).Result
+                _lastHttpStatusCode = response.StatusCode
+                Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
-        ' Use centralized failure handling and translate to Nothing for older call-sites.
-        Try
-            response.ThrowIfFailure()
-        Catch ex As UnauthorizedAccessException
-            Debug.WriteLine($"GetUserString unauthorized: {ex.Message}")
-            Return Nothing
-        Catch ex As ArgumentException
-            Debug.WriteLine($"GetUserString bad request: {ex.Message}")
-            Return Nothing
-        Catch ex As HttpRequestException
-            Debug.WriteLine($"GetUserString HTTP error: {ex.Message}")
-            Return Nothing
-        End Try
+                ' Use centralized failure handling and translate to Nothing for older call-sites.
+                Try
+                    response.ThrowIfFailure()
+                Catch ex As UnauthorizedAccessException
+                    Debug.WriteLine($"GetUserString unauthorized: {ex.Message}")
+                    Return Nothing
+                Catch ex As ArgumentException
+                    Debug.WriteLine($"GetUserString bad request: {ex.Message}")
+                    Return Nothing
+                Catch ex As HttpRequestException
+                    Debug.WriteLine($"GetUserString HTTP error: {ex.Message}")
+                    Return Nothing
+                End Try
 
-        Return response.Content.ReadAsStringAsync().Result
+                Dim contentString As String = response.Content.ReadAsStringAsync().Result
+                Return contentString
+            End Using
+        End Using
     End Function
 
     ''' <summary>
@@ -654,8 +660,8 @@ Public Class Client2
     '''  Synchronous wrapper for InitAsync.
     ''' </summary>
     ''' <returns>True if initialization succeeded; otherwise, False.</returns>
-    Public Function Init() As Boolean
-        Return Me.InitAsync().GetAwaiter().GetResult()
+    Public Function Init(IsUsRegion As Boolean) As Boolean
+        Return Me.InitAsync(IsUsRegion).GetAwaiter().GetResult()
     End Function
 
     ''' <summary>
@@ -665,8 +671,9 @@ Public Class Client2
     '''  A task representing the asynchronous operation, containing True if initialization succeeded;
     '''  otherwise, False.
     ''' </returns>
-    Public Async Function InitAsync() As Task(Of Boolean)
+    Public Async Function InitAsync(IsUsRegion As Boolean) As Task(Of Boolean)
         If Not Await Me.internalInit().ConfigureAwait(False) Then
+            GetLoginData(IsUsRegion, tokenData:=Nothing)
             If Not Await Me.internalInit().ConfigureAwait(False) Then
                 Return False
             End If
