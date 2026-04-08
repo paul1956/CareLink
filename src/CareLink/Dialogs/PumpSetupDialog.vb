@@ -22,7 +22,7 @@ Public Class PumpSetupDialog
             Dim bufferLength As Integer = .Text.Length
             .AppendTextNewFont(text:=$"{Indent4}Time:", newFont:=FixedWidthBoldFont)
             If Me.Pdf.Utilities.AutoSuspend.Alarm = "Off" Then
-                .AppendTextNewFont(text:="12:00 hr".AlignCenter, newFont:=FixedWidthFont, includeNewLine:=True)
+                .AppendTextNewFont(text:="12:00 hr".AlignCenter(), newFont:=FixedWidthFont, includeNewLine:=True)
                 .Select(start:=bufferLength, length:= .Text.Length - bufferLength)
                 .SelectionBackColor = SystemColors.Window
                 .SelectionColor = SystemColors.GrayText

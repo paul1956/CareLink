@@ -66,7 +66,8 @@ Public Module RichTextBoxExtensions
     ''' <param name="singleIndent"></param>
     <Extension>
     Friend Sub AppendKeyValue(rtb As RichTextBox, key As String, value As String, Optional indent As String = Indent4)
-        rtb.AppendTextNewFont(text:=$"{indent}{key}", newFont:=FixedWidthBoldFont)
+        Dim text As String = $"{indent}{key}"
+        rtb.AppendTextNewFont(text, newFont:=FixedWidthBoldFont)
         rtb.AppendTextNewFont(text:=value.AlignCenter(), newFont:=FixedWidthFont, includeNewLine:=True)
     End Sub
 
@@ -196,7 +197,7 @@ Public Module RichTextBoxExtensions
         Dim newFont As Font = If(heading, FixedWidthBoldFont, FixedWidthFont)
 
         rtb.AppendTextNewFont(text:=$"{indent}{timeRange}", newFont)
-        Dim text As String = $"{value}".AlignCenter()
+        Dim text As String = value.AlignCenter()
         rtb.AppendTextNewFont(text, newFont:=FixedWidthFont, includeNewLine:=True)
     End Sub
 

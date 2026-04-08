@@ -8,7 +8,7 @@ Public Class PumpSetup
 
     Private Const CareLinkUrl As String =
         "https://www.medtronicdiabetes.com/products/carelink-personal-diabetes-software"
-
+    Private Const ClickAccept As String = "Click Accept!"
     Private _currentUrlUnderMouse As String = ""
 
     ''' <summary>
@@ -74,8 +74,14 @@ Public Class PumpSetup
         Handles ComboBoxPDFs.SelectedIndexChanged
         ' Enable the Accept button only if a valid PDF is selected
         Dim validPdf As Boolean = Me.ComboBoxPDFs.SelectedIndex > 0
-        Me.Accept_Button.Enabled = validPdf  ' Index 0 is "(None)"
-        Me.UserName.Enabled = Me.ComboBoxPDFs.SelectedIndex = 0
+        If validPdf Then
+            Me.UserName.Text = ClickAccept
+            Me.UserName.Enabled = False
+            Me.Accept_Button.Enabled = True
+        Else
+            Me.Accept_Button.Enabled = Me.UserName.TextLength > 0 AndAlso Me.UserName.Text <> ClickAccept
+            Me.UserName.Enabled = True
+        End If
         If validPdf Then
             ' If a valid PDF is selected, set the current PDF name with path
             Me.PdfFilePath = IO.Path.Combine(GetDownloadsDirectory(), Me.ComboBoxPDFs.SelectedItem.ToString())
@@ -97,7 +103,6 @@ Public Class PumpSetup
     End Sub
 
     Private Sub Exit_Button_Click(sender As Object, e As EventArgs) Handles Exit_Button.Click
-
         End
     End Sub
 
@@ -200,9 +205,10 @@ Public Class PumpSetup
     End Sub
 
     Private Sub UserName_TextChanged(sender As Object, e As EventArgs) Handles UserName.TextChanged
-        Dim path As String = IO.Path.Combine(GetSettingsDirectory(), $"{Me.UserName.Text}Settings.pdf")
+        Dim userName As String = Me.UserName.Text.Trim
+        Dim path As String = IO.Path.Combine(GetSettingsDirectory(), $"{userName}Settings.pdf")
         Dim validPdf As Boolean = IO.File.Exists(path)
-        Me.Accept_Button.Enabled = validPdf
+        Me.Accept_Button.Enabled = validPdf OrElse userName <> ClickAccept
         Me.ComboBoxPDFs.Enabled = Not validPdf
         If validPdf Then
             ' If a valid PDF is selected, set the current PDF name with path

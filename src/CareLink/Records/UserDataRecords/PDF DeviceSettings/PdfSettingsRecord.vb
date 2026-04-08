@@ -14,6 +14,7 @@ Public Class PdfSettingsRecord
     Private Const CarbohydrateRatiosHeader As String = "Time Ratio"
     Private Const DeviceSettings As String = "Device Settings (1 of 2)"
     Private Const EasyBolusHeader As String = "Easy Bolus"
+    Private Const EndReminder As String = " 24 hour Sensor End Reminder"
     Private Const HighAlertsHeader As String = "Start High"
     Private Const InsulinSensitivityHeader As String = "Time Sensitivity"
     Private Const LowAlertsHeader As String = "Start Low"
@@ -25,9 +26,10 @@ Public Class PdfSettingsRecord
     Private Const PresetBolusHeader As String = "Name Normal"
     Private Const PresetTempHeader As String = "Name Rate"
     Private Const SensorHeader As String = "Sensor"
+    Private Const Sensor24HourEndReminder As String = "< 24 hour Sensor End Reminder"
+    Private Const SensorCustimerEndReminder As String = "Custom Sensor End Reminder setting"
     Private Const SmartGuardHeader As String = "SmartGuard"
     Private Const UtilitiesHeader As String = "Block Mode"
-
     ''' <summary>
     '''  Initializes a new instance of the <see cref="PdfSettingsRecord"/> class
     '''  by extracting data from the specified PDF file.
@@ -252,6 +254,29 @@ Public Class PdfSettingsRecord
                         tableHeader = AutoCalibrationHeader
                         sTable = table.PdfTableToStringTable(tableHeader)
                         Me.Sensor.UpdateCalibrationReminder(sTable)
+
+                    Case itemKey.StartsWith(value:=AutoCalibrationHeader)
+                        tableHeader = AutoCalibrationHeader
+                        sTable = table.PdfTableToStringTable(tableHeader)
+                        Me.Sensor.UpdateCalibrationReminder(sTable)
+
+                    Case itemKey.StartsWith(value:=EndReminder)
+                        tableHeader = EndReminder
+                        sTable = table.PdfTableToStringTable(tableHeader)
+                        Me.Sensor.UpdateCalibrationReminder(sTable)
+
+                    Case itemKey.StartsWith(value:=Sensor24HourEndReminder)
+                        tableHeader = Sensor24HourEndReminder
+                        sTable = table.PdfTableToStringTable(tableHeader)
+                        Me.Sensor.SensorEnding.LessThan24Hours = sTable.GetSingleLineValue(Of String)(Sensor24HourEndReminder)
+                        Dim result As String = sTable.GetSingleLineValue(Of String)(SensorCustimerEndReminder)
+                        Dim state As String = result.Split(separator:=" "c)(0)
+                        Me.Sensor.SensorEnding.CustomSensorEndReminder.State = state
+                        If state = "On" Then
+                            Me.Sensor.SensorEnding.CustomSensorEndReminder.LessThan =
+                                result.Split(separator:="<"c)(1).Split(separator:="1"c)(0).Trim
+                        End If
+
                     Case Else
                         Stop
                 End Select

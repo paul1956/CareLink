@@ -8,14 +8,14 @@ Public Class SensorRecord
     End Sub
 
     Public Sub New(sTable As StringTable)
-        _SensorOn = sTable.GetSingleLineValue(Of String)("Sensor")
+        Me.SensorOn = sTable.GetSingleLineValue(Of String)("Sensor")
     End Sub
 
     Public Property AutoCalibration As String = "Off"
     Public Property CalibrationReminder As String = "Off"
     Public Property CalibrationReminderTime As String = "Off"
     Public Property SensorOn As String = "Off"
-
+    Public Property SensorEnding As New SensorEndingRecord
     Public Sub UpdateCalibrationReminder(sTable As StringTable)
         ArgumentNullException.ThrowIfNull(sTable)
         If sTable.IsValid Then

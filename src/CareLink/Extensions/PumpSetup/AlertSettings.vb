@@ -66,8 +66,17 @@ Public Module AlertSettings
 
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings>Reminders > Set Change", symbol)
             .AppendKeyValue(key:="Set Change:", value:=$"{pdf.Reminders.SetChange}")
-
             .AppendNewLine
+
+            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings>Reminders > Sensor Ending", symbol)
+            .AppendKeyValue(key:="Less than 24 hours:",
+                            value:=$"{pdf.Sensor.SensorEnding.LessThan24Hours}")
+            .AppendKeyValue(key:="Custom Reminder:",
+                            value:=pdf.Sensor.SensorEnding.CustomSensorEndReminder.State)
+            .AppendKeyValue(key:="Less than:",
+                            value:=pdf.Sensor.SensorEnding.CustomSensorEndReminder.LessThan)
+            .AppendNewLine
+
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings>Reminders > Bolus BG Check", symbol)
             .AppendKeyValue(key:="Reminder:", value:=$"{pdf.Reminders.BolusBgCheck}")
 
