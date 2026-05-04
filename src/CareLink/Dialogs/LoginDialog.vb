@@ -3,10 +3,8 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
-Imports System.IO
 Imports System.Net
 Imports System.Net.Http
-Imports System.Text
 
 Public Class LoginDialog
     Private ReadOnly _mySource As New AutoCompleteStringCollection()
@@ -14,7 +12,7 @@ Public Class LoginDialog
     Private _httpClient As HttpClient
     Private _initialHeight As Integer = 0
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
-    Public Property Client As Client2
+    Friend Property Client As Client2
     Public Property ClientDiscover As DiscoveryRecord
     Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
     Public Property LoginSourceAutomatic As FileToLoadOptions = FileToLoadOptions.NewUser
@@ -248,10 +246,11 @@ Public Class LoginDialog
 
             Dim isUsRegion As Boolean = Me.RegionComboBox.SelectedValue.ToString = "North America"
             GetLoginData(isUsRegion, ReadTokenDataFile(s_userName))
-            Me.Client = New Client2()
-            Dim success As Boolean = Me.Client.Init(isUsRegion)
+            Me.Client = New Client2(isUsRegion:=isUsRegion)
+            lastErrorMsg = If(Not Me.Client.Init(),
+                              "Login failed: Client.Init() did not complete successfully.",
+                              Me.Client.GetRecentData())
 
-            lastErrorMsg = Me.Client.GetRecentData()
         End If
         If IsNullOrWhiteSpace(lastErrorMsg) Then
             s_lastMedicalDeviceDataUpdateServerEpoch = 0

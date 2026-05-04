@@ -81,6 +81,57 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
+    '''  Indicates whether the specified string is <see langword="Not"/>
+    '''  <see langword="nothing"/> or an empty string("").
+    ''' </summary>
+    ''' <param name="value">The string to check.</param>
+    ''' <returns>
+    '''  <see langword="False"/> if the value parameter is <see langword="nothing"/> or an empty string("");
+    '''  otherwise, <see langword="True"/>.
+    ''' </returns>
+    Public Function IsNotNullOrEmpty(value As String) As Boolean
+        Return Not String.IsNullOrEmpty(value)
+    End Function
+
+    ''' <summary>
+    '''  Indicates whether the specified string is <see langword="Not"/> <see langword="nothing"/>,
+    '''  not an empty string(""), and does not consist only of whitespace characters.
+
+    ''' </summary>
+    ''' <param name="value">The string to check.</param>
+    ''' <returns>
+    '''  <see langword="False"/> if the value parameter is <see langword="nothing"/> or <see cref="String.Empty"/>
+    '''  or if the value consists exclusively of white-space characters; otherwise, <see langword="True"/>.
+    ''' </returns>
+    Public Function IsNotNullOrWhiteSpace(value As String) As Boolean
+        Return Not String.IsNullOrWhiteSpace(value)
+    End Function
+
+    ''' <summary>
+    '''  Indicates whether the specified string is <see langword="nothing"/> or an empty string("").
+    ''' </summary>
+    ''' <param name="value">The string to check.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the value parameter is <see langword="nothing"/> or an empty string("");
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    Public Function IsNullOrEmpty(value As String) As Boolean
+        Return String.IsNullOrEmpty(value)
+    End Function
+
+    ''' <summary>
+    ''' Checks if the string is 'nothing, an empty string, or consists only of whitespace characters' 
+    ''' </summary>
+    ''' <param name="value">The string to check.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if the value parameter is <see langword="nothing"/> or <see cref="String.Empty"/>
+    '''  or if the value consists exclusively of white-space characters; otherwise, <see langword="False"/>.
+    ''' </returns>
+    Public Function IsNullOrWhiteSpace(value As String) As Boolean
+        Return String.IsNullOrWhiteSpace(value)
+    End Function
+
+    ''' <summary>
     '''  Converts a <see langword="String"/> to a <see langword="Double"/>
     '''  using <see cref="CultureInfo.InvariantCulture"/>.
     ''' </summary>
@@ -111,53 +162,22 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Indicates whether the specified string is <see langword="nothing"/> or an empty string("").
+    '''  Removes the specified suffix from the end of the string if it exists,
+    '''  using the specified string comparison.
     ''' </summary>
-    ''' <param name="value">The string to check.</param>
-    ''' <returns>
-    '''  <see langword="True"/> if the value parameter is <see langword="nothing"/> or an empty string("");
-    '''  otherwise, <see langword="False"/>.
-    ''' </returns>
-    Public Function IsNullOrEmpty(value As String) As Boolean
-        Return String.IsNullOrEmpty(value)
-    End Function
-
-    ''' <summary>
-    '''  Indicates whether the specified string is <see langword="Not"/>
-    '''  <see langword="nothing"/> or an empty string("").
-    ''' </summary>
-    ''' <param name="value">The string to check.</param>
-    ''' <returns>
-    '''  <see langword="False"/> if the value parameter is <see langword="nothing"/> or an empty string("");
-    '''  otherwise, <see langword="True"/>.
-    ''' </returns>
-    Public Function IsNotNullOrEmpty(value As String) As Boolean
-        Return Not String.IsNullOrEmpty(value)
-    End Function
-
-    ''' <summary>
-    '''  Indicates whether the specified string is <see langword="nothing"/> or an empty string("").
-    ''' </summary>
-    ''' <param name="value">The string to check.</param>
-    ''' <returns>
-    '''  <see langword="True"/> if the value parameter is <see langword="nothing"/> or <see cref="String.Empty"/>
-    '''  or if the value consists exclusively of white-space characters; otherwise, <see langword="False"/>.
-    ''' </returns>
-    Public Function IsNullOrWhiteSpace(value As String) As Boolean
-        Return String.IsNullOrWhiteSpace(value)
-    End Function
-
-    ''' <summary>
-    '''  Indicates whether the specified string is <see langword="Not"/>
-    '''  <see langword="nothing"/> or an empty or consists only of non-whitespace characters.
-    ''' </summary>
-    ''' <param name="value">The string to check.</param>
-    ''' <returns>
-    '''  <see langword="False"/> if the value parameter is <see langword="nothing"/> or <see cref="String.Empty"/>
-    '''  or if the value consists exclusively of white-space characters; otherwise, <see langword="True"/>.
-    ''' </returns>
-    Public Function IsNotNullOrWhiteSpace(value As String) As Boolean
-        Return Not String.IsNullOrWhiteSpace(value)
+    ''' <param name="value">The string to remove the suffix from.</param>
+    ''' <param name="suffix">The suffix to remove.</param>
+    ''' <param name="comparison">The string comparison to use.</param>
+    ''' <returns>The string with the suffix removed, if it existed.</returns>
+    <Extension>
+    Public Function RemoveSuffix(value As String,
+                                 suffix As String,
+                                 Optional comparison As StringComparison = StringComparison.Ordinal) As String
+        Return If(String.IsNullOrEmpty(value) OrElse String.IsNullOrEmpty(suffix),
+                  value,
+                  If(value.EndsWith(suffix, comparison),
+                      value.Substring(0, value.Length - suffix.Length),
+                      value))
     End Function
 
     ''' <summary>
@@ -178,58 +198,6 @@ Public Module StringExtensions
             result.Append(value:=value.AsSpan(start:=1))
         End If
         Return result.ToString
-    End Function
-
-    ''' <summary>
-    '''  Converts an unsigned integer representing total units
-    '''  (years, days, months, hours, minutes, or seconds) to a formatted string.
-    ''' </summary>
-    ''' <param name="totalUnits">The total units to convert.</param>
-    ''' <param name="Unit">The unit  to use, e.g., "minute" or "hour".</param>
-    ''' <returns>A formatted string representing the total units.</returns>
-    ''' <param name="includeValue"></param>
-    <Extension>
-    Public Function ToUnits(totalUnits As UInteger,
-                            unit As String,
-                            Optional includeValue As Boolean = True) As String
-
-        Dim unitOnly As String = If(totalUnits = 1,
-                                    unit,
-                                    $"{unit}s")
-        Return If(includeValue,
-                  $"{totalUnits:N0} {unitOnly}",
-                  unitOnly)
-    End Function
-
-    ''' <summary>
-    '''  Converts an integer representing total units
-    '''  (e.g., years, days, months, hours, minutes, or seconds)
-    '''  to a formatted string with optional prefix and suffix.
-    ''' </summary>
-    ''' <param name="totalUnits">The total units to convert.</param>
-    ''' <param name="unit">The unit to use, e.g., "minute" or "hour".</param>
-    ''' <param name="prefix">Optional prefix to prepend to the formatted string.</param>
-    ''' <param name="suffix">Optional suffix to append to the formatted string.</param>
-    ''' <param name="includeValue">
-    '''  If true, includes the numeric value in the formatted string.
-    ''' </param>
-    ''' <returns>
-    '''  A formatted string representing the total units with optional prefix and suffix.
-    ''' </returns>
-    <Extension>
-    Public Function ToUnits(
-        totalUnits As Integer,
-        unit As String,
-        Optional prefix As String = EmptyString,
-        Optional suffix As String = EmptyString,
-        Optional includeValue As Boolean = True) As String
-
-        Dim unitOnly As String = If(totalUnits = 1,
-                                    unit,
-                                    $"{unit}s")
-        Return If(includeValue,
-                  $"{prefix}{totalUnits:N0}{unitOnly}{suffix}",
-                  $"{prefix}{unitOnly}{suffix}")
     End Function
 
     ''' <summary>
@@ -333,6 +301,58 @@ Public Module StringExtensions
 
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Return resultString.Replace(oldValue:="time", newValue:=" Time", ignoreCase:=False, culture:=provider)
+    End Function
+
+    ''' <summary>
+    '''  Converts an unsigned integer representing total units
+    '''  (years, days, months, hours, minutes, or seconds) to a formatted string.
+    ''' </summary>
+    ''' <param name="totalUnits">The total units to convert.</param>
+    ''' <param name="Unit">The unit  to use, e.g., "minute" or "hour".</param>
+    ''' <returns>A formatted string representing the total units.</returns>
+    ''' <param name="includeValue"></param>
+    <Extension>
+    Public Function ToUnits(totalUnits As UInteger,
+                            unit As String,
+                            Optional includeValue As Boolean = True) As String
+
+        Dim unitOnly As String = If(totalUnits = 1,
+                                    unit,
+                                    $"{unit}s")
+        Return If(includeValue,
+                  $"{totalUnits:N0} {unitOnly}",
+                  unitOnly)
+    End Function
+
+    ''' <summary>
+    '''  Converts an integer representing total units
+    '''  (e.g., years, days, months, hours, minutes, or seconds)
+    '''  to a formatted string with optional prefix and suffix.
+    ''' </summary>
+    ''' <param name="totalUnits">The total units to convert.</param>
+    ''' <param name="unit">The unit to use, e.g., "minute" or "hour".</param>
+    ''' <param name="prefix">Optional prefix to prepend to the formatted string.</param>
+    ''' <param name="suffix">Optional suffix to append to the formatted string.</param>
+    ''' <param name="includeValue">
+    '''  If true, includes the numeric value in the formatted string.
+    ''' </param>
+    ''' <returns>
+    '''  A formatted string representing the total units with optional prefix and suffix.
+    ''' </returns>
+    <Extension>
+    Public Function ToUnits(
+        totalUnits As Integer,
+        unit As String,
+        Optional prefix As String = EmptyString,
+        Optional suffix As String = EmptyString,
+        Optional includeValue As Boolean = True) As String
+
+        Dim unitOnly As String = If(totalUnits = 1,
+                                    unit,
+                                    $"{unit}s")
+        Return If(includeValue,
+                  $"{prefix}{totalUnits:N0}{unitOnly}{suffix}",
+                  $"{prefix}{unitOnly}{suffix}")
     End Function
 
     ''' <summary>

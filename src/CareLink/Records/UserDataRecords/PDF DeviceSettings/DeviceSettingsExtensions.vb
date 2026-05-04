@@ -7,12 +7,15 @@ Imports System.Runtime.CompilerServices
 Friend Module DeviceSettingsExtensions
 
     <Extension>
-    Friend Function GetSingleLineValue(Of T)(sTable As StringTable, key As String) As T
+    Friend Function GetSingleLineValue(Of T)(sTable As StringTable, key As String, Optional endsWith As String = "") As T
         Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
         Dim typeOfT As Type = GetType(T)
         For Each r As StringTable.Row In sTable.Rows
             Dim v As String = r.Columns(index:=0)
             If v.StartsWith(value:=key) Then
+                If Not String.IsNullOrEmpty(endsWith) Then
+                    v = v.RemoveSuffix(endsWith)
+                End If
                 Dim value As String = v.Remove(key).Trim
                 If value = v Then
                     value = r.Columns(index:=1)
@@ -50,10 +53,8 @@ Friend Module DeviceSettingsExtensions
                               CType(CObj(bol), T),
                               CType(CObj(False), T))
                 End If
-                Stop
             End If
         Next
-        Stop
         If typeOfT Is GetType(String) Then
             Return CType(CObj(EmptyString), T)
         End If
@@ -72,7 +73,7 @@ Friend Module DeviceSettingsExtensions
         If typeOfT Is GetType(Boolean) Then
             Return CType(CObj(False), T)
         End If
-        Stop
+        Throw New ArgumentException($"Unsupported type '{typeOfT.FullName}' in GetSingleLineValue.")
         Return Nothing
     End Function
 

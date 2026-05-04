@@ -6,6 +6,27 @@ Imports System.IO
 Imports System.Text
 
 Public Module LoginHelper
+
+    ''' <summary>
+    '''  Ensures local login data exists by invoking the embedded helper executable when
+    '''  no <paramref name="tokenData"/> is supplied.
+    ''' </summary>
+    ''' <param name="tokenData">
+    '''  The current token data. If <c>Nothing</c>, the method will extract an embedded helper EXE,
+    '''  run it to produce a JSON file, and move that file to the configured login data destination.
+    ''' </param>
+    ''' <remarks>
+    '''  The method performs file I/O and launches an external process. It:
+    '''  - Extracts the embedded resource <c>carelink_carepartner_api_login</c> to a temporary EXE file.
+    '''  - Executes the EXE (optionally with the <c>--us</c> switch) and waits for it to
+    '''    create a temporary JSON output file.
+    '''  - Moves the generated JSON to the destination returned by <see cref="GetLoginDataFileName"/>
+    '''    (s_userName) and cleans up temporary files and the helper process.
+    '''  Callers should avoid invoking this on the UI thread because it performs blocking I/O and process operations.
+    ''' </remarks>
+    ''' <exception cref="System.IO.IOException">
+    '''  Propagates I/O exceptions from writing, moving, or deleting files.
+    ''' </exception>
     Public Sub GetLoginData(isUsRegion As Boolean, tokenData As TokenData)
         If tokenData Is Nothing Then
             ' Get the embedded EXE as a byte array
@@ -34,10 +55,10 @@ Public Module LoginHelper
             Dim process As New Process With {.StartInfo = startInfo}
 
             Dim outputBuilder As New StringBuilder()
-            Dim errorBuilder As New System.Text.StringBuilder()
+            Dim errorBuilder As New StringBuilder()
 
-            Dim outHandler As System.Diagnostics.DataReceivedEventHandler = Nothing
-            Dim errHandler As System.Diagnostics.DataReceivedEventHandler = Nothing
+            Dim outHandler As DataReceivedEventHandler = Nothing
+            Dim errHandler As DataReceivedEventHandler = Nothing
             outHandler = Sub(sender2 As Object, args2 As DataReceivedEventArgs)
                              If args2.Data IsNot Nothing Then
                                  Debug.WriteLine(args2.Data)

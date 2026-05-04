@@ -72,8 +72,7 @@ Public Module PumpVariables
 
     Public Property ProgramInitialized As Boolean = False
 
-    Public Property RecentData As New Dictionary(Of String, String) _
-        (comparer:=StringComparer.OrdinalIgnoreCase)
+    Public Property RecentData As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
 
     Public Function GetCarbDefaultUnit() As String
         Return "Grams"

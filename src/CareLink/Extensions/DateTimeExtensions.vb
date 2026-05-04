@@ -127,8 +127,8 @@ Friend Module DateTimeExtensions
             pumpTime = Date.SpecifyKind(value:=unixTimeSpan.FromUnixTime, kind:=DateTimeKind.Local)
             Dim offset As TimeSpan = TimeZoneInfo.Local.GetUtcOffset(dateTime:=pumpTime)
             Dim pumpTimeOffset As New DateTimeOffset(dateTime:=pumpTime, offset)
-            offset = TimeZoneInfo.Local.GetUtcOffset(dateTime:=Now)
-            Dim localTimeOffset As New DateTimeOffset(dateTime:=Now, offset)
+            offset = TimeZoneInfo.Local.GetUtcOffset(dateTime:=Date.Now)
+            Dim localTimeOffset As New DateTimeOffset(dateTime:=Date.Now, offset)
 
             If pumpTimeOffset.Offset = localTimeOffset.Offset Then
                 localTime = pumpTime
@@ -222,6 +222,34 @@ Friend Module DateTimeExtensions
             Stop
         End Try
         Return Nothing
+    End Function
+
+    ''' <summary>
+    '''  Determines whether a given <see cref="Date"/> occurs earlier than a cutoff point defined by subtracting
+    '''  a <see cref="TimeSpan"/> from a reference date.
+    ''' </summary>
+    ''' <param name="dateTime">The date and time to evaluate.</param>
+    ''' <param name="referenceDate">The baseline date from which the comparison window is calculated.</param>
+    ''' <param name="span">
+    '''  The amount of time to subtract from <paramref name="referenceDate"/> to establish the cutoff threshold.
+    ''' </param>
+    ''' <returns>
+    '''  True if <paramref name="dateTime"/> is earlier than (<paramref name="referenceDate"/> minus <paramref name="span"/>);
+    '''  otherwise, false.
+    ''' </returns>
+    ''' <example>
+    '''  Dim referenceDate As Date = Date.Now
+    '''  Dim span As TimeSpan = TimeSpan.FromDays(7)
+    '''  Dim inputDate As Date = Date.Now.AddDays(-10)
+    '''
+    '''  ' Cutoff = referenceDate - 7 days
+    '''  ' inputDate is 10 days ago, so it is older than the cutoff → True
+    '''  Dim result As Boolean = inputDate.IsDateOlderThan(referenceDate, span)
+    ''' </example>
+
+    <Extension>
+    Public Function IsDateOlderThan(dateTime As Date, referenceDate As Date, span As TimeSpan) As Boolean
+        Return dateTime < (referenceDate - span)
     End Function
 
     ''' <summary>

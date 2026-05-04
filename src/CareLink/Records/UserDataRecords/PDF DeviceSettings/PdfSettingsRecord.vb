@@ -85,10 +85,15 @@ Public Class PdfSettingsRecord
 
                     Case itemKey.StartsWith(value:=MaximumBasalRateHeader)
                         tableHeader = MaximumBasalRateHeader
-                        sTable = tables.Values(index:=0).PdfTableToStringTable(tableHeader)
+                        '  Maximum Basal Rate is not always present, so skip if there are not at least 2 tables
+                        '  (header and value)
+                        If tables.Values.Count < 2 Then
+                            Continue For
+                        End If
+                        sTable = tables.Values(index:=1).PdfTableToStringTable(tableHeader)
 
                         Dim key As String = MaximumBasalRateHeader
-                        Me.Basal.MaximumBasalRate = sTable.GetSingleLineValue(Of Single)(key)
+                        Me.Basal.MaximumBasalRate = sTable.GetSingleLineValue(Of Single)(key, endsWith:="U/Hr")
 
                     Case itemKey.StartsWith(NamedBasalHeader)
                         Dim tableNumber As Integer = ExtractIndex(itemKey)
@@ -96,6 +101,9 @@ Public Class PdfSettingsRecord
                         Dim indexOfKey As Integer = allText.IndexOf(value:=key) + key.Length + 2
                         Dim isActive As Boolean = allText.Substring(startIndex:=indexOfKey, length:=1) = "("c
                         Me.Basal.NamedBasal(key) = New NamedBasalRecord(table, isActive)
+
+                    Case itemKey.StartsWith("24-Hour") AndAlso itemKey.EndsWith("Total")
+                        Continue For
 
                     Case itemKey.StartsWith(value:=BolusWizardHeader)
                         tableHeader = BolusWizardHeader
@@ -278,7 +286,7 @@ Public Class PdfSettingsRecord
                         End If
 
                     Case Else
-                        Stop
+                        Throw New UnreachableException(itemKey)
                 End Select
             Catch ex As Exception
                 Stop

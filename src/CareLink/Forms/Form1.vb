@@ -39,7 +39,7 @@ Public Class Form1
 
     Private Shared Property TimeInTightRange As (Uint As UInteger, Str As String)
 
-    Public Shared Property Client As Client2
+    Friend Shared Property Client As Client2
         Get
             Return LoginHelpers.LoginDialog?.Client
         End Get
@@ -2704,7 +2704,7 @@ Public Class Form1
             .CheckFileExists = True,
             .CheckPathExists = True,
             .DefaultExt = "pdf",
-            .Filter = $"Settings file (*.pdf)|*.pdf",
+            .Filter = "Settings file (*.pdf)|*.pdf",
             .InitialDirectory = initialDirectory,
             .Multiselect = False,
             .ReadOnlyChecked = True,
@@ -3626,9 +3626,7 @@ Public Class Form1
     '''  The method checks if updates are in progress, retrieves recent data,
     '''  and updates the UI accordingly.
     ''' </remarks>
-    Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) _
-        Handles ServerUpdateTimer.Tick
-
+    Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         SetServerUpdateTimer(Start:=False)
         Dim lastErrorMessage As String = String.Empty
         SyncLock _updatingLock
@@ -3636,9 +3634,10 @@ Public Class Form1
                 Stop
             Else
                 _updating = True
+                RecentData = Nothing
                 lastErrorMessage = Client?.GetRecentData()
                 If RecentDataEmpty() Then
-                    If Client Is Nothing Then
+                    If Client Is Nothing OrElse IsNotNullOrEmpty(lastErrorMessage) Then
                         Do While True
                             LoginDialog.LoginSourceAutomatic = FileToLoadOptions.Login
                             Dim result As DialogResult = LoginDialog.ShowDialog(owner:=Me)
@@ -3677,7 +3676,15 @@ Public Class Form1
                     Dim epochAsLocalDate As Date =
                         lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
 
-                    If epochAsLocalDate + FiveMinuteSpan < Now() Then
+                    ' The pump updates the lastMedicalDeviceDataUpdateServerEpoch value when
+                    ' it receives new data from the pump, but it may take a few minutes for the pump to receive
+                    ' and process the new data.
+                    ' If the epoch time is older than 6 minutes, it's likely that the pump has not yet updated
+                    ' with the new data, so we should highlight the last update time
+                    ' and show NaN for the SG value on the mini display.
+                    ' If it's within 6 minutes, we can assume that the pump has updated and
+                    ' we can show the actual SG value.
+                    If epochAsLocalDate.IsDateOlderThan(Date.Now, span:=SixMinuteSpan) Then
                         Me.SetLastUpdateTime(highLight:=True,
                                              isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
                         _sgMiniDisplay.SetCurrentSgString(sgString, f:=Single.NaN)
@@ -4129,7 +4136,7 @@ Public Class Form1
                     Me.NotifyIcon1.Icon = CreateTextIcon(s, backColor)
                     Dim strBuilder As New StringBuilder(capacity:=100)
                     Dim dateSeparator As String = CultureInfo.CurrentUICulture.DateTimeFormat.DateSeparator
-                    strBuilder.AppendLine(value:=Date.Now().ToShortDateTime.Remove(s:=$"{dateSeparator}{Now.Year}"))
+                    strBuilder.AppendLine(value:=Date.Now.ToShortDateTime.Remove(s:=$"{dateSeparator}{Date.Now.Year}"))
                     strBuilder.AppendLine(value:=$"Last SG {sgString} {BgUnits}")
                     If PatientData.ConduitInRange Then
                         If s_lastSgValue.IsSgInvalid Then

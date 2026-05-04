@@ -119,7 +119,7 @@ Public Module FileIoHelpers
         If IsNullOrWhiteSpace(value:=path) Then
             Throw New ArgumentNullException(paramName:=NameOf(path), message:="Path cannot be null or whitespace.")
         End If
-        Return File.GetLastWriteTime(path) < Now - ThirtyDaysSpan
+        Return File.GetLastWriteTime(path).IsDateOlderThan(Date.Now, span:=ThirtyDaysSpan)
     End Function
 
     ''' <summary>

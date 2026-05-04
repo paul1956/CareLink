@@ -387,15 +387,14 @@ Friend Module SpeechSupport
             Return
         End If
 
-        Dim diff As Long = DateDiff(Interval:=DateInterval.Minute, Now, s_timeOfLastAlert)
-        If s_lastSpokenMessage = textToSpeak AndAlso diff < ThirtySecondsInMilliseconds Then
+        If s_lastSpokenMessage = textToSpeak AndAlso Not s_timeOfLastAlert.IsDateOlderThan(Date.Now, ThirtySecondSpan) Then
             Form1.StatusStripSpeech.Text = $"Rejected: '{textToSpeak}' too soon, Listening"
             s_statusStripSpeechText = textToSpeak
         End If
         If Form1.StatusStripSpeech.Text.Contains("too soon") Then
             Form1.StatusStripSpeech.Text = "Listening"
         End If
-        s_timeOfLastAlert = Now
+        s_timeOfLastAlert = Date.Now
         s_lastSpokenMessage = textToSpeak
         If Not s_speechErrorReported Then
             If s_speechSynthesizer Is Nothing Then

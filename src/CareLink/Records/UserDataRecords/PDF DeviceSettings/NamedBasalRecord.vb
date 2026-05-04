@@ -8,7 +8,7 @@ Public Class NamedBasalRecord
 
     Public Sub New(table As PdfTable, isActive As Boolean)
         Dim sTable As StringTable = table.PdfTableToStringTable(tableHeader:="24-Hour")
-        Me.Total24Hour = sTable.GetSingleLineValue(Of String)(key:="24-Hour Total")
+        Me.Total24Hour = sTable.GetSingleLineValue(Of String)(key:="24-Hour", endsWith:="Total")
         Me.Active = isActive
     End Sub
 

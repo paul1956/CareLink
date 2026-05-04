@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+<DebuggerNonUserCode()>
 Friend Module NewMessageBox
 
     ''' <summary>
@@ -213,6 +214,7 @@ Friend Module NewMessageBox
     ''' <returns>
     '''  The <see cref="MsgBoxResult"/> indicating which button was pressed.
     ''' </returns>
+    <DebuggerNonUserCode()>
     Public Function MsgBox(
         heading As String,
         prompt As String,

@@ -263,6 +263,7 @@ Friend Module LoginHelpers
             End If
             If highLight Then
                 .ForeColor = GetGraphLineColor(key:="High Alert")
+
                 .BackColor = .ForeColor.ContrastingColor()
             Else
                 .BackColor = form1.MenuStrip1.BackColor
@@ -313,12 +314,12 @@ Friend Module LoginHelpers
                 Form1.ServerUpdateTimer.Interval = interval
             End If
             Form1.ServerUpdateTimer.Start()
-            DebugPrint(message:=$"started at {Now:T}")
+            DebugPrint(message:=$"started at {Date.Now:T}")
             Return True
         Else
             If Form1.ServerUpdateTimer.Enabled Then
                 Form1.ServerUpdateTimer.Stop()
-                DebugPrint(message:=$"stopped at {Now:T}")
+                DebugPrint(message:=$"stopped at {Date.Now:T}")
                 Return True
             End If
         End If

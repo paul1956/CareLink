@@ -1,4 +1,8 @@
-﻿Imports System.Net
+﻿' Licensed to the .NET Foundation under one or more agreements.
+' The .NET Foundation licenses this file to you under the MIT license.
+' See the LICENSE file in the project root for more information.
+
+Imports System.Net
 Imports System.Net.Http
 Imports System.Reflection
 Imports System.Text.Json
@@ -27,7 +31,7 @@ Public Class Client2TransientErrorsTests
         Dim httpClient As New HttpClient(handler)
         Dim client As New Client2(httpClient:=httpClient) With {
             .Config = New Dictionary(Of String, String) From {{"baseUrlCumulus", "https://example.com"}}}
-        client.GetType().GetProperty("UserElementDictionary").SetValue(client, New Dictionary(Of String, Object) From {{"role", "patient"}})
+        client.SetUserElementDictionaryForTests(New Dictionary(Of String, Object) From {{"role", "patient"}})
 
         Dim tokenJson As String = "{""access_token"":""aaa.bbb.ccc"",""refresh_token"":""r"",""client_id"":""cid"",""mag-identifier"":""m""}"
         Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(tokenJson)

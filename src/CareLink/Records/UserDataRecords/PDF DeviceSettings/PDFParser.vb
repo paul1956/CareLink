@@ -157,7 +157,7 @@ Public Module PDFParser
                 Select Case True
                     Case value.StartsWith(value:="Maximum Basal Rate")
                         key = "Maximum Basal Rate"
-                    Case value.StartsWith(value:="24-Hour Total")
+                    Case value.StartsWith(value:="24-Hour") AndAlso value.EndsWith(value:="Total")
                         sub24HourTotal += 1
                         key = $"24 Hour Total({sub24HourTotal})"
                     Case value.StartsWith(value:="Bolus Wizard")
@@ -198,12 +198,17 @@ Public Module PDFParser
                         key = "Calibration Reminder"
                     Case value.StartsWith(value:="Block Mode")
                         key = "Block Mode"
+                    Case value.StartsWith(value:="Basal")
+                        key = "Basal"
                     Case IsNullOrWhiteSpace(value)
                         Continue For
                     Case Else
                         key = value
                 End Select
-                results.Add(key, value:=table)
+                If Not results.TryAdd(key, value:=table) Then
+                    Dim msg As String = $"Duplicate table key: {key} on page {i + 1} in file {fileName}"
+                    Throw New InvalidDataException(msg)
+                End If
             Next
         Next
         Return results

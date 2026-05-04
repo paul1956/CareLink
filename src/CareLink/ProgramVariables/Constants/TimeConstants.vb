@@ -20,10 +20,13 @@ Friend Module TimeConstants
     Public ReadOnly Property ZeroTickSpan As New TimeSpan(ticks:=0)
 
 #Region "Minute Spans"
+    Public ReadOnly Property ThirtySecondSpan As New TimeSpan(hours:=0, minutes:=0, seconds:=30)
 
     Public ReadOnly Property OneMinuteSpan As New TimeSpan(hours:=0, minutes:=1, seconds:=0)
 
     Public ReadOnly Property FiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
+
+    Public ReadOnly Property SixMinuteSpan As New TimeSpan(hours:=0, minutes:=6, seconds:=0)
 
     Public ReadOnly Property ThirtyMinuteSpan As New TimeSpan(hours:=0, minutes:=30, seconds:=0)
 

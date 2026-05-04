@@ -134,7 +134,7 @@ Friend Module TimeZoneExtensions
     '''  The pumps current <see cref="Date"/> in the applications local time.
     ''' </returns>
     Public Function PumpNow() As Date
-        Return TimeZoneInfo.ConvertTime(dateTime:=Now, destinationTimeZone:=PumpTimeZoneInfo)
+        Return TimeZoneInfo.ConvertTime(dateTime:=Date.Now, destinationTimeZone:=PumpTimeZoneInfo)
     End Function
 
 End Module
