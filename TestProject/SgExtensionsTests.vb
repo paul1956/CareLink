@@ -75,7 +75,7 @@ Public Class SgExtensionsTests
     Public Sub ScaleSg_KeyValuePair_With_Number_JsonElement_ReturnsFormatted()
         ' Arrange
         NativeMmolL = False
-        Dim element As JsonElement = JsonDocument.Parse("100").RootElement
+        Dim element As JsonElement = JsonElement.Parse("100")
         Dim kvp As New KeyValuePair(Of String, Object)("sg", element)
         Dim expected As String = 100.0F.ToString(CultureInfo.CurrentUICulture)
 
@@ -90,7 +90,7 @@ Public Class SgExtensionsTests
     <Fact>
     Public Sub ScaleSg_KeyValuePair_With_Null_JsonElement_ReturnsEmptyString()
         ' Arrange
-        Dim element As JsonElement = JsonDocument.Parse("null").RootElement
+        Dim element As JsonElement = JsonElement.Parse("null")
         Dim kvp As New KeyValuePair(Of String, Object)("sg", element)
 
         ' Act

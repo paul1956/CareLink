@@ -38,7 +38,7 @@ Public Class Client2TransientErrorsTests
         Dim tokenField As FieldInfo = client.GetType().GetField("_tokenDataElement", BindingFlags.NonPublic Or BindingFlags.Instance)
         tokenField.SetValue(client, tokenElement)
 
-        Dim accessPayload As New Dictionary(Of String, Object) From {{"exp", JsonDocument.Parse("10000000000").RootElement}}
+        Dim accessPayload As New Dictionary(Of String, Object) From {{"exp", JsonElement.Parse("10000000000")}}
         Dim accessField As FieldInfo = client.GetType().GetField("_accessTokenPayload", BindingFlags.NonPublic Or BindingFlags.Instance)
         accessField.SetValue(client, CType(accessPayload, Object))
 
