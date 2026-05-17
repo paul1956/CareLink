@@ -44,9 +44,12 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-5/4/2026
+5/16/2026
 
 ## What's New
+New in 5.2.3.4
+Fix GetCarbRatio to handle boundries better
+
 New in 5.2.3.3
 Add misssing License headers for tests.
 Replace Now with Date.Now

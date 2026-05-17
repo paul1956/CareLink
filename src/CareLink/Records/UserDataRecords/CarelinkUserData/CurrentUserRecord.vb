@@ -21,6 +21,24 @@ Public Class CurrentUserRecord
     Public Property UseAdvancedAitDecay As CheckState
     Public ReadOnly Property UserName As String
 
+    Private Shared Function RoundToMinute(t As TimeOnly) As TimeOnly
+        Return New TimeOnly(t.Hour, t.Minute)
+    End Function
+
+    Friend Function GetCarbRatio(forTime As TimeOnly) As Single
+        For Each carbRatio As CarbRatioRecord In Me.CarbRatios
+            Dim startTime As TimeOnly = RoundToMinute(carbRatio.StartTime)
+            Dim endTime As TimeOnly = RoundToMinute(carbRatio.EndTime)
+            Dim checkTime As TimeOnly = RoundToMinute(forTime)
+
+            If checkTime.IsBetween(startTime, endTime) OrElse checkTime = startTime OrElse checkTime = endTime Then
+                Return carbRatio.CarbRatio
+            End If
+        Next
+
+        Throw New InvalidOperationException("No carb ratio found for the specified time.")
+    End Function
+
     Friend Function Clone() As CurrentUserRecord
 
         Return New CurrentUserRecord(Me.UserName, Me.UseAdvancedAitDecay) With {
@@ -60,17 +78,6 @@ Public Class CurrentUserRecord
                   CInt(Me.InsulinRealAit * 12),
                   CInt(Me.PumpAit * 12))
 
-    End Function
-
-    Public Function GetCarbRatio(forTime As TimeOnly) As Single
-
-        For Each carbRatio As CarbRatioRecord In Me.CarbRatios
-            If forTime.IsBetween(start:=carbRatio.StartTime, [end]:=carbRatio.EndTime) Then
-                Return carbRatio.CarbRatio
-            End If
-        Next
-        Stop
-        Throw UnreachableException(paramName:=NameOf(forTime))
     End Function
 
     Public Overrides Function GetHashCode() As Integer
