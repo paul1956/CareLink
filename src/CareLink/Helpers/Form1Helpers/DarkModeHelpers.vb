@@ -39,11 +39,7 @@ Public Module DarkModeHelpers
             attrValue:=borderColor,
             attrSize:=Marshal.SizeOf([structure]:=borderColor))
         If result <> 0 Then
-            MessageBox.Show(
-                text:="Failed to set border color.",
-                caption:="Error",
-                buttons:=MessageBoxButtons.OK,
-                icon:=MessageBoxIcon.Error)
+            ' ignore result for border color as it may not be supported on all versions of Windows
         End If
     End Sub
 
