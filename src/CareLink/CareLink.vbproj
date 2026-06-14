@@ -88,7 +88,7 @@
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.8" />
     <PackageReference Include="FreeSpire.PDF" Version="12.4.0" />
     <PackageReference Include="Octokit" Version="14.0.0" />
-    <PackageReference Include="System.Speech" Version="10.0.8" />
+    <PackageReference Include="System.Speech" Version="10.0.9" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.3" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.8" />
     <PackageReference Include="WinForms.DataVisualization" Version="1.10.2" />
