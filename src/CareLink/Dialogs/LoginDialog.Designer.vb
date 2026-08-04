@@ -71,7 +71,7 @@ Partial Class LoginDialog
         UsernameLabel.Margin = New Padding(9, 0, 9, 0)
         UsernameLabel.Name = "UsernameLabel"
         UsernameLabel.Size = New Size(220, 23)
-        UsernameLabel.TabIndex = 2
+        UsernameLabel.TabIndex = 0
         UsernameLabel.Text = "User Name"
         UsernameLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
@@ -81,7 +81,7 @@ Partial Class LoginDialog
         PasswordLabel.Location = New Point(201, 55)
         PasswordLabel.Name = "PasswordLabel"
         PasswordLabel.Size = New Size(220, 23)
-        PasswordLabel.TabIndex = 4
+        PasswordLabel.TabIndex = 2
         PasswordLabel.Text = "Password"
         PasswordLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
@@ -94,7 +94,7 @@ Partial Class LoginDialog
         UsernameComboBox.Margin = New Padding(9, 10, 9, 10)
         UsernameComboBox.Name = "UsernameComboBox"
         UsernameComboBox.Size = New Size(220, 23)
-        UsernameComboBox.TabIndex = 3
+        UsernameComboBox.TabIndex = 1
         ' 
         ' PasswordTextBox
         ' 
@@ -104,7 +104,7 @@ Partial Class LoginDialog
         PasswordTextBox.Name = "PasswordTextBox"
         PasswordTextBox.PasswordChar = "*"c
         PasswordTextBox.Size = New Size(159, 23)
-        PasswordTextBox.TabIndex = 5
+        PasswordTextBox.TabIndex = 3
         ' 
         ' Ok_Button
         ' 
@@ -114,7 +114,7 @@ Partial Class LoginDialog
         Ok_Button.Margin = New Padding(9, 10, 9, 10)
         Ok_Button.Name = "Ok_Button"
         Ok_Button.Size = New Size(94, 23)
-        Ok_Button.TabIndex = 0
+        Ok_Button.TabIndex = 11
         Ok_Button.Text = "&OK"
         ' 
         ' Cancel_Button
@@ -125,7 +125,7 @@ Partial Class LoginDialog
         Cancel_Button.Margin = New Padding(9, 10, 9, 10)
         Cancel_Button.Name = "Cancel_Button"
         Cancel_Button.Size = New Size(94, 23)
-        Cancel_Button.TabIndex = 1
+        Cancel_Button.TabIndex = 12
         Cancel_Button.Text = "&Cancel"
         ' 
         ' CountryComboBox
@@ -138,7 +138,7 @@ Partial Class LoginDialog
         CountryComboBox.Margin = New Padding(9, 10, 9, 10)
         CountryComboBox.Name = "CountryComboBox"
         CountryComboBox.Size = New Size(220, 23)
-        CountryComboBox.TabIndex = 10
+        CountryComboBox.TabIndex = 8
         ' 
         ' RegionComboBox
         ' 
@@ -149,7 +149,7 @@ Partial Class LoginDialog
         RegionComboBox.Margin = New Padding(9, 10, 9, 10)
         RegionComboBox.Name = "RegionComboBox"
         RegionComboBox.Size = New Size(220, 23)
-        RegionComboBox.TabIndex = 8
+        RegionComboBox.TabIndex = 6
         ' 
         ' SelectRegionLabel
         ' 
@@ -159,7 +159,7 @@ Partial Class LoginDialog
         SelectRegionLabel.Margin = New Padding(9, 0, 9, 0)
         SelectRegionLabel.Name = "SelectRegionLabel"
         SelectRegionLabel.Size = New Size(78, 15)
-        SelectRegionLabel.TabIndex = 7
+        SelectRegionLabel.TabIndex = 5
         SelectRegionLabel.Text = "Select Region"
         ' 
         ' SelectCountryLabel
@@ -170,7 +170,7 @@ Partial Class LoginDialog
         SelectCountryLabel.Margin = New Padding(9, 0, 9, 0)
         SelectCountryLabel.Name = "SelectCountryLabel"
         SelectCountryLabel.Size = New Size(84, 15)
-        SelectCountryLabel.TabIndex = 9
+        SelectCountryLabel.TabIndex = 7
         SelectCountryLabel.Text = "Select Country"
         ' 
         ' ShowPasswordCheckBox
@@ -180,7 +180,7 @@ Partial Class LoginDialog
         ShowPasswordCheckBox.Margin = New Padding(9, 10, 9, 10)
         ShowPasswordCheckBox.Name = "ShowPasswordCheckBox"
         ShowPasswordCheckBox.Size = New Size(55, 19)
-        ShowPasswordCheckBox.TabIndex = 6
+        ShowPasswordCheckBox.TabIndex = 4
         ShowPasswordCheckBox.Text = "Show"
         ShowPasswordCheckBox.UseVisualStyleBackColor = True
         ' 
@@ -194,7 +194,7 @@ Partial Class LoginDialog
         LoginStatus.Name = "LoginStatus"
         LoginStatus.ScrollBars = ScrollBars.Vertical
         LoginStatus.Size = New Size(214, 76)
-        LoginStatus.TabIndex = 12
+        LoginStatus.TabIndex = 9
         LoginStatus.Text = "Login Status: Unknown"
         ' 
         ' Panel1
@@ -206,7 +206,7 @@ Partial Class LoginDialog
         Panel1.Margin = New Padding(9, 10, 9, 10)
         Panel1.Name = "Panel1"
         Panel1.Size = New Size(197, 76)
-        Panel1.TabIndex = 13
+        Panel1.TabIndex = 10
         ' 
         ' PatientUserIDLabel
         ' 
@@ -215,7 +215,7 @@ Partial Class LoginDialog
         PatientUserIDLabel.Margin = New Padding(9, 0, 9, 0)
         PatientUserIDLabel.Name = "PatientUserIDLabel"
         PatientUserIDLabel.Size = New Size(81, 15)
-        PatientUserIDLabel.TabIndex = 18
+        PatientUserIDLabel.TabIndex = 1
         PatientUserIDLabel.Text = "Patient UserID"
         ' 
         ' PatientUserIDTextBox
@@ -224,7 +224,7 @@ Partial Class LoginDialog
         PatientUserIDTextBox.Margin = New Padding(9, 10, 9, 10)
         PatientUserIDTextBox.Name = "PatientUserIDTextBox"
         PatientUserIDTextBox.Size = New Size(190, 23)
-        PatientUserIDTextBox.TabIndex = 17
+        PatientUserIDTextBox.TabIndex = 2
         ' 
         ' CarePartnerCheckBox
         ' 
@@ -233,7 +233,7 @@ Partial Class LoginDialog
         CarePartnerCheckBox.Margin = New Padding(9, 10, 9, 10)
         CarePartnerCheckBox.Name = "CarePartnerCheckBox"
         CarePartnerCheckBox.Size = New Size(88, 19)
-        CarePartnerCheckBox.TabIndex = 16
+        CarePartnerCheckBox.TabIndex = 0
         CarePartnerCheckBox.Text = "CarePartner"
         CarePartnerCheckBox.UseVisualStyleBackColor = True
         ' 

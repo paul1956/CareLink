@@ -124,9 +124,11 @@ Public Module SystemConstants
     Friend Const MaxMmolL22_2 As Single = 22.2
     Friend Const MinMmDl50 As Integer = 50
     Friend Const MinMmolL2_8 As Single = 2.8
+    Friend Const Target90mgDl As Single = 90.0
     Friend Const Target100mgDl As Single = 100.0
     Friend Const Target110mgDl As Single = 110.0
     Friend Const Target120mgDl As Single = 120.0
+    Friend Const Target5mmol As Single = 5.0
     Friend Const Target5_6mmol As Single = 5.6
     Friend Const Target6_1mmol As Single = 6.1
     Friend Const Target6_7mmol As Single = 6.7

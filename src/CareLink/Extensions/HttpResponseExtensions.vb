@@ -52,4 +52,16 @@ Friend Module HttpResponseExtensions
         End Select
     End Sub
 
+    <Extension>
+    Public Function GetValueOrNothing(response As HttpResponseMessage, key As String) As String
+        ArgumentNullException.ThrowIfNull(argument:=response)
+        ArgumentNullException.ThrowIfNull(argument:=key)
+        If response.Headers.Contains(name:=key) Then
+            Dim valueString As String = response.Headers.GetValues(name:=key).FirstOrDefault()
+            If valueString IsNot Nothing Then
+                Return valueString
+            End If
+        End If
+        Return Nothing
+    End Function
 End Module

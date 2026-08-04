@@ -100,6 +100,7 @@ Partial Class Form1
         MaxBasalPerHourLabel = New Label()
         MenuHelp = New ToolStripMenuItem()
         MenuHelpReportAnIssue = New ToolStripMenuItem()
+        MenuHelpShowControlPositions = New ToolStripMenuItem()
         MenuHelpCheckForUpdates = New ToolStripMenuItem()
         MenuHelpAbout = New ToolStripMenuItem()
         MenuOptions = New ToolStripMenuItem()
@@ -1155,16 +1156,24 @@ Partial Class Form1
         ' 
         ' MenuHelp
         ' 
-        MenuHelp.DropDownItems.AddRange(New ToolStripItem() {MenuHelpReportAnIssue, MenuHelpCheckForUpdates, MenuHelpAbout})
+        MenuHelp.DropDownItems.AddRange(New ToolStripItem() {MenuHelpShowControlPositions, MenuHelpReportAnIssue, MenuHelpCheckForUpdates, MenuHelpAbout})
         MenuHelp.Name = "MenuHelp"
         MenuHelp.ShortcutKeys = Keys.Alt Or Keys.H
         MenuHelp.Size = New Size(44, 20)
         MenuHelp.Text = "&Help"
         ' 
+        ' MenuShowControlPositions
+        ' 
+        MenuHelpShowControlPositions.Image = My.Resources.Resources.GridLight
+        MenuHelpShowControlPositions.ImageScaling = ToolStripItemImageScaling.SizeToFit
+        MenuHelpShowControlPositions.Name = "MenuHelpShowControlPositions"
+        MenuHelpShowControlPositions.Size = New Size(177, 22)
+        MenuHelpShowControlPositions.Text = "Show Control Positions"
+        ' 
         ' MenuHelpReportAnIssue
         ' 
         MenuHelpReportAnIssue.Image = My.Resources.Resources.FeedbackSmile_16x
-        MenuHelpReportAnIssue.ImageScaling = ToolStripItemImageScaling.None
+        MenuHelpReportAnIssue.ImageScaling = ToolStripItemImageScaling.SizeToFit
         MenuHelpReportAnIssue.Name = "MenuHelpReportAnIssue"
         MenuHelpReportAnIssue.Size = New Size(177, 22)
         MenuHelpReportAnIssue.Text = "Report A Problem..."
@@ -2290,7 +2299,6 @@ Partial Class Form1
         TlpNotificationActive.Name = "TlpNotificationActive"
         TlpNotificationActive.RowCount = 1
         TlpNotificationActive.RowStyles.Add(New RowStyle())
-        TlpNotificationActive.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpNotificationActive.Size = New Size(1376, 658)
         TlpNotificationActive.TabIndex = 0
         ' 
@@ -3165,6 +3173,7 @@ Partial Class Form1
     Friend WithEvents MenuHelp As ToolStripMenuItem
     Friend WithEvents MenuHelpAbout As ToolStripMenuItem
     Friend WithEvents MenuHelpCheckForUpdates As ToolStripMenuItem
+    Friend WithEvents MenuHelpShowControlPositions As ToolStripMenuItem
     Friend WithEvents MenuHelpReportAnIssue As ToolStripMenuItem
     Friend WithEvents MenuOptions As ToolStripMenuItem
     Friend WithEvents MenuOptionsAdvancedOptions As ToolStripMenuItem

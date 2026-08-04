@@ -31,8 +31,11 @@ Friend Module Form1SummaryTabHelpers
         dgv.InitializeDgv()
         dgv.DataSource = ClassCollectionToDataTable(classCollection)
         dgv.RowHeadersVisible = False
-        If s_currentSummaryRow <> 0 AndAlso dgv.Name = My.Forms.Form1.DgvSummary.Name Then
-            dgv.CurrentCell = dgv.Rows(index:=s_currentSummaryRow).Cells(index:=2)
+        If s_currentSummaryRow <> 0 Then
+            If dgv.Name = My.Forms.Form1.DgvSummary.Name Then
+                dgv.CurrentCell = dgv.Rows(index:=s_currentSummaryRow).Cells(index:=2)
+                dgv.UpdateDgvCellSafe(text:=dgv.Rows(index:=s_currentSummaryRow).Cells(index:=2).Value.ToString())
+            End If
         End If
         dgv.AutoResizeColumns(autoSizeColumnsMode:=DataGridViewAutoSizeColumnsMode.AllCells)
     End Sub

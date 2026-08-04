@@ -8,9 +8,9 @@ Public Module FileEnum
     '''  Specifies the options for which file to load during login or data initialization.
     ''' </summary>
     Public Enum FileToLoadOptions As Integer
-        LastSaved = 0
-        Login = 1
-        NewUser = 2
+        NewUser = 0
+        LastSaved = 1
+        Login = 2
         Snapshot = 3
         TestData = 4
     End Enum

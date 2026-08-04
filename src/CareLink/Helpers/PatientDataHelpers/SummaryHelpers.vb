@@ -314,37 +314,41 @@ Friend Module SummaryHelpers
                 Select Case kvp.Key
                     Case "faultId"
                         Dim message As String = String.Empty
-                        If s_notificationMessages.TryGetValue(key:=kvp.Value, value:=message) Then
-                            message = TranslateNotificationMessageId(jsonDictionary, faultId:=kvp.Value)
-                            If kvp.Value = "811" Then
-                                Dim key As String = NameOf(ActiveNotification.triggeredDateTime)
-                                If jsonDictionary.TryGetValue(key, value:=s_suspendedSince) Then
-                                    Dim result As Date = Nothing
-                                    key = NameOf(ActiveNotification.triggeredDateTime)
-                                    s_suspendedSince = If(s_suspendedSince.TryParseDate(key, result),
-                                                          result.ToString(format:=s_timeWithMinuteFormat),
-                                                          "???")
-                                End If
-                            End If
-                            If kvp.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
-                                Dim question As String = jsonDictionary(key:="deliveredAmount")
-                                If question.StartsWith(value:="3"c) Then
-                                    message &= "Did you see drops at the end of the tubing?"
-                                Else
-                                    message &= "Remove reservoir and select rewind, restart New reservoir procedure."
-                                End If
-                            End If
+                        If kvp.Value.Contains(value:="."c) Then
+                            message = kvp.Value
                         Else
-                            Dim stackFrame As StackFrame
-                            If Debugger.IsAttached AndAlso IsNotNullOrWhiteSpace(kvp.Value) Then
-                                stackFrame = New StackFrame(skipFrames:=0, needFileInfo:=True)
-                                MsgBox(
-                                    heading:=$"{kvp.Value} is unknown Notification Messages",
-                                    prompt:=String.Empty,
-                                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                                    title:=GetTitleFromStack(stackFrame))
+                            If s_notificationMessages.TryGetValue(key:=kvp.Value, value:=message) Then
+                                message = TranslateNotificationMessageId(jsonDictionary, faultId:=kvp.Value)
+                                If kvp.Value = "811" Then
+                                    Dim key As String = NameOf(ActiveNotification.triggeredDateTime)
+                                    If jsonDictionary.TryGetValue(key, value:=s_suspendedSince) Then
+                                        Dim result As Date = Nothing
+                                        key = NameOf(ActiveNotification.triggeredDateTime)
+                                        s_suspendedSince = If(s_suspendedSince.TryParseDate(key, result),
+                                                              result.ToString(format:=s_timeWithMinuteFormat),
+                                                              "???")
+                                    End If
+                                End If
+                                If kvp.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
+                                    Dim question As String = jsonDictionary(key:="deliveredAmount")
+                                    If question.StartsWith(value:="3"c) Then
+                                        message &= "Did you see drops at the end of the tubing?"
+                                    Else
+                                        message &= "Remove reservoir and select rewind, restart New reservoir procedure."
+                                    End If
+                                End If
+                            Else
+                                Dim stackFrame As StackFrame
+                                If Debugger.IsAttached AndAlso IsNotNullOrWhiteSpace(kvp.Value) Then
+                                    stackFrame = New StackFrame(skipFrames:=0, needFileInfo:=True)
+                                    MsgBox(
+                                        heading:=$"{kvp.Value} is unknown Notification Messages",
+                                        prompt:=String.Empty,
+                                        buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                                        title:=GetTitleFromStack(stackFrame))
+                                End If
+                                message = kvp.Value.ToTitle
                             End If
-                            message = kvp.Value.ToTitle
                         End If
                         item = New SummaryRecord(recordNumber, kvp, message)
                     Case "autoModeReadinessState"
@@ -432,7 +436,7 @@ Friend Module SummaryHelpers
                 Throw New ArgumentException(message:="Key not found", paramName:=NameOf(key))
             End If
         Catch ex As Exception
-
+            Stop
         End Try
         If defaultValue IsNot Nothing Then
             Return defaultValue

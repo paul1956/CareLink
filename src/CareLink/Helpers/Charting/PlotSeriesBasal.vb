@@ -28,12 +28,11 @@ Friend Module PlotSeriesBasal
     '''   </para>
     ''' </remarks>
     <Extension>
-    Private Sub AddBasalPoint(
-        basalSeries As Series,
-        xValue As OADate,
-        yValue As Double,
-        lineColor As Color,
-        tag As String)
+    Private Sub AddBasalPoint(basalSeries As Series,
+                              xValue As OADate,
+                              yValue As Double,
+                              lineColor As Color,
+                              tag As String)
 
         If basalSeries.Points.Count > 0 AndAlso
            (Not basalSeries.Points.Last.IsEmpty) AndAlso

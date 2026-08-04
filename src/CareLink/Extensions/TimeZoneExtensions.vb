@@ -96,6 +96,7 @@ Friend Module TimeZoneExtensions
             s_timeZoneMap(key:=value) = tz
             Return tz
         Catch ex As TimeZoneNotFoundException
+            ' Ignore and continue to search by name
         Catch ex As Exception
             Stop
         End Try

@@ -464,10 +464,34 @@ Friend Module DateTimeExtensions
     ''' </remarks>
     <Extension>
     Public Function TryParseDateStr(s As String) As Date
+        If String.IsNullOrWhiteSpace(s) Then
+            Return Nothing
+        End If
+
         Dim provider As IFormatProvider = CultureInfo.InvariantCulture
-        Return If(IsNotNullOrWhiteSpace(value:=s),
-                  Date.ParseExact(s, format:="yyyy-MM-ddTHH:mm:ss", provider),
-                  Nothing)
+        Dim result As Date
+        ' Try the original exact format first to preserve existing behavior
+        If Date.TryParseExact(s, Format, provider, style:=DateTimeStyles.None, result) Then
+            Return result
+        End If
+
+        ' Fallback: support ISO 8601 inputs with fractional seconds and timezone offsets
+        ' Parse as DateTimeOffset then convert to Local Date per chosen behavior
+        Dim dto As DateTimeOffset
+        If DateTimeOffset.TryParse(input:=s,
+                                   formatProvider:=provider,
+                                   styles:=DateTimeStyles.None,
+                                   result:=dto) Then
+            Return dto.LocalDateTime
+        End If
+
+        ' As a last resort, try a broader Date parse using invariant culture
+        If Date.TryParse(s, provider:=CultureInfo.InvariantCulture, styles:=DateTimeStyles.None, result) Then
+            Return result
+        End If
+
+        ' Let caller handle invalid format by throwing like original code would
+        Throw New FormatException(message:=$"String '{s}' was not recognized as a valid DateTime.")
     End Function
 
 End Module

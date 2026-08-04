@@ -29,7 +29,7 @@ Public Class Client2TransientErrorsTests
         handler.EnqueueResponse(responseFactory)
 
         Dim httpClient As New HttpClient(handler)
-        Dim client As New Client2(httpClient:=httpClient) With {
+        Dim client As New Client2(serverRegion:=Region.NorthAmerica, httpClient) With {
             .Config = New Dictionary(Of String, String) From {{"baseUrlCumulus", "https://example.com"}}}
         client.SetUserElementDictionaryForTests(New Dictionary(Of String, Object) From {{"role", "patient"}})
 

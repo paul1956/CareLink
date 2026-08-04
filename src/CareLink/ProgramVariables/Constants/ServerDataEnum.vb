@@ -39,7 +39,11 @@ Public Enum ServerDataEnum
     reservoirAmount
     pumpSuspended
     pumpBatteryLevelPercent
+    isPumpCharging
     reservoirRemainingUnits
+    infusionStatus
+    reservoirStatus
+    infusionRemainingDuration
     conduitInRange
     conduitMedicalDeviceInRange
     conduitSensorInRange
@@ -68,6 +72,10 @@ Public Enum ServerDataEnum
     markers
     sgs
     notificationHistory
+    reservoirIconSelection
+    infusionStatusIconSelection
+    pumpBatteryLevelTime
+    pumpBatteryIconSelection
     sensorLifeText
     sensorLifeIcon
 End Enum

@@ -19,6 +19,9 @@
     <Compile Update="Dialogs\CleanUpObsoleteFilesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\RawDataViewerDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Dialogs\ExceptionHandlerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -47,6 +50,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\SgMiniForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Helpers\LoginHelpers\OAuthBrowserForm.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

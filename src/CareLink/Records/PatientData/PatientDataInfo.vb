@@ -111,8 +111,20 @@ Public Class PatientDataInfo
     <JsonPropertyName("pumpBatteryLevelPercent")>
     Public Property PumpBatteryLevelPercent As Integer
 
+    <JsonPropertyName("isPumpCharging")>
+    Public Property IsPumpCharging As Boolean
+
     <JsonPropertyName("reservoirRemainingUnits")>
     Public Property ReservoirRemainingUnits As Double
+
+    <JsonPropertyName("infusionStatus")>
+    Public Property InfusionStatus As String
+
+    <JsonPropertyName("reservoirStatus")>
+    Public Property ReservoirStatus As String
+
+    <JsonPropertyName("infusionRemainingDuration")>
+    Public Property InfusionRemainingDuration As Integer
 
     <JsonPropertyName("conduitInRange")>
     Public Property ConduitInRange As Boolean

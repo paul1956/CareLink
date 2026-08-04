@@ -65,7 +65,7 @@ Public Class SummaryRecord
                 End Select
             End If
         End If
-        Me.Message = message.Replace(vbCrLf, " ")
+        Me.Message = message.Replace(oldValue:=vbCrLf, newValue:=" ")
     End Sub
 
     ''' <summary>

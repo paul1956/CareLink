@@ -169,14 +169,16 @@ Public Class SgMiniForm
     Friend Sub SetCurrentSgString(sgString As String, f As Single)
         _currentSgValue = f
         _normalizedSg = f
-        Me.SgTextBox.Text = If(IsNullOrWhiteSpace(value:=sgString) OrElse Single.IsNaN(f),
-                               "---",
-                               sgString)
+        Dim text As String = If(IsNullOrWhiteSpace(value:=sgString) OrElse Single.IsNaN(f),
+                                "---",
+                                sgString)
+        UpdateTextBoxSafe(txtBox:=Me.SgTextBox, text)
+
         If NativeMmolL Then
             _normalizedSg *= MmolLUnitsDivisor
         End If
 
-        Me.Text = GetLastUpdateMessage()
+        Me.UpdateFormSafe(text:=GetLastUpdateMessage())
     End Sub
 
 End Class

@@ -86,10 +86,12 @@ Friend Module PlotMarkers
     ''' </returns>
     Private Function GetInsulinYValue() As Single
         ' Selector function to extract blood glucose value (sg) from SG records
-        Dim getSgValue As Func(Of SG, Single) = Function(sgRecord As SG) sgRecord.sg
+        Dim selector As Func(Of SG, Single) = Function(sgRecord As SG)
+                                                  Return sgRecord.sg
+                                              End Function
 
         ' Calculate max blood glucose value from the records, offset by 2 for padding
-        Dim maxYscaled As Single = s_sgRecords.Max(getSgValue) + 2
+        Dim maxYscaled As Single = s_sgRecords.Max(selector) + 2
 
         ' Handle case where maxYscaled is NaN (no valid records)
         If maxYscaled.IsSgInvalid Then

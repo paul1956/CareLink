@@ -23,23 +23,27 @@ Friend Module Form1TransmitterBatteryHelper
     ''' Updates the sensor status on Form1.
     ''' </summary>
     Friend Sub UpdateSensorData()
-        If PatientData.ConduitSensorInRange Then
-            If PatientData.CgmInfo.SensorType = "DURABLE" Then
-                Form1.TransmitterBatteryPictureBox.Image = GetBatteryImage(PatientData.GstBatteryLevel)
-                Form1.TransmitterBatteryPercentLabel.Text = $"{PatientData.GstBatteryLevel}%"
-            ElseIf PatientData.CgmInfo.SensorProductModel.TrimEnd = "MMT-5120" Then
-                Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToSimpleraOK
-                Form1.TransmitterBatteryPercentLabel.Text = $"Simplera{vbCrLf}Connected"
-            ElseIf PatientData.CgmInfo.SensorProductModel.TrimEnd = "MMT-1894" Then
-                Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToInstinctOK
-                Form1.TransmitterBatteryPercentLabel.Text = $"Instinct{vbCrLf}Connected"
-            Else
-                Stop
-            End If
-        Else
-            Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToTransmitterNotOK
-            Form1.TransmitterBatteryPercentLabel.Text = "N/A"
-        End If
+        UiInvoker.Invoke(owner:=My.Forms.Form1,
+                         method:=
+            Sub()
+                If PatientData.ConduitSensorInRange Then
+                    If PatientData.CgmInfo.SensorType = "DURABLE" Then
+                        Form1.TransmitterBatteryPictureBox.Image = GetBatteryImage(PatientData.GstBatteryLevel)
+                        Form1.TransmitterBatteryPercentLabel.Text = $"{PatientData.GstBatteryLevel}%"
+                    ElseIf PatientData.CgmInfo.SensorProductModel.TrimEnd = "MMT-5120" Then
+                        Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToSimpleraOK
+                        Form1.TransmitterBatteryPercentLabel.Text = $"Simplera{vbCrLf}Connected"
+                    ElseIf PatientData.CgmInfo.SensorProductModel.TrimEnd = "MMT-1894" Then
+                        Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToInstinctOK
+                        Form1.TransmitterBatteryPercentLabel.Text = $"Instinct{vbCrLf}Connected"
+                    Else
+                        Stop
+                    End If
+                Else
+                    Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToTransmitterNotOK
+                    Form1.TransmitterBatteryPercentLabel.Text = "N/A"
+                End If
+            End Sub)
 
     End Sub
 

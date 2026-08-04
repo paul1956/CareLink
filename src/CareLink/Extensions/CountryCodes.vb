@@ -16,6 +16,7 @@ Public Module RegionCountryLists
     ''' </summary>
     Public ReadOnly s_countryCodeList As New Dictionary(Of String, String) From {
         {"United States", "US"},
+        {"Trial", "Trial"},
         {"Albania", "AL"},
         {"Algeria", "DZ"},
         {"Argentina", "AR"},
@@ -142,6 +143,7 @@ Public Module RegionCountryLists
     ''' </remarks>
     Public ReadOnly s_regionCountryList As New Dictionary(Of String, String) From {
         {"United States", "North America"},
+        {"Trial", "Trial"},
         {"Albania", "Europe"},
         {"Algeria", "Africa"},
         {"Argentina", "South America"},
@@ -264,11 +266,8 @@ Public Module RegionCountryLists
     ''' </summary>
     Public ReadOnly s_regionList As New Dictionary(Of String, String) From {
         {"North America", "North America"},
-        {"Africa", "Africa"},
-        {"Asia", "Asia"},
         {"Europe", "Europe"},
-        {"Oceania", "Oceania"},
-        {"South America", "South America"}}
+        {"Trial", "Trial"}}
 
     ''' <summary>
     '''  Extracts the <see cref="CultureInfo"/> from a report file name.
@@ -384,7 +383,6 @@ Public Module RegionCountryLists
     ''' <returns>The country name if found; otherwise, <see langword="Nothing"/></returns>
     <Extension>
     Public Function GetCountryFromCode(countryCode As String) As String
-        Debug.Assert(condition:=countryCode.Length = 2)
         If s_countryCodeToCountry.Count = 0 Then
             ' Create the reverse lookup Dictionary only once
             For Each kvp As KeyValuePair(Of String, String) In s_countryCodeList

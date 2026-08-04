@@ -16,6 +16,7 @@ Public Module Discover
     '''  from the provided JSON data.
     ''' </summary>
     ''' <param name="country">The country code to look up.</param>
+    ''' <param name="serverRegion">The server region for which to retrieve configuration.</param>
     ''' <param name="discoveryElement">
     '''  The root JSON element containing supported countries and configuration data.
     ''' </param>
@@ -27,15 +28,21 @@ Public Module Discover
     '''  Thrown if the country code is not supported or if the configuration
     '''  cannot be found.
     ''' </exception>
-    Private Function GetConfigJson(country As String, discoveryElement As JsonElement) As JsonElement
+    Private Function GetConfigJson(country As String, serverRegion As Region, discoveryElement As JsonElement) As JsonElement
         Dim config As JsonElement
         Dim region As JsonElement
         Dim arrayEnumerator As JsonElement.ArrayEnumerator =
             discoveryElement.GetProperty(propertyName:="supportedCountries").EnumerateArray()
 
         For Each c As JsonElement In arrayEnumerator
-            If c.TryGetProperty(propertyName:=country.ToUpper(), value:=region) Then
-                Exit For
+            If serverRegion = Regions.Region.Trial Then
+                If c.TryGetProperty(propertyName:="CLINICAL", value:=region) Then
+                    Exit For
+                End If
+            Else
+                If c.TryGetProperty(propertyName:=country.ToUpper(), value:=region) Then
+                    Exit For
+                End If
             End If
         Next
         Dim message As String
@@ -56,6 +63,7 @@ Public Module Discover
                 End If
             Catch ex As Exception
                 ' ignore here error will be handled outside the loop
+                Stop
             End Try
         Next
         If config.IsNullOrUndefined Then
@@ -73,6 +81,12 @@ Public Module Discover
     '''  The <see cref="HttpClient"/> used to fetch configuration data.
     ''' </param>
     ''' <param name="discoveryUrl"></param>
+    ''' <param name="country">
+    '''  The country code to retrieve configuration for.
+    ''' </param>
+    ''' <param name="serverRegion">
+    '''  The server region for which to retrieve configuration.
+    ''' </param>
     ''' <returns>
     '''  A <see cref="JsonElement"/> containing the configuration for the
     '''  specified country, including a computed token URL.
@@ -81,17 +95,17 @@ Public Module Discover
     '''  Thrown if the country code is not supported or if configuration
     '''  data cannot be retrieved.
     ''' </exception>
-    ''' <param name="country">The country code to retrieve configuration for.</param>
-    Public Function GetConfig(httpClient As HttpClient, discoveryUrl As String, country As String) As JsonElement
-        Debug.WriteLine(NameOf(GetConfig))
-
-        Dim json As String = httpClient.GetStringAsync(requestUri:=discoveryUrl).Result
+    Public Function GetConfig(httpClient As HttpClient, country As String, serverRegion As Region) As JsonElement
+        Dim requestUri As String = If(serverRegion <> Region.Europe,
+                                        s_discoverUrl(key:="US"),
+                                        s_discoverUrl(key:="EU"))
+        Dim json As String = httpClient.GetStringAsync(requestUri).Result
         Dim discoveryElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
-        Dim configJson As JsonElement = GetConfigJson(country, discoveryElement)
+        Dim configJson As JsonElement = GetConfigJson(country, serverRegion, discoveryElement)
 
         Dim ssoConfigurationKey As String = configJson.GetProperty(propertyName:="UseSSOConfiguration").GetString()
         Dim resp As String =
-            httpClient.GetStringAsync(configJson.GetProperty(propertyName:=ssoConfigurationKey).GetString()).Result
+            httpClient.GetStringAsync(requestUri:=configJson.GetProperty(propertyName:=ssoConfigurationKey).GetString()).Result
         Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(resp)
 
         Dim hostname As String = ssoConfig.Server.Hostname
@@ -126,7 +140,7 @@ Public Module Discover
         httpStatusCode = 0 ' Default value meaning no response received yet
         Try
             Using client As New HttpClient()
-                Dim response As HttpResponseMessage = client.GetAsync(discoveryUrl).Result
+                Dim response As HttpResponseMessage = client.GetAsync(requestUri:=discoveryUrl).Result
                 httpStatusCode = CType(response.StatusCode, Integer)
 
                 ' Use centralized response inspection to ensure common statuses are surfaced.
@@ -134,15 +148,15 @@ Public Module Discover
                     response.ThrowIfFailure()
                 Catch uaEx As UnauthorizedAccessException
                     lastErrorMsg = $"Unauthorized access when fetching discovery data: {uaEx.Message}"
-                    Debug.WriteLine(lastErrorMsg)
+                    Debug.WriteLine(message:=lastErrorMsg)
                     Return Nothing
                 Catch argEx As ArgumentException
                     lastErrorMsg = $"Bad request fetching discovery data: {argEx.Message}"
-                    Debug.WriteLine(lastErrorMsg)
+                    Debug.WriteLine(message:=lastErrorMsg)
                     Return Nothing
                 Catch httpEx As HttpRequestException
                     lastErrorMsg = $"HTTP request failed: {httpEx.Message}"
-                    Debug.WriteLine(lastErrorMsg)
+                    Debug.WriteLine(message:=lastErrorMsg)
                     Return Nothing
                 End Try
 
@@ -171,19 +185,19 @@ Public Module Discover
                 Next
                 lastErrorMsg = $"Multiple errors: {String.Join("; ", messages)}"
             End If
-            Debug.WriteLine(lastErrorMsg)
+            Debug.WriteLine(message:=lastErrorMsg)
         Catch ex As HttpRequestException
             lastErrorMsg = $"HTTP request error: {ex.Message}"
-            Debug.WriteLine(lastErrorMsg)
+            Debug.WriteLine(message:=lastErrorMsg)
         Catch ex As TaskCanceledException
             lastErrorMsg = "The request timed out."
-            Debug.WriteLine(lastErrorMsg)
+            Debug.WriteLine(message:=lastErrorMsg)
         Catch ex As JsonException
             lastErrorMsg = $"JSON deserialization error: {ex.Message}"
-            Debug.WriteLine(lastErrorMsg)
+            Debug.WriteLine(message:=lastErrorMsg)
         Catch ex As Exception
             lastErrorMsg = $"Unexpected error: {ex.Message}"
-            Debug.WriteLine(lastErrorMsg)
+            Debug.WriteLine(message:=lastErrorMsg)
             Stop
         End Try
 

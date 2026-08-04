@@ -1978,7 +1978,15 @@ Public Class Form1
                              ServerDataEnum.bgUnits,
                              ServerDataEnum.lastSGTrend,
                              ServerDataEnum.sensorLifeText,
-                             ServerDataEnum.sensorLifeIcon
+                             ServerDataEnum.sensorLifeIcon,
+                             ServerDataEnum.infusionStatus,
+                             ServerDataEnum.reservoirStatus,
+                             ServerDataEnum.infusionRemainingDuration,
+                             ServerDataEnum.reservoirIconSelection,
+                             ServerDataEnum.infusionStatusIconSelection,
+                             ServerDataEnum.pumpBatteryLevelTime,
+                             ServerDataEnum.pumpBatteryIconSelection
+
 
                             align = DataGridViewContentAlignment.MiddleLeft
                             e.CellStyle.SetCellStyle(align, pad:=New Padding(all:=1))
@@ -2002,7 +2010,8 @@ Public Class Form1
                              ServerDataEnum.conduitMedicalDeviceInRange,
                              ServerDataEnum.conduitSensorInRange,
                              ServerDataEnum.gstCommunicationState,
-                             ServerDataEnum.pumpCommunicationState
+                             ServerDataEnum.pumpCommunicationState,
+                             ServerDataEnum.isPumpCharging
 
                             align = DataGridViewContentAlignment.MiddleCenter
                             e.CellStyle.SetCellStyle(align, pad:=New Padding(all:=1))
@@ -2382,6 +2391,10 @@ Public Class Form1
         Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle = currentHeaderStyle
         Me.DgvBasalPerHour.DefaultCellStyle = New DataGridViewCellStyle With {
             .Font = New Font(FamilyName, emSize, style:=FontStyle.Regular)}
+        If Debugger.IsAttached Then
+            Me.MenuHelpShowControlPositions.Visible = False
+        End If
+
     End Sub
 
     ''' <summary>
@@ -2466,15 +2479,11 @@ Public Class Form1
         Me.NotifyIcon1.Visible = False
         Application.DoEvents()
 
-        If DoOptionalLoginAndUpdateData(
-            owner:=Me,
-            updateAllTabs:=False,
-            fileToLoad:=FileToLoadOptions.NewUser) Then
+        If DoOptionalLoginAndUpdateData(owner:=Me,
+                                        updateAllTabs:=False,
+                                        fileToLoad:=FileToLoadOptions.NewUser) Then
 
             Me.UpdateAllTabPages(fromFile:=False)
-        End If
-        If Debugger.IsAttached Then
-            Me.ShowControlPositions()
         End If
     End Sub
 
@@ -2574,12 +2583,14 @@ Public Class Form1
         searchPattern = $"{BaseErrorReportName}*.txt"
         Me.MenuStartLoadExceptionReport.Visible = AnyMatchingFiles(path, searchPattern)
 
-        searchPattern = $"{s_userName}Settings.pdf"
-        Dim validUser As Boolean = IsNullOrWhiteSpace(s_userName)
+        searchPattern = $"{GetUserName()}Settings.pdf"
+        Dim validUser As Boolean = IsNullOrWhiteSpace(value:=GetUserName())
         Dim userPdfExists As Boolean =
             Not (validUser OrElse Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern))
 
-        Me.MenuStartShowPumpSetup.Enabled = userPdfExists AndAlso CurrentPdf IsNot Nothing AndAlso CurrentPdf.IsValid
+        Me.MenuStartShowPumpSetup.Enabled = userPdfExists AndAlso
+                                            CurrentPdf IsNot Nothing AndAlso
+                                            CurrentPdf.IsValid
 
         Dim settingExist As Boolean = Directory.Exists(path:=GetSettingsDirectory)
 
@@ -2738,6 +2749,7 @@ Public Class Form1
                 End If
             Catch ex As Exception
                 ' Ignore errors here
+                Stop
             End Try
         End Using
     End Sub
@@ -2829,10 +2841,10 @@ Public Class Form1
     '''  The last saved file will be loaded and processed to update the application state.
     ''' </remarks>
     Private Sub MenuStartUseLastSaved_Click(sender As Object, e As EventArgs) Handles MenuStartUseLastFile.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(
-            owner:=Me,
-            updateAllTabs:=True,
-            fileToLoad:=FileToLoadOptions.LastSaved)
+        Dim success As Boolean =
+            DoOptionalLoginAndUpdateData(owner:=Me,
+                                         updateAllTabs:=True,
+                                         fileToLoad:=FileToLoadOptions.LastSaved)
         Me.MenuStartSaveSnapshot.Enabled = Not success
     End Sub
 
@@ -3241,6 +3253,18 @@ Public Class Form1
     End Sub
 
     ''' <summary>
+    '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for
+    '''  the <see cref="MenuHelpShowControlPositions"/> menu item.
+    '''  This event is raised when the Show Control Positions menu item is clicked.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
+    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    Private Sub MenuHelpShowControlPositions_Click(sender As Object, e As EventArgs) _
+        Handles MenuHelpShowControlPositions.Click
+        Me.ShowControlPositions()
+    End Sub
+
+    ''' <summary>
     '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for the
     '''  <see cref="MenuHelpReportAnIssue"/> menu item.
     '''  Opens the GitHub issues page for the CareLink™ project in the default web browser.
@@ -3637,7 +3661,7 @@ Public Class Form1
                 RecentData = Nothing
                 lastErrorMessage = Client?.GetRecentData()
                 If RecentDataEmpty() Then
-                    If Client Is Nothing OrElse IsNotNullOrEmpty(lastErrorMessage) Then
+                    If Client Is Nothing OrElse IsNotNullOrEmpty(value:=lastErrorMessage) Then
                         Do While True
                             LoginDialog.LoginSourceAutomatic = FileToLoadOptions.Login
                             Dim result As DialogResult = LoginDialog.ShowDialog(owner:=Me)
@@ -4455,12 +4479,14 @@ Public Class Form1
                         If timeOrderedMarkers.ContainsKey(key) Then
                             timeOrderedMarkers(key) += bolusAmount
                         Else
-                            timeOrderedMarkers.Add(key, bolusAmount)
+                            timeOrderedMarkers.Add(key, value:=bolusAmount)
                         End If
                     End If
                 Next
-                Dim upCount As Integer = s_insulinTypes(key:=CurrentUser.InsulinTypeName).UpCount
-                Dim windowSize As Integer = CInt(s_insulinTypes(key:=CurrentUser.InsulinTypeName).AitHours * 12)
+                Dim upCount As Integer =
+                    s_insulinTypes(key:=CurrentUser.InsulinTypeName).UpCount
+                Dim windowSize As Integer =
+                    CInt(s_insulinTypes(key:=CurrentUser.InsulinTypeName).AitHours * 12)
                 Dim timestamp As Date = s_sgRecords(index:=0).Timestamp
                 Dim insulinIncrements As Integer = CurrentUser.GetActiveInsulinIncrements
                 ' set up table that holds active insulin for every 5 minutes

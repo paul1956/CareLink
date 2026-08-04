@@ -40,7 +40,6 @@ Partial Class PositionForm
         DataGridView1.Dock = DockStyle.Fill
         DataGridView1.Location = New Point(0, 0)
         DataGridView1.Name = "DataGridView1"
-        DataGridView1.Name = NameOf(DataGridView1)
         DataGridView1.ReadOnly = True
         DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         DataGridView1.Size = New Size(800, 450)

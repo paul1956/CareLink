@@ -123,15 +123,17 @@ Friend Module Form1UpdateHelpers
     Friend Function GetPumpName(modelNumber As String) As String
         Select Case modelNumber
             Case "MMT-1812"
-                Return "Medtronic MiniMed™ 740G--mg/dL"
+                Return "MiniMed™ 740G--mg/dL"
             Case "MMT-1880"
-                Return "Medtronic MiniMed™ 770G"
+                Return "MiniMed™ 770G"
             Case "MMT-1884"
-                Return "Medtronic MiniMed™ 780G-US Update"
+                Return "MiniMed™ 780G-US Update"
             Case "MMT-1885"
-                Return "Medtronic MiniMed™ 780G-mmol/L"
+                Return "MiniMed™ 780G-mmol/L"
             Case "MMT-1886"
-                Return "Medtronic MiniMed™ 780G-mg/dL"
+                Return "MiniMed™ 780G-mg/dL"
+            Case "MMT-8162"
+                Return "MiniMed™ Flex-mg/dL"
             Case Else
                 Return "Unknown"
         End Select
@@ -178,7 +180,7 @@ Friend Module Form1UpdateHelpers
         End If
 
         Try
-            Dim filenameWithoutExtension As String = $"{baseName}({cultureName}){s_userName}"
+            Dim filenameWithoutExtension As String = $"{baseName}({cultureName}){GetUserName()}"
             Dim filenameWithExtension As String = $"{filenameWithoutExtension}.{extension}"
             Dim withPath As String = Path.Join(GetProjectDataDirectory(), filenameWithExtension)
 
@@ -249,6 +251,7 @@ Friend Module Form1UpdateHelpers
                 End Using
             Catch ex As JsonException
                 ' Not JSON or malformed; fall through to legacy parsing.
+                Stop
             End Try
         End If
 
@@ -317,9 +320,9 @@ Friend Module Form1UpdateHelpers
         End If
         Dim bgUnitsNative As String = String.Empty
         Dim bgUnits As String = String.Empty
-        If RecentData.TryGetValue("bgUnits", value:=bgUnitsNative) AndAlso
+        If RecentData.TryGetValue(key:="bgUnits", value:=bgUnitsNative) AndAlso
             UnitsStrings.TryGetValue(key:=bgUnitsNative, value:=bgUnits) Then
-            NativeMmolL = bgUnits.Equals("mmol/L")
+            NativeMmolL = bgUnits.Equals(value:="mmol/L")
         Else
             Stop
         End If
@@ -545,8 +548,27 @@ Friend Module Form1UpdateHelpers
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
+                Case NameOf(ServerDataEnum.isPumpCharging)
+                    message = If(Boolean.Parse(kvp.Value),
+                                 $"Pump is charging!",
+                                 $"Pump is not charging!")
+                    item = New SummaryRecord(recordNumber, kvp, message)
+                    s_listOfSummaryRecords.Add(item)
+
                 Case NameOf(ServerDataEnum.reservoirRemainingUnits)
                     message = $"Reservoir has {PatientData.ReservoirRemainingUnits}U remaining."
+                    item = New SummaryRecord(recordNumber, kvp, message)
+                    s_listOfSummaryRecords.Add(item)
+
+                Case NameOf(ServerDataEnum.infusionStatus),
+                     NameOf(ServerDataEnum.reservoirStatus)
+
+                    message = $"{kvp.Key.ToTitleCase} is {kvp.Value.ToTitle}"
+                    item = New SummaryRecord(recordNumber, kvp, message)
+                    s_listOfSummaryRecords.Add(item)
+
+                Case NameOf(ServerDataEnum.infusionRemainingDuration)
+                    message = $"Infusion Set has {PatientData.InfusionRemainingDuration.MinutesToDaysHoursMinutes} left."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
@@ -581,6 +603,7 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataEnum.timeFormat)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
+
                 Case NameOf(ServerDataEnum.bgUnits)
                     item = New SummaryRecord(recordNumber, kvp, message:=bgUnits)
                     s_listOfSummaryRecords.Add(item)
@@ -683,7 +706,21 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
                     s_notificationHistoryValue = DeserializeJsonAsDictionary(json:=kvp.Value)
 
+                Case NameOf(ServerDataEnum.reservoirIconSelection)
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
+
+                Case NameOf(ServerDataEnum.infusionStatusIconSelection)
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
+
+                Case NameOf(ServerDataEnum.pumpBatteryLevelTime)
+                    message = $"Pump Battery Level Time: {CInt(kvp.Value).MinutesToDaysHoursMinutes}."
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
+
                 Case NameOf(ServerDataEnum.sensorLifeText)
+                    message = $"Sensor life: {kvp.Value}"
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
+
+                Case NameOf(ServerDataEnum.pumpBatteryIconSelection)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataEnum.sensorLifeIcon)

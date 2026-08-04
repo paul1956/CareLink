@@ -52,7 +52,10 @@ Friend Module NotificationHelpers
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If e.RowIndex >= 0 AndAlso dgv.SelectedCells.Count > 0 Then
-            e.ContextMenuStrip = My.Forms.Form1.DgvCopyWithoutExcelMenuStrip
+            UiInvoker.Invoke(owner:=My.Forms.Form1,
+                             method:=Sub()
+                                         e.ContextMenuStrip = My.Forms.Form1.DgvCopyWithoutExcelMenuStrip
+                                     End Sub)
         End If
     End Sub
 

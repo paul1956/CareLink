@@ -151,16 +151,6 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized resource of type System.Byte[].
-        '''</summary>
-        Friend ReadOnly Property carelink_carepartner_api_login() As Byte()
-            Get
-                Dim obj As Object = ResourceManager.GetObject("carelink_carepartner_api_login", resourceCulture)
-                Return CType(obj,Byte())
-            End Get
-        End Property
-        
-        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property Copy() As System.Drawing.Bitmap
@@ -226,6 +216,16 @@ Namespace My.Resources
         Friend ReadOnly Property FeedbackSmile_16xDark() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("FeedbackSmile_16xDark", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property GridLight() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("GridLight", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

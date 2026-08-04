@@ -15,7 +15,7 @@ Public Module TimeSpanExtensions
     ''' </returns>
     <Extension>
     Public Function FormatTimeText(timeStr As String) As String
-        Dim parts() As String = timeStr.Split(":"c)
+        Dim parts() As String = timeStr.Split(separator:=":"c)
         Dim hours As Integer = Integer.Parse(parts(0))
         Dim minutes As Integer = Integer.Parse(parts(1))
 
@@ -59,26 +59,29 @@ Public Module TimeSpanExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a number of minutes into a human-readable string representing
-    '''  days, hours, and minutes.
+    '''  Converts a number of totalMinutes into a human-readable string representing
+    '''  days, hours, and totalMinutes.
     ''' </summary>
-    ''' <param name="minutes">The total number of minutes to convert.</param>
+    ''' <param name="totalMinutes">The total number of totalMinutes to convert.</param>
     ''' <returns>
-    '''  A string formatted as "X days, Y hours, Z minutes" or "X days" or
-    '''  "Y hours" or "Z minutes", depending on the values.
+    '''  A string formatted as "X days, Y hours, Z totalMinutes" or "X days" or
+    '''  "Y hours" or "Z totalMinutes", depending on the values.
     ''' </returns>
     <Extension>
-    Public Function MinutesToDaysHoursMinutes(minutes As Integer) As String
+    Public Function MinutesToDaysHoursMinutes(totalMinutes As Integer) As String
+        If totalMinutes < 0 Then
+            Throw New ArgumentOutOfRangeException(paramName:=NameOf(totalMinutes), message:="Minutes cannot be negative.")
+        End If
         Dim parts As New List(Of String)
-        If minutes < 0 Then
+        If totalMinutes < 0 Then
             Return "Unknown"
         End If
-        Dim days As UInteger = CUInt(minutes \ 1440) ' 1440 minutes in a day
-        Dim hours As UInteger = CUInt((minutes Mod 1440) \ 60)
-        Dim mins As UInteger = CUInt(minutes Mod 60)
+        Dim days As UInteger = CUInt(totalMinutes \ 1440) ' 1440 totalMinutes in a day
+        Dim hours As UInteger = CUInt((totalMinutes Mod 1440) \ 60)
+        Dim mins As UInteger = CUInt(totalMinutes Mod 60)
 
         If days > 0 Then parts.Add(item:=days.ToUnits(unit:="day"))
-        If hours > 0 Then parts.Add(item:=hours.ToUnits(unit:="hour"))
+        If days > 0 OrElse hours > 0 Then parts.Add(item:=hours.ToUnits(unit:="hour"))
         If mins > 0 OrElse parts.Count = 0 Then parts.Add(item:=mins.ToUnits(unit:="minute"))
 
         Return String.Join(separator:=", ", values:=parts)

@@ -56,8 +56,9 @@ Friend Module SgExtensions
             Case Else
                 Stop
         End Select
-
-        Return itemAsSingle.ScaleSg()
+        Return If(itemAsSingle = 0,
+                  "NaN",
+                  itemAsSingle.ScaleSg())
     End Function
 
     ''' <summary>
