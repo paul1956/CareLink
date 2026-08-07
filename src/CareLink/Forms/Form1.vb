@@ -384,7 +384,6 @@ Public Class Form1
                                         Me.CursorPictureBox.Image = Nothing
                                 End Select
                                 Me.CursorPanel.Visible = True
-                                Me.CursorPanel.CenterControlsInPanel()
                             Case 3
                                 Select Case markerTags(1).Trim
                                     Case "Calibration accepted", "Calibration not accepted"
@@ -446,6 +445,9 @@ Public Class Form1
                 Case Else
                     Stop
             End Select
+            If Me.CursorPanel.Visible Then
+                Me.CursorPanel.CenterControlsInPanel()
+            End If
         Catch ex As Exception
             result = Nothing
         Finally
