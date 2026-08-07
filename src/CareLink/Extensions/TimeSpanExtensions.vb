@@ -79,7 +79,7 @@ Public Module TimeSpanExtensions
         Dim mins As UInteger = CUInt(totalMinutes Mod 60)
 
         If days > 0 Then parts.Add(item:=days.ToUnits(unit:="day"))
-        If days > 0 OrElse hours > 0 Then parts.Add(item:=hours.ToUnits(unit:="hour"))
+        If (days > 0 AndAlso mins > 0) OrElse hours > 0 Then parts.Add(item:=hours.ToUnits(unit:="hour"))
         If mins > 0 OrElse parts.Count = 0 Then parts.Add(item:=mins.ToUnits(unit:="minute"))
 
         Return String.Join(separator:=", ", values:=parts)

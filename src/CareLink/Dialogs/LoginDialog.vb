@@ -260,10 +260,10 @@ Public Class LoginDialog
                 Application.DoEvents()
                 Dim value As String = Me.RegionComboBox.SelectedValue.ToString().Replace(oldValue:=" ", newValue:="")
                 Dim serverRegion As Region = [Enum].Parse(Of Region)(value:=value)
-                Await GetLoginData(serverRegion:=serverRegion,
-                                   userName:=s_userName,
-                                   password:=s_password,
-                                   tokenData:=ReadTokenDataFile())
+                Await Client2.GetLoginData(serverRegion:=serverRegion,
+                                           userName:=s_userName,
+                                           password:=s_password,
+                                           tokenData:=ReadTokenDataFile())
                 Me.Client = New Client2(serverRegion)
                 Const loginFailed As String = "Login failed: Client.InitAsync() did not complete successfully."
                 lastErrorMsg = If(Not Await Me.Client.InitAsync(),

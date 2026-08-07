@@ -47,6 +47,12 @@ Friend Class Client2
         _httpClient.SetDefaultRequestHeaders()
     End Sub
 
+    Private Enum DataKeyCount
+        NoData
+        SingleData
+        RecentData
+    End Enum
+
     Friend Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
 
     Friend Property Config As Dictionary(Of String, String)
@@ -58,19 +64,10 @@ Friend Class Client2
         End Set
     End Property
 
-    Friend Property serverRegion As Region
-
     Friend Property LoggedIn As Boolean
-
     Friend Property PatientPersonalData As New PatientPersonalInfo
-
+    Friend Property serverRegion As Region
     Friend Property UserElementDictionary As Dictionary(Of String, Object)
-
-    Private Enum DataKeyCount
-        NoData
-        SingleData
-        RecentData
-    End Enum
 
     ''' <summary>
     ''' Build request headers from tokenDataElement.
@@ -187,10 +184,9 @@ Friend Class Client2
     '''  A task representing the asynchronous operation, containing the requested
     '''  nameValueCollection as a dictionary.
     ''' </returns>
-    Private Async Function GetDataAsync(
-        username As String,
-        role As String,
-        patientId As String) As Task(Of Dictionary(Of String, Object))
+    Private Async Function GetDataAsync(username As String,
+                                        role As String,
+                                        patientId As String) As Task(Of Dictionary(Of String, Object))
 
         _httpClient.SetDefaultRequestHeaders()
         Dim requestUri As String = $"{Me.Config(key:="baseUrlCumulus")}/display/message"
@@ -370,23 +366,6 @@ Friend Class Client2
     End Function
 
     ''' <summary>
-    '''  Asynchronous initialization function that prepares the client for use.
-    ''' </summary>
-    ''' <returns>
-    '''  A task representing the asynchronous operation, containing True if initialization succeeded;
-    '''  otherwise, False.
-    ''' </returns>
-    Friend Async Function InitAsync() As Task(Of Boolean)
-        If Not Await Me.internalInit() Then
-            Await GetLoginData(Me.serverRegion, userName:=s_userName, password:=s_password)
-            If Not Await Me.internalInit() Then
-                Return False
-            End If
-        End If
-        Return True
-    End Function
-
-    ''' <summary>
     '''  Initializes the client by reading token nameValueCollection and user information.
     ''' </summary>
     ''' <returns>
@@ -507,12 +486,63 @@ Friend Class Client2
     End Function
 
     ''' <summary>
+    '''  Asynchronous initialization function that prepares the client for use.
+    ''' </summary>
+    ''' <returns>
+    '''  A task representing the asynchronous operation, containing True if initialization succeeded;
+    '''  otherwise, False.
+    ''' </returns>
+    Friend Async Function InitAsync() As Task(Of Boolean)
+        If Not Await Me.internalInit() Then
+            Await GetLoginData(Me.serverRegion, userName:=s_userName, password:=s_password)
+            If Not Await Me.internalInit() Then
+                Return False
+            End If
+        End If
+        Return True
+    End Function
+
+    ''' <summary>
     '''  Sets the user element dictionary for testing purposes to allow access to UserElementDictionary.
     '''  This method is Friend to allow access from test assemblies.
     ''' </summary>
     Friend Sub SetUserElementDictionaryForTests(value As Dictionary(Of String, Object))
         Me.UserElementDictionary = value
     End Sub
+
+    ''' <summary>
+    '''  Asynchronously retrieves login data for the specified server region,
+    '''  username, and password.
+    ''' </summary>
+    ''' <param name="serverRegion">The server <see cref="Region"/> to use.</param>
+    ''' <param name="userName">The username for login.</param>
+    ''' <param name="password">The password for login.</param>
+    ''' <param name="tokenData">The current token data.</param>
+    ''' <returns>A task representing the asynchronous operation.</returns>
+    Public Shared Async Function GetLoginData(serverRegion As Region,
+                                              userName As String,
+                                              password As String,
+                                              Optional tokenData As TokenData = Nothing) As Task
+        If tokenData Is Nothing Then
+            Try
+                Dim discoveryUrl As String = If(serverRegion <> Region.Europe,
+                                                CareLinkService.DiscoveryUrlNa,
+                                                CareLinkService.DiscoveryUrlEu)
+                Dim outputFile As String = GetLoginDataFileName()
+
+                Dim endpointConfig As EndpointConfig =
+                    Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, serverRegion)
+
+                Dim result As TokenData =
+                Await CareLinkService.DoLoginAsync(endpointConfig,
+                                                  outputFile,
+                                                  userName,
+                                                  password)
+            Catch ex As Exception
+                MessageBox.Show(text:=ex.Message, caption:="Error", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Error)
+            End Try
+        End If
+    End Function
 
     ''' <summary>
     '''  Async variant of DoRefresh that uses Await.
@@ -526,7 +556,6 @@ Friend Class Client2
     ''' </returns>
     Public Async Function DoRefreshAsync(config As Dictionary(Of String, String),
                                          tokenElement As JsonElement) As Task(Of JsonElement)
-
 
         Dim tokenUrl As String = config(key:="token_url")
 
@@ -627,7 +656,6 @@ Friend Class Client2
                 data = Await Me.GetDataAsync(username:=GetUserName(),
                                              role,
                                              patientId:=EmptyString)
-
             Catch uaEx As UnauthorizedAccessException
                 ' schedule refresh, will await below and then retry once
                 hadAuthException = True
