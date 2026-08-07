@@ -7,6 +7,35 @@ Imports System.Runtime.CompilerServices
 Public Module ControlExtensions
 
     ''' <summary>
+    '''  Centers all controls within a given panel.
+    ''' </summary>
+    <Extension>
+    Friend Sub CenterControlsInPanel(panel1 As Panel)
+        For Each ctrl As Control In panel1.Controls
+            ctrl.CenterXOnParent()
+        Next
+    End Sub
+
+    ''' Centers a form relative to another form, even if it's not the parent.
+    ''' </summary>
+    <Extension>
+    Friend Sub CenterFormOnAnother(child As Form, reference As Form)
+        If child Is Nothing OrElse reference Is Nothing Then Exit Sub
+
+        ' Calculate centered position
+        Dim x As Integer = reference.Left + ((reference.Width - child.Width) \ 2)
+        Dim y As Integer = reference.Top + ((reference.Height - child.Height) \ 2)
+
+        ' Ensure the form stays fully visible on screen
+        Dim screenBounds As Rectangle = Screen.FromControl(reference).WorkingArea
+        x = Math.Max(screenBounds.Left, Math.Min(x, screenBounds.Right - child.Width))
+        y = Math.Max(screenBounds.Top, Math.Min(y, screenBounds.Bottom - child.Height))
+
+        child.StartPosition = FormStartPosition.Manual
+        child.Location = New Point(x, y)
+    End Sub
+
+    ''' <summary>
     '''  Centers a <see cref="Label"/> parent container.
     ''' </summary>
     ''' <param name="lbl">
@@ -20,7 +49,7 @@ Public Module ControlExtensions
     '''  is used to determine the drawn width. The method does not change parent layout or anchors.
     ''' </remarks>
     <Extension>
-    Friend Sub CenterLabelXOnParent(lbl As Label)
+    Friend Sub CenterLabelOnParent(lbl As Label)
         If lbl Is Nothing OrElse lbl.IsDisposed Then
             Exit Sub
         End If

@@ -876,7 +876,7 @@ Friend Module Form1UpdateHelpers
                 mainForm.LastSgOrExitTimeLabel.Text =
                     $"Exit In:{ TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(unit:="hr")}"
                 mainForm.LastSgOrExitTimeLabel.Visible = True
-                mainForm.LastSgOrExitTimeLabel.CenterLabelXOnParent()
+                mainForm.LastSgOrExitTimeLabel.CenterLabelOnParent()
             Else
                 mainForm.LastSgOrExitTimeLabel.Visible = False
             End If

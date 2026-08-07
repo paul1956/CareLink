@@ -19,7 +19,7 @@ Public Class ControlExtensionsTests
             parent.Controls.Add(lbl)
 
             ' Act
-            lbl.CenterLabelXOnParent()
+            lbl.CenterLabelOnParent()
 
             ' Assert
             lbl.Left.Should().Be((parent.Width - lbl.Width) \ 2)
@@ -29,13 +29,13 @@ Public Class ControlExtensionsTests
     <Fact>
     Public Sub CenterLabelXOnParent_NullOrDisposed_DoesNotThrow()
         ' Null
-        Dim subCallNull As Action = Sub() CenterLabelXOnParent(Nothing)
+        Dim subCallNull As Action = Sub() CenterLabelOnParent(Nothing)
         subCallNull.Should().NotThrow()
 
         ' Disposed
         Dim lbl As New Label()
         lbl.Dispose()
-        Dim subCallDisposed As Action = Sub() CenterLabelXOnParent(lbl)
+        Dim subCallDisposed As Action = Sub() CenterLabelOnParent(lbl)
         subCallDisposed.Should().NotThrow()
     End Sub
 

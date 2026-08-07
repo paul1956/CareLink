@@ -384,6 +384,7 @@ Public Class Form1
                                         Me.CursorPictureBox.Image = Nothing
                                 End Select
                                 Me.CursorPanel.Visible = True
+                                Me.CursorPanel.CenterControlsInPanel()
                             Case 3
                                 Select Case markerTags(1).Trim
                                     Case "Calibration accepted", "Calibration not accepted"
@@ -4690,7 +4691,7 @@ Public Class Form1
                 Me.CurrentSgLabel.Text = sgString
                 Me.CurrentSgLabel.CenterXYOnParent(verticalOffset:=-Me.ShieldUnitsLabel.Height)
                 Me.CurrentSgLabel.Visible = True
-                Me.ShieldUnitsLabel.CenterLabelXOnParent()
+                Me.ShieldUnitsLabel.CenterLabelOnParent()
                 Me.ShieldUnitsLabel.Top = Me.CurrentSgLabel.Bottom + 2
                 Me.UpdateNotifyIcon(sgString)
                 _sgMiniDisplay.SetCurrentSgString(sgString, f:=s_lastSg.sg)
