@@ -127,11 +127,10 @@ Public Class SummaryRecord
     ''' <param name="key">The key for the record.</param>
     ''' <param name="value">The value associated with the key.</param>
     ''' <param name="message">The message for the record.</param>
-    Protected Friend Sub New(
-        recordNumber As Single,
-        key As String,
-        value As String,
-        message As String)
+    Protected Friend Sub New(recordNumber As Single,
+                             key As String,
+                             value As String,
+                             message As String)
 
         Me.RecordNumber = recordNumber + 1
         Me.Key = key

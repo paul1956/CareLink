@@ -10,7 +10,6 @@ Imports System.Text
 Imports System.Text.Json
 
 Public Class CareLinkService
-    Private Const OrdinalIgnoreCase As StringComparison = StringComparison.OrdinalIgnoreCase
     Private Shared ReadOnly s_http As New HttpClient With {.Timeout = TimeSpan.FromSeconds(120)}
     Public Const DiscoveryUrlEu As String = "https://clcloud.minimed.eu/connect/carepartner/v13/discover/android/3.6"
     Public Const DiscoveryUrlNa As String = "https://clcloud.minimed.com/connect/carepartner/v13/discover/android/3.6"
@@ -41,7 +40,7 @@ Public Class CareLinkService
         End Using
     End Function
 
-    Private Shared Async Function DoLoginAuth0Async(endpointConfig As EndpointConfig, outputFile As String) As Task(Of TokenData)
+    Private Shared Async Function DoLoginAuth0Async(endpointConfig As EndpointConfig, outputFile As String, userName As String, password As String) As Task(Of TokenData)
         Using ssoDoc As JsonDocument = JsonDocument.Parse(json:=endpointConfig.SsoJson)
             Dim clientId As String =
                 ssoDoc.RootElement.GetProperty(propertyName:="client").GetProperty(propertyName:="client_id").GetString()
@@ -52,23 +51,27 @@ Public Class CareLinkService
             Dim audience As String =
                 ssoDoc.RootElement.GetProperty(propertyName:="client").GetProperty(propertyName:="audience").GetString()
 
-            Dim authorizePath As String = ssoDoc.RootElement.GetProperty(propertyName:="system_endpoints").GetProperty(propertyName:="authorization_endpoint_path").GetString()
-            Dim tokenPath As String = ssoDoc.RootElement.GetProperty(propertyName:="system_endpoints").GetProperty(propertyName:="token_endpoint_path").GetString()
+            Dim authorizePath As String =
+                ssoDoc.RootElement.GetProperty(propertyName:="system_endpoints").GetProperty(propertyName:="authorization_endpoint_path").GetString()
+            Dim tokenPath As String =
+                ssoDoc.RootElement.GetProperty(propertyName:="system_endpoints").GetProperty(propertyName:="token_endpoint_path").GetString()
 
             Dim authUrl As String = $"{endpointConfig.ApiBaseUrl}{authorizePath}"
-            Dim fullUrl As String = $"{authUrl}?client_id={Uri.EscapeDataString(clientId)}&response_type=code&scope={Uri.EscapeDataString(scope)}&redirect_uri={Uri.EscapeDataString(redirectUri)}&audience={Uri.EscapeDataString(audience)}"
+            Dim fullUrl As String =
+                $"{authUrl}?client_id={Uri.EscapeDataString(stringToEscape:=clientId)}&response_type=code&scope={Uri.EscapeDataString(stringToEscape:=scope)}&redirect_uri={Uri.EscapeDataString(stringToEscape:=redirectUri)}&audience={Uri.EscapeDataString(stringToEscape:=audience)}"
 
             Dim redirectResult As RedirectResult
 
             ' Ensure the UI dialog and WebView2 initialization run on the UI thread.
-            redirectResult = Await InvokeOnUiThreadAsync(Function()
-                                                             Using frm As New OAuthBrowserForm(startUrl:=fullUrl, redirectUri)
-                                                                 If frm.ShowDialog() <> DialogResult.OK Then
-                                                                     Throw New Exception(message:="Login was cancelled.")
-                                                                 End If
-                                                                 Return frm.Result
-                                                             End Using
-                                                         End Function)
+            redirectResult = Await InvokeOnUiThreadAsync(
+               work:=Function()
+                         Using frm As New OAuthBrowserForm(startUrl:=fullUrl, redirectUri, userName, password)
+                             If frm.ShowDialog() <> DialogResult.OK Then
+                                 Throw New Exception(message:="Login was cancelled.")
+                             End If
+                             Return frm.Result
+                         End Using
+                     End Function)
 
             If redirectResult Is Nothing OrElse String.IsNullOrWhiteSpace(value:=redirectResult.Code) Then
                 Throw New Exception(message:="Authorization code was not captured.")
@@ -101,7 +104,7 @@ Public Class CareLinkService
         End Using
     End Function
 
-    Private Shared Async Function DoLoginNonAuth0Async(endpointConfig As EndpointConfig, outputFile As String) As Task(Of TokenData)
+    Private Shared Async Function DoLoginNonAuth0Async(endpointConfig As EndpointConfig, outputFile As String, userName As String, password As String) As Task(Of TokenData)
         Using ssoDoc As JsonDocument = JsonDocument.Parse(json:=endpointConfig.SsoJson)
             Dim oauthClient As JsonElement =
                 ssoDoc.RootElement.GetProperty(propertyName:="oauth").
@@ -193,7 +196,7 @@ Public Class CareLinkService
                                                  GetProperty(propertyName:="auth_url").GetString()
 
                     Dim redirectResult As RedirectResult
-                    Using frm As New OAuthBrowserForm(startUrl:=captchaUrl, redirectUri:=redirectUri)
+                    Using frm As New OAuthBrowserForm(startUrl:=captchaUrl, redirectUri, userName, password)
                         If frm.ShowDialog() <> DialogResult.OK Then
                             Throw New Exception(message:="Login was cancelled.")
                         End If
@@ -350,10 +353,13 @@ Public Class CareLinkService
         Return Base64UrlEncode(bytes)
     End Function
 
-    Public Shared Async Function DoLoginAsync(endpointConfig As EndpointConfig, outputFile As String) As Task(Of TokenData)
+    Public Shared Async Function DoLoginAsync(endpointConfig As EndpointConfig,
+                                              outputFile As String,
+                                              userName As String,
+                                              password As String) As Task(Of TokenData)
         Return If(endpointConfig.IsAuth0,
-            Await DoLoginAuth0Async(endpointConfig, outputFile),
-            Await DoLoginNonAuth0Async(endpointConfig, outputFile))
+            Await DoLoginAuth0Async(endpointConfig, outputFile, userName, password),
+            Await DoLoginNonAuth0Async(endpointConfig, outputFile, userName, password))
     End Function
 
     Public Shared Function ParseRegion(value As String) As String
@@ -404,10 +410,10 @@ Public Class CareLinkService
             For Each c As JsonElement In cp.EnumerateArray()
                 Dim regionProp As String = c.GetProperty(propertyName:="region").GetString()
 
-                If regionProp.Equals(value:=targetRegion, comparisonType:=OrdinalIgnoreCase) Then
+                If regionProp.EqualsNoCase(targetRegion) Then
                     Dim keyName As String = Nothing
                     For Each prop As JsonProperty In c.EnumerateObject()
-                        If prop.Name.Contains(value:="UseSSOConfiguration", comparisonType:=OrdinalIgnoreCase) Then
+                        If prop.Name.ContainsNoCase(value:="UseSSOConfiguration") Then
                             ' The property named like "UseSSOConfiguration*" contains the name
                             ' of the actual SSO configuration property. We need the property's
                             ' value (the lookup key), not the property name itself.
@@ -421,7 +427,7 @@ Public Class CareLinkService
                     End If
 
                     Dim ssoUrl As String = c.GetProperty(propertyName:=keyName).GetString()
-                    Dim isAuth0 As Boolean = keyName.Contains(value:="Auth0", comparisonType:=OrdinalIgnoreCase)
+                    Dim isAuth0 As Boolean = keyName.ContainsNoCase(value:="Auth0")
                     Dim ssoJson As String = Await s_http.GetStringAsync(requestUri:=ssoUrl)
 
                     Using ssoDoc As JsonDocument = JsonDocument.Parse(json:=ssoJson)

@@ -67,11 +67,9 @@ Public Module TimeSpanExtensions
     '''  A string formatted as "X days, Y hours, Z totalMinutes" or "X days" or
     '''  "Y hours" or "Z totalMinutes", depending on the values.
     ''' </returns>
+    ''' <remarks>If total minues is negitive return "Unknown"</remarks>
     <Extension>
     Public Function MinutesToDaysHoursMinutes(totalMinutes As Integer) As String
-        If totalMinutes < 0 Then
-            Throw New ArgumentOutOfRangeException(paramName:=NameOf(totalMinutes), message:="Minutes cannot be negative.")
-        End If
         Dim parts As New List(Of String)
         If totalMinutes < 0 Then
             Return "Unknown"

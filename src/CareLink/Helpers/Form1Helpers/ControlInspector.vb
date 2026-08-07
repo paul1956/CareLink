@@ -99,11 +99,11 @@ Friend Module ControlInspector
 
         Try
             ' Accessing Handle may create it; acceptable for diagnostic/inspection helpers.
-            Dim h As IntPtr = ctrl.Handle
-            Dim sb As New StringBuilder(256)
-            If GetClassName(h, sb, sb.Capacity) > 0 Then
+            Dim hWnd As IntPtr = ctrl.Handle
+            Dim sb As New StringBuilder(capacity:=256)
+            If GetClassName(hWnd, lpClassName:=sb, nMaxCount:=sb.Capacity) > 0 Then
                 Dim cls As String = sb.ToString()
-                If cls.ContainsNoCase("ScrollBar") Then
+                If cls.ContainsNoCase(value:="ScrollBar") Then
                     Return True
                 End If
 
@@ -111,7 +111,7 @@ Friend Module ControlInspector
                 ' don't expose a managed Name and their class indicates a native window.
                 If String.IsNullOrWhiteSpace(ctrl.Name) Then
                     ' Common native control class prefixes
-                    If cls.StartsWith("MS", StringComparison.OrdinalIgnoreCase) OrElse cls.Contains("Sys") Then
+                    If cls.StartsWithNoCase(value:="MS") OrElse cls.Contains(value:="Sys") Then
                         Return True
                     End If
                 End If
@@ -140,7 +140,7 @@ Friend Module ControlInspector
         End If
 
         ' If the parent is a panel belonging to a SplitContainer, show the split container name and panel
-        Dim sc As System.Windows.Forms.SplitContainer = TryCast(parent.Parent, System.Windows.Forms.SplitContainer)
+        Dim sc As SplitContainer = TryCast(parent.Parent, SplitContainer)
         If sc IsNot Nothing Then
             Dim panelLabel As String = "Panel"
             If Object.ReferenceEquals(sc.Panel1, parent) Then

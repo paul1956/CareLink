@@ -94,12 +94,11 @@ Public Module DgvCellStyleHelpers
     ''' <param name="isUri">Indicates if the cell value is a URI.</param>
     ''' <param name="emIncrease"></param>
     <Extension>
-    Friend Sub CellFormattingApplyBoldColor(
-        dgv As DataGridView,
-        e As DataGridViewCellFormattingEventArgs,
-        textColor As Color,
-        Optional isUri As Boolean = False,
-        Optional emIncrease As Integer = 0)
+    Friend Sub CellFormattingApplyBoldColor(dgv As DataGridView,
+                                            e As DataGridViewCellFormattingEventArgs,
+                                            textColor As Color,
+                                            Optional isUri As Boolean = False,
+                                            Optional emIncrease As Integer = 0)
 
         Dim value As String = Convert.ToString(e.Value)
         If IsNullOrEmpty(value) Then
@@ -125,8 +124,6 @@ Public Module DgvCellStyleHelpers
                     .SelectionBackColor = uriColor
                     .SelectionForeColor = uriColor.ContrastingColor()
                 End If
-            Else
-                .ForeColor = rowRef.GetTextColor(textColor)
             End If
             .Font = New Font(family:= .Font.FontFamily, emSize:= .Font.Size + emIncrease, style:=FontStyle.Italic)
         End With
@@ -185,7 +182,8 @@ Public Module DgvCellStyleHelpers
     ''' </param>
     <Extension>
     Friend Sub CellFormattingSetForegroundColor(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs)
-        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
+        Dim col As DataGridViewTextBoxColumn =
+            TryCast(dgv.Columns(index:=e.ColumnIndex), DataGridViewTextBoxColumn)
         If col IsNot Nothing Then
             e.Value = $"{e.Value}"
             Dim textColor As Color = e.CellStyle.ForeColor

@@ -233,17 +233,15 @@ Friend Class Client2
                             request.Headers.TryAddWithoutValidation(name:=header.Key, value:=header.Value)
                         Next
 
-                        Using response As HttpResponseMessage = _httpClient.Send(request)
+                        Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).ConfigureAwait(continueOnCapturedContext:=False)
                             _lastHttpStatusCode = response.StatusCode
                             Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
                             ' Centralized response inspection; may throw UnauthorizedAccessException,
                             ' ArgumentException (bad request) or HttpRequestException (transient/server).
-                            response.ThrowIfFailure()
+                            Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
 
-                            Dim json As String =
-                                Await response.Content.ReadAsStringAsync() _
-                                                      .ConfigureAwait(continueOnCapturedContext:=False)
+                            Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
                             Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json)
                         End Using
                     End Using
@@ -260,7 +258,7 @@ Friend Class Client2
                 End Try
 
                 If needRetry Then
-                    Await Task.Delay(millisecondsDelay:=retryDelayMs).ConfigureAwait(continueOnCapturedContext:=True)
+                    Await Task.Delay(millisecondsDelay:=retryDelayMs)
                     Continue While
                 End If
             End While
@@ -300,15 +298,13 @@ Friend Class Client2
                 request.Headers.TryAddWithoutValidation(name:=header.Key, value:=header.Value)
             Next
 
-            Using response As HttpResponseMessage =
-                Await _httpClient.SendAsync(request).
-                                  ConfigureAwait(continueOnCapturedContext:=True)
+            Using response As HttpResponseMessage = Await _httpClient.SendAsync(request)
                 _lastHttpStatusCode = response.StatusCode
                 Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
                 ' Ensure non-success status codes are not silently ignored.
                 Try
-                    response.ThrowIfFailure()
+                    Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
                 Catch ex As Exception
                     response.Dispose()
                     Debug.WriteLine(message:=$"GetPatient HTTP failure: {ex.Message}")
@@ -317,7 +313,7 @@ Friend Class Client2
 
                 Dim patients As List(Of Dictionary(Of String, String))
                 Dim json As String =
-                    Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=True)
+                    Await response.Content.ReadAsStringAsync()
                 patients = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String)))(json)
                 If patients.Count > 0 Then
                     Return patients(index:=0)
@@ -334,7 +330,7 @@ Friend Class Client2
     ''' <param name="config">The configuration JSON tokenDataElement containing base URL information.</param>
     ''' <param name="tokenData">The token nameValueCollection JSON tokenDataElement containing authentication tokens.</param>
     ''' <returns>A JSON string representing the user information.</returns>
-    Private Function GetUserString(config As JsonElement, tokenData As JsonElement) As String
+    Private Async Function GetUserStringAsync(config As JsonElement, tokenData As JsonElement) As Task(Of String)
         Dim requestUri As String = $"{config.GetProperty(propertyName:="baseUrlCareLink").GetString()}/users/me"
         Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
         Dim magId As String = Nothing
@@ -350,13 +346,13 @@ Friend Class Client2
                 request.Headers.Add(name:=header.Key, header.Value)
             Next
 
-            Using response As HttpResponseMessage = _httpClient.SendAsync(request).Result
+            Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).ConfigureAwait(continueOnCapturedContext:=False)
                 _lastHttpStatusCode = response.StatusCode
                 Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
                 ' Use centralized failure handling and translate to Nothing for older call-sites.
                 Try
-                    response.ThrowIfFailure()
+                    Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
                 Catch ex As UnauthorizedAccessException
                     Debug.WriteLine(message:=$"GetUserString unauthorized: {ex.Message}")
                     Return Nothing
@@ -368,7 +364,7 @@ Friend Class Client2
                     Return Nothing
                 End Try
 
-                Return response.Content.ReadAsStringAsync().Result
+                Return Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
             End Using
         End Using
     End Function
@@ -381,9 +377,9 @@ Friend Class Client2
     '''  otherwise, False.
     ''' </returns>
     Friend Async Function InitAsync() As Task(Of Boolean)
-        If Not Await Me.internalInit().ConfigureAwait(continueOnCapturedContext:=True) Then
-            Await GetLoginData(Me.serverRegion, tokenData:=Nothing)
-            If Not Await Me.internalInit().ConfigureAwait(continueOnCapturedContext:=True) Then
+        If Not Await Me.internalInit() Then
+            Await GetLoginData(Me.serverRegion, userName:=s_userName, password:=s_password)
+            If Not Await Me.internalInit() Then
                 Return False
             End If
         End If
@@ -419,11 +415,11 @@ Friend Class Client2
             Dim options As JsonSerializerOptions = s_jsonDesterilizeOptions
             Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, options)
             _country = If(payload.Country, s_countryCode)
-            configJsonElement = GetConfig(httpClient:=_httpClient, country:=_country, serverRegion:=Me.serverRegion)
+            configJsonElement = Await Discover.GetConfigAsync(httpClient:=_httpClient, country:=_country, serverRegion:=Me.serverRegion)
             Me.Config = configJsonElement.ToStringDictionary()
 
             ' Call user string; handle typed failures
-            Dim json As String = Me.GetUserString(config:=configJsonElement, tokenData:=_tokenDataElement)
+            Dim json As String = Await Me.GetUserStringAsync(config:=configJsonElement, tokenData:=_tokenDataElement)
             If IsNullOrWhiteSpace(value:=json) Then
                 Throw New UnauthorizedAccessException
             End If
@@ -433,9 +429,7 @@ Friend Class Client2
 
             Dim role As String = _PatientPersonalData.role
             If role.ContainsNoCase(value:="Partner") Then
-                _patientElement =
-                    Await Me.GetPatient(configJsonElement, token_data:=_tokenDataElement) _
-                            .ConfigureAwait(continueOnCapturedContext:=True)
+                _patientElement = Await Me.GetPatient(configJsonElement, token_data:=_tokenDataElement)
             End If
         Catch ex As Exception
             hadException = True
@@ -462,7 +456,7 @@ Friend Class Client2
             If refreshTask IsNot Nothing Then
                 Try
                     Dim refreshedToken As JsonElement =
-                        Await refreshTask.ConfigureAwait(continueOnCapturedContext:=false)
+                        Await refreshTask.ConfigureAwait(continueOnCapturedContext:=False)
                     If Not refreshedToken.IsNullOrUndefined Then
                         _tokenDataElement = refreshedToken
                         _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
@@ -500,8 +494,8 @@ Friend Class Client2
             Else
                 Dim op As System.Windows.Threading.DispatcherOperation(Of Task(Of Boolean)) =
                     disp.InvokeAsync(callback:=Function() Me.InitAsync())
-                Dim taskOfTask As System.Threading.Tasks.Task(Of System.Threading.Tasks.Task(Of Boolean)) = op.Task
-                Dim unwrapped As System.Threading.Tasks.Task(Of Boolean) = taskOfTask.Unwrap()
+                Dim taskOfTask As Task(Of Task(Of Boolean)) = op.Task
+                Dim unwrapped As Task(Of Boolean) = taskOfTask.Unwrap()
                 Return unwrapped.GetAwaiter().GetResult()
             End If
         End If
@@ -573,10 +567,10 @@ Friend Class Client2
                     _lastHttpStatusCode = response.StatusCode
                     Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
-                    response.ThrowIfFailure()
+                    Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
 
                     Dim responseBody As String =
-                        Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=True)
+                        Await response.Content.ReadAsStringAsync()
                     Dim newData As Dictionary(Of String, String) =
                         JsonSerializer.Deserialize(Of Dictionary(Of String, String))(json:=responseBody)
 
@@ -599,17 +593,6 @@ Friend Class Client2
     End Function
 
     ''' <summary>
-    '''  Synchronous wrapper for GetRecentDataAsync.
-    ''' </summary>
-    ''' <returns>
-    '''  A String containing an error message if the operation failed, or Nothing if successful.
-    '''  On success, PatientData and RecentData properties are populated.
-    '''  </returns>
-    Public Function GetRecentData() As String
-        Return Me.GetRecentDataAsync().GetAwaiter().GetResult()
-    End Function
-
-    ''' <summary>
     '''  Async variant of GetRecentData that uses Await and centralized response inspection.
     ''' </summary>
     ''' <returns>
@@ -623,8 +606,7 @@ Friend Class Client2
         Dim hadAuthException As Boolean = False
         If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
             Try
-                _tokenDataElement = Await Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement) _
-                                            .ConfigureAwait(continueOnCapturedContext:=True)
+                _tokenDataElement = Await Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement)
                 _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
                 WriteTokenFile(token:=_tokenDataElement)
             Catch ex As Exception
@@ -644,8 +626,7 @@ Friend Class Client2
             Try
                 data = Await Me.GetDataAsync(username:=GetUserName(),
                                              role,
-                                             patientId:=EmptyString) _
-                                .ConfigureAwait(continueOnCapturedContext:=True)
+                                             patientId:=EmptyString)
 
             Catch uaEx As UnauthorizedAccessException
                 ' schedule refresh, will await below and then retry once
@@ -666,8 +647,7 @@ Friend Class Client2
             ' If we scheduled a refresh due to auth, await it now and retry GetDataAsync once.
             If hadAuthException AndAlso refreshTask IsNot Nothing Then
                 Try
-                    Dim refreshedToken As JsonElement =
-                        Await refreshTask.ConfigureAwait(continueOnCapturedContext:=True)
+                    Dim refreshedToken As JsonElement = Await refreshTask
                     If Not refreshedToken.IsNullOrUndefined Then
                         _tokenDataElement = refreshedToken
                         _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
@@ -675,8 +655,7 @@ Friend Class Client2
                         ' retry
                         data = Await Me.GetDataAsync(username:=GetUserName(),
                                                      role:=role,
-                                                     patientId:=EmptyString) _
-                                       .ConfigureAwait(continueOnCapturedContext:=True)
+                                                     patientId:=EmptyString)
                     End If
                 Catch refreshEx As Exception
                     Debug.WriteLine(message:=refreshEx.ToString())
@@ -705,9 +684,7 @@ Friend Class Client2
         ' If a call earlier produced an auth status code, attempt refresh proactively.
         If Auth_Error_Codes.Contains(value:=_lastHttpStatusCode) Then
             Try
-                _tokenDataElement =
-                    Await Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement) _
-                            .ConfigureAwait(continueOnCapturedContext:=True)
+                _tokenDataElement = Await Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement)
                 _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
                 WriteTokenFile(token:=_tokenDataElement)
             Catch ex As Exception

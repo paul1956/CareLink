@@ -183,6 +183,23 @@ Friend Module UserMessageConstants
         {"869", "Reminder time to take (reminderName)."},
         {"870", "Recharge transmitter within 24 hours(triggeredDateTime)."}}
 
+    Friend ReadOnly s_notificationMessagesFlex As New Dictionary(Of String, String) From {
+        {"1.050", "Unknown?"},
+        {"1.205", "No SG values (> 30 minutes) resolved (resolved)"},
+        {"2.253", "Bolus not delivered?"},
+        {"2.500", "Low Reservoir(triggeredDateTime). (unitsRemaining) units remaining. " &
+                   "Change reservoir?"},
+        {"3.328", "Prolonged high sensor glucose."},
+        {"3.329", "Prolonged low sensor glucose?"},
+        {"3.330", "Sensor glucose approaching high limit?"},
+        {"3.331", "Sensor glucose approaching low limit?"},
+        {"3.332", "Sensor glucose raising rapidly?"},
+        {"3.333", "Sensor glucose falling rapidly?"},
+        {"3.334", "Sensor glucose under low limit?"},
+        {"3.335", "Sensor glucose over high limit?"}
+        }
+
+
     Friend ReadOnly s_plgmLgsMessages As New Dictionary(Of String, String) From {
         {"FEATURE_OFF", "Feature Off"},
         {"MONITORING", "Monitoring"},

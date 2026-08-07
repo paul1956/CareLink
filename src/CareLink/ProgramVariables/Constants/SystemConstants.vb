@@ -6,7 +6,6 @@ Imports System.Runtime.CompilerServices
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Public Module SystemConstants
-
     Friend Const BaseDownloadName As String = "CareLinkLastDownload"
     Friend Const BaseErrorReportName As String = "CareLinkErrorReport"
     Friend Const BaseSnapshotName As String = "CareLinkSnapshot"

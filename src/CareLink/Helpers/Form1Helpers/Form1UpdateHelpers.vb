@@ -222,7 +222,7 @@ Friend Module Form1UpdateHelpers
         ' First try to parse the value as JSON object and enumerate properties.
         If IsNotNullOrWhiteSpace(kvp.Value) Then
             Try
-                Using doc As JsonDocument = JsonDocument.Parse(kvp.Value)
+                Using doc As JsonDocument = JsonDocument.Parse(json:=kvp.Value)
                     If doc.RootElement.ValueKind = JsonValueKind.Object Then
                         Dim idx As Integer = 0
                         For Each prop As JsonProperty In doc.RootElement.EnumerateObject()
@@ -237,6 +237,12 @@ Friend Module Form1UpdateHelpers
                                childKey.EqualsNoCase("sensorUpdateTime") Then
 
                                 message = GetSensorUpdateTime(key:=childValue)
+                            End If
+                            If childKey = "time" Then
+                                Dim result As Date
+                                message = If(childValue.TryParseDate(key:="", result),
+                                             result.ToShortDateTime,
+                                             String.Empty)
                             End If
                             Dim item As New SummaryRecord(
                                 recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
@@ -513,7 +519,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataEnum.gstBatteryLevel)
-                    message = If(kvp.Value = "255",
+                    message = If(kvp.Value = "-1" OrElse kvp.Value = "255",
                                  "Integrated Transmitter so N/A.",
                                  $"Transmitter battery is at {kvp.Value}%.")
                     item = New SummaryRecord(recordNumber, kvp, message)

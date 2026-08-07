@@ -16,13 +16,13 @@ Public Module SystemVariables
 
 #End Region ' Used for painting
 
-    Private s_userName As String
     Friend s_allUserSettingsData As New CareLinkUserDataList
     Friend s_countryCode As String = String.Empty
     Friend s_currentSummaryRow As Integer = 0
     Friend s_formLoaded As Boolean = False
     Friend s_password As String = String.Empty
     Friend s_useLocalTimeZone As Boolean
+    Friend s_userName As String
     Friend ReadOnly Property CareLinkDecimalSeparator As Char = "."c
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property DecimalSeparator As String = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator

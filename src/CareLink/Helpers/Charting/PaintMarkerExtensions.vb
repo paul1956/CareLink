@@ -37,12 +37,11 @@ Friend Module PaintMarkerExtensions
     '''  otherwise, on the Y axis.
     ''' </param>
     <Extension>
-    Private Sub PaintMarker(
-        e As ChartPaintEventArgs,
-        markerImage As Bitmap,
-        markerDictionary As Dictionary(Of OADate, Single),
-        noImageOffset As Boolean,
-        paintOnY2 As Boolean)
+    Private Sub PaintMarker(e As ChartPaintEventArgs,
+                            markerImage As Bitmap,
+                            markerDictionary As Dictionary(Of OADate, Single),
+                            noImageOffset As Boolean,
+                            paintOnY2 As Boolean)
 
         ' Draw the cloned portion of the Bitmap object.
         Dim halfHeight As Single = CSng(If(noImageOffset,

@@ -95,7 +95,7 @@ Public Class ExceptionHandlerDialog
     ''' <param name="sender">The sender of the event.</param>
     ''' <param name="e">The event arguments.</param>
     ''' <remarks>This method is called when the dialog is loaded.</remarks>
-    Private Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetServerUpdateTimer(Start:=False)
         Dim rtb As RichTextBox = Me.InstructionRtb
         Dim newFont As Font = rtb.Font
@@ -125,7 +125,8 @@ Public Class ExceptionHandlerDialog
             AppendTextNewFont(rtb, text, newFont, padRight:=0)
             text = "You can review what is being stored and then attach it to a new issue at"
             AppendTextNewFont(rtb, text, newFont, padRight:=0)
-            text = $"{_gitClient.Repository.Get(owner:=GitOwnerName, name:="CareLink").Result.HtmlUrl}/issues."
+            Dim repo As Repository = Await _gitClient.Repository.Get(owner:=GitOwnerName, name:="CareLink")
+            text = $"{repo.HtmlUrl}/issues."
             AppendTextNewFont(rtb, text, newFont, padRight:=0)
             text = "This will help me isolate issues quickly."
             AppendTextNewFont(rtb, text, newFont, padRight:=0)
@@ -219,16 +220,6 @@ Public Class ExceptionHandlerDialog
     ''' </param>
     Private Sub ReportInvalidErrorFile(currentLine As String, exceptionStartingString As String)
         Throw New NotImplementedException()
-    End Sub
-
-    ''' <summary>
-    '''  Overrides the OnHandleCreated method to enable dark mode
-    '''  for the dialog when its handle is created.
-    ''' </summary>
-    ''' <param name="e">The event data.</param>
-    Protected Overrides Sub OnHandleCreated(e As EventArgs)
-        MyBase.OnHandleCreated(e)
-        EnableDarkMode(hwnd:=Me.Handle)
     End Sub
 
     ''' <summary>

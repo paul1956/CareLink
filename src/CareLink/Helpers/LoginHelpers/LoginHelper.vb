@@ -13,10 +13,7 @@ Public Module LoginHelper
     ''' <param name="serverRegion">
     '''  The server region to use when invoking the helper EXE.
     ''' </param>
-    ''' <param name="tokenData">
-    '''  The current token data. If <c>Nothing</c>, the method will extract an embedded helper EXE,
-    '''  run it to produce a JSON file, and move that file to the configured login data destination.
-    ''' </param>
+    ''' <param name="userName"></param>
     ''' <remarks>
     '''  The method performs file I/O and launches an external process. It:
     '''  - Extracts the embedded resource <c>carelink_carepartner_api_login</c> to a temporary EXE file.
@@ -29,9 +26,14 @@ Public Module LoginHelper
     ''' <exception cref="IOException">
     '''  Propagates I/O exceptions from writing, moving, or deleting files.
     ''' </exception>
-    ''' 
-    ''' 
-    Public Async Function GetLoginData(serverRegion As Region, tokenData As TokenData) As Task
+    ''' <param name="password"></param><param name="tokenData">
+    '''  The current token data. If <c>Nothing</c>, the method will extract an embedded helper EXE,
+    '''  run it to produce a JSON file, and move that file to the configured login data destination.
+    ''' </param>
+    Public Async Function GetLoginData(serverRegion As Region,
+                                       userName As String,
+                                       password As String,
+                                       Optional tokenData As TokenData = Nothing) As Task
         If tokenData Is Nothing Then
             Try
                 Dim discoveryUrl As String = If(serverRegion <> Region.Europe,
@@ -42,12 +44,12 @@ Public Module LoginHelper
                 Dim endpointConfig As EndpointConfig =
                     Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, serverRegion)
 
-                Dim result As TokenData = Await CareLinkService.DoLoginAsync(endpointConfig, outputFile)
+                Dim result As TokenData =
+                Await CareLinkService.DoLoginAsync(endpointConfig,
+                                                  outputFile,
+                                                  userName,
+                                                  password)
 
-                'MessageBox.Show(text:=$"Login completed.{Environment.NewLine}Access token saved.",
-                '                caption:="Success",
-                '                buttons:=MessageBoxButtons.OK,
-                '                icon:=MessageBoxIcon.Information)
             Catch ex As Exception
                 MessageBox.Show(text:=ex.Message, caption:="Error", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Error)
             End Try

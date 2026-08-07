@@ -4,8 +4,10 @@
 
 Public Class OptionsConfigureTiTR
 
+    Private _unitsDesiredIndex As Integer
+
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) _
-        Handles Cancel_Button.Click
+            Handles Cancel_Button.Click
 
         Me.DialogResult = DialogResult.Cancel
         Me.Close()
@@ -18,8 +20,6 @@ Public Class OptionsConfigureTiTR
         Me.DialogResult = DialogResult.OK
         Me.Close()
     End Sub
-
-    Private _unitsDesiredIndex As Integer
 
     Private Sub OptionsConfigureTiTR_Load(sender As Object, e As EventArgs) Handles Me.Load
         ' Ensure the combo looks enabled but cannot be changed by the user.
@@ -45,20 +45,6 @@ Public Class OptionsConfigureTiTR
         Me.TreatmentTargetPercentUpDown.Value = My.Settings.TiTrTreatmentTargetPercent
     End Sub
 
-    ''' <summary>
-    '''  Overrides the OnHandleCreated method to enable dark mode
-    '''  for the dialog when its handle is created.
-    ''' </summary>
-    ''' <param name="e">The event data.</param>
-    Protected Overrides Sub OnHandleCreated(e As EventArgs)
-        MyBase.OnHandleCreated(e)
-        EnableDarkMode(hwnd:=Me.Handle)
-    End Sub
-
-    Public Function GetTiTrMsg() As String
-        Return $"{My.Settings.TiTrLowThreshold}/{My.Settings.TiTrTreatmentTargetPercent}%"
-    End Function
-
     Private Sub UnitsComboBox_DropDown(sender As Object, e As EventArgs) Handles UnitsComboBox.DropDown
         ' Immediately close the dropdown so the user cannot change the value with the mouse.
         CType(sender, ComboBox).DroppedDown = False
@@ -76,5 +62,9 @@ Public Class OptionsConfigureTiTR
         ' revert any user selection back to the programmatic value
         CType(sender, ComboBox).SelectedIndex = _unitsDesiredIndex
     End Sub
+
+    Public Function GetTiTrMsg() As String
+        Return $"{My.Settings.TiTrLowThreshold}/{My.Settings.TiTrTreatmentTargetPercent}%"
+    End Function
 
 End Class

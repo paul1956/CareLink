@@ -2,6 +2,9 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
+Imports System.Text.RegularExpressions
+
 ''' <summary>
 '''  Provides helper methods for displaying and managing notification data
 '''  in <see cref="DataGridView"/> controls. Handles attaching event handlers,
@@ -67,10 +70,45 @@ Friend Module NotificationHelpers
     ''' <param name="e">Event arguments containing formatting information.</param>
     Private Sub DgvNotification_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        If e.Value.ToString().StartsWithNoCase(value:="additionalInfo") Then
-            e.Value = e.Value.ToString.Replace(oldValue:=":", newValue:=" : ")
+        ' Ignore header/invalid rows and only handle format the "Message" column
+        If e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then
+            Exit Sub
         End If
+
+        Dim input As String = e.Value.ToString()
+        e.Value = Regex.Replace(input, pattern:="\s*:\s*", replacement:=" : ")
         dgv.CellFormattingSetForegroundColor(e)
+
+        If e.ColumnIndex <> dgv.Columns(columnName:="Message").Index Then
+            Exit Sub
+        End If
+        Try
+            ' Safely get the Key cell as a string (handles DBNull/Nothing)
+            Dim keyValue As String =
+                Convert.ToString(dgv.Rows(index:=e.RowIndex).Cells(columnName:="Key").Value)
+            ' Only apply if Key column equals "backgroundColor"
+            If keyValue.EqualsNoCase("backgroundColor") Then
+                Dim colorString As String =
+                    dgv.Rows(index:=e.RowIndex).Cells(columnName:="Value").Value?.ToString()
+
+                ' Validate and parse color string
+                If Not String.IsNullOrWhiteSpace(value:=colorString) AndAlso
+                    colorString.StartsWithNoCase(value:="0x") Then
+                    Dim argb As Integer
+                    If Integer.TryParse(colorString.AsSpan(start:=2),
+                                         style:=NumberStyles.HexNumber,
+                                         provider:=Nothing,
+                                         result:=argb) Then
+                        ' Convert ARGB integer to Color
+                        Dim c As Color = Color.FromArgb(argb)
+                        e.CellStyle.BackColor = c
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+            MessageBox.Show(text:=$"Error formatting cell: {ex.Message}")
+        End Try
+
     End Sub
 
     ''' <summary>
@@ -120,7 +158,7 @@ Friend Module NotificationHelpers
             dgv.ScrollBars = ScrollBars.None
             Dim dataGridViewLastColumn As DataGridViewColumn = dgv.Columns(index:=dgv.ColumnCount - 1)
             If dataGridViewLastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
-                dataGridViewLastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                dataGridViewLastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.False
             End If
         End If
         dgv.ClearSelection()
@@ -134,16 +172,15 @@ Friend Module NotificationHelpers
     ''' <param name="e">Layout event arguments.</param>
     Private Sub DgvNotification_Layout(sender As Object, e As LayoutEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-
+        Dim dgvParent As TableLayoutPanel = CType(dgv.Parent, TableLayoutPanel)
         ' Calculate total height of rows and headers
         Dim height As Integer = 0
         For i As Integer = 0 To dgv.Rows.Count - 1
-            Dim dgvRow As DataGridViewRow = dgv.Rows(i)
+            Dim dgvRow As DataGridViewRow = dgv.Rows(index:=i)
             If dgvRow.Visible Then
                 height += dgvRow.Height
             End If
         Next
-
         ' Adjust DataGridView size if necessary
         If dgv.ClientSize.Height <> height Then
             dgv.ClientSize = New Size(dgv.ClientSize.Width, height)
@@ -152,9 +189,10 @@ Friend Module NotificationHelpers
         ' Set panel row to absolute height
         Dim index As Integer = dgv.Parent.Controls.IndexOf(control:=dgv)
         Dim panel As TableLayoutPanel = CType(dgv.Parent, TableLayoutPanel)
-        'panel.RowStyles(index).SizeType = SizeType.Absolute
-        'panel.RowStyles(index).Height = dgv.ClientSize.Height
-        panel.BackColor = Color.PeachPuff
+        panel.RowStyles(index).SizeType = SizeType.Absolute
+        panel.RowStyles(index).Height = dgv.ClientSize.Height
+        panel.BackColor = Color.Yellow
+        panel.BorderStyle = BorderStyle.FixedSingle
     End Sub
 
     ''' <summary>
@@ -169,14 +207,13 @@ Friend Module NotificationHelpers
     ''' <param name="attachHandlers">
     '''  Delegate to attach event handlers to the DataGridView.
     ''' </param>
-    Private Sub DisplayNotificationDataTableInDGV(
-        ByRef realPanel As TableLayoutPanel,
-        table As DataTable,
-        className As String,
-        attachHandlers As attachHandlers)
+    Private Sub DisplayNotificationDataTableInDGV(ByRef realPanel As TableLayoutPanel,
+                                                  table As DataTable,
+                                                  className As String,
+                                                  attachHandlers As attachHandlers)
 
         Dim dgv As New DataGridView With {
-                .AutoSize = False,
+                .AutoSize = True,
                 .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders,
                 .BorderStyle = BorderStyle.None,
                 .ColumnHeadersVisible = False,
@@ -184,6 +221,7 @@ Friend Module NotificationHelpers
                 .Name = $"DataGridView{className}",
                 .RowHeadersVisible = False}
         realPanel.AutoSize = True
+        realPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink
         realPanel.RowStyles.Add(rowStyle:=New RowStyle(sizeType:=SizeType.AutoSize))
         realPanel.RowCount += 1
         If className = "activeNotifications" Then
@@ -194,26 +232,14 @@ Friend Module NotificationHelpers
         Else
             realPanel.Controls.Add(control:=dgv, column:=0, row:=realPanel.RowCount - 1)
         End If
-        dgv.InitializeDgv(DockStyle.Top)
+        dgv.InitializeDgv(dock:=DockStyle.Top)
         dgv.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         attachHandlers?(dgv)
         For Each column As DataGridViewColumn In dgv.Columns
             column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             column.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         Next
-        Dim rowIndex As Integer = 0
         dgv.DataSource = table
-        If className = "activeNotifications" Then
-        Else
-            For Each dgvRow As DataGridViewRow In dgv.Rows
-                dgv.AutoResizeRow(
-                    rowIndex,
-                    autoSizeRowMode:=DataGridViewAutoSizeRowMode.AllCellsExceptHeader)
-                rowIndex += 1
-                dgvRow.DefaultCellStyle.WrapMode = DataGridViewTriState.False
-            Next
-        End If
-
     End Sub
 
     ''' <summary>

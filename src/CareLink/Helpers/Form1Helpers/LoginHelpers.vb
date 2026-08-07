@@ -69,10 +69,10 @@ Friend Module LoginHelpers
     '''  <see langword="True"/> if login and data update succeeded;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Friend Function DoOptionalLoginAndUpdateData(
+    Friend Async Function DoOptionalLoginAndUpdateDataAsync(
         owner As Form1,
         updateAllTabs As Boolean,
-        fileToLoad As FileToLoadOptions) As Boolean
+        fileToLoad As FileToLoadOptions) As Task(Of Boolean)
 
         Dim serverTimerEnabled As Boolean = SetServerUpdateTimer(Start:=False)
         s_autoBasalDeliveryMarkers.Clear()
@@ -99,7 +99,8 @@ Friend Module LoginHelpers
                 owner.Text = SavedTitle
                 Do While True
                     LoginDialog.LoginSourceAutomatic = fileToLoad
-                    Dim result As DialogResult = LoginDialog.ShowDialog(owner)
+                    Application.DoEvents()
+                    Dim result As DialogResult = Await LoginDialog.ShowDialogAsync(owner)
                     Select Case result
                         Case DialogResult.OK
                             Exit Do
@@ -130,7 +131,7 @@ Friend Module LoginHelpers
                     owner.SetLastUpdateTime(msg, suffixMessage:=EmptyString, highLight:=True)
                     Return False
                 End If
-                Dim lastErrorMessage As String = LoginDialog.Client.GetRecentData()
+                Dim lastErrorMessage As String = Await LoginDialog.Client.GetRecentDataAsync()
 
                 SetUpCareLinkUser(forceUI:=False)
                 SetServerUpdateTimer(Start:=True, interval:=OneMinuteInMilliseconds)

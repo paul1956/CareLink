@@ -12,6 +12,7 @@ Public Class LoginDialog
     Private _httpClient As HttpClient
     Private _initialHeight As Integer
     Private _mySource As AutoCompleteStringCollection
+    Private _showTcs As TaskCompletionSource(Of DialogResult)
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
 
     Friend Property Client As Client2
@@ -61,8 +62,13 @@ Public Class LoginDialog
     ''' </remarks>
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         _doCancel = True
-        Me.DialogResult = DialogResult.Cancel
-        Me.Hide()
+        If _showTcs IsNot Nothing Then
+            _showTcs.TrySetResult(DialogResult.Cancel)
+            Me.Close()
+        Else
+            Me.DialogResult = DialogResult.Cancel
+            Me.Hide()
+        End If
     End Sub
 
     ''' <summary>
@@ -127,7 +133,7 @@ Public Class LoginDialog
     '''  loads user settings, and populates the username and region combo boxes.
     ''' </remarks>
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.LoggedOnUser = New CareLinkUserDataRecord(s_allUserSettingsData)
+        Me.LoggedOnUser = New CareLinkUserDataRecord(parent:=s_allUserSettingsData)
         Me.Icon = If(Application.IsDarkModeEnabled,
                      PngBitmapToIcon(original:=My.Resources.LoginLight),
                      PngBitmapToIcon(original:=My.Resources.LoginDark))
@@ -137,6 +143,7 @@ Public Class LoginDialog
         If _initialHeight = 0 Then
             _initialHeight = Me.Height
         End If
+        Me.CenterFormOnAnother(reference:=Form1)
 
         Dim commandLineArguments As String() = Environment.GetCommandLineArgs()
 
@@ -236,25 +243,32 @@ Public Class LoginDialog
             Exit Sub
         End If
 
-        SetUserName(Me.UsernameComboBox.Text)
+        SetUserName(value:=Me.UsernameComboBox.Text)
         s_password = Me.PasswordTextBox.Text
         s_countryCode = Me.CountryComboBox.SelectedValue.ToString
         Try
             Me.LoginStatus.Text = "Checking token file..."
-            Dim lastErrorMsg As String = String.Empty
+            Dim lastErrorMsg As String
             Dim httpStatusCode As Integer = 0
-            Me.ClientDiscover = GetDiscoveryData(lastErrorMsg, httpStatusCode)
+            Dim discoveryTuple As (discoveryRecord As DiscoveryRecord, lastErrorMsg As String, httpStatusCode As Integer) =
+                Await Discover.GetDiscoveryDataAsync()
+            Me.ClientDiscover = discoveryTuple.discoveryRecord
+            lastErrorMsg = discoveryTuple.lastErrorMsg
+            httpStatusCode = discoveryTuple.httpStatusCode
             If Me.ClientDiscover IsNot Nothing Then
                 Me.Ok_Button.Enabled = False
                 Application.DoEvents()
                 Dim value As String = Me.RegionComboBox.SelectedValue.ToString().Replace(oldValue:=" ", newValue:="")
                 Dim serverRegion As Region = [Enum].Parse(Of Region)(value:=value)
-                Await GetLoginData(serverRegion:=serverRegion, tokenData:=ReadTokenDataFile())
+                Await GetLoginData(serverRegion:=serverRegion,
+                                   userName:=s_userName,
+                                   password:=s_password,
+                                   tokenData:=ReadTokenDataFile())
                 Me.Client = New Client2(serverRegion)
                 Const loginFailed As String = "Login failed: Client.InitAsync() did not complete successfully."
                 lastErrorMsg = If(Not Await Me.Client.InitAsync(),
                                   loginFailed,
-                                  Me.Client.GetRecentData())
+                                  Await Me.Client.GetRecentDataAsync())
 
             End If
             If IsNullOrWhiteSpace(value:=lastErrorMsg) Then
@@ -277,12 +291,17 @@ Public Class LoginDialog
                         loggedOnUser:=New CareLinkUserDataRecord(parent:=s_allUserSettingsData),
                         key:=NameOf(CareLinkUserDataRecord.CareLinkUserName), value:=GetUserName())
                 End If
-                Me.DialogResult = DialogResult.OK
-                Me.Hide()
+                If _showTcs IsNot Nothing Then
+                    _showTcs.TrySetResult(DialogResult.OK)
+                    Me.Close()
+                Else
+                    Me.DialogResult = DialogResult.OK
+                    Me.Hide()
+                End If
             Else
                 httpStatusCode = If(httpStatusCode <> 0,
-                                        httpStatusCode,
-                                        Me.Client.GetHttpStatusCode)
+                                    httpStatusCode,
+                                    Me.Client.GetHttpStatusCode)
                 Me.LoginStatus.Text = lastErrorMsg
                 ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMsg, httpStatusCode)
                 If Client2.Auth_Error_Codes.Contains(value:=httpStatusCode) Then
@@ -293,9 +312,10 @@ Public Class LoginDialog
                     End If
                 End If
 
-                Dim networkDownMessage As String = If(NetworkUnavailable(),
-                                                      "Due to network being unavailable",
-                                                      $"Network unavailable Response Code = {httpStatusCode}")
+                Dim networkDownMessage As String =
+                    If(NetworkUnavailable(),
+                       "Due to network being unavailable",
+                       $"Network unavailable Response Code = {httpStatusCode}")
 
                 Dim heading As String
 
@@ -318,13 +338,32 @@ Public Class LoginDialog
                     Case MsgBoxResult.Abort
                         End
                     Case MsgBoxResult.Ignore
-                        Me.DialogResult = DialogResult.Ignore
+                        If _showTcs IsNot Nothing Then
+                            _showTcs.TrySetResult(result:=DialogResult.Ignore)
+                            Me.Close()
+                        Else
+                            Me.DialogResult = DialogResult.Ignore
+                        End If
                     Case MsgBoxResult.Retry
-                        Me.DialogResult = DialogResult.Retry
+                        If _showTcs IsNot Nothing Then
+                            _showTcs.TrySetResult(result:=DialogResult.Retry)
+                        Else
+                            Me.DialogResult = DialogResult.Retry
+                        End If
                     Case MsgBoxResult.Ok
-                        Me.DialogResult = DialogResult.OK
+                        If _showTcs IsNot Nothing Then
+                            _showTcs.TrySetResult(result:=DialogResult.OK)
+                            Me.Close()
+                        Else
+                            Me.DialogResult = DialogResult.OK
+                        End If
                     Case MsgBoxResult.Cancel
-                        Me.DialogResult = DialogResult.Cancel
+                        If _showTcs IsNot Nothing Then
+                            _showTcs.TrySetResult(result:=DialogResult.Cancel)
+                            Me.Close()
+                        Else
+                            Me.DialogResult = DialogResult.Cancel
+                        End If
                 End Select
             End If
         Catch ex As Exception
@@ -417,7 +456,6 @@ Public Class LoginDialog
     ''' </summary>
     Private Sub UsernameComboBox_Leave(sender As Object, e As EventArgs) Handles UsernameComboBox.Leave
         Try
-
             Dim userRecord As CareLinkUserDataRecord = Nothing
             If s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.Text, userRecord) Then
                 If userRecord.CareLinkUserName.EqualsNoCase(Me.UsernameComboBox.Text) Then
@@ -487,12 +525,27 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Overrides the OnHandleCreated method to enable dark mode
-    '''  for the dialog when its handle is created.
+    ''' Shows the dialog in an async-friendly way. Disables the owner to emulate modal behavior
+    ''' and returns when the dialog completes (OK/Cancel/Retry/etc.).
     ''' </summary>
-    ''' <param name="e">The event data.</param>
-    Protected Overrides Sub OnHandleCreated(e As EventArgs)
-        MyBase.OnHandleCreated(e)
-        EnableDarkMode(hwnd:=Me.Handle)
-    End Sub
+    Public Overloads Async Function ShowDialogAsync(owner As IWin32Window) As Task(Of DialogResult)
+        _showTcs = New TaskCompletionSource(Of DialogResult)()
+
+        Dim ownerForm As Form = TryCast(owner, Form)
+        If ownerForm IsNot Nothing Then
+            ownerForm.Enabled = False
+        End If
+
+        ' Show modelessly with owner so dialog is positioned properly
+        Me.Show(owner)
+
+        Dim result As DialogResult = Await _showTcs.Task
+
+        If ownerForm IsNot Nothing Then
+            ownerForm.Enabled = True
+        End If
+
+        Return result
+    End Function
+
 End Class

@@ -95,17 +95,16 @@ Public Module Discover
     '''  Thrown if the country code is not supported or if configuration
     '''  data cannot be retrieved.
     ''' </exception>
-    Public Function GetConfig(httpClient As HttpClient, country As String, serverRegion As Region) As JsonElement
+    Public Async Function GetConfigAsync(httpClient As HttpClient, country As String, serverRegion As Region) As Task(Of JsonElement)
         Dim requestUri As String = If(serverRegion <> Region.Europe,
                                         s_discoverUrl(key:="US"),
                                         s_discoverUrl(key:="EU"))
-        Dim json As String = httpClient.GetStringAsync(requestUri).Result
+        Dim json As String = Await httpClient.GetStringAsync(requestUri).ConfigureAwait(continueOnCapturedContext:=False)
         Dim discoveryElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
         Dim configJson As JsonElement = GetConfigJson(country, serverRegion, discoveryElement)
 
         Dim ssoConfigurationKey As String = configJson.GetProperty(propertyName:="UseSSOConfiguration").GetString()
-        Dim resp As String =
-            httpClient.GetStringAsync(requestUri:=configJson.GetProperty(propertyName:=ssoConfigurationKey).GetString()).Result
+        Dim resp As String = Await httpClient.GetStringAsync(requestUri:=configJson.GetProperty(propertyName:=ssoConfigurationKey).GetString()).ConfigureAwait(continueOnCapturedContext:=False)
         Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(resp)
 
         Dim hostname As String = ssoConfig.Server.Hostname
@@ -133,42 +132,44 @@ Public Module Discover
     ''' A <see cref="DiscoveryRecord"/> containing the configuration data for the specified country,
     ''' or <see langword="Nothing"/> if an error occurs.
     ''' </returns>
-    Public Function GetDiscoveryData(ByRef lastErrorMsg As String, ByRef httpStatusCode As Integer) As DiscoveryRecord
+    Public Async Function GetDiscoveryDataAsync() As Task(Of (DiscoveryRecord, String, Integer))
         Dim discoveryUrl As String = If(s_countryCode.EqualsNoCase("US"),
                                         s_discoverUrl(key:="US"),
                                         s_discoverUrl(key:="EU"))
-        httpStatusCode = 0 ' Default value meaning no response received yet
+        Dim lastErrorMsg As String
+        Dim httpStatusCode As Integer = 0 ' Default value meaning no response received yet
         Try
             Using client As New HttpClient()
-                Dim response As HttpResponseMessage = client.GetAsync(requestUri:=discoveryUrl).Result
-                httpStatusCode = CType(response.StatusCode, Integer)
+                Using response As HttpResponseMessage = Await client.GetAsync(requestUri:=discoveryUrl).ConfigureAwait(continueOnCapturedContext:=False)
+                    httpStatusCode = CType(response.StatusCode, Integer)
 
-                ' Use centralized response inspection to ensure common statuses are surfaced.
-                Try
-                    response.ThrowIfFailure()
-                Catch uaEx As UnauthorizedAccessException
-                    lastErrorMsg = $"Unauthorized access when fetching discovery data: {uaEx.Message}"
-                    Debug.WriteLine(message:=lastErrorMsg)
-                    Return Nothing
-                Catch argEx As ArgumentException
-                    lastErrorMsg = $"Bad request fetching discovery data: {argEx.Message}"
-                    Debug.WriteLine(message:=lastErrorMsg)
-                    Return Nothing
-                Catch httpEx As HttpRequestException
-                    lastErrorMsg = $"HTTP request failed: {httpEx.Message}"
-                    Debug.WriteLine(message:=lastErrorMsg)
-                    Return Nothing
-                End Try
+                    ' Use centralized response inspection to ensure common statuses are surfaced.
+                    Try
+                        Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
+                    Catch uaEx As UnauthorizedAccessException
+                        lastErrorMsg = $"Unauthorized access when fetching discovery data: {uaEx.Message}"
+                        Debug.WriteLine(message:=lastErrorMsg)
+                        Return (Nothing, lastErrorMsg, httpStatusCode)
+                    Catch argEx As ArgumentException
+                        lastErrorMsg = $"Bad request fetching discovery data: {argEx.Message}"
+                        Debug.WriteLine(message:=lastErrorMsg)
+                        Return (Nothing, lastErrorMsg, httpStatusCode)
+                    Catch httpEx As HttpRequestException
+                        lastErrorMsg = $"HTTP request failed: {httpEx.Message}"
+                        Debug.WriteLine(message:=lastErrorMsg)
+                        Return (Nothing, lastErrorMsg, httpStatusCode)
+                    End Try
 
-                Dim json As String = response.Content.ReadAsStringAsync().Result
-                Dim result As DiscoveryRecord
-                Try
-                    result = JsonSerializer.Deserialize(Of DiscoveryRecord)(json, options:=s_jsonDesterilizeOptions)
-                Catch ex As Exception
-                    Stop
-                    Throw
-                End Try
-                Return result
+                    Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
+                    Dim result As DiscoveryRecord
+                    Try
+                        result = JsonSerializer.Deserialize(Of DiscoveryRecord)(json, options:=s_jsonDesterilizeOptions)
+                    Catch ex As Exception
+                        Stop
+                        Throw
+                    End Try
+                    Return (result, String.Empty, httpStatusCode)
+                End Using
             End Using
         Catch ex As AggregateException
             ' AggregateException is common for .Result on async methods when faulted
@@ -201,7 +202,7 @@ Public Module Discover
             Stop
         End Try
 
-        Return Nothing
+        Return (Nothing, lastErrorMsg, httpStatusCode)
     End Function
 
 End Module

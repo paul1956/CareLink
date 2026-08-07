@@ -476,15 +476,15 @@ Public Class DataGridViewNumericUpDownCell
         Dim numberFormatInfo As NumberFormatInfo = CultureInfo.CurrentCulture.NumberFormat
         Dim negativeSignKey As Keys = Keys.None
         Dim negativeSignStr As String = numberFormatInfo.NegativeSign
-        If IsNotNullOrEmpty(negativeSignStr) AndAlso negativeSignStr.Length = 1 Then
-            negativeSignKey = CType(VkKeyScan(negativeSignStr(index:=0)), Keys)
+        If IsNotNullOrEmpty(value:=negativeSignStr) AndAlso negativeSignStr.Length = 1 Then
+            negativeSignKey = CType(VkKeyScan(key:=negativeSignStr(index:=0)), Keys)
         End If
 
-        Return (Char.IsDigit(ChrW(e.KeyCode)) OrElse
-            (e.KeyCode >= Keys.NumPad0 AndAlso e.KeyCode <= Keys.NumPad9) OrElse
-             negativeSignKey = e.KeyCode OrElse
-             Keys.Subtract = e.KeyCode) AndAlso
-            Not e.Shift AndAlso Not e.Alt AndAlso Not e.Control
+        Return (Char.IsDigit(c:=ChrW(CharCode:=e.KeyCode)) OrElse
+               (e.KeyCode >= Keys.NumPad0 AndAlso e.KeyCode <= Keys.NumPad9) OrElse
+               negativeSignKey = e.KeyCode OrElse
+               Keys.Subtract = e.KeyCode) AndAlso
+               Not e.Shift AndAlso Not e.Alt AndAlso Not e.Control
     End Function
 
     ''' <summary>

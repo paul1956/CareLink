@@ -8,6 +8,7 @@ Imports System.Globalization
 Imports System.IO
 Imports System.Text
 Imports System.Text.Json
+Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Imports DataGridViewColumnControls
@@ -49,16 +50,6 @@ Public Class Form1
     End Property
 
 #Region "Overrides"
-
-    ''' <summary>
-    '''  Handles the <see cref="Form.HandleCreated"/> event.
-    '''  Enables dark mode for the form and its controls.
-    ''' </summary>
-    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Protected Overrides Sub OnHandleCreated(e As EventArgs)
-        MyBase.OnHandleCreated(e)
-        EnableDarkMode(hwnd:=Me.Handle)
-    End Sub
 
     ''' <summary>
     '''  Scales the control based on the <paramref name="factor"/>
@@ -334,7 +325,8 @@ Public Class Form1
                 Exit Sub
             End If
 
-            Dim currentDataPoint As DataPoint = result.Series.Points(index:=result.PointIndex)
+            Dim currentDataPoint As DataPoint =
+                result.Series.Points(index:=result.PointIndex)
 
             If currentDataPoint.IsEmpty OrElse currentDataPoint.Color = Color.Transparent Then
                 Me.CursorPanel.Visible = False
@@ -345,10 +337,12 @@ Public Class Form1
                 Case HighLimitSeriesName, HighTiTRSeriesName, LowLimitSeriesName, TargetSgSeriesName
                     Me.CursorPanel.Visible = False
                 Case MarkerSeriesName, BasalSeriesName
-                    Dim markerTags() As String = currentDataPoint.Tag.ToString.Split(separator:=":"c)
+                    Dim markerTags() As String =
+                        currentDataPoint.Tag.ToString.Split(separator:=":"c)
                     If markerTags.Length <= 1 Then
                         If chart1.Name = NameOf(TreatmentMarkersChart) Then
-                            Dim callout As CalloutAnnotation = chart1.FindAnnotation(lastDataPoint:=currentDataPoint)
+                            Dim callout As CalloutAnnotation =
+                                chart1.FindAnnotation(lastDataPoint:=currentDataPoint)
                             callout.BringToFront()
                         Else
                             Me.CursorPanel.Visible = True
@@ -1320,11 +1314,11 @@ Public Class Form1
     Private Sub DgvCareLinkUsers_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) _
         Handles DgvCareLinkUsers.CellEndEdit
 
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        If e.RowIndex < 0 OrElse e.ColumnIndex <= 0 Then
+            Exit Sub
+        End If
         Try
-            Dim dgv As DataGridView = CType(sender, DataGridView)
-            If e.RowIndex < 0 OrElse e.ColumnIndex <= 0 Then
-                Exit Sub
-            End If
             Dim currentValue As String = dgv.CurrentCell.Value.ToString
             If currentValue = dgv.Tag.ToString Then
                 Exit Sub ' No change, exit early
@@ -1619,6 +1613,39 @@ Public Class Form1
 #End Region ' Dgv Insulin Events
 
 #Region "Dgv Last Alarm Events"
+    Private Sub DgvLastAlarm_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) _
+        Handles DgvLastAlarm.CellFormatting
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        ' Ignore header/invalid rows and only handle format the "Message" column
+        If e.RowIndex < 0 OrElse e.ColumnIndex <> dgv.Columns(columnName:="Message").Index Then
+            Exit Sub
+        End If
+        Try
+            ' Safely get the Key cell as a string (handles DBNull/Nothing)
+            Dim keyValue As String = Convert.ToString(dgv.Rows(index:=e.RowIndex).Cells(columnName:="Key").Value)
+            ' Only apply if Key column equals "backgroundColor"
+            If keyValue.EqualsNoCase("backgroundColor") Then
+                Dim colorString As String = dgv.Rows(index:=e.RowIndex).Cells(columnName:="Value").Value?.ToString()
+
+                ' Validate and parse color string
+                If Not String.IsNullOrWhiteSpace(value:=colorString) AndAlso
+                    colorString.StartsWithNoCase(value:="0x") Then
+                    Dim argb As Integer
+                    If Integer.TryParse(colorString.AsSpan(start:=2),
+                                         style:=NumberStyles.HexNumber,
+                                         provider:=Nothing,
+                                         result:=argb) Then
+                        ' Convert ARGB integer to Color
+                        Dim c As Color = Color.FromArgb(argb)
+                        e.CellStyle.BackColor = c
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+            MessageBox.Show(text:=$"Error formatting cell: {ex.Message}")
+        End Try
+    End Sub
+
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event
@@ -1964,7 +1991,8 @@ Public Class Form1
                     dgv.CellFormattingSingleValue(e, digits:=1)
                 End If
             Case 1
-                e.Value = eValue.Replace(oldValue:=":", newValue:=" : ")
+                Dim input As String = e.Value.ToString()
+                e.Value = Regex.Replace(input, pattern:="\s*:\s*", replacement:=" : ")
             Case 2
                 If e.Value IsNot Nothing Then
                     Dim align As DataGridViewContentAlignment
@@ -1986,8 +2014,6 @@ Public Class Form1
                              ServerDataEnum.infusionStatusIconSelection,
                              ServerDataEnum.pumpBatteryLevelTime,
                              ServerDataEnum.pumpBatteryIconSelection
-
-
                             align = DataGridViewContentAlignment.MiddleLeft
                             e.CellStyle.SetCellStyle(align, pad:=New Padding(all:=1))
 
@@ -2110,7 +2136,7 @@ Public Class Form1
         If e.RowIndex < 0 OrElse _updating Then Exit Sub
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim value As String = dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex).Value.ToString
-        If value.StartsWith(value:=ClickToShowDetails) Then
+        If value.StartsWithNoCase(value:=ClickToShowDetails) Then
             With Me.TabControlPage1
                 Dim key As String = dgv.Rows(index:=e.RowIndex).Cells(columnName:="key").Value.ToString
                 Select Case key.GetItemIndex()
@@ -2429,7 +2455,7 @@ Public Class Form1
     '''  This event is used to finalize the setup of the form after it has been
     '''  displayed to the user.
     ''' </remarks>
-    Private Sub Form1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+    Private Async Sub Form1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.Fix(c:=Me)
 
         Me.CurrentSgLabel.Parent = Me.SmartGuardShieldPictureBox
@@ -2479,9 +2505,9 @@ Public Class Form1
         Me.NotifyIcon1.Visible = False
         Application.DoEvents()
 
-        If DoOptionalLoginAndUpdateData(owner:=Me,
-                                        updateAllTabs:=False,
-                                        fileToLoad:=FileToLoadOptions.NewUser) Then
+        If Await DoOptionalLoginAndUpdateDataAsync(owner:=Me,
+                                                    updateAllTabs:=False,
+                                                    fileToLoad:=FileToLoadOptions.NewUser) Then
 
             Me.UpdateAllTabPages(fromFile:=False)
         End If
@@ -2519,7 +2545,7 @@ Public Class Form1
         Me.TabControlPage1.Visible = True
         Dim dgv As DataGridView = CType(Me.TabControlPage1.TabPages(index:=3).Controls(index:=0), DataGridView)
         For Each row As DataGridViewRow In dgv.Rows
-            If row.Cells(index:=1).FormattedValue.ToString.StartsWith(value:="medicalDeviceInformation") Then
+            If row.Cells(index:=1).FormattedValue.ToString.StartsWithNoCase(value:="medicalDeviceInformation") Then
                 dgv.CurrentCell = dgv.Rows(row.Index).Cells(index:=1)
                 _dgvSummaryPrevRowIndex = dgv.CurrentCell.RowIndex
                 _dgvSummaryPrevColIndex = dgv.CurrentCell.ColumnIndex
@@ -2822,8 +2848,8 @@ Public Class Form1
     ''' <remarks>
     '''  The user can select a saved data file to load and process.
     ''' </remarks>
-    Private Sub MenuStartUseDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartLoadDataFile.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(
+    Private Async Sub MenuStartUseDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartLoadDataFile.Click
+        Dim success As Boolean = Await DoOptionalLoginAndUpdateDataAsync(
             owner:=Me,
             updateAllTabs:=True,
             fileToLoad:=FileToLoadOptions.Snapshot)
@@ -2840,9 +2866,8 @@ Public Class Form1
     ''' <remarks>
     '''  The last saved file will be loaded and processed to update the application state.
     ''' </remarks>
-    Private Sub MenuStartUseLastSaved_Click(sender As Object, e As EventArgs) Handles MenuStartUseLastFile.Click
-        Dim success As Boolean =
-            DoOptionalLoginAndUpdateData(owner:=Me,
+    Private Async Sub MenuStartUseLastSaved_Click(sender As Object, e As EventArgs) Handles MenuStartUseLastFile.Click
+        Dim success As Boolean = Await DoOptionalLoginAndUpdateDataAsync(owner:=Me,
                                          updateAllTabs:=True,
                                          fileToLoad:=FileToLoadOptions.LastSaved)
         Me.MenuStartSaveSnapshot.Enabled = Not success
@@ -2860,8 +2885,8 @@ Public Class Form1
     '''  The user will be prompted to log in, and their data will be updated
     '''  based on their account information.
     ''' </remarks>
-    Private Sub MenuStartUserLogin_Click(sender As Object, e As EventArgs) Handles MenuStartUserLogin.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(
+    Private Async Sub MenuStartUserLogin_Click(sender As Object, e As EventArgs) Handles MenuStartUserLogin.Click
+        Dim success As Boolean = Await DoOptionalLoginAndUpdateDataAsync(
             owner:=Me,
             updateAllTabs:=True,
             fileToLoad:=FileToLoadOptions.NewUser)
@@ -2877,8 +2902,8 @@ Public Class Form1
     ''' <remarks>
     '''  The test data will be loaded and processed to simulate a CareLink™ environment.
     ''' </remarks>
-    Private Sub MenuStartUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartUseTestData.Click
-        Dim success As Boolean = DoOptionalLoginAndUpdateData(
+    Private Async Sub MenuStartUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartUseTestData.Click
+        Dim success As Boolean = Await DoOptionalLoginAndUpdateDataAsync(
             owner:=Me,
             updateAllTabs:=True,
             fileToLoad:=FileToLoadOptions.TestData)
@@ -3370,7 +3395,7 @@ Public Class Form1
     '''  including the setting name and new value.
     ''' </param>
     Private Sub MySettings_SettingChanging(sender As Object, e As SettingChangingEventArgs)
-        If e.SettingName.StartsWith(value:="System") Then Exit Sub
+        If e.SettingName.StartsWithNoCase(value:="System") Then Exit Sub
 
         Dim value As String = Convert.ToString(value:=e.NewValue)
         If EqualsNoCase(My.Settings(propertyName:=e.SettingName), value) Then Exit Sub
@@ -3423,6 +3448,9 @@ Public Class Form1
         Last24HrCarbsLabel.MouseHover,
         Last24HrCarbsValueLabel.MouseHover
 
+        If s_totalCarbs = 0 Then
+            Exit Sub
+        End If
         Dim caption As String = $"Carb Ratio {CDbl(s_totalCarbs / s_totalManualBolus):N1}"
         _carbRatio.SetToolTip(control:=DirectCast(sender, Label), caption)
     End Sub
@@ -3650,45 +3678,60 @@ Public Class Form1
     '''  The method checks if updates are in progress, retrieves recent data,
     '''  and updates the UI accordingly.
     ''' </remarks>
-    Private Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
+    Private Async Sub ServerUpdateTimer_Tick(sender As Object, e As EventArgs) Handles ServerUpdateTimer.Tick
         SetServerUpdateTimer(Start:=False)
         Dim lastErrorMessage As String = String.Empty
+
+        ' Prevent concurrent updates without holding the lock across awaits
         SyncLock _updatingLock
             If _updating Then
                 Stop
-            Else
-                _updating = True
-                RecentData = Nothing
-                lastErrorMessage = Client?.GetRecentData()
-                If RecentDataEmpty() Then
-                    If Client Is Nothing OrElse IsNotNullOrEmpty(value:=lastErrorMessage) Then
-                        Do While True
-                            LoginDialog.LoginSourceAutomatic = FileToLoadOptions.Login
-                            Dim result As DialogResult = LoginDialog.ShowDialog(owner:=Me)
-                            Select Case result
-                                Case DialogResult.OK
-                                    Exit Do
-                                Case DialogResult.Cancel
-                                    SetServerUpdateTimer(Start:=False)
-                                    Return
-                                Case DialogResult.Retry
-                            End Select
-                        Loop
-
-                        Client = LoginDialog.Client
-                    End If
-                    lastErrorMessage = Client.GetRecentData()
-                End If
-                ReportLoginStatus(
-                    Me.LoginStatus,
-                    hasErrors:=RecentDataEmpty,
-                    lastErrorMessage)
-
-                Me.Cursor = Cursors.Default
-                Application.DoEvents()
+                Return
             End If
-            _updating = False
+            _updating = True
         End SyncLock
+
+        Try
+            RecentData = Nothing
+
+            ' Retrieve recent data asynchronously
+            lastErrorMessage = If(Client IsNot Nothing,
+                                  Await Client.GetRecentDataAsync(),
+                                  String.Empty)
+
+            If RecentDataEmpty() Then
+                If Client Is Nothing OrElse IsNotNullOrEmpty(value:=lastErrorMessage) Then
+                    Do
+                        LoginDialog.LoginSourceAutomatic = FileToLoadOptions.Login
+                        Dim result As DialogResult = Await LoginDialog.ShowDialogAsync(owner:=Me)
+                        Select Case result
+                            Case DialogResult.OK
+                                Exit Do
+                            Case DialogResult.Cancel
+                                SetServerUpdateTimer(Start:=False)
+                                Return
+                            Case DialogResult.Retry
+                        End Select
+                    Loop
+
+                    Client = LoginDialog.Client
+                End If
+
+                lastErrorMessage = Await Client.GetRecentDataAsync()
+            End If
+
+            ReportLoginStatus(
+                Me.LoginStatus,
+                hasErrors:=RecentDataEmpty,
+                lastErrorMessage)
+
+            Me.Cursor = Cursors.Default
+            Application.DoEvents()
+        Finally
+            SyncLock _updatingLock
+                _updating = False
+            End SyncLock
+        End Try
 
         Dim lastMedicalDeviceDataUpdateServerEpochString As String = EmptyString
         Dim sgString As String = "---"
@@ -4828,11 +4871,11 @@ Public Class Form1
             End If
         End If
 
-        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Dim totalPercent As String = If(s_totalDailyDose = 0,
                                         "???",
                                         $"{CInt(s_totalBasal / s_totalDailyDose * 100)}")
 
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Me.Last24HrBasalUnitsLabel.Text = String.Format(provider, format:=$"{s_totalBasal:F1} U")
         Me.Last24HrBasalPercentLabel.Text = $"{totalPercent}%"
 

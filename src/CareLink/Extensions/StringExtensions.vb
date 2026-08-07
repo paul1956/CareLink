@@ -384,7 +384,6 @@ Public Module StringExtensions
     End Function
 
 #Region "IgnoreCase String Comparisons"
-
     ''' <summary>
     '''  Checks if a string contains another string, ignoring case.
     ''' </summary>
