@@ -396,9 +396,9 @@ Friend Class Client2
 
             Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, options)
             _country = If(payload.Country, s_countryCode)
-            configJsonElement = Await Discover.GetConfigAsync(httpClient:=_httpClient,
-                                                              country:=_country,
-                                                              Me.serverRegion)
+            configJsonElement =
+                Await GetConfigAsync(httpClient:=_httpClient, country:=_country, Me.serverRegion)
+
             Me.Config = configJsonElement.ToStringDictionary()
 
             ' Call user string; handle typed failures
@@ -561,7 +561,7 @@ Friend Class Client2
                     _lastHttpStatusCode = resp.StatusCode
                     Debug.WriteLine(message:=$"   status: {CInt(_lastHttpStatusCode)}")
 
-                    If resp.StatusCode <> Net.HttpStatusCode.OK Then
+                    If resp.StatusCode <> HttpStatusCode.OK Then
                         Throw New Exception(message:="ERROR: failed to refresh token")
                     End If
                     Dim json As String = Await resp.Content.ReadAsStringAsync()

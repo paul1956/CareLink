@@ -43,9 +43,9 @@ Public Class PositionForm
         })
 
         ' Use DgvExportHelpers public methods as handlers (they expect the sender ToolStripMenuItem)
-        AddHandler _copyWithHeaderMenuItem.Click, AddressOf DgvExportHelpers.CopyToClipboardWithHeaders
-        AddHandler _copyWithoutHeaderMenuItem.Click, AddressOf DgvExportHelpers.CopyToClipboardWithoutHeaders
-        AddHandler _copyToExcelMenuItem.Click, AddressOf DgvExportHelpers.CopyDataToExcel
+        AddHandler _copyWithHeaderMenuItem.Click, AddressOf CopyToClipboardWithHeaders
+        AddHandler _copyWithoutHeaderMenuItem.Click, AddressOf CopyToClipboardWithoutHeaders
+        AddHandler _copyToExcelMenuItem.Click, AddressOf CopyDataToExcel
 
         Me.DataGridView1.ContextMenuStrip = _contextMenu
 

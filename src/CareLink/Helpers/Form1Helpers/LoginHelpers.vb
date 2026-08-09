@@ -14,7 +14,7 @@ Friend Module LoginHelpers
     Public ReadOnly Property LoginDialog As LoginDialog
         Get
             If s_loginDialog Is Nothing Then
-                UiInvoker.Invoke(owner:=My.Forms.Form1,
+                Invoke(owner:=My.Forms.Form1,
                                  method:=Sub()
                                              If s_loginDialog Is Nothing Then
                                                  s_loginDialog = New LoginDialog()

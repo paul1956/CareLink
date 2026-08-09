@@ -52,9 +52,9 @@ Friend Module ControlInspector
                     Dim sc As SplitContainer = TryCast(current.Parent, SplitContainer)
                     If sc IsNot Nothing Then
                         Dim panelLabel As String = current.GetType().Name
-                        If Object.ReferenceEquals(sc.Panel1, current) Then
+                        If ReferenceEquals(sc.Panel1, current) Then
                             panelLabel = "Panel1"
-                        ElseIf Object.ReferenceEquals(sc.Panel2, current) Then
+                        ElseIf ReferenceEquals(sc.Panel2, current) Then
                             panelLabel = "Panel2"
                         End If
 
@@ -143,9 +143,9 @@ Friend Module ControlInspector
         Dim sc As SplitContainer = TryCast(parent.Parent, SplitContainer)
         If sc IsNot Nothing Then
             Dim panelLabel As String = "Panel"
-            If Object.ReferenceEquals(sc.Panel1, parent) Then
+            If ReferenceEquals(sc.Panel1, parent) Then
                 panelLabel = "Panel1"
-            ElseIf Object.ReferenceEquals(sc.Panel2, parent) Then
+            ElseIf ReferenceEquals(sc.Panel2, parent) Then
                 panelLabel = "Panel2"
             End If
 

@@ -19,35 +19,38 @@ Friend Module Form1TransmitterBatteryHelper
         End Select
     End Function
 
+    Private Sub Form1SensorDataUpdate()
+        If PatientData.ConduitSensorInRange Xor PatientData.AppModelType = "INSTINCT_10" Then
+            If PatientData.CgmInfo.SensorType = "DURABLE" Then
+                Form1.TransmitterBatteryPictureBox.Image = GetBatteryImage(PatientData.GstBatteryLevel)
+                Form1.TransmitterBatteryPercentLabel.Text = $"{PatientData.GstBatteryLevel}%"
+            Else
+                If PatientData.CgmInfo.SensorProductModel?.TrimEnd = "MMT-5120" Then
+                    Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToSimpleraOK
+                    Form1.TransmitterBatteryPercentLabel.Text = $"Simplera{vbCrLf}Connected"
+                ElseIf PatientData.CgmInfo.SensorProductModel?.TrimEnd = "MMT-1894" Then
+                    Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToInstinctOK
+                    Form1.TransmitterBatteryPercentLabel.Text = $"Instinct{vbCrLf}Connected"
+                Else
+                    ' default for Disposible sensor
+                    Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToSimpleraOK
+                    Form1.TransmitterBatteryPercentLabel.Text = $"Simplera{vbCrLf}Connected"
+                End If
+            End If
+        Else
+            Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToTransmitterNotOK
+            Form1.TransmitterBatteryPercentLabel.Text = "N/A"
+        End If
+    End Sub
+
     ''' <summary>
     ''' Updates the sensor status on Form1.
     ''' </summary>
-    Friend Sub UpdateSensorData()
-        UiInvoker.Invoke(owner:=My.Forms.Form1,
-                         method:=
-            Sub()
-                If PatientData.ConduitSensorInRange Xor PatientData.AppModelType = "INSTINCT_10" Then
-                    If PatientData.CgmInfo.SensorType = "DURABLE" Then
-                        Form1.TransmitterBatteryPictureBox.Image = GetBatteryImage(PatientData.GstBatteryLevel)
-                        Form1.TransmitterBatteryPercentLabel.Text = $"{PatientData.GstBatteryLevel}%"
-                    Else
-                        If PatientData.CgmInfo.SensorProductModel?.TrimEnd = "MMT-5120" Then
-                            Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToSimpleraOK
-                            Form1.TransmitterBatteryPercentLabel.Text = $"Simplera{vbCrLf}Connected"
-                        ElseIf PatientData.CgmInfo.SensorProductModel?.TrimEnd = "MMT-1894" Then
-                            Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToInstinctOK
-                            Form1.TransmitterBatteryPercentLabel.Text = $"Instinct{vbCrLf}Connected"
-                        Else
-                            ' default for Disposible sensor
-                            Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToSimpleraOK
-                            Form1.TransmitterBatteryPercentLabel.Text = $"Simplera{vbCrLf}Connected"
-                        End If
-                    End If
-                Else
-                    Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToTransmitterNotOK
-                    Form1.TransmitterBatteryPercentLabel.Text = "N/A"
-                End If
-            End Sub)
+    Friend Sub ThreadSafeForm1SensorDataUpdate()
+        Invoke(owner:=My.Forms.Form1,
+               method:=Sub()
+                           Form1SensorDataUpdate()
+                       End Sub)
 
     End Sub
 

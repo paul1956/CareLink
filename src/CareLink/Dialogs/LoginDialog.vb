@@ -251,7 +251,7 @@ Public Class LoginDialog
             Dim lastErrorMsg As String
             Dim httpStatusCode As Integer = 0
             Dim discoveryTuple As (discoveryRecord As DiscoveryRecord, lastErrorMsg As String, httpStatusCode As Integer) =
-                Await Discover.GetDiscoveryDataAsync()
+                Await GetDiscoveryDataAsync()
             Me.ClientDiscover = discoveryTuple.discoveryRecord
             lastErrorMsg = discoveryTuple.lastErrorMsg
             httpStatusCode = discoveryTuple.httpStatusCode
