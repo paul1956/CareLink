@@ -69,10 +69,9 @@ Friend Module LoginHelpers
     '''  <see langword="True"/> if login and data update succeeded;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Friend Async Function DoOptionalLoginAndUpdateDataAsync(
-        owner As Form1,
-        updateAllTabs As Boolean,
-        fileToLoad As FileToLoadOptions) As Task(Of Boolean)
+    Friend Async Function OptionalLoginUpdateDataAsync(owner As Form1,
+                                                       updateAllTabs As Boolean,
+                                                       fileToLoad As FileToLoadOptions) As Task(Of Boolean)
 
         Dim serverTimerEnabled As Boolean = SetServerUpdateTimer(Start:=False)
         s_autoBasalDeliveryMarkers.Clear()
@@ -83,8 +82,7 @@ Friend Module LoginHelpers
                 owner.Text = $"{SavedTitle} Using Test Data from 'SampleUserV2Data.json'"
                 CurrentDateCulture = New CultureInfo(name:="en-US")
                 Dim path As String = GetTestDataPath()
-                Dim json As String = File.ReadAllText(path)
-                PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
+                PatientDataElement = ReadJsonElementFromFile(path)
                 DeserializePatientElement()
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path)
@@ -202,8 +200,7 @@ Friend Module LoginHelpers
                 owner.TabControlPage1.Visible = True
                 owner.TabControlPage2.Visible = True
                 CurrentDateCulture = lastDownloadFileWithPath.ExtractCulture(fixedPart, fuzzy:=True)
-                Dim json As String = File.ReadAllText(path:=lastDownloadFileWithPath)
-                PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
+                PatientDataElement = ReadJsonElementFromFile(lastDownloadFileWithPath)
                 DeserializePatientElement()
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path:=lastDownloadFileWithPath)
@@ -351,7 +348,7 @@ Friend Module LoginHelpers
     Friend Sub SetUpCareLinkUser()
         Dim path As String = GetUserSettingsPath()
         Dim json As String = File.ReadAllText(path)
-        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonDesterilizeOptions)
+        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonDeserializationOptions)
     End Sub
 
     ''' <summary>
@@ -391,8 +388,10 @@ Friend Module LoginHelpers
             Dim userSettingsFileFullPath As String = GetUserSettingsPath()
 
             If File.Exists(path:=userSettingsFileFullPath) Then
-                Dim json As String = File.ReadAllText(path:=userSettingsFileFullPath)
-                CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonSerializerOptions)
+                Dim element As JsonElement = ReadJsonElementFromFile(userSettingsFileFullPath)
+                If Not element.IsNullOrUndefined Then
+                    CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(element, options:=s_jsonSerializerOptions)
+                End If
 
                 If CurrentUser.InsulinRealAit = 0 Then
                     CurrentUser.InsulinRealAit = s_insulinTypes.Values(index:=0).AitHours

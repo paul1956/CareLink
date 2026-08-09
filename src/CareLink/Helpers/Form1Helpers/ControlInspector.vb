@@ -109,7 +109,7 @@ Friend Module ControlInspector
 
                 ' Other native windowed child controls may be present; treat them as native if they
                 ' don't expose a managed Name and their class indicates a native window.
-                If String.IsNullOrWhiteSpace(ctrl.Name) Then
+                If IsNullOrWhiteSpace(value:=ctrl.Name) Then
                     ' Common native control class prefixes
                     If cls.StartsWithNoCase(value:="MS") OrElse cls.Contains(value:="Sys") Then
                         Return True

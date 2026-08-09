@@ -301,7 +301,7 @@ Public Class LoginDialog
             Else
                 httpStatusCode = If(httpStatusCode <> 0,
                                     httpStatusCode,
-                                    Me.Client.GetHttpStatusCode)
+                                    Me.Client.HttpStatusCode)
                 Me.LoginStatus.Text = lastErrorMsg
                 ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMsg, httpStatusCode)
                 If Client2.Auth_Error_Codes.Contains(value:=httpStatusCode) Then
@@ -529,7 +529,9 @@ Public Class LoginDialog
     ''' and returns when the dialog completes (OK/Cancel/Retry/etc.).
     ''' </summary>
     Public Overloads Async Function ShowDialogAsync(owner As IWin32Window) As Task(Of DialogResult)
-        _showTcs = New TaskCompletionSource(Of DialogResult)()
+        If _showTcs Is Nothing Then
+            _showTcs = New TaskCompletionSource(Of DialogResult)
+        End If
 
         Dim ownerForm As Form = TryCast(owner, Form)
         If ownerForm IsNot Nothing Then

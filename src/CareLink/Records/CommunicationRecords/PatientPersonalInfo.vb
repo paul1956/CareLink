@@ -83,13 +83,18 @@ Public Class PatientPersonalInfo
     <JsonPropertyName("mfaRequired")>
     Public Property MfaRequired As Boolean
 
-    <DisplayName("Username")>
+    <DisplayName("Blinded Status")>
     <Column(Order:=15, TypeName:=NameOf([String]))>
+    <JsonPropertyName("blindedStatus")>
+    Public Property BlindedStatus As String
+
+    <DisplayName("Username")>
+    <Column(Order:=16, TypeName:=NameOf([String]))>
     <JsonPropertyName("username")>
     Public Property username As String
 
     <DisplayName("Insulin Type")>
-    <Column(Order:=16, TypeName:=NameOf([String]))>
+    <Column(Order:=17, TypeName:=NameOf([String]))>
     <JsonPropertyName("insulinType")>
     Public Property InsulinType As String
 

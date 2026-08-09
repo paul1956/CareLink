@@ -9,28 +9,16 @@ Public Class ClientInfo
     <JsonPropertyName("client_id")>
     Public Property ClientId As String
 
+    <JsonPropertyName("client_secret")>
+    Public Property ClientSecret As String
+
     <JsonPropertyName("scope")>
     Public Property Scope As String
 
     <JsonPropertyName("redirect_uri")>
-    Public Property RedirectUri As String
+    Public Property RedirectUrl As String
 
-    <JsonPropertyName("environment")>
-    Public Property Environment As String
-
-    <JsonPropertyName("status")>
-    Public Property Status As String
-
-    <JsonPropertyName("registered_by")>
-    Public Property RegisteredBy As String
-
-    <JsonPropertyName("service_ids")>
-    Public Property ServiceIds As String
-
-    <JsonPropertyName("account_plan_mapping_ids")>
-    Public Property AccountPlanMappingIds As String
-
-    <JsonPropertyName("client_key_custom")>
-    Public Property ClientKeyCustom As ClientKeyCustom
+    <JsonPropertyName("audience")>
+    Public Property Audience As String
 
 End Class

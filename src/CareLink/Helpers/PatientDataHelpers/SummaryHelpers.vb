@@ -180,9 +180,8 @@ Friend Module SummaryHelpers
                             Dim jsonString As String = String.Empty
                             key = "AdditionalInfo"
                             If jsonDictionary.TryGetValue(key, value:=jsonString) Then
-                                Dim addInfo As Dictionary(Of String, String) =
-                                    GetAdditionalInformation(json:=jsonString)
-
+                                Dim addInfo As Dictionary(Of String, String) = jsonString.ToDictionary
+                                ToDictionary(jsonString)
                                 If addInfo.TryGetValue("secondaryTime", value:=secondaryTime) Then
                                     s_secondaryTimeReminder = secondaryTime.FormatTimeText()
                                 Else
@@ -196,7 +195,7 @@ Friend Module SummaryHelpers
                         Dim jsonString As String = String.Empty
                         key = "AdditionalInfo"
                         If jsonDictionary.TryGetValue(key, value:=jsonString) Then
-                            Dim addInfo As Dictionary(Of String, String) = GetAdditionalInformation(json:=jsonString)
+                            Dim addInfo As Dictionary(Of String, String) = jsonString.ToDictionary
                             key = keyWord
                             Select Case keyWord
                                 Case "basalName"
@@ -512,6 +511,49 @@ Friend Module SummaryHelpers
             End If
         Next
         Throw New ArgumentException(message:="Key not found", paramName:=NameOf(key))
+    End Function
+
+    ''' <summary>
+    '''  Normalize spacing around colons in the given text while preserving
+    '''  time-like tokens (HH:mm or HH:mm:ss). Times are temporarily replaced
+    '''  with placeholders before normalization and restored afterwards.
+    ''' </summary>
+    ''' <param name="input">The input string to normalize.</param>
+    ''' <returns>The normalized string with times preserved.</returns>
+    Friend Function NormalizeColonSpacingPreservingTimes(input As String) As String
+        If input Is Nothing Then
+            Return input
+        End If
+
+        Dim times As New List(Of String)
+        Const timePattern As String = "\b(?:[01]?\d|2[0-3]):[0-5]\d(?::[0-5]\d)?\b"
+
+        ' Replace times with placeholders and collect originals
+        ' Use a placeholder pattern less likely to be altered by editors or templates: ##TIME{n}##
+        Dim protectedText As String =
+            Regex.Replace(input,
+                          pattern:=timePattern,
+                          evaluator:=Function(m As Match)
+                                         times.Add(item:=m.Value)
+                                         Return $"##TIME{times.Count - 1}##"
+                                     End Function)
+
+        ' Normalize spacing around colons for the rest of the text
+        protectedText =
+            Regex.Replace(input:=protectedText,
+                          pattern:="\s*:\s*",
+                          replacement:=" : ")
+
+        ' Restore original times from the collected list
+        Dim result As String =
+            Regex.Replace(input:=protectedText,
+                          pattern:="##TIME(\d+)##",
+                          evaluator:=Function(m As Match)
+                                         Dim idx As Integer = CInt(m.Groups(groupnum:=1).Value)
+                                         Return If(idx >= 0 AndAlso idx < times.Count, times(index:=idx), m.Value)
+                                     End Function)
+
+        Return result
     End Function
 
 End Module

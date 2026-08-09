@@ -113,7 +113,7 @@ Public Class OAuthBrowserForm
 
     Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs)
         Dim currentUrl As String = Me.WebView21.Source?.ToString()
-        If String.IsNullOrWhiteSpace(value:=currentUrl) Then Return
+        If IsNullOrWhiteSpace(value:=currentUrl) Then Return
 
         ' If we've reached the redirect URI, capture result and close.
         If currentUrl.StartsWithNoCase(value:=_redirectUri) Then
@@ -133,7 +133,7 @@ Public Class OAuthBrowserForm
     End Sub
 
     Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs)
-        If String.IsNullOrWhiteSpace(value:=e.Uri) Then Return
+        If IsNullOrWhiteSpace(value:=e.Uri) Then Return
         If e.Uri.StartsWithNoCase(value:=_redirectUri) Then
             Me.CaptureAndClose(uriString:=e.Uri)
         End If
@@ -141,7 +141,7 @@ Public Class OAuthBrowserForm
 
     Private Sub WebView21_SourceChanged(sender As Object, e As CoreWebView2SourceChangedEventArgs)
         Dim currentUrl As String = Me.WebView21.Source?.ToString()
-        If String.IsNullOrWhiteSpace(value:=currentUrl) Then Return
+        If IsNullOrWhiteSpace(value:=currentUrl) Then Return
         If currentUrl.StartsWithNoCase(value:=_redirectUri) Then
             Me.CaptureAndClose(uriString:=currentUrl)
         End If

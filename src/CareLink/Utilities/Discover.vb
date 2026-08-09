@@ -29,8 +29,11 @@ Public Module Discover
     '''  cannot be found.
     ''' </exception>
     Private Function GetConfigJson(country As String, serverRegion As Region, discoveryElement As JsonElement) As JsonElement
+        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
+
         Dim config As JsonElement
         Dim region As JsonElement
+
         Dim arrayEnumerator As JsonElement.ArrayEnumerator =
             discoveryElement.GetProperty(propertyName:="supportedCountries").EnumerateArray()
 
@@ -52,11 +55,11 @@ Public Module Discover
         End If
         Debug.WriteLine(message:=$"   region: {region}")
         Dim json As String = JsonSerializer.Serialize(value:=region)
-        Dim countryInfo As CountryInfo = JsonSerializer.Deserialize(Of CountryInfo)(json)
+        Dim countryInfo As CountryInfo = JsonSerializer.Deserialize(Of CountryInfo)(json, options)
         For Each value As JsonElement In discoveryElement.GetProperty(propertyName:="CP").EnumerateArray()
             Try
                 Dim json1 As String = JsonSerializer.Serialize(value)
-                Dim cpInfo As CPInfo = JsonSerializer.Deserialize(Of CPInfo)(json:=json1)
+                Dim cpInfo As CPInfo = JsonSerializer.Deserialize(Of CPInfo)(json:=json1, options)
                 If countryInfo.Region = cpInfo.Region Then
                     config = value
                     Exit For
@@ -96,30 +99,34 @@ Public Module Discover
     '''  data cannot be retrieved.
     ''' </exception>
     Public Async Function GetConfigAsync(httpClient As HttpClient, country As String, serverRegion As Region) As Task(Of JsonElement)
+        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
+
         Dim requestUri As String = If(serverRegion <> Region.Europe,
                                         s_discoverUrl(key:="US"),
                                         s_discoverUrl(key:="EU"))
         Dim json As String = Await httpClient.GetStringAsync(requestUri).ConfigureAwait(continueOnCapturedContext:=False)
-        Dim discoveryElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json)
+        Dim discoveryElement As JsonElement = DeserializeJsonElement(json)
         Dim configJson As JsonElement = GetConfigJson(country, serverRegion, discoveryElement)
 
         Dim ssoConfigurationKey As String = configJson.GetProperty(propertyName:="UseSSOConfiguration").GetString()
-        Dim resp As String = Await httpClient.GetStringAsync(requestUri:=configJson.GetProperty(propertyName:=ssoConfigurationKey).GetString()).ConfigureAwait(continueOnCapturedContext:=False)
-        Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(resp)
+        Dim resp As String =
+            Await httpClient.GetStringAsync(requestUri:=configJson.GetProperty(propertyName:=ssoConfigurationKey).GetString()) _
+                            .ConfigureAwait(continueOnCapturedContext:=False)
+        Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(json:=resp, options)
 
         Dim hostname As String = ssoConfig.Server.Hostname
         Dim ssoBaseUrl As String = $"https://{hostname}:{ssoConfig.Server.Port}/{ssoConfig.Server.Prefix}"
-        If ssoBaseUrl.EndsWith("/"c) Then
-            ssoBaseUrl = ssoBaseUrl.TrimEnd("/"c)
+        If ssoBaseUrl.EndsWith(value:="/"c) Then
+            ssoBaseUrl = ssoBaseUrl.TrimEnd(trimChar:="/"c)
         End If
         Dim tokenUrl As String = $"{ssoBaseUrl}{ssoConfig.OAuth.UserInfoEndpointPath}"
 
         json = configJson.GetRawText()
         Dim mutableConfig As Dictionary(Of String, JsonElement) =
-            JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(json)
-        mutableConfig("token_url") = JsonSerializer.Deserialize(Of JsonElement)(json:=$"{Quote}{tokenUrl}{Quote}")
+            JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(json, options)
+        mutableConfig(key:="token_url") = DeserializeJsonElement(json:=$"{Quote}{tokenUrl}{Quote}")
         json = JsonSerializer.Serialize(value:=mutableConfig, options:=s_jsonSerializerOptions)
-        Return JsonSerializer.Deserialize(Of JsonElement)(json)
+        Return DeserializeJsonElement(json)
     End Function
 
     ''' <summary>
@@ -136,6 +143,7 @@ Public Module Discover
         Dim discoveryUrl As String = If(s_countryCode.EqualsNoCase("US"),
                                         s_discoverUrl(key:="US"),
                                         s_discoverUrl(key:="EU"))
+        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
         Dim lastErrorMsg As String
         Dim httpStatusCode As Integer = 0 ' Default value meaning no response received yet
         Try
@@ -163,7 +171,7 @@ Public Module Discover
                     Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
                     Dim result As DiscoveryRecord
                     Try
-                        result = JsonSerializer.Deserialize(Of DiscoveryRecord)(json, options:=s_jsonDesterilizeOptions)
+                        result = JsonSerializer.Deserialize(Of DiscoveryRecord)(json, options)
                     Catch ex As Exception
                         Stop
                         Throw
@@ -176,8 +184,8 @@ Public Module Discover
             Dim messages As New List(Of String)
 
             If ex.InnerExceptions.Count = 1 Then
-                lastErrorMsg = ex.InnerExceptions(0).Message
-                If lastErrorMsg.Contains("No such host is known") Then
+                lastErrorMsg = ex.InnerExceptions(index:=0).Message
+                If lastErrorMsg.Contains(value:="No such host is known") Then
                     httpStatusCode = 1
                 End If
             Else

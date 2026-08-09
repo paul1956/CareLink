@@ -76,7 +76,9 @@ Friend Module NotificationHelpers
         End If
 
         Dim input As String = e.Value.ToString()
-        e.Value = Regex.Replace(input, pattern:="\s*:\s*", replacement:=" : ")
+
+        ' Normalize spacing around colons but preserve any time-like tokens (HH:mm or HH:mm:ss)
+        e.Value = NormalizeColonSpacingPreservingTimes(input)
         dgv.CellFormattingSetForegroundColor(e)
 
         If e.ColumnIndex <> dgv.Columns(columnName:="Message").Index Then
@@ -92,7 +94,7 @@ Friend Module NotificationHelpers
                     dgv.Rows(index:=e.RowIndex).Cells(columnName:="Value").Value?.ToString()
 
                 ' Validate and parse color string
-                If Not String.IsNullOrWhiteSpace(value:=colorString) AndAlso
+                If IsNotNullOrWhiteSpace(value:=colorString) AndAlso
                     colorString.StartsWithNoCase(value:="0x") Then
                     Dim argb As Integer
                     If Integer.TryParse(colorString.AsSpan(start:=2),
@@ -191,7 +193,7 @@ Friend Module NotificationHelpers
         Dim panel As TableLayoutPanel = CType(dgv.Parent, TableLayoutPanel)
         panel.RowStyles(index).SizeType = SizeType.Absolute
         panel.RowStyles(index).Height = dgv.ClientSize.Height
-        panel.BackColor = Color.Yellow
+        panel.BackColor = Color.Wheat
         panel.BorderStyle = BorderStyle.FixedSingle
     End Sub
 
@@ -269,7 +271,6 @@ Friend Module NotificationHelpers
         Dim classCollection As List(Of SummaryRecord)
         Dim jsonDictionary As Dictionary(Of String, String)
         If innerJson.Count > 0 Then
-            innerJson.Reverse()
             For Each jsonDictionary In innerJson
                 classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
                 DisplayNotificationDataTableInDGV(

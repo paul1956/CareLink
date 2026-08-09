@@ -389,14 +389,19 @@ Friend Module DateTimeExtensions
     ''' <param name="dateValue">
     '''  The <see langword="Date"/> to convert.
     ''' </param>
+    ''' <param name="showSeconds">Controls if seconds are displayed</param>
     ''' <returns>
-    '''  A <see langword="String"/> representing the date in "MM/dd/yyyy HH:mm:ss" format.
+    '''  A <see langword="String"/> representing the date in "MM/dd/yyyy HH:mm:ss" format or
+    '''  "MM/dd/yyyy HH:mm" is showSeconds os false.
     ''' </returns>
     <Extension>
-    Public Function ToShortDateTime(dateValue As Date) As String
-        Return $"{dateValue:d} {dateValue:T}"
-    End Function
+    Public Function ToShortDateTime(dateValue As Date,
+                                Optional showSeconds As Boolean = True) As String
 
+        Dim timeFormat As String = If(showSeconds, "T", "t")
+        Return $"{dateValue:d} {dateValue.ToString(format:=timeFormat)}"
+
+    End Function
     ''' <summary>
     '''  Converts a <see cref="Date"/> to a <see langword="String"/>
     '''  with the specified format.
@@ -464,7 +469,7 @@ Friend Module DateTimeExtensions
     ''' </remarks>
     <Extension>
     Public Function TryParseDateStr(s As String) As Date
-        If String.IsNullOrWhiteSpace(s) Then
+        If IsNullOrWhiteSpace(value:=s) Then
             Return Nothing
         End If
 

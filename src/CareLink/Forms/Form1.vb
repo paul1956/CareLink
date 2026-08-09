@@ -37,7 +37,6 @@ Public Class Form1
     Private _summaryChartAbsoluteRectangle As RectangleF
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _updating As Boolean
-
     Private Shared Property TimeInTightRange As (Uint As UInteger, Str As String)
 
     Friend Shared Property Client As Client2
@@ -319,8 +318,7 @@ Public Class Form1
         Dim result As HitTestResult
         Try
             result = chart1.HitTest(e.X, e.Y, ignoreTransparent:=True)
-            If result.Series Is Nothing OrElse
-                result.PointIndex = -1 Then
+            If result.Series Is Nothing OrElse result.PointIndex = -1 Then
                 Me.CursorPanel.Visible = False
                 Exit Sub
             End If
@@ -352,9 +350,15 @@ Public Class Form1
                     markerTags(0) = markerTags(0).Trim
                     If isHomePage Then
                         Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
-                        Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
-                        Me.CursorPictureBox.Visible = True
-                        Me.CursorMessage2Label.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
+                        If Me.CursorPictureBox.SizeMode <> PictureBoxSizeMode.StretchImage Then
+                            Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+                        End If
+                        If Not Me.CursorPictureBox.Visible Then
+                            Me.CursorPictureBox.Visible = True
+                        End If
+                        If Me.CursorMessage2Label.Font Is Nothing OrElse Not Me.CursorMessage2Label.Font.Equals(s_font12Bold) Then
+                            Me.CursorMessage2Label.Font = s_font12Bold
+                        End If
                         Select Case markerTags.Length
                             Case 2
                                 Me.CursorMessage1Label.Text = markerTags(0)
@@ -391,7 +395,9 @@ Public Class Form1
                                     Case "Not used for calibration"
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDot
                                         Dim style As FontStyle = FontStyle.Bold
-                                        Me.CursorMessage2Label.Font = New Font(FamilyName, emSize:=11.0F, style)
+                                        If Me.CursorMessage2Label.Font Is Nothing OrElse Not Me.CursorMessage2Label.Font.Equals(s_font11Bold) Then
+                                            Me.CursorMessage2Label.Font = s_font11Bold
+                                        End If
                                     Case Else
                                         Stop
                                 End Select
@@ -627,7 +633,7 @@ Public Class Form1
                 Case NameOf(BasalPerHour.BasalRate), NameOf(BasalPerHour.BasalRate2)
                     If dgv.Name = NameOf(DgvBasalPerHour) Then
                         dgv.CellFormattingSingleValue(e, digits:=3, TrailingText:=" U/h")
-                        e.CellStyle.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
+                        e.CellStyle.Font = s_font12
                     End If
 
                 Case NameOf(Calibration.bgUnits)
@@ -677,7 +683,7 @@ Public Class Form1
                         minute:=0,
                         second:=0)
                     e.Value = time.ToString(format:=s_timeWithoutMinuteFormat)
-                    e.CellStyle.Font = New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
+                    e.CellStyle.Font = s_font12
 
                 Case NameOf(BannerState.Message)
                     Select Case dgv.Name
@@ -1631,7 +1637,7 @@ Public Class Form1
                 Dim colorString As String = dgv.Rows(index:=e.RowIndex).Cells(columnName:="Value").Value?.ToString()
 
                 ' Validate and parse color string
-                If Not String.IsNullOrWhiteSpace(value:=colorString) AndAlso
+                If Not IsNullOrWhiteSpace(value:=colorString) AndAlso
                     colorString.StartsWithNoCase(value:="0x") Then
                     Dim argb As Integer
                     If Integer.TryParse(colorString.AsSpan(start:=2),
@@ -1995,7 +2001,7 @@ Public Class Form1
                 End If
             Case 1
                 Dim input As String = e.Value.ToString()
-                e.Value = Regex.Replace(input, pattern:="\s*:\s*", replacement:=" : ")
+                e.Value = NormalizeColonSpacingPreservingTimes(input)
             Case 2
                 If e.Value IsNot Nothing Then
                     Dim align As DataGridViewContentAlignment
@@ -2412,14 +2418,12 @@ Public Class Form1
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(index:=1)
 
-        Dim style As FontStyle = FontStyle.Bold
-        Dim emSize As Single = 12.0F
-        Me.DgvBasalPerHour.Font = New Font(FamilyName, emSize, style)
+        Me.DgvBasalPerHour.Font = s_font12Bold
         Dim currentHeaderStyle As DataGridViewCellStyle = Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle.Clone
-        currentHeaderStyle.Font = New Font(FamilyName, emSize, style)
+        currentHeaderStyle.Font = s_font12Bold
         Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle = currentHeaderStyle
         Me.DgvBasalPerHour.DefaultCellStyle = New DataGridViewCellStyle With {
-            .Font = New Font(FamilyName, emSize, style:=FontStyle.Regular)}
+            .Font = s_font12}
         If Debugger.IsAttached Then
             Me.MenuHelpShowControlPositions.Visible = False
         End If
@@ -2508,7 +2512,7 @@ Public Class Form1
         Me.NotifyIcon1.Visible = False
         Application.DoEvents()
 
-        If Await DoOptionalLoginAndUpdateDataAsync(owner:=Me,
+        If Await OptionalLoginUpdateDataAsync(owner:=Me,
                                                     updateAllTabs:=False,
                                                     fileToLoad:=FileToLoadOptions.NewUser) Then
 
@@ -2680,7 +2684,7 @@ Public Class Form1
                             ExceptionHandlerDialog.ReportNameWithPath = EmptyString
                             Try
                                 Dim json As String = ExceptionHandlerDialog.LocalRawData
-                                PatientDataElement = JsonSerializer.Deserialize(Of JsonElement)(json)
+                                PatientDataElement = DeserializeJsonElement(json)
                                 DeserializePatientElement()
                                 Me.TabControlPage2.Visible = True
                                 Me.TabControlPage1.Visible = True
@@ -2825,18 +2829,16 @@ Public Class Form1
             If CurrentPdf.IsValid Then
                 SetServerUpdateTimer(Start:=True)
             Else
-                MsgBox(
-                    heading:=$"Device Setting PDF file Is invalid",
-                    prompt:=GetUserPdfPath(),
-                    buttonStyle:=MsgBoxStyle.OkOnly,
-                    title:="Invalid Settings PDF File")
+                MsgBox(heading:=$"Device Setting PDF file Is invalid",
+                       prompt:=GetUserPdfPath(),
+                       buttonStyle:=MsgBoxStyle.OkOnly,
+                       title:="Invalid Settings PDF File")
             End If
         Else
-            MsgBox(
-                heading:=$"Device Setting PDF file Is missing!",
-                prompt:=GetUserPdfPath(),
-                buttonStyle:=MsgBoxStyle.OkOnly,
-                title:="Missing Settings PDF File")
+            MsgBox(heading:=$"Device Setting PDF file Is missing!",
+                   prompt:=GetUserPdfPath(),
+                   buttonStyle:=MsgBoxStyle.OkOnly,
+                   title:="Missing Settings PDF File")
         End If
     End Sub
 
@@ -2852,10 +2854,10 @@ Public Class Form1
     '''  The user can select a saved data file to load and process.
     ''' </remarks>
     Private Async Sub MenuStartUseDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartLoadDataFile.Click
-        Dim success As Boolean = Await DoOptionalLoginAndUpdateDataAsync(
-            owner:=Me,
-            updateAllTabs:=True,
-            fileToLoad:=FileToLoadOptions.Snapshot)
+        Dim success As Boolean =
+            Await OptionalLoginUpdateDataAsync(owner:=Me,
+                                               updateAllTabs:=True,
+                                               fileToLoad:=FileToLoadOptions.Snapshot)
         Me.MenuStartLoadDataFile.Enabled = Not success
     End Sub
 
@@ -2870,7 +2872,7 @@ Public Class Form1
     '''  The last saved file will be loaded and processed to update the application state.
     ''' </remarks>
     Private Async Sub MenuStartUseLastSaved_Click(sender As Object, e As EventArgs) Handles MenuStartUseLastFile.Click
-        Dim success As Boolean = Await DoOptionalLoginAndUpdateDataAsync(owner:=Me,
+        Dim success As Boolean = Await OptionalLoginUpdateDataAsync(owner:=Me,
                                          updateAllTabs:=True,
                                          fileToLoad:=FileToLoadOptions.LastSaved)
         Me.MenuStartSaveSnapshot.Enabled = Not success
@@ -2889,10 +2891,10 @@ Public Class Form1
     '''  based on their account information.
     ''' </remarks>
     Private Async Sub MenuStartUserLogin_Click(sender As Object, e As EventArgs) Handles MenuStartUserLogin.Click
-        Dim success As Boolean = Await DoOptionalLoginAndUpdateDataAsync(
-            owner:=Me,
-            updateAllTabs:=True,
-            fileToLoad:=FileToLoadOptions.NewUser)
+        Dim success As Boolean =
+            Await OptionalLoginUpdateDataAsync(owner:=Me,
+                                               updateAllTabs:=True,
+                                               fileToLoad:=FileToLoadOptions.NewUser)
     End Sub
 
     ''' <summary>
@@ -2906,10 +2908,10 @@ Public Class Form1
     '''  The test data will be loaded and processed to simulate a CareLink™ environment.
     ''' </remarks>
     Private Async Sub MenuStartUseTestData_Click(sender As Object, e As EventArgs) Handles MenuStartUseTestData.Click
-        Dim success As Boolean = Await DoOptionalLoginAndUpdateDataAsync(
-            owner:=Me,
-            updateAllTabs:=True,
-            fileToLoad:=FileToLoadOptions.TestData)
+        Dim success As Boolean =
+            Await OptionalLoginUpdateDataAsync(owner:=Me,
+                                               updateAllTabs:=True,
+                                               fileToLoad:=FileToLoadOptions.TestData)
         Me.MenuStartSaveSnapshot.Enabled = Not success
     End Sub
 
@@ -3039,9 +3041,13 @@ Public Class Form1
     Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) _
         Handles MenuOptionsEditPumpSettings.Click
 
+        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
+
         SetUpCareLinkUser(forceUI:=True)
-        Dim json As String = File.ReadAllText(path:=GetUserSettingsPath())
-        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonSerializerOptions)
+        Dim element As JsonElement = ReadJsonElementFromFile(path:=GetUserSettingsPath())
+        If Not element.IsNullOrUndefined Then
+            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(element, options)
+        End If
     End Sub
 
     ''' <summary>
@@ -3934,13 +3940,12 @@ Public Class Form1
         Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
         Dim activeInsulinChartArea As ChartArea = CreateChartArea(containingChart:=Me.ActiveInsulinChart)
         Dim labelColor As Color = Me.ActiveInsulinChart.BackColor.ContrastingColor()
-        Dim labelFont As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
 
         With activeInsulinChartArea.AxisY
             .Interval = 2
             .IsInterlaced = False
             With .LabelStyle
-                .Font = labelFont
+                .Font = s_font12Bold
                 .ForeColor = labelColor
                 .Format = "{0}"
             End With
@@ -3951,7 +3956,7 @@ Public Class Form1
             .Maximum = 25
             .Minimum = 0
             .Title = "Active Insulin"
-            .TitleFont = New Font(family:=labelFont.FontFamily, emSize:=14)
+            .TitleFont = s_font14Bold
             .TitleForeColor = labelColor
         End With
         Me.ActiveInsulinChart.ChartAreas.Add(item:=activeInsulinChartArea)
@@ -4066,7 +4071,6 @@ Public Class Form1
         End Select
 
         Dim baseColor As Color = Me.TreatmentMarkersChart.BackColor.ContrastingColor()
-        Dim labelFont As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
 
         With treatmentMarkersChartArea.AxisY
             Dim interval As Single = (TreatmentInsulinRow / 10).RoundToSingle(digits:=3)
@@ -4074,7 +4078,7 @@ Public Class Form1
             .IsInterlaced = False
             .IsMarginVisible = False
             With .LabelStyle
-                .Font = labelFont
+                .Font = s_font12Bold
                 .ForeColor = baseColor
                 .Format = $"{{0{DecimalSeparator}00}}"
             End With
@@ -4087,7 +4091,7 @@ Public Class Form1
             .Maximum = TreatmentInsulinRow
             .Minimum = 0
             .Title = "Delivered Insulin"
-            .TitleFont = New Font(family:=labelFont.FontFamily, emSize:=14)
+            .TitleFont = s_font14Bold
             .TitleForeColor = baseColor
         End With
 
@@ -4308,15 +4312,15 @@ Public Class Form1
         Dim hoursStr As String
         Select Case sensorDurationHours
             Case Is <= 24
-                Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 7.0F, FontStyle.Bold)
+                Me.SensorTimeLeftLabel.Font = s_font7Bold
                 hoursStr = sensorDurationHours.HoursToDaysAndHours(shortHr:=True)
                 Return $"Expiring soon{vbCrLf}(Remaining{vbCrLf}grace period:{vbCrLf}{hoursStr})"
             Case Is < 48
-                Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F, FontStyle.Bold)
+                Me.SensorTimeLeftLabel.Font = s_font8Bold
                 hoursStr = (sensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
                 Return $"{hoursStr} (Followed{vbCrLf}by 24 hr grace{vbCrLf}period)"
             Case Else  ' sensorDurationHours >= 48
-                Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 8.0F, FontStyle.Bold)
+                Me.SensorTimeLeftLabel.Font = s_font8Bold
                 hoursStr = (sensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
                 Return $"{hoursStr}{vbCrLf}(Followed by 24{vbCrLf}hr grace period)"
         End Select
@@ -5017,7 +5021,7 @@ Public Class Form1
     Private Sub UpdateSensorLife()
         Dim haveCGM As Boolean = PatientData.ConduitInRange AndAlso PatientData.CgmInfo IsNot Nothing
         If haveCGM Then
-            Me.SensorTimeLeftLabel.Font = New Font(Me.SensorTimeLeftLabel.Font.FontFamily, 12.0F, FontStyle.Bold)
+            Me.SensorTimeLeftLabel.Font = s_font12Bold
             Select Case PatientData.CgmInfo.SensorProductModel?.Trim
                 Case "MMT-5120" ' Simplera
                     Dim durationWithoutGrace As Integer = PatientData.SensorDurationHours - 24
@@ -5367,12 +5371,12 @@ Public Class Form1
             Dim value As String = Nothing
             If s_trends.TryGetValue(key, value) Then
                 Me.TrendArrowsLabel.Font = If(key = "NONE",
-                                              New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold),
-                                              New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold))
+                                              s_font18Bold,
+                                              s_font14Bold)
 
                 Me.TrendArrowsLabel.Text = s_trends(key)
             Else
-                Me.TrendArrowsLabel.Font = New Font(FamilyName, emSize:=14.25F, style:=FontStyle.Bold)
+                Me.TrendArrowsLabel.Font = s_font14Bold
                 Me.TrendArrowsLabel.Text = key
             End If
         End If

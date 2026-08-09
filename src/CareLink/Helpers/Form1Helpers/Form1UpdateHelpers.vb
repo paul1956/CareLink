@@ -35,10 +35,9 @@ Friend Module Form1UpdateHelpers
     '''  otherwise, an empty string.
     ''' </returns>
     <Extension>
-    Private Function CDateOrDefault(
-        s As String,
-        key As String,
-        provider As IFormatProvider) As String
+    Private Function CDateOrDefault(s As String,
+                                    key As String,
+                                    provider As IFormatProvider) As String
 
         Dim result As Date
         Return If(TryParseDate(s, key, result),
@@ -63,10 +62,7 @@ Friend Module Form1UpdateHelpers
                   $"{hours} hours and {minutes} minutes, out of last 24 hours.")
     End Function
 
-    Private Sub SetupPumpTimeZoneInfo(
-        mainForm As Form1,
-        kvp As KeyValuePair(Of String, String))
-
+    Private Sub SetupPumpTimeZoneInfo(mainForm As Form1, kvp As KeyValuePair(Of String, String))
         If s_useLocalTimeZone Then
             PumpTimeZoneInfo = TimeZoneInfo.Local
         Else
@@ -94,11 +90,11 @@ Friend Module Form1UpdateHelpers
                         "under the Options Menu."
                     messageButtons = MessageBoxButtons.YesNoCancel
                 End If
-                Dim result As DialogResult = MessageBox.Show(
-                    text,
-                    caption:="TimeZone Unknown",
-                    buttons:=messageButtons,
-                    icon:=MessageBoxIcon.Question)
+                Dim result As DialogResult =
+                    MessageBox.Show(text,
+                                    caption:="TimeZone Unknown",
+                                    buttons:=messageButtons,
+                                    icon:=MessageBoxIcon.Question)
 
                 s_useLocalTimeZone = True
                 PumpTimeZoneInfo = TimeZoneInfo.Local
@@ -213,48 +209,46 @@ Friend Module Form1UpdateHelpers
     ''' <param name="listOfSummaryRecords">
     '''  The list to which summary records are added.
     ''' </param>
-    Friend Sub HandleComplexItems(
-        kvp As KeyValuePair(Of String, String),
-        recordNumber As Single,
-        key As String,
-        listOfSummaryRecords As List(Of SummaryRecord))
+    Friend Sub HandleComplexItems(kvp As KeyValuePair(Of String, String),
+                                  recordNumber As Single,
+                                  key As String,
+                                  listOfSummaryRecords As List(Of SummaryRecord))
 
         ' First try to parse the value as JSON object and enumerate properties.
         If IsNotNullOrWhiteSpace(kvp.Value) Then
             Try
-                Using doc As JsonDocument = JsonDocument.Parse(json:=kvp.Value)
-                    If doc.RootElement.ValueKind = JsonValueKind.Object Then
-                        Dim idx As Integer = 0
-                        For Each prop As JsonProperty In doc.RootElement.EnumerateObject()
-                            Dim childKey As String = prop.Name
-                            Dim childValue As String = If(prop.Value.ValueKind = JsonValueKind.Null,
-                                                          String.Empty,
-                                                          If(prop.Value.ValueKind = JsonValueKind.String,
-                                                             prop.Value.GetString(),
-                                                             prop.Value.GetRawText()))
-                            Dim message As String = String.Empty
-                            If kvp.Key.EqualsNoCase("AdditionalInfo") AndAlso
-                               childKey.EqualsNoCase("sensorUpdateTime") Then
-
+                Dim elem As JsonElement = DeserializeJsonElement(kvp.Value)
+                If Not elem.IsNullOrUndefined AndAlso elem.ValueKind = JsonValueKind.Object Then
+                    Dim idx As Integer = 0
+                    For Each prop As JsonProperty In elem.EnumerateObject()
+                        Dim childKey As String = prop.Name
+                        Dim childValue As String = If(prop.Value.ValueKind = JsonValueKind.Null,
+                                                      String.Empty,
+                                                      If(prop.Value.ValueKind = JsonValueKind.String,
+                                                         prop.Value.GetString(),
+                                                         prop.Value.GetRawText()))
+                        Dim message As String = String.Empty
+                        If kvp.Key.EqualsNoCase("AdditionalInfo") Then
+                            If childKey.EqualsNoCase("sensorUpdateTime") Then
                                 message = GetSensorUpdateTime(key:=childValue)
                             End If
-                            If childKey = "time" Then
-                                Dim result As Date
-                                message = If(childValue.TryParseDate(key:="", result),
-                                             result.ToShortDateTime,
-                                             String.Empty)
-                            End If
-                            Dim item As New SummaryRecord(
+                        End If
+                        If childKey = "time" Then
+                            Dim result As Date
+                            message = If(childValue.TryParseDate(key:="", result),
+                                         result.ToShortDateTime(showSeconds:=False),
+                                         String.Empty)
+                        End If
+                        Dim item As New SummaryRecord(
                                 recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
                                 key:=$"{key}:{childKey.Trim}",
                                 value:=childValue?.Trim,
                                 message)
-                            listOfSummaryRecords.Add(item)
-                            idx += 1
-                        Next
-                        Return
-                    End If
-                End Using
+                        listOfSummaryRecords.Add(item)
+                        idx += 1
+                    Next
+                    Return
+                End If
             Catch ex As JsonException
                 ' Not JSON or malformed; fall through to legacy parsing.
                 Stop
@@ -262,16 +256,18 @@ Friend Module Form1UpdateHelpers
         End If
 
         ' Legacy fallback: defensive handling of "key = value" style entries.
-        Dim valueList As String() = GetValueList(json:=kvp.Value)
+        Dim valueDictionary As Dictionary(Of String, String) = kvp.Value.ToDictionary()
         Dim separator As String() = New String() {" = "}
-        For Each e As IndexClass(Of String) In valueList.WithIndex
+        For Each e As IndexClass(Of String) In valueDictionary.Keys.WithIndex
             Dim message As String = String.Empty
-            Dim strings As String() = e.Value.Split(separator, StringSplitOptions.None)
+            Dim strings As String() = e.Value.Split(separator, options:=StringSplitOptions.None)
             If strings.Length < 2 Then
                 ' Skip malformed entry
                 Continue For
             End If
-            If kvp.Key.EqualsNoCase("AdditionalInfo") AndAlso strings(0).EqualsNoCase("sensorUpdateTime") Then
+            If kvp.Key.EqualsNoCase("AdditionalInfo") AndAlso
+                strings(0).EqualsNoCase("sensorUpdateTime") Then
+
                 message = GetSensorUpdateTime(key:=strings(1))
             End If
             Dim item As New SummaryRecord(
@@ -838,7 +834,7 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.Text = typeValue.ToTitle()
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
-                            .PumpBannerStateLabel.Font = New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
+                            .PumpBannerStateLabel.Font = s_font7Bold
                         Case "TEMP_BASAL"
                             .PumpBannerStateLabel.BackColor = Color.Lime
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
@@ -847,7 +843,7 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.Text = $"Temp Basal {hours} hr"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
-                            .PumpBannerStateLabel.Font = New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
+                            .PumpBannerStateLabel.Font = s_font7Bold
                         Case "WAIT_TO_ENTER_BG"
                             Stop
                         Case Else

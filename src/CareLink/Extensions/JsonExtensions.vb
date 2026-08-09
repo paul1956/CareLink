@@ -13,7 +13,7 @@ Public Module JsonExtensions
     '''  Ignores null values, writes numbers as strings,
     '''  uses case-insensitive property names, and disallows unmapped members.
     ''' </summary>
-    Public ReadOnly s_jsonDesterilizeOptions As New JsonSerializerOptions() With {
+    Public ReadOnly s_jsonDeserializationOptions As New JsonSerializerOptions() With {
         .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         .NumberHandling = JsonNumberHandling.WriteAsString,
         .PropertyNameCaseInsensitive = True,
@@ -105,13 +105,14 @@ Public Module JsonExtensions
     '''  <see langword="String"/> values representing the indexed items.
     ''' </returns>
     Public Function DeserializeJsonAsDictionary(json As String) As Dictionary(Of String, String)
+        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
+
         Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
         Dim resultDictionary As New Dictionary(Of String, String)(comparer)
         If IsNullOrWhiteSpace(value:=json) Then
             Return resultDictionary
         End If
         Dim item As KeyValuePair(Of String, Object)
-        Dim options As JsonSerializerOptions = s_jsonDesterilizeOptions
         Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) =
             JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json, options).ToList()
 
@@ -248,7 +249,7 @@ Public Module JsonExtensions
         End If
 
         Dim item As KeyValuePair(Of String, Object)
-        Dim options As JsonSerializerOptions = s_jsonDesterilizeOptions
+        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
         Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) =
             JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json, options).ToList()
 
@@ -277,7 +278,7 @@ Public Module JsonExtensions
             Return resultListOfDictionary
         End If
 
-        Dim options As JsonSerializerOptions = s_jsonDesterilizeOptions
+        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
         Dim jsonList As List(Of Dictionary(Of String, Object)) =
             JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(json, options)
 
@@ -287,9 +288,7 @@ Public Module JsonExtensions
             Dim item As New Dictionary(Of String, String)(comparer)
             Dim defaultTime As Date = PumpNow() - Eleven55Span
             Dim index As Integer = -1
-            For Each e1 As IndexClass(Of KeyValuePair(Of String, Object)) In
-                e.Value.WithIndex
-
+            For Each e1 As IndexClass(Of KeyValuePair(Of String, Object)) In e.Value.WithIndex
                 If e1.Value.Value Is Nothing Then
                     item.Add(e1.Value.Key, value:=Nothing)
                 ElseIf e1.Value.Key = "index" Then
@@ -324,7 +323,7 @@ Public Module JsonExtensions
     ''' <param name="json">The JSON string to convert.</param>
     ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
     Public Function JsonToListOfSgs(json As String) As List(Of SG)
-        Dim options As JsonSerializerOptions = s_jsonDesterilizeOptions
+        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
         Dim jsonList As List(Of Dictionary(Of String, Object)) =
             JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(json, options)
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))

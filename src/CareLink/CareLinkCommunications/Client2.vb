@@ -2,7 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.IO
 Imports System.Net
 Imports System.Net.Http
 Imports System.Net.Http.Headers
@@ -70,37 +69,29 @@ Friend Class Client2
     Friend Property UserElementDictionary As Dictionary(Of String, Object)
 
     ''' <summary>
-    ''' Build request headers from tokenDataElement.
+    '''  Gets the last HTTP status code from the most recent operation.
     ''' </summary>
-    Private Shared Function BuildHeaders(token_data As JsonElement) As Dictionary(Of String, String)
-        Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
-        Dim magId As String = Nothing
-        If TryGetStringProperty(element:=token_data, propertyName:="mag-identifier", value:=magId) Then
-            If Not String.IsNullOrWhiteSpace(value:=magId) Then
-                headers(key:="mag-identifier") = magId
-            End If
-        End If
-
-        Dim access As String = Nothing
-        If TryGetStringProperty(element:=token_data, propertyName:="access_token", value:=access) Then
-            headers(key:="Authorization") = $"Bearer {access}"
-        End If
-
-        Return headers
-    End Function
+    ''' <returns>The last HTTP status code.</returns>
+    Public ReadOnly Property HttpStatusCode As HttpStatusCode
+        Get
+            Return _lastHttpStatusCode
+        End Get
+    End Property
 
     ''' <summary>
     ''' Build request headers preferring config mag-identifier then tokenDataElement.
     ''' </summary>
-    Private Shared Function BuildHeaders(configJsonElement As JsonElement, token_data As JsonElement) As Dictionary(Of String, String)
+    Private Shared Function BuildHeaders(configJsonElement As JsonElement,
+                                         token_data As JsonElement) As Dictionary(Of String, String)
+
         Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
         Dim magId As String = Nothing
         If TryGetStringProperty(element:=configJsonElement, propertyName:="mag-identifier", value:=magId) Then
-            If Not String.IsNullOrWhiteSpace(value:=magId) Then
+            If IsNotNullOrWhiteSpace(value:=magId) Then
                 headers(key:="mag-identifier") = magId
             End If
         ElseIf TryGetStringProperty(element:=token_data, propertyName:="mag-identifier", value:=magId) Then
-            If Not String.IsNullOrWhiteSpace(value:=magId) Then
+            If IsNotNullOrWhiteSpace(value:=magId) Then
                 headers(key:="mag-identifier") = magId
             End If
         End If
@@ -114,7 +105,6 @@ Friend Class Client2
     End Function
 
     Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, Object)
-        Debug.WriteLine(message:=NameOf(GetAccessTokenPayload))
         Try
             Dim token As String = CStr(token_data.ToObjectDictionary("access_token"))
             Dim payload_b64 As String = token.Split(separator:="."c)(1)
@@ -125,7 +115,8 @@ Friend Class Client2
             End If
             Dim bytes As Byte() = Convert.FromBase64String(s:=payload_b64)
             Dim json As String = Encoding.UTF8.GetString(bytes)
-            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json)
+            Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
+            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json, options)
         Catch ex As Exception
             Dim str As String = ex.DecodeException()
             Dim location As String = NameOf(GetAccessTokenPayload)
@@ -142,7 +133,8 @@ Friend Class Client2
     ''' <param name="access_token_payload">The payload of the access token as a dictionary.</param>
     ''' <returns>True if the token is valid; otherwise, false.</returns>
     ''' <param name="message"></param>
-    Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, Object), ByRef message As String) As Boolean
+    Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, Object),
+                                         ByRef message As String) As Boolean
         Try
             Dim unixTime As Long = CType(access_token_payload(key:="exp"), JsonElement).GetInt64()
             Dim unixCurrentTime As Long = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
@@ -174,7 +166,7 @@ Friend Class Client2
     End Function
 
     ''' <summary>
-    '''  Async version of GetData that uses Await and centralized response inspection.
+    '''  Async version of GetData that uses Await and centralized resp inspection.
     '''  This variant implements a small retry loop for transient failures.
     ''' </summary>
     ''' <param name="username">The username for the nameValueCollection request.</param>
@@ -205,7 +197,9 @@ Friend Class Client2
         Dim headers As New Dictionary(Of String, String)
         headers(key:="Authorization") = $"Bearer {tokenData(key:="access_token")}"
         Dim magidentifier As String = Nothing
-        If tokenData.TryGetValue(key:="mag-identifier", value:=magidentifier) AndAlso Not String.IsNullOrWhiteSpace(value:=magidentifier) Then
+        If tokenData.TryGetValue(key:="mag-identifier", value:=magidentifier) AndAlso
+           IsNotNullOrWhiteSpace(value:=magidentifier) Then
+
             headers(key:="mag-identifier") = magidentifier
         End If
 
@@ -233,12 +227,13 @@ Friend Class Client2
                             _lastHttpStatusCode = response.StatusCode
                             Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
-                            ' Centralized response inspection; may throw UnauthorizedAccessException,
+                            ' Centralized resp inspection; may throw UnauthorizedAccessException,
                             ' ArgumentException (bad request) or HttpRequestException (transient/server).
                             Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
 
                             Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
-                            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json)
+                            Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
+                            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json, options)
                         End Using
                     End Using
                 Catch hex As HttpRequestException
@@ -280,7 +275,7 @@ Friend Class Client2
 
         Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
         Dim magId As String = Nothing
-        If TryGetStringProperty(configJsonElement, propertyName:="mag-identifier", value:=magId) Then
+        If TryGetStringProperty(element:=configJsonElement, propertyName:="mag-identifier", value:=magId) Then
             headers(key:="mag-identifier") = magId
         End If
 
@@ -310,7 +305,8 @@ Friend Class Client2
                 Dim patients As List(Of Dictionary(Of String, String))
                 Dim json As String =
                     Await response.Content.ReadAsStringAsync()
-                patients = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String)))(json)
+                Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
+                patients = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String)))(json, options)
                 If patients.Count > 0 Then
                     Return patients(index:=0)
                 End If
@@ -323,14 +319,18 @@ Friend Class Client2
     ''' <summary>
     '''  Retrieves user information as a JSON string.
     ''' </summary>
-    ''' <param name="config">The configuration JSON tokenDataElement containing base URL information.</param>
-    ''' <param name="tokenData">The token nameValueCollection JSON tokenDataElement containing authentication tokens.</param>
+    ''' <param name="config">
+    '''  The configuration JSON tokenDataElement containing base URL information.
+    ''' </param>
+    ''' <param name="tokenData">
+    '''  The token nameValueCollection JSON tokenDataElement containing authentication tokens.
+    ''' </param>
     ''' <returns>A JSON string representing the user information.</returns>
     Private Async Function GetUserStringAsync(config As JsonElement, tokenData As JsonElement) As Task(Of String)
         Dim requestUri As String = $"{config.GetProperty(propertyName:="baseUrlCareLink").GetString()}/users/me"
         Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
         Dim magId As String = Nothing
-        If TryGetStringProperty(tokenData, propertyName:="mag-identifier", value:=magId) Then
+        If TryGetStringProperty(element:=tokenData, propertyName:="mag-identifier", value:=magId) Then
             headers(key:="mag-identifier") = magId
         End If
         headers(key:="Authorization") = $"Bearer {tokenData.GetProperty(propertyName:="access_token").GetString()}"
@@ -342,7 +342,9 @@ Friend Class Client2
                 request.Headers.Add(name:=header.Key, header.Value)
             Next
 
-            Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).ConfigureAwait(continueOnCapturedContext:=False)
+            Using response As HttpResponseMessage =
+                Await _httpClient.SendAsync(request).
+                                  ConfigureAwait(continueOnCapturedContext:=False)
                 _lastHttpStatusCode = response.StatusCode
                 Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
 
@@ -387,14 +389,16 @@ Friend Class Client2
         Dim hadException As Boolean = False
         Dim configJsonElement As JsonElement
 
+        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
         Try
             Application.DoEvents()
             Dim element As JsonElement = CType(_accessTokenPayload(key:="token_details"), JsonElement)
 
-            Dim options As JsonSerializerOptions = s_jsonDesterilizeOptions
             Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, options)
             _country = If(payload.Country, s_countryCode)
-            configJsonElement = Await Discover.GetConfigAsync(httpClient:=_httpClient, country:=_country, serverRegion:=Me.serverRegion)
+            configJsonElement = Await Discover.GetConfigAsync(httpClient:=_httpClient,
+                                                              country:=_country,
+                                                              Me.serverRegion)
             Me.Config = configJsonElement.ToStringDictionary()
 
             ' Call user string; handle typed failures
@@ -403,8 +407,9 @@ Friend Class Client2
                 Throw New UnauthorizedAccessException
             End If
 
-            Me.UserElementDictionary = JsonSerializer.Deserialize(Of JsonElement)(json).ToObjectDictionary()
-            _PatientPersonalData = JsonSerializer.Deserialize(Of PatientPersonalInfo)(json)
+            Dim userElement As JsonElement = DeserializeJsonElement(json)
+            Me.UserElementDictionary = userElement.ToObjectDictionary()
+            _PatientPersonalData = JsonSerializer.Deserialize(Of PatientPersonalInfo)(element:=userElement, options)
 
             Dim role As String = _PatientPersonalData.role
             If role.ContainsNoCase(value:="Partner") Then
@@ -419,8 +424,7 @@ Friend Class Client2
                     If Not configJsonElement.ValueKind = JsonValueKind.Undefined Then
                         Dim config As ConfigRecord =
                             JsonSerializer.Deserialize(Of ConfigRecord)(
-                                json:=JsonSerializer.Serialize(value:=configJsonElement),
-                                options:=s_jsonDesterilizeOptions)
+                                json:=JsonSerializer.Serialize(value:=configJsonElement), options)
                         refreshTask = Me.DoRefreshAsync(config:=configJsonElement.ToStringDictionary(),
                                                         tokenElement:=_tokenDataElement)
                     End If
@@ -452,37 +456,6 @@ Friend Class Client2
 
         Me.LoggedIn = True
         Return True
-    End Function
-
-    ''' <summary>
-    '''  Synchronous wrapper for InitAsync.
-    ''' </summary>
-    ''' <returns>True if initialization succeeded; otherwise, False.</returns>
-    Friend Function Init() As Boolean
-        ' Safe synchronous wrapper:
-        ' - If called from a background thread, dispatch InitAsync to the UI thread and
-        '   synchronously wait for the unwrapped Task to complete (safe; UI thread is not
-        '   blocked by the caller).
-        ' - If called from the UI thread, throw to avoid deadlock; callers on the UI
-        '   thread should use Await InitAsync() instead.
-        Dim app As System.Windows.Application = System.Windows.Application.Current
-        If app IsNot Nothing Then
-            Dim disp As System.Windows.Threading.Dispatcher = app.Dispatcher
-            If disp.CheckAccess() Then
-                Throw New InvalidOperationException("Synchronous Init() cannot be called from the UI thread. Use Await InitAsync() instead.")
-            Else
-                Dim op As System.Windows.Threading.DispatcherOperation(Of Task(Of Boolean)) =
-                    disp.InvokeAsync(callback:=Function() Me.InitAsync())
-                Dim taskOfTask As Task(Of Task(Of Boolean)) = op.Task
-                Dim unwrapped As Task(Of Boolean) = taskOfTask.Unwrap()
-                Return unwrapped.GetAwaiter().GetResult()
-            End If
-        End If
-
-        ' No dispatcher available: run InitAsync synchronously on the thread-pool and return result.
-        Return System.Threading.Tasks.Task.Run(Function()
-                                                   Return Me.InitAsync().GetAwaiter().GetResult()
-                                               End Function).GetAwaiter().GetResult()
     End Function
 
     ''' <summary>
@@ -534,10 +507,10 @@ Friend Class Client2
                     Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, serverRegion)
 
                 Dim result As TokenData =
-                Await CareLinkService.DoLoginAsync(endpointConfig,
-                                                  outputFile,
-                                                  userName,
-                                                  password)
+                    Await CareLinkService.DoLoginAsync(endpointConfig,
+                                                       outputFile,
+                                                       userName,
+                                                       password)
             Catch ex As Exception
                 MessageBox.Show(text:=ex.Message, caption:="Error", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Error)
             End Try
@@ -558,71 +531,54 @@ Friend Class Client2
                                          tokenElement As JsonElement) As Task(Of JsonElement)
 
         Dim tokenUrl As String = config(key:="token_url")
-
-        Dim tokenData As Dictionary(Of String, Object) =
-            JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(element:=tokenElement)
+        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
+        Dim tokenData As Dictionary(Of String, String) =
+                JsonSerializer.Deserialize(Of Dictionary(Of String, String))(element:=tokenElement, options)
 
         ' Prepare form data
-        Dim data As New Dictionary(Of String, String) From {
-            {"refresh_token", tokenData(key:="refresh_token").ToString()},
-            {"client_id", tokenData(key:="client_id").ToString()},
-            {"grant_type", "refresh_token"}}
+        Dim data As New List(Of KeyValuePair(Of String, String)) From {
+            New KeyValuePair(Of String, String)(key:="refresh_token", value:=tokenData(key:="refresh_token")),
+            New KeyValuePair(Of String, String)(key:="client_id", value:=tokenData(key:="client_id")),
+            New KeyValuePair(Of String, String)(key:="grant_type", value:="refresh_token")}
 
-        Dim clientSecret As Object = Nothing
-        If tokenData.TryGetValue(key:="client_secret", value:=clientSecret) Then
-            If IsNotNullOrEmpty(value:=clientSecret?.ToString) Then
-                data(key:="client_secret") = clientSecret.ToString
-            End If
-        End If
-
-        Dim magIdentifier As Object = Nothing
-
-        Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
-        ' Prepare optional headers
-        If tokenData.TryGetValue(key:="mag-identifier", value:=magIdentifier) Then
-            headers(key:="mag-identifier") = magIdentifier?.ToString
+        Dim value As String = Nothing
+        ' Optional client_secret
+        If tokenData.TryGetValue(key:="client_secret", value) Then
+            data.Add(item:=New KeyValuePair(Of String, String)(key:="client_secret", value))
         End If
 
         Using client As New HttpClient()
-            For Each header As KeyValuePair(Of String, String) In headers
-                client.DefaultRequestHeaders.Add(name:=header.Key, header.Value)
-            Next
+            value = Nothing
+            If tokenData.TryGetValue(key:="mag-identifier", value) Then
+                client.DefaultRequestHeaders.Add(name:="mag-identifier", value)
+            End If
 
             Using content As New FormUrlEncodedContent(nameValueCollection:=data)
                 ' POST request
-                Using response As HttpResponseMessage =
+                Using resp As HttpResponseMessage =
                    Await client.PostAsync(requestUri:=tokenUrl, content) _
                                .ConfigureAwait(continueOnCapturedContext:=False)
-                    _lastHttpStatusCode = response.StatusCode
-                    Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
+                    _lastHttpStatusCode = resp.StatusCode
+                    Debug.WriteLine(message:=$"   status: {CInt(_lastHttpStatusCode)}")
 
-                    Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
-
-                    Dim responseBody As String =
-                        Await response.Content.ReadAsStringAsync()
-                    Dim newData As Dictionary(Of String, String) =
-                        JsonSerializer.Deserialize(Of Dictionary(Of String, String))(json:=responseBody)
-
-                    tokenData(key:="access_token") = newData(key:="access_token")
-                    tokenData(key:="refresh_token") = newData(key:="refresh_token")
+                    If resp.StatusCode <> Net.HttpStatusCode.OK Then
+                        Throw New Exception(message:="ERROR: failed to refresh token")
+                    End If
+                    Dim json As String = Await resp.Content.ReadAsStringAsync()
+                    Using newData As JsonDocument = JsonDocument.Parse(json)
+                        Dim root As JsonElement = newData.RootElement
+                        tokenData(key:="access_token") = root.GetProperty(propertyName:="access_token").GetString()
+                        tokenData(key:="refresh_token") = root.GetProperty(propertyName:="refresh_token").GetString()
+                    End Using
                 End Using
             End Using
         End Using
 
-        Dim json As String = JsonSerializer.Serialize(value:=tokenData, options:=s_jsonSerializerOptions)
-        Return JsonSerializer.Deserialize(Of JsonElement)(json)
+        Return DeserializeJsonElement(JsonSerializer.Serialize(value:=tokenData, options:=s_jsonSerializerOptions))
     End Function
 
     ''' <summary>
-    '''  Gets the last HTTP status code from the most recent operation.
-    ''' </summary>
-    ''' <returns>The last HTTP status code.</returns>
-    Public Function GetHttpStatusCode() As HttpStatusCode
-        Return _lastHttpStatusCode
-    End Function
-
-    ''' <summary>
-    '''  Async variant of GetRecentData that uses Await and centralized response inspection.
+    '''  Async variant of GetRecentData that uses Await and centralized resp inspection.
     ''' </summary>
     ''' <returns>
     '''  Returns the last error message if the operation fails;

@@ -5,6 +5,7 @@
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports System.Text
+Imports System.Text.Json
 
 Public Module DictionaryExtensions
 
@@ -178,34 +179,13 @@ Public Module DictionaryExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a JSON string to a <see cref="Dictionary(Of String, String)"/>.
-    ''' </summary>
-    ''' <param name="json">The JSON string to convert.</param>
-    ''' <returns>A Dictionary with the key-value pairs from the JSON string.</returns>
-    Public Function GetAdditionalInformation(json As String) As Dictionary(Of String, String)
-        Dim valueList() As String = GetValueList(json)
-        Dim dic As New Dictionary(Of String, String)
-        For Each row As String In valueList
-            Dim value() As String = row.Split(separator:=" = ")
-            dic.Add(key:=value(0).Trim, value:=value(1).Trim)
-        Next
-        Return dic
-    End Function
-
-    ''' <summary>
     '''  Converts a JSON string to a Dictionary.
     ''' </summary>
     ''' <param name="json">The JSON string to convert.</param>
-    ''' <returns>A Dictionary with the key-value pairs from the JSON string.
-    Public Function GetValueList(json As String) As String()
-        Dim values As String() = JsonToDictionary(json).ToCsv.Remove(s:="{").Trim _
-                                                             .Remove(s:="}").Trim _
-                                                             .Split(separator:=",")
-
-        Dim selector As Func(Of String, String) = Function(s As String) As String
-                                                      Return s.Trim()
-                                                  End Function
-        Return values.Select(selector).ToArray
+    ''' <returns>A Dictionary with the key-value pairs from the JSON string.</returns>
+    <Extension>
+    Public Function ToDictionary(json As String) As Dictionary(Of String, String)
+        Return JsonSerializer.Deserialize(Of Dictionary(Of String, String))(json)
     End Function
 
     ''' <summary>

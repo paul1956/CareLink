@@ -21,4 +21,7 @@ Public Class SystemEndpoints
     <JsonPropertyName("usersession_status_endpoint_path")>
     Public Property UserSessionStatusEndpointPath As String
 
+    <JsonPropertyName("configuration_endpoint_path")>
+    Public Property ConfigurationEndpointPath As String
+
 End Class

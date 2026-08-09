@@ -73,7 +73,7 @@ Public Class CareLinkService
                          End Using
                      End Function)
 
-            If redirectResult Is Nothing OrElse String.IsNullOrWhiteSpace(value:=redirectResult.Code) Then
+            If redirectResult Is Nothing OrElse IsNullOrWhiteSpace(value:=redirectResult.Code) Then
                 Throw New Exception(message:="Authorization code was not captured.")
             End If
 
@@ -203,7 +203,7 @@ Public Class CareLinkService
                         redirectResult = frm.Result
                     End Using
 
-                    If redirectResult Is Nothing OrElse String.IsNullOrWhiteSpace(redirectResult.Code) Then
+                    If redirectResult Is Nothing OrElse IsNullOrWhiteSpace(value:=redirectResult.Code) Then
                         Throw New Exception(message:="Captcha authorization code was not captured.")
                     End If
 
@@ -371,23 +371,6 @@ Public Class CareLinkService
             Return "Europe"
         End If
         Throw New ArgumentException(message:="Invalid region. Use NorthAmerica/NA, Europe/EU, or Trial/TR.")
-    End Function
-
-    Public Shared Async Function ReadTokenFileAsync(path As String) As Task(Of TokenData)
-        If Not File.Exists(path) Then Return Nothing
-
-        Dim json As String = Await File.ReadAllTextAsync(path)
-        Dim token As TokenData = JsonSerializer.Deserialize(Of TokenData)(json)
-
-        If token Is Nothing Then Return Nothing
-        If String.IsNullOrWhiteSpace(value:=token.AccessToken) Then Return Nothing
-        If String.IsNullOrWhiteSpace(value:=token.RefreshToken) Then Return Nothing
-        If String.IsNullOrWhiteSpace(value:=token.Scope) Then Return Nothing
-        If String.IsNullOrWhiteSpace(value:=token.ClientId) Then Return Nothing
-        If String.IsNullOrWhiteSpace(value:=token.ClientSecret) Then Return Nothing
-        If String.IsNullOrWhiteSpace(value:=token.MagIdentifier) Then Return Nothing
-
-        Return token
     End Function
 
     Public Shared Async Function ResolveEndpointConfigAsync(discoveryUrl As String, serverRegion As Region) As Task(Of EndpointConfig)

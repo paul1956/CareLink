@@ -214,7 +214,7 @@ Public Module FileIoHelpers
     ''' <param name="path">Full path to the file to delete.</param>
     Public Sub SafeDeleteFile(path As String)
         Try
-            If String.IsNullOrWhiteSpace(path) Then Return
+            If IsNullOrWhiteSpace(value:=path) Then Return
             If Not File.Exists(path) Then Return
             ' try to clear read-only attribute
             Try
