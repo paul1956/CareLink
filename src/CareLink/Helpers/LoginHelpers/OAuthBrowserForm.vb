@@ -45,7 +45,7 @@ Public Class OAuthBrowserForm
 
         Dim pairs As String() = If(String.IsNullOrEmpty(value:=queryString),
                                    Array.Empty(Of String)(),
-                                   queryString.Split(s_separator, options:=StringSplitOptions.RemoveEmptyEntries))
+                                   queryString.Split(separator:=s_separator, options:=StringSplitOptions.RemoveEmptyEntries))
         Dim dict As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
 
         For Each pair As String In pairs

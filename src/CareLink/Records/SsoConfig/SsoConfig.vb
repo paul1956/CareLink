@@ -7,15 +7,15 @@ Imports System.Text.Json.Serialization
 Public Class SsoConfig
 
     <JsonPropertyName("server")>
-    Public Property Server As ServerConfig
+    Public Property Server As Server
 
     <JsonPropertyName("client")>
-    Public Property Client As ClientInfo
+    Public Property Client As Client
 
     <JsonPropertyName("system_endpoints")>
     Public Property system_Endpoints As SystemEndpoints
 
     <JsonPropertyName("oauth_protected_endpoints")>
-    Public Property OAuth As OAuthProtectedEndpoints
+    Public Property OAuth As OAuth
 
 End Class

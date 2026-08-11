@@ -12,14 +12,23 @@ Public Class TokenData
     <JsonPropertyName("refresh_token")>
     Public Property RefreshToken As String
 
+    <JsonPropertyName("id_token")>
+    Public Property idToken As String
+
     <JsonPropertyName("scope")>
     Public Property Scope As String
 
-    <JsonPropertyName("resource")>
-    Public Property Resource As List(Of String)
-
     <JsonPropertyName("client_id")>
     Public Property ClientId As String
+
+    <JsonPropertyName("expires_In")>
+    Public Property ExpiresIn As String
+
+    <JsonPropertyName("token_type")>
+    Public Property TokenType As String
+
+    <JsonPropertyName("resource")>
+    Public Property Resource As List(Of String)
 
     <JsonPropertyName("client_secret")>
     Public Property ClientSecret As String

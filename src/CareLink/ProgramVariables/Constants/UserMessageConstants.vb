@@ -186,9 +186,13 @@ Friend Module UserMessageConstants
     Friend ReadOnly s_notificationMessagesFlex As New Dictionary(Of String, String) From {
         {"1.050", "Unknown 1.050"},
         {"1.205", "No SG values (> 30 minutes) resolved (auto Cleared)"},
+        {"2.210", "Blood glucose not accepted(triggeredDateTime). Wait at least a 15 minutes before trying again."},
         {"2.253", "Bolus not delivered?"},
-        {"2.500", "Low Reservoir(triggeredDateTime). (unitsRemaining) units remaining. " &
+        {"2.326", "Reservoir Low(triggeredDateTime), Change reservoir soon."},
+        {"2.500", "Reservoir Low(triggeredDateTime). (unitsRemaining) units remaining. " &
                    "Change reservoir?"},
+        {"3.221", "Sensor grace period ending soon(triggeredDateTime), you will need to change your sensor within 12 hours."},
+        {"3.327", "Low reservoir(triggeredDateTime)."},
         {"3.328", "Unknown 3.328"},
         {"3.329", "Prolonged low sensor glucose?"},
         {"3.330", "Sensor glucose approaching high limit?"},
@@ -197,6 +201,7 @@ Friend Module UserMessageConstants
         {"3.333", "Sensor glucose falling rapidly?"},
         {"3.334", "Sensor glucose under low limit?"},
         {"3.335", "Sensor glucose over high limit?"},
+        {"3.380", "Phones times zone has changed."},
         {"4.600", "Lost pump communications"}
         }
 

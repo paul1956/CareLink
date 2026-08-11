@@ -8,7 +8,6 @@ Imports System.Globalization
 Imports System.IO
 Imports System.Text
 Imports System.Text.Json
-Imports System.Text.RegularExpressions
 Imports System.Windows.Forms.DataVisualization.Charting
 
 Imports DataGridViewColumnControls
@@ -965,13 +964,13 @@ Public Class Form1
 
         ' Populate the ContextMenuStrip control with its default items.
         mnuStrip.Items.Add(
-            text:="Copy with Header",
-            image:=My.Resources.Copy,
-            onClick:=AddressOf CopyToClipboardWithHeaders)
-        mnuStrip.Items.Add(
             text:="Copy without Header",
             image:=My.Resources.Copy,
             onClick:=AddressOf CopyToClipboardWithoutHeaders)
+        mnuStrip.Items.Add(
+            text:="Copy with Header",
+            image:=My.Resources.Copy,
+            onClick:=AddressOf CopyToClipboardWithHeaders)
         mnuStrip.Items.Add(
             text:="Save To Excel",
             image:=My.Resources.ExportData,
@@ -1002,13 +1001,13 @@ Public Class Form1
 
         ' Populate the ContextMenuStrip control with its default items.
         mnuStrip.Items.Add(
-            text:="Copy Selected Cells with Header",
-            image:=My.Resources.Copy,
-            onClick:=AddressOf CopySelectedCellsToClipBoardWithHeaders)
-        mnuStrip.Items.Add(
             text:="Copy Selected Cells without headers",
             image:=My.Resources.Copy,
             onClick:=AddressOf CopySelectedCellsToClipboardNoHeaders)
+        mnuStrip.Items.Add(
+            text:="Copy Selected Cells with Header",
+            image:=My.Resources.Copy,
+            onClick:=AddressOf CopySelectedCellsToClipboardWithHeaders)
 
         ' Set Cancel to false.
         ' It is optimized to true based on empty key.

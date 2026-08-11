@@ -179,16 +179,6 @@ Public Module DictionaryExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a JSON string to a Dictionary.
-    ''' </summary>
-    ''' <param name="json">The JSON string to convert.</param>
-    ''' <returns>A Dictionary with the key-value pairs from the JSON string.</returns>
-    <Extension>
-    Public Function ToDictionary(json As String) As Dictionary(Of String, String)
-        Return JsonSerializer.Deserialize(Of Dictionary(Of String, String))(json)
-    End Function
-
-    ''' <summary>
     '''  Returns the index of the value in the <see cref="SortedDictionary"/>.
     ''' </summary>
     ''' <param name="dic">The SortedDictionary to search.</param>

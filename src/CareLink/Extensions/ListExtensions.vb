@@ -4,7 +4,7 @@
 
 Imports System.Runtime.CompilerServices
 
-Public Module StringListExtensions
+Public Module ListExtensions
 
     ''' <summary>
     '''  Tries to find a string in the list that <paramref name="headerText"/>

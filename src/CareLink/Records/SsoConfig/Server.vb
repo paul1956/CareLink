@@ -4,7 +4,7 @@
 
 Imports System.Text.Json.Serialization
 
-Public Class ServerConfig
+Public Class Server
 
     <JsonPropertyName("hostname")>
     Public Property Hostname As String

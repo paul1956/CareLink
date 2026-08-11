@@ -4,7 +4,7 @@
 
 Imports System.Text.Json.Serialization
 
-Public Class ClientConfig
+Public Class ClientIdEntry
 
     <JsonPropertyName("organization")>
     Public Property Organization As String
@@ -25,6 +25,6 @@ Public Class ClientConfig
     Public Property ClientCustom As Object
 
     <JsonPropertyName("client_ids")>
-    Public Property ClientIds As List(Of ClientInfo)
+    Public Property ClientIds As List(Of Client)
 
 End Class

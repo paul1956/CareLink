@@ -5,6 +5,7 @@
 Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Text
+Imports System.Text.Json
 Imports System.Text.RegularExpressions
 
 ''' <summary>
@@ -545,4 +546,32 @@ Public Module StringExtensions
 
 #End Region ' IgnoreCase String Comparisons
 
+    ''' <summary>
+    '''  Converts a JSON string to a result of strings.
+    ''' </summary>
+    ''' <param name="Json">The JSON string to convert.</param>
+    ''' <returns>
+    '''  A result containing the key-value pairs from the JSON string.
+    ''' </returns>
+    <Extension>
+    Public Function ToStringDictionary(Json As String) As Dictionary(Of String, String)
+        Dim raw As Dictionary(Of String, JsonElement) =
+            JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(Json)
+
+        Dim keySelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
+                Function(kvp)
+                    Return kvp.Key
+                End Function
+        Dim elementSelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
+                Function(kvp)
+                    Return kvp.Value.ElementToString()
+                End Function
+        Dim result As Dictionary(Of String, String) = Nothing
+        Try
+            result = raw.ToDictionary(keySelector, elementSelector)
+        Catch ex As Exception
+            Stop
+        End Try
+        Return result
+    End Function
 End Module

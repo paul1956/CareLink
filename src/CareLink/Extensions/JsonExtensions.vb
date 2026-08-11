@@ -207,15 +207,28 @@ Public Module JsonExtensions
         Select Case itemAsElement.ValueKind
             Case JsonValueKind.False
                 Return "False"
-            Case JsonValueKind.Null
-                Return String.Empty
-            Case JsonValueKind.Number
-                Return valueAsString
             Case JsonValueKind.True
                 Return "True"
-            Case JsonValueKind.String
+            Case JsonValueKind.Null
+                Return String.Empty
         End Select
         Return valueAsString
+    End Function
+
+    ''' <summary>
+    '''  Converts a <see cref="JsonElement"/> to its <see langword="String"/> representation.
+    '''  If the element is null or undefined, returns an empty string.
+    '''  If the element is a string, returns its value; otherwise, returns the raw JSON text.
+    ''' </summary>
+    ''' <param name="value">The <see cref="JsonElement"/> to convert.</param>
+    ''' <returns>The <see langword="String"/> representation of the element.</returns>
+    <Extension>
+    Public Function ElementToString(value As JsonElement) As String
+        Return If(value.IsNullOrUndefined,
+                  String.Empty,
+                  If(value.ValueKind = JsonValueKind.String,
+                     value.GetString(),
+                     value.GetRawText()))
     End Function
 
     ''' <summary>
@@ -235,35 +248,6 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a JSON string to a <see cref="Dictionary(Of String, String)"/>.
-    ''' </summary>
-    ''' <param name="json">The JSON string to convert.</param>
-    ''' <returns>
-    '''  A <see cref="Dictionary"/> with string values representing the JSON object.
-    ''' </returns>
-    Public Function JsonToDictionary(json As String) As Dictionary(Of String, String)
-        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
-        Dim resultDictionary As New Dictionary(Of String, String)(comparer)
-        If IsNullOrWhiteSpace(value:=json) Then
-            Return resultDictionary
-        End If
-
-        Dim item As KeyValuePair(Of String, Object)
-        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
-        Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) =
-            JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json, options).ToList()
-
-        For Each item In rawJsonData
-            If item.Value Is Nothing Then
-                resultDictionary.Add(item.Key, value:=Nothing)
-                Continue For
-            End If
-            resultDictionary.Add(item.Key, value:=item.DeserializeJsonAsString)
-        Next
-        Return resultDictionary
-    End Function
-
-    ''' <summary>
     '''  Converts a JSON string representing an array of objects
     '''  to a <see cref="List(Of Dictionary(Of String, String)"/>.
     ''' </summary>
@@ -272,7 +256,7 @@ Public Module JsonExtensions
     '''  A <see cref="List(Of Dictionary(Of String, String)"/> representing
     '''  the JSON objects.
     ''' </returns>
-    Public Function JsonToDictionaryList(json As String) As List(Of Dictionary(Of String, String))
+    Public Function JsonToListOfDictionary(json As String) As List(Of Dictionary(Of String, String))
         Dim resultListOfDictionary As New List(Of Dictionary(Of String, String))
         If IsNullOrWhiteSpace(value:=json) Then
             Return resultListOfDictionary

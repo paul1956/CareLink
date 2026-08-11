@@ -4,21 +4,23 @@
 
 Imports System.Text.Json.Serialization
 
-Public Class ClientInfo
+Public Class Client
 
     <JsonPropertyName("client_id")>
     Public Property ClientId As String
 
-    <JsonPropertyName("client_secret")>
+    <JsonPropertyName("client_Secret")>
     Public Property ClientSecret As String
 
     <JsonPropertyName("scope")>
     Public Property Scope As String
 
     <JsonPropertyName("redirect_uri")>
-    Public Property RedirectUrl As String
+    Public Property RedirectUri As String
 
     <JsonPropertyName("audience")>
     Public Property Audience As String
+
+
 
 End Class

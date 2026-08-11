@@ -217,16 +217,12 @@ Friend Module Form1UpdateHelpers
         ' First try to parse the value as JSON object and enumerate properties.
         If IsNotNullOrWhiteSpace(kvp.Value) Then
             Try
-                Dim elem As JsonElement = DeserializeJsonElement(kvp.Value)
+                Dim elem As JsonElement = DeserializeJsonElement(json:=kvp.Value)
                 If Not elem.IsNullOrUndefined AndAlso elem.ValueKind = JsonValueKind.Object Then
                     Dim idx As Integer = 0
                     For Each prop As JsonProperty In elem.EnumerateObject()
                         Dim childKey As String = prop.Name
-                        Dim childValue As String = If(prop.Value.ValueKind = JsonValueKind.Null,
-                                                      String.Empty,
-                                                      If(prop.Value.ValueKind = JsonValueKind.String,
-                                                         prop.Value.GetString(),
-                                                         prop.Value.GetRawText()))
+                        Dim childValue As String = prop.Value.ElementToString()
                         Dim message As String = String.Empty
                         If kvp.Key.EqualsNoCase("AdditionalInfo") Then
                             If childKey.EqualsNoCase("sensorUpdateTime") Then
@@ -242,7 +238,7 @@ Friend Module Form1UpdateHelpers
                         Dim item As New SummaryRecord(
                                 recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
                                 key:=$"{key}:{childKey.Trim}",
-                                value:=childValue?.Trim,
+                                value:=childValue?.Trim.ToTitle,
                                 message)
                         listOfSummaryRecords.Add(item)
                         idx += 1
@@ -256,7 +252,8 @@ Friend Module Form1UpdateHelpers
         End If
 
         ' Legacy fallback: defensive handling of "key = value" style entries.
-        Dim valueDictionary As Dictionary(Of String, String) = kvp.Value.ToDictionary()
+        Dim valueDictionary As Dictionary(Of String, String) =
+                kvp.Value.ToStringDictionary()
         Dim separator As String() = New String() {" = "}
         For Each e As IndexClass(Of String) In valueDictionary.Keys.WithIndex
             Dim message As String = String.Empty
@@ -522,7 +519,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataEnum.pumpBannerState)
-                    s_pumpBannerStateValue = JsonToDictionaryList(json:=kvp.Value)
+                    s_pumpBannerStateValue = JsonToListOfDictionary(json:=kvp.Value)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     mainForm.PumpBannerStateLabel.Visible = s_pumpBannerStateValue.Count > 0

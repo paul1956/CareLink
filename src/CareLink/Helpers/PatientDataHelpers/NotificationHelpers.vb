@@ -193,7 +193,9 @@ Friend Module NotificationHelpers
         Dim panel As TableLayoutPanel = CType(dgv.Parent, TableLayoutPanel)
         panel.RowStyles(index).SizeType = SizeType.Absolute
         panel.RowStyles(index).Height = dgv.ClientSize.Height
-        panel.BackColor = Color.Wheat
+        panel.BackColor = If(index > 2,
+                             Color.White,
+                             panel.BackColor)
         panel.BorderStyle = BorderStyle.FixedSingle
     End Sub
 
@@ -267,7 +269,7 @@ Friend Module NotificationHelpers
 
         ' clearedNotifications
         Dim json As String = s_notificationHistoryValue(key:="clearedNotifications")
-        innerJson = JsonToDictionaryList(json)
+        innerJson = JsonToListOfDictionary(json)
         Dim classCollection As List(Of SummaryRecord)
         Dim jsonDictionary As Dictionary(Of String, String)
         If innerJson.Count > 0 Then
@@ -288,7 +290,7 @@ Friend Module NotificationHelpers
         End If
 
         ' activeNotifications
-        innerJson = JsonToDictionaryList(json:=s_notificationHistoryValue(key:="activeNotifications"))
+        innerJson = JsonToListOfDictionary(json:=s_notificationHistoryValue(key:="activeNotifications"))
         If innerJson.Count > 0 Then
             mainForm.TlpNotificationActive.SetTableName(rowIndex, isClearedNotifications:=False)
             If mainForm.TlpNotificationActive.Controls.Count > 1 Then
