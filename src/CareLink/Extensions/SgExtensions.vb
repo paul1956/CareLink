@@ -117,9 +117,10 @@ Friend Module SgExtensions
     '''   the underlying collection may change between enumeration calls.
     ''' </remarks>
     Public Function GetValidSgRecords() As IEnumerable(Of SG)
-        Dim predicate As Func(Of SG, Boolean) = Function(entry As SG) As Boolean
-                                                    Return entry.sg.IsSgValid
-                                                End Function
+        Dim predicate As Func(Of SG, Boolean) =
+            Function(entry As SG) As Boolean
+                Return entry.sg.IsSgValid
+            End Function
 
         Return s_sgRecords.Where(predicate)
     End Function

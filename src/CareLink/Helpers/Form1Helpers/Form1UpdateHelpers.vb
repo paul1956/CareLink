@@ -109,6 +109,104 @@ Friend Module Form1UpdateHelpers
     End Sub
 
     ''' <summary>
+    '''  Converts a JSON string representing an array of objects to a
+    '''  <see cref="List(Of SG)"/>.
+    ''' </summary>
+    ''' <param name="json">The JSON string to convert.</param>
+    ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
+    Private Function ToListOfSgs(json As String) As List(Of SG)
+        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
+        Dim jsonList As List(Of Dictionary(Of String, Object)) =
+            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(json, options)
+        Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
+        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
+        For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
+            Dim resultDictionary As New Dictionary(Of String, String)(comparer)
+            For Each item As KeyValuePair(Of String, Object) In e.Value
+                If item.Value Is Nothing Then
+                    resultDictionary.Add(item.Key, value:=Nothing)
+                ElseIf item.Key = "sg" Then
+                    resultDictionary.Add(item.Key, value:=item.ScaleSg)
+                Else
+                    resultDictionary.Add(item.Key, value:=item.DeserializeJsonAsString)
+                End If
+            Next
+            resultDictionaryArray.Add(resultDictionary)
+        Next
+        Return resultDictionaryArray.ToSgList()
+    End Function
+
+    ''' <summary>
+    '''  Converts a list of dictionaries representing JSON objects
+    '''  to a list of <see cref="SG"/> objects.
+    ''' </summary>
+    ''' <param name="json">The list of dictionaries to convert.</param>
+    ''' <returns>A list of <see cref="SG"/> objects.</returns>
+    <Extension>
+    Private Function ToSgList(json As List(Of Dictionary(Of String, String))) As List(Of SG)
+        Dim sGs As New List(Of SG)
+        Dim yesterday As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - Eleven55Span
+
+        ' Build list first
+        For index As Integer = 0 To json.Count - 1
+            sGs.Add(item:=New SG(json:=json(index), index))
+        Next
+
+        ' Do NOT sort by Timestamp directly because New Date (default) is the minimum
+        ' and would move placeholder records to the beginning. Instead detect if the
+        ' feed is in reverse chronological order (newest->oldest) and only flip the
+        ' entire list in that case. Otherwise keep the incoming record order.
+
+        ' Collect real timestamps (skip New Date placeholders) in their current record order
+        Dim realTimestamps As New List(Of Date)
+        For Each sg As SG In sGs
+            If Not sg.Timestamp.Equals(value:=New Date) Then
+                realTimestamps.Add(item:=sg.Timestamp)
+            End If
+        Next
+
+        Dim needReverse As Boolean = False
+        If realTimestamps.Count >= 2 Then
+            Dim ascending As Boolean = True
+            Dim descending As Boolean = True
+            For index As Integer = 1 To realTimestamps.Count - 1
+                If realTimestamps(index) > realTimestamps(index:=index - 1) Then
+                    descending = False
+                End If
+                If realTimestamps(index) < realTimestamps(index:=index - 1) Then
+                    ascending = False
+                End If
+            Next
+            ' If timestamps are descending (newest->oldest) and not ascending, reverse list
+            needReverse = descending AndAlso Not ascending
+        End If
+
+        If needReverse Then
+            sGs.Reverse()
+        End If
+
+        ' Fill any placeholder timestamps (New Date) using a running base time.
+        ' Walk the (possibly reversed) list from start->end and assign times incrementally.
+        Dim lastKnown As New Date
+        For index As Integer = 0 To sGs.Count - 1
+            If sGs(index).Timestamp.Equals(value:=New Date) Then
+                If lastKnown.Equals(value:=New Date) Then
+                    lastKnown = yesterday.RoundDownToMinute()
+                    sGs(index).TimestampAsString = lastKnown.ToStringExact()
+                Else
+                    lastKnown += FiveMinuteSpan
+                    sGs(index).TimestampAsString = lastKnown.ToStringExact()
+                End If
+            Else
+                ' We have a real timestamp; remember it as the last known time for subsequent fillers
+                lastKnown = sGs(index).Timestamp
+            End If
+        Next
+
+        Return sGs
+    End Function
+
+    ''' <summary>
     '''  Gets the display name of a pump model based on its model number.
     ''' </summary>
     ''' <param name="modelNumber">The model number of the pump.</param>
@@ -154,31 +252,35 @@ Friend Module Form1UpdateHelpers
     ''' <example>
     '''  GetUniqueDataFileName("MyFile", "en-US", "txt", mustBeUnique:=True)
     ''' </example>
-    Friend Function GetUniqueDataFileName(
-        baseName As String,
-        cultureName As String,
-        extension As String,
-        mustBeUnique As Boolean) As FileNameStruct
+    Friend Function GetUniqueDataFileName(baseName As String,
+                                          cultureName As String,
+                                          extension As String,
+                                          mustBeUnique As Boolean) As FileNameStruct
         Dim message As String
-        If IsNullOrWhiteSpace(baseName) Then
+        If IsNullOrWhiteSpace(value:=baseName) Then
             message = $"'{NameOf(baseName)}' cannot be null or whitespace."
             Throw New ArgumentException(message, paramName:=NameOf(baseName))
         End If
 
-        If IsNullOrWhiteSpace(cultureName) Then
+        If IsNullOrWhiteSpace(value:=cultureName) Then
             message = $"'{NameOf(cultureName)}' cannot be null or whitespace."
             Throw New ArgumentException(message, paramName:=NameOf(cultureName))
         End If
 
-        If IsNullOrWhiteSpace(extension) Then
+        If IsNullOrWhiteSpace(value:=extension) Then
             message = $"'{NameOf(extension)}' cannot be null or whitespace."
             Throw New ArgumentException(message, paramName:=NameOf(extension))
         End If
 
         Try
-            Dim filenameWithoutExtension As String = $"{baseName}({cultureName}){GetUserName()}"
-            Dim filenameWithExtension As String = $"{filenameWithoutExtension}.{extension}"
-            Dim withPath As String = Path.Join(GetProjectDataDirectory(), filenameWithExtension)
+            Dim filenameWithoutExtension As String =
+                $"{baseName}({cultureName}){GetUserName()}"
+
+            Dim filenameWithExtension As String =
+                $"{filenameWithoutExtension}.{extension}"
+
+            Dim withPath As String =
+                Path.Join(GetProjectDataDirectory(), filenameWithExtension)
 
             If mustBeUnique AndAlso File.Exists(path:=withPath) Then
                 'Get unique file name
@@ -196,7 +298,6 @@ Friend Module Form1UpdateHelpers
             Stop
         End Try
         Return New FileNameStruct
-
     End Function
 
     ''' <summary>
@@ -285,7 +386,7 @@ Friend Module Form1UpdateHelpers
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function Is700Series() As Boolean
-        If RecentDataEmpty() Then Return False
+        If IsRecentDataEmpty() Then Return False
         Return s_700Models.Contains(PatientData.MedicalDeviceInformation.ModelNumber)
     End Function
 
@@ -296,7 +397,7 @@ Friend Module Form1UpdateHelpers
     '''  <see langword="True"/> if <see cref="RecentData"/> is empty;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Friend Function RecentDataEmpty() As Boolean
+    Friend Function IsRecentDataEmpty() As Boolean
         Return RecentData Is Nothing OrElse RecentData.Count = 0
     End Function
 
@@ -306,7 +407,7 @@ Friend Module Form1UpdateHelpers
     ''' </summary>
     ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdateDataTables(mainForm As Form1)
-        If RecentDataEmpty() Then
+        If IsRecentDataEmpty() Then
             DebugPrint(message:=$"Exiting, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If
@@ -335,7 +436,7 @@ Friend Module Form1UpdateHelpers
         End If
 
         s_sgRecords = If(RecentData.TryGetValue(key:="sgs", value),
-                         JsonToListOfSgs(json:=value),
+                         ToListOfSgs(json:=value),
                          New List(Of SG))
 
         mainForm.MaxBasalPerHourLabel.Text = If(RecentData.TryGetValue(key:="markers", value),

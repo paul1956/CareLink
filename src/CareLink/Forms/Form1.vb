@@ -2607,7 +2607,7 @@ Public Class Form1
         Dim path As String = GetProjectDataDirectory()
         Me.MenuStartLoadDataFile.Enabled = AnyMatchingFiles(path, searchPattern)
 
-        Me.MenuStartSaveSnapshot.Enabled = Not RecentDataEmpty()
+        Me.MenuStartSaveSnapshot.Enabled = Not IsRecentDataEmpty()
 
         searchPattern = $"{BaseErrorReportName}*.txt"
         Me.MenuStartLoadExceptionReport.Visible = AnyMatchingFiles(path, searchPattern)
@@ -2794,7 +2794,7 @@ Public Class Form1
     '''  The saved file will have a unique name based on the current date and time.
     ''' </remarks>
     Private Sub MenuStartSaveSnapshot_Click(sender As Object, e As EventArgs) Handles MenuStartSaveSnapshot.Click
-        If RecentDataEmpty() Then Exit Sub
+        If IsRecentDataEmpty() Then Exit Sub
         Dim path As String = GetUniqueDataFileName(
             baseName:=BaseSnapshotName,
             cultureName:=CurrentDateCulture.Name,
@@ -3704,7 +3704,7 @@ Public Class Form1
                                   Await Client.GetRecentDataAsync(),
                                   String.Empty)
 
-            If RecentDataEmpty() Then
+            If IsRecentDataEmpty() Then
                 If Client Is Nothing OrElse IsNotNullOrEmpty(value:=lastErrorMessage) Then
                     Do
                         LoginDialog.LoginSourceAutomatic = FileToLoadOptions.Login
@@ -3727,7 +3727,7 @@ Public Class Form1
 
             ReportLoginStatus(
                 Me.LoginStatus,
-                hasErrors:=RecentDataEmpty,
+                hasErrors:=IsRecentDataEmpty,
                 lastErrorMessage)
 
             Me.Cursor = Cursors.Default
@@ -3740,7 +3740,7 @@ Public Class Form1
 
         Dim lastMedicalDeviceDataUpdateServerEpochString As String = EmptyString
         Dim sgString As String = "---"
-        If Not RecentDataEmpty() Then
+        If Not IsRecentDataEmpty() Then
             If RecentData.TryGetValue(
                     key:=NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime),
                     value:=lastMedicalDeviceDataUpdateServerEpochString) Then
@@ -5391,7 +5391,7 @@ Public Class Form1
     '''  based on the current patient data and system status.
     ''' </remarks>
     Friend Sub UpdateAllTabPages(fromFile As Boolean)
-        If RecentDataEmpty() Then
+        If IsRecentDataEmpty() Then
             DebugPrint($"exiting, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If

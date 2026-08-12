@@ -138,7 +138,7 @@ Friend Module LoginHelpers
                     ReportLoginStatus(owner.LoginStatus)
                     Return False
                 End If
-                ReportLoginStatus(owner.LoginStatus, hasErrors:=RecentDataEmpty, lastErrorMessage)
+                ReportLoginStatus(owner.LoginStatus, hasErrors:=IsRecentDataEmpty, lastErrorMessage)
                 owner.MenuShowMiniDisplay.Visible = True
                 fromFile = False
                 owner.TabControlPage1.Visible = True
