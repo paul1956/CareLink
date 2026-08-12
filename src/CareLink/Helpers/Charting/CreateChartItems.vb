@@ -173,6 +173,17 @@ Friend Module CreateChartItems
             .BorderColor = Color.FromArgb(alpha:=64, baseColor:=Color.DimGray),
             .BorderDashStyle = ChartDashStyle.Solid,
             .ShadowColor = Color.Transparent}
+
+        Dim firstAxis As List(Of Single)
+        Dim secondAxis As List(Of Single)
+        If NativeMmolL Then
+            firstAxis = s_mmolLValues
+            secondAxis = s_mgdLValues
+        Else
+            firstAxis = s_mgdLValues
+            secondAxis = s_mmolLValues
+        End If
+
         With tmpChartArea
             Dim baseColor As Color = containingChart.BackColor.ContrastingColor()
             Dim labelFont As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
@@ -212,11 +223,13 @@ Friend Module CreateChartItems
                 .IsInterlaced = True
                 .IsLabelAutoFit = False
                 .IsMarginVisible = False
-                .IsStartedFromZero = True
+                .IsStartedFromZero = False
+                .Maximum = firstAxis.Last
+                .Minimum = firstAxis.First
                 With .LabelStyle
                     .Font = labelFont
                     .ForeColor = baseColor
-                    .Format = "{0}"
+                    .Format = GetChartAxisFormat(NativeMmolL)
                 End With
                 .LineColor = Color.FromArgb(alpha:=64, baseColor)
                 With .MajorGrid
@@ -224,15 +237,6 @@ Friend Module CreateChartItems
                 End With
                 .ScaleView.Zoomable = False
             End With
-            Dim firstAxis As List(Of Single)
-            Dim secondAxis As List(Of Single)
-            If NativeMmolL Then
-                firstAxis = s_mmolLValues
-                secondAxis = s_mgdLValues
-            Else
-                firstAxis = s_mgdLValues
-                secondAxis = s_mmolLValues
-            End If
 
             With .AxisY2
                 .Maximum = firstAxis.Last
@@ -240,10 +244,11 @@ Friend Module CreateChartItems
 
                 .IsMarginVisible = False
                 .IsStartedFromZero = False
+
                 With .LabelStyle
                     .Font = labelFont
                     .ForeColor = baseColor
-                    .Format = GetSgFormat(withSign:=False)
+                    .Format = GetChartAxisFormat(NativeMmolL)
                 End With
                 .LineColor = Color.FromArgb(alpha:=64, baseColor)
 
@@ -259,9 +264,8 @@ Friend Module CreateChartItems
 
                 Dim provider As CultureInfo = CultureInfo.CurrentUICulture
                 For i As Integer = 0 To s_mmolLValues.Count - 1
-                    Dim format As String = GetSgFormat()
                     Dim yMin As Single = GetYMinNativeMmolL()
-                    Dim axisText As String = firstAxis(index:=i).ToString(format, provider)
+                    Dim axisText As String = firstAxis(index:=i).ToString(format:=GetSgFormat(NativeMmolL), provider)
                     .CustomLabels.Add(
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,
@@ -269,10 +273,7 @@ Friend Module CreateChartItems
                             text:=axisText,
                             labelRow:=0,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
-                    format = If(NativeMmolL,
-                                "F0",
-                                "F1")
-                    axisText = secondAxis(index:=i).ToString(format, provider)
+                    axisText = secondAxis(index:=i).ToString(GetSgFormat(nativeMmolL:=Not NativeMmolL, withSign:=False), provider)
                     .CustomLabels.Add(
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,

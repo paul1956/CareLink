@@ -206,7 +206,7 @@ Public Class SG
     '''  A format string for displaying the sensor glucose value.
     ''' </returns>
     Public Overrides Function ToString() As String
-        Return Me.sg.ToString(format:=GetSgFormat(), provider:=CultureInfo.CurrentUICulture)
+        Return Me.sg.ToString(format:=GetSgFormat(NativeMmolL), provider:=CultureInfo.CurrentUICulture)
     End Function
 
 End Class

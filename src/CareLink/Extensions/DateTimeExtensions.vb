@@ -369,7 +369,7 @@ Friend Module DateTimeExtensions
 
     ''' <summary>
     '''  Converts a <see langword="Date"/> to a <see langword="String"/>
-    '''  formatted as "ddd, MMM d HH:mm".
+    '''  formatted as "MMM dd, yyyy HH:mm".
     ''' </summary>
     ''' <param name="triggeredDateTime">
     '''  The <see langword="Date"/> to convert.
@@ -379,7 +379,7 @@ Friend Module DateTimeExtensions
     ''' </returns>
     <Extension>
     Public Function ToNotificationString(triggeredDateTime As Date) As String
-        Return triggeredDateTime.ToString(format:=$"ddd, MMM d,{s_timeWithMinuteFormat}")
+        Return triggeredDateTime.ToString(format:=$"MMM dd, yyyy {s_timeWithMinuteFormat}")
     End Function
 
     ''' <summary>

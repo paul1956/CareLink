@@ -231,7 +231,7 @@ Friend Module DgvExportHelpers
                                     Else
                                         .Value = valueASingle
                                         .Style.NumberFormat.Format = If(dgv.Columns(index).Name.EqualsNoCase("sg"),
-                                                                        GetSgFormat(withSign:=False),
+                                                                        GetSgFormat(NativeMmolL, withSign:=False),
                                                                         $"0{DecimalSeparator}000")
 
                                         align = XLAlignmentHorizontalValues.Right

@@ -4224,7 +4224,7 @@ Public Class Form1
                             Else
                                 deltaString = If(Math.Abs(value:=delta) < 0.001,
                                                  "0",
-                                                 delta.ToString(format:=GetSgFormat(withSign:=True), provider))
+                                                 delta.ToString(format:=GetSgFormat(NativeMmolL, withSign:=True), provider))
 
                                 Me.TrendValueLabel.Text = deltaString
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta)

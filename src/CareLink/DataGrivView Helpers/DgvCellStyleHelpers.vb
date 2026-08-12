@@ -217,7 +217,7 @@ Public Module DgvCellStyleHelpers
             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
         Else
             Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-            Dim format As String = GetSgFormat()
+            Dim format As String = GetSgFormat(NativeMmolL)
             Select Case sgColumnName
                 Case partialKey
                     e.Value = sensorValue.ToString(format, provider)

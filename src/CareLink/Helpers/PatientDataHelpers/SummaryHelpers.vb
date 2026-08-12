@@ -72,7 +72,7 @@ Friend Module SummaryHelpers
             End Function
 
         Dim mergedDict As Dictionary(Of String, String) =
-            s_notificationMessagesFlex.Concat(s_notificationMessages).ToDictionary(keySelector, elementSelector)
+            s_notificationMessagesFlex.Concat(second:=s_notificationMessages).ToDictionary(keySelector, elementSelector)
 
         For Each kvp As KeyValuePair(Of String, String) In mergedDict
             Dim value As New List(Of String)
@@ -102,11 +102,10 @@ Friend Module SummaryHelpers
                                                     ByRef message As String) As Boolean
 
         ExtractErrorMessageVariables()
-        Dim originalMessage As String = String.Empty
-
         ' Initialize variables to hold extracted values Pre-Flex
         Dim basalName As String = String.Empty
         Dim bgValue As String = String.Empty
+        Dim alertClearType As String = String.Empty
         Dim criticalLow As String = String.Empty
         Dim deliveredAmount As String = String.Empty
         Dim lastSetChange As String = String.Empty
@@ -157,6 +156,13 @@ Friend Module SummaryHelpers
         End If
 
         Dim triggerTime As TimeOnly
+        Dim additionalInfo As Dictionary(Of String, String) = Nothing
+        key = "AdditionalInfo"
+        Dim jsonString As String = String.Empty
+        If jsonDictionary.TryGetValue(key, value:=jsonString) Then
+            additionalInfo = jsonString.ToStringDictionary()
+        End If
+
         For Each keyWord As String In list
             Try
                 Select Case keyWord
@@ -167,6 +173,17 @@ Friend Module SummaryHelpers
                                 JsonSerializer.Deserialize(Of AcknowledgedRecord)(json:=resolvedValue.ToString)
                             resolved = $" {acknowledgedRecord.Time.ToNotificationString}"
                         End If
+                    Case "alertClearType"
+                        Dim resolvedValue As String = String.Empty
+                        If jsonDictionary.TryGetValue(key:="alert_clear_type", value:=resolvedValue) Then
+                            alertClearType = resolvedValue.ToTitle
+                        Else
+                            If additionalInfo.TryGetValue(key:="alert_clear_type", value:=resolvedValue) Then
+                                alertClearType = resolvedValue.ToTitle()
+                            Else
+                                Stop
+                            End If
+                        End If
                     Case "triggeredDateTime"
                        ' handled above
                     Case "secondaryTime", "secondaryTimeReminder"
@@ -175,22 +192,16 @@ Friend Module SummaryHelpers
                             triggerTime = TimeOnly.FromDateTime(secondaryTime.ParseDate(key))
                             secondaryTime = $" { secondaryTime.ParseDate(key).ToNotificationString}"
                         Else
-                            Dim jsonString As String = String.Empty
-                            key = "AdditionalInfo"
-                            If jsonDictionary.TryGetValue(key, value:=jsonString) Then
-                                Dim addInfo As Dictionary(Of String, String) = jsonString.ToStringDictionary()
-                                If addInfo.TryGetValue("secondaryTime", value:=secondaryTime) Then
-                                    s_secondaryTimeReminder = secondaryTime.FormatTimeText()
-                                Else
-                                    Stop
-                                End If
+                            If additionalInfo.TryGetValue(key:="secondaryTime", value:=secondaryTime) Then
+                                s_secondaryTimeReminder = secondaryTime.FormatTimeText()
+                            Else
+                                Stop
                             End If
                         End If
                     Case "dateTime"
                         Stop
                     Case Else
                         Try
-                            Dim jsonString As String = String.Empty
                             key = "AdditionalInfo"
                             If jsonDictionary.TryGetValue(key, value:=jsonString) Then
                                 Dim addInfo As Dictionary(Of String, String) = jsonString.ToStringDictionary
@@ -256,7 +267,7 @@ Friend Module SummaryHelpers
                                             Stop
                                         End If
                                     Case "units"
-                        ' handled elsewhere
+                                        ' handled elsewhere
                                     Case "unitsRemaining"
                                         If Not addInfo.TryGetValue(key, value:=unitsRemaining) Then
                                             unitsRemaining = "0"
@@ -273,6 +284,7 @@ Friend Module SummaryHelpers
         Next
 
         message = message _
+            .Replace(oldValue:="(alertClearType)", newValue:=alertClearType) _
             .Replace(oldValue:="(basalName)", newValue:=basalName) _
             .Replace(oldValue:="(bgValue)", newValue:=bgValue) _
             .Replace(oldValue:="(criticalLow)", newValue:=criticalLow) _
