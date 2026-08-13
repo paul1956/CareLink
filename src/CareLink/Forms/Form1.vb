@@ -6,6 +6,7 @@ Imports System.ComponentModel
 Imports System.Configuration
 Imports System.Globalization
 Imports System.IO
+Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Text.Json
 Imports System.Windows.Forms.DataVisualization.Charting
@@ -2380,6 +2381,7 @@ Public Class Form1
             My.Settings.Save()
         End If
         Encoding.RegisterProvider(provider:=CodePagesEncodingProvider.Instance)
+        Me.StatusStripDotNetVersion.Text = $"Dot Net Version: {RuntimeInformation.FrameworkDescription}"
         If Not Directory.Exists(path:=GetProjectDataDirectory()) Then
             Dim lastError As String = $"Can't create required project directories!"
             Directory.CreateDirectory(path:=GetProjectDataDirectory())
@@ -2482,8 +2484,8 @@ Public Class Form1
 
         Me.StatusStrip1.BackColor = Me.MenuStrip1.BackColor
 
-        Me.LastUpdateTimeToolStripStatusLabel.BackColor = Me.MenuStrip1.BackColor
-        Me.LastUpdateTimeToolStripStatusLabel.ForeColor = Me.MenuStrip1.ForeColor
+        Me.StripStatusLastUpdateTime.BackColor = Me.MenuStrip1.BackColor
+        Me.StripStatusLastUpdateTime.ForeColor = Me.MenuStrip1.ForeColor
 
         Me.LoginStatus.BackColor = Me.MenuStrip1.BackColor
         Me.LoginStatus.ForeColor = Me.MenuStrip1.ForeColor
@@ -2493,11 +2495,11 @@ Public Class Form1
         Me.StatusStripSpeech.BackColor = Me.MenuStrip1.BackColor
         Me.StatusStripSpeech.ForeColor = Me.MenuStrip1.ForeColor
 
-        Me.TimeZoneToolStripStatusLabel.BackColor = Me.MenuStrip1.BackColor
-        Me.TimeZoneToolStripStatusLabel.ForeColor = Me.MenuStrip1.ForeColor
+        Me.StripStatusTimeZoneToolLabel.BackColor = Me.MenuStrip1.BackColor
+        Me.StripStatusTimeZoneToolLabel.ForeColor = Me.MenuStrip1.ForeColor
 
-        Me.UpdateAvailableStatusStripLabel.BackColor = Me.MenuStrip1.BackColor
-        Me.UpdateAvailableStatusStripLabel.ForeColor = Color.Red
+        Me.StatusStripUpdateAvailable.BackColor = Me.MenuStrip1.BackColor
+        Me.StatusStripUpdateAvailable.ForeColor = Color.Red
 
 #End Region ' Status Strip Colors
 

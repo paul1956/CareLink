@@ -25,6 +25,7 @@ Namespace My
             e.ColorMode = SystemColorMode.Dark
             '    ' If a splash dialog is used, this sets the minimum display time:
             '    e.MinimumSplashScreenDisplayTime = 4000
+            e.VisualStylesMode = VisualStylesMode.Net11
         End Sub
 
         Private Sub Me_UnhandledException(sender As Object, e As UnhandledExceptionEventArgs) _

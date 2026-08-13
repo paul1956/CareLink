@@ -273,7 +273,7 @@ Friend Module LoginHelpers
         Optional highLight As Boolean = False,
         Optional isDaylightSavingTime? As Boolean = Nothing)
 
-        With form1.LastUpdateTimeToolStripStatusLabel
+        With form1.StripStatusLastUpdateTime
             If IsNotNullOrWhiteSpace(msg) Then
                 .Text = msg
             End If
@@ -287,7 +287,7 @@ Friend Module LoginHelpers
             End If
         End With
 
-        With form1.TimeZoneToolStripStatusLabel
+        With form1.StripStatusTimeZoneToolLabel
             .Text = String.Empty
             .ForeColor = form1.MenuStrip1.ForeColor
             If isDaylightSavingTime IsNot Nothing Then

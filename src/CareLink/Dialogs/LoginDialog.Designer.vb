@@ -110,10 +110,10 @@ Partial Class LoginDialog
         ' 
         Ok_Button.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         Ok_Button.DialogResult = DialogResult.OK
-        Ok_Button.Location = New Point(235, 323)
+        Ok_Button.Location = New Point(223, 323)
         Ok_Button.Margin = New Padding(9, 10, 9, 10)
         Ok_Button.Name = "Ok_Button"
-        Ok_Button.Size = New Size(94, 23)
+        Ok_Button.Size = New Size(106, 25)
         Ok_Button.TabIndex = 11
         Ok_Button.Text = "&OK"
         ' 
@@ -124,7 +124,7 @@ Partial Class LoginDialog
         Cancel_Button.Location = New Point(338, 323)
         Cancel_Button.Margin = New Padding(9, 10, 9, 10)
         Cancel_Button.Name = "Cancel_Button"
-        Cancel_Button.Size = New Size(94, 23)
+        Cancel_Button.Size = New Size(94, 25)
         Cancel_Button.TabIndex = 12
         Cancel_Button.Text = "&Cancel"
         ' 
@@ -240,7 +240,7 @@ Partial Class LoginDialog
         ' LoginDialog
         ' 
         Me.AcceptButton = Ok_Button
-        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = Cancel_Button
         Me.ClientSize = New Size(442, 359)
