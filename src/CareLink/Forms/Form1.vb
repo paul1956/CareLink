@@ -175,18 +175,18 @@ Public Class Form1
             homeChartLegend:=_summaryChartLegend,
             treatmentMarkersChartLegend:=_treatmentMarkersChartLegend)
 
-        Dim predicate As Func(Of LowGlucoseSuspended, Boolean) = Function(s As LowGlucoseSuspended) As Boolean
-                                                                     Return s.deliverySuspended
-                                                                 End Function
+        Dim predicate As Func(Of LowGlucoseSuspended, Boolean) =
+            Function(s As LowGlucoseSuspended) As Boolean
+                Return s.deliverySuspended
+            End Function
 
         showLegend = s_suspendedMarkers.Any(predicate)
 
-        ShowHideLegendItem(
-            showLegend,
-            legendString:="Suspend",
-            activeInsulinChartLegend:=_activeInsulinChartLegend,
-            homeChartLegend:=_summaryChartLegend,
-            treatmentMarkersChartLegend:=_treatmentMarkersChartLegend)
+        ShowHideLegendItem(showLegend,
+                           legendString:="Suspend",
+                           activeInsulinChartLegend:=_activeInsulinChartLegend,
+                           homeChartLegend:=_summaryChartLegend,
+                           treatmentMarkersChartLegend:=_treatmentMarkersChartLegend)
     End Sub
 
 #End Region
@@ -429,7 +429,8 @@ Public Class Form1
                 Case SgSeriesName
                     Me.CursorMessage1Label.Text = "Sensor Glucose"
                     Me.CursorMessage1Label.Visible = True
-                    Me.CursorMessage2Label.Text = $"{currentDataPoint.YValues(0).RoundToSingle(digits:=3)} {BgUnits}"
+                    Me.CursorMessage2Label.Text =
+                        $"{currentDataPoint.YValues(0).RoundToSingle(digits:=3)} {BgUnits}"
                     Me.CursorMessage2Label.Visible = True
                     Me.CursorMessage3Label.Text =
                         If(NativeMmolL,
@@ -2549,8 +2550,8 @@ Public Class Form1
     End Sub
 
     Private Sub ShowControlPositions()
-        Dim data As List(Of ControlInfo) = GetAllControlsAndNative(Me.TabControlPage1)
-
+        Dim data As List(Of ControlInfo) =
+            GetAllControlsAndNative(root:=Me.TabControlPage1)
         Dim f As New ControlPositionsForm()
         f.DataGridView1.AutoGenerateColumns = True
         f.DataGridView1.DataSource = data
