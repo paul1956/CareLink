@@ -556,7 +556,7 @@ Public Module StringExtensions
     <Extension>
     Public Function ToStringDictionary(Json As String) As Dictionary(Of String, String)
         Dim raw As Dictionary(Of String, JsonElement) =
-            JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(Json)
+            Json.FromJson(Of Dictionary(Of String, JsonElement))()
 
         Dim keySelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
                 Function(kvp)

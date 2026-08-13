@@ -91,7 +91,7 @@ Friend Module FileUtilities
 
         Try
             Dim json As String = tokenElement.GetRawText()
-            Return JsonSerializer.Deserialize(Of TokenData)(json)
+            Return json.FromJson(Of TokenData)()
         Catch ex As JsonException
             Debug.WriteLine(message:=$"Failed parsing token data to TokenData: {ex.Message}")
             Return Nothing
@@ -127,7 +127,7 @@ Friend Module FileUtilities
 
         Try
             Dim json As String = File.ReadAllText(path)
-            Dim tokenData As JsonElement = DeserializeJsonElement(json)
+            Dim tokenData As JsonElement = json.FromJson(Of JsonElement)()
             For Each propertyName As String In s_requiredFields
                 Dim propElem As JsonElement = Nothing
                 If Not tokenData.TryGetProperty(propertyName, value:=propElem) Then
@@ -156,27 +156,21 @@ Friend Module FileUtilities
     Public Sub WriteTokenFile(token As JsonElement,
         Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME)
         Dim path As String = GetLoginDataFileName(tokenBaseFileName)
-        Dim contents As String = JsonSerializer.Serialize(value:=token, options:=s_jsonSerializerOptions)
+        Dim contents As String = token.ToJson()
         WriteTokenFile(Of JsonElement)(token, path)
     End Sub
 
+    ''' <summary>
+    '''   Writes the specified token data of type <typeparamref name="T"/>
+    '''  to a file at the given path.
+    ''' </summary>
+    ''' <typeparam name="T">The type of the token data to write.</typeparam>
+    ''' <param name="token">The token data to write.</param>
+    ''' <param name="path">The path to the file where the token data will be written.</param>
     Public Sub WriteTokenFile(Of T)(token As T, path As String)
-        Dim contents As String = JsonSerializer.Serialize(value:=token, options:=s_jsonSerializerOptions)
+        Dim contents As String = token.ToJson()
         File.WriteAllText(path, contents)
     End Sub
-
-    ''' <summary>
-    '''  Deserializes a JSON string into a <see cref="JsonElement"/>.
-    ''' </summary>
-    Friend Function DeserializeJsonElement(json As String) As JsonElement
-        Try
-            Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
-            Return JsonSerializer.Deserialize(Of JsonElement)(json, options)
-        Catch ex As JsonException
-            Debug.WriteLine(message:=$"ERROR: failed deserializing JSON string: {ex.Message}")
-            Return Nothing
-        End Try
-    End Function
 
     ''' <summary>
     '''  Reads a file and deserializes its contents into a <see cref="JsonElement"/>.
@@ -190,7 +184,7 @@ Friend Module FileUtilities
 
         Try
             Dim json As String = File.ReadAllText(path)
-            Return DeserializeJsonElement(json)
+            Return json.FromJson(Of JsonElement)()
         Catch ex As Exception
             Debug.WriteLine(message:=$"ERROR: failed reading file {path}: {ex.Message}")
             Return Nothing

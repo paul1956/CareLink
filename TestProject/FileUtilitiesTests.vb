@@ -9,7 +9,7 @@ Public Class FileUtilitiesTests
     <Fact>
     Public Sub DeserializeJsonElementFromString_ValidJson_ReturnsElement()
         Dim json As String = "{""a"":1,""b"":""text""}"
-        Dim elem As JsonElement = FileUtilities.DeserializeJsonElement(json)
+        Dim elem As JsonElement = json.FromJson(Of JsonElement)()
         elem.ValueKind.Should().Be(expected:=JsonValueKind.Object)
         elem.GetProperty("a").GetInt32().Should().Be(1)
         elem.GetProperty("b").GetString().Should().Be("text")

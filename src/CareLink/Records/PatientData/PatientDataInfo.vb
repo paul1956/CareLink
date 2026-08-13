@@ -210,6 +210,18 @@ Public Class PatientDataInfo
     <JsonPropertyName("notificationHistory")>
     Public Property NotificationHistory As Object '  As NotificationHistory
 
+    <JsonPropertyName("reservoirIconSelection")>
+    Public Property ReservoirIconSelection As String
+
+    <JsonPropertyName("infusionStatusIconSelection")>
+    Public Property InfusionStatusIconSelection As String
+
+    <JsonPropertyName("pumpBatteryLevelTime")>
+    Public Property PumpBatteryLevelTime As Integer
+
+    <JsonPropertyName("pumpBatteryIconSelection")>
+    Public Property PumpBatteryIconSelection As String
+
     <JsonPropertyName("sensorLifeText")>
     Public Property SensorLifeText As String
 

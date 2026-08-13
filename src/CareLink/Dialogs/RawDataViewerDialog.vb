@@ -11,7 +11,7 @@ Public Class RawDataViewerDialog
     Public Sub New(json As JsonElement)
         Me.InitializeComponent()
         Dim rootNode As JsonNode = JsonNode.Parse(json:=json.ToString())
-        Me.RawDataRTB.Text = JsonSerializer.Serialize(value:=rootNode, options:=s_jsonSerializerOptions)
+        Me.RawDataRTB.Text = rootNode.ToJsonString()
     End Sub
 
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click

@@ -44,7 +44,7 @@ Public Class CareLinkService
                                                     userName As String,
                                                     password As String) As Task(Of TokenData)
 
-        Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(json:=endpointConfig.SsoJson)
+        Dim ssoConfig As SsoConfig = endpointConfig.SsoJson.FromJson(Of SsoConfig)()
         Dim clientId As String = ssoConfig.Client.ClientId
         Dim scope As String = ssoConfig.Client.Scope
         Dim redirectUri As String = ssoConfig.Client.RedirectUri
@@ -93,7 +93,7 @@ Public Class CareLinkService
             Throw New Exception(message:=$"Could not get token data: {body}")
         End If
 
-        Dim token As TokenData = JsonSerializer.Deserialize(Of TokenData)(json:=body)
+        Dim token As TokenData = body.FromJson(Of TokenData)()
         token.ClientId = clientId
         WriteTokenFile(token, path:=outputFile)
         Return token
@@ -104,7 +104,7 @@ Public Class CareLinkService
                                                        userName As String,
                                                        password As String) As Task(Of TokenData)
 
-        Dim ssoConfig As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(json:=endpointConfig.SsoJson)
+        Dim ssoConfig As SsoConfig = endpointConfig.SsoJson.FromJson(Of SsoConfig)()
 
         Using ssoDoc As JsonDocument = JsonDocument.Parse(json:=endpointConfig.SsoJson)
             Dim oauthClient As JsonElement =

@@ -115,8 +115,7 @@ Friend Class Client2
             End If
             Dim bytes As Byte() = Convert.FromBase64String(s:=payload_b64)
             Dim json As String = Encoding.UTF8.GetString(bytes)
-            Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
-            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json, options)
+            Return json.FromJson(Of Dictionary(Of String, Object))()
         Catch ex As Exception
             Dim str As String = ex.DecodeException()
             Dim location As String = NameOf(GetAccessTokenPayload)
@@ -204,7 +203,7 @@ Friend Class Client2
         End If
 
         Using content As New StringContent(
-            content:=JsonSerializer.Serialize(value),
+            content:=value.ToJson(),
             encoding:=Encoding.UTF8,
             mediaType:="application/json")
 
@@ -232,8 +231,7 @@ Friend Class Client2
                             Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
 
                             Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
-                            Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
-                            Return JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json, options)
+                            Return json.FromJson(Of Dictionary(Of String, Object))()
                         End Using
                     End Using
                 Catch hex As HttpRequestException
@@ -305,8 +303,7 @@ Friend Class Client2
                 Dim patients As List(Of Dictionary(Of String, String))
                 Dim json As String =
                     Await response.Content.ReadAsStringAsync()
-                Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
-                patients = JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, String)))(json, options)
+                patients = json.FromJson(Of List(Of Dictionary(Of String, String)))()
                 If patients.Count > 0 Then
                     Return patients(index:=0)
                 End If
@@ -389,12 +386,10 @@ Friend Class Client2
         Dim hadException As Boolean = False
         Dim configJsonElement As JsonElement
 
-        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
         Try
             Application.DoEvents()
             Dim element As JsonElement = CType(_accessTokenPayload(key:="token_details"), JsonElement)
-
-            Dim payload As AccessTokenDetails = JsonSerializer.Deserialize(Of AccessTokenDetails)(element, options)
+            Dim payload As AccessTokenDetails = element.FromJson(Of AccessTokenDetails)()
             _country = If(payload.Country, s_countryCode)
             configJsonElement =
                 Await GetConfigAsync(httpClient:=_httpClient, country:=_country, Me.serverRegion)
@@ -407,9 +402,9 @@ Friend Class Client2
                 Throw New UnauthorizedAccessException
             End If
 
-            Dim userElement As JsonElement = DeserializeJsonElement(json)
+            Dim userElement As JsonElement = json.FromJson(Of JsonElement)()
             Me.UserElementDictionary = userElement.ToObjectDictionary()
-            _PatientPersonalData = JsonSerializer.Deserialize(Of PatientPersonalInfo)(element:=userElement, options)
+            _PatientPersonalData = userElement.FromJson(Of PatientPersonalInfo)()
 
             Dim role As String = _PatientPersonalData.role
             If role.ContainsNoCase(value:="Partner") Then
@@ -421,10 +416,9 @@ Friend Class Client2
             If Auth_Error_Codes.Contains(value:=_lastHttpStatusCode) Then
                 ' Start refresh task without Await inside Catch
                 Try
-                    If Not configJsonElement.ValueKind = JsonValueKind.Undefined Then
+                    If Not configJsonElement.ValueKind = Global.System.Text.Json.JsonValueKind.Undefined Then
                         Dim config As ConfigRecord =
-                            JsonSerializer.Deserialize(Of ConfigRecord)(
-                                json:=JsonSerializer.Serialize(value:=configJsonElement), options)
+                            FromJson(Of ConfigRecord)(json:=configJsonElement.ToJson())
                         refreshTask = Me.DoRefreshAsync(config:=configJsonElement.ToStringDictionary(),
                                                         tokenElement:=_tokenDataElement)
                     End If
@@ -531,9 +525,8 @@ Friend Class Client2
                                          tokenElement As JsonElement) As Task(Of JsonElement)
 
         Dim tokenUrl As String = config(key:="token_url")
-        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
         Dim tokenData As Dictionary(Of String, String) =
-                JsonSerializer.Deserialize(Of Dictionary(Of String, String))(element:=tokenElement, options)
+            tokenElement.FromJson(Of Dictionary(Of String, String))()
 
         ' Prepare form data
         Dim data As New List(Of KeyValuePair(Of String, String)) From {
@@ -574,7 +567,7 @@ Friend Class Client2
             End Using
         End Using
 
-        Return DeserializeJsonElement(JsonSerializer.Serialize(value:=tokenData, options:=s_jsonSerializerOptions))
+        Return tokenData.ToJson().FromJson(Of JsonElement)()
     End Function
 
     ''' <summary>

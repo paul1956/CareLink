@@ -2680,7 +2680,7 @@ Public Class Form1
                             ExceptionHandlerDialog.ReportNameWithPath = EmptyString
                             Try
                                 Dim json As String = ExceptionHandlerDialog.LocalRawData
-                                PatientDataElement = DeserializeJsonElement(json)
+                                PatientDataElement = json.FromJson(Of JsonElement)()
                                 DeserializePatientElement()
                                 Me.TabControlPage2.Visible = True
                                 Me.TabControlPage1.Visible = True
@@ -3037,12 +3037,10 @@ Public Class Form1
     Private Sub MenuOptionsEditPumpSettings_Click(sender As Object, e As EventArgs) _
         Handles MenuOptionsEditPumpSettings.Click
 
-        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
-
         SetUpCareLinkUser(forceUI:=True)
         Dim element As JsonElement = ReadJsonElementFromFile(path:=GetUserSettingsPath())
         If Not element.IsNullOrUndefined Then
-            CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(element, options)
+            CurrentUser = element.FromJson(Of CurrentUserRecord)()
         End If
     End Sub
 

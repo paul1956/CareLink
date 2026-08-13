@@ -388,20 +388,20 @@ Public Class InitializeDialog
         Dim rowIndex As Integer = 0
         For Each row As DataGridViewRow In Me.InitializeDataGridView.Rows
             Dim carbRecord As New CarbRatioRecord
-            Dim colName As String = NameOf(ColumnStart)
-            cell = row.Cells(colName)
+            Dim columnName As String = NameOf(ColumnStart)
+            cell = row.Cells(columnName)
             carbRecord.StartTime = TimeOnly.Parse(cell.Value.ToString, provider:=CurrentDateCulture)
-            colName = NameOf(ColumnEnd)
-            cell = row.Cells(colName)
+            columnName = NameOf(ColumnEnd)
+            cell = row.Cells(columnName)
             carbRecord.EndTime = TimeOnly.Parse(cell.Value.ToString, provider:=CurrentDateCulture)
-            colName = NameOf(ColumnNumericUpDown)
+            columnName = NameOf(ColumnNumericUpDown)
             Dim numericCell As DataGridViewNumericUpDownCell =
-                CType(row.Cells(colName), DataGridViewNumericUpDownCell)
+                CType(row.Cells(columnName), DataGridViewNumericUpDownCell)
             carbRecord.CarbRatio = ParseSingle(numericCell.Value, digits:=1)
-            Me.CurrentUser.CarbRatios.Add(carbRecord)
+            Me.CurrentUser.CarbRatios.Add(item:=carbRecord)
         Next
 
-        Dim contents As String = JsonSerializer.Serialize(value:=Me.CurrentUser, options:=s_jsonSerializerOptions)
+        Dim contents As String = Me.CurrentUser.ToJson()
         File.WriteAllTextAsync(path:=GetUserSettingsPath(), contents)
         Me.Close()
     End Sub

@@ -99,10 +99,10 @@ Public Class OAuthBrowserForm
     Private Async Function SetFieldAsync(selector As String, value As String) As Task
         Dim javaScript As String =
         $"(() => {{
-            const el = document.querySelector({JsonSerializer.Serialize(value:=selector)});
+            const el = document.querySelector({selector.ToJson()});
             if (!el) return false;
             el.focus();
-            el.value = {JsonSerializer.Serialize(value)};
+            el.value = {value.ToJson()};
             el.dispatchEvent(new Event('input', {{ bubbles: true }}));
             el.dispatchEvent(new Event('change', {{ bubbles: true }}));
             return true;

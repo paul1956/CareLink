@@ -13,16 +13,16 @@ Public Module JsonExtensions
     '''  Ignores null values, writes numbers as strings,
     '''  uses case-insensitive property names, and disallows unmapped members.
     ''' </summary>
-    Public ReadOnly s_jsonDeserializationOptions As New JsonSerializerOptions() With {
-        .DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        .NumberHandling = JsonNumberHandling.WriteAsString,
-        .PropertyNameCaseInsensitive = True,
-        .UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow}
+    Private ReadOnly Property DeserializationOptions As New JsonSerializerOptions() With
+        {.NumberHandling = JsonNumberHandling.WriteAsString,
+         .PropertyNameCaseInsensitive = True,
+         .UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow}
 
     ''' <summary>
     '''  Default <see cref="JsonSerializerOptions"/> for serialization with indented output.
     ''' </summary>
-    Public ReadOnly s_jsonSerializerOptions As New JsonSerializerOptions With {.WriteIndented = True}
+    Private ReadOnly Property SerializerOptions As New JsonSerializerOptions With
+        {.WriteIndented = True}
 
     ''' <summary>
     '''  Loads indexed items from a JSON string
@@ -35,8 +35,6 @@ Public Module JsonExtensions
     '''  <see langword="String"/> values representing the indexed items.
     ''' </returns>
     Public Function DeserializeJsonAsDictionary(json As String) As Dictionary(Of String, String)
-        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
-
         Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
         Dim resultDictionary As New Dictionary(Of String, String)(comparer)
         If IsNullOrWhiteSpace(value:=json) Then
@@ -44,7 +42,7 @@ Public Module JsonExtensions
         End If
         Dim item As KeyValuePair(Of String, Object)
         Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) =
-            JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json, options).ToList()
+            json.FromJson(Of Dictionary(Of String, Object)).ToList()
 
         For Each item In rawJsonData
             If item.Value Is Nothing Then
@@ -56,7 +54,7 @@ Public Module JsonExtensions
                     Case "additionalInfo"
                         Dim jsonItem As String = item.DeserializeJsonAsString
                         Dim additionalInfo As Dictionary(Of String, Object) =
-                            JsonSerializer.Deserialize(Of Dictionary(Of String, Object))(json:=jsonItem, options)
+                            jsonItem.FromJson(Of Dictionary(Of String, Object))
                         For Each kvp As KeyValuePair(Of String, Object) In additionalInfo
                             resultDictionary.Add(kvp.Key, value:=kvp.Value.ToString)
                         Next
@@ -147,11 +145,11 @@ Public Module JsonExtensions
 
     ''' <summary>
     '''  Converts a <see cref="JsonElement"/> to its <see langword="String"/> representation.
-    '''  If the element is null or undefined, returns an empty string.
-    '''  If the element is a string, returns its value; otherwise, returns the raw JSON text.
+    '''  If the jsonElement is null or undefined, returns an empty string.
+    '''  If the jsonElement is a string, returns its value; otherwise, returns the raw JSON text.
     ''' </summary>
     ''' <param name="value">The <see cref="JsonElement"/> to convert.</param>
-    ''' <returns>The <see langword="String"/> representation of the element.</returns>
+    ''' <returns>The <see langword="String"/> representation of the jsonElement.</returns>
     <Extension>
     Public Function ElementToString(value As JsonElement) As String
         Return If(value.IsNullOrUndefined,
@@ -159,6 +157,43 @@ Public Module JsonExtensions
                   If(value.ValueKind = JsonValueKind.String,
                      value.GetString(),
                      value.GetRawText()))
+    End Function
+
+    ''' <summary>
+    '''  Converts a JSON string to an object of type <typeparamref name="T"/>
+    '''  using the default <see cref="JsonSerializerOptions"/>.
+    ''' </summary>
+    ''' <typeparam name="T">The type of the object to deserialize.</typeparam>
+    ''' <param name="json">The JSON string to deserialize.</param>
+    ''' <returns>The deserialized object.</returns>
+    <Extension>
+    Public Function FromJson(Of T)(json As String) As T
+        Try
+            Return JsonSerializer.Deserialize(Of T)(json, options:=DeserializationOptions)
+        Catch ex As JsonException
+            Stop
+            Debug.WriteLine(message:=$"ERROR: failed deserializing JSON string: {ex.Message}")
+            Return Nothing
+        End Try
+    End Function
+
+    ''' <summary>
+    '''  Converts a JSON string to an object of type <typeparamref name="T"/>
+    '''  using the default <see cref="JsonSerializerOptions"/>.
+    ''' </summary>
+    ''' <typeparam name="T">The type of the object to deserialize.</typeparam>
+    ''' <param name="element">The JSON string to deserialize.</param>
+    ''' <returns>The deserialized object.</returns>
+    <Extension>
+    Public Function FromJson(Of T)(element As JsonElement) As T
+        Try
+            Dim elem As T = JsonSerializer.Deserialize(Of T)(element, options:=DeserializationOptions)
+            Return elem
+        Catch ex As JsonException
+            Stop
+            Debug.WriteLine(message:=$"ERROR: failed deserializing JSON string: {ex.Message}")
+            Return Nothing
+        End Try
     End Function
 
     ''' <summary>
@@ -192,9 +227,8 @@ Public Module JsonExtensions
             Return resultListOfDictionary
         End If
 
-        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
         Dim jsonList As List(Of Dictionary(Of String, Object)) =
-            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(json, options)
+            json.FromJson(Of List(Of Dictionary(Of String, Object)))
 
         Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
 
@@ -231,6 +265,24 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
+    '''  Serializes an object of type <typeparamref name="T"/> to a JSON string
+    '''  using the default <see cref="JsonSerializerOptions"/>.
+    ''' </summary>
+    ''' <typeparam name="T">The type of the object to serialize.</typeparam>
+    ''' <param name="value">The object to serialize.</param>
+    ''' <returns>The JSON string representing the object.</returns>
+    <Extension>
+    Public Function ToJson(Of T)(value As T) As String
+        Dim json As String = String.Empty
+        Try
+            json = JsonSerializer.Serialize(value, options:=SerializerOptions)
+        Catch ex As Exception
+            Stop
+        End Try
+        Return json
+    End Function
+
+    ''' <summary>
     '''  Converts a <paramref name="jsonArray"/> array to a <see cref="List"/> of objects,
     '''  recursively handling nested arrays and objects.
     ''' </summary>
@@ -239,14 +291,14 @@ Public Module JsonExtensions
     <Extension>
     Public Function ToList(jsonArray As JsonElement) As List(Of Object)
         Dim result As New List(Of Object)()
-        For Each element As JsonElement In jsonArray.EnumerateArray()
-            Select Case element.ValueKind
+        For Each jsonElement As JsonElement In jsonArray.EnumerateArray()
+            Select Case jsonElement.ValueKind
                 Case JsonValueKind.Object
-                    result.Add(item:=ToObjectDictionary(element))
+                    result.Add(item:=ToObjectDictionary(json:=jsonElement))
                 Case JsonValueKind.Array
-                    result.Add(item:=ToList(jsonArray:=element))
+                    result.Add(item:=ToList(jsonArray:=jsonElement))
                 Case Else
-                    result.Add(item:=ToObject(element))
+                    result.Add(item:=ToObject(jsonElement))
             End Select
         Next
         Return result
@@ -347,7 +399,6 @@ Public Module JsonExtensions
                 End Select
             Next
         End If
-
         Return result
     End Function
 
@@ -360,13 +411,11 @@ Public Module JsonExtensions
         If element.IsNullOrUndefined Then
             Return False
         End If
-
         Dim prop As JsonElement
-        If element.TryGetProperty(propertyName, prop) AndAlso Not prop.IsNullOrUndefined Then
+        If element.TryGetProperty(propertyName, value:=prop) AndAlso Not prop.IsNullOrUndefined Then
             value = prop.GetString()
             Return True
         End If
-
         Return False
     End Function
 

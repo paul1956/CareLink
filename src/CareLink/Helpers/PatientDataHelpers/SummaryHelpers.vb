@@ -170,7 +170,7 @@ Friend Module SummaryHelpers
                         Dim resolvedValue As String = String.Empty
                         If jsonDictionary.TryGetValue(key:="acknowledged", value:=resolvedValue) Then
                             Dim acknowledgedRecord As AcknowledgedRecord =
-                                JsonSerializer.Deserialize(Of AcknowledgedRecord)(json:=resolvedValue.ToString)
+                                resolvedValue.ToString.FromJson(Of AcknowledgedRecord)()
                             resolved = $" {acknowledgedRecord.Time.ToNotificationString}"
                         End If
                     Case "alertClearType"

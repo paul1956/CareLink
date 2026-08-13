@@ -21,8 +21,8 @@ Public Class TokenData
     <JsonPropertyName("client_id")>
     Public Property ClientId As String
 
-    <JsonPropertyName("expires_In")>
-    Public Property ExpiresIn As String
+    <JsonPropertyName("expires_in")>
+    Public Property ExpiresIn As Integer?
 
     <JsonPropertyName("token_type")>
     Public Property TokenType As String

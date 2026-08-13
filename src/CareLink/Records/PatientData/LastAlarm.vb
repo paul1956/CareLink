@@ -115,8 +115,13 @@ Public Class LastAlarm
     <JsonPropertyName("sg")>
     Public Property Sg As Single
 
+    <DisplayName("Background Color")>
+    <Column(Order:=21, TypeName:=NameOf([String]))>
+    <JsonPropertyName("backgroundColor")>
+    Public Property BackgroundColor As String
+
     <DisplayName("Additional Info")>
-    <Column(Order:=21, TypeName:=NameOf(AdditionalInfo))>
+    <Column(Order:=22, TypeName:=NameOf(AdditionalInfo))>
     <JsonPropertyName("additionalInfo")>
     Public Property AdditionalInfo As Dictionary(Of String, Object)
 

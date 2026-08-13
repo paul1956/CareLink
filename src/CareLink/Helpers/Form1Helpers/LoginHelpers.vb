@@ -36,7 +36,7 @@ Friend Module LoginHelpers
             '    Dim rawDataDialog As New RawDataViewerDialog(json:=PatientDataElement)
             '    rawDataDialog.ShowDialog(owner:=My.Forms.Form1)
             'End If
-            PatientData = JsonSerializer.Deserialize(Of PatientDataInfo)(element:=PatientDataElement)
+            PatientData = PatientDataElement.FromJson(Of PatientDataInfo)()
             RecentData = PatientDataElement.ToStringDictionary()
         Catch ex As Exception
             MessageBox.Show(
@@ -348,7 +348,7 @@ Friend Module LoginHelpers
     Friend Sub SetUpCareLinkUser()
         Dim path As String = GetUserSettingsPath()
         Dim json As String = File.ReadAllText(path)
-        CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(json, options:=s_jsonDeserializationOptions)
+        CurrentUser = json.FromJson(Of CurrentUserRecord)()
     End Sub
 
     ''' <summary>
@@ -390,7 +390,7 @@ Friend Module LoginHelpers
             If File.Exists(path:=userSettingsFileFullPath) Then
                 Dim element As JsonElement = ReadJsonElementFromFile(userSettingsFileFullPath)
                 If Not element.IsNullOrUndefined Then
-                    CurrentUser = JsonSerializer.Deserialize(Of CurrentUserRecord)(element, options:=s_jsonSerializerOptions)
+                    CurrentUser = element.FromJson(Of CurrentUserRecord)()
                 End If
 
                 If CurrentUser.InsulinRealAit = 0 Then
@@ -478,7 +478,7 @@ Friend Module LoginHelpers
             If currentUserUpdateNeeded Then
                 File.WriteAllTextAsync(
                     path:=userSettingsFileFullPath,
-                    contents:=JsonSerializer.Serialize(value:=CurrentUser, options:=s_jsonSerializerOptions))
+                    contents:=CurrentUser.ToJson())
             Else
                 TouchFile(userSettingsFileFullPath)
             End If

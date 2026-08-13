@@ -115,9 +115,8 @@ Friend Module Form1UpdateHelpers
     ''' <param name="json">The JSON string to convert.</param>
     ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
     Private Function ToListOfSgs(json As String) As List(Of SG)
-        Dim options As JsonSerializerOptions = s_jsonDeserializationOptions
         Dim jsonList As List(Of Dictionary(Of String, Object)) =
-            JsonSerializer.Deserialize(Of List(Of Dictionary(Of String, Object)))(json, options)
+            json.FromJson(Of List(Of Dictionary(Of String, Object)))()
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
         For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
@@ -318,7 +317,7 @@ Friend Module Form1UpdateHelpers
         ' First try to parse the value as JSON object and enumerate properties.
         If IsNotNullOrWhiteSpace(kvp.Value) Then
             Try
-                Dim elem As JsonElement = DeserializeJsonElement(json:=kvp.Value)
+                Dim elem As JsonElement = kvp.Value.FromJson(Of JsonElement)()
                 If Not elem.IsNullOrUndefined AndAlso elem.ValueKind = JsonValueKind.Object Then
                     Dim idx As Integer = 0
                     For Each prop As JsonProperty In elem.EnumerateObject()
