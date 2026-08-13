@@ -2422,10 +2422,7 @@ Public Class Form1
         Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle = currentHeaderStyle
         Me.DgvBasalPerHour.DefaultCellStyle = New DataGridViewCellStyle With {
             .Font = s_font12}
-        If Debugger.IsAttached Then
-            Me.MenuHelpShowControlPositions.Visible = False
-        End If
-
+        Me.MenuHelpShowControlPositions.Visible = Debugger.IsAttached
     End Sub
 
     ''' <summary>
@@ -2554,7 +2551,7 @@ Public Class Form1
     Private Sub ShowControlPositions()
         Dim data As List(Of ControlInfo) = GetAllControlsAndNative(Me.TabControlPage1)
 
-        Dim f As New PositionForm()
+        Dim f As New ControlPositionsForm()
         f.DataGridView1.AutoGenerateColumns = True
         f.DataGridView1.DataSource = data
         f.DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
