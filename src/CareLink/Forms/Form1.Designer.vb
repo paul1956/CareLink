@@ -478,19 +478,18 @@ Partial Class Form1
         CalibrationShieldPanel.Location = New Point(0, 0)
         CalibrationShieldPanel.Margin = New Padding(0)
         CalibrationShieldPanel.Name = "CalibrationShieldPanel"
-        CalibrationShieldPanel.Size = New Size(120, 132)
+        CalibrationShieldPanel.Size = New Size(125, 132)
         CalibrationShieldPanel.TabIndex = 64
         ' 
         ' LastSgOrExitTimeLabel
         ' 
-        LastSgOrExitTimeLabel.AutoSize = True
         LastSgOrExitTimeLabel.BackColor = Color.Transparent
         LastSgOrExitTimeLabel.Dock = DockStyle.Bottom
         LastSgOrExitTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         LastSgOrExitTimeLabel.ForeColor = Color.LightGray
         LastSgOrExitTimeLabel.Location = New Point(0, 90)
         LastSgOrExitTimeLabel.Name = "LastSgOrExitTimeLabel"
-        LastSgOrExitTimeLabel.Size = New Size(124, 21)
+        LastSgOrExitTimeLabel.Size = New Size(125, 21)
         LastSgOrExitTimeLabel.TabIndex = 55
         LastSgOrExitTimeLabel.Text = "Exit in: 3:27 hrs"
         LastSgOrExitTimeLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -503,7 +502,7 @@ Partial Class Form1
         PumpBannerStateLabel.ForeColor = Color.Black
         PumpBannerStateLabel.Location = New Point(0, 0)
         PumpBannerStateLabel.Name = "PumpBannerStateLabel"
-        PumpBannerStateLabel.Size = New Size(120, 15)
+        PumpBannerStateLabel.Size = New Size(125, 15)
         PumpBannerStateLabel.TabIndex = 56
         PumpBannerStateLabel.Text = "Target 150 2:00 Hr"
         PumpBannerStateLabel.TextAlign = ContentAlignment.MiddleCenter
@@ -534,13 +533,13 @@ Partial Class Form1
         CurrentSgLabel.Visible = False
         ' 
         ' SensorMessageLabel
-        ' 
+        '
         SensorMessageLabel.BackColor = Color.Transparent
         SensorMessageLabel.Font = New Font("Segoe UI", 9.5F, FontStyle.Bold)
         SensorMessageLabel.ForeColor = Color.LightGray
         SensorMessageLabel.Location = New Point(0, 8)
         SensorMessageLabel.Name = "SensorMessageLabel"
-        SensorMessageLabel.Size = New Size(116, 57)
+        SensorMessageLabel.Size = New Size(125, 57)
         SensorMessageLabel.TabIndex = 1
         SensorMessageLabel.Text = "Calibration Required"
         SensorMessageLabel.TextAlign = ContentAlignment.MiddleCenter

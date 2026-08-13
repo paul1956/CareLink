@@ -686,7 +686,8 @@ Friend Module Form1UpdateHelpers
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.systemStatusMessage), NameOf(ServerDataEnum.sensorState)
+                Case NameOf(ServerDataEnum.systemStatusMessage),
+                     NameOf(ServerDataEnum.sensorState)
                     item = New SummaryRecord(
                         recordNumber,
                         kvp,
@@ -815,12 +816,13 @@ Friend Module Form1UpdateHelpers
                     message = $"Pump Battery Level Time: {CInt(kvp.Value).MinutesToDaysHoursMinutes}."
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
+                Case NameOf(ServerDataEnum.pumpBatteryIconSelection)
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
+
                 Case NameOf(ServerDataEnum.sensorLifeText)
                     message = $"Sensor life: {kvp.Value}"
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
-                Case NameOf(ServerDataEnum.pumpBatteryIconSelection)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataEnum.sensorLifeIcon)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
