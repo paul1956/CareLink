@@ -2518,16 +2518,6 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub ShowControlPositions()
-        Dim data As List(Of ControlInfo) = GetAllControlsAndNative(Me.TabControlPage1)
-
-        Dim f As New PositionForm()
-        f.DataGridView1.AutoGenerateColumns = True
-        f.DataGridView1.DataSource = data
-        f.DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-        f.Show()
-    End Sub
-
     ''' <summary>
     '''  Handles the <see cref="Button.Click"/> event for
     '''  the <see cref="SerialNumberButton"/> control.
@@ -2561,6 +2551,15 @@ Public Class Form1
         Next
     End Sub
 
+    Private Sub ShowControlPositions()
+        Dim data As List(Of ControlInfo) = GetAllControlsAndNative(Me.TabControlPage1)
+
+        Dim f As New PositionForm()
+        f.DataGridView1.AutoGenerateColumns = True
+        f.DataGridView1.DataSource = data
+        f.DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+        f.Show()
+    End Sub
 #End Region ' Form Events
 
 #Region "Form1 Menu Events"
@@ -3283,18 +3282,6 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for
-    '''  the <see cref="MenuHelpShowControlPositions"/> menu item.
-    '''  This event is raised when the Show Control Positions menu item is clicked.
-    ''' </summary>
-    ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
-    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuHelpShowControlPositions_Click(sender As Object, e As EventArgs) _
-        Handles MenuHelpShowControlPositions.Click
-        Me.ShowControlPositions()
-    End Sub
-
-    ''' <summary>
     '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for the
     '''  <see cref="MenuHelpReportAnIssue"/> menu item.
     '''  Opens the GitHub issues page for the CareLink™ project in the default web browser.
@@ -3307,6 +3294,17 @@ Public Class Form1
         OpenUrlInBrowser(url:=$"{GitHubCareLinkUrl}issues")
     End Sub
 
+    ''' <summary>
+    '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for
+    '''  the <see cref="MenuHelpShowControlPositions"/> menu item.
+    '''  This event is raised when the Show Control Positions menu item is clicked.
+    ''' </summary>
+    ''' <param name="sender">The source of the event, a <see cref="ToolStripMenuItem"/> control.</param>
+    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    Private Sub MenuHelpShowControlPositions_Click(sender As Object, e As EventArgs) _
+        Handles MenuHelpShowControlPositions.Click
+        Me.ShowControlPositions()
+    End Sub
 #End Region ' Help Menu Events
 
 #End Region 'Form1 Menu Events
