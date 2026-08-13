@@ -2914,7 +2914,7 @@ Public Class Form1
 
 #End Region ' Start Here Menu Events
 
-#Region "Menus Options"
+#Region "Options Menu Events"
 
     ''' <summary>
     '''  Gets the selected speech recognition minimum confidence headderText from the menu.
