@@ -525,25 +525,30 @@ Friend Class Client2
                                          tokenElement As JsonElement) As Task(Of JsonElement)
 
         Dim tokenUrl As String = config(key:="token_url")
-        Dim tokenData As Dictionary(Of String, String) =
-            tokenElement.FromJson(Of Dictionary(Of String, String))()
+        Dim tokenData As Dictionary(Of String, Object) =
+            tokenElement.FromJson(Of Dictionary(Of String, Object))()
 
         ' Prepare form data
         Dim data As New List(Of KeyValuePair(Of String, String)) From {
-            New KeyValuePair(Of String, String)(key:="refresh_token", value:=tokenData(key:="refresh_token")),
-            New KeyValuePair(Of String, String)(key:="client_id", value:=tokenData(key:="client_id")),
+            New KeyValuePair(Of String, String)(key:="refresh_token", value:=tokenData(key:="refresh_token").ToString()),
+            New KeyValuePair(Of String, String)(key:="client_id", value:=tokenData(key:="client_id").ToString()),
             New KeyValuePair(Of String, String)(key:="grant_type", value:="refresh_token")}
 
-        Dim value As String = Nothing
+        Dim value As Object = Nothing
         ' Optional client_secret
         If tokenData.TryGetValue(key:="client_secret", value) Then
-            data.Add(item:=New KeyValuePair(Of String, String)(key:="client_secret", value))
+            If Not String.IsNullOrWhiteSpace(value?.ToString()) Then
+                data.Add(item:=New KeyValuePair(Of String, String)(key:="client_secret", value:=value.ToString()))
+            End If
         End If
 
         Using client As New HttpClient()
             value = Nothing
             If tokenData.TryGetValue(key:="mag-identifier", value) Then
-                client.DefaultRequestHeaders.Add(name:="mag-identifier", value)
+                If Not String.IsNullOrWhiteSpace(value?.ToString()) Then
+                    client.DefaultRequestHeaders.Add(name:="mag-identifier", value:=value.ToString())
+                End If
+
             End If
 
             Using content As New FormUrlEncodedContent(nameValueCollection:=data)

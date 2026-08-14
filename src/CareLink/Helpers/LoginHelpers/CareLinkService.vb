@@ -362,11 +362,13 @@ Public Class CareLinkService
                                               outputFile As String,
                                               userName As String,
                                               password As String) As Task(Of TokenData)
+#Disable Warning IDE0046 ' Convert to conditional expression
         If endpointConfig.IsAuth0 Then
             Return Await DoLoginAuth0Async(endpointConfig, outputFile, userName, password)
         Else
             Return Await DoLoginNonAuth0Async(endpointConfig, outputFile, userName, password)
         End If
+#Enable Warning IDE0046 ' Convert to conditional expression
     End Function
 
     Public Shared Function ParseRegion(value As String) As String

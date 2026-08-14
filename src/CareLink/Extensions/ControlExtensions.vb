@@ -5,15 +5,23 @@
 Imports System.Runtime.CompilerServices
 
 Public Module ControlExtensions
-
     ''' <summary>
-    '''  Centers all controls within a given panel.
+    '''  Sets the visibility of a control to the specified value.
+    '''  If the control is <see langword="Nothing"/>, the method returns.
+    '''  If the control's current visibility matches the desired state,
+    '''  no change is made and <see langword="True"/> is returned.
+    '''  Otherwise, the control's visibility is updated.
     ''' </summary>
+    ''' <param name="control">The control whose visibility is to be set.</param>
+    ''' <param name="visible">The desired visibility state.</param>
     <Extension>
-    Friend Sub CenterControlsInPanel(panel1 As Panel)
-        For Each ctrl As Control In panel1.Controls
-            ctrl.CenterXOnParent()
-        Next
+    Public Sub SetControlVisibility(control As Control, visible As Boolean)
+        If control Is Nothing Then
+            Return
+        End If
+        If control.Visible <> visible Then
+            control.Visible = visible
+        End If
     End Sub
 
     ''' Centers a form relative to another form, even if it's not the parent.

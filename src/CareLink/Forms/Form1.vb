@@ -319,7 +319,7 @@ Public Class Form1
         Try
             result = chart1.HitTest(e.X, e.Y, ignoreTransparent:=True)
             If result.Series Is Nothing OrElse result.PointIndex = -1 Then
-                Me.CursorPanel.Visible = False
+                Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
                 Exit Sub
             End If
 
@@ -327,13 +327,14 @@ Public Class Form1
                 result.Series.Points(index:=result.PointIndex)
 
             If currentDataPoint.IsEmpty OrElse currentDataPoint.Color = Color.Transparent Then
-                Me.CursorPanel.Visible = False
+                Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
                 Exit Sub
             End If
 
+            Dim showWhat As CursorInfoVisibility = CursorInfoVisibility.None
             Select Case result.Series.Name
                 Case HighLimitSeriesName, HighTiTRSeriesName, LowLimitSeriesName, TargetSgSeriesName
-                    Me.CursorPanel.Visible = False
+                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
                 Case MarkerSeriesName, BasalSeriesName
                     Dim markerTags() As String =
                         currentDataPoint.Tag.ToString.Split(separator:=":"c)
@@ -343,7 +344,7 @@ Public Class Form1
                                 chart1.FindAnnotation(lastDataPoint:=currentDataPoint)
                             callout.BringToFront()
                         Else
-                            Me.CursorPanel.Visible = True
+                            Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show1)
                         End If
                         Exit Sub
                     End If
@@ -353,22 +354,18 @@ Public Class Form1
                         If Me.CursorPictureBox.SizeMode <> PictureBoxSizeMode.StretchImage Then
                             Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                         End If
-                        If Not Me.CursorPictureBox.Visible Then
-                            Me.CursorPictureBox.Visible = True
-                        End If
-                        If Me.CursorMessage2Label.Font Is Nothing OrElse Not Me.CursorMessage2Label.Font.Equals(s_font12Bold) Then
+                        If Me.CursorMessage2Label.Font Is Nothing OrElse
+                            Not Me.CursorMessage2Label.Font.Equals(s_font12Bold) Then
+
                             Me.CursorMessage2Label.Font = s_font12Bold
                         End If
                         Select Case markerTags.Length
                             Case 2
                                 Me.CursorMessage1Label.Text = markerTags(0)
-                                Me.CursorMessage1Label.Visible = True
                                 Me.CursorMessage2Label.Text = markerTags(1).Trim
-                                Me.CursorMessage2Label.Visible = True
                                 Me.CursorMessage3Label.Text =
                                     Date.FromOADate(currentDataPoint.XValue).ToString(format:=s_timeWithMinuteFormat)
-                                Me.CursorMessage3Label.Visible = True
-                                Me.CursorMessage4Label.Visible = False
+                                showWhat = CursorInfoVisibility.Show3 Or CursorInfoVisibility.PictureBoxMask
                                 Select Case markerTags(0)
                                     Case "Auto Correction",
                                          "Auto Basal",
@@ -382,12 +379,9 @@ Public Class Form1
                                         Me.CursorPictureBox.Image = My.Resources.MealImageLarge
                                     Case Else
                                         Stop
-                                        Me.CursorMessage1Label.Visible = False
-                                        Me.CursorMessage2Label.Visible = False
-                                        Me.CursorMessage3Label.Visible = False
-                                        Me.CursorPictureBox.Image = Nothing
+                                        showWhat = CursorInfoVisibility.None
                                 End Select
-                                Me.CursorPanel.Visible = True
+                                Me.ShowCursorControls(showWhat)
                             Case 3
                                 Select Case markerTags(1).Trim
                                     Case "Calibration accepted", "Calibration not accepted"
@@ -403,12 +397,9 @@ Public Class Form1
                                 End Select
                                 Me.CursorMessage1Label.Text =
                                     $"{markerTags(0)}@{xValue.ToString(format:=s_timeWithMinuteFormat)}"
-                                Me.CursorMessage1Label.Visible = True
                                 Me.CursorMessage2Label.Text =
                                     markerTags(1).Replace(oldValue:="Calibration not", newValue:="Cal. not").Trim
-                                Me.CursorMessage2Label.Visible = True
                                 Me.CursorMessage3Label.Text = markerTags(2).Trim
-                                Me.CursorMessage3Label.Visible = True
                                 Dim sgVal As Single = markerTags(2).Trim _
                                                                    .Split(separator:=" ")(0) _
                                                                    .ParseSingle(digits:=2)
@@ -416,50 +407,57 @@ Public Class Form1
                                 Me.CursorMessage4Label.Text = If(NativeMmolL,
                                                                  $"{CInt(sgVal * MmolLUnitsDivisor)} mg/dL",
                                                                  $"{sgVal / MmolLUnitsDivisor:F1} mmol/L")
-
-                                Me.CursorMessage4Label.Visible = True
-                                Me.CursorPanel.Visible = True
+                                Me.ShowCursorControls(showWhat:=CursorInfoVisibility.ShowAll)
                             Case Else
                                 Stop
-                                Me.CursorPanel.Visible = False
+                                Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
                         End Select
                     End If
                     chart1.SetUpCallout(currentDataPoint, markerTags)
 
                 Case SgSeriesName
                     Me.CursorMessage1Label.Text = "Sensor Glucose"
-                    Me.CursorMessage1Label.Visible = True
                     Me.CursorMessage2Label.Text =
                         $"{currentDataPoint.YValues(0).RoundToSingle(digits:=3)} {BgUnits}"
-                    Me.CursorMessage2Label.Visible = True
                     Me.CursorMessage3Label.Text =
                         If(NativeMmolL,
                            $"{CInt(currentDataPoint.YValues(0) * MmolLUnitsDivisor)} mg/dL",
                            $"{currentDataPoint.YValues(0) / MmolLUnitsDivisor:F1} mmol/L")
 
-                    Me.CursorMessage3Label.Visible = True
                     Dim format As String = s_timeWithMinuteFormat
                     Me.CursorMessage4Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(format)
-                    Me.CursorMessage4Label.Visible = True
-                    Me.CursorPictureBox.Image = Nothing
-                    Me.CursorPanel.Visible = True
-                    chart1.SetupCallout(currentDataPoint, $"Sensor Glucose {Me.CursorMessage2Label.Text}")
+                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show4)
+                    chart1.SetupCallout(currentDataPoint, text:=$"Sensor Glucose {Me.CursorMessage2Label.Text}")
                 Case SuspendSeriesName, TimeChangeSeriesName
-                    Me.CursorPanel.Visible = False
+                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
                 Case ActiveInsulinSeriesName
                     Dim yValue As Single = currentDataPoint.YValues.FirstOrDefault().RoundToSingle(digits:=3)
                     chart1.SetupCallout(currentDataPoint, text:=$"Theoretical Active Insulin {yValue:F3} U")
+                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
                 Case Else
                     Stop
             End Select
-            If Me.CursorPanel.Visible Then
-                Me.CursorPanel.CenterControlsInPanel()
-            End If
         Catch ex As Exception
             result = Nothing
         Finally
             _inMouseMove = False
         End Try
+    End Sub
+
+    Private Sub ShowCursorControls(showWhat As CursorInfoVisibility)
+        Dim showImage As Boolean = (showWhat And CursorInfoVisibility.PictureBoxMask) <> 0
+        If Me.CursorPictureBox.Image Is Nothing Then
+            Me.CursorPictureBox.SetControlVisibility(visible:=False)
+        Else
+            If (showWhat And CursorInfoVisibility.PictureBoxMask) = 0 Then
+                Me.CursorPictureBox.Image = Nothing
+            End If
+            Me.CursorPictureBox.SetControlVisibility(visible:=showImage)
+        End If
+        Me.CursorMessage1Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Show1) <> 0)
+        Me.CursorMessage2Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Mask2) <> 0)
+        Me.CursorMessage3Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Mask3) <> 0)
+        Me.CursorMessage4Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Mask4) <> 0)
     End Sub
 
 #Region "Post Paint Events"
@@ -1620,6 +1618,7 @@ Public Class Form1
 #End Region ' Dgv Insulin Events
 
 #Region "Dgv Last Alarm Events"
+
     Private Sub DgvLastAlarm_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) _
         Handles DgvLastAlarm.CellFormatting
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -1652,7 +1651,6 @@ Public Class Form1
             MessageBox.Show(text:=$"Error formatting cell: {ex.Message}")
         End Try
     End Sub
-
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event
@@ -2558,6 +2556,7 @@ Public Class Form1
         f.DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         f.Show()
     End Sub
+
 #End Region ' Form Events
 
 #Region "Form1 Menu Events"
@@ -3303,6 +3302,7 @@ Public Class Form1
         Handles MenuHelpShowControlPositions.Click
         Me.ShowControlPositions()
     End Sub
+
 #End Region ' Help Menu Events
 
 #End Region 'Form1 Menu Events
@@ -3410,7 +3410,9 @@ Public Class Form1
             userSettings.UpdateValue(key:=e.SettingName, value)
             s_allUserSettingsData.Add(value:=userSettings)
         End If
-        s_allUserSettingsData.SaveAllUserRecords(LoginHelpers.LoginDialog.LoggedOnUser, key:=e.SettingName, value)
+        If LoginHelpers.LoginDialog.LoggedOnUser IsNot Nothing Then
+            s_allUserSettingsData.SaveAllUserRecords(LoginHelpers.LoginDialog.LoggedOnUser, key:=e.SettingName, value)
+        End If
     End Sub
 
 #End Region ' Settings Events
@@ -4885,7 +4887,7 @@ Public Class Form1
             Me.Last24HrAutoCorrectionUnitsLabel.ForeColor = Color.LightGray
             Me.Last24HrAutoCorrectionUnitsLabel.Text =
                 String.Format(provider, format:=$"{s_totalAutoCorrection:F1} U")
-            Me.Last24HrAutoCorrectionLabel.ForeColor = Color.Gray
+            Me.Last24HrAutoCorrectionLabel.ForeColor = Color.LightGray
             Me.Last24HrAutoCorrectionUnitsLabel.Visible = True
             If s_totalDailyDose > 0 Then
                 totalPercent = CInt(s_totalAutoCorrection / s_totalDailyDose * 100).ToString
@@ -5416,7 +5418,7 @@ Public Class Form1
                 Dim msg As String = $"Last Update Time: {PumpNow()}"
                 Me.SetLastUpdateTime(msg, isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)
             End If
-            Me.CursorPanel.Visible = False
+            Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
 
             Me.Cursor = Cursors.WaitCursor
             Application.DoEvents()

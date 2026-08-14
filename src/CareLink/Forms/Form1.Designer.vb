@@ -39,13 +39,17 @@ Partial Class Form1
         BelowLowLimitValueLabel = New Label()
         CalibrationDueImage = New PictureBox()
         CalibrationShieldPanel = New Panel()
-        CareLinkUserDataRecordBindingSource = New BindingSource(components)
+        LastSgOrExitTimeLabel = New Label()
+        PumpBannerStateLabel = New Label()
+        ShieldUnitsLabel = New Label()
         CurrentSgLabel = New Label()
+        SensorMessageLabel = New Label()
+        SmartGuardShieldPictureBox = New PictureBox()
+        CareLinkUserDataRecordBindingSource = New BindingSource(components)
         CursorMessage1Label = New Label()
         CursorMessage2Label = New Label()
         CursorMessage3Label = New Label()
         CursorMessage4Label = New Label()
-        CursorPanel = New Panel()
         CursorPictureBox = New PictureBox()
         CursorTimer = New Timer(components)
         DgvActiveInsulin = New DataGridView()
@@ -89,50 +93,56 @@ Partial Class Form1
         Last24HrTotalInsulinLabel = New Label()
         Last24HrTotalInsulinUnitsLabel = New Label()
         Last24HrTotalsPanel = New Panel()
-        LastSgOrExitTimeLabel = New Label()
         LoginStatus = New ToolStripStatusLabel()
         LowTirComplianceLabel = New Label()
         MaxBasalPerHourLabel = New Label()
         MenuHelp = New ToolStripMenuItem()
-        MenuHelpAbout = New ToolStripMenuItem()
-        MenuHelpCheckForUpdates = New ToolStripMenuItem()
-        MenuHelpReportAnIssue = New ToolStripMenuItem()
         MenuHelpShowControlPositions = New ToolStripMenuItem()
+        MenuHelpReportAnIssue = New ToolStripMenuItem()
+        MenuHelpCheckForUpdates = New ToolStripMenuItem()
+        MenuHelpAbout = New ToolStripMenuItem()
         MenuOptions = New ToolStripMenuItem()
-        MenuOptionsAdvancedOptions = New ToolStripMenuItem()
         MenuOptionsAudioAlerts = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognitionEnabled = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognitionDisabled = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognitionConfidence = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition95 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition90 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition85 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition80 = New ToolStripMenuItem()
+        MenuOptionsShowChartLegends = New ToolStripMenuItem()
+        MenuOptionsSpeechHelpShown = New ToolStripMenuItem()
+        ToolStripSeparator5 = New ToolStripSeparator()
         MenuOptionsAutoLogin = New ToolStripMenuItem()
+        ToolStripSeparator6 = New ToolStripSeparator()
+        MenuOptionsAdvancedOptions = New ToolStripMenuItem()
+        MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
+        MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
+        ToolStripSeparator7 = New ToolStripSeparator()
         MenuOptionsColorPicker = New ToolStripMenuItem()
         MenuOptionsConfigureTiTR = New ToolStripMenuItem()
         MenuOptionsEditPumpSettings = New ToolStripMenuItem()
-        MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
-        MenuOptionsShowChartLegends = New ToolStripMenuItem()
-        MenuOptionsSpeechHelpShown = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition80 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition85 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition90 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition95 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognitionConfidence = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognitionDisabled = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognitionEnabled = New ToolStripMenuItem()
-        MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
         MenuShowMiniDisplay = New ToolStripMenuItem()
         MenuStartCleanUpObsoleteFiles = New ToolStripMenuItem()
         MenuStartExit = New ToolStripMenuItem()
         MenuStartHere = New ToolStripMenuItem()
+        MenuStartUserLogin = New ToolStripMenuItem()
+        ToolStripSeparator8 = New ToolStripSeparator()
+        MenuStartManuallyImportDeviceSettings = New ToolStripMenuItem()
+        MenuStartShowPumpSetup = New ToolStripMenuItem()
+        ToolStripSeparator1 = New ToolStripSeparator()
         MenuStartLoadDataFile = New ToolStripMenuItem()
         MenuStartLoadExceptionReport = New ToolStripMenuItem()
-        MenuStartManuallyImportDeviceSettings = New ToolStripMenuItem()
-        MenuStartSaveSnapshot = New ToolStripMenuItem()
-        MenuStartShowPumpSetup = New ToolStripMenuItem()
+        ToolStripSeparator4 = New ToolStripSeparator()
         MenuStartUseLastFile = New ToolStripMenuItem()
-        MenuStartUserLogin = New ToolStripMenuItem()
         MenuStartUseTestData = New ToolStripMenuItem()
+        ToolStripSeparator2 = New ToolStripSeparator()
+        MenuStartSaveSnapshot = New ToolStripMenuItem()
+        ToolStripSeparator3 = New ToolStripSeparator()
         MenuStrip1 = New MenuStrip()
         ModelLabel = New Label()
         NotifyIcon1 = New NotifyIcon(components)
         PumpAITLabel = New Label()
-        PumpBannerStateLabel = New Label()
         PumpBatteryPictureBox = New PictureBox()
         PumpBatteryRemaining2Label = New Label()
         PumpBatteryRemainingLabel = New Label()
@@ -140,123 +150,110 @@ Partial Class Form1
         ReadingsLabel = New Label()
         RemainingInsulinUnits = New Label()
         SensorDaysLeftLabel = New Label()
-        SensorMessageLabel = New Label()
         SensorTimeLeftLabel = New Label()
         SensorTimeLeftPanel = New Panel()
         SensorTimeLeftPictureBox = New PictureBox()
         SerialNumberButton = New Button()
         ServerUpdateTimer = New Timer(components)
         SgTrendLabel = New Label()
-        ShieldUnitsLabel = New Label()
         SmartGuardLabel = New Label()
-        SmartGuardShieldPictureBox = New PictureBox()
         SplitContainer1 = New SplitContainer()
-        SplitContainer2 = New SplitContainer()
-        SplitContainer3 = New SplitContainer()
-        SplitContainerNotificationsCleared = New SplitContainer()
-        StatusStrip1 = New StatusStrip()
-        StatusStripDotNetVersion = New ToolStripStatusLabel()
-        StatusStripDotNetVersion = New ToolStripStatusLabel()
-        StatusStripSpacerRight = New ToolStripStatusLabel()
-        StatusStripSpeech = New ToolStripStatusLabel()
-        StatusStripUpdateAvailable = New ToolStripStatusLabel()
-        StripStatusLastUpdateTime = New ToolStripStatusLabel()
-        StripStatusTimeZoneToolLabel = New ToolStripStatusLabel()
-        TabControlPage1 = New TabControl()
-        TabControlPage2 = New TabControl()
-        TabPage01AutoBasalDelivery = New TabPage()
-        TabPage01HomePage = New TabPage()
-        TabPage02AutoModeStatus = New TabPage()
-        TabPage02RunningIOB = New TabPage()
-        TabPage03BgReadings = New TabPage()
-        TabPage03TreatmentDetails = New TabPage()
-        TabPage04Calibration = New TabPage()
-        TabPage04SummaryData = New TabPage()
-        TabPage05ActiveInsulin = New TabPage()
-        TabPage05Insulin = New TabPage()
-        TabPage06Basal = New TabPage()
-        TabPage06LowGlucoseSuspended = New TabPage()
-        TabPage07LastAlarm = New TabPage()
-        TabPage07Meal = New TabPage()
-        TabPage08LastSG = New TabPage()
-        TabPage08TimeChange = New TabPage()
-        TabPage09BasalPerHour = New TabPage()
-        TabPage09Limits = New TabPage()
-        TabPage10CurrentUser = New TabPage()
-        TabPage10NotificationActive = New TabPage()
-        TabPage11AllUsers = New TabPage()
-        TabPage11NotificationsCleared = New TabPage()
-        TabPage12BackToHomePage = New TabPage()
-        TabPage12PumpBannerState = New TabPage()
-        TabPage13SensorGlucose = New TabPage()
-        TabPage14TherapyAlgorithmState = New TabPage()
-        TabPage15More = New TabPage()
         TempUseAdvanceAITDecayCheckBox = New CheckBox()
-        TimeChangeLabel = New Label()
-        TimeInTightRangeLabel = New Label()
-        TirChartLabel = New Label()
-        TirComplianceLabel = New Label()
-        TirHeaderLabel = New Label()
-        TirMsgLabel = New Label()
-        TirSummaryPercentCharLabel = New Label()
-        TirValueLabel = New Label()
-        TiTRMgsLabel = New Label()
-        TiTRMgsLabel2 = New Label()
-        TiTRValueLabel = New Label()
-        TlpActiveInsulin = New TableLayoutPanel()
-        TlpActiveInsulinTop = New TableLayoutPanelTopEx()
-        TlpAutoBasalDelivery = New TableLayoutPanel()
-        TlpAutoBasalDeliveryTop = New TableLayoutPanelTopEx()
-        TlpAutoModeStatus = New TableLayoutPanel()
-        TlpAutoModeStatusTop = New TableLayoutPanelTopEx()
-        TlpBasal = New TableLayoutPanel()
-        TlpBasalTop = New TableLayoutPanelTopEx()
-        TlpBgReadings = New TableLayoutPanel()
-        TlpBgReadingsTop = New TableLayoutPanelTopEx()
-        TlpCalibration = New TableLayoutPanel()
-        TlpCalibrationTop = New TableLayoutPanelTopEx()
-        TlpInsulin = New TableLayoutPanel()
-        TlpInsulinTop = New TableLayoutPanelTopEx()
-        TlpLastAlarm = New TableLayoutPanel()
-        TlpLastAlarmTop = New TableLayoutPanelTopEx()
-        TlpLastSG = New TableLayoutPanel()
-        TlpLastSgTop = New TableLayoutPanelTopEx()
-        TlpLimits = New TableLayoutPanel()
-        TlpLimitsTop = New TableLayoutPanelTopEx()
-        TlpLowGlucoseSuspended = New TableLayoutPanel()
-        TlpLowGlucoseSuspendedTop = New TableLayoutPanelTopEx()
-        TlpMeal = New TableLayoutPanel()
-        TlpMealTop = New TableLayoutPanelTopEx()
-        TlpNotificationActive = New TableLayoutPanel()
-        TlpNotificationActiveTop = New TableLayoutPanelTopEx()
-        TlpNotificationsCleared = New TableLayoutPanel()
-        TlpNotificationsClearedTop = New TableLayoutPanelTopEx()
-        TlpPumpBannerState = New TableLayoutPanel()
-        TlpPumpBannerStateTop = New TableLayoutPanelTopEx()
-        TlpSgs = New TableLayoutPanel()
-        TlpSgsTop = New TableLayoutPanelTopEx()
-        TlpTherapyAlgorithmState = New TableLayoutPanel()
-        TlpTherapyAlgorithmStateTop = New TableLayoutPanelTopEx()
-        TlpTimeChange = New TableLayoutPanel()
-        TlpTimeChangeTop = New TableLayoutPanelTopEx()
-        ToolStripSeparator1 = New ToolStripSeparator()
-        ToolStripSeparator2 = New ToolStripSeparator()
-        ToolStripSeparator3 = New ToolStripSeparator()
-        ToolStripSeparator4 = New ToolStripSeparator()
-        ToolStripSeparator5 = New ToolStripSeparator()
-        ToolStripSeparator6 = New ToolStripSeparator()
-        ToolStripSeparator7 = New ToolStripSeparator()
-        ToolStripSeparator8 = New ToolStripSeparator()
-        ToolTip1 = New ToolTip(components)
+        SplitContainer2 = New SplitContainer()
+        TrendValueLabel = New Label()
+        TrendArrowsLabel = New Label()
         TransmitterBatteryPercentLabel = New Label()
         TransmitterBatteryPictureBox = New PictureBox()
-        TrendArrowsLabel = New Label()
-        TrendValueLabel = New Label()
+        SplitContainer3 = New SplitContainer()
+        TirHeaderLabel = New Label()
+        TirChartLabel = New Label()
+        TirSummaryPercentCharLabel = New Label()
+        TirValueLabel = New Label()
+        TiTRValueLabel = New Label()
+        TirMsgLabel = New Label()
+        TirComplianceLabel = New Label()
+        TiTRMgsLabel = New Label()
+        TiTRMgsLabel2 = New Label()
+        SplitContainerNotificationsCleared = New SplitContainer()
+        TlpNotificationsClearedTop = New TableLayoutPanelTopEx()
+        TlpNotificationsCleared = New TableLayoutPanel()
+        StatusStrip1 = New StatusStrip()
+        StatusStripSpeech = New ToolStripStatusLabel()
+        StripStatusLastUpdateTime = New ToolStripStatusLabel()
+        StripStatusTimeZoneToolLabel = New ToolStripStatusLabel()
+        StatusStripSpacerRight = New ToolStripStatusLabel()
+        StatusStripDotNetVersion = New ToolStripStatusLabel()
+        StatusStripUpdateAvailable = New ToolStripStatusLabel()
+        TabControlPage1 = New TabControl()
+        TabPage01HomePage = New TabPage()
+        TabPage02RunningIOB = New TabPage()
+        TabPage03TreatmentDetails = New TabPage()
+        TabPage04SummaryData = New TabPage()
+        TabPage05ActiveInsulin = New TabPage()
+        TlpActiveInsulin = New TableLayoutPanel()
+        TlpActiveInsulinTop = New TableLayoutPanelTopEx()
+        TabPage06Basal = New TabPage()
+        TlpBasal = New TableLayoutPanel()
+        TlpBasalTop = New TableLayoutPanelTopEx()
+        TabPage07LastAlarm = New TabPage()
+        TlpLastAlarm = New TableLayoutPanel()
+        TlpLastAlarmTop = New TableLayoutPanelTopEx()
+        TabPage08LastSG = New TabPage()
+        TlpLastSG = New TableLayoutPanel()
+        TlpLastSgTop = New TableLayoutPanelTopEx()
+        TabPage09Limits = New TabPage()
+        TlpLimits = New TableLayoutPanel()
+        TlpLimitsTop = New TableLayoutPanelTopEx()
+        TabPage10NotificationActive = New TabPage()
+        TlpNotificationActive = New TableLayoutPanel()
+        TlpNotificationActiveTop = New TableLayoutPanelTopEx()
+        TabPage11NotificationsCleared = New TabPage()
+        TabPage12PumpBannerState = New TabPage()
+        TlpPumpBannerState = New TableLayoutPanel()
+        TlpPumpBannerStateTop = New TableLayoutPanelTopEx()
+        TabPage13SensorGlucose = New TabPage()
+        TlpSgs = New TableLayoutPanel()
+        TlpSgsTop = New TableLayoutPanelTopEx()
+        TabPage14TherapyAlgorithmState = New TabPage()
+        TlpTherapyAlgorithmState = New TableLayoutPanel()
+        TlpTherapyAlgorithmStateTop = New TableLayoutPanelTopEx()
+        TabPage15More = New TabPage()
+        TabControlPage2 = New TabControl()
+        TabPage01AutoBasalDelivery = New TabPage()
+        TlpAutoBasalDelivery = New TableLayoutPanel()
+        TlpAutoBasalDeliveryTop = New TableLayoutPanelTopEx()
+        TabPage02AutoModeStatus = New TabPage()
+        TlpAutoModeStatus = New TableLayoutPanel()
+        TlpAutoModeStatusTop = New TableLayoutPanelTopEx()
+        TabPage03BgReadings = New TabPage()
+        TlpBgReadings = New TableLayoutPanel()
+        TlpBgReadingsTop = New TableLayoutPanelTopEx()
+        TabPage04Calibration = New TabPage()
+        TlpCalibration = New TableLayoutPanel()
+        TlpCalibrationTop = New TableLayoutPanelTopEx()
+        TabPage05Insulin = New TabPage()
+        TlpInsulin = New TableLayoutPanel()
+        TlpInsulinTop = New TableLayoutPanelTopEx()
+        TabPage06LowGlucoseSuspended = New TabPage()
+        TlpLowGlucoseSuspended = New TableLayoutPanel()
+        TlpLowGlucoseSuspendedTop = New TableLayoutPanelTopEx()
+        TabPage07Meal = New TabPage()
+        TlpMeal = New TableLayoutPanel()
+        TlpMealTop = New TableLayoutPanelTopEx()
+        TabPage08TimeChange = New TabPage()
+        TlpTimeChange = New TableLayoutPanel()
+        TlpTimeChangeTop = New TableLayoutPanelTopEx()
+        TabPage09BasalPerHour = New TabPage()
+        TabPage10CurrentUser = New TabPage()
+        TabPage11AllUsers = New TabPage()
+        TabPage12BackToHomePage = New TabPage()
+        TimeChangeLabel = New Label()
+        TimeInTightRangeLabel = New Label()
+        ToolTip1 = New ToolTip(components)
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
         CType(SmartGuardShieldPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(CareLinkUserDataRecordBindingSource, ComponentModel.ISupportInitialize).BeginInit()
-        CursorPanel.SuspendLayout()
         CType(CursorPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvActiveInsulin, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).BeginInit()
@@ -279,7 +276,6 @@ Partial Class Form1
         CType(DgvTherapyAlgorithmState, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvTimeChange, ComponentModel.ISupportInitialize).BeginInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).BeginInit()
-        Last24HrTotalsPanel.SuspendLayout()
         MenuStrip1.SuspendLayout()
         CType(PumpBatteryPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         SensorTimeLeftPanel.SuspendLayout()
@@ -300,6 +296,7 @@ Partial Class Form1
         SplitContainerNotificationsCleared.Panel2.SuspendLayout()
         SplitContainerNotificationsCleared.SuspendLayout()
         StatusStrip1.SuspendLayout()
+        TabControlPage1.SuspendLayout()
         TabPage01HomePage.SuspendLayout()
         TabPage02RunningIOB.SuspendLayout()
         TabPage04SummaryData.SuspendLayout()
@@ -322,6 +319,7 @@ Partial Class Form1
         TlpSgs.SuspendLayout()
         TabPage14TherapyAlgorithmState.SuspendLayout()
         TlpTherapyAlgorithmState.SuspendLayout()
+        TabControlPage2.SuspendLayout()
         TabPage01AutoBasalDelivery.SuspendLayout()
         TlpAutoBasalDelivery.SuspendLayout()
         TabPage02AutoModeStatus.SuspendLayout()
@@ -341,8 +339,6 @@ Partial Class Form1
         TabPage09BasalPerHour.SuspendLayout()
         TabPage10CurrentUser.SuspendLayout()
         TabPage11AllUsers.SuspendLayout()
-        TabControlPage1.SuspendLayout()
-        TabControlPage2.SuspendLayout()
         Me.SuspendLayout()
         ' 
         ' AboveHighLimitMessageLabel
@@ -352,7 +348,7 @@ Partial Class Form1
         AboveHighLimitMessageLabel.BackColor = Color.Transparent
         AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         AboveHighLimitMessageLabel.ForeColor = Color.Yellow
-        AboveHighLimitMessageLabel.Location = New Point(221, 211)
+        AboveHighLimitMessageLabel.Location = New Point(1241, 211)
         AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
         AboveHighLimitMessageLabel.Size = New Size(144, 21)
         AboveHighLimitMessageLabel.TabIndex = 28
@@ -366,7 +362,7 @@ Partial Class Form1
         AboveHighLimitValueLabel.BackColor = Color.Black
         AboveHighLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         AboveHighLimitValueLabel.ForeColor = Color.Yellow
-        AboveHighLimitValueLabel.Location = New Point(290, 169)
+        AboveHighLimitValueLabel.Location = New Point(1310, 169)
         AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
         AboveHighLimitValueLabel.Size = New Size(59, 40)
         AboveHighLimitValueLabel.TabIndex = 22
@@ -393,7 +389,7 @@ Partial Class Form1
         AverageSGMessageLabel.BackColor = Color.Transparent
         AverageSGMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         AverageSGMessageLabel.ForeColor = Color.LightGray
-        AverageSGMessageLabel.Location = New Point(235, 398)
+        AverageSGMessageLabel.Location = New Point(1255, 398)
         AverageSGMessageLabel.Name = "AverageSGMessageLabel"
         AverageSGMessageLabel.Size = New Size(167, 21)
         AverageSGMessageLabel.TabIndex = 0
@@ -407,7 +403,7 @@ Partial Class Form1
         AverageSGValueLabel.BackColor = Color.Black
         AverageSGValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         AverageSGValueLabel.ForeColor = Color.LightGray
-        AverageSGValueLabel.Location = New Point(286, 356)
+        AverageSGValueLabel.Location = New Point(1306, 356)
         AverageSGValueLabel.Margin = New Padding(0)
         AverageSGValueLabel.Name = "AverageSGValueLabel"
         AverageSGValueLabel.Size = New Size(68, 40)
@@ -436,7 +432,7 @@ Partial Class Form1
         BelowLowLimitMessageLabel.BackColor = Color.Transparent
         BelowLowLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         BelowLowLimitMessageLabel.ForeColor = Color.Red
-        BelowLowLimitMessageLabel.Location = New Point(226, 333)
+        BelowLowLimitMessageLabel.Location = New Point(1246, 333)
         BelowLowLimitMessageLabel.Name = "BelowLowLimitMessageLabel"
         BelowLowLimitMessageLabel.Size = New Size(142, 21)
         BelowLowLimitMessageLabel.TabIndex = 32
@@ -450,7 +446,7 @@ Partial Class Form1
         BelowLowLimitValueLabel.BackColor = Color.Black
         BelowLowLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         BelowLowLimitValueLabel.ForeColor = Color.Red
-        BelowLowLimitValueLabel.Location = New Point(290, 291)
+        BelowLowLimitValueLabel.Location = New Point(1310, 291)
         BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
         BelowLowLimitValueLabel.Size = New Size(59, 40)
         BelowLowLimitValueLabel.TabIndex = 26
@@ -480,7 +476,7 @@ Partial Class Form1
         CalibrationShieldPanel.Location = New Point(0, 0)
         CalibrationShieldPanel.Margin = New Padding(0)
         CalibrationShieldPanel.Name = "CalibrationShieldPanel"
-        CalibrationShieldPanel.Size = New Size(125, 132)
+        CalibrationShieldPanel.Size = New Size(125, 134)
         CalibrationShieldPanel.TabIndex = 64
         ' 
         ' LastSgOrExitTimeLabel
@@ -489,7 +485,7 @@ Partial Class Form1
         LastSgOrExitTimeLabel.Dock = DockStyle.Bottom
         LastSgOrExitTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         LastSgOrExitTimeLabel.ForeColor = Color.LightGray
-        LastSgOrExitTimeLabel.Location = New Point(0, 90)
+        LastSgOrExitTimeLabel.Location = New Point(0, 113)
         LastSgOrExitTimeLabel.Name = "LastSgOrExitTimeLabel"
         LastSgOrExitTimeLabel.Size = New Size(125, 21)
         LastSgOrExitTimeLabel.TabIndex = 55
@@ -535,7 +531,7 @@ Partial Class Form1
         CurrentSgLabel.Visible = False
         ' 
         ' SensorMessageLabel
-        '
+        ' 
         SensorMessageLabel.BackColor = Color.Transparent
         SensorMessageLabel.Font = New Font("Segoe UI", 9.5F, FontStyle.Bold)
         SensorMessageLabel.ForeColor = Color.LightGray
@@ -563,10 +559,9 @@ Partial Class Form1
         ' 
         ' CursorMessage1Label
         ' 
-        CursorMessage1Label.Anchor = AnchorStyles.Top
         CursorMessage1Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         CursorMessage1Label.ForeColor = Color.LightGray
-        CursorMessage1Label.Location = New Point(0, 43)
+        CursorMessage1Label.Location = New Point(284, 43)
         CursorMessage1Label.Name = "CursorMessage1Label"
         CursorMessage1Label.Size = New Size(178, 21)
         CursorMessage1Label.TabIndex = 39
@@ -575,10 +570,9 @@ Partial Class Form1
         ' 
         ' CursorMessage2Label
         ' 
-        CursorMessage2Label.Anchor = AnchorStyles.Top
         CursorMessage2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         CursorMessage2Label.ForeColor = Color.LightGray
-        CursorMessage2Label.Location = New Point(0, 65)
+        CursorMessage2Label.Location = New Point(284, 65)
         CursorMessage2Label.Name = "CursorMessage2Label"
         CursorMessage2Label.Size = New Size(178, 21)
         CursorMessage2Label.TabIndex = 40
@@ -589,7 +583,7 @@ Partial Class Form1
         ' 
         CursorMessage3Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         CursorMessage3Label.ForeColor = Color.LightGray
-        CursorMessage3Label.Location = New Point(0, 86)
+        CursorMessage3Label.Location = New Point(284, 86)
         CursorMessage3Label.Name = "CursorMessage3Label"
         CursorMessage3Label.Size = New Size(178, 21)
         CursorMessage3Label.TabIndex = 41
@@ -600,32 +594,18 @@ Partial Class Form1
         ' 
         CursorMessage4Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         CursorMessage4Label.ForeColor = Color.LightGray
-        CursorMessage4Label.Location = New Point(0, 107)
+        CursorMessage4Label.Location = New Point(284, 111)
         CursorMessage4Label.Name = "CursorMessage4Label"
         CursorMessage4Label.Size = New Size(178, 21)
         CursorMessage4Label.TabIndex = 41
         CursorMessage4Label.Text = "7.6 mmol/L"
         CursorMessage4Label.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' CursorPanel
-        ' 
-        CursorPanel.Controls.Add(CursorPictureBox)
-        CursorPanel.Controls.Add(CursorMessage1Label)
-        CursorPanel.Controls.Add(CursorMessage2Label)
-        CursorPanel.Controls.Add(CursorMessage3Label)
-        CursorPanel.Controls.Add(CursorMessage4Label)
-        CursorPanel.Location = New Point(284, 0)
-        CursorPanel.Margin = New Padding(0)
-        CursorPanel.Name = "CursorPanel"
-        CursorPanel.Size = New Size(178, 135)
-        CursorPanel.TabIndex = 63
-        ' 
         ' CursorPictureBox
         ' 
-        CursorPictureBox.Anchor = AnchorStyles.Top
         CursorPictureBox.Image = CType(resources.GetObject("CursorPictureBox.Image"), Image)
         CursorPictureBox.InitialImage = Nothing
-        CursorPictureBox.Location = New Point(39, 0)
+        CursorPictureBox.Location = New Point(356, 0)
         CursorPictureBox.Name = "CursorPictureBox"
         CursorPictureBox.Size = New Size(34, 43)
         CursorPictureBox.SizeMode = PictureBoxSizeMode.CenterImage
@@ -876,7 +856,7 @@ Partial Class Form1
         GraphLast24HoursLabel.AutoSize = True
         GraphLast24HoursLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         GraphLast24HoursLabel.ForeColor = Color.Gray
-        GraphLast24HoursLabel.Location = New Point(266, 22)
+        GraphLast24HoursLabel.Location = New Point(1286, 22)
         GraphLast24HoursLabel.Name = "GraphLast24HoursLabel"
         GraphLast24HoursLabel.Size = New Size(109, 21)
         GraphLast24HoursLabel.TabIndex = 34
@@ -935,22 +915,20 @@ Partial Class Form1
         ' 
         ' Last24HrAutoCorrectionLabel
         ' 
-        Last24HrAutoCorrectionLabel.Anchor = AnchorStyles.Top
         Last24HrAutoCorrectionLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrAutoCorrectionLabel.ForeColor = Color.Gray
-        Last24HrAutoCorrectionLabel.Location = New Point(0, 43)
+        Last24HrAutoCorrectionLabel.ForeColor = Color.LightGray
+        Last24HrAutoCorrectionLabel.Location = New Point(724, 45)
         Last24HrAutoCorrectionLabel.Name = "Last24HrAutoCorrectionLabel"
-        Last24HrAutoCorrectionLabel.Size = New Size(145, 21)
+        Last24HrAutoCorrectionLabel.Size = New Size(139, 21)
         Last24HrAutoCorrectionLabel.TabIndex = 64
         Last24HrAutoCorrectionLabel.Text = "Auto Correction:"
         Last24HrAutoCorrectionLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Last24HrAutoCorrectionPercentLabel
-        '
-        Last24HrAutoCorrectionPercentLabel.Anchor = AnchorStyles.Top
+        ' 
         Last24HrAutoCorrectionPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrAutoCorrectionPercentLabel.ForeColor = Color.LightGray
-        Last24HrAutoCorrectionPercentLabel.Location = New Point(145, 43)
+        Last24HrAutoCorrectionPercentLabel.Location = New Point(869, 45)
         Last24HrAutoCorrectionPercentLabel.Name = "Last24HrAutoCorrectionPercentLabel"
         Last24HrAutoCorrectionPercentLabel.Size = New Size(46, 21)
         Last24HrAutoCorrectionPercentLabel.TabIndex = 73
@@ -959,10 +937,9 @@ Partial Class Form1
         ' 
         ' Last24HrAutoCorrectionUnitsLabel
         ' 
-        Last24HrAutoCorrectionUnitsLabel.Anchor = AnchorStyles.Top
         Last24HrAutoCorrectionUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrAutoCorrectionUnitsLabel.ForeColor = Color.LightGray
-        Last24HrAutoCorrectionUnitsLabel.Location = New Point(180, 43)
+        Last24HrAutoCorrectionUnitsLabel.Location = New Point(902, 45)
         Last24HrAutoCorrectionUnitsLabel.Name = "Last24HrAutoCorrectionUnitsLabel"
         Last24HrAutoCorrectionUnitsLabel.Size = New Size(70, 21)
         Last24HrAutoCorrectionUnitsLabel.TabIndex = 72
@@ -971,34 +948,31 @@ Partial Class Form1
         ' 
         ' Last24HrBasalLabel
         ' 
-        Last24HrBasalLabel.Anchor = AnchorStyles.Top
         Last24HrBasalLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrBasalLabel.ForeColor = Color.Gray
-        Last24HrBasalLabel.Location = New Point(0, 23)
+        Last24HrBasalLabel.ForeColor = Color.LightGray
+        Last24HrBasalLabel.Location = New Point(724, 23)
         Last24HrBasalLabel.Name = "Last24HrBasalLabel"
-        Last24HrBasalLabel.Size = New Size(110, 21)
+        Last24HrBasalLabel.Size = New Size(139, 21)
         Last24HrBasalLabel.TabIndex = 62
         Last24HrBasalLabel.Text = "Basal:"
         Last24HrBasalLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Last24HrBasalPercentLabel
         ' 
-        Last24HrBasalPercentLabel.Anchor = AnchorStyles.Top
         Last24HrBasalPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrBasalPercentLabel.ForeColor = Color.LightGray
-        Last24HrBasalPercentLabel.Location = New Point(145, 23)
+        Last24HrBasalPercentLabel.Location = New Point(869, 23)
         Last24HrBasalPercentLabel.Name = "Last24HrBasalPercentLabel"
         Last24HrBasalPercentLabel.Size = New Size(46, 21)
         Last24HrBasalPercentLabel.TabIndex = 69
-        Last24HrBasalPercentLabel.Text = "50%"
+        Last24HrBasalPercentLabel.Text = " 50%"
         Last24HrBasalPercentLabel.TextAlign = ContentAlignment.MiddleRight
         ' 
         ' Last24HrBasalUnitsLabel
         ' 
-        Last24HrBasalUnitsLabel.Anchor = AnchorStyles.Top
         Last24HrBasalUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrBasalUnitsLabel.ForeColor = Color.LightGray
-        Last24HrBasalUnitsLabel.Location = New Point(180, 23)
+        Last24HrBasalUnitsLabel.Location = New Point(902, 23)
         Last24HrBasalUnitsLabel.Name = "Last24HrBasalUnitsLabel"
         Last24HrBasalUnitsLabel.Size = New Size(70, 21)
         Last24HrBasalUnitsLabel.TabIndex = 68
@@ -1007,24 +981,20 @@ Partial Class Form1
         ' 
         ' Last24HrCarbsLabel
         ' 
-        Last24HrCarbsLabel.Anchor = AnchorStyles.Top
-        Last24HrCarbsLabel.AutoSize = True
         Last24HrCarbsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrCarbsLabel.ForeColor = Color.Gray
-        Last24HrCarbsLabel.Location = New Point(0, 103)
+        Last24HrCarbsLabel.ForeColor = Color.LightGray
+        Last24HrCarbsLabel.Location = New Point(724, 111)
         Last24HrCarbsLabel.Name = "Last24HrCarbsLabel"
-        Last24HrCarbsLabel.Size = New Size(110, 21)
+        Last24HrCarbsLabel.Size = New Size(139, 21)
         Last24HrCarbsLabel.TabIndex = 66
         Last24HrCarbsLabel.Text = "Total Carbs:"
         Last24HrCarbsLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Last24HrCarbsValueLabel
         ' 
-        Last24HrCarbsValueLabel.Anchor = AnchorStyles.Top
-        Last24HrCarbsValueLabel.AutoSize = True
         Last24HrCarbsValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrCarbsValueLabel.ForeColor = Color.LightGray
-        Last24HrCarbsValueLabel.Location = New Point(145, 103)
+        Last24HrCarbsValueLabel.Location = New Point(869, 111)
         Last24HrCarbsValueLabel.Name = "Last24HrCarbsValueLabel"
         Last24HrCarbsValueLabel.Size = New Size(95, 21)
         Last24HrCarbsValueLabel.TabIndex = 74
@@ -1033,22 +1003,20 @@ Partial Class Form1
         ' 
         ' Last24HrMealBolusLabel
         ' 
-        Last24HrMealBolusLabel.Anchor = AnchorStyles.Top
         Last24HrMealBolusLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrMealBolusLabel.ForeColor = Color.Gray
-        Last24HrMealBolusLabel.Location = New Point(0, 64)
+        Last24HrMealBolusLabel.ForeColor = Color.LightGray
+        Last24HrMealBolusLabel.Location = New Point(724, 67)
         Last24HrMealBolusLabel.Name = "Last24HrMealBolusLabel"
-        Last24HrMealBolusLabel.Size = New Size(110, 21)
+        Last24HrMealBolusLabel.Size = New Size(139, 21)
         Last24HrMealBolusLabel.TabIndex = 63
         Last24HrMealBolusLabel.Text = "Meal Bolus:"
         Last24HrMealBolusLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Last24HrMealBolusPercentLabel
         ' 
-        Last24HrMealBolusPercentLabel.Anchor = AnchorStyles.Top
         Last24HrMealBolusPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrMealBolusPercentLabel.ForeColor = Color.LightGray
-        Last24HrMealBolusPercentLabel.Location = New Point(145, 64)
+        Last24HrMealBolusPercentLabel.Location = New Point(869, 67)
         Last24HrMealBolusPercentLabel.Name = "Last24HrMealBolusPercentLabel"
         Last24HrMealBolusPercentLabel.Size = New Size(46, 21)
         Last24HrMealBolusPercentLabel.TabIndex = 71
@@ -1057,10 +1025,9 @@ Partial Class Form1
         ' 
         ' Last24HrMealBolusUnitsLabel
         ' 
-        Last24HrMealBolusUnitsLabel.Anchor = AnchorStyles.Top
         Last24HrMealBolusUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrMealBolusUnitsLabel.ForeColor = Color.LightGray
-        Last24HrMealBolusUnitsLabel.Location = New Point(180, 64)
+        Last24HrMealBolusUnitsLabel.Location = New Point(902, 67)
         Last24HrMealBolusUnitsLabel.Name = "Last24HrMealBolusUnitsLabel"
         Last24HrMealBolusUnitsLabel.Size = New Size(70, 21)
         Last24HrMealBolusUnitsLabel.TabIndex = 70
@@ -1070,34 +1037,31 @@ Partial Class Form1
         ' Last24HrSummaryLabel
         ' 
         Last24HrSummaryLabel.BackColor = Color.DimGray
-        Last24HrSummaryLabel.Dock = DockStyle.Top
         Last24HrSummaryLabel.Font = New Font("Segoe UI", 11.0F, FontStyle.Bold)
         Last24HrSummaryLabel.ForeColor = Color.Black
-        Last24HrSummaryLabel.Location = New Point(0, 0)
+        Last24HrSummaryLabel.Location = New Point(720, 0)
         Last24HrSummaryLabel.Name = "Last24HrSummaryLabel"
-        Last24HrSummaryLabel.Size = New Size(253, 21)
+        Last24HrSummaryLabel.Size = New Size(254, 21)
         Last24HrSummaryLabel.TabIndex = 65
         Last24HrSummaryLabel.Text = "Last 24 Hr Summary"
         Last24HrSummaryLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' Last24HrTotalInsulinLabel
         ' 
-        Last24HrTotalInsulinLabel.Anchor = AnchorStyles.Top
         Last24HrTotalInsulinLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        Last24HrTotalInsulinLabel.ForeColor = Color.Gray
-        Last24HrTotalInsulinLabel.Location = New Point(0, 85)
+        Last24HrTotalInsulinLabel.ForeColor = Color.LightGray
+        Last24HrTotalInsulinLabel.Location = New Point(724, 89)
         Last24HrTotalInsulinLabel.Name = "Last24HrTotalInsulinLabel"
-        Last24HrTotalInsulinLabel.Size = New Size(110, 21)
+        Last24HrTotalInsulinLabel.Size = New Size(139, 21)
         Last24HrTotalInsulinLabel.TabIndex = 61
         Last24HrTotalInsulinLabel.Text = "Total Insulin:"
         Last24HrTotalInsulinLabel.TextAlign = ContentAlignment.MiddleLeft
         ' 
         ' Last24HrTotalInsulinUnitsLabel
         ' 
-        Last24HrTotalInsulinUnitsLabel.Anchor = AnchorStyles.Top
         Last24HrTotalInsulinUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrTotalInsulinUnitsLabel.ForeColor = Color.LightGray
-        Last24HrTotalInsulinUnitsLabel.Location = New Point(183, 85)
+        Last24HrTotalInsulinUnitsLabel.Location = New Point(902, 89)
         Last24HrTotalInsulinUnitsLabel.Name = "Last24HrTotalInsulinUnitsLabel"
         Last24HrTotalInsulinUnitsLabel.Size = New Size(70, 21)
         Last24HrTotalInsulinUnitsLabel.TabIndex = 67
@@ -1106,33 +1070,12 @@ Partial Class Form1
         ' 
         ' Last24HrTotalsPanel
         ' 
-        Last24HrTotalsPanel.Controls.Add(Last24HrCarbsValueLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrAutoCorrectionLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrAutoCorrectionPercentLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrAutoCorrectionUnitsLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrBasalLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrBasalPercentLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrBasalUnitsLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrCarbsLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrMealBolusLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrMealBolusPercentLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrMealBolusUnitsLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrTotalInsulinLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrTotalInsulinUnitsLabel)
-        Last24HrTotalsPanel.Controls.Add(Last24HrSummaryLabel)
-        Last24HrTotalsPanel.Location = New Point(724, 0)
+        Last24HrTotalsPanel.BackColor = Color.Transparent
+        Last24HrTotalsPanel.BorderStyle = BorderStyle.FixedSingle
+        Last24HrTotalsPanel.Location = New Point(720, 3)
         Last24HrTotalsPanel.Name = "Last24HrTotalsPanel"
-        Last24HrTotalsPanel.Size = New Size(253, 129)
-        Last24HrTotalsPanel.TabIndex = 66
-        ' 
-        ' StripStatusLastUpdateTime
-        ' 
-        StripStatusLastUpdateTime.BorderSides = ToolStripStatusLabelBorderSides.Left
-        StripStatusLastUpdateTime.BorderStyle = Border3DStyle.RaisedOuter
-        StripStatusLastUpdateTime.DisplayStyle = ToolStripItemDisplayStyle.Text
-        StripStatusLastUpdateTime.Name = "StripStatusLastUpdateTime"
-        StripStatusLastUpdateTime.Size = New Size(160, 20)
-        StripStatusLastUpdateTime.Text = "Last Update Time: Unknown"
+        Last24HrTotalsPanel.Size = New Size(254, 130)
+        Last24HrTotalsPanel.TabIndex = 75
         ' 
         ' LoginStatus
         ' 
@@ -1160,7 +1103,7 @@ Partial Class Form1
         MaxBasalPerHourLabel.AutoSize = True
         MaxBasalPerHourLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         MaxBasalPerHourLabel.ForeColor = Color.LightGray
-        MaxBasalPerHourLabel.Location = New Point(978, 108)
+        MaxBasalPerHourLabel.Location = New Point(978, 111)
         MaxBasalPerHourLabel.Name = "MaxBasalPerHourLabel"
         MaxBasalPerHourLabel.Size = New Size(161, 21)
         MaxBasalPerHourLabel.TabIndex = 67
@@ -1369,6 +1312,20 @@ Partial Class Form1
         MenuShowMiniDisplay.ToolTipText = "Minimize and show Widget"
         MenuShowMiniDisplay.Visible = False
         ' 
+        ' MenuStartCleanUpObsoleteFiles
+        ' 
+        MenuStartCleanUpObsoleteFiles.Name = "MenuStartCleanUpObsoleteFiles"
+        MenuStartCleanUpObsoleteFiles.Size = New Size(245, 22)
+        MenuStartCleanUpObsoleteFiles.Text = "Clean Up Obsolete Files"
+        ' 
+        ' MenuStartExit
+        ' 
+        MenuStartExit.Image = My.Resources.Resources.AboutBox
+        MenuStartExit.Name = "MenuStartExit"
+        MenuStartExit.ShortcutKeys = Keys.Alt Or Keys.X
+        MenuStartExit.Size = New Size(245, 22)
+        MenuStartExit.Text = "E&xit"
+        ' 
         ' MenuStartHere
         ' 
         MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartUserLogin, ToolStripSeparator8, MenuStartManuallyImportDeviceSettings, MenuStartShowPumpSetup, ToolStripSeparator1, MenuStartLoadDataFile, MenuStartLoadExceptionReport, ToolStripSeparator4, MenuStartUseLastFile, MenuStartUseTestData, ToolStripSeparator2, MenuStartSaveSnapshot, MenuStartCleanUpObsoleteFiles, ToolStripSeparator3, MenuStartExit})
@@ -1446,24 +1403,10 @@ Partial Class Form1
         MenuStartSaveSnapshot.Size = New Size(245, 22)
         MenuStartSaveSnapshot.Text = "&Save Snapshot File"
         ' 
-        ' MenuStartCleanUpObsoleteFiles
-        ' 
-        MenuStartCleanUpObsoleteFiles.Name = "MenuStartCleanUpObsoleteFiles"
-        MenuStartCleanUpObsoleteFiles.Size = New Size(245, 22)
-        MenuStartCleanUpObsoleteFiles.Text = "Clean Up Obsolete Files"
-        ' 
         ' ToolStripSeparator3
         ' 
         ToolStripSeparator3.Name = "ToolStripSeparator3"
         ToolStripSeparator3.Size = New Size(242, 6)
-        ' 
-        ' MenuStartExit
-        ' 
-        MenuStartExit.Image = My.Resources.Resources.AboutBox
-        MenuStartExit.Name = "MenuStartExit"
-        MenuStartExit.ShortcutKeys = Keys.Alt Or Keys.X
-        MenuStartExit.Size = New Size(245, 22)
-        MenuStartExit.Text = "E&xit"
         ' 
         ' MenuStrip1
         ' 
@@ -1583,7 +1526,7 @@ Partial Class Form1
         SensorTimeLeftLabel.BackColor = Color.Transparent
         SensorTimeLeftLabel.Font = New Font("Segoe UI", 8.0F, FontStyle.Bold)
         SensorTimeLeftLabel.ForeColor = Color.LightGray
-        SensorTimeLeftLabel.Location = New Point(0, 80)
+        SensorTimeLeftLabel.Location = New Point(-3, 80)
         SensorTimeLeftLabel.Name = "SensorTimeLeftLabel"
         SensorTimeLeftLabel.Size = New Size(90, 39)
         SensorTimeLeftLabel.TabIndex = 46
@@ -1604,7 +1547,7 @@ Partial Class Form1
         ' 
         SensorTimeLeftPictureBox.ErrorImage = Nothing
         SensorTimeLeftPictureBox.Image = My.Resources.Resources.SensorLifeOK
-        SensorTimeLeftPictureBox.Location = New Point(15, 0)
+        SensorTimeLeftPictureBox.Location = New Point(12, 0)
         SensorTimeLeftPictureBox.Name = "SensorTimeLeftPictureBox"
         SensorTimeLeftPictureBox.Size = New Size(74, 84)
         SensorTimeLeftPictureBox.TabIndex = 47
@@ -1644,7 +1587,7 @@ Partial Class Form1
         SmartGuardLabel.BackColor = Color.Transparent
         SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
         SmartGuardLabel.ForeColor = Color.DodgerBlue
-        SmartGuardLabel.Location = New Point(232, 421)
+        SmartGuardLabel.Location = New Point(1252, 421)
         SmartGuardLabel.Name = "SmartGuardLabel"
         SmartGuardLabel.Size = New Size(176, 25)
         SmartGuardLabel.TabIndex = 35
@@ -1690,6 +1633,25 @@ Partial Class Form1
         SplitContainer2.Panel1.Controls.Add(PumpAITLabel)
         SplitContainer2.Panel1.Controls.Add(TrendValueLabel)
         SplitContainer2.Panel1.Controls.Add(MaxBasalPerHourLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrCarbsValueLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrCarbsLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrAutoCorrectionLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrAutoCorrectionPercentLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrTotalInsulinLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrBasalLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrBasalPercentLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrMealBolusLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrMealBolusPercentLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrSummaryLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrTotalInsulinUnitsLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrAutoCorrectionUnitsLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrBasalUnitsLabel)
+        SplitContainer2.Panel1.Controls.Add(Last24HrMealBolusUnitsLabel)
+        SplitContainer2.Panel1.Controls.Add(CursorPictureBox)
+        SplitContainer2.Panel1.Controls.Add(CursorMessage1Label)
+        SplitContainer2.Panel1.Controls.Add(CursorMessage2Label)
+        SplitContainer2.Panel1.Controls.Add(CursorMessage3Label)
+        SplitContainer2.Panel1.Controls.Add(CursorMessage4Label)
         SplitContainer2.Panel1.Controls.Add(Last24HrTotalsPanel)
         SplitContainer2.Panel1.Controls.Add(SensorTimeLeftPanel)
         SplitContainer2.Panel1.Controls.Add(TrendArrowsLabel)
@@ -1709,14 +1671,13 @@ Partial Class Form1
         SplitContainer2.Panel1.Controls.Add(InsulinLevelPictureBox)
         SplitContainer2.Panel1.Controls.Add(ActiveInsulinValue)
         SplitContainer2.Panel1.Controls.Add(CalibrationDueImage)
-        SplitContainer2.Panel1.Controls.Add(CursorPanel)
         SplitContainer2.Panel1.Controls.Add(CalibrationShieldPanel)
         ' 
         ' SplitContainer2.Panel2
         ' 
         SplitContainer2.Panel2.Controls.Add(SplitContainer3)
         SplitContainer2.Size = New Size(1376, 658)
-        SplitContainer2.SplitterDistance = 132
+        SplitContainer2.SplitterDistance = 134
         SplitContainer2.TabIndex = 52
         ' 
         ' TrendValueLabel
@@ -1747,7 +1708,7 @@ Partial Class Form1
         TransmitterBatteryPercentLabel.BackColor = Color.Transparent
         TransmitterBatteryPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         TransmitterBatteryPercentLabel.ForeColor = Color.LightGray
-        TransmitterBatteryPercentLabel.Location = New Point(547, 89)
+        TransmitterBatteryPercentLabel.Location = New Point(543, 89)
         TransmitterBatteryPercentLabel.Name = "TransmitterBatteryPercentLabel"
         TransmitterBatteryPercentLabel.Size = New Size(92, 21)
         TransmitterBatteryPercentLabel.TabIndex = 13
@@ -1758,7 +1719,7 @@ Partial Class Form1
         ' 
         TransmitterBatteryPictureBox.ErrorImage = Nothing
         TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryUnknown
-        TransmitterBatteryPictureBox.Location = New Point(554, 0)
+        TransmitterBatteryPictureBox.Location = New Point(551, 0)
         TransmitterBatteryPictureBox.Name = "TransmitterBatteryPictureBox"
         TransmitterBatteryPictureBox.Size = New Size(74, 84)
         TransmitterBatteryPictureBox.TabIndex = 47
@@ -1796,7 +1757,7 @@ Partial Class Form1
         SplitContainer3.Panel2.Controls.Add(SmartGuardLabel)
         SplitContainer3.Panel2.Controls.Add(TiTRMgsLabel)
         SplitContainer3.Panel2.Controls.Add(TiTRMgsLabel2)
-        SplitContainer3.Size = New Size(1376, 522)
+        SplitContainer3.Size = New Size(1376, 520)
         SplitContainer3.SplitterDistance = 1140
         SplitContainer3.TabIndex = 0
         ' 
@@ -1806,7 +1767,7 @@ Partial Class Form1
         TirHeaderLabel.AutoSize = True
         TirHeaderLabel.Font = New Font("Segoe UI", 14.0F, FontStyle.Bold)
         TirHeaderLabel.ForeColor = Color.Gray
-        TirHeaderLabel.Location = New Point(251, 0)
+        TirHeaderLabel.Location = New Point(1271, 0)
         TirHeaderLabel.Name = "TirHeaderLabel"
         TirHeaderLabel.Size = New Size(138, 25)
         TirHeaderLabel.TabIndex = 46
@@ -1820,7 +1781,7 @@ Partial Class Form1
         TirChartLabel.BackColor = Color.Black
         TirChartLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TirChartLabel.ForeColor = Color.LightGray
-        TirChartLabel.Location = New Point(286, 74)
+        TirChartLabel.Location = New Point(1306, 74)
         TirChartLabel.Name = "TirChartLabel"
         TirChartLabel.Size = New Size(68, 40)
         TirChartLabel.TabIndex = 2
@@ -1834,7 +1795,7 @@ Partial Class Form1
         TirSummaryPercentCharLabel.BackColor = Color.Transparent
         TirSummaryPercentCharLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TirSummaryPercentCharLabel.ForeColor = Color.LightGray
-        TirSummaryPercentCharLabel.Location = New Point(299, 113)
+        TirSummaryPercentCharLabel.Location = New Point(1319, 113)
         TirSummaryPercentCharLabel.Name = "TirSummaryPercentCharLabel"
         TirSummaryPercentCharLabel.Size = New Size(42, 40)
         TirSummaryPercentCharLabel.TabIndex = 3
@@ -1848,7 +1809,7 @@ Partial Class Form1
         TirValueLabel.BackColor = Color.Black
         TirValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TirValueLabel.ForeColor = Color.DarkGreen
-        TirValueLabel.Location = New Point(215, 234)
+        TirValueLabel.Location = New Point(1235, 234)
         TirValueLabel.Name = "TirValueLabel"
         TirValueLabel.Size = New Size(84, 40)
         TirValueLabel.TabIndex = 24
@@ -1862,7 +1823,7 @@ Partial Class Form1
         TiTRValueLabel.BackColor = Color.Black
         TiTRValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TiTRValueLabel.ForeColor = Color.Red
-        TiTRValueLabel.Location = New Point(340, 234)
+        TiTRValueLabel.Location = New Point(1360, 234)
         TiTRValueLabel.Name = "TiTRValueLabel"
         TiTRValueLabel.Size = New Size(84, 40)
         TiTRValueLabel.TabIndex = 24
@@ -1889,7 +1850,7 @@ Partial Class Form1
         TirComplianceLabel.BackColor = Color.Transparent
         TirComplianceLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
         TirComplianceLabel.ForeColor = Color.LightGray
-        TirComplianceLabel.Location = New Point(241, 448)
+        TirComplianceLabel.Location = New Point(1261, 448)
         TirComplianceLabel.Name = "TirComplianceLabel"
         TirComplianceLabel.Size = New Size(157, 25)
         TirComplianceLabel.TabIndex = 35
@@ -1948,11 +1909,56 @@ Partial Class Form1
         TlpNotificationsClearedTop.ColumnCount = 2
         TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
         TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpNotificationsClearedTop.Dock = DockStyle.Fill
         TlpNotificationsClearedTop.LabelText = "Notifications Cleared"
         TlpNotificationsClearedTop.Location = New Point(0, 0)
         TlpNotificationsClearedTop.Name = "TlpNotificationsClearedTop"
         TlpNotificationsClearedTop.RowCount = 1
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
+        TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
         TlpNotificationsClearedTop.RowStyles.Add(New RowStyle())
         TlpNotificationsClearedTop.Size = New Size(1376, 39)
         TlpNotificationsClearedTop.TabIndex = 1
@@ -1985,17 +1991,18 @@ Partial Class Form1
         ' 
         StatusStripSpeech.DisplayStyle = ToolStripItemDisplayStyle.Text
         StatusStripSpeech.Name = "StatusStripSpeech"
-        StatusStripSpeech.Size = New Size(400, 20)
+        StatusStripSpeech.Size = New Size(395, 20)
         StatusStripSpeech.Spring = True
         StatusStripSpeech.Text = " "
         ' 
-        ' StatusStripDotNetVersion
+        ' StripStatusLastUpdateTime
         ' 
-        StatusStripDotNetVersion.DisplayStyle = ToolStripItemDisplayStyle.Text
-        StatusStripDotNetVersion.Name = "StatusStripDotNetVersion"
-        StatusStripDotNetVersion.Size = New Size(400, 20)
-        StatusStripDotNetVersion.Spring = False
-        StatusStripDotNetVersion.Text = " "
+        StripStatusLastUpdateTime.BorderSides = ToolStripStatusLabelBorderSides.Left
+        StripStatusLastUpdateTime.BorderStyle = Border3DStyle.RaisedOuter
+        StripStatusLastUpdateTime.DisplayStyle = ToolStripItemDisplayStyle.Text
+        StripStatusLastUpdateTime.Name = "StripStatusLastUpdateTime"
+        StripStatusLastUpdateTime.Size = New Size(160, 20)
+        StripStatusLastUpdateTime.Text = "Last Update Time: Unknown"
         ' 
         ' StripStatusTimeZoneToolLabel
         ' 
@@ -2009,9 +2016,16 @@ Partial Class Form1
         ' StatusStripSpacerRight
         ' 
         StatusStripSpacerRight.Name = "StatusStripSpacerRight"
-        StatusStripSpacerRight.Size = New Size(400, 20)
+        StatusStripSpacerRight.Size = New Size(395, 20)
         StatusStripSpacerRight.Spring = True
         StatusStripSpacerRight.Text = " "
+        ' 
+        ' StatusStripDotNetVersion
+        ' 
+        StatusStripDotNetVersion.DisplayStyle = ToolStripItemDisplayStyle.Text
+        StatusStripDotNetVersion.Name = "StatusStripDotNetVersion"
+        StatusStripDotNetVersion.Size = New Size(10, 20)
+        StatusStripDotNetVersion.Text = " "
         ' 
         ' StatusStripUpdateAvailable
         ' 
@@ -2021,6 +2035,32 @@ Partial Class Form1
         StatusStripUpdateAvailable.Name = "StatusStripUpdateAvailable"
         StatusStripUpdateAvailable.Size = New Size(154, 20)
         StatusStripUpdateAvailable.Text = "Update Status Unknown"
+        ' 
+        ' TabControlPage1
+        ' 
+        TabControlPage1.Controls.Add(TabPage01HomePage)
+        TabControlPage1.Controls.Add(TabPage02RunningIOB)
+        TabControlPage1.Controls.Add(TabPage03TreatmentDetails)
+        TabControlPage1.Controls.Add(TabPage04SummaryData)
+        TabControlPage1.Controls.Add(TabPage05ActiveInsulin)
+        TabControlPage1.Controls.Add(TabPage06Basal)
+        TabControlPage1.Controls.Add(TabPage07LastAlarm)
+        TabControlPage1.Controls.Add(TabPage08LastSG)
+        TabControlPage1.Controls.Add(TabPage09Limits)
+        TabControlPage1.Controls.Add(TabPage10NotificationActive)
+        TabControlPage1.Controls.Add(TabPage11NotificationsCleared)
+        TabControlPage1.Controls.Add(TabPage12PumpBannerState)
+        TabControlPage1.Controls.Add(TabPage13SensorGlucose)
+        TabControlPage1.Controls.Add(TabPage14TherapyAlgorithmState)
+        TabControlPage1.Controls.Add(TabPage15More)
+        TabControlPage1.Dock = DockStyle.Fill
+        TabControlPage1.Font = New Font("Segoe UI", 9.0F)
+        TabControlPage1.Location = New Point(0, 24)
+        TabControlPage1.Name = "TabControlPage1"
+        TabControlPage1.Padding = New Point(6, 6)
+        TabControlPage1.SelectedIndex = 0
+        TabControlPage1.Size = New Size(1384, 692)
+        TabControlPage1.TabIndex = 1
         ' 
         ' TabPage01HomePage
         ' 
@@ -2097,11 +2137,56 @@ Partial Class Form1
         TlpActiveInsulinTop.ColumnCount = 2
         TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
         TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpActiveInsulinTop.Dock = DockStyle.Fill
         TlpActiveInsulinTop.LabelText = "Active Insulin"
         TlpActiveInsulinTop.Location = New Point(3, 3)
         TlpActiveInsulinTop.Name = "TlpActiveInsulinTop"
         TlpActiveInsulinTop.RowCount = 1
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
+        TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
         TlpActiveInsulinTop.RowStyles.Add(New RowStyle())
         TlpActiveInsulinTop.Size = New Size(1370, 37)
         TlpActiveInsulinTop.TabIndex = 1
@@ -2144,11 +2229,56 @@ Partial Class Form1
         TlpBasalTop.ColumnCount = 2
         TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
         TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpBasalTop.Dock = DockStyle.Fill
         TlpBasalTop.LabelText = "Basal"
         TlpBasalTop.Location = New Point(6, 6)
         TlpBasalTop.Name = "TlpBasalTop"
         TlpBasalTop.RowCount = 1
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
+        TlpBasalTop.RowStyles.Add(New RowStyle())
         TlpBasalTop.RowStyles.Add(New RowStyle())
         TlpBasalTop.Size = New Size(1364, 37)
         TlpBasalTop.TabIndex = 1
@@ -2190,11 +2320,56 @@ Partial Class Form1
         TlpLastAlarmTop.ColumnCount = 2
         TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
         TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLastAlarmTop.Dock = DockStyle.Fill
         TlpLastAlarmTop.LabelText = "Last Alarm"
         TlpLastAlarmTop.Location = New Point(6, 6)
         TlpLastAlarmTop.Name = "TlpLastAlarmTop"
         TlpLastAlarmTop.RowCount = 1
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
+        TlpLastAlarmTop.RowStyles.Add(New RowStyle())
         TlpLastAlarmTop.RowStyles.Add(New RowStyle())
         TlpLastAlarmTop.Size = New Size(1364, 37)
         TlpLastAlarmTop.TabIndex = 1
@@ -2235,11 +2410,56 @@ Partial Class Form1
         TlpLastSgTop.ColumnCount = 2
         TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
         TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLastSgTop.Dock = DockStyle.Fill
         TlpLastSgTop.LabelText = "Last Sensor Glucose"
         TlpLastSgTop.Location = New Point(6, 6)
         TlpLastSgTop.Name = "TlpLastSgTop"
         TlpLastSgTop.RowCount = 1
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
+        TlpLastSgTop.RowStyles.Add(New RowStyle())
         TlpLastSgTop.RowStyles.Add(New RowStyle())
         TlpLastSgTop.Size = New Size(1364, 37)
         TlpLastSgTop.TabIndex = 1
@@ -2280,11 +2500,56 @@ Partial Class Form1
         TlpLimitsTop.ColumnCount = 2
         TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
         TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLimitsTop.Dock = DockStyle.Fill
         TlpLimitsTop.LabelText = "Limits"
         TlpLimitsTop.Location = New Point(6, 6)
         TlpLimitsTop.Name = "TlpLimitsTop"
         TlpLimitsTop.RowCount = 1
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
+        TlpLimitsTop.RowStyles.Add(New RowStyle())
         TlpLimitsTop.RowStyles.Add(New RowStyle())
         TlpLimitsTop.Size = New Size(1364, 37)
         TlpLimitsTop.TabIndex = 1
@@ -2323,13 +2588,58 @@ Partial Class Form1
         TlpNotificationActiveTop.ColumnCount = 2
         TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
         TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpNotificationActiveTop.Dock = DockStyle.Fill
         TlpNotificationActiveTop.LabelText = "Active Notification"
         TlpNotificationActiveTop.Location = New Point(6, 6)
         TlpNotificationActiveTop.Name = "TlpNotificationActiveTop"
         TlpNotificationActiveTop.RowCount = 1
         TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
-        TlpNotificationActiveTop.Size = New Size(1364, 37)
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.RowStyles.Add(New RowStyle())
+        TlpNotificationActiveTop.Size = New Size(1364, 646)
         TlpNotificationActiveTop.TabIndex = 1
         ' 
         ' TabPage11NotificationsCleared
@@ -2379,11 +2689,56 @@ Partial Class Form1
         TlpPumpBannerStateTop.ColumnCount = 2
         TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
         TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpPumpBannerStateTop.Dock = DockStyle.Fill
         TlpPumpBannerStateTop.LabelText = "Pump Banner State"
         TlpPumpBannerStateTop.Location = New Point(6, 6)
         TlpPumpBannerStateTop.Name = "TlpPumpBannerStateTop"
         TlpPumpBannerStateTop.RowCount = 1
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
+        TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
         TlpPumpBannerStateTop.RowStyles.Add(New RowStyle())
         TlpPumpBannerStateTop.Size = New Size(1364, 37)
         TlpPumpBannerStateTop.TabIndex = 1
@@ -2424,11 +2779,56 @@ Partial Class Form1
         TlpSgsTop.ColumnCount = 2
         TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
         TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpSgsTop.Dock = DockStyle.Fill
         TlpSgsTop.LabelText = "Sensor Glucose Values"
         TlpSgsTop.Location = New Point(6, 6)
         TlpSgsTop.Name = "TlpSgsTop"
         TlpSgsTop.RowCount = 1
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
+        TlpSgsTop.RowStyles.Add(New RowStyle())
         TlpSgsTop.RowStyles.Add(New RowStyle())
         TlpSgsTop.Size = New Size(1364, 37)
         TlpSgsTop.TabIndex = 1
@@ -2468,11 +2868,56 @@ Partial Class Form1
         TlpTherapyAlgorithmStateTop.ColumnCount = 2
         TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
         TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpTherapyAlgorithmStateTop.Dock = DockStyle.Fill
         TlpTherapyAlgorithmStateTop.LabelText = "Therapy Algorithm State"
         TlpTherapyAlgorithmStateTop.Location = New Point(6, 6)
         TlpTherapyAlgorithmStateTop.Name = "TlpTherapyAlgorithmStateTop"
         TlpTherapyAlgorithmStateTop.RowCount = 1
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
+        TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
         TlpTherapyAlgorithmStateTop.RowStyles.Add(New RowStyle())
         TlpTherapyAlgorithmStateTop.Size = New Size(1364, 37)
         TlpTherapyAlgorithmStateTop.TabIndex = 1
@@ -2485,6 +2930,29 @@ Partial Class Form1
         TabPage15More.TabIndex = 24
         TabPage15More.Text = "More..."
         TabPage15More.UseVisualStyleBackColor = True
+        ' 
+        ' TabControlPage2
+        ' 
+        TabControlPage2.Controls.Add(TabPage01AutoBasalDelivery)
+        TabControlPage2.Controls.Add(TabPage02AutoModeStatus)
+        TabControlPage2.Controls.Add(TabPage03BgReadings)
+        TabControlPage2.Controls.Add(TabPage04Calibration)
+        TabControlPage2.Controls.Add(TabPage05Insulin)
+        TabControlPage2.Controls.Add(TabPage06LowGlucoseSuspended)
+        TabControlPage2.Controls.Add(TabPage07Meal)
+        TabControlPage2.Controls.Add(TabPage08TimeChange)
+        TabControlPage2.Controls.Add(TabPage09BasalPerHour)
+        TabControlPage2.Controls.Add(TabPage10CurrentUser)
+        TabControlPage2.Controls.Add(TabPage11AllUsers)
+        TabControlPage2.Controls.Add(TabPage12BackToHomePage)
+        TabControlPage2.Dock = DockStyle.Fill
+        TabControlPage2.Font = New Font("Segoe UI", 9.0F)
+        TabControlPage2.Location = New Point(0, 24)
+        TabControlPage2.Name = "TabControlPage2"
+        TabControlPage2.Padding = New Point(6, 6)
+        TabControlPage2.SelectedIndex = 0
+        TabControlPage2.Size = New Size(1384, 692)
+        TabControlPage2.TabIndex = 0
         ' 
         ' TabPage01AutoBasalDelivery
         ' 
@@ -2522,11 +2990,56 @@ Partial Class Form1
         TlpAutoBasalDeliveryTop.ColumnCount = 2
         TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
         TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpAutoBasalDeliveryTop.Dock = DockStyle.Fill
         TlpAutoBasalDeliveryTop.LabelText = "Marker : Auto Basal Delivery"
         TlpAutoBasalDeliveryTop.Location = New Point(6, 6)
         TlpAutoBasalDeliveryTop.Name = "TlpAutoBasalDeliveryTop"
         TlpAutoBasalDeliveryTop.RowCount = 1
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
+        TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
         TlpAutoBasalDeliveryTop.RowStyles.Add(New RowStyle())
         TlpAutoBasalDeliveryTop.Size = New Size(1364, 37)
         TlpAutoBasalDeliveryTop.TabIndex = 1
@@ -2567,11 +3080,56 @@ Partial Class Form1
         TlpAutoModeStatusTop.ColumnCount = 2
         TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
         TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpAutoModeStatusTop.Dock = DockStyle.Fill
         TlpAutoModeStatusTop.LabelText = "Marker : Auto Mode Status"
         TlpAutoModeStatusTop.Location = New Point(6, 6)
         TlpAutoModeStatusTop.Name = "TlpAutoModeStatusTop"
         TlpAutoModeStatusTop.RowCount = 1
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
+        TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
         TlpAutoModeStatusTop.RowStyles.Add(New RowStyle())
         TlpAutoModeStatusTop.Size = New Size(1364, 37)
         TlpAutoModeStatusTop.TabIndex = 1
@@ -2613,11 +3171,56 @@ Partial Class Form1
         TlpBgReadingsTop.ColumnCount = 2
         TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
         TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpBgReadingsTop.Dock = DockStyle.Fill
         TlpBgReadingsTop.LabelText = "Marker : Blood Glucose Readings"
         TlpBgReadingsTop.Location = New Point(6, 6)
         TlpBgReadingsTop.Name = "TlpBgReadingsTop"
         TlpBgReadingsTop.RowCount = 1
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
+        TlpBgReadingsTop.RowStyles.Add(New RowStyle())
         TlpBgReadingsTop.RowStyles.Add(New RowStyle())
         TlpBgReadingsTop.Size = New Size(1364, 37)
         TlpBgReadingsTop.TabIndex = 1
@@ -2659,11 +3262,56 @@ Partial Class Form1
         TlpCalibrationTop.ColumnCount = 2
         TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
         TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpCalibrationTop.Dock = DockStyle.Fill
         TlpCalibrationTop.LabelText = "Marker : Calibration"
         TlpCalibrationTop.Location = New Point(6, 6)
         TlpCalibrationTop.Name = "TlpCalibrationTop"
         TlpCalibrationTop.RowCount = 1
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
+        TlpCalibrationTop.RowStyles.Add(New RowStyle())
         TlpCalibrationTop.RowStyles.Add(New RowStyle())
         TlpCalibrationTop.Size = New Size(1364, 37)
         TlpCalibrationTop.TabIndex = 1
@@ -2705,11 +3353,56 @@ Partial Class Form1
         TlpInsulinTop.ColumnCount = 2
         TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
         TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpInsulinTop.Dock = DockStyle.Fill
         TlpInsulinTop.LabelText = "Marker : Insulin"
         TlpInsulinTop.Location = New Point(6, 6)
         TlpInsulinTop.Name = "TlpInsulinTop"
         TlpInsulinTop.RowCount = 1
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
+        TlpInsulinTop.RowStyles.Add(New RowStyle())
         TlpInsulinTop.RowStyles.Add(New RowStyle())
         TlpInsulinTop.Size = New Size(1364, 37)
         TlpInsulinTop.TabIndex = 1
@@ -2751,11 +3444,56 @@ Partial Class Form1
         TlpLowGlucoseSuspendedTop.ColumnCount = 2
         TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
         TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLowGlucoseSuspendedTop.Dock = DockStyle.Fill
         TlpLowGlucoseSuspendedTop.LabelText = "Marker : Low Glucose Suspended"
         TlpLowGlucoseSuspendedTop.Location = New Point(6, 6)
         TlpLowGlucoseSuspendedTop.Name = "TlpLowGlucoseSuspendedTop"
         TlpLowGlucoseSuspendedTop.RowCount = 1
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
+        TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
         TlpLowGlucoseSuspendedTop.RowStyles.Add(New RowStyle())
         TlpLowGlucoseSuspendedTop.Size = New Size(1364, 37)
         TlpLowGlucoseSuspendedTop.TabIndex = 1
@@ -2797,11 +3535,56 @@ Partial Class Form1
         TlpMealTop.ColumnCount = 2
         TlpMealTop.ColumnStyles.Add(New ColumnStyle())
         TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle())
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpMealTop.Dock = DockStyle.Fill
         TlpMealTop.LabelText = "Marker : Meal"
         TlpMealTop.Location = New Point(6, 6)
         TlpMealTop.Name = "TlpMealTop"
         TlpMealTop.RowCount = 1
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
+        TlpMealTop.RowStyles.Add(New RowStyle())
         TlpMealTop.RowStyles.Add(New RowStyle())
         TlpMealTop.Size = New Size(1364, 37)
         TlpMealTop.TabIndex = 1
@@ -2843,11 +3626,56 @@ Partial Class Form1
         TlpTimeChangeTop.ColumnCount = 2
         TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
         TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpTimeChangeTop.Dock = DockStyle.Fill
         TlpTimeChangeTop.LabelText = "Marker : Time Change"
         TlpTimeChangeTop.Location = New Point(6, 6)
         TlpTimeChangeTop.Name = "TlpTimeChangeTop"
         TlpTimeChangeTop.RowCount = 1
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
+        TlpTimeChangeTop.RowStyles.Add(New RowStyle())
         TlpTimeChangeTop.RowStyles.Add(New RowStyle())
         TlpTimeChangeTop.Size = New Size(1364, 37)
         TlpTimeChangeTop.TabIndex = 1
@@ -2879,7 +3707,7 @@ Partial Class Form1
         TabPage11AllUsers.Name = "TabPage11AllUsers"
         TabPage11AllUsers.Size = New Size(1376, 658)
         TabPage11AllUsers.TabIndex = 11
-        TabPage11AllUsers.Text = "All Users"
+        TabPage11AllUsers.Text = "ShowAll Users"
         TabPage11AllUsers.UseVisualStyleBackColor = True
         ' 
         ' TabPage12BackToHomePage
@@ -2890,55 +3718,6 @@ Partial Class Form1
         TabPage12BackToHomePage.TabIndex = 12
         TabPage12BackToHomePage.Text = "Back.."
         TabPage12BackToHomePage.UseVisualStyleBackColor = True
-        ' 
-        ' TabControlPage1
-        ' 
-        TabControlPage1.Controls.Add(TabPage01HomePage)
-        TabControlPage1.Controls.Add(TabPage02RunningIOB)
-        TabControlPage1.Controls.Add(TabPage03TreatmentDetails)
-        TabControlPage1.Controls.Add(TabPage04SummaryData)
-        TabControlPage1.Controls.Add(TabPage05ActiveInsulin)
-        TabControlPage1.Controls.Add(TabPage06Basal)
-        TabControlPage1.Controls.Add(TabPage07LastAlarm)
-        TabControlPage1.Controls.Add(TabPage08LastSG)
-        TabControlPage1.Controls.Add(TabPage09Limits)
-        TabControlPage1.Controls.Add(TabPage10NotificationActive)
-        TabControlPage1.Controls.Add(TabPage11NotificationsCleared)
-        TabControlPage1.Controls.Add(TabPage12PumpBannerState)
-        TabControlPage1.Controls.Add(TabPage13SensorGlucose)
-        TabControlPage1.Controls.Add(TabPage14TherapyAlgorithmState)
-        TabControlPage1.Controls.Add(TabPage15More)
-        TabControlPage1.Dock = DockStyle.Fill
-        TabControlPage1.Font = New Font("Segoe UI", 9.0F)
-        TabControlPage1.Location = New Point(0, 24)
-        TabControlPage1.Name = "TabControlPage1"
-        TabControlPage1.Padding = New Point(6, 6)
-        TabControlPage1.SelectedIndex = 0
-        TabControlPage1.Size = New Size(1384, 692)
-        TabControlPage1.TabIndex = 1
-        ' 
-        ' TabControlPage2
-        ' 
-        TabControlPage2.Controls.Add(TabPage01AutoBasalDelivery)
-        TabControlPage2.Controls.Add(TabPage02AutoModeStatus)
-        TabControlPage2.Controls.Add(TabPage03BgReadings)
-        TabControlPage2.Controls.Add(TabPage04Calibration)
-        TabControlPage2.Controls.Add(TabPage05Insulin)
-        TabControlPage2.Controls.Add(TabPage06LowGlucoseSuspended)
-        TabControlPage2.Controls.Add(TabPage07Meal)
-        TabControlPage2.Controls.Add(TabPage08TimeChange)
-        TabControlPage2.Controls.Add(TabPage09BasalPerHour)
-        TabControlPage2.Controls.Add(TabPage10CurrentUser)
-        TabControlPage2.Controls.Add(TabPage11AllUsers)
-        TabControlPage2.Controls.Add(TabPage12BackToHomePage)
-        TabControlPage2.Dock = DockStyle.Fill
-        TabControlPage2.Font = New Font("Segoe UI", 9.0F)
-        TabControlPage2.Location = New Point(0, 24)
-        TabControlPage2.Name = "TabControlPage2"
-        TabControlPage2.Padding = New Point(6, 6)
-        TabControlPage2.SelectedIndex = 0
-        TabControlPage2.Size = New Size(1384, 692)
-        TabControlPage2.TabIndex = 0
         ' 
         ' TimeChangeLabel
         ' 
@@ -2982,7 +3761,6 @@ Partial Class Form1
         CalibrationShieldPanel.PerformLayout()
         CType(SmartGuardShieldPictureBox, ComponentModel.ISupportInitialize).EndInit()
         CType(CareLinkUserDataRecordBindingSource, ComponentModel.ISupportInitialize).EndInit()
-        CursorPanel.ResumeLayout(False)
         CType(CursorPictureBox, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvActiveInsulin, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).EndInit()
@@ -3005,8 +3783,6 @@ Partial Class Form1
         CType(DgvTherapyAlgorithmState, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvTimeChange, ComponentModel.ISupportInitialize).EndInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).EndInit()
-        Last24HrTotalsPanel.ResumeLayout(False)
-        Last24HrTotalsPanel.PerformLayout()
         MenuStrip1.ResumeLayout(False)
         MenuStrip1.PerformLayout()
         CType(PumpBatteryPictureBox, ComponentModel.ISupportInitialize).EndInit()
@@ -3035,6 +3811,7 @@ Partial Class Form1
         SplitContainerNotificationsCleared.ResumeLayout(False)
         StatusStrip1.ResumeLayout(False)
         StatusStrip1.PerformLayout()
+        TabControlPage1.ResumeLayout(False)
         TabPage01HomePage.ResumeLayout(False)
         TabPage02RunningIOB.ResumeLayout(False)
         TabPage04SummaryData.ResumeLayout(False)
@@ -3075,6 +3852,7 @@ Partial Class Form1
         TabPage14TherapyAlgorithmState.PerformLayout()
         TlpTherapyAlgorithmState.ResumeLayout(False)
         TlpTherapyAlgorithmState.PerformLayout()
+        TabControlPage2.ResumeLayout(False)
         TabPage01AutoBasalDelivery.ResumeLayout(False)
         TabPage01AutoBasalDelivery.PerformLayout()
         TlpAutoBasalDelivery.ResumeLayout(False)
@@ -3110,8 +3888,6 @@ Partial Class Form1
         TabPage09BasalPerHour.ResumeLayout(False)
         TabPage10CurrentUser.ResumeLayout(False)
         TabPage11AllUsers.ResumeLayout(False)
-        TabControlPage1.ResumeLayout(False)
-        TabControlPage2.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
@@ -3133,7 +3909,6 @@ Partial Class Form1
     Friend WithEvents CursorMessage2Label As Label
     Friend WithEvents CursorMessage3Label As Label
     Friend WithEvents CursorMessage4Label As Label
-    Friend WithEvents CursorPanel As Panel
     Friend WithEvents CursorPictureBox As PictureBox
     Friend WithEvents CursorTimer As Timer
     Friend WithEvents DgvActiveInsulin As DataGridView
