@@ -15,7 +15,6 @@ Public Class LoginDialog
     Private _showTcs As TaskCompletionSource(Of DialogResult)
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
 
-    Friend Property Client As Client2
     Public Property ClientDiscover As DiscoveryRecord
     Public Property LoggedOnUser As CareLinkUserDataRecord
     Public Property LoginSourceAutomatic As FileToLoadOptions
@@ -264,11 +263,11 @@ Public Class LoginDialog
                                            userName:=s_userName,
                                            password:=s_password,
                                            tokenData:=ReadTokenDataFile())
-                Me.Client = New Client2(serverRegion)
+                Form1.Client = New Client2(serverRegion)
                 Const loginFailed As String = "Login failed: Client.InitAsync() did not complete successfully."
-                lastErrorMsg = If(Not Await Me.Client.InitAsync(),
+                lastErrorMsg = If(Not Await Form1.Client.InitAsync(),
                                   loginFailed,
-                                  Await Me.Client.GetRecentDataAsync())
+                                  Await Form1.Client.GetRecentDataAsync())
 
             End If
             If IsNullOrWhiteSpace(value:=lastErrorMsg) Then
@@ -301,7 +300,7 @@ Public Class LoginDialog
             Else
                 httpStatusCode = If(httpStatusCode <> 0,
                                     httpStatusCode,
-                                    Me.Client.HttpStatusCode)
+                                    Form1.Client.HttpStatusCode)
                 Me.LoginStatus.Text = lastErrorMsg
                 ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMsg, httpStatusCode)
                 If Client2.Auth_Error_Codes.Contains(value:=httpStatusCode) Then

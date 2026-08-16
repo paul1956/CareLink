@@ -151,7 +151,7 @@ Public Module JsonExtensions
     ''' <param name="value">The <see cref="JsonElement"/> to convert.</param>
     ''' <returns>The <see langword="String"/> representation of the jsonElement.</returns>
     <Extension>
-    Public Function ElementToString(value As JsonElement) As String
+    Public Function ElementToJson(value As JsonElement) As String
         Return If(value.IsNullOrUndefined,
                   String.Empty,
                   If(value.ValueKind = JsonValueKind.String,
@@ -160,7 +160,7 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a JSON string to an object of type <typeparamref name="T"/>
+    '''  Converts (Deserializes) a JSON string  to an object of type <typeparamref name="T"/>
     '''  using the default <see cref="JsonSerializerOptions"/>.
     ''' </summary>
     ''' <typeparam name="T">The type of the object to deserialize.</typeparam>
@@ -178,7 +178,7 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a JSON string to an object of type <typeparamref name="T"/>
+    '''  Converts (Deserializes) a JSON string to an object of type <typeparamref name="T"/>
     '''  using the default <see cref="JsonSerializerOptions"/>.
     ''' </summary>
     ''' <typeparam name="T">The type of the object to deserialize.</typeparam>

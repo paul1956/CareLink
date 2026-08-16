@@ -39,12 +39,16 @@ Public Class Form1
     Private _updating As Boolean
     Private Shared Property TimeInTightRange As (Uint As UInteger, Str As String)
 
+    ''' <summary>
+    '''  Store the Client locally to prevent the LoginDialog from popin up. 
+    ''' </summary>
+    ''' <returns> </returns>
     Friend Shared Property Client As Client2
         Get
-            Return LoginHelpers.LoginDialog?.Client
+            Return s_client
         End Get
-        Set(value As Client2)
-            LoginHelpers.LoginDialog.Client = value
+        Set
+            s_client = Value
         End Set
     End Property
 
@@ -336,9 +340,10 @@ Public Class Form1
                 Case HighLimitSeriesName, HighTiTRSeriesName, LowLimitSeriesName, TargetSgSeriesName
                     Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
                 Case MarkerSeriesName, BasalSeriesName
-                    Dim markerTags() As String =
-                        currentDataPoint.Tag.ToString.Split(separator:=":"c)
-                    If markerTags.Length <= 1 Then
+                    Dim markerTags As List(Of String) =
+                        currentDataPoint.Tag.ToString.Split(separator:=":"c) _
+                                                     .ToList()
+                    If markerTags.Count <= 1 Then
                         If chart1.Name = NameOf(TreatmentMarkersChart) Then
                             Dim callout As CalloutAnnotation =
                                 chart1.FindAnnotation(lastDataPoint:=currentDataPoint)
@@ -348,65 +353,70 @@ Public Class Form1
                         End If
                         Exit Sub
                     End If
-                    markerTags(0) = markerTags(0).Trim
+                    markerTags(index:=0) = markerTags(index:=0).Trim
                     If isHomePage Then
                         Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
                         If Me.CursorPictureBox.SizeMode <> PictureBoxSizeMode.StretchImage Then
                             Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
                         End If
-                        If Me.CursorMessage2Label.Font Is Nothing OrElse
-                            Not Me.CursorMessage2Label.Font.Equals(s_font12Bold) Then
-
-                            Me.CursorMessage2Label.Font = s_font12Bold
-                        End If
-                        Select Case markerTags.Length
+                        SetFontIfChanged(Me.CursorMessage2Label, s_font12Bold)
+                        Select Case markerTags.Count
                             Case 2
-                                Me.CursorMessage1Label.Text = markerTags(0)
-                                Me.CursorMessage2Label.Text = markerTags(1).Trim
-                                Me.CursorMessage3Label.Text =
-                                    Date.FromOADate(currentDataPoint.XValue).ToString(format:=s_timeWithMinuteFormat)
+                                Dim amountStr As String =
+                                    markerTags(index:=1).TrimEnd.TrimEnd(trimChar:="U"c)
                                 showWhat = CursorInfoVisibility.Show3 Or CursorInfoVisibility.PictureBoxMask
-                                Select Case markerTags(0)
-                                    Case "Auto Correction",
-                                         "Auto Basal",
-                                         "Manual Basal",
-                                         "Basal",
-                                         "Min Auto Basal"
-                                        Me.CursorPictureBox.Image = My.Resources.InsulinVial
-                                    Case "Bolus"
-                                        Me.CursorPictureBox.Image = My.Resources.InsulinVial
-                                    Case "Meal"
-                                        Me.CursorPictureBox.Image = My.Resources.MealImageLarge
-                                    Case Else
-                                        Stop
-                                        showWhat = CursorInfoVisibility.None
-                                End Select
+                                If CDbl(amountStr).AlmostZero Then
+                                    Me.CursorMessage1Label.Text = "Calibration"
+                                    Me.CursorMessage2Label.Text = "Only"
+                                    Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
+                                Else
+                                    Me.CursorMessage1Label.Text = markerTags(index:=0)
+                                    Me.CursorMessage2Label.Text = amountStr
+                                    Select Case markerTags(index:=0)
+                                        Case "Auto Correction",
+                                             "Auto Basal",
+                                             "Manual Basal",
+                                             "Basal",
+                                             "Min Auto Basal"
+                                            Me.CursorPictureBox.Image = My.Resources.InsulinVial
+                                        Case "Bolus"
+                                            Me.CursorPictureBox.Image = My.Resources.InsulinVial
+                                        Case "Meal"
+                                            Me.CursorPictureBox.Image = My.Resources.MealImageLarge
+                                        Case Else
+                                            Stop
+                                            Me.CursorPictureBox.Image = Nothing
+                                            showWhat = CursorInfoVisibility.None
+                                    End Select
+                                End If
+                                Me.CursorMessage3Label.Text = Date.FromOADate(currentDataPoint.XValue).
+                                                                   ToString(format:=s_timeWithMinuteFormat)
                                 Me.ShowCursorControls(showWhat)
                             Case 3
-                                Select Case markerTags(1).Trim
-                                    Case "Calibration accepted", "Calibration not accepted"
+                                Me.CursorMessage1Label.Text =
+                                    $"{markerTags(index:=0)}@{xValue.ToString(format:=s_timeWithMinuteFormat)}"
+                                Me.CursorMessage2Label.Text =
+                                    markerTags(index:=1).Replace(oldValue:="Calibration not", newValue:="Cal. not").Trim
+                                Me.CursorMessage3Label.Text = markerTags(index:=2).Trim
+                                Dim sgVal As Single =
+                                    markerTags(index:=2).Trim.
+                                                         Split(separator:=" ")(0).
+                                                         ParseSingle(digits:=2)
+
+                                Me.CursorMessage4Label.Text =
+                                    If(NativeMmolL,
+                                       $"{CInt(sgVal * MmolLUnitsDivisor)} mg/dL",
+                                       $"{sgVal / MmolLUnitsDivisor:F1} mmol/L")
+                                Select Case markerTags(index:=1).Trim
+                                    Case "Calibration accepted",
+                                         "Calibration not accepted"
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
                                     Case "Not used for calibration"
                                         Me.CursorPictureBox.Image = My.Resources.CalibrationDot
-                                        Dim style As FontStyle = FontStyle.Bold
-                                        If Me.CursorMessage2Label.Font Is Nothing OrElse Not Me.CursorMessage2Label.Font.Equals(s_font11Bold) Then
-                                            Me.CursorMessage2Label.Font = s_font11Bold
-                                        End If
+                                        Me.CursorMessage2Label.SetFontIfChanged(newFont:=s_font11Bold)
                                     Case Else
                                         Stop
                                 End Select
-                                Me.CursorMessage1Label.Text =
-                                    $"{markerTags(0)}@{xValue.ToString(format:=s_timeWithMinuteFormat)}"
-                                Me.CursorMessage2Label.Text =
-                                    markerTags(1).Replace(oldValue:="Calibration not", newValue:="Cal. not").Trim
-                                Me.CursorMessage3Label.Text = markerTags(2).Trim
-                                Dim sgVal As Single = markerTags(2).Trim _
-                                                                   .Split(separator:=" ")(0) _
-                                                                   .ParseSingle(digits:=2)
-
-                                Me.CursorMessage4Label.Text = If(NativeMmolL,
-                                                                 $"{CInt(sgVal * MmolLUnitsDivisor)} mg/dL",
-                                                                 $"{sgVal / MmolLUnitsDivisor:F1} mmol/L")
                                 Me.ShowCursorControls(showWhat:=CursorInfoVisibility.ShowAll)
                             Case Else
                                 Stop
@@ -943,6 +953,7 @@ Public Class Form1
 
     Private WithEvents DgvCopyWithExcelMenuStrip As New ContextMenuStrip
     Friend WithEvents DgvCopyWithoutExcelMenuStrip As New ContextMenuStrip
+    Private Shared s_client As Client2
 
     ''' <summary>
     '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event
@@ -3716,8 +3727,6 @@ Public Class Form1
                             Case DialogResult.Retry
                         End Select
                     Loop
-
-                    Client = LoginDialog.Client
                 End If
 
                 lastErrorMessage = Await Client.GetRecentDataAsync()
@@ -4234,7 +4243,9 @@ Public Class Form1
                     Else
                         Me.TrendValueLabel.Visible = False
                     End If
-                    strBuilder.Append(value:=$"Active ins. {PatientData.ActiveInsulin?.Amount:N3} U")
+                    If s_activeInsulin IsNot Nothing AndAlso s_activeInsulin.Amount >= 0 Then
+                        strBuilder.Append(value:=$"Active ins. {s_activeInsulin.Amount:N3} U")
+                    End If
                     Me.NotifyIcon1.Text = strBuilder.ToString()
                     Me.NotifyIcon1.Visible = True
                     s_lastSgValue = sg
@@ -4343,9 +4354,12 @@ Public Class Form1
                 Case "SAFE_BASAL"
                     title = autoModeState.ToTitle
                     Dim key As String = NameOf(TherapyAlgorithmState.SafeBasalDuration)
-                    Dim safeBasalDuration As UInteger = CUInt(s_therapyAlgorithmStateValue(key))
-                    If safeBasalDuration > 0 Then
-                        title &= $", {TimeSpan.FromMinutes(safeBasalDuration):h\:mm} left."
+                    Dim value As String = Nothing
+                    If s_therapyAlgorithmStateValue.TryGetValue(key, value:=value) Then
+                        Dim safeBasalDuration As UInteger = Nothing
+                        If IsNotNullOrWhiteSpace(value) Then
+                            title &= $", {TimeSpan.FromMinutes(safeBasalDuration):h\:mm} left."
+                        End If
                     End If
             End Select
         Else
@@ -4420,12 +4434,15 @@ Public Class Form1
     ''' </exception>
     Private Sub UpdateActiveInsulin()
         Try
-            If PatientData.ActiveInsulin IsNot Nothing AndAlso
-               PatientData.ActiveInsulin.Amount >= 0 Then
+            If s_activeInsulin IsNot Nothing AndAlso
+               s_activeInsulin.Amount >= 0 Then
 
-                Dim activeInsulinStr As String = $"Active Insulin {$"{PatientData.ActiveInsulin.Amount:N3}"} U"
+                Dim activeInsulinStr As String = $"Active Insulin {$"{s_activeInsulin.Amount:N3}"} U"
                 Me.ActiveInsulinValue.Text = activeInsulinStr
                 _sgMiniDisplay.ActiveInsulinTextBox.Text = activeInsulinStr
+            ElseIf PumpInfo.IsFlex Then
+                Me.ActiveInsulinValue.Text = $"Active Insulin N/A"
+                _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin N/A"
             Else
                 Me.ActiveInsulinValue.Text = $"Active Insulin Unknown"
                 _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin --- U"
@@ -4623,7 +4640,6 @@ Public Class Form1
     Private Sub UpdateAllSummarySeries()
         Try
             With Me.SummaryChart
-
                 For Each s As Series In .Series
                     s.Points.Clear()
                 Next
@@ -4644,7 +4660,6 @@ Public Class Form1
             Dim message As String = $"{str} exception while plotting Markers in {NameOf(UpdateAllSummarySeries)}"
             Throw New ApplicationException(message, innerException)
         End Try
-
     End Sub
 
     ''' <summary>
@@ -5213,9 +5228,10 @@ Public Class Form1
         Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnits}"
 
         ' Calculate Time in AutoMode
-        If s_autoModeStatusMarkers.Count = 0 Then
+
+        If s_autoModeStatusMarkers.Count = 0 AndAlso Not PumpInfo.IsFlex Then
             Me.SmartGuardLabel.Text = "SmartGuard 0%"
-        ElseIf s_autoModeStatusMarkers.Count = 1 AndAlso s_autoModeStatusMarkers.First.AutoModeOn Then
+        ElseIf s_autoModeStatusMarkers.Count = 1 Then
             Me.SmartGuardLabel.Text = "SmartGuard 100%"
         Else
             Try
@@ -5244,9 +5260,10 @@ Public Class Form1
                         End If
                     End If
                 Next
-                Me.SmartGuardLabel.Text = If(timeInAutoMode >= OneDaySpan,
-                                             "SmartGuard 100%",
-                                             $"SmartGuard {CInt(timeInAutoMode / OneDaySpan * 100)}%")
+                Me.SmartGuardLabel.Text =
+                    If(timeInAutoMode >= OneDaySpan OrElse (s_autoModeStatusMarkers.Count = 0 AndAlso PumpInfo.IsFlex),
+                       "SmartGuard 100%",
+                       $"SmartGuard {CInt(timeInAutoMode / OneDaySpan * 100)}%")
             Catch ex As Exception
                 Me.SmartGuardLabel.Text = "SmartGuard ???%"
             End Try
@@ -5428,6 +5445,7 @@ Public Class Form1
             _updating = False
         End SyncLock
 
+        Dim mdi As MedicalDeviceInformation = PatientData.MedicalDeviceInformation
         FinishInitialization(mainForm:=Me)
         Me.UpdateTrendArrows()
         UpdateSummaryTab(dgv:=Me.DgvSummary, classCollection:=s_listOfSummaryRecords, sort:=True)
@@ -5445,10 +5463,9 @@ Public Class Form1
         key = NameOf(ServerDataEnum.lastName)
         Me.FullNameLabel.Text = $"{PatientData.FirstName} {RecentData.GetStringValueOrEmpty(key)}"
 
-        Dim mdi As MedicalDeviceInformation = PatientData.MedicalDeviceInformation
-        Me.ModelLabel.Text = $"{mdi.ModelNumber} HW Version = {mdi.HardwareRevision}"
-        Me.PumpNameLabel.Text = GetPumpName(mdi.ModelNumber)
-
+        Dim modelNumber As String = mdi.ModelNumber
+        Me.ModelLabel.Text = $"{modelNumber} HW Version = {mdi.HardwareRevision}"
+        Me.PumpNameLabel.Text = PumpInfo.GetPumpName
         Me.ReadingsLabel.Text = $"{GetValidSgRecords().Count()}/{288} SG Readings"
 
         Me.TlpLastSG.DisplayDataTableInDGV(
@@ -5467,9 +5484,10 @@ Public Class Form1
             className:=NameOf(ActiveInsulin), rowIndex:=ServerDataEnum.activeInsulin,
             hideRecordNumberColumn:=True)
 
-        Dim keySelector As Func(Of SG, Integer) = Function(x As SG) As Integer
-                                                      Return x.RecordNumber
-                                                  End Function
+        Dim keySelector As Func(Of SG, Integer) =
+            Function(x As SG) As Integer
+                Return x.RecordNumber
+            End Function
         Dim classCollection As List(Of SG) = s_sgRecords.OrderByDescending(keySelector).ToList()
         Me.TlpSgs.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection),

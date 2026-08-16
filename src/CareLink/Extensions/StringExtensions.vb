@@ -44,9 +44,10 @@ Public Module StringExtensions
     ''' </returns>
     <Extension()>
     Public Function Count(s As String, c As Char) As Integer
-        Dim predicate As Func(Of Char, Boolean) = Function(c1 As Char) As Boolean
-                                                      Return c1 = c
-                                                  End Function
+        Dim predicate As Func(Of Char, Boolean) =
+            Function(c1 As Char) As Boolean
+                Return c1 = c
+            End Function
 
         Return s.Count(predicate)
     End Function
@@ -564,7 +565,7 @@ Public Module StringExtensions
                 End Function
         Dim elementSelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
                 Function(kvp)
-                    Return kvp.Value.ElementToString()
+                    Return kvp.Value.ElementToJson()
                 End Function
         Dim result As Dictionary(Of String, String) = Nothing
         Try

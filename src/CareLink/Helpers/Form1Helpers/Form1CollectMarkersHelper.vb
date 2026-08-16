@@ -128,31 +128,24 @@ Friend Module Form1CollectMarkersHelper
                        item,
                        recordNumber:=s_suspendedMarkers.Count + 1))
                 Case "AUTO_MODE_STATUS"
-                    s_autoModeStatusMarkers.Add(item:=New AutoModeStatus(
-                        item,
-                        recordNumber:=s_autoModeStatusMarkers.Count + 1))
-                    s_suspendedMarkers.Add(item:=New LowGlucoseSuspended(
-                        item,
-                        recordNumber:=s_suspendedMarkers.Count + 1))
+                    Dim item1 As New AutoModeStatus(item, recordNumber:=s_autoModeStatusMarkers.Count + 1)
+                    s_autoModeStatusMarkers.Add(item:=item1)
+                    Dim item2 As New LowGlucoseSuspended(item, recordNumber:=s_suspendedMarkers.Count + 1)
+                    s_suspendedMarkers.Add(item:=item2)
                 Case "BG_READING"
                     s_markers.Add(item)
-                    s_bgReadingMarkers.Add(item:=New BgReading(
-                        item,
-                        recordNumber:=s_bgReadingMarkers.Count + 1))
+                    Dim item3 As New BgReading(item, recordNumber:=s_bgReadingMarkers.Count + 1)
+                    s_bgReadingMarkers.Add(item:=item3)
                 Case "CALIBRATION"
                     s_markers.Add(item:=item.ScaleMarker)
-                    s_calibrationMarkers.Add(item:=New Calibration(
-                        item:=item.ScaleMarker(),
-                        recordNumber:=s_calibrationMarkers.Count + 1))
+                    Dim item4 As New Calibration(item:=item.ScaleMarker(), recordNumber:=s_calibrationMarkers.Count + 1)
+                    s_calibrationMarkers.Add(item:=item4)
                 Case "INSULIN"
                     s_markers.Add(item)
-                    Dim lastInsulinRecord As New Insulin(
-                        item,
-                        recordNumber:=s_insulinMarkers.Count + 1)
+                    Dim lastInsulinRecord As New Insulin(item, recordNumber:=s_insulinMarkers.Count + 1)
                     s_insulinMarkers.Add(item:=lastInsulinRecord)
-                    s_suspendedMarkers.Add(item:=New LowGlucoseSuspended(
-                        item,
-                        recordNumber:=s_suspendedMarkers.Count + 1))
+                    Dim item5 As New LowGlucoseSuspended(item, recordNumber:=s_suspendedMarkers.Count + 1)
+                    s_suspendedMarkers.Add(item:=item5)
                     Select Case item.GetString(key:=NameOf(Insulin.ActivationType))
                         Case "AUTOCORRECTION", "MANUAL"
                             Dim key As OADate = lastInsulinRecord.OAdateTime

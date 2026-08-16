@@ -63,7 +63,7 @@ Friend Module SummaryHelpers
 
         ' Process each string in the input list
         Dim elementSelector As Func(Of KeyValuePair(Of String, String), String) =
-            Function(kv)
+            Function(kv As KeyValuePair(Of String, String))
                 Return kv.Value
             End Function
         Dim keySelector As Func(Of KeyValuePair(Of String, String), String) =
@@ -72,7 +72,8 @@ Friend Module SummaryHelpers
             End Function
 
         Dim mergedDict As Dictionary(Of String, String) =
-            s_notificationMessagesFlex.Concat(second:=s_notificationMessages).ToDictionary(keySelector, elementSelector)
+            s_notificationMessagesFlex.Concat(second:=s_notificationMessages) _
+                                      .ToDictionary(keySelector, elementSelector)
 
         For Each kvp As KeyValuePair(Of String, String) In mergedDict
             Dim value As New List(Of String)
@@ -539,17 +540,18 @@ Friend Module SummaryHelpers
         End If
 
         Dim times As New List(Of String)
-        Const timePattern As String = "\b(?:[01]?\d|2[0-3]):[0-5]\d(?::[0-5]\d)?\b"
 
         ' Replace times with placeholders and collect originals
         ' Use a placeholder pattern less likely to be altered by editors or templates: ##TIME{n}##
-        Dim protectedText As String =
-            Regex.Replace(input,
-                          pattern:=timePattern,
-                          evaluator:=Function(m As Match)
-                                         times.Add(item:=m.Value)
-                                         Return $"##TIME{times.Count - 1}##"
-                                     End Function)
+        Dim evaluator As MatchEvaluator =
+            Function(m As Match)
+                times.Add(item:=m.Value)
+                Return $"##TIME{times.Count - 1}##"
+            End Function
+
+        Const pattern As String =
+            "\b(?:[01]?\d|2[0-3]):[0-5]\d(?::[0-5]\d)?\b"
+        Dim protectedText As String = Regex.Replace(input, pattern, evaluator)
 
         ' Normalize spacing around colons for the rest of the text
         protectedText =
@@ -563,7 +565,9 @@ Friend Module SummaryHelpers
                           pattern:="##TIME(\d+)##",
                           evaluator:=Function(m As Match)
                                          Dim idx As Integer = CInt(m.Groups(groupnum:=1).Value)
-                                         Return If(idx >= 0 AndAlso idx < times.Count, times(index:=idx), m.Value)
+                                         Return If(idx >= 0 AndAlso idx < times.Count,
+                                                   times(index:=idx),
+                                                   m.Value)
                                      End Function)
 
         Return result

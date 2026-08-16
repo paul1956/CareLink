@@ -206,33 +206,6 @@ Friend Module Form1UpdateHelpers
     End Function
 
     ''' <summary>
-    '''  Gets the display name of a pump model based on its model number.
-    ''' </summary>
-    ''' <param name="modelNumber">The model number of the pump.</param>
-    ''' <returns>
-    '''  The display name of the pump if recognized;
-    '''  otherwise, "Unknown".
-    ''' </returns>
-    Friend Function GetPumpName(modelNumber As String) As String
-        Select Case modelNumber
-            Case "MMT-1812"
-                Return "MiniMed™ 740G--mg/dL"
-            Case "MMT-1880"
-                Return "MiniMed™ 770G"
-            Case "MMT-1884"
-                Return "MiniMed™ 780G-US Update"
-            Case "MMT-1885"
-                Return "MiniMed™ 780G-mmol/L"
-            Case "MMT-1886"
-                Return "MiniMed™ 780G-mg/dL"
-            Case "MMT-8162"
-                Return "MiniMed™ Flex-mg/dL"
-            Case Else
-                Return "Unknown"
-        End Select
-    End Function
-
-    ''' <summary>
     '''  Generates a possibly unique file name for data export,
     '''  based on the specified base name, culture, and extension.
     ''' </summary>
@@ -322,7 +295,7 @@ Friend Module Form1UpdateHelpers
                     Dim idx As Integer = 0
                     For Each prop As JsonProperty In elem.EnumerateObject()
                         Dim childKey As String = prop.Name
-                        Dim childValue As String = prop.Value.ElementToString()
+                        Dim childValue As String = prop.Value.ElementToJson()
                         Dim message As String = String.Empty
                         If kvp.Key.EqualsNoCase("AdditionalInfo") Then
                             If childKey.EqualsNoCase("sensorUpdateTime") Then
@@ -729,6 +702,10 @@ Friend Module Form1UpdateHelpers
                     s_activeInsulin = PatientData.ActiveInsulin
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
+                    If True Then
+
+
+                    End If
 
                 Case NameOf(ServerDataEnum.basal)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)

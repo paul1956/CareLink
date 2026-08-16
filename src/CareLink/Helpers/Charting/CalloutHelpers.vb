@@ -53,15 +53,17 @@ Friend Module CalloutHelpers
     ''' </summary>
     ''' <param name="markerTags">An array of strings representing the marker tags.</param>
     ''' <returns>A formatted annotation text string.</returns>
-    Private Function GetAnnotationText(markerTags() As String) As String
+    Private Function GetAnnotationText(markerTags As List(Of String)) As String
         Dim annotationText As String = EmptyString
-        Select Case markerTags.Length
+        Dim markerTag0 As String = markerTags(index:=0)
+        Select Case markerTags.Count
             Case 1
-                annotationText = $"{markerTags(0)}"
+                annotationText = $"{markerTag0}"
             Case 2
-                annotationText = $"{markerTags(0)} {markerTags(1)}"
+                annotationText = $"{markerTag0} {markerTags(index:=1)}"
             Case 3
-                annotationText = $"{markerTags(0)} {markerTags(1)} {markerTags(2)}"
+                annotationText =
+                    $"{markerTag0} {markerTags(index:=1)} {markerTags(index:=2)}"
             Case Else
                 Stop
         End Select
@@ -151,7 +153,7 @@ Friend Module CalloutHelpers
     ''' <param name="currentDataPoint">The data point to anchor the annotation to.</param>
     ''' <param name="markerTags">An array of strings representing the marker tags.</param>
     <Extension>
-    Friend Sub SetUpCallout(chart As Chart, currentDataPoint As DataPoint, markerTags() As String)
+    Friend Sub SetUpCallout(chart As Chart, currentDataPoint As DataPoint, markerTags As List(Of String))
         Dim text As String = GetAnnotationText(markerTags)
         chart.SetupCallout(currentDataPoint, text)
     End Sub

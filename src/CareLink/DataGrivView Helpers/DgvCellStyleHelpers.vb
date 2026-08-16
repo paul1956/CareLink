@@ -58,6 +58,9 @@ Public Module DgvCellStyleHelpers
             NameOf(TimeChange.Kind),
             NameOf(TimeChange.Type)}}}
 
+    Private ReadOnly Property BlackAsArgb As Integer = Color.Black.ToArgb()
+    Private ReadOnly Property WhiteAsArgb As Integer = Color.White.ToArgb()
+
     ''' <summary>
     '''  Sets the cell value to <see cref="String.Empty"/> if the
     '''  value is <see langword="Nothing"/> or "0".
@@ -186,10 +189,9 @@ Public Module DgvCellStyleHelpers
             TryCast(dgv.Columns(index:=e.ColumnIndex), DataGridViewTextBoxColumn)
         If col IsNot Nothing Then
             e.Value = $"{e.Value}"
-            Dim textColor As Color = e.CellStyle.ForeColor
-            Dim argb As Integer = textColor.ToArgb()
-            If argb <> Color.Black.ToArgb() AndAlso argb <> Color.White.ToArgb() Then
-                e.CellStyle.ForeColor = dgv.Rows(index:=e.RowIndex).GetTextColor(textColor)
+            Dim argb As Integer = e.CellStyle.ForeColor.ToArgb()
+            If argb <> BlackAsArgb AndAlso argb <> WhiteAsArgb Then
+                e.CellStyle.ForeColor = dgv.Rows(index:=e.RowIndex).GetTextColor(e.CellStyle.ForeColor)
             End If
             e.CellStyle.Font = New Font(prototype:=e.CellStyle.Font, newStyle:=FontStyle.Regular)
             e.FormattingApplied = True

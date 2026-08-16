@@ -876,8 +876,7 @@ Public Class DataGridViewNumericUpDownCell
     ''' </summary>
     ''' <param name="align">The content alignment value.</param>
     ''' <returns>The corresponding <see cref="HorizontalAlignment"/>.</returns>
-    Friend Shared Function TranslateAlignment(
-        align As DataGridViewContentAlignment) As HorizontalAlignment
+    Friend Shared Function TranslateAlignment(align As DataGridViewContentAlignment) As HorizontalAlignment
 
         If (align And s_anyRight) <> 0 Then
             Return HorizontalAlignment.Right

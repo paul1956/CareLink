@@ -7,6 +7,7 @@ Imports System.Security.Cryptography
 Imports System.Security.Cryptography.X509Certificates
 Imports System.Text
 Imports System.Text.Json
+Imports System.Text.RegularExpressions
 
 Public Class CareLinkService
     Private Shared ReadOnly s_http As New HttpClient With {.Timeout = TimeSpan.FromSeconds(120)}
@@ -160,7 +161,9 @@ Public Class CareLinkService
                     initDoc.RootElement.GetProperty(propertyName:="client_secret").GetString()
 
                 Dim codeVerifier As String = Convert.ToBase64String(inArray:=RandomNumberGenerator.GetBytes(count:=40))
-                codeVerifier = RegularExpressions.Regex.Replace(input:=codeVerifier, pattern:="[^a-zA-Z0-9]+", replacement:="")
+                codeVerifier = Regex.Replace(input:=codeVerifier,
+                                              pattern:="[^a-zA-Z0-9]+",
+                                              replacement:="")
                 Dim challengeBytes As Byte() = SHA256.HashData(source:=Encoding.UTF8.GetBytes(codeVerifier))
                 Dim codeChallenge As String =
                     Convert.ToBase64String(inArray:=challengeBytes).Replace(oldValue:="+", newValue:="-").
@@ -179,7 +182,9 @@ Public Class CareLinkService
                     {"state", state}}
 
                 Dim selector As Func(Of KeyValuePair(Of String, String), String) =
-                    Function(kvp) $"{kvp.Key}={Uri.EscapeDataString(stringToEscape:=kvp.Value)}"
+                    Function(kvp As KeyValuePair(Of String, String))
+                        Return $"{kvp.Key}={Uri.EscapeDataString(stringToEscape:=kvp.Value)}"
+                    End Function
                 Dim values As IEnumerable(Of String) = authParams.Select(selector)
                 Dim authUrl As String =
                     $"{endpointConfig.ApiBaseUrl}{authPath}?{String.Join(separator:="&", values)}"
@@ -211,7 +216,7 @@ Public Class CareLinkService
                     Dim registerDeviceId As String = RandomDeviceId()
                     Dim androidModel As String = RandomAndroidModel()
                     Dim androidModelSafe As String =
-                        RegularExpressions.Regex.Replace(input:=androidModel, pattern:="[^a-zA-Z0-9]", replacement:="")
+                        Regex.Replace(input:=androidModel, pattern:="[^a-zA-Z0-9]", replacement:="")
                     Dim csrPem As String = CreateCsrPem(cn:="socialLogin",
                                                         ou:=registerDeviceId,
                                                         dc:=androidModelSafe,

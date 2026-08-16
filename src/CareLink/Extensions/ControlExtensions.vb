@@ -284,4 +284,19 @@ Public Module ControlExtensions
         Next
     End Sub
 
+    ''' <summary>
+    '''  If newFont is the same as existing on <paramref name="lbl"/> then Return,
+    '''  Otherwise change the lbl Font to <paramref name="newFont"/>.
+    ''' </summary>
+    ''' <param name="lbl">
+    '''  The <see cref="Label"/> whose <see cref="Font"/> to check.
+    ''' </param>
+    ''' <param name="newFont">The desired <see cref="Font"/>.</param>
+    <Extension>
+    Public Sub SetFontIfChanged(lbl As Label, newFont As Font)
+        If lbl.Font.Equals(newFont) Then
+            Return
+        End If
+        lbl.Font = newFont
+    End Sub
 End Module

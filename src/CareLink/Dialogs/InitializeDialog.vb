@@ -42,11 +42,10 @@ Public Class InitializeDialog
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         If _currentUserBackup Is Nothing Then
-            If MsgBox(
-                heading:="If you cancel, the program will exit",
-                prompt:="Retry will allow editing.",
-                buttonStyle:=MsgBoxStyle.RetryCancel Or MsgBoxStyle.Exclamation,
-                title:="Exit Or Retry") = MsgBoxResult.Cancel Then
+            If MsgBox(heading:="If you cancel, the program will exit",
+                      prompt:="Retry will allow editing.",
+                      buttonStyle:=MsgBoxStyle.RetryCancel Or MsgBoxStyle.Exclamation,
+                      title:="Exit Or Retry") = MsgBoxResult.Cancel Then
 
                 End
             End If
@@ -54,7 +53,13 @@ Public Class InitializeDialog
             Me.DialogResult = DialogResult.None
         Else
             If Not Me.CurrentUser.Equals(other:=_currentUserBackup) Then
-                ' TODO Warn editing will be lost
+                If MsgBox(heading:="If you cancel, all changes will be lost.",
+                          prompt:="Retry will allow editing.",
+                          buttonStyle:=MsgBoxStyle.RetryCancel Or MsgBoxStyle.Exclamation,
+                          title:="Exit Or Retry") = MsgBoxResult.Cancel Then
+                    Me.DialogResult = DialogResult.Cancel
+                    Exit Sub
+                End If
                 Me.CurrentUser = _currentUserBackup.Clone
             End If
             Me.DialogResult = DialogResult.OK

@@ -129,7 +129,7 @@ Friend Module LoginHelpers
                     owner.SetLastUpdateTime(msg, suffixMessage:=EmptyString, highLight:=True)
                     Return False
                 End If
-                Dim lastErrorMessage As String = Await LoginDialog.Client.GetRecentDataAsync()
+                Dim lastErrorMessage As String = Await Form1.Client.GetRecentDataAsync()
 
                 SetUpCareLinkUser(forceUI:=False)
                 SetServerUpdateTimer(Start:=True, interval:=OneMinuteInMilliseconds)
@@ -157,13 +157,15 @@ Friend Module LoginHelpers
                         owner.Text = $"{SavedTitle} Using Snapshot Data"
                         Dim path As String = GetProjectDataDirectory()
                         Dim di As New DirectoryInfo(path)
-                        Dim keySelector As Func(Of FileInfo, Date) = Function(f As FileInfo) As Date
-                                                                         Return f.LastWriteTime
-                                                                     End Function
+                        Dim keySelector As Func(Of FileInfo, Date) =
+                            Function(f As FileInfo) As Date
+                                Return f.LastWriteTime
+                            End Function
 
-                        Dim selector As Func(Of FileInfo, String) = Function(f As FileInfo) As String
-                                                                        Return f.Name
-                                                                    End Function
+                        Dim selector As Func(Of FileInfo, String) =
+                            Function(f As FileInfo) As String
+                                Return f.Name
+                            End Function
 
                         Dim fileList As String() =
                             New DirectoryInfo(path).EnumerateFiles(searchPattern:=$"CareLinkSnapshot*.json") _
