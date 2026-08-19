@@ -55,10 +55,12 @@ Friend Module NotificationHelpers
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If e.RowIndex >= 0 AndAlso dgv.SelectedCells.Count > 0 Then
-            Invoke(owner:=My.Forms.Form1,
-                   method:=Sub()
-                               e.ContextMenuStrip = My.Forms.Form1.DgvCopyWithoutExcelMenuStrip
-                           End Sub)
+            Dim method As Action =
+                Sub()
+                    e.ContextMenuStrip =
+                        My.Forms.Form1.DgvCopyWithoutExcelMenuStrip
+                End Sub
+            Invoke(owner:=My.Forms.Form1, method)
         End If
     End Sub
 
@@ -276,10 +278,10 @@ Friend Module NotificationHelpers
             innerJson = JsonToListOfDictionary(json)
             If innerJson.Count > 0 Then
                 For Each jsonDictionary In innerJson
-                    ClassCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
+                    classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
                     DisplayNotificationDataTableInDGV(
                         realPanel:=mainForm.TlpNotificationsCleared,
-                        table:=ClassCollectionToDataTable(ClassCollection),
+                        table:=ClassCollectionToDataTable(classCollection),
                         className:=NameOf(SummaryRecord),
                         attachHandlers:=AddressOf AttachHandlers)
                 Next

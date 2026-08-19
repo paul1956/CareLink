@@ -306,8 +306,8 @@ Public Class CareLinkService
         Try
             If Application.OpenForms IsNot Nothing AndAlso Application.OpenForms.Count > 0 Then
                 Dim ctrl As Control = Application.OpenForms(index:=0)
-                ctrl.BeginInvoke(
-                   method:=New MethodInvoker(Sub()
+                ctrl.BeginInvoke(method:=New MethodInvoker(
+                                             Sub()
                                                  Try
                                                      Dim result As T = work()
                                                      tcs.SetResult(result)

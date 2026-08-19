@@ -12,9 +12,11 @@ Friend Module UiInvoker
             ' Check if we need to marshal to the UI thread
             If dgv.InvokeRequired Then
                 ' Use Invoke to run on the UI thread without requiring form-specific delegates
-                dgv.Invoke(method:=Sub()
-                                       dgv.CurrentCell.Value = text
-                                   End Sub)
+                Dim method As Action =
+                    Sub()
+                        dgv.CurrentCell.Value = text
+                    End Sub
+                dgv.Invoke(method)
             Else
                 ' Safe to update directly
                 dgv.CurrentCell.Value = text
@@ -37,9 +39,11 @@ Friend Module UiInvoker
             ' Check if we need to marshal to the UI thread
             If lbl.InvokeRequired Then
                 ' Use Invoke to run on the UI thread without requiring form-specific delegates
-                lbl.Invoke(method:=Sub()
-                                       lbl.Text = text
-                                   End Sub)
+                Dim method As Action =
+                    Sub()
+                        lbl.Text = text
+                    End Sub
+                lbl.Invoke(method)
             Else
                 ' Safe to update directly
                 lbl.Text = text
@@ -61,9 +65,11 @@ Friend Module UiInvoker
             ' Check if we need to marshal to the UI thread
             If txtBox.InvokeRequired Then
                 ' Use Invoke to run on the UI thread without requiring form-specific delegates
-                txtBox.Invoke(method:=Sub()
-                                          txtBox.Text = text
-                                      End Sub)
+                Dim method As Action =
+                    Sub()
+                        txtBox.Text = text
+                    End Sub
+                txtBox.Invoke(method)
             Else
                 ' Safe to update directly
                 txtBox.Text = text
@@ -85,9 +91,11 @@ Friend Module UiInvoker
             ' Check if we need to marshal to the UI thread
             If form.InvokeRequired Then
                 ' Use Invoke to run on the UI thread without requiring form-specific delegates
-                form.Invoke(method:=Sub()
-                                        form.Text = text
-                                    End Sub)
+                Dim method As Action =
+                    Sub()
+                        form.Text = text
+                    End Sub
+                form.Invoke(method)
             Else
                 ' Safe to update directly
                 form.Text = text

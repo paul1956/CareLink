@@ -20,8 +20,8 @@ Public Class ColorDictionaryHelpersTests
 
     Public Sub New()
         ' Backup existing file if present
-        If File.Exists(_graphColorsPath) Then
-            File.Copy(_graphColorsPath, _backupPath, overwrite:=True)
+        If File.Exists(path:=_graphColorsPath) Then
+            File.Copy(sourceFileName:=_graphColorsPath, destFileName:=_backupPath, overwrite:=True)
             _backupMade = True
         End If
     End Sub
@@ -39,56 +39,56 @@ Public Class ColorDictionaryHelpersTests
     <Fact>
     Public Sub GetGraphLineColor_ForSuspend_IsSemiTransparent()
         ' Arrange
-        Dim baseKnown As KnownColor = GraphColorDictionary("Suspend")
+        Dim baseKnown As KnownColor = GraphColorDictionary(key:="Suspend")
         Dim baseColor As Color = baseKnown.ToColor()
 
         ' Act
-        Dim c As Color = GetGraphLineColor("Suspend")
+        Dim c As Color = GetGraphLineColor(key:="Suspend")
 
         ' Assert
-        c.A.Should().Be(128)
-        c.R.Should().Be(baseColor.R)
-        c.G.Should().Be(baseColor.G)
-        c.B.Should().Be(baseColor.B)
+        c.A.Should().Be(expected:=128)
+        c.R.Should().Be(expected:=baseColor.R)
+        c.G.Should().Be(expected:=baseColor.G)
+        c.B.Should().Be(expected:=baseColor.B)
     End Sub
 
     <Fact>
     Public Sub GetGraphLineColor_ForOtherKey_ReturnsOpaqueBaseColor()
         ' Act
-        Dim c As Color = GetGraphLineColor("Active Insulin")
+        Dim c As Color = GetGraphLineColor(key:="Active Insulin")
 
         ' Assert
-        c.A.Should().Be(255)
-        c.Should().Be(GraphColorDictionary("Active Insulin").ToColor())
+        c.A.Should().Be(expected:=255)
+        c.Should().Be(expected:=GraphColorDictionary(key:="Active Insulin").ToColor())
     End Sub
 
     <Fact>
     Public Sub UpdateColorDictionary_And_GetColorDictionaryFromFile_WriteToFile_Workflow()
         ' Arrange - create a minimal CSV that changes one color
-        Directory.CreateDirectory(Path.GetDirectoryName(_graphColorsPath))
-        Using sw As New StreamWriter(_graphColorsPath, append:=False)
-            sw.WriteLine("Key,ForegroundColor,BackgroundColor")
-            sw.WriteLine("Active Insulin,Black,White")
+        Directory.CreateDirectory(path:=Path.GetDirectoryName(_graphColorsPath))
+        Using sw As New StreamWriter(path:=_graphColorsPath, append:=False)
+            sw.WriteLine(value:="Key,ForegroundColor,BackgroundColor")
+            sw.WriteLine(value:="Active Insulin,Black,White")
         End Using
 
         ' Act - load file which should update only the existing key
         GetColorDictionaryFromFile()
 
         ' Assert updated value
-        GraphColorDictionary("Active Insulin").Should().Be(KnownColor.Black)
+        GraphColorDictionary(key:="Active Insulin").Should().Be(expected:=KnownColor.Black)
 
         ' Act - update value programmatically and write back to file
-        UpdateColorDictionary("Active Insulin", KnownColor.Lime)
+        UpdateColorDictionary(key:="Active Insulin", item:=KnownColor.Lime)
         WriteColorDictionaryToFile()
 
         ' Assert file contains the updated KnownColor name for the key
-        Dim text As String = File.ReadAllText(_graphColorsPath)
-        text.Should().Contain("Active Insulin,Lime,")
+        Dim text As String = File.ReadAllText(path:=_graphColorsPath)
+        text.Should().Contain(expected:="Active Insulin,Lime,")
     End Sub
 
     Public Sub Dispose() Implements IDisposable.Dispose
         ' CA1816 requires calling GC.SuppressFinalize in Dispose
-        GC.SuppressFinalize(Me)
+        GC.SuppressFinalize(obj:=Me)
 
         ' Restore in-memory dictionary
         GraphColorDictionary.Clear()
@@ -98,11 +98,11 @@ Public Class ColorDictionaryHelpersTests
 
         ' Restore or remove on-disk file
         Try
-            If _backupMade AndAlso File.Exists(_backupPath) Then
-                File.Copy(_backupPath, _graphColorsPath, overwrite:=True)
-                File.Delete(_backupPath)
-            ElseIf File.Exists(_graphColorsPath) Then
-                File.Delete(_graphColorsPath)
+            If _backupMade AndAlso File.Exists(path:=_backupPath) Then
+                File.Copy(sourceFileName:=_backupPath, destFileName:=_graphColorsPath, overwrite:=True)
+                File.Delete(path:=_backupPath)
+            ElseIf File.Exists(path:=_graphColorsPath) Then
+                File.Delete(path:=_graphColorsPath)
             End If
         Catch
             ' Best effort - ignore errors

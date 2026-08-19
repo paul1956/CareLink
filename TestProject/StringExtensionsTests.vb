@@ -128,12 +128,12 @@ Public Class StringExtensionsTests
     <Fact>
     Public Sub FindIndexOfAnyChar_ShouldThrow_WhenCharsIsNothing()
         ' Act
-        Dim act As Action = Sub()
-                                FindIndexOfAnyChar(
-                                    inputString:="abc",
-                                    chars:=Nothing,
-                                    startIndex:=0)
-                            End Sub
+        Dim act As Action =
+            Sub()
+                FindIndexOfAnyChar(inputString:="abc",
+                                   chars:=Nothing,
+                                   startIndex:=0)
+            End Sub
 
         ' Assert
         act.Should() _
@@ -149,9 +149,12 @@ Public Class StringExtensionsTests
         Dim startIndex As Integer = inputString.Length
 
         ' Act
-        Dim act As Action = Sub()
-                                FindIndexOfAnyChar(inputString, chars, startIndex)
-                            End Sub
+        Dim act As Action =
+            Sub()
+                FindIndexOfAnyChar(inputString,
+                                   chars,
+                                   startIndex)
+            End Sub
 
         ' Assert
         act.Should() _
@@ -165,9 +168,12 @@ Public Class StringExtensionsTests
         Dim chars As New List(Of Char) From {"a"c, "b"c}
 
         ' Act
-        Dim act As Action = Sub()
-                                FindIndexOfAnyChar(inputString:="abc", chars, startIndex:=-1)
-                            End Sub
+        Dim act As Action =
+            Sub()
+                FindIndexOfAnyChar(inputString:="abc",
+                                   chars,
+                                   startIndex:=-1)
+            End Sub
 
         ' Assert
         act.Should() _

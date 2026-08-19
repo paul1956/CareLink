@@ -47,11 +47,11 @@ Friend Module Form1TransmitterBatteryHelper
     ''' Updates the sensor status on Form1.
     ''' </summary>
     Friend Sub ThreadSafeForm1SensorDataUpdate()
-        Invoke(owner:=My.Forms.Form1,
-               method:=Sub()
-                           Form1SensorDataUpdate()
-                       End Sub)
-
+        Dim method As Action =
+            Sub()
+                Form1SensorDataUpdate()
+            End Sub
+        Invoke(owner:=My.Forms.Form1, method)
     End Sub
 
 End Module

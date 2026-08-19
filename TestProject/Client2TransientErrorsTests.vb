@@ -16,14 +16,14 @@ Public Class Client2TransientErrorsTests
     <Fact>
     Public Async Function GetRecentDataAsync_DoesNotCrash_OnTransientHttpErrors() As Task
         Dim handler As New SequenceHandler()
-        handler.EnqueueException(New HttpRequestException("transient 1"))
-        handler.EnqueueException(New HttpRequestException("transient 2"))
+        handler.EnqueueException(ex:=New HttpRequestException(message:="transient 1"))
+        handler.EnqueueException(ex:=New HttpRequestException(message:="transient 2"))
 
         Dim validContent As String = "{""meta"":{},""patientData"":[] }"
         Dim responseFactory As Func(Of HttpResponseMessage) =
             Function()
-                Return New HttpResponseMessage(HttpStatusCode.OK) With {
-                                                     .Content = New StringContent(validContent)}
+                Return New HttpResponseMessage(statusCode:=HttpStatusCode.OK) With
+                {.Content = New StringContent(content:=validContent)}
             End Function
 
         handler.EnqueueResponse(responseFactory)
@@ -32,21 +32,25 @@ Public Class Client2TransientErrorsTests
         Dim client As New Client2(serverRegion:=Region.NorthAmerica, httpClient) With {
             .Config = New Dictionary(Of String, String) From {{"baseUrlCumulus", "https://example.com"}}}
         ' Wrap it in JSON string syntax (quotes) so it's valid JSON
-        client.SetUserElementDictionaryForTests(New Dictionary(Of String, JsonElement) From {{"role", "patient".ToJsonElement()}})
+        Dim value As New Dictionary(Of String, JsonElement) From {{"role", "patient".ToJsonElement()}}
+        client.SetUserElementDictionaryForTests(value)
 
         Dim tokenJson As String = "{""access_token"":""aaa.bbb.ccc"",""refresh_token"":""r"",""client_id"":""cid"",""mag-identifier"":""m""}"
-        Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(tokenJson)
-        Dim tokenField As FieldInfo = client.GetType().GetField("_tokenDataElement", BindingFlags.NonPublic Or BindingFlags.Instance)
-        tokenField.SetValue(client, tokenElement)
+        Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
+        Const bindingAttr As BindingFlags = BindingFlags.NonPublic Or BindingFlags.Instance
+        Dim tokenField As FieldInfo = client.GetType().GetField(name:="_tokenDataElement", bindingAttr)
+        tokenField.SetValue(obj:=client, value:=tokenElement)
 
-        Dim accessPayload As New Dictionary(Of String, JsonElement) From {{"exp", JsonElement.Parse("10000000000")}}
-        Dim accessField As FieldInfo = client.GetType().GetField("_accessTokenPayload", BindingFlags.NonPublic Or BindingFlags.Instance)
-        accessField.SetValue(client, accessPayload)
+        Dim accessPayload As New Dictionary(Of String, JsonElement) From
+            {{"exp", JsonElement.Parse(json:="10000000000")}}
+        Dim accessField As FieldInfo = client.GetType().GetField(name:="_accessTokenPayload", bindingAttr)
+        accessField.SetValue(obj:=client, value:=accessPayload)
 
         Dim result As String = Nothing
         Dim ex As Exception = Nothing
         Try
-            result = Await client.GetRecentDataAsync().ConfigureAwait(False)
+            result = Await client.GetRecentDataAsync() _
+                                 .ConfigureAwait(continueOnCapturedContext:=False)
         Catch e As Exception
             ex = e
         End Try
@@ -79,15 +83,15 @@ Public Class Client2TransientErrorsTests
                 Return Task.FromResult(factory.Invoke())
             End If
 
-            Return Task.FromResult(New HttpResponseMessage(HttpStatusCode.NotFound))
+            Return Task.FromResult(New HttpResponseMessage(statusCode:=HttpStatusCode.NotFound))
         End Function
 
         Public Sub EnqueueException(ex As Exception)
-            _exceptions.Enqueue(ex)
+            _exceptions.Enqueue(item:=ex)
         End Sub
 
         Public Sub EnqueueResponse(responseFactory As Func(Of HttpResponseMessage))
-            _responses.Enqueue(responseFactory)
+            _responses.Enqueue(item:=responseFactory)
         End Sub
 
     End Class

@@ -20,12 +20,12 @@ Public Class BasalListExtensionsTests
         Dim list As New List(Of Basal)()
 
         ' Act / Assert
-        list.ActiveBasalPattern().Should().Be(String.Empty)
+        list.ActiveBasalPattern().Should().Be(expected:=String.Empty)
         Double.IsNaN(list.GetBasalPerHour()).Should().BeTrue()
-        list.Subtitle().Should().Be(String.Empty)
+        list.Subtitle().Should().Be(expected:=String.Empty)
 
         Dim cc As List(Of Basal) = list.ClassCollection()
-        cc.Should().NotBeSameAs(list)
+        cc.Should().NotBeSameAs(unexpected:=list)
         cc.Should().BeEmpty()
     End Sub
 
@@ -35,12 +35,12 @@ Public Class BasalListExtensionsTests
         Dim list As New List(Of Basal) From {New Basal()}
 
         ' Act / Assert
-        list.ActiveBasalPattern().Should().Be(String.Empty)
+        list.ActiveBasalPattern().Should().Be(expected:=String.Empty)
         Double.IsNaN(list.GetBasalPerHour()).Should().BeTrue()
-        list.Subtitle().Should().Be(String.Empty)
+        list.Subtitle().Should().Be(expected:=String.Empty)
 
         Dim cc As List(Of Basal) = list.ClassCollection()
-        cc.Should().NotBeSameAs(list)
+        cc.Should().NotBeSameAs(unexpected:=list)
         cc.Should().BeEmpty()
     End Sub
 
@@ -54,12 +54,12 @@ Public Class BasalListExtensionsTests
         Dim list As New List(Of Basal) From {b}
 
         ' Act / Assert
-        list.ActiveBasalPattern().Should().Be("BASAL1")
-        list.GetBasalPerHour().Should().Be(1.25)
-        list.Subtitle().Should().Be("- BASAL1")
+        list.ActiveBasalPattern().Should().Be(expected:="BASAL1")
+        list.GetBasalPerHour().Should().Be(expected:=1.25)
+        list.Subtitle().Should().Be(expected:="- BASAL1")
 
         Dim cc As List(Of Basal) = list.ClassCollection()
-        cc.Should().BeSameAs(list)
+        cc.Should().BeSameAs(expected:=list)
     End Sub
 
     <Fact>
@@ -74,7 +74,7 @@ Public Class BasalListExtensionsTests
         Dim list As New List(Of Basal) From {b}
 
         ' Act / Assert
-        list.GetBasalPerHour().Should().Be(2.0)
+        list.GetBasalPerHour().Should().Be(expected:=2.0)
     End Sub
 
     <Fact>
@@ -89,7 +89,7 @@ Public Class BasalListExtensionsTests
         Dim list As New List(Of Basal) From {b}
 
         ' Act / Assert
-        list.GetBasalPerHour().Should().Be(1.0)
+        list.GetBasalPerHour().Should().Be(expected:=1.0)
     End Sub
 
 End Class

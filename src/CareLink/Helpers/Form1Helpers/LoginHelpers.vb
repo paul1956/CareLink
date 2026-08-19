@@ -14,12 +14,13 @@ Friend Module LoginHelpers
     Public ReadOnly Property LoginDialog As LoginDialog
         Get
             If s_loginDialog Is Nothing OrElse s_loginDialog.IsDisposed Then
-                Invoke(owner:=My.Forms.Form1,
-                       method:=Sub()
-                                   If s_loginDialog Is Nothing OrElse s_loginDialog.IsDisposed Then
-                                       s_loginDialog = New LoginDialog()
-                                   End If
-                               End Sub)
+                Dim method As Action =
+                    Sub()
+                        If s_loginDialog Is Nothing OrElse s_loginDialog.IsDisposed Then
+                            s_loginDialog = New LoginDialog()
+                        End If
+                    End Sub
+                Invoke(owner:=My.Forms.Form1, method)
             End If
             Return s_loginDialog
         End Get
