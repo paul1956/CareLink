@@ -140,7 +140,7 @@ Partial Class AboutBox1
         ' 
         ' TextBoxDescription
         ' 
-        TextBoxDescription.BackColor = Color.FromArgb(30, 30, 30)
+        TextBoxDescription.BackColor = Color.FromArgb(CByte(30), CByte(30), CByte(30))
         TextBoxDescription.Dock = DockStyle.Fill
         TextBoxDescription.ForeColor = Color.White
         TextBoxDescription.Location = New Point(192, 126)

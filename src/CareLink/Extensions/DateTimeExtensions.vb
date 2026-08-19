@@ -145,8 +145,8 @@ Friend Module DateTimeExtensions
         End If
         Dim localAndPumpTimeEqual As Boolean = pumpTime.ToString = localTime.ToString
         Dim timeStr As String = If(localAndPumpTimeEqual,
-                                   $"Local & Pump = {localTime}",
-                                   $"Local = {localTime}, Pump = {pumpTime}")
+                                   $"Local    -    Pump = {localTime}",
+                                   $"Local    -    {localTime}, Pump = {pumpTime}")
 
         Return $"{$"{unixTime} UTC"}, {timeStr}"
     End Function
@@ -442,7 +442,7 @@ Friend Module DateTimeExtensions
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.AssumeUniversal, success)
             Case NameOf(SG.Timestamp)
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
-            Case NameOf(TimeChange.Timestamp), NameOf(ClearedNotifications.dateTime)
+            Case NameOf(TimeChange.Timestamp), "dateTime"
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case NameOf(ActiveNotification.SecondaryTime)
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.NoCurrentDateDefault, success)

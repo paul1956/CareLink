@@ -31,6 +31,7 @@ Public Class Form1
     Private _inMouseMove As Boolean = False
     Private _lastMarkerTabLocation As (Page As Integer, Tab As Integer) = (Page:=0, Tab:=0)
     Private _lastSummaryTabIndex As Integer = 0
+    Private _latestActiveInsulin As Double = 0
     Private _previousLoc As Point
     Private _remainingInsulinList As New List(Of RunningActiveInsulin)
     Private _showBalloonTip As Boolean = True
@@ -395,8 +396,7 @@ Public Class Form1
                             Case 3
                                 Me.CursorMessage1Label.Text =
                                     $"{markerTags(index:=0)}@{xValue.ToString(format:=s_timeWithMinuteFormat)}"
-                                Me.CursorMessage2Label.Text =
-                                    markerTags(index:=1).Replace(oldValue:="Calibration not", newValue:="Cal. not").Trim
+                                Me.CursorMessage2Label.Text = markerTags(index:=1).Trim
                                 Me.CursorMessage3Label.Text = markerTags(index:=2).Trim
                                 Dim sgVal As Single =
                                     markerTags(index:=2).Trim.
@@ -532,7 +532,7 @@ Public Class Form1
                 chartRelativePosition:=_summaryChartAbsoluteRectangle,
                 insulinDictionary:=s_summaryMarkersInsulin,
                 mealDictionary:=s_summaryMarkersMeal,
-                offsetInsulinImage:=True,
+                offsetInsulinImage:=False,
                 paintOnY2:=True)
         End SyncLock
     End Sub
@@ -810,9 +810,8 @@ Public Class Form1
                             Dim result As String = String.Empty
                             If s_wrappedStrings.TryGetPrefixMatch(.HeaderText, result) Then
                                 Dim trimChars As Char() = {" "c, NonBreakingSpace}
-                                .HeaderText = .HeaderText.Replace(
-                                    oldValue:=result,
-                                    newValue:=$"{result.TrimEnd(trimChars)}{vbCrLf}")
+                                Dim newValue As String = $"{result.TrimEnd(trimChars)}{vbCrLf}"
+                                .HeaderText = .HeaderText.Replace(oldValue:=result, newValue)
                                 .HeaderCell.Style.WrapMode = DataGridViewTriState.True
                                 .DefaultCellStyle.WrapMode = DataGridViewTriState.True
                                 If result.StartsWithNoCase(value:="Timestamp") Then
@@ -829,10 +828,10 @@ Public Class Form1
         End If
 
         If dgv.Name = NameOf(DgvSummary) AndAlso
-            _dgvSummaryPrevRowIndex > 0 AndAlso
-            _dgvSummaryPrevRowIndex < dgv.RowCount AndAlso
-            _dgvSummaryPrevColIndex > 0 AndAlso
-            _dgvSummaryPrevColIndex < dgv.ColumnCount Then
+           _dgvSummaryPrevRowIndex > 0 AndAlso
+           _dgvSummaryPrevRowIndex < dgv.RowCount AndAlso
+           _dgvSummaryPrevColIndex > 0 AndAlso
+           _dgvSummaryPrevColIndex < dgv.ColumnCount Then
 
             ' Restore the previous selection in the Summary DataGridView
             ' if its not empty or Row(0).Cell(0).
@@ -1445,7 +1444,7 @@ Public Class Form1
             Dim disableButtonCell As DataGridViewDisableButtonCell =
                 CType(dgv.Rows(index:=i).Cells(columnName), DataGridViewDisableButtonCell)
 
-            Dim careLinkUserName As String = LoginHelpers.LoginDialog.LoggedOnUser.CareLinkUserName
+            Dim careLinkUserName As String = LoginHelpers.LoginDialog.LoggedOnUser?.CareLinkUserName
             disableButtonCell.Enabled = s_allUserSettingsData(index:=i).CareLinkUserName <> careLinkUserName
         Next
     End Sub
@@ -2060,14 +2059,10 @@ Public Class Form1
                         ' Not Clickable - Data Dependent
                         Case ServerDataEnum.appModelNumber,
                              ServerDataEnum.transmitterPairedTime
-                            Dim alignment As DataGridViewContentAlignment
-                            If eValue = "NA" Then
-                                alignment = DataGridViewContentAlignment.MiddleCenter
-                                e.Value = "N/A"
-                            Else
-                                alignment = DataGridViewContentAlignment.MiddleRight
-                            End If
-                            e.CellStyle.SetCellStyle(alignment, pad:=New Padding(all:=1))
+                            align = If(eValue.IsNumericInAnyCulture,
+                                       DataGridViewContentAlignment.MiddleRight,
+                                       DataGridViewContentAlignment.MiddleCenter)
+                            e.CellStyle.SetCellStyle(align, pad:=New Padding(all:=1))
 
                         ' Not Clickable Cells - Right
                         Case ServerDataEnum.currentServerTime,
@@ -2615,7 +2610,7 @@ Public Class Form1
         Dim searchPattern As String = $"CareLink*.json"
         Dim path As String = GetProjectDataDirectory()
         Me.MenuStartLoadDataFile.Enabled = AnyMatchingFiles(path, searchPattern)
-
+        Me.MenuStartUseLastFile.Enabled = File.Exists(path:=GetLastDownloadFileWithPath)
         Me.MenuStartSaveSnapshot.Enabled = Not IsRecentDataEmpty()
 
         searchPattern = $"{BaseErrorReportName}*.txt"
@@ -2689,7 +2684,7 @@ Public Class Form1
                             ExceptionHandlerDialog.ReportNameWithPath = EmptyString
                             Try
                                 Dim json As String = ExceptionHandlerDialog.LocalRawData
-                                PatientDataElement = json.FromJson(Of JsonElement)()
+                                PatientDataElement = json.FromJson(Of JsonElement)(DeserializationOptions)
                                 DeserializePatientElement()
                                 Me.TabControlPage2.Visible = True
                                 Me.TabControlPage1.Visible = True
@@ -3048,7 +3043,7 @@ Public Class Form1
 
         SetUpCareLinkUser(forceUI:=True)
         Dim element As JsonElement = ReadJsonElementFromFile(path:=GetUserSettingsPath())
-        If Not element.IsNullOrUndefined Then
+        If Not element.IsEmpty Then
             CurrentUser = element.FromJson(Of CurrentUserRecord)()
         End If
     End Sub
@@ -4434,19 +4429,16 @@ Public Class Form1
     ''' </exception>
     Private Sub UpdateActiveInsulin()
         Try
-            If s_activeInsulin IsNot Nothing AndAlso
-               s_activeInsulin.Amount >= 0 Then
-
-                Dim activeInsulinStr As String = $"Active Insulin {$"{s_activeInsulin.Amount:N3}"} U"
-                Me.ActiveInsulinValue.Text = activeInsulinStr
-                _sgMiniDisplay.ActiveInsulinTextBox.Text = activeInsulinStr
-            ElseIf PumpInfo.IsFlex Then
-                Me.ActiveInsulinValue.Text = $"Active Insulin N/A"
-                _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin N/A"
+            Dim activeInsulinStr As String
+            If s_activeInsulin IsNot Nothing AndAlso s_activeInsulin.Amount >= 0 Then
+                activeInsulinStr = $"Active Insulin {$"{s_activeInsulin.Amount:N3}"} U"
+            ElseIf IsFlex AndAlso _latestActiveInsulin >= 0 Then
+                activeInsulinStr = $"Active Insulin Est. {_latestActiveInsulin:N3} U"
             Else
-                Me.ActiveInsulinValue.Text = $"Active Insulin Unknown"
-                _sgMiniDisplay.ActiveInsulinTextBox.Text = $"Active Insulin --- U"
+                activeInsulinStr = $"Active Insulin --- U"
             End If
+            Me.ActiveInsulinValue.Text = activeInsulinStr
+            _sgMiniDisplay.ActiveInsulinTextBox.Text = activeInsulinStr
         Catch ex As ArithmeticException
             Stop
             Throw New ArithmeticException(
@@ -4570,11 +4562,10 @@ Public Class Form1
                         initialInsulinLevel += timeOrderedMarkers.Values(index:=currentMarker)
                         currentMarker += 1
                     End While
-                    Dim item As New RunningActiveInsulin(
-                        firstValidOaTime,
-                        initialInsulinLevel,
-                        insulinIncrements,
-                        upCount)
+                    Dim item As New RunningActiveInsulin(firstValidOaTime,
+                                                         initialInsulinLevel,
+                                                         insulinIncrements,
+                                                         upCount)
                     _remainingInsulinList.Add(item)
                 Next
 
@@ -4596,6 +4587,7 @@ Public Class Form1
                     End If
                     Dim start As Integer = i - count + 1
                     Dim sum As Double = _remainingInsulinList.ConditionalSum(index:=start, count)
+                    _latestActiveInsulin = sum
                     maxActiveInsulin = Math.Max(sum, maxActiveInsulin)
                     With Me.ActiveInsulinActiveInsulinSeries
                         .Points.AddXY(xValue:=_remainingInsulinList(index:=i).OaDateTime, yValue:=sum)
@@ -4605,10 +4597,9 @@ Public Class Form1
 
                 .ChartAreas(name:=NameOf(ChartArea)).AxisY.Maximum = Math.Ceiling(maxActiveInsulin) + 1
                 .PlotSuspendArea(SuspendSeries:=Me.ActiveInsulinSuspendSeries)
-                .PlotMarkers(
-                    timeChangeSeries:=Me.ActiveInsulinTimeChangeSeries,
-                    markerInsulinDictionary:=s_activeInsulinMarkers,
-                    markerMealDictionary:=Nothing)
+                .PlotMarkers(timeChangeSeries:=Me.ActiveInsulinTimeChangeSeries,
+                             markerInsulinDictionary:=s_activeInsulinMarkers,
+                             markerMealDictionary:=Nothing)
                 .PlotSgSeries(HomePageMealRow:=GetYMinNativeMmolL())
                 .PlotHighLowLimitsAndTargetSg(targetSgOnly:=True)
             End With
@@ -5229,7 +5220,7 @@ Public Class Form1
 
         ' Calculate Time in AutoMode
 
-        If s_autoModeStatusMarkers.Count = 0 AndAlso Not PumpInfo.IsFlex Then
+        If s_autoModeStatusMarkers.Count = 0 AndAlso Not IsFlex Then
             Me.SmartGuardLabel.Text = "SmartGuard 0%"
         ElseIf s_autoModeStatusMarkers.Count = 1 Then
             Me.SmartGuardLabel.Text = "SmartGuard 100%"
@@ -5261,7 +5252,7 @@ Public Class Form1
                     End If
                 Next
                 Me.SmartGuardLabel.Text =
-                    If(timeInAutoMode >= OneDaySpan OrElse (s_autoModeStatusMarkers.Count = 0 AndAlso PumpInfo.IsFlex),
+                    If(timeInAutoMode >= OneDaySpan OrElse (s_autoModeStatusMarkers.Count = 0 AndAlso IsFlex),
                        "SmartGuard 100%",
                        $"SmartGuard {CInt(timeInAutoMode / OneDaySpan * 100)}%")
             Catch ex As Exception
@@ -5449,7 +5440,6 @@ Public Class Form1
         FinishInitialization(mainForm:=Me)
         Me.UpdateTrendArrows()
         UpdateSummaryTab(dgv:=Me.DgvSummary, classCollection:=s_listOfSummaryRecords, sort:=True)
-        Me.UpdateActiveInsulin()
         Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()
         Me.UpdateInsulinLevel()
@@ -5465,7 +5455,7 @@ Public Class Form1
 
         Dim modelNumber As String = mdi.ModelNumber
         Me.ModelLabel.Text = $"{modelNumber} HW Version = {mdi.HardwareRevision}"
-        Me.PumpNameLabel.Text = PumpInfo.GetPumpName
+        Me.PumpNameLabel.Text = GetPumpName
         Me.ReadingsLabel.Text = $"{GetValidSgRecords().Count()}/{288} SG Readings"
 
         Me.TlpLastSG.DisplayDataTableInDGV(
@@ -5520,6 +5510,7 @@ Public Class Form1
         ProgramInitialized = True
         Me.UpdateTreatmentChart()
         Me.UpdateActiveInsulinChart()
+        Me.UpdateActiveInsulin()
 
         Me.ShowHideLegends()
 

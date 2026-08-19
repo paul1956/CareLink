@@ -332,11 +332,10 @@ Friend Module CreateChartItems
     ''' </summary>
     ''' <returns>A Series object configured for active insulin values.</returns>
     Friend Function CreateSeriesActiveInsulin() As Series
-        Dim s As Series = CreateSeriesBase(
-            name:=ActiveInsulinSeriesName,
-            legendText:="Active Insulin",
-            borderWidth:=4,
-            yAxisType:=AxisType.Primary)
+        Dim s As Series = CreateSeriesBase(name:=ActiveInsulinSeriesName,
+                                           legendText:="Active Insulin",
+                                           borderWidth:=4,
+                                           yAxisType:=AxisType.Primary)
         s.MarkerColor = Color.Black
         s.MarkerSize = 4
         s.MarkerStyle = MarkerStyle.Circle

@@ -150,7 +150,7 @@ Friend Module SgExtensions
     End Function
 
     ''' <summary>
-    '''  Converts the value portion of a <see cref="KeyValuePair(Of String, Object)"/> into
+    '''  Converts the value portion of a <see cref="KeyValuePair(Of String, JsonElement)"/> into
     '''  a scaled SG string using the same rules as <see cref="ScaleSg(JsonElement)"/>.
     ''' </summary>
     ''' <param name="item">A key/value pair whose value is expected to be a <see cref="JsonElement"/>.</param>
@@ -160,8 +160,8 @@ Friend Module SgExtensions
     '''  forwards to <see cref="ScaleSg(JsonElement)"/>.
     ''' </remarks>
     <Extension>
-    Public Function ScaleSg(item As KeyValuePair(Of String, Object)) As String
-        Return CType(item.Value, JsonElement).ScaleSg()
+    Public Function ScaleSg(item As KeyValuePair(Of String, JsonElement)) As String
+        Return item.Value.ScaleSg()
     End Function
 
     ''' <summary>

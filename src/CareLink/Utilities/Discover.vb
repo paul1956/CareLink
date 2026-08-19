@@ -47,7 +47,7 @@ Public Module Discover
             End If
         Next
         Dim message As String
-        If region.IsNullOrUndefined Then
+        If region.IsEmpty Then
             message = $"ERROR: country code {country} is not supported"
             Throw New ApplicationException(message)
         End If
@@ -65,7 +65,7 @@ Public Module Discover
                 Stop
             End Try
         Next
-        If config.IsNullOrUndefined Then
+        If config.IsEmpty Then
             message = $"ERROR: failed to get config base URLs for region {region}"
             Throw New ApplicationException(message)
         End If
@@ -100,14 +100,14 @@ Public Module Discover
                                         s_discoverUrl(key:="US"),
                                         s_discoverUrl(key:="EU"))
         Dim json As String = Await httpClient.GetStringAsync(requestUri).ConfigureAwait(continueOnCapturedContext:=False)
-        Dim discoveryElement As JsonElement = json.FromJson(Of JsonElement)()
+        Dim discoveryElement As JsonElement = json.FromJson(Of JsonElement)(DeserializationOptions)
         Dim configJson As JsonElement = GetConfigJson(country, serverRegion, discoveryElement)
 
         Dim ssoConfigurationKey As String = configJson.GetProperty(propertyName:="UseSSOConfiguration").GetString()
         Dim resp As String =
             Await httpClient.GetStringAsync(requestUri:=configJson.GetProperty(propertyName:=ssoConfigurationKey).GetString()) _
                             .ConfigureAwait(continueOnCapturedContext:=False)
-        Dim ssoConfig As SsoConfig = resp.FromJson(Of SsoConfig)()
+        Dim ssoConfig As SsoConfig = resp.FromJson(Of SsoConfig)(DeserializationOptions)
 
         Dim hostname As String = ssoConfig.Server.Hostname
         Dim ssoBaseUrl As String = $"https://{hostname}:{ssoConfig.Server.Port}/{ssoConfig.Server.Prefix}"
@@ -117,9 +117,9 @@ Public Module Discover
         Dim tokenUrl As String = $"{ssoBaseUrl}{ssoConfig.OAuth.UserInfoEndpointPath}"
 
         Dim mutableConfig As Dictionary(Of String, JsonElement) =
-           configJson.GetRawText().FromJson(Of Dictionary(Of String, JsonElement))()
-        mutableConfig(key:="token_url") = $"{Quote}{tokenUrl}{Quote}".FromJson(Of JsonElement)()
-        Return mutableConfig.ToJson().FromJson(Of JsonElement)()
+           configJson.GetRawText().FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions)
+        mutableConfig(key:="token_url") = $"{Quote}{tokenUrl}{Quote}".FromJson(Of JsonElement)(DeserializationOptions)
+        Return mutableConfig.ToJson().FromJson(Of JsonElement)(DeserializationOptions)
     End Function
 
     ''' <summary>
@@ -141,7 +141,7 @@ Public Module Discover
         Try
             Using client As New HttpClient()
                 Using response As HttpResponseMessage = Await client.GetAsync(requestUri:=discoveryUrl).ConfigureAwait(continueOnCapturedContext:=False)
-                    httpStatusCode = CType(response.StatusCode, Integer)
+                    httpStatusCode = response.StatusCode
 
                     ' Use centralized response inspection to ensure common statuses are surfaced.
                     Try
@@ -164,7 +164,7 @@ Public Module Discover
                     Try
                         Dim json As String = Await response.Content.ReadAsStringAsync() _
                                                                    .ConfigureAwait(continueOnCapturedContext:=False)
-                        result = json.FromJson(Of DiscoveryRecord)()
+                        result = json.FromJson(Of DiscoveryRecord)(DeserializationOptions)
                     Catch ex As Exception
                         Stop
                         Throw

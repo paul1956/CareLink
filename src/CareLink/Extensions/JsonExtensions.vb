@@ -4,25 +4,192 @@
 
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
+Imports System.Text.Json.Nodes
 Imports System.Text.Json.Serialization
+Imports DocumentFormat.OpenXml.Spreadsheet
 
 Public Module JsonExtensions
-
-    ''' <summary>
-    '''  Default <see cref="JsonSerializerOptions"/> for deserialization.
-    '''  Ignores null values, writes numbers as strings,
-    '''  uses case-insensitive property names, and disallows unmapped members.
-    ''' </summary>
-    Private ReadOnly Property DeserializationOptions As New JsonSerializerOptions() With
-        {.NumberHandling = JsonNumberHandling.WriteAsString,
-         .PropertyNameCaseInsensitive = True,
-         .UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow}
 
     ''' <summary>
     '''  Default <see cref="JsonSerializerOptions"/> for serialization with indented output.
     ''' </summary>
     Private ReadOnly Property SerializerOptions As New JsonSerializerOptions With
         {.WriteIndented = True}
+
+    ''' <summary>
+    '''  Default <see cref="JsonSerializerOptions"/> for deserialization.
+    '''  Ignores null values, writes numbers as strings,
+    '''  uses case-insensitive property names, and disallows unmapped members.
+    ''' </summary>
+    Public ReadOnly Property DeserializationOptions As New JsonSerializerOptions() With
+        {.NumberHandling = JsonNumberHandling.WriteAsString,
+         .PropertyNameCaseInsensitive = True,
+         .UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow}
+
+    Private Sub HandleExtendedInfo(item As KeyValuePair(Of String,
+                                   JsonElement), resultDictionary As Dictionary(Of String, String))
+        If item.Value.IsEmpty() Then
+            Return
+        End If
+        Select Case item.Value.ValueKind
+            Case JsonValueKind.Array
+                Stop
+            Case JsonValueKind.Object
+                Dim jsonItem As String = item.DeserializeJsonAsString
+                Dim extendedInfo As Dictionary(Of String, JsonElement) =
+                    jsonItem.FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions)
+                For Each kvp As KeyValuePair(Of String, JsonElement) In extendedInfo
+                    resultDictionary.Add(key:=$"{item.Key}:{kvp.Key}", value:=kvp.Value.ToString)
+                Next
+            Case JsonValueKind.Undefined
+                Stop
+                resultDictionary.Add(key:=$"{item.Key}", value:=Nothing)
+            Case JsonValueKind.String
+                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.ToString)
+            Case JsonValueKind.Number
+                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.ToString)
+            Case JsonValueKind.True
+                resultDictionary.Add(key:=$"{item.Key}", value:="True")
+            Case JsonValueKind.False
+                resultDictionary.Add(key:=$"{item.Key}", value:="False")
+            Case JsonValueKind.Null
+                Stop
+                Exit Select
+        End Select
+    End Sub
+
+    ''' <summary>
+    '''  Converts a JSON item (key-value pair) to its <see langword="String"/> representation.
+    ''' </summary>
+    ''' <param name="item">The key-value pair to convert.</param>
+    ''' <returns>The <see langword="String"/> representation of the item's value.</returns>
+    <Extension>
+    Public Function DeserializeJsonAsString(item As KeyValuePair(Of String, JsonElement)) As String
+        Select Case item.Value.ValueKind
+            Case JsonValueKind.String
+                Return item.Value.GetString()
+
+            Case JsonValueKind.Number
+                Return item.Value.ToString() ' Keeps numeric formatting
+
+            Case JsonValueKind.True
+                Return "True"
+
+            Case JsonValueKind.False
+                Return "False"
+
+            Case JsonValueKind.Null
+                Return String.Empty
+
+            Case Else
+                ' For objects, arrays, or other kinds, return raw JSON text
+                Return item.Value.GetRawText()
+        End Select
+    End Function
+
+    ''' <summary>
+    '''  Converts a <see cref="JsonElement"/> to its <see langword="String"/> representation.
+    '''  If the jsonElement is null or undefined, returns an empty string.
+    '''  If the jsonElement is a string, returns its value; otherwise, returns the raw JSON text.
+    ''' </summary>
+    ''' <param name="value">The <see cref="JsonElement"/> to convert.</param>
+    ''' <returns>The <see langword="String"/> representation of the jsonElement.</returns>
+    <Extension>
+    Public Function ElementToJson(value As JsonElement) As String
+        Return If(value.IsEmpty,
+                  String.Empty,
+                  If(value.ValueKind = JsonValueKind.String,
+                     value.GetString(),
+                     value.GetRawText()))
+    End Function
+
+    ''' <summary>
+    '''  Converts (Deserializes) a JSON string  to an object of type <typeparamref name="T"/>
+    '''  using the default <see cref="JsonSerializerOptions"/>.
+    ''' </summary>
+    ''' <typeparam name="T">The type of the object to deserialize.</typeparam>
+    ''' <param name="json">The JSON string to deserialize.</param>
+    ''' <returns>The deserialized object.</returns>
+    ''' <param name="DeserializationOptions"></param>
+    <Extension>
+    Public Function FromJson(Of T)(json As String, DeserializationOptions As JsonSerializerOptions) As T
+        Try
+            Return JsonSerializer.Deserialize(Of T)(json, options:=DeserializationOptions)
+        Catch ex As JsonException
+            Stop
+            Debug.WriteLine(message:=$"ERROR: failed deserializing JSON string: {ex.Message}")
+            Return Nothing
+        End Try
+    End Function
+
+    ''' <summary>
+    '''  Converts (Deserializes) a JSON string to an object of type <typeparamref name="T"/>
+    '''  using the default <see cref="JsonSerializerOptions"/>.
+    ''' </summary>
+    ''' <typeparam name="T">The type of the object to deserialize.</typeparam>
+    ''' <param name="element">The JSON string to deserialize.</param>
+    ''' <returns>The deserialized object.</returns>
+    <Extension>
+    Public Function FromJson(Of T)(element As JsonElement) As T
+        Try
+            Dim elem As T = JsonSerializer.Deserialize(Of T)(element, options:=DeserializationOptions)
+            Return elem
+        Catch ex As JsonException
+            Stop
+            Debug.WriteLine(message:=$"ERROR: failed deserializing JSON string: {ex.Message}")
+            Return Nothing
+        End Try
+    End Function
+
+    <Extension>
+    Public Function IsEmpty(element As JsonElement) As Boolean
+        Select Case element.ValueKind
+            Case JsonValueKind.Null
+                Return True
+            Case JsonValueKind.Undefined
+                Return True
+            Case JsonValueKind.Object
+                Return Not element.EnumerateObject().Any()
+            Case JsonValueKind.Array
+                Return element.GetArrayLength() = 0
+            Case JsonValueKind.String
+                Return element.ToString.Length = 0
+            Case JsonValueKind.Number
+                Return False
+            Case JsonValueKind.True
+                Return False
+            Case JsonValueKind.False
+                Return False
+        End Select
+        Return False
+    End Function
+
+    ''' <summary>
+    '''  Converts a <paramref name="json"/> object to a
+    '''  <see cref="Dictionary(Of String, Object)"/>,
+    '''  recursively handling nested objects and arrays.
+    ''' </summary>
+    ''' <param name="json">The JsonElement representing a JSON object.</param>
+    ''' <returns>A dictionary representing the JSON object.</returns>
+    ''' <summary>
+    ''' Converts a JsonElement (Object) into a Dictionary(Of String, JsonElement)
+    ''' </summary>
+    <Extension>
+    Public Function JsonElementToDictionary(element As JsonElement) As Dictionary(Of String, JsonElement)
+        Dim result As New Dictionary(Of String, JsonElement)(StringComparer.OrdinalIgnoreCase)
+
+        ' Ensure the element is an object
+        If element.ValueKind <> JsonValueKind.Object Then
+            Throw New ArgumentException(message:="JsonElement must be an object to convert to Dictionary.")
+        End If
+
+        ' Enumerate properties and add to dictionary
+        For Each prop As JsonProperty In element.EnumerateObject()
+            result(prop.Name) = prop.Value
+        Next
+
+        Return result
+    End Function
 
     ''' <summary>
     '''  Loads indexed items from a JSON string
@@ -34,30 +201,30 @@ Public Module JsonExtensions
     '''  A <see cref="Dictionary(Of String, String)"/> with
     '''  <see langword="String"/> values representing the indexed items.
     ''' </returns>
-    Public Function DeserializeJsonAsDictionary(json As String) As Dictionary(Of String, String)
+    <Extension>
+    Public Function JsonToDictionary(json As String) As Dictionary(Of String, String)
         Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
         Dim resultDictionary As New Dictionary(Of String, String)(comparer)
         If IsNullOrWhiteSpace(value:=json) Then
             Return resultDictionary
         End If
-        Dim item As KeyValuePair(Of String, Object)
-        Dim rawJsonData As List(Of KeyValuePair(Of String, Object)) =
-            json.FromJson(Of Dictionary(Of String, Object)).ToList()
+        Dim item As KeyValuePair(Of String, JsonElement)
+        Dim rawJsonData As List(Of KeyValuePair(Of String, JsonElement)) =
+            json.FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions).ToList()
 
         For Each item In rawJsonData
-            If item.Value Is Nothing Then
+            If item.Value.ValueKind = JsonValueKind.Null Then
                 resultDictionary.Add(item.Key, value:=Nothing)
                 Continue For
             End If
             Try
                 Select Case item.Key
-                    Case "additionalInfo"
-                        Dim jsonItem As String = item.DeserializeJsonAsString
-                        Dim additionalInfo As Dictionary(Of String, Object) =
-                            jsonItem.FromJson(Of Dictionary(Of String, Object))
-                        For Each kvp As KeyValuePair(Of String, Object) In additionalInfo
-                            resultDictionary.Add(kvp.Key, value:=kvp.Value.ToString)
-                        Next
+                    Case "activeNotifications", "clearedNotifications"
+                        If item.Value.IsEmpty() Then
+                            resultDictionary.Add(item.Key, value:=Nothing)
+                        Else
+                            resultDictionary.Add(item.Key, value:=item.Value.ToJson)
+                        End If
                     Case NameOf(ServerDataEnum.clientTimeZoneName)
                         If s_useLocalTimeZone Then
                             PumpTimeZoneInfo = TimeZoneInfo.Local
@@ -66,7 +233,7 @@ Public Module JsonExtensions
                             Dim text As String
                             Dim messageButtons As MessageBoxButtons
                             If PumpTimeZoneInfo Is Nothing Then
-                                Dim value As String = item.Value?.ToString
+                                Dim value As String = item.Value.ToString
                                 If IsNullOrWhiteSpace(value) Then
                                     text = "Your pump appears To be off-line, some " &
                                            "values will be wrong do you want to continue? " &
@@ -113,7 +280,11 @@ Public Module JsonExtensions
 
                         resultDictionary.Add(item.Key, value:=item.ScaleSg())
                     Case Else
-                        resultDictionary.Add(item.Key, value:=item.DeserializeJsonAsString)
+                        If item.Value.ValueKind = JsonValueKind.String Then
+                            resultDictionary.Add(item.Key, value:=item.DeserializeJsonAsString)
+                        Else
+                            HandleExtendedInfo(item, resultDictionary)
+                        End If
                 End Select
             Catch ex As Exception
                 Stop
@@ -121,95 +292,6 @@ Public Module JsonExtensions
             End Try
         Next
         Return resultDictionary
-    End Function
-
-    ''' <summary>
-    '''  Converts a JSON item (key-value pair) to its <see langword="String"/> representation.
-    ''' </summary>
-    ''' <param name="item">The key-value pair to convert.</param>
-    ''' <returns>The <see langword="String"/> representation of the item's value.</returns>
-    <Extension>
-    Public Function DeserializeJsonAsString(item As KeyValuePair(Of String, Object)) As String
-        Dim itemAsElement As JsonElement = CType(item.Value, JsonElement)
-        Dim valueAsString As String = itemAsElement.ToString
-        Select Case itemAsElement.ValueKind
-            Case JsonValueKind.False
-                Return "False"
-            Case JsonValueKind.True
-                Return "True"
-            Case JsonValueKind.Null
-                Return String.Empty
-        End Select
-        Return valueAsString
-    End Function
-
-    ''' <summary>
-    '''  Converts a <see cref="JsonElement"/> to its <see langword="String"/> representation.
-    '''  If the jsonElement is null or undefined, returns an empty string.
-    '''  If the jsonElement is a string, returns its value; otherwise, returns the raw JSON text.
-    ''' </summary>
-    ''' <param name="value">The <see cref="JsonElement"/> to convert.</param>
-    ''' <returns>The <see langword="String"/> representation of the jsonElement.</returns>
-    <Extension>
-    Public Function ElementToJson(value As JsonElement) As String
-        Return If(value.IsNullOrUndefined,
-                  String.Empty,
-                  If(value.ValueKind = JsonValueKind.String,
-                     value.GetString(),
-                     value.GetRawText()))
-    End Function
-
-    ''' <summary>
-    '''  Converts (Deserializes) a JSON string  to an object of type <typeparamref name="T"/>
-    '''  using the default <see cref="JsonSerializerOptions"/>.
-    ''' </summary>
-    ''' <typeparam name="T">The type of the object to deserialize.</typeparam>
-    ''' <param name="json">The JSON string to deserialize.</param>
-    ''' <returns>The deserialized object.</returns>
-    <Extension>
-    Public Function FromJson(Of T)(json As String) As T
-        Try
-            Return JsonSerializer.Deserialize(Of T)(json, options:=DeserializationOptions)
-        Catch ex As JsonException
-            Stop
-            Debug.WriteLine(message:=$"ERROR: failed deserializing JSON string: {ex.Message}")
-            Return Nothing
-        End Try
-    End Function
-
-    ''' <summary>
-    '''  Converts (Deserializes) a JSON string to an object of type <typeparamref name="T"/>
-    '''  using the default <see cref="JsonSerializerOptions"/>.
-    ''' </summary>
-    ''' <typeparam name="T">The type of the object to deserialize.</typeparam>
-    ''' <param name="element">The JSON string to deserialize.</param>
-    ''' <returns>The deserialized object.</returns>
-    <Extension>
-    Public Function FromJson(Of T)(element As JsonElement) As T
-        Try
-            Dim elem As T = JsonSerializer.Deserialize(Of T)(element, options:=DeserializationOptions)
-            Return elem
-        Catch ex As JsonException
-            Stop
-            Debug.WriteLine(message:=$"ERROR: failed deserializing JSON string: {ex.Message}")
-            Return Nothing
-        End Try
-    End Function
-
-    ''' <summary>
-    '''  Determines whether a <see cref="JsonValueKind"/> is
-    '''  <see cref="JsonValueKind.Null"/> or
-    '''  <see cref="JsonValueKind.Undefined"/>.
-    ''' </summary>
-    ''' <param name="kind">The <see cref="JsonValueKind"/> to check.</param>
-    ''' <returns>
-    '''  <see langword="True"/> if the kind is Null or Undefined;
-    '''  otherwise, <see langword="False"/>.
-    ''' </returns>
-    <Extension>
-    Public Function IsNullOrUndefined(element As JsonElement) As Boolean
-        Dim kind As JsonValueKind = element.ValueKind
-        Return kind = JsonValueKind.Null OrElse kind = JsonValueKind.Undefined
     End Function
 
     ''' <summary>
@@ -227,17 +309,17 @@ Public Module JsonExtensions
             Return resultListOfDictionary
         End If
 
-        Dim jsonList As List(Of Dictionary(Of String, Object)) =
-            json.FromJson(Of List(Of Dictionary(Of String, Object)))
+        Dim jsonList As List(Of Dictionary(Of String, JsonElement)) =
+            json.FromJson(Of List(Of Dictionary(Of String, JsonElement)))(DeserializationOptions)
 
         Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
 
-        For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
+        For Each e As IndexClass(Of Dictionary(Of String, JsonElement)) In jsonList.WithIndex
             Dim item As New Dictionary(Of String, String)(comparer)
             Dim defaultTime As Date = PumpNow() - Eleven55Span
             Dim index As Integer = -1
-            For Each e1 As IndexClass(Of KeyValuePair(Of String, Object)) In e.Value.WithIndex
-                If e1.Value.Value Is Nothing Then
+            For Each e1 As IndexClass(Of KeyValuePair(Of String, JsonElement)) In e.Value.WithIndex
+                If e1.Value.Value.ValueKind = JsonValueKind.Null Then
                     item.Add(e1.Value.Key, value:=Nothing)
                 ElseIf e1.Value.Key = "index" Then
                     index = CInt(e1.Value.DeserializeJsonAsString)
@@ -245,7 +327,7 @@ Public Module JsonExtensions
                 ElseIf e1.Value.Key = "sg" Then
                     item.Add(e1.Value.Key, value:=e1.Value.ScaleSg)
                 ElseIf e1.Value.Key = "dateTime" Then
-                    Dim dateValue As Date = CType(e1.Value.Value, JsonElement).GetDateTime()
+                    Dim dateValue As Date = e1.Value.Value.GetDateTime()
 
                     ' Prevent Crash but not valid data
                     If dateValue.Year <= 2001 AndAlso index >= 0 Then
@@ -283,81 +365,42 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
+    '''  Convert a <see langword="String"/> into a <see cref="jsonElement"/>
+    ''' </summary>
+    ''' <param name="value">The String to0 be converted</param>
+    <Extension>
+    Public Function ToJsonElement(value As String) As JsonElement
+        Dim json As String = JsonSerializer.Serialize(value)
+        Using doc As JsonDocument = JsonDocument.Parse(json)
+            Return doc.RootElement.Clone
+        End Using
+    End Function
+
+    ''' <summary>
     '''  Converts a <paramref name="jsonArray"/> array to a <see cref="List"/> of objects,
     '''  recursively handling nested arrays and objects.
     ''' </summary>
     ''' <param name="jsonArray">The JsonElement representing a JSON array.</param>
     ''' <returns>A list of objects representing the array elements.</returns>
     <Extension>
-    Public Function ToList(jsonArray As JsonElement) As List(Of Object)
-        Dim result As New List(Of Object)()
+    Public Function ToList(jsonArray As JsonElement) As List(Of JsonElement)
+        Dim result As New List(Of JsonElement)()
         For Each jsonElement As JsonElement In jsonArray.EnumerateArray()
             Select Case jsonElement.ValueKind
                 Case JsonValueKind.Object
-                    result.Add(item:=ToObjectDictionary(json:=jsonElement))
+                    result.Add(item:=jsonElement)
                 Case JsonValueKind.Array
-                    result.Add(item:=ToList(jsonArray:=jsonElement))
+                    result.Add(item:=jsonElement)
                 Case Else
-                    result.Add(item:=ToObject(jsonElement))
+                    result.Add(item:=jsonElement)
             End Select
         Next
         Return result
     End Function
 
     ''' <summary>
-    '''  Converts a <see cref="JsonElement"/> to a .NET object based on its value kind.
-    ''' </summary>
-    ''' <param name="jsonElement">The <see cref="JsonElement"/> to convert.</param>
-    ''' <returns>The corresponding .NET object.</returns>
-    <Extension>
-    Public Function ToObject(jsonElement As JsonElement) As Object
-        Select Case jsonElement.ValueKind
-            Case JsonValueKind.String
-                Return jsonElement.GetString()
-            Case JsonValueKind.Number
-                Return jsonElement.GetDecimal()
-            Case JsonValueKind.True
-                Return True
-            Case JsonValueKind.False
-                Return False
-            Case JsonValueKind.Null
-                Return Nothing
-            Case Else
-                Return jsonElement.GetRawText()
-        End Select
-    End Function
-
-    ''' <summary>
-    '''  Converts a <paramref name="json"/> object to a
-    '''  <see cref="Dictionary(Of String, Object)"/>,
-    '''  recursively handling nested objects and arrays.
-    ''' </summary>
-    ''' <param name="json">The JsonElement representing a JSON object.</param>
-    ''' <returns>A dictionary representing the JSON object.</returns>
-    <Extension>
-    Public Function ToObjectDictionary(json As JsonElement) As Dictionary(Of String, Object)
-        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
-        Dim result As New Dictionary(Of String, Object)(comparer)
-
-        If json.ValueKind = JsonValueKind.Object Then
-            For Each [property] As JsonProperty In json.EnumerateObject()
-                Dim key As String = [property].Name
-                Select Case [property].Value.ValueKind
-                    Case JsonValueKind.Object
-                        result.Add(key, value:=ToObjectDictionary(json:=[property].Value))
-                    Case JsonValueKind.Array
-                        result.Add(key, value:=ToList(jsonArray:=[property].Value))
-                    Case Else
-                        result.Add(key, value:=ToObject(jsonElement:=[property].Value))
-                End Select
-            Next
-        End If
-        Return result
-    End Function
-
-    ''' <summary>
     '''  Converts a <see cref="JsonElement"/> object to a
-    '''  <see cref="Dictionary(Of String, Object)"/>,
+    '''  <see cref="Dictionary(Of String, JsonElement)"/>,
     '''  recursively handling nested objects and arrays.
     ''' </summary>
     ''' <param name="jsonElement">
@@ -368,37 +411,28 @@ Public Module JsonExtensions
     ''' </returns>
     <Extension>
     Public Function ToStringDictionary(jsonElement As JsonElement) As Dictionary(Of String, String)
-        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
-        Dim result As New Dictionary(Of String, String)(comparer)
+        Dim result As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
 
-        If jsonElement.ValueKind = JsonValueKind.Object Then
-            For Each [property] As JsonProperty In jsonElement.EnumerateObject()
-                Dim key As String = [property].Name
-                Dim value As String = [property].Value.ToString
+        For Each prop As JsonProperty In jsonElement.EnumerateObject()
+            Dim v As JsonElement = prop.Value
+            Dim s As String = Nothing
 
-                Select Case [property].Value.ValueKind
-                    Case JsonValueKind.String
-                        result.Add(key, value)
-                    Case JsonValueKind.Object
-                        result.Add(key, value)
-                    Case JsonValueKind.Array
-                        result.Add(key, value)
-                    Case JsonValueKind.Null
-                        result.Add(key, value:=String.Empty)
-                    Case JsonValueKind.Undefined
-                        Stop
-                        Exit Select
-                    Case JsonValueKind.Number
-                        result.Add(key, value)
-                    Case JsonValueKind.True
-                        result.Add(key, value:="True")
-                    Case JsonValueKind.False
-                        result.Add(key, value:="False")
-                    Case Else
-                        result.Add(key, value:=ToObject(jsonElement:=[property].Value).ToString)
-                End Select
-            Next
-        End If
+            Select Case v.ValueKind
+                Case JsonValueKind.String
+                    s = v.GetString()
+                Case JsonValueKind.Number, JsonValueKind.True, JsonValueKind.False
+                    s = v.GetRawText()
+                Case JsonValueKind.Object, JsonValueKind.Array
+                    s = v.GetRawText() ' or recursively flatten
+                Case JsonValueKind.Null, JsonValueKind.Undefined
+                    s = Nothing
+            End Select
+
+            If s IsNot Nothing Then
+                result(key:=prop.Name) = s
+            End If
+        Next
+
         Return result
     End Function
 
@@ -408,11 +442,11 @@ Public Module JsonExtensions
     <Extension>
     Public Function TryGetStringProperty(element As JsonElement, propertyName As String, ByRef value As String) As Boolean
         value = Nothing
-        If element.IsNullOrUndefined Then
+        If element.IsEmpty Then
             Return False
         End If
         Dim prop As JsonElement
-        If element.TryGetProperty(propertyName, value:=prop) AndAlso Not prop.IsNullOrUndefined Then
+        If element.TryGetProperty(propertyName, value:=prop) AndAlso Not prop.IsEmpty Then
             value = prop.GetString()
             Return True
         End If

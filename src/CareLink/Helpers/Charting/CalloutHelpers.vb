@@ -24,7 +24,9 @@ Friend Module CalloutHelpers
     ''' <param name="lastDataPoint">The data point to anchor the annotation to.</param>
     ''' <param name="text">The text to display in the annotation.</param>
     <Extension>
-    Private Sub AddOrUpdateAnnotation(chart As Chart, lastDataPoint As DataPoint, text As String)
+    Private Sub AddOrUpdateAnnotation(chart As Chart,
+                                      lastDataPoint As DataPoint,
+                                      text As String)
         Dim annotation As CalloutAnnotation = chart.FindAnnotation(lastDataPoint)
         If annotation IsNot Nothing Then
             With annotation
@@ -60,10 +62,14 @@ Friend Module CalloutHelpers
             Case 1
                 annotationText = $"{markerTag0}"
             Case 2
-                annotationText = $"{markerTag0} {markerTags(index:=1)}"
+                Dim markerTag1 As String = markerTags(index:=1).Trim()
+                annotationText = If(markerTag1 = "0U",
+                                    "Calibration Only!",
+                                    $"{markerTag0} {markerTag1}")
             Case 3
+                Dim markerTag1 As String = markerTags(index:=1).Trim()
                 annotationText =
-                    $"{markerTag0} {markerTags(index:=1)} {markerTags(index:=2)}"
+                    $"{markerTag0} {markerTag1} {markerTags(index:=2)}"
             Case Else
                 Stop
         End Select
@@ -83,7 +89,10 @@ Friend Module CalloutHelpers
     ''' </param>
     ''' <param name="text">The text to display in the callout annotation.</param>
     <Extension>
-    Friend Sub CreateCallout(chart As Chart, lastDataPoint As DataPoint, markerBorderColor As Color, text As String)
+    Friend Sub CreateCallout(chart As Chart,
+                             lastDataPoint As DataPoint,
+                             markerBorderColor As Color,
+                             text As String)
         lastDataPoint.Color = markerBorderColor
         lastDataPoint.MarkerBorderWidth = 2
         lastDataPoint.MarkerBorderColor = markerBorderColor
@@ -106,7 +115,8 @@ Friend Module CalloutHelpers
     '''  otherwise, <see langword="Nothing"/>.
     ''' </returns>
     <Extension>
-    Friend Function FindAnnotation(treatmentChart As Chart, lastDataPoint As DataPoint) As CalloutAnnotation
+    Friend Function FindAnnotation(treatmentChart As Chart,
+                                   lastDataPoint As DataPoint) As CalloutAnnotation
         For Each e As IndexClass(Of Annotation) In treatmentChart.Annotations.ToList.WithIndex
             Dim annotation As CalloutAnnotation = CType(e.Value, CalloutAnnotation)
             If annotation.AnchorDataPoint Is Nothing Then Continue For
@@ -129,7 +139,9 @@ Friend Module CalloutHelpers
     ''' <param name="currentDataPoint">The data point to anchor the annotation to.</param>
     ''' <param name="text">The text to display in the annotation.</param>
     <Extension>
-    Friend Sub SetupCallout(chart As Chart, currentDataPoint As DataPoint, text As String)
+    Friend Sub SetupCallout(chart As Chart,
+                            currentDataPoint As DataPoint,
+                            text As String)
         If chart.Name = "TreatmentMarkersChart" AndAlso
             (text.StartsWith(value:="Bolus ") OrElse text.StartsWith(value:="Meal ")) Then
 
@@ -153,7 +165,9 @@ Friend Module CalloutHelpers
     ''' <param name="currentDataPoint">The data point to anchor the annotation to.</param>
     ''' <param name="markerTags">An array of strings representing the marker tags.</param>
     <Extension>
-    Friend Sub SetUpCallout(chart As Chart, currentDataPoint As DataPoint, markerTags As List(Of String))
+    Friend Sub SetUpCallout(chart As Chart,
+                            currentDataPoint As DataPoint,
+                            markerTags As List(Of String))
         Dim text As String = GetAnnotationText(markerTags)
         chart.SetupCallout(currentDataPoint, text)
     End Sub

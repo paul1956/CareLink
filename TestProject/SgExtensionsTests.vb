@@ -18,6 +18,36 @@ Public Class SgExtensionsTests
     End Sub
 
     <Fact>
+    Public Sub ScaleSg_KeyValuePair_With_Null_JsonElement_ReturnsEmptyString()
+        ' Arrange
+        Dim element As JsonElement = JsonElement.Parse(json:="null")
+        Dim kvp As New KeyValuePair(Of String, JsonElement)(key:="sg", value:=element)
+
+        ' Act
+        Dim actual As String = kvp.ScaleSg()
+
+        ' Assert
+        actual.Should().Be(expected:=String.Empty)
+        RestoreDefaults()
+    End Sub
+
+    <Fact>
+    Public Sub ScaleSg_KeyValuePair_With_Number_JsonElement_ReturnsFormatted()
+        ' Arrange
+        NativeMmolL = False
+        Dim element As JsonElement = JsonElement.Parse(json:="100")
+        Dim kvp As New KeyValuePair(Of String, JsonElement)(key:="sg", value:=element)
+        Dim expected As String = 100.0F.ToString(provider:=CultureInfo.CurrentUICulture)
+
+        ' Act
+        Dim actual As String = kvp.ScaleSg()
+
+        ' Assert
+        actual.Should().Be(expected)
+        RestoreDefaults()
+    End Sub
+
+    <Fact>
     Public Sub ScaleSg_Single_Mgdl_ReturnsFormattedString()
         ' Arrange
         NativeMmolL = False
@@ -59,7 +89,7 @@ Public Class SgExtensionsTests
         Dim input As String = "100"
         Dim parsed As Single = input.ParseSingle()
         Dim scaled As Single = (parsed / MmolLUnitsDivisor).RoundToSingle(digits:=1, considerValue:=True)
-        Dim expected As String = scaled.ToString(CultureInfo.CurrentUICulture)
+        Dim expected As String = scaled.ToString(provider:=CultureInfo.CurrentUICulture)
 
         ' Act
         Dim actual As String = input.ScaleSg()
@@ -68,36 +98,6 @@ Public Class SgExtensionsTests
         actual.Should().Be(expected)
 
         ' Cleanup
-        RestoreDefaults()
-    End Sub
-
-    <Fact>
-    Public Sub ScaleSg_KeyValuePair_With_Number_JsonElement_ReturnsFormatted()
-        ' Arrange
-        NativeMmolL = False
-        Dim element As JsonElement = JsonElement.Parse("100")
-        Dim kvp As New KeyValuePair(Of String, Object)("sg", element)
-        Dim expected As String = 100.0F.ToString(CultureInfo.CurrentUICulture)
-
-        ' Act
-        Dim actual As String = kvp.ScaleSg()
-
-        ' Assert
-        actual.Should().Be(expected)
-        RestoreDefaults()
-    End Sub
-
-    <Fact>
-    Public Sub ScaleSg_KeyValuePair_With_Null_JsonElement_ReturnsEmptyString()
-        ' Arrange
-        Dim element As JsonElement = JsonElement.Parse("null")
-        Dim kvp As New KeyValuePair(Of String, Object)("sg", element)
-
-        ' Act
-        Dim actual As String = kvp.ScaleSg()
-
-        ' Assert
-        actual.Should().Be(String.Empty)
         RestoreDefaults()
     End Sub
 

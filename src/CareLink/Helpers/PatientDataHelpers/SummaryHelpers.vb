@@ -116,6 +116,9 @@ Friend Module SummaryHelpers
         Dim reminderName As String = String.Empty
         Dim secondaryTime As String = String.Empty
         Dim sg As String = String.Empty
+        Dim sg64 As String = If(NativeMmolL,
+                                "3.5 mmol/L",
+                                "64 mg/dL")
         Dim sensorUpdateTime As String = String.Empty
         Dim triggeredDate As String = String.Empty
         Dim unitsRemaining As String = Nothing
@@ -171,7 +174,7 @@ Friend Module SummaryHelpers
                         Dim resolvedValue As String = String.Empty
                         If jsonDictionary.TryGetValue(key:="acknowledged", value:=resolvedValue) Then
                             Dim acknowledgedRecord As AcknowledgedRecord =
-                                resolvedValue.ToString.FromJson(Of AcknowledgedRecord)()
+                                resolvedValue.ToString.FromJson(Of AcknowledgedRecord)(DeserializationOptions)
                             resolved = $" {acknowledgedRecord.Time.ToNotificationString}"
                         End If
                     Case "alertClearType"
@@ -258,8 +261,8 @@ Friend Module SummaryHelpers
                                         If addInfo.TryGetValue(key, value:=sg) Then
                                             If faultId = "827" Then
                                                 lowLimit = If(CSng(sg) < 65 AndAlso CSng(sg) > 20,
-                                                          "64",
-                                                          "3.5")
+                                                              "64 mg/dL",
+                                                              "3.5  mmol/L")
                                             End If
                                         ElseIf faultId = "787" Then
                                             lowAlertRec = LowAlertsRecord.GetLowAlertRecord(triggerTime)
@@ -303,6 +306,7 @@ Friend Module SummaryHelpers
             .Replace(oldValue:="(sensorUpdateTime)", newValue:=sensorUpdateTime) _
             .Replace(oldValue:="(suspendedSince)", newValue:=s_suspendedSince) _
             .Replace(oldValue:="(sg)", newValue:=sg) _
+            .Replace(oldValue:="(sg64)", newValue:=sg64) _
             .Replace(oldValue:="(triggeredDateTime)", newValue:=triggeredDate) _
             .Replace(oldValue:="(units)", newValue:=BgUnits()) _
             .Replace(oldValue:="(unitsRemaining)", newValue:=unitsRemaining) _
@@ -398,8 +402,8 @@ Friend Module SummaryHelpers
                                                  kvp,
                                                  messages:=s_plgmLgsMessages,
                                                  messageTableName:=NameOf(s_plgmLgsMessages))
-                    Case NameOf(ClearedNotifications.dateTime)
-                        Dim key As String = NameOf(ClearedNotifications.dateTime)
+                    Case "dateTime"
+                        Dim key As String = "dateTime"
                         item = New SummaryRecord(recordNumber,
                                                  kvp,
                                                  message:=kvp.Value.ParseDate(key).ToShortDateTime)
@@ -407,22 +411,26 @@ Friend Module SummaryHelpers
                         HandleComplexItems(kvp,
                                            recordNumber,
                                            key:="additionalInfo",
-                                           listOfSummaryRecords)
+                                           listOfSummaryRecords,
+                                           isTitle:=True)
                     Case "cleared"
                         HandleComplexItems(kvp,
                                            recordNumber,
                                            key:="cleared",
-                                           listOfSummaryRecords)
+                                           listOfSummaryRecords,
+                                           isTitle:=True)
                     Case "acknowledged"
                         HandleComplexItems(kvp,
                                            recordNumber,
                                            key:="acknowledged",
-                                           listOfSummaryRecords)
+                                           listOfSummaryRecords,
+                                           isTitle:=True)
                     Case "snoozed"
                         HandleComplexItems(kvp,
                                            recordNumber,
                                            key:="snoozed",
-                                           listOfSummaryRecords)
+                                           listOfSummaryRecords,
+                                           isTitle:=True)
                     Case Else
                         item = New SummaryRecord(recordNumber, kvp)
                 End Select

@@ -14,7 +14,7 @@ Friend Class Client2
     Private Const TokenBaseFileName As String = "loginData.json"
     Private ReadOnly _httpClient As HttpClient
     Private ReadOnly _tokenBaseFileName As String
-    Private _accessTokenPayload As Dictionary(Of String, Object)
+    Private _accessTokenPayload As Dictionary(Of String, JsonElement)
     Private _config As Dictionary(Of String, String)
     Private _country As String
     Private _lastHttpStatusCode As HttpStatusCode
@@ -66,7 +66,7 @@ Friend Class Client2
     Friend Property LoggedIn As Boolean
     Friend Property PatientPersonalData As New PatientPersonalInfo
     Friend Property serverRegion As Region
-    Friend Property UserElementDictionary As Dictionary(Of String, Object)
+    Friend Property UserElementDictionary As Dictionary(Of String, JsonElement)
 
     ''' <summary>
     '''  Gets the last HTTP status code from the most recent operation.
@@ -104,9 +104,9 @@ Friend Class Client2
         Return headers
     End Function
 
-    Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, Object)
+    Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, JsonElement)
         Try
-            Dim token As String = CStr(token_data.ToObjectDictionary("access_token"))
+            Dim token As String = token_data.JsonElementToDictionary(key:="access_token").ToString
             Dim payload_b64 As String = token.Split(separator:="."c)(1)
             Dim payload_b64_bytes As Byte() = Encoding.UTF8.GetBytes(s:=payload_b64)
             Dim count As Integer = (4 - (payload_b64_bytes.Length Mod 4)) Mod 4
@@ -115,7 +115,7 @@ Friend Class Client2
             End If
             Dim bytes As Byte() = Convert.FromBase64String(s:=payload_b64)
             Dim json As String = Encoding.UTF8.GetString(bytes)
-            Return json.FromJson(Of Dictionary(Of String, Object))()
+            Return json.FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions)
         Catch ex As Exception
             Dim str As String = ex.DecodeException()
             Dim location As String = NameOf(GetAccessTokenPayload)
@@ -132,10 +132,10 @@ Friend Class Client2
     ''' <param name="access_token_payload">The payload of the access token as a dictionary.</param>
     ''' <returns>True if the token is valid; otherwise, false.</returns>
     ''' <param name="message"></param>
-    Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, Object),
+    Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, JsonElement),
                                          ByRef message As String) As Boolean
         Try
-            Dim unixTime As Long = CType(access_token_payload(key:="exp"), JsonElement).GetInt64()
+            Dim unixTime As Long = access_token_payload(key:="exp").GetInt64()
             Dim unixCurrentTime As Long = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             Dim tDiff As Long = unixTime - unixCurrentTime
             If tDiff < 0 Then
@@ -177,12 +177,12 @@ Friend Class Client2
     ''' </returns>
     Private Async Function GetDataAsync(username As String,
                                         role As String,
-                                        patientId As String) As Task(Of Dictionary(Of String, Object))
+                                        patientId As String) As Task(Of Dictionary(Of String, JsonElement))
 
         _httpClient.SetDefaultRequestHeaders()
         Dim requestUri As String = $"{Me.Config(key:="baseUrlCumulus")}/display/message"
         Dim tokenData As Dictionary(Of String, String) = _tokenDataElement.ToStringDictionary()
-        Dim value As New Dictionary(Of String, Object) From {{"username", username}}
+        Dim value As New Dictionary(Of String, String) From {{"username", username}}
         If role.ContainsNoCase(value:="Partner") Then
             value(key:="role") = "carePartner".ToLower()
             value(key:="patientId") = patientId
@@ -231,7 +231,7 @@ Friend Class Client2
                             Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
 
                             Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
-                            Return json.FromJson(Of Dictionary(Of String, Object))()
+                            Return json.FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions)
                         End Using
                     End Using
                 Catch hex As HttpRequestException
@@ -281,7 +281,7 @@ Friend Class Client2
 
         _lastHttpStatusCode = 0
         Const key As String = "baseUrlCareLink"
-        Dim requestUri As String = $"{CStr(configJsonElement.ToObjectDictionary(key))}/links/patients"
+        Dim requestUri As String = $"{configJsonElement.JsonElementToDictionary(key)}/links/patients"
         Using request As New HttpRequestMessage(method:=HttpMethod.Get, requestUri:=requestUri)
             For Each header As KeyValuePair(Of String, String) In headers
                 request.Headers.TryAddWithoutValidation(name:=header.Key, value:=header.Value)
@@ -303,7 +303,7 @@ Friend Class Client2
                 Dim patients As List(Of Dictionary(Of String, String))
                 Dim json As String =
                     Await response.Content.ReadAsStringAsync()
-                patients = json.FromJson(Of List(Of Dictionary(Of String, String)))()
+                patients = json.FromJson(Of List(Of Dictionary(Of String, String)))(DeserializationOptions)
                 If patients.Count > 0 Then
                     Return patients(index:=0)
                 End If
@@ -372,7 +372,7 @@ Friend Class Client2
     ''' </returns>
     Private Async Function internalInit() As Task(Of Boolean)
         _tokenDataElement = ReadTokenFile(tokenBaseFileName:=_tokenBaseFileName)
-        If _tokenDataElement.IsNullOrUndefined Then
+        If _tokenDataElement.IsEmpty Then
             Me.LoggedIn = False
             Return False
         End If
@@ -388,7 +388,7 @@ Friend Class Client2
 
         Try
             Application.DoEvents()
-            Dim element As JsonElement = CType(_accessTokenPayload(key:="token_details"), JsonElement)
+            Dim element As JsonElement = _accessTokenPayload(key:="token_details")
             Dim payload As AccessTokenDetails = element.FromJson(Of AccessTokenDetails)()
             _country = If(payload.Country, s_countryCode)
             configJsonElement =
@@ -402,8 +402,8 @@ Friend Class Client2
                 Throw New UnauthorizedAccessException
             End If
 
-            Dim userElement As JsonElement = json.FromJson(Of JsonElement)()
-            Me.UserElementDictionary = userElement.ToObjectDictionary()
+            Dim userElement As JsonElement = json.FromJson(Of JsonElement)(DeserializationOptions)
+            Me.UserElementDictionary = userElement.JsonElementToDictionary
             _PatientPersonalData = userElement.FromJson(Of PatientPersonalInfo)()
 
             Dim role As String = _PatientPersonalData.role
@@ -418,7 +418,7 @@ Friend Class Client2
                 Try
                     If Not configJsonElement.ValueKind = Global.System.Text.Json.JsonValueKind.Undefined Then
                         Dim config As ConfigRecord =
-                            FromJson(Of ConfigRecord)(json:=configJsonElement.ToJson())
+                            FromJson(Of ConfigRecord)(json:=configJsonElement.ToJson(), DeserializationOptions:=DeserializationOptions)
                         refreshTask = Me.DoRefreshAsync(config:=configJsonElement.ToStringDictionary(),
                                                         tokenElement:=_tokenDataElement)
                     End If
@@ -434,7 +434,7 @@ Friend Class Client2
                 Try
                     Dim refreshedToken As JsonElement =
                         Await refreshTask.ConfigureAwait(continueOnCapturedContext:=False)
-                    If Not refreshedToken.IsNullOrUndefined Then
+                    If Not refreshedToken.IsEmpty Then
                         _tokenDataElement = refreshedToken
                         _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
                         WriteTokenFile(token:=_tokenDataElement)
@@ -473,7 +473,7 @@ Friend Class Client2
     '''  Sets the user element dictionary for testing purposes to allow access to UserElementDictionary.
     '''  This method is Friend to allow access from test assemblies.
     ''' </summary>
-    Friend Sub SetUserElementDictionaryForTests(value As Dictionary(Of String, Object))
+    Friend Sub SetUserElementDictionaryForTests(value As Dictionary(Of String, JsonElement))
         Me.UserElementDictionary = value
     End Sub
 
@@ -525,8 +525,10 @@ Friend Class Client2
                                          tokenElement As JsonElement) As Task(Of JsonElement)
 
         Dim tokenUrl As String = config(key:="token_url")
-        Dim tokenData As Dictionary(Of String, Object) =
-            tokenElement.FromJson(Of Dictionary(Of String, Object))()
+        'Dim tokenData As Dictionary(Of String, Object) =
+        '    tokenElement.FromJson(Of Dictionary(Of String, Object))()
+        Dim tokenData As Dictionary(Of String, JsonElement) =
+            tokenElement.FromJson(Of Dictionary(Of String, JsonElement))()
 
         ' Prepare form data
         Dim data As New List(Of KeyValuePair(Of String, String)) From {
@@ -534,10 +536,10 @@ Friend Class Client2
             New KeyValuePair(Of String, String)(key:="client_id", value:=tokenData(key:="client_id").ToString()),
             New KeyValuePair(Of String, String)(key:="grant_type", value:="refresh_token")}
 
-        Dim value As Object = Nothing
+        Dim value As JsonElement = Nothing
         ' Optional client_secret
         If tokenData.TryGetValue(key:="client_secret", value) Then
-            If Not String.IsNullOrWhiteSpace(value?.ToString()) Then
+            If value.ValueKind = JsonValueKind.String Then
                 data.Add(item:=New KeyValuePair(Of String, String)(key:="client_secret", value:=value.ToString()))
             End If
         End If
@@ -545,10 +547,9 @@ Friend Class Client2
         Using client As New HttpClient()
             value = Nothing
             If tokenData.TryGetValue(key:="mag-identifier", value) Then
-                If Not String.IsNullOrWhiteSpace(value?.ToString()) Then
+                If value.ValueKind = JsonValueKind.String Then
                     client.DefaultRequestHeaders.Add(name:="mag-identifier", value:=value.ToString())
                 End If
-
             End If
 
             Using content As New FormUrlEncodedContent(nameValueCollection:=data)
@@ -565,14 +566,14 @@ Friend Class Client2
                     Dim json As String = Await resp.Content.ReadAsStringAsync()
                     Using newData As JsonDocument = JsonDocument.Parse(json)
                         Dim root As JsonElement = newData.RootElement
-                        tokenData(key:="access_token") = root.GetProperty(propertyName:="access_token").GetString()
-                        tokenData(key:="refresh_token") = root.GetProperty(propertyName:="refresh_token").GetString()
+                        tokenData(key:="access_token") = root.GetProperty(propertyName:="access_token")
+                        tokenData(key:="refresh_token") = root.GetProperty(propertyName:="refresh_token")
                     End Using
                 End Using
             End Using
         End Using
 
-        Return tokenData.ToJson().FromJson(Of JsonElement)()
+        Return tokenData.ToJson().FromJson(Of JsonElement)(DeserializationOptions)
     End Function
 
     ''' <summary>
@@ -602,9 +603,9 @@ Friend Class Client2
             End If
         End If
 
-        Dim data As Dictionary(Of String, Object) = Nothing
+        Dim data As Dictionary(Of String, JsonElement) = Nothing
         Try
-            Dim role As String = CStr(Me.UserElementDictionary("role"))
+            Dim role As String = Me.UserElementDictionary(key:="role").ToJson
             ' Call GetDataAsync and handle typed exceptions without Await inside Catch.
             Try
                 data = Await Me.GetDataAsync(username:=GetUserName(),
@@ -630,7 +631,7 @@ Friend Class Client2
             If hadAuthException AndAlso refreshTask IsNot Nothing Then
                 Try
                     Dim refreshedToken As JsonElement = Await refreshTask
-                    If Not refreshedToken.IsNullOrUndefined Then
+                    If Not refreshedToken.IsEmpty Then
                         _tokenDataElement = refreshedToken
                         _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
                         WriteTokenFile(token:=_tokenDataElement)

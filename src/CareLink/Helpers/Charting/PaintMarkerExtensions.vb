@@ -117,53 +117,58 @@ Friend Module PaintMarkerExtensions
         End If
 
         If chartRelativePosition.IsEmpty Then
-            chartRelativePosition.X = CSng(e.ChartGraphics.GetPositionFromAxis(
-                ChartAreaName,
-                axis:=AxisName.X,
-                axisValue:=s_sgRecords(index:=0).OaDateTime))
-            chartRelativePosition.Y = CSng(e.ChartGraphics.GetPositionFromAxis(
-                ChartAreaName,
-                axis:=AxisName.Y2,
-                axisValue:=GetYMaxNativeMmolL()))
-            chartRelativePosition.Height = CSng(e.ChartGraphics.GetPositionFromAxis(
-                ChartAreaName,
-                axis:=AxisName.Y2,
-                axisValue:=CSng(e.ChartGraphics.GetPositionFromAxis(
-                    ChartAreaName,
-                    axis:=AxisName.Y2,
-                    axisValue:=GetTirHighLimit())))) - chartRelativePosition.Y
-            chartRelativePosition.Width = CSng(e.ChartGraphics.GetPositionFromAxis(
-                ChartAreaName,
-                axis:=AxisName.X,
-                axisValue:=s_sgRecords.Last.OaDateTime)) - chartRelativePosition.X
+            chartRelativePosition.X =
+                CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
+                                                         axis:=AxisName.X,
+                                                         axisValue:=s_sgRecords(index:=0).OaDateTime))
+            chartRelativePosition.Y =
+                CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
+                                                         axis:=AxisName.Y2,
+                                                         axisValue:=GetYMaxNativeMmolL()))
+            Dim axisValue As Single =
+                CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
+                                                         axis:=AxisName.Y2,
+                                                         axisValue:=GetTirHighLimit()))
+            Dim y2 As Single =
+                CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
+                                                         axis:=AxisName.Y2,
+                                                         axisValue))
+            chartRelativePosition.Height = y2 - chartRelativePosition.Y
+
+            Dim x As Single =
+                CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
+                                                         axis:=AxisName.X,
+                                                         axisValue:=s_sgRecords.Last.OaDateTime))
+            chartRelativePosition.Width = x - chartRelativePosition.X
         End If
 
-        Dim highLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(
-            ChartAreaName,
-            axis:=AxisName.Y2,
-            axisValue:=GetTirHighLimit()))
-        Dim lowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(
-            ChartAreaName,
-            axis:=AxisName.Y2,
-            axisValue:=GetTirLowLimit()))
-        Dim criticalLowLimitY As Single = CSng(e.ChartGraphics.GetPositionFromAxis(
-            ChartAreaName,
-            axis:=AxisName.Y2,
-            axisValue:=GetYMinNativeMmolL()))
+        Dim highLimitY As Single =
+            CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
+                                                     axis:=AxisName.Y2,
+                                                     axisValue:=GetTirHighLimit()))
+        Dim lowLimitY As Single =
+            CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
+                                                     axis:=AxisName.Y2,
+                                                     axisValue:=GetTirLowLimit()))
+        Dim criticalLowLimitY As Single =
+            CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
+                                                     axis:=AxisName.Y2,
+                                                     axisValue:=GetYMinNativeMmolL()))
 
-        Dim rectangle As New RectangleF(
-            chartRelativePosition.X,
-            chartRelativePosition.Y,
-            chartRelativePosition.Width,
-            height:=highLimitY - chartRelativePosition.Y)
-        Dim chartAbsoluteHighRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(rectangle)
+        Dim height As Single = highLimitY - chartRelativePosition.Y
+        Dim rectangle As New RectangleF(chartRelativePosition.X,
+                                        chartRelativePosition.Y,
+                                        chartRelativePosition.Width,
+                                        height:=height)
+        Dim chartAbsoluteHighRectangle As RectangleF =
+            e.ChartGraphics.GetAbsoluteRectangle(rectangle)
 
-        rectangle = New RectangleF(
-            chartRelativePosition.X,
-            y:=lowLimitY,
-            width:=chartRelativePosition.Width,
-            height:=criticalLowLimitY - lowLimitY)
-        Dim chartAbsoluteLowRectangle As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(rectangle)
+        rectangle = New RectangleF(chartRelativePosition.X,
+                                   y:=lowLimitY,
+                                   width:=chartRelativePosition.Width,
+                                   height:=criticalLowLimitY - lowLimitY)
+        Dim chartAbsoluteLowRectangle As RectangleF =
+            e.ChartGraphics.GetAbsoluteRectangle(rectangle)
 
         Using brush As New SolidBrush(color:=Color.FromArgb(alpha:=5, baseColor:=Color.Black))
             e.ChartGraphics.Graphics.FillRectangle(brush, rect:=chartAbsoluteHighRectangle)
@@ -171,11 +176,10 @@ Friend Module PaintMarkerExtensions
         End Using
 
         If insulinDictionary IsNot Nothing Then
-            e.PaintMarker(
-                markerImage:=s_insulinImage,
-                markerDictionary:=insulinDictionary,
-                noImageOffset:=offsetInsulinImage,
-                paintOnY2)
+            e.PaintMarker(markerImage:=s_insulinImage,
+                          markerDictionary:=insulinDictionary,
+                          noImageOffset:=offsetInsulinImage,
+                          paintOnY2)
         End If
         If mealDictionary IsNot Nothing Then
             e.PaintMarker(

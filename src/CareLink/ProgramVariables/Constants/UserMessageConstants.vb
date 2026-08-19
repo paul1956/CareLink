@@ -184,6 +184,7 @@ Friend Module UserMessageConstants
         {"870", "Recharge transmitter within 24 hours(triggeredDateTime)."}}
 
     Friend ReadOnly s_notificationMessagesFlex As New Dictionary(Of String, String) From {
+        {"1.000", "Urgent low sensor glucose(triggeredDateTime), your sensor glucose is below (sg64)."},
         {"1.050", "Unknown(triggeredDateTime) 1.050"},
         {"1.205", "No SG values (> 30 minutes)(triggeredDateTime), (alertClearType)"},
         {"2.210", "Blood glucose not accepted(triggeredDateTime). Wait at least a 15 minutes before trying again."},
@@ -194,7 +195,7 @@ Friend Module UserMessageConstants
         {"2.353", "Bolus not delivered(triggeredDateTime). (alertClearType)!"},
         {"3.221", "Sensor grace period ending soon(triggeredDateTime), you will need to change your sensor within 12 hours."},
         {"3.327", "Low reservoir(triggeredDateTime)."},
-        {"3.328", "Unknown(triggeredDateTime) 3.328"},
+        {"3.328", "Low reservoir, < 15U(triggeredDateTime)."},
         {"3.329", "Prolonged low sensor glucose?"},
         {"3.330", "Sensor glucose approaching high limit?"},
         {"3.331", "Sensor glucose approaching low limit?"},

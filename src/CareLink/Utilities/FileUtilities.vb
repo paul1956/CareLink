@@ -85,13 +85,13 @@ Friend Module FileUtilities
             Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As TokenData
 
         Dim tokenElement As JsonElement = ReadAndValidateTokenJsonElement(tokenBaseFileName)
-        If tokenElement.IsNullOrUndefined Then
+        If tokenElement.IsEmpty Then
             Return Nothing
         End If
 
         Try
             Dim json As String = tokenElement.GetRawText()
-            Return json.FromJson(Of TokenData)()
+            Return json.FromJson(Of TokenData)(DeserializationOptions)
         Catch ex As JsonException
             Debug.WriteLine(message:=$"Failed parsing token data to TokenData: {ex.Message}")
             Return Nothing
@@ -127,7 +127,7 @@ Friend Module FileUtilities
 
         Try
             Dim json As String = File.ReadAllText(path)
-            Dim tokenData As JsonElement = json.FromJson(Of JsonElement)()
+            Dim tokenData As JsonElement = json.FromJson(Of JsonElement)(DeserializationOptions)
             For Each propertyName As String In s_requiredFields
                 Dim propElem As JsonElement = Nothing
                 If Not tokenData.TryGetProperty(propertyName, value:=propElem) Then
@@ -184,7 +184,7 @@ Friend Module FileUtilities
 
         Try
             Dim json As String = File.ReadAllText(path)
-            Return json.FromJson(Of JsonElement)()
+            Return json.FromJson(Of JsonElement)(DeserializationOptions)
         Catch ex As Exception
             Debug.WriteLine(message:=$"ERROR: failed reading file {path}: {ex.Message}")
             Return Nothing

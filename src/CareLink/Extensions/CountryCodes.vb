@@ -405,10 +405,10 @@ Public Module RegionCountryLists
     ''' </returns>
     <Extension>
     Public Function GetRegionFromCode(countryCode As String) As String
-        If IsNullOrWhiteSpace(countryCode) Then
+        If IsNullOrWhiteSpace(value:=countryCode) Then
             countryCode = "US"
         End If
-        Return s_regionCountryList(GetCountryFromCode(countryCode))
+        Return s_regionCountryList(key:=GetCountryFromCode(countryCode))
     End Function
 
 End Module

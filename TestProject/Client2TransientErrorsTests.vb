@@ -31,16 +31,17 @@ Public Class Client2TransientErrorsTests
         Dim httpClient As New HttpClient(handler)
         Dim client As New Client2(serverRegion:=Region.NorthAmerica, httpClient) With {
             .Config = New Dictionary(Of String, String) From {{"baseUrlCumulus", "https://example.com"}}}
-        client.SetUserElementDictionaryForTests(New Dictionary(Of String, Object) From {{"role", "patient"}})
+        ' Wrap it in JSON string syntax (quotes) so it's valid JSON
+        client.SetUserElementDictionaryForTests(New Dictionary(Of String, JsonElement) From {{"role", "patient".ToJsonElement()}})
 
         Dim tokenJson As String = "{""access_token"":""aaa.bbb.ccc"",""refresh_token"":""r"",""client_id"":""cid"",""mag-identifier"":""m""}"
         Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(tokenJson)
         Dim tokenField As FieldInfo = client.GetType().GetField("_tokenDataElement", BindingFlags.NonPublic Or BindingFlags.Instance)
         tokenField.SetValue(client, tokenElement)
 
-        Dim accessPayload As New Dictionary(Of String, Object) From {{"exp", JsonElement.Parse("10000000000")}}
+        Dim accessPayload As New Dictionary(Of String, JsonElement) From {{"exp", JsonElement.Parse("10000000000")}}
         Dim accessField As FieldInfo = client.GetType().GetField("_accessTokenPayload", BindingFlags.NonPublic Or BindingFlags.Instance)
-        accessField.SetValue(client, CType(accessPayload, Object))
+        accessField.SetValue(client, accessPayload)
 
         Dim result As String = Nothing
         Dim ex As Exception = Nothing

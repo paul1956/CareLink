@@ -89,7 +89,7 @@ Public Class LoginDialog
         Me.PatientUserIDLabel.Visible = careLinkPartner
         Me.PatientUserIDTextBox.Visible = careLinkPartner
         If careLinkPartner AndAlso
-           IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text) Then
+           IsNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text) Then
             Me.PatientUserIDTextBox.Focus()
         End If
     End Sub

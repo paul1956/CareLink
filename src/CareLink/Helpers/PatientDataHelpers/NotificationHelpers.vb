@@ -254,65 +254,72 @@ Friend Module NotificationHelpers
     Friend Sub UpdateNotificationTabs(mainForm As Form1)
         Const rowIndex As ServerDataEnum = ServerDataEnum.notificationHistory
 
-        mainForm.TlpNotificationsCleared.SetTableName(rowIndex, isClearedNotifications:=True)
-        mainForm.TlpNotificationsCleared.Controls.Clear()
-        mainForm.TlpNotificationsCleared.RowStyles.Clear()
-        mainForm.TlpNotificationsCleared.RowCount = 0
+        Dim innerJson As List(Of Dictionary(Of String, String))
+        Dim classCollection As List(Of SummaryRecord)
+        Dim jsonDictionary As Dictionary(Of String, String)
 
-        ' Force a full garbage collection and allow background GC if enabled
-        GC.Collect(generation:=GC.MaxGeneration,
+        With mainForm.TlpNotificationsCleared
+            .SetTableName(rowIndex, isClearedNotifications:=True)
+            .Controls.Clear()
+            .RowStyles.Clear()
+            .RowCount = 0
+
+
+            ' Force a full garbage collection and allow background GC if enabled
+            GC.Collect(generation:=GC.MaxGeneration,
                    mode:=GCCollectionMode.Optimized,
                    blocking:=False,
                    compacting:=False)
 
-        Dim innerJson As List(Of Dictionary(Of String, String))
-
-        ' clearedNotifications
-        Dim json As String = s_notificationHistoryValue(key:="clearedNotifications")
-        innerJson = JsonToListOfDictionary(json)
-        Dim classCollection As List(Of SummaryRecord)
-        Dim jsonDictionary As Dictionary(Of String, String)
-        If innerJson.Count > 0 Then
-            For Each jsonDictionary In innerJson
-                classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
-                DisplayNotificationDataTableInDGV(
-                    realPanel:=mainForm.TlpNotificationsCleared,
-                    table:=ClassCollectionToDataTable(classCollection),
-                    className:=NameOf(SummaryRecord),
-                    attachHandlers:=AddressOf AttachHandlers)
-            Next
-            mainForm.TlpNotificationsCleared.HorizontalScroll.Enabled = False
-            mainForm.TlpNotificationsCleared.HorizontalScroll.Visible = False
-        Else
-            mainForm.TlpNotificationsCleared.AutoSizeMode = AutoSizeMode.GrowAndShrink
-            Dim className As String = "clearedNotifications"
-            mainForm.TlpNotificationsCleared.DgvNoRecordsFound(className)
-        End If
+            ' clearedNotifications
+            Dim json As String = s_notificationHistoryValue(key:="clearedNotifications")
+            innerJson = JsonToListOfDictionary(json)
+            If innerJson.Count > 0 Then
+                For Each jsonDictionary In innerJson
+                    ClassCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
+                    DisplayNotificationDataTableInDGV(
+                        realPanel:=mainForm.TlpNotificationsCleared,
+                        table:=ClassCollectionToDataTable(ClassCollection),
+                        className:=NameOf(SummaryRecord),
+                        attachHandlers:=AddressOf AttachHandlers)
+                Next
+                .HorizontalScroll.Enabled = False
+                .HorizontalScroll.Visible = False
+            Else
+                .AutoSizeMode = AutoSizeMode.GrowAndShrink
+                Dim className As String = "clearedNotifications"
+                .DgvNoRecordsFound(className)
+            End If
+            .AutoScroll = True
+        End With
 
         ' activeNotifications
         innerJson = JsonToListOfDictionary(json:=s_notificationHistoryValue(key:="activeNotifications"))
-        If innerJson.Count > 0 Then
-            mainForm.TlpNotificationActive.SetTableName(rowIndex, isClearedNotifications:=False)
-            If mainForm.TlpNotificationActive.Controls.Count > 1 Then
-                mainForm.TlpNotificationActive.Controls.RemoveAt(index:=1)
-                mainForm.TlpNotificationActive.RowStyles.RemoveAt(index:=1)
-                mainForm.TlpNotificationActive.RowCount = 1
+        With mainForm.TlpNotificationActive
+            If innerJson.Count > 0 Then
+                .SetTableName(rowIndex, isClearedNotifications:=False)
+                If .Controls.Count > 1 Then
+                    .Controls.RemoveAt(index:=1)
+                    If .RowStyles.Count > 1 Then
+                        .RowStyles.RemoveAt(index:=1)
+                    End If
+                    .RowCount = 1
+                End If
+                For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
+                    jsonDictionary = innerDictionary.Value
+                    classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
+                    DisplayNotificationDataTableInDGV(
+                        realPanel:=mainForm.TlpNotificationActive,
+                        table:=ClassCollectionToDataTable(classCollection),
+                        className:="ActiveNotifications",
+                        attachHandlers:=AddressOf AttachHandlers)
+                Next
+            Else
+                .AutoSizeMode = AutoSizeMode.GrowAndShrink
+                .DgvNoRecordsFound(className:="activeNotification")
             End If
-            For Each innerDictionary As IndexClass(Of Dictionary(Of String, String)) In innerJson.WithIndex()
-                jsonDictionary = innerDictionary.Value
-                classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
-                DisplayNotificationDataTableInDGV(
-                    realPanel:=mainForm.TlpNotificationActive,
-                    table:=ClassCollectionToDataTable(classCollection),
-                    className:="ActiveNotifications",
-                    attachHandlers:=AddressOf AttachHandlers)
-            Next
-        Else
-            mainForm.TlpNotificationActive.AutoSizeMode = AutoSizeMode.GrowAndShrink
-            mainForm.TlpNotificationActive.DgvNoRecordsFound(className:="activeNotification")
-        End If
-        mainForm.TlpNotificationActive.AutoScroll = True
-        mainForm.TlpNotificationsCleared.AutoScroll = True
+            .AutoScroll = True
+        End With
         Application.DoEvents()
     End Sub
 

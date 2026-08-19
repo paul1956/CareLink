@@ -134,7 +134,11 @@ Public Class SummaryRecord
 
         Me.RecordNumber = recordNumber + 1
         Me.Key = key
-        Me.Value = value
+        Dim result As Boolean
+        Me.Value = If(Boolean.TryParse(value, result),
+                      value.ToTitleCase,
+                      value)
+
         Me.Message = message
     End Sub
 

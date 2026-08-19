@@ -202,7 +202,7 @@ Friend Module LoginHelpers
                 owner.TabControlPage1.Visible = True
                 owner.TabControlPage2.Visible = True
                 CurrentDateCulture = lastDownloadFileWithPath.ExtractCulture(fixedPart, fuzzy:=True)
-                PatientDataElement = ReadJsonElementFromFile(lastDownloadFileWithPath)
+                PatientDataElement = ReadJsonElementFromFile(path:=lastDownloadFileWithPath)
                 DeserializePatientElement()
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path:=lastDownloadFileWithPath)
@@ -350,7 +350,7 @@ Friend Module LoginHelpers
     Friend Sub SetUpCareLinkUser()
         Dim path As String = GetUserSettingsPath()
         Dim json As String = File.ReadAllText(path)
-        CurrentUser = json.FromJson(Of CurrentUserRecord)()
+        CurrentUser = json.FromJson(Of CurrentUserRecord)(DeserializationOptions)
     End Sub
 
     ''' <summary>
@@ -391,7 +391,7 @@ Friend Module LoginHelpers
 
             If File.Exists(path:=userSettingsFileFullPath) Then
                 Dim element As JsonElement = ReadJsonElementFromFile(userSettingsFileFullPath)
-                If Not element.IsNullOrUndefined Then
+                If Not element.IsEmpty Then
                     CurrentUser = element.FromJson(Of CurrentUserRecord)()
                 End If
 
@@ -490,19 +490,19 @@ Friend Module LoginHelpers
     End Sub
 
     ''' <summary>
-    '''  Converts a <see cref="Dictionary(Of String, Object)"/> to a
+    '''  Converts a <see cref="Dictionary(Of String, JsonElement)"/> to a
     '''  <see cref="List(Of KeyValuePair(Of String, String))"/>.
     ''' </summary>
-    ''' <param name="dic">The <see cref="Dictionary(Of String, Object)"/> to convert.</param>
+    ''' <param name="dic">The <see cref="Dictionary(Of String, JsonElement)"/> to convert.</param>
     ''' <returns>
     '''  A list of key-value pairs where the value is converted to a <see langword="String"/>.
     ''' </returns>
     <Extension>
-    Friend Function ToDataSource(dic As Dictionary(Of String, Object)) As List(Of KeyValuePair(Of String, String))
+    Friend Function ToDataSource(dic As Dictionary(Of String, JsonElement)) As List(Of KeyValuePair(Of String, String))
         Dim dataSource As New List(Of KeyValuePair(Of String, String))
-        For Each kvp As KeyValuePair(Of String, Object) In dic
+        For Each kvp As KeyValuePair(Of String, JsonElement) In dic
             Dim item As KeyValuePair(Of String, String) =
-                KeyValuePair.Create(kvp.Key, value:=CType(kvp.Value, String))
+                KeyValuePair.Create(kvp.Key, value:=kvp.Value.ToString)
             dataSource.Add(item)
         Next
         Return dataSource

@@ -334,4 +334,49 @@
   <data name="GridLight" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\GridLight.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="FlexActiveInsulinReset" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\FlexActiveInsulinReset.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FlexBattery1-10Hours" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\FlexBattery1-10Hours.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FlexBatteryDeplated" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\FlexBatteryDeplated.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FlexBatteryLessThen1Hour" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\FlexBatteryLessThen1Hour.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FlexBatteryUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\FlexBatteryUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FlexlBatterFully" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\FlexlBatterFully.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FlexPump" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\FlexPump.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FlexSmartGuardShield" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\FlexSmartGuardShield.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="FlexSmartGuardSuspended" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\FlexSmartGuardSuspended.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="InfusionLife12-24Hours" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\InfusionLife12-24Hours.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="InfusionLifeExpired" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\InfusionLifeExpired.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="InfusionLifeOver24Hours" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\InfusionLifeOver24Hours.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="InfusionLifeUnder12Hours" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\InfusionLifeUnder12Hours.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="InfusionLifeUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\InfusionLifeUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="InfusionNotsetup" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\InfusionNotsetup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

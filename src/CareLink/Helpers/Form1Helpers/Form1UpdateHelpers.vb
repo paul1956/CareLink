@@ -115,22 +115,20 @@ Friend Module Form1UpdateHelpers
     ''' <param name="json">The JSON string to convert.</param>
     ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
     Private Function ToListOfSgs(json As String) As List(Of SG)
-        Dim jsonList As List(Of Dictionary(Of String, Object)) =
-            json.FromJson(Of List(Of Dictionary(Of String, Object)))()
+        Dim jsonList As List(Of Dictionary(Of String, JsonElement)) =
+            json.FromJson(Of List(Of Dictionary(Of String, JsonElement)))(DeserializationOptions)
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
-        For Each e As IndexClass(Of Dictionary(Of String, Object)) In jsonList.WithIndex
+        For Each e As IndexClass(Of Dictionary(Of String, JsonElement)) In jsonList.WithIndex
             Dim resultDictionary As New Dictionary(Of String, String)(comparer)
-            For Each item As KeyValuePair(Of String, Object) In e.Value
-                If item.Value Is Nothing Then
-                    resultDictionary.Add(item.Key, value:=Nothing)
-                ElseIf item.Key = "sg" Then
+            For Each item As KeyValuePair(Of String, JsonElement) In e.Value
+                If item.Key = "sg" Then
                     resultDictionary.Add(item.Key, value:=item.ScaleSg)
                 Else
                     resultDictionary.Add(item.Key, value:=item.DeserializeJsonAsString)
                 End If
             Next
-            resultDictionaryArray.Add(resultDictionary)
+            resultDictionaryArray.Add(item:=resultDictionary)
         Next
         Return resultDictionaryArray.ToSgList()
     End Function
@@ -282,16 +280,18 @@ Friend Module Form1UpdateHelpers
     ''' <param name="listOfSummaryRecords">
     '''  The list to which summary records are added.
     ''' </param>
+    ''' <param name="isTitle"></param>
     Friend Sub HandleComplexItems(kvp As KeyValuePair(Of String, String),
                                   recordNumber As Single,
                                   key As String,
-                                  listOfSummaryRecords As List(Of SummaryRecord))
+                                  listOfSummaryRecords As List(Of SummaryRecord),
+                                  isTitle As Boolean)
 
         ' First try to parse the value as JSON object and enumerate properties.
         If IsNotNullOrWhiteSpace(kvp.Value) Then
             Try
-                Dim elem As JsonElement = kvp.Value.FromJson(Of JsonElement)()
-                If Not elem.IsNullOrUndefined AndAlso elem.ValueKind = JsonValueKind.Object Then
+                Dim elem As JsonElement = kvp.Value.FromJson(Of JsonElement)(DeserializationOptions)
+                If Not elem.IsEmpty AndAlso elem.ValueKind = JsonValueKind.Object Then
                     Dim idx As Integer = 0
                     For Each prop As JsonProperty In elem.EnumerateObject()
                         Dim childKey As String = prop.Name
@@ -308,15 +308,21 @@ Friend Module Form1UpdateHelpers
                                          result.ToShortDateTime(showSeconds:=False),
                                          String.Empty)
                         End If
+                        Dim value As String = If(isTitle,
+                                                 childValue?.Trim.ToTitle,
+                                                 childValue)
+
                         Dim item As New SummaryRecord(
                                 recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
                                 key:=$"{key}:{childKey.Trim}",
-                                value:=childValue?.Trim.ToTitle,
+                                value,
                                 message)
                         listOfSummaryRecords.Add(item)
                         idx += 1
                     Next
                     Return
+                Else
+                    Stop
                 End If
             Catch ex As JsonException
                 ' Not JSON or malformed; fall through to legacy parsing.
@@ -400,7 +406,7 @@ Friend Module Form1UpdateHelpers
         End If
 
         If RecentData.TryGetValue(key:="therapyAlgorithmState", value) Then
-            s_therapyAlgorithmStateValue = DeserializeJsonAsDictionary(json:=value)
+            s_therapyAlgorithmStateValue = value.JsonToDictionary
             Dim key As String = NameOf(TherapyAlgorithmState.AutoModeShieldState)
             Dim basalTypes As IEnumerable(Of String) = {"AUTO_BASAL", "SAFE_BASAL"}
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso
@@ -484,11 +490,11 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataEnum.medicalDeviceInformation)
-                    HandleComplexItems(
-                        kvp,
-                        recordNumber,
-                        key:="medicalDeviceInformation",
-                        listOfSummaryRecords:=s_listOfSummaryRecords)
+                    HandleComplexItems(kvp,
+                                       recordNumber,
+                                       key:="medicalDeviceInformation",
+                                       listOfSummaryRecords:=s_listOfSummaryRecords,
+                                       isTitle:=False)
                     Dim deviceSerialNumber As String = PatientData.MedicalDeviceInformation.DeviceSerialNumber
                     mainForm.SerialNumberButton.Text = $"{deviceSerialNumber} Details..."
 
@@ -504,11 +510,11 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataEnum.cgmInfo)
-                    HandleComplexItems(
-                        kvp,
-                        recordNumber,
-                        key:="cgmInfo",
-                        listOfSummaryRecords:=s_listOfSummaryRecords)
+                    HandleComplexItems(kvp,
+                                       recordNumber,
+                                       key:="cgmInfo",
+                                       listOfSummaryRecords:=s_listOfSummaryRecords,
+                                       isTitle:=False)
 
                 Case NameOf(ServerDataEnum.calFreeSensor)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -696,14 +702,13 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataEnum.lastAlarm)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
-                    s_lastAlarmValue = DeserializeJsonAsDictionary(json:=kvp.Value)
+                    s_lastAlarmValue = kvp.Value.JsonToDictionary()
 
                 Case NameOf(ServerDataEnum.activeInsulin)
                     s_activeInsulin = PatientData.ActiveInsulin
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     If True Then
-
 
                     End If
 
@@ -777,11 +782,10 @@ Friend Module Form1UpdateHelpers
                         recordNumber:=CSng(c.Index + 0.1),
                         key:="activeNotification")
                     s_listOfSummaryRecords.Add(item)
-                    item = New SummaryRecord(
-                        recordNumber:=CSng(c.Index + 0.2),
-                        key:="clearedNotifications")
+                    item = New SummaryRecord(recordNumber:=CSng(c.Index + 0.2),
+                                             key:="clearedNotifications")
                     s_listOfSummaryRecords.Add(item)
-                    s_notificationHistoryValue = DeserializeJsonAsDictionary(json:=kvp.Value)
+                    s_notificationHistoryValue = kvp.Value.JsonToDictionary()
 
                 Case NameOf(ServerDataEnum.reservoirIconSelection)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -799,7 +803,6 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataEnum.sensorLifeText)
                     message = $"Sensor life: {kvp.Value}"
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
-
 
                 Case NameOf(ServerDataEnum.sensorLifeIcon)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))

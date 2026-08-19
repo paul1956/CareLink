@@ -138,7 +138,8 @@ Friend Module Form1CollectMarkersHelper
                     s_bgReadingMarkers.Add(item:=item3)
                 Case "CALIBRATION"
                     s_markers.Add(item:=item.ScaleMarker)
-                    Dim item4 As New Calibration(item:=item.ScaleMarker(), recordNumber:=s_calibrationMarkers.Count + 1)
+                    Dim item4 As New Calibration(item:=item.ScaleMarker(),
+                                                 recordNumber:=s_calibrationMarkers.Count + 1)
                     s_calibrationMarkers.Add(item:=item4)
                 Case "INSULIN"
                     s_markers.Add(item)
