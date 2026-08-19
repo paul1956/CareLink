@@ -3,7 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Globalization
-Imports System.Text.RegularExpressions
 
 ''' <summary>
 '''  Provides helper methods for displaying and managing notification data
@@ -265,7 +264,6 @@ Friend Module NotificationHelpers
             .Controls.Clear()
             .RowStyles.Clear()
             .RowCount = 0
-
 
             ' Force a full garbage collection and allow background GC if enabled
             GC.Collect(generation:=GC.MaxGeneration,

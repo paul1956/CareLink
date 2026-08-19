@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Module Regions
+
     Public Enum Region As Integer
         NorthAmerica
         Europe

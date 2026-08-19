@@ -4,7 +4,6 @@
 
 Imports System.Text.Json
 Imports System.Text.Json.Nodes
-Imports System.Windows.Forms
 
 Public Class RawDataViewerDialog
 

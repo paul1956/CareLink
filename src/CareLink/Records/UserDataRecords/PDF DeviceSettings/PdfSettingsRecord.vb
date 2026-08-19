@@ -30,6 +30,7 @@ Public Class PdfSettingsRecord
     Private Const SensorCustimerEndReminder As String = "Custom Sensor End Reminder setting"
     Private Const SmartGuardHeader As String = "SmartGuard"
     Private Const UtilitiesHeader As String = "Block Mode"
+
     ''' <summary>
     '''  Initializes a new instance of the <see cref="PdfSettingsRecord"/> class
     '''  by extracting data from the specified PDF file.

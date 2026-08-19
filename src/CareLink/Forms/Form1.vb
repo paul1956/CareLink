@@ -41,7 +41,7 @@ Public Class Form1
     Private Shared Property TimeInTightRange As (Uint As UInteger, Str As String)
 
     ''' <summary>
-    '''  Store the Client locally to prevent the LoginDialog from popin up. 
+    '''  Store the Client locally to prevent the LoginDialog from popin up.
     ''' </summary>
     ''' <returns> </returns>
     Friend Shared Property Client As Client2

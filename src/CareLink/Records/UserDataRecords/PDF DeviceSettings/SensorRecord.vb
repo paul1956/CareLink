@@ -16,6 +16,7 @@ Public Class SensorRecord
     Public Property CalibrationReminderTime As String = "Off"
     Public Property SensorOn As String = "Off"
     Public Property SensorEnding As New SensorEndingRecord
+
     Public Sub UpdateCalibrationReminder(sTable As StringTable)
         ArgumentNullException.ThrowIfNull(sTable)
         If sTable.IsValid Then

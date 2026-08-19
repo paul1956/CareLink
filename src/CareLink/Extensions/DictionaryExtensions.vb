@@ -5,7 +5,6 @@
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports System.Text
-Imports System.Text.Json
 
 Public Module DictionaryExtensions
 

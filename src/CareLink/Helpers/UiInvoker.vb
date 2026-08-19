@@ -3,9 +3,9 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
-Imports DocumentFormat.OpenXml.Office2016.Drawing.Charts
 
 Friend Module UiInvoker
+
     <Extension>
     Friend Sub UpdateDgvCellSafe(dgv As DataGridView, text As String)
         Try

@@ -2,7 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Text.Json
 Imports Microsoft.Web.WebView2.Core
 
 Public Class OAuthBrowserForm
@@ -94,7 +93,6 @@ Public Class OAuthBrowserForm
     Private Async Sub OAuthBrowserForm_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Await Me.InitializeAsync()
     End Sub
-
 
     Private Async Function SetFieldAsync(selector As String, value As String) As Task
         Dim javaScript As String =

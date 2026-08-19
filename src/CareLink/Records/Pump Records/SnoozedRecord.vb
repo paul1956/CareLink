@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class SnoozedRecord
+
     <JsonPropertyName("by")>
     Public Property By As String
 
@@ -13,6 +14,5 @@ Public Class SnoozedRecord
 
     <JsonPropertyName("duration")>
     Public Property Duration As Integer
-
 
 End Class

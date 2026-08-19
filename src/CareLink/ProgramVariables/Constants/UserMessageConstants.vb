@@ -207,7 +207,6 @@ Friend Module UserMessageConstants
         {"4.600", "Lost pump communications at(triggeredDateTime). (alertClearType)!."}
         }
 
-
     Friend ReadOnly s_plgmLgsMessages As New Dictionary(Of String, String) From {
         {"FEATURE_OFF", "Feature Off"},
         {"MONITORING", "Monitoring"},

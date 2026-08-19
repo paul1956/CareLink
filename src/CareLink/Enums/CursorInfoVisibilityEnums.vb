@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Module CursorInfoVisibilityEnums
+
     Public Enum CursorInfoVisibility As Integer
         None = 0
         Show1 = &B1

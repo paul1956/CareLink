@@ -402,6 +402,7 @@ Friend Module DateTimeExtensions
         Return $"{dateValue:d} {dateValue.ToString(format:=timeFormat)}"
 
     End Function
+
     ''' <summary>
     '''  Converts a <see cref="Date"/> to a <see langword="String"/>
     '''  with the specified format.

@@ -54,18 +54,18 @@ Public Class ControlExtensionsTests
 
             ' Center in middle
             c.CenterXOnParent()
-            c.Left.Should().Be((parent.Width - c.Width) \ 2)
+            c.Left.Should().Be(expected:=(parent.Width - c.Width) \ 2)
 
             ' Center on left half
             c.CenterXOnParent(onLeftHalf:=True)
             Dim expectedLeftLeftHalf As Integer = Math.Max(0, ((parent.Width \ 2) - c.Width) \ 2)
-            c.Left.Should().Be(expectedLeftLeftHalf)
+            c.Left.Should().Be(expected:=expectedLeftLeftHalf)
 
             ' Center on right half
             c.CenterXOnParent(onLeftHalf:=False)
             Dim halfWidth As Integer = parent.Width \ 2
             Dim expectedRight As Integer = Math.Max(0, halfWidth + ((halfWidth - c.Width) \ 2))
-            c.Left.Should().Be(expectedRight)
+            c.Left.Should().Be(expected:=expectedRight)
         End Using
     End Sub
 

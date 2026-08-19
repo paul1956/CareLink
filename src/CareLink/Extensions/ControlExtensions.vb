@@ -5,6 +5,7 @@
 Imports System.Runtime.CompilerServices
 
 Public Module ControlExtensions
+
     ''' <summary>
     '''  Sets the visibility of a control to the specified value.
     '''  If the control is <see langword="Nothing"/>, the method returns.
@@ -299,4 +300,5 @@ Public Module ControlExtensions
         End If
         lbl.Font = newFont
     End Sub
+
 End Module

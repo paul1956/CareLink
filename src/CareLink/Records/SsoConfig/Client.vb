@@ -21,6 +21,4 @@ Public Class Client
     <JsonPropertyName("audience")>
     Public Property Audience As String
 
-
-
 End Class
