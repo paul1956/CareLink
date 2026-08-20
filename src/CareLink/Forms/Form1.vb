@@ -468,6 +468,7 @@ Public Class Form1
         Me.CursorMessage2Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Mask2) <> 0)
         Me.CursorMessage3Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Mask3) <> 0)
         Me.CursorMessage4Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Mask4) <> 0)
+        Me.FlexInfustionSetPictureBox.SetControlVisibility(visible:=showWhat = CursorInfoVisibility.None)
     End Sub
 
 #Region "Post Paint Events"
@@ -2479,6 +2480,11 @@ Public Class Form1
         Me.ToolTip1.SetToolTip(control:=Me.TirComplianceLabel, caption:=CheckComplianceValues)
         Me.ToolTip1.SetToolTip(control:=Me.LowTirComplianceLabel, caption:=TirToolTip)
         Me.ToolTip1.SetToolTip(control:=Me.HighTirComplianceLabel, caption:=TirToolTip)
+
+        Me.ToolTip2.AutoPopDelay = 5000   ' Tooltip stays visible for 5 seconds
+        Me.ToolTip2.InitialDelay = 500    ' Delay before showing tooltip
+        Me.ToolTip2.ReshowDelay = 200     ' Delay before re-showing tooltip
+        Me.ToolTip2.ShowAlways = False    ' Show only if form is active
 
         Me.SetDgvCustomHeadersVisualStyles()
 
@@ -5474,6 +5480,7 @@ Public Class Form1
         Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()
         Me.UpdateInsulinLevel()
+        Me.UpdateInfusionImage()
         Me.UpdatePumpBattery()
         Me.UpdateSensorLife()
         ThreadSafeForm1SensorDataUpdate()
@@ -5551,6 +5558,34 @@ Public Class Form1
             CancelSpeechRecognition()
         End If
         Application.DoEvents()
+    End Sub
+
+    Private Sub UpdateInfusionImage()
+        Dim baseImage As Bitmap = My.Resources.FlexPump
+        Dim overlayImage As Bitmap
+        Dim infusionRemainingDuration As Integer = PatientData.InfusionRemainingDuration
+        ' Assign tooltip text to PictureBox
+        Dim caption As String =
+            $"{infusionRemainingDuration.MinutesToDaysHoursMinutes()} left"
+        Me.ToolTip2.SetToolTip(control:=Me.FlexInfustionSetPictureBox, caption)
+
+        Select Case infusionRemainingDuration \ 60
+            Case > 24
+                overlayImage = My.Resources.InfusionLifeOver24Hours
+                OverlayTransparentImages(baseImage, overlayImage)
+            Case > 12
+                overlayImage = My.Resources.InfusionLife12_24Hours
+                OverlayTransparentImages(baseImage, overlayImage)
+            Case > 0
+                overlayImage = My.Resources.InfusionLifeUnder12Hours
+                OverlayTransparentImages(baseImage, overlayImage)
+            Case = 0
+                overlayImage = My.Resources.InfusionLifeExpired
+                OverlayTransparentImages(baseImage, overlayImage)
+            Case Else
+                overlayImage = My.Resources.InfusionLifeUnknown
+                OverlayTransparentImages(baseImage, overlayImage)
+        End Select
     End Sub
 
 #End Region ' Update Home Tab

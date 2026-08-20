@@ -250,6 +250,7 @@ Partial Class Form1
         TimeChangeLabel = New Label()
         TimeInTightRangeLabel = New Label()
         ToolTip1 = New ToolTip(components)
+        ToolTip2 = New ToolTip(components)
         FlexInfustionSetPictureBox = New PictureBox()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
@@ -1573,6 +1574,7 @@ Partial Class Form1
         SerialNumberButton.TabIndex = 56
         SerialNumberButton.Text = "Serial Number Details..."
         ToolTip1.SetToolTip(SerialNumberButton, "Click for details")
+        ToolTip2.SetToolTip(FlexInfustionSetPictureBox, "")
         ' 
         ' ServerUpdateTimer
         ' 
@@ -3359,6 +3361,7 @@ Partial Class Form1
     Friend WithEvents ToolStripSeparator7 As ToolStripSeparator
     Friend WithEvents ToolStripSeparator8 As ToolStripSeparator
     Friend WithEvents ToolTip1 As ToolTip
+    Friend WithEvents ToolTip2 As ToolTip
     Friend WithEvents TransmitterBatteryPercentLabel As Label
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents TrendArrowsLabel As Label

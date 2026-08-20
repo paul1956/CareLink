@@ -881,7 +881,7 @@ Friend Module Form1UpdateHelpers
                     Select Case typeValue
                         Case "TEMP_TARGET"
                             Dim minutes As Integer = bannerStateRecord1.TimeRemaining
-                            .PumpBannerStateLabel.BackColor = Color.FromArgb(red:=44, green:=90, blue:=247)
+                            .PumpBannerStateLabel.BackColor = Color.FromArgb(44, 90, 247)
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
                             Dim target150 As String = If(NativeMmolL, "8.3", "150")
                             .PumpBannerStateLabel.Text = $"Temp Target {minutes.ToHoursMinutes} hr"
