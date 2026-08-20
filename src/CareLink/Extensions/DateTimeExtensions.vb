@@ -312,28 +312,36 @@ Friend Module DateTimeExtensions
         Dim hrs As Integer = hours Mod 24
 
         Dim parts As New List(Of String)
+        Dim item As String
         If days > 0 Then
-            parts.Add($"{days} {If(days = 1, "day", "days")}")
+            item = $"{days} {If(days = 1, "day", "days")}"
+            parts.Add(item)
         End If
         If hrs > 0 Then
-            parts.Add($"{hrs} {If(hrs = 1, "hr", "hrs")}")
+            item = $"{hrs} {If(hrs = 1, "hr", "hrs")}"
+            parts.Add(item)
         End If
 
         If parts.Count = 0 Then
             ' This should not happen because hours > 0, but handle defensively
             Return "0 hrs"
         ElseIf parts.Count = 1 Then
-            Return parts(0)
+            Return parts(index:=0)
         Else
-            Return $"{parts(0)} and {parts(1)}"
+            Return $"{parts(index:=0)} and {parts(index:=1)}"
         End If
     End Function
 
     <Extension>
     Public Function ToHoursMinutes(minutes As Integer) As String
-        Return New TimeSpan(hours:=0,
-                            minutes:=minutes \ 60,
-                            seconds:=minutes Mod 60).ToString.Substring(startIndex:=4)
+        Dim timeSpan As New TimeSpan(hours:=minutes \ 60,
+                                     minutes:=minutes Mod 60,
+                                     seconds:=0)
+        Dim result As String = timeSpan.ToString.Substring(startIndex:=0, length:=5)
+        If result.StartsWith(value:="0"c) Then
+            result = $" {result.Substring(startIndex:=1)}"
+        End If
+        Return result
     End Function
 
     ''' <summary>

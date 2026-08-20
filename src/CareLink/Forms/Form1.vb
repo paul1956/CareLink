@@ -4981,32 +4981,57 @@ Public Class Form1
     ''' </remarks>
     Private Sub UpdatePumpBattery()
         If Not PatientData.ConduitInRange Then
-            Me.PumpBatteryPictureBox.Image = My.Resources.PumpConnectivityToPhoneNotOK
+            Me.PumpBatteryPictureBox.Image =
+                If(IsFlex(),
+                   My.Resources.FlexBatteryUnknown,
+                   My.Resources.PumpConnectivityToPhoneNotOK)
+
             Me.PumpBatteryRemainingLabel.Text = "Pump out"
             Me.PumpBatteryRemaining2Label.Text = "of range"
             Exit Sub
         End If
 
-        Dim batteryLeftPercent As Integer = PatientData.PumpBatteryLevelPercent
-        Me.PumpBatteryRemaining2Label.Text = $"{Math.Abs(batteryLeftPercent)}%"
-        Select Case batteryLeftPercent
-            Case > 90
-                Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryFull
-                Me.PumpBatteryRemainingLabel.Text = "Full"
-            Case > 50
-                Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryHigh
-                Me.PumpBatteryRemainingLabel.Text = "High"
-            Case > 25
-                Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryMedium
-                Me.PumpBatteryRemainingLabel.Text = $"Medium"
-            Case > 10
-                Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryLow
-                Me.PumpBatteryRemainingLabel.Text = "Low"
+        If IsFlex() Then
+            Dim hours As Integer = PatientData.PumpBatteryLevelTime \ 60
+            Dim tsp As New TimeSpanParts(hours, shortHr:=True)
 
-            Case Else
-                Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryCritical
-                Me.PumpBatteryRemainingLabel.Text = "Critical"
-        End Select
+            Me.PumpBatteryRemainingLabel.Text = tsp.DayPart
+            Me.PumpBatteryRemaining2Label.Text = tsp.HourPart
+            Dim minutes As Double = hours Mod 60
+            Select Case True
+                Case hours > 24
+                    Me.PumpBatteryPictureBox.Image = My.Resources.FlexBatteryFull
+                Case hours > 1
+                    Me.PumpBatteryPictureBox.Image = My.Resources.FlexBattery1_10Hours
+                Case minutes > 1
+                    Me.PumpBatteryPictureBox.Image = My.Resources.FlexBatteryLessThen1Hour
+                Case minutes > 0
+                    Me.PumpBatteryPictureBox.Image = My.Resources.FlexBatteryLessThen1Hour
+                Case Else
+                    Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryCritical
+            End Select
+        Else
+            Dim batteryLeftPercent As Integer
+            Me.PumpBatteryRemaining2Label.Text = $"{Math.Abs(value:=batteryLeftPercent)}%"
+            Select Case PatientData.PumpBatteryLevelPercent
+                Case > 90
+                    Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryFull
+                    Me.PumpBatteryRemainingLabel.Text = "Full"
+                Case > 50
+                    Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryHigh
+                    Me.PumpBatteryRemainingLabel.Text = "High"
+                Case > 25
+                    Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryMedium
+                    Me.PumpBatteryRemainingLabel.Text = $"Medium"
+                Case > 10
+                    Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryLow
+                    Me.PumpBatteryRemainingLabel.Text = "Low"
+
+                Case Else
+                    Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryCritical
+                    Me.PumpBatteryRemainingLabel.Text = "Critical"
+            End Select
+        End If
     End Sub
 
     ''' <summary>
@@ -5114,6 +5139,7 @@ Public Class Form1
                     Me.SensorTimeLeftPictureBox.Image = If(PatientData.SensorDurationHours > 24,
                                                            My.Resources.SensorLifeOK,
                                                            My.Resources.SensorLifeNotOK)
+
                     Me.SensorDaysLeftLabel.Text = PatientData.SensorDurationHours.HoursToDaysAndHours(shortHr:=False)
                     Me.SensorTimeLeftLabel.Text = "Unknown"
             End Select

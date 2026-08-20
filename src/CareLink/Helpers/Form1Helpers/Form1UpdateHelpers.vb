@@ -881,10 +881,10 @@ Friend Module Form1UpdateHelpers
                     Select Case typeValue
                         Case "TEMP_TARGET"
                             Dim minutes As Integer = bannerStateRecord1.TimeRemaining
-                            .PumpBannerStateLabel.BackColor = Color.Lime
+                            .PumpBannerStateLabel.BackColor = Color.FromArgb(red:=44, green:=90, blue:=247)
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
                             Dim target150 As String = If(NativeMmolL, "8.3", "150")
-                            .PumpBannerStateLabel.Text = $"Target {target150} {minutes.ToHoursMinutes}/hr"
+                            .PumpBannerStateLabel.Text = $"Temp Target {minutes.ToHoursMinutes} hr"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Top
                         Case "BG_REQUIRED"
