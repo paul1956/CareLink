@@ -25,17 +25,26 @@ Friend Module Form1TransmitterBatteryHelper
                 Form1.TransmitterBatteryPictureBox.Image = GetBatteryImage(PatientData.GstBatteryLevel)
                 Form1.TransmitterBatteryPercentLabel.Text = $"{PatientData.GstBatteryLevel}%"
             Else
-                If PatientData.CgmInfo.SensorProductModel?.TrimEnd = "MMT-5120" Then
-                    Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToSimpleraOK
-                    Form1.TransmitterBatteryPercentLabel.Text = $"Simplera{vbCrLf}Connected"
-                ElseIf PatientData.CgmInfo.SensorProductModel?.TrimEnd = "MMT-1894" Then
-                    Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToInstinctOK
-                    Form1.TransmitterBatteryPercentLabel.Text = $"Instinct{vbCrLf}Connected"
-                Else
-                    ' default for Disposible sensor
-                    Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToSimpleraOK
-                    Form1.TransmitterBatteryPercentLabel.Text = $"Simplera{vbCrLf}Connected"
-                End If
+                Select Case $"{PatientData.CgmInfo?.SensorProductModel}".TrimEnd
+                    Case "MMT-5120"
+                        Form1.TransmitterBatteryPictureBox.Image =
+                            My.Resources.PumpConnectivityToSimpleraOK
+                        Form1.TransmitterBatteryPercentLabel.Text =
+                            $"Simplera{vbCrLf}Connected"
+
+                    Case "MMT-1894"
+                        Form1.TransmitterBatteryPictureBox.Image =
+                            My.Resources.PumpConnectivityToInstinctOK
+                        Form1.TransmitterBatteryPercentLabel.Text =
+                            $"Instinct{vbCrLf}Connected"
+
+                    Case Else
+                        ' default for Disposible sensor
+                        Form1.TransmitterBatteryPictureBox.Image =
+                            My.Resources.PumpConnectivityToSimpleraOK
+                        Form1.TransmitterBatteryPercentLabel.Text =
+                            $"Simplera{vbCrLf}Connected"
+                End Select
             End If
         Else
             Form1.TransmitterBatteryPictureBox.Image = My.Resources.PumpConnectivityToTransmitterNotOK
