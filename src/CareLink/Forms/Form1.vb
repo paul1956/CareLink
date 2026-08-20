@@ -4670,15 +4670,20 @@ Public Class Form1
 
             If InAutoMode Then
                 Select Case PatientData.SensorState
-                    Case "CALIBRATING"
-                        Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
                     Case "CALIBRATION_REQUIRED"
-                        Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield_Disabled
-                    Case "NO_ERROR_MESSAGE"
-                        Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
+                        Me.SmartGuardShieldPictureBox.Image =
+                            If(IsFlex(),
+                               My.Resources.FlexSmartGuardShield,
+                               My.Resources.Shield_Disabled)
+                    Case "NO_ERROR_MESSAGE", "CALIBRATING"
+                        Me.SmartGuardShieldPictureBox.Image =
+                            If(IsFlex(),
+                               My.Resources.FlexSmartGuardShield,
+                               My.Resources.Shield)
                     Case "WARM_UP"
                         Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield_Disabled
                     Case "UNKNOWN"
+                        Me.SmartGuardShieldPictureBox.Image = My.Resources.FlexActiveInsulinReset
                     Case Else
                         Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
                 End Select
