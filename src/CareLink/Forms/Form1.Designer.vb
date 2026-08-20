@@ -1460,6 +1460,7 @@ Partial Class Form1
         PumpBatteryPictureBox.Location = New Point(127, 0)
         PumpBatteryPictureBox.Name = "PumpBatteryPictureBox"
         PumpBatteryPictureBox.Size = New Size(74, 84)
+        PumpBatteryPictureBox.SizeMode = PictureBoxSizeMode.CenterImage
         PumpBatteryPictureBox.TabIndex = 43
         PumpBatteryPictureBox.TabStop = False
         ' 
