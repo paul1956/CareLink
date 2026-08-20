@@ -3718,6 +3718,9 @@ Public Class Form1
                 If Client Is Nothing OrElse IsNotNullOrEmpty(value:=lastErrorMessage) Then
                     Do
                         LoginDialog.LoginSourceAutomatic = FileToLoadOptions.Login
+                        If LoginDialog.Visible Then
+                            LoginDialog.Visible = False
+                        End If
                         Dim result As DialogResult = Await LoginDialog.ShowDialogAsync(owner:=Me)
                         Select Case result
                             Case DialogResult.OK

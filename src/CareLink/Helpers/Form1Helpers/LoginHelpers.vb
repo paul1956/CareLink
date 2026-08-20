@@ -98,6 +98,9 @@ Friend Module LoginHelpers
                 owner.Text = SavedTitle
                 Do While True
                     LoginDialog.LoginSourceAutomatic = fileToLoad
+                    If LoginDialog.Visible Then
+                        LoginDialog.Visible = False
+                    End If
                     Application.DoEvents()
                     Dim result As DialogResult = Await LoginDialog.ShowDialogAsync(owner)
                     Select Case result

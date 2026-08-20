@@ -537,6 +537,9 @@ Public Class LoginDialog
             ownerForm.Enabled = False
         End If
 
+        If Me.Visible Then
+            Me.Visible = False
+        End If
         ' Show modelessly with owner so dialog is positioned properly
         Me.Show(owner)
 
