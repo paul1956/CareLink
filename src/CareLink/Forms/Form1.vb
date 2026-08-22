@@ -285,6 +285,7 @@ Public Class Form1
                 .Visible = False
             End If
         End With
+        Me.InfusionSetDataRestore()
     End Sub
 
     ''' <summary>
@@ -298,9 +299,9 @@ Public Class Form1
     ''' <param name="sender">The source of the event, a <see cref="Chart"/> control.</param>
     ''' <param name="e">A <see cref="MouseEventArgs"/> that contains the event data.</param>
     Private Sub Chart_MouseMove(sender As Object, e As MouseEventArgs) Handles _
-        ActiveInsulinChart.MouseMove,
-        SummaryChart.MouseMove,
-        TreatmentMarkersChart.MouseMove
+                    ActiveInsulinChart.MouseMove,
+                    SummaryChart.MouseMove,
+                    TreatmentMarkersChart.MouseMove
 
         If Not ProgramInitialized Then
             Exit Sub
@@ -308,8 +309,7 @@ Public Class Form1
         If e.Button <> MouseButtons.None OrElse
            e.Clicks > 0 OrElse
            e.Location = _previousLoc Then
-            Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Hide1)
-            Return
+            Exit Sub
         End If
         _inMouseMove = True
         _previousLoc = e.Location
@@ -323,7 +323,7 @@ Public Class Form1
         End Try
         If Double.IsNaN(yInPixels) Then
             _inMouseMove = False
-            Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Hide1)
+            Me.ShowCursorControls(showWhat:=CursorInfo.Hide1)
             Exit Sub
         End If
         Dim result As HitTestResult
@@ -342,10 +342,10 @@ Public Class Form1
                 Exit Sub
             End If
 
-            Dim showWhat As CursorInfoVisibility = CursorInfoVisibility.Hide1
+            Dim showWhat As CursorInfo = CursorInfo.Hide1
             Select Case result.Series.Name
                 Case HighLimitSeriesName, HighTiTRSeriesName, LowLimitSeriesName, TargetSgSeriesName
-                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Hide1)
+                    Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showPictureBox:=False)
                 Case MarkerSeriesName, BasalSeriesName
                     Dim markerTags As List(Of String) =
                         currentDataPoint.Tag.
@@ -358,28 +358,29 @@ Public Class Form1
                                 chart1.FindAnnotation(lastDataPoint:=currentDataPoint)
                             callout.BringToFront()
                         Else
-                            Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show1)
+                            Me.ShowCursorControls(showWhat:=CursorInfo.Show1, showPictureBox:=False)
                         End If
                         Exit Sub
                     End If
-                    markerTags(index:=0) = markerTags(index:=0).Trim
+
+                    Dim markerTag0 As String = markerTags(index:=0).Trim
                     If isHomePage Then
                         Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
                         SetFontIfChanged(lbl:=Me.CursorMessage2Label, newFont:=s_font12Bold)
                         Select Case markerTags.Count
                             Case 2
-                                Dim amountStr As String =
-                                    markerTags(index:=1).TrimEnd.TrimEnd(trimChar:="U"c)
-                                showWhat = CursorInfoVisibility.Show3
-                                If CDbl(amountStr).AlmostZero Then
+                                Dim trimChars As Char() = {" "c, "U"c}
+                                Dim markerTag1 As String = markerTags(index:=1).TrimEnd(trimChars)
+                                showWhat = CursorInfo.Show3
+                                If CDbl(markerTag1).AlmostZero Then
                                     Me.CursorMessage1Label.Text = "Calibration"
                                     Me.CursorMessage2Label.Text = "Only"
                                     Me.InfusionSetUpdate(image:=My.Resources.CalibrationDotRed,
                                                          IsInfusionSet:=False)
                                 Else
-                                    Me.CursorMessage1Label.Text = markerTags(index:=0)
-                                    Me.CursorMessage2Label.Text = amountStr
-                                    Select Case markerTags(index:=0)
+                                    Me.CursorMessage1Label.Text = markerTag0
+                                    Me.CursorMessage2Label.Text = markerTag1
+                                    Select Case markerTag0
                                         Case "Auto Correction",
                                              "Auto Basal",
                                              "Manual Basal",
@@ -396,6 +397,7 @@ Public Class Form1
                                         Case Else
                                             Stop
                                             Me.InfusionSetDataRestore()
+                                            Return
                                     End Select
                                 End If
                                 Me.CursorMessage3Label.Text =
@@ -403,7 +405,7 @@ Public Class Form1
                                 Me.ShowCursorControls(showWhat)
                             Case 3
                                 Me.CursorMessage1Label.Text =
-                                    $"{markerTags(index:=0)}@{xValue.ToString(format:=s_timeWithMinuteFormat)}"
+                                    $"{markerTag0}@{xValue.ToString(format:=s_timeWithMinuteFormat)}"
                                 Me.CursorMessage2Label.Text = markerTags(index:=1).Trim
                                 Me.CursorMessage3Label.Text = markerTags(index:=2).Trim
                                 Dim sgVal As Single =
@@ -418,18 +420,18 @@ Public Class Form1
                                     Case "Calibration accepted",
                                          "Calibration not accepted"
                                         Me.InfusionSetUpdate(image:=My.Resources.CalibrationDotRed,
-                                                                IsInfusionSet:=False)
+                                                             IsInfusionSet:=False)
                                     Case "Not used for calibration"
                                         Me.InfusionSetUpdate(image:=My.Resources.CalibrationDot,
-                                                                IsInfusionSet:=False)
+                                                             IsInfusionSet:=False)
                                         Me.CursorMessage2Label.SetFontIfChanged(newFont:=s_font11Bold)
                                     Case Else
                                         Stop
                                 End Select
-                                Me.ShowCursorControls(showWhat:=CursorInfoVisibility.ShowAll)
+                                Me.ShowCursorControls(showWhat:=CursorInfo.ShowAll)
                             Case Else
                                 Stop
-                                Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show3)
+                                Me.ShowCursorControls(showWhat:=CursorInfo.Show3)
                                 Me.InfusionSetDataRestore()
                         End Select
                     End If
@@ -446,14 +448,15 @@ Public Class Form1
 
                     Dim format As String = s_timeWithMinuteFormat
                     Me.CursorMessage4Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(format)
-                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.ShowAll)
+                    Me.ShowCursorControls(showWhat:=CursorInfo.ShowAll, showPictureBox:=False)
+                Case ActiveInsulinSeriesName
                     chart1.SetupCallout(currentDataPoint, text:=$"Sensor Glucose {Me.CursorMessage2Label.Text}")
                 Case SuspendSeriesName, TimeChangeSeriesName
-                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show3)
+                    Me.ShowCursorControls(showWhat:=CursorInfo.Show3, showPictureBox:=False)
                 Case ActiveInsulinSeriesName
                     Dim yValue As Single = currentDataPoint.YValues.FirstOrDefault().RoundToSingle(digits:=3)
                     chart1.SetupCallout(currentDataPoint, text:=$"Theoretical Active Insulin {yValue:F3} U")
-                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show3)
+                    Me.ShowCursorControls(showWhat:=CursorInfo.Show3)
                 Case Else
                     Stop
             End Select
@@ -476,7 +479,7 @@ Public Class Form1
             End If
             Me.CursorSetPictureBox.Size = _infusionSetSizeBackup
             Me.CursorSetPictureBox.Image = _infusionSetImageBackup
-
+            Me.CursorSetPictureBox.Show()
         Catch ex As Exception
             Stop
         End Try
@@ -499,17 +502,21 @@ Public Class Form1
                 Me.CursorSetPictureBox.Size = image.Size
                 Me.CursorSetPictureBox.Image = image
             End If
+            Me.CursorSetPictureBox.Visible = True
             Me.CursorSetPictureBox.CenterXOnControl(parent:=Me.CursorMessage2Label)
         Catch ex As Exception
             Stop
         End Try
     End Sub
 
-    Private Sub ShowCursorControls(showWhat As CursorInfoVisibility)
-        Me.CursorMessage1Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Show1) <> 0)
-        Me.CursorMessage2Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Mask2) <> 0)
-        Me.CursorMessage3Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Mask3) <> 0)
-        Me.CursorMessage4Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Mask4) <> 0)
+    Private Sub ShowCursorControls(showWhat As CursorInfo,
+                                   Optional showPictureBox As Boolean = True)
+        Me.CursorMessage1Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Show1) <> 0)
+        Me.CursorMessage2Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Mask2) <> 0)
+        Me.CursorMessage3Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Mask3) <> 0)
+        Me.CursorMessage4Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Mask4) <> 0)
+        Me.CursorSetPictureBox.Visible = showPictureBox
+        Application.DoEvents()
     End Sub
 
 #Region "Post Paint Events"
@@ -5015,7 +5022,7 @@ Public Class Form1
         Me.CursorMessage2Label.Text = "Insusion Set Life"
         Me.CursorMessage3Label.Text = caption
         Me.CursorMessage4Label.Text = "Left"
-        Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Hide1)
+        Me.ShowCursorControls(showWhat:=CursorInfo.Hide1)
         Select Case infusionRemainingDuration \ 60
             Case > 24
                 Me.InfusionSetUpdate(image:=My.Resources.InfusionLifeOver24Hours,
@@ -5625,7 +5632,7 @@ Public Class Form1
                 Dim msg As String = $"Last Update Time: {PumpNow()}"
                 Me.SetLastUpdateTime(msg, isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)
             End If
-            Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show3)
+            Me.ShowCursorControls(showWhat:=CursorInfo.Hide1)
 
             Me.Cursor = Cursors.WaitCursor
             Application.DoEvents()

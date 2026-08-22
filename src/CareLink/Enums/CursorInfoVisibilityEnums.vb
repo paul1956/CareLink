@@ -4,13 +4,12 @@
 
 Friend Module CursorInfoVisibilityEnums
 
-    Public Enum CursorInfoVisibility As Integer
+    Public Enum CursorInfo As Integer
         Hide1 = &B1110
         Mask2 = &B__10
         Mask3 = &B_100
         Mask4 = &B1000
         Show1 = &B___1
-        Show2 = &B__11
         Show3 = &B_111
         ShowAll = &B1111
     End Enum

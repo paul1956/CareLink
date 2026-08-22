@@ -17,7 +17,8 @@ Public Class CareLinkService
 
     Private Shared Function Base64UrlEncode(bytes As Byte()) As String
         Dim s As String = Convert.ToBase64String(inArray:=bytes)
-        s = s.Replace(oldValue:="+", newValue:="-").Replace(oldValue:="/", newValue:="_").TrimEnd("="c)
+        s = s.Replace(oldValue:="+",
+                      newValue:="-").Replace(oldValue:="/", newValue:="_").TrimEnd(trimChar:="="c)
         Return s
     End Function
 
@@ -433,7 +434,8 @@ Public Class CareLinkService
                             Dim hostname As String = server.GetProperty(propertyName:="hostname").GetString()
                             Dim port As String = server.GetProperty(propertyName:="port").ToString()
                             Dim prefix As String = server.GetProperty(propertyName:="prefix").GetString()
-                            Dim apiBaseUrl As String = $"https://{hostname}:{port}/{prefix}".TrimEnd(trimChar:="/"c)
+                            Dim apiBaseUrl As String =
+                                $"https://{hostname}:{port}/{prefix}".TrimEnd(trimChar:="/"c)
 
                             Return New EndpointConfig With {
                                 .SsoJson = ssoJson,

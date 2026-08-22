@@ -213,7 +213,7 @@ Friend Module LoginHelpers
                 Dim isDaylightSavingTime As Boolean = fileDate.IsDaylightSavingTime
                 owner.SetLastUpdateTime(msg:=fileDate.ToShortDateTime,
                                         suffixMessage:="from file",
-                                        isDaylightSavingTime)
+                                        highLight:=isDaylightSavingTime)
                 SetUpCareLinkUser()
                 fromFile = True
         End Select
