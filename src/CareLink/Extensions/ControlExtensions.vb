@@ -71,6 +71,7 @@ Public Module ControlExtensions
                             lbl.Font.Style)
         g.Dispose()
     End Sub
+
     ''' <summary>
     '''  Centers a <see cref="Label"/> parent container.
     ''' </summary>

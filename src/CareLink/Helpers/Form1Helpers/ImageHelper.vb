@@ -50,4 +50,5 @@ Friend Module ImageHelper
         baseImage.Dispose()
         overlayImage.Dispose()
     End Sub
+
 End Module

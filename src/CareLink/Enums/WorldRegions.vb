@@ -52,4 +52,5 @@ Public Module WorldRegions
         Return WorldRegion.Europe.ToString
 
     End Function
+
 End Module
