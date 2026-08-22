@@ -164,6 +164,36 @@ Public Module ControlExtensions
     End Sub
 
     ''' <summary>
+    '''  Horizontially center a <see cref="Control"/> on another Control
+    ''' </summary>
+    ''' <param name="pictBox"></param>
+    ''' <param name="parent"></param>
+    <Extension>
+    Friend Sub CenterXOnControl(pictBox As PictureBox, parent As Control)
+        If pictBox Is Nothing OrElse pictBox.IsDisposed Then
+            Exit Sub
+        End If
+        If parent Is Nothing OrElse parent.IsDisposed Then
+            Exit Sub
+        End If
+        Dim controlWidth As Integer
+        If pictBox IsNot Nothing Then
+            ' Fallback to Width if PreferredWidth is not set
+            controlWidth = pictBox.Width
+        End If
+
+        ' Defensive fixes: ensure controlWidth is sane and cache parent width
+        If controlWidth < 0 Then
+            controlWidth = pictBox.Width
+        End If
+        Dim parentWidth As Integer = parent.Width
+
+        ' Center in the middle of the parent control
+        pictBox.Left =
+            parent.Left + Math.Max(0, (parentWidth - controlWidth) \ 2)
+    End Sub
+
+    ''' <summary>
     '''  Centers a <see cref="Label"/> on its parent container, applying an optional vertical offset.
     ''' </summary>
     ''' <param name="ctrl">

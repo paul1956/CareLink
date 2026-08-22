@@ -28,6 +28,9 @@ Public Class Form1
     Private _dgvSummaryPrevRowIndex As Integer = -1
     Private _formScale As New SizeF(width:=1.0F, height:=1.0F)
     Private _infusionSetImageBackup As Bitmap
+    Private _infusionSetLabel2Backup As String
+    Private _infusionSetLabel3Backup As String
+    Private _infusionSetLabel4Backup As String
     Private _infusionSetSizeBackup As Size
     Private _inMouseMove As Boolean = False
     Private _lastMarkerTabLocation As (Page As Integer, Tab As Integer) = (Page:=0, Tab:=0)
@@ -327,7 +330,7 @@ Public Class Form1
         Try
             result = chart1.HitTest(e.X, e.Y, ignoreTransparent:=True)
             If result.Series Is Nothing OrElse result.PointIndex = -1 Then
-                Me.RestoreInfusionSetImage()
+                Me.InfusionSetDataRestore()
                 Exit Sub
             End If
 
@@ -335,7 +338,7 @@ Public Class Form1
                 result.Series.Points(index:=result.PointIndex)
 
             If currentDataPoint.IsEmpty OrElse currentDataPoint.Color = Color.Transparent Then
-                Me.RestoreInfusionSetImage()
+                Me.InfusionSetDataRestore()
                 Exit Sub
             End If
 
@@ -371,8 +374,8 @@ Public Class Form1
                                 If CDbl(amountStr).AlmostZero Then
                                     Me.CursorMessage1Label.Text = "Calibration"
                                     Me.CursorMessage2Label.Text = "Only"
-                                    Me.CursorSetUpdateImage(image:=My.Resources.CalibrationDotRed,
-                                                            IsInfusionSet:=False)
+                                    Me.InfusionSetUpdate(image:=My.Resources.CalibrationDotRed,
+                                                         IsInfusionSet:=False)
                                 Else
                                     Me.CursorMessage1Label.Text = markerTags(index:=0)
                                     Me.CursorMessage2Label.Text = amountStr
@@ -382,17 +385,17 @@ Public Class Form1
                                              "Manual Basal",
                                              "Basal",
                                              "Min Auto Basal"
-                                            Me.CursorSetUpdateImage(image:=My.Resources.InsulinVial,
-                                                                    IsInfusionSet:=False)
+                                            Me.InfusionSetUpdate(image:=My.Resources.InsulinVial,
+                                                                 IsInfusionSet:=False)
                                         Case "Bolus"
-                                            Me.CursorSetUpdateImage(image:=My.Resources.InsulinVial,
-                                                                    IsInfusionSet:=False)
+                                            Me.InfusionSetUpdate(image:=My.Resources.InsulinVial,
+                                                                 IsInfusionSet:=False)
                                         Case "Meal"
-                                            Me.CursorSetUpdateImage(image:=My.Resources.MealImageLarge,
-                                                                    IsInfusionSet:=False)
+                                            Me.InfusionSetUpdate(image:=My.Resources.MealImageLarge,
+                                                                 IsInfusionSet:=False)
                                         Case Else
                                             Stop
-                                            Me.RestoreInfusionSetImage()
+                                            Me.InfusionSetDataRestore()
                                     End Select
                                 End If
                                 Me.CursorMessage3Label.Text =
@@ -407,7 +410,6 @@ Public Class Form1
                                     markerTags(index:=2).Trim.
                                                          Split(separator:=" ")(0).
                                                          ParseSingle(digits:=2)
-
                                 Me.CursorMessage4Label.Text =
                                     If(NativeMmolL,
                                        $"{CInt(sgVal * MmolLUnitsDivisor)} mg/dL",
@@ -415,10 +417,10 @@ Public Class Form1
                                 Select Case markerTags(index:=1).Trim
                                     Case "Calibration accepted",
                                          "Calibration not accepted"
-                                        Me.CursorSetUpdateImage(image:=My.Resources.CalibrationDotRed,
+                                        Me.InfusionSetUpdate(image:=My.Resources.CalibrationDotRed,
                                                                 IsInfusionSet:=False)
                                     Case "Not used for calibration"
-                                        Me.CursorSetUpdateImage(image:=My.Resources.CalibrationDot,
+                                        Me.InfusionSetUpdate(image:=My.Resources.CalibrationDot,
                                                                 IsInfusionSet:=False)
                                         Me.CursorMessage2Label.SetFontIfChanged(newFont:=s_font11Bold)
                                     Case Else
@@ -428,12 +430,8 @@ Public Class Form1
                             Case Else
                                 Stop
                                 Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show3)
-                                Me.RestoreInfusionSetImage()
+                                Me.InfusionSetDataRestore()
                         End Select
-                    Else
-                        If Me.CursorSetPictureBox.SizeMode <> PictureBoxSizeMode.AutoSize Then
-                            Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
-                        End If
                     End If
                     chart1.SetUpCallout(currentDataPoint, markerTags)
 
@@ -467,26 +465,41 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub CursorSetUpdateImage(image As Bitmap, IsInfusionSet As Boolean)
+    Private Sub InfusionSetDataRestore()
         Try
-            If IsInfusionSet Then
-                _infusionSetImageBackup = Nothing
+            Me.CursorMessage1Label.Hide()
+            Me.CursorMessage2Label.Text = _infusionSetLabel2Backup
+            Me.CursorMessage3Label.Text = _infusionSetLabel3Backup
+            Me.CursorMessage4Label.Text = _infusionSetLabel4Backup
+            If Me.CursorSetPictureBox.SizeMode <> PictureBoxSizeMode.AutoSize Then
                 Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
-                _infusionSetImageBackup = image
-            Else
-                Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.CenterImage
             End If
-            Me.CursorSetPictureBox.Image = image
+            Me.CursorSetPictureBox.Size = _infusionSetSizeBackup
+            Me.CursorSetPictureBox.Image = _infusionSetImageBackup
+
         Catch ex As Exception
             Stop
         End Try
     End Sub
 
-    Private Sub RestoreInfusionSetImage()
+    Private Sub InfusionSetUpdate(image As Bitmap, IsInfusionSet As Boolean)
         Try
-            Me.CursorSetPictureBox.Size = _infusionSetSizeBackup
-            Me.CursorSetPictureBox.Image = _infusionSetImageBackup
-            Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Hide1)
+            If IsInfusionSet Then
+                Me.CursorMessage1Label.Visible = False
+                _infusionSetLabel2Backup = Me.CursorMessage2Label.Text
+                _infusionSetLabel3Backup = Me.CursorMessage3Label.Text
+                _infusionSetLabel4Backup = Me.CursorMessage4Label.Text
+                _infusionSetImageBackup = Nothing
+                Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
+                Me.CursorSetPictureBox.Image = image
+                _infusionSetImageBackup = image
+                _infusionSetSizeBackup = image.Size
+            Else
+                Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.Normal
+                Me.CursorSetPictureBox.Size = image.Size
+                Me.CursorSetPictureBox.Image = image
+            End If
+            Me.CursorSetPictureBox.CenterXOnControl(parent:=Me.CursorMessage2Label)
         Catch ex As Exception
             Stop
         End Try
@@ -2431,11 +2444,6 @@ Public Class Form1
         Else
             My.Settings.AutoLogin = False
         End If
-        Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
-        _infusionSetSizeBackup = Me.CursorSetPictureBox.Size
-        _infusionSetImageBackup = My.Resources.InfusionLifeOver24Hours
-        Me.CursorSetPictureBox.Image = _infusionSetImageBackup
-        Me.CursorMessage1Label.Hide()
         Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
         Me.InitializeDgvCareLinkUsers(dgv:=Me.DgvCareLinkUsers)
@@ -2505,9 +2513,16 @@ Public Class Form1
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
         Me.SensorMessageLabel.Parent = Me.SmartGuardShieldPictureBox
         Me.SensorMessageLabel.CenterLabelOnParent
+        Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
         Me.SensorTimeLeftPictureBox.CenterXOnParent()
-        Me.SensorDaysLeftLabel.BackColor = Color.Transparent
+
+        Me.InfusionSetUpdate(image:=My.Resources.InfusionLifeOver24Hours,
+                             IsInfusionSet:=True)
+        Me.CursorMessage1Label.Hide()
+        _infusionSetLabel2Backup = Me.CursorMessage2Label.Text
+        _infusionSetLabel3Backup = Me.CursorMessage3Label.Text
+        _infusionSetLabel4Backup = Me.CursorMessage4Label.Text
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
         CheckForUpdatesAsync(reportSuccessfulResult:=False)
@@ -5003,19 +5018,19 @@ Public Class Form1
         Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Hide1)
         Select Case infusionRemainingDuration \ 60
             Case > 24
-                Me.CursorSetUpdateImage(image:=My.Resources.InfusionLifeOver24Hours,
+                Me.InfusionSetUpdate(image:=My.Resources.InfusionLifeOver24Hours,
                                         IsInfusionSet:=True)
             Case > 12
-                Me.CursorSetUpdateImage(image:=My.Resources.InfusionLife12_24Hours,
+                Me.InfusionSetUpdate(image:=My.Resources.InfusionLife12_24Hours,
                                         IsInfusionSet:=True)
             Case > 0
-                Me.CursorSetUpdateImage(image:=My.Resources.InfusionLifeUnder12Hours,
+                Me.InfusionSetUpdate(image:=My.Resources.InfusionLifeUnder12Hours,
                                         IsInfusionSet:=True)
             Case = 0
-                Me.CursorSetUpdateImage(image:=My.Resources.InfusionLifeExpired,
+                Me.InfusionSetUpdate(image:=My.Resources.InfusionLifeExpired,
                                         IsInfusionSet:=True)
             Case Else
-                Me.CursorSetUpdateImage(image:=My.Resources.InfusionLifeUnknown,
+                Me.InfusionSetUpdate(image:=My.Resources.InfusionLifeUnknown,
                                         IsInfusionSet:=True)
         End Select
     End Sub
