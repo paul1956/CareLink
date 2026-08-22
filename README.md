@@ -44,9 +44,17 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-8/20/2026
+8/22/2026
 
 ## What's New
+New in 6.0.0.3
+Add AdjustFontToFitWidth
+Add Description support for Enums
+Cleanup CursorSetPictureBox handling
+Fix Formatting in multiple files
+Fix Shield control formatting
+Redo all CountryCode Handling to handle other Regions in DropDowns
+Restore full Region list
 New in 6.0.0.2
 Support for Flex including improved graphics
 FireFox was replaced with WebView2

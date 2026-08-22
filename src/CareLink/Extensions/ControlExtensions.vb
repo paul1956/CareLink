@@ -45,6 +45,33 @@ Public Module ControlExtensions
     End Sub
 
     ''' <summary>
+    ''' Adjusts the label's font size so that its width does not exceed maxWidth.
+    ''' </summary>
+    <Extension>
+    Public Sub AdjustFontToFitWidth(lbl As Label, maxWidth As Integer)
+        If String.IsNullOrEmpty(value:=lbl.Text) Then Exit Sub
+
+        Dim g As Graphics = lbl.CreateGraphics()
+        Dim fontSize As Single = lbl.Font.Size
+
+        ' Reduce font size until it fits
+        While True
+            Dim textSize As SizeF =
+                g.MeasureString(lbl.Text,
+                                font:=New Font(family:=lbl.Font.FontFamily, emSize:=fontSize),
+                                width:=maxWidth)
+            If textSize.Width <= maxWidth OrElse fontSize <= 6 Then
+                Exit While
+            End If
+            fontSize -= 0.5F
+        End While
+
+        lbl.Font = New Font(family:=lbl.Font.FontFamily,
+                            emSize:=fontSize,
+                            lbl.Font.Style)
+        g.Dispose()
+    End Sub
+    ''' <summary>
     '''  Centers a <see cref="Label"/> parent container.
     ''' </summary>
     ''' <param name="lbl">

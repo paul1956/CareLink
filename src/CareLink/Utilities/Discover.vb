@@ -97,8 +97,8 @@ Public Module Discover
     Public Async Function GetConfigAsync(httpClient As HttpClient, country As String, serverRegion As Region) As Task(Of JsonElement)
 
         Dim requestUri As String = If(serverRegion <> Region.Europe,
-                                        s_discoverUrl(key:="US"),
-                                        s_discoverUrl(key:="EU"))
+                                      s_discoverUrl(key:="US"),
+                                      s_discoverUrl(key:="EU"))
         Dim json As String = Await httpClient.GetStringAsync(requestUri).ConfigureAwait(continueOnCapturedContext:=False)
         Dim discoveryElement As JsonElement = json.FromJson(Of JsonElement)(DeserializationOptions)
         Dim configJson As JsonElement = GetConfigJson(country, serverRegion, discoveryElement)
@@ -107,7 +107,8 @@ Public Module Discover
         Dim resp As String =
             Await httpClient.GetStringAsync(requestUri:=configJson.GetProperty(propertyName:=ssoConfigurationKey).GetString()) _
                             .ConfigureAwait(continueOnCapturedContext:=False)
-        Dim ssoConfig As SsoConfig = resp.FromJson(Of SsoConfig)(DeserializationOptions)
+        Dim ssoConfig As SsoConfig =
+            resp.FromJson(Of SsoConfig)(DeserializationOptions)
 
         Dim hostname As String = ssoConfig.Server.Hostname
         Dim ssoBaseUrl As String = $"https://{hostname}:{ssoConfig.Server.Port}/{ssoConfig.Server.Prefix}"
@@ -118,7 +119,8 @@ Public Module Discover
 
         Dim mutableConfig As Dictionary(Of String, JsonElement) =
            configJson.GetRawText().FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions)
-        mutableConfig(key:="token_url") = $"{Quote}{tokenUrl}{Quote}".FromJson(Of JsonElement)(DeserializationOptions)
+        mutableConfig(key:="token_url") =
+            $"{Quote}{tokenUrl}{Quote}".FromJson(Of JsonElement)(DeserializationOptions)
         Return mutableConfig.ToJson().FromJson(Of JsonElement)(DeserializationOptions)
     End Function
 

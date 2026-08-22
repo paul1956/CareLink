@@ -164,6 +164,14 @@ Friend Module SummaryHelpers
         Dim jsonString As String = String.Empty
         If jsonDictionary.TryGetValue(key, value:=jsonString) Then
             additionalInfo = jsonString.ToStringDictionary()
+        Else
+            additionalInfo = New Dictionary(Of String, String)
+            For Each kvp As KeyValuePair(Of String, String) In jsonDictionary
+                If kvp.Key.StartsWithNoCase(value:="AdditionalInfo") Then
+                    Dim split() As String = kvp.Key.Split(separator:=":")
+                    additionalInfo.Add(key:=split(1), kvp.Value)
+                End If
+            Next
         End If
 
         For Each keyWord As String In list
@@ -178,14 +186,8 @@ Friend Module SummaryHelpers
                         End If
                     Case "alertClearType"
                         Dim resolvedValue As String = String.Empty
-                        If jsonDictionary.TryGetValue(key:="alert_clear_type", value:=resolvedValue) Then
+                        If additionalInfo.TryGetValue(key:="alert_clear_type", value:=resolvedValue) Then
                             alertClearType = resolvedValue.ToTitle
-                        Else
-                            If additionalInfo.TryGetValue(key:="alert_clear_type", value:=resolvedValue) Then
-                                alertClearType = resolvedValue.ToTitle()
-                            Else
-                                Stop
-                            End If
                         End If
                     Case "triggeredDateTime"
                        ' handled above
@@ -210,6 +212,10 @@ Friend Module SummaryHelpers
                                 Dim addInfo As Dictionary(Of String, String) = jsonString.ToStringDictionary
                                 key = keyWord
                                 Select Case keyWord
+                                    Case "alert_clear_type"
+                                        If addInfo.TryGetValue(key, value:=alertClearType) Then
+                                            alertClearType = alertClearType.ToTitle()
+                                        End If
                                     Case "basalName"
                                         If addInfo.TryGetValue(key, value:=basalName) Then
                                             basalName = basalName.ToTitle(separateDigits:=True)

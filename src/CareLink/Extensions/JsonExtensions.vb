@@ -25,7 +25,7 @@ Public Module JsonExtensions
          .UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow}
 
     Private Sub HandleExtendedInfo(item As KeyValuePair(Of String,
-                                   JsonElement), resultDictionary As Dictionary(Of String, String))
+                                       JsonElement), resultDictionary As Dictionary(Of String, String))
         If item.Value.IsEmpty() Then
             Return
         End If

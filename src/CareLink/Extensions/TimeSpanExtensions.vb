@@ -51,13 +51,14 @@ Public Module TimeSpanExtensions
     '''  days, hours, and totalMinutes.
     ''' </summary>
     ''' <param name="totalMinutes">The total number of totalMinutes to convert.</param>
+    ''' <param name="showMinutes"></param>
     ''' <returns>
     '''  A string formatted as "X days, Y hours, Z totalMinutes" or "X days" or
     '''  "Y hours" or "Z totalMinutes", depending on the values.
     ''' </returns>
     ''' <remarks>If total minues is negitive return "Unknown"</remarks>
     <Extension>
-    Public Function MinutesToDaysHoursMinutes(totalMinutes As Integer) As String
+    Public Function MinutesToDaysHoursMinutes(totalMinutes As Integer, Optional showMinutes As Boolean = True) As String
         Dim parts As New List(Of String)
         If totalMinutes < 0 Then
             Return "Unknown"
@@ -66,9 +67,15 @@ Public Module TimeSpanExtensions
         Dim hours As UInteger = CUInt((totalMinutes Mod 1440) \ 60)
         Dim mins As UInteger = CUInt(totalMinutes Mod 60)
 
-        If days > 0 Then parts.Add(item:=days.ToUnits(unit:="day"))
-        If (days > 0 AndAlso mins > 0) OrElse hours > 0 Then parts.Add(item:=hours.ToUnits(unit:="hour"))
-        If mins > 0 OrElse parts.Count = 0 Then parts.Add(item:=mins.ToUnits(unit:="minute"))
+        If days > 0 Then
+            parts.Add(item:=days.ToUnits(unit:="day"))
+        End If
+        If (days > 0 AndAlso mins > 0) OrElse hours > 0 Then
+            parts.Add(item:=hours.ToUnits(unit:="hour"))
+        End If
+        If (showMinutes And mins > 0) OrElse parts.Count = 0 Then
+            parts.Add(item:=mins.ToUnits(unit:="minute"))
+        End If
 
         Return String.Join(separator:=", ", values:=parts)
     End Function

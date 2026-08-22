@@ -23,11 +23,12 @@ Public Class Form1
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _sgMiniDisplay As New SgMiniForm(form1:=Me)
     Private ReadOnly _updatingLock As New Object()
-
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
     Private _dgvSummaryPrevColIndex As Integer = -1
     Private _dgvSummaryPrevRowIndex As Integer = -1
     Private _formScale As New SizeF(width:=1.0F, height:=1.0F)
+    Private _infusionSetImageBackup As Bitmap
+    Private _infusionSetSizeBackup As Size
     Private _inMouseMove As Boolean = False
     Private _lastMarkerTabLocation As (Page As Integer, Tab As Integer) = (Page:=0, Tab:=0)
     Private _lastSummaryTabIndex As Integer = 0
@@ -304,6 +305,7 @@ Public Class Form1
         If e.Button <> MouseButtons.None OrElse
            e.Clicks > 0 OrElse
            e.Location = _previousLoc Then
+            Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Hide1)
             Return
         End If
         _inMouseMove = True
@@ -318,13 +320,14 @@ Public Class Form1
         End Try
         If Double.IsNaN(yInPixels) Then
             _inMouseMove = False
+            Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Hide1)
             Exit Sub
         End If
         Dim result As HitTestResult
         Try
             result = chart1.HitTest(e.X, e.Y, ignoreTransparent:=True)
             If result.Series Is Nothing OrElse result.PointIndex = -1 Then
-                Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
+                Me.RestoreInfusionSetImage()
                 Exit Sub
             End If
 
@@ -332,18 +335,20 @@ Public Class Form1
                 result.Series.Points(index:=result.PointIndex)
 
             If currentDataPoint.IsEmpty OrElse currentDataPoint.Color = Color.Transparent Then
-                Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
+                Me.RestoreInfusionSetImage()
                 Exit Sub
             End If
 
-            Dim showWhat As CursorInfoVisibility = CursorInfoVisibility.None
+            Dim showWhat As CursorInfoVisibility = CursorInfoVisibility.Hide1
             Select Case result.Series.Name
                 Case HighLimitSeriesName, HighTiTRSeriesName, LowLimitSeriesName, TargetSgSeriesName
-                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
+                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Hide1)
                 Case MarkerSeriesName, BasalSeriesName
                     Dim markerTags As List(Of String) =
-                        currentDataPoint.Tag.ToString.Split(separator:=":"c) _
-                                                     .ToList()
+                        currentDataPoint.Tag.
+                                         ToString.
+                                         Split(separator:=":"c).
+                                         ToList()
                     If markerTags.Count <= 1 Then
                         If chart1.Name = NameOf(TreatmentMarkersChart) Then
                             Dim callout As CalloutAnnotation =
@@ -357,19 +362,17 @@ Public Class Form1
                     markerTags(index:=0) = markerTags(index:=0).Trim
                     If isHomePage Then
                         Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
-                        If Me.CursorPictureBox.SizeMode <> PictureBoxSizeMode.StretchImage Then
-                            Me.CursorPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
-                        End If
-                        SetFontIfChanged(Me.CursorMessage2Label, s_font12Bold)
+                        SetFontIfChanged(lbl:=Me.CursorMessage2Label, newFont:=s_font12Bold)
                         Select Case markerTags.Count
                             Case 2
                                 Dim amountStr As String =
                                     markerTags(index:=1).TrimEnd.TrimEnd(trimChar:="U"c)
-                                showWhat = CursorInfoVisibility.Show3 Or CursorInfoVisibility.PictureBoxMask
+                                showWhat = CursorInfoVisibility.Show3
                                 If CDbl(amountStr).AlmostZero Then
                                     Me.CursorMessage1Label.Text = "Calibration"
                                     Me.CursorMessage2Label.Text = "Only"
-                                    Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
+                                    Me.CursorSetUpdateImage(image:=My.Resources.CalibrationDotRed,
+                                                            IsInfusionSet:=False)
                                 Else
                                     Me.CursorMessage1Label.Text = markerTags(index:=0)
                                     Me.CursorMessage2Label.Text = amountStr
@@ -379,19 +382,21 @@ Public Class Form1
                                              "Manual Basal",
                                              "Basal",
                                              "Min Auto Basal"
-                                            Me.CursorPictureBox.Image = My.Resources.InsulinVial
+                                            Me.CursorSetUpdateImage(image:=My.Resources.InsulinVial,
+                                                                    IsInfusionSet:=False)
                                         Case "Bolus"
-                                            Me.CursorPictureBox.Image = My.Resources.InsulinVial
+                                            Me.CursorSetUpdateImage(image:=My.Resources.InsulinVial,
+                                                                    IsInfusionSet:=False)
                                         Case "Meal"
-                                            Me.CursorPictureBox.Image = My.Resources.MealImageLarge
+                                            Me.CursorSetUpdateImage(image:=My.Resources.MealImageLarge,
+                                                                    IsInfusionSet:=False)
                                         Case Else
                                             Stop
-                                            Me.CursorPictureBox.Image = Nothing
-                                            showWhat = CursorInfoVisibility.None
+                                            Me.RestoreInfusionSetImage()
                                     End Select
                                 End If
-                                Me.CursorMessage3Label.Text = Date.FromOADate(currentDataPoint.XValue).
-                                                                   ToString(format:=s_timeWithMinuteFormat)
+                                Me.CursorMessage3Label.Text =
+                                    Date.FromOADate(currentDataPoint.XValue).ToString(format:=s_timeWithMinuteFormat)
                                 Me.ShowCursorControls(showWhat)
                             Case 3
                                 Me.CursorMessage1Label.Text =
@@ -410,9 +415,11 @@ Public Class Form1
                                 Select Case markerTags(index:=1).Trim
                                     Case "Calibration accepted",
                                          "Calibration not accepted"
-                                        Me.CursorPictureBox.Image = My.Resources.CalibrationDotRed
+                                        Me.CursorSetUpdateImage(image:=My.Resources.CalibrationDotRed,
+                                                                IsInfusionSet:=False)
                                     Case "Not used for calibration"
-                                        Me.CursorPictureBox.Image = My.Resources.CalibrationDot
+                                        Me.CursorSetUpdateImage(image:=My.Resources.CalibrationDot,
+                                                                IsInfusionSet:=False)
                                         Me.CursorMessage2Label.SetFontIfChanged(newFont:=s_font11Bold)
                                     Case Else
                                         Stop
@@ -420,8 +427,13 @@ Public Class Form1
                                 Me.ShowCursorControls(showWhat:=CursorInfoVisibility.ShowAll)
                             Case Else
                                 Stop
-                                Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
+                                Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show3)
+                                Me.RestoreInfusionSetImage()
                         End Select
+                    Else
+                        If Me.CursorSetPictureBox.SizeMode <> PictureBoxSizeMode.AutoSize Then
+                            Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
+                        End If
                     End If
                     chart1.SetUpCallout(currentDataPoint, markerTags)
 
@@ -436,39 +448,55 @@ Public Class Form1
 
                     Dim format As String = s_timeWithMinuteFormat
                     Me.CursorMessage4Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(format)
-                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show4)
+                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.ShowAll)
                     chart1.SetupCallout(currentDataPoint, text:=$"Sensor Glucose {Me.CursorMessage2Label.Text}")
                 Case SuspendSeriesName, TimeChangeSeriesName
-                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
+                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show3)
                 Case ActiveInsulinSeriesName
                     Dim yValue As Single = currentDataPoint.YValues.FirstOrDefault().RoundToSingle(digits:=3)
                     chart1.SetupCallout(currentDataPoint, text:=$"Theoretical Active Insulin {yValue:F3} U")
-                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
+                    Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show3)
                 Case Else
                     Stop
             End Select
         Catch ex As Exception
             result = Nothing
+            Stop
         Finally
             _inMouseMove = False
         End Try
     End Sub
 
-    Private Sub ShowCursorControls(showWhat As CursorInfoVisibility)
-        Dim showImage As Boolean = (showWhat And CursorInfoVisibility.PictureBoxMask) <> 0
-        If Me.CursorPictureBox.Image Is Nothing Then
-            Me.CursorPictureBox.SetControlVisibility(visible:=False)
-        Else
-            If (showWhat And CursorInfoVisibility.PictureBoxMask) = 0 Then
-                Me.CursorPictureBox.Image = Nothing
+    Private Sub CursorSetUpdateImage(image As Bitmap, IsInfusionSet As Boolean)
+        Try
+            If IsInfusionSet Then
+                _infusionSetImageBackup = Nothing
+                Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
+                _infusionSetImageBackup = image
+            Else
+                Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.CenterImage
             End If
-            Me.CursorPictureBox.SetControlVisibility(visible:=showImage)
-        End If
+            Me.CursorSetPictureBox.Image = image
+        Catch ex As Exception
+            Stop
+        End Try
+    End Sub
+
+    Private Sub RestoreInfusionSetImage()
+        Try
+            Me.CursorSetPictureBox.Size = _infusionSetSizeBackup
+            Me.CursorSetPictureBox.Image = _infusionSetImageBackup
+            Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Hide1)
+        Catch ex As Exception
+            Stop
+        End Try
+    End Sub
+
+    Private Sub ShowCursorControls(showWhat As CursorInfoVisibility)
         Me.CursorMessage1Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Show1) <> 0)
         Me.CursorMessage2Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Mask2) <> 0)
         Me.CursorMessage3Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Mask3) <> 0)
         Me.CursorMessage4Label.SetControlVisibility(visible:=(showWhat And CursorInfoVisibility.Mask4) <> 0)
-        Me.FlexInfustionSetPictureBox.SetControlVisibility(visible:=showWhat = CursorInfoVisibility.None)
     End Sub
 
 #Region "Post Paint Events"
@@ -2403,7 +2431,11 @@ Public Class Form1
         Else
             My.Settings.AutoLogin = False
         End If
-
+        Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
+        _infusionSetSizeBackup = Me.CursorSetPictureBox.Size
+        _infusionSetImageBackup = My.Resources.InfusionLifeOver24Hours
+        Me.CursorSetPictureBox.Image = _infusionSetImageBackup
+        Me.CursorMessage1Label.Hide()
         Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
         Me.InitializeDgvCareLinkUsers(dgv:=Me.DgvCareLinkUsers)
@@ -2467,11 +2499,14 @@ Public Class Form1
         Me.Fix(c:=Me)
 
         Me.CurrentSgLabel.Parent = Me.SmartGuardShieldPictureBox
+        Me.CurrentSgLabel.CenterLabelOnParent
         Me.ShieldUnitsLabel.Parent = Me.SmartGuardShieldPictureBox
+        Me.ShieldUnitsLabel.CenterLabelOnParent
         Me.ShieldUnitsLabel.BackColor = Color.Transparent
+        Me.SensorMessageLabel.Parent = Me.SmartGuardShieldPictureBox
+        Me.SensorMessageLabel.CenterLabelOnParent
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
         Me.SensorTimeLeftPictureBox.CenterXOnParent()
-        Me.SensorMessageLabel.Parent = Me.SmartGuardShieldPictureBox
         Me.SensorDaysLeftLabel.BackColor = Color.Transparent
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
@@ -3329,13 +3364,20 @@ Public Class Form1
     ''' <param name="sender">The source of the event, the ActiveInsulinValue label.</param>
     ''' <param name="e">A <see cref="PaintEventArgs"/> that contains the event data.</param>
     Private Sub ActiveInsulinValue_Paint(sender As Object, e As PaintEventArgs) Handles ActiveInsulinValue.Paint
-        ControlPaint.DrawBorder(
-            e.Graphics,
-            bounds:=e.ClipRectangle,
-            leftColor:=Color.LimeGreen, leftWidth:=3, leftStyle:=ButtonBorderStyle.Solid,
-            topColor:=Color.LimeGreen, topWidth:=3, topStyle:=ButtonBorderStyle.Solid,
-            rightColor:=Color.LimeGreen, rightWidth:=3, rightStyle:=ButtonBorderStyle.Solid,
-            bottomColor:=Color.LimeGreen, bottomWidth:=3, bottomStyle:=ButtonBorderStyle.Solid)
+        ControlPaint.DrawBorder(e.Graphics,
+                                bounds:=e.ClipRectangle,
+                                leftColor:=Color.LimeGreen,
+                                leftWidth:=3,
+                                leftStyle:=ButtonBorderStyle.Solid,
+                                topColor:=Color.LimeGreen,
+                                topWidth:=3,
+                                topStyle:=ButtonBorderStyle.Solid,
+                                rightColor:=Color.LimeGreen,
+                                rightWidth:=3,
+                                rightStyle:=ButtonBorderStyle.Solid,
+                                bottomColor:=Color.LimeGreen,
+                                bottomWidth:=3,
+                                bottomStyle:=ButtonBorderStyle.Solid)
     End Sub
 
     ''' <summary>
@@ -3485,7 +3527,7 @@ Public Class Form1
         If PatientData Is Nothing Then Exit Sub
         Dim caption As String = $"Sensor will expire In {PatientData.SensorDurationHours} hours"
         If PatientData.CgmInfo.SensorProductModel?.Trim = "MMT-5120" Then
-            _sensorLifeToolTip.SetToolTip(control:=Me.SensorDaysLeftLabel, Me.GetSensorTimeLeftMessage())
+            _sensorLifeToolTip.SetToolTip(control:=Me.SensorDaysLeftLabel, GetSimpleraTimeLeftMessage(PatientData.SensorDurationHours))
         Else
             If PatientData.SensorDurationHours < 24 Then
                 _sensorLifeToolTip.SetToolTip(control:=Me.SensorDaysLeftLabel, caption)
@@ -4316,21 +4358,17 @@ Public Class Form1
 
 #Region "Update Home Tab"
 
-    Private Function GetSensorTimeLeftMessage() As String
-        Dim sensorDurationHours As Integer = PatientData.SensorDurationHours
+    Private Shared Function GetSimpleraTimeLeftMessage(SensorDurationHours As Integer) As String
         Dim hoursStr As String
-        Select Case sensorDurationHours
+        Select Case SensorDurationHours
             Case Is <= 24
-                Me.SensorTimeLeftLabel.Font = s_font7Bold
-                hoursStr = sensorDurationHours.HoursToDaysAndHours(shortHr:=True)
+                hoursStr = SensorDurationHours.HoursToDaysAndHours(shortHr:=True)
                 Return $"Expiring soon{vbCrLf}(Remaining{vbCrLf}grace period:{vbCrLf}{hoursStr})"
             Case Is < 48
-                Me.SensorTimeLeftLabel.Font = s_font8Bold
-                hoursStr = (sensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
+                hoursStr = (SensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
                 Return $"{hoursStr} (Followed{vbCrLf}by 24 hr grace{vbCrLf}period)"
             Case Else  ' sensorDurationHours >= 48
-                Me.SensorTimeLeftLabel.Font = s_font8Bold
-                hoursStr = (sensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
+                hoursStr = (SensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
                 Return $"{hoursStr}{vbCrLf}(Followed by 24{vbCrLf}hr grace period)"
         End Select
     End Function
@@ -4690,17 +4728,21 @@ Public Class Form1
                                My.Resources.FlexSmartGuardShield,
                                My.Resources.Shield)
                     Case "WARM_UP"
-                        Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield_Disabled
+                        Me.SmartGuardShieldPictureBox.Image =
+                            My.Resources.Shield_Disabled
                     Case "UNKNOWN"
-                        Me.SmartGuardShieldPictureBox.Image = My.Resources.FlexActiveInsulinReset
+                        Me.SmartGuardShieldPictureBox.Image =
+                            My.Resources.FlexActiveInsulinReset
                     Case Else
-                        Me.SmartGuardShieldPictureBox.Image = My.Resources.Shield
+                        Me.SmartGuardShieldPictureBox.Image =
+                            My.Resources.Shield
                 End Select
                 Me.ShieldUnitsLabel.Visible = True
                 Me.LastSgOrExitTimeLabel.Visible = True
             Else
                 Me.SmartGuardShieldPictureBox.Image = Nothing
-                Me.ShieldUnitsLabel.Visible = PatientData.SensorState = "NO_ERROR_MESSAGE"
+                Me.ShieldUnitsLabel.Visible =
+                    PatientData.SensorState = "NO_ERROR_MESSAGE"
                 Me.LastSgOrExitTimeLabel.Visible = False
             End If
 
@@ -4777,24 +4819,32 @@ Public Class Form1
             If PatientData.ConduitInRange Then
                 If PatientData.TimeToNextCalibHours >= Byte.MaxValue Then
                     Dim calibrationDot As Bitmap = My.Resources.CalibrationDot
-                    Me.CalibrationDueImage.Image = calibrationDot.DrawCenteredArc(minutesToNextCalibration:=720)
+                    Me.CalibrationDueImage.Image =
+                        calibrationDot.DrawCenteredArc(minutesToNextCalibration:=720)
                 ElseIf PatientData.TimeToNextCalibHours = 0 Then
                     Dim notReady As Boolean =
-                        PatientData.SystemStatusMessage = "WAIT_TO_CALIBRATE" OrElse
-                        PatientData.SensorState = "WARM_UP" OrElse
-                        PatientData.SensorState = "CHANGE_SENSOR"
+                        PatientData.SystemStatusMessage =
+                            "WAIT_TO_CALIBRATE" OrElse
+                            PatientData.SensorState = "WARM_UP" OrElse
+                            PatientData.SensorState = "CHANGE_SENSOR"
                     If notReady Then
-                        Me.CalibrationDueImage.Image = My.Resources.CalibrationNotReady
+                        Me.CalibrationDueImage.Image =
+                            My.Resources.CalibrationNotReady
                     Else
-                        Dim minutesToNextCalibration As Short = s_timeToNextCalibrationMinutes
-                        Dim calibrationDotRed As Bitmap = My.Resources.CalibrationDotRed
-                        Me.CalibrationDueImage.Image = calibrationDotRed.DrawCenteredArc(minutesToNextCalibration)
+                        Dim minutesToNextCalibration As Short =
+                            s_timeToNextCalibrationMinutes
+                        Dim calibrationDotRed As Bitmap =
+                            My.Resources.CalibrationDotRed
+                        Me.CalibrationDueImage.Image =
+                            calibrationDotRed.DrawCenteredArc(minutesToNextCalibration)
                     End If
                 ElseIf s_timeToNextCalibrationMinutes = -1 Then
                     Me.CalibrationDueImage.Image = Nothing
                 Else
-                    Dim minutesToNextCalibration As Short = s_timeToNextCalibrationMinutes
-                    Me.CalibrationDueImage.Image = My.Resources.CalibrationDot.DrawCenteredArc(minutesToNextCalibration)
+                    Dim minutesToNextCalibration As Short =
+                        s_timeToNextCalibrationMinutes
+                    Me.CalibrationDueImage.Image =
+                        My.Resources.CalibrationDot.DrawCenteredArc(minutesToNextCalibration)
                 End If
             End If
             Me.CalibrationDueImage.Visible = PatientData.ConduitInRange
@@ -4941,6 +4991,35 @@ Public Class Form1
         Me.Last24HrCarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}{Superscript3}"
     End Sub
 
+    Private Sub UpdateInfusionImage()
+        Dim infusionRemainingDuration As Integer =
+            PatientData.InfusionRemainingDuration
+        ' Assign tooltip text to PictureBox
+        Dim caption As String =
+            $"{infusionRemainingDuration.MinutesToDaysHoursMinutes(showMinutes:=False)}"
+        Me.CursorMessage2Label.Text = "Insusion Set Life"
+        Me.CursorMessage3Label.Text = caption
+        Me.CursorMessage4Label.Text = "Left"
+        Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Hide1)
+        Select Case infusionRemainingDuration \ 60
+            Case > 24
+                Me.CursorSetUpdateImage(image:=My.Resources.InfusionLifeOver24Hours,
+                                        IsInfusionSet:=True)
+            Case > 12
+                Me.CursorSetUpdateImage(image:=My.Resources.InfusionLife12_24Hours,
+                                        IsInfusionSet:=True)
+            Case > 0
+                Me.CursorSetUpdateImage(image:=My.Resources.InfusionLifeUnder12Hours,
+                                        IsInfusionSet:=True)
+            Case = 0
+                Me.CursorSetUpdateImage(image:=My.Resources.InfusionLifeExpired,
+                                        IsInfusionSet:=True)
+            Case Else
+                Me.CursorSetUpdateImage(image:=My.Resources.InfusionLifeUnknown,
+                                        IsInfusionSet:=True)
+        End Select
+    End Sub
+
     ''' <summary>
     '''  Updates the insulin level display on the home tab.
     '''  This method updates the insulin level picture box and remaining
@@ -4953,30 +5032,40 @@ Public Class Form1
     Private Sub UpdateInsulinLevel()
         ' This function is subject to crash if the ImageList is disposed on exit.
         Try
-            Me.InsulinLevelPictureBox.SizeMode = PictureBoxSizeMode.StretchImage
+            Me.InsulinLevelPictureBox.SizeMode = PictureBoxSizeMode.CenterImage
             If Not PatientData.ConduitInRange Then
-                Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=8)
+                Me.InsulinLevelPictureBox.Image =
+                    Me.ImageList1.Images(index:=8)
                 Me.RemainingInsulinUnits.Text = "???U"
             Else
-                Dim remainingUnits As Double = PatientData.ReservoirRemainingUnits
+                Dim remainingUnits As Double =
+                    PatientData.ReservoirRemainingUnits
                 Me.RemainingInsulinUnits.Text = $"{remainingUnits:N1} U"
                 Select Case PatientData.ReservoirLevelPercent
                     Case >= 85
-                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=7)
+                        Me.InsulinLevelPictureBox.Image =
+                            Me.ImageList1.Images(index:=7)
                     Case >= 71
-                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=6)
+                        Me.InsulinLevelPictureBox.Image =
+                            Me.ImageList1.Images(index:=6)
                     Case >= 57
-                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=5)
+                        Me.InsulinLevelPictureBox.Image =
+                            Me.ImageList1.Images(index:=5)
                     Case >= 43
-                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=4)
+                        Me.InsulinLevelPictureBox.Image =
+                            Me.ImageList1.Images(index:=4)
                     Case >= 29
-                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=3)
+                        Me.InsulinLevelPictureBox.Image =
+                            Me.ImageList1.Images(index:=3)
                     Case >= 15
-                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=2)
+                        Me.InsulinLevelPictureBox.Image =
+                            Me.ImageList1.Images(index:=2)
                     Case >= 1
-                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=1)
+                        Me.InsulinLevelPictureBox.Image =
+                            Me.ImageList1.Images(index:=1)
                     Case Else
-                        Me.InsulinLevelPictureBox.Image = Me.ImageList1.Images(index:=0)
+                        Me.InsulinLevelPictureBox.Image =
+                            Me.ImageList1.Images(index:=0)
                 End Select
             End If
         Finally
@@ -4994,13 +5083,15 @@ Public Class Form1
     '''  and the remaining battery percentage is displayed accordingly.
     ''' </remarks>
     Private Sub UpdatePumpBattery()
+        Dim baseImage As Bitmap = My.Resources.FlexPump
+
         If Not PatientData.ConduitInRange Then
             Me.PumpBatteryPictureBox.Image =
                 If(IsFlex(),
                    My.Resources.FlexBatteryUnknown,
                    My.Resources.PumpConnectivityToPhoneNotOK)
 
-            Me.PumpBatteryRemainingLabel.Text = "Pump out"
+            Me.PumpBatteryRemaining1Label.Text = "Pump out"
             Me.PumpBatteryRemaining2Label.Text = "of range"
             Exit Sub
         End If
@@ -5009,41 +5100,46 @@ Public Class Form1
             Dim hours As Integer = PatientData.PumpBatteryLevelTime \ 60
             Dim tsp As New TimeSpanParts(hours, shortHr:=True)
 
-            Me.PumpBatteryRemainingLabel.Text = tsp.DayPart
+            Me.PumpBatteryRemaining1Label.Text = tsp.DayPart
             Me.PumpBatteryRemaining2Label.Text = tsp.HourPart
             Dim minutes As Double = hours Mod 60
+            Dim overlayImage As Bitmap
             Select Case True
                 Case hours > 24
-                    Me.PumpBatteryPictureBox.Image = My.Resources.FlexBatteryFull
+                    overlayImage = My.Resources.FlexBatteryFull
                 Case hours > 1
-                    Me.PumpBatteryPictureBox.Image = My.Resources.FlexBattery1_10Hours
+                    overlayImage = My.Resources.FlexBattery1_10Hours
                 Case minutes > 1
-                    Me.PumpBatteryPictureBox.Image = My.Resources.FlexBatteryLessThen1Hour
+                    overlayImage = My.Resources.FlexBatteryLessThen1Hour
                 Case minutes > 0
-                    Me.PumpBatteryPictureBox.Image = My.Resources.FlexBatteryLessThen1Hour
+                    overlayImage = My.Resources.FlexBatteryLessThen1Hour
                 Case Else
-                    Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryCritical
+                    overlayImage = My.Resources.PumpBatteryCritical
             End Select
+            OverlayTransparentImages(pictureBox:=Me.PumpBatteryPictureBox,
+                                     baseImage:=My.Resources.FlexPump,
+                                     overlayImage)
         Else
             Dim batteryLeftPercent As Integer
             Me.PumpBatteryRemaining2Label.Text = $"{Math.Abs(value:=batteryLeftPercent)}%"
             Select Case PatientData.PumpBatteryLevelPercent
                 Case > 90
                     Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryFull
-                    Me.PumpBatteryRemainingLabel.Text = "Full"
+                    Me.PumpBatteryRemaining1Label.Text = "Full"
                 Case > 50
                     Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryHigh
-                    Me.PumpBatteryRemainingLabel.Text = "High"
+                    Me.PumpBatteryRemaining1Label.Text = "High"
                 Case > 25
                     Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryMedium
-                    Me.PumpBatteryRemainingLabel.Text = $"Medium"
+                    Me.PumpBatteryRemaining1Label.Text = $"Medium"
                 Case > 10
                     Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryLow
-                    Me.PumpBatteryRemainingLabel.Text = "Low"
+                    Me.PumpBatteryRemaining1Label.Text = "Low"
 
                 Case Else
                     Me.PumpBatteryPictureBox.Image = My.Resources.PumpBatteryCritical
-                    Me.PumpBatteryRemainingLabel.Text = "Critical"
+                    Me.PumpBatteryRemaining1Label.Text = "Critical"
+
             End Select
         End If
     End Sub
@@ -5060,111 +5156,159 @@ Public Class Form1
     Private Sub UpdateSensorLife()
         Dim haveCGM As Boolean = PatientData.ConduitInRange AndAlso PatientData.CgmInfo IsNot Nothing
         If haveCGM Then
-            Me.SensorTimeLeftLabel.Font = s_font12Bold
-            Select Case PatientData.CgmInfo.SensorProductModel?.Trim
+            Dim sensorModelNumber As String =
+                PatientData.CgmInfo.SensorProductModel?.Trim
+
+            If IsFlex() Then
+                If SensorModelNumber Is Nothing Then
+                    ' Simplera
+                    Me.UpdateSimpleraLife()
+                Else
+                    ' Instinct
+                    Stop
+                End If
+                Return
+            End If
+
+            Dim sensorDurationHours As Integer =
+                PatientData.SensorDurationHours
+            Select Case sensorModelNumber
                 Case "MMT-5120" ' Simplera
-                    Dim durationWithoutGrace As Integer = PatientData.SensorDurationHours - 24
-                    Select Case PatientData.SensorDurationHours
-                        Case Is >= 255
-                            Me.SensorDaysLeftLabel.Text = EmptyString
-                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
-                            Me.SensorTimeLeftLabel.Text = "Unknown"
-                        Case Is >= 48
-                            Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(durationWithoutGrace / 24))
-                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
-                            Me.SensorTimeLeftLabel.Text = Me.GetSensorTimeLeftMessage()
-                        Case Is > 24
-                            Me.SensorDaysLeftLabel.Text = Math.Ceiling(durationWithoutGrace / 24).ToString()
-                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
-                            Me.SensorTimeLeftLabel.Text = Me.GetSensorTimeLeftMessage()
-                        Case Is > 0 ' Grace
-                            Me.SensorDaysLeftLabel.Text = EmptyString
-                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpiringSoon
-                            Me.SensorTimeLeftLabel.Text = Me.GetSensorTimeLeftMessage()
-                        Case Is = 0
-                            Dim sensorDurationMinutes As Integer = If(PatientData.SensorDurationMinutes Is Nothing,
-                                                                      -1,
-                                                                      CInt(PatientData.SensorDurationMinutes))
-                            Select Case sensorDurationMinutes
-                                Case Is > 0
-                                    Me.SensorDaysLeftLabel.Text = "0"
-                                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
-                                    Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
-                                Case Is = 0
-                                    Me.SensorDaysLeftLabel.Text = EmptyString
-                                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
-                                    Me.SensorTimeLeftLabel.Text = "Expired"
-                                Case Else
-                                    Me.SensorDaysLeftLabel.Text = EmptyString
-                                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
-                                    Me.SensorTimeLeftLabel.Text = "Unknown"
-                            End Select
-
-                        Case Else
-                            Me.SensorDaysLeftLabel.Text = EmptyString
-                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
-                            Me.SensorTimeLeftLabel.Text = "Unknown"
-                    End Select
-
+                    Me.UpdateSimpleraLife()
                 Case Nothing ' Guardian 4
-                    Dim sensorDurationDays As Integer = CInt(Math.Ceiling(PatientData.SensorDurationHours / 24))
-                    Select Case PatientData.SensorDurationHours
+                    Dim sensorDurationDays As Integer = CInt(Math.Ceiling(sensorDurationHours / 24))
+                    Select Case sensorDurationHours
                         Case Is >= 255
                             Me.SensorDaysLeftLabel.Text = EmptyString
-                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
+                            Me.SensorTimeLeftPictureBox.Image =
+                                My.Resources.SensorExpirationUnknown
                             Me.SensorTimeLeftLabel.Text = "Unknown"
                         Case Is >= 168
                             Me.SensorDaysLeftLabel.Text = "~7"
-                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
+                            Me.SensorTimeLeftPictureBox.Image =
+                                My.Resources.SensorLifeOK
                             Me.SensorTimeLeftLabel.Text = "7 Days"
                         Case Is >= 24
                             Me.SensorDaysLeftLabel.Text = sensorDurationDays.ToString()
-                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
-                            Me.SensorTimeLeftLabel.Text = $"{sensorDurationDays} Days"
+                            Me.SensorTimeLeftPictureBox.Image =
+                                My.Resources.SensorLifeOK
+                            Me.SensorTimeLeftLabel.Text =
+                                $"{sensorDurationDays} Days"
                         Case Is > 0
-                            Me.SensorDaysLeftLabel.Text = $"<{sensorDurationDays}"
+                            Me.SensorDaysLeftLabel.Text =
+                                $"<{sensorDurationDays}"
                             Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
-                            Me.SensorTimeLeftLabel.Text = $"{PatientData.SensorDurationHours} Hours"
+                            Me.SensorTimeLeftLabel.Text =
+                                $"{sensorDurationHours} Hours"
                         Case Is = 0
-                            Dim sensorDurationMinutes As Integer = If(PatientData.SensorDurationMinutes Is Nothing,
-                                                                      -1,
-                                                                      CInt(PatientData.SensorDurationMinutes))
+                            Dim sensorDurationMinutes As Integer =
+                                If(PatientData.SensorDurationMinutes Is Nothing,
+                                   -1,
+                                   CInt(PatientData.SensorDurationMinutes))
                             Select Case sensorDurationMinutes
                                 Case Is > 0
                                     Me.SensorDaysLeftLabel.Text = "0"
-                                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeNotOK
-                                    Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
+                                    Me.SensorTimeLeftPictureBox.Image =
+                                        My.Resources.SensorLifeNotOK
+                                    Me.SensorTimeLeftLabel.Text =
+                                        $"{sensorDurationMinutes} minutes"
                                 Case Is = 0
                                     Me.SensorDaysLeftLabel.Text = EmptyString
-                                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpired
+                                    Me.SensorTimeLeftPictureBox.Image =
+                                        My.Resources.SensorExpired
                                     Me.SensorTimeLeftLabel.Text = "Expired"
                                 Case Else
                                     Me.SensorDaysLeftLabel.Text = EmptyString
-                                    Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
+                                    Me.SensorTimeLeftPictureBox.Image =
+                                        My.Resources.SensorExpirationUnknown
                                     Me.SensorTimeLeftLabel.Text = "Unknown"
                             End Select
 
                         Case Else
-                            Me.SensorDaysLeftLabel.Text = sensorDurationDays.ToString()
-                            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
+                            Me.SensorDaysLeftLabel.Text =
+                                sensorDurationDays.ToString()
+                            Me.SensorTimeLeftPictureBox.Image =
+                                My.Resources.SensorExpirationUnknown
                             Me.SensorTimeLeftLabel.Text = "Unknown"
                     End Select
                 Case Else ' Instinct
-                    Me.SensorTimeLeftPictureBox.Image = If(PatientData.SensorDurationHours > 24,
-                                                           My.Resources.SensorLifeOK,
-                                                           My.Resources.SensorLifeNotOK)
+                    Me.SensorTimeLeftPictureBox.Image =
+                        If(sensorDurationHours > 24,
+                           My.Resources.SensorLifeOK,
+                           My.Resources.SensorLifeNotOK)
 
-                    Me.SensorDaysLeftLabel.Text = PatientData.SensorDurationHours.HoursToDaysAndHours(shortHr:=False)
+                    Me.SensorDaysLeftLabel.Text =
+                        sensorDurationHours.HoursToDaysAndHours(shortHr:=False)
                     Me.SensorTimeLeftLabel.Text = "Unknown"
             End Select
         Else
             Me.SensorDaysLeftLabel.Text = EmptyString
-            Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorExpirationUnknown
+            Me.SensorTimeLeftPictureBox.Image =
+                My.Resources.SensorExpirationUnknown
             Me.SensorTimeLeftLabel.Text = "Unknown"
             Me.SensorTimeLeftPanel.Visible = True
         End If
         Me.SensorDaysLeftLabel.Visible = Me.SensorDaysLeftLabel.Text <> String.Empty
         Me.SensorTimeLeftPanel.Visible = PatientData.ConduitInRange
+    End Sub
+
+    Private Sub UpdateSimpleraLife()
+        Dim sensorDurationHours As Integer = PatientData.SensorDurationHours
+        Dim durationWithoutGrace As Integer = sensorDurationHours - 24
+
+        Select Case durationWithoutGrace
+            Case Is >= 255
+                Me.SensorDaysLeftLabel.Text = EmptyString
+                Me.SensorTimeLeftPictureBox.Image =
+                    My.Resources.SensorExpirationUnknown
+                Me.SensorTimeLeftLabel.Text = "Unknown"
+            Case Is >= 48
+                Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(durationWithoutGrace / 24))
+                Me.SensorTimeLeftPictureBox.Image =
+                    My.Resources.SensorLifeOK
+                Me.SensorTimeLeftLabel.Text =
+                    GetSimpleraTimeLeftMessage(sensorDurationHours)
+            Case Is > 24
+                Me.SensorDaysLeftLabel.Text =
+                    Math.Ceiling(durationWithoutGrace / 24).ToString()
+                Me.SensorTimeLeftPictureBox.Image = My.Resources.SensorLifeOK
+                Me.SensorTimeLeftLabel.Text =
+                    GetSimpleraTimeLeftMessage(sensorDurationHours)
+            Case Is > 0 ' Grace
+                Me.SensorDaysLeftLabel.Text = EmptyString
+                Me.SensorTimeLeftPictureBox.Image =
+                    My.Resources.SensorExpiringSoon
+                Me.SensorTimeLeftLabel.Text =
+                    GetSimpleraTimeLeftMessage(sensorDurationHours)
+            Case Is = 0
+                Dim sensorDurationMinutes As Integer =
+                    If(PatientData.SensorDurationMinutes Is Nothing,
+                       -1,
+                       CInt(PatientData.SensorDurationMinutes))
+                Select Case sensorDurationMinutes
+                    Case Is > 0
+                        Me.SensorDaysLeftLabel.Text = "0"
+                        Me.SensorTimeLeftPictureBox.Image =
+                            My.Resources.SensorLifeNotOK
+                        Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
+                    Case Is = 0
+                        Me.SensorDaysLeftLabel.Text = EmptyString
+                        Me.SensorTimeLeftPictureBox.Image =
+                            My.Resources.SensorExpired
+                        Me.SensorTimeLeftLabel.Text = "Expired"
+                    Case Else
+                        Me.SensorDaysLeftLabel.Text = EmptyString
+                        Me.SensorTimeLeftPictureBox.Image =
+                            My.Resources.SensorExpirationUnknown
+                        Me.SensorTimeLeftLabel.Text = "Unknown"
+                End Select
+            Case Else
+                Me.SensorDaysLeftLabel.Text = EmptyString
+                Me.SensorTimeLeftPictureBox.Image =
+                    My.Resources.SensorExpirationUnknown
+                Me.SensorTimeLeftLabel.Text = "Unknown"
+        End Select
+        Me.SensorDaysLeftLabel.AdjustFontToFitWidth(maxWidth:=70)
     End Sub
 
     ''' <summary>
@@ -5466,7 +5610,7 @@ Public Class Form1
                 Dim msg As String = $"Last Update Time: {PumpNow()}"
                 Me.SetLastUpdateTime(msg, isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)
             End If
-            Me.ShowCursorControls(showWhat:=CursorInfoVisibility.None)
+            Me.ShowCursorControls(showWhat:=CursorInfoVisibility.Show3)
 
             Me.Cursor = Cursors.WaitCursor
             Application.DoEvents()
@@ -5561,34 +5705,6 @@ Public Class Form1
             CancelSpeechRecognition()
         End If
         Application.DoEvents()
-    End Sub
-
-    Private Sub UpdateInfusionImage()
-        Dim baseImage As Bitmap = My.Resources.FlexPump
-        Dim overlayImage As Bitmap
-        Dim infusionRemainingDuration As Integer = PatientData.InfusionRemainingDuration
-        ' Assign tooltip text to PictureBox
-        Dim caption As String =
-            $"{infusionRemainingDuration.MinutesToDaysHoursMinutes()} left"
-        Me.ToolTip2.SetToolTip(control:=Me.FlexInfustionSetPictureBox, caption)
-
-        Select Case infusionRemainingDuration \ 60
-            Case > 24
-                overlayImage = My.Resources.InfusionLifeOver24Hours
-                OverlayTransparentImages(baseImage, overlayImage)
-            Case > 12
-                overlayImage = My.Resources.InfusionLife12_24Hours
-                OverlayTransparentImages(baseImage, overlayImage)
-            Case > 0
-                overlayImage = My.Resources.InfusionLifeUnder12Hours
-                OverlayTransparentImages(baseImage, overlayImage)
-            Case = 0
-                overlayImage = My.Resources.InfusionLifeExpired
-                OverlayTransparentImages(baseImage, overlayImage)
-            Case Else
-                overlayImage = My.Resources.InfusionLifeUnknown
-                OverlayTransparentImages(baseImage, overlayImage)
-        End Select
     End Sub
 
 #End Region ' Update Home Tab

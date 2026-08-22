@@ -525,8 +525,6 @@ Friend Class Client2
                                          tokenElement As JsonElement) As Task(Of JsonElement)
 
         Dim tokenUrl As String = config(key:="token_url")
-        'Dim tokenData As Dictionary(Of String, Object) =
-        '    tokenElement.FromJson(Of Dictionary(Of String, Object))()
         Dim tokenData As Dictionary(Of String, JsonElement) =
             tokenElement.FromJson(Of Dictionary(Of String, JsonElement))()
 

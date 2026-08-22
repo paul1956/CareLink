@@ -257,7 +257,7 @@ Public Class DataGridViewNumericUpDownCell
     ''' <param name="value">The value to constrain.</param>
     ''' <returns>The constrained value.</returns>
     Private Function Constrain(value As Decimal) As Decimal
-        Debug.Assert(_minimum <= _maximum)
+        Debug.Assert(condition:=_minimum <= _maximum)
         If value < _minimum Then
             value = _minimum
         End If
@@ -338,10 +338,9 @@ Public Class DataGridViewNumericUpDownCell
     ''' <param name="cellStyle">The cell style.</param>
     ''' <param name="rowIndex">The row index.</param>
     ''' <returns>The bounds for the error icon.</returns>
-    Protected Overrides Function GetErrorIconBounds(
-            graphics As Graphics,
-            cellStyle As DataGridViewCellStyle,
-            rowIndex As Integer) As Rectangle
+    Protected Overrides Function GetErrorIconBounds(graphics As Graphics,
+                                                    cellStyle As DataGridViewCellStyle,
+                                                    rowIndex As Integer) As Rectangle
         Const buttonsWidth As Integer = 16
 
         Dim errorIconBounds As Rectangle = MyBase.GetErrorIconBounds(graphics, cellStyle, rowIndex)
@@ -366,13 +365,12 @@ Public Class DataGridViewNumericUpDownCell
     ''' </param>
     ''' <param name="context">The data error context.</param>
     ''' <returns>The formatted value as an object.</returns>
-    Protected Overrides Function GetFormattedValue(
-        value As Object,
-        rowIndex As Integer,
-        ByRef cellStyle As DataGridViewCellStyle,
-        valueTypeConverter As TypeConverter,
-        formattedValueTypeConverter As TypeConverter,
-        context As DataGridViewDataErrorContexts) As Object
+    Protected Overrides Function GetFormattedValue(value As Object,
+                                                   rowIndex As Integer,
+                                                   ByRef cellStyle As DataGridViewCellStyle,
+                                                   valueTypeConverter As TypeConverter,
+                                                   formattedValueTypeConverter As TypeConverter,
+                                                   context As DataGridViewDataErrorContexts) As Object
 
         ' By default, the base implementation converts the Decimal 1234.5
         ' into the string "1234.5"
@@ -411,16 +409,19 @@ Public Class DataGridViewNumericUpDownCell
     ''' <param name="rowIndex">The row index.</param>
     ''' <param name="constraintSize">The constraint size.</param>
     ''' <returns>The preferred size for the cell.</returns>
-    Protected Overrides Function GetPreferredSize(
-        graphics As Graphics,
-        cellStyle As DataGridViewCellStyle,
-        rowIndex As Integer,
-        constraintSize As Size) As Size
+    Protected Overrides Function GetPreferredSize(graphics As Graphics,
+                                                  cellStyle As DataGridViewCellStyle,
+                                                  rowIndex As Integer,
+                                                  constraintSize As Size) As Size
         If Me.DataGridView Is Nothing Then
-            Return New Size(-1, -1)
+            Return New Size(width:=-1, height:=-1)
         End If
 
-        Dim preferredSize As Size = MyBase.GetPreferredSize(graphics, cellStyle, rowIndex, constraintSize)
+        Dim preferredSize As Size =
+            MyBase.GetPreferredSize(graphics,
+                                    cellStyle,
+                                    rowIndex,
+                                    constraintSize)
         If constraintSize.Width = 0 Then
             ' Account for the width of the up/down buttons.
             Const buttonsWidth As Integer = 16
@@ -441,10 +442,9 @@ Public Class DataGridViewNumericUpDownCell
     ''' <param name="rowIndex">The row index.</param>
     ''' <param name="initialFormattedValue">The initial formatted value.</param>
     ''' <param name="dataGridViewCellStyle">The cell style.</param>
-    Public Overrides Sub InitializeEditingControl(
-        rowIndex As Integer,
-        initialFormattedValue As Object,
-        dataGridViewCellStyle As DataGridViewCellStyle)
+    Public Overrides Sub InitializeEditingControl(rowIndex As Integer,
+                                                  initialFormattedValue As Object,
+                                                  dataGridViewCellStyle As DataGridViewCellStyle)
 
         MyBase.InitializeEditingControl(rowIndex, initialFormattedValue, dataGridViewCellStyle)
         Dim numericUpDown As NumericUpDown = TryCast(Me.DataGridView.EditingControl, NumericUpDown)
@@ -560,18 +560,17 @@ Public Class DataGridViewNumericUpDownCell
     ''' <param name="advancedBorderStyle">The advanced border style.</param>
     ''' <param name="paintParts">The paint parts.</param>
     <DebuggerNonUserCode()>
-    Protected Overrides Sub Paint(
-        graphics As Graphics,
-        clipBounds As Rectangle,
-        cellBounds As Rectangle,
-        rowIndex As Integer,
-        cellState As DataGridViewElementStates,
-        value As Object,
-        formattedValue As Object,
-        errorText As String,
-        cellStyle As DataGridViewCellStyle,
-        advancedBorderStyle As DataGridViewAdvancedBorderStyle,
-        paintParts As DataGridViewPaintParts)
+    Protected Overrides Sub Paint(graphics As Graphics,
+                                  clipBounds As Rectangle,
+                                  cellBounds As Rectangle,
+                                  rowIndex As Integer,
+                                  cellState As DataGridViewElementStates,
+                                  value As Object,
+                                  formattedValue As Object,
+                                  errorText As String,
+                                  cellStyle As DataGridViewCellStyle,
+                                  advancedBorderStyle As DataGridViewAdvancedBorderStyle,
+                                  paintParts As DataGridViewPaintParts)
 
         If Me.DataGridView Is Nothing Then
             Return
@@ -581,18 +580,17 @@ Public Class DataGridViewNumericUpDownCell
         Const dgvPaintParts As DataGridViewPaintParts =
             Not (DataGridViewPaintParts.ErrorIcon Or DataGridViewPaintParts.ContentForeground)
 
-        MyBase.Paint(
-            graphics,
-            clipBounds,
-            cellBounds,
-            rowIndex,
-            cellState,
-            value,
-            formattedValue,
-            errorText,
-            cellStyle,
-            advancedBorderStyle,
-            paintParts:=paintParts And dgvPaintParts)
+        MyBase.Paint(graphics,
+                     clipBounds,
+                     cellBounds,
+                     rowIndex,
+                     cellState,
+                     value,
+                     formattedValue,
+                     errorText,
+                     cellStyle,
+                     advancedBorderStyle,
+                     paintParts:=paintParts And dgvPaintParts)
 
         Dim ptCurrentCell As Point = Me.DataGridView.CurrentCellAddress
         Dim cellCurrent As Boolean = ptCurrentCell.X = Me.ColumnIndex AndAlso ptCurrentCell.Y = rowIndex
@@ -715,25 +713,24 @@ Public Class DataGridViewNumericUpDownCell
     '''  Whether this is the first displayed column.
     ''' </param>
     ''' <param name="isFirstDisplayedRow">Whether this is the first displayed row.</param>
-    Public Overrides Sub PositionEditingControl(
-        setLocation As Boolean,
-        setSize As Boolean,
-        cellBounds As Rectangle,
-        cellClip As Rectangle,
-        cellStyle As DataGridViewCellStyle,
-        singleVerticalBorderAdded As Boolean,
-        singleHorizontalBorderAdded As Boolean,
-        isFirstDisplayedColumn As Boolean,
-        isFirstDisplayedRow As Boolean)
+    Public Overrides Sub PositionEditingControl(setLocation As Boolean,
+                                                setSize As Boolean,
+                                                cellBounds As Rectangle,
+                                                cellClip As Rectangle,
+                                                cellStyle As DataGridViewCellStyle,
+                                                singleVerticalBorderAdded As Boolean,
+                                                singleHorizontalBorderAdded As Boolean,
+                                                isFirstDisplayedColumn As Boolean,
+                                                isFirstDisplayedRow As Boolean)
 
-        Dim editingControlBounds As Rectangle = Me.PositionEditingPanel(
-                                                        cellBounds,
-                                                        cellClip,
-                                                        cellStyle,
-                                                        singleVerticalBorderAdded,
-                                                        singleHorizontalBorderAdded,
-                                                        isFirstDisplayedColumn,
-                                                        isFirstDisplayedRow)
+        Dim editingControlBounds As Rectangle =
+            Me.PositionEditingPanel(cellBounds,
+                                    cellClip,
+                                    cellStyle,
+                                    singleVerticalBorderAdded,
+                                    singleHorizontalBorderAdded,
+                                    isFirstDisplayedColumn,
+                                    isFirstDisplayedRow)
 
         editingControlBounds = GetAdjustedEditingControlBounds(editingControlBounds, cellStyle)
         Me.DataGridView.EditingControl.Location = New Point(editingControlBounds.X, editingControlBounds.Y)
@@ -754,7 +751,7 @@ Public Class DataGridViewNumericUpDownCell
     ''' <param name="rowIndex">The row index.</param>
     ''' <param name="value">The new decimal places value.</param>
     Friend Sub SetDecimalPlaces(rowIndex As Integer, value As Integer)
-        Debug.Assert(value >= 0 AndAlso value <= 99)
+        Debug.Assert(condition:=value >= 0 AndAlso value <= 99)
         _decimalPlaces = value
         If Me.OwnsEditingNumericUpDown(rowIndex) Then
             Me.EditingNumericUpDown.DecimalPlaces = value

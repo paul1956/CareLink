@@ -7,7 +7,6 @@ Imports System.Net
 Imports System.Net.Http
 
 Public Class LoginDialog
-
     Private _doCancel As Boolean
     Private _httpClient As HttpClient
     Private _initialHeight As Integer
@@ -184,19 +183,24 @@ Public Class LoginDialog
             Else
             End If
             .Text = GetUserName()
-            Me.PasswordTextBox.Text = If(s_allUserSettingsData?.ContainsKey(key:= .Text),
-                                         s_allUserSettingsData(itemName:= .Text).CareLinkPassword,
-                                         String.Empty)
+            Me.PasswordTextBox.Text =
+                If(s_allUserSettingsData?.ContainsKey(key:= .Text),
+                   s_allUserSettingsData(itemName:= .Text).CareLinkPassword,
+                   String.Empty)
         End With
 
-        Me.RegionComboBox.DataSource = New BindingSource(dataSource:=s_regionList, dataMember:=Nothing)
-        Me.RegionComboBox.DisplayMember = "Key"
-        Me.RegionComboBox.ValueMember = "Value"
+        With Me.RegionComboBox
+            .DisplayMember = NameOf(KeyValuePair(Of WorldRegion, String).Value)
+            .ValueMember = NameOf(KeyValuePair(Of WorldRegion, String).Key)
+            .DataSource = New BindingSource(dataSource:=s_regionDictionary, dataMember:=Nothing)
+        End With
+
         If IsNullOrEmpty(value:=My.Settings.CountryCode) Then
             My.Settings.CountryCode = "US"
         End If
+
         Me.RegionComboBox.SelectedValue = My.Settings.CountryCode.GetRegionFromCode
-        Me.CountryComboBox.Text = My.Settings.CountryCode.GetCountryFromCode
+        Me.CountryComboBox.SelectedValue = My.Settings.CountryCode
 
         Me.PatientUserIDTextBox.Text = My.Settings.CareLinkPatientUserID
         Dim careLinkPartner As Boolean = My.Settings.CareLinkPartner
@@ -268,7 +272,6 @@ Public Class LoginDialog
                 lastErrorMsg = If(Not Await Form1.Client.InitAsync(),
                                   loginFailed,
                                   Await Form1.Client.GetRecentDataAsync())
-
             End If
             If IsNullOrWhiteSpace(value:=lastErrorMsg) Then
                 s_lastMedicalDeviceDataUpdateServerEpoch = 0
@@ -413,10 +416,10 @@ Public Class LoginDialog
         Handles RegionComboBox.SelectedIndexChanged
 
         Dim countriesInRegion As New Dictionary(Of String, String)
-        Dim selectedRegion As String = s_regionList.Values(index:=Me.RegionComboBox.SelectedIndex)
-        For Each kvp As KeyValuePair(Of String, String) In s_regionCountryList
+        Dim selectedRegion As WorldRegion = s_regionToServerMapping.Keys(index:=Me.RegionComboBox.SelectedIndex)
+        For Each kvp As KeyValuePair(Of String, WorldRegion) In s_countryNameToRegionList
             If kvp.Value = selectedRegion Then
-                countriesInRegion.Add(kvp.Key, value:=s_countryCodeList(kvp.Key))
+                countriesInRegion.Add(kvp.Key, value:=s_countryToCodeList(kvp.Key))
             End If
         Next
         If countriesInRegion.Count > 0 Then
