@@ -5278,7 +5278,7 @@ Public Class Form1
         Dim sensorDurationHours As Integer = PatientData.SensorDurationHours
         Dim durationWithoutGrace As Integer = sensorDurationHours - 24
 
-        Select Case durationWithoutGrace
+        Select Case sensorDurationHours
             Case Is >= 255
                 Me.SensorDaysLeftLabel.Text = EmptyString
                 Me.SensorTimeLeftPictureBox.Image =
