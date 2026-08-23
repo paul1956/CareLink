@@ -2630,32 +2630,6 @@ Public Class Form1
 
 #Region "Form1 Menu Events"
 
-    ''' <summary>
-    '''  Hides separators that are at the start, end, or next to another separator,
-    '''  or between only hidden items.
-    ''' </summary>
-    Private Sub UpdateSeparators(items As ToolStripItemCollection)
-        Dim prevVisibleIsSeparator As Boolean = True ' Start as True to hide leading separators
-
-        For Each item As ToolStripItem In items
-            If TypeOf item Is ToolStripSeparator Then
-                ' Hide if previous visible item was a separator or none
-                item.Visible = Not prevVisibleIsSeparator
-                prevVisibleIsSeparator = True
-            Else
-                ' For normal menu items
-                If item.Visible Then
-                    prevVisibleIsSeparator = False
-                End If
-            End If
-        Next
-
-        ' Hide trailing separator if last visible was a separator
-        If items.Count > 0 AndAlso TypeOf items(items.Count - 1) Is ToolStripSeparator Then
-            items(items.Count - 1).Visible = False
-        End If
-    End Sub
-
 #Region "Start Here Menu Events"
 
     ''' <summary>
@@ -2696,36 +2670,40 @@ Public Class Form1
     ''' </param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
+        Dim debuggerIsAttached As Boolean = Debugger.IsAttached
+        Me.MenuStartLoadExceptionReport.Available = debuggerIsAttached
+
+        Me.MenuStartUseLastFile.Available = debuggerIsAttached
+
+        Me.MenuStartUseTestData.Available = debuggerIsAttached
+
         Dim searchPattern As String = $"CareLink*.json"
         Dim path As String = GetProjectDataDirectory()
-        Me.MenuStartLoadDataFile.Enabled = AnyMatchingFiles(path, searchPattern)
-        Me.MenuStartUseLastFile.Enabled = File.Exists(path:=GetLastDownloadFileWithPath)
+        Me.MenuStartLoadDataFile.Enabled =
+            debuggerIsAttached AndAlso AnyMatchingFiles(path, searchPattern)
+
+        Me.MenuStartUseLastFile.Enabled =
+            debuggerIsAttached AndAlso File.Exists(path:=GetLastDownloadFileWithPath)
+
         Me.MenuStartSaveSnapshot.Enabled = Not IsRecentDataEmpty()
 
-        Dim debuggerIsAttached As Boolean = Debugger.IsAttached
-        Me.MenuStartLoadExceptionReport.Visible = debuggerIsAttached
-        Me.MenuStartUseLastFile.Visible = debuggerIsAttached
-        Me.MenuStartUseTestData.Visible = debuggerIsAttached
-        Me.MenuStartLoadDataFile.Visible = debuggerIsAttached
         searchPattern = $"{BaseErrorReportName}*.txt"
-        Me.MenuStartLoadExceptionReport.Visible =
+        Me.MenuStartLoadExceptionReport.Available =
             debuggerIsAttached AndAlso AnyMatchingFiles(path, searchPattern)
-        Me.UpdateSeparators(items:=Me.MenuStartHere.DropDownItems)
+
         searchPattern = $"{GetUserName()}Settings.pdf"
         Dim validUser As Boolean = IsNullOrWhiteSpace(value:=GetUserName())
         Dim userPdfExists As Boolean =
             Not (validUser OrElse Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern))
-
         Me.MenuStartShowPumpSetup.Enabled = userPdfExists AndAlso
                                             CurrentPdf IsNot Nothing AndAlso
                                             CurrentPdf.IsValid
 
-        Dim settingExist As Boolean = Directory.Exists(path:=GetSettingsDirectory)
+        Me.MenuStartManuallyImportDeviceSettings.Enabled =
+            Directory.GetFiles(path:=GetDownloadsDirectory(),
+                               searchPattern:=$"*.pdf").Length > 0
 
-        Dim downloadFilesExists As Boolean =
-            Directory.GetFiles(path:=GetDownloadsDirectory(), searchPattern:=$"*.pdf").Length > 0
-
-        Me.MenuStartManuallyImportDeviceSettings.Enabled = downloadFilesExists
+        Me.MenuStartHere.DropDownItems.UpdateSeparators()
 
         ' The menu item For cleaning up obsolete files
         ' (MenuStartCleanUpObsoleteFiles) is only enabled,
