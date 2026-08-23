@@ -31,7 +31,6 @@ Public Class Form1
     Private _infusionSetLabel2Backup As String
     Private _infusionSetLabel3Backup As String
     Private _infusionSetLabel4Backup As String
-    Private _infusionSetSizeBackup As Size
     Private _inMouseMove As Boolean = False
     Private _lastMarkerTabLocation As (Page As Integer, Tab As Integer) = (Page:=0, Tab:=0)
     Private _lastSummaryTabIndex As Integer = 0
@@ -306,6 +305,9 @@ Public Class Form1
         If Not ProgramInitialized Then
             Exit Sub
         End If
+
+        Dim chart1 As Chart = CType(sender, Chart)
+
         If e.Button <> MouseButtons.None OrElse
            e.Clicks > 0 OrElse
            e.Location = _previousLoc Then
@@ -314,7 +316,6 @@ Public Class Form1
         _inMouseMove = True
         _previousLoc = e.Location
         Dim yInPixels As Double
-        Dim chart1 As Chart = CType(sender, Chart)
         Dim isHomePage As Boolean = chart1.Name = NameOf(SummaryChart)
         Try
             yInPixels = chart1.ChartAreas(name:=NameOf(ChartArea)).AxisY2.ValueToPixelPosition(axisValue:=e.Y)
@@ -329,8 +330,12 @@ Public Class Form1
         Dim result As HitTestResult
         Try
             result = chart1.HitTest(e.X, e.Y, ignoreTransparent:=True)
-            If result.Series Is Nothing OrElse result.PointIndex = -1 Then
-                Me.InfusionSetDataRestore()
+            If result.Series Is Nothing OrElse
+               chart1.Name = "" OrElse
+               result.PointIndex = -1 Then
+                If isHomePage Then
+                    Me.InfusionSetDataRestore()
+                End If
                 Exit Sub
             End If
 
@@ -375,7 +380,7 @@ Public Class Form1
                                 If CDbl(markerTag1).AlmostZero Then
                                     Me.CursorMessage1Label.Text = "Calibration"
                                     Me.CursorMessage2Label.Text = "Only"
-                                    Me.InfusionSetUpdate(image:=My.Resources.CalibrationDotRed,
+                                    Me.InfusionSetUpdate(bitmap:=My.Resources.CalibrationDotRed,
                                                          IsInfusionSet:=False)
                                 Else
                                     Me.CursorMessage1Label.Text = markerTag0
@@ -386,13 +391,13 @@ Public Class Form1
                                              "Manual Basal",
                                              "Basal",
                                              "Min Auto Basal"
-                                            Me.InfusionSetUpdate(image:=My.Resources.InsulinVial,
+                                            Me.InfusionSetUpdate(bitmap:=My.Resources.InsulinVial,
                                                                  IsInfusionSet:=False)
                                         Case "Bolus"
-                                            Me.InfusionSetUpdate(image:=My.Resources.InsulinVial,
+                                            Me.InfusionSetUpdate(bitmap:=My.Resources.InsulinVial,
                                                                  IsInfusionSet:=False)
                                         Case "Meal"
-                                            Me.InfusionSetUpdate(image:=My.Resources.MealImageLarge,
+                                            Me.InfusionSetUpdate(bitmap:=My.Resources.MealImageLarge,
                                                                  IsInfusionSet:=False)
                                         Case Else
                                             Stop
@@ -419,10 +424,10 @@ Public Class Form1
                                 Select Case markerTags(index:=1).Trim
                                     Case "Calibration accepted",
                                          "Calibration not accepted"
-                                        Me.InfusionSetUpdate(image:=My.Resources.CalibrationDotRed,
+                                        Me.InfusionSetUpdate(bitmap:=My.Resources.CalibrationDotRed,
                                                              IsInfusionSet:=False)
                                     Case "Not used for calibration"
-                                        Me.InfusionSetUpdate(image:=My.Resources.CalibrationDot,
+                                        Me.InfusionSetUpdate(bitmap:=My.Resources.CalibrationDot,
                                                              IsInfusionSet:=False)
                                         Me.CursorMessage2Label.SetFontIfChanged(newFont:=s_font11Bold)
                                     Case Else
@@ -477,7 +482,6 @@ Public Class Form1
             If Me.CursorSetPictureBox.SizeMode <> PictureBoxSizeMode.AutoSize Then
                 Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
             End If
-            Me.CursorSetPictureBox.Size = _infusionSetSizeBackup
             Me.CursorSetPictureBox.Image = _infusionSetImageBackup
             Me.CursorSetPictureBox.Show()
         Catch ex As Exception
@@ -485,22 +489,21 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub InfusionSetUpdate(image As Bitmap, IsInfusionSet As Boolean)
+    Private Sub InfusionSetUpdate(bitmap As Bitmap, IsInfusionSet As Boolean)
         Try
             If IsInfusionSet Then
                 Me.CursorMessage1Label.Visible = False
                 _infusionSetLabel2Backup = Me.CursorMessage2Label.Text
                 _infusionSetLabel3Backup = Me.CursorMessage3Label.Text
                 _infusionSetLabel4Backup = Me.CursorMessage4Label.Text
-                _infusionSetImageBackup = Nothing
                 Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
-                Me.CursorSetPictureBox.Image = image
-                _infusionSetImageBackup = image
-                _infusionSetSizeBackup = image.Size
+                Me.CursorSetPictureBox.Image = bitmap
+                _infusionSetImageBackup = Nothing
+                _infusionSetImageBackup = bitmap
             Else
                 Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.Normal
-                Me.CursorSetPictureBox.Size = image.Size
-                Me.CursorSetPictureBox.Image = image
+                Me.CursorSetPictureBox.Size = bitmap.Size
+                Me.CursorSetPictureBox.Image = bitmap
             End If
             Me.CursorSetPictureBox.Visible = True
             Me.CursorSetPictureBox.CenterXOnControl(parent:=Me.CursorMessage2Label)
@@ -2412,6 +2415,7 @@ Public Class Form1
     '''  Ensures proper resource cleanup before the application exits
     ''' </remarks>
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        BitmapCache.CleanUp()
         Me.NotifyIcon1?.Dispose()
     End Sub
 
@@ -2451,6 +2455,9 @@ Public Class Form1
         Else
             My.Settings.AutoLogin = False
         End If
+
+        PreloadBitmaps()
+
         Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
         Me.InitializeDgvCareLinkUsers(dgv:=Me.DgvCareLinkUsers)
@@ -2524,7 +2531,7 @@ Public Class Form1
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
         Me.SensorTimeLeftPictureBox.CenterXOnParent()
 
-        Me.InfusionSetUpdate(image:=My.Resources.InfusionLifeOver24Hours,
+        Me.InfusionSetUpdate(bitmap:=My.Resources.InfusionLifeOver24Hours,
                              IsInfusionSet:=True)
         Me.CursorMessage1Label.Hide()
         _infusionSetLabel2Backup = Me.CursorMessage2Label.Text
@@ -4734,11 +4741,11 @@ Public Class Form1
 
     ''' <summary>
     '''  Updates the Auto Mode shield display on the home tab.
-    '''  This method updates the shield image, last sensor glucose time,
+    '''  This method updates the shield bitmap, last sensor glucose time,
     '''  and shield units label based on the current sensor state.
     ''' </summary>
     ''' <remarks>
-    '''  The shield image is set based on the sensor state, and the last
+    '''  The shield bitmap is set based on the sensor state, and the last
     '''  sensor glucose time and shield units are displayed accordingly.
     ''' </remarks>
     Private Sub UpdateAutoModeShield()
@@ -4752,13 +4759,11 @@ Public Class Form1
                     Case "CALIBRATION_REQUIRED"
                         Me.SmartGuardShieldPictureBox.Image =
                             If(IsFlex(),
-                               My.Resources.FlexSmartGuardShield,
+                               My.Resources.SmartGuardShield,
                                My.Resources.Shield_Disabled)
                     Case "NO_ERROR_MESSAGE", "CALIBRATING"
                         Me.SmartGuardShieldPictureBox.Image =
-                            If(IsFlex(),
-                               My.Resources.FlexSmartGuardShield,
-                               My.Resources.Shield)
+                               My.Resources.SmartGuardShield
                     Case "WARM_UP"
                         Me.SmartGuardShieldPictureBox.Image =
                             My.Resources.Shield_Disabled
@@ -4767,7 +4772,7 @@ Public Class Form1
                             My.Resources.FlexActiveInsulinReset
                     Case Else
                         Me.SmartGuardShieldPictureBox.Image =
-                            My.Resources.Shield
+                            My.Resources.SmartGuardShield
                 End Select
                 Me.ShieldUnitsLabel.Visible = True
                 Me.LastSgOrExitTimeLabel.Visible = True
@@ -4831,20 +4836,20 @@ Public Class Form1
 
     ''' <summary>
     '''  Updates the calibration time remaining display on the home tab.
-    '''  This method updates the calibration due image based on the current sensor state
+    '''  This method updates the calibration due bitmap based on the current sensor state
     '''  and time to next calibration.
     ''' </summary>
     ''' <remarks>
-    '''  The calibration due image is set based on the time remaining for calibration
+    '''  The calibration due bitmap is set based on the time remaining for calibration
     '''  and the sensor state.
-    '''  If the sensor is in range, the image is updated to reflect the calibration status:
+    '''  If the sensor is in range, the bitmap is updated to reflect the calibration status:
     '''  - If the time to next calibration is unknown (>= Byte.MaxValue),
     '''    a default arc is shown.
-    '''  - If calibration is due now (0 hours), the image reflects whether
+    '''  - If calibration is due now (0 hours), the bitmap reflects whether
     '''    calibration is not ready or required.
-    '''  - If the time to next calibration is -1, the image is cleared.
-    '''  - Otherwise, the image shows a progress arc for the remaining minutes.
-    '''  The image is only visible if the sensor is in range.
+    '''  - If the time to next calibration is -1, the bitmap is cleared.
+    '''  - Otherwise, the bitmap shows a progress arc for the remaining minutes.
+    '''  The bitmap is only visible if the sensor is in range.
     ''' </remarks>
     Private Sub UpdateCalibrationTimeRemaining()
         Try
@@ -5035,19 +5040,19 @@ Public Class Form1
         Me.ShowCursorControls(showWhat:=CursorInfo.Hide1)
         Select Case infusionRemainingDuration \ 60
             Case > 24
-                Me.InfusionSetUpdate(image:=My.Resources.InfusionLifeOver24Hours,
-                                        IsInfusionSet:=True)
+                Me.InfusionSetUpdate(bitmap:=GetBitmapFromCache(imageName:="InfusionLifeOver24Hours"),
+                                     IsInfusionSet:=True)
             Case > 12
-                Me.InfusionSetUpdate(image:=My.Resources.InfusionLife12_24Hours,
+                Me.InfusionSetUpdate(bitmap:=My.Resources.InfusionLife12_24Hours,
                                         IsInfusionSet:=True)
             Case > 0
-                Me.InfusionSetUpdate(image:=My.Resources.InfusionLifeUnder12Hours,
+                Me.InfusionSetUpdate(bitmap:=My.Resources.InfusionLifeUnder12Hours,
                                         IsInfusionSet:=True)
             Case = 0
-                Me.InfusionSetUpdate(image:=My.Resources.InfusionLifeExpired,
+                Me.InfusionSetUpdate(bitmap:=My.Resources.InfusionLifeExpired,
                                         IsInfusionSet:=True)
             Case Else
-                Me.InfusionSetUpdate(image:=My.Resources.InfusionLifeUnknown,
+                Me.InfusionSetUpdate(bitmap:=My.Resources.InfusionLifeUnknown,
                                         IsInfusionSet:=True)
         End Select
     End Sub
