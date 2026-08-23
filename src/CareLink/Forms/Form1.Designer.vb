@@ -112,13 +112,13 @@ Partial Class Form1
         MenuOptionsSpeechRecognition80 = New ToolStripMenuItem()
         MenuOptionsShowChartLegends = New ToolStripMenuItem()
         MenuOptionsSpeechHelpShown = New ToolStripMenuItem()
-        ToolStripSeparator5 = New ToolStripSeparator()
+        ToolStripSeparator1 = New ToolStripSeparator()
         MenuOptionsAutoLogin = New ToolStripMenuItem()
-        ToolStripSeparator6 = New ToolStripSeparator()
+        ToolStripSeparator2 = New ToolStripSeparator()
         MenuOptionsAdvancedOptions = New ToolStripMenuItem()
         MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
         MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
-        ToolStripSeparator7 = New ToolStripSeparator()
+        ToolStripSeparator3 = New ToolStripSeparator()
         MenuOptionsColorPicker = New ToolStripMenuItem()
         MenuOptionsConfigureTiTR = New ToolStripMenuItem()
         MenuOptionsEditPumpSettings = New ToolStripMenuItem()
@@ -127,18 +127,18 @@ Partial Class Form1
         MenuStartExit = New ToolStripMenuItem()
         MenuStartHere = New ToolStripMenuItem()
         MenuStartUserLogin = New ToolStripMenuItem()
-        ToolStripSeparator8 = New ToolStripSeparator()
+        ToolStripSeparator4 = New ToolStripSeparator()
+        ToolStripSeparator5 = New ToolStripSeparator()
         MenuStartManuallyImportDeviceSettings = New ToolStripMenuItem()
         MenuStartShowPumpSetup = New ToolStripMenuItem()
-        ToolStripSeparator1 = New ToolStripSeparator()
         MenuStartLoadDataFile = New ToolStripMenuItem()
         MenuStartLoadExceptionReport = New ToolStripMenuItem()
-        ToolStripSeparator4 = New ToolStripSeparator()
+        ToolStripSeparator6 = New ToolStripSeparator()
         MenuStartUseLastFile = New ToolStripMenuItem()
         MenuStartUseTestData = New ToolStripMenuItem()
-        ToolStripSeparator2 = New ToolStripSeparator()
+        ToolStripSeparator7 = New ToolStripSeparator()
         MenuStartSaveSnapshot = New ToolStripMenuItem()
-        ToolStripSeparator3 = New ToolStripSeparator()
+        ToolStripSeparator8 = New ToolStripSeparator()
         MenuStrip1 = New MenuStrip()
         ModelLabel = New Label()
         NotifyIcon1 = New NotifyIcon(components)
@@ -347,7 +347,7 @@ Partial Class Form1
         AboveHighLimitMessageLabel.Anchor = AnchorStyles.Top
         AboveHighLimitMessageLabel.AutoSize = True
         AboveHighLimitMessageLabel.BackColor = Color.Transparent
-        AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         AboveHighLimitMessageLabel.ForeColor = Color.Yellow
         AboveHighLimitMessageLabel.Location = New Point(1241, 211)
         AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
@@ -374,7 +374,7 @@ Partial Class Form1
         ' 
         ActiveInsulinValue.BackColor = Color.Transparent
         ActiveInsulinValue.BorderStyle = BorderStyle.FixedSingle
-        ActiveInsulinValue.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        ActiveInsulinValue.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         ActiveInsulinValue.ForeColor = Color.LightGray
         ActiveInsulinValue.Location = New Point(995, 53)
         ActiveInsulinValue.Name = "ActiveInsulinValue"
@@ -388,7 +388,7 @@ Partial Class Form1
         AverageSGMessageLabel.Anchor = AnchorStyles.Top
         AverageSGMessageLabel.AutoSize = True
         AverageSGMessageLabel.BackColor = Color.Transparent
-        AverageSGMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        AverageSGMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         AverageSGMessageLabel.ForeColor = Color.LightGray
         AverageSGMessageLabel.Location = New Point(1255, 398)
         AverageSGMessageLabel.Name = "AverageSGMessageLabel"
@@ -431,7 +431,7 @@ Partial Class Form1
         BelowLowLimitMessageLabel.Anchor = AnchorStyles.Top
         BelowLowLimitMessageLabel.AutoSize = True
         BelowLowLimitMessageLabel.BackColor = Color.Transparent
-        BelowLowLimitMessageLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        BelowLowLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         BelowLowLimitMessageLabel.ForeColor = Color.Red
         BelowLowLimitMessageLabel.Location = New Point(1246, 333)
         BelowLowLimitMessageLabel.Name = "BelowLowLimitMessageLabel"
@@ -484,7 +484,7 @@ Partial Class Form1
         ' 
         LastSgOrExitTimeLabel.BackColor = Color.Transparent
         LastSgOrExitTimeLabel.Dock = DockStyle.Bottom
-        LastSgOrExitTimeLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        LastSgOrExitTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         LastSgOrExitTimeLabel.ForeColor = Color.LightGray
         LastSgOrExitTimeLabel.Location = New Point(0, 113)
         LastSgOrExitTimeLabel.Name = "LastSgOrExitTimeLabel"
@@ -497,7 +497,7 @@ Partial Class Form1
         ' 
         PumpBannerStateLabel.BackColor = Color.Lime
         PumpBannerStateLabel.Dock = DockStyle.Top
-        PumpBannerStateLabel.Font = New Font("Segoe UI", 8F)
+        PumpBannerStateLabel.Font = New Font("Segoe UI", 8.0F)
         PumpBannerStateLabel.ForeColor = Color.Black
         PumpBannerStateLabel.Location = New Point(0, 0)
         PumpBannerStateLabel.Name = "PumpBannerStateLabel"
@@ -521,7 +521,7 @@ Partial Class Form1
         ' CurrentSgLabel
         ' 
         CurrentSgLabel.BackColor = Color.Transparent
-        CurrentSgLabel.Font = New Font("Segoe UI", 18F, FontStyle.Bold)
+        CurrentSgLabel.Font = New Font("Segoe UI", 18.0F, FontStyle.Bold)
         CurrentSgLabel.ForeColor = Color.LightGray
         CurrentSgLabel.Location = New Point(0, 30)
         CurrentSgLabel.Name = "CurrentSgLabel"
@@ -560,7 +560,7 @@ Partial Class Form1
         ' 
         ' CursorMessage1Label
         ' 
-        CursorMessage1Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        CursorMessage1Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         CursorMessage1Label.ForeColor = Color.LightGray
         CursorMessage1Label.Location = New Point(284, 45)
         CursorMessage1Label.Name = "CursorMessage1Label"
@@ -572,7 +572,7 @@ Partial Class Form1
         ' 
         ' CursorMessage2Label
         ' 
-        CursorMessage2Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        CursorMessage2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         CursorMessage2Label.ForeColor = Color.LightGray
         CursorMessage2Label.Location = New Point(284, 67)
         CursorMessage2Label.Name = "CursorMessage2Label"
@@ -583,7 +583,7 @@ Partial Class Form1
         ' 
         ' CursorMessage3Label
         ' 
-        CursorMessage3Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        CursorMessage3Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         CursorMessage3Label.ForeColor = Color.LightGray
         CursorMessage3Label.Location = New Point(284, 90)
         CursorMessage3Label.Name = "CursorMessage3Label"
@@ -594,7 +594,7 @@ Partial Class Form1
         ' 
         ' CursorMessage4Label
         ' 
-        CursorMessage4Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        CursorMessage4Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         CursorMessage4Label.ForeColor = Color.LightGray
         CursorMessage4Label.Location = New Point(284, 111)
         CursorMessage4Label.Name = "CursorMessage4Label"
@@ -689,13 +689,13 @@ Partial Class Form1
         DgvCareLinkUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
         DgvCareLinkUsers.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         DataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.Font = New Font("Segoe UI", 9F)
+        DataGridViewCellStyle1.Font = New Font("Segoe UI", 9.0F)
         DataGridViewCellStyle1.WrapMode = DataGridViewTriState.True
         DgvCareLinkUsers.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         DgvCareLinkUsers.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
         DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle2.BackColor = SystemColors.Control
-        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9F)
+        DataGridViewCellStyle2.Font = New Font("Segoe UI", 9.0F)
         DataGridViewCellStyle2.ForeColor = SystemColors.ControlText
         DataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight
         DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
@@ -842,7 +842,7 @@ Partial Class Form1
         ' FullNameLabel
         ' 
         FullNameLabel.BackColor = Color.Transparent
-        FullNameLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        FullNameLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         FullNameLabel.ForeColor = Color.LightGray
         FullNameLabel.Location = New Point(1140, 0)
         FullNameLabel.Margin = New Padding(0)
@@ -856,7 +856,7 @@ Partial Class Form1
         ' 
         GraphLast24HoursLabel.Anchor = AnchorStyles.Top
         GraphLast24HoursLabel.AutoSize = True
-        GraphLast24HoursLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        GraphLast24HoursLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         GraphLast24HoursLabel.ForeColor = Color.Gray
         GraphLast24HoursLabel.Location = New Point(1286, 22)
         GraphLast24HoursLabel.Name = "GraphLast24HoursLabel"
@@ -906,7 +906,7 @@ Partial Class Form1
         ' 
         ' InsulinTypeLabel
         ' 
-        InsulinTypeLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        InsulinTypeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         InsulinTypeLabel.ForeColor = Color.LightGray
         InsulinTypeLabel.Location = New Point(978, 3)
         InsulinTypeLabel.Name = "InsulinTypeLabel"
@@ -917,7 +917,7 @@ Partial Class Form1
         ' 
         ' Last24HrAutoCorrectionLabel
         ' 
-        Last24HrAutoCorrectionLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrAutoCorrectionLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrAutoCorrectionLabel.ForeColor = Color.LightGray
         Last24HrAutoCorrectionLabel.Location = New Point(726, 45)
         Last24HrAutoCorrectionLabel.Name = "Last24HrAutoCorrectionLabel"
@@ -928,7 +928,7 @@ Partial Class Form1
         ' 
         ' Last24HrAutoCorrectionPercentLabel
         ' 
-        Last24HrAutoCorrectionPercentLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrAutoCorrectionPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrAutoCorrectionPercentLabel.ForeColor = Color.LightGray
         Last24HrAutoCorrectionPercentLabel.Location = New Point(871, 45)
         Last24HrAutoCorrectionPercentLabel.Name = "Last24HrAutoCorrectionPercentLabel"
@@ -939,7 +939,7 @@ Partial Class Form1
         ' 
         ' Last24HrAutoCorrectionUnitsLabel
         ' 
-        Last24HrAutoCorrectionUnitsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrAutoCorrectionUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrAutoCorrectionUnitsLabel.ForeColor = Color.LightGray
         Last24HrAutoCorrectionUnitsLabel.Location = New Point(904, 45)
         Last24HrAutoCorrectionUnitsLabel.Name = "Last24HrAutoCorrectionUnitsLabel"
@@ -950,7 +950,7 @@ Partial Class Form1
         ' 
         ' Last24HrBasalLabel
         ' 
-        Last24HrBasalLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrBasalLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrBasalLabel.ForeColor = Color.LightGray
         Last24HrBasalLabel.Location = New Point(726, 23)
         Last24HrBasalLabel.Name = "Last24HrBasalLabel"
@@ -961,7 +961,7 @@ Partial Class Form1
         ' 
         ' Last24HrBasalPercentLabel
         ' 
-        Last24HrBasalPercentLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrBasalPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrBasalPercentLabel.ForeColor = Color.LightGray
         Last24HrBasalPercentLabel.Location = New Point(871, 23)
         Last24HrBasalPercentLabel.Name = "Last24HrBasalPercentLabel"
@@ -972,7 +972,7 @@ Partial Class Form1
         ' 
         ' Last24HrBasalUnitsLabel
         ' 
-        Last24HrBasalUnitsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrBasalUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrBasalUnitsLabel.ForeColor = Color.LightGray
         Last24HrBasalUnitsLabel.Location = New Point(904, 23)
         Last24HrBasalUnitsLabel.Name = "Last24HrBasalUnitsLabel"
@@ -983,7 +983,7 @@ Partial Class Form1
         ' 
         ' Last24HrCarbsLabel
         ' 
-        Last24HrCarbsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrCarbsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrCarbsLabel.ForeColor = Color.LightGray
         Last24HrCarbsLabel.Location = New Point(726, 111)
         Last24HrCarbsLabel.Name = "Last24HrCarbsLabel"
@@ -994,7 +994,7 @@ Partial Class Form1
         ' 
         ' Last24HrCarbsValueLabel
         ' 
-        Last24HrCarbsValueLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrCarbsValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrCarbsValueLabel.ForeColor = Color.LightGray
         Last24HrCarbsValueLabel.Location = New Point(871, 111)
         Last24HrCarbsValueLabel.Name = "Last24HrCarbsValueLabel"
@@ -1005,7 +1005,7 @@ Partial Class Form1
         ' 
         ' Last24HrMealBolusLabel
         ' 
-        Last24HrMealBolusLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrMealBolusLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrMealBolusLabel.ForeColor = Color.LightGray
         Last24HrMealBolusLabel.Location = New Point(726, 67)
         Last24HrMealBolusLabel.Name = "Last24HrMealBolusLabel"
@@ -1016,7 +1016,7 @@ Partial Class Form1
         ' 
         ' Last24HrMealBolusPercentLabel
         ' 
-        Last24HrMealBolusPercentLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrMealBolusPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrMealBolusPercentLabel.ForeColor = Color.LightGray
         Last24HrMealBolusPercentLabel.Location = New Point(871, 67)
         Last24HrMealBolusPercentLabel.Name = "Last24HrMealBolusPercentLabel"
@@ -1027,7 +1027,7 @@ Partial Class Form1
         ' 
         ' Last24HrMealBolusUnitsLabel
         ' 
-        Last24HrMealBolusUnitsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrMealBolusUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrMealBolusUnitsLabel.ForeColor = Color.LightGray
         Last24HrMealBolusUnitsLabel.Location = New Point(904, 67)
         Last24HrMealBolusUnitsLabel.Name = "Last24HrMealBolusUnitsLabel"
@@ -1039,7 +1039,7 @@ Partial Class Form1
         ' Last24HrSummaryLabel
         ' 
         Last24HrSummaryLabel.BackColor = Color.DimGray
-        Last24HrSummaryLabel.Font = New Font("Segoe UI", 11F, FontStyle.Bold)
+        Last24HrSummaryLabel.Font = New Font("Segoe UI", 11.0F, FontStyle.Bold)
         Last24HrSummaryLabel.ForeColor = Color.Black
         Last24HrSummaryLabel.Location = New Point(722, 0)
         Last24HrSummaryLabel.Name = "Last24HrSummaryLabel"
@@ -1050,7 +1050,7 @@ Partial Class Form1
         ' 
         ' Last24HrTotalInsulinLabel
         ' 
-        Last24HrTotalInsulinLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrTotalInsulinLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrTotalInsulinLabel.ForeColor = Color.LightGray
         Last24HrTotalInsulinLabel.Location = New Point(726, 89)
         Last24HrTotalInsulinLabel.Name = "Last24HrTotalInsulinLabel"
@@ -1061,7 +1061,7 @@ Partial Class Form1
         ' 
         ' Last24HrTotalInsulinUnitsLabel
         ' 
-        Last24HrTotalInsulinUnitsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        Last24HrTotalInsulinUnitsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         Last24HrTotalInsulinUnitsLabel.ForeColor = Color.LightGray
         Last24HrTotalInsulinUnitsLabel.Location = New Point(904, 89)
         Last24HrTotalInsulinUnitsLabel.Name = "Last24HrTotalInsulinUnitsLabel"
@@ -1103,7 +1103,7 @@ Partial Class Form1
         ' MaxBasalPerHourLabel
         ' 
         MaxBasalPerHourLabel.AutoSize = True
-        MaxBasalPerHourLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        MaxBasalPerHourLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         MaxBasalPerHourLabel.ForeColor = Color.LightGray
         MaxBasalPerHourLabel.Location = New Point(978, 111)
         MaxBasalPerHourLabel.Name = "MaxBasalPerHourLabel"
@@ -1149,7 +1149,7 @@ Partial Class Form1
         ' 
         ' MenuOptions
         ' 
-        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsAudioAlerts, MenuOptionsSpeechRecognitionEnabled, MenuOptionsShowChartLegends, MenuOptionsSpeechHelpShown, ToolStripSeparator5, MenuOptionsAutoLogin, ToolStripSeparator6, MenuOptionsAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator7, MenuOptionsColorPicker, MenuOptionsConfigureTiTR, MenuOptionsEditPumpSettings})
+        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsAudioAlerts, MenuOptionsSpeechRecognitionEnabled, MenuOptionsShowChartLegends, MenuOptionsSpeechHelpShown, ToolStripSeparator1, MenuOptionsAutoLogin, ToolStripSeparator2, MenuOptionsAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator3, MenuOptionsColorPicker, MenuOptionsConfigureTiTR, MenuOptionsEditPumpSettings})
         MenuOptions.Name = "MenuOptions"
         MenuOptions.Size = New Size(61, 20)
         MenuOptions.Text = "Options"
@@ -1235,10 +1235,10 @@ Partial Class Form1
         MenuOptionsSpeechHelpShown.Size = New Size(186, 22)
         MenuOptionsSpeechHelpShown.Text = "Disable Speech Help"
         ' 
-        ' ToolStripSeparator5
+        ' ToolStripSeparator1
         ' 
-        ToolStripSeparator5.Name = "ToolStripSeparator5"
-        ToolStripSeparator5.Size = New Size(183, 6)
+        ToolStripSeparator1.Name = "ToolStripSeparator1"
+        ToolStripSeparator1.Size = New Size(183, 6)
         ' 
         ' MenuOptionsAutoLogin
         ' 
@@ -1247,10 +1247,10 @@ Partial Class Form1
         MenuOptionsAutoLogin.Size = New Size(186, 22)
         MenuOptionsAutoLogin.Text = "Auto Login"
         ' 
-        ' ToolStripSeparator6
+        ' ToolStripSeparator2
         ' 
-        ToolStripSeparator6.Name = "ToolStripSeparator6"
-        ToolStripSeparator6.Size = New Size(183, 6)
+        ToolStripSeparator2.Name = "ToolStripSeparator2"
+        ToolStripSeparator2.Size = New Size(183, 6)
         ' 
         ' MenuOptionsAdvancedOptions
         ' 
@@ -1277,10 +1277,10 @@ Partial Class Form1
         MenuOptionsUseLocalTimeZone.Size = New Size(186, 22)
         MenuOptionsUseLocalTimeZone.Text = "Use Local TImeZone"
         ' 
-        ' ToolStripSeparator7
+        ' ToolStripSeparator3
         ' 
-        ToolStripSeparator7.Name = "ToolStripSeparator7"
-        ToolStripSeparator7.Size = New Size(183, 6)
+        ToolStripSeparator3.Name = "ToolStripSeparator3"
+        ToolStripSeparator3.Size = New Size(183, 6)
         ' 
         ' MenuOptionsColorPicker
         ' 
@@ -1330,7 +1330,7 @@ Partial Class Form1
         ' 
         ' MenuStartHere
         ' 
-        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartUserLogin, ToolStripSeparator8, MenuStartManuallyImportDeviceSettings, MenuStartShowPumpSetup, ToolStripSeparator1, MenuStartLoadDataFile, MenuStartLoadExceptionReport, ToolStripSeparator4, MenuStartUseLastFile, MenuStartUseTestData, ToolStripSeparator2, MenuStartSaveSnapshot, MenuStartCleanUpObsoleteFiles, ToolStripSeparator3, MenuStartExit})
+        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartUserLogin, ToolStripSeparator4, MenuStartManuallyImportDeviceSettings, MenuStartShowPumpSetup, ToolStripSeparator5, MenuStartLoadDataFile, MenuStartLoadExceptionReport, ToolStripSeparator6, MenuStartUseLastFile, MenuStartUseTestData, ToolStripSeparator7, MenuStartSaveSnapshot, MenuStartCleanUpObsoleteFiles, ToolStripSeparator8, MenuStartExit})
         MenuStartHere.Name = "MenuStartHere"
         MenuStartHere.Size = New Size(71, 20)
         MenuStartHere.Text = "Start Here"
@@ -1341,10 +1341,15 @@ Partial Class Form1
         MenuStartUserLogin.Size = New Size(245, 22)
         MenuStartUserLogin.Text = "Login"
         ' 
-        ' ToolStripSeparator8
+        ' ToolStripSeparator4
         ' 
-        ToolStripSeparator8.Name = "ToolStripSeparator8"
-        ToolStripSeparator8.Size = New Size(242, 6)
+        ToolStripSeparator4.Name = "ToolStripSeparator4"
+        ToolStripSeparator4.Size = New Size(242, 6)
+        ' 
+        ' ToolStripSeparator5
+        ' 
+        ToolStripSeparator5.Name = "ToolStripSeparator5"
+        ToolStripSeparator5.Size = New Size(242, 6)
         ' 
         ' MenuStartManuallyImportDeviceSettings
         ' 
@@ -1359,11 +1364,6 @@ Partial Class Form1
         MenuStartShowPumpSetup.Size = New Size(245, 22)
         MenuStartShowPumpSetup.Text = "Show Pump Setup"
         ' 
-        ' ToolStripSeparator1
-        ' 
-        ToolStripSeparator1.Name = "ToolStripSeparator1"
-        ToolStripSeparator1.Size = New Size(242, 6)
-        ' 
         ' MenuStartLoadDataFile
         ' 
         MenuStartLoadDataFile.Name = "MenuStartLoadDataFile"
@@ -1376,10 +1376,10 @@ Partial Class Form1
         MenuStartLoadExceptionReport.Size = New Size(245, 22)
         MenuStartLoadExceptionReport.Text = "Load An Exception Report"
         ' 
-        ' ToolStripSeparator4
+        ' ToolStripSeparator6
         ' 
-        ToolStripSeparator4.Name = "ToolStripSeparator4"
-        ToolStripSeparator4.Size = New Size(242, 6)
+        ToolStripSeparator6.Name = "ToolStripSeparator6"
+        ToolStripSeparator6.Size = New Size(242, 6)
         ' 
         ' MenuStartUseLastFile
         ' 
@@ -1393,10 +1393,10 @@ Partial Class Form1
         MenuStartUseTestData.Size = New Size(245, 22)
         MenuStartUseTestData.Text = "Use Test Data"
         ' 
-        ' ToolStripSeparator2
+        ' ToolStripSeparator7
         ' 
-        ToolStripSeparator2.Name = "ToolStripSeparator2"
-        ToolStripSeparator2.Size = New Size(242, 6)
+        ToolStripSeparator7.Name = "ToolStripSeparator7"
+        ToolStripSeparator7.Size = New Size(242, 6)
         ' 
         ' MenuStartSaveSnapshot
         ' 
@@ -1405,10 +1405,10 @@ Partial Class Form1
         MenuStartSaveSnapshot.Size = New Size(245, 22)
         MenuStartSaveSnapshot.Text = "&Save Snapshot File"
         ' 
-        ' ToolStripSeparator3
+        ' ToolStripSeparator8
         ' 
-        ToolStripSeparator3.Name = "ToolStripSeparator3"
-        ToolStripSeparator3.Size = New Size(242, 6)
+        ToolStripSeparator8.Name = "ToolStripSeparator8"
+        ToolStripSeparator8.Size = New Size(242, 6)
         ' 
         ' MenuStrip1
         ' 
@@ -1435,7 +1435,7 @@ Partial Class Form1
         ' 
         ' PumpAITLabel
         ' 
-        PumpAITLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        PumpAITLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         PumpAITLabel.ForeColor = Color.LightGray
         PumpAITLabel.Location = New Point(978, 28)
         PumpAITLabel.Name = "PumpAITLabel"
@@ -1458,7 +1458,7 @@ Partial Class Form1
         ' PumpBatteryRemaining1Label
         ' 
         PumpBatteryRemaining1Label.BackColor = Color.Transparent
-        PumpBatteryRemaining1Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        PumpBatteryRemaining1Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         PumpBatteryRemaining1Label.ForeColor = Color.LightGray
         PumpBatteryRemaining1Label.Location = New Point(128, 90)
         PumpBatteryRemaining1Label.Name = "PumpBatteryRemaining1Label"
@@ -1470,7 +1470,7 @@ Partial Class Form1
         ' PumpBatteryRemaining2Label
         ' 
         PumpBatteryRemaining2Label.BackColor = Color.Transparent
-        PumpBatteryRemaining2Label.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        PumpBatteryRemaining2Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         PumpBatteryRemaining2Label.ForeColor = Color.LightGray
         PumpBatteryRemaining2Label.Location = New Point(128, 113)
         PumpBatteryRemaining2Label.Name = "PumpBatteryRemaining2Label"
@@ -1491,7 +1491,7 @@ Partial Class Form1
         ' 
         ' ReadingsLabel
         ' 
-        ReadingsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        ReadingsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         ReadingsLabel.ForeColor = Color.LightGray
         ReadingsLabel.Location = New Point(1140, 106)
         ReadingsLabel.Name = "ReadingsLabel"
@@ -1503,7 +1503,7 @@ Partial Class Form1
         ' RemainingInsulinUnits
         ' 
         RemainingInsulinUnits.BackColor = Color.Transparent
-        RemainingInsulinUnits.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        RemainingInsulinUnits.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         RemainingInsulinUnits.ForeColor = Color.LightGray
         RemainingInsulinUnits.Location = New Point(215, 90)
         RemainingInsulinUnits.Name = "RemainingInsulinUnits"
@@ -1528,7 +1528,7 @@ Partial Class Form1
         ' 
         SensorTimeLeftLabel.AutoSize = True
         SensorTimeLeftLabel.BackColor = Color.Transparent
-        SensorTimeLeftLabel.Font = New Font("Segoe UI", 7F, FontStyle.Bold)
+        SensorTimeLeftLabel.Font = New Font("Segoe UI", 7.0F, FontStyle.Bold)
         SensorTimeLeftLabel.ForeColor = Color.LightGray
         SensorTimeLeftLabel.Location = New Point(0, 80)
         SensorTimeLeftLabel.Margin = New Padding(0)
@@ -1560,7 +1560,7 @@ Partial Class Form1
         ' 
         ' SerialNumberButton
         ' 
-        SerialNumberButton.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        SerialNumberButton.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         SerialNumberButton.ForeColor = Color.LightGray
         SerialNumberButton.Location = New Point(1140, 74)
         SerialNumberButton.Name = "SerialNumberButton"
@@ -1576,7 +1576,7 @@ Partial Class Form1
         ' SgTrendLabel
         ' 
         SgTrendLabel.BackColor = Color.Black
-        SgTrendLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        SgTrendLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         SgTrendLabel.ForeColor = Color.LightGray
         SgTrendLabel.Location = New Point(461, 64)
         SgTrendLabel.Name = "SgTrendLabel"
@@ -1687,7 +1687,7 @@ Partial Class Form1
         ' 
         ' TrendValueLabel
         ' 
-        TrendValueLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        TrendValueLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         TrendValueLabel.ForeColor = Color.LightGray
         TrendValueLabel.Location = New Point(461, 90)
         TrendValueLabel.Name = "TrendValueLabel"
@@ -1711,7 +1711,7 @@ Partial Class Form1
         ' 
         TransmitterBatteryPercentLabel.AutoSize = True
         TransmitterBatteryPercentLabel.BackColor = Color.Transparent
-        TransmitterBatteryPercentLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        TransmitterBatteryPercentLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         TransmitterBatteryPercentLabel.ForeColor = Color.LightGray
         TransmitterBatteryPercentLabel.Location = New Point(543, 89)
         TransmitterBatteryPercentLabel.Name = "TransmitterBatteryPercentLabel"
@@ -1770,7 +1770,7 @@ Partial Class Form1
         ' 
         TirHeaderLabel.Anchor = AnchorStyles.Top
         TirHeaderLabel.AutoSize = True
-        TirHeaderLabel.Font = New Font("Segoe UI", 14F, FontStyle.Bold)
+        TirHeaderLabel.Font = New Font("Segoe UI", 14.0F, FontStyle.Bold)
         TirHeaderLabel.ForeColor = Color.Gray
         TirHeaderLabel.Location = New Point(1339, 0)
         TirHeaderLabel.Name = "TirHeaderLabel"
@@ -1839,7 +1839,7 @@ Partial Class Form1
         ' 
         TirMsgLabel.AutoSize = True
         TirMsgLabel.BackColor = Color.Transparent
-        TirMsgLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        TirMsgLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         TirMsgLabel.ForeColor = Color.DarkGreen
         TirMsgLabel.Location = New Point(19, 270)
         TirMsgLabel.Name = "TirMsgLabel"
@@ -1866,7 +1866,7 @@ Partial Class Form1
         ' 
         TiTRMgsLabel.AutoSize = True
         TiTRMgsLabel.BackColor = Color.Transparent
-        TiTRMgsLabel.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        TiTRMgsLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         TiTRMgsLabel.ForeColor = Color.Red
         TiTRMgsLabel.Location = New Point(123, 270)
         TiTRMgsLabel.Name = "TiTRMgsLabel"
@@ -1879,7 +1879,7 @@ Partial Class Form1
         ' 
         TiTRMgsLabel2.AutoSize = True
         TiTRMgsLabel2.BackColor = Color.Transparent
-        TiTRMgsLabel2.Font = New Font("Segoe UI", 12F, FontStyle.Bold)
+        TiTRMgsLabel2.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         TiTRMgsLabel2.ForeColor = Color.Red
         TiTRMgsLabel2.Location = New Point(162, 291)
         TiTRMgsLabel2.Name = "TiTRMgsLabel2"
@@ -1913,7 +1913,7 @@ Partial Class Form1
         TlpNotificationsClearedTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpNotificationsClearedTop.ColumnCount = 2
         TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle())
-        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpNotificationsClearedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpNotificationsClearedTop.Dock = DockStyle.Fill
         TlpNotificationsClearedTop.LabelText = "Notifications Cleared"
         TlpNotificationsClearedTop.Location = New Point(0, 0)
@@ -1929,7 +1929,7 @@ Partial Class Form1
         TlpNotificationsCleared.AutoSize = True
         TlpNotificationsCleared.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpNotificationsCleared.ColumnCount = 1
-        TlpNotificationsCleared.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpNotificationsCleared.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpNotificationsCleared.Dock = DockStyle.Fill
         TlpNotificationsCleared.Location = New Point(0, 0)
         TlpNotificationsCleared.Name = "TlpNotificationsCleared"
@@ -2014,7 +2014,7 @@ Partial Class Form1
         TabControlPage1.Controls.Add(TabPage14TherapyAlgorithmState)
         TabControlPage1.Controls.Add(TabPage15More)
         TabControlPage1.Dock = DockStyle.Fill
-        TabControlPage1.Font = New Font("Segoe UI", 9F)
+        TabControlPage1.Font = New Font("Segoe UI", 9.0F)
         TabControlPage1.Location = New Point(0, 24)
         TabControlPage1.Name = "TabControlPage1"
         TabControlPage1.Padding = New Point(6, 6)
@@ -2077,7 +2077,7 @@ Partial Class Form1
         TlpActiveInsulin.AutoSize = True
         TlpActiveInsulin.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpActiveInsulin.ColumnCount = 1
-        TlpActiveInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpActiveInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpActiveInsulin.Controls.Add(TlpActiveInsulinTop, 0, 0)
         TlpActiveInsulin.Controls.Add(DgvActiveInsulin, 0, 1)
         TlpActiveInsulin.Dock = DockStyle.Fill
@@ -2085,7 +2085,7 @@ Partial Class Form1
         TlpActiveInsulin.Name = "TlpActiveInsulin"
         TlpActiveInsulin.RowCount = 2
         TlpActiveInsulin.RowStyles.Add(New RowStyle())
-        TlpActiveInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpActiveInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpActiveInsulin.Size = New Size(1376, 658)
         TlpActiveInsulin.TabIndex = 0
         ' 
@@ -2096,7 +2096,7 @@ Partial Class Form1
         TlpActiveInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpActiveInsulinTop.ColumnCount = 2
         TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle())
-        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpActiveInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpActiveInsulinTop.Dock = DockStyle.Fill
         TlpActiveInsulinTop.LabelText = "Active Insulin"
         TlpActiveInsulinTop.Location = New Point(3, 3)
@@ -2123,7 +2123,7 @@ Partial Class Form1
         TlpBasal.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpBasal.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpBasal.ColumnCount = 1
-        TlpBasal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpBasal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpBasal.Controls.Add(TlpBasalTop, 0, 0)
         TlpBasal.Controls.Add(DgvBasal, 0, 1)
         TlpBasal.Dock = DockStyle.Fill
@@ -2132,7 +2132,7 @@ Partial Class Form1
         TlpBasal.Name = "TlpBasal"
         TlpBasal.RowCount = 2
         TlpBasal.RowStyles.Add(New RowStyle())
-        TlpBasal.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpBasal.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpBasal.Size = New Size(1376, 658)
         TlpBasal.TabIndex = 0
         ' 
@@ -2143,7 +2143,7 @@ Partial Class Form1
         TlpBasalTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpBasalTop.ColumnCount = 2
         TlpBasalTop.ColumnStyles.Add(New ColumnStyle())
-        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpBasalTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpBasalTop.Dock = DockStyle.Fill
         TlpBasalTop.LabelText = "Basal"
         TlpBasalTop.Location = New Point(6, 6)
@@ -2169,7 +2169,7 @@ Partial Class Form1
         TlpLastAlarm.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpLastAlarm.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpLastAlarm.ColumnCount = 1
-        TlpLastAlarm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpLastAlarm.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLastAlarm.Controls.Add(TlpLastAlarmTop, 0, 0)
         TlpLastAlarm.Controls.Add(DgvLastAlarm, 0, 1)
         TlpLastAlarm.Dock = DockStyle.Fill
@@ -2178,7 +2178,7 @@ Partial Class Form1
         TlpLastAlarm.Name = "TlpLastAlarm"
         TlpLastAlarm.RowCount = 2
         TlpLastAlarm.RowStyles.Add(New RowStyle())
-        TlpLastAlarm.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpLastAlarm.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpLastAlarm.Size = New Size(1376, 658)
         TlpLastAlarm.TabIndex = 0
         ' 
@@ -2189,7 +2189,7 @@ Partial Class Form1
         TlpLastAlarmTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpLastAlarmTop.ColumnCount = 2
         TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle())
-        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpLastAlarmTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLastAlarmTop.Dock = DockStyle.Fill
         TlpLastAlarmTop.LabelText = "Last Alarm"
         TlpLastAlarmTop.Location = New Point(6, 6)
@@ -2215,7 +2215,7 @@ Partial Class Form1
         TlpLastSG.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpLastSG.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpLastSG.ColumnCount = 1
-        TlpLastSG.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpLastSG.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLastSG.Controls.Add(TlpLastSgTop, 0, 0)
         TlpLastSG.Controls.Add(DgvLastSensorGlucose, 0, 1)
         TlpLastSG.Dock = DockStyle.Fill
@@ -2223,7 +2223,7 @@ Partial Class Form1
         TlpLastSG.Name = "TlpLastSG"
         TlpLastSG.RowCount = 2
         TlpLastSG.RowStyles.Add(New RowStyle())
-        TlpLastSG.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpLastSG.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpLastSG.Size = New Size(1376, 658)
         TlpLastSG.TabIndex = 1
         ' 
@@ -2234,7 +2234,7 @@ Partial Class Form1
         TlpLastSgTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpLastSgTop.ColumnCount = 2
         TlpLastSgTop.ColumnStyles.Add(New ColumnStyle())
-        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpLastSgTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLastSgTop.Dock = DockStyle.Fill
         TlpLastSgTop.LabelText = "Last Sensor Glucose"
         TlpLastSgTop.Location = New Point(6, 6)
@@ -2260,7 +2260,7 @@ Partial Class Form1
         TlpLimits.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpLimits.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpLimits.ColumnCount = 1
-        TlpLimits.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpLimits.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLimits.Controls.Add(TlpLimitsTop, 0, 0)
         TlpLimits.Controls.Add(DgvLimits, 0, 1)
         TlpLimits.Dock = DockStyle.Fill
@@ -2268,7 +2268,7 @@ Partial Class Form1
         TlpLimits.Name = "TlpLimits"
         TlpLimits.RowCount = 2
         TlpLimits.RowStyles.Add(New RowStyle())
-        TlpLimits.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpLimits.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpLimits.Size = New Size(1376, 658)
         TlpLimits.TabIndex = 0
         ' 
@@ -2279,7 +2279,7 @@ Partial Class Form1
         TlpLimitsTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpLimitsTop.ColumnCount = 2
         TlpLimitsTop.ColumnStyles.Add(New ColumnStyle())
-        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpLimitsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLimitsTop.Dock = DockStyle.Fill
         TlpLimitsTop.LabelText = "Limits"
         TlpLimitsTop.Location = New Point(6, 6)
@@ -2305,7 +2305,7 @@ Partial Class Form1
         TlpNotificationActive.AutoSize = True
         TlpNotificationActive.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpNotificationActive.ColumnCount = 1
-        TlpNotificationActive.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpNotificationActive.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpNotificationActive.Controls.Add(TlpNotificationActiveTop, 0, 0)
         TlpNotificationActive.Dock = DockStyle.Fill
         TlpNotificationActive.Location = New Point(0, 0)
@@ -2322,7 +2322,7 @@ Partial Class Form1
         TlpNotificationActiveTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpNotificationActiveTop.ColumnCount = 2
         TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle())
-        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpNotificationActiveTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpNotificationActiveTop.Dock = DockStyle.Fill
         TlpNotificationActiveTop.LabelText = "Active Notification"
         TlpNotificationActiveTop.Location = New Point(6, 6)
@@ -2358,7 +2358,7 @@ Partial Class Form1
         TlpPumpBannerState.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpPumpBannerState.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpPumpBannerState.ColumnCount = 1
-        TlpPumpBannerState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpPumpBannerState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpPumpBannerState.Controls.Add(TlpPumpBannerStateTop, 0, 0)
         TlpPumpBannerState.Controls.Add(DgvPumpBannerState, 0, 1)
         TlpPumpBannerState.Dock = DockStyle.Fill
@@ -2367,7 +2367,7 @@ Partial Class Form1
         TlpPumpBannerState.Name = "TlpPumpBannerState"
         TlpPumpBannerState.RowCount = 2
         TlpPumpBannerState.RowStyles.Add(New RowStyle())
-        TlpPumpBannerState.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpPumpBannerState.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpPumpBannerState.Size = New Size(1376, 658)
         TlpPumpBannerState.TabIndex = 0
         ' 
@@ -2378,7 +2378,7 @@ Partial Class Form1
         TlpPumpBannerStateTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpPumpBannerStateTop.ColumnCount = 2
         TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle())
-        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpPumpBannerStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpPumpBannerStateTop.Dock = DockStyle.Fill
         TlpPumpBannerStateTop.LabelText = "Pump Banner State"
         TlpPumpBannerStateTop.Location = New Point(6, 6)
@@ -2404,7 +2404,7 @@ Partial Class Form1
         TlpSgs.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpSgs.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpSgs.ColumnCount = 1
-        TlpSgs.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpSgs.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpSgs.Controls.Add(TlpSgsTop, 0, 0)
         TlpSgs.Controls.Add(DgvSGs, 0, 1)
         TlpSgs.Dock = DockStyle.Fill
@@ -2412,7 +2412,7 @@ Partial Class Form1
         TlpSgs.Name = "TlpSgs"
         TlpSgs.RowCount = 2
         TlpSgs.RowStyles.Add(New RowStyle())
-        TlpSgs.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpSgs.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpSgs.Size = New Size(1376, 658)
         TlpSgs.TabIndex = 1
         ' 
@@ -2423,7 +2423,7 @@ Partial Class Form1
         TlpSgsTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpSgsTop.ColumnCount = 2
         TlpSgsTop.ColumnStyles.Add(New ColumnStyle())
-        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpSgsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpSgsTop.Dock = DockStyle.Fill
         TlpSgsTop.LabelText = "Sensor Glucose Values"
         TlpSgsTop.Location = New Point(6, 6)
@@ -2448,7 +2448,7 @@ Partial Class Form1
         TlpTherapyAlgorithmState.AutoSize = True
         TlpTherapyAlgorithmState.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpTherapyAlgorithmState.ColumnCount = 1
-        TlpTherapyAlgorithmState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpTherapyAlgorithmState.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpTherapyAlgorithmState.Controls.Add(TlpTherapyAlgorithmStateTop, 0, 0)
         TlpTherapyAlgorithmState.Controls.Add(DgvTherapyAlgorithmState, 0, 1)
         TlpTherapyAlgorithmState.Dock = DockStyle.Fill
@@ -2456,7 +2456,7 @@ Partial Class Form1
         TlpTherapyAlgorithmState.Name = "TlpTherapyAlgorithmState"
         TlpTherapyAlgorithmState.RowCount = 2
         TlpTherapyAlgorithmState.RowStyles.Add(New RowStyle())
-        TlpTherapyAlgorithmState.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpTherapyAlgorithmState.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpTherapyAlgorithmState.Size = New Size(1376, 658)
         TlpTherapyAlgorithmState.TabIndex = 0
         ' 
@@ -2467,7 +2467,7 @@ Partial Class Form1
         TlpTherapyAlgorithmStateTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpTherapyAlgorithmStateTop.ColumnCount = 2
         TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle())
-        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpTherapyAlgorithmStateTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpTherapyAlgorithmStateTop.Dock = DockStyle.Fill
         TlpTherapyAlgorithmStateTop.LabelText = "Therapy Algorithm State"
         TlpTherapyAlgorithmStateTop.Location = New Point(6, 6)
@@ -2501,7 +2501,7 @@ Partial Class Form1
         TabControlPage2.Controls.Add(TabPage11AllUsers)
         TabControlPage2.Controls.Add(TabPage12BackToHomePage)
         TabControlPage2.Dock = DockStyle.Fill
-        TabControlPage2.Font = New Font("Segoe UI", 9F)
+        TabControlPage2.Font = New Font("Segoe UI", 9.0F)
         TabControlPage2.Location = New Point(0, 24)
         TabControlPage2.Name = "TabControlPage2"
         TabControlPage2.Padding = New Point(6, 6)
@@ -2525,7 +2525,7 @@ Partial Class Form1
         TlpAutoBasalDelivery.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpAutoBasalDelivery.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpAutoBasalDelivery.ColumnCount = 1
-        TlpAutoBasalDelivery.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpAutoBasalDelivery.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpAutoBasalDelivery.Controls.Add(TlpAutoBasalDeliveryTop, 0, 0)
         TlpAutoBasalDelivery.Controls.Add(DgvAutoBasalDelivery, 0, 1)
         TlpAutoBasalDelivery.Dock = DockStyle.Fill
@@ -2533,7 +2533,7 @@ Partial Class Form1
         TlpAutoBasalDelivery.Name = "TlpAutoBasalDelivery"
         TlpAutoBasalDelivery.RowCount = 2
         TlpAutoBasalDelivery.RowStyles.Add(New RowStyle())
-        TlpAutoBasalDelivery.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpAutoBasalDelivery.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpAutoBasalDelivery.Size = New Size(1376, 658)
         TlpAutoBasalDelivery.TabIndex = 0
         ' 
@@ -2544,7 +2544,7 @@ Partial Class Form1
         TlpAutoBasalDeliveryTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpAutoBasalDeliveryTop.ColumnCount = 2
         TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle())
-        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpAutoBasalDeliveryTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpAutoBasalDeliveryTop.Dock = DockStyle.Fill
         TlpAutoBasalDeliveryTop.LabelText = "Marker : Auto Basal Delivery"
         TlpAutoBasalDeliveryTop.Location = New Point(6, 6)
@@ -2570,7 +2570,7 @@ Partial Class Form1
         TlpAutoModeStatus.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpAutoModeStatus.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpAutoModeStatus.ColumnCount = 1
-        TlpAutoModeStatus.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpAutoModeStatus.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpAutoModeStatus.Controls.Add(TlpAutoModeStatusTop, 0, 0)
         TlpAutoModeStatus.Controls.Add(DgvAutoModeStatus, 0, 1)
         TlpAutoModeStatus.Dock = DockStyle.Fill
@@ -2578,7 +2578,7 @@ Partial Class Form1
         TlpAutoModeStatus.Name = "TlpAutoModeStatus"
         TlpAutoModeStatus.RowCount = 2
         TlpAutoModeStatus.RowStyles.Add(New RowStyle())
-        TlpAutoModeStatus.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpAutoModeStatus.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpAutoModeStatus.Size = New Size(1376, 658)
         TlpAutoModeStatus.TabIndex = 0
         ' 
@@ -2589,7 +2589,7 @@ Partial Class Form1
         TlpAutoModeStatusTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpAutoModeStatusTop.ColumnCount = 2
         TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle())
-        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpAutoModeStatusTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpAutoModeStatusTop.Dock = DockStyle.Fill
         TlpAutoModeStatusTop.LabelText = "Marker : Auto Mode Status"
         TlpAutoModeStatusTop.Location = New Point(6, 6)
@@ -2616,7 +2616,7 @@ Partial Class Form1
         TlpBgReadings.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpBgReadings.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpBgReadings.ColumnCount = 1
-        TlpBgReadings.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpBgReadings.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpBgReadings.Controls.Add(TlpBgReadingsTop, 0, 0)
         TlpBgReadings.Controls.Add(DgvSensorBgReadings, 0, 1)
         TlpBgReadings.Dock = DockStyle.Fill
@@ -2624,7 +2624,7 @@ Partial Class Form1
         TlpBgReadings.Name = "TlpBgReadings"
         TlpBgReadings.RowCount = 2
         TlpBgReadings.RowStyles.Add(New RowStyle())
-        TlpBgReadings.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpBgReadings.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpBgReadings.Size = New Size(1376, 658)
         TlpBgReadings.TabIndex = 1
         ' 
@@ -2635,7 +2635,7 @@ Partial Class Form1
         TlpBgReadingsTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpBgReadingsTop.ColumnCount = 2
         TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle())
-        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpBgReadingsTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpBgReadingsTop.Dock = DockStyle.Fill
         TlpBgReadingsTop.LabelText = "Marker : Blood Glucose Readings"
         TlpBgReadingsTop.Location = New Point(6, 6)
@@ -2662,7 +2662,7 @@ Partial Class Form1
         TlpCalibration.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpCalibration.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpCalibration.ColumnCount = 1
-        TlpCalibration.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpCalibration.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpCalibration.Controls.Add(TlpCalibrationTop, 0, 0)
         TlpCalibration.Controls.Add(DgvCalibration, 0, 1)
         TlpCalibration.Dock = DockStyle.Fill
@@ -2670,7 +2670,7 @@ Partial Class Form1
         TlpCalibration.Name = "TlpCalibration"
         TlpCalibration.RowCount = 2
         TlpCalibration.RowStyles.Add(New RowStyle())
-        TlpCalibration.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpCalibration.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpCalibration.Size = New Size(1376, 658)
         TlpCalibration.TabIndex = 1
         ' 
@@ -2681,7 +2681,7 @@ Partial Class Form1
         TlpCalibrationTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpCalibrationTop.ColumnCount = 2
         TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle())
-        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpCalibrationTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpCalibrationTop.Dock = DockStyle.Fill
         TlpCalibrationTop.LabelText = "Marker : Calibration"
         TlpCalibrationTop.Location = New Point(6, 6)
@@ -2708,7 +2708,7 @@ Partial Class Form1
         TlpInsulin.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpInsulin.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpInsulin.ColumnCount = 1
-        TlpInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpInsulin.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpInsulin.Controls.Add(TlpInsulinTop, 0, 0)
         TlpInsulin.Controls.Add(DgvInsulin, 0, 1)
         TlpInsulin.Dock = DockStyle.Fill
@@ -2716,7 +2716,7 @@ Partial Class Form1
         TlpInsulin.Name = "TlpInsulin"
         TlpInsulin.RowCount = 2
         TlpInsulin.RowStyles.Add(New RowStyle())
-        TlpInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpInsulin.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpInsulin.Size = New Size(1376, 658)
         TlpInsulin.TabIndex = 1
         ' 
@@ -2727,7 +2727,7 @@ Partial Class Form1
         TlpInsulinTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpInsulinTop.ColumnCount = 2
         TlpInsulinTop.ColumnStyles.Add(New ColumnStyle())
-        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpInsulinTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpInsulinTop.Dock = DockStyle.Fill
         TlpInsulinTop.LabelText = "Marker : Insulin"
         TlpInsulinTop.Location = New Point(6, 6)
@@ -2754,7 +2754,7 @@ Partial Class Form1
         TlpLowGlucoseSuspended.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpLowGlucoseSuspended.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpLowGlucoseSuspended.ColumnCount = 1
-        TlpLowGlucoseSuspended.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpLowGlucoseSuspended.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLowGlucoseSuspended.Controls.Add(TlpLowGlucoseSuspendedTop, 0, 0)
         TlpLowGlucoseSuspended.Controls.Add(DgvLowGlucoseSuspended, 0, 1)
         TlpLowGlucoseSuspended.Dock = DockStyle.Fill
@@ -2762,7 +2762,7 @@ Partial Class Form1
         TlpLowGlucoseSuspended.Name = "TlpLowGlucoseSuspended"
         TlpLowGlucoseSuspended.RowCount = 2
         TlpLowGlucoseSuspended.RowStyles.Add(New RowStyle())
-        TlpLowGlucoseSuspended.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpLowGlucoseSuspended.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpLowGlucoseSuspended.Size = New Size(1376, 658)
         TlpLowGlucoseSuspended.TabIndex = 1
         ' 
@@ -2773,7 +2773,7 @@ Partial Class Form1
         TlpLowGlucoseSuspendedTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpLowGlucoseSuspendedTop.ColumnCount = 2
         TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle())
-        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpLowGlucoseSuspendedTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLowGlucoseSuspendedTop.Dock = DockStyle.Fill
         TlpLowGlucoseSuspendedTop.LabelText = "Marker : Low Glucose Suspended"
         TlpLowGlucoseSuspendedTop.Location = New Point(6, 6)
@@ -2800,7 +2800,7 @@ Partial Class Form1
         TlpMeal.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpMeal.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpMeal.ColumnCount = 1
-        TlpMeal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpMeal.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpMeal.Controls.Add(TlpMealTop, 0, 0)
         TlpMeal.Controls.Add(DgvMeal, 0, 1)
         TlpMeal.Dock = DockStyle.Fill
@@ -2808,7 +2808,7 @@ Partial Class Form1
         TlpMeal.Name = "TlpMeal"
         TlpMeal.RowCount = 2
         TlpMeal.RowStyles.Add(New RowStyle())
-        TlpMeal.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpMeal.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpMeal.Size = New Size(1376, 658)
         TlpMeal.TabIndex = 1
         ' 
@@ -2819,7 +2819,7 @@ Partial Class Form1
         TlpMealTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpMealTop.ColumnCount = 2
         TlpMealTop.ColumnStyles.Add(New ColumnStyle())
-        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpMealTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpMealTop.Dock = DockStyle.Fill
         TlpMealTop.LabelText = "Marker : Meal"
         TlpMealTop.Location = New Point(6, 6)
@@ -2846,7 +2846,7 @@ Partial Class Form1
         TlpTimeChange.AutoSizeMode = AutoSizeMode.GrowAndShrink
         TlpTimeChange.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpTimeChange.ColumnCount = 1
-        TlpTimeChange.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpTimeChange.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpTimeChange.Controls.Add(TlpTimeChangeTop, 0, 0)
         TlpTimeChange.Controls.Add(DgvTimeChange, 0, 1)
         TlpTimeChange.Dock = DockStyle.Fill
@@ -2854,7 +2854,7 @@ Partial Class Form1
         TlpTimeChange.Name = "TlpTimeChange"
         TlpTimeChange.RowCount = 2
         TlpTimeChange.RowStyles.Add(New RowStyle())
-        TlpTimeChange.RowStyles.Add(New RowStyle(SizeType.Percent, 100F))
+        TlpTimeChange.RowStyles.Add(New RowStyle(SizeType.Percent, 100.0F))
         TlpTimeChange.Size = New Size(1376, 658)
         TlpTimeChange.TabIndex = 1
         ' 
@@ -2865,7 +2865,7 @@ Partial Class Form1
         TlpTimeChangeTop.ButtonText = "Return To 'Summary Data' Tab"
         TlpTimeChangeTop.ColumnCount = 2
         TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle())
-        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100F))
+        TlpTimeChangeTop.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpTimeChangeTop.Dock = DockStyle.Fill
         TlpTimeChangeTop.LabelText = "Marker : Time Change"
         TlpTimeChangeTop.Location = New Point(6, 6)
@@ -2935,7 +2935,7 @@ Partial Class Form1
         ' 
         ' Form1
         ' 
-        Me.AutoScaleDimensions = New SizeF(96F, 96F)
+        Me.AutoScaleDimensions = New SizeF(96.0F, 96.0F)
         Me.AutoScaleMode = AutoScaleMode.Dpi
         Me.ClientSize = New Size(1384, 741)
         Me.Controls.Add(TabControlPage1)

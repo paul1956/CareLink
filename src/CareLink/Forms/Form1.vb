@@ -2630,6 +2630,32 @@ Public Class Form1
 
 #Region "Form1 Menu Events"
 
+    ''' <summary>
+    '''  Hides separators that are at the start, end, or next to another separator,
+    '''  or between only hidden items.
+    ''' </summary>
+    Private Sub UpdateSeparators(items As ToolStripItemCollection)
+        Dim prevVisibleIsSeparator As Boolean = True ' Start as True to hide leading separators
+
+        For Each item As ToolStripItem In items
+            If TypeOf item Is ToolStripSeparator Then
+                ' Hide if previous visible item was a separator or none
+                item.Visible = Not prevVisibleIsSeparator
+                prevVisibleIsSeparator = True
+            Else
+                ' For normal menu items
+                If item.Visible Then
+                    prevVisibleIsSeparator = False
+                End If
+            End If
+        Next
+
+        ' Hide trailing separator if last visible was a separator
+        If items.Count > 0 AndAlso TypeOf items(items.Count - 1) Is ToolStripSeparator Then
+            items(items.Count - 1).Visible = False
+        End If
+    End Sub
+
 #Region "Start Here Menu Events"
 
     ''' <summary>
@@ -2676,9 +2702,15 @@ Public Class Form1
         Me.MenuStartUseLastFile.Enabled = File.Exists(path:=GetLastDownloadFileWithPath)
         Me.MenuStartSaveSnapshot.Enabled = Not IsRecentDataEmpty()
 
+        Dim debuggerIsAttached As Boolean = Debugger.IsAttached
+        Me.MenuStartLoadExceptionReport.Visible = debuggerIsAttached
+        Me.MenuStartUseLastFile.Visible = debuggerIsAttached
+        Me.MenuStartUseTestData.Visible = debuggerIsAttached
+        Me.MenuStartLoadDataFile.Visible = debuggerIsAttached
         searchPattern = $"{BaseErrorReportName}*.txt"
-        Me.MenuStartLoadExceptionReport.Visible = AnyMatchingFiles(path, searchPattern)
-
+        Me.MenuStartLoadExceptionReport.Visible =
+            debuggerIsAttached AndAlso AnyMatchingFiles(path, searchPattern)
+        Me.UpdateSeparators(items:=Me.MenuStartHere.DropDownItems)
         searchPattern = $"{GetUserName()}Settings.pdf"
         Dim validUser As Boolean = IsNullOrWhiteSpace(value:=GetUserName())
         Dim userPdfExists As Boolean =
