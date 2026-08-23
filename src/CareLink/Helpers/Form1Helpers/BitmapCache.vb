@@ -47,6 +47,13 @@ Public Module BitmapCache
         s_bitmaps.Clear()
     End Sub
 
+    ''' <summary>
+    '''  Gets a Bitmap for PNG files stored in Images directory from Cache
+    ''' </summary>
+    ''' <param name="imageName">
+    '''  The name of the file without the extension.
+    ''' </param>
+    ''' <returns>Bitmap of file</returns>
     Public Function GetBitmapFromCache(imageName As String) As Bitmap
         Dim value As Bitmap = Nothing
         If s_bitmaps.TryGetValue(key:=imageName, value) Then
