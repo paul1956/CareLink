@@ -380,7 +380,7 @@ Public Class Form1
                                 If CDbl(markerTag1).AlmostZero Then
                                     Me.CursorMessage1Label.Text = "Calibration"
                                     Me.CursorMessage2Label.Text = "Only"
-                                    Me.InfusionSetUpdate(bitmap:=My.Resources.CalibrationDotRed,
+                                    Me.InfusionSetUpdate(name:="CalibrationDotRed",
                                                          IsInfusionSet:=False)
                                 Else
                                     Me.CursorMessage1Label.Text = markerTag0
@@ -391,13 +391,13 @@ Public Class Form1
                                              "Manual Basal",
                                              "Basal",
                                              "Min Auto Basal"
-                                            Me.InfusionSetUpdate(bitmap:=My.Resources.InsulinVial,
+                                            Me.InfusionSetUpdate(name:="InsulinVial",
                                                                  IsInfusionSet:=False)
                                         Case "Bolus"
-                                            Me.InfusionSetUpdate(bitmap:=My.Resources.InsulinVial,
+                                            Me.InfusionSetUpdate(name:="InsulinVial",
                                                                  IsInfusionSet:=False)
                                         Case "Meal"
-                                            Me.InfusionSetUpdate(bitmap:=My.Resources.MealImageLarge,
+                                            Me.InfusionSetUpdate(bitmap:=GetBitmapFromCache(name:="MealImage"),
                                                                  IsInfusionSet:=False)
                                         Case Else
                                             Stop
@@ -424,7 +424,7 @@ Public Class Form1
                                 Select Case markerTags(index:=1).Trim
                                     Case "Calibration accepted",
                                          "Calibration not accepted"
-                                        Me.InfusionSetUpdate(bitmap:=My.Resources.CalibrationDotRed,
+                                        Me.InfusionSetUpdate(name:="CalibrationDotRed",
                                                              IsInfusionSet:=False)
                                     Case "Not used for calibration"
                                         Me.InfusionSetUpdate(bitmap:=My.Resources.CalibrationDot,
@@ -487,6 +487,11 @@ Public Class Form1
         Catch ex As Exception
             Stop
         End Try
+    End Sub
+
+    Private Sub InfusionSetUpdate(name As String, IsInfusionSet As Boolean)
+        Dim bitmap As Bitmap = GetBitmapFromCache(name)
+        Me.InfusionSetUpdate(bitmap, IsInfusionSet)
     End Sub
 
     Private Sub InfusionSetUpdate(bitmap As Bitmap, IsInfusionSet As Boolean)
@@ -2457,6 +2462,17 @@ Public Class Form1
         End If
 
         PreloadBitmaps()
+
+        Me.InsulinLevelPictureBox.Image =
+            GetBitmapFromCache(name:="ReservoirRemainsOver85Percent")
+
+        Me.SmartGuardShieldPictureBox.Image =
+            GetBitmapFromCache(name:="SmartGuardShield")
+
+
+        OverlayTransparentImages(pictureBox:=Me.PumpBatteryPictureBox,
+                                 baseImageName:="FlexPump",
+                                 overlayImageName:="FlexBatteryFull")
 
         Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
@@ -4759,20 +4775,20 @@ Public Class Form1
                     Case "CALIBRATION_REQUIRED"
                         Me.SmartGuardShieldPictureBox.Image =
                             If(IsFlex(),
-                               My.Resources.SmartGuardShield,
-                               My.Resources.Shield_Disabled)
+                               GetBitmapFromCache(name:="SmartGuardFlexSuspended"),
+                               GetBitmapFromCache(name:="ShieldDisabled"))
                     Case "NO_ERROR_MESSAGE", "CALIBRATING"
                         Me.SmartGuardShieldPictureBox.Image =
-                               My.Resources.SmartGuardShield
+                               GetBitmapFromCache(name:="SmartGuardShield")
                     Case "WARM_UP"
                         Me.SmartGuardShieldPictureBox.Image =
-                            My.Resources.Shield_Disabled
+                            GetBitmapFromCache(name:="ShieldDisabled")
                     Case "UNKNOWN"
                         Me.SmartGuardShieldPictureBox.Image =
-                            My.Resources.FlexActiveInsulinReset
+                            GetBitmapFromCache(name:="FlexActiveInsulinReset")
                     Case Else
                         Me.SmartGuardShieldPictureBox.Image =
-                            My.Resources.SmartGuardShield
+                            GetBitmapFromCache(name:="SmartGuardShield")
                 End Select
                 Me.ShieldUnitsLabel.Visible = True
                 Me.LastSgOrExitTimeLabel.Visible = True
@@ -4870,8 +4886,7 @@ Public Class Form1
                     Else
                         Dim minutesToNextCalibration As Short =
                             s_timeToNextCalibrationMinutes
-                        Dim calibrationDotRed As Bitmap =
-                            My.Resources.CalibrationDotRed
+                        Dim calibrationDotRed As Bitmap = GetBitmapFromCache(name:="CalibrationDotRed")
                         Me.CalibrationDueImage.Image =
                             calibrationDotRed.DrawCenteredArc(minutesToNextCalibration)
                     End If
@@ -5040,14 +5055,14 @@ Public Class Form1
         Me.ShowCursorControls(showWhat:=CursorInfo.Hide1)
         Select Case infusionRemainingDuration \ 60
             Case > 24
-                Me.InfusionSetUpdate(bitmap:=GetBitmapFromCache(imageName:="InfusionLifeOver24Hours"),
+                Me.InfusionSetUpdate(bitmap:=GetBitmapFromCache(name:="InfusionLifeOver24Hours"),
                                      IsInfusionSet:=True)
             Case > 12
-                Me.InfusionSetUpdate(bitmap:=My.Resources.InfusionLife12_24Hours,
-                                        IsInfusionSet:=True)
+                Me.InfusionSetUpdate(name:="InfusionLife12_24Hours",
+                                     IsInfusionSet:=True)
             Case > 0
-                Me.InfusionSetUpdate(bitmap:=My.Resources.InfusionLifeUnder12Hours,
-                                        IsInfusionSet:=True)
+                Me.InfusionSetUpdate(name:="InfusionLifeUnder12Hours",
+                                     IsInfusionSet:=True)
             Case = 0
                 Me.InfusionSetUpdate(bitmap:=My.Resources.InfusionLifeExpired,
                                         IsInfusionSet:=True)
@@ -5071,8 +5086,7 @@ Public Class Form1
         Try
             Me.InsulinLevelPictureBox.SizeMode = PictureBoxSizeMode.CenterImage
             If Not PatientData.ConduitInRange Then
-                Me.InsulinLevelPictureBox.Image =
-                    Me.ImageList1.Images(index:=8)
+                Me.InsulinLevelPictureBox.Image = GetBitmapFromCache(name:="ReservoirRemainsUnknown")
                 Me.RemainingInsulinUnits.Text = "???U"
             Else
                 Dim remainingUnits As Double =
@@ -5081,28 +5095,28 @@ Public Class Form1
                 Select Case PatientData.ReservoirLevelPercent
                     Case >= 85
                         Me.InsulinLevelPictureBox.Image =
-                            Me.ImageList1.Images(index:=7)
+                            GetBitmapFromCache(name:="ReservoirRemainsOver85Percent")
                     Case >= 71
                         Me.InsulinLevelPictureBox.Image =
-                            Me.ImageList1.Images(index:=6)
+                            GetBitmapFromCache(name:="ReservoirRemainsOver71Percent")
                     Case >= 57
                         Me.InsulinLevelPictureBox.Image =
-                            Me.ImageList1.Images(index:=5)
+                            GetBitmapFromCache(name:="ReservoirRemainsOver57Percent")
                     Case >= 43
                         Me.InsulinLevelPictureBox.Image =
-                            Me.ImageList1.Images(index:=4)
+                            GetBitmapFromCache(name:="ReservoirRemainsOver43Percent")
                     Case >= 29
                         Me.InsulinLevelPictureBox.Image =
-                            Me.ImageList1.Images(index:=3)
+                            GetBitmapFromCache(name:="ReservoirRemainsOver29Percent")
                     Case >= 15
                         Me.InsulinLevelPictureBox.Image =
-                            Me.ImageList1.Images(index:=2)
+                            GetBitmapFromCache(name:="ReservoirRemainsOver15Percent")
                     Case >= 1
                         Me.InsulinLevelPictureBox.Image =
-                            Me.ImageList1.Images(index:=1)
+                            GetBitmapFromCache(name:="ReservoirRemainsOver01Percent")
                     Case Else
                         Me.InsulinLevelPictureBox.Image =
-                            Me.ImageList1.Images(index:=0)
+                            GetBitmapFromCache(name:="ReservoirEmpty")
                 End Select
             End If
         Finally
@@ -5140,22 +5154,22 @@ Public Class Form1
             Me.PumpBatteryRemaining1Label.Text = tsp.DayPart
             Me.PumpBatteryRemaining2Label.Text = tsp.HourPart
             Dim minutes As Double = hours Mod 60
-            Dim overlayImage As Bitmap
+            Dim overlayImageName As String
             Select Case True
                 Case hours > 24
-                    overlayImage = My.Resources.FlexBatteryFull
+                    overlayImageName = "FlexBatteryFull"
                 Case hours > 1
-                    overlayImage = My.Resources.FlexBattery1_10Hours
+                    overlayImageName = "FlexBattery1-10Hours"
                 Case minutes > 1
-                    overlayImage = My.Resources.FlexBatteryLessThen1Hour
+                    overlayImageName = "FlexBatteryLessThen1Hour"
                 Case minutes > 0
-                    overlayImage = My.Resources.FlexBatteryLessThen1Hour
+                    overlayImageName = "FlexBatteryDeplated"
                 Case Else
-                    overlayImage = My.Resources.PumpBatteryCritical
+                    overlayImageName = "PumpBatteryCritical"
             End Select
             OverlayTransparentImages(pictureBox:=Me.PumpBatteryPictureBox,
-                                     baseImage:=My.Resources.FlexPump,
-                                     overlayImage)
+                                     baseImageName:="FlexPump",
+                                     overlayImageName)
         Else
             Dim batteryLeftPercent As Integer
             Me.PumpBatteryRemaining2Label.Text = $"{Math.Abs(value:=batteryLeftPercent)}%"

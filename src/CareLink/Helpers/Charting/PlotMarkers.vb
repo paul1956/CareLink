@@ -255,9 +255,10 @@ Friend Module PlotMarkers
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then Continue For
                         If markerMealDictionary.TryAdd(key:=markerOADateTime, value:=yMinNativeMmolL) Then
+                            Dim mealImage As Bitmap = GetBitmapFromCache(name:="MealImage")
                             Dim height As Double = If(NativeMmolL,
-                                                      s_mealImage.Height / 2 / MmolLUnitsDivisor,
-                                                      s_mealImage.Height / 2)
+                                                      mealImage.Height / 2 / MmolLUnitsDivisor,
+                                                      mealImage.Height / 2)
                             markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=yMinNativeMmolL + height)
                             Dim markerColor As Color = Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
                             markerSeriesPoints.Last.Color = markerColor

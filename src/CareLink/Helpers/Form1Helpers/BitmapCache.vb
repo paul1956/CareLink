@@ -6,7 +6,7 @@ Imports System.IO
 
 Public Module BitmapCache
     ' Storage for the preloaded Bitmaps
-    Private ReadOnly s_bitmaps As New Dictionary(Of String, Bitmap)(comparer:=StringComparer.OrdinalIgnoreCase)
+    Friend ReadOnly s_bitmaps As New Dictionary(Of String, Bitmap)(comparer:=StringComparer.OrdinalIgnoreCase)
 
     ''' <summary>
     '''  Loads all PNG files as Bitmaps into memory.
@@ -50,13 +50,13 @@ Public Module BitmapCache
     ''' <summary>
     '''  Gets a Bitmap for PNG files stored in Images directory from Cache
     ''' </summary>
-    ''' <param name="imageName">
+    ''' <param name="name">
     '''  The name of the file without the extension.
     ''' </param>
     ''' <returns>Bitmap of file</returns>
-    Public Function GetBitmapFromCache(imageName As String) As Bitmap
+    Public Function GetBitmapFromCache(name As String) As Bitmap
         Dim value As Bitmap = Nothing
-        If s_bitmaps.TryGetValue(key:=imageName, value) Then
+        If s_bitmaps.TryGetValue(key:=name, value) Then
             ' Assign the preloaded Bitmap safely
             Return value
         Else

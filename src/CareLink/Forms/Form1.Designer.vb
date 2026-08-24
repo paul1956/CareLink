@@ -75,7 +75,6 @@ Partial Class Form1
         FullNameLabel = New Label()
         GraphLast24HoursLabel = New Label()
         HighTirComplianceLabel = New Label()
-        ImageList1 = New ImageList(components)
         InsulinLevelPictureBox = New PictureBox()
         InsulinTypeLabel = New Label()
         Last24HrAutoCorrectionLabel = New Label()
@@ -545,7 +544,6 @@ Partial Class Form1
         ' 
         ' SmartGuardShieldPictureBox
         ' 
-        SmartGuardShieldPictureBox.Image = My.Resources.Resources.SmartGuardShield
         SmartGuardShieldPictureBox.Location = New Point(14, 16)
         SmartGuardShieldPictureBox.Margin = New Padding(5)
         SmartGuardShieldPictureBox.Name = "SmartGuardShieldPictureBox"
@@ -877,24 +875,8 @@ Partial Class Form1
         HighTirComplianceLabel.Text = "High" & vbCrLf & "Excellent²"
         HighTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' ImageList1
-        ' 
-        ImageList1.ColorDepth = ColorDepth.Depth32Bit
-        ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), ImageListStreamer)
-        ImageList1.TransparentColor = Color.Transparent
-        ImageList1.Images.SetKeyName(0, "ReservoirRemains0.png")
-        ImageList1.Images.SetKeyName(1, "ReservoirRemains1+.png")
-        ImageList1.Images.SetKeyName(2, "ReservoirRemains15+.png")
-        ImageList1.Images.SetKeyName(3, "ReservoirRemains29+.png")
-        ImageList1.Images.SetKeyName(4, "ReservoirRemains43+.png")
-        ImageList1.Images.SetKeyName(5, "ReservoirRemains57+.png")
-        ImageList1.Images.SetKeyName(6, "ReservoirRemains71+.png")
-        ImageList1.Images.SetKeyName(7, "ReservoirRemains85+.png")
-        ImageList1.Images.SetKeyName(8, "ReservoirRemainsUnknown.png")
-        ' 
         ' InsulinLevelPictureBox
         ' 
-        InsulinLevelPictureBox.Image = CType(resources.GetObject("InsulinLevelPictureBox.Image"), Image)
         InsulinLevelPictureBox.InitialImage = Nothing
         InsulinLevelPictureBox.Location = New Point(224, 4)
         InsulinLevelPictureBox.Name = "InsulinLevelPictureBox"
@@ -1447,7 +1429,6 @@ Partial Class Form1
         ' PumpBatteryPictureBox
         ' 
         PumpBatteryPictureBox.ErrorImage = Nothing
-        PumpBatteryPictureBox.Image = My.Resources.Resources.PumpBatteryFull
         PumpBatteryPictureBox.Location = New Point(128, 4)
         PumpBatteryPictureBox.Name = "PumpBatteryPictureBox"
         PumpBatteryPictureBox.Size = New Size(84, 84)
@@ -3130,7 +3111,6 @@ Partial Class Form1
     Friend WithEvents FullNameLabel As Label
     Friend WithEvents GraphLast24HoursLabel As Label
     Friend WithEvents HighTirComplianceLabel As Label
-    Friend WithEvents ImageList1 As ImageList
     Friend WithEvents InsulinLevelPictureBox As PictureBox
     Friend WithEvents InsulinTypeLabel As Label
     Friend WithEvents Last24HrAutoCorrectionLabel As Label

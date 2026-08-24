@@ -139,9 +139,6 @@
   <data name="CalibrationDot" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\CalibrationDot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="CalibrationDotRed" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\CalibrationDotRed.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="CalibrationNotReady" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\CalibrationNotReady.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -168,18 +165,6 @@
   </data>
   <data name="FeedbackSmile_16xDark" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\FeedbackSmile_16xDark.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="InsulinVial" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\InsulinVial.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="InsulinVial_Tiny" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\InsulinVial Tiny.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="MealImage" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MealImage .png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="MealImageLarge" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\MealImageLarge.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NotificationAlertGray_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\NotificationAlertGray_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -235,27 +220,6 @@
   <data name="PumpConnectivityToTransmitterUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\PumpConnectivityToTransmitterUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ReservoirRemains15_" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ReservoirRemains15+.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ReservoirRemains29_" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ReservoirRemains29+.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ReservoirRemains43_" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ReservoirRemains43+.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ReservoirRemains57_" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ReservoirRemains57+.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ReservoirRemains71_" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ReservoirRemains71+.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ReservoirRemains85_" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ReservoirRemains85+.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ReservoirRemainsUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ReservoirRemainsUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="SelectAll" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\SelectAll.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -277,9 +241,6 @@
   <data name="SensorLifeOK" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\SensorLifeOK.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Shield_Disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\Shield Disabled.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="TransmitterBatteryCritical" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\TransmitterBatteryCritical.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -297,9 +258,6 @@
   </data>
   <data name="TransmitterBatteryUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\TransmitterBatteryUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="_Exit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\Exit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="QuestionMark" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\QuestionMark.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -325,32 +283,14 @@
   <data name="GridLight" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\GridLight.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="FlexActiveInsulinReset" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\FlexActiveInsulinReset.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="FlexBattery1-10Hours" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\FlexBattery1-10Hours.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="FlexBatteryDeplated" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\FlexBatteryDeplated.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="FlexBatteryLessThen1Hour" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\FlexBatteryLessThen1Hour.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="FlexBatteryUnknown" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\FlexBatteryUnknown.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="FlexBatteryFull" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\FlexlBatterFully.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="FlexPump" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\FlexPump.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="FlexSmartGuardSuspended" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\FlexSmartGuardSuspended.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="InfusionLife12-24Hours" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\InfusionLife12-24Hours.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="InfusionLifeExpired" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\InfusionLifeExpired.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -363,9 +303,6 @@
   </data>
   <data name="InfusionNotsetup" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\InfusionNotsetup.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ReservoirRemains0" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Images\ReservoirRemains0.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="SmartGuardShield" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Images\SmartGuardShield.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

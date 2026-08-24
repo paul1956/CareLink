@@ -169,11 +169,5 @@ Public Module SystemConstants
 
 #End Region
 
-#Region "Images"
-
-    Friend ReadOnly s_insulinImage As Bitmap = My.Resources.InsulinVial_Tiny
-    Friend ReadOnly s_mealImage As Bitmap = My.Resources.MealImage
-
-#End Region
 
 End Module

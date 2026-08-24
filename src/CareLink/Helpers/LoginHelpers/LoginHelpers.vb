@@ -240,6 +240,7 @@ Friend Module LoginHelpers
     ''' <param name="mainForm">The main application form.</param>
     Friend Sub FinishInitialization(mainForm As Form1)
         mainForm.Cursor = Cursors.Default
+
         mainForm.InitializeSummaryTabCharts()
         mainForm.InitializeActiveInsulinTabChart()
         mainForm.InitializeTimeInRangeArea()
