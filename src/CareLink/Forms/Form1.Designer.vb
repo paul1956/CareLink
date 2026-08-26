@@ -1932,7 +1932,7 @@ Partial Class Form1
         ' 
         StatusStripSpeech.DisplayStyle = ToolStripItemDisplayStyle.Text
         StatusStripSpeech.Name = "StatusStripSpeech"
-        StatusStripSpeech.Size = New Size(395, 20)
+        StatusStripSpeech.Size = New Size(300, 20)
         StatusStripSpeech.Spring = True
         StatusStripSpeech.Text = " "
         ' 

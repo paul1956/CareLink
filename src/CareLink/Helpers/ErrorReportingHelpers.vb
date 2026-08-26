@@ -32,14 +32,19 @@ Friend Module ErrorReportingHelpers
             ' No change in memory usage, no need to report
             Return
         End If
-        Dim upDown As String = If(diff > 0,
-                                  "↑",
-                                  "↓")
 
-        Dim message As String =
-            $"Current process memory usage: {memInMB:F2} MB, from last: {upDown} {Math.Abs(value:=diff):F2} MB"
-        Debug.WriteLine(message)
-        My.Forms.Form1.StatusStripSpacerRight.Text = message
+        Dim upDown As String
+        Select Case diff
+            Case Is > 0
+                upDown = "↑"
+            Case 0
+                upDown = "-"
+            Case Else
+                upDown = "↓"
+        End Select
+        Dim changeAmount As String = $"{Math.Abs(value:=diff):F2}"
+        My.Forms.Form1.StatusStripSpacerRight.Text =
+            $"Process memory usage: {memInMB:F2} MB, {upDown} {changeAmount:F2} MB"
 
         s_lastReportedMemory = memInMB
 

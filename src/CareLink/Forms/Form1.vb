@@ -2456,7 +2456,7 @@ Public Class Form1
             My.Settings.Save()
         End If
         Encoding.RegisterProvider(provider:=CodePagesEncodingProvider.Instance)
-        Me.StatusStripDotNetVersion.Text = $"Dot Net Version: {RuntimeInformation.FrameworkDescription}"
+        Me.StatusStripDotNetVersion.Text = RuntimeInformation.FrameworkDescription
         If Not Directory.Exists(path:=GetProjectDataDirectory()) Then
             Dim lastError As String = $"Can't create required project directories!"
             Directory.CreateDirectory(path:=GetProjectDataDirectory())
