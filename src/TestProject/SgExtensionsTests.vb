@@ -56,7 +56,7 @@ Public Class SgExtensionsTests
         Dim expected As String = value.ToString(provider)
 
         ' Act
-        Dim actual As String = value.ScaleSg()
+        Dim actual As String = value.ScaleSgStr()
 
         ' Assert
         actual.Should().Be(expected)
@@ -73,7 +73,7 @@ Public Class SgExtensionsTests
         Dim expected As String = scaled.ToString(provider)
 
         ' Act
-        Dim actual As String = value.ScaleSg()
+        Dim actual As String = value.ScaleSgStr()
 
         ' Assert
         actual.Should().Be(expected)

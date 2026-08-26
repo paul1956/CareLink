@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 Imports System.Text.Json.Serialization
@@ -12,7 +13,8 @@ Public Module JsonExtensions
     '''  Default <see cref="JsonSerializerOptions"/> for serialization with indented output.
     ''' </summary>
     Private ReadOnly Property SerializerOptions As New JsonSerializerOptions With
-        {.WriteIndented = True}
+        {.WriteIndented = True,
+        .NumberHandling = JsonNumberHandling.AllowReadingFromString}
 
     ''' <summary>
     '''  Default <see cref="JsonSerializerOptions"/> for deserialization.
@@ -20,9 +22,8 @@ Public Module JsonExtensions
     '''  uses case-insensitive property names, and disallows unmapped members.
     ''' </summary>
     Public ReadOnly Property DeserializationOptions As New JsonSerializerOptions() With
-        {.NumberHandling = JsonNumberHandling.WriteAsString,
-         .PropertyNameCaseInsensitive = True,
-         .UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow}
+        {.NumberHandling = JsonNumberHandling.AllowReadingFromString,
+         .PropertyNameCaseInsensitive = True}
 
     Private Sub HandleExtendedInfo(item As KeyValuePair(Of String,
                                        JsonElement), resultDictionary As Dictionary(Of String, String))
@@ -55,6 +56,53 @@ Public Module JsonExtensions
                 Exit Select
         End Select
     End Sub
+
+    Public Function CollectAllExtensionData(obj As Object) As List(Of KeyValuePair(Of String, JsonElement))
+        Dim results As New List(Of KeyValuePair(Of String, JsonElement))()
+
+        If obj Is Nothing Then Return results
+
+        Dim t As Type = obj.GetType()
+
+        ' Find the single JsonExtensionData property (if present)
+        Dim predicate As Func(Of PropertyInfo, Boolean) =
+            Function(p)
+                Return Attribute.IsDefined(element:=p,
+                                           attributeType:=GetType(JsonExtensionDataAttribute))
+            End Function
+
+        Dim extProp As PropertyInfo =
+            t.GetProperties().FirstOrDefault(predicate:=predicate)
+
+        If extProp IsNot Nothing Then
+            Dim collection As Dictionary(Of String, JsonElement) =
+                TryCast(extProp.GetValue(obj), Dictionary(Of String, JsonElement))
+            If collection IsNot Nothing Then
+                results.AddRange(collection)
+            End If
+        End If
+
+        ' Recursively inspect child properties
+        For Each p As PropertyInfo In t.GetProperties()
+            Dim child As Object
+            Try
+                If p.PropertyType.IsClass AndAlso
+                    p.PropertyType IsNot GetType(String) Then
+
+                    If p.GetIndexParameters().Length = 0 Then
+                        child = p.GetValue(obj)
+                        If child IsNot Nothing Then
+                            results.AddRange(collection:=CollectAllExtensionData(obj:=child))
+                        End If
+                    End If
+                End If
+            Catch ex As Exception
+                Stop
+            End Try
+        Next
+
+        Return results
+    End Function
 
     ''' <summary>
     '''  Converts a JSON item (key-value pair) to its <see langword="String"/> representation.

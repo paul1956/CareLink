@@ -52,6 +52,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Extensions\MarkerExtensions.vb" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Images\AboutBox.png" />
     <None Remove="Images\AboutBoxDark.png" />
     <None Remove="Images\AdvancedView.png" />

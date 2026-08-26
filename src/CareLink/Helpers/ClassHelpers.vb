@@ -87,4 +87,14 @@ Public Module ClassHelpers
         Return cellStyle
     End Function
 
+    Public Function GetPropertyValue(obj As Object, propName As String) As Object
+        Dim type As Type = obj.GetType()
+        Dim propInfo As PropertyInfo = type.GetProperty(name:=propName)
+        If propInfo IsNot Nothing Then
+            Return propInfo.GetValue(obj, index:=Nothing)
+        Else
+            Throw New ArgumentException(message:=$"Property '{propName}' not found.")
+        End If
+    End Function
+
 End Module

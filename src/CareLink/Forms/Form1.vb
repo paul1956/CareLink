@@ -677,18 +677,11 @@ Public Class Form1
         Dim columnName As String = dgv.Columns(index:=e.ColumnIndex).Name
         Try
             Select Case columnName
-                Case NameOf(Insulin.ActivationType)
-                    Select Case Convert.ToString(e.Value)
-                        Case "AUTOCORRECTION"
-                            e.Value = "Auto Correction"
-                            Dim textColor As Color = GetGraphLineColor(key:="Auto Correction")
-                            dgv.CellFormattingApplyBoldColor(e, textColor)
-                        Case "FAST", "RECOMMENDED", "UNDETERMINED"
-                            dgv.CellFormattingToTitle(e)
-                        Case Else
-                            dgv.CellFormattingSetForegroundColor(e)
-                    End Select
-                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                Case NameOf(ActiveInsulin.DateTime)
+                    dgv.CellFormattingDateTime(e)
+
+                Case NameOf(ActiveInsulin.Precision)
+                    dgv.CellFormattingToTitle(e)
 
                 Case "Amount"
                     Select Case dgv.Name
@@ -698,7 +691,35 @@ Public Class Form1
                             dgv.CellFormattingInteger(e, message:=GetCarbDefaultUnit)
                     End Select
 
-                Case NameOf(BasalPerHour.BasalRate), NameOf(BasalPerHour.BasalRate2)
+                Case NameOf(AutoBasalDelivery.BolusAmount)
+                    If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
+                    Else
+                        dgv.CellFormattingSetForegroundColor(e)
+                    End If
+
+                Case NameOf(AutoModeStatus.DisplayTime),
+                     NameOf(AutoModeStatus.Timestamp)
+                    dgv.CellFormattingDateTime(e)
+
+                Case NameOf(BannerState.Message)
+                    Select Case dgv.Name
+                        Case NameOf(DgvPumpBannerState)
+                            dgv.CellFormattingToTitle(e)
+                        Case NameOf(DgvSGs)
+                            e.Value = Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ")
+                            dgv.CellFormattingSetForegroundColor(e)
+                        Case Else
+                            e.Value = Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ")
+                            dgv.CellFormattingSetForegroundColor(e)
+                    End Select
+
+                Case NameOf(BannerState.TimeRemaining)
+                    e.CellFormatting0Value()
+
+                Case NameOf(BasalPerHour.BasalRate),
+                     NameOf(BasalPerHour.BasalRate2)
+
                     If dgv.Name = NameOf(DgvBasalPerHour) Then
                         dgv.CellFormattingSingleValue(e, digits:=3, TrailingText:=" U/h")
                         e.CellStyle.Font = s_font12
@@ -714,21 +735,52 @@ Public Class Form1
                     End Try
                     dgv.CellFormattingSetForegroundColor(e)
 
-                Case NameOf(AutoBasalDelivery.BolusAmount)
-                    If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
-                    Else
-                        dgv.CellFormattingSetForegroundColor(e)
-                    End If
+                Case NameOf(Calibration.UnitValue),
+                     NameOf(Calibration.UnitValueMgdL),
+                     NameOf(Calibration.UnitValueMmolL)
+                    dgv.CellFormattingSg(e, partialKey:=NameOf(Calibration.UnitValue))
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+                    dgv.CellFormattingSetForegroundColor(e)
 
-                Case NameOf(Insulin.BolusType), NameOf(Insulin.InsulinType)
+                Case NameOf(Insulin.ActivationType)
+                    Select Case Convert.ToString(e.Value)
+                        Case "AUTOCORRECTION"
+                            e.Value = "Auto Correction"
+                            Dim textColor As Color = GetGraphLineColor(key:="Auto Correction")
+                            dgv.CellFormattingApplyBoldColor(e, textColor)
+                        Case "FAST", "RECOMMENDED", "UNDETERMINED"
+                            dgv.CellFormattingToTitle(e)
+                        Case Else
+                            dgv.CellFormattingSetForegroundColor(e)
+                    End Select
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+
+                Case NameOf(Insulin.BolusType),
+                     NameOf(Insulin.InsulinType)
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     dgv.CellFormattingToTitle(e)
 
-                Case NameOf(ActiveInsulin.DateTime),
-                     NameOf(AutoModeStatus.DisplayTime),
-                     NameOf(AutoModeStatus.Timestamp)
-                    dgv.CellFormattingDateTime(e)
+                Case NameOf(Insulin.SafeMealReduction)
+                    If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
+                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.OrangeRed)
+                    Else
+                        e.Value = EmptyString
+                        dgv.CellFormattingSetForegroundColor(e)
+                    End If
+
+                Case NameOf(InsulinPerHour.Hour),
+                     NameOf(InsulinPerHour.Hour2)
+
+                    Dim hour As Integer =
+                        TimeSpan.FromHours(CInt(e.Value)).Hours
+                    Dim time As New Date(year:=1,
+                                         month:=1,
+                                         day:=1,
+                                         hour,
+                                         minute:=0,
+                                         second:=0)
+                    e.Value = time.ToString(format:=s_timeWithoutMinuteFormat)
+                    e.CellStyle.Font = s_font12
 
                 Case NameOf(Limit.HighLimit),
                      NameOf(Limit.HighLimitMgdL),
@@ -740,39 +792,7 @@ Public Class Form1
                      NameOf(Limit.lowLimitMmolL)
                     dgv.CellFormattingSg(e, partialKey:=NameOf(Limit.LowLimit))
 
-                Case NameOf(InsulinPerHour.Hour),
-                     NameOf(InsulinPerHour.Hour2)
-                    Dim hour As Integer = TimeSpan.FromHours(CInt(e.Value)).Hours
-                    Dim time As New Date(
-                        year:=1,
-                        month:=1,
-                        day:=1,
-                        hour,
-                        minute:=0,
-                        second:=0)
-                    e.Value = time.ToString(format:=s_timeWithoutMinuteFormat)
-                    e.CellStyle.Font = s_font12
 
-                Case NameOf(BannerState.Message)
-                    Select Case dgv.Name
-                        Case NameOf(DgvPumpBannerState)
-                            dgv.CellFormattingToTitle(e)
-                        Case NameOf(DgvSGs)
-                            e.Value = Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ")
-                            dgv.CellFormattingSetForegroundColor(e)
-                        Case Else
-                            e.Value = Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ")
-                            dgv.CellFormattingSetForegroundColor(e)
-                    End Select
-                Case NameOf(ActiveInsulin.Precision)
-                    dgv.CellFormattingToTitle(e)
-                Case NameOf(Insulin.SafeMealReduction)
-                    If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.OrangeRed)
-                    Else
-                        e.Value = EmptyString
-                        dgv.CellFormattingSetForegroundColor(e)
-                    End If
                 Case NameOf(SG.SensorState)
                     If Equals(e.Value, "NO_ERROR_MESSAGE") Then
                         dgv.CellFormattingToTitle(e)
@@ -781,24 +801,13 @@ Public Class Form1
                         dgv.CellFormattingToTitle(e)
                     End If
 
-                Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
+                Case NameOf(SG.sg),
+                     NameOf(SG.sgMgdL),
+                     NameOf(SG.sgMmolL)
                     dgv.CellFormattingSg(e, partialKey:=NameOf(SG.sg))
-
-                Case NameOf(BannerState.TimeRemaining)
-                    e.CellFormatting0Value()
 
                 Case NameOf(SG.Timestamp)
                     dgv.CellFormattingDateTime(e)
-
-                Case NameOf(SG.sg), NameOf(SG.sgMmolL), NameOf(SG.sgMgdL)
-                    dgv.CellFormattingSg(e, partialKey:=NameOf(SG.sg))
-
-                Case NameOf(Calibration.UnitValue),
-                     NameOf(Calibration.UnitValueMgdL),
-                     NameOf(Calibration.UnitValueMmolL)
-                    dgv.CellFormattingSg(e, partialKey:=NameOf(Calibration.UnitValue))
-                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-                    dgv.CellFormattingSetForegroundColor(e)
 
                 Case Else
                     Dim valueType As Type = dgv.Columns(index:=e.ColumnIndex).ValueType
@@ -2127,6 +2136,7 @@ Public Class Form1
                         Case ServerDataEnum.currentServerTime,
                              ServerDataEnum.conduitBatteryLevel,
                              ServerDataEnum.lastConduitUpdateServerDateTime,
+                             ServerDataEnum.maxAutoBasalRate,
                              ServerDataEnum.medicalDeviceTime,
                              ServerDataEnum.lastMedicalDeviceDataUpdateServerTime,
                              ServerDataEnum.timeToNextCalibrationMinutes,
@@ -2139,7 +2149,6 @@ Public Class Form1
                              ServerDataEnum.reservoirAmount,
                              ServerDataEnum.pumpBatteryLevelPercent,
                              ServerDataEnum.reservoirRemainingUnits,
-                             ServerDataEnum.maxAutoBasalRate,
                              ServerDataEnum.maxBolusAmount,
                              ServerDataEnum.sgBelowLimit,
                              ServerDataEnum.lastSensorTime,
@@ -2174,6 +2183,7 @@ Public Class Form1
                                 align:=DataGridViewContentAlignment.MiddleCenter,
                                 pad:=New Padding(all:=1))
                             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Black, emIncrease:=1)
+
                         Case Else
                             Stop
                     End Select
@@ -2702,26 +2712,40 @@ Public Class Form1
     Private Sub MenuStartHere_DropDownOpening(sender As Object, e As EventArgs) Handles MenuStartHere.DropDownOpening
         Dim debuggerIsAttached As Boolean = Debugger.IsAttached
         Me.MenuStartLoadExceptionReport.Available = debuggerIsAttached
+        Me.MenuStartLoadExceptionReport.Visible = debuggerIsAttached
 
         Me.MenuStartUseLastFile.Available = debuggerIsAttached
+        Me.MenuStartUseLastFile.Visible = debuggerIsAttached
 
         Me.MenuStartUseTestData.Available = debuggerIsAttached
+        Me.MenuStartUseTestData.Visible = debuggerIsAttached
+
+        Dim show As Boolean = debuggerIsAttached AndAlso
+            Not PatientDataElement.IsEmpty
+
+        Me.MenuStartShowRawJsonData.Available = show
+        Me.MenuStartShowRawJsonData.Enabled = show
+        Me.MenuStartShowRawJsonData.Visible = debuggerIsAttached
 
         Dim searchPattern As String = $"CareLink*.json"
         Dim path As String = GetProjectDataDirectory()
-        Me.MenuStartLoadDataFile.Enabled =
-            debuggerIsAttached AndAlso AnyMatchingFiles(path, searchPattern)
-
-        Me.MenuStartUseLastFile.Enabled =
-            debuggerIsAttached AndAlso File.Exists(path:=GetLastDownloadFileWithPath)
+        show = debuggerIsAttached AndAlso AnyMatchingFiles(path, searchPattern)
+        Me.MenuStartLoadDataFile.Enabled = show
 
         Me.MenuStartSaveSnapshot.Enabled = Not IsRecentDataEmpty()
 
+        Dim enabled As Boolean = debuggerIsAttached AndAlso
+            File.Exists(path:=GetLastDownloadFileWithPath)
+        Me.MenuStartUseLastFile.Enabled = enabled
+
+
         searchPattern = $"{BaseErrorReportName}*.txt"
-        Me.MenuStartLoadExceptionReport.Available =
-            debuggerIsAttached AndAlso AnyMatchingFiles(path, searchPattern)
+        enabled = debuggerIsAttached AndAlso
+            AnyMatchingFiles(path, searchPattern)
+        Me.MenuStartLoadExceptionReport.Available = enabled
 
         searchPattern = $"{GetUserName()}Settings.pdf"
+
         Dim validUser As Boolean = IsNullOrWhiteSpace(value:=GetUserName())
         Dim userPdfExists As Boolean =
             Not (validUser OrElse Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern))
@@ -2729,9 +2753,10 @@ Public Class Form1
                                             CurrentPdf IsNot Nothing AndAlso
                                             CurrentPdf.IsValid
 
-        Me.MenuStartManuallyImportDeviceSettings.Enabled =
-            Directory.GetFiles(path:=GetDownloadsDirectory(),
-                               searchPattern:=$"*.pdf").Length > 0
+        enabled = Directory.GetFiles(path:=GetDownloadsDirectory(),
+                                     searchPattern:=$"*.pdf").Length > 0
+        Me.MenuStartManuallyImportDeviceSettings.Enabled = enabled
+
 
         Me.MenuStartHere.DropDownItems.UpdateSeparators()
 
@@ -2943,6 +2968,11 @@ Public Class Form1
                    buttonStyle:=MsgBoxStyle.OkOnly,
                    title:="Missing Settings PDF File")
         End If
+    End Sub
+
+    Private Sub MenuStartShowRawJsonData_Click(sender As Object, e As EventArgs) Handles MenuStartShowRawJsonData.Click
+        Dim rawDataDialog As New RawDataViewerDialog(json:=PatientDataElement)
+        rawDataDialog.ShowDialog(owner:=My.Forms.Form1)
     End Sub
 
     ''' <summary>
@@ -4609,11 +4639,11 @@ Public Class Form1
 
                     Select Case marker.Type
                         Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
-                            bolusAmount = marker.GetSingle(NameOf(AutoBasalDelivery.BolusAmount))
+                            bolusAmount = marker.Data.DataValues.BolusAmount
                             shouldAdd = True
 
                         Case "INSULIN"
-                            bolusAmount = marker.GetSingle(NameOf(Insulin.DeliveredFastAmount))
+                            bolusAmount = marker.Data.DataValues.DeliveredFastAmount
                             shouldAdd = True
 
                         Case "LOW_GLUCOSE_SUSPENDED"
@@ -4938,10 +4968,10 @@ Public Class Form1
             Dim marker As Marker = markerWithIndex.Value
             Select Case marker.Type
                 Case "INSULIN"
-                    Dim deliveredAmount As String = marker.GetSingle(
-                        key:=NameOf(Insulin.DeliveredFastAmount)).ToString
+                    Dim deliveredAmount As String =
+                        marker.Data.DataValues.DeliveredFastAmount.ToString
                     s_totalDailyDose += deliveredAmount.ParseSingle(digits:=3)
-                    Select Case marker.GetString(key:=NameOf(Insulin.ActivationType))
+                    Select Case marker.Data.DataValues.ActivationType
                         Case "AUTOCORRECTION"
                             s_totalAutoCorrection += deliveredAmount.ParseSingle(digits:=3)
                         Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
@@ -4949,19 +4979,17 @@ Public Class Form1
                     End Select
 
                 Case "AUTO_BASAL_DELIVERY"
-                    Dim amount As Single = marker.GetSingle(
-                        key:=NameOf(AutoBasalDelivery.BolusAmount),
-                        digits:=3)
+                    Dim amount As Single =
+                        marker.Data.DataValues.BolusAmount.RoundToSingle(digits:=3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MANUAL_BASAL_DELIVERY"
-                    Dim amount As Single = marker.GetSingle(
-                        key:=NameOf(AutoBasalDelivery.BolusAmount),
-                        digits:=3)
+                    Dim amount As Single =
+                        marker.Data.DataValues.BolusAmount.RoundToSingle(digits:=3)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MEAL"
-                    s_totalCarbs += CInt(marker.GetSingle(key:="amount"))
+                    s_totalCarbs += marker.Data.DataValues.Amount.RoundToSingle(digits:=3)
                 Case "CALIBRATION"
                     ' IGNORE HERE
                 Case "BG_READING"
@@ -5698,7 +5726,8 @@ Public Class Form1
         Me.UpdateDosingAndCarbs()
 
         key = NameOf(ServerDataEnum.lastName)
-        Me.FullNameLabel.Text = $"{PatientData.FirstName} {RecentData.GetStringValueOrEmpty(key)}"
+        Me.FullNameLabel.Text =
+            $"{PatientData.FirstName} {RecentData.GetStringValueOrEmpty(key)}"
 
         Dim modelNumber As String = mdi.ModelNumber
         Me.ModelLabel.Text = $"{modelNumber} HW Version = {mdi.HardwareRevision}"

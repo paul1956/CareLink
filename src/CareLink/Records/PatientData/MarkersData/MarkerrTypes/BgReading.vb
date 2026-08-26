@@ -14,8 +14,10 @@ Public Class BgReading
         Me.Kind = "Marker"
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
-        Me.UnitValue = item.GetSingle(key:=NameOf(UnitValue), digits:=0, considerValue:=True)
-        Me.bgUnits = item.GetString(key:=NameOf(bgUnits))
+        With item.Data.DataValues
+            Me.UnitValue = .unitValue.RoundToSingle(digits:=0, considerValue:=True)
+            Me.bgUnits = .bgUnits
+        End With
     End Sub
 
     <DisplayName("Record Number")>

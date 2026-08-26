@@ -124,22 +124,6 @@
     <value>759, 17</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="InsulinLevelPictureBox.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAAB8AAAAvCAYAAAAb1BGUAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vAAADrwBlbxySQAAAmNJREFUWEftl89P02AYx/lP+mNbO9k0xuG2gFMYICQcHKIHF3DqnShu0wPhQubA
-        qDdiglETlRjwgAni2QsemPJvbHHzH1j24zFPTbu2j7Pt9nbh0Cf5XN487/fztHm3tkMAMGRBP2XOMkAW
-        zOJWqwW1ahUqlYptsB/3WQ1BFvRirNFoDHwc75ixWBy+Hh7+dwCyoBf7eYGEOgH3fz86ci7PLC1BQBBJ
-        oBNw/73MHefyicRlEtYLUxNJ5/LxSwkS1AvJK+Oe3OzoLl9IpZic9sVbaedyrNFYHGSfXzm1GGQX7A/6
-        AzA3M6tGOZJrAzAqc7al3HXIgg6lGo0GVH9VoVwu2+Z3rQbtdrvnK4d6vQ4bT4pwLhQmB8kO0cgIvHj2
-        XBm+2wBkAbvwiXT3dqbv044sptP6u2At/7izQ0L6YW9315ZcqV5vdTfOh8+q0YYBiDi38rDvp5kZzHuc
-        z5MBDPLS8THZyJKTnyf/lCuncjo5yfyqVTB3dvoqNJtNbQBN/mp7m2xwg7ev3xjkSp0JSKTRDYbloKr8
-        e9Wf9/dJk5t8OTjoyAvr6yCJPtLkBujBf05Njj+vQcof5XIdefbBChM5ZlgRvxiFfDbLVj4syfCjVLJk
-        s1hkL5+ZnFICrerl1pYn9+SenIY64cO795asra6yl+NTMSQHLcFXKiIPCyLMcYLrhASRyhOcAN8E2XXG
-        OMGTnwI5vkwMUm54mSgWCiBzPHziJdLMkj1eAonj4enGZkeOFbsQgTDHw3VOhBsugLkhjod4ZERVKnJt
-        gPvLy3Bzfh4WrqWYg7mYryv6rTagUpx/AG163UchpGQoAAAAAElFTkSuQmCC
-</value>
-  </data>
   <data name="MenuOptionsColorPicker.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAACFQAAAjbCAYAAAB6oRnuAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL

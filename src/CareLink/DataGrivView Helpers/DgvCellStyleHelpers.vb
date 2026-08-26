@@ -51,6 +51,7 @@ Public Module DgvCellStyleHelpers
             NameOf(Meal.Kind),
             NameOf(Meal.Type)}},
         {GetType(SG), New List(Of String) From {
+            NameOf(SG.Kind),
             NameOf(SG.OaDateTime),
             NameOf(SG.Version)}},
         {GetType(TherapyAlgorithmState), New List(Of String) From {}},
@@ -191,7 +192,8 @@ Public Module DgvCellStyleHelpers
             e.Value = $"{e.Value}"
             Dim argb As Integer = e.CellStyle.ForeColor.ToArgb()
             If argb <> BlackAsArgb AndAlso argb <> WhiteAsArgb Then
-                e.CellStyle.ForeColor = dgv.Rows(index:=e.RowIndex).GetTextColor(e.CellStyle.ForeColor)
+                e.CellStyle.ForeColor =
+                    dgv.Rows(index:=e.RowIndex).GetTextColor(textColor:=e.CellStyle.ForeColor)
             End If
             e.CellStyle.Font = New Font(prototype:=e.CellStyle.Font, newStyle:=FontStyle.Regular)
             e.FormattingApplied = True
@@ -253,6 +255,7 @@ Public Module DgvCellStyleHelpers
                 Case Else
                     Stop
             End Select
+            e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
         End If
     End Sub
 
@@ -464,8 +467,12 @@ Public Module DgvCellStyleHelpers
         If TrailingText <> EmptyString Then
             TrailingText = $" {TrailingText}"
         End If
-        e.Value = $"{amount.ToString(format:=$"F{digits}", provider)}{TrailingText}"
+        e.Value =
+            $"{amount.ToString(format:=$"F{digits}", provider)}{TrailingText}"
         dgv.CellFormattingSetForegroundColor(e)
+        e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+
+        e.FormattingApplied = True
         Return amount
     End Function
 

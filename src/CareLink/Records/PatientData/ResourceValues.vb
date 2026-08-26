@@ -2,14 +2,11 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
-Public Class MarkerData
-
-    <JsonPropertyName("dataValues")>
-    Public Property DataValues As DataValues
-
-    <JsonPropertyName("resourceValues")>
-    Public Property ResourceValues As ResourceValues
+Public Class ResourceValues
+    <JsonExtensionData>
+    Public Property AdditionalProperties As Dictionary(Of String, JsonElement)
 
 End Class

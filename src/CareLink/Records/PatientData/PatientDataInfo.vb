@@ -208,7 +208,7 @@ Public Class PatientDataInfo
     Public Property Sgs As List(Of SG)
 
     <JsonPropertyName("notificationHistory")>
-    Public Property NotificationHistory As Object '  As NotificationHistory
+    Public Property NotificationHistory As NotificationHistory
 
     <JsonPropertyName("reservoirIconSelection")>
     Public Property ReservoirIconSelection As String

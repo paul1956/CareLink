@@ -7,7 +7,7 @@ Imports System.Text.Json.Serialization
 Public Class NotificationHistory
 
     <JsonPropertyName("activeNotifications")>
-    Public Property ActiveNotifications As List(Of Object)
+    Public Property ActiveNotifications As List(Of ActiveNotifications)
 
     <JsonPropertyName("clearedNotifications")>
     Public Property ClearedNotifications As List(Of ClearedNotifications)

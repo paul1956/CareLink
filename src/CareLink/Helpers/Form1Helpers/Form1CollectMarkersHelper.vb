@@ -16,19 +16,9 @@ Friend Module Form1CollectMarkersHelper
     ''' <returns>A new <cref name="Marker"/> with the scaled "unitValue".</returns>
     <Extension>
     Private Function ScaleMarker(item As Marker) As Marker
-        Const key As String = "unitValue"
         Dim newMarker As Marker = item
-        Dim value As Object = Nothing
-        If item.Data.DataValues.TryGetValue(key, value) Then
-            Select Case True
-                Case TypeOf value Is JsonElement
-                    item.Data.DataValues(key) = CType(value, JsonElement).ScaleSg
-                Case TypeOf value Is String
-                    item.Data.DataValues(key) = CType(value, String).ScaleSg
-                Case Else
-                    Stop
-            End Select
-        End If
+        item.Data.DataValues.UnitValue =
+            item.Data.DataValues.UnitValue.ScaleSg
         Return newMarker
     End Function
 
@@ -147,7 +137,7 @@ Friend Module Form1CollectMarkersHelper
                     s_insulinMarkers.Add(item:=lastInsulinRecord)
                     Dim item5 As New LowGlucoseSuspended(item, recordNumber:=s_suspendedMarkers.Count + 1)
                     s_suspendedMarkers.Add(item:=item5)
-                    Select Case item.GetString(key:=NameOf(Insulin.ActivationType))
+                    Select Case item.Data.DataValues.ActivationType
                         Case "AUTOCORRECTION", "MANUAL"
                             Dim key As OADate = lastInsulinRecord.OAdateTime
                             Dim value As Single = lastInsulinRecord.DeliveredFastAmount

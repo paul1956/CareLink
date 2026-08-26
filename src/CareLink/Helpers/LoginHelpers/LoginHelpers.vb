@@ -33,11 +33,13 @@ Friend Module LoginHelpers
     ''' </summary>
     Friend Sub DeserializePatientElement()
         Try
-            'If Debugger.IsAttached Then
-            '    Dim rawDataDialog As New RawDataViewerDialog(json:=PatientDataElement)
-            '    rawDataDialog.ShowDialog(owner:=My.Forms.Form1)
-            'End If
             PatientData = PatientDataElement.FromJson(Of PatientDataInfo)()
+            Dim listOfMissingItems As List(Of KeyValuePair(Of String, JsonElement)) =
+                CollectAllExtensionData(obj:=PatientData)
+            If listOfMissingItems.Count > 0 Then
+                Stop
+            End If
+
             RecentData = PatientDataElement.ToStringDictionary()
         Catch ex As Exception
             MessageBox.Show(
@@ -500,7 +502,7 @@ Friend Module LoginHelpers
     ''' </summary>
     ''' <param name="dic">The <see cref="Dictionary(Of String, JsonElement)"/> to convert.</param>
     ''' <returns>
-    '''  A list of key-value pairs where the value is converted to a <see langword="String"/>.
+    '''  A listOfMissingItems of key-value pairs where the value is converted to a <see langword="String"/>.
     ''' </returns>
     <Extension>
     Friend Function ToDataSource(dic As Dictionary(Of String, JsonElement)) As List(Of KeyValuePair(Of String, String))
