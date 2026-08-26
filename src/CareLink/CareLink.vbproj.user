@@ -43,10 +43,10 @@
     <Compile Update="Forms\AboutBox1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\Form1.vb">
+    <Compile Update="Forms\ControlPositionsForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\ControlPositionsForm.vb">
+    <Compile Update="Forms\Form1.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\SgMiniForm.vb">
