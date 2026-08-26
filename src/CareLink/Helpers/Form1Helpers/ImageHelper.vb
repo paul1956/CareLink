@@ -4,6 +4,10 @@
 
 Friend Module ImageHelper
 
+#If False Then
+
+#End If
+
     ''' <summary>
     '''  Merge 2 images into a PictureBox
     ''' </summary>
@@ -19,31 +23,34 @@ Friend Module ImageHelper
                                      pictureBox.Height)
             Dim baseImage As Bitmap
             Dim overlayImage As Bitmap
-            baseImage = GetBitmapFromCache(name:=baseImageName)
-            overlayImage = GetBitmapFromCache(name:=overlayImageName)
+            baseImage = GetBitmapFromCache(Name:=baseImageName)
+            overlayImage = GetBitmapFromCache(Name:=overlayImageName)
 
             ' 3. Create a Graphics object to draw onto the new blank bitmap
             Using g As Graphics = Graphics.FromImage(mergedImage)
-                ' (Optional) Set high quality rendering options
-                g.CompositingMode = Drawing2D.CompositingMode.SourceOver
-                g.CompositingQuality = Drawing2D.CompositingQuality.HighQuality
-                g.InterpolationMode =
+                Try
+                    ' (Optional) Set high quality rendering options
+                    g.CompositingMode = Drawing2D.CompositingMode.SourceOver
+                    g.CompositingQuality = Drawing2D.CompositingQuality.HighQuality
+                    g.InterpolationMode =
                     Drawing2D.InterpolationMode.HighQualityBicubic
 
-                ' 4. Draw the base image first
-                Dim width As Integer = pictureBox.Width
-                Dim halfWidth As Integer = width \ 2
-                Dim height As Integer = pictureBox.Height
-                Dim x As Single = 30
-                Dim y As Single = 0
-                g.DrawImage(image:=baseImage, x, y, baseImage.Width, height)
+                    ' 4. Draw the base image first
+                    Dim width As Integer = pictureBox.Width
+                    Dim halfWidth As Integer = width \ 2
+                    Dim height As Integer = pictureBox.Height
+                    Dim x As Single = 30
+                    Dim y As Single = 0
+                    g.DrawImage(image:=baseImage, x, y, baseImage.Width, height)
 
-                ' 5. Draw the transparent overlay image on top
-                ' Center on the left half
-                x = Math.Max(0, width - overlayImage.Width)
-                y = Math.Max(0, (height - overlayImage.Height) \ 2)
-                g.DrawImage(image:=overlayImage, x, y, overlayImage.Width, overlayImage.Height)
-
+                    ' 5. Draw the transparent overlay image on top
+                    ' Center on the left half
+                    x = Math.Max(0, width - overlayImage.Width)
+                    y = Math.Max(0, (height - overlayImage.Height) \ 2)
+                    g.DrawImage(image:=overlayImage, x, y, overlayImage.Width, overlayImage.Height)
+                Catch ex As Exception
+                    Stop
+                End Try
             End Using ' The Graphics object is safely disposed of here
             ' 6. Free up individual image resources if they are no longer needed
             s_bitmaps(key:=name) = mergedImage

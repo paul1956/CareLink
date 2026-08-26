@@ -113,19 +113,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
-        Friend ReadOnly Property CalibrationNotReady() As System.Drawing.Bitmap
+        Friend ReadOnly Property CalibrationDotRed() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("CalibrationNotReady", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property CalibrationUnavailable() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("CalibrationUnavailable", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("CalibrationDotRed", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -203,36 +193,6 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
-        Friend ReadOnly Property FlexBatteryLessThen1Hour() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("FlexBatteryLessThen1Hour", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property FlexBatteryUnknown() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("FlexBatteryUnknown", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property FlexPump() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("FlexPump", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
         Friend ReadOnly Property GridLight() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("GridLight", resourceCulture)
@@ -256,46 +216,6 @@ Namespace My.Resources
             Get
                 Dim obj As Object = ResourceManager.GetObject("IconImage", resourceCulture)
                 Return CType(obj,Byte())
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property InfusionLifeExpired() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("InfusionLifeExpired", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property InfusionLifeOver24Hours() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("InfusionLifeOver24Hours", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property InfusionLifeUnknown() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("InfusionLifeUnknown", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property InfusionNotsetup() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("InfusionNotsetup", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
         
@@ -399,136 +319,6 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpBatteryCritical() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpBatteryCritical", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpBatteryFull() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpBatteryFull", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpBatteryHigh() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpBatteryHigh", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpBatteryLow() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpBatteryLow", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpBatteryMedium() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpBatteryMedium", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpBatteryUnknown() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpBatteryUnknown", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpConnectivityToInstinctOK() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpConnectivityToInstinctOK", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpConnectivityToPhoneNotOK() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpConnectivityToPhoneNotOK", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpConnectivityToPhoneOK() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpConnectivityToPhoneOK", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpConnectivityToSimpleraOK() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpConnectivityToSimpleraOK", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpConnectivityToTransmitterNotOK() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpConnectivityToTransmitterNotOK", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpConnectivityToTransmitterOK() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpConnectivityToTransmitterOK", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property PumpConnectivityToTransmitterUnknown() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("PumpConnectivityToTransmitterUnknown", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         '''</summary>
         Friend ReadOnly Property QuestionMark() As System.Drawing.Icon
@@ -554,136 +344,6 @@ Namespace My.Resources
         Friend ReadOnly Property SelectAllDark() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("SelectAllDark", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property SensorCommunicationLost() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("SensorCommunicationLost", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property SensorExpirationUnknown() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("SensorExpirationUnknown", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property SensorExpired() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("SensorExpired", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property SensorExpiringSoon() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("SensorExpiringSoon", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property SensorLifeNotOK() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("SensorLifeNotOK", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property SensorLifeOK() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("SensorLifeOK", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property SmartGuardShield() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("SmartGuardShield", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property TransmitterBatteryCritical() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("TransmitterBatteryCritical", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property TransmitterBatteryFull() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("TransmitterBatteryFull", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property TransmitterBatteryLow() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("TransmitterBatteryLow", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property TransmitterBatteryMedium() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("TransmitterBatteryMedium", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property TransmitterBatteryOK() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("TransmitterBatteryOK", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized resource of type System.Drawing.Bitmap.
-        '''</summary>
-        Friend ReadOnly Property TransmitterBatteryUnknown() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("TransmitterBatteryUnknown", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

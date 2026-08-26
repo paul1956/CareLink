@@ -456,7 +456,6 @@ Partial Class Form1
         ' CalibrationDueImage
         ' 
         CalibrationDueImage.BackColor = Color.Transparent
-        CalibrationDueImage.Image = My.Resources.Resources.CalibrationUnavailable
         CalibrationDueImage.Location = New Point(474, 0)
         CalibrationDueImage.Name = "CalibrationDueImage"
         CalibrationDueImage.Size = New Size(58, 58)
@@ -603,7 +602,6 @@ Partial Class Form1
         ' 
         ' CursorSetPictureBox
         ' 
-        CursorSetPictureBox.Image = My.Resources.Resources.InfusionLifeOver24Hours
         CursorSetPictureBox.InitialImage = Nothing
         CursorSetPictureBox.Location = New Point(350, 3)
         CursorSetPictureBox.Name = "CursorSetPictureBox"
@@ -1532,7 +1530,6 @@ Partial Class Form1
         ' SensorTimeLeftPictureBox
         ' 
         SensorTimeLeftPictureBox.ErrorImage = Nothing
-        SensorTimeLeftPictureBox.Image = My.Resources.Resources.SensorLifeOK
         SensorTimeLeftPictureBox.Location = New Point(12, 0)
         SensorTimeLeftPictureBox.Name = "SensorTimeLeftPictureBox"
         SensorTimeLeftPictureBox.Size = New Size(74, 84)
@@ -1704,7 +1701,6 @@ Partial Class Form1
         ' TransmitterBatteryPictureBox
         ' 
         TransmitterBatteryPictureBox.ErrorImage = Nothing
-        TransmitterBatteryPictureBox.Image = My.Resources.Resources.TransmitterBatteryUnknown
         TransmitterBatteryPictureBox.Location = New Point(551, 0)
         TransmitterBatteryPictureBox.Name = "TransmitterBatteryPictureBox"
         TransmitterBatteryPictureBox.Size = New Size(74, 84)

@@ -54,13 +54,23 @@ Public Module BitmapCache
     '''  The name of the file without the extension.
     ''' </param>
     ''' <returns>Bitmap of file</returns>
-    Public Function GetBitmapFromCache(name As String) As Bitmap
+    Public Function GetBitmapFromCache(Name As String) As Bitmap
         Dim value As Bitmap = Nothing
-        If s_bitmaps.TryGetValue(key:=name, value) Then
+        If s_bitmaps.TryGetValue(key:=Name, value) Then
             ' Assign the preloaded Bitmap safely
-            Return value
+            Return CType(value.Clone, Bitmap)
         Else
             Return Nothing
         End If
     End Function
+
+    ''' <summary>
+    '''  Calls GetBitmapFromCache after translating id to Name 
+    ''' </summary>
+    ''' <param name="id"><see cref="ImageEnum"/></param>
+    ''' <returns>Bitmap from Cache</returns>
+    Public Function GetBitmapFromCache(id As ImageEnum) As Bitmap
+        Return GetBitmapFromCache(Name:=id.Description)
+    End Function
+
 End Module

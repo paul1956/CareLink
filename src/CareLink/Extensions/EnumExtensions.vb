@@ -9,13 +9,23 @@ Imports System.Runtime.CompilerServices
 Public Module EnumExtensions
 
     <Extension>
-    Public Function Description(value As [Enum]) As String
+    Public Function Description(enumVal As [Enum]) As String
         Dim field As FieldInfo =
-            value.GetType().GetField(name:=value.ToString())
+            enumVal.GetType().GetField(name:=enumVal.ToString())
         Dim attribute As DescriptionAttribute =
             field?.GetCustomAttribute(Of DescriptionAttribute)()
 
-        Return If(attribute?.Description, value.ToString())
+        Return If(attribute?.Description, enumVal.ToString())
+    End Function
+
+    ' Helper to safely pull Description attribute enumVal
+    Public Function GetEnumDescription(enumVal As [Enum]) As String
+        Dim field As FieldInfo =
+            enumVal.GetType().GetField(enumVal.ToString())
+        Dim attribute As DescriptionAttribute() =
+            DirectCast(field.GetCustomAttributes(GetType(DescriptionAttribute), False), DescriptionAttribute())
+
+        Return If(attribute IsNot Nothing AndAlso attribute.Length > 0, attribute(0).Description, enumVal.ToString())
     End Function
 
 End Module

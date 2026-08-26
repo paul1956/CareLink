@@ -81,7 +81,6 @@
     <None Remove="Images\GridLight.png" />
     <None Remove="Images\ICON.ico" />
     <None Remove="Images\IconImage.ico" />
-    <None Remove="Images\InfusionLife12-24Hours.png" />
     <None Remove="Images\InfusionLifeExpired.png" />
     <None Remove="Images\InfusionLifeOver24Hours.png" />
     <None Remove="Images\InfusionLifeUnder12Hours.png" />
@@ -103,7 +102,16 @@
     <None Remove="Images\OpenFileDark.png" />
     <None Remove="Images\OpenProjectFolder.png" />
     <None Remove="Images\OpenProjectFolderDark.png" />
+    <None Remove="Images\PumpBattery780GFull.png" />
+    <None Remove="Images\PumpBattery780GHigh.png" />
+    <None Remove="Images\PumpBattery780GLow.png" />
+    <None Remove="Images\PumpBattery780GMedium.png" />
+    <None Remove="Images\PumpBattery780GUnknown.png" />
     <None Remove="Images\PumpBatteryCritical.png" />
+    <None Remove="Images\PumpBatteryFlexDepleted.png" />
+    <None Remove="Images\PumpBatteryFlexFull.png" />
+    <None Remove="Images\PumpBatteryFlexLessThen1Hour.png" />
+    <None Remove="Images\PumpBatteryFlexUnknown.png" />
     <None Remove="Images\PumpBatteryFull.png" />
     <None Remove="Images\PumpBatteryHigh.png" />
     <None Remove="Images\PumpBatteryLow.png" />
@@ -205,21 +213,6 @@
     <Content Include="Images\FlexActiveInsulinReset.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\FlexBattery1-10Hours.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\FlexBatteryDeplated.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\FlexBatteryFull.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\FlexBatteryLessThen1Hour.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\FlexBatteryUnknown.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Images\FlexPump.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -232,7 +225,7 @@
     <Content Include="Images\IconImage.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\InfusionLife12-24Hours.png">
+    <Content Include="Images\InfusionLife12To24Hours.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\InfusionLifeExpired.png">
@@ -298,22 +291,37 @@
     <Content Include="Images\OpenProjectFolderDark.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\PumpBatteryCritical.png">
+    <Content Include="Images\PumpBattery780GFull.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\PumpBatteryFull.png">
+    <Content Include="Images\PumpBattery780GHigh.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\PumpBatteryHigh.png">
+    <Content Include="Images\PumpBattery780GLow.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\PumpBatteryLow.png">
+    <Content Include="Images\PumpBattery780GMedium.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\PumpBatteryMedium.png">
+    <Content Include="Images\PumpBattery780GUnknown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\PumpBatteryUnknown.png">
+    <Content Include="Images\PumpBattery780GCritical.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBatteryFlex1To10Hours.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBatteryFlexDepleted.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBatteryFlexFull.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBatteryFlexLessThen1Hour.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBatteryFlexUnknown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\PumpConnectivityToInstinctOK.png">

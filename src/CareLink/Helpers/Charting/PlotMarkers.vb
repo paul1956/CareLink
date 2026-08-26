@@ -255,7 +255,7 @@ Friend Module PlotMarkers
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then Continue For
                         If markerMealDictionary.TryAdd(key:=markerOADateTime, value:=yMinNativeMmolL) Then
-                            Dim mealImage As Bitmap = GetBitmapFromCache(name:="MealImage")
+                            Dim mealImage As Bitmap = GetBitmapFromCache(id:=ImageEnum.MealImage)
                             Dim height As Double = If(NativeMmolL,
                                                       mealImage.Height / 2 / MmolLUnitsDivisor,
                                                       mealImage.Height / 2)

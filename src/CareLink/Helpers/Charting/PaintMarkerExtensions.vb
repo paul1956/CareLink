@@ -176,13 +176,13 @@ Friend Module PaintMarkerExtensions
         End Using
 
         If insulinDictionary IsNot Nothing Then
-            e.PaintMarker(markerImage:=GetBitmapFromCache(name:="insulinVialTiny"),
+            e.PaintMarker(markerImage:=GetBitmapFromCache(id:=ImageEnum.InsulinVialTiny),
                           markerDictionary:=insulinDictionary,
                           noImageOffset:=offsetInsulinImage,
                           paintOnY2)
         End If
         If mealDictionary IsNot Nothing Then
-            e.PaintMarker(markerImage:=GetBitmapFromCache(name:="mealImage"),
+            e.PaintMarker(markerImage:=GetBitmapFromCache(id:=ImageEnum.MealImage),
                           markerDictionary:=mealDictionary,
                           noImageOffset:=False,
                           paintOnY2)

@@ -690,7 +690,7 @@ Friend Class Client2
 
         Dim unusedMetaData As JsonElement = CType(data.Values(index:=0), JsonElement)
         Try
-            PatientDataElement = CType(data.Values(index:=1), JsonElement)
+            PatientDataElement = data.Values(index:=1)
             DeserializePatientElement()
             WriteTokenFile(token:=PatientDataElement, path:=GetLastDownloadFileWithPath())
         Catch ex As Exception
