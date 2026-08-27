@@ -231,7 +231,7 @@ Public Module JsonExtensions
 
         ' Enumerate properties and add to dictionary
         For Each prop As JsonProperty In element.EnumerateObject()
-            result(prop.Name) = prop.Value
+            result(key:=prop.Name) = prop.Value
         Next
 
         Return result

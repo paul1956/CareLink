@@ -397,14 +397,16 @@ Friend Class Client2
             Me.Config = configJsonElement.ToStringDictionary()
 
             ' Call user string; handle typed failures
-            Dim json As String = Await Me.GetUserStringAsync(config:=configJsonElement, tokenData:=_tokenDataElement)
+            Dim json As String =
+                Await Me.GetUserStringAsync(config:=configJsonElement, tokenData:=_tokenDataElement)
             If IsNullOrWhiteSpace(value:=json) Then
                 Throw New UnauthorizedAccessException
             End If
 
-            Dim userElement As JsonElement = json.FromJson(Of JsonElement)(DeserializationOptions)
-            Me.UserElementDictionary = userElement.JsonElementToDictionary
-            _PatientPersonalData = userElement.FromJson(Of PatientPersonalInfo)()
+            Me.UserElementDictionary =
+                json.FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions)
+
+            _PatientPersonalData = json.FromJson(Of PatientPersonalInfo)(DeserializationOptions)
 
             Dim role As String = _PatientPersonalData.role
             If role.ContainsNoCase(value:="Partner") Then
@@ -603,7 +605,7 @@ Friend Class Client2
 
         Dim data As Dictionary(Of String, JsonElement) = Nothing
         Try
-            Dim role As String = Me.UserElementDictionary(key:="role").ToJson
+            Dim role As String = _PatientPersonalData.role.ToJson
             ' Call GetDataAsync and handle typed exceptions without Await inside Catch.
             Try
                 data = Await Me.GetDataAsync(username:=GetUserName(),

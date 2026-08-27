@@ -389,7 +389,8 @@ Public Class CareLinkService
     End Function
 
     Public Shared Async Function ResolveEndpointConfigAsync(discoveryUrl As String, serverRegion As Region) As Task(Of EndpointConfig)
-        Dim discoveryJson As String = Await s_http.GetStringAsync(requestUri:=discoveryUrl)
+        Dim discoveryJson As String =
+            Await s_http.GetStringAsync(requestUri:=discoveryUrl)
         Using discoveryDoc As JsonDocument = JsonDocument.Parse(json:=discoveryJson)
             Dim cp As JsonElement = discoveryDoc.RootElement.GetProperty(propertyName:="CP")
             Dim targetRegion As String

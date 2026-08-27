@@ -37,35 +37,37 @@ Public Class OAuthBrowserForm
     Private Sub CaptureAndClose(uriString As String)
         Dim uri As New Uri(uriString)
 
-        Dim queryString As String = If(uri.Query, String.Empty)
-        If queryString.StartsWithNoCase(value:="?"c) Then
-            queryString = queryString.Substring(startIndex:=1)
-        End If
+        Dim selector As Func(Of String, String()) =
+            Function(part)
+                Dim separator As Char() = {"="c}
+                Return part.Split(separator, count:=2)
+            End Function
 
-        Dim pairs As String() = If(String.IsNullOrEmpty(value:=queryString),
-                                   Array.Empty(Of String)(),
-                                   queryString.Split(separator:=s_separator, options:=StringSplitOptions.RemoveEmptyEntries))
-        Dim dict As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
+        Dim elementSelector As Func(Of String(), String) =
+            Function(parts)
+                Return If(parts.Length > 1,
+                          Uri.UnescapeDataString(stringToUnescape:=parts(1)),
+                          "")
+            End Function
 
-        For Each pair As String In pairs
-            Dim idx As Integer = pair.IndexOf(value:="="c)
-            Dim key As String
-            Dim value As String
-            If idx >= 0 Then
-                key = Uri.UnescapeDataString(charsToUnescape:=pair.AsSpan(start:=0, length:=idx))
-                value = Uri.UnescapeDataString(charsToUnescape:=pair.AsSpan(start:=idx + 1))
-            Else
-                key = Uri.UnescapeDataString(stringToUnescape:=pair)
-                value = String.Empty
-            End If
-            dict(key) = value
-        Next
+        Dim keySelector As Func(Of String(), String) =
+            Function(parts)
+                Return Uri.UnescapeDataString(stringToUnescape:=parts(0))
+            End Function
+
+        Dim parameters As Dictionary(Of String, String) =
+            uri.Query.TrimStart(trimChar:="?"c).
+                      Split(separator:="&"c, options:=StringSplitOptions.RemoveEmptyEntries).
+                      Select(selector).
+                      ToDictionary(keySelector,
+                                  elementSelector,
+                                  comparer:=StringComparer.OrdinalIgnoreCase)
 
         Dim code As String = Nothing
-        Dim state As String = Nothing
-        dict.TryGetValue(key:="code", value:=code)
-        dict.TryGetValue(key:="state", value:=state)
+        parameters.TryGetValue(key:="code", value:=code)
 
+        Dim state As String = Nothing
+        parameters.TryGetValue(key:="state", value:=state)
         Me.Result = New RedirectResult With {
             .Code = code,
             .State = state

@@ -287,7 +287,7 @@ Public Class PdfSettingsRecord
                         End If
 
                     Case Else
-                        Throw New UnreachableException(itemKey)
+                        Throw New UnreachableException(message:=itemKey)
                 End Select
             Catch ex As Exception
                 Stop
