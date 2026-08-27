@@ -145,8 +145,8 @@ Friend Module DateTimeExtensions
         End If
         Dim localAndPumpTimeEqual As Boolean = pumpTime.ToString = localTime.ToString
         Dim timeStr As String = If(localAndPumpTimeEqual,
-                                   $"Local    -    Pump = {localTime}",
-                                   $"Local    -    {localTime}, Pump = {pumpTime}")
+                                   $"    Local and  Pump Time are {localTime}",
+                                   $"    Local time is {localTime}, Pump Time is {pumpTime}")
 
         Return $"{$"{unixTime} UTC"}, {timeStr}"
     End Function

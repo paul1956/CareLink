@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
+Imports System.ComponentModel.DataAnnotations
 Imports System.Configuration
 Imports System.Globalization
 Imports System.IO
@@ -15,6 +16,7 @@ Imports CareLink.ImageEnums
 Imports DataGridViewColumnControls
 Imports Microsoft.Win32
 Imports TableLayputPanelTop
+Imports Windows.Devices.AllJoyn
 
 Public Class Form1
 
@@ -686,7 +688,12 @@ Public Class Form1
                 Case "Amount"
                     Select Case dgv.Name
                         Case NameOf(DgvActiveInsulin)
-                            dgv.CellFormattingSingleValue(e, digits:=3, TrailingText:=" U")
+                            If e.Value.ToString = "-1" Then
+                                e.Value = $"Active Insulin Estimate {_latestActiveInsulin:N3} U"
+                                e.FormattingApplied = True
+                            Else
+                                dgv.CellFormattingSingleValue(e, digits:=3, TrailingText:=" U")
+                            End If
                         Case NameOf(DgvMeal)
                             dgv.CellFormattingInteger(e, message:=GetCarbDefaultUnit)
                     End Select
@@ -697,6 +704,9 @@ Public Class Form1
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
+
+                Case NameOf(AutoBasalDelivery.RecordNumber)
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
                 Case NameOf(AutoModeStatus.DisplayTime),
                      NameOf(AutoModeStatus.Timestamp)
@@ -719,7 +729,6 @@ Public Class Form1
 
                 Case NameOf(BasalPerHour.BasalRate),
                      NameOf(BasalPerHour.BasalRate2)
-
                     If dgv.Name = NameOf(DgvBasalPerHour) Then
                         dgv.CellFormattingSingleValue(e, digits:=3, TrailingText:=" U/h")
                         e.CellStyle.Font = s_font12
@@ -738,6 +747,7 @@ Public Class Form1
                 Case NameOf(Calibration.UnitValue),
                      NameOf(Calibration.UnitValueMgdL),
                      NameOf(Calibration.UnitValueMmolL)
+
                     dgv.CellFormattingSg(e, partialKey:=NameOf(Calibration.UnitValue))
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
                     dgv.CellFormattingSetForegroundColor(e)
@@ -770,7 +780,6 @@ Public Class Form1
 
                 Case NameOf(InsulinPerHour.Hour),
                      NameOf(InsulinPerHour.Hour2)
-
                     Dim hour As Integer =
                         TimeSpan.FromHours(CInt(e.Value)).Hours
                     Dim time As New Date(year:=1,
@@ -792,7 +801,6 @@ Public Class Form1
                      NameOf(Limit.lowLimitMmolL)
                     dgv.CellFormattingSg(e, partialKey:=NameOf(Limit.LowLimit))
 
-
                 Case NameOf(SG.SensorState)
                     If Equals(e.Value, "NO_ERROR_MESSAGE") Then
                         dgv.CellFormattingToTitle(e)
@@ -813,10 +821,16 @@ Public Class Form1
                     Dim valueType As Type = dgv.Columns(index:=e.ColumnIndex).ValueType
                     If valueType = GetType(Single) Then
                         dgv.CellFormattingSingleValue(e, digits:=3)
-                    ElseIf valueType = GetType(String) AndAlso
-                        dgv.Name <> NameOf(DgvLastAlarm) Then
-
-                        dgv.CellFormattingSingleWord(e)
+                    ElseIf valueType = GetType(String) Then
+                        If dgv.Name = NameOf(DgvLastAlarm) Then
+                            Dim valString As String = e.Value.ToString
+                            If valString.Contains(value:="_"c) Then
+                                e.Value = valString.ToTitle
+                            End If
+                            dgv.CellFormattingSetForegroundColor(e)
+                        Else
+                            dgv.CellFormattingSingleWord(e)
+                        End If
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
@@ -2073,6 +2087,8 @@ Public Class Form1
                 Else
                     dgv.CellFormattingSingleValue(e, digits:=1)
                 End If
+                e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
+
             Case 1
                 Dim input As String = e.Value.ToString()
                 e.Value = NormalizeColonSpacingPreservingTimes(input)
@@ -2738,7 +2754,6 @@ Public Class Form1
             File.Exists(path:=GetLastDownloadFileWithPath)
         Me.MenuStartUseLastFile.Enabled = enabled
 
-
         searchPattern = $"{BaseErrorReportName}*.txt"
         enabled = debuggerIsAttached AndAlso
             AnyMatchingFiles(path, searchPattern)
@@ -2756,7 +2771,6 @@ Public Class Form1
         enabled = Directory.GetFiles(path:=GetDownloadsDirectory(),
                                      searchPattern:=$"*.pdf").Length > 0
         Me.MenuStartManuallyImportDeviceSettings.Enabled = enabled
-
 
         Me.MenuStartHere.DropDownItems.UpdateSeparators()
 
@@ -3863,6 +3877,7 @@ Public Class Form1
                                 SetServerUpdateTimer(Start:=False)
                                 Return
                             Case DialogResult.Retry
+                                Exit Do
                         End Select
                     Loop
                 End If

@@ -562,28 +562,28 @@ Friend Module SummaryHelpers
                 Return $"##TIME{times.Count - 1}##"
             End Function
 
-        Const pattern As String =
-            "\b(?:[01]?\d|2[0-3]):[0-5]\d(?::[0-5]\d)?\b"
-        Dim protectedText As String = Regex.Replace(input, pattern, evaluator)
+        ' Deliberately does not use \b at the start:
+        ' ISO dates may join the time with a literal "T", e.g. 2026-08-26t13:40:31.
+        Const timePattern As String =
+            "(?<!\d)(?:[01]?\d|2[0-3]):[0-5]\d(?::[0-5]\d)?\b"
 
-        ' Normalize spacing around colons for the rest of the text
+        Dim protectedText As String =
+            Regex.Replace(input, pattern:=timePattern, evaluator)
+
         protectedText =
-            Regex.Replace(input:=protectedText,
-                          pattern:="\s*:\s*",
-                          replacement:=" : ")
+            Regex.Replace(input:=protectedText, pattern:="\s*:\s*", replacement:=" : ")
+
+        Dim evaluator1 As MatchEvaluator = Function(m As Match)
+                                               Dim index As Integer = CInt(m.Groups(groupnum:=1).Value)
+
+                                               Return If(index >= 0 AndAlso index < times.Count,
+                                                         times(index),
+                                                         m.Value)
+                                           End Function
 
         ' Restore original times from the collected list
-        Dim result As String =
-            Regex.Replace(input:=protectedText,
-                          pattern:="##TIME(\d+)##",
-                          evaluator:=Function(m As Match)
-                                         Dim idx As Integer = CInt(m.Groups(groupnum:=1).Value)
-                                         Return If(idx >= 0 AndAlso idx < times.Count,
-                                                   times(index:=idx),
-                                                   m.Value)
-                                     End Function)
-
-        Return result
+        Return Regex.Replace(input:=protectedText,
+                             pattern:="##TIME(\d+)##",
+                             evaluator:=evaluator1)
     End Function
-
 End Module

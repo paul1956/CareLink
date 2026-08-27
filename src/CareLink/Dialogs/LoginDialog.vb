@@ -317,7 +317,7 @@ Public Class LoginDialog
                 Dim networkDownMessage As String =
                     If(NetworkUnavailable(),
                        "Due to network being unavailable",
-                       $"Network unavailable Response Code = {httpStatusCode}")
+                       $"Network Response Code = {httpStatusCode}")
 
                 Dim heading As String
 

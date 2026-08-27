@@ -77,8 +77,8 @@ Public Module DgvCellStyleHelpers
         Dim value As String = Convert.ToString(e.Value)
         If value = String.Empty OrElse value = "0" Then
             e.Value = String.Empty
-            e.FormattingApplied = True
         End If
+        e.FormattingApplied = True
     End Sub
 
     ''' <summary>
@@ -257,6 +257,7 @@ Public Module DgvCellStyleHelpers
             End Select
             e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
         End If
+        e.FormattingApplied = True
     End Sub
 
     ''' <summary>
@@ -272,9 +273,15 @@ Public Module DgvCellStyleHelpers
     <Extension>
     Friend Sub CellFormattingSingleWord(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs)
         Dim input As String = Convert.ToString(e.Value)
-        If e.ColumnIndex > 0 AndAlso Text.RegularExpressions.Regex.IsMatch(input, pattern:="^[A-Za-z]+$") Then
-            e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-        End If
+        Dim isMatch As Boolean =
+            Text.RegularExpressions.Regex.IsMatch(input, pattern:="^[A-Za-z]+$")
+        e.CellStyle.Alignment =
+            If(e.ColumnIndex > 0 AndAlso isMatch,
+               DataGridViewContentAlignment.MiddleCenter,
+               DataGridViewContentAlignment.MiddleLeft)
+        e.Value = If(e.Value.ToString = "NA",
+                     "N/A",
+                     e.Value.ToString.ToTitle)
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
