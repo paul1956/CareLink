@@ -13,7 +13,7 @@ Public Class SsoConfig
     Public Property Client As Client
 
     <JsonPropertyName("system_endpoints")>
-    Public Property system_Endpoints As SystemEndpoints
+    Public Property SystemEndpoints As SystemEndpoints
 
     <JsonPropertyName("oauth_protected_endpoints")>
     Public Property OAuth As OAuth

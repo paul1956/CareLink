@@ -410,7 +410,7 @@ Friend Class Client2
             If Auth_Error_Codes.Contains(value:=_lastHttpStatusCode) Then
                 ' Start refresh task without Await inside Catch
                 Try
-                    If Not configElement.ValueKind = Global.System.Text.Json.JsonValueKind.Undefined Then
+                    If Not configElement.ValueKind = JsonValueKind.Undefined Then
                         refreshTask = Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement)
                     End If
                 Catch innerEx As Exception

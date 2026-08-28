@@ -47,13 +47,14 @@ Public Class CareLinkService
                                                     password As String) As Task(Of TokenData)
 
         Dim ssoConfig As SsoConfig = endpointConfig.SsoJson.FromJson(Of SsoConfig)(DeserializationOptions)
-        Dim clientId As String = ssoConfig.Client.ClientId
-        Dim scope As String = ssoConfig.Client.Scope
-        Dim redirectUri As String = ssoConfig.Client.RedirectUri
-        Dim audience As String = ssoConfig.Client.Audience
+        Dim client As Client = ssoConfig.Client
+        Dim clientId As String = client.ClientId
+        Dim scope As String = client.Scope
+        Dim redirectUri As String = client.RedirectUri
+        Dim audience As String = client.Audience
 
-        Dim authorizePath As String = ssoConfig.system_Endpoints.AuthorizationEndpointPath
-        Dim tokenPath As String = ssoConfig.system_Endpoints.TokenEndpointPath
+        Dim authorizePath As String = ssoConfig.SystemEndpoints.AuthorizationEndpointPath
+        Dim tokenPath As String = ssoConfig.SystemEndpoints.TokenEndpointPath
 
         Dim authUrl As String = $"{endpointConfig.ApiBaseUrl}{authorizePath}"
         Dim fullUrl As String =
