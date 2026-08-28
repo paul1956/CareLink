@@ -28,7 +28,9 @@ Public Module Discover
     '''  Thrown if the country code is not supported or if the configuration
     '''  cannot be found.
     ''' </exception>
-    Private Function GetConfigJson(country As String, serverRegion As Region, discoveryElement As JsonElement) As JsonElement
+    Private Function GetConfigJson(country As String,
+                                   serverRegion As Region,
+                                   discoveryElement As JsonElement) As JsonElement
         Dim config As JsonElement
         Dim region As JsonElement
 
@@ -99,19 +101,24 @@ Public Module Discover
         Dim requestUri As String = If(serverRegion <> Region.Europe,
                                       s_discoverUrl(key:="US"),
                                       s_discoverUrl(key:="EU"))
-        Dim json As String = Await httpClient.GetStringAsync(requestUri).ConfigureAwait(continueOnCapturedContext:=False)
+        Dim json As String =
+            Await httpClient.GetStringAsync(requestUri).
+                ConfigureAwait(continueOnCapturedContext:=False)
         Dim discoveryElement As JsonElement = json.FromJson(Of JsonElement)(DeserializationOptions)
-        Dim configJson As JsonElement = GetConfigJson(country, serverRegion, discoveryElement)
-
-        Dim ssoConfigurationKey As String = configJson.GetProperty(propertyName:="UseSSOConfiguration").GetString()
+        Dim configJson As JsonElement =
+            GetConfigJson(country, serverRegion, discoveryElement)
+        Dim config As ConfigRecord = configJson.FromJson(Of ConfigRecord)
+        Dim ssoConfigurationKey As String = config.UseSSOConfiguration
+        requestUri = config.GetPropertyValue(propertyName:=ssoConfigurationKey)
         Dim resp As String =
-            Await httpClient.GetStringAsync(requestUri:=configJson.GetProperty(propertyName:=ssoConfigurationKey).GetString()) _
+            Await httpClient.GetStringAsync(requestUri) _
                             .ConfigureAwait(continueOnCapturedContext:=False)
         Dim ssoConfig As SsoConfig =
             resp.FromJson(Of SsoConfig)(DeserializationOptions)
 
         Dim hostname As String = ssoConfig.Server.Hostname
-        Dim ssoBaseUrl As String = $"https://{hostname}:{ssoConfig.Server.Port}/{ssoConfig.Server.Prefix}"
+        Dim ssoBaseUrl As String =
+            $"https://{hostname}:{ssoConfig.Server.Port}/{ssoConfig.Server.Prefix}"
         If ssoBaseUrl.EndsWith(value:="/"c) Then
             ssoBaseUrl = ssoBaseUrl.TrimEnd(trimChar:="/"c)
         End If

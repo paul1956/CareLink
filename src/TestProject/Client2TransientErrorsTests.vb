@@ -30,7 +30,8 @@ Public Class Client2TransientErrorsTests
 
         Dim httpClient As New HttpClient(handler)
         Dim client As New Client2(serverRegion:=Region.NorthAmerica, httpClient) With {
-            .Config = New Dictionary(Of String, String) From {{"baseUrlCumulus", "https://example.com"}}}
+            .Config = New ConfigRecord With {
+                .BaseUrlCumulus = "https://example.com"}}
         ' Wrap it in JSON string syntax (quotes) so it's valid JSON
         Dim value As New Dictionary(Of String, JsonElement) From {{"role", "patient".ToJsonElement()}}
         client.SetUserElementDictionaryForTests(value)

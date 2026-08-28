@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Reflection
+Imports System.Runtime.CompilerServices
 
 Public Module ClassHelpers
 
@@ -87,14 +88,24 @@ Public Module ClassHelpers
         Return cellStyle
     End Function
 
-    Public Function GetPropertyValue(obj As Object, propName As String) As Object
-        Dim type As Type = obj.GetType()
-        Dim propInfo As PropertyInfo = type.GetProperty(name:=propName)
-        If propInfo IsNot Nothing Then
-            Return propInfo.GetValue(obj, index:=Nothing)
-        Else
-            Throw New ArgumentException(message:=$"Property '{propName}' not found.")
-        End If
-    End Function
+    <Extension>
+    Public Function GetPropertyValue(instance As Object,
+                                     propertyName As String) As String
+        If instance Is Nothing OrElse
+           String.IsNullOrWhiteSpace(value:=propertyName) Then
 
+            Return Nothing
+        End If
+
+        Const bindingAttr As BindingFlags = BindingFlags.Instance Or
+                                            BindingFlags.Public Or
+                                            BindingFlags.IgnoreCase
+        Dim prop As PropertyInfo =
+            instance.GetType().GetProperty(name:=propertyName,
+                                           bindingAttr)
+
+        Return If(prop Is Nothing OrElse prop.PropertyType IsNot GetType(String),
+                  Nothing,
+                  TryCast(prop.GetValue(obj:=instance), String))
+    End Function
 End Module

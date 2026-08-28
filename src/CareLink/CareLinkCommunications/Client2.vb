@@ -15,7 +15,6 @@ Friend Class Client2
     Private ReadOnly _httpClient As HttpClient
     Private ReadOnly _tokenBaseFileName As String
     Private _accessTokenPayload As Dictionary(Of String, JsonElement)
-    Private _config As Dictionary(Of String, String)
     Private _country As String
     Private _lastHttpStatusCode As HttpStatusCode
     Private _patientElement As New Dictionary(Of String, String)
@@ -54,15 +53,7 @@ Friend Class Client2
 
     Friend Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
 
-    Friend Property Config As Dictionary(Of String, String)
-        Get
-            Return _config
-        End Get
-        Set(value As Dictionary(Of String, String))
-            _config = value
-        End Set
-    End Property
-
+    Friend Property Config As ConfigRecord
     Friend Property LoggedIn As Boolean
     Friend Property PatientPersonalData As New PatientPersonalInfo
     Friend Property serverRegion As Region
@@ -79,7 +70,7 @@ Friend Class Client2
     End Property
 
     ''' <summary>
-    ''' Build request headers preferring config mag-identifier then tokenDataElement.
+    ''' Build request headers preferring configElement mag-identifier then tokenDataElement.
     ''' </summary>
     Private Shared Function BuildHeaders(configJsonElement As JsonElement,
                                          token_data As JsonElement) As Dictionary(Of String, String)
@@ -180,7 +171,7 @@ Friend Class Client2
                                         patientId As String) As Task(Of Dictionary(Of String, JsonElement))
 
         _httpClient.SetDefaultRequestHeaders()
-        Dim requestUri As String = $"{Me.Config(key:="baseUrlCumulus")}/display/message"
+        Dim requestUri As String = $"{Me.Config.BaseUrlCumulus}/display/message"
         Dim tokenData As Dictionary(Of String, String) = _tokenDataElement.ToStringDictionary()
         Dim value As New Dictionary(Of String, String) From {{"username", username}}
         If role.ContainsNoCase(value:="Partner") Then
@@ -316,15 +307,15 @@ Friend Class Client2
     ''' <summary>
     '''  Retrieves user information as a JSON string.
     ''' </summary>
-    ''' <param name="config">
+    ''' <param name="configElement">
     '''  The configuration JSON tokenDataElement containing base URL information.
     ''' </param>
     ''' <param name="tokenData">
     '''  The token nameValueCollection JSON tokenDataElement containing authentication tokens.
     ''' </param>
     ''' <returns>A JSON string representing the user information.</returns>
-    Private Async Function GetUserStringAsync(config As JsonElement, tokenData As JsonElement) As Task(Of String)
-        Dim requestUri As String = $"{config.GetProperty(propertyName:="baseUrlCareLink").GetString()}/users/me"
+    Private Async Function GetUserStringAsync(config As ConfigRecord, tokenData As JsonElement) As Task(Of String)
+        Dim requestUri As String = $"{config.BaseUrlCareLink}/users/me"
         Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
         Dim magId As String = Nothing
         If TryGetStringProperty(element:=tokenData, propertyName:="mag-identifier", value:=magId) Then
@@ -384,21 +375,22 @@ Friend Class Client2
 
         Dim refreshTask As Task(Of JsonElement) = Nothing
         Dim hadException As Boolean = False
-        Dim configJsonElement As JsonElement
+        Dim configElement As JsonElement
 
         Try
             Application.DoEvents()
             Dim element As JsonElement = _accessTokenPayload(key:="token_details")
             Dim payload As AccessTokenDetails = element.FromJson(Of AccessTokenDetails)()
             _country = If(payload.Country, s_countryCode)
-            configJsonElement =
+
+            configElement =
                 Await GetConfigAsync(httpClient:=_httpClient, country:=_country, Me.serverRegion)
 
-            Me.Config = configJsonElement.ToStringDictionary()
+            Me.Config = configElement.FromJson(Of ConfigRecord)
 
             ' Call user string; handle typed failures
             Dim json As String =
-                Await Me.GetUserStringAsync(config:=configJsonElement, tokenData:=_tokenDataElement)
+                Await Me.GetUserStringAsync(Me.Config, tokenData:=_tokenDataElement)
             If IsNullOrWhiteSpace(value:=json) Then
                 Throw New UnauthorizedAccessException
             End If
@@ -410,7 +402,7 @@ Friend Class Client2
 
             Dim role As String = _PatientPersonalData.role
             If role.ContainsNoCase(value:="Partner") Then
-                _patientElement = Await Me.GetPatient(configJsonElement, token_data:=_tokenDataElement)
+                _patientElement = Await Me.GetPatient(configElement, token_data:=_tokenDataElement)
             End If
         Catch ex As Exception
             hadException = True
@@ -418,11 +410,8 @@ Friend Class Client2
             If Auth_Error_Codes.Contains(value:=_lastHttpStatusCode) Then
                 ' Start refresh task without Await inside Catch
                 Try
-                    If Not configJsonElement.ValueKind = Global.System.Text.Json.JsonValueKind.Undefined Then
-                        Dim config As ConfigRecord =
-                            FromJson(Of ConfigRecord)(json:=configJsonElement.ToJson(), DeserializationOptions:=DeserializationOptions)
-                        refreshTask = Me.DoRefreshAsync(config:=configJsonElement.ToStringDictionary(),
-                                                        tokenElement:=_tokenDataElement)
+                    If Not configElement.ValueKind = Global.System.Text.Json.JsonValueKind.Undefined Then
+                        refreshTask = Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement)
                     End If
                 Catch innerEx As Exception
                     Debug.WriteLine(message:=innerEx.ToString())
@@ -523,10 +512,10 @@ Friend Class Client2
     ''' <returns>
     '''  A task representing the asynchronous operation, containing the refreshed token as a JSON tokenDataElement.
     ''' </returns>
-    Public Async Function DoRefreshAsync(config As Dictionary(Of String, String),
+    Public Async Function DoRefreshAsync(config As ConfigRecord,
                                          tokenElement As JsonElement) As Task(Of JsonElement)
 
-        Dim tokenUrl As String = config(key:="token_url")
+        Dim tokenUrl As String = config.TokenUrl
         Dim tokenData As Dictionary(Of String, JsonElement) =
             tokenElement.FromJson(Of Dictionary(Of String, JsonElement))()
 

@@ -68,7 +68,10 @@ Public Class CareLinkService
         ' Ensure the UI dialog and WebView2 initialization run on the UI thread.
         redirectResult = Await InvokeOnUiThreadAsync(
            work:=Function()
-                     Using frm As New OAuthBrowserForm(startUrl:=fullUrl, redirectUri, userName, password)
+                     Using frm As New OAuthBrowserForm(startUrl:=fullUrl,
+                         redirectUri:=redirectUri,
+                         userName:=userName,
+                         password:=password)
                          If frm.ShowDialog() <> DialogResult.OK Then
                              Throw New Exception(message:="Login was cancelled.")
                          End If
@@ -203,7 +206,10 @@ Public Class CareLinkService
                                                  GetProperty(propertyName:="auth_url").GetString()
 
                     Dim redirectResult As RedirectResult
-                    Using frm As New OAuthBrowserForm(startUrl:=captchaUrl, redirectUri, userName, password)
+                    Using frm As New OAuthBrowserForm(startUrl:=captchaUrl,
+                        redirectUri:=redirectUri,
+                        userName:=userName,
+                        password:=password)
                         If frm.ShowDialog() <> DialogResult.OK Then
                             Throw New Exception(message:="Login was cancelled.")
                         End If
