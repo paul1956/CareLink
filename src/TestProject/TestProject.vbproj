@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\CareLink\CareLink.vbproj" />
+    <ProjectReference Include="..\CareLink\CareLink.vbproj" />
   </ItemGroup>
 
   <ItemGroup>

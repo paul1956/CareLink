@@ -8,6 +8,9 @@
     <File Path="License.txt" />
     <File Path="README.md" />
     <File Path="Screenshot 2022-10-08 203350.png" />
+    <Project Path="src/CareLink/CareLink.vbproj" />
+    <Project Path="src/PumpSetup/PumpSetup.vbproj" />
+    <Project Path="src/TestProject/TestProject.vbproj" />
   </Folder>
   <Folder Name="/Solution Items/.GitHub/" />
   <Folder Name="/Solution Items/.GitHub/Copilot/">
@@ -16,7 +19,4 @@
   <Folder Name="/Solution Items/.GitHub/Prompts/">
     <File Path="vb.prompt.md file" />
   </Folder>
-  <Project Path="PumpSetup/PumpSetup.vbproj" Id="0eddd319-d9d5-4052-8473-67803297152d" />
-  <Project Path="src/CareLink/CareLink.vbproj" />
-  <Project Path="TestProject/TestProject.vbproj" />
 </Solution>
