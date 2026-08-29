@@ -47,6 +47,9 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 8/22/2026
 
 ## What's New
+New in 6.0.1.0
+Minor improvements in Json handling
+
 New in 6.0.0.3
 Add AdjustFontToFitWidth
 Add Description support for Enums
