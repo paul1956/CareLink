@@ -19,6 +19,11 @@ Public Class Basal
     <JsonPropertyName("basalRate")>
     Public Property BasalRate As Double
 
+    <DisplayName("Temp Basal Name")>
+    <Column(Order:=2, TypeName:=NameOf([String]))>
+    <JsonPropertyName("tempBasalName")>
+    Public Property TempBasalName As String
+
     <DisplayName("Temp Basal Rate")>
     <Column(Order:=2, TypeName:=NameOf([Double]))>
     <JsonPropertyName("tempBasalRate")>

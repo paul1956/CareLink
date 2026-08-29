@@ -90,7 +90,7 @@ Public Module FileIoHelpers
     ''' </summary>
     ''' <returns>The full path to the user's settings PDF file.</returns>
     Friend Function GetUserPdfPath() As String
-        Return Path.Join(GetSettingsDirectory(), $"{s_userName}Settings.pdf")
+        Return Path.Join(GetSettingsDirectory(), $"{GetUserName()}Settings.pdf")
     End Function
 
     ''' <summary>
@@ -98,7 +98,7 @@ Public Module FileIoHelpers
     ''' </summary>
     ''' <returns>The full path to the user's settings JSON file.</returns>
     Friend Function GetUserSettingsPath() As String
-        Return Path.Join(GetSettingsDirectory(), $"{s_userName}Settings.json")
+        Return Path.Join(GetSettingsDirectory(), $"{GetUserName()}Settings.json")
     End Function
 
     ''' <summary>
@@ -214,11 +214,11 @@ Public Module FileIoHelpers
     ''' <param name="path">Full path to the file to delete.</param>
     Public Sub SafeDeleteFile(path As String)
         Try
-            If String.IsNullOrWhiteSpace(path) Then Return
+            If IsNullOrWhiteSpace(value:=path) Then Return
             If Not File.Exists(path) Then Return
             ' try to clear read-only attribute
             Try
-                File.SetAttributes(path, FileAttributes.Normal)
+                File.SetAttributes(path, fileAttributes:=FileAttributes.Normal)
             Catch
             End Try
             ' attempt delete with a couple of retries for transient locks
@@ -229,12 +229,12 @@ Public Module FileIoHelpers
                     Exit While
                 Catch ex As IOException
                     attempts += 1
-                    Threading.Thread.Sleep(100)
+                    Threading.Thread.Sleep(millisecondsTimeout:=100)
                 Catch ex As UnauthorizedAccessException
                     attempts += 1
-                    Threading.Thread.Sleep(100)
+                    Threading.Thread.Sleep(millisecondsTimeout:=100)
                 Catch ex As Exception
-                    Debug.WriteLine($"SafeDeleteFile failed: {ex.Message}")
+                    Debug.WriteLine(message:=$"SafeDeleteFile failed: {ex.Message}")
                     Exit While
                 End Try
             End While

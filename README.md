@@ -44,9 +44,36 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-5/16/2026
+8/28/2026
 
 ## What's New
+New in 6.0.1.0
+Minor improvements in Json handling
+
+New in 6.0.0.3
+Add AdjustFontToFitWidth
+Add Description support for Enums
+Cleanup CursorSetPictureBox handling
+Fix Formatting in multiple files
+Fix Shield control formatting
+Redo all CountryCode Handling to handle other Regions in DropDowns
+Restore full Region list
+New in 6.0.0.2
+Support for Flex including improved graphics
+FireFox was replaced with WebView2
+Support for Trial Logins
+.Net 11 graphics
+
+New in 6.0.0.1
+Cached Fonts to improve performance.
+Fix issue with new login process that broke login for some users.
+Fixed formating of Time variables where the colon was surrounded by a space.
+Added new message to support new CareLink™ API.
+
+New in 6.0.0.0
+Support for new new MiniMed Flex pump and new CareLink™ API including Trial participants.
+Work needed to support new Flex PDF settings report and other new Flex features.
+
 New in 5.2.3.4
 Fix GetCarbRatio to handle boundries better
 

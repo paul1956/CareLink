@@ -2,8 +2,6 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Text.Json
-
 Public Module PatientDataHelpers
 
     Private ReadOnly s_keyDictionary As New Dictionary(Of String, String) From {
@@ -18,7 +16,7 @@ Public Module PatientDataHelpers
     ''' </summary>
     ''' <returns>String without any personal information</returns>
     Public Function CleanPatientData() As String
-        Dim value As String = JsonSerializer.Serialize(value:=PatientDataElement, options:=s_jsonSerializerOptions)
+        Dim value As String = PatientDataElement.ToJson()
         If IsNullOrWhiteSpace(value) Then
             Return value
         End If

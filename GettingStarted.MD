@@ -2,8 +2,10 @@
 
 ## Requires
 
-- Visual Studio 2019 Version 17.5 or later, the community version can be download for free from Microsoft at
+- Visual Studio Insiders [12023.133], the community version can be download for free from Microsoft at
 https://VisualStudio.Microsoft.com/vs/community
+and make sure you select the ".Net Desktop Development" workload during installation.
+with .Net 11.
 
 ## Installation of Visual Studio
 

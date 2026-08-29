@@ -19,4 +19,7 @@
   <Folder Name="/Solution Items/.GitHub/Prompts/">
     <File Path="vb.prompt.md file" />
   </Folder>
+  <Project Path="src/CareLink/CareLink.vbproj" />
+  <Project Path="src/PumpSetup/PumpSetup.vbproj" Id="0eddd319-d9d5-4052-8473-67803297152d" />
+  <Project Path="src/TestProject/TestProject.vbproj" />
 </Solution>

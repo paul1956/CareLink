@@ -22,11 +22,32 @@ Public Module SystemVariables
     Friend s_formLoaded As Boolean = False
     Friend s_password As String = String.Empty
     Friend s_useLocalTimeZone As Boolean
-    Friend s_userName As String = My.Settings.CareLinkUserName
+    Friend s_userName As String
     Friend ReadOnly Property CareLinkDecimalSeparator As Char = "."c
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property DecimalSeparator As String = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator
     Friend Property MaxBasalPerDose As Double
     Friend Property TreatmentInsulinRow As Single
+
+    ' Cached fonts
+    Friend ReadOnly s_font7Bold As New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
+
+    Friend ReadOnly s_font8Bold As New Font(FamilyName, emSize:=8.0F, style:=FontStyle.Bold)
+    Friend ReadOnly s_font11Bold As New Font(FamilyName, emSize:=11.0F, style:=FontStyle.Bold)
+    Friend ReadOnly s_font12 As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
+    Friend ReadOnly s_font12Bold As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
+    Friend ReadOnly s_font14Bold As New Font(FamilyName, emSize:=14.0F, style:=FontStyle.Bold)
+    Friend ReadOnly s_font18Bold As New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold)
+
+    Friend Function GetUserName() As String
+        If IsNullOrWhiteSpace(value:=s_userName) Then
+            s_userName = $"{My.Settings.CareLinkUserName} ".Trim()
+        End If
+        Return s_userName
+    End Function
+
+    Friend Sub SetUserName(value As String)
+        s_userName = value
+    End Sub
 
 End Module

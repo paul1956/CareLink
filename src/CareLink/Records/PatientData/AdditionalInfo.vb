@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
 Public Class AdditionalInfo
@@ -47,5 +48,8 @@ Public Class AdditionalInfo
     <Column(Order:=7, TypeName:=NameOf([Double]))>
     <JsonPropertyName("notDeliveredAmount")>
     Public Property NotDeliveredAmount As String
+
+    <JsonExtensionData>
+    Public Property AdditionalProperties As Dictionary(Of String, JsonElement)
 
 End Class

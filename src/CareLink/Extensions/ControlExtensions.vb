@@ -7,6 +7,72 @@ Imports System.Runtime.CompilerServices
 Public Module ControlExtensions
 
     ''' <summary>
+    '''  Sets the visibility of a control to the specified value.
+    '''  If the control is <see langword="Nothing"/>, the method returns.
+    '''  If the control's current visibility matches the desired state,
+    '''  no change is made and <see langword="True"/> is returned.
+    '''  Otherwise, the control's visibility is updated.
+    ''' </summary>
+    ''' <param name="control">The control whose visibility is to be set.</param>
+    ''' <param name="visible">The desired visibility state.</param>
+    <Extension>
+    Public Sub SetControlVisibility(control As Control, visible As Boolean)
+        If control Is Nothing Then
+            Return
+        End If
+        If control.Visible <> visible Then
+            control.Visible = visible
+        End If
+    End Sub
+
+    ''' Centers a form relative to another form, even if it's not the parent.
+    ''' </summary>
+    <Extension>
+    Friend Sub CenterFormOnAnother(child As Form, reference As Form)
+        If child Is Nothing OrElse reference Is Nothing Then Exit Sub
+
+        ' Calculate centered position
+        Dim x As Integer = reference.Left + ((reference.Width - child.Width) \ 2)
+        Dim y As Integer = reference.Top + ((reference.Height - child.Height) \ 2)
+
+        ' Ensure the form stays fully visible on screen
+        Dim screenBounds As Rectangle = Screen.FromControl(reference).WorkingArea
+        x = Math.Max(screenBounds.Left, Math.Min(x, screenBounds.Right - child.Width))
+        y = Math.Max(screenBounds.Top, Math.Min(y, screenBounds.Bottom - child.Height))
+
+        child.StartPosition = FormStartPosition.Manual
+        child.Location = New Point(x, y)
+    End Sub
+
+    ''' <summary>
+    ''' Adjusts the label's font size so that its width does not exceed maxWidth.
+    ''' </summary>
+    <Extension>
+    Public Sub AdjustFontToFitWidth(lbl As Label, maxWidth As Integer)
+        If String.IsNullOrEmpty(value:=lbl.Text) Then Exit Sub
+
+        Dim g As Graphics = lbl.CreateGraphics()
+        Dim fontSize As Single = lbl.Font.Size
+
+        ' Reduce font size until it fits
+        While True
+            Dim textSize As SizeF =
+                g.MeasureString(lbl.Text,
+                                font:=New Font(family:=lbl.Font.FontFamily, emSize:=fontSize),
+                                width:=maxWidth)
+            If textSize.Width <= maxWidth OrElse fontSize <= 6 Then
+                Exit While
+            End If
+            fontSize -= 0.5F
+        End While
+
+        lbl.Font = New Font(family:=lbl.Font.FontFamily,
+                            emSize:=fontSize,
+                            lbl.Font.Style)
+        g.Dispose()
+    End Sub
+
+    ''' <summary>
     '''  Centers a <see cref="Label"/> parent container.
     ''' </summary>
     ''' <param name="lbl">
@@ -20,7 +86,7 @@ Public Module ControlExtensions
     '''  is used to determine the drawn width. The method does not change parent layout or anchors.
     ''' </remarks>
     <Extension>
-    Friend Sub CenterLabelXOnParent(lbl As Label)
+    Friend Sub CenterLabelOnParent(lbl As Label)
         If lbl Is Nothing OrElse lbl.IsDisposed Then
             Exit Sub
         End If
@@ -96,6 +162,36 @@ Public Module ControlExtensions
             ' Center in the middle of the parent control
             ctrl.Left = Math.Max(0, (parentWidth - controlWidth) \ 2)
         End If
+    End Sub
+
+    ''' <summary>
+    '''  Horizontially center a <see cref="Control"/> on another Control
+    ''' </summary>
+    ''' <param name="pictBox"></param>
+    ''' <param name="parent"></param>
+    <Extension>
+    Friend Sub CenterXOnControl(pictBox As PictureBox, parent As Control)
+        If pictBox Is Nothing OrElse pictBox.IsDisposed Then
+            Exit Sub
+        End If
+        If parent Is Nothing OrElse parent.IsDisposed Then
+            Exit Sub
+        End If
+        Dim controlWidth As Integer
+        If pictBox IsNot Nothing Then
+            ' Fallback to Width if PreferredWidth is not set
+            controlWidth = pictBox.Width
+        End If
+
+        ' Defensive fixes: ensure controlWidth is sane and cache parent width
+        If controlWidth < 0 Then
+            controlWidth = pictBox.Width
+        End If
+        Dim parentWidth As Integer = parent.Width
+
+        ' Center in the middle of the parent control
+        pictBox.Left =
+            parent.Left + Math.Max(0, (parentWidth - controlWidth) \ 2)
     End Sub
 
     ''' <summary>
@@ -245,6 +341,22 @@ Public Module ControlExtensions
                 SetDgvCustomHeadersVisualStyles(ctrl:=c)
             End If
         Next
+    End Sub
+
+    ''' <summary>
+    '''  If newFont is the same as existing on <paramref name="lbl"/> then Return,
+    '''  Otherwise change the lbl Font to <paramref name="newFont"/>.
+    ''' </summary>
+    ''' <param name="lbl">
+    '''  The <see cref="Label"/> whose <see cref="Font"/> to check.
+    ''' </param>
+    ''' <param name="newFont">The desired <see cref="Font"/>.</param>
+    <Extension>
+    Public Sub SetFontIfChanged(lbl As Label, newFont As Font)
+        If lbl.Font.Equals(newFont) Then
+            Return
+        End If
+        lbl.Font = newFont
     End Sub
 
 End Module

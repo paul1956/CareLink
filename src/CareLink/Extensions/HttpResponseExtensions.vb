@@ -13,7 +13,7 @@ Imports System.Runtime.CompilerServices
 Friend Module HttpResponseExtensions
 
     <Extension>
-    Friend Sub ThrowIfFailure(response As HttpResponseMessage)
+    Friend Async Function ThrowIfFailureAsync(response As HttpResponseMessage) As Task
         ArgumentNullException.ThrowIfNull(response)
 
         If response.IsSuccessStatusCode Then
@@ -24,7 +24,7 @@ Friend Module HttpResponseExtensions
         Dim body As String
 
         Try
-            body = response.Content.ReadAsStringAsync().Result
+            body = Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
         Catch ex As Exception
             ' Could not read body — continue with empty body.
             body = $"<unable to read response body: {ex.Message}>"
@@ -50,6 +50,19 @@ Friend Module HttpResponseExtensions
                 ' Generic HTTP failure
                 Throw New HttpRequestException(msg)
         End Select
-    End Sub
+    End Function
+
+    <Extension>
+    Public Function GetValueOrNothing(response As HttpResponseMessage, key As String) As String
+        ArgumentNullException.ThrowIfNull(argument:=response)
+        ArgumentNullException.ThrowIfNull(argument:=key)
+        If response.Headers.Contains(name:=key) Then
+            Dim valueString As String = response.Headers.GetValues(name:=key).FirstOrDefault()
+            If valueString IsNot Nothing Then
+                Return valueString
+            End If
+        End If
+        Return Nothing
+    End Function
 
 End Module

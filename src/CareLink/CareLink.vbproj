@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows10.0.17763.0</TargetFramework>
+    <TargetFramework>net11.0-windows10.0.17763.0</TargetFramework>
     <RootNamespace>CareLink</RootNamespace>
-    <StartupObject>Sub Main</StartupObject>
+    <StartupObject>CareLink.My.MyApplication</StartupObject>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <MyType>WindowsForms</MyType>
@@ -18,19 +18,19 @@
     <Authors>Paul M Cohen</Authors>
     <Company>Travel By Paul</Company>
     <Product>CareLink Data Viewer</Product>
-    <Description>View raw and visualized pump data from Medtronic 770G and 780G Insulin Pumps</Description>
+    <Description>View raw and visualized pump data from Medtronic 770G, 780G or MiniMed Flex Insulin Pumps</Description>
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>5.2.3.5</Version>
-    <AssemblyVersion>5.2.3.5</AssemblyVersion>
-    <FileVersion>5.2.3.5</FileVersion>
+    <Version>6.0.1.0</Version>
+    <AssemblyVersion>6.0.1.0</AssemblyVersion>
+    <FileVersion>6.0.1.0</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
     <PackageTags>CareLink Medtronic Insulin Pump</PackageTags>
     <PackageLicenseFile>License.txt</PackageLicenseFile>
-    <PackageReleaseNotes>Requires Windows 10 or later and .Net 9.0 of later
+    <PackageReleaseNotes>Requires Windows 10 or later and .Net 11.0 of later
     </PackageReleaseNotes>
     <Title>CareLink For Windows</Title>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -38,14 +38,6 @@
     <GenerateResourceWarnOnBinaryFormatterUse>false</GenerateResourceWarnOnBinaryFormatterUse>
     <NoWarn>$(NoWarn);WFO1000</NoWarn>
     <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <NoWarn>$(NoWarn);NETSDK1206;NETSDK1194</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <NoWarn>$(NoWarn);WFO5001</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -60,21 +52,386 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Records\CountrySettingsRecords\**" />
-    <EmbeddedResource Remove="Records\CountrySettingsRecords\**" />
-    <None Remove="Records\CountrySettingsRecords\**" />
-    <Page Remove="Records\CountrySettingsRecords\**" />
+    <None Remove="Images\AboutBox.png" />
+    <None Remove="Images\AboutBoxDark.png" />
+    <None Remove="Images\AdvancedView.png" />
+    <None Remove="Images\AdvancedViewDark.png" />
+    <None Remove="Images\CalibrationDot.png" />
+    <None Remove="Images\CalibrationDotRed.png" />
+    <None Remove="Images\CalibrationNotReady.png" />
+    <None Remove="Images\CalibrationUnavailable.png" />
+    <None Remove="Images\color-wheel-icon-png-25.jpg" />
+    <None Remove="Images\Copy.png" />
+    <None Remove="Images\CopyDark.png" />
+    <None Remove="Images\Exit.png" />
+    <None Remove="Images\ExitDark.png" />
+    <None Remove="Images\ExitFullScreen.png" />
+    <None Remove="Images\ExitFullScreenDark.png" />
+    <None Remove="Images\ExportData.png" />
+    <None Remove="Images\FeedbackSmile_16x.png" />
+    <None Remove="Images\FeedbackSmile_16xDark.png" />
+    <None Remove="Images\FlexActiveInsulinReset.png" />
+    <None Remove="Images\FlexBattery1-10Hours.png" />
+    <None Remove="Images\FlexBatteryDeplated.png" />
+    <None Remove="Images\FlexBatteryFull.png" />
+    <None Remove="Images\FlexBatteryLessThen1Hour.png" />
+    <None Remove="Images\FlexBatteryUnknown.png" />
+    <None Remove="Images\FlexPump.png" />
+    <None Remove="Images\FlexSmartGuardSuspended.png" />
+    <None Remove="Images\GridLight.png" />
+    <None Remove="Images\ICON.ico" />
+    <None Remove="Images\IconImage.ico" />
+    <None Remove="Images\InfusionLifeExpired.png" />
+    <None Remove="Images\InfusionLifeOver24Hours.png" />
+    <None Remove="Images\InfusionLifeUnder12Hours.png" />
+    <None Remove="Images\InfusionLifeUnknown.png" />
+    <None Remove="Images\InfusionNotsetup.png" />
+    <None Remove="Images\InsulinVial.png" />
+    <None Remove="Images\InsulinVialTiny.png" />
+    <None Remove="Images\LoginDark.png" />
+    <None Remove="Images\LoginImage.jpg" />
+    <None Remove="Images\LoginLight.png" />
+    <None Remove="Images\Mail_16x.ico" />
+    <None Remove="Images\MealImage.png" />
+    <None Remove="Images\MealImageLarge.png" />
+    <None Remove="Images\NotificationAlertGray_16x.png" />
+    <None Remove="Images\NotificationAlertRed_16x.png" />
+    <None Remove="Images\NotificationAlert_16x.png" />
+    <None Remove="Images\NotifyIcon1.icon.ico" />
+    <None Remove="Images\OpenFile.png" />
+    <None Remove="Images\OpenFileDark.png" />
+    <None Remove="Images\OpenProjectFolder.png" />
+    <None Remove="Images\OpenProjectFolderDark.png" />
+    <None Remove="Images\PumpBattery780GFull.png" />
+    <None Remove="Images\PumpBattery780GHigh.png" />
+    <None Remove="Images\PumpBattery780GLow.png" />
+    <None Remove="Images\PumpBattery780GMedium.png" />
+    <None Remove="Images\PumpBattery780GUnknown.png" />
+    <None Remove="Images\PumpBatteryCritical.png" />
+    <None Remove="Images\PumpBatteryFlexDepleted.png" />
+    <None Remove="Images\PumpBatteryFlexFull.png" />
+    <None Remove="Images\PumpBatteryFlexLessThen1Hour.png" />
+    <None Remove="Images\PumpBatteryFlexUnknown.png" />
+    <None Remove="Images\PumpBatteryFull.png" />
+    <None Remove="Images\PumpBatteryHigh.png" />
+    <None Remove="Images\PumpBatteryLow.png" />
+    <None Remove="Images\PumpBatteryMedium.png" />
+    <None Remove="Images\PumpBatteryUnknown.png" />
+    <None Remove="Images\PumpConnectivityToInstinctOK.png" />
+    <None Remove="Images\PumpConnectivityToPhoneNotOK.png" />
+    <None Remove="Images\PumpConnectivityToPhoneOK.png" />
+    <None Remove="Images\PumpConnectivityToSimpleraOK.png" />
+    <None Remove="Images\PumpConnectivityToTransmitterNotOK.png" />
+    <None Remove="Images\PumpConnectivityToTransmitterOK.png" />
+    <None Remove="Images\PumpConnectivityToTransmitterUnknown.png" />
+    <None Remove="Images\QuestionMark.ico" />
+    <None Remove="Images\QuestionMark.png" />
+    <None Remove="Images\ReservoirEmpty.png" />
+    <None Remove="Images\ReservoirRemainsOver01Percent.png" />
+    <None Remove="Images\ReservoirRemainsOver15Percent.png" />
+    <None Remove="Images\ReservoirRemainsOver29Percent.png" />
+    <None Remove="Images\ReservoirRemainsOver43Percent.png" />
+    <None Remove="Images\ReservoirRemainsOver57Percent.png" />
+    <None Remove="Images\ReservoirRemainsOver71Percent.png" />
+    <None Remove="Images\ReservoirRemainsOver85Percent.png" />
+    <None Remove="Images\ReservoirRemainsUnknown.png" />
+    <None Remove="Images\SelectAll.png" />
+    <None Remove="Images\SelectAllDark.png" />
+    <None Remove="Images\SensorCommunicationLost.png" />
+    <None Remove="Images\SensorExpirationUnknown.png" />
+    <None Remove="Images\SensorExpired.png" />
+    <None Remove="Images\SensorExpiringSoon.png" />
+    <None Remove="Images\SensorLifeNotOK.png" />
+    <None Remove="Images\SensorLifeOK.png" />
+    <None Remove="Images\Shield.png" />
+    <None Remove="Images\ShieldDisabled.png" />
+    <None Remove="Images\SmartGuardFlexSuspended.png" />
+    <None Remove="Images\SmartGuardShield.png" />
+    <None Remove="Images\TransmitterBatteryCritical.png" />
+    <None Remove="Images\TransmitterBatteryFull.png" />
+    <None Remove="Images\TransmitterBatteryLow.png" />
+    <None Remove="Images\TransmitterBatteryMedium.png" />
+    <None Remove="Images\TransmitterBatteryOK.png" />
+    <None Remove="Images\TransmitterBatteryUnknown.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="CareLinkCommunications\CareLinkClientHelpers.vb" />
-    <Compile Remove="Dialogs\Captcha.Designer.vb" />
-    <Compile Remove="Dialogs\Captcha.vb" />
-    <Compile Remove="Records\CommunicationRecords\SessionProfile.vb" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Remove="Dialogs\Captcha.resx" />
+    <Content Include="Images\AboutBox.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\AboutBoxDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\AdvancedView.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\AdvancedViewDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\CalibrationDot.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\CalibrationDotRed.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\CalibrationNotReady.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\CalibrationUnavailable.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\color-wheel-icon-png-25.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Copy.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\CopyDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Exit.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ExitDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ExitFullScreen.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ExitFullScreenDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ExportData.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\FeedbackSmile_16x.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\FeedbackSmile_16xDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\FlexActiveInsulinReset.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\FlexPump.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\GridLight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ICON.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\IconImage.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\InfusionLife12To24Hours.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\InfusionLifeExpired.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\InfusionLifeOver24Hours.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\InfusionLifeUnder12Hours.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\InfusionLifeUnknown.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\InfusionNotsetup.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\InsulinVial.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\InsulinVialTiny.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\LoginDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\LoginImage.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\LoginLight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Mail_16x.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\MealImage.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\MealImageLarge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\NotificationAlertGray_16x.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\NotificationAlertRed_16x.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\NotificationAlert_16x.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\NotifyIcon1.icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\OpenFile.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\OpenFileDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\OpenProjectFolder.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\OpenProjectFolderDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBattery780GFull.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBattery780GHigh.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBattery780GLow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBattery780GMedium.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBattery780GUnknown.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBattery780GCritical.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBatteryFlex1To10Hours.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBatteryFlexDepleted.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBatteryFlexFull.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBatteryFlexLessThen1Hour.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpBatteryFlexUnknown.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpConnectivityToInstinctOK.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpConnectivityToPhoneNotOK.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpConnectivityToPhoneOK.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpConnectivityToSimpleraOK.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpConnectivityToTransmitterNotOK.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpConnectivityToTransmitterOK.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\PumpConnectivityToTransmitterUnknown.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\QuestionMark.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\QuestionMark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ReservoirEmpty.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ReservoirRemainsOver01Percent.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ReservoirRemainsOver15Percent.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ReservoirRemainsOver29Percent.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ReservoirRemainsOver43Percent.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ReservoirRemainsOver57Percent.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ReservoirRemainsOver71Percent.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ReservoirRemainsOver85Percent.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ReservoirRemainsUnknown.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SelectAll.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SelectAllDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SensorCommunicationLost.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SensorExpirationUnknown.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SensorExpired.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SensorExpiringSoon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SensorLifeNotOK.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SensorLifeOK.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Shield.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\ShieldDisabled.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SmartGuardFlexSuspended.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SmartGuardShield.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\TransmitterBatteryCritical.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\TransmitterBatteryFull.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\TransmitterBatteryLow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\TransmitterBatteryMedium.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\TransmitterBatteryOK.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\TransmitterBatteryUnknown.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -84,11 +441,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.105.0" />
+    <PackageReference Include="ClosedXML" Version="0.105.1" />
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.8" />
     <PackageReference Include="FreeSpire.PDF" Version="12.4.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4129.50" />
     <PackageReference Include="Octokit" Version="14.0.0" />
-    <PackageReference Include="System.Speech" Version="10.0.9" />
+    <PackageReference Include="System.Speech" Version="10.0.11" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.3" />
     <PackageReference Include="ToolStripComboBoxEx" Version="1.0.8" />
     <PackageReference Include="WinForms.DataVisualization" Version="1.10.2" />
@@ -121,9 +479,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Resources\carelink_carepartner_api_login.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="SampleUserV2Data.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -142,10 +497,11 @@
     <None Update="SampleUserDataScratch.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
-    <None Include="Images\IconImage.png">
+    <Content Include="Images\IconImage.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
-    </None>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

@@ -58,9 +58,10 @@ Friend Module DgvExportHelpers
 
         If copyAll OrElse dgv.GetCellCount(includeFilter:=DataGridViewElementStates.Selected) > 0 Then
             Dim dgvCells As List(Of DataGridViewCell) = dgv.SelectedCells.Cast(Of DataGridViewCell)().ToList()
-            Dim selector As Func(Of DataGridViewCell, Integer) = Function(c As DataGridViewCell) As Integer
-                                                                     Return c.ColumnIndex
-                                                                 End Function
+            Dim selector As Func(Of DataGridViewCell, Integer) =
+                Function(c As DataGridViewCell) As Integer
+                    Return c.ColumnIndex
+                End Function
             Dim colLow As Integer = If(copyAll,
                                        0,
                                        dgvCells.Min(selector))
@@ -231,7 +232,7 @@ Friend Module DgvExportHelpers
                                     Else
                                         .Value = valueASingle
                                         .Style.NumberFormat.Format = If(dgv.Columns(index).Name.EqualsNoCase("sg"),
-                                                                        GetSgFormat(withSign:=False),
+                                                                        GetSgFormat(NativeMmolL, withSign:=False),
                                                                         $"0{DecimalSeparator}000")
 
                                         align = XLAlignmentHorizontalValues.Right

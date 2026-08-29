@@ -23,8 +23,10 @@ Namespace My
             ' Setting the HighDpiMode for the Application:
             e.HighDpiMode = HighDpiMode.PerMonitorV2
             e.ColorMode = SystemColorMode.Dark
+            e.FormRevealMode = FormRevealMode.Deferred
             '    ' If a splash dialog is used, this sets the minimum display time:
             '    e.MinimumSplashScreenDisplayTime = 4000
+            e.VisualStylesMode = VisualStylesMode.Net11
         End Sub
 
         Private Sub Me_UnhandledException(sender As Object, e As UnhandledExceptionEventArgs) _

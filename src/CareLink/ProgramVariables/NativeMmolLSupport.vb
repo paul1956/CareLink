@@ -74,12 +74,39 @@ Public Module NativeMmolLSupport
     ''' <returns>
     '''  The standard format string for blood glucose values.
     ''' </returns>
-    Public Function GetSgFormat(Optional withSign As Boolean? = Nothing) As String
-        Return If(withSign Is Nothing,
-                  If(NativeMmolL, "F1", "F0"),
-                  If(withSign,
-                     If(NativeMmolL, $"+0{DecimalSeparator}0;-#{DecimalSeparator}0", "+0;-#"),
-                     If(NativeMmolL, $"0{DecimalSeparator}0", "0")))
+    Public Function GetSgFormat(nativeMmolL As Boolean, Optional withSign As Boolean? = Nothing) As String
+        If nativeMmolL Then
+            ' One required decimal place
+            If withSign Is Nothing Then
+                Return "0.0"
+            ElseIf withSign.Value Then
+                Return "+0.0;-0.0;0.0"
+            Else
+                Return "0.0"
+            End If
+        Else
+            ' Rounded whole number
+            If withSign Is Nothing Then
+                Return "0"
+            ElseIf withSign.Value Then
+                Return "+0;-0;0"
+            Else
+                Return "0"
+            End If
+        End If
+    End Function
+
+    ''' <summary>
+    '''  Gets the standard format string for chart axis values
+    '''  based on the current mmol/L setting.
+    ''' </summary>
+    ''' <returns>
+    '''  The standard format string for chart axis values.
+    ''' </returns>
+    Public Function GetChartAxisFormat(nativeMmolL As Boolean) As String
+        Return If(nativeMmolL,
+                  "0.0",
+                  "0")
     End Function
 
 End Module

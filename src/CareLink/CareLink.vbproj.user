@@ -19,6 +19,9 @@
     <Compile Update="Dialogs\CleanUpObsoleteFilesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\RawDataViewerDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Dialogs\ExceptionHandlerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -40,13 +43,16 @@
     <Compile Update="Forms\AboutBox1.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Forms\ControlPositionsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\Form1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\PositionForm.vb">
+    <Compile Update="Forms\SgMiniForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Forms\SgMiniForm.vb">
+    <Compile Update="Helpers\LoginHelpers\OAuthBrowserForm.vb">
       <SubType>Form</SubType>
     </Compile>
   </ItemGroup>

@@ -43,7 +43,7 @@ Friend Module DrawingExtensions
     ''' </returns>
     <Extension>
     Friend Function DrawCenteredArc(backImage As Bitmap, minutesToNextCalibration As Integer) As Bitmap
-        ArgumentNullException.ThrowIfNull(backImage)
+        ArgumentNullException.ThrowIfNull(argument:=backImage)
         If minutesToNextCalibration = 0 Then
             Return backImage
         End If

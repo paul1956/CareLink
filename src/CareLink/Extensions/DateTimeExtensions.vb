@@ -145,8 +145,8 @@ Friend Module DateTimeExtensions
         End If
         Dim localAndPumpTimeEqual As Boolean = pumpTime.ToString = localTime.ToString
         Dim timeStr As String = If(localAndPumpTimeEqual,
-                                   $"Local & Pump = {localTime}",
-                                   $"Local = {localTime}, Pump = {pumpTime}")
+                                   $"    Local and  Pump Time are {localTime}",
+                                   $"    Local time is {localTime}, Pump Time is {pumpTime}")
 
         Return $"{$"{unixTime} UTC"}, {timeStr}"
     End Function
@@ -312,28 +312,36 @@ Friend Module DateTimeExtensions
         Dim hrs As Integer = hours Mod 24
 
         Dim parts As New List(Of String)
+        Dim item As String
         If days > 0 Then
-            parts.Add($"{days} {If(days = 1, "day", "days")}")
+            item = $"{days} {If(days = 1, "day", "days")}"
+            parts.Add(item)
         End If
         If hrs > 0 Then
-            parts.Add($"{hrs} {If(hrs = 1, "hr", "hrs")}")
+            item = $"{hrs} {If(hrs = 1, "hr", "hrs")}"
+            parts.Add(item)
         End If
 
         If parts.Count = 0 Then
             ' This should not happen because hours > 0, but handle defensively
             Return "0 hrs"
         ElseIf parts.Count = 1 Then
-            Return parts(0)
+            Return parts(index:=0)
         Else
-            Return $"{parts(0)} and {parts(1)}"
+            Return $"{parts(index:=0)} and {parts(index:=1)}"
         End If
     End Function
 
     <Extension>
     Public Function ToHoursMinutes(minutes As Integer) As String
-        Return New TimeSpan(hours:=0,
-                            minutes:=minutes \ 60,
-                            seconds:=minutes Mod 60).ToString.Substring(startIndex:=4)
+        Dim timeSpan As New TimeSpan(hours:=minutes \ 60,
+                                     minutes:=minutes Mod 60,
+                                     seconds:=0)
+        Dim result As String = timeSpan.ToString.Substring(startIndex:=0, length:=5)
+        If result.StartsWith(value:="0"c) Then
+            result = $" {result.Substring(startIndex:=1)}"
+        End If
+        Return result
     End Function
 
     ''' <summary>
@@ -369,7 +377,7 @@ Friend Module DateTimeExtensions
 
     ''' <summary>
     '''  Converts a <see langword="Date"/> to a <see langword="String"/>
-    '''  formatted as "ddd, MMM d HH:mm".
+    '''  formatted as "MMM dd, yyyy HH:mm".
     ''' </summary>
     ''' <param name="triggeredDateTime">
     '''  The <see langword="Date"/> to convert.
@@ -379,7 +387,7 @@ Friend Module DateTimeExtensions
     ''' </returns>
     <Extension>
     Public Function ToNotificationString(triggeredDateTime As Date) As String
-        Return triggeredDateTime.ToString(format:=$"ddd, MMM d,{s_timeWithMinuteFormat}")
+        Return triggeredDateTime.ToString(format:=$"MMM dd, yyyy {s_timeWithMinuteFormat}")
     End Function
 
     ''' <summary>
@@ -389,12 +397,18 @@ Friend Module DateTimeExtensions
     ''' <param name="dateValue">
     '''  The <see langword="Date"/> to convert.
     ''' </param>
+    ''' <param name="showSeconds">Controls if seconds are displayed</param>
     ''' <returns>
-    '''  A <see langword="String"/> representing the date in "MM/dd/yyyy HH:mm:ss" format.
+    '''  A <see langword="String"/> representing the date in "MM/dd/yyyy HH:mm:ss" format or
+    '''  "MM/dd/yyyy HH:mm" is showSeconds os false.
     ''' </returns>
     <Extension>
-    Public Function ToShortDateTime(dateValue As Date) As String
-        Return $"{dateValue:d} {dateValue:T}"
+    Public Function ToShortDateTime(dateValue As Date,
+                                Optional showSeconds As Boolean = True) As String
+
+        Dim timeFormat As String = If(showSeconds, "T", "t")
+        Return $"{dateValue:d} {dateValue.ToString(format:=timeFormat)}"
+
     End Function
 
     ''' <summary>
@@ -437,7 +451,7 @@ Friend Module DateTimeExtensions
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.AssumeUniversal, success)
             Case NameOf(SG.Timestamp)
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
-            Case NameOf(TimeChange.Timestamp), NameOf(ClearedNotifications.dateTime)
+            Case NameOf(TimeChange.Timestamp), "dateTime"
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case NameOf(ActiveNotification.SecondaryTime)
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.NoCurrentDateDefault, success)
@@ -464,10 +478,34 @@ Friend Module DateTimeExtensions
     ''' </remarks>
     <Extension>
     Public Function TryParseDateStr(s As String) As Date
+        If IsNullOrWhiteSpace(value:=s) Then
+            Return Nothing
+        End If
+
         Dim provider As IFormatProvider = CultureInfo.InvariantCulture
-        Return If(IsNotNullOrWhiteSpace(value:=s),
-                  Date.ParseExact(s, format:="yyyy-MM-ddTHH:mm:ss", provider),
-                  Nothing)
+        Dim result As Date
+        ' Try the original exact format first to preserve existing behavior
+        If Date.TryParseExact(s, Format, provider, style:=DateTimeStyles.None, result) Then
+            Return result
+        End If
+
+        ' Fallback: support ISO 8601 inputs with fractional seconds and timezone offsets
+        ' Parse as DateTimeOffset then convert to Local Date per chosen behavior
+        Dim dto As DateTimeOffset
+        If DateTimeOffset.TryParse(input:=s,
+                                   formatProvider:=provider,
+                                   styles:=DateTimeStyles.None,
+                                   result:=dto) Then
+            Return dto.LocalDateTime
+        End If
+
+        ' As a last resort, try a broader Date parse using invariant culture
+        If Date.TryParse(s, provider:=CultureInfo.InvariantCulture, styles:=DateTimeStyles.None, result) Then
+            Return result
+        End If
+
+        ' Let caller handle invalid format by throwing like original code would
+        Throw New FormatException(message:=$"String '{s}' was not recognized as a valid DateTime.")
     End Function
 
 End Module

@@ -56,8 +56,9 @@ Friend Module SgExtensions
             Case Else
                 Stop
         End Select
-
-        Return itemAsSingle.ScaleSg()
+        Return If(itemAsSingle = 0,
+                  "NaN",
+                  itemAsSingle.ScaleSgStr())
     End Function
 
     ''' <summary>
@@ -116,39 +117,38 @@ Friend Module SgExtensions
     '''   the underlying collection may change between enumeration calls.
     ''' </remarks>
     Public Function GetValidSgRecords() As IEnumerable(Of SG)
-        Dim predicate As Func(Of SG, Boolean) = Function(entry As SG) As Boolean
-                                                    Return entry.sg.IsSgValid
-                                                End Function
+        Dim predicate As Func(Of SG, Boolean) =
+            Function(entry As SG) As Boolean
+                Return entry.sg.IsSgValid
+            End Function
 
         Return s_sgRecords.Where(predicate)
     End Function
 
     ''' <summary>
-    '''  Converts a <see cref="Single"/> SG value to a localized string, applying unit conversion
-    '''  when the application is configured to use mmol/L.
+    '''  Parses a string to a <see cref="Single"/> and returns a scaled representation
     ''' </summary>
-    ''' <param name="value">
-    '''  The raw SG value (assumed to be in mg/dL units unless <see cref="NativeMmolL"/> is <c>True</c>).
-    ''' </param>
+    ''' <param name="value">A string containing a numeric representation of the SG value.</param>
     ''' <returns>
-    '''  A culture-aware string representation of the value. When <see cref="NativeMmolL"/> is <c>True</c>,
-    '''  the numeric value is divided by <see cref="MmolLUnitsDivisor"/> and rounded to one decimal place.
+    '''  The scaled representation of the parsed value.
+    '''  If parsing fails, <see cref="ParseSingle"/> may throw a <see cref="FormatException"/>
+    '''  or <see cref="OverflowException"/>.
     ''' </returns>
-    ''' <remarks>
-    '''  - Uses <see cref="CultureInfo.CurrentUICulture"/> for numeric formatting.
-    '''  - Rounding is performed by <see cref="RoundToSingle"/> with <c>digits:=1</c>.
-    ''' </remarks>
+    ''' <exception cref="FormatException">If <paramref name="value"/> is not a valid number.</exception>
+    ''' <exception cref="OverflowException">
+    '''  If <paramref name="value"/> represents a number outside the range of <see cref="Single"/>.
+    ''' </exception>
     <Extension>
-    Public Function ScaleSg(value As Single) As String
-        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+    Public Function ScaleSg(value As Single) As Single
+        Dim result As Single = value
         If NativeMmolL Then
-            value = (value / MmolLUnitsDivisor).RoundToSingle(digits:=1, considerValue:=True)
+            result = (value / MmolLUnitsDivisor).RoundToSingle(digits:=1, considerValue:=True)
         End If
-        Return value.ToString(provider)
+        Return result
     End Function
 
     ''' <summary>
-    '''  Converts the value portion of a <see cref="KeyValuePair(Of String, Object)"/> into
+    '''  Converts the value portion of a <see cref="KeyValuePair(Of String, JsonElement)"/> into
     '''  a scaled SG string using the same rules as <see cref="ScaleSg(JsonElement)"/>.
     ''' </summary>
     ''' <param name="item">A key/value pair whose value is expected to be a <see cref="JsonElement"/>.</param>
@@ -158,8 +158,8 @@ Friend Module SgExtensions
     '''  forwards to <see cref="ScaleSg(JsonElement)"/>.
     ''' </remarks>
     <Extension>
-    Public Function ScaleSg(item As KeyValuePair(Of String, Object)) As String
-        Return CType(item.Value, JsonElement).ScaleSg()
+    Public Function ScaleSg(item As KeyValuePair(Of String, JsonElement)) As String
+        Return item.Value.ScaleSg()
     End Function
 
     ''' <summary>
@@ -178,7 +178,29 @@ Friend Module SgExtensions
     ''' </exception>
     <Extension>
     Public Function ScaleSg(value As String) As String
-        Return value.ParseSingle().ScaleSg()
+        Return value.ParseSingle().ScaleSgStr()
+    End Function
+
+    ''' <summary>
+    '''  Converts a <see cref="Single"/> SG value to a localized string, applying unit conversion
+    '''  when the application is configured to use mmol/L.
+    ''' </summary>
+    ''' <param name="value">
+    '''  The raw SG value (assumed to be in mg/dL units unless <see cref="NativeMmolL"/> is <c>True</c>).
+    ''' </param>
+    ''' <returns>
+    '''  A culture-aware string representation of the value. When <see cref="NativeMmolL"/> is <c>True</c>,
+    '''  the numeric value is divided by <see cref="MmolLUnitsDivisor"/> and rounded to one decimal place.
+    ''' </returns>
+    ''' <remarks>
+    '''  - Uses <see cref="CultureInfo.CurrentUICulture"/> for numeric formatting.
+    '''  - Rounding is performed by <see cref="RoundToSingle"/> with <c>digits:=1</c>.
+    ''' </remarks>
+    <Extension>
+    Public Function ScaleSgStr(value As Single) As String
+        Dim result As Single = ScaleSg(value)
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+        Return result.ToString(provider)
     End Function
 
 End Module

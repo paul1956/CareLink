@@ -124,6 +124,7 @@ Public Class CareLinkUserDataList
                     End If
                 Next
             Catch ex As Exception
+                Stop
                 Return New CareLinkUserDataRecord(parent:=Me)
             End Try
             message = $"Key '{itemName}' Not Present in Dictionary, in {functionName}"
@@ -297,6 +298,7 @@ Public Class CareLinkUserDataList
                     End If
                     rowIndex += 1
                 Catch ex As FileIO.MalformedLineException
+                    Stop
                     MsgBox(
                       heading:="Malformed Line Exception",
                       prompt:=$"Line {ex.Message} is invalid.  Skipping",
@@ -432,6 +434,7 @@ Public Class CareLinkUserDataList
                 append:=False)
         Catch ex As Exception
             ' Handle exceptions as needed
+            Stop
         End Try
     End Sub
 

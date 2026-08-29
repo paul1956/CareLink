@@ -20,19 +20,19 @@ Public Class ControlInfo
         Dim parts As New List(Of String)
 
         If (a And AnchorStyles.Left) = AnchorStyles.Left Then
-            parts.Add("Left")
+            parts.Add(item:="Left")
         End If
         If (a And AnchorStyles.Right) = AnchorStyles.Right Then
-            parts.Add("Right")
+            parts.Add(item:="Right")
         End If
         If (a And AnchorStyles.Top) = AnchorStyles.Top Then
-            parts.Add("Top")
+            parts.Add(item:="Top")
         End If
         If (a And AnchorStyles.Bottom) = AnchorStyles.Bottom Then
-            parts.Add("Bottom")
+            parts.Add(item:="Bottom")
         End If
 
-        Return String.Join(" or ", parts)
+        Return String.Join(separator:=" or ", values:=parts)
     End Function
 
 End Class

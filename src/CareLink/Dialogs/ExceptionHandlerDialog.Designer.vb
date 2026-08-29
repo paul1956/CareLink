@@ -44,7 +44,7 @@ Partial Class ExceptionHandlerDialog
         OK.DialogResult = DialogResult.OK
         OK.Location = New Point(1190, 348)
         OK.Name = "OK"
-        OK.Size = New Size(94, 23)
+        OK.Size = New Size(94, 25)
         OK.TabIndex = 4
         OK.Text = "&OK"
         ' 
@@ -54,7 +54,7 @@ Partial Class ExceptionHandlerDialog
         Cancel.DialogResult = DialogResult.Cancel
         Cancel.Location = New Point(1311, 348)
         Cancel.Name = "Cancel"
-        Cancel.Size = New Size(94, 23)
+        Cancel.Size = New Size(94, 25)
         Cancel.TabIndex = 4
         Cancel.Text = "&Cancel"
         ' 
@@ -79,7 +79,7 @@ Partial Class ExceptionHandlerDialog
         ' 
         exTextBox.Location = New Point(75, 2)
         exTextBox.Name = "exTextBox"
-        exTextBox.Size = New Size(1330, 23)
+        exTextBox.Size = New Size(1330, 25)
         exTextBox.TabIndex = 8
         ' 
         ' BgReadingLabel

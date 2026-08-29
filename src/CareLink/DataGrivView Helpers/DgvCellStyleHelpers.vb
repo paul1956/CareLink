@@ -51,12 +51,16 @@ Public Module DgvCellStyleHelpers
             NameOf(Meal.Kind),
             NameOf(Meal.Type)}},
         {GetType(SG), New List(Of String) From {
+            NameOf(SG.Kind),
             NameOf(SG.OaDateTime),
             NameOf(SG.Version)}},
         {GetType(TherapyAlgorithmState), New List(Of String) From {}},
         {GetType(TimeChange), New List(Of String) From {
             NameOf(TimeChange.Kind),
             NameOf(TimeChange.Type)}}}
+
+    Private ReadOnly Property BlackAsArgb As Integer = Color.Black.ToArgb()
+    Private ReadOnly Property WhiteAsArgb As Integer = Color.White.ToArgb()
 
     ''' <summary>
     '''  Sets the cell value to <see cref="String.Empty"/> if the
@@ -73,8 +77,8 @@ Public Module DgvCellStyleHelpers
         Dim value As String = Convert.ToString(e.Value)
         If value = String.Empty OrElse value = "0" Then
             e.Value = String.Empty
-            e.FormattingApplied = True
         End If
+        e.FormattingApplied = True
     End Sub
 
     ''' <summary>
@@ -94,12 +98,11 @@ Public Module DgvCellStyleHelpers
     ''' <param name="isUri">Indicates if the cell value is a URI.</param>
     ''' <param name="emIncrease"></param>
     <Extension>
-    Friend Sub CellFormattingApplyBoldColor(
-        dgv As DataGridView,
-        e As DataGridViewCellFormattingEventArgs,
-        textColor As Color,
-        Optional isUri As Boolean = False,
-        Optional emIncrease As Integer = 0)
+    Friend Sub CellFormattingApplyBoldColor(dgv As DataGridView,
+                                            e As DataGridViewCellFormattingEventArgs,
+                                            textColor As Color,
+                                            Optional isUri As Boolean = False,
+                                            Optional emIncrease As Integer = 0)
 
         Dim value As String = Convert.ToString(e.Value)
         If IsNullOrEmpty(value) Then
@@ -125,8 +128,6 @@ Public Module DgvCellStyleHelpers
                     .SelectionBackColor = uriColor
                     .SelectionForeColor = uriColor.ContrastingColor()
                 End If
-            Else
-                .ForeColor = rowRef.GetTextColor(textColor)
             End If
             .Font = New Font(family:= .Font.FontFamily, emSize:= .Font.Size + emIncrease, style:=FontStyle.Italic)
         End With
@@ -185,13 +186,14 @@ Public Module DgvCellStyleHelpers
     ''' </param>
     <Extension>
     Friend Sub CellFormattingSetForegroundColor(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs)
-        Dim col As DataGridViewTextBoxColumn = TryCast(dgv.Columns(e.ColumnIndex), DataGridViewTextBoxColumn)
+        Dim col As DataGridViewTextBoxColumn =
+            TryCast(dgv.Columns(index:=e.ColumnIndex), DataGridViewTextBoxColumn)
         If col IsNot Nothing Then
             e.Value = $"{e.Value}"
-            Dim textColor As Color = e.CellStyle.ForeColor
-            Dim argb As Integer = textColor.ToArgb()
-            If argb <> Color.Black.ToArgb() AndAlso argb <> Color.White.ToArgb() Then
-                e.CellStyle.ForeColor = dgv.Rows(index:=e.RowIndex).GetTextColor(textColor)
+            Dim argb As Integer = e.CellStyle.ForeColor.ToArgb()
+            If argb <> BlackAsArgb AndAlso argb <> WhiteAsArgb Then
+                e.CellStyle.ForeColor =
+                    dgv.Rows(index:=e.RowIndex).GetTextColor(textColor:=e.CellStyle.ForeColor)
             End If
             e.CellStyle.Font = New Font(prototype:=e.CellStyle.Font, newStyle:=FontStyle.Regular)
             e.FormattingApplied = True
@@ -219,7 +221,7 @@ Public Module DgvCellStyleHelpers
             dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
         Else
             Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-            Dim format As String = GetSgFormat()
+            Dim format As String = GetSgFormat(NativeMmolL)
             Select Case sgColumnName
                 Case partialKey
                     e.Value = sensorValue.ToString(format, provider)
@@ -253,7 +255,9 @@ Public Module DgvCellStyleHelpers
                 Case Else
                     Stop
             End Select
+            e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
         End If
+        e.FormattingApplied = True
     End Sub
 
     ''' <summary>
@@ -269,9 +273,15 @@ Public Module DgvCellStyleHelpers
     <Extension>
     Friend Sub CellFormattingSingleWord(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs)
         Dim input As String = Convert.ToString(e.Value)
-        If e.ColumnIndex > 0 AndAlso Text.RegularExpressions.Regex.IsMatch(input, pattern:="^[A-Za-z]+$") Then
-            e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-        End If
+        Dim isMatch As Boolean =
+            Text.RegularExpressions.Regex.IsMatch(input, pattern:="^[A-Za-z]+$")
+        e.CellStyle.Alignment =
+            If(e.ColumnIndex > 0 AndAlso isMatch,
+               DataGridViewContentAlignment.MiddleCenter,
+               DataGridViewContentAlignment.MiddleLeft)
+        e.Value = If(e.Value.ToString = "NA",
+                     "N/A",
+                     e.Value.ToString.ToTitle)
         dgv.CellFormattingSetForegroundColor(e)
     End Sub
 
@@ -464,8 +474,12 @@ Public Module DgvCellStyleHelpers
         If TrailingText <> EmptyString Then
             TrailingText = $" {TrailingText}"
         End If
-        e.Value = $"{amount.ToString(format:=$"F{digits}", provider)}{TrailingText}"
+        e.Value =
+            $"{amount.ToString(format:=$"F{digits}", provider)}{TrailingText}"
         dgv.CellFormattingSetForegroundColor(e)
+        e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+
+        e.FormattingApplied = True
         Return amount
     End Function
 

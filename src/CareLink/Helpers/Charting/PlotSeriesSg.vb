@@ -35,7 +35,6 @@ Friend Module PlotSeriesSg
     Friend Sub PlotSgSeries(chart As Chart, HomePageMealRow As Double)
         For Each sgRecordWithIndex As IndexClass(Of SG) In s_sgRecords.WithIndex()
             Try
-
                 With chart.Series(name:=SgSeriesName).Points
                     Dim sgRecord As SG = sgRecordWithIndex.Value
                     Dim xValue As OADate = sgRecord.OaDateTime()
@@ -66,9 +65,9 @@ Friend Module PlotSeriesSg
                         If sgRecord.isBackfill Then
                             Dim nextXValue As Date = If(sgRecordWithIndex.IsLast,
                                                         sgRecord.Timestamp,
-                                                        s_sgRecords(sgRecordWithIndex.Index + 1).Timestamp)
+                                                        s_sgRecords(index:=sgRecordWithIndex.Index + 1).Timestamp)
                             .Last().Color = Color.Transparent
-                            .AddXY(Midpoint(xValue, nextXValue.ToOADate), yValue:=f)
+                            .AddXY(xValue:=Midpoint(start:=xValue, [end]:=nextXValue.ToOADate), yValue:=f)
                         End If
                         .Last.Color = lineColor
                     End If

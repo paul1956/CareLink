@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Reflection
+Imports System.Runtime.CompilerServices
 
 Public Module ClassHelpers
 
@@ -87,4 +88,24 @@ Public Module ClassHelpers
         Return cellStyle
     End Function
 
+    <Extension>
+    Public Function GetPropertyValue(instance As Object,
+                                     propertyName As String) As String
+        If instance Is Nothing OrElse
+           String.IsNullOrWhiteSpace(value:=propertyName) Then
+
+            Return Nothing
+        End If
+
+        Const bindingAttr As BindingFlags = BindingFlags.Instance Or
+                                            BindingFlags.Public Or
+                                            BindingFlags.IgnoreCase
+        Dim prop As PropertyInfo =
+            instance.GetType().GetProperty(name:=propertyName,
+                                           bindingAttr)
+
+        Return If(prop Is Nothing OrElse prop.PropertyType IsNot GetType(String),
+                  Nothing,
+                  TryCast(prop.GetValue(obj:=instance), String))
+    End Function
 End Module

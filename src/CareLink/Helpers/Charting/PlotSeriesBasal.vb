@@ -28,12 +28,11 @@ Friend Module PlotSeriesBasal
     '''   </para>
     ''' </remarks>
     <Extension>
-    Private Sub AddBasalPoint(
-        basalSeries As Series,
-        xValue As OADate,
-        yValue As Double,
-        lineColor As Color,
-        tag As String)
+    Private Sub AddBasalPoint(basalSeries As Series,
+                              xValue As OADate,
+                              yValue As Double,
+                              lineColor As Color,
+                              tag As String)
 
         If basalSeries.Points.Count > 0 AndAlso
            (Not basalSeries.Points.Last.IsEmpty) AndAlso
@@ -74,21 +73,20 @@ Friend Module PlotSeriesBasal
     '''  Uses <see cref="AddBasalPoint"/> to add each segment of the basal series.
     ''' </remarks>
     <Extension>
-    Friend Sub PlotBasalSeries(
-         basalSeries As Series,
-         markerOADateTime As OADate,
-         amount As Single,
-         bolusRow As Double,
-         insulinRow As Double,
-         legendText As String,
-         DrawFromBottom As Boolean,
-         tag As String)
+    Friend Sub PlotBasalSeries(basalSeries As Series,
+                               markerOADateTime As OADate,
+                               amount As Single,
+                               bolusRow As Double,
+                               insulinRow As Double,
+                               legendText As String,
+                               DrawFromBottom As Boolean,
+                               tag As String)
 
         Dim xValue As OADate
         Dim yValue As Double
         Dim lineColor As Color = If(amount.IsMinBasal(),
                                     GetGraphLineColor(key:="Min Basal"),
-                                    GetGraphLineColor(legendText))
+                                    GetGraphLineColor(key:=legendText))
 
         xValue = markerOADateTime + TwoMinutes30SecondsOADate
         If DrawFromBottom Then

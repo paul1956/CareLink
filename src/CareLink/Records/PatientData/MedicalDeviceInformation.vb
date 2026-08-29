@@ -21,6 +21,9 @@ Public Class MedicalDeviceInformation
     <JsonPropertyName("softwareRevision")>
     Public Property SoftwareRevision As String
 
+    <JsonPropertyName("ieee")>
+    Public Property Ieee As String
+
     <JsonPropertyName("systemId")>
     Public Property SystemId As String
 

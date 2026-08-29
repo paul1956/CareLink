@@ -5,6 +5,7 @@
 Imports System.Globalization
 Imports System.Runtime.CompilerServices
 Imports System.Text
+Imports System.Text.Json
 Imports System.Text.RegularExpressions
 
 ''' <summary>
@@ -43,9 +44,10 @@ Public Module StringExtensions
     ''' </returns>
     <Extension()>
     Public Function Count(s As String, c As Char) As Integer
-        Dim predicate As Func(Of Char, Boolean) = Function(c1 As Char) As Boolean
-                                                      Return c1 = c
-                                                  End Function
+        Dim predicate As Func(Of Char, Boolean) =
+            Function(c1 As Char) As Boolean
+                Return c1 = c
+            End Function
 
         Return s.Count(predicate)
     End Function
@@ -96,7 +98,6 @@ Public Module StringExtensions
     ''' <summary>
     '''  Indicates whether the specified string is <see langword="Not"/> <see langword="nothing"/>,
     '''  not an empty string(""), and does not consist only of whitespace characters.
-
     ''' </summary>
     ''' <param name="value">The string to check.</param>
     ''' <returns>
@@ -120,7 +121,7 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    ''' Checks if the string is 'nothing, an empty string, or consists only of whitespace characters' 
+    ''' Checks if the string is 'nothing, an empty string, or consists only of whitespace characters'
     ''' </summary>
     ''' <param name="value">The string to check.</param>
     ''' <returns>
@@ -129,6 +130,35 @@ Public Module StringExtensions
     ''' </returns>
     Public Function IsNullOrWhiteSpace(value As String) As Boolean
         Return String.IsNullOrWhiteSpace(value)
+    End Function
+
+    ''' <summary>
+    '''   Check whether a <see langword="String"/> could be a valid numeric value
+    '''   in any country/locale
+    ''' </summary>
+    ''' <param name="input">The value to test</param>
+    ''' <returns>
+    '''  <see langword="True"/> if value could be a number;
+    '''  Otherwise <see langword="False"./>
+    ''' </returns>
+    <Extension>
+    Public Function IsNumericInAnyCulture(value As String) As Boolean
+        If String.IsNullOrWhiteSpace(value) Then
+            Return False
+        End If
+
+        ' Try parsing with all available cultures
+        For Each culture As CultureInfo In CultureInfo.GetCultures(CultureTypes.AllCultures)
+            Dim number As Double
+            If Double.TryParse(value,
+                               style:=NumberStyles.Any,
+                               provider:=culture,
+                               result:=number) Then
+                Return True
+            End If
+        Next
+
+        Return False
     End Function
 
     ''' <summary>
@@ -198,6 +228,35 @@ Public Module StringExtensions
             result.Append(value:=value.AsSpan(start:=1))
         End If
         Return result.ToString
+    End Function
+
+    ''' <summary>
+    '''  Converts a JSON string to a result of strings.
+    ''' </summary>
+    ''' <param name="Json">The JSON string to convert.</param>
+    ''' <returns>
+    '''  A result containing the key-value pairs from the JSON string.
+    ''' </returns>
+    <Extension>
+    Public Function ToStringDictionary(Json As String) As Dictionary(Of String, String)
+        Dim raw As Dictionary(Of String, JsonElement) =
+            Json.FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions)
+
+        Dim keySelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
+                Function(kvp As KeyValuePair(Of String, JsonElement)) As String
+                    Return kvp.Key
+                End Function
+        Dim elementSelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
+                Function(kvp As KeyValuePair(Of String, JsonElement)) As String
+                    Return kvp.Value.ElementToJson()
+                End Function
+        Dim result As Dictionary(Of String, String) = Nothing
+        Try
+            result = raw.ToDictionary(keySelector, elementSelector)
+        Catch ex As Exception
+            Stop
+        End Try
+        Return result
     End Function
 
     ''' <summary>

@@ -88,7 +88,7 @@ Public Class DataGridViewNumericUpDownColumn
                     dataGridViewCell1?.SetDecimalPlaces(rowIndex, value)
                 Next
 
-                Me.DataGridView.InvalidateColumn(Me.Index)
+                Me.DataGridView.InvalidateColumn(columnIndex:=Me.Index)
                 ' TODO: Call the grid's autosizing methods to autosize the
                 ' column, rows, column headers / row headers as needed.
             End If
@@ -168,11 +168,9 @@ Public Class DataGridViewNumericUpDownColumn
                     dgvCell?.SetMaximum(rowIndex, value)
                 Next
 
-                Me.DataGridView.InvalidateColumn(Me.Index)
+                Me.DataGridView.InvalidateColumn(columnIndex:=Me.Index)
                 ' TODO: Call the grid's autosizing methods to autosize the
                 ' column, rows, column headers / row headers as needed.
-                ' Call the autosizing methods to autosize the column, rows,
-                ' column headers / row headers as needed.
             End If
         End Set
     End Property
@@ -216,7 +214,7 @@ Public Class DataGridViewNumericUpDownColumn
                     dgvCell?.SetMinimum(rowIndex, value)
                 Next
 
-                Me.DataGridView.InvalidateColumn(Me.Index)
+                Me.DataGridView.InvalidateColumn(columnIndex:=Me.Index)
                 ' TODO: This column and/or grid rows may need to be autosized
                 '       depending on their AutoSize settings. Call the autosizing
                 '       methods to autosize the column, rows, column headers / row headers

@@ -45,10 +45,11 @@ Public Class TimeSpanExtensionsTests
     <InlineData(120, "2 hours")>
     <InlineData(121, "2 hours, 1 minute")>
     <InlineData(1440, "1 day")>
+    <InlineData(1441, "1 day, 0 hours, 1 minute")>
     <InlineData(1500, "1 day, 1 hour")>
     <InlineData(1501, "1 day, 1 hour, 1 minute")>
-    Public Sub MinutesToDaysHoursMinutes_ReturnsExpectedString(minutes As Integer, expected As String)
-        Dim result As String = MinutesToDaysHoursMinutes(minutes)
+    Public Sub MinutesToDaysHoursMinutes_ReturnsExpectedString(totalMinutes As Integer, expected As String)
+        Dim result As String = MinutesToDaysHoursMinutes(totalMinutes)
         result.Should().Be(expected)
     End Sub
 

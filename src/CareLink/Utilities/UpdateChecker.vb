@@ -171,15 +171,15 @@ Friend Module UpdateChecker
                 If s_updateSleepCount > 0 Then
                     s_updateSleepCount -= 1
                 Else
-                    Form1.UpdateAvailableStatusStripLabel.Text = $"Update {gitHubVersion} available"
+                    Form1.StatusStripUpdateAvailable.Text = $"Update {gitHubVersion} available"
 
-                    Form1.UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
+                    Form1.StatusStripUpdateAvailable.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
 
-                    Form1.UpdateAvailableStatusStripLabel.Image = My.Resources.NotificationAlertRed_16x
+                    Form1.StatusStripUpdateAvailable.Image = My.Resources.NotificationAlertRed_16x
 
-                    Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
+                    Form1.StatusStripUpdateAvailable.ImageAlign = ContentAlignment.MiddleLeft
 
-                    Form1.UpdateAvailableStatusStripLabel.ForeColor = Color.Red
+                    Form1.StatusStripUpdateAvailable.ForeColor = Color.Red
                     If reportSuccessfulResult Then
                         If Interlocked.Exchange(location1:=s_inCheckForUpdate, value:=1) = 0 Then
                             If MsgBox(
@@ -197,10 +197,10 @@ Friend Module UpdateChecker
                     End If
                 End If
             Else
-                Form1.UpdateAvailableStatusStripLabel.DisplayStyle = ToolStripItemDisplayStyle.Text
-                Form1.UpdateAvailableStatusStripLabel.Text = $"Current version {My.Application.Info.Version}"
-                Form1.UpdateAvailableStatusStripLabel.ImageAlign = ContentAlignment.MiddleLeft
-                Form1.UpdateAvailableStatusStripLabel.ForeColor = Form1.MenuStrip1.ForeColor
+                Form1.StatusStripUpdateAvailable.DisplayStyle = ToolStripItemDisplayStyle.Text
+                Form1.StatusStripUpdateAvailable.Text = $"Current version {My.Application.Info.Version}"
+                Form1.StatusStripUpdateAvailable.ImageAlign = ContentAlignment.MiddleLeft
+                Form1.StatusStripUpdateAvailable.ForeColor = Form1.MenuStrip1.ForeColor
                 If reportSuccessfulResult Then
                     MsgBox(
                         heading:="You are running the latest version",

@@ -4,7 +4,6 @@
 
 Imports System.ComponentModel
 Imports System.IO
-Imports System.Text.Json
 
 Imports DataGridViewColumnControls
 
@@ -42,11 +41,10 @@ Public Class InitializeDialog
 
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         If _currentUserBackup Is Nothing Then
-            If MsgBox(
-                heading:="If you cancel, the program will exit",
-                prompt:="Retry will allow editing.",
-                buttonStyle:=MsgBoxStyle.RetryCancel Or MsgBoxStyle.Exclamation,
-                title:="Exit Or Retry") = MsgBoxResult.Cancel Then
+            If MsgBox(heading:="If you cancel, the program will exit",
+                      prompt:="Retry will allow editing.",
+                      buttonStyle:=MsgBoxStyle.RetryCancel Or MsgBoxStyle.Exclamation,
+                      title:="Exit Or Retry") = MsgBoxResult.Cancel Then
 
                 End
             End If
@@ -54,7 +52,13 @@ Public Class InitializeDialog
             Me.DialogResult = DialogResult.None
         Else
             If Not Me.CurrentUser.Equals(other:=_currentUserBackup) Then
-                ' TODO Warn editing will be lost
+                If MsgBox(heading:="If you cancel, all changes will be lost.",
+                          prompt:="Retry will allow editing.",
+                          buttonStyle:=MsgBoxStyle.RetryCancel Or MsgBoxStyle.Exclamation,
+                          title:="Exit Or Retry") = MsgBoxResult.Cancel Then
+                    Me.DialogResult = DialogResult.Cancel
+                    Exit Sub
+                End If
                 Me.CurrentUser = _currentUserBackup.Clone
             End If
             Me.DialogResult = DialogResult.OK
@@ -67,9 +71,9 @@ Public Class InitializeDialog
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim cell As DataGridViewCell
         Dim start As Integer
-        Dim colName As String = dgv.Columns(index:=e.ColumnIndex).Name
+        Dim columnName As String = dgv.Columns(index:=e.ColumnIndex).Name
         Dim index As Integer
-        Select Case colName
+        Select Case columnName
             Case NameOf(ColumnDeleteRow)
                 cell = dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex)
                 If Not CType(cell, DataGridViewDisableButtonCell).Enabled Then
@@ -79,22 +83,22 @@ Public Class InitializeDialog
                 dgv.Rows.Remove(dataGridViewRow:=dgv.Rows(index))
                 index -= 1
                 With dgv.Rows(index)
-                    colName = NameOf(ColumnDeleteRow)
+                    columnName = NameOf(ColumnDeleteRow)
                     Dim btnCell As DataGridViewDisableButtonCell =
-                        CType(.Cells(colName), DataGridViewDisableButtonCell)
+                        CType(.Cells(columnName), DataGridViewDisableButtonCell)
                     btnCell.Enabled = False
                     btnCell.ReadOnly = True
-                    colName = NameOf(ColumnEnd)
-                    Dim comboBoxCell As DataGridViewComboBoxCell = CType(.Cells(colName), DataGridViewComboBoxCell)
-                    colName = NameOf(ColumnEnd)
+                    columnName = NameOf(ColumnEnd)
+                    Dim comboBoxCell As DataGridViewComboBoxCell = CType(.Cells(columnName), DataGridViewComboBoxCell)
+                    columnName = NameOf(ColumnEnd)
                     Dim dgvRow As DataGridViewRow = Me.InitializeDataGridView.Rows(index)
-                    Dim startTime As TimeOnly = TimeOnly.Parse(s:=dgvRow.Cells(colName).Value.ToString)
+                    Dim startTime As TimeOnly = TimeOnly.Parse(s:=dgvRow.Cells(columnName).Value.ToString)
                     start = CInt(startTime.ToTimeSpan.TotalMinutes / 30)
                     InitializeComboList(comboBoxCell, start)
                     comboBoxCell.Value = Eleven59
                     comboBoxCell.ReadOnly = False
-                    colName = NameOf(ColumnSave)
-                    btnCell = CType(.Cells(colName), DataGridViewDisableButtonCell)
+                    columnName = NameOf(ColumnSave)
+                    btnCell = CType(.Cells(columnName), DataGridViewDisableButtonCell)
                     btnCell.ReadOnly = False
                     btnCell.Enabled = True
                 End With
@@ -107,13 +111,13 @@ Public Class InitializeDialog
 
             Case NameOf(ColumnSave)
                 With Me.InitializeDataGridView
-                    colName = NameOf(ColumnEnd)
-                    cell = Me.InitializeDataGridView.Rows(index:=e.RowIndex).Cells(colName)
+                    columnName = NameOf(ColumnEnd)
+                    cell = Me.InitializeDataGridView.Rows(index:=e.RowIndex).Cells(columnName)
                     If cell.Value.ToString = Eleven59Str OrElse .RowCount = 12 Then
                         Me.OK_Button.Enabled = True
-                        colName = NameOf(ColumnSave)
+                        columnName = NameOf(ColumnSave)
                         index = .RowCount - 1
-                        Dim dgvCell As DataGridViewCell = .Rows(index).Cells(colName)
+                        Dim dgvCell As DataGridViewCell = .Rows(index).Cells(columnName)
                         Dim buttonCell As DataGridViewDisableButtonCell =
                             CType(dgvCell, DataGridViewDisableButtonCell)
 
@@ -133,26 +137,26 @@ Public Class InitializeDialog
                     .Rows.Add()
                     With .Rows(index:= .Rows.Count - 1)
                         Me.OK_Button.Enabled = False
-                        colName = NameOf(ColumnStart)
+                        columnName = NameOf(ColumnStart)
                         Dim comboBoxCell As DataGridViewComboBoxCell =
-                            CType(.Cells(colName), DataGridViewComboBoxCell)
-                        colName = NameOf(ColumnEnd)
+                            CType(.Cells(columnName), DataGridViewComboBoxCell)
+                        columnName = NameOf(ColumnEnd)
                         Dim colEndCell As DataGridViewCell = Me.InitializeDataGridView.Rows(index:=e.RowIndex) _
-                                                                                      .Cells(colName)
+                                                                                      .Cells(columnName)
                         colEndCell.ErrorText = String.Empty
                         Dim timeOnly As TimeOnly = TimeOnly.Parse(colEndCell.Value.ToString)
                         Dim item As String = timeOnly.ToHoursMinutes
                         comboBoxCell.Items.Add(item)
                         comboBoxCell.Value = item
-                        colName = NameOf(ColumnEnd)
-                        comboBoxCell = CType(.Cells(colName), DataGridViewComboBoxCell)
+                        columnName = NameOf(ColumnEnd)
+                        comboBoxCell = CType(.Cells(columnName), DataGridViewComboBoxCell)
                         start = CInt(timeOnly.ToTimeSpan.TotalMinutes / 30) + 1
                         InitializeComboList(comboBoxCell, start)
                         comboBoxCell.Value = Eleven59
-                        colName = NameOf(ColumnNumericUpDown)
-                        .Cells(colName).Value = 15.0
-                        colName = NameOf(ColumnDeleteRow)
-                        CType(.Cells(colName), DataGridViewDisableButtonCell).Enabled = True
+                        columnName = NameOf(ColumnNumericUpDown)
+                        .Cells(columnName).Value = 15.0
+                        columnName = NameOf(ColumnDeleteRow)
+                        CType(.Cells(columnName), DataGridViewDisableButtonCell).Enabled = True
                     End With
 
                 End With
@@ -388,20 +392,20 @@ Public Class InitializeDialog
         Dim rowIndex As Integer = 0
         For Each row As DataGridViewRow In Me.InitializeDataGridView.Rows
             Dim carbRecord As New CarbRatioRecord
-            Dim colName As String = NameOf(ColumnStart)
-            cell = row.Cells(colName)
+            Dim columnName As String = NameOf(ColumnStart)
+            cell = row.Cells(columnName)
             carbRecord.StartTime = TimeOnly.Parse(cell.Value.ToString, provider:=CurrentDateCulture)
-            colName = NameOf(ColumnEnd)
-            cell = row.Cells(colName)
+            columnName = NameOf(ColumnEnd)
+            cell = row.Cells(columnName)
             carbRecord.EndTime = TimeOnly.Parse(cell.Value.ToString, provider:=CurrentDateCulture)
-            colName = NameOf(ColumnNumericUpDown)
+            columnName = NameOf(ColumnNumericUpDown)
             Dim numericCell As DataGridViewNumericUpDownCell =
-                CType(row.Cells(colName), DataGridViewNumericUpDownCell)
+                CType(row.Cells(columnName), DataGridViewNumericUpDownCell)
             carbRecord.CarbRatio = ParseSingle(numericCell.Value, digits:=1)
-            Me.CurrentUser.CarbRatios.Add(carbRecord)
+            Me.CurrentUser.CarbRatios.Add(item:=carbRecord)
         Next
 
-        Dim contents As String = JsonSerializer.Serialize(value:=Me.CurrentUser, options:=s_jsonSerializerOptions)
+        Dim contents As String = Me.CurrentUser.ToJson()
         File.WriteAllTextAsync(path:=GetUserSettingsPath(), contents)
         Me.Close()
     End Sub
@@ -466,16 +470,6 @@ Public Class InitializeDialog
             Dim cell As DataGridViewCell = Me.InitializeDataGridView.Rows(index).Cells(colName)
             Me.InitializeDataGridView.CurrentCell = cell
         End If
-    End Sub
-
-    ''' <summary>
-    '''  Overrides the OnHandleCreated method to enable dark mode
-    '''  for the dialog when its handle is created.
-    ''' </summary>
-    ''' <param name="e">The event data.</param>
-    Protected Overrides Sub OnHandleCreated(e As EventArgs)
-        MyBase.OnHandleCreated(e)
-        EnableDarkMode(hwnd:=Me.Handle)
     End Sub
 
 End Class

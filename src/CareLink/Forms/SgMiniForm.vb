@@ -149,16 +149,6 @@ Public Class SgMiniForm
         Me.Text = GetLastUpdateMessage()
     End Sub
 
-    ''' <summary>
-    '''  Overrides the OnHandleCreated method to enable dark mode
-    '''  for the dialog when its handle is created.
-    ''' </summary>
-    ''' <param name="e">The event data.</param>
-    Protected Overrides Sub OnHandleCreated(e As EventArgs)
-        MyBase.OnHandleCreated(e)
-        EnableDarkMode(hwnd:=Me.Handle)
-    End Sub
-
     Friend Sub SetCurrentDeltaValue(deltaString As String, delta As Single)
         Me.DeltaTextBox.Text = If(delta.IsSgInvalid OrElse Math.Abs(value:=delta) < 0.001,
                                   EmptyString,
@@ -169,14 +159,16 @@ Public Class SgMiniForm
     Friend Sub SetCurrentSgString(sgString As String, f As Single)
         _currentSgValue = f
         _normalizedSg = f
-        Me.SgTextBox.Text = If(IsNullOrWhiteSpace(value:=sgString) OrElse Single.IsNaN(f),
-                               "---",
-                               sgString)
+        Dim text As String = If(IsNullOrWhiteSpace(value:=sgString) OrElse Single.IsNaN(f),
+                                "---",
+                                sgString)
+        UpdateTextBoxSafe(txtBox:=Me.SgTextBox, text)
+
         If NativeMmolL Then
             _normalizedSg *= MmolLUnitsDivisor
         End If
 
-        Me.Text = GetLastUpdateMessage()
+        Me.UpdateFormSafe(text:=GetLastUpdateMessage())
     End Sub
 
 End Class

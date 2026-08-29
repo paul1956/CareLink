@@ -65,7 +65,7 @@ Public Class SummaryRecord
                 End Select
             End If
         End If
-        Me.Message = message.Replace(vbCrLf, " ")
+        Me.Message = message.Replace(oldValue:=vbCrLf, newValue:=" ")
     End Sub
 
     ''' <summary>
@@ -127,15 +127,18 @@ Public Class SummaryRecord
     ''' <param name="key">The key for the record.</param>
     ''' <param name="value">The value associated with the key.</param>
     ''' <param name="message">The message for the record.</param>
-    Protected Friend Sub New(
-        recordNumber As Single,
-        key As String,
-        value As String,
-        message As String)
+    Protected Friend Sub New(recordNumber As Single,
+                             key As String,
+                             value As String,
+                             message As String)
 
         Me.RecordNumber = recordNumber + 1
         Me.Key = key
-        Me.Value = value
+        Dim result As Boolean
+        Me.Value = If(Boolean.TryParse(value, result),
+                      value.ToTitleCase,
+                      value)
+
         Me.Message = message
     End Sub
 

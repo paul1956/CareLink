@@ -151,7 +151,7 @@ Friend Module SpeechSupport
                 errorMsg = "Speech: Please speak louder"
             Case Else
         End Select
-        If Not Form1.StatusStripSpeech.Text.StartsWith(value:="Speech:") Then
+        If Not Form1.StatusStripSpeech.Text.StartsWithNoCase(value:="Speech:") Then
             Form1.StatusStripSpeech.Text = errorMsg
         End If
 
@@ -201,7 +201,7 @@ Friend Module SpeechSupport
             Exit Sub
         End If
 
-        If recognizedText.StartsWith("carelink") Then
+        If recognizedText.StartsWithNoCase(value:="carelink") Then
             If confidence >= My.Settings.SystemSpeechRecognitionThreshold Then
                 s_speechWakeWordFound = True
                 message = $"Heard: Wake word {recognizedText} with confidence {confidence}%), waiting.."

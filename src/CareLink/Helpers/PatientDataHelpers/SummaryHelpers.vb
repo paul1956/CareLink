@@ -11,6 +11,14 @@ Imports System.Text.RegularExpressions
 ''' </summary>
 Friend Module SummaryHelpers
 
+    Private s_secondaryTimeReminder As String
+
+    ''' <summary>
+    '''  Stores extracted variable names (words in parentheses) from
+    '''  notification messages, keyed by the message key.
+    ''' </summary>
+    Private s_wordsInParentheses As Dictionary(Of String, List(Of String))
+
     ''' <summary>
     '''  Maps sensor update time keys to their corresponding human-readable time strings.
     ''' </summary>
@@ -21,14 +29,6 @@ Friend Module SummaryHelpers
         {"DURATION_CHANGED_TO_SHORT", "30 minutes"},
         {"DURATION_CHANGED_TO_MEDIUM", "90 more minutes"},
         {"DURATION_CHANGED_TO_LONG", "2 hours"}}
-
-    Private s_secondaryTimeReminder As String
-
-    ''' <summary>
-    '''  Stores extracted variable names (words in parentheses) from
-    '''  notification messages, keyed by the message key.
-    ''' </summary>
-    Private s_wordsInParentheses As Dictionary(Of String, List(Of String))
 
     ''' <summary>
     '''  Converts an object to a specified type.
@@ -61,14 +61,26 @@ Friend Module SummaryHelpers
         Dim parenthesesRegex As New Regex(pattern:="\(([^)]+)\)")
 
         ' Process each string in the input list
-        For Each kvp As KeyValuePair(Of String, String) In s_notificationMessages
+        Dim elementSelector As Func(Of KeyValuePair(Of String, String), String) =
+            Function(kv As KeyValuePair(Of String, String))
+                Return kv.Value
+            End Function
+        Dim keySelector As Func(Of KeyValuePair(Of String, String), String) =
+            Function(kv As KeyValuePair(Of String, String))
+                Return kv.Key
+            End Function
+
+        Dim mergedDict As Dictionary(Of String, String) =
+            s_notificationMessagesFlex.Concat(second:=s_notificationMessages) _
+                                      .ToDictionary(keySelector, elementSelector)
+
+        For Each kvp As KeyValuePair(Of String, String) In mergedDict
             Dim value As New List(Of String)
             ' Find matches for parentheses
             For Each match As Match In parenthesesRegex.Matches(input:=kvp.Value)
                 Dim word As String = match.Groups(groupnum:=1).Value
                 Dim item As String = match.Value.TrimStart(trimChar:="("c).TrimEnd(trimChar:=")"c)
                 value.Add(item)
-                's_variablesUsedInMessages.Add(item)
             Next
             s_wordsInParentheses.Add(kvp.Key, value)
         Next
@@ -84,14 +96,16 @@ Friend Module SummaryHelpers
     ''' </param>
     ''' <param name="faultId">The fault ID to translate.</param>
     ''' <returns>A translated notification message.</returns>
-    Private Function TranslateNotificationMessageId(
-        jsonDictionary As Dictionary(Of String, String),
-        faultId As String) As String
+    ''' <param name="message"></param>
+    Private Function TranslateNotificationMessageId(jsonDictionary As Dictionary(Of String, String),
+                                                    faultId As String,
+                                                    ByRef message As String) As Boolean
 
         ExtractErrorMessageVariables()
-        Dim originalMessage As String = String.Empty
+        ' Initialize variables to hold extracted values Pre-Flex
         Dim basalName As String = String.Empty
         Dim bgValue As String = String.Empty
+        Dim alertClearType As String = String.Empty
         Dim criticalLow As String = String.Empty
         Dim deliveredAmount As String = String.Empty
         Dim lastSetChange As String = String.Empty
@@ -101,45 +115,80 @@ Friend Module SummaryHelpers
         Dim reminderName As String = String.Empty
         Dim secondaryTime As String = String.Empty
         Dim sg As String = String.Empty
+        Dim sg64 As String = If(NativeMmolL,
+                                "3.5 mmol/L",
+                                "64 mg/dL")
         Dim sensorUpdateTime As String = String.Empty
         Dim triggeredDate As String = String.Empty
         Dim unitsRemaining As String = Nothing
-        Try
-            Dim faultIdFound As Boolean = s_notificationMessages.TryGetValue(key:=faultId, value:=originalMessage)
-            If Not faultIdFound Then
-                Dim prompt As String = $"faultId = '{faultId}'"
-                If Debugger.IsAttached Then
-                    Stop
-                    Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
-                    MsgBox(
-                        heading:="Unknown faultId",
-                        prompt,
-                        buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                        title:=GetTitleFromStack(stackFrame))
+
+        ' Initialize variables to hold extracted values Post-Flex
+        Dim resolved As String = String.Empty
+
+        Dim faultIdFound As Boolean =
+            If(PatientData.MedicalDeviceFamily = "CC",
+               s_notificationMessagesFlex.TryGetValue(key:=faultId, value:=message),
+               s_notificationMessages.TryGetValue(key:=faultId, value:=message))
+        If Not faultIdFound Then
+            message = $"faultId = '{faultId}'"
+            If Debugger.IsAttached Then
+                Stop
+                Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
+                MsgBox(
+                    heading:="Unknown faultId",
+                    prompt:=faultId,
+                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                    title:=GetTitleFromStack(stackFrame))
+            End If
+            Return False
+        End If
+        Dim list As List(Of String) = s_wordsInParentheses(key:=faultId)
+        If list.Count = 0 Then
+            Return True
+        End If
+        Dim key As String = "triggeredDateTime"
+        If list.Contains(item:=key) Then
+            If jsonDictionary.TryGetValue(key, value:=triggeredDate) Then
+                triggeredDate = $" { triggeredDate.ParseDate(key).ToNotificationString}"
+            End If
+        Else
+            key = "dateTime"
+            If jsonDictionary.TryGetValue(key, value:=triggeredDate) Then
+                triggeredDate = $" { triggeredDate.ParseDate(key).ToNotificationString}"
+            End If
+        End If
+
+        Dim triggerTime As TimeOnly
+        Dim additionalInfo As Dictionary(Of String, String) = Nothing
+        key = "AdditionalInfo"
+        Dim jsonString As String = String.Empty
+        If jsonDictionary.TryGetValue(key, value:=jsonString) Then
+            additionalInfo = jsonString.ToStringDictionary()
+        Else
+            additionalInfo = New Dictionary(Of String, String)
+            For Each kvp As KeyValuePair(Of String, String) In jsonDictionary
+                If kvp.Key.StartsWithNoCase(value:="AdditionalInfo") Then
+                    Dim split() As String = kvp.Key.Split(separator:=":")
+                    additionalInfo.Add(key:=split(1), kvp.Value)
                 End If
-                Return prompt
-            End If
-            Dim list As List(Of String) = s_wordsInParentheses(key:=faultId)
-            If list.Count = 0 Then
-                Return originalMessage
-            End If
+            Next
+        End If
 
-            Dim key As String = "triggeredDateTime"
-            If list.Contains(item:=key) Then
-                key = NameOf(ClearedNotifications.dateTime)
-                If jsonDictionary.TryGetValue(key, value:=triggeredDate) Then
-                    triggeredDate = $" { triggeredDate.ParseDate(key).ToNotificationString}"
-                ElseIf jsonDictionary.TryGetValue(key, value:=triggeredDate) Then
-                    triggeredDate = $" { triggeredDate.ParseDate(key).ToNotificationString}"
-                Else
-                    Stop
-                End If
-
-            End If
-
-            Dim triggerTime As TimeOnly
-            For Each keyWord As String In list
+        For Each keyWord As String In list
+            Try
                 Select Case keyWord
+                    Case "resolved"
+                        Dim resolvedValue As String = String.Empty
+                        If jsonDictionary.TryGetValue(key:="acknowledged", value:=resolvedValue) Then
+                            Dim acknowledgedRecord As AcknowledgedRecord =
+                                resolvedValue.ToString.FromJson(Of AcknowledgedRecord)(DeserializationOptions)
+                            resolved = $" {acknowledgedRecord.Time.ToNotificationString}"
+                        End If
+                    Case "alertClearType"
+                        Dim resolvedValue As String = String.Empty
+                        If additionalInfo.TryGetValue(key:="alert_clear_type", value:=resolvedValue) Then
+                            alertClearType = resolvedValue.ToTitle
+                        End If
                     Case "triggeredDateTime"
                        ' handled above
                     Case "secondaryTime", "secondaryTimeReminder"
@@ -148,124 +197,126 @@ Friend Module SummaryHelpers
                             triggerTime = TimeOnly.FromDateTime(secondaryTime.ParseDate(key))
                             secondaryTime = $" { secondaryTime.ParseDate(key).ToNotificationString}"
                         Else
-                            Dim jsonString As String = String.Empty
-                            key = "AdditionalInfo"
-                            If jsonDictionary.TryGetValue(key, value:=jsonString) Then
-                                Dim addInfo As Dictionary(Of String, String) =
-                                    GetAdditionalInformation(json:=jsonString)
-
-                                If addInfo.TryGetValue("secondaryTime", value:=secondaryTime) Then
-                                    s_secondaryTimeReminder = secondaryTime.FormatTimeText()
-                                Else
-                                    Stop
-                                End If
+                            If additionalInfo.TryGetValue(key:="secondaryTime", value:=secondaryTime) Then
+                                s_secondaryTimeReminder = secondaryTime.FormatTimeText()
+                            Else
+                                Stop
                             End If
                         End If
                     Case "dateTime"
                         Stop
                     Case Else
-                        Dim jsonString As String = String.Empty
-                        key = "AdditionalInfo"
-                        If jsonDictionary.TryGetValue(key, value:=jsonString) Then
-                            Dim addInfo As Dictionary(Of String, String) = GetAdditionalInformation(json:=jsonString)
-                            key = keyWord
-                            Select Case keyWord
-                                Case "basalName"
-                                    If addInfo.TryGetValue(key, value:=basalName) Then
-                                        basalName = basalName.ToTitle(separateDigits:=True)
-                                    Else
-                                        Stop
-                                    End If
-                                Case "bgValue"
-                                    If addInfo.TryGetValue(key, value:=bgValue) Then
-                                    Else
-                                        Stop
-                                    End If
-                                Case "criticalLow"
-                                    If addInfo.TryGetValue(key, value:=criticalLow) Then
-                                    Else
-                                        Stop
-                                    End If
-                                Case "deliveredAmount"
-                                    If addInfo.TryGetValue(key, value:=deliveredAmount) Then
-                                    Else
-                                        Stop
-                                    End If
-                                Case "lastSetChange"
-                                    lastSetChange = s_oneToNineteen(index:=CInt(addInfo(key))).ToTitle
-                                Case "notDeliveredAmount"
-                                    If addInfo.TryGetValue(key, value:=notDeliveredAmount) Then
-                                    Else
-                                        Stop
-                                    End If
-                                Case "programmedAmount"
-                                    If addInfo.TryGetValue(key, value:=programmedAmount) Then
-                                    Else
-                                        Stop
-                                    End If
-                                    Stop
-                                Case "reminderName"
-                                    If addInfo.TryGetValue(key, value:=reminderName) Then
-                                    Else
-                                        Stop
-                                    End If
-                                Case "sensorUpdateTime"
-                                    If addInfo.TryGetValue(key, value:=sensorUpdateTime) Then
-                                        sensorUpdateTime = GetSensorUpdateTime(sensorUpdateTime)
-                                    Else
-                                        Stop
-                                    End If
-                                Case "sg"
-                                    Dim lowAlertRec As LowAlertRecord
-                                    If addInfo.TryGetValue(key, value:=sg) Then
-                                        If faultId = "827" Then
-                                            lowLimit = If(CSng(sg) < 65 AndAlso CSng(sg) > 20,
-                                                          "64",
-                                                          "3.5")
+                        Try
+                            key = "AdditionalInfo"
+                            If jsonDictionary.TryGetValue(key, value:=jsonString) Then
+                                Dim addInfo As Dictionary(Of String, String) = jsonString.ToStringDictionary
+                                key = keyWord
+                                Select Case keyWord
+                                    Case "alert_clear_type"
+                                        If addInfo.TryGetValue(key, value:=alertClearType) Then
+                                            alertClearType = alertClearType.ToTitle()
                                         End If
-                                    ElseIf faultId = "787" Then
-                                        lowAlertRec = LowAlertsRecord.GetLowAlertRecord(triggerTime)
-                                        lowLimit = $"{lowAlertRec.LowLimit} {BgUnits()}"
-                                    Else
+                                    Case "basalName"
+                                        If addInfo.TryGetValue(key, value:=basalName) Then
+                                            basalName = basalName.ToTitle(separateDigits:=True)
+                                        Else
+                                            Stop
+                                        End If
+                                    Case "bgValue"
+                                        If addInfo.TryGetValue(key, value:=bgValue) Then
+                                        Else
+                                            Stop
+                                        End If
+                                    Case "criticalLow"
+                                        If addInfo.TryGetValue(key, value:=criticalLow) Then
+                                        Else
+                                            Stop
+                                        End If
+                                    Case "deliveredAmount"
+                                        If addInfo.TryGetValue(key, value:=deliveredAmount) Then
+                                        Else
+                                            Stop
+                                        End If
+                                    Case "lastSetChange"
+                                        lastSetChange = s_oneToNineteen(index:=CInt(addInfo(key))).ToTitle
+                                    Case "notDeliveredAmount"
+                                        If addInfo.TryGetValue(key, value:=notDeliveredAmount) Then
+                                        Else
+                                            Stop
+                                        End If
+                                    Case "programmedAmount"
+                                        If addInfo.TryGetValue(key, value:=programmedAmount) Then
+                                        Else
+                                            Stop
+                                        End If
                                         Stop
-                                    End If
-                                Case "units"
-                        ' handled elsewhere
-                                Case "unitsRemaining"
-                                    If Not addInfo.TryGetValue(key, value:=unitsRemaining) Then
-                                        unitsRemaining = "0"
-                                    End If
-                            End Select
-                        End If
+                                    Case "reminderName"
+                                        If addInfo.TryGetValue(key, value:=reminderName) Then
+                                        Else
+                                            Stop
+                                        End If
+                                    Case "sensorUpdateTime"
+                                        If addInfo.TryGetValue(key, value:=sensorUpdateTime) Then
+                                            sensorUpdateTime = GetSensorUpdateTime(sensorUpdateTime)
+                                        Else
+                                            Stop
+                                        End If
+                                    Case "sg"
+                                        Dim lowAlertRec As LowAlertRecord
+                                        If addInfo.TryGetValue(key, value:=sg) Then
+                                            If faultId = "827" Then
+                                                lowLimit = If(CSng(sg) < 65 AndAlso CSng(sg) > 20,
+                                                              "64 mg/dL",
+                                                              "3.5  mmol/L")
+                                            End If
+                                        ElseIf faultId = "787" Then
+                                            lowAlertRec = LowAlertsRecord.GetLowAlertRecord(triggerTime)
+                                            lowLimit = $"{lowAlertRec.LowLimit} {BgUnits()}"
+                                        Else
+                                            Stop
+                                        End If
+                                    Case "units"
+                                        ' handled elsewhere
+                                    Case "unitsRemaining"
+                                        If Not addInfo.TryGetValue(key, value:=unitsRemaining) Then
+                                            unitsRemaining = "0"
+                                        End If
+                                End Select
+                            End If
+                        Catch ex As Exception
+                            Stop
+                        End Try
                 End Select
-            Next
+            Catch ex As Exception
+                Stop
+            End Try
+        Next
 
-            Return originalMessage _
-                .Replace(oldValue:="(basalName)", newValue:=basalName) _
-                .Replace(oldValue:="(bgValue)", newValue:=bgValue) _
-                .Replace(oldValue:="(criticalLow)", newValue:=criticalLow) _
-                .Replace(oldValue:="(deliveredAmount)", newValue:=deliveredAmount) _
-                .Replace(oldValue:="(notDeliveredAmount)", newValue:=notDeliveredAmount) _
-                .Replace(oldValue:="(programmedAmount)", newValue:=programmedAmount) _
-                .Replace(oldValue:="(deliveredAmount)", newValue:=deliveredAmount) _
-                .Replace(oldValue:="(lastSetChange)", newValue:=lastSetChange) _
-                .Replace(oldValue:="(lowLimit)", newValue:=lowLimit) _
-                .Replace(oldValue:="(notDeliveredAmount)", newValue:=notDeliveredAmount) _
-                .Replace(oldValue:="(programmedAmount)", newValue:=programmedAmount) _
-                .Replace(oldValue:="(reminderName)", newValue:=reminderName) _
-                .Replace(oldValue:="(secondaryTime)", newValue:=secondaryTime) _
-                .Replace(oldValue:="(secondaryTimeReminder)", newValue:=s_secondaryTimeReminder) _
-                .Replace(oldValue:="(sensorUpdateTime)", newValue:=sensorUpdateTime) _
-                .Replace(oldValue:="(suspendedSince)", newValue:=s_suspendedSince) _
-                .Replace(oldValue:="(sg)", newValue:=sg) _
-                .Replace(oldValue:="(triggeredDateTime)", newValue:=triggeredDate) _
-                .Replace(oldValue:="(units)", newValue:=BgUnits()) _
-                .Replace(oldValue:="(unitsRemaining)", newValue:=unitsRemaining) _
-                .Replace(oldValue:="(vbCrLf)", newValue:=vbCrLf)
-        Catch ex As Exception
-            Stop
-        End Try
-        Return originalMessage
+        message = message _
+            .Replace(oldValue:="(alertClearType)", newValue:=alertClearType) _
+            .Replace(oldValue:="(basalName)", newValue:=basalName) _
+            .Replace(oldValue:="(bgValue)", newValue:=bgValue) _
+            .Replace(oldValue:="(criticalLow)", newValue:=criticalLow) _
+            .Replace(oldValue:="(deliveredAmount)", newValue:=deliveredAmount) _
+            .Replace(oldValue:="(notDeliveredAmount)", newValue:=notDeliveredAmount) _
+            .Replace(oldValue:="(programmedAmount)", newValue:=programmedAmount) _
+            .Replace(oldValue:="(deliveredAmount)", newValue:=deliveredAmount) _
+            .Replace(oldValue:="(lastSetChange)", newValue:=lastSetChange) _
+            .Replace(oldValue:="(lowLimit)", newValue:=lowLimit) _
+            .Replace(oldValue:="(notDeliveredAmount)", newValue:=notDeliveredAmount) _
+            .Replace(oldValue:="(programmedAmount)", newValue:=programmedAmount) _
+            .Replace(oldValue:="(reminderName)", newValue:=reminderName) _
+            .Replace(oldValue:="(secondaryTime)", newValue:=secondaryTime) _
+            .Replace(oldValue:="(secondaryTimeReminder)", newValue:=s_secondaryTimeReminder) _
+            .Replace(oldValue:="(sensorUpdateTime)", newValue:=sensorUpdateTime) _
+            .Replace(oldValue:="(suspendedSince)", newValue:=s_suspendedSince) _
+            .Replace(oldValue:="(sg)", newValue:=sg) _
+            .Replace(oldValue:="(sg64)", newValue:=sg64) _
+            .Replace(oldValue:="(triggeredDateTime)", newValue:=triggeredDate) _
+            .Replace(oldValue:="(units)", newValue:=BgUnits()) _
+            .Replace(oldValue:="(unitsRemaining)", newValue:=unitsRemaining) _
+            .Replace(oldValue:="(vbCrLf)", newValue:=vbCrLf)
+        Return True
     End Function
 
     ''' <summary>
@@ -313,71 +364,78 @@ Friend Module SummaryHelpers
                 Dim item As SummaryRecord = Nothing
                 Select Case kvp.Key
                     Case "faultId"
+                        Dim faultId As String = kvp.Value
                         Dim message As String = String.Empty
-                        If s_notificationMessages.TryGetValue(key:=kvp.Value, value:=message) Then
-                            message = TranslateNotificationMessageId(jsonDictionary, faultId:=kvp.Value)
-                            If kvp.Value = "811" Then
-                                Dim key As String = NameOf(ActiveNotification.triggeredDateTime)
-                                If jsonDictionary.TryGetValue(key, value:=s_suspendedSince) Then
-                                    Dim result As Date = Nothing
-                                    key = NameOf(ActiveNotification.triggeredDateTime)
-                                    s_suspendedSince = If(s_suspendedSince.TryParseDate(key, result),
-                                                          result.ToString(format:=s_timeWithMinuteFormat),
-                                                          "???")
-                                End If
+
+                        Dim success As Boolean =
+                            TranslateNotificationMessageId(jsonDictionary, faultId:=kvp.Value, message)
+
+                        If kvp.Value = "811" Then
+                            Dim key As String = NameOf(ActiveNotification.triggeredDateTime)
+                            If jsonDictionary.TryGetValue(key, value:=s_suspendedSince) Then
+                                Dim result As Date = Nothing
+                                key = NameOf(ActiveNotification.triggeredDateTime)
+                                s_suspendedSince = If(s_suspendedSince.TryParseDate(key, result),
+                                                      result.ToString(format:=s_timeWithMinuteFormat),
+                                                      "???")
                             End If
-                            If kvp.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
-                                Dim question As String = jsonDictionary(key:="deliveredAmount")
-                                If question.StartsWith(value:="3"c) Then
-                                    message &= "Did you see drops at the end of the tubing?"
-                                Else
-                                    message &= "Remove reservoir and select rewind, restart New reservoir procedure."
-                                End If
+                        ElseIf kvp.Value = "BC_SID_MAX_FILL_DROPS_QUESITION" Then
+                            Dim question As String = jsonDictionary(key:="deliveredAmount")
+                            If question.StartsWith(value:="3"c) Then
+                                message &= "Did you see drops at the end of the tubing?"
+                            Else
+                                message &= "Remove reservoir and select rewind, restart New reservoir procedure."
                             End If
-                        Else
-                            Dim stackFrame As StackFrame
-                            If Debugger.IsAttached AndAlso IsNotNullOrWhiteSpace(kvp.Value) Then
-                                stackFrame = New StackFrame(skipFrames:=0, needFileInfo:=True)
-                                MsgBox(
-                                    heading:=$"{kvp.Value} is unknown Notification Messages",
-                                    prompt:=String.Empty,
-                                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                                    title:=GetTitleFromStack(stackFrame))
-                            End If
+                        ElseIf Not success Then
                             message = kvp.Value.ToTitle
                         End If
                         item = New SummaryRecord(recordNumber, kvp, message)
                     Case "autoModeReadinessState"
-                        s_autoModeReadinessState = New SummaryRecord(
-                                                        recordNumber,
-                                                        kvp,
-                                                        messages:=s_sensorMessages,
-                                                        messageTableName:=NameOf(s_sensorMessages))
-                        listOfSummaryRecords.Add(s_autoModeReadinessState)
+                        s_autoModeReadinessState =
+                            New SummaryRecord(recordNumber,
+                                              kvp,
+                                              messages:=s_sensorMessages,
+                                              messageTableName:=NameOf(s_sensorMessages))
+                        listOfSummaryRecords.Add(item:=s_autoModeReadinessState)
                     Case "autoModeShieldState"
-                        item = New SummaryRecord(
-                                    recordNumber,
-                                    kvp,
-                                    messages:=s_autoModeShieldMessages,
-                                    messageTableName:=NameOf(s_autoModeShieldMessages))
+                        item = New SummaryRecord(recordNumber,
+                                                  kvp,
+                                                  messages:=s_autoModeShieldMessages,
+                                                  messageTableName:=NameOf(s_autoModeShieldMessages))
                     Case "plgmLgsState"
-                        item = New SummaryRecord(
-                                    recordNumber,
-                                    kvp,
-                                    messages:=s_plgmLgsMessages,
-                                    messageTableName:=NameOf(s_plgmLgsMessages))
-                    Case NameOf(ClearedNotifications.dateTime)
-                        Dim key As String = NameOf(ClearedNotifications.dateTime)
-                        item = New SummaryRecord(
-                                    recordNumber,
-                                    kvp,
-                                    message:=kvp.Value.ParseDate(key).ToShortDateTime)
+                        item = New SummaryRecord(recordNumber,
+                                                 kvp,
+                                                 messages:=s_plgmLgsMessages,
+                                                 messageTableName:=NameOf(s_plgmLgsMessages))
+                    Case "dateTime"
+                        Dim key As String = "dateTime"
+                        item = New SummaryRecord(recordNumber,
+                                                 kvp,
+                                                 message:=kvp.Value.ParseDate(key).ToShortDateTime)
                     Case "additionalInfo"
-                        HandleComplexItems(
-                            kvp,
-                            recordNumber,
-                            key:="additionalInfo",
-                            listOfSummaryRecords)
+                        HandleComplexItems(kvp,
+                                           recordNumber,
+                                           key:="additionalInfo",
+                                           listOfSummaryRecords,
+                                           isTitle:=True)
+                    Case "cleared"
+                        HandleComplexItems(kvp,
+                                           recordNumber,
+                                           key:="cleared",
+                                           listOfSummaryRecords,
+                                           isTitle:=True)
+                    Case "acknowledged"
+                        HandleComplexItems(kvp,
+                                           recordNumber,
+                                           key:="acknowledged",
+                                           listOfSummaryRecords,
+                                           isTitle:=True)
+                    Case "snoozed"
+                        HandleComplexItems(kvp,
+                                           recordNumber,
+                                           key:="snoozed",
+                                           listOfSummaryRecords,
+                                           isTitle:=True)
                     Case Else
                         item = New SummaryRecord(recordNumber, kvp)
                 End Select
@@ -432,7 +490,7 @@ Friend Module SummaryHelpers
                 Throw New ArgumentException(message:="Key not found", paramName:=NameOf(key))
             End If
         Catch ex As Exception
-
+            Stop
         End Try
         If defaultValue IsNot Nothing Then
             Return defaultValue
@@ -482,4 +540,50 @@ Friend Module SummaryHelpers
         Throw New ArgumentException(message:="Key not found", paramName:=NameOf(key))
     End Function
 
+    ''' <summary>
+    '''  Normalize spacing around colons in the given text while preserving
+    '''  time-like tokens (HH:mm or HH:mm:ss). Times are temporarily replaced
+    '''  with placeholders before normalization and restored afterwards.
+    ''' </summary>
+    ''' <param name="input">The input string to normalize.</param>
+    ''' <returns>The normalized string with times preserved.</returns>
+    Friend Function NormalizeColonSpacingPreservingTimes(input As String) As String
+        If input Is Nothing Then
+            Return input
+        End If
+
+        Dim times As New List(Of String)
+
+        ' Replace times with placeholders and collect originals
+        ' Use a placeholder pattern less likely to be altered by editors or templates: ##TIME{n}##
+        Dim evaluator As MatchEvaluator =
+            Function(m As Match)
+                times.Add(item:=m.Value)
+                Return $"##TIME{times.Count - 1}##"
+            End Function
+
+        ' Deliberately does not use \b at the start:
+        ' ISO dates may join the time with a literal "T", e.g. 2026-08-26t13:40:31.
+        Const timePattern As String =
+            "(?<!\d)(?:[01]?\d|2[0-3]):[0-5]\d(?::[0-5]\d)?\b"
+
+        Dim protectedText As String =
+            Regex.Replace(input, pattern:=timePattern, evaluator)
+
+        protectedText =
+            Regex.Replace(input:=protectedText, pattern:="\s*:\s*", replacement:=" : ")
+
+        Dim evaluator1 As MatchEvaluator = Function(m As Match)
+                                               Dim index As Integer = CInt(m.Groups(groupnum:=1).Value)
+
+                                               Return If(index >= 0 AndAlso index < times.Count,
+                                                         times(index),
+                                                         m.Value)
+                                           End Function
+
+        ' Restore original times from the collected list
+        Return Regex.Replace(input:=protectedText,
+                             pattern:="##TIME(\d+)##",
+                             evaluator:=evaluator1)
+    End Function
 End Module

@@ -35,10 +35,9 @@ Friend Module Form1UpdateHelpers
     '''  otherwise, an empty string.
     ''' </returns>
     <Extension>
-    Private Function CDateOrDefault(
-        s As String,
-        key As String,
-        provider As IFormatProvider) As String
+    Private Function CDateOrDefault(s As String,
+                                    key As String,
+                                    provider As IFormatProvider) As String
 
         Dim result As Date
         Return If(TryParseDate(s, key, result),
@@ -63,10 +62,7 @@ Friend Module Form1UpdateHelpers
                   $"{hours} hours and {minutes} minutes, out of last 24 hours.")
     End Function
 
-    Private Sub SetupPumpTimeZoneInfo(
-        mainForm As Form1,
-        kvp As KeyValuePair(Of String, String))
-
+    Private Sub SetupPumpTimeZoneInfo(mainForm As Form1, kvp As KeyValuePair(Of String, String))
         If s_useLocalTimeZone Then
             PumpTimeZoneInfo = TimeZoneInfo.Local
         Else
@@ -94,11 +90,11 @@ Friend Module Form1UpdateHelpers
                         "under the Options Menu."
                     messageButtons = MessageBoxButtons.YesNoCancel
                 End If
-                Dim result As DialogResult = MessageBox.Show(
-                    text,
-                    caption:="TimeZone Unknown",
-                    buttons:=messageButtons,
-                    icon:=MessageBoxIcon.Question)
+                Dim result As DialogResult =
+                    MessageBox.Show(text,
+                                    caption:="TimeZone Unknown",
+                                    buttons:=messageButtons,
+                                    icon:=MessageBoxIcon.Question)
 
                 s_useLocalTimeZone = True
                 PumpTimeZoneInfo = TimeZoneInfo.Local
@@ -113,28 +109,98 @@ Friend Module Form1UpdateHelpers
     End Sub
 
     ''' <summary>
-    '''  Gets the display name of a pump model based on its model number.
+    '''  Converts a JSON string representing an array of objects to a
+    '''  <see cref="List(Of SG)"/>.
     ''' </summary>
-    ''' <param name="modelNumber">The model number of the pump.</param>
-    ''' <returns>
-    '''  The display name of the pump if recognized;
-    '''  otherwise, "Unknown".
-    ''' </returns>
-    Friend Function GetPumpName(modelNumber As String) As String
-        Select Case modelNumber
-            Case "MMT-1812"
-                Return "Medtronic MiniMed™ 740G--mg/dL"
-            Case "MMT-1880"
-                Return "Medtronic MiniMed™ 770G"
-            Case "MMT-1884"
-                Return "Medtronic MiniMed™ 780G-US Update"
-            Case "MMT-1885"
-                Return "Medtronic MiniMed™ 780G-mmol/L"
-            Case "MMT-1886"
-                Return "Medtronic MiniMed™ 780G-mg/dL"
-            Case Else
-                Return "Unknown"
-        End Select
+    ''' <param name="json">The JSON string to convert.</param>
+    ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
+    Private Function ToListOfSgs(json As String) As List(Of SG)
+        Dim jsonList As List(Of Dictionary(Of String, JsonElement)) =
+            json.FromJson(Of List(Of Dictionary(Of String, JsonElement)))(DeserializationOptions)
+        Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
+        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
+        For Each e As IndexClass(Of Dictionary(Of String, JsonElement)) In jsonList.WithIndex
+            Dim resultDictionary As New Dictionary(Of String, String)(comparer)
+            For Each item As KeyValuePair(Of String, JsonElement) In e.Value
+                If item.Key = "sg" Then
+                    resultDictionary.Add(item.Key, value:=item.ScaleSg)
+                Else
+                    resultDictionary.Add(item.Key, value:=item.DeserializeJsonAsString)
+                End If
+            Next
+            resultDictionaryArray.Add(item:=resultDictionary)
+        Next
+        Return resultDictionaryArray.ToSgList()
+    End Function
+
+    ''' <summary>
+    '''  Converts a list of dictionaries representing JSON objects
+    '''  to a list of <see cref="SG"/> objects.
+    ''' </summary>
+    ''' <param name="json">The list of dictionaries to convert.</param>
+    ''' <returns>A list of <see cref="SG"/> objects.</returns>
+    <Extension>
+    Private Function ToSgList(json As List(Of Dictionary(Of String, String))) As List(Of SG)
+        Dim sGs As New List(Of SG)
+        Dim yesterday As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - Eleven55Span
+
+        ' Build list first
+        For index As Integer = 0 To json.Count - 1
+            sGs.Add(item:=New SG(json:=json(index), index))
+        Next
+
+        ' Do NOT sort by Timestamp directly because New Date (default) is the minimum
+        ' and would move placeholder records to the beginning. Instead detect if the
+        ' feed is in reverse chronological order (newest->oldest) and only flip the
+        ' entire list in that case. Otherwise keep the incoming record order.
+
+        ' Collect real timestamps (skip New Date placeholders) in their current record order
+        Dim realTimestamps As New List(Of Date)
+        For Each sg As SG In sGs
+            If Not sg.Timestamp.Equals(value:=New Date) Then
+                realTimestamps.Add(item:=sg.Timestamp)
+            End If
+        Next
+
+        Dim needReverse As Boolean = False
+        If realTimestamps.Count >= 2 Then
+            Dim ascending As Boolean = True
+            Dim descending As Boolean = True
+            For index As Integer = 1 To realTimestamps.Count - 1
+                If realTimestamps(index) > realTimestamps(index:=index - 1) Then
+                    descending = False
+                End If
+                If realTimestamps(index) < realTimestamps(index:=index - 1) Then
+                    ascending = False
+                End If
+            Next
+            ' If timestamps are descending (newest->oldest) and not ascending, reverse list
+            needReverse = descending AndAlso Not ascending
+        End If
+
+        If needReverse Then
+            sGs.Reverse()
+        End If
+
+        ' Fill any placeholder timestamps (New Date) using a running base time.
+        ' Walk the (possibly reversed) list from start->end and assign times incrementally.
+        Dim lastKnown As New Date
+        For index As Integer = 0 To sGs.Count - 1
+            If sGs(index).Timestamp.Equals(value:=New Date) Then
+                If lastKnown.Equals(value:=New Date) Then
+                    lastKnown = yesterday.RoundDownToMinute()
+                    sGs(index).TimestampAsString = lastKnown.ToStringExact()
+                Else
+                    lastKnown += FiveMinuteSpan
+                    sGs(index).TimestampAsString = lastKnown.ToStringExact()
+                End If
+            Else
+                ' We have a real timestamp; remember it as the last known time for subsequent fillers
+                lastKnown = sGs(index).Timestamp
+            End If
+        Next
+
+        Return sGs
     End Function
 
     ''' <summary>
@@ -156,31 +222,35 @@ Friend Module Form1UpdateHelpers
     ''' <example>
     '''  GetUniqueDataFileName("MyFile", "en-US", "txt", mustBeUnique:=True)
     ''' </example>
-    Friend Function GetUniqueDataFileName(
-        baseName As String,
-        cultureName As String,
-        extension As String,
-        mustBeUnique As Boolean) As FileNameStruct
+    Friend Function GetUniqueDataFileName(baseName As String,
+                                          cultureName As String,
+                                          extension As String,
+                                          mustBeUnique As Boolean) As FileNameStruct
         Dim message As String
-        If IsNullOrWhiteSpace(baseName) Then
+        If IsNullOrWhiteSpace(value:=baseName) Then
             message = $"'{NameOf(baseName)}' cannot be null or whitespace."
             Throw New ArgumentException(message, paramName:=NameOf(baseName))
         End If
 
-        If IsNullOrWhiteSpace(cultureName) Then
+        If IsNullOrWhiteSpace(value:=cultureName) Then
             message = $"'{NameOf(cultureName)}' cannot be null or whitespace."
             Throw New ArgumentException(message, paramName:=NameOf(cultureName))
         End If
 
-        If IsNullOrWhiteSpace(extension) Then
+        If IsNullOrWhiteSpace(value:=extension) Then
             message = $"'{NameOf(extension)}' cannot be null or whitespace."
             Throw New ArgumentException(message, paramName:=NameOf(extension))
         End If
 
         Try
-            Dim filenameWithoutExtension As String = $"{baseName}({cultureName}){s_userName}"
-            Dim filenameWithExtension As String = $"{filenameWithoutExtension}.{extension}"
-            Dim withPath As String = Path.Join(GetProjectDataDirectory(), filenameWithExtension)
+            Dim filenameWithoutExtension As String =
+                $"{baseName}({cultureName}){GetUserName()}"
+
+            Dim filenameWithExtension As String =
+                $"{filenameWithoutExtension}.{extension}"
+
+            Dim withPath As String =
+                Path.Join(GetProjectDataDirectory(), filenameWithExtension)
 
             If mustBeUnique AndAlso File.Exists(path:=withPath) Then
                 'Get unique file name
@@ -198,7 +268,6 @@ Friend Module Form1UpdateHelpers
             Stop
         End Try
         Return New FileNameStruct
-
     End Function
 
     ''' <summary>
@@ -211,58 +280,70 @@ Friend Module Form1UpdateHelpers
     ''' <param name="listOfSummaryRecords">
     '''  The list to which summary records are added.
     ''' </param>
-    Friend Sub HandleComplexItems(
-        kvp As KeyValuePair(Of String, String),
-        recordNumber As Single,
-        key As String,
-        listOfSummaryRecords As List(Of SummaryRecord))
+    ''' <param name="isTitle"></param>
+    Friend Sub HandleComplexItems(kvp As KeyValuePair(Of String, String),
+                                  recordNumber As Single,
+                                  key As String,
+                                  listOfSummaryRecords As List(Of SummaryRecord),
+                                  isTitle As Boolean)
 
         ' First try to parse the value as JSON object and enumerate properties.
         If IsNotNullOrWhiteSpace(kvp.Value) Then
             Try
-                Using doc As JsonDocument = JsonDocument.Parse(kvp.Value)
-                    If doc.RootElement.ValueKind = JsonValueKind.Object Then
-                        Dim idx As Integer = 0
-                        For Each prop As JsonProperty In doc.RootElement.EnumerateObject()
-                            Dim childKey As String = prop.Name
-                            Dim childValue As String = If(prop.Value.ValueKind = JsonValueKind.Null,
-                                                          String.Empty,
-                                                          If(prop.Value.ValueKind = JsonValueKind.String,
-                                                             prop.Value.GetString(),
-                                                             prop.Value.GetRawText()))
-                            Dim message As String = String.Empty
-                            If kvp.Key.EqualsNoCase("AdditionalInfo") AndAlso
-                               childKey.EqualsNoCase("sensorUpdateTime") Then
-
+                Dim elem As JsonElement = kvp.Value.FromJson(Of JsonElement)(DeserializationOptions)
+                If Not elem.IsEmpty AndAlso elem.ValueKind = JsonValueKind.Object Then
+                    Dim idx As Integer = 0
+                    For Each prop As JsonProperty In elem.EnumerateObject()
+                        Dim childKey As String = prop.Name
+                        Dim childValue As String = prop.Value.ElementToJson()
+                        Dim message As String = String.Empty
+                        If kvp.Key.EqualsNoCase("AdditionalInfo") Then
+                            If childKey.EqualsNoCase("sensorUpdateTime") Then
                                 message = GetSensorUpdateTime(key:=childValue)
                             End If
-                            Dim item As New SummaryRecord(
+                        End If
+                        If childKey = "time" Then
+                            Dim result As Date
+                            message = If(childValue.TryParseDate(key:="", result),
+                                         result.ToShortDateTime(showSeconds:=False),
+                                         String.Empty)
+                        End If
+                        Dim value As String = If(isTitle,
+                                                 childValue?.Trim.ToTitle,
+                                                 childValue)
+
+                        Dim item As New SummaryRecord(
                                 recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
                                 key:=$"{key}:{childKey.Trim}",
-                                value:=childValue?.Trim,
+                                value,
                                 message)
-                            listOfSummaryRecords.Add(item)
-                            idx += 1
-                        Next
-                        Return
-                    End If
-                End Using
+                        listOfSummaryRecords.Add(item)
+                        idx += 1
+                    Next
+                    Return
+                Else
+                    Stop
+                End If
             Catch ex As JsonException
                 ' Not JSON or malformed; fall through to legacy parsing.
+                Stop
             End Try
         End If
 
         ' Legacy fallback: defensive handling of "key = value" style entries.
-        Dim valueList As String() = GetValueList(json:=kvp.Value)
+        Dim valueDictionary As Dictionary(Of String, String) =
+                kvp.Value.ToStringDictionary()
         Dim separator As String() = New String() {" = "}
-        For Each e As IndexClass(Of String) In valueList.WithIndex
+        For Each e As IndexClass(Of String) In valueDictionary.Keys.WithIndex
             Dim message As String = String.Empty
-            Dim strings As String() = e.Value.Split(separator, StringSplitOptions.None)
+            Dim strings As String() = e.Value.Split(separator, options:=StringSplitOptions.None)
             If strings.Length < 2 Then
                 ' Skip malformed entry
                 Continue For
             End If
-            If kvp.Key.EqualsNoCase("AdditionalInfo") AndAlso strings(0).EqualsNoCase("sensorUpdateTime") Then
+            If kvp.Key.EqualsNoCase("AdditionalInfo") AndAlso
+                strings(0).EqualsNoCase("sensorUpdateTime") Then
+
                 message = GetSensorUpdateTime(key:=strings(1))
             End If
             Dim item As New SummaryRecord(
@@ -283,7 +364,7 @@ Friend Module Form1UpdateHelpers
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function Is700Series() As Boolean
-        If RecentDataEmpty() Then Return False
+        If IsRecentDataEmpty() Then Return False
         Return s_700Models.Contains(PatientData.MedicalDeviceInformation.ModelNumber)
     End Function
 
@@ -294,7 +375,7 @@ Friend Module Form1UpdateHelpers
     '''  <see langword="True"/> if <see cref="RecentData"/> is empty;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Friend Function RecentDataEmpty() As Boolean
+    Friend Function IsRecentDataEmpty() As Boolean
         Return RecentData Is Nothing OrElse RecentData.Count = 0
     End Function
 
@@ -304,7 +385,7 @@ Friend Module Form1UpdateHelpers
     ''' </summary>
     ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdateDataTables(mainForm As Form1)
-        If RecentDataEmpty() Then
+        If IsRecentDataEmpty() Then
             DebugPrint(message:=$"Exiting, {NameOf(RecentData)} has no data!")
             Exit Sub
         End If
@@ -317,15 +398,15 @@ Friend Module Form1UpdateHelpers
         End If
         Dim bgUnitsNative As String = String.Empty
         Dim bgUnits As String = String.Empty
-        If RecentData.TryGetValue("bgUnits", value:=bgUnitsNative) AndAlso
+        If RecentData.TryGetValue(key:="bgUnits", value:=bgUnitsNative) AndAlso
             UnitsStrings.TryGetValue(key:=bgUnitsNative, value:=bgUnits) Then
-            NativeMmolL = bgUnits.Equals("mmol/L")
+            NativeMmolL = bgUnits.Equals(value:="mmol/L")
         Else
             Stop
         End If
 
         If RecentData.TryGetValue(key:="therapyAlgorithmState", value) Then
-            s_therapyAlgorithmStateValue = DeserializeJsonAsDictionary(json:=value)
+            s_therapyAlgorithmStateValue = value.JsonToDictionary
             Dim key As String = NameOf(TherapyAlgorithmState.AutoModeShieldState)
             Dim basalTypes As IEnumerable(Of String) = {"AUTO_BASAL", "SAFE_BASAL"}
             InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso
@@ -333,7 +414,7 @@ Friend Module Form1UpdateHelpers
         End If
 
         s_sgRecords = If(RecentData.TryGetValue(key:="sgs", value),
-                         JsonToListOfSgs(json:=value),
+                         ToListOfSgs(json:=value),
                          New List(Of SG))
 
         mainForm.MaxBasalPerHourLabel.Text = If(RecentData.TryGetValue(key:="markers", value),
@@ -409,11 +490,11 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataEnum.medicalDeviceInformation)
-                    HandleComplexItems(
-                        kvp,
-                        recordNumber,
-                        key:="medicalDeviceInformation",
-                        listOfSummaryRecords:=s_listOfSummaryRecords)
+                    HandleComplexItems(kvp,
+                                       recordNumber,
+                                       key:="medicalDeviceInformation",
+                                       listOfSummaryRecords:=s_listOfSummaryRecords,
+                                       isTitle:=False)
                     Dim deviceSerialNumber As String = PatientData.MedicalDeviceInformation.DeviceSerialNumber
                     mainForm.SerialNumberButton.Text = $"{deviceSerialNumber} Details..."
 
@@ -429,11 +510,11 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataEnum.cgmInfo)
-                    HandleComplexItems(
-                        kvp,
-                        recordNumber,
-                        key:="cgmInfo",
-                        listOfSummaryRecords:=s_listOfSummaryRecords)
+                    HandleComplexItems(kvp,
+                                       recordNumber,
+                                       key:="cgmInfo",
+                                       listOfSummaryRecords:=s_listOfSummaryRecords,
+                                       isTitle:=False)
 
                 Case NameOf(ServerDataEnum.calFreeSensor)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -510,14 +591,14 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataEnum.gstBatteryLevel)
-                    message = If(kvp.Value = "255",
+                    message = If(kvp.Value = "-1" OrElse kvp.Value = "255",
                                  "Integrated Transmitter so N/A.",
                                  $"Transmitter battery is at {kvp.Value}%.")
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
                 Case NameOf(ServerDataEnum.pumpBannerState)
-                    s_pumpBannerStateValue = JsonToDictionaryList(json:=kvp.Value)
+                    s_pumpBannerStateValue = JsonToListOfDictionary(json:=kvp.Value)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     mainForm.PumpBannerStateLabel.Visible = s_pumpBannerStateValue.Count > 0
@@ -545,8 +626,27 @@ Friend Module Form1UpdateHelpers
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
+                Case NameOf(ServerDataEnum.isPumpCharging)
+                    message = If(Boolean.Parse(kvp.Value),
+                                 $"Pump is charging!",
+                                 $"Pump is not charging!")
+                    item = New SummaryRecord(recordNumber, kvp, message)
+                    s_listOfSummaryRecords.Add(item)
+
                 Case NameOf(ServerDataEnum.reservoirRemainingUnits)
                     message = $"Reservoir has {PatientData.ReservoirRemainingUnits}U remaining."
+                    item = New SummaryRecord(recordNumber, kvp, message)
+                    s_listOfSummaryRecords.Add(item)
+
+                Case NameOf(ServerDataEnum.infusionStatus),
+                     NameOf(ServerDataEnum.reservoirStatus)
+
+                    message = $"{kvp.Key.ToTitleCase} is {kvp.Value.ToTitle}"
+                    item = New SummaryRecord(recordNumber, kvp, message)
+                    s_listOfSummaryRecords.Add(item)
+
+                Case NameOf(ServerDataEnum.infusionRemainingDuration)
+                    message = $"Infusion Set has {PatientData.InfusionRemainingDuration.MinutesToDaysHoursMinutes} left."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
@@ -565,7 +665,8 @@ Friend Module Form1UpdateHelpers
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.systemStatusMessage), NameOf(ServerDataEnum.sensorState)
+                Case NameOf(ServerDataEnum.systemStatusMessage),
+                     NameOf(ServerDataEnum.sensorState)
                     item = New SummaryRecord(
                         recordNumber,
                         kvp,
@@ -581,6 +682,7 @@ Friend Module Form1UpdateHelpers
 
                 Case NameOf(ServerDataEnum.timeFormat)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
+
                 Case NameOf(ServerDataEnum.bgUnits)
                     item = New SummaryRecord(recordNumber, kvp, message:=bgUnits)
                     s_listOfSummaryRecords.Add(item)
@@ -600,12 +702,15 @@ Friend Module Form1UpdateHelpers
                 Case NameOf(ServerDataEnum.lastAlarm)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
-                    s_lastAlarmValue = DeserializeJsonAsDictionary(json:=kvp.Value)
+                    s_lastAlarmValue = kvp.Value.JsonToDictionary()
 
                 Case NameOf(ServerDataEnum.activeInsulin)
                     s_activeInsulin = PatientData.ActiveInsulin
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
+                    If True Then
+
+                    End If
 
                 Case NameOf(ServerDataEnum.basal)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
@@ -677,14 +782,27 @@ Friend Module Form1UpdateHelpers
                         recordNumber:=CSng(c.Index + 0.1),
                         key:="activeNotification")
                     s_listOfSummaryRecords.Add(item)
-                    item = New SummaryRecord(
-                        recordNumber:=CSng(c.Index + 0.2),
-                        key:="clearedNotifications")
+                    item = New SummaryRecord(recordNumber:=CSng(c.Index + 0.2),
+                                             key:="clearedNotifications")
                     s_listOfSummaryRecords.Add(item)
-                    s_notificationHistoryValue = DeserializeJsonAsDictionary(json:=kvp.Value)
+                    s_notificationHistoryValue = kvp.Value.JsonToDictionary()
+
+                Case NameOf(ServerDataEnum.reservoirIconSelection)
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
+
+                Case NameOf(ServerDataEnum.infusionStatusIconSelection)
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
+
+                Case NameOf(ServerDataEnum.pumpBatteryLevelTime)
+                    message = $"Pump Battery Level Time: {CInt(kvp.Value).MinutesToDaysHoursMinutes}."
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
+
+                Case NameOf(ServerDataEnum.pumpBatteryIconSelection)
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case NameOf(ServerDataEnum.sensorLifeText)
-                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
+                    message = $"Sensor life: {kvp.Value}"
+                    s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
                 Case NameOf(ServerDataEnum.sensorLifeIcon)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -763,10 +881,10 @@ Friend Module Form1UpdateHelpers
                     Select Case typeValue
                         Case "TEMP_TARGET"
                             Dim minutes As Integer = bannerStateRecord1.TimeRemaining
-                            .PumpBannerStateLabel.BackColor = Color.Lime
+                            .PumpBannerStateLabel.BackColor = Color.FromArgb(44, 90, 247)
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
                             Dim target150 As String = If(NativeMmolL, "8.3", "150")
-                            .PumpBannerStateLabel.Text = $"Target {target150} {minutes.ToHoursMinutes}/hr"
+                            .PumpBannerStateLabel.Text = $"Temp Target {minutes.ToHoursMinutes} hr"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Top
                         Case "BG_REQUIRED"
@@ -795,7 +913,7 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.Text = typeValue.ToTitle()
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
-                            .PumpBannerStateLabel.Font = New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
+                            .PumpBannerStateLabel.Font = s_font7Bold
                         Case "TEMP_BASAL"
                             .PumpBannerStateLabel.BackColor = Color.Lime
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
@@ -804,7 +922,7 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.Text = $"Temp Basal {hours} hr"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
-                            .PumpBannerStateLabel.Font = New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
+                            .PumpBannerStateLabel.Font = s_font7Bold
                         Case "WAIT_TO_ENTER_BG"
                             Stop
                         Case Else
@@ -833,7 +951,7 @@ Friend Module Form1UpdateHelpers
                 mainForm.LastSgOrExitTimeLabel.Text =
                     $"Exit In:{ TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(unit:="hr")}"
                 mainForm.LastSgOrExitTimeLabel.Visible = True
-                mainForm.LastSgOrExitTimeLabel.CenterLabelXOnParent()
+                mainForm.LastSgOrExitTimeLabel.CenterLabelOnParent()
             Else
                 mainForm.LastSgOrExitTimeLabel.Visible = False
             End If

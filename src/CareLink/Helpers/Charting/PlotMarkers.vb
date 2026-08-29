@@ -7,7 +7,7 @@ Imports System.Windows.Forms.DataVisualization.Charting
 
 ''' <summary>
 '''  Provides extension methods and helpers for plotting marker data points
-'''  and treatment markers on charts.
+'''  and treatment markersSorted on charts.
 ''' </summary>
 Friend Module PlotMarkers
 
@@ -21,10 +21,9 @@ Friend Module PlotMarkers
     <Extension>
     Private Sub AddCalibrationPt(seriesPts As DataPointCollection, markerOA As OADate, f As Single, item As Marker)
         seriesPts.AddMarkerPt(markerOA, f, markerColor:=Color.Red)
-        Dim status As Boolean = CBool(item.GetString(key:="calibrationSuccess"))
+        Dim status As Boolean = item.Data.DataValues.CalibrationSuccess
         Dim calibrationStatus As String = If(status, "accepted", "not accepted")
-        Dim key As String = "unitValue"
-        Dim unitValue As String = item.GetSingle(key, digits:=2, considerValue:=True).ToString
+        Dim unitValue As String = item.Data.DataValues.UnitValue.RoundToSingle(digits:=2, considerValue:=True).ToString
         seriesPts.Last.Tag = $"Blood Glucose: Calibration {calibrationStatus}: {unitValue} {BgUnits}"
     End Sub
 
@@ -86,10 +85,12 @@ Friend Module PlotMarkers
     ''' </returns>
     Private Function GetInsulinYValue() As Single
         ' Selector function to extract blood glucose value (sg) from SG records
-        Dim getSgValue As Func(Of SG, Single) = Function(sgRecord As SG) sgRecord.sg
+        Dim selector As Func(Of SG, Single) = Function(sgRecord As SG)
+                                                  Return sgRecord.sg
+                                              End Function
 
         ' Calculate max blood glucose value from the records, offset by 2 for padding
-        Dim maxYscaled As Single = s_sgRecords.Max(getSgValue) + 2
+        Dim maxYscaled As Single = s_sgRecords.Max(selector) + 2
 
         ' Handle case where maxYscaled is NaN (no valid records)
         If maxYscaled.IsSgInvalid Then
@@ -137,11 +138,11 @@ Friend Module PlotMarkers
     End Function
 
     ''' <summary>
-    '''  Plots all markers on the specified chart, including insulin, meal,
-    '''  and time change markers.
+    '''  Plots all markersSorted on the specified chart, including insulin, meal,
+    '''  and time change markersSorted.
     ''' </summary>
-    ''' <param name="pageChart">The chart to plot markers on.</param>
-    ''' <param name="timeChangeSeries">The series used for time change markers.</param>
+    ''' <param name="pageChart">The chart to plot markersSorted on.</param>
+    ''' <param name="timeChangeSeries">The series used for time change markersSorted.</param>
     ''' <param name="markerInsulinDictionary">
     '''  Dictionary to store insulin marker positions.
     ''' </param>
@@ -154,13 +155,12 @@ Friend Module PlotMarkers
     '''  automatically supplied by the compiler.
     ''' </param>
     <Extension>
-    Friend Sub PlotMarkers(
-        pageChart As Chart,
-        timeChangeSeries As Series,
-        markerInsulinDictionary As Dictionary(Of OADate, Single),
-        markerMealDictionary As Dictionary(Of OADate, Single),
-        <CallerMemberName> Optional memberName As String = Nothing,
-        <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
+    Friend Sub PlotMarkers(pageChart As Chart,
+                           timeChangeSeries As Series,
+                           markerInsulinDictionary As Dictionary(Of OADate, Single),
+                           markerMealDictionary As Dictionary(Of OADate, Single),
+                           <CallerMemberName> Optional memberName As String = Nothing,
+                           <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
 
         Dim lastTimeChangeRecord As TimeChange = Nothing
         markerInsulinDictionary.Clear()
@@ -168,13 +168,21 @@ Friend Module PlotMarkers
         Dim bolusRow As Single = GetYMaxNativeMmolL()
         Dim insulinRow As Single = GetInsulinYValue()
         Dim yMinNativeMmolL As Single = GetYMinNativeMmolL()
-        For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
+        Dim markersSorted As IOrderedEnumerable(Of Marker) =
+            s_markers.OrderBy(keySelector:=Function(m As Marker)
+                                               Return m.Timestamp
+                                           End Function).
+                      ThenByDescending(keySelector:=Function(m As Marker)
+                                                        Return m.Type
+                                                    End Function)
+
+        For Each markerWithIndex As IndexClass(Of Marker) In markersSorted.ToList().WithIndex()
             Dim item As Marker = markerWithIndex.Value
             Try
                 Dim markerDateTimestamp As Date = item.GetMarkerTimestamp
-                Dim markerOA As New OADate(asDate:=markerDateTimestamp)
-                Dim f As Single = item.GetSingle(key:="unitValue")
+                Dim markerOADateTime As New OADate(asDate:=markerDateTimestamp)
 
+                Dim f As Single = item.Data.DataValues.UnitValue
                 If Not Single.IsNaN(f) Then
                     f = Math.Min(val1:=bolusRow, val2:=f)
                     f = Math.Max(val1:=yMinNativeMmolL, val2:=f)
@@ -183,48 +191,50 @@ Friend Module PlotMarkers
                 Select Case item.Type
                     Case "BG_READING"
                         If Not Single.IsNaN(f) Then
-                            markerSeriesPoints.AddSgReadingPoint(markerOA, f)
+                            markerSeriesPoints.AddSgReadingPoint(markerOA:=markerOADateTime, f)
                         End If
                     Case "CALIBRATION"
-                        markerSeriesPoints.AddCalibrationPt(markerOA, f, item)
+                        markerSeriesPoints.AddCalibrationPt(markerOA:=markerOADateTime, f, item)
                     Case "AUTO_BASAL_DELIVERY"
-                        Dim amount As Single = item.GetSingle(key:="bolusAmount", digits:=3)
-                        pageChart.Series(name:=BasalSeriesName).PlotBasalSeries(
-                            markerOA,
-                            amount,
-                            bolusRow,
-                            insulinRow,
-                            legendText:="Basal Series",
-                            DrawFromBottom:=False,
-                            tag:=GetToolTip(item.Type, amount))
+                        Dim amount As Single =
+                            item.Data.DataValues.BolusAmount.RoundToSingle(digits:=3)
+                        pageChart.Series(name:=BasalSeriesName).PlotBasalSeries(markerOADateTime,
+                                                                                amount,
+                                                                                bolusRow,
+                                                                                insulinRow,
+                                                                                legendText:="Basal Series",
+                                                                                DrawFromBottom:=False,
+                                                                                tag:=GetToolTip(item.Type, amount))
                     Case "MANUAL_BASAL_DELIVERY"
-                        Dim amount As Single = item.GetSingle(key:=EmptyString, digits:=3)
-                        pageChart.Series(name:=BasalSeriesName).PlotBasalSeries(
-                            markerOA,
-                            amount,
-                            bolusRow,
-                            insulinRow,
-                            legendText:="Basal Series",
-                            DrawFromBottom:=False,
-                            tag:=GetToolTip(item.Type, amount))
+                        Dim amount As Single =
+                            item.Data.DataValues.BolusAmount.RoundToSingle(digits:=3)
+                        pageChart.Series(name:=BasalSeriesName).PlotBasalSeries(markerOADateTime,
+                                                                                amount,
+                                                                                bolusRow,
+                                                                                insulinRow,
+                                                                                legendText:="Basal Series",
+                                                                                DrawFromBottom:=False,
+                                                                                tag:=GetToolTip(item.Type, amount))
                     Case "INSULIN"
-                        Dim key As String
-                        Select Case item.GetString(key:=NameOf(Insulin.ActivationType))
+                        Select Case item.Data.DataValues.ActivationType
                             Case "AUTOCORRECTION"
-                                key = "deliveredFastAmount"
-                                pageChart.Series(name:=BasalSeriesName).PlotBasalSeries(
-                                    markerOA,
-                                    amount:=item.GetSingle(key, digits:=3),
-                                    bolusRow,
-                                    insulinRow,
-                                    legendText:="Auto Correction",
-                                    DrawFromBottom:=False,
-                                    tag:=$"Auto Correction: {item.GetSingle(key, digits:=3)}U")
+                                Dim amount1 As Single =
+                                    item.Data.DataValues.DeliveredFastAmount.RoundToSingle(digits:=3)
+                                Dim tag As String =
+                                    $"Auto Correction: {item.Data.DataValues.DeliveredFastAmount.RoundToSingle(digits:=3)}U"
+                                pageChart.Series(name:=BasalSeriesName).
+                                    PlotBasalSeries(markerOADateTime,
+                                                    amount:=amount1,
+                                                    bolusRow,
+                                                    insulinRow,
+                                                    legendText:="Auto Correction",
+                                                    DrawFromBottom:=False,
+                                                    tag)
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 Dim baseColor As Color
-                                If markerInsulinDictionary.TryAdd(key:=markerOA, value:=CInt(GetInsulinYValue())) Then
+                                If markerInsulinDictionary.TryAdd(key:=markerOADateTime, value:=CInt(GetInsulinYValue())) Then
                                     Dim yValue As Double = GetInsulinYValue() - If(NativeMmolL, 0.555, 10)
-                                    markerSeriesPoints.AddXY(xValue:=markerOA, yValue)
+                                    markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue)
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
                                     baseColor = Color.Black
                                     markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(alpha:=10, baseColor)
@@ -236,8 +246,8 @@ Friend Module PlotMarkers
                                     Else
                                         baseColor = Color.LightBlue
                                         markerSeriesPoints.Last.Color = Color.FromArgb(alpha:=30, baseColor)
-                                        key = "deliveredFastAmount"
-                                        Dim autoCorrection As Single = item.GetSingle(key, digits:=3)
+                                        Dim autoCorrection As Single =
+                                            item.Data.DataValues.DeliveredFastAmount.RoundToSingle(digits:=3)
                                         markerSeriesPoints.Last.Tag = $"Bolus: {autoCorrection}U"
                                     End If
                                 Else
@@ -248,27 +258,29 @@ Friend Module PlotMarkers
                         End Select
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then Continue For
-                        If markerMealDictionary.TryAdd(key:=markerOA, value:=yMinNativeMmolL) Then
+                        If markerMealDictionary.TryAdd(key:=markerOADateTime, value:=yMinNativeMmolL) Then
+                            Dim mealImage As Bitmap = GetBitmapFromCache(id:=ImageEnum.MealImage)
                             Dim height As Double = If(NativeMmolL,
-                                                      s_mealImage.Height / 2 / MmolLUnitsDivisor,
-                                                      s_mealImage.Height / 2)
-                            markerSeriesPoints.AddXY(xValue:=markerOA, yValue:=yMinNativeMmolL + height)
+                                                      mealImage.Height / 2 / MmolLUnitsDivisor,
+                                                      mealImage.Height / 2)
+                            markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=yMinNativeMmolL + height)
                             Dim markerColor As Color = Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
                             markerSeriesPoints.Last.Color = markerColor
                             markerSeriesPoints.Last.MarkerBorderWidth = 2
                             markerSeriesPoints.Last.MarkerBorderColor = markerColor
                             markerSeriesPoints.Last.MarkerSize = 20
                             markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                            Dim amount As Integer = CInt(item.GetSingle(key:="amount", digits:=0))
+                            Dim amount As Integer =
+                                CInt(item.Data.DataValues.Amount.RoundToSingle(digits:=0))
                             markerSeriesPoints.Last.Tag = $"Meal:{amount} {GetCarbDefaultUnit()}"
                         End If
                     Case "TIME_CHANGE"
                         With pageChart.Series(name:=TimeChangeSeriesName).Points
                             lastTimeChangeRecord = New TimeChange(item, recordNumber:=1)
-                            markerOA = New OADate(asDate:=lastTimeChangeRecord.Timestamp)
-                            .AddXY(xValue:=markerOA, yValue:=0)
-                            .AddXY(xValue:=markerOA, yValue:=bolusRow)
-                            .AddXY(xValue:=markerOA, yValue:=Double.NaN)
+                            markerOADateTime = New OADate(asDate:=lastTimeChangeRecord.Timestamp)
+                            .AddXY(xValue:=markerOADateTime, yValue:=0)
+                            .AddXY(xValue:=markerOADateTime, yValue:=bolusRow)
+                            .AddXY(xValue:=markerOADateTime, yValue:=Double.NaN)
                         End With
                     Case "LOW_GLUCOSE_SUSPENDED"
                         Dim timeOrderedMarkers As SortedDictionary(Of OADate, Single)
@@ -307,12 +319,12 @@ Friend Module PlotMarkers
     End Sub
 
     ''' <summary>
-    '''  Plots treatment markers on the specified treatment chart,
-    '''  including insulin and meal markers.
+    '''  Plots treatment markersSorted on the specified treatment chart,
+    '''  including insulin and meal markersSorted.
     ''' </summary>
-    ''' <param name="chart">The chart to plot treatment markers on.</param>
+    ''' <param name="chart">The chart to plot treatment markersSorted on.</param>
     ''' <param name="treatmentTimeChangeSeries">
-    '''  The series used for time change markers in the treatment chart.
+    '''  The series used for time change markersSorted in the treatment chart.
     ''' </param>
     ''' <param name="memberName">
     '''  Optional. The name of the calling member, automatically supplied by the compiler.
@@ -331,7 +343,6 @@ Friend Module PlotMarkers
         Dim lastTimeChangeRecord As TimeChange = Nothing
         s_treatmentMarkersInsulin.Clear()
         s_treatmentMarkersMeal.Clear()
-        Dim key As String
         For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
             Try
                 Dim item As Marker = markerWithIndex.Value
@@ -342,50 +353,52 @@ Friend Module PlotMarkers
                 Dim markerBorderColor As Color
                 Select Case item.Type
                     Case "AUTO_BASAL_DELIVERY"
-                        key = NameOf(AutoBasalDelivery.BolusAmount)
-                        Dim amount As Single = item.GetSingle(key, digits:=3)
+                        Dim amount As Single =
+                            item.Data.DataValues.BolusAmount.RoundToSingle(digits:=3)
                         With chart.Series(name:=BasalSeriesName)
-                            .PlotBasalSeries(
-                                markerOADateTime,
-                                amount,
-                                bolusRow:=MaxBasalPerDose,
-                                insulinRow:=TreatmentInsulinRow,
-                                legendText:="Basal Series",
-                                DrawFromBottom:=True,
-                                tag:=GetToolTip(item.Type, amount))
+                            .PlotBasalSeries(markerOADateTime,
+                                             amount,
+                                             bolusRow:=MaxBasalPerDose,
+                                             insulinRow:=TreatmentInsulinRow,
+                                             legendText:="Basal Series",
+                                             DrawFromBottom:=True,
+                                             tag:=GetToolTip(item.Type, amount))
 
                         End With
                     Case "MANUAL_BASAL_DELIVERY"
-                        key = NameOf(AutoBasalDelivery.BolusAmount)
-                        Dim amount As Single = item.GetSingle(key, digits:=3)
-                        chart.Series(name:=BasalSeriesName).PlotBasalSeries(
-                            markerOADateTime,
-                            amount,
-                            bolusRow:=MaxBasalPerDose,
-                            insulinRow:=TreatmentInsulinRow,
-                            legendText:="Basal Series",
-                            DrawFromBottom:=True,
-                            tag:=GetToolTip(item.Type, amount))
+                        Dim amount As Single =
+                            item.Data.DataValues.BolusAmount.RoundToSingle(digits:=3)
+                        chart.Series(name:=BasalSeriesName).
+                            PlotBasalSeries(markerOADateTime,
+                                            amount,
+                                            bolusRow:=MaxBasalPerDose,
+                                            insulinRow:=TreatmentInsulinRow,
+                                            legendText:="Basal Series",
+                                            DrawFromBottom:=True,
+                                            tag:=GetToolTip(item.Type, amount))
 
                     Case "INSULIN"
-                        key = NameOf(Insulin.ActivationType)
-                        Select Case item.GetString(key)
+                        Select Case item.Data.DataValues.ActivationType
                             Case "AUTOCORRECTION"
-                                key = NameOf(Insulin.DeliveredFastAmount)
-                                Dim amount As Single = item.GetSingle(key, digits:=3)
-                                chart.Series(name:=BasalSeriesName).PlotBasalSeries(
-                                    markerOADateTime,
-                                    amount,
-                                    bolusRow:=MaxBasalPerDose,
-                                    insulinRow:=TreatmentInsulinRow,
-                                    legendText:="Auto Correction",
-                                    DrawFromBottom:=True,
-                                    tag:=$"Auto Correction: {amount}U")
+                                Dim amount As Single =
+                                    item.Data.DataValues.DeliveredFastAmount.RoundToSingle(digits:=3)
+                                chart.Series(name:=BasalSeriesName).
+                                    PlotBasalSeries(markerOADateTime,
+                                                    amount,
+                                                    bolusRow:=MaxBasalPerDose,
+                                                    insulinRow:=TreatmentInsulinRow,
+                                                    legendText:="Auto Correction",
+                                                    DrawFromBottom:=True,
+                                                    tag:=$"Auto Correction: {amount}U")
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                                If s_treatmentMarkersInsulin.TryAdd(
-                                    key:=markerOADateTime,
-                                    value:=TreatmentInsulinRow) Then
-
+                                If item.Data.DataValues.ActivationType = "RECOMMENDED" Then
+                                    Dim amount As Single =
+                                        item.Data.DataValues.DeliveredFastAmount.RoundToSingle(digits:=3)
+                                    If amount.AlmostZero Then
+                                        Continue For
+                                    End If
+                                End If
+                                If s_treatmentMarkersInsulin.TryAdd(key:=markerOADateTime, value:=TreatmentInsulinRow) Then
                                     markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=TreatmentInsulinRow)
                                     Dim lastDataPoint As DataPoint = markerSeriesPoints.Last
                                     If Double.IsNaN(GetInsulinYValue()) Then
@@ -393,14 +406,17 @@ Friend Module PlotMarkers
                                         lastDataPoint.MarkerSize = 0
                                     Else
                                         lastDataPoint.Color = Color.FromArgb(alpha:=30, baseColor:=Color.LightBlue)
-                                        key = NameOf(Insulin.DeliveredFastAmount)
                                         markerBorderColor = Color.FromArgb(alpha:=10, baseColor:=Color.Black)
-                                        Dim singleValue As Single = item.GetSingle(key, digits:=3)
-                                        CreateCallout(
-                                            chart,
-                                            lastDataPoint,
-                                            markerBorderColor,
-                                            text:=$"Bolus {singleValue}U")
+                                        Dim singleValue As Single =
+                                            item.Data.DataValues.DeliveredFastAmount.RoundToSingle(digits:=3)
+                                        Dim text As String =
+                                            If(singleValue.AlmostZero,
+                                               "Calibraion Only!",
+                                               $"Bolus {singleValue}U")
+                                        CreateCallout(chart,
+                                                      lastDataPoint,
+                                                      markerBorderColor,
+                                                      text)
                                     End If
                                 Else
                                     Stop
@@ -413,12 +429,12 @@ Friend Module PlotMarkers
                         If s_treatmentMarkersMeal.TryAdd(key:=markerOADateTime, value) Then
                             markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=value)
                             markerBorderColor = Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
-                            Dim amount As Integer = CInt(item.GetSingle(key:="amount", digits:=0))
-                            CreateCallout(
-                                chart,
-                                lastDataPoint:=markerSeriesPoints.Last,
-                                markerBorderColor,
-                                text:=$"Meal {amount} {GetCarbDefaultUnit()}")
+                            Dim amount As Integer =
+                                CInt(item.Data.DataValues.Amount.RoundToSingle(digits:=0))
+                            CreateCallout(chart,
+                                          lastDataPoint:=markerSeriesPoints.Last,
+                                          markerBorderColor,
+                                          text:=$"Meal {amount} {GetCarbDefaultUnit()}")
                         End If
                     Case "BG_READING"
                     Case "CALIBRATION"

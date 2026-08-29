@@ -34,29 +34,40 @@ Public Class NativeMmolLSupportTests
 
     <Fact>
     Public Sub GetSgFormat_WithoutSign_ReturnsCorrectFormat()
-        NativeMmolL = True
-        GetSgFormat().Should().Be(expected:="F1")
-        NativeMmolL = False
-        GetSgFormat().Should().Be(expected:="F0")
+        GetSgFormat(nativeMmolL:=True).Should().Be(expected:="0.0")
+        GetSgFormat(nativeMmolL:=False).Should().Be(expected:="0")
     End Sub
 
     <Fact>
     Public Sub GetSgFormat_WithoutSign_ReturnsCorrectFormat_WithCulture()
-        Dim separator As String = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
-        NativeMmolL = True
-        GetSgFormat(withSign:=False).Should().Be(expected:=$"0{separator}0")
-        NativeMmolL = False
-        GetSgFormat(withSign:=False).Should().Be(expected:="0")
+        GetSgFormat(nativeMmolL:=True, withSign:=False).Should().Be(expected:="0.0")
+        GetSgFormat(nativeMmolL:=False, withSign:=False).Should().Be(expected:="0")
         RestoreDefaults()
     End Sub
 
     <Fact>
     Public Sub GetSgFormat_WithSign_ReturnsCorrectFormat()
-        Dim separator As String = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator
-        NativeMmolL = True
-        GetSgFormat(withSign:=True).Should().Be(expected:=$"+0{separator}0;-#{separator}0")
-        NativeMmolL = False
-        GetSgFormat(withSign:=True).Should().Be(expected:="+0;-#")
+        GetSgFormat(nativeMmolL:=True, withSign:=True).Should().Be(expected:="+0.0;-0.0;0.0")
+        GetSgFormat(nativeMmolL:=False, withSign:=True).Should().Be(expected:="+0;-0;0")
+    End Sub
+
+    <Fact>
+    Public Sub GetSgFormat_UsesCurrentUICultureDecimalSeparator()
+        Dim oldUi As CultureInfo = CultureInfo.CurrentUICulture
+        Try
+            ' Use a culture with a different decimal separator (comma)
+            Dim testUi As New CultureInfo("fr-FR")
+            Threading.Thread.CurrentThread.CurrentUICulture = testUi
+
+            GetSgFormat(nativeMmolL:=True, withSign:=False).Should().Be(expected:="0.0")
+            GetSgFormat(nativeMmolL:=True, withSign:=True).Should().Be(expected:="+0.0;-0.0;0.0")
+
+            GetSgFormat(nativeMmolL:=False, withSign:=False).Should().Be(expected:="0")
+            GetSgFormat(nativeMmolL:=False, withSign:=True).Should().Be(expected:="+0;-0;0")
+        Finally
+            Threading.Thread.CurrentThread.CurrentUICulture = oldUi
+            RestoreDefaults()
+        End Try
     End Sub
 
 End Class

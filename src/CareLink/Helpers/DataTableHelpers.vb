@@ -26,14 +26,14 @@ Friend Module DataTableHelpers
             Return
         End If
         Dim row As DataRow = table.NewRow()
-        For Each [property] As PropertyInfo In GetType(T).GetProperties()
-            Dim name As String = [property].Name
+        For Each prop As PropertyInfo In GetType(T).GetProperties()
+            Dim name As String = prop.Name
             If table.Columns.Contains(name) Then
                 If table.Columns(name) IsNot Nothing Then
-                    row(columnName:=name) = [property].GetValue(obj, index:=Nothing)
+                    row(columnName:=name) = prop.GetValue(obj, index:=Nothing)
                 End If
             End If
-        Next [property]
+        Next prop
         table.Rows.Add(row)
     End Sub
 
@@ -52,8 +52,8 @@ Friend Module DataTableHelpers
         Dim propertyOrder As New SortedDictionary(Of Integer, PropertyInfo)
         Dim fallbackOrder As Integer = 1000
 
-        For Each [property] As PropertyInfo In classType.GetProperties()
-            Dim colAttribute As ColumnAttribute = [property].GetCustomAttributes(
+        For Each prop As PropertyInfo In classType.GetProperties()
+            Dim colAttribute As ColumnAttribute = prop.GetCustomAttributes(
                     attributeType:=GetType(ColumnAttribute),
                     inherit:=True).Cast(Of ColumnAttribute)().SingleOrDefault()
             Dim key As Integer = If(colAttribute Is Nothing,
@@ -63,22 +63,22 @@ Friend Module DataTableHelpers
             While propertyOrder.ContainsKey(key)
                 key += 1 ' Avoid duplicate keys
             End While
-            propertyOrder.Add(key, value:=[property])
+            propertyOrder.Add(key, value:=prop)
             If colAttribute Is Nothing Then
                 fallbackOrder += 1
             End If
         Next
 
-        For Each [property] As PropertyInfo In propertyOrder.Values
-            Dim propertyType As Type = [property].PropertyType
+        For Each prop As PropertyInfo In propertyOrder.Values
+            Dim propertyType As Type = prop.PropertyType
             If propertyType = GetType(Boolean) Then
                 propertyType = GetType(String)
             ElseIf propertyType.IsEnum Then
-                propertyType = GetType(String) ' Or propertyType = [property].PropertyType
+                propertyType = GetType(String) ' Or propertyType = property.PropertyType
             End If
             Dim column As New DataColumn With {
-                .ColumnName = [property].Name,
-                .Caption = GetColumnDisplayName([property]),
+                .ColumnName = prop.Name,
+                .Caption = GetColumnDisplayName(prop),
                 .DataType = If(IsNullableType(nullableType:=propertyType) AndAlso propertyType.IsGenericType,
                                propertyType.GenericTypeArguments.FirstOrDefault(),
                                propertyType)
@@ -96,12 +96,12 @@ Friend Module DataTableHelpers
     ''' </summary>
     ''' <param name="property">The property to get the display name for.</param>
     ''' <returns>The display name for the property.</returns>
-    Private Function GetColumnDisplayName([property] As PropertyInfo) As String
-        Dim displayNameAttribute As DisplayNameAttribute = [property].GetCustomAttributes(
+    Private Function GetColumnDisplayName(prop As PropertyInfo) As String
+        Dim displayNameAttribute As DisplayNameAttribute = prop.GetCustomAttributes(
             attributeType:=GetType(DisplayNameAttribute),
             inherit:=True).Cast(Of DisplayNameAttribute)().SingleOrDefault()
         If displayNameAttribute Is Nothing Then
-            Return [property].Name
+            Return prop.Name
         Else
             ' Non-breaking space for better display
             Dim displayName As String = displayNameAttribute.DisplayName

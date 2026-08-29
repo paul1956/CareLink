@@ -32,17 +32,20 @@ Public Class SG
 
     Public Sub New(json As Dictionary(Of String, String), index As Integer)
         Try
-            If json(key:=NameOf(sg)) <> "0" OrElse json.Count = 5 Then
-                Me.TimestampAsString = json(key:=NameOf(Me.Timestamp))
-                Me.SensorState = json(key:=NameOf(SensorState))
+            Dim value1 As String = json(key:=NameOf(sg))
+            If value1 = "0" OrElse value1 = "NaN" Then
+                Me.sg = Single.NaN
+            ElseIf json.Count >= 5 Then
                 Me.sg = json(key:=NameOf(sg)).ParseSingle(digits:=2)
+                Me.SensorState = json(key:=NameOf(SensorState))
+                Me.TimestampAsString = json(key:=NameOf(Me.Timestamp))
                 Dim value As String = "False"
                 Me.timeChange = json.TryGetValue(key:=NameOf(timeChange), value) AndAlso Boolean.Parse(value)
             Else
                 Me.sg = Single.NaN
             End If
             Dim isBackfillString As String = Nothing
-            Me.isBackfill = json.TryGetValue(NameOf(isBackfill), isBackfillString) AndAlso CBool(isBackfillString)
+            Me.isBackfill = json.TryGetValue(key:=NameOf(isBackfill), value:=isBackfillString) AndAlso CBool(isBackfillString)
             Me.Kind = json(key:=NameOf(Kind))
             Me.RecordNumber = index + 1
             Me.Version = CInt(json(key:=NameOf(Version)))
@@ -203,7 +206,7 @@ Public Class SG
     '''  A format string for displaying the sensor glucose value.
     ''' </returns>
     Public Overrides Function ToString() As String
-        Return Me.sg.ToString(format:=GetSgFormat(), provider:=CultureInfo.CurrentUICulture)
+        Return Me.sg.ToString(format:=GetSgFormat(NativeMmolL), provider:=CultureInfo.CurrentUICulture)
     End Function
 
 End Class

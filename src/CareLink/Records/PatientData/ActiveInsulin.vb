@@ -9,6 +9,7 @@ Imports System.Text.Json.Serialization
 Public Class ActiveInsulin
 
     Private _amount As Single
+    Private _dateTimeAsString As String
 
     <Column(Order:=0, TypeName:=NameOf([Single]))>
     <DisplayName("Amount")>
@@ -26,13 +27,22 @@ Public Class ActiveInsulin
     <Column(Order:=1, TypeName:="String")>
     <JsonPropertyName("datetime")>
     Public Property DateTimeAsString As String
+        Get
+            Return If(_dateTimeAsString, String.Empty)
+        End Get
+        Set
+            _dateTimeAsString = Value
+        End Set
+    End Property
 
     <DisplayName("Date with Time As Date")>
     <Column(Order:=2, TypeName:="DateTime")>
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property DateTime As Date
         Get
-            Return TryParseDateStr(s:=Me.DateTimeAsString)
+            Return If(IsNullOrWhiteSpace(value:=Me.DateTimeAsString),
+                      Now,
+                      TryParseDateStr(s:=Me.DateTimeAsString))
         End Get
     End Property
 

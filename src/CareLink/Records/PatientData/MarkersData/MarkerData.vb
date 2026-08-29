@@ -7,9 +7,9 @@ Imports System.Text.Json.Serialization
 Public Class MarkerData
 
     <JsonPropertyName("dataValues")>
-    Public Property DataValues As Dictionary(Of String, Object)
+    Public Property DataValues As DataValues
 
     <JsonPropertyName("resourceValues")>
-    Public Property ResourceValues As Dictionary(Of String, Object)
+    Public Property ResourceValues As ResourceValues
 
 End Class

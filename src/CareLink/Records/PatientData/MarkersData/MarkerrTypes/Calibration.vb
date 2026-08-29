@@ -14,9 +14,13 @@ Public Class Calibration
         Me.Kind = "Marker"
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
-        Me.CalibrationSuccess = item.GetBoolean(key:=NameOf(CalibrationSuccess))
-        Me.UnitValue = item.GetSingle(key:=NameOf(UnitValue), digits:=0, considerValue:=True)
-        Me.bgUnits = item.GetString(NameOf(bgUnits))
+        With item.Data.DataValues
+            Me.CalibrationSuccess = .CalibrationSuccess
+            Const digits As Integer = 0
+            Const considerValue As Boolean = True
+            Me.UnitValue = .unitValue.RoundToSingle(digits, considerValue)
+            Me.bgUnits = .bgUnits
+        End With
     End Sub
 
     <DisplayName("Record Number")>

@@ -8,6 +8,7 @@ Public Class PumpSetup
 
     Private Const CareLinkUrl As String =
         "https://www.medtronicdiabetes.com/products/carelink-personal-diabetes-software"
+
     Private Const ClickAccept As String = "Click Accept!"
     Private _currentUrlUnderMouse As String = ""
 
@@ -217,16 +218,6 @@ Public Class PumpSetup
             ' If "(None)" is selected, clear the current PDF name with path
             Me.PdfFilePath = ""
         End If
-    End Sub
-
-    ''' <summary>
-    '''  Handles the <see cref="Form.HandleCreated"/> event.
-    '''  Enables dark mode for the form and its controls.
-    ''' </summary>
-    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Protected Overrides Sub OnHandleCreated(e As EventArgs)
-        MyBase.OnHandleCreated(e)
-        DarkModeHelpers.EnableDarkMode(hwnd:=Me.Handle)
     End Sub
 
 End Class

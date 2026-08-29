@@ -7,28 +7,28 @@ Imports System.Net
 Imports System.Net.Http
 
 Public Class LoginDialog
-    Private ReadOnly _mySource As New AutoCompleteStringCollection()
     Private _doCancel As Boolean
     Private _httpClient As HttpClient
-    Private _initialHeight As Integer = 0
+    Private _initialHeight As Integer
+    Private _mySource As AutoCompleteStringCollection
+    Private _showTcs As TaskCompletionSource(Of DialogResult)
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
-    Friend Property Client As Client2
+
     Public Property ClientDiscover As DiscoveryRecord
-    Public Property LoggedOnUser As New CareLinkUserDataRecord(s_allUserSettingsData)
-    Public Property LoginSourceAutomatic As FileToLoadOptions = FileToLoadOptions.NewUser
+    Public Property LoggedOnUser As CareLinkUserDataRecord
+    Public Property LoginSourceAutomatic As FileToLoadOptions
 
     ''' <summary>
     '''  Updates the login status UI based on the result of the login attempt.
     ''' </summary>
     ''' <param name="loginStatus">The <see cref="TextBox"/> to display status.</param>
     ''' <param name="hasErrors">Indicates if errors occurred.</param>
-    ''' <param name="lastErrorMessage">The last error message, if any.</param>
+    ''' <param name="lastErrorMsg">The last error message, if any.</param>
     ''' <param name="lastHttpStatusCode">The last HttpStatusCode code.</param>
-    Private Shared Sub ReportLoginStatus(
-        loginStatus As TextBox,
-        hasErrors As Boolean,
-        Optional lastErrorMessage As String = Nothing,
-        Optional lastHttpStatusCode As Integer = HttpStatusCode.OK)
+    Private Shared Sub ReportLoginStatus(loginStatus As TextBox,
+                                         hasErrors As Boolean,
+                                         Optional lastErrorMsg As String = Nothing,
+                                         Optional lastHttpStatusCode As Integer = HttpStatusCode.OK)
 
         If Client2.Auth_Error_Codes.Contains(lastHttpStatusCode) Then
             loginStatus.ForeColor = Color.Red
@@ -39,7 +39,7 @@ Public Class LoginDialog
 
         If hasErrors Then
             loginStatus.ForeColor = Color.Red
-            loginStatus.Text = If(lastErrorMessage, "Unknown Login Issue")
+            loginStatus.Text = If(lastErrorMsg, "Unknown Login Issue")
             My.Settings.AutoLogin = False
         Else
             loginStatus.ForeColor = Color.Black
@@ -60,8 +60,13 @@ Public Class LoginDialog
     ''' </remarks>
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         _doCancel = True
-        Me.DialogResult = DialogResult.Cancel
-        Me.Hide()
+        If _showTcs IsNot Nothing Then
+            _showTcs.TrySetResult(DialogResult.Cancel)
+            Me.Close()
+        Else
+            Me.DialogResult = DialogResult.Cancel
+            Me.Hide()
+        End If
     End Sub
 
     ''' <summary>
@@ -83,7 +88,7 @@ Public Class LoginDialog
         Me.PatientUserIDLabel.Visible = careLinkPartner
         Me.PatientUserIDTextBox.Visible = careLinkPartner
         If careLinkPartner AndAlso
-           IsNullOrWhiteSpace(Me.PatientUserIDTextBox.Text) Then
+           IsNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text) Then
             Me.PatientUserIDTextBox.Focus()
         End If
     End Sub
@@ -126,6 +131,7 @@ Public Class LoginDialog
     '''  loads user settings, and populates the username and region combo boxes.
     ''' </remarks>
     Private Sub LoginForm1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.LoggedOnUser = New CareLinkUserDataRecord(parent:=s_allUserSettingsData)
         Me.Icon = If(Application.IsDarkModeEnabled,
                      PngBitmapToIcon(original:=My.Resources.LoginLight),
                      PngBitmapToIcon(original:=My.Resources.LoginDark))
@@ -135,6 +141,7 @@ Public Class LoginDialog
         If _initialHeight = 0 Then
             _initialHeight = Me.Height
         End If
+        Me.CenterFormOnAnother(reference:=Form1)
 
         Dim commandLineArguments As String() = Environment.GetCommandLineArgs()
 
@@ -156,6 +163,7 @@ Public Class LoginDialog
             End Select
         End If
 
+        _mySource = New AutoCompleteStringCollection()
         If AllUserLoginInfoFileExists() Then
             _mySource.AddRange(s_allUserSettingsData.Keys.ToArray)
             Me.UsernameComboBox.DataSource = s_allUserSettingsData.Keys
@@ -170,25 +178,29 @@ Public Class LoginDialog
             .AutoCompleteCustomSource = _mySource
             .AutoCompleteMode = AutoCompleteMode.SuggestAppend
             .AutoCompleteSource = AutoCompleteSource.CustomSource
-            If s_userName = String.Empty Then
-                .Text = My.Settings.CareLinkUserName
-            Else
+            If IsNotNullOrWhiteSpace(value:=GetUserName()) Then
                 .SelectedIndex = -1
-                .Text = s_userName
+            Else
             End If
-            Me.PasswordTextBox.Text = If(s_allUserSettingsData?.ContainsKey(key:= .Text),
-                                         s_allUserSettingsData(itemName:= .Text).CareLinkPassword,
-                                         String.Empty)
+            .Text = GetUserName()
+            Me.PasswordTextBox.Text =
+                If(s_allUserSettingsData?.ContainsKey(key:= .Text),
+                   s_allUserSettingsData(itemName:= .Text).CareLinkPassword,
+                   String.Empty)
         End With
 
-        Me.RegionComboBox.DataSource = New BindingSource(dataSource:=s_regionList, dataMember:=Nothing)
-        Me.RegionComboBox.DisplayMember = "Key"
-        Me.RegionComboBox.ValueMember = "Value"
+        With Me.RegionComboBox
+            .DisplayMember = NameOf(KeyValuePair(Of WorldRegion, String).Value)
+            .ValueMember = NameOf(KeyValuePair(Of WorldRegion, String).Key)
+            .DataSource = New BindingSource(dataSource:=s_regionDictionary, dataMember:=Nothing)
+        End With
+
         If IsNullOrEmpty(value:=My.Settings.CountryCode) Then
             My.Settings.CountryCode = "US"
         End If
+
         Me.RegionComboBox.SelectedValue = My.Settings.CountryCode.GetRegionFromCode
-        Me.CountryComboBox.Text = My.Settings.CountryCode.GetCountryFromCode
+        Me.CountryComboBox.SelectedValue = My.Settings.CountryCode
 
         Me.PatientUserIDTextBox.Text = My.Settings.CareLinkPatientUserID
         Dim careLinkPartner As Boolean = My.Settings.CareLinkPartner
@@ -224,7 +236,7 @@ Public Class LoginDialog
     ''' <param name="e">
     '''  The <see cref="EventArgs"/> instance containing the event data.
     ''' </param>
-    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
+    Private Async Sub OK_Button_Click(sender As Object, e As EventArgs) Handles Ok_Button.Click
         If Me.UsernameComboBox.Text.Length = 0 Then
             Me.UsernameComboBox.Focus()
             Exit Sub
@@ -234,95 +246,134 @@ Public Class LoginDialog
             Exit Sub
         End If
 
-        s_userName = Me.UsernameComboBox.Text
+        SetUserName(value:=Me.UsernameComboBox.Text)
         s_password = Me.PasswordTextBox.Text
         s_countryCode = Me.CountryComboBox.SelectedValue.ToString
+        Try
+            Me.LoginStatus.Text = "Checking token file..."
+            Dim lastErrorMsg As String
+            Dim httpStatusCode As Integer = 0
+            Dim discoveryTuple As (discoveryRecord As DiscoveryRecord, lastErrorMsg As String, httpStatusCode As Integer) =
+                Await GetDiscoveryDataAsync()
+            Me.ClientDiscover = discoveryTuple.discoveryRecord
+            lastErrorMsg = discoveryTuple.lastErrorMsg
+            httpStatusCode = discoveryTuple.httpStatusCode
+            If Me.ClientDiscover IsNot Nothing Then
+                Me.Ok_Button.Enabled = False
+                Application.DoEvents()
+                Dim value As String = Me.RegionComboBox.SelectedValue.ToString().Replace(oldValue:=" ", newValue:="")
+                Dim serverRegion As Region = [Enum].Parse(Of Region)(value:=value)
+                Await Client2.GetLoginData(serverRegion:=serverRegion,
+                                           userName:=s_userName,
+                                           password:=s_password,
+                                           tokenData:=ReadTokenDataFile())
+                Form1.Client = New Client2(serverRegion)
+                Const loginFailed As String = "Login failed: Client.InitAsync() did not complete successfully."
+                lastErrorMsg = If(Not Await Form1.Client.InitAsync(),
+                                  loginFailed,
+                                  Await Form1.Client.GetRecentDataAsync())
+            End If
+            If IsNullOrWhiteSpace(value:=lastErrorMsg) Then
+                s_lastMedicalDeviceDataUpdateServerEpoch = 0
+                ReportLoginStatus(Me.LoginStatus, hasErrors:=False, lastErrorMsg)
 
-        Dim lastErrorMsg As String = String.Empty
-        Dim lastHttpStatusCode As Integer = 0
-        Me.ClientDiscover = GetDiscoveryData(lastErrorMsg, lastHttpStatusCode)
-        If Me.ClientDiscover IsNot Nothing Then
-            Me.Ok_Button.Enabled = False
+                Me.Ok_Button.Enabled = True
+                Me.Cancel_Button.Enabled = True
 
-            Dim isUsRegion As Boolean = Me.RegionComboBox.SelectedValue.ToString = "North America"
-            GetLoginData(isUsRegion, ReadTokenDataFile(s_userName))
-            Me.Client = New Client2(isUsRegion:=isUsRegion)
-            lastErrorMsg = If(Not Me.Client.Init(),
-                              "Login failed: Client.Init() did not complete successfully.",
-                              Me.Client.GetRecentData())
+                My.Settings.CountryCode = Me.CountryComboBox.SelectedValue.ToString
+                My.Settings.CareLinkUserName = GetUserName()
+                My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
+                My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
+                Dim checked As Boolean = Me.CarePartnerCheckBox.Checked
+                My.Settings.CareLinkPartner = checked OrElse IsNotNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text)
+                My.Settings.Save()
+                Dim key As String = GetUserName()
+                If Not s_allUserSettingsData.TryGetValue(key, userRecord:=Me.LoggedOnUser) Then
+                    s_allUserSettingsData.SaveAllUserRecords(
+                        loggedOnUser:=New CareLinkUserDataRecord(parent:=s_allUserSettingsData),
+                        key:=NameOf(CareLinkUserDataRecord.CareLinkUserName), value:=GetUserName())
+                End If
+                If _showTcs IsNot Nothing Then
+                    _showTcs.TrySetResult(DialogResult.OK)
+                    Me.Close()
+                Else
+                    Me.DialogResult = DialogResult.OK
+                    Me.Hide()
+                End If
+            Else
+                httpStatusCode = If(httpStatusCode <> 0,
+                                    httpStatusCode,
+                                    Form1.Client.HttpStatusCode)
+                Me.LoginStatus.Text = lastErrorMsg
+                ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMsg, httpStatusCode)
+                If Client2.Auth_Error_Codes.Contains(value:=httpStatusCode) Then
+                    Me.PasswordTextBox.Text = String.Empty
+                    Dim userRecord As CareLinkUserDataRecord = Nothing
+                    If s_allUserSettingsData.TryGetValue(key:=GetUserName(), userRecord) Then
+                        s_allUserSettingsData.Remove(value:=userRecord)
+                    End If
+                End If
 
-        End If
-        If IsNullOrWhiteSpace(lastErrorMsg) Then
-            s_lastMedicalDeviceDataUpdateServerEpoch = 0
-            ReportLoginStatus(Me.LoginStatus, hasErrors:=False, lastErrorMsg)
+                Dim networkDownMessage As String =
+                    If(NetworkUnavailable(),
+                       "Due to network being unavailable",
+                       $"Network Response Code = {httpStatusCode}")
 
+                Dim heading As String
+
+                Dim buttonsAvailable As MsgBoxStyle
+                Dim buttonStyle As MsgBoxStyle
+                If httpStatusCode <> 1 Then
+                    buttonsAvailable = MsgBoxStyle.AbortRetryIgnore
+                    buttonStyle = buttonsAvailable Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question
+                    heading = $"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!"
+                Else
+                    buttonsAvailable = MsgBoxStyle.Critical
+                    buttonStyle = buttonsAvailable Or MsgBoxStyle.DefaultButton1 Or MsgBoxStyle.Critical
+                    heading = $"Network down?{vbCrLf}Ok, will exit program!"
+                End If
+
+                Const title As String = "Login Failed"
+                Dim msgBoxResult As MsgBoxResult = MsgBox(heading, prompt:=networkDownMessage, buttonStyle, title)
+
+                Select Case msgBoxResult
+                    Case MsgBoxResult.Abort
+                        End
+                    Case MsgBoxResult.Ignore
+                        If _showTcs IsNot Nothing Then
+                            _showTcs.TrySetResult(result:=DialogResult.Ignore)
+                            Me.Close()
+                        Else
+                            Me.DialogResult = DialogResult.Ignore
+                        End If
+                    Case MsgBoxResult.Retry
+                        If _showTcs IsNot Nothing Then
+                            _showTcs.TrySetResult(result:=DialogResult.Retry)
+                        Else
+                            Me.DialogResult = DialogResult.Retry
+                        End If
+                    Case MsgBoxResult.Ok
+                        If _showTcs IsNot Nothing Then
+                            _showTcs.TrySetResult(result:=DialogResult.OK)
+                            Me.Close()
+                        Else
+                            Me.DialogResult = DialogResult.OK
+                        End If
+                    Case MsgBoxResult.Cancel
+                        If _showTcs IsNot Nothing Then
+                            _showTcs.TrySetResult(result:=DialogResult.Cancel)
+                            Me.Close()
+                        Else
+                            Me.DialogResult = DialogResult.Cancel
+                        End If
+                End Select
+            End If
+        Catch ex As Exception
+            Stop
+        Finally
             Me.Ok_Button.Enabled = True
             Me.Cancel_Button.Enabled = True
-
-            My.Settings.CountryCode = Me.CountryComboBox.SelectedValue.ToString
-            My.Settings.CareLinkUserName = s_userName
-            My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
-            My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
-            Dim checked As Boolean = Me.CarePartnerCheckBox.Checked
-            My.Settings.CareLinkPartner = checked OrElse IsNotNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text)
-            My.Settings.Save()
-            Dim key As String = s_userName
-            If Not s_allUserSettingsData.TryGetValue(key, userRecord:=Me.LoggedOnUser) Then
-                s_allUserSettingsData.SaveAllUserRecords(
-                    loggedOnUser:=New CareLinkUserDataRecord(parent:=s_allUserSettingsData),
-                    key:=NameOf(CareLinkUserDataRecord.CareLinkUserName), value:=s_userName)
-            End If
-            Me.DialogResult = DialogResult.OK
-            Me.Hide()
-        Else
-            lastHttpStatusCode = If(lastHttpStatusCode <> 0,
-                                    lastHttpStatusCode,
-                                    Me.Client.GetHttpStatusCode)
-            Me.LoginStatus.Text = lastErrorMsg
-            ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMsg, lastHttpStatusCode)
-            If Client2.Auth_Error_Codes.Contains(value:=lastHttpStatusCode) Then
-                Me.PasswordTextBox.Text = String.Empty
-                Dim userRecord As CareLinkUserDataRecord = Nothing
-                If s_allUserSettingsData.TryGetValue(s_userName, userRecord) Then
-                    s_allUserSettingsData.Remove(userRecord)
-                End If
-            End If
-
-            Dim networkDownMessage As String = If(NetworkUnavailable(),
-                                                  "Due to network being unavailable",
-                                                  $"Network unavailable Response Code = {lastHttpStatusCode}")
-
-            Dim heading As String
-
-            Dim buttonsAvailable As MsgBoxStyle
-            Dim buttonStyle As MsgBoxStyle
-            If lastHttpStatusCode <> 1 Then
-                buttonsAvailable = MsgBoxStyle.AbortRetryIgnore
-                buttonStyle = buttonsAvailable Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question
-                heading = $"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!"
-            Else
-                buttonsAvailable = MsgBoxStyle.Critical
-                buttonStyle = buttonsAvailable Or MsgBoxStyle.DefaultButton1 Or MsgBoxStyle.Critical
-                heading = $"Network down?{vbCrLf}Ok, will exit program!"
-            End If
-
-            Const title As String = "Login Failed"
-            Dim msgBoxResult As MsgBoxResult = MsgBox(heading, prompt:=networkDownMessage, buttonStyle, title)
-
-            Select Case msgBoxResult
-                Case MsgBoxResult.Abort
-                    End
-                Case MsgBoxResult.Ignore
-                    Me.DialogResult = DialogResult.Ignore
-                Case MsgBoxResult.Retry
-                    Me.DialogResult = DialogResult.Retry
-                Case MsgBoxResult.Ok
-                    Me.DialogResult = DialogResult.OK
-                Case MsgBoxResult.Cancel
-                    Me.DialogResult = DialogResult.Cancel
-            End Select
-        End If
-        Me.Cancel_Button.Enabled = True
+        End Try
     End Sub
 
     ''' <summary>
@@ -365,10 +416,10 @@ Public Class LoginDialog
         Handles RegionComboBox.SelectedIndexChanged
 
         Dim countriesInRegion As New Dictionary(Of String, String)
-        Dim selectedRegion As String = s_regionList.Values(index:=Me.RegionComboBox.SelectedIndex)
-        For Each kvp As KeyValuePair(Of String, String) In s_regionCountryList
+        Dim selectedRegion As WorldRegion = s_regionToServerMapping.Keys(index:=Me.RegionComboBox.SelectedIndex)
+        For Each kvp As KeyValuePair(Of String, WorldRegion) In s_countryNameToRegionList
             If kvp.Value = selectedRegion Then
-                countriesInRegion.Add(kvp.Key, value:=s_countryCodeList(kvp.Key))
+                countriesInRegion.Add(kvp.Key, value:=s_countryToCodeList(kvp.Key))
             End If
         Next
         If countriesInRegion.Count > 0 Then
@@ -407,13 +458,12 @@ Public Class LoginDialog
     ''' </summary>
     Private Sub UsernameComboBox_Leave(sender As Object, e As EventArgs) Handles UsernameComboBox.Leave
         Try
-
             Dim userRecord As CareLinkUserDataRecord = Nothing
             If s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.Text, userRecord) Then
                 If userRecord.CareLinkUserName.EqualsNoCase(Me.UsernameComboBox.Text) Then
                     Me.UsernameComboBox.Text = userRecord.CareLinkUserName
                 End If
-                s_userName = Me.UsernameComboBox.Text
+                SetUserName(value:=Me.UsernameComboBox.Text)
                 Me.PasswordTextBox.Text = userRecord.CareLinkPassword
                 Me.RegionComboBox.SelectedValue = userRecord.CountryCode.GetRegionFromCode
                 Me.PatientUserIDTextBox.Text = userRecord.CareLinkPatientUserID
@@ -427,7 +477,7 @@ Public Class LoginDialog
                 Me.CarePartnerCheckBox.Checked = False
             End If
         Catch ex As Exception
-
+            Stop
         End Try
 
     End Sub
@@ -477,13 +527,32 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Overrides the OnHandleCreated method to enable dark mode
-    '''  for the dialog when its handle is created.
+    ''' Shows the dialog in an async-friendly way. Disables the owner to emulate modal behavior
+    ''' and returns when the dialog completes (OK/Cancel/Retry/etc.).
     ''' </summary>
-    ''' <param name="e">The event data.</param>
-    Protected Overrides Sub OnHandleCreated(e As EventArgs)
-        MyBase.OnHandleCreated(e)
-        EnableDarkMode(hwnd:=Me.Handle)
-    End Sub
+    Public Overloads Async Function ShowDialogAsync(owner As IWin32Window) As Task(Of DialogResult)
+        If _showTcs Is Nothing Then
+            _showTcs = New TaskCompletionSource(Of DialogResult)
+        End If
+
+        Dim ownerForm As Form = TryCast(owner, Form)
+        If ownerForm IsNot Nothing Then
+            ownerForm.Enabled = False
+        End If
+
+        If Me.Visible Then
+            Me.Visible = False
+        End If
+        ' Show modelessly with owner so dialog is positioned properly
+        Me.Show(owner)
+
+        Dim result As DialogResult = Await _showTcs.Task
+
+        If ownerForm IsNot Nothing Then
+            ownerForm.Enabled = True
+        End If
+
+        Return result
+    End Function
 
 End Class
