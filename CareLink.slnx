@@ -8,6 +8,9 @@
     <File Path="License.txt" />
     <File Path="README.md" />
     <File Path="Screenshot 2022-10-08 203350.png" />
+    <Project Path="src/CareLink/CareLink.vbproj" />
+    <Project Path="src/PumpSetup/PumpSetup.vbproj" />
+    <Project Path="src/TestProject/TestProject.vbproj" />
   </Folder>
   <Folder Name="/Solution Items/.GitHub/" />
   <Folder Name="/Solution Items/.GitHub/Copilot/">
