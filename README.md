@@ -44,7 +44,7 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-8/22/2026
+8/28/2026
 
 ## What's New
 New in 6.0.1.0
