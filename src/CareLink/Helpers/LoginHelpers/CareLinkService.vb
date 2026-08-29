@@ -274,7 +274,10 @@ Public Class CareLinkService
                         {"grant_type", idTokenType}})
 
                     Dim tokenRequest As New HttpRequestMessage(method:=HttpMethod.Post, requestUri:=tokenUrl)
-                    tokenRequest.Headers.Add(name:="mag-identifier", value:=magIdentifier)
+                    If String.IsNullOrWhiteSpace(value:=magIdentifier) Then
+                        tokenRequest.Headers.Add(name:="mag-identifier", value:=magIdentifier)
+                    End If
+
                     tokenRequest.Content = tokenForm
 
                     Dim tokenResponse As HttpResponseMessage = Await s_http.SendAsync(tokenRequest)
@@ -289,9 +292,13 @@ Public Class CareLinkService
                             .AccessToken = tokenDoc.RootElement.GetProperty(propertyName:="access_token").GetString(),
                             .RefreshToken = tokenDoc.RootElement.GetProperty(propertyName:="refresh_token").GetString(),
                             .Scope = tokenDoc.RootElement.GetProperty(propertyName:="scope").GetString(),
-                            .ClientId = initClientId,
-                            .ClientSecret = initClientSecret,
-                            .MagIdentifier = magIdentifier}
+                            .ClientId = initClientId}
+                        If initClientSecret IsNot Nothing Then
+                            token.ClientSecret = initClientSecret
+                        End If
+                        If magIdentifier IsNot Nothing Then
+                            token.MagIdentifier = magIdentifier
+                        End If
                         WriteTokenFile(token, path:=outputFile)
                         Return token
                     End Using
