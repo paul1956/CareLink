@@ -57,7 +57,7 @@ Public Module JsonExtensions
         End Select
     End Sub
 
-    Public Function CollectAllExtensionData(obj As Object) As List(Of KeyValuePair(Of String, JsonElement))
+    Public Function CollectAllExtensionData(obj As Object, depth As Integer) As List(Of KeyValuePair(Of String, JsonElement))
         Dim results As New List(Of KeyValuePair(Of String, JsonElement))()
 
         If obj Is Nothing Then Return results
@@ -84,6 +84,7 @@ Public Module JsonExtensions
 
         ' Recursively inspect child properties
         For Each p As PropertyInfo In t.GetProperties()
+            LogMessage(message:=$"{Space(Number:=depth * 4)}{p.Name}")
             Dim child As Object
             Try
                 If p.PropertyType.IsClass AndAlso
@@ -92,7 +93,7 @@ Public Module JsonExtensions
                     If p.GetIndexParameters().Length = 0 Then
                         child = p.GetValue(obj)
                         If child IsNot Nothing Then
-                            results.AddRange(collection:=CollectAllExtensionData(obj:=child))
+                            results.AddRange(collection:=CollectAllExtensionData(obj:=child, depth:=depth + 1))
                         End If
                     End If
                 End If

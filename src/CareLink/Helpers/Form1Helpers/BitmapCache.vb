@@ -3,10 +3,48 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.IO
+Imports System.Runtime.CompilerServices
 
 Public Module BitmapCache
+
     ' Storage for the preloaded Bitmaps
     Friend ReadOnly s_bitmaps As New Dictionary(Of String, Bitmap)(comparer:=StringComparer.OrdinalIgnoreCase)
+
+    ''' <summary>
+    '''  Cleans up all Bitmaps from memory.
+    ''' </summary>
+    Public Sub CleanUp()
+        For Each kvp As KeyValuePair(Of String, Bitmap) In s_bitmaps
+            kvp.Value?.Dispose()
+        Next
+        s_bitmaps.Clear()
+    End Sub
+
+    ''' <summary>
+    '''  Gets <see cref="Bitmap"/> from <see cref="s_bitmaps"/> after translating id to Name
+    ''' </summary>
+    ''' <param name="id"><see cref="ImageEnum"/></param>
+    ''' <returns>Bitmap from s_bitmaps</returns>
+    Public Function GetBitmapFromCache(id As ImageEnum) As Bitmap
+        Dim value As Bitmap = Nothing
+        If s_bitmaps.TryGetValue(key:=id.Description, value) Then
+            ' Assign the preloaded Bitmap safely
+            Return CType(value.Clone, Bitmap)
+        Else
+            Return Nothing
+        End If
+
+    End Function
+
+    <Extension>
+    Public Sub GetBitmapFromCache(pictureBox As PictureBox, id As ImageEnum)
+        pictureBox.Image = Nothing
+        Dim value As Bitmap = Nothing
+        If s_bitmaps.TryGetValue(key:=id.Description, value) Then
+            ' Assign the preloaded Bitmap safely
+            pictureBox.Image = CType(value.Clone, Bitmap)
+        End If
+    End Sub
 
     ''' <summary>
     '''  Loads all PNG files as Bitmaps into memory.
@@ -36,41 +74,5 @@ Public Module BitmapCache
             End Try
         Next
     End Sub
-
-    ''' <summary>
-    '''  Cleans up all Bitmaps from memory.
-    ''' </summary>
-    Public Sub CleanUp()
-        For Each kvp As KeyValuePair(Of String, Bitmap) In s_bitmaps
-            kvp.Value?.Dispose()
-        Next
-        s_bitmaps.Clear()
-    End Sub
-
-    ''' <summary>
-    '''  Gets a Bitmap for PNG files stored in Images directory from Cache
-    ''' </summary>
-    ''' <param name="name">
-    '''  The name of the file without the extension.
-    ''' </param>
-    ''' <returns>Bitmap of file</returns>
-    Public Function GetBitmapFromCache(Name As String) As Bitmap
-        Dim value As Bitmap = Nothing
-        If s_bitmaps.TryGetValue(key:=Name, value) Then
-            ' Assign the preloaded Bitmap safely
-            Return CType(value.Clone, Bitmap)
-        Else
-            Return Nothing
-        End If
-    End Function
-
-    ''' <summary>
-    '''  Calls GetBitmapFromCache after translating id to Name 
-    ''' </summary>
-    ''' <param name="id"><see cref="ImageEnum"/></param>
-    ''' <returns>Bitmap from Cache</returns>
-    Public Function GetBitmapFromCache(id As ImageEnum) As Bitmap
-        Return GetBitmapFromCache(Name:=id.Description)
-    End Function
 
 End Module

@@ -9,9 +9,6 @@ Public Class Client
     <JsonPropertyName("client_id")>
     Public Property ClientId As String
 
-    <JsonPropertyName("client_Secret")>
-    Public Property ClientSecret As String
-
     <JsonPropertyName("scope")>
     Public Property Scope As String
 

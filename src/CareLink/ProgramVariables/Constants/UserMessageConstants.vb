@@ -185,6 +185,7 @@ Friend Module UserMessageConstants
 
     Friend ReadOnly s_notificationMessagesFlex As New Dictionary(Of String, String) From {
         {"1.000", "Urgent low sensor glucose(triggeredDateTime), your sensor glucose is below (sg64)."},
+        {"1.200", "Change Infusion Set(triggeredDateTime)."},
         {"1.050", "Unknown(triggeredDateTime) 1.050"},
         {"1.205", "No SG values (> 30 minutes)(triggeredDateTime), (alertClearType)"},
         {"2.210", "Blood glucose not accepted(triggeredDateTime). Wait at least a 15 minutes before trying again."},
@@ -247,9 +248,6 @@ Friend Module UserMessageConstants
         {"WAIT_TO_CALIBRATE", $"Wait To{vbCrLf}Calibrate..."},
         {"WAIT_TO_ENTER_BG", $"Wait To{vbCrLf}Enter BG..."},
         {"WAITING_WARM_UP", $"Waiting For warm up{vbCrLf}to start..."},
-        {"WARM_UP", "Sensor warm up"}}
-
-    Private ReadOnly Property PumpModel As Integer =
-            CInt(PatientData.MedicalDeviceInformation.ModelNumber.Replace(oldValue:="MMT-", newValue:=""))
+        {"WARM_UP", $"Sensor{vbCrLf}warm up"}}
 
 End Module

@@ -104,13 +104,12 @@ Friend Module PaintMarkerExtensions
     ''' </param>
     <DebuggerNonUserCode()>
     <Extension>
-    Friend Sub PostPaintSupport(
-        e As ChartPaintEventArgs,
-        ByRef chartRelativePosition As RectangleF,
-        insulinDictionary As Dictionary(Of OADate, Single),
-        mealDictionary As Dictionary(Of OADate, Single),
-        offsetInsulinImage As Boolean,
-        paintOnY2 As Boolean)
+    Friend Sub PostPaintSupport(e As ChartPaintEventArgs,
+                                ByRef chartRelativePosition As RectangleF,
+                                insulinDictionary As Dictionary(Of OADate, Single),
+                                mealDictionary As Dictionary(Of OADate, Single),
+                                offsetInsulinImage As Boolean,
+                                paintOnY2 As Boolean)
 
         If s_sgRecords.Count = 0 OrElse Not ProgramInitialized Then
             Exit Sub
@@ -176,13 +175,13 @@ Friend Module PaintMarkerExtensions
         End Using
 
         If insulinDictionary IsNot Nothing Then
-            e.PaintMarker(markerImage:=GetBitmapFromCache(id:=ImageEnum.InsulinVialTiny),
+            e.PaintMarker(markerImage:=InsulinVialTiny,
                           markerDictionary:=insulinDictionary,
                           noImageOffset:=offsetInsulinImage,
                           paintOnY2)
         End If
         If mealDictionary IsNot Nothing Then
-            e.PaintMarker(markerImage:=GetBitmapFromCache(id:=ImageEnum.MealImage),
+            e.PaintMarker(markerImage:=MealImage,
                           markerDictionary:=mealDictionary,
                           noImageOffset:=False,
                           paintOnY2)

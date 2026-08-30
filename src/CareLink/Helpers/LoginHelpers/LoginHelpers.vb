@@ -35,7 +35,7 @@ Friend Module LoginHelpers
         Try
             PatientData = PatientDataElement.FromJson(Of PatientDataInfo)()
             Dim listOfMissingItems As List(Of KeyValuePair(Of String, JsonElement)) =
-                CollectAllExtensionData(obj:=PatientData)
+                CollectAllExtensionData(obj:=PatientData, depth:=0)
             If listOfMissingItems.Count > 0 Then
                 Stop
             End If

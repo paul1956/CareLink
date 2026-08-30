@@ -252,12 +252,12 @@ Public Class LoginDialog
         Try
             Me.LoginStatus.Text = "Checking token file..."
             Dim lastErrorMsg As String
-            Dim httpStatusCode As Integer = 0
-            Dim discoveryTuple As (discoveryRecord As DiscoveryRecord, lastErrorMsg As String, httpStatusCode As Integer) =
-                Await GetDiscoveryDataAsync()
+            Dim discovertTupleStatusCode As HttpStatusCode = HttpStatusCode.OK
+            Dim discoveryTuple As (discoveryRecord As DiscoveryRecord, lastErrorMsg As String, httpStatusCode As HttpStatusCode) =
+                CType(Await GetDiscoveryDataAsync(), (discoveryRecord As DiscoveryRecord, lastErrorMsg As String, httpStatusCode As HttpStatusCode))
             Me.ClientDiscover = discoveryTuple.discoveryRecord
             lastErrorMsg = discoveryTuple.lastErrorMsg
-            httpStatusCode = discoveryTuple.httpStatusCode
+            discovertTupleStatusCode = discoveryTuple.httpStatusCode
             If Me.ClientDiscover IsNot Nothing Then
                 Me.Ok_Button.Enabled = False
                 Application.DoEvents()
@@ -301,12 +301,13 @@ Public Class LoginDialog
                     Me.Hide()
                 End If
             Else
-                httpStatusCode = If(httpStatusCode <> 0,
-                                    httpStatusCode,
-                                    Form1.Client.HttpStatusCode)
+                discovertTupleStatusCode =
+                    If(discovertTupleStatusCode = HttpStatusCode.OK,
+                       Form1.Client.HttpStatusCode,
+                       discovertTupleStatusCode)
                 Me.LoginStatus.Text = lastErrorMsg
-                ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMsg, httpStatusCode)
-                If Client2.Auth_Error_Codes.Contains(value:=httpStatusCode) Then
+                ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMsg, discovertTupleStatusCode)
+                If Client2.Auth_Error_Codes.Contains(value:=discovertTupleStatusCode) Then
                     Me.PasswordTextBox.Text = String.Empty
                     Dim userRecord As CareLinkUserDataRecord = Nothing
                     If s_allUserSettingsData.TryGetValue(key:=GetUserName(), userRecord) Then
@@ -317,13 +318,13 @@ Public Class LoginDialog
                 Dim networkDownMessage As String =
                     If(NetworkUnavailable(),
                        "Due to network being unavailable",
-                       $"Network Response Code = {httpStatusCode}")
+                       $"Network Response Code = {discovertTupleStatusCode}")
 
                 Dim heading As String
 
                 Dim buttonsAvailable As MsgBoxStyle
                 Dim buttonStyle As MsgBoxStyle
-                If httpStatusCode <> 1 Then
+                If discovertTupleStatusCode <> 1 Then
                     buttonsAvailable = MsgBoxStyle.AbortRetryIgnore
                     buttonStyle = buttonsAvailable Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question
                     heading = $"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!"

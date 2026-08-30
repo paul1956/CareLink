@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
 Public Class Marker
@@ -50,5 +51,8 @@ Public Class Marker
 
     <JsonPropertyName("views")>
     Public Property Views As List(Of MarkerView)
+
+    <JsonExtensionData>
+    Public Property AdditionalProperties As Dictionary(Of String, JsonElement)
 
 End Class

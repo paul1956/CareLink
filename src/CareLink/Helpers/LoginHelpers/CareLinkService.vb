@@ -162,8 +162,6 @@ Public Class CareLinkService
             Using initDoc As JsonDocument = JsonDocument.Parse(json:=initBody)
                 Dim initClientId As String =
                     initDoc.RootElement.GetProperty(propertyName:="client_id").GetString()
-                Dim initClientSecret As String =
-                    initDoc.RootElement.GetProperty(propertyName:="client_secret").GetString()
 
                 Dim codeVerifier As String = Convert.ToBase64String(inArray:=RandomNumberGenerator.GetBytes(count:=40))
                 codeVerifier = Regex.Replace(input:=codeVerifier,
@@ -230,10 +228,12 @@ Public Class CareLinkService
                                                         dc:=androidModelSafe,
                                                         o:=organization,
                                                         keySizeInBits:=KeySizeInBits)
+#If False Then
                     Dim clientAuth As String =
                         Convert.ToBase64String(inArray:=Encoding.UTF8.GetBytes($"{initClientId}:{initClientSecret}"))
+#End If
 
-                    Dim requestUri As String = endpointConfig.ApiBaseUrl & registerPath
+                    Dim requestUri As String = $"{endpointConfig.ApiBaseUrl}{registerPath}"
                     Dim regRequest As New HttpRequestMessage(method:=HttpMethod.Post, requestUri)
                     regRequest.Headers.Add(name:="device-name",
                                            value:=Convert.ToBase64String(inArray:=Encoding.UTF8.GetBytes(androidModel)))
@@ -241,8 +241,12 @@ Public Class CareLinkService
                                            value:=$"Bearer {redirectResult.Code}")
                     regRequest.Headers.Add(name:="cert-format",
                                            value:="pem")
+#If False Then
+
+
                     regRequest.Headers.Add(name:="client-authorization",
                                            value:=$"Basic {clientAuth}")
+#End If
                     regRequest.Headers.Add(name:="create-session",
                                            value:="true")
                     regRequest.Headers.Add(name:="code-verifier",
@@ -269,7 +273,6 @@ Public Class CareLinkService
                     Dim tokenForm As New FormUrlEncodedContent(nameValueCollection:=New Dictionary(Of String, String) From {
                         {"assertion", idToken},
                         {"client_id", initClientId},
-                        {"client_secret", initClientSecret},
                         {"scope", scope},
                         {"grant_type", idTokenType}})
 
@@ -293,12 +296,14 @@ Public Class CareLinkService
                             .RefreshToken = tokenDoc.RootElement.GetProperty(propertyName:="refresh_token").GetString(),
                             .Scope = tokenDoc.RootElement.GetProperty(propertyName:="scope").GetString(),
                             .ClientId = initClientId}
+#If False Then
                         If initClientSecret IsNot Nothing Then
                             token.ClientSecret = initClientSecret
                         End If
                         If magIdentifier IsNot Nothing Then
                             token.MagIdentifier = magIdentifier
                         End If
+#End If
                         WriteTokenFile(token, path:=outputFile)
                         Return token
                     End Using

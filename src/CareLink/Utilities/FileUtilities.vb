@@ -24,6 +24,35 @@ Friend Module FileUtilities
         "scope",
         "client_id"}
 
+    Private Function ReadAndValidateTokenJsonElement(
+                Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As JsonElement
+
+        Dim path As String = GetLoginDataFileName(tokenBaseFileName)
+        Debug.WriteLine(message:=$"Reading token file: {path}")
+        If Not File.Exists(path) Then
+            Debug.WriteLine(message:=$"ERROR: token file {path} not found")
+            Return Nothing
+        End If
+
+        Try
+            Dim json As String = File.ReadAllText(path)
+            Dim tokenData As JsonElement = json.FromJson(Of JsonElement)(DeserializationOptions)
+            For Each propertyName As String In s_requiredFields
+                Dim propElem As JsonElement = Nothing
+                If Not tokenData.TryGetProperty(propertyName, value:=propElem) Then
+                    Dim message As String = $"ERROR: field {propertyName} is missing from token file"
+                    Debug.WriteLine(message)
+                    Return Nothing
+                End If
+            Next
+
+            Return tokenData
+        Catch ex As JsonException
+            Debug.WriteLine(message:=$"ERROR: failed parsing token file {path}: {ex.Message}")
+            Return Nothing
+        End Try
+    End Function
+
     ''' <summary>
     '''  Writes a byte array to a file.
     ''' </summary>
@@ -39,6 +68,11 @@ Friend Module FileUtilities
             Stop
         End Try
     End Sub
+
+    Friend Function DeleteTokenFile() As JsonElement
+        Dim path As String = GetLoginDataFileName(tokenBaseFileName:=LOGIN_DATA_FILENAME)
+        SafeDeleteFile(path)
+    End Function
 
     ''' <summary>
     '''  Gets the full path for the login data file based on the user name
@@ -67,6 +101,25 @@ Friend Module FileUtilities
         Else
             Return tokenBaseFileName
         End If
+    End Function
+
+    ''' <summary>
+    '''  Reads a file and deserializes its contents into a <see cref="JsonElement"/>.
+    '''  Returns Nothing on error.
+    ''' </summary>
+    Friend Function ReadJsonElementFromFile(path As String) As JsonElement
+        If Not File.Exists(path) Then
+            Debug.WriteLine(message:=$"ERROR: file {path} not found")
+            Return Nothing
+        End If
+
+        Try
+            Dim json As String = File.ReadAllText(path)
+            Return json.FromJson(Of JsonElement)(DeserializationOptions)
+        Catch ex As Exception
+            Debug.WriteLine(message:=$"ERROR: failed reading file {path}: {ex.Message}")
+            Return Nothing
+        End Try
     End Function
 
     ''' <summary>
@@ -115,35 +168,6 @@ Friend Module FileUtilities
         Return ReadAndValidateTokenJsonElement(tokenBaseFileName)
     End Function
 
-    Private Function ReadAndValidateTokenJsonElement(
-            Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As JsonElement
-
-        Dim path As String = GetLoginDataFileName(tokenBaseFileName)
-        Debug.WriteLine(message:=$"Reading token file: {path}")
-        If Not File.Exists(path) Then
-            Debug.WriteLine(message:=$"ERROR: token file {path} not found")
-            Return Nothing
-        End If
-
-        Try
-            Dim json As String = File.ReadAllText(path)
-            Dim tokenData As JsonElement = json.FromJson(Of JsonElement)(DeserializationOptions)
-            For Each propertyName As String In s_requiredFields
-                Dim propElem As JsonElement = Nothing
-                If Not tokenData.TryGetProperty(propertyName, value:=propElem) Then
-                    Dim message As String = $"ERROR: field {propertyName} is missing from token file"
-                    Debug.WriteLine(message)
-                    Return Nothing
-                End If
-            Next
-
-            Return tokenData
-        Catch ex As JsonException
-            Debug.WriteLine(message:=$"ERROR: failed parsing token file {path}: {ex.Message}")
-            Return Nothing
-        End Try
-    End Function
-
     ''' <summary>
     '''  Writes the specified <see cref="JsonElement"/> token data
     '''  to a file for the given user.
@@ -171,24 +195,5 @@ Friend Module FileUtilities
         Dim contents As String = token.ToJson()
         File.WriteAllText(path, contents)
     End Sub
-
-    ''' <summary>
-    '''  Reads a file and deserializes its contents into a <see cref="JsonElement"/>.
-    '''  Returns Nothing on error.
-    ''' </summary>
-    Friend Function ReadJsonElementFromFile(path As String) As JsonElement
-        If Not File.Exists(path) Then
-            Debug.WriteLine(message:=$"ERROR: file {path} not found")
-            Return Nothing
-        End If
-
-        Try
-            Dim json As String = File.ReadAllText(path)
-            Return json.FromJson(Of JsonElement)(DeserializationOptions)
-        Catch ex As Exception
-            Debug.WriteLine(message:=$"ERROR: failed reading file {path}: {ex.Message}")
-            Return Nothing
-        End Try
-    End Function
 
 End Module

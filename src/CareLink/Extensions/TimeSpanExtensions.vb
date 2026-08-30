@@ -129,7 +129,7 @@ Public Module TimeSpanExtensions
                 unitOut = unit
                 r = $"{tSpan.Hours,2}:{tSpan.Minutes:D2}:{tSpan.Seconds:D2}"
         End Select
-        Return $"{r} {unitOut}".TrimEnd
+        Return $"{r.TrimStart(trimChar:=" "c)} {unitOut}".TrimEnd
     End Function
 
 End Module

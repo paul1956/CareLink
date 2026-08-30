@@ -10,6 +10,26 @@ Imports System.Windows.Forms.DataVisualization.Charting
 '''  and treatment markersSorted on charts.
 ''' </summary>
 Friend Module PlotMarkers
+    Private s_insulinVialTiny As Bitmap = Nothing
+    Private s_mealImage As Bitmap = Nothing
+
+    Friend ReadOnly Property MealImage As Bitmap
+        Get
+            If s_mealImage Is Nothing Then
+                s_mealImage = GetBitmapFromCache(id:=ImageEnum.MealImage)
+            End If
+            Return s_mealImage
+        End Get
+    End Property
+
+    Friend ReadOnly Property InsulinVialTiny As Bitmap
+        Get
+            If s_insulinVialTiny Is Nothing Then
+                s_insulinVialTiny = GetBitmapFromCache(id:=ImageEnum.InsulinVialTiny)
+            End If
+            Return s_insulinVialTiny
+        End Get
+    End Property
 
     ''' <summary>
     '''  Adds a calibration point to the marker series.
@@ -259,10 +279,9 @@ Friend Module PlotMarkers
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then Continue For
                         If markerMealDictionary.TryAdd(key:=markerOADateTime, value:=yMinNativeMmolL) Then
-                            Dim mealImage As Bitmap = GetBitmapFromCache(id:=ImageEnum.MealImage)
                             Dim height As Double = If(NativeMmolL,
-                                                      mealImage.Height / 2 / MmolLUnitsDivisor,
-                                                      mealImage.Height / 2)
+                                                      MealImage.Height / 2 / MmolLUnitsDivisor,
+                                                      MealImage.Height / 2)
                             markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=yMinNativeMmolL + height)
                             Dim markerColor As Color = Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
                             markerSeriesPoints.Last.Color = markerColor

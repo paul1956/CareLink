@@ -4,9 +4,22 @@
 
 Friend Module ImageHelper
 
-#If False Then
-
-#End If
+    ''' <summary>
+    '''  Gets a Bitmap for PNG files stored in Images directory from Cache
+    ''' </summary>
+    ''' <param name="name">
+    '''  The name of the file without the extension.
+    ''' </param>
+    ''' <returns>Bitmap of file</returns>
+    Private Function GetBitmapFromCache(Name As String) As Bitmap
+        Dim value As Bitmap = Nothing
+        If s_bitmaps.TryGetValue(key:=Name, value) Then
+            ' Assign the preloaded Bitmap safely
+            Return CType(value.Clone, Bitmap)
+        Else
+            Return Nothing
+        End If
+    End Function
 
     ''' <summary>
     '''  Merge 2 images into a PictureBox

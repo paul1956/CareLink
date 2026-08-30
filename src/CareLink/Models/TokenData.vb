@@ -30,10 +30,4 @@ Public Class TokenData
     <JsonPropertyName("resource")>
     Public Property Resource As List(Of String)
 
-    <JsonPropertyName("client_secret")>
-    Public Property ClientSecret As String
-
-    <JsonPropertyName("mag-identifier")>
-    Public Property MagIdentifier As String
-
 End Class
