@@ -243,7 +243,6 @@ Public Class CareLinkService
                                            value:="pem")
 #If False Then
 
-
                     regRequest.Headers.Add(name:="client-authorization",
                                            value:=$"Basic {clientAuth}")
 #End If

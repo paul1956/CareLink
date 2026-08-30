@@ -3,9 +3,9 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.IO
-Imports Xunit
-Imports FluentAssertions
 Imports CareLink
+Imports FluentAssertions
+Imports Xunit
 
 Public Class EnumImageSyncTests
 
@@ -58,7 +58,6 @@ Public Class EnumImageSyncTests
         Dim missingEnums As List(Of String) =
             filesInDir.Except(second:=enumDescriptions,
                               comparer:=StringComparer.OrdinalIgnoreCase).ToList()
-
 
         ' 5. Assert with clean, explicit failure messages
         Const separator As String = ", "

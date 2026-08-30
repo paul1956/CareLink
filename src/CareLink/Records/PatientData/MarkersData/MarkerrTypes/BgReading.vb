@@ -15,7 +15,8 @@ Public Class BgReading
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
         With item.Data.DataValues
-            Me.UnitValue = .unitValue.RoundToSingle(digits:=0, considerValue:=True)
+            Me.UnitValue =
+                .UnitValue.RoundToSingle(digits:=0, considerValue:=True)
             Me.bgUnits = .bgUnits
         End With
     End Sub

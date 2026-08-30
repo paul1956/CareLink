@@ -18,7 +18,7 @@ Public Class Calibration
             Me.CalibrationSuccess = .CalibrationSuccess
             Const digits As Integer = 0
             Const considerValue As Boolean = True
-            Me.UnitValue = .unitValue.RoundToSingle(digits, considerValue)
+            Me.UnitValue = .UnitValue.RoundToSingle(digits, considerValue)
             Me.bgUnits = .bgUnits
         End With
     End Sub

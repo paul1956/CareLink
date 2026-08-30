@@ -6,6 +6,7 @@ Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
 Public Class ResourceValues
+
     <JsonExtensionData>
     Public Property AdditionalProperties As Dictionary(Of String, JsonElement)
 

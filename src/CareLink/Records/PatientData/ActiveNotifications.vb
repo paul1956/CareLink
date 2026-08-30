@@ -8,6 +8,7 @@ Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
 Public Class ActiveNotifications
+
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
     Public Property RecordNumber As Integer

@@ -108,4 +108,5 @@ Public Module ClassHelpers
                   Nothing,
                   TryCast(prop.GetValue(obj:=instance), String))
     End Function
+
 End Module

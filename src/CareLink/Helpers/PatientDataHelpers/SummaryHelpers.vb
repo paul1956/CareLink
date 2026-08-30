@@ -586,4 +586,5 @@ Friend Module SummaryHelpers
                              pattern:="##TIME(\d+)##",
                              evaluator:=evaluator1)
     End Function
+
 End Module

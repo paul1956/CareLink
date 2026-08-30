@@ -451,7 +451,7 @@ Friend Class Client2
     ''' </returns>
     Friend Async Function InitAsync() As Task(Of Boolean)
         If Not Await Me.internalInit() Then
-            ' Force user login 
+            ' Force user login
             Await GetLoginData(Me.serverRegion,
                                userName:=s_userName,
                                password:=s_password)
@@ -581,6 +581,7 @@ Friend Class Client2
 
         Return tokenData.ToJson().FromJson(Of JsonElement)(DeserializationOptions)
     End Function
+
     ''' <summary>
     '''  Async variant of GetRecentData that uses Await and centralized resp inspection.
     ''' </summary>

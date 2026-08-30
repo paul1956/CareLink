@@ -5,6 +5,7 @@
 Imports System.Runtime.CompilerServices
 
 Friend Module MenuHelpers
+
     ''' <summary>
     '''  Hides separators that are at the start, end, or next to another separator,
     '''  or between only hidden items.
