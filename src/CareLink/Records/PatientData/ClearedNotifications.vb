@@ -42,8 +42,24 @@ Public Class ClearedNotifications
     <JsonPropertyName("triggeredDateTime")>
     Public Property triggeredDateTime As String
 
+    <DisplayName("Acknowledged")>
+    <JsonPropertyName("acknowledged")>
+    Public Property Acknowledged As AcknowledgedRecord
+
+    <DisplayName("Cleared")>
+    <JsonPropertyName("cleared")>
+    Public Property Cleared As ClearedRecord
+
+    <DisplayName("Snoozed")>
+    <JsonPropertyName("snoozed")>
+    Public Property Snoozed As SnoozedRecord
+
+    <DisplayName("BackgroundColor")>
+    <JsonPropertyName("backgroundColor")>
+    Public Property BackgroundColor As String
+
     <DisplayName("Additional Info")>
-    <Column(Order:=7, TypeName:="AdditionalInfo")>
+    <Column(Order:=8, TypeName:="AdditionalInfo")>
     <JsonPropertyName("additionalInfo")>
     Public Property AdditionalInfo As Dictionary(Of String, Object)
 

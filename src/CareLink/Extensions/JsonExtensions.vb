@@ -23,7 +23,8 @@ Public Module JsonExtensions
     ''' </summary>
     Public ReadOnly Property DeserializationOptions As New JsonSerializerOptions() With
         {.NumberHandling = JsonNumberHandling.AllowReadingFromString,
-         .PropertyNameCaseInsensitive = True}
+         .PropertyNameCaseInsensitive = True,
+         .UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow}
 
     Private Sub HandleExtendedInfo(item As KeyValuePair(Of String,
                                        JsonElement), resultDictionary As Dictionary(Of String, String))
