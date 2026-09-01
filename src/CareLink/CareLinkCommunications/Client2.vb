@@ -324,7 +324,7 @@ Friend Class Client2
         Dim baseUrl As String = String.Empty
         Dim baseElem As JsonElement = Nothing
         If configDict.TryGetValue(key, value:=baseElem) Then
-            baseUrl = baseElem.JsonElementToString()
+            baseUrl = baseElem.ElementToString()
         End If
 
         Dim requestUri As String = $"{baseUrl}/links/patients"
@@ -465,7 +465,7 @@ Friend Class Client2
             End If
 
             Dim tmpDict As Dictionary(Of String, JsonElement) = Nothing
-            If Not json.TryFromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions, tmpDict) Then
+            If Not json.TryFromJson(Of Dictionary(Of String, JsonElement))(options:=DeserializationOptions, result:=tmpDict) Then
                 tmpDict = New Dictionary(Of String, JsonElement)()
             End If
             Me.UserElementDictionary = tmpDict
@@ -760,7 +760,7 @@ Friend Class Client2
                         Return Nothing
                     End If
                     Dim tdElem2 As JsonElement
-                    If Not tdJson2.TryFromJson(Of JsonElement)(DeserializationOptions, tdElem2) Then
+                    If Not tdJson2.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=tdElem2) Then
                         LoggerManager.LogMessage(message:=$"DoRefreshAsync: failed parsing TokenData JSON after interactive login.")
                         Return Nothing
                     End If

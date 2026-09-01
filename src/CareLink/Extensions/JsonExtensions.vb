@@ -26,11 +26,18 @@ Public Module JsonExtensions
     '''  (not as quoted strings) to support round-trip serialization.
     ''' </summary>
     Public ReadOnly Property SerializerOptions As New JsonSerializerOptions With {
-        .WriteIndented = True
-    }
+        .WriteIndented = True}
 
+    ''' <summary>
+    '''   Handles extended information in a JSON key-value pair and
+    '''   adds it to the result dictionary.
+    ''' </summary>
+    ''' <param name="item">The JSON key-value pair to process.</param>
+    ''' <param name="resultDictionary">
+    '''  The dictionary to add the processed information to.
+    ''' </param>
     Private Sub HandleExtendedInfo(item As KeyValuePair(Of String,
-                                       JsonElement), resultDictionary As Dictionary(Of String, String))
+                                   JsonElement), resultDictionary As Dictionary(Of String, String))
         If item.Value.IsEmpty() Then
             Return
         End If
@@ -38,52 +45,30 @@ Public Module JsonExtensions
             Case JsonValueKind.Array
                 Stop
             Case JsonValueKind.Object
-                Dim jsonItem As String = item.DeserializeJsonAsString
+                Dim jsonItem As String = item.Value.ElementToString()
                 Dim extendedInfo As Dictionary(Of String, JsonElement) = Nothing
-                If Not jsonItem.TryFromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions, extendedInfo) Then
+                If Not jsonItem.TryFromJson(Of Dictionary(Of String, JsonElement))(options:=DeserializationOptions, result:=extendedInfo) Then
                     Return
                 End If
                 For Each kvp As KeyValuePair(Of String, JsonElement) In extendedInfo
-                    resultDictionary.Add(key:=$"{item.Key}:{kvp.Key}", value:=kvp.Value.JsonElementToString())
+                    resultDictionary.Add(key:=$"{item.Key}:{kvp.Key}", value:=kvp.Value.ElementToString())
                 Next
             Case JsonValueKind.Undefined
                 Stop
                 resultDictionary.Add(key:=$"{item.Key}", value:=Nothing)
             Case JsonValueKind.String
-                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.JsonElementToString())
+                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.ElementToString())
             Case JsonValueKind.Number
-                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.JsonElementToString())
+                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.ElementToString())
             Case JsonValueKind.True
-                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.JsonElementToString())
+                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.ElementToString())
             Case JsonValueKind.False
-                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.JsonElementToString())
+                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.ElementToString())
             Case JsonValueKind.Null
                 Stop
                 Exit Select
         End Select
     End Sub
-
-    ''' <summary>
-    '''  Converts a JSON item (key-value pair) to its <see langword="String"/> representation.
-    ''' </summary>
-    ''' <param name="item">The key-value pair to convert.</param>
-    ''' <returns>The <see langword="String"/> representation of the item's value.</returns>
-    <Extension>
-    Public Function DeserializeJsonAsString(item As KeyValuePair(Of String, JsonElement)) As String
-        Return item.Value.JsonElementToString()
-    End Function
-
-    ''' <summary>
-    '''  Converts a <see cref="JsonElement"/> to its <see langword="String"/> representation.
-    '''  If the jsonElement is null or undefined, returns an empty string.
-    '''  If the jsonElement is a string, returns its value; otherwise, returns the raw JSON text.
-    ''' </summary>
-    ''' <param name="value">The <see cref="JsonElement"/> to convert.</param>
-    ''' <returns>The <see langword="String"/> representation of the jsonElement.</returns>
-    <Extension>
-    Public Function ElementToJson(value As JsonElement) As String
-        Return JsonElementToString(value)
-    End Function
 
     ''' <summary>
     ''' Centralized conversion of a JsonElement to a String.
@@ -93,8 +78,8 @@ Public Module JsonExtensions
     ''' - Booleans are returned as "True"/"False" (capitalized) for compatibility with existing callers.
     ''' </summary>
     <Extension>
-    Public Function JsonElementToString(element As JsonElement) As String
-        If element.IsEmpty OrElse element.ValueKind = JsonValueKind.Null OrElse element.ValueKind = JsonValueKind.Undefined Then
+    Public Function ElementToString(element As JsonElement) As String
+        If element.IsEmpty Then
             Return String.Empty
         End If
 
@@ -134,29 +119,6 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Non-throwing Try pattern for deserializing a JSON string to T using provided options.
-    ''' </summary>
-    <Extension>
-    Public Function TryFromJson(Of T)(json As String, options As JsonSerializerOptions, ByRef result As T) As Boolean
-        Try
-            result = JsonSerializer.Deserialize(Of T)(json, options:=options)
-            Return True
-        Catch ex As JsonException
-            LoggerManager.LogMessage(message:=$"TryFromJson failed: {ex.Message}")
-            result = Nothing
-            Return False
-        End Try
-    End Function
-
-    ''' <summary>
-    '''  Non-throwing Try pattern for deserializing a JSON string to T using module-level options.
-    ''' </summary>
-    <Extension>
-    Public Function TryFromJson(Of T)(json As String, ByRef result As T) As Boolean
-        Return TryFromJson(Of T)(json, DeserializationOptions, result)
-    End Function
-
-    ''' <summary>
     '''  Converts (Deserializes) a JsonElement to an object of type <typeparamref name="T"/>
     '''  using the module-level <see cref="DeserializationOptions"/>.
     ''' </summary>
@@ -176,34 +138,13 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Non-throwing Try pattern for deserializing a JsonElement to T using module-level options.
+    '''   Checks if a <see cref="JsonElement"/> is empty, null, or undefined.
     ''' </summary>
-    ''' <typeparam name="T"></typeparam>
-    ''' <param name="element"></param>
-    ''' <param name="result"></param>
-    ''' <returns></returns>
-    <Extension>
-    Public Function TryFromJson(Of T)(element As JsonElement, ByRef result As T) As Boolean
-        Try
-            result = JsonSerializer.Deserialize(Of T)(element, options:=DeserializationOptions)
-            Return True
-        Catch ex As JsonException
-            LoggerManager.LogMessage(message:=$"TryFromJson(JsonElement) failed: {ex.Message}")
-            result = Nothing
-            Return False
-        End Try
-    End Function
-
-    ''' <summary>
-    '''  Converts a scalar <see cref="JsonElement"/> to its string
-    '''  representation. Strings are returned unwrapped (without quotes);
-    '''  other primitives use GetRawText() so booleans/numbers are exact.
-    ''' </summary>
-    <Extension>
-    Public Function GetScalarValue(element As JsonElement) As String
-        Return JsonElementToString(element)
-    End Function
-
+    ''' <param name="element"> The JsonElement to check. </param>
+    ''' <returns>
+    '''  True if the element is empty, null, or undefined;
+    '''  otherwise, False.
+    ''' </returns>
     <Extension>
     Public Function IsEmpty(element As JsonElement) As Boolean
         Select Case element.ValueKind
@@ -239,7 +180,8 @@ Public Module JsonExtensions
     ''' </summary>
     <Extension>
     Public Function JsonElementToDictionary(element As JsonElement) As Dictionary(Of String, JsonElement)
-        Dim result As New Dictionary(Of String, JsonElement)(StringComparer.OrdinalIgnoreCase)
+        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
+        Dim result As New Dictionary(Of String, JsonElement)(comparer)
 
         ' Ensure the element is an object
         If element.ValueKind <> JsonValueKind.Object Then
@@ -274,7 +216,7 @@ Public Module JsonExtensions
         Dim item As KeyValuePair(Of String, JsonElement)
         Dim rawJsonData As List(Of KeyValuePair(Of String, JsonElement)) = Nothing
         Dim tmpDict As Dictionary(Of String, JsonElement) = Nothing
-        If Not json.TryFromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions, tmpDict) Then
+        If Not json.TryFromJson(Of Dictionary(Of String, JsonElement))(options:=DeserializationOptions, result:=tmpDict) Then
             Return resultDictionary
         End If
         rawJsonData = tmpDict.ToList()
@@ -296,11 +238,11 @@ Public Module JsonExtensions
                         If s_useLocalTimeZone Then
                             PumpTimeZoneInfo = TimeZoneInfo.Local
                         Else
-                            PumpTimeZoneInfo = CalculateTimeZone(timeZoneName:=item.Value.JsonElementToString())
+                            PumpTimeZoneInfo = CalculateTimeZone(timeZoneName:=item.Value.ElementToString())
                             Dim text As String
                             Dim messageButtons As MessageBoxButtons
                             If PumpTimeZoneInfo Is Nothing Then
-                                Dim value As String = item.Value.JsonElementToString()
+                                Dim value As String = item.Value.ElementToString()
                                 If IsNullOrWhiteSpace(value) Then
                                     text = "Your pump appears To be off-line, some " &
                                            "values will be wrong do you want to continue? " &
@@ -309,7 +251,7 @@ Public Module JsonExtensions
                                            "not be prompted further. Cancel will Exit."
                                     messageButtons = MessageBoxButtons.OKCancel
                                 Else
-                                    text = $"Your pump TimeZone '{item.Value.JsonElementToString()}' " &
+                                    text = $"Your pump TimeZone '{item.Value.ElementToString()}' " &
                                            "is not recognized, do you want to exit? " &
                                            "If you select No permanently use " &
                                            $"'{TimeZoneInfo.Local.Id}''? If you select " &
@@ -318,7 +260,7 @@ Public Module JsonExtensions
                                            $"'{TimeZoneInfo.Local.Id}' until you restart " &
                                            "program. Cancel will exit program. " &
                                            "Please open an issue and provide the name " &
-                                           $"'{item.Value.JsonElementToString()}'. After selecting 'Yes' " &
+                                           $"'{item.Value.ElementToString()}'. After selecting 'Yes' " &
                                            "you can change the behavior under the Options Menu."
                                     messageButtons = MessageBoxButtons.YesNoCancel
                                 End If
@@ -338,7 +280,7 @@ Public Module JsonExtensions
                                 End Select
                             End If
                         End If
-                        resultDictionary.Add(item.Key, value:=item.DeserializeJsonAsString)
+                        resultDictionary.Add(item.Key, value:=item.Value.ElementToString())
                     Case "Sg",
                          "sg",
                          NameOf(ServerDataEnum.averageSG),
@@ -348,7 +290,7 @@ Public Module JsonExtensions
                         resultDictionary.Add(item.Key, value:=item.ScaleSg())
                     Case Else
                         If item.Value.ValueKind = JsonValueKind.String Then
-                            resultDictionary.Add(item.Key, value:=item.DeserializeJsonAsString)
+                            resultDictionary.Add(item.Key, value:=item.Value.ElementToString())
                         Else
                             HandleExtendedInfo(item, resultDictionary)
                         End If
@@ -377,7 +319,7 @@ Public Module JsonExtensions
         End If
 
         Dim jsonList As List(Of Dictionary(Of String, JsonElement)) = Nothing
-        If Not json.TryFromJson(Of List(Of Dictionary(Of String, JsonElement)))(DeserializationOptions, jsonList) Then
+        If Not json.TryFromJson(Of List(Of Dictionary(Of String, JsonElement)))(options:=DeserializationOptions, result:=jsonList) Then
             Return resultListOfDictionary
         End If
 
@@ -391,8 +333,8 @@ Public Module JsonExtensions
                 If e1.Value.Value.ValueKind = JsonValueKind.Null Then
                     item.Add(e1.Value.Key, value:=Nothing)
                 ElseIf e1.Value.Key = "index" Then
-                    index = CInt(e1.Value.DeserializeJsonAsString)
-                    item.Add(e1.Value.Key, value:=e1.Value.DeserializeJsonAsString)
+                    index = CInt(e1.Value.Value.ElementToString())
+                    item.Add(e1.Value.Key, value:=e1.Value.Value.ElementToString())
                 ElseIf e1.Value.Key = "sg" Then
                     item.Add(e1.Value.Key, value:=e1.Value.ScaleSg)
                 ElseIf e1.Value.Key = "dateTime" Then
@@ -406,7 +348,7 @@ Public Module JsonExtensions
                         item.Add(e1.Value.Key, value:=dateValue.ToShortDateTime())
                     End If
                 Else
-                    item.Add(e1.Value.Key, value:=e1.Value.DeserializeJsonAsString())
+                    item.Add(e1.Value.Key, value:=e1.Value.Value.ElementToString())
                 End If
             Next
 
@@ -437,21 +379,6 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Non-throwing Try pattern for serializing an object to JSON using module-level SerializerOptions.
-    ''' </summary>
-    <Extension>
-    Public Function TryToJson(Of T)(value As T, ByRef json As String) As Boolean
-        Try
-            json = JsonSerializer.Serialize(value, options:=SerializerOptions)
-            Return True
-        Catch ex As Exception
-            LoggerManager.LogMessage(message:=$"TryToJson failed: {ex.Message}")
-            json = String.Empty
-            Return False
-        End Try
-    End Function
-
-    ''' <summary>
     '''  Convert a <see langword="String"/> into a <see cref="jsonElement"/>
     ''' </summary>
     ''' <param name="value">The String to0 be converted</param>
@@ -461,6 +388,37 @@ Public Module JsonExtensions
         Using doc As JsonDocument = JsonDocument.Parse(json)
             Return doc.RootElement.Clone
         End Using
+    End Function
+
+    ''' <summary>
+    '''  Converts a JSON string to a result of strings.
+    ''' </summary>
+    ''' <param name="Json">The JSON string to convert.</param>
+    ''' <returns>
+    '''  A result containing the key-element pairs from the JSON string.
+    ''' </returns>
+    <Extension>
+    Public Function ToStringDictionary(Json As String) As Dictionary(Of String, String)
+        Dim raw As Dictionary(Of String, JsonElement) = Nothing
+        If Not Json.TryFromJson(Of Dictionary(Of String, JsonElement))(options:=DeserializationOptions, result:=raw) Then
+            Return New Dictionary(Of String, String)()
+        End If
+
+        Dim keySelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
+                Function(kvp As KeyValuePair(Of String, JsonElement)) As String
+                    Return kvp.Key
+                End Function
+        Dim elementSelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
+                Function(kvp As KeyValuePair(Of String, JsonElement)) As String
+                    Return kvp.Value.ElementToString()
+                End Function
+        Dim result As Dictionary(Of String, String) = Nothing
+        Try
+            result = raw.ToDictionary(keySelector, elementSelector)
+        Catch ex As Exception
+            Stop
+        End Try
+        Return result
     End Function
 
     ''' <summary>
@@ -502,6 +460,48 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
+    '''  Non-throwing Try pattern for deserializing a JSON string to T using provided options.
+    ''' </summary>
+    <Extension>
+    Public Function TryFromJson(Of T)(json As String, options As JsonSerializerOptions, ByRef result As T) As Boolean
+        Try
+            result = JsonSerializer.Deserialize(Of T)(json, options:=options)
+            Return True
+        Catch ex As JsonException
+            LoggerManager.LogMessage(message:=$"TryFromJson failed: {ex.Message}")
+            result = Nothing
+            Return False
+        End Try
+    End Function
+
+    ''' <summary>
+    '''  Non-throwing Try pattern for deserializing a JSON string to T using module-level options.
+    ''' </summary>
+    <Extension>
+    Public Function TryFromJson(Of T)(json As String, ByRef result As T) As Boolean
+        Return TryFromJson(Of T)(json, DeserializationOptions, result)
+    End Function
+
+    ''' <summary>
+    '''  Non-throwing Try pattern for deserializing a JsonElement to T using module-level options.
+    ''' </summary>
+    ''' <typeparam name="T"></typeparam>
+    ''' <param name="element"></param>
+    ''' <param name="result"></param>
+    ''' <returns></returns>
+    <Extension>
+    Public Function TryFromJson(Of T)(element As JsonElement, ByRef result As T) As Boolean
+        Try
+            result = JsonSerializer.Deserialize(Of T)(element, options:=DeserializationOptions)
+            Return True
+        Catch ex As JsonException
+            LoggerManager.LogMessage(message:=$"TryFromJson(JsonElement) failed: {ex.Message}")
+            result = Nothing
+            Return False
+        End Try
+    End Function
+
+    ''' <summary>
     ''' Try to get a string property from a JsonElement safely.
     ''' </summary>
     <Extension>
@@ -516,6 +516,21 @@ Public Module JsonExtensions
             Return True
         End If
         Return False
+    End Function
+
+    ''' <summary>
+    '''  Non-throwing Try pattern for serializing an object to JSON using module-level SerializerOptions.
+    ''' </summary>
+    <Extension>
+    Public Function TryToJson(Of T)(value As T, ByRef json As String) As Boolean
+        Try
+            json = JsonSerializer.Serialize(value, options:=SerializerOptions)
+            Return True
+        Catch ex As Exception
+            LoggerManager.LogMessage(message:=$"TryToJson failed: {ex.Message}")
+            json = String.Empty
+            Return False
+        End Try
     End Function
 
 End Module

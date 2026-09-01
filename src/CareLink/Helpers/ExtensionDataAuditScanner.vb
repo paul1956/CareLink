@@ -109,7 +109,7 @@ Public NotInheritable Class ExtensionDataAuditScanner
 
             Case Else
                 ' Scalar leaf value: record it.
-                Dim value As String = GetScalarValue(element)
+                Dim value As String = ElementToString(element)
                 report.AddField(key:=path, value)
                 Dim line As String = $"[field] {path} = {value}"
                 report.AppendLine(line)

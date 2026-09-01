@@ -53,7 +53,7 @@ Public Module Discover
             message = $"ERROR: country code {country} is not supported"
             Throw New ApplicationException(message)
         End If
-        LoggerManager.LogMessage(message:=$"   region: {region.JsonElementToString()}")
+        LoggerManager.LogMessage(message:=$"   region: {region.ElementToString()}")
         Dim countryInfo As CountryInfo = Nothing
         If Not region.TryFromJson(Of CountryInfo)(result:=countryInfo) Then
             Throw New ApplicationException(message:="Failed to parse country info from discovery data.")
@@ -76,7 +76,7 @@ Public Module Discover
             End Try
         Next
         If config.IsEmpty Then
-            message = $"ERROR: failed to get config base URLs for region {region.JsonElementToString()}"
+            message = $"ERROR: failed to get config base URLs for region {region.ElementToString()}"
             Throw New ApplicationException(message)
         End If
         Return config
@@ -113,7 +113,7 @@ Public Module Discover
             Await httpClient.GetStringAsync(requestUri).
                 ConfigureAwait(continueOnCapturedContext:=False)
         Dim discoveryElement As JsonElement
-        If Not json.TryFromJson(Of JsonElement)(DeserializationOptions, discoveryElement) Then
+        If Not json.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=discoveryElement) Then
             Throw New ApplicationException("Failed to parse discovery JSON.")
         End If
         Dim configJson As JsonElement =
@@ -142,11 +142,11 @@ Public Module Discover
 
         Dim mutableConfig As Dictionary(Of String, JsonElement) =
            Nothing
-        If Not configJson.GetRawText().TryFromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions, mutableConfig) Then
+        If Not configJson.GetRawText().TryFromJson(Of Dictionary(Of String, JsonElement))(options:=DeserializationOptions, result:=mutableConfig) Then
             Throw New ApplicationException("Failed to parse mutable config JSON.")
         End If
         Dim tokenElem As JsonElement
-        If Not $"{Quote}{tokenUrl}{Quote}".TryFromJson(Of JsonElement)(DeserializationOptions, tokenElem) Then
+        If Not $"{Quote}{tokenUrl}{Quote}".TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=tokenElem) Then
             Throw New ApplicationException("Failed to create token Url JSON element.")
         End If
         mutableConfig(key:="token_url") = tokenElem
@@ -155,7 +155,7 @@ Public Module Discover
             Throw New ApplicationException("Failed to serialize mutable config to JSON.")
         End If
         Dim outElem As JsonElement
-        If Not mcJson.TryFromJson(Of JsonElement)(DeserializationOptions, outElem) Then
+        If Not mcJson.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=outElem) Then
             Throw New ApplicationException("Failed to parse mutable config to JsonElement.")
         End If
         Return outElem

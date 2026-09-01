@@ -121,7 +121,7 @@ Friend Module Form1UpdateHelpers
     ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
     Private Function ToListOfSgs(json As String) As List(Of SG)
         Dim jsonList As List(Of Dictionary(Of String, JsonElement)) = Nothing
-        If Not json.TryFromJson(Of List(Of Dictionary(Of String, JsonElement)))(DeserializationOptions, jsonList) Then
+        If Not json.TryFromJson(Of List(Of Dictionary(Of String, JsonElement)))(options:=DeserializationOptions, result:=jsonList) Then
             Return New List(Of SG)()
         End If
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
@@ -132,7 +132,7 @@ Friend Module Form1UpdateHelpers
                 If item.Key = "sg" Then
                     resultDictionary.Add(item.Key, value:=item.ScaleSg)
                 Else
-                    resultDictionary.Add(item.Key, value:=item.DeserializeJsonAsString)
+                    resultDictionary.Add(item.Key, value:=item.Value.ElementToString())
                 End If
             Next
             resultDictionaryArray.Add(item:=resultDictionary)
@@ -298,14 +298,14 @@ Friend Module Form1UpdateHelpers
         If IsNotNullOrWhiteSpace(kvp.Value) Then
             Try
                 Dim elem As JsonElement
-                If Not kvp.Value.TryFromJson(Of JsonElement)(DeserializationOptions, elem) Then
+                If Not kvp.Value.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=elem) Then
                     elem = Nothing
                 End If
                 If Not elem.IsEmpty AndAlso elem.ValueKind = JsonValueKind.Object Then
                     Dim idx As Integer = 0
                     For Each prop As JsonProperty In elem.EnumerateObject()
                         Dim childKey As String = prop.Name
-                        Dim childValue As String = prop.Value.ElementToJson()
+                        Dim childValue As String = prop.Value.ElementToString()
                         Dim message As String = String.Empty
                         If kvp.Key.EqualsNoCase("AdditionalInfo") Then
                             If childKey.EqualsNoCase("sensorUpdateTime") Then

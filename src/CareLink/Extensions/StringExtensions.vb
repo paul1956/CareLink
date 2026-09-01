@@ -231,37 +231,6 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a JSON string to a result of strings.
-    ''' </summary>
-    ''' <param name="Json">The JSON string to convert.</param>
-    ''' <returns>
-    '''  A result containing the key-value pairs from the JSON string.
-    ''' </returns>
-    <Extension>
-    Public Function ToStringDictionary(Json As String) As Dictionary(Of String, String)
-        Dim raw As Dictionary(Of String, JsonElement) = Nothing
-        If Not Json.TryFromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions, raw) Then
-            Return New Dictionary(Of String, String)()
-        End If
-
-        Dim keySelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
-                Function(kvp As KeyValuePair(Of String, JsonElement)) As String
-                    Return kvp.Key
-                End Function
-        Dim elementSelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
-                Function(kvp As KeyValuePair(Of String, JsonElement)) As String
-                    Return kvp.Value.ElementToJson()
-                End Function
-        Dim result As Dictionary(Of String, String) = Nothing
-        Try
-            result = raw.ToDictionary(keySelector, elementSelector)
-        Catch ex As Exception
-            Stop
-        End Try
-        Return result
-    End Function
-
-    ''' <summary>
     '''  Converts a string of words separated by a space or underscore to a title case string,
     '''  where the first letter of every word is capitalized and the rest are lower case.
     ''' </summary>

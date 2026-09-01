@@ -103,7 +103,7 @@ Public Class CareLinkService
         End If
 
         Dim token As TokenData = Nothing
-        If Not body.TryFromJson(Of TokenData)(DeserializationOptions, token) Then
+        If Not body.TryFromJson(Of TokenData)(options:=DeserializationOptions, result:=token) Then
             Throw New ApplicationException("Failed to parse token response JSON.")
         End If
         token.ClientId = clientId

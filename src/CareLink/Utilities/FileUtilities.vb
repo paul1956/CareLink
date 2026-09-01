@@ -37,7 +37,7 @@ Friend Module FileUtilities
         Try
             Dim json As String = File.ReadAllText(path)
             Dim tokenData As JsonElement
-            If Not json.TryFromJson(Of JsonElement)(DeserializationOptions, tokenData) Then
+            If Not json.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=tokenData) Then
                 Debug.WriteLine(message:=$"ERROR: failed parsing token file {path}")
                 Return Nothing
             End If

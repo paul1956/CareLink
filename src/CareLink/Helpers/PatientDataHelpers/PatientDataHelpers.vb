@@ -16,7 +16,7 @@ Public Module PatientDataHelpers
     ''' </summary>
     ''' <returns>String without any personal information</returns>
     Public Function CleanPatientData() As String
-        Dim value As String = PatientDataElement.ElementToJson()
+        Dim value As String = PatientDataElement.ElementToString()
         If IsNullOrWhiteSpace(value) Then
             Return value
         End If

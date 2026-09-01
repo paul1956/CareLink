@@ -30,6 +30,8 @@ Partial Class RawDataViewerDialog
         OK_Button = New Button()
         Cancel_Button = New Button()
         RawDataRTB = New RichTextBox()
+        txtFind = New TextBox()
+        btnFind = New Button()
         TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         ' 
@@ -71,12 +73,29 @@ Partial Class RawDataViewerDialog
         ' 
         ' RawDataRTB
         ' 
+        RawDataRTB.Dock = DockStyle.Top
         RawDataRTB.Font = New Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
-        RawDataRTB.Location = New Point(-3, 2)
+        RawDataRTB.Location = New Point(0, 0)
         RawDataRTB.Name = "RawDataRTB"
-        RawDataRTB.Size = New Size(843, 564)
+        RawDataRTB.Size = New Size(838, 573)
         RawDataRTB.TabIndex = 1
         RawDataRTB.Text = ""
+        ' 
+        ' txtFind
+        ' 
+        txtFind.Location = New Point(21, 584)
+        txtFind.Name = "txtFind"
+        txtFind.Size = New Size(170, 23)
+        txtFind.TabIndex = 2
+        ' 
+        ' btnFind
+        ' 
+        btnFind.Location = New Point(221, 584)
+        btnFind.Name = "btnFind"
+        btnFind.Size = New Size(75, 23)
+        btnFind.TabIndex = 3
+        btnFind.Text = "Find"
+        btnFind.UseVisualStyleBackColor = True
         ' 
         ' RawDataViewerDialog
         ' 
@@ -85,6 +104,8 @@ Partial Class RawDataViewerDialog
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = Cancel_Button
         Me.ClientSize = New Size(838, 619)
+        Me.Controls.Add(btnFind)
+        Me.Controls.Add(txtFind)
         Me.Controls.Add(RawDataRTB)
         Me.Controls.Add(TableLayoutPanel1)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
@@ -97,11 +118,14 @@ Partial Class RawDataViewerDialog
         Me.Text = "Raw Data Viewer"
         TableLayoutPanel1.ResumeLayout(False)
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents OK_Button As System.Windows.Forms.Button
     Friend WithEvents Cancel_Button As System.Windows.Forms.Button
     Friend WithEvents RawDataRTB As RichTextBox
+    Friend WithEvents txtFind As TextBox
+    Friend WithEvents btnFind As Button
 
 End Class

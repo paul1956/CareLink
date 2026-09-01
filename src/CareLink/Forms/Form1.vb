@@ -2836,7 +2836,7 @@ Public Class Form1
                             Try
                                 Dim json As String = ExceptionHandlerDialog.LocalRawData
                                 Dim pde As JsonElement
-                                If Not json.TryFromJson(Of JsonElement)(DeserializationOptions, pde) Then
+                                If Not json.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=pde) Then
                                     Stop
                                     Throw New ApplicationException("Failed to parse patient data from file.")
                                 End If

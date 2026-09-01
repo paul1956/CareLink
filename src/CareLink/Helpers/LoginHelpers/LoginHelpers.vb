@@ -520,7 +520,7 @@ Friend Module LoginHelpers
         Dim dataSource As New List(Of KeyValuePair(Of String, String))
         For Each kvp As KeyValuePair(Of String, JsonElement) In dic
             Dim item As KeyValuePair(Of String, String) =
-                KeyValuePair.Create(kvp.Key, value:=kvp.Value.JsonElementToString())
+                KeyValuePair.Create(kvp.Key, value:=kvp.Value.ElementToString())
             dataSource.Add(item)
         Next
         Return dataSource
