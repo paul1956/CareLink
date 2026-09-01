@@ -120,8 +120,10 @@ Friend Module Form1UpdateHelpers
     ''' <param name="json">The JSON string to convert.</param>
     ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
     Private Function ToListOfSgs(json As String) As List(Of SG)
-        Dim jsonList As List(Of Dictionary(Of String, JsonElement)) =
-            json.FromJson(Of List(Of Dictionary(Of String, JsonElement)))(DeserializationOptions)
+        Dim jsonList As List(Of Dictionary(Of String, JsonElement)) = Nothing
+        If Not json.TryFromJson(Of List(Of Dictionary(Of String, JsonElement)))(DeserializationOptions, jsonList) Then
+            Return New List(Of SG)()
+        End If
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
         Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
         For Each e As IndexClass(Of Dictionary(Of String, JsonElement)) In jsonList.WithIndex
@@ -295,7 +297,10 @@ Friend Module Form1UpdateHelpers
         ' First try to parse the value as JSON object and enumerate properties.
         If IsNotNullOrWhiteSpace(kvp.Value) Then
             Try
-                Dim elem As JsonElement = kvp.Value.FromJson(Of JsonElement)(DeserializationOptions)
+                Dim elem As JsonElement
+                If Not kvp.Value.TryFromJson(Of JsonElement)(DeserializationOptions, elem) Then
+                    elem = Nothing
+                End If
                 If Not elem.IsEmpty AndAlso elem.ValueKind = JsonValueKind.Object Then
                     Dim idx As Integer = 0
                     For Each prop As JsonProperty In elem.EnumerateObject()
@@ -439,6 +444,9 @@ Friend Module Form1UpdateHelpers
                 End Function
             Dim kvp As KeyValuePair(Of String, String) =
                 recentData.Where(predicate).SingleOrDefault()
+            If kvp.Key = Nothing Then
+                Continue For
+            End If
             Dim recordNumber As Single = c.Index
             Dim message As String
             Dim item As SummaryRecord

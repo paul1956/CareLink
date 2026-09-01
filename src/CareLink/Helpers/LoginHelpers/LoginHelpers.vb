@@ -33,13 +33,20 @@ Friend Module LoginHelpers
     ''' </summary>
     Friend Sub DeserializePatientElement()
         Try
-            PatientData = PatientDataElement.FromJson(Of PatientDataInfo)()
+            Dim pd As PatientDataInfo = Nothing
+            If Not PatientDataElement.TryFromJson(Of PatientDataInfo)(result:=pd) Then
+                MessageBox.Show(text:=$"Error deserializing patient data (parse failed).",
+                                caption:="Deserialization Error",
+                                buttons:=MessageBoxButtons.OK,
+                                icon:=MessageBoxIcon.Error)
+                Stop
+            End If
+            PatientData = pd
         Catch ex As Exception
-            MessageBox.Show(
-                text:=$"Error deserializing patient data: {ex.Message}",
-                caption:="Deserialization Error",
-                buttons:=MessageBoxButtons.OK,
-                icon:=MessageBoxIcon.Error)
+            MessageBox.Show(text:=$"Error deserializing patient data: {ex.Message}",
+                            caption:="Deserialization Error",
+                            buttons:=MessageBoxButtons.OK,
+                            icon:=MessageBoxIcon.Error)
             Stop
         End Try
 
@@ -350,7 +357,11 @@ Friend Module LoginHelpers
     Friend Sub SetUpCareLinkUser()
         Dim path As String = GetUserSettingsPath()
         Dim json As String = File.ReadAllText(path)
-        CurrentUser = json.FromJson(Of CurrentUserRecord)(DeserializationOptions)
+        Dim cu As CurrentUserRecord = Nothing
+        If Not json.TryFromJson(Of CurrentUserRecord)(options:=DeserializationOptions, result:=cu) Then
+            cu = Nothing
+        End If
+        CurrentUser = cu
     End Sub
 
     ''' <summary>
@@ -392,7 +403,11 @@ Friend Module LoginHelpers
             If File.Exists(path:=userSettingsFileFullPath) Then
                 Dim element As JsonElement = ReadJsonElementFromFile(userSettingsFileFullPath)
                 If Not element.IsEmpty Then
-                    CurrentUser = element.FromJson(Of CurrentUserRecord)()
+                    Dim cur As CurrentUserRecord = Nothing
+                    If Not element.TryFromJson(Of CurrentUserRecord)(cur) Then
+                        cur = Nothing
+                    End If
+                    CurrentUser = cur
                 End If
 
                 If CurrentUser.InsulinRealAit = 0 Then
@@ -478,9 +493,12 @@ Friend Module LoginHelpers
                 End Using
             End If
             If currentUserUpdateNeeded Then
-                File.WriteAllTextAsync(
-                    path:=userSettingsFileFullPath,
-                    contents:=CurrentUser.ToJson())
+                Dim cuJson As String = String.Empty
+                If CurrentUser.TryToJson(cuJson) Then
+                    File.WriteAllTextAsync(path:=userSettingsFileFullPath, contents:=cuJson)
+                Else
+                    Debug.WriteLine(message:=$"ERROR: failed serializing CurrentUser to {userSettingsFileFullPath}")
+                End If
             Else
                 TouchFile(userSettingsFileFullPath)
             End If
@@ -502,7 +520,7 @@ Friend Module LoginHelpers
         Dim dataSource As New List(Of KeyValuePair(Of String, String))
         For Each kvp As KeyValuePair(Of String, JsonElement) In dic
             Dim item As KeyValuePair(Of String, String) =
-                KeyValuePair.Create(kvp.Key, value:=kvp.Value.ToString)
+                KeyValuePair.Create(kvp.Key, value:=kvp.Value.JsonElementToString())
             dataSource.Add(item)
         Next
         Return dataSource

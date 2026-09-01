@@ -9,7 +9,6 @@ Imports System.Net.Http
 Imports System.Net.Http.Headers
 Imports System.Text
 Imports System.Text.Json
-Imports DocumentFormat.OpenXml.Wordprocessing
 
 ' This class is intentionally not part of the public API.
 ' It is designed to be used internally within the assembly and is not intended for external consumption.
@@ -141,12 +140,15 @@ Friend Class Client2
             End If
             Dim bytes As Byte() = Convert.FromBase64String(s:=payload_b64)
             Dim json As String = Encoding.UTF8.GetString(bytes)
-            Return json.FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions)
+            Dim dict As Dictionary(Of String, JsonElement) = Nothing
+            Return If(Not json.TryFromJson(options:=DeserializationOptions, result:=dict),
+                                           Nothing,
+                                           dict)
         Catch ex As Exception
             Dim str As String = ex.DecodeException()
             Dim location As String = NameOf(GetAccessTokenPayload)
             Dim message As String = $"No access token found or malformed access token: {str} in {location}"
-            Debug.WriteLine(message)
+            LoggerManager.LogMessage(message)
             Stop
             Return Nothing
         End Try
@@ -167,25 +169,26 @@ Friend Class Client2
             If tDiff < 0 Then
                 Dim absDiff As Long = Math.Abs(value:=tDiff)
                 message = $"In {NameOf(IsTokenValid)} access token has expired {absDiff}s ago"
-                Debug.WriteLine(message)
+                LoggerManager.LogMessage(message)
                 Return False
             End If
 
             If tDiff < 600 Then
+                Dim startKey As String = $"In {NameOf(IsTokenValid)} access token is about to expire in "
                 message = $"In {NameOf(IsTokenValid)} access token is about to expire in {tDiff}s"
-                Debug.WriteLine(message)
+                LoggerManager.UpdateMessage(startKey, endKey:="", message)
                 Return False
             End If
 
             Const format As String = "ddd MMM dd HH:mm:ss UTC yyyy"
             Dim authTokenValidTo As String = DateTimeOffset.FromUnixTimeSeconds(seconds:=unixTime).ToString(format)
             message = $"In {NameOf(IsTokenValid)} access token expires in {tDiff} seconds at {authTokenValidTo}"
-            Debug.WriteLine(message)
+            LoggerManager.LogMessage(message)
             Return True
         Catch ex As Exception
             message =
                 $"In {NameOf(IsTokenValid)} missing nameValueCollection in access token. {ex.DecodeException()}"
-            Debug.WriteLine(message)
+            LoggerManager.LogMessage(message)
             Return False
         End Try
     End Function
@@ -220,16 +223,19 @@ Friend Class Client2
         Dim headers As New Dictionary(Of String, String)
         headers(key:="Authorization") = $"Bearer {tokenData(key:="access_token")}"
 
-#If False Then
         Dim magidentifier As String = Nothing
         If tokenData.TryGetValue(key:="mag-identifier", value:=magidentifier) AndAlso
            IsNotNullOrWhiteSpace(value:=magidentifier) Then
 
             headers(key:="mag-identifier") = magidentifier
         End If
-#End If
 
-        Using content As New StringContent(content:=value.ToJson(),
+        Dim contentJson As String = String.Empty
+        If Not value.TryToJson(contentJson) Then
+            LoggerManager.LogMessage(message:=$"ERROR: failed serializing request body for GetDataAsync")
+            contentJson = "{}"
+        End If
+        Using content As New StringContent(content:=contentJson,
                                            encoding:=Encoding.UTF8,
                                            mediaType:="application/json")
 
@@ -250,14 +256,19 @@ Friend Class Client2
 
                         Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).ConfigureAwait(continueOnCapturedContext:=False)
                             _lastHttpStatusCode = response.StatusCode
-                            Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
+                            LoggerManager.UpdateMessage(startKey:=$"   status: ",
+                                                        endKey:="",
+                                                        message:=$"   status: {_lastHttpStatusCode}")
 
                             ' Centralized resp inspection; may throw UnauthorizedAccessException,
                             ' ArgumentException (bad request) or HttpRequestException (transient/server).
                             Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
 
                             Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
-                            Return json.FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions)
+                            Dim d As Dictionary(Of String, JsonElement) = Nothing
+                            Return If(Not json.TryFromJson(options:=DeserializationOptions, result:=d),
+                                                           Nothing,
+                                                           d)
                         End Using
                     End Using
                 Catch hex As HttpRequestException
@@ -307,7 +318,16 @@ Friend Class Client2
 
         _lastHttpStatusCode = HttpStatusCode.OK
         Const key As String = "baseUrlCareLink"
-        Dim requestUri As String = $"{configJsonElement.JsonElementToDictionary(key)}/links/patients"
+        Dim configDict As Dictionary(Of String, JsonElement) =
+            configJsonElement.JsonElementToDictionary()
+
+        Dim baseUrl As String = String.Empty
+        Dim baseElem As JsonElement = Nothing
+        If configDict.TryGetValue(key, value:=baseElem) Then
+            baseUrl = baseElem.JsonElementToString()
+        End If
+
+        Dim requestUri As String = $"{baseUrl}/links/patients"
         Using request As New HttpRequestMessage(method:=HttpMethod.Get, requestUri:=requestUri)
             For Each header As KeyValuePair(Of String, String) In headers
                 request.Headers.TryAddWithoutValidation(name:=header.Key, value:=header.Value)
@@ -315,21 +335,26 @@ Friend Class Client2
 
             Using response As HttpResponseMessage = Await _httpClient.SendAsync(request)
                 _lastHttpStatusCode = response.StatusCode
-                Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
+                If _lastHttpStatusCode <> HttpStatusCode.OK Then
+                    LoggerManager.LogMessage(message:=$"   status: {_lastHttpStatusCode}")
+                End If
 
                 ' Ensure non-success status codes are not silently ignored.
                 Try
                     Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
                 Catch ex As Exception
                     response.Dispose()
-                    Debug.WriteLine(message:=$"GetPatient HTTP failure: {ex.Message}")
+                    LoggerManager.LogMessage(message:=$"GetPatient HTTP failure: {ex.Message}")
                     Return Nothing
                 End Try
 
                 Dim patients As List(Of Dictionary(Of String, String))
                 Dim json As String =
                     Await response.Content.ReadAsStringAsync()
-                patients = json.FromJson(Of List(Of Dictionary(Of String, String)))(DeserializationOptions)
+                Dim p As List(Of Dictionary(Of String, String)) = Nothing
+                patients = If(Not json.TryFromJson(options:=DeserializationOptions, result:=p),
+                              New List(Of Dictionary(Of String, String))(),
+                              p)
                 If patients.Count > 0 Then
                     Return patients(index:=0)
                 End If
@@ -352,12 +377,11 @@ Friend Class Client2
     Private Async Function GetUserStringAsync(config As ConfigRecord, tokenData As JsonElement) As Task(Of String)
         Dim requestUri As String = $"{config.BaseUrlCareLink}/users/me"
         Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
-#If False Then
+
         Dim magId As String = Nothing
         If TryGetStringProperty(element:=tokenData, propertyName:="mag-identifier", value:=magId) Then
             headers(key:="mag-identifier") = magId
         End If
-#End If
         headers(key:="Authorization") = $"Bearer {tokenData.GetProperty(propertyName:="access_token").GetString()}"
         headers(key:="Accept-Language") = "en-US"
 
@@ -371,19 +395,19 @@ Friend Class Client2
                 Await _httpClient.SendAsync(request).
                                   ConfigureAwait(continueOnCapturedContext:=False)
                 _lastHttpStatusCode = response.StatusCode
-                Debug.WriteLine(message:=$"   status: {_lastHttpStatusCode}")
+                LoggerManager.LogMessage(message:=$"   status: {_lastHttpStatusCode}")
 
                 ' Use centralized failure handling and translate to Nothing for older call-sites.
                 Try
                     Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
                 Catch ex As UnauthorizedAccessException
-                    Debug.WriteLine(message:=$"GetUserString unauthorized: {ex.Message}")
+                    LoggerManager.LogMessage(message:=$"GetUserString unauthorized: {ex.Message}")
                     Return Nothing
                 Catch ex As ArgumentException
-                    Debug.WriteLine(message:=$"GetUserString bad request: {ex.Message}")
+                    LoggerManager.LogMessage(message:=$"GetUserString bad request: {ex.Message}")
                     Return Nothing
                 Catch ex As HttpRequestException
-                    Debug.WriteLine(message:=$"GetUserString HTTP error: {ex.Message}")
+                    LoggerManager.LogMessage(message:=$"GetUserString HTTP error: {ex.Message}")
                     Return Nothing
                 End Try
 
@@ -418,13 +442,20 @@ Friend Class Client2
         Try
             Application.DoEvents()
             Dim element As JsonElement = _accessTokenPayload(key:="token_details")
-            Dim payload As AccessTokenDetails = element.FromJson(Of AccessTokenDetails)()
+            Dim payload As AccessTokenDetails = Nothing
+            If Not element.TryFromJson(Of AccessTokenDetails)(payload) Then
+                payload = Nothing
+            End If
             _country = If(payload.Country, s_countryCode)
 
             configJsonElement =
                 Await GetConfigAsync(httpClient:=_httpClient, country:=_country, Me.serverRegion)
 
-            Me.Config = configJsonElement.FromJson(Of ConfigRecord)
+            Dim cfg As ConfigRecord = Nothing
+            If Not configJsonElement.TryFromJson(Of ConfigRecord)(result:=cfg) Then
+                Throw New ApplicationException(message:="Failed to parse configuration JSON.")
+            End If
+            Me.Config = cfg
 
             ' Call user string; handle typed failures
             Dim json As String =
@@ -433,10 +464,17 @@ Friend Class Client2
                 Throw New UnauthorizedAccessException
             End If
 
-            Me.UserElementDictionary =
-                json.FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions)
+            Dim tmpDict As Dictionary(Of String, JsonElement) = Nothing
+            If Not json.TryFromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions, tmpDict) Then
+                tmpDict = New Dictionary(Of String, JsonElement)()
+            End If
+            Me.UserElementDictionary = tmpDict
 
-            _PatientPersonalData = json.FromJson(Of PatientPersonalInfo)(DeserializationOptions)
+            Dim ppd As PatientPersonalInfo = Nothing
+            If Not json.TryFromJson(options:=DeserializationOptions, result:=ppd) Then
+                ppd = New PatientPersonalInfo()
+            End If
+            _PatientPersonalData = ppd
 
             Dim role As String = _PatientPersonalData.role
             If role.ContainsNoCase(value:="Partner") Then
@@ -452,7 +490,7 @@ Friend Class Client2
                         refreshTask = Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement)
                     End If
                 Catch innerEx As Exception
-                    Debug.WriteLine(message:=innerEx.ToString())
+                    LoggerManager.LogMessage(message:=innerEx.ToString())
                 End Try
             End If
         End Try
@@ -469,7 +507,7 @@ Friend Class Client2
                         WriteTokenFile(token:=_tokenDataElement)
                     End If
                 Catch refreshEx As Exception
-                    Debug.WriteLine(message:=refreshEx.ToString())
+                    LoggerManager.LogMessage(message:=refreshEx.ToString())
                 End Try
             End If
 
@@ -555,70 +593,194 @@ Friend Class Client2
     ''' </returns>
     Public Async Function DoRefreshAsync(config As ConfigRecord,
                                          tokenElement As JsonElement) As Task(Of JsonElement)
-        Dim tokenData As Dictionary(Of String, JsonElement) =
-            tokenElement.FromJson(Of Dictionary(Of String, JsonElement))()
+        Dim teDict As Dictionary(Of String, JsonElement) = Nothing
+        If Not tokenElement.TryFromJson(Of Dictionary(Of String, JsonElement))(teDict) Then
+            LoggerManager.LogMessage(message:=$"DoRefreshAsync: token element could not be parsed")
+            Return Nothing
+        End If
+        Dim tokenData As Dictionary(Of String, JsonElement) = teDict
 
-        Dim value As JsonElement
-        'If Not tokenData.TryGetValue(key:="mag-identifier", value) Then
-        '    DeleteTokenFile()
-        '    Return Nothing
-        'End If
-
-        Dim formData As New List(Of KeyValuePair(Of String, String)) From {
-            New KeyValuePair(Of String, String)(
-                key:="refresh_token",
-                value:=tokenData("refresh_token").GetString()),
-            New KeyValuePair(Of String, String)(
-                key:="client_id",
-                value:=tokenData("client_id").GetString()),
-            New KeyValuePair(Of String, String)(
-                key:="grant_type",
-                value:="refresh_token")}
-
-        value = Nothing
-        If tokenData.TryGetValue(key:="client_secret", value) Then
-            Dim item As New KeyValuePair(Of String, String)(
-                key:="client_secret",
-                value:=value.GetString())
-            formData.Add(item)
+        ' Validate required keys
+        Dim refreshTok As String = Nothing
+        Dim clientId As String = Nothing
+        If tokenData.TryGetValue(key:="refresh_token", value:=New JsonElement) Then
+            Try
+                refreshTok = tokenData("refresh_token").GetString()
+            Catch
+                refreshTok = Nothing
+            End Try
+        End If
+        If tokenData.TryGetValue(key:="client_id", value:=New JsonElement) Then
+            Try
+                clientId = tokenData("client_id").GetString()
+            Catch
+                clientId = Nothing
+            End Try
+        End If
+        If IsNullOrWhiteSpace(refreshTok) OrElse IsNullOrWhiteSpace(clientId) Then
+            LoggerManager.LogMessage(message:=$"DoRefreshAsync: missing refresh_token or client_id in stored token data")
+            Return Nothing
         End If
 
-        Using client As New HttpClient(),
-          content As New FormUrlEncodedContent(nameValueCollection:=formData)
+        ' Build form data (grant_type always present)
+        Dim formData As New List(Of KeyValuePair(Of String, String)) From {
+            New KeyValuePair(Of String, String)(key:="refresh_token", value:=refreshTok),
+            New KeyValuePair(Of String, String)(key:="client_id", value:=clientId),
+            New KeyValuePair(Of String, String)(key:="grant_type", value:="refresh_token")}
 
-            Dim value1 As JsonElement = Nothing
-            If tokenData.TryGetValue(key:="mag-identifier", value:=value1) Then
-                Const key As String = "mag-identifier"
-                client.DefaultRequestHeaders.Add(name:=key, value:=value1.GetString())
+        ' If client_secret exists, prefer sending it as HTTP Basic auth (common requirement),
+        ' otherwise include in form body if provider expects that.
+        Dim clientSecret As String = Nothing
+        Dim hasClientSecret As Boolean = False
+        Dim ce As JsonElement = Nothing
+        If tokenData.TryGetValue(key:="client_secret", value:=ce) Then
+            Try
+                clientSecret = ce.GetString()
+                hasClientSecret = Not IsNullOrWhiteSpace(clientSecret)
+            Catch
+                hasClientSecret = False
+            End Try
+        End If
+
+        Using client As New HttpClient()
+            ' Add mag-identifier header if present
+            Dim magElem As JsonElement = Nothing
+            If tokenData.TryGetValue(key:="mag-identifier", value:=magElem) Then
+                Try
+                    Dim mag As String = magElem.GetString()
+                    If Not IsNullOrWhiteSpace(mag) Then
+                        client.DefaultRequestHeaders.Add(name:="mag-identifier", value:=mag)
+                    End If
+                Catch
+                End Try
             End If
 
-            Using resp As HttpResponseMessage =
-            Await client.PostAsync(requestUri:=config.TokenUrl, content).
-                         ConfigureAwait(continueOnCapturedContext:=False)
+            Dim succeeded As Boolean = False
+            Dim lastResponseBody As String = String.Empty
+
+            ' Strategy: if we have a client_secret, try Basic auth first (preferred). If that fails and provider may expect client_secret in body, retry with client_secret in form.
+            Dim attempts As New List(Of Tuple(Of Boolean, Boolean))
+            If hasClientSecret Then
+                attempts.Add(Tuple.Create(True, False))   ' Basic auth, no client_secret in form
+                attempts.Add(Tuple.Create(False, True))   ' No basic auth, include client_secret in form
+            Else
+                attempts.Add(Tuple.Create(False, False))  ' No client_secret available
+            End If
+
+            For Each attempt As Tuple(Of Boolean, Boolean) In attempts
+                Dim resp As HttpResponseMessage = Nothing
+                Try
+                    ' Configure auth header for this attempt
+                    If attempt.Item1 AndAlso hasClientSecret Then
+                        Dim cred As String = Convert.ToBase64String(inArray:=System.Text.Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}"))
+                        client.DefaultRequestHeaders.Authorization = New System.Net.Http.Headers.AuthenticationHeaderValue("Basic", cred)
+                    Else
+                        client.DefaultRequestHeaders.Authorization = Nothing
+                    End If
+
+                    ' Build actual form for this attempt
+                    Dim actualForm As New List(Of KeyValuePair(Of String, String))(collection:=formData)
+                    If attempt.Item2 AndAlso hasClientSecret Then
+                        actualForm.Add(item:=New KeyValuePair(Of String, String)(key:="client_secret", value:=clientSecret))
+                    End If
+
+                    Using content As New FormUrlEncodedContent(nameValueCollection:=actualForm)
+                        resp = Await client.PostAsync(requestUri:=config.TokenUrl, content).ConfigureAwait(continueOnCapturedContext:=False)
+                    End Using
+                Catch ex As Exception
+                    LoggerManager.LogMessage(message:=$"DoRefreshAsync: HTTP request failed: {ex.Message}")
+                    Continue For
+                End Try
 
                 _lastHttpStatusCode = resp.StatusCode
-                Debug.WriteLine(message:=$"   status: {CInt(resp.StatusCode)}")
+                Dim respBody As String = Await resp.Content.ReadAsStringAsync().ConfigureAwait(False)
+                lastResponseBody = respBody
 
-                If resp.StatusCode <> HttpStatusCode.OK Then
-                    Throw New Exception(message:="ERROR: failed to refresh token")
+                If resp.StatusCode = HttpStatusCode.OK Then
+                    Try
+                        Using newData As JsonDocument = JsonDocument.Parse(respBody)
+                            Dim root As JsonElement = newData.RootElement
+                            tokenData("access_token") = root.GetProperty("access_token").Clone()
+                            tokenData("refresh_token") = root.GetProperty("refresh_token").Clone()
+                        End Using
+                        succeeded = True
+                        Exit For
+                    Catch ex As Exception
+                        LoggerManager.LogMessage(message:=$"DoRefreshAsync: failed parsing token refresh response: {ex.Message}")
+                        Return Nothing
+                    End Try
+                Else
+                    LoggerManager.LogMessage(message:=$"DoRefreshAsync: token refresh attempt failed. useBasic={attempt.Item1} includeSecret={attempt.Item2} Status={CInt(resp.StatusCode)} Body={respBody}")
                 End If
+            Next
 
-                Dim json As String =
-                Await resp.Content.ReadAsStringAsync().ConfigureAwait(False)
+            If Not succeeded Then
+                LoggerManager.LogMessage(message:=$"DoRefreshAsync: all refresh attempts failed. Last response: {lastResponseBody}")
 
-                Using newData As JsonDocument = JsonDocument.Parse(json)
-                    Dim root As JsonElement = newData.RootElement
+                ' Attempt interactive login using WebView2 (fallback)
+                Try
+                    'Try
+                    ' Notify the user that interactive re-authentication is required
+                    '    Dim method As Action =
+                    '        Sub()
+                    '            Dim owner As Form =
+                    '                If(LoginDialog.Visible,
+                    '                   DirectCast(My.Forms.LoginDialog, Form),
+                    '                   DirectCast(My.Forms.Form1, Form))
+                    '            MessageBox.Show(owner,
+                    '                            text:="Re-authentication required, please sign in.",
+                    '                            caption:="Sign in required",
+                    '                            buttons:=MessageBoxButtons.OK,
+                    '                            icon:=MessageBoxIcon.Information)
+                    '        End Sub
 
-                    tokenData("access_token") =
-                    root.GetProperty("access_token").Clone()
+                    '    Invoke(owner:=My.Forms.Form1, method)
+                    'Catch
+                    '    ' Best-effort UI notify; continue to interactive login even if notification fails
+                    'End Try
 
-                    tokenData("refresh_token") =
-                    root.GetProperty("refresh_token").Clone()
-                End Using
-            End Using
+                    Dim discoveryUrl As String =
+                        If(Me.serverRegion = Region.NorthAmerica,
+                           s_discoverUrl(key:="US"),
+                           s_discoverUrl(key:="EU"))
+                    Dim endpointConfig As EndpointConfig =
+                        Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, Me.serverRegion)
+
+                    ' Do interactive login (user will be prompted). DoLoginAsync writes token file.
+                    Dim tokenResult As TokenData = Await CareLinkService.DoLoginAsync(endpointConfig, outputFile:=_tokenBaseFileName, userName:=String.Empty, password:=String.Empty)
+                    If tokenResult Is Nothing Then
+                        LoggerManager.LogMessage(message:=$"DoRefreshAsync: interactive login returned no token.")
+                        Return Nothing
+                    End If
+
+                    ' Convert TokenData to JsonElement
+                    Dim tdJson2 As String = String.Empty
+                    If Not tokenResult.TryToJson(json:=tdJson2) Then
+                        LoggerManager.LogMessage(message:=$"DoRefreshAsync: failed serializing TokenData after interactive login.")
+                        Return Nothing
+                    End If
+                    Dim tdElem2 As JsonElement
+                    If Not tdJson2.TryFromJson(Of JsonElement)(DeserializationOptions, tdElem2) Then
+                        LoggerManager.LogMessage(message:=$"DoRefreshAsync: failed parsing TokenData JSON after interactive login.")
+                        Return Nothing
+                    End If
+                    Return tdElem2
+                Catch ex As Exception
+                    LoggerManager.LogMessage(message:=$"DoRefreshAsync: interactive login failed: {ex.Message}")
+                    Return Nothing
+                End Try
+            End If
         End Using
 
-        Return tokenData.ToJson().FromJson(Of JsonElement)(DeserializationOptions)
+        Dim tdJson As String = String.Empty
+        If Not tokenData.TryToJson(json:=tdJson) Then
+            LoggerManager.LogMessage(message:=$"ERROR: failed serializing token data to JSON.")
+            Return Nothing
+        End If
+        Dim tdElem As JsonElement
+        Return If(Not tdJson.TryFromJson(options:=DeserializationOptions, result:=tdElem),
+                  Nothing,
+                  tdElem)
     End Function
 
     ''' <summary>
@@ -639,11 +801,11 @@ Friend Class Client2
                 _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
                 WriteTokenFile(token:=_tokenDataElement)
             Catch ex As Exception
-                Debug.WriteLine(message:=ex.ToString())
+                LoggerManager.LogMessage(message:=ex.ToString())
             End Try
 
             If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
-                Debug.WriteLine(message:=lastErrorMessage)
+                LoggerManager.LogMessage(message:=lastErrorMessage)
                 Return lastErrorMessage
             End If
         End If
@@ -662,13 +824,13 @@ Friend Class Client2
                 Try
                     refreshTask = Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement)
                 Catch innerEx As Exception
-                    Debug.WriteLine(message:=innerEx.ToString())
+                    LoggerManager.LogMessage(message:=innerEx.ToString())
                 End Try
             Catch argEx As ArgumentException
-                Debug.WriteLine(message:=$"GetRecentData bad request: {argEx.Message}")
+                LoggerManager.LogMessage(message:=$"GetRecentData bad request: {argEx.Message}")
                 Return argEx.Message
             Catch httpEx As HttpRequestException
-                Debug.WriteLine(message:=$"GetRecentData network/server error: {httpEx.Message}")
+                LoggerManager.LogMessage(message:=$"GetRecentData network/server error: {httpEx.Message}")
                 Return $"Network/server error: {httpEx.Message}"
             End Try
 
@@ -686,7 +848,7 @@ Friend Class Client2
                                                      patientId:=EmptyString)
                     End If
                 Catch refreshEx As Exception
-                    Debug.WriteLine(message:=refreshEx.ToString())
+                    LoggerManager.LogMessage(message:=refreshEx.ToString())
                     Return "ERROR: failed to refresh token"
                 End Try
             End If
@@ -698,12 +860,12 @@ Friend Class Client2
                 PatientData = Nothing
                 Dim message As String =
                     $"{NameOf(GetRecentDataAsync)}: No nameValueCollection returned from GetData for user {GetUserName()}"
-                Debug.WriteLine(message)
+                LoggerManager.LogMessage(message)
                 Return "No nameValueCollection received from server"
             End If
         Catch ex As Exception
             PatientData = Nothing
-            Debug.WriteLine(message:=ex.DecodeException())
+            LoggerManager.LogMessage(message:=ex.DecodeException())
             Return ex.DecodeException()
         End Try
 
@@ -714,7 +876,7 @@ Friend Class Client2
                 _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
                 WriteTokenFile(token:=_tokenDataElement)
             Catch ex As Exception
-                Debug.WriteLine(message:=ex.ToString())
+                LoggerManager.LogMessage(message:=ex.ToString())
             End Try
         End If
 
@@ -736,7 +898,11 @@ Friend Class Client2
         Try
             Dim metaDataElement As JsonElement =
                 CType(data.Values(index:=0), JsonElement)
-            Dim metaData As Metadata = metaDataElement.FromJson(Of Metadata)
+            Dim metaData As Metadata = Nothing
+            If Not metaDataElement.TryFromJson(Of Metadata)(metaData) Then
+                Stop
+                Throw New ApplicationException("Failed to parse metadata element.")
+            End If
             Dim requestUri As String = metaData.IconResourceBundle.IconBundleUrl
             Dim zipFileName As String = requestUri.Split(separator:="/").Last
             Dim destinationPath As String =
@@ -768,7 +934,7 @@ Friend Class Client2
             DeserializePatientElement()
             WriteTokenFile(token:=PatientDataElement, path:=GetLastDownloadFileWithPath())
         Catch ex As Exception
-            Debug.WriteLine(message:=ex.DecodeException())
+            LoggerManager.LogMessage(message:=ex.DecodeException())
             Return ex.DecodeException()
         End Try
 

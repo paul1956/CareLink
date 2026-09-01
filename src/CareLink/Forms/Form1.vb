@@ -378,11 +378,17 @@ Public Class Form1
                         SetFontIfChanged(lbl:=Me.CursorMessage2Label, newFont:=s_font12Bold)
                         Select Case markerTags.Count
                             Case 2
-                                Dim trimChars As Char() = {" "c, "U"c}
                                 Dim markerTag1 As String = markerTags(index:=1).Trim
-                                Dim amount As Double = CDbl(markerTag1.TrimEnd(trimChars))
+                                Dim amount As Double
+                                Dim split As String() = markerTag1.Split(separator:=" "c)
+                                If split.Length = 2 Then
+                                    amount = CDbl(split(0))
+                                Else
+                                    Dim trimChars As Char() = {" "c, "U"c}
+                                    amount = CDbl(markerTag1.TrimEnd(trimChars))
+                                End If
                                 showWhat = CursorInfo.Show3
-                                If amount.AlmostZero Then
+                                If split.Length = 1 AndAlso amount.AlmostZero Then
                                     Me.CursorMessage1Label.Text = "Calibration"
                                     Me.CursorMessage2Label.Text = "Only"
                                     Me.InfusionSetUpdate(id:=ImageEnum.CalibrationDotRed,
@@ -2829,7 +2835,12 @@ Public Class Form1
                             ExceptionHandlerDialog.ReportNameWithPath = EmptyString
                             Try
                                 Dim json As String = ExceptionHandlerDialog.LocalRawData
-                                PatientDataElement = json.FromJson(Of JsonElement)(DeserializationOptions)
+                                Dim pde As JsonElement
+                                If Not json.TryFromJson(Of JsonElement)(DeserializationOptions, pde) Then
+                                    Stop
+                                    Throw New ApplicationException("Failed to parse patient data from file.")
+                                End If
+                                PatientDataElement = pde
                                 DeserializePatientElement()
                                 Me.TabControlPage2.Visible = True
                                 Me.TabControlPage1.Visible = True
@@ -3194,7 +3205,11 @@ Public Class Form1
         SetUpCareLinkUser(forceUI:=True)
         Dim element As JsonElement = ReadJsonElementFromFile(path:=GetUserSettingsPath())
         If Not element.IsEmpty Then
-            CurrentUser = element.FromJson(Of CurrentUserRecord)()
+            Dim cur As CurrentUserRecord = Nothing
+            If Not element.TryFromJson(Of CurrentUserRecord)(cur) Then
+                cur = Nothing
+            End If
+            CurrentUser = cur
         End If
     End Sub
 

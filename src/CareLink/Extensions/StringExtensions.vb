@@ -239,8 +239,10 @@ Public Module StringExtensions
     ''' </returns>
     <Extension>
     Public Function ToStringDictionary(Json As String) As Dictionary(Of String, String)
-        Dim raw As Dictionary(Of String, JsonElement) =
-            Json.FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions)
+        Dim raw As Dictionary(Of String, JsonElement) = Nothing
+        If Not Json.TryFromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions, raw) Then
+            Return New Dictionary(Of String, String)()
+        End If
 
         Dim keySelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
                 Function(kvp As KeyValuePair(Of String, JsonElement)) As String

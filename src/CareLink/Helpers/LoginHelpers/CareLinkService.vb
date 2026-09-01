@@ -46,7 +46,10 @@ Public Class CareLinkService
                                                     userName As String,
                                                     password As String) As Task(Of TokenData)
 
-        Dim ssoConfig As SsoConfig = endpointConfig.SsoJson.FromJson(Of SsoConfig)(DeserializationOptions)
+        Dim ssoConfig As SsoConfig = Nothing
+        If Not endpointConfig.SsoJson.TryFromJson(Of SsoConfig)(options:=DeserializationOptions, result:=ssoConfig) Then
+            Throw New ApplicationException(message:="Failed to parse SSO configuration JSON.")
+        End If
         Dim client As Client = ssoConfig.Client
         Dim clientId As String = client.ClientId
         Dim scope As String = client.Scope
@@ -99,7 +102,10 @@ Public Class CareLinkService
             Throw New Exception(message:=$"Could not get token data: {body}")
         End If
 
-        Dim token As TokenData = body.FromJson(Of TokenData)(DeserializationOptions)
+        Dim token As TokenData = Nothing
+        If Not body.TryFromJson(Of TokenData)(DeserializationOptions, token) Then
+            Throw New ApplicationException("Failed to parse token response JSON.")
+        End If
         token.ClientId = clientId
         WriteTokenFile(token, path:=outputFile)
         Return token
@@ -110,7 +116,10 @@ Public Class CareLinkService
                                                        userName As String,
                                                        password As String) As Task(Of TokenData)
 
-        Dim ssoConfig As SsoConfig = endpointConfig.SsoJson.FromJson(Of SsoConfig)(DeserializationOptions)
+        Dim ssoConfig As SsoConfig = Nothing
+        If Not endpointConfig.SsoJson.TryFromJson(Of SsoConfig)(options:=DeserializationOptions, result:=ssoConfig) Then
+            Throw New ApplicationException("Failed to parse SSO configuration JSON.")
+        End If
 
         Using ssoDoc As JsonDocument = JsonDocument.Parse(json:=endpointConfig.SsoJson)
             Dim oauthClient As JsonElement =

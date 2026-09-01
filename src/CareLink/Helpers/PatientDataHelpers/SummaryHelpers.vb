@@ -180,9 +180,10 @@ Friend Module SummaryHelpers
                     Case "resolved"
                         Dim resolvedValue As String = String.Empty
                         If jsonDictionary.TryGetValue(key:="acknowledged", value:=resolvedValue) Then
-                            Dim acknowledgedRecord As AcknowledgedRecord =
-                                resolvedValue.ToString.FromJson(Of AcknowledgedRecord)(DeserializationOptions)
-                            resolved = $" {acknowledgedRecord.Time.ToNotificationString}"
+                            Dim acknowledgedRecord As AcknowledgedRecord = Nothing
+                            If resolvedValue.TryFromJson(Of AcknowledgedRecord)(options:=DeserializationOptions, result:=acknowledgedRecord) Then
+                                resolved = $" {acknowledgedRecord.Time.ToNotificationString}"
+                            End If
                         End If
                     Case "alertClearType"
                         Dim resolvedValue As String = String.Empty

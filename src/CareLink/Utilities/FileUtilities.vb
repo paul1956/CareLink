@@ -25,30 +25,36 @@ Friend Module FileUtilities
         "client_id"}
 
     Private Function ReadAndValidateTokenJsonElement(
-                Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As JsonElement
+        Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As JsonElement
 
         Dim path As String = GetLoginDataFileName(tokenBaseFileName)
-        Debug.WriteLine(message:=$"Reading token file: {path}")
+        LoggerManager.UpdateMessage(startKey:="Reading token file: ", endKey:="", message:=$"Reading token file: {path}")
         If Not File.Exists(path) Then
-            Debug.WriteLine(message:=$"ERROR: token file {path} not found")
+            LoggerManager.LogMessage(message:=$"ERROR: token file {path} not found")
             Return Nothing
         End If
 
         Try
             Dim json As String = File.ReadAllText(path)
-            Dim tokenData As JsonElement = json.FromJson(Of JsonElement)(DeserializationOptions)
+            Dim tokenData As JsonElement
+            If Not json.TryFromJson(Of JsonElement)(DeserializationOptions, tokenData) Then
+                Debug.WriteLine(message:=$"ERROR: failed parsing token file {path}")
+                Return Nothing
+            End If
             For Each propertyName As String In s_requiredFields
                 Dim propElem As JsonElement = Nothing
                 If Not tokenData.TryGetProperty(propertyName, value:=propElem) Then
                     Dim message As String = $"ERROR: field {propertyName} is missing from token file"
-                    Debug.WriteLine(message)
+                    LoggerManager.LogMessage(message)
                     Return Nothing
                 End If
             Next
 
             Return tokenData
         Catch ex As JsonException
-            Debug.WriteLine(message:=$"ERROR: failed parsing token file {path}: {ex.Message}")
+            Dim message As String =
+                $"ERROR: failed parsing token file {path}: {ex.Message}"
+            LoggerManager.LogMessage(message)
             Return Nothing
         End Try
     End Function
@@ -109,15 +115,18 @@ Friend Module FileUtilities
     ''' </summary>
     Friend Function ReadJsonElementFromFile(path As String) As JsonElement
         If Not File.Exists(path) Then
-            Debug.WriteLine(message:=$"ERROR: file {path} not found")
+            LoggerManager.LogMessage(message:=$"ERROR: file {path} not found")
             Return Nothing
         End If
 
         Try
             Dim json As String = File.ReadAllText(path)
-            Return json.FromJson(Of JsonElement)(DeserializationOptions)
+            Dim elem As JsonElement
+            Return If(Not json.TryFromJson(options:=DeserializationOptions, result:=elem),
+                      Nothing,
+                      elem)
         Catch ex As Exception
-            Debug.WriteLine(message:=$"ERROR: failed reading file {path}: {ex.Message}")
+            LoggerManager.LogMessage(message:=$"ERROR: failed reading file {path}: {ex.Message}")
             Return Nothing
         End Try
     End Function
@@ -145,9 +154,10 @@ Friend Module FileUtilities
 
         Try
             Dim json As String = tokenElement.GetRawText()
-            Return json.FromJson(Of TokenData)(DeserializationOptions)
+            Dim td As TokenData = Nothing
+            Return If(Not json.TryFromJson(options:=DeserializationOptions, result:=td), Nothing, td)
         Catch ex As JsonException
-            Debug.WriteLine(message:=$"Failed parsing token data to TokenData: {ex.Message}")
+            LoggerManager.LogMessage(message:=$"Failed parsing token data to TokenData: {ex.Message}")
             Return Nothing
         End Try
     End Function
@@ -181,7 +191,11 @@ Friend Module FileUtilities
     Public Sub WriteTokenFile(token As JsonElement,
         Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME)
         Dim path As String = GetLoginDataFileName(tokenBaseFileName)
-        Dim contents As String = token.ToJson()
+        Dim contents As String = String.Empty
+        If Not token.TryToJson(contents) Then
+            LoggerManager.LogMessage(message:=$"ERROR: failed serializing token for file {path}")
+            Return
+        End If
         WriteTokenFile(Of JsonElement)(token, path)
     End Sub
 
@@ -193,7 +207,11 @@ Friend Module FileUtilities
     ''' <param name="token">The token data to write.</param>
     ''' <param name="path">The path to the file where the token data will be written.</param>
     Public Sub WriteTokenFile(Of T)(token As T, path As String)
-        Dim contents As String = token.ToJson()
+        Dim contents As String = String.Empty
+        If Not token.TryToJson(contents) Then
+            LoggerManager.LogMessage(message:=$"ERROR: failed serializing token to file {path}")
+            Return
+        End If
         File.WriteAllText(path, contents)
     End Sub
 

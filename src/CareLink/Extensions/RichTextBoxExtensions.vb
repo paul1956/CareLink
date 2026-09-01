@@ -182,14 +182,13 @@ Public Module RichTextBoxExtensions
     ''' <param name="indent">If true, applies a single indent to the row.</param>
     ''' <param name="heading"></param>
     <Extension>
-    Friend Sub AppendTimeValueRow(
-        rtb As RichTextBox,
-        startTime As TimeOnly,
-        endTime As TimeOnly,
-        value As String,
-        timeFormat As String,
-        Optional indent As String = Indent8,
-        Optional heading As Boolean = False)
+    Friend Sub AppendTimeValueRow(rtb As RichTextBox,
+                                  startTime As TimeOnly,
+                                  endTime As TimeOnly,
+                                  value As String,
+                                  timeFormat As String,
+                                  Optional indent As String = Indent8,
+                                  Optional heading As Boolean = False)
 
         Dim startTimeStr As String = startTime.StandardWidth(timeFormat)
         Dim endTimeStr As String = endTime.StandardWidth(timeFormat)
@@ -212,11 +211,10 @@ Public Module RichTextBoxExtensions
     ''' <param name="startTime">The start time of the row as a string.</param>
     ''' <param name="endTime">The end time of the row as a string.</param>
     <Extension>
-    Friend Sub AppendTimeValueRow(
-        rtb As RichTextBox,
-        key As String,
-        startTime As String,
-        Optional endTime As String = EmptyString)
+    Friend Sub AppendTimeValueRow(rtb As RichTextBox,
+                                  key As String,
+                                  startTime As String,
+                                  Optional endTime As String = EmptyString)
 
         Dim text As String = $"{Indent4}{key}".PadRight(TotalWidth)
         rtb.AppendTextNewFont(text, newFont:=FixedWidthFont)
@@ -263,10 +261,11 @@ Public Module RichTextBoxExtensions
         Dim start As Integer = 0
         Dim length As Integer = str.Length
         While start < rtb.TextLength - 1
-            Dim wordStartIndex As Integer = rtb.Find(str,
-                                                     start,
-                                                     [end]:=rtb.TextLength - 1,
-                                                     RichTextBoxFinds.MatchCase)
+            Dim wordStartIndex As Integer =
+                rtb.Find(str,
+                         start,
+                         [end]:=rtb.TextLength - 1,
+                         options:=RichTextBoxFinds.MatchCase)
 
             If wordStartIndex = -1 Then
                 Exit While ' No more occurrences found

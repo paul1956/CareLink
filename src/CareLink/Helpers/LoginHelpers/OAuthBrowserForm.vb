@@ -5,6 +5,7 @@
 Imports System.IO
 Imports System.Runtime.InteropServices
 Imports System.Text
+Imports System.Text.Json
 Imports Microsoft.Web.WebView2.Core
 
 Public Class OAuthBrowserForm
@@ -248,13 +249,22 @@ Public Class OAuthBrowserForm
     End Sub
 
     Private Async Function SetFieldAsync(selector As String, value As String) As Task
+        Dim selectorJson As String = Nothing
+        If Not selector.TryToJson(selectorJson) Then
+            selectorJson = JsonSerializer.Serialize(selector)
+        End If
+
+        Dim valueJson As String = Nothing
+        If Not value.TryToJson(valueJson) Then
+            valueJson = JsonSerializer.Serialize(value)
+        End If
         Dim javaScript As String =
             $"(() => {{
-                const el = document.querySelector({selector.ToJson()});
+                const el = document.querySelector({selectorJson});
                 if (!el) return false;
 
                 el.focus();
-                el.value = {value.ToJson()};
+                el.value = {valueJson};
 
                 el.dispatchEvent(new Event('input', {{ bubbles: true }}));
                 el.dispatchEvent(new Event('change', {{ bubbles: true }}));

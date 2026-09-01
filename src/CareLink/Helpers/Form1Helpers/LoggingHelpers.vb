@@ -30,4 +30,15 @@ Public Module LoggerManager
         End If
     End Sub
 
+    <Extension>
+    Public Sub UpdateMessage(startKey As String,
+                             endKey As String,
+                             message As String)
+        If Debugger.IsAttached Then
+            If s_loggerForm IsNot Nothing AndAlso Not s_loggerForm.IsDisposed Then
+                s_loggerForm.UpdateLogMessage(startKey, endKey, message)
+            End If
+        End If
+    End Sub
+
 End Module

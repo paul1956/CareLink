@@ -53,11 +53,19 @@ Public Module Discover
             message = $"ERROR: country code {country} is not supported"
             Throw New ApplicationException(message)
         End If
-        Debug.WriteLine(message:=$"   region: {region}")
-        Dim countryInfo As CountryInfo = region.FromJson(Of CountryInfo)()
+        LoggerManager.LogMessage(message:=$"   region: {region.JsonElementToString()}")
+        Dim countryInfo As CountryInfo = Nothing
+        If Not region.TryFromJson(Of CountryInfo)(result:=countryInfo) Then
+            Throw New ApplicationException(message:="Failed to parse country info from discovery data.")
+        End If
         For Each value As JsonElement In discoveryElement.GetProperty(propertyName:="CP").EnumerateArray()
             Try
-                Dim cpInfo As CPInfo = value.FromJson(Of CPInfo)()
+                Dim cpInfo As CPInfo = Nothing
+                If Not value.TryFromJson(Of CPInfo)(result:=cpInfo) Then
+                    ' ignore here error will be handled outside the loop
+                    Stop
+                    Continue For
+                End If
                 If countryInfo.Region = cpInfo.Region Then
                     config = value
                     Exit For
@@ -68,7 +76,7 @@ Public Module Discover
             End Try
         Next
         If config.IsEmpty Then
-            message = $"ERROR: failed to get config base URLs for region {region}"
+            message = $"ERROR: failed to get config base URLs for region {region.JsonElementToString()}"
             Throw New ApplicationException(message)
         End If
         Return config
@@ -104,17 +112,25 @@ Public Module Discover
         Dim json As String =
             Await httpClient.GetStringAsync(requestUri).
                 ConfigureAwait(continueOnCapturedContext:=False)
-        Dim discoveryElement As JsonElement = json.FromJson(Of JsonElement)(DeserializationOptions)
+        Dim discoveryElement As JsonElement
+        If Not json.TryFromJson(Of JsonElement)(DeserializationOptions, discoveryElement) Then
+            Throw New ApplicationException("Failed to parse discovery JSON.")
+        End If
         Dim configJson As JsonElement =
             GetConfigJson(country, serverRegion, discoveryElement)
-        Dim config As ConfigRecord = configJson.FromJson(Of ConfigRecord)
+        Dim config As ConfigRecord = Nothing
+        If Not configJson.TryFromJson(Of ConfigRecord)(result:=config) Then
+            Throw New ApplicationException(message:="Failed to parse config JSON.")
+        End If
         Dim ssoConfigurationKey As String = config.UseSSOConfiguration
         requestUri = config.GetPropertyValue(propertyName:=ssoConfigurationKey)
         Dim resp As String =
             Await httpClient.GetStringAsync(requestUri) _
                             .ConfigureAwait(continueOnCapturedContext:=False)
-        Dim ssoConfig As SsoConfig =
-            resp.FromJson(Of SsoConfig)(DeserializationOptions)
+        Dim ssoConfig As SsoConfig = Nothing
+        If Not resp.TryFromJson(Of SsoConfig)(options:=DeserializationOptions, result:=ssoConfig) Then
+            Throw New ApplicationException(message:="Failed to parse SSO configuration JSON.")
+        End If
 
         Dim hostname As String = ssoConfig.Server.Hostname
         Dim ssoBaseUrl As String =
@@ -125,10 +141,24 @@ Public Module Discover
         Dim tokenUrl As String = $"{ssoBaseUrl}{ssoConfig.OAuth.UserInfoEndpointPath}"
 
         Dim mutableConfig As Dictionary(Of String, JsonElement) =
-           configJson.GetRawText().FromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions)
-        mutableConfig(key:="token_url") =
-            $"{Quote}{tokenUrl}{Quote}".FromJson(Of JsonElement)(DeserializationOptions)
-        Return mutableConfig.ToJson().FromJson(Of JsonElement)(DeserializationOptions)
+           Nothing
+        If Not configJson.GetRawText().TryFromJson(Of Dictionary(Of String, JsonElement))(DeserializationOptions, mutableConfig) Then
+            Throw New ApplicationException("Failed to parse mutable config JSON.")
+        End If
+        Dim tokenElem As JsonElement
+        If Not $"{Quote}{tokenUrl}{Quote}".TryFromJson(Of JsonElement)(DeserializationOptions, tokenElem) Then
+            Throw New ApplicationException("Failed to create token Url JSON element.")
+        End If
+        mutableConfig(key:="token_url") = tokenElem
+        Dim mcJson As String = String.Empty
+        If Not mutableConfig.TryToJson(mcJson) Then
+            Throw New ApplicationException("Failed to serialize mutable config to JSON.")
+        End If
+        Dim outElem As JsonElement
+        If Not mcJson.TryFromJson(Of JsonElement)(DeserializationOptions, outElem) Then
+            Throw New ApplicationException("Failed to parse mutable config to JsonElement.")
+        End If
+        Return outElem
     End Function
 
     ''' <summary>
@@ -157,15 +187,15 @@ Public Module Discover
                         Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
                     Catch uaEx As UnauthorizedAccessException
                         lastErrorMsg = $"Unauthorized access when fetching discovery data: {uaEx.Message}"
-                        Debug.WriteLine(message:=lastErrorMsg)
+                        LoggerManager.LogMessage(message:=lastErrorMsg)
                         Return (Nothing, lastErrorMsg, httpStatusCode)
                     Catch argEx As ArgumentException
                         lastErrorMsg = $"Bad request fetching discovery data: {argEx.Message}"
-                        Debug.WriteLine(message:=lastErrorMsg)
+                        LoggerManager.LogMessage(message:=lastErrorMsg)
                         Return (Nothing, lastErrorMsg, httpStatusCode)
                     Catch httpEx As HttpRequestException
                         lastErrorMsg = $"HTTP request failed: {httpEx.Message}"
-                        Debug.WriteLine(message:=lastErrorMsg)
+                        LoggerManager.LogMessage(message:=lastErrorMsg)
                         Return (Nothing, lastErrorMsg, httpStatusCode)
                     End Try
 
@@ -173,7 +203,12 @@ Public Module Discover
                     Try
                         Dim json As String = Await response.Content.ReadAsStringAsync() _
                                                                    .ConfigureAwait(continueOnCapturedContext:=False)
-                        result = json.FromJson(Of DiscoveryRecord)(DeserializationOptions)
+                        Dim dr As DiscoveryRecord = Nothing
+                        If Not json.TryFromJson(Of DiscoveryRecord)(options:=DeserializationOptions, result:=dr) Then
+                            Stop
+                            Throw New ApplicationException("Failed to parse discovery response.")
+                        End If
+                        result = dr
                     Catch ex As Exception
                         Stop
                         Throw
@@ -196,13 +231,13 @@ Public Module Discover
                 Next
                 lastErrorMsg = $"Multiple errors: {String.Join("; ", messages)}"
             End If
-            Debug.WriteLine(message:=lastErrorMsg)
+            LoggerManager.LogMessage(message:=lastErrorMsg)
         Catch ex As HttpRequestException
             lastErrorMsg = $"HTTP request error: {ex.Message}"
-            Debug.WriteLine(message:=lastErrorMsg)
+            LoggerManager.LogMessage(message:=lastErrorMsg)
         Catch ex As TaskCanceledException
             lastErrorMsg = "The request timed out."
-            Debug.WriteLine(message:=lastErrorMsg)
+            LoggerManager.LogMessage(message:=lastErrorMsg)
         Catch ex As JsonException
             lastErrorMsg = $"JSON deserialization error: {ex.Message}"
             Debug.WriteLine(message:=lastErrorMsg)
