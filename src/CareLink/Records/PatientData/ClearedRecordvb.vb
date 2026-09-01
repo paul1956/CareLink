@@ -5,6 +5,7 @@
 Imports System.Text.Json.Serialization
 
 Public Class ClearedRecord
+
     <JsonPropertyName("by")>
     Public Property By As String
 

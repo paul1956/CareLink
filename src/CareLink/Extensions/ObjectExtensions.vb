@@ -6,6 +6,7 @@ Imports System.Reflection
 Imports System.Runtime.CompilerServices
 
 Friend Module ObjectExtensions
+
     ' Helper method to convert object to Dictionary(Of String, String)
     <Extension>
     Public Function InstanceToDictionary(Of T)(instance As T) As Dictionary(Of String, String)
@@ -18,4 +19,5 @@ Friend Module ObjectExtensions
         Next
         Return result
     End Function
+
 End Module
