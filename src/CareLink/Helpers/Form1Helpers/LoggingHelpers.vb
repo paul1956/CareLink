@@ -9,25 +9,25 @@ Public Module LoggerManager
 
     ' Initialize logger (call from Program startup or MainForm)
     Public Sub InitLogger()
-#If DEBUG Then
         If s_loggerForm Is Nothing OrElse s_loggerForm.IsDisposed Then
             s_loggerForm = New LoggerForm()
-            s_loggerForm.Show()
+            If Debugger.IsAttached Then
+                s_loggerForm.Show()
+            End If
         End If
-#End If
     End Sub
 
     ' Public method to log messages from anywhere
     <Extension>
     Public Sub LogMessage(message As String)
-#If DEBUG Then
-        ' Also send to Visual Studio Output window
-        Debug.WriteLine(message)
+        If Debugger.IsAttached Then
+            ' Also send to Visual Studio Output window
+            Debug.WriteLine(message)
 
-        If s_loggerForm IsNot Nothing AndAlso Not s_loggerForm.IsDisposed Then
-            s_loggerForm.LogMessage(message)
+            If s_loggerForm IsNot Nothing AndAlso Not s_loggerForm.IsDisposed Then
+                s_loggerForm.LogMessage(message)
+            End If
         End If
-#End If
     End Sub
 
 End Module

@@ -20,6 +20,7 @@ Public Class Form1
 
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _carbRatio As New ToolTip()
+
     Private ReadOnly _processName As String =
         Process.GetCurrentProcess().ProcessName
 
@@ -2492,11 +2493,11 @@ Public Class Form1
             My.Settings.AutoLogin = False
         End If
 
-#If DEBUG Then
-        ' Show logger only in Debug mode
-        InitLogger()
-        LogMessage(message:="Application started in DEBUG mode.")
-#End If
+        If Debugger.IsAttached Then
+            ' Show logger only in Debug mode
+            InitLogger()
+            LogMessage(message:="Application started in DEBUG mode.")
+        End If
 
         PreloadBitmaps()
         Me.CalibrationDueImage.GetBitmapFromCache(id:=ImageEnum.CalibrationUnavailable)
@@ -2569,7 +2570,9 @@ Public Class Form1
     ''' </remarks>
     Private Async Sub Form1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.Fix(c:=Me)
-        InitLogger()
+        If Debugger.IsAttached Then
+            InitLogger()
+        End If
         Me.CurrentSgLabel.Parent = Me.SmartGuardShieldPictureBox
         Me.CurrentSgLabel.CenterLabelOnParent
         Me.ShieldUnitsLabel.Parent = Me.SmartGuardShieldPictureBox
@@ -2749,7 +2752,7 @@ Public Class Form1
         show = debuggerIsAttached AndAlso AnyMatchingFiles(path, searchPattern)
         Me.MenuStartLoadDataFile.Enabled = show
 
-        Me.MenuStartSaveSnapshot.Enabled = Not IsRecentDataEmpty()
+        Me.MenuStartSaveSnapshot.Enabled = Not IsPatientDataEmpty()
 
         Dim enabled As Boolean = debuggerIsAttached AndAlso
             File.Exists(path:=GetLastDownloadFileWithPath)
@@ -2821,7 +2824,6 @@ Public Class Form1
                     Dim fileNameWithPath As String = openFileDialog1.FileName
                     SetServerUpdateTimer(Start:=False)
                     If File.Exists(fileNameWithPath) Then
-                        RecentData = New Dictionary(Of String, String)
                         ExceptionHandlerDialog.ReportNameWithPath = fileNameWithPath
                         If ExceptionHandlerDialog.ShowDialog(owner:=Me) = DialogResult.OK Then
                             ExceptionHandlerDialog.ReportNameWithPath = EmptyString
@@ -2941,7 +2943,7 @@ Public Class Form1
     '''  The saved file will have a unique name based on the current date and time.
     ''' </remarks>
     Private Sub MenuStartSaveSnapshot_Click(sender As Object, e As EventArgs) Handles MenuStartSaveSnapshot.Click
-        If IsRecentDataEmpty() Then Exit Sub
+        If IsPatientDataEmpty() Then Exit Sub
         Dim path As String = GetUniqueDataFileName(
             baseName:=BaseSnapshotName,
             cultureName:=CurrentDateCulture.Name,
@@ -3330,8 +3332,7 @@ Public Class Form1
             PumpTimeZoneInfo = TimeZoneInfo.Local
             My.Settings.UseLocalTimeZone = True
         Else
-            Const key As String = NameOf(ServerDataEnum.clientTimeZoneName)
-            Dim timeZoneName As String = RecentData(key)
+            Dim timeZoneName As String = PatientData.ClientTimeZoneName
             PumpTimeZoneInfo = CalculateTimeZone(timeZoneName)
             My.Settings.UseLocalTimeZone = False
         End If
@@ -3856,14 +3857,12 @@ Public Class Form1
         End SyncLock
 
         Try
-            RecentData = Nothing
-
             ' Retrieve recent data asynchronously
             lastErrorMessage = If(Client IsNot Nothing,
                                   Await Client.GetRecentDataAsync(),
                                   String.Empty)
 
-            If IsRecentDataEmpty() Then
+            If IsPatientDataEmpty() Then
                 If Client Is Nothing OrElse IsNotNullOrEmpty(value:=lastErrorMessage) Then
                     Do
                         LoginDialog.LoginSourceAutomatic = FileToLoadOptions.Login
@@ -3888,7 +3887,7 @@ Public Class Form1
 
             ReportLoginStatus(
                 Me.LoginStatus,
-                hasErrors:=IsRecentDataEmpty,
+                hasErrors:=IsPatientDataEmpty,
                 lastErrorMessage)
 
             Me.Cursor = Cursors.Default
@@ -3899,40 +3898,33 @@ Public Class Form1
             End SyncLock
         End Try
 
-        Dim lastMedicalDeviceDataUpdateServerEpochString As String = EmptyString
         Dim sgString As String = "---"
-        If Not IsRecentDataEmpty() Then
-            If RecentData.TryGetValue(
-                    key:=NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime),
-                    value:=lastMedicalDeviceDataUpdateServerEpochString) Then
-                If CLng(lastMedicalDeviceDataUpdateServerEpochString) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                    Dim epochAsLocalDate As Date =
-                        lastMedicalDeviceDataUpdateServerEpochString.FromUnixTime.ToLocalTime
+        If Not IsPatientDataEmpty() Then
+            If PatientData.LastMedicalDeviceDataUpdateServerTime = s_lastMedicalDeviceDataUpdateServerEpoch Then
+                Dim epochAsLocalDate As Date =
+                    PatientData.LastMedicalDeviceDataUpdateServerTime.ToString.FromUnixTime.ToLocalTime
 
-                    ' The pump updates the lastMedicalDeviceDataUpdateServerEpoch headderText when
-                    ' it receives new data from the pump, but it may take a few minutes for the pump to receive
-                    ' and process the new data.
-                    ' If the epoch time is older than 6 minutes, it's likely that the pump has not yet updated
-                    ' with the new data, so we should highlight the last update time
-                    ' and show NaN for the SG headderText on the mini display.
-                    ' If it's within 6 minutes, we can assume that the pump has updated and
-                    ' we can show the actual SG headderText.
-                    If epochAsLocalDate.IsDateOlderThan(Date.Now, span:=SixMinuteSpan) Then
-                        Me.SetLastUpdateTime(highLight:=True,
-                                             isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
-                        _sgMiniDisplay.SetCurrentSgString(sgString, f:=Single.NaN)
-                    Else
-                        Me.SetLastUpdateTime(isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
-                        If s_lastSg IsNot Nothing Then
-                            sgString = s_lastSg.ToString
-                        End If
-                        _sgMiniDisplay.SetCurrentSgString(sgString, f:=s_lastSg.sg)
-                    End If
+                ' The pump updates the lastMedicalDeviceDataUpdateServerEpoch headderText when
+                ' it receives new data from the pump, but it may take a few minutes for the pump to receive
+                ' and process the new data.
+                ' If the epoch time is older than 6 minutes, it's likely that the pump has not yet updated
+                ' with the new data, so we should highlight the last update time
+                ' and show NaN for the SG headderText on the mini display.
+                ' If it's within 6 minutes, we can assume that the pump has updated and
+                ' we can show the actual SG headderText.
+                If epochAsLocalDate.IsDateOlderThan(referenceDate:=Date.Now, span:=SixMinuteSpan) Then
+                    Me.SetLastUpdateTime(highLight:=True,
+                                         isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
+                    _sgMiniDisplay.SetCurrentSgString(sgString, f:=Single.NaN)
                 Else
-                    Me.UpdateAllTabPages(fromFile:=False)
+                    Me.SetLastUpdateTime(isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
+                    If s_lastSg IsNot Nothing Then
+                        sgString = s_lastSg.ToString
+                    End If
+                    _sgMiniDisplay.SetCurrentSgString(sgString, f:=s_lastSg.sg)
                 End If
             Else
-                Stop
+                Me.UpdateAllTabPages(fromFile:=False)
             End If
         Else
             ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMessage)
@@ -4490,11 +4482,11 @@ Public Class Form1
     ''' <returns>
     '''  A string representing the current subtitle for the summary chart.
     ''' </returns>
-    Private Function GetSubTitle() As String
+    Private Shared Function GetSubTitle() As String
         Dim title As String = EmptyString
         If InAutoMode Then
             Dim autoModeState As String =
-                s_therapyAlgorithmStateValue(key:=NameOf(TherapyAlgorithmState.AutoModeShieldState))
+                PatientData.TherapyAlgorithmState.AutoModeShieldState.ToTitle
             Select Case autoModeState
                 Case "AUTO_BASAL"
                     title = If(Is700Series(),
@@ -4503,10 +4495,10 @@ Public Class Form1
 
                 Case "SAFE_BASAL"
                     title = autoModeState.ToTitle
-                    Dim key As String = NameOf(TherapyAlgorithmState.SafeBasalDuration)
                     Dim value As String = Nothing
-                    If s_therapyAlgorithmStateValue.TryGetValue(key, value:=value) Then
-                        Dim safeBasalDuration As UInteger = Nothing
+                    Dim safeBasalDuration As Integer =
+                            PatientData.TherapyAlgorithmState.SafeBasalDuration
+                    If safeBasalDuration > 0 Then
                         If IsNotNullOrWhiteSpace(value) Then
                             title &= $", {TimeSpan.FromMinutes(safeBasalDuration):h\:mm} left."
                         End If
@@ -4587,7 +4579,7 @@ Public Class Form1
             Dim activeInsulinStr As String
             If s_activeInsulin IsNot Nothing AndAlso s_activeInsulin.Amount >= 0 Then
                 activeInsulinStr = $"Active Insulin {$"{s_activeInsulin.Amount:N3}"} U"
-            ElseIf IsFlex AndAlso _latestActiveInsulin >= 0 Then
+            ElseIf IsFlex() AndAlso _latestActiveInsulin >= 0 Then
                 activeInsulinStr = $"Active Insulin Est. {_latestActiveInsulin:N3} U"
             Else
                 activeInsulinStr = $"Active Insulin --- U"
@@ -4790,7 +4782,7 @@ Public Class Form1
                     s.Points.Clear()
                 Next
                 .ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
-                .Titles(index:=0).Text = $"Status - {Me.GetSubTitle()}"
+                .Titles(index:=0).Text = $"Status - {GetSubTitle()}"
                 .PlotSuspendArea(SuspendSeries:=Me.SummarySuspendSeries)
                 .PlotMarkers(
                     timeChangeSeries:=Me.SummaryTimeChangeSeries,
@@ -5476,10 +5468,11 @@ Public Class Form1
 
         Me.BelowLowLimitValueLabel.Text = $"{GetBelowHypoLimit.Str}%"
         Me.BelowLowLimitMessageLabel.Text = $"Below {GetTirLowLimitWithUnits()} {BgUnits}"
-        Dim averageSgStr As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataEnum.averageSG))
-        Me.AverageSGValueLabel.Text = If(NativeMmolL,
-                                         averageSgStr.TruncateSingle(digits:=2),
-                                         averageSgStr)
+        Dim averageSgStr As String = PatientData.AverageSG.ToString
+        Me.AverageSGValueLabel.Text =
+            If(NativeMmolL,
+              (PatientData.AverageSG / 18).RoundToSingle(digits:=2),
+              PatientData.AverageSG).ToString
 
         Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnits}"
 
@@ -5633,19 +5626,13 @@ Public Class Form1
     '''  headderText and is styled accordingly.
     ''' </remarks>
     Private Sub UpdateTrendArrows()
-        Dim key As String = RecentData.GetStringValueOrEmpty(NameOf(ServerDataEnum.lastSGTrend))
         If PatientData.ConduitInRange Then
-            Dim value As String = Nothing
-            If s_trends.TryGetValue(key, value) Then
-                Me.TrendArrowsLabel.Font = If(key = "NONE",
-                                              s_font18Bold,
-                                              s_font14Bold)
+            Dim key As String = PatientData.LastSGTrend
+            Me.TrendArrowsLabel.Font = If(key = "NONE",
+                                          s_font18Bold,
+                                          s_font14Bold)
 
-                Me.TrendArrowsLabel.Text = s_trends(key)
-            Else
-                Me.TrendArrowsLabel.Font = s_font14Bold
-                Me.TrendArrowsLabel.Text = key
-            End If
+            Me.TrendArrowsLabel.Text = s_trends(key)
         End If
         Me.SgTrendLabel.Visible = PatientData.ConduitInRange
         Me.TrendValueLabel.Visible = PatientData.ConduitInRange
@@ -5662,22 +5649,14 @@ Public Class Form1
     '''  based on the current patient data and system status.
     ''' </remarks>
     Friend Sub UpdateAllTabPages(fromFile As Boolean)
-        If IsRecentDataEmpty() Then
-            DebugPrint($"exiting, {NameOf(RecentData)} has no data!")
+        If IsPatientDataEmpty() Then
+            DebugPrint($"exiting, {NameOf(PatientData)} has no data!")
             Exit Sub
         End If
-        Dim lastMedicalDeviceDataUpdateServerTimeEpoch As String = EmptyString
-        Dim key As String = NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime)
-        If RecentData.TryGetValue(key, value:=lastMedicalDeviceDataUpdateServerTimeEpoch) Then
-            If CLng(lastMedicalDeviceDataUpdateServerTimeEpoch) = s_lastMedicalDeviceDataUpdateServerEpoch Then
-                Exit Sub
-            Else
-                s_lastMedicalDeviceDataUpdateServerEpoch = CLng(lastMedicalDeviceDataUpdateServerTimeEpoch)
-            End If
-        End If
-
-        If RecentData.Count > ServerDataEnum.sensorLifeIcon + 1 Then
-            Stop
+        If PatientData.LastMedicalDeviceDataUpdateServerTime = s_lastMedicalDeviceDataUpdateServerEpoch Then
+            Exit Sub
+        Else
+            s_lastMedicalDeviceDataUpdateServerEpoch = PatientData.LastMedicalDeviceDataUpdateServerTime
         End If
 
         CheckForUpdatesAsync(reportSuccessfulResult:=False)
@@ -5716,9 +5695,8 @@ Public Class Form1
         Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
 
-        key = NameOf(ServerDataEnum.lastName)
         Me.FullNameLabel.Text =
-            $"{PatientData.FirstName} {RecentData.GetStringValueOrEmpty(key)}"
+            $"{PatientData.FirstName} {PatientData.LastName}"
 
         Dim modelNumber As String = mdi.ModelNumber
         Me.ModelLabel.Text = $"{modelNumber} HW Version = {mdi.HardwareRevision}"
@@ -5759,7 +5737,7 @@ Public Class Form1
 
         UpdateSummaryTab(
             dgv:=Me.DgvTherapyAlgorithmState,
-            classCollection:=GetSummaryRecords(jsonDictionary:=s_therapyAlgorithmStateValue),
+            classCollection:=GetSummaryRecords(jsonDictionary:=PatientData.TherapyAlgorithmState.InstanceToDictionary),
             sort:=False)
         Me.DgvTherapyAlgorithmState.Columns(index:=0).Visible = False
 

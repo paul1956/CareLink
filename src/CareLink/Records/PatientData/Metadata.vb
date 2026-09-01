@@ -4,7 +4,7 @@
 
 Imports System.Text.Json.Serialization
 
-Public Class MetadataInfo
+Public Class Metadata
 
     <JsonPropertyName("kind")>
     Public Property Kind As String

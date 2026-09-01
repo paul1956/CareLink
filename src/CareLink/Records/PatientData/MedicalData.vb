@@ -7,7 +7,7 @@ Imports System.Text.Json.Serialization
 Public Class MedicalData
 
     <JsonPropertyName("metadata")>
-    Public Property Metadata As MetadataInfo
+    Public Property Metadata As Metadata
 
     <JsonPropertyName("patientData")>
     Public Property PatientData As PatientDataInfo

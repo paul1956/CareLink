@@ -150,7 +150,7 @@ Public Module DictionaryExtensions
                                 value = Convert.ChangeType(
                                     row.Value,
                                     conversionType:=[property].PropertyType)
-                            Case "MarkerData"
+                            Case "Data"
                                 Stop
                             Case Else
                                 Throw UnreachableException(

@@ -137,7 +137,8 @@ Friend Module FileUtilities
     Friend Function ReadTokenDataFile(
             Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As TokenData
 
-        Dim tokenElement As JsonElement = ReadAndValidateTokenJsonElement(tokenBaseFileName)
+        Dim tokenElement As JsonElement =
+            ReadAndValidateTokenJsonElement(tokenBaseFileName)
         If tokenElement.IsEmpty Then
             Return Nothing
         End If

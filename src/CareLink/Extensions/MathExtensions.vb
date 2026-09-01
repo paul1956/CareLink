@@ -87,6 +87,31 @@ Friend Module MathExtensions
         Return Math.Abs(value) <= Tolerance
     End Function
 
+    Public Function ConvertObjectToSingle(value As Object) As Single
+        If value Is Nothing OrElse value Is DBNull.Value Then
+            Return 0.0F
+        End If
+
+        Try
+            ' Direct cast if already Single
+            If TypeOf value Is Single Then
+                Return DirectCast(value, Single)
+            End If
+
+            ' Use Convert.ToSingle for numeric-compatible types
+            Return Convert.ToSingle(value)
+        Catch ex As Exception
+            ' Try parsing if it's a string
+            Dim result As Single
+            If Single.TryParse(value.ToString(), result) Then
+                Return result
+            End If
+        End Try
+
+        ' Default if all conversions fail
+        Return 0.0F
+    End Function
+
     ''' <summary>
     '''  Gets the fractional part of a Decimal value.
     ''' </summary>

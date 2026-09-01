@@ -47,12 +47,9 @@ Public Class Marker
     <DisplayName("Data")>
     <Column(Order:=5, TypeName:="Date")>
     <JsonPropertyName("data")>
-    Public Property Data As MarkerData
+    Public Property Data As Data
 
     <JsonPropertyName("views")>
-    Public Property Views As List(Of MarkerView)
-
-    <JsonExtensionData>
-    Public Property AdditionalProperties As Dictionary(Of String, JsonElement)
+    Public Property Views As List(Of View)
 
 End Class

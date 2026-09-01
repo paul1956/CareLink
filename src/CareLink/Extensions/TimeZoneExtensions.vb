@@ -88,7 +88,9 @@ Friend Module TimeZoneExtensions
 
         ' Attempt to get from cache
         Dim tz As TimeZoneInfo = Nothing
-        If s_timeZoneMap.TryGetValue(key:=value, value:=tz) Then Return tz
+        If s_timeZoneMap.TryGetValue(key:=value, value:=tz) Then
+            Return tz
+        End If
 
         ' Try to find system time zone by id
         Try

@@ -4,13 +4,13 @@
 
 Imports System.Text.Json.Serialization
 
-Public Class MarkerViewItem
+Public Class Item
 
     <JsonPropertyName("action")>
     Public Property Action As String
 
     <JsonPropertyName("contents")>
-    Public Property Contents As List(Of MarkerViewItemContent)
+    Public Property Contents As List(Of Content)
 
     <JsonPropertyName("iconIdentifier")>
     Public Property IconIdentifier As String

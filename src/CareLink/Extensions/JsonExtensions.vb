@@ -2,19 +2,11 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
 Public Module JsonExtensions
-
-    ''' <summary>
-    '''  Default <see cref="JsonSerializerOptions"/> for serialization with indented output.
-    ''' </summary>
-    Private ReadOnly Property SerializerOptions As New JsonSerializerOptions With
-        {.WriteIndented = True,
-        .NumberHandling = JsonNumberHandling.AllowReadingFromString}
 
     ''' <summary>
     '''  Default <see cref="JsonSerializerOptions"/> for deserialization.
@@ -25,6 +17,13 @@ Public Module JsonExtensions
         {.NumberHandling = JsonNumberHandling.AllowReadingFromString,
          .PropertyNameCaseInsensitive = True,
          .UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow}
+
+    ''' <summary>
+    '''  Default <see cref="JsonSerializerOptions"/> for serialization with indented output.
+    ''' </summary>
+    Public ReadOnly Property SerializerOptions As New JsonSerializerOptions With
+        {.WriteIndented = True,
+        .NumberHandling = JsonNumberHandling.AllowReadingFromString}
 
     Private Sub HandleExtendedInfo(item As KeyValuePair(Of String,
                                        JsonElement), resultDictionary As Dictionary(Of String, String))
@@ -57,54 +56,6 @@ Public Module JsonExtensions
                 Exit Select
         End Select
     End Sub
-
-    Public Function CollectAllExtensionData(obj As Object, depth As Integer) As List(Of KeyValuePair(Of String, JsonElement))
-        Dim results As New List(Of KeyValuePair(Of String, JsonElement))()
-
-        If obj Is Nothing Then Return results
-
-        Dim t As Type = obj.GetType()
-
-        ' Find the single JsonExtensionData property (if present)
-        Dim predicate As Func(Of PropertyInfo, Boolean) =
-            Function(p)
-                Return Attribute.IsDefined(element:=p,
-                                           attributeType:=GetType(JsonExtensionDataAttribute))
-            End Function
-
-        Dim extProp As PropertyInfo =
-            t.GetProperties().FirstOrDefault(predicate:=predicate)
-
-        If extProp IsNot Nothing Then
-            Dim collection As Dictionary(Of String, JsonElement) =
-                TryCast(extProp.GetValue(obj), Dictionary(Of String, JsonElement))
-            If collection IsNot Nothing Then
-                results.AddRange(collection)
-            End If
-        End If
-
-        ' Recursively inspect child properties
-        For Each p As PropertyInfo In t.GetProperties()
-            LogMessage(message:=$"{Space(Number:=depth * 4)}{p.Name}")
-            Dim child As Object
-            Try
-                If p.PropertyType.IsClass AndAlso
-                    p.PropertyType IsNot GetType(String) Then
-
-                    If p.GetIndexParameters().Length = 0 Then
-                        child = p.GetValue(obj)
-                        If child IsNot Nothing Then
-                            results.AddRange(collection:=CollectAllExtensionData(obj:=child, depth:=depth + 1))
-                        End If
-                    End If
-                End If
-            Catch ex As Exception
-                Stop
-            End Try
-        Next
-
-        Return results
-    End Function
 
     ''' <summary>
     '''  Converts a JSON item (key-value pair) to its <see langword="String"/> representation.
@@ -187,6 +138,27 @@ Public Module JsonExtensions
             Debug.WriteLine(message:=$"ERROR: failed deserializing JSON string: {ex.Message}")
             Return Nothing
         End Try
+    End Function
+
+    ''' <summary>
+    '''  Converts a scalar <see cref="JsonElement"/> to its string
+    '''  representation. Strings are returned unwrapped (without quotes);
+    '''  other primitives use GetRawText() so booleans/numbers are exact.
+    ''' </summary>
+    <Extension>
+    Public Function GetScalarValue(element As JsonElement) As String
+        Select Case element.ValueKind
+            Case JsonValueKind.String
+                Return element.GetString()
+            Case JsonValueKind.True
+                Return "True"
+            Case JsonValueKind.False
+                Return "False"
+            Case JsonValueKind.Number
+                Return element.GetRawText()
+            Case Else
+                Return element.GetRawText()
+        End Select
     End Function
 
     <Extension>
@@ -422,28 +394,6 @@ Public Module JsonExtensions
         Using doc As JsonDocument = JsonDocument.Parse(json)
             Return doc.RootElement.Clone
         End Using
-    End Function
-
-    ''' <summary>
-    '''  Converts a <paramref name="jsonArray"/> array to a <see cref="List"/> of objects,
-    '''  recursively handling nested arrays and objects.
-    ''' </summary>
-    ''' <param name="jsonArray">The JsonElement representing a JSON array.</param>
-    ''' <returns>A list of objects representing the array elements.</returns>
-    <Extension>
-    Public Function ToList(jsonArray As JsonElement) As List(Of JsonElement)
-        Dim result As New List(Of JsonElement)()
-        For Each jsonElement As JsonElement In jsonArray.EnumerateArray()
-            Select Case jsonElement.ValueKind
-                Case JsonValueKind.Object
-                    result.Add(item:=jsonElement)
-                Case JsonValueKind.Array
-                    result.Add(item:=jsonElement)
-                Case Else
-                    result.Add(item:=jsonElement)
-            End Select
-        Next
-        Return result
     End Function
 
     ''' <summary>

@@ -4,12 +4,12 @@
 
 Imports System.Text.Json.Serialization
 
-Public Class MarkerView
+Public Class Data
 
-    <JsonPropertyName("viewType")>
-    Public Property ViewType As String
+    <JsonPropertyName("dataValues")>
+    Public Property DataValues As DataValues
 
-    <JsonPropertyName("items")>
-    Public Property Items As List(Of MarkerViewItem)
+    <JsonPropertyName("resourceValues")>
+    Public Property ResourceValues As ResourceValues
 
 End Class

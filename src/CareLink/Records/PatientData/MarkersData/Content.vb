@@ -4,7 +4,7 @@
 
 Imports System.Text.Json.Serialization
 
-Public Class MarkerViewItemContent
+Public Class Content
 
     <JsonPropertyName("type")>
     Public Property Type As String

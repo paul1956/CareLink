@@ -19,8 +19,8 @@ Public Class LoggerForm
             Dim method As New Action(Of String)(AddressOf Me.LogMessage)
             Me.BeginInvoke(method, $"{message}{vbCrLf}")
         Else
+            Me.Visible = Me.txtLog.Lines.Length > 1
             Me.txtLog.AppendText(text:=$"{message}{vbCrLf}")
-            'Me.txtLog.AppendNewLine()
         End If
     End Sub
 

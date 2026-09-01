@@ -42,8 +42,10 @@ Public Class SummaryRecord
                 Select Case kvp.Key
                     Case "SG_ABOVE_400_MGDL"
                         message = $"SG Above{vbCrLf}{GetTirHighLimitWithUnits()}"
+
                     Case "SG_BELOW_40_MGDL"
                         message = $"SG Below{vbCrLf}{GetTirLowLimitWithUnits()}"
+
                     Case "WARM_UP"
                         Dim timeRemaining As String
                         message = "Warm Up..."
@@ -51,6 +53,10 @@ Public Class SummaryRecord
                             timeRemaining = s_systemStatusTimeRemaining.ToFormattedTimeSpan(unit:="hr")
                             message = $"{message.Remove(s:="...")} time remaining {vbCrLf}{timeRemaining}"
                         End If
+
+                    Case "NA", "N/A"
+                        message = "N/A"
+
                     Case Else
                         If Debugger.IsAttached Then
                             Stop

@@ -12,6 +12,9 @@ Public Class SsoConfig
     <JsonPropertyName("client")>
     Public Property Client As Client
 
+    <JsonPropertyName("client_secret")>
+    Public Property Client_Secret As Client
+
     <JsonPropertyName("system_endpoints")>
     Public Property SystemEndpoints As SystemEndpoints
 

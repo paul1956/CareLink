@@ -34,13 +34,6 @@ Friend Module LoginHelpers
     Friend Sub DeserializePatientElement()
         Try
             PatientData = PatientDataElement.FromJson(Of PatientDataInfo)()
-            Dim listOfMissingItems As List(Of KeyValuePair(Of String, JsonElement)) =
-                CollectAllExtensionData(obj:=PatientData, depth:=0)
-            If listOfMissingItems.Count > 0 Then
-                Stop
-            End If
-
-            RecentData = PatientDataElement.ToStringDictionary()
         Catch ex As Exception
             MessageBox.Show(
                 text:=$"Error deserializing patient data: {ex.Message}",
@@ -144,7 +137,7 @@ Friend Module LoginHelpers
                     ReportLoginStatus(owner.LoginStatus)
                     Return False
                 End If
-                ReportLoginStatus(owner.LoginStatus, hasErrors:=IsRecentDataEmpty, lastErrorMessage)
+                ReportLoginStatus(owner.LoginStatus, hasErrors:=IsPatientDataEmpty, lastErrorMessage)
                 owner.MenuShowMiniDisplay.Visible = True
                 fromFile = False
                 owner.TabControlPage1.Visible = True
@@ -300,9 +293,9 @@ Friend Module LoginHelpers
             .Text = String.Empty
             .ForeColor = form1.MenuStrip1.ForeColor
             If isDaylightSavingTime IsNot Nothing Then
-                Dim timeZoneName As String = Nothing
-                Const key As String = NameOf(ServerDataEnum.clientTimeZoneName)
-                If RecentData?.TryGetValue(key, value:=timeZoneName) Then
+                If Not String.IsNullOrEmpty(value:=PatientData?.ClientTimeZoneName) Then
+                    Dim timeZoneName As String = PatientData.ClientTimeZoneName
+
                     Dim timeZoneInfo As TimeZoneInfo = CalculateTimeZone(timeZoneName)
                     Dim dst As String = If(isDaylightSavingTime,
                                            timeZoneInfo.DaylightName,

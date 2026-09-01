@@ -49,7 +49,6 @@ Public Module PumpVariables
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
     Friend s_suspendedSince As String = "???"
     Friend s_systemStatusTimeRemaining As TimeSpan
-    Friend s_therapyAlgorithmStateValue As Dictionary(Of String, String)
     Friend s_timeToNextCalibrationMinutes As Short ' Do not replace this, it is used in the UI
     Friend s_timeWithMinuteFormat As String
     Friend s_timeWithoutMinuteFormat As String
@@ -71,8 +70,6 @@ Public Module PumpVariables
     Public Property PatientDataElement As JsonElement
 
     Public Property ProgramInitialized As Boolean = False
-
-    Public Property RecentData As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
 
     Public Function GetCarbDefaultUnit() As String
         Return "Grams"

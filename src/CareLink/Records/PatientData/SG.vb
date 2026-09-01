@@ -42,7 +42,7 @@ Public Class SG
                 Dim value As String = "False"
                 Me.timeChange = json.TryGetValue(key:=NameOf(timeChange), value) AndAlso Boolean.Parse(value)
             Else
-                Me.sg = Single.NaN
+                Me.sg = 0
             End If
             Dim isBackfillString As String = Nothing
             Me.isBackfill = json.TryGetValue(key:=NameOf(isBackfill), value:=isBackfillString) AndAlso CBool(isBackfillString)
@@ -76,8 +76,8 @@ Public Class SG
             Return _sg
         End Get
         Set
-            _sg = If(Value = 0,
-                     Single.NaN,
+            _sg = If(Value.IsSgInvalid,
+                     Nothing,
                      Value)
         End Set
     End Property
@@ -86,7 +86,7 @@ Public Class SG
     <Column(Order:=4, TypeName:=NameOf([Single]))>
     Public ReadOnly Property sgMgdL As Single
         Get
-            If _sg.IsSgInvalid Then Return _sg
+            If _sg.IsSgInvalid Then Return Nothing
             Return If(NativeMmolL,
                       CSng(Math.Round(_sg * MmolLUnitsDivisor)),
                       _sg)
@@ -97,7 +97,7 @@ Public Class SG
     <Column(Order:=5, TypeName:=NameOf([Single]))>
     Public ReadOnly Property sgMmolL As Single
         Get
-            If Single.IsNaN(_sg) Then Return _sg
+            If Single.IsNaN(_sg) Then Return Nothing
             Return If(NativeMmolL,
                       _sg,
                       (_sg / MmolLUnitsDivisor).RoundToSingle(digits:=2))

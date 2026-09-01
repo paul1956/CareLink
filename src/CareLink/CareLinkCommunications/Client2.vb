@@ -2,11 +2,14 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Globalization
+Imports System.IO
 Imports System.Net
 Imports System.Net.Http
 Imports System.Net.Http.Headers
 Imports System.Text
 Imports System.Text.Json
+Imports DocumentFormat.OpenXml.Wordprocessing
 
 ' This class is intentionally not part of the public API.
 ' It is designed to be used internally within the assembly and is not intended for external consumption.
@@ -90,6 +93,41 @@ Friend Class Client2
         End If
 
         Return headers
+    End Function
+
+    Public Async Function DownloadFileAsync(requestUri As String,
+                                            path As String,
+                                            localTime As Date) As Task
+        ' Create a single static instance of HttpClient for performance (recommended)
+        Try
+            ' Send a GET request to fetch the file data
+            Const completionOption As HttpCompletionOption = HttpCompletionOption.ResponseHeadersRead
+            Dim tokenData As Dictionary(Of String, String) =
+                _tokenDataElement.ToStringDictionary()
+
+            ' Set the Authorization header with the Bearer token
+            _httpClient.DefaultRequestHeaders.Authorization =
+                New AuthenticationHeaderValue(scheme:="Bearer",
+                                              parameter:=tokenData(key:="access_token"))
+
+            Using response As HttpResponseMessage =
+                Await _httpClient.GetAsync(requestUri, completionOption)
+                response.EnsureSuccessStatusCode() ' Throw if not successful
+
+                ' Read the file bytes as a stream
+                Using fileStream As Stream = Await response.Content.ReadAsStreamAsync(),
+                      destination As Stream = File.Create(path)
+
+                    ' Copy the content to the local file stream
+                    Await fileStream.CopyToAsync(destination)
+                End Using
+            End Using
+
+            File.SetCreationTime(path, creationTime:=localTime)
+            File.SetLastAccessTime(path, lastAccessTime:=localTime)
+        Catch ex As Exception
+            LoggerManager.LogMessage(message:=$"Error downloading file: {ex.Message}")
+        End Try
     End Function
 
     Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, JsonElement)
@@ -367,7 +405,8 @@ Friend Class Client2
             Return False
         End If
 
-        _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
+        _accessTokenPayload =
+            GetAccessTokenPayload(token_data:=_tokenDataElement)
         If _accessTokenPayload Is Nothing Then
             Return False
         End If
@@ -520,10 +559,10 @@ Friend Class Client2
             tokenElement.FromJson(Of Dictionary(Of String, JsonElement))()
 
         Dim value As JsonElement
-        If Not tokenData.TryGetValue(key:="mag-identifier", value) Then
-            DeleteTokenFile()
-            Return Nothing
-        End If
+        'If Not tokenData.TryGetValue(key:="mag-identifier", value) Then
+        '    DeleteTokenFile()
+        '    Return Nothing
+        'End If
 
         Dim formData As New List(Of KeyValuePair(Of String, String)) From {
             New KeyValuePair(Of String, String)(
@@ -657,7 +696,6 @@ Friend Class Client2
                 CType(data("patientData"), JsonElement).ValueKind = JsonValueKind.Array) Then
 
                 PatientData = Nothing
-                RecentData = Nothing
                 Dim message As String =
                     $"{NameOf(GetRecentDataAsync)}: No nameValueCollection returned from GetData for user {GetUserName()}"
                 Debug.WriteLine(message)
@@ -665,7 +703,6 @@ Friend Class Client2
             End If
         Catch ex As Exception
             PatientData = Nothing
-            RecentData = Nothing
             Debug.WriteLine(message:=ex.DecodeException())
             Return ex.DecodeException()
         End Try
@@ -696,7 +733,36 @@ Friend Class Client2
             Return lastErrorMessage
         End If
 
-        Dim unusedMetaData As JsonElement = CType(data.Values(index:=0), JsonElement)
+        Try
+            Dim metaDataElement As JsonElement =
+                CType(data.Values(index:=0), JsonElement)
+            Dim metaData As Metadata = metaDataElement.FromJson(Of Metadata)
+            Dim requestUri As String = metaData.IconResourceBundle.IconBundleUrl
+            Dim zipFileName As String = requestUri.Split(separator:="/").Last
+            Dim destinationPath As String =
+                Path.Combine(GetMyDocuments(), "CareLink", zipFileName)
+
+            ' Download the file
+            Dim utcString As String =
+                metaData.IconResourceBundle.IconBundleTimestamp
+            Const styles As DateTimeStyles =
+                DateTimeStyles.AdjustToUniversal Or DateTimeStyles.AssumeUniversal
+            Dim utcTime As Date = Date.Parse(s:=utcString,
+                                             provider:=Nothing,
+                                             styles)
+            ' Convert to local time
+            Dim localTime As Date = utcTime.ToLocalTime()
+
+            If Not File.Exists(path:=destinationPath) OrElse
+                File.GetCreationTime(path:=destinationPath) < localTime Then
+                Await Me.DownloadFileAsync(requestUri,
+                                           path:=destinationPath,
+                                           localTime)
+            End If
+        Catch ex As Exception
+            Stop
+        End Try
+
         Try
             PatientDataElement = data.Values(index:=1)
             DeserializePatientElement()

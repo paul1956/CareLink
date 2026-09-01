@@ -4,6 +4,7 @@
 
 Imports System.Globalization
 Imports System.IO
+Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 
@@ -20,6 +21,10 @@ Friend Module Form1UpdateHelpers
     Private ReadOnly s_700Models As New List(Of String) From {
         "MMT-1812",
         "MMT-1880"}
+
+    Private ReadOnly s_basalTypes As IEnumerable(Of String) =
+        {"AUTO_BASAL",
+        "SAFE_BASAL"}
 
     ''' <summary>
     '''  Converts a date string to a formatted date string using the specified provider,
@@ -364,19 +369,19 @@ Friend Module Form1UpdateHelpers
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Friend Function Is700Series() As Boolean
-        If IsRecentDataEmpty() Then Return False
+        If IsPatientDataEmpty() Then Return False
         Return s_700Models.Contains(PatientData.MedicalDeviceInformation.ModelNumber)
     End Function
 
     ''' <summary>
-    '''  Checks if the <see cref="RecentData"/> is empty or not.
+    '''  Checks if the <see cref="PatientData"/> is empty or not.
     ''' </summary>
     ''' <returns>
-    '''  <see langword="True"/> if <see cref="RecentData"/> is empty;
+    '''  <see langword="True"/> if <see cref="PatientData"/> is empty;
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
-    Friend Function IsRecentDataEmpty() As Boolean
-        Return RecentData Is Nothing OrElse RecentData.Count = 0
+    Friend Function IsPatientDataEmpty() As Boolean
+        Return PatientData Is Nothing
     End Function
 
     ''' <summary>
@@ -385,93 +390,97 @@ Friend Module Form1UpdateHelpers
     ''' </summary>
     ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdateDataTables(mainForm As Form1)
-        If IsRecentDataEmpty() Then
-            DebugPrint(message:=$"Exiting, {NameOf(RecentData)} has no data!")
+        If IsPatientDataEmpty() Then
+            DebugPrint(message:=$"Exiting, {NameOf(PatientData)} has no data!")
             Exit Sub
         End If
 
         s_listOfSummaryRecords.Clear()
 
-        Dim value As String = String.Empty
-        If RecentData.TryGetValue(key:="clientTimeZoneName", value) Then
-            PumpTimeZoneInfo = CalculateTimeZone(timeZoneName:=value)
-        End If
-        Dim bgUnitsNative As String = String.Empty
+        PumpTimeZoneInfo = CalculateTimeZone(timeZoneName:=PatientData.ClientTimeZoneName)
+        Dim bgUnitsNative As String = PatientData.BgUnits
         Dim bgUnits As String = String.Empty
-        If RecentData.TryGetValue(key:="bgUnits", value:=bgUnitsNative) AndAlso
-            UnitsStrings.TryGetValue(key:=bgUnitsNative, value:=bgUnits) Then
+        If UnitsStrings.TryGetValue(key:=bgUnitsNative, value:=bgUnits) Then
             NativeMmolL = bgUnits.Equals(value:="mmol/L")
         Else
             Stop
         End If
 
-        If RecentData.TryGetValue(key:="therapyAlgorithmState", value) Then
-            s_therapyAlgorithmStateValue = value.JsonToDictionary
-            Dim key As String = NameOf(TherapyAlgorithmState.AutoModeShieldState)
-            Dim basalTypes As IEnumerable(Of String) = {"AUTO_BASAL", "SAFE_BASAL"}
-            InAutoMode = s_therapyAlgorithmStateValue.Count > 0 AndAlso
-                basalTypes.Contains(value:=s_therapyAlgorithmStateValue(key))
+        If PatientData.TherapyAlgorithmState IsNot Nothing Then
+            InAutoMode = PatientData.TherapyAlgorithmState.AutoModeReadinessState = "NO_ACTION_REQUIRED" AndAlso
+                s_basalTypes.Contains(value:=PatientData.TherapyAlgorithmState.AutoModeShieldState)
+
         End If
 
-        s_sgRecords = If(RecentData.TryGetValue(key:="sgs", value),
-                         ToListOfSgs(json:=value),
-                         New List(Of SG))
+        s_sgRecords = If(PatientData.Sgs Is Nothing,
+                         New List(Of SG),
+                         ToListOfSgs(json:=PatientData.Sgs.ToJson))
 
-        mainForm.MaxBasalPerHourLabel.Text = If(RecentData.TryGetValue(key:="markers", value),
+        mainForm.MaxBasalPerHourLabel.Text = If(PatientData.Markers.Count > 0,
                                                 CollectMarkers(),
                                                 String.Empty)
 
         s_systemStatusTimeRemaining = Nothing
-        For Each c As IndexClass(Of KeyValuePair(Of String, String)) In RecentData.WithIndex()
-            Dim kvp As KeyValuePair(Of String, String) = c.Value
-            If kvp.Value Is Nothing Then
-                kvp = KeyValuePair.Create(kvp.Key, value:=String.Empty)
-            End If
 
+        ' Get all public instance properties
+        Const bindingAttr As BindingFlags = BindingFlags.Public Or BindingFlags.Instance
+        Dim props As PropertyInfo() =
+            PatientData.GetType.GetProperties(bindingAttr)
+
+        Dim recentData As Dictionary(Of String, String) =
+                PatientDataElement.ToStringDictionary()
+        For Each c As IndexClass(Of PropertyInfo) In props.WithIndex
+            Dim prop As PropertyInfo = c.Value
+            Dim index As Integer = c.Index
             Dim key As ServerDataEnum = CType(c.Index, ServerDataEnum)
+            Dim predicate As Func(Of KeyValuePair(Of String, String), Boolean) =
+                Function(k As KeyValuePair(Of String, String)) As Boolean
+                    Return k.Key = prop.Name
+                End Function
+            Dim kvp As KeyValuePair(Of String, String) =
+                recentData.Where(predicate).SingleOrDefault()
             Dim recordNumber As Single = c.Index
             Dim message As String
             Dim item As SummaryRecord
-            Select Case kvp.Key
-                Case NameOf(ServerDataEnum.clientTimeZoneName)
+            Select Case key
+                Case ServerDataEnum.clientTimeZoneName
                     item = New SummaryRecord(recordNumber, key, kvp.Value)
                     s_listOfSummaryRecords.Add(item)
                     SetupPumpTimeZoneInfo(mainForm, kvp)
-                Case NameOf(ServerDataEnum.lastName)
+                Case ServerDataEnum.lastName
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.firstName)
-                    item = New SummaryRecord(
-                        recordNumber,
-                        key,
-                        value:=PatientData.FirstName)
+                Case ServerDataEnum.firstName
+                    item = New SummaryRecord(recordNumber,
+                                             key,
+                                             value:=PatientData.FirstName)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.appModelType)
+                Case ServerDataEnum.appModelType
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.appModelNumber)
+                Case ServerDataEnum.appModelNumber
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.currentServerTime)
+                Case ServerDataEnum.currentServerTime
                     message = kvp.Value.Epoch2DateTimeString()
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.conduitSerialNumber)
+                Case ServerDataEnum.conduitSerialNumber
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.conduitBatteryLevel)
+                Case ServerDataEnum.conduitBatteryLevel
                     message = $"Phone battery is at {kvp.Value}%."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.conduitBatteryStatus)
+                Case ServerDataEnum.conduitBatteryStatus
                     message = $"Phone battery status is {kvp.Value.ToLower()}."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.lastConduitDateTime)
+                Case ServerDataEnum.lastConduitDateTime
                     Dim provider As CultureInfo = CultureInfo.CurrentUICulture
                     kvp = New KeyValuePair(Of String, String)(
                         key:=NameOf(ServerDataEnum.lastConduitDateTime),
@@ -480,16 +489,16 @@ Friend Module Form1UpdateHelpers
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.lastConduitUpdateServerDateTime)
+                Case ServerDataEnum.lastConduitUpdateServerDateTime
                     message = kvp.Value.Epoch2DateTimeString
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.medicalDeviceFamily)
+                Case ServerDataEnum.medicalDeviceFamily
                     item = New SummaryRecord(recordNumber, kvp)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.medicalDeviceInformation)
+                Case ServerDataEnum.medicalDeviceInformation
                     HandleComplexItems(kvp,
                                        recordNumber,
                                        key:="medicalDeviceInformation",
@@ -498,40 +507,39 @@ Friend Module Form1UpdateHelpers
                     Dim deviceSerialNumber As String = PatientData.MedicalDeviceInformation.DeviceSerialNumber
                     mainForm.SerialNumberButton.Text = $"{deviceSerialNumber} Details..."
 
-                Case NameOf(ServerDataEnum.medicalDeviceTime)
+                Case ServerDataEnum.medicalDeviceTime
                     ' In Local Time
                     message = kvp.Value.Epoch2DateTimeString(isLocalTime:=True)
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.lastMedicalDeviceDataUpdateServerTime)
+                Case ServerDataEnum.lastMedicalDeviceDataUpdateServerTime
                     message = kvp.Value.Epoch2DateTimeString
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.cgmInfo)
+                Case ServerDataEnum.cgmInfo
                     HandleComplexItems(kvp,
                                        recordNumber,
                                        key:="cgmInfo",
                                        listOfSummaryRecords:=s_listOfSummaryRecords,
                                        isTitle:=False)
 
-                Case NameOf(ServerDataEnum.calFreeSensor)
+                Case ServerDataEnum.calFreeSensor
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.calibStatus)
+                Case ServerDataEnum.calibStatus
                     Dim messageTableName As String = NameOf(s_calibrationMessages)
-                    item = New SummaryRecord(
-                        recordNumber,
-                        kvp,
-                        messages:=s_calibrationMessages,
-                        messageTableName)
+                    item = New SummaryRecord(recordNumber,
+                                             kvp,
+                                             messages:=s_calibrationMessages,
+                                             messageTableName)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.calibrationIconId)
+                Case ServerDataEnum.calibrationIconId
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.timeToNextEarlyCalibrationMinutes)
+                Case ServerDataEnum.timeToNextEarlyCalibrationMinutes
                     If kvp.Value = "15555" Then
                         message = "Calibration Free Sensor"
                         item = New SummaryRecord(recordNumber, kvp, message)
@@ -541,8 +549,8 @@ Friend Module Form1UpdateHelpers
                         s_listOfSummaryRecords.Add(item)
                     End If
 
-                Case NameOf(ServerDataEnum.timeToNextCalibrationMinutes),
-                     NameOf(ServerDataEnum.timeToNextCalibrationRecommendedMinutes)
+                Case ServerDataEnum.timeToNextCalibrationMinutes,
+                     ServerDataEnum.timeToNextCalibrationRecommendedMinutes
                     If kvp.Value = "-1" Then
                         message = "Calibration Free Sensor"
                         item = New SummaryRecord(recordNumber, kvp, message)
@@ -552,7 +560,7 @@ Friend Module Form1UpdateHelpers
                         s_listOfSummaryRecords.Add(item)
                     End If
 
-                Case NameOf(ServerDataEnum.timeToNextCalibHours)
+                Case ServerDataEnum.timeToNextCalibHours
                     Dim timeToNextCalibrationHours As Byte = Byte.Parse(kvp.Value)
                     If timeToNextCalibrationHours = Byte.MaxValue Then
                         message = "Calibration Free Sensor"
@@ -564,109 +572,109 @@ Friend Module Form1UpdateHelpers
                         s_listOfSummaryRecords.Add(item)
                     End If
 
-                Case NameOf(ServerDataEnum.finalCalibration)
+                Case ServerDataEnum.finalCalibration
                     If Boolean.Parse(kvp.Value) Then
                         s_timeToNextCalibrationMinutes = -1
                     End If
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.sensorDurationMinutes)
+                Case ServerDataEnum.sensorDurationMinutes
                     Dim sensorDurationMinutes As Integer = CInt(kvp.Value)
                     message = sensorDurationMinutes.MinutesToDaysHoursMinutes
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.sensorDurationHours)
+                Case ServerDataEnum.sensorDurationHours
                     Dim sensorDurationHours As Integer = CInt(kvp.Value)
                     message = sensorDurationHours.HoursToDaysAndHours(shortHr:=False)
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.transmitterPairedTime)
+                Case ServerDataEnum.transmitterPairedTime
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.systemStatusTimeRemaining)
+                Case ServerDataEnum.systemStatusTimeRemaining
                     s_systemStatusTimeRemaining =
                         New TimeSpan(hours:=0, minutes:=PatientData.SystemStatusTimeRemaining, seconds:=0)
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.gstBatteryLevel)
+                Case ServerDataEnum.gstBatteryLevel
                     message = If(kvp.Value = "-1" OrElse kvp.Value = "255",
                                  "Integrated Transmitter so N/A.",
                                  $"Transmitter battery is at {kvp.Value}%.")
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.pumpBannerState)
+                Case ServerDataEnum.pumpBannerState
                     s_pumpBannerStateValue = JsonToListOfDictionary(json:=kvp.Value)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     mainForm.PumpBannerStateLabel.Visible = s_pumpBannerStateValue.Count > 0
 
-                Case NameOf(ServerDataEnum.therapyAlgorithmState)
+                Case ServerDataEnum.therapyAlgorithmState
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.reservoirLevelPercent)
+                Case ServerDataEnum.reservoirLevelPercent
                     message = $"Reservoir is {PatientData.ReservoirLevelPercent}% full."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.reservoirAmount)
+                Case ServerDataEnum.reservoirAmount
                     message = $"Full reservoir holds {PatientData.ReservoirAmount}U."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.pumpSuspended)
+                Case ServerDataEnum.pumpSuspended
                     item = New SummaryRecord(recordNumber, kvp)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.pumpBatteryLevelPercent)
+                Case ServerDataEnum.pumpBatteryLevelPercent
                     message = $"Pump battery is at {kvp.Value}%."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.isPumpCharging)
+                Case ServerDataEnum.isPumpCharging
                     message = If(Boolean.Parse(kvp.Value),
                                  $"Pump is charging!",
                                  $"Pump is not charging!")
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.reservoirRemainingUnits)
+                Case ServerDataEnum.reservoirRemainingUnits
                     message = $"Reservoir has {PatientData.ReservoirRemainingUnits}U remaining."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.infusionStatus),
-                     NameOf(ServerDataEnum.reservoirStatus)
+                Case ServerDataEnum.infusionStatus,
+                     ServerDataEnum.reservoirStatus
 
                     message = $"{kvp.Key.ToTitleCase} is {kvp.Value.ToTitle}"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.infusionRemainingDuration)
+                Case ServerDataEnum.infusionRemainingDuration
                     message = $"Infusion Set has {PatientData.InfusionRemainingDuration.MinutesToDaysHoursMinutes} left."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.conduitInRange)
+                Case ServerDataEnum.conduitInRange
                     message = $"Phone {If(PatientData.ConduitInRange, "is", "is not")} in range of pump."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.conduitMedicalDeviceInRange)
+                Case ServerDataEnum.conduitMedicalDeviceInRange
                     message = $"Pump {If(CBool(kvp.Value), "is", "is not")} in range of phone"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.conduitSensorInRange)
+                Case ServerDataEnum.conduitSensorInRange
                     message = $"Transmitter {If(PatientData.ConduitSensorInRange, "is", "is not")} in range of pump."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.systemStatusMessage),
-                     NameOf(ServerDataEnum.sensorState)
+                Case ServerDataEnum.systemStatusMessage,
+                     ServerDataEnum.sensorState
                     item = New SummaryRecord(
                         recordNumber,
                         kvp,
@@ -674,37 +682,37 @@ Friend Module Form1UpdateHelpers
                         messageTableName:=NameOf(s_sensorMessages))
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.gstCommunicationState)
+                Case ServerDataEnum.gstCommunicationState
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.pumpCommunicationState)
+                Case ServerDataEnum.pumpCommunicationState
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.timeFormat)
+                Case ServerDataEnum.timeFormat
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.bgUnits)
+                Case ServerDataEnum.bgUnits
                     item = New SummaryRecord(recordNumber, kvp, message:=bgUnits)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.maxAutoBasalRate)
+                Case ServerDataEnum.maxAutoBasalRate
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.maxBolusAmount)
+                Case ServerDataEnum.maxBolusAmount
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.sgBelowLimit)
+                Case ServerDataEnum.sgBelowLimit
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.approvedForTreatment)
+                Case ServerDataEnum.approvedForTreatment
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.lastAlarm)
+                Case ServerDataEnum.lastAlarm
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     s_lastAlarmValue = kvp.Value.JsonToDictionary()
 
-                Case NameOf(ServerDataEnum.activeInsulin)
+                Case ServerDataEnum.activeInsulin
                     s_activeInsulin = PatientData.ActiveInsulin
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
@@ -712,25 +720,25 @@ Friend Module Form1UpdateHelpers
 
                     End If
 
-                Case NameOf(ServerDataEnum.basal)
+                Case ServerDataEnum.basal
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     s_basalList(index:=0) = If(IsNullOrWhiteSpace(kvp.Value),
                                                New Basal,
                                                PatientData.Basal)
 
-                Case NameOf(ServerDataEnum.lastSensorTime)
+                Case ServerDataEnum.lastSensorTime
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.lastSG)
+                Case ServerDataEnum.lastSG
                     s_lastSg = New SG(PatientData.LastSG)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.lastSGTrend)
+                Case ServerDataEnum.lastSGTrend
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.limits)
+                Case ServerDataEnum.limits
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     s_limitRecords = New List(Of Limit)
@@ -743,33 +751,33 @@ Friend Module Form1UpdateHelpers
                     End If
                     s_limitRecords = PatientData.Limits
 
-                Case NameOf(ServerDataEnum.belowHypoLimit)
+                Case ServerDataEnum.belowHypoLimit
                     message =
                         $"Time below limit = {PercentOf24HoursToString(kvp.Value)}"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.aboveHyperLimit)
+                Case ServerDataEnum.aboveHyperLimit
                     message = $"Time above limit = {PercentOf24HoursToString(kvp.Value)}"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.timeInRange)
+                Case ServerDataEnum.timeInRange
                     message = $"Time in range = {PercentOf24HoursToString(kvp.Value)}"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.averageSGFloat)
+                Case ServerDataEnum.averageSGFloat
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.averageSG)
+                Case ServerDataEnum.averageSG
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.markers)
+                Case ServerDataEnum.markers
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
 
-                Case NameOf(ServerDataEnum.sgs)
+                Case ServerDataEnum.sgs
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     s_lastSgValue = 0
@@ -777,34 +785,33 @@ Friend Module Form1UpdateHelpers
                         s_lastSgValue = s_sgRecords.Item(index:=s_sgRecords.Count - 2).sg
                     End If
 
-                Case NameOf(ServerDataEnum.notificationHistory)
-                    item = New SummaryRecord(
-                        recordNumber:=CSng(c.Index + 0.1),
-                        key:="activeNotification")
+                Case ServerDataEnum.notificationHistory
+                    item = New SummaryRecord(recordNumber:=CSng(c.Index + 0.1),
+                                             key:="activeNotification")
                     s_listOfSummaryRecords.Add(item)
                     item = New SummaryRecord(recordNumber:=CSng(c.Index + 0.2),
                                              key:="clearedNotifications")
                     s_listOfSummaryRecords.Add(item)
                     s_notificationHistoryValue = kvp.Value.JsonToDictionary()
 
-                Case NameOf(ServerDataEnum.reservoirIconSelection)
+                Case ServerDataEnum.reservoirIconSelection
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.infusionStatusIconSelection)
+                Case ServerDataEnum.infusionStatusIconSelection
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.pumpBatteryLevelTime)
+                Case ServerDataEnum.pumpBatteryLevelTime
                     message = $"Pump Battery Level Time: {CInt(kvp.Value).MinutesToDaysHoursMinutes}."
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
-                Case NameOf(ServerDataEnum.pumpBatteryIconSelection)
+                Case ServerDataEnum.pumpBatteryIconSelection
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
-                Case NameOf(ServerDataEnum.sensorLifeText)
+                Case ServerDataEnum.sensorLifeText
                     message = $"Sensor life: {kvp.Value}"
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp, message))
 
-                Case NameOf(ServerDataEnum.sensorLifeIcon)
+                Case ServerDataEnum.sensorLifeIcon
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case Else
@@ -943,18 +950,15 @@ Friend Module Form1UpdateHelpers
             End If
         Next
 
-        Dim safeBasalDurationStr As String = String.Empty
-        Dim key As String = NameOf(TherapyAlgorithmState.SafeBasalDuration)
-        If s_therapyAlgorithmStateValue?.TryGetValue(key, value:=safeBasalDurationStr) Then
-            Dim safeBasalDuration As Integer = CInt(safeBasalDurationStr)
-            If safeBasalDuration > 0 Then
-                mainForm.LastSgOrExitTimeLabel.Text =
-                    $"Exit In:{ TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(unit:="hr")}"
-                mainForm.LastSgOrExitTimeLabel.Visible = True
-                mainForm.LastSgOrExitTimeLabel.CenterLabelOnParent()
-            Else
-                mainForm.LastSgOrExitTimeLabel.Visible = False
-            End If
+        Dim safeBasalDuration As Integer =
+            PatientData.TherapyAlgorithmState.SafeBasalDuration
+        If safeBasalDuration > 0 Then
+            mainForm.LastSgOrExitTimeLabel.Text =
+                $"Exit In:{ TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(unit:="hr")}"
+            mainForm.LastSgOrExitTimeLabel.Visible = True
+            mainForm.LastSgOrExitTimeLabel.CenterLabelOnParent()
+        Else
+            mainForm.LastSgOrExitTimeLabel.Visible = False
         End If
         mainForm.TlpPumpBannerState.DisplayDataTableInDGV(
             table:=ClassCollectionToDataTable(classCollection:=listOfBannerState),
