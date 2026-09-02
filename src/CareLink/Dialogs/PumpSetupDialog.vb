@@ -108,16 +108,16 @@ Public Class PumpSetupDialog
         pageArea.Right = CInt(e.PageBounds.Right * 14.4)
 
         Dim fmtRange As STRUCT_FORMATRANGE
-        fmtRange.chrg.cpMin = _charFrom
-        fmtRange.chrg.cpMax = _charTo
-        fmtRange.hdc = e.Graphics.GetHdc()
-        fmtRange.hdcTarget = fmtRange.hdc
-        fmtRange.rc = printArea
-        fmtRange.rcPage = pageArea
+        fmtRange.Chrg.CpMin = _charFrom
+        fmtRange.Chrg.CpMax = _charTo
+        fmtRange.Hdc = e.Graphics.GetHdc()
+        fmtRange.HdcTarget = fmtRange.Hdc
+        fmtRange.Rc = printArea
+        fmtRange.RcPage = pageArea
 
         Dim hWnd As IntPtr = _printRtb.Handle
         Dim res As IntPtr = SendMessage(hWnd, msg:=EM_FORMATRANGE, wParam:=CType(1, IntPtr), lParam:=fmtRange)
-        e.Graphics.ReleaseHdc(fmtRange.hdc)
+        e.Graphics.ReleaseHdc(fmtRange.Hdc)
 
         Dim charsPrinted As Integer = res.ToInt32()
         If charsPrinted < _charTo Then
@@ -331,7 +331,7 @@ Public Class PumpSetupDialog
             For Each item As KeyValuePair(Of String, NamedBasalRecord) In Me.Pdf.Basal.NamedBasal
                 Dim text As String = $"{Indent4}{item.Key}:"
                 .AppendTextNewFont(text, newFont:=FixedWidthBoldFont, includeNewLine:=True)
-                For Each e As IndexClass(Of BasalRateRecord) In item.Value.basalRates.WithIndex
+                For Each e As IndexClass(Of BasalRateRecord) In item.Value.BasalRates.WithIndex
                     Dim basalRate As BasalRateRecord = e.Value
                     If Not basalRate.IsValid Then
                         Exit For
@@ -339,7 +339,7 @@ Public Class PumpSetupDialog
                     Dim startTime As TimeOnly = basalRate.Time
                     Dim endTime As TimeOnly = If(e.IsLast,
                                                  Eleven59,
-                                                 item.Value.basalRates(index:=e.Index + 1).Time)
+                                                 item.Value.BasalRates(index:=e.Index + 1).Time)
 
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
                     .AppendTimeValueRow(startTime, endTime, value, Me.Pdf.Utilities.TimeFormat)

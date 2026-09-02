@@ -14,7 +14,7 @@ Public Class LowGlucoseSuspended
         Me.Kind = "Marker"
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
-        Me.deliverySuspended = item.Type = "LOW_GLUCOSE_SUSPENDED"
+        Me.DeliverySuspended = item.Type = "LOW_GLUCOSE_SUSPENDED"
     End Sub
 
     <DisplayName("Record Number")>
@@ -59,6 +59,7 @@ Public Class LowGlucoseSuspended
 
     <DisplayName("Delivery Suspended")>
     <Column(Order:=7, TypeName:=NameOf([Boolean]))>
-    Public Property deliverySuspended As Boolean
+    <JsonPropertyName("deliverySuspended")>
+    Public Property DeliverySuspended As Boolean
 
 End Class

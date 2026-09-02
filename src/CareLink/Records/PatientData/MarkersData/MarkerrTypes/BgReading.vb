@@ -17,7 +17,7 @@ Public Class BgReading
         With item.Data.DataValues
             Me.UnitValue =
                 .UnitValue.RoundToSingle(digits:=0, considerValue:=True)
-            Me.bgUnits = .bgUnits
+            Me.BgUnits = .BgUnits
         End With
     End Sub
 
@@ -67,14 +67,15 @@ Public Class BgReading
 
     <DisplayName("Units")>
     <Column(Order:=9, TypeName:=NameOf([String]))>
-    Public ReadOnly Property bgUnits As String
+    <JsonPropertyName("bgUnits")>
+    Public ReadOnly Property BgUnits As String
 
     <DisplayName("UnitValue (mg/dL)")>
     <Column(Order:=10, TypeName:=NameOf([Single]))>
     Public ReadOnly Property UnitValueMgdL As Single
         Get
             If Me.UnitValue.IsSgInvalid Then Return Me.UnitValue
-            Return If(Me.bgUnits = "MGDL",
+            Return If(Me.BgUnits = "MGDL",
                       Me.UnitValue,
                       CSng(Math.Round(Me.UnitValue * MmolLUnitsDivisor)))
         End Get
@@ -85,7 +86,7 @@ Public Class BgReading
     Public ReadOnly Property UnitValueMmolL As Single
         Get
             If Me.UnitValue.IsSgInvalid Then Return Me.UnitValue
-            Return If(Me.bgUnits <> "MGDL",
+            Return If(Me.BgUnits <> "MGDL",
                       Me.UnitValue,
                       (Me.UnitValue / MmolLUnitsDivisor).RoundToSingle(digits:=2))
         End Get

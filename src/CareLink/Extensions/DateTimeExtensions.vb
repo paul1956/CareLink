@@ -74,7 +74,7 @@ Friend Module DateTimeExtensions
         success = False
         Dim currentCultureLocal As CultureInfo = CurrentDateCulture
         Dim uiCultureLocal As CultureInfo = CultureInfo.CurrentUICulture
-        Dim usCultureLocal As CultureInfo = usDataCulture
+        Dim usCultureLocal As CultureInfo = UsDataCulture
 
         If Date.TryParse(s, provider:=currentCultureLocal, styles, result) Then
             success = True
@@ -455,7 +455,7 @@ Friend Module DateTimeExtensions
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case NameOf(ActiveNotification.SecondaryTime)
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.NoCurrentDateDefault, success)
-            Case NameOf(ActiveNotification.triggeredDateTime)
+            Case NameOf(ActiveNotification.TriggeredDateTime)
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)
             Case "dateTime"
                 result = s.CultureSpecificParse(styles:=DateTimeStyles.AdjustToUniversal, success)

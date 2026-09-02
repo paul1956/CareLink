@@ -31,7 +31,7 @@ Public Class ActiveNotifications
     <DisplayName("Date Time")>
     <Column(Order:=4, TypeName:="Date")>
     <JsonPropertyName("dateTime")>
-    Public Property [dateTime] As String
+    Public Property DateTime As String
 
     <DisplayName("Type")>
     <Column(Order:=5, TypeName:=NameOf([String]))>
@@ -41,7 +41,7 @@ Public Class ActiveNotifications
     <DisplayName("Triggered Date Time")>
     <Column(Order:=6, TypeName:="Date")>
     <JsonPropertyName("triggeredDateTime")>
-    Public Property triggeredDateTime As String
+    Public Property TriggeredDateTime As String
 
     <DisplayName("Additional Info")>
     <Column(Order:=7, TypeName:="AdditionalInfo")>

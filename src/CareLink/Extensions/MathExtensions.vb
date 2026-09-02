@@ -202,7 +202,7 @@ Friend Module MathExtensions
         End If
         Dim result As Single
         Const style As NumberStyles = NumberStyles.Number
-        Return If(Single.TryParse(s, style, provider:=usDataCulture, result),
+        Return If(Single.TryParse(s, style, provider:=UsDataCulture, result),
                   result.RoundToSingle(digits),
                   Single.NaN)
     End Function

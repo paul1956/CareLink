@@ -16,7 +16,7 @@ Public Class NamedBasalRecord
     End Sub
 
     Public Property Active As Boolean = False
-    Public Property basalRates As New List(Of BasalRateRecord)
+    Public Property BasalRates As New List(Of BasalRateRecord)
     Public Property Total24Hour As String = EmptyString
 
     Public Sub UpdateBasalRates(sTable As StringTable)
@@ -27,7 +27,7 @@ Public Class NamedBasalRecord
             Dim value As String = e.Value.Columns(index:=0)
             Dim item As New BasalRateRecord(value)
             If Not item.IsValid Then Exit For
-            Me.basalRates.Add(item)
+            Me.BasalRates.Add(item)
         Next
     End Sub
 

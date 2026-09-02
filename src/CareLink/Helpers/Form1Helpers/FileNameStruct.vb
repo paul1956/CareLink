@@ -10,12 +10,12 @@ Friend Structure FileNameStruct
     ''' <summary>
     '''  Gets or sets the file name including its full path.
     ''' </summary>
-    Public withPath As String
+    Public WithPath As String
 
     ''' <summary>
     '''  Gets or sets the file name without its path.
     ''' </summary>
-    Public withoutPath As String
+    Public WithoutPath As String
 
     ''' <summary>
     '''  Initializes a new instance of the <see cref="FileNameStruct"/> structure.
@@ -23,8 +23,8 @@ Friend Structure FileNameStruct
     ''' <param name="withPath">The file name including its full path.</param>
     ''' <param name="withoutPath">The file name without its path.</param>
     Public Sub New(withPath As String, withoutPath As String)
-        Me.withPath = withPath
-        Me.withoutPath = withoutPath
+        Me.WithPath = withPath
+        Me.WithoutPath = withoutPath
     End Sub
 
     ''' <summary>
@@ -41,8 +41,8 @@ Friend Structure FileNameStruct
         End If
 
         Dim other As FileNameStruct = DirectCast(obj, FileNameStruct)
-        Return withPath = other.withPath AndAlso
-               withoutPath = other.withoutPath
+        Return WithPath = other.WithPath AndAlso
+               WithoutPath = other.WithoutPath
     End Function
 
     ''' <summary>
@@ -50,7 +50,7 @@ Friend Structure FileNameStruct
     ''' </summary>
     ''' <returns>A hash code for the current structure.</returns>
     Public Overrides Function GetHashCode() As Integer
-        Return HashCode.Combine(withPath, withoutPath)
+        Return HashCode.Combine(WithPath, WithoutPath)
     End Function
 
 End Structure

@@ -49,7 +49,7 @@ Public Class ActiveInsulin
     <DisplayName("Kind")>
     <Column(Order:=3, TypeName:=NameOf([String]))>
     <JsonPropertyName("kind")>
-    Public Property kind As String
+    Public Property Kind As String
 
     <DisplayName("Precision")>
     <Column(Order:=4, TypeName:=NameOf([String]))>

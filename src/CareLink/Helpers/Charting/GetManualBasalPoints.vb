@@ -52,7 +52,7 @@ Friend Module GetManualBasalPoints
         Dim lowGlucoseSuspend As New LowGlucoseSuspended(
             item:=s_markers.Last(),
             recordNumber:=s_markers.Count)
-        If lowGlucoseSuspend.deliverySuspended Then
+        If lowGlucoseSuspend.DeliverySuspended Then
             Return New SortedDictionary(Of OADate, Single)
         End If
 

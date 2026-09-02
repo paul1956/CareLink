@@ -790,7 +790,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
                     s_lastSgValue = 0
                     If s_sgRecords.Count > 2 Then
-                        s_lastSgValue = s_sgRecords.Item(index:=s_sgRecords.Count - 2).sg
+                        s_lastSgValue = s_sgRecords.Item(index:=s_sgRecords.Count - 2).Sg
                     End If
 
                 Case ServerDataEnum.notificationHistory

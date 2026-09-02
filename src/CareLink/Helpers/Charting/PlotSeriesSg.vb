@@ -38,7 +38,7 @@ Friend Module PlotSeriesSg
                 With chart.Series(name:=SgSeriesName).Points
                     Dim sgRecord As SG = sgRecordWithIndex.Value
                     Dim xValue As OADate = sgRecord.OaDateTime()
-                    Dim f As Single = sgRecord.sg
+                    Dim f As Single = sgRecord.Sg
                     If Single.IsNaN(f) OrElse f.AlmostZero Then
                         .AddXY(xValue, yValue:=HomePageMealRow)
                         .Last().Color = Color.Transparent
@@ -62,7 +62,7 @@ Friend Module PlotSeriesSg
                             lineColor = Color.White
                         End If
 
-                        If sgRecord.isBackfill Then
+                        If sgRecord.IsBackfill Then
                             Dim nextXValue As Date = If(sgRecordWithIndex.IsLast,
                                                         sgRecord.Timestamp,
                                                         s_sgRecords(index:=sgRecordWithIndex.Index + 1).Timestamp)

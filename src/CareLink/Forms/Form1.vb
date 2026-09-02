@@ -52,13 +52,6 @@ Public Class Form1
     ''' </summary>
     ''' <returns> </returns>
     Friend Shared Property Client As Client2
-        Get
-            Return s_client
-        End Get
-        Set
-            s_client = Value
-        End Set
-    End Property
 
 #Region "Overrides"
 
@@ -85,69 +78,69 @@ Public Class Form1
         Select Case m.Msg
             Case WM_POWERBROADCAST
                 Select Case m.WParam.ToInt32()
-                    'headderText passed when system is going on standby / suspended
+                    'headerText passed when system is going on standby / suspended
                     Case PBT_APMQUERYSUSPEND
                         Me.PowerModeChanged(
                             sender:=Nothing,
                             e:=New PowerModeChangedEventArgs(mode:=PowerModes.Suspend))
 
-                        'headderText passed when system is resumed after suspension.
+                        'headerText passed when system is resumed after suspension.
                     Case PBT_APMRESUMESUSPEND
                         Me.PowerModeChanged(
                             sender:=Nothing,
                             e:=New PowerModeChangedEventArgs(mode:=PowerModes.Resume))
 
-                    'headderText passed when system Suspend Failed
+                    'headerText passed when system Suspend Failed
                     Case PBT_APMQUERYSUSPENDFAILED
                         Me.PowerModeChanged(
                             sender:=Nothing,
                             e:=New PowerModeChangedEventArgs(mode:=PowerModes.Resume))
 
-                    'headderText passed when system is suspended
+                    'headerText passed when system is suspended
                     Case PBT_APMSUSPEND
                         Me.PowerModeChanged(
                             sender:=Nothing,
                             e:=New PowerModeChangedEventArgs(mode:=PowerModes.Suspend))
 
-                    'headderText passed when system is in standby
+                    'headerText passed when system is in standby
                     Case PBT_APMSTANDBY
                         Me.PowerModeChanged(
                             sender:=Nothing,
                             e:=New PowerModeChangedEventArgs(mode:=PowerModes.Suspend))
 
-                        'headderText passed when system resumes from standby
+                        'headerText passed when system resumes from standby
                     Case PBT_APMRESUMESTANDBY
                         Me.PowerModeChanged(
                             sender:=Nothing,
                             e:=New PowerModeChangedEventArgs(mode:=PowerModes.Resume))
 
-                        'headderText passed when system resumes from suspend
+                        'headerText passed when system resumes from suspend
                     Case PBT_APMRESUMESUSPEND
                         Me.PowerModeChanged(
                             sender:=Nothing,
                             e:=New PowerModeChangedEventArgs(mode:=PowerModes.Resume))
 
-                    'headderText passed when system is resumed automatically
+                    'headerText passed when system is resumed automatically
                     Case PBT_APMRESUMEAUTOMATIC
                         Me.PowerModeChanged(
                             sender:=Nothing,
                             e:=New PowerModeChangedEventArgs(mode:=PowerModes.Resume))
 
-                    'headderText passed when system is resumed from critical
+                    'headerText passed when system is resumed from critical
                     'suspension possibly due to battery failure
                     Case PBT_APMRESUMECRITICAL
                         Stop
 
-                    'headderText passed when system is low on battery
+                    'headerText passed when system is low on battery
                     Case PBT_APMBATTERYLOW
                         Stop
 
-                    'headderText passed when system power status changed
+                    'headerText passed when system power status changed
                     'from battery to AC power or vice-a-versa
                     Case PBT_APMPOWERSTATUSCHANGE
                         Stop
 
-                    'headderText passed when OEM Event is fired. Not sure what that is??
+                    'headerText passed when OEM Event is fired. Not sure what that is??
                     Case PBT_APMOEMEVENT
                         Stop
 
@@ -189,7 +182,7 @@ Public Class Form1
 
         Dim predicate As Func(Of LowGlucoseSuspended, Boolean) =
             Function(s As LowGlucoseSuspended) As Boolean
-                Return s.deliverySuspended
+                Return s.DeliverySuspended
             End Function
 
         showLegend = s_suspendedMarkers.Any(predicate)
@@ -296,7 +289,7 @@ Public Class Form1
     '''  the <see cref="ActiveInsulinChart"/>, <see cref="SummaryChart"/>,
     '''  and <see cref="TreatmentMarkersChart"/>. Displays context-sensitive
     '''  information in a panel or callout when the mouse moves over a data point.
-    '''  Shows details such as marker type, headderText, and time,
+    '''  Shows details such as marker type, headerText, and time,
     '''  or sensor glucose information, depending on the series.
     ''' </summary>
     ''' <param name="sender">The source of the event, a <see cref="Chart"/> control.</param>
@@ -736,13 +729,13 @@ Public Class Form1
                         e.CellStyle.Font = s_font12
                     End If
 
-                Case NameOf(Calibration.bgUnits)
+                Case NameOf(Calibration.BgUnits)
                     Dim key As String = Convert.ToString(e.Value)
                     Try
                         e.Value = UnitsStrings(key)
                         e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     Catch ex As Exception
-                        e.Value = key ' Key becomes headderText if its unknown
+                        e.Value = key ' Key becomes headerText if its unknown
                     End Try
                     dgv.CellFormattingSetForegroundColor(e)
 
@@ -799,8 +792,8 @@ Public Class Form1
                     dgv.CellFormattingSg(e, partialKey:=NameOf(Limit.HighLimit))
 
                 Case NameOf(Limit.LowLimit),
-                     NameOf(Limit.lowLimitMgdL),
-                     NameOf(Limit.lowLimitMmolL)
+                     NameOf(Limit.LowLimitMgdL),
+                     NameOf(Limit.LowLimitMmolL)
                     dgv.CellFormattingSg(e, partialKey:=NameOf(Limit.LowLimit))
 
                 Case NameOf(SG.SensorState)
@@ -811,10 +804,10 @@ Public Class Form1
                         dgv.CellFormattingToTitle(e)
                     End If
 
-                Case NameOf(SG.sg),
-                     NameOf(SG.sgMgdL),
-                     NameOf(SG.sgMmolL)
-                    dgv.CellFormattingSg(e, partialKey:=NameOf(SG.sg))
+                Case NameOf(SG.Sg),
+                     NameOf(SG.SgMgdL),
+                     NameOf(SG.SgMmolL)
+                    dgv.CellFormattingSg(e, partialKey:=NameOf(SG.Sg))
 
                 Case NameOf(SG.Timestamp)
                     dgv.CellFormattingDateTime(e)
@@ -890,9 +883,9 @@ Public Class Form1
                             .DefaultCellStyle.WrapMode = DataGridViewTriState.True
                         End If
                     Else
-                        If s_wrappedDataGridView.Contains(item:=dgv.Name) Then
+                        If WrappedDataGridView.Contains(item:=dgv.Name) Then
                             Dim result As String = String.Empty
-                            If s_wrappedStrings.TryGetPrefixMatch(.HeaderText, result) Then
+                            If WrappedStrings.TryGetPrefixMatch(.HeaderText, result) Then
                                 Dim trimChars As Char() = {" "c, NonBreakingSpace}
                                 Dim newValue As String = $"{result.TrimEnd(trimChars)}{vbCrLf}"
                                 .HeaderText = .HeaderText.Replace(oldValue:=result, newValue)
@@ -932,7 +925,7 @@ Public Class Form1
     '''  Handles the <see cref="DataGridView.DataError"/> event
     '''  for all DataGridViews in the form. This event is raised when an
     '''  exception occurs during data operations such as
-    '''  formatting, parsing, or committing a cell headderText.
+    '''  formatting, parsing, or committing a cell headerText.
     '''  The handler currently stops execution for debugging purposes.
     ''' </summary>
     ''' <param name="sender">
@@ -970,7 +963,9 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         ' Log the error (to file, event log, etc.)
-        Debug.WriteLine($"DataError in {dgv.Name}: {e.Exception.Message}")
+        Dim message As String =
+            $"DataError in {dgv.Name}: {e.Exception.Message}"
+        Debug.WriteLine(message)
 
         ' Show a user-friendly message
         Dim dgvName As String = dgv.Name.Remove(s:="dgv")
@@ -1036,7 +1031,6 @@ Public Class Form1
 
     Private WithEvents DgvCopyWithExcelMenuStrip As New ContextMenuStrip
     Friend WithEvents DgvCopyWithoutExcelMenuStrip As New ContextMenuStrip
-    Private Shared s_client As Client2
 
     ''' <summary>
     '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event
@@ -1343,9 +1337,9 @@ Public Class Form1
     '''  Handles the <see cref="DataGridView.CellBeginEdit"/> event
     '''  for the <see cref="DgvCareLinkUsers"/> DataGridView.
     '''  This event is raised when a cell enters edit mode.
-    '''  Saves the current headderText of the cell being edited to the
+    '''  Saves the current headerText of the cell being edited to the
     '''  DataGridView's <see cref="DataGridView.Tag"/> property.
-    '''  This allows comparison with the new headderText after editing is complete,
+    '''  This allows comparison with the new headerText after editing is complete,
     '''  for change detection or validation.
     ''' </summary>
     ''' <param name="sender">
@@ -1358,8 +1352,8 @@ Public Class Form1
         Handles DgvCareLinkUsers.CellBeginEdit
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        'Here we save a current headderText of cell to some variable,
-        'that later we can compare with a new headderText
+        'Here we save a current headerText of cell to some variable,
+        'that later we can compare with a new headerText
         'For example using of dgv.Tag property
         If e.RowIndex >= 0 AndAlso e.ColumnIndex > 0 Then
             dgv.Tag = dgv.CurrentCell.Value.ToString
@@ -1480,16 +1474,16 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            Dim headderText As String = dgv.Columns(.Index).HeaderText
-            If IsNullOrWhiteSpace(value:=headderText) Then
-                headderText = .DataPropertyName.Remove(s:="DgvCareLinkUsers")
+            Dim headerText As String = dgv.Columns(.Index).HeaderText
+            If IsNullOrWhiteSpace(value:=headerText) Then
+                headerText = .DataPropertyName.Remove(s:="DgvCareLinkUsers")
             End If
-            If headderText.ContainsNoCase(value:="DeleteRow") Then
-                headderText = EmptyString
+            If headerText.ContainsNoCase(value:="DeleteRow") Then
+                headerText = EmptyString
             Else
                 If .Index > 0 AndAlso
                    IsNullOrWhiteSpace(value:= .DataPropertyName) AndAlso
-                   IsNullOrWhiteSpace(value:=headderText) Then
+                   IsNullOrWhiteSpace(value:=headerText) Then
 
                     .DataPropertyName = s_headerColumns(index:= .Index - 2)
                 End If
@@ -1501,7 +1495,7 @@ Public Class Form1
                 forceReadOnly = True
             End If
             Dim cellStyle As DataGridViewCellStyle = GetCellStyleForCareLinkUser(columnName:= .DataPropertyName)
-            e.DgvColumnAdded(cellStyle, forceReadOnly, caption:=headderText)
+            e.DgvColumnAdded(cellStyle, forceReadOnly, caption:=headerText)
         End With
     End Sub
 
@@ -1981,7 +1975,7 @@ Public Class Form1
                 ' Determine if this column is sorted and which direction
                 Dim glyphDir As SortOrder = col.HeaderCell.SortGlyphDirection
                 If glyphDir <> SortOrder.None Then
-                    Dim color As Color = Color.White
+                    Dim color As Color = color.White
                     Dim x As Integer = e.CellBounds.Right - 18
                     Dim y As Integer = e.CellBounds.Top + (e.CellBounds.Height \ 2) - 4
                     Dim points() As Point =
@@ -2065,7 +2059,7 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="DataGridView.CellFormatting"/> event
     '''  for the <see cref="DgvSummary"/> DataGridView.
-    '''  This event is raised when a cell's headderText needs to be formatted for display.
+    '''  This event is raised when a cell's headerText needs to be formatted for display.
     ''' </summary>
     ''' <param name="sender">
     '''  The source of the event, a <see cref="DataGridView"/> control.
@@ -2222,7 +2216,7 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="DataGridView.CellMouseClick"/> event for the
     '''  <see cref="DgvSummary"/> DataGridView.
-    '''  When a cell is clicked, checks if the headderText starts with <c>ClickToShowDetails</c>.
+    '''  When a cell is clicked, checks if the headerText starts with <c>ClickToShowDetails</c>.
     '''  If so, navigates to the appropriate tab or page in the UI based
     '''  on the key in the clicked row.
     '''  This allows users to quickly jump to detailed views for items such as
@@ -2335,7 +2329,7 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="DataGridView.CellFormatting"/> event for
     '''  the <see cref="DgvTherapyAlgorithmState"/> DataGridView.
-    '''  This event is raised when a cell's headderText needs to be formatted for display.
+    '''  This event is raised when a cell's headerText needs to be formatted for display.
     ''' </summary>
     ''' <param name="sender">
     '''  The source of the event, a <see cref="DataGridView"/> control.
@@ -2905,7 +2899,7 @@ Public Class Form1
             .CheckPathExists = True,
             .DefaultExt = "pdf",
             .Filter = "Settings file (*.pdf)|*.pdf",
-            .InitialDirectory = initialDirectory,
+            .initialDirectory = initialDirectory,
             .Multiselect = False,
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
@@ -2959,7 +2953,7 @@ Public Class Form1
             baseName:=BaseSnapshotName,
             cultureName:=CurrentDateCulture.Name,
             extension:="json",
-            mustBeUnique:=True).withPath
+            mustBeUnique:=True).WithPath
         File.WriteAllTextAsync(path, contents:=CleanPatientData())
     End Sub
 
@@ -3081,11 +3075,11 @@ Public Class Form1
 #Region "Options Menu Events"
 
     ''' <summary>
-    '''  Gets the selected speech recognition minimum confidence headderText from the menu.
+    '''  Gets the selected speech recognition minimum confidence headerText from the menu.
     ''' </summary>
     ''' <returns>
-    '''  The selected confidence headderText as a <see cref="Double"/>.
-    '''  Returns 100 if no item is checked or no numeric headderText is found.
+    '''  The selected confidence headerText as a <see cref="Double"/>.
+    '''  Returns 100 if no item is checked or no numeric headerText is found.
     ''' </returns>
     Private Function GetSpeechConfidenceValue() As Double
         For Each item As ToolStripMenuItem In Me.MenuOptionsSpeechRecognitionEnabled.DropDownItems
@@ -3356,7 +3350,7 @@ Public Class Form1
 
     ''' <summary>
     '''  Sets the checked state of speech recognition confidence threshold
-    '''  menu items based on the current headderText in
+    '''  menu items based on the current headerText in
     '''  <see cref="My.Settings.SystemSpeechRecognitionThreshold"/>.
     '''  Ensures only the selected threshold is checked.
     ''' </summary>
@@ -3522,7 +3516,7 @@ Public Class Form1
             Dim checkState As CheckState = Me.TempUseAdvanceAITDecayCheckBox.CheckState
             Dim whileUsing As String = $" hours, while using { .InsulinTypeName}"
             Me.TempUseAdvanceAITDecayCheckBox.Text =
-                If(checkState = CheckState.Checked,
+                If(checkState = checkState.Checked,
                    $"Advanced Decay, AIT will decay over { .InsulinRealAit}{ whileUsing}",
                    $"AIT will decay over { .PumpAit.ToHoursMinutes}{ whileUsing}")
 
@@ -3560,17 +3554,17 @@ Public Class Form1
     '''  for application settings.
     '''  This method is called whenever a setting is about to change,
     '''  except for settings whose names start with "System".
-    '''  It checks if the new headderText is different from the current headderText (case-insensitive).
+    '''  It checks if the new headerText is different from the current headerText (case-insensitive).
     '''  If the setting being changed is "CareLinkUserName", it updates the logged-on user
     '''  in <see cref="LoginHelpers.LoginDialog"/>.
     '''  If the user does not exist in <see cref="s_allUserSettingsData"/>,
     '''  a new <see cref="CareLinkUserDataRecord"/> is created and added.
-    '''  Finally, all user records are saved with the updated headderText.
+    '''  Finally, all user records are saved with the updated headerText.
     ''' </summary>
     ''' <param name="sender">The source of the event, typically the settings object.</param>
     ''' <param name="e">
     '''  A <see cref="SettingChangingEventArgs"/> containing the event data,
-    '''  including the setting name and new headderText.
+    '''  including the setting name and new headerText.
     ''' </param>
     Private Sub MySettings_SettingChanging(sender As Object, e As SettingChangingEventArgs)
         If e.SettingName.StartsWithNoCase(value:="System") Then Exit Sub
@@ -3919,14 +3913,14 @@ Public Class Form1
                 Dim epochAsLocalDate As Date =
                     PatientData.LastMedicalDeviceDataUpdateServerTime.ToString.FromUnixTime.ToLocalTime
 
-                ' The pump updates the lastMedicalDeviceDataUpdateServerEpoch headderText when
+                ' The pump updates the lastMedicalDeviceDataUpdateServerEpoch headerText when
                 ' it receives new data from the pump, but it may take a few minutes for the pump to receive
                 ' and process the new data.
                 ' If the epoch time is older than 6 minutes, it's likely that the pump has not yet updated
                 ' with the new data, so we should highlight the last update time
-                ' and show NaN for the SG headderText on the mini display.
+                ' and show NaN for the SG headerText on the mini display.
                 ' If it's within 6 minutes, we can assume that the pump has updated and
-                ' we can show the actual SG headderText.
+                ' we can show the actual SG headerText.
                 If epochAsLocalDate.IsDateOlderThan(referenceDate:=Date.Now, span:=SixMinuteSpan) Then
                     Me.SetLastUpdateTime(highLight:=True,
                                          isDaylightSavingTime:=epochAsLocalDate.IsDaylightSavingTime)
@@ -3936,7 +3930,7 @@ Public Class Form1
                     If s_lastSg IsNot Nothing Then
                         sgString = s_lastSg.ToString
                     End If
-                    _sgMiniDisplay.SetCurrentSgString(sgString, f:=s_lastSg.sg)
+                    _sgMiniDisplay.SetCurrentSgString(sgString, f:=s_lastSg.Sg)
                 End If
             Else
                 Me.UpdateAllTabPages(fromFile:=False)
@@ -4054,7 +4048,7 @@ Public Class Form1
                 .BackSecondaryColor = Color.Transparent,
                 .BorderlineColor = Color.Transparent,
                 .BorderlineWidth = 0,
-                .Size = New Size(width:=size, height:=size)}
+                .size = New Size(width:=size, height:=size)}
 
             With Me.TimeInRangeChart
                 .BorderSkin.BackSecondaryColor = Color.Transparent
@@ -4327,15 +4321,15 @@ Public Class Form1
 #Region "NotifyIcon Support"
 
     ''' <summary>
-    '''  Updates the notification icon with the latest sensor glucose headderText
+    '''  Updates the notification icon with the latest sensor glucose headerText
     '''  and displays a balloon tip if necessary.
     '''  This method is called to refresh the notification icon based on
     '''  the latest sensor glucose reading.
     ''' </summary>
-    ''' <param name="sgString">The last sensor glucose headderText as a string.</param>
+    ''' <param name="sgString">The last sensor glucose headerText as a string.</param>
     Private Sub UpdateNotifyIcon(sgString As String)
         Try
-            Dim sg As Single = s_lastSg.sg
+            Dim sg As Single = s_lastSg.Sg
             Dim tipText As String
             Using bitmapText As New Bitmap(width:=16, height:=16)
                 Using g As Graphics = Graphics.FromImage(bitmapText)
@@ -4575,19 +4569,19 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Updates the Active Insulin headderText display on the main form
+    '''  Updates the Active Insulin headerText display on the main form
     '''  and mini display.
     ''' </summary>
     ''' <remarks>
-    '''  If the active insulin headderText is available and non-negative,
+    '''  If the active insulin headerText is available and non-negative,
     '''  it is formatted and displayed.
     '''  Otherwise, "Unknown" or "---" is shown.
     ''' </remarks>
     ''' <exception cref="ArithmeticException">
-    '''  Thrown if an arithmetic error occurs while updating the active insulin headderText.
+    '''  Thrown if an arithmetic error occurs while updating the active insulin headerText.
     ''' </exception>
     ''' <exception cref="ApplicationException">
-    '''  Thrown if a general error occurs while updating the active insulin headderText.
+    '''  Thrown if a general error occurs while updating the active insulin headerText.
     ''' </exception>
     Private Sub UpdateActiveInsulin()
         Try
@@ -4858,7 +4852,7 @@ Public Class Form1
             End If
 
             Dim message As String = EmptyString
-            If s_lastSg.sg.IsSgValid Then
+            If s_lastSg.Sg.IsSgValid Then
                 Me.SensorMessageLabel.Visible = False
                 Dim sgString As String = New SG(PatientData.LastSG).ToString()
                 Me.CurrentSgLabel.Text = sgString
@@ -4867,10 +4861,10 @@ Public Class Form1
                 Me.ShieldUnitsLabel.CenterLabelOnParent()
                 Me.ShieldUnitsLabel.Top = Me.CurrentSgLabel.Bottom + 2
                 Me.UpdateNotifyIcon(sgString)
-                _sgMiniDisplay.SetCurrentSgString(sgString, f:=s_lastSg.sg)
+                _sgMiniDisplay.SetCurrentSgString(sgString, f:=s_lastSg.Sg)
                 message = SG.FormatSensorMessage(key:=PatientData.SensorState, truncate:=True)
             Else
-                _sgMiniDisplay.SetCurrentSgString(sgString:="---", f:=s_lastSg.sg)
+                _sgMiniDisplay.SetCurrentSgString(sgString:="---", f:=s_lastSg.Sg)
                 Me.CurrentSgLabel.Visible = False
                 Me.LastSgOrExitTimeLabel.Visible = False
                 Me.SensorMessageLabel.Visible = True
@@ -5265,7 +5259,7 @@ Public Class Form1
                 PatientData.CgmInfo.SensorProductModel?.Trim
 
             If IsFlex() Then
-                If SensorModelNumber Is Nothing Then
+                If sensorModelNumber Is Nothing Then
                     ' Simplera
                     Me.UpdateSimpleraLife()
                 Else
@@ -5493,7 +5487,7 @@ Public Class Form1
 
         ' Calculate Time in AutoMode
 
-        If s_autoModeStatusMarkers.Count = 0 AndAlso Not IsFlex Then
+        If s_autoModeStatusMarkers.Count = 0 AndAlso Not IsFlex() Then
             Me.SmartGuardLabel.Text = "SmartGuard 0%"
         ElseIf s_autoModeStatusMarkers.Count = 1 Then
             Me.SmartGuardLabel.Text = "SmartGuard 100%"
@@ -5525,7 +5519,7 @@ Public Class Form1
                     End If
                 Next
                 Me.SmartGuardLabel.Text =
-                    If(timeInAutoMode >= OneDaySpan OrElse (s_autoModeStatusMarkers.Count = 0 AndAlso IsFlex),
+                    If(timeInAutoMode >= OneDaySpan OrElse (s_autoModeStatusMarkers.Count = 0 AndAlso IsFlex()),
                        "SmartGuard 100%",
                        $"SmartGuard {CInt(timeInAutoMode / OneDaySpan * 100)}%")
             Catch ex As Exception
@@ -5544,19 +5538,19 @@ Public Class Form1
 
         For Each sg As SG In GetValidSgRecords()
             elements += 1
-            If sg.sgMgdL < 70 Then
+            If sg.SgMgdL < 70 Then
                 lowCount += 1
                 If NativeMmolL Then
-                    lowDeviations += ((GetTirLowLimit() - sg.sgMmolL) * MmolLUnitsDivisor) ^ 2
+                    lowDeviations += ((GetTirLowLimit() - sg.SgMmolL) * MmolLUnitsDivisor) ^ 2
                 Else
-                    lowDeviations += (GetTirLowLimit() - sg.sgMgdL) ^ 2
+                    lowDeviations += (GetTirLowLimit() - sg.SgMgdL) ^ 2
                 End If
-            ElseIf sg.sgMgdL > 180 Then
+            ElseIf sg.SgMgdL > 180 Then
                 highCount += 1
                 If NativeMmolL Then
-                    highDeviations += ((sg.sgMmolL - GetTirHighLimit()) * MmolLUnitsDivisor) ^ 2
+                    highDeviations += ((sg.SgMmolL - GetTirHighLimit()) * MmolLUnitsDivisor) ^ 2
                 Else
-                    highDeviations += (sg.sgMgdL - GetTirHighLimit()) ^ 2
+                    highDeviations += (sg.SgMgdL - GetTirHighLimit()) ^ 2
                 End If
             End If
         Next
@@ -5634,11 +5628,11 @@ Public Class Form1
     ''' <summary>
     '''  Updates the trend arrows display on the home tab.
     '''  This method updates the trend arrows label based on the
-    '''  current sensor glucose trend headderText.
+    '''  current sensor glucose trend headerText.
     ''' </summary>
     ''' <remarks>
     '''  The trend arrows label is set based on the last sensor glucose trend
-    '''  headderText and is styled accordingly.
+    '''  headerText and is styled accordingly.
     ''' </remarks>
     Private Sub UpdateTrendArrows()
         If PatientData.ConduitInRange Then
@@ -5647,7 +5641,7 @@ Public Class Form1
                                           s_font18Bold,
                                           s_font14Bold)
 
-            Me.TrendArrowsLabel.Text = s_trends(key)
+            Me.TrendArrowsLabel.Text = Trends(key)
         End If
         Me.SgTrendLabel.Visible = PatientData.ConduitInRange
         Me.TrendValueLabel.Visible = PatientData.ConduitInRange
@@ -5715,7 +5709,7 @@ Public Class Form1
 
         Dim modelNumber As String = mdi.ModelNumber
         Me.ModelLabel.Text = $"{modelNumber} HW Version = {mdi.HardwareRevision}"
-        Me.PumpNameLabel.Text = GetPumpName
+        Me.PumpNameLabel.Text = GetPumpName()
         Me.ReadingsLabel.Text = $"{GetValidSgRecords().Count()}/{288} SG Readings"
 
         Me.TlpLastSG.DisplayDataTableInDGV(

@@ -24,7 +24,7 @@ Friend Module PlotSuspend
     <Extension>
     Friend Sub PlotSuspendArea(pageChart As Chart, SuspendSeries As Series)
         If s_suspendedMarkers.Count = 1 AndAlso
-            Not s_suspendedMarkers(index:=0).deliverySuspended Then
+            Not s_suspendedMarkers(index:=0).DeliverySuspended Then
 
             Exit Sub
         End If
@@ -37,7 +37,7 @@ Friend Module PlotSuspend
                 Dim suspendRecord As LowGlucoseSuspended = e.Value
                 Dim xValue As Date = suspendRecord.Timestamp
 
-                If suspendRecord.deliverySuspended Then
+                If suspendRecord.DeliverySuspended Then
                     suspended = True
                     .AddXY(xValue, 0)
                     .Last.Color = lineColor

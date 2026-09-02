@@ -4,24 +4,27 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Text.Json.Serialization
 
 Public Class RaceRecord
 
     <DisplayName("Base")>
     <Column(Order:=0, TypeName:=NameOf([String]))>
-    Public Property base As String
+    <JsonPropertyName("base")>
+    Public Property Base As String
 
     <DisplayName("extra")>
     <Column(Order:=1, TypeName:=NameOf([String]))>
-    Public Property extra As String
+    <JsonPropertyName("extra")>
+    Public Property Extra As String
 
     Public Sub New(jsonDictionary As Dictionary(Of String, String))
         For Each e As KeyValuePair(Of String, String) In jsonDictionary
             Select Case e.Key
-                Case NameOf(base)
-                    Me.base = e.Value
-                Case NameOf(extra)
-                    Me.extra = e.Value
+                Case NameOf(Base)
+                    Me.Base = e.Value
+                Case NameOf(Extra)
+                    Me.Extra = e.Value
                 Case Else
                     Stop
             End Select
@@ -29,7 +32,7 @@ Public Class RaceRecord
     End Sub
 
     Public Overrides Function ToString() As String
-        Return $"{NameOf(base)} = '{Me.base}', {NameOf(extra)} = '{Me.extra}'"
+        Return $"{NameOf(Base)} = '{Me.Base}', {NameOf(Extra)} = '{Me.Extra}'"
     End Function
 
 End Class

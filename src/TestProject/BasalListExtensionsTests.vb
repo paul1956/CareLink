@@ -69,7 +69,7 @@ Public Class BasalListExtensionsTests
             .ActiveBasalPattern = "TEMP",
             .BasalRate = 1.0,
             .TempBasalRate = 2.0,
-            .tempBasalPercentage = 10.0F
+            .TempBasalPercentage = 10.0F
         }
         Dim list As New List(Of Basal) From {b}
 
@@ -84,7 +84,7 @@ Public Class BasalListExtensionsTests
             .ActiveBasalPattern = "TEMP",
             .BasalRate = 1.0,
             .TempBasalRate = 2.0,
-            .tempBasalPercentage = 0.0F
+            .TempBasalPercentage = 0.0F
         }
         Dim list As New List(Of Basal) From {b}
 

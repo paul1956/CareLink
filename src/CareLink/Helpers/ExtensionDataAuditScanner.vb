@@ -140,15 +140,9 @@ Public NotInheritable Class ExtensionDataAuditScanner
     ''' audit log produced during a scan.
     ''' </summary>
     Public NotInheritable Class AuditReport
-
-        Private ReadOnly _fields As New List(Of KeyValuePair(Of String, String))
         Private ReadOnly _log As New StringBuilder()
 
-        Public ReadOnly Property Fields As List(Of KeyValuePair(Of String, String))
-            Get
-                Return _fields
-            End Get
-        End Property
+        Public ReadOnly Property Fields As New List(Of KeyValuePair(Of String, String))
 
         Public ReadOnly Property Log As String
             Get
@@ -157,7 +151,7 @@ Public NotInheritable Class ExtensionDataAuditScanner
         End Property
 
         Friend Sub AddField(key As String, value As String)
-            _fields.Add(New KeyValuePair(Of String, String)(key, value))
+            Fields.Add(New KeyValuePair(Of String, String)(key, value))
         End Sub
 
         Friend Sub AppendLine(line As String)

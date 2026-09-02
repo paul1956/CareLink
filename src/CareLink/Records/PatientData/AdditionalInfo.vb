@@ -12,7 +12,7 @@ Public Class AdditionalInfo
     <DisplayName("Sensor Glucose")>
     <Column(Order:=1, TypeName:=NameOf([Single]))>
     <JsonPropertyName("sg")>
-    Public Property sg As Single
+    Public Property Sg As Single
 
     <DisplayName("Pump Delivery Suspend State")>
     <Column(Order:=2, TypeName:=NameOf([Boolean]))>

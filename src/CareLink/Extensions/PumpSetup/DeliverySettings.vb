@@ -82,7 +82,7 @@ Friend Module DeliverySettings
         With rtb
             For Each item As KeyValuePair(Of String, NamedBasalRecord) In pdf.Basal.NamedBasal
                 .AppendTextNewFont(text:=$"{Indent4}{item.Key}:", newFont:=FixedWidthBoldFont, includeNewLine:=True)
-                For Each e As IndexClass(Of BasalRateRecord) In item.Value.basalRates.WithIndex
+                For Each e As IndexClass(Of BasalRateRecord) In item.Value.BasalRates.WithIndex
                     Dim basalRate As BasalRateRecord = e.Value
                     If Not basalRate.IsValid Then
                         Exit For
@@ -90,7 +90,7 @@ Friend Module DeliverySettings
                     Dim startTime As TimeOnly = basalRate.Time
                     Dim endTime As TimeOnly = If(e.IsLast,
                                                  Eleven59,
-                                                 item.Value.basalRates(index:=e.Index + 1).Time)
+                                                 item.Value.BasalRates(index:=e.Index + 1).Time)
 
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
                     .AppendTimeValueRow(startTime, endTime, value, pdf.Utilities.TimeFormat)

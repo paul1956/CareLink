@@ -44,7 +44,8 @@ Public Class Limit
 
     <DisplayName("Low Limit (mg/dL)")>
     <Column(Order:=5, TypeName:=NameOf([Single]))>
-    Public ReadOnly Property lowLimitMgdL As Single
+    <JsonPropertyName("lowLimitMgdL")>
+    Public ReadOnly Property LowLimitMgdL As Single
         Get
             Return If(NativeMmolL,
                       CSng(Math.Round(Me.LowLimit * MmolLUnitsDivisor)),
@@ -54,7 +55,8 @@ Public Class Limit
 
     <DisplayName("Low Limit (mmol/L)")>
     <Column(Order:=6, TypeName:=NameOf([Single]))>
-    Public ReadOnly Property lowLimitMmolL As Single
+    <JsonPropertyName("lowLimitMmolL")>
+    Public ReadOnly Property LowLimitMmolL As Single
         Get
             Return If(NativeMmolL,
                       Me.LowLimit,

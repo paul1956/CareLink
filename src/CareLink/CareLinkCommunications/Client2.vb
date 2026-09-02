@@ -39,7 +39,7 @@ Friend Class Client2
         _accessTokenPayload = Nothing
         _Config = Nothing
         _country = Nothing
-        Me.serverRegion = serverRegion
+        Me.ServerRegion = serverRegion
         _httpClient = If(httpClient, New HttpClient)
         _httpClient.SetDefaultRequestHeaders()
     End Sub
@@ -55,7 +55,7 @@ Friend Class Client2
     Friend Property Config As ConfigRecord
     Friend Property LoggedIn As Boolean
     Friend Property PatientPersonalData As New PatientPersonalInfo
-    Friend Property serverRegion As Region
+    Friend Property ServerRegion As Region
     Friend Property UserElementDictionary As Dictionary(Of String, JsonElement)
 
     ''' <summary>
@@ -449,7 +449,7 @@ Friend Class Client2
             _country = If(payload.Country, s_countryCode)
 
             configJsonElement =
-                Await GetConfigAsync(httpClient:=_httpClient, country:=_country, Me.serverRegion)
+                Await GetConfigAsync(httpClient:=_httpClient, country:=_country, Me.ServerRegion)
 
             Dim cfg As ConfigRecord = Nothing
             If Not configJsonElement.TryFromJson(Of ConfigRecord)(result:=cfg) Then
@@ -476,7 +476,7 @@ Friend Class Client2
             End If
             _PatientPersonalData = ppd
 
-            Dim role As String = _PatientPersonalData.role
+            Dim role As String = _PatientPersonalData.Role
             If role.ContainsNoCase(value:="Partner") Then
                 Await Me.GetPatient(configJsonElement, token_data:=_tokenDataElement)
             End If
@@ -529,7 +529,7 @@ Friend Class Client2
     Friend Async Function InitAsync() As Task(Of Boolean)
         If Not Await Me.internalInit() Then
             ' Force user login
-            Await GetLoginData(Me.serverRegion,
+            Await GetLoginData(Me.ServerRegion,
                                userName:=s_userName,
                                password:=s_password)
             If Not Await Me.internalInit() Then
@@ -740,11 +740,11 @@ Friend Class Client2
                     'End Try
 
                     Dim discoveryUrl As String =
-                        If(Me.serverRegion = Region.NorthAmerica,
+                        If(Me.ServerRegion = Region.NorthAmerica,
                            s_discoverUrl(key:="US"),
                            s_discoverUrl(key:="EU"))
                     Dim endpointConfig As EndpointConfig =
-                        Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, Me.serverRegion)
+                        Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, Me.ServerRegion)
 
                     ' Do interactive login (user will be prompted). DoLoginAsync writes token file.
                     Dim tokenResult As TokenData = Await CareLinkService.DoLoginAsync(endpointConfig, outputFile:=_tokenBaseFileName, userName:=String.Empty, password:=String.Empty)
@@ -812,7 +812,7 @@ Friend Class Client2
 
         Dim data As Dictionary(Of String, JsonElement) = Nothing
         Try
-            Dim role As String = _PatientPersonalData.role.ToJson
+            Dim role As String = _PatientPersonalData.Role.ToJson
             ' Call GetDataAsync and handle typed exceptions without Await inside Catch.
             Try
                 data = Await Me.GetDataAsync(username:=GetUserName(),

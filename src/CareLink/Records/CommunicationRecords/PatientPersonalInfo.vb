@@ -46,7 +46,8 @@ Public Class PatientPersonalInfo
 
     <DisplayName("Patient Nickname")>
     <Column(Order:=7, TypeName:=NameOf([String]))>
-    Public Property patientNickname As String
+    <JsonPropertyName("patientNickname")>
+    Public Property PatientNickname As String
 
     <DisplayName("AccountId")>
     <Column(Order:=8, TypeName:=NameOf([Int32]))>
@@ -56,7 +57,7 @@ Public Class PatientPersonalInfo
     <DisplayName("Role")>
     <Column(Order:=9, TypeName:=NameOf([String]))>
     <JsonPropertyName("role")>
-    Public Property role As String
+    Public Property Role As String
 
     <DisplayName("cpRegistrationStatus")>
     <Column(Order:=10, TypeName:=NameOf([String]))>
@@ -91,7 +92,7 @@ Public Class PatientPersonalInfo
     <DisplayName("Username")>
     <Column(Order:=16, TypeName:=NameOf([String]))>
     <JsonPropertyName("username")>
-    Public Property username As String
+    Public Property Username As String
 
     <DisplayName("Insulin Type")>
     <Column(Order:=17, TypeName:=NameOf([String]))>

@@ -51,11 +51,11 @@ Public Module SystemConstants
         {$"FIASP{RegisteredTrademark}", New InsulinActivationRecord(upCount:=4, aitHours:=3)},
         {$"Lyumjev{RegisteredTrademark}", New InsulinActivationRecord(upCount:=3, aitHours:=3)}}
 
-    Public ReadOnly s_oneToNineteen As New List(Of String) From {
+    Public ReadOnly OneToNineteen As New List(Of String) From {
         "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
         "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"}
 
-    Public ReadOnly s_trends As New Dictionary(Of String, String) From {
+    Public ReadOnly Trends As New Dictionary(Of String, String) From {
         {"DOWN", "↓"},
         {"DOWN_DOUBLE", "↓↓"},
         {"DOWN_TRIPLE", "↓↓↓"},
@@ -64,13 +64,13 @@ Public Module SystemConstants
         {"UP_TRIPLE", "↑↑↑"},
         {"NONE", "↔"}}
 
-    Public ReadOnly s_wrappedDataGridView As New List(Of String) From {
+    Public ReadOnly WrappedDataGridView As New List(Of String) From {
         NameOf(Form1.DgvCalibration),
         NameOf(Form1.DgvInsulin),
         NameOf(Form1.DgvLastSensorGlucose),
         NameOf(Form1.DgvSGs)}
 
-    Public ReadOnly s_wrappedStrings As New List(Of String) From {
+    Public ReadOnly WrappedStrings As New List(Of String) From {
         "Delivered ",
         "Display Time ",
         "Programmed ",
@@ -104,7 +104,7 @@ Public Module SystemConstants
         {"5:00", 5}, {"5:15", 5.25}, {"5:30", 5.5}, {"5:45", 5.45},
         {"6:00", 6}}
 
-    Public ReadOnly s_aitValues As New Dictionary(Of String, String) From {
+    Public ReadOnly AitValues As New Dictionary(Of String, String) From {
         {"AIT 2:00", "2:00"}, {"AIT 2:15", "2:15"},
         {"AIT 2:30", "2:30"}, {"AIT 2:45", "2:45"},
         {"AIT 3:00", "3:00"}, {"AIT 3:15", "3:15"},

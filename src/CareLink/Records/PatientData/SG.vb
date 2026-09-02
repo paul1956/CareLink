@@ -16,7 +16,7 @@ Public Class SG
     End Sub
 
     Public Sub New(lastSg As LastSG)
-        Me.isBackfill = lastSg.IsBackfill
+        Me.IsBackfill = lastSg.IsBackfill
         Me.Kind = lastSg.Kind
         Me.RecordNumber = 0
         _sensorState = lastSg.SensorState
@@ -25,27 +25,27 @@ Public Class SG
                     lastSg.Sg / MmolLUnitsDivisor,
                     lastSg.Sg),
                  Single.NaN)
-        Me.timeChange = False
+        Me.TimeChange = False
         Me.TimestampAsString = lastSg.TimestampAsString
         Me.Version = lastSg.Version
     End Sub
 
     Public Sub New(json As Dictionary(Of String, String), index As Integer)
         Try
-            Dim value1 As String = json(key:=NameOf(sg))
+            Dim value1 As String = json(key:=NameOf(Sg))
             If value1 = "0" OrElse value1 = "NaN" Then
-                Me.sg = Single.NaN
+                Me.Sg = Single.NaN
             ElseIf json.Count >= 5 Then
-                Me.sg = json(key:=NameOf(sg)).ParseSingle(digits:=2)
+                Me.Sg = json(key:=NameOf(Sg)).ParseSingle(digits:=2)
                 Me.SensorState = json(key:=NameOf(SensorState))
                 Me.TimestampAsString = json(key:=NameOf(Me.Timestamp))
                 Dim value As String = "False"
-                Me.timeChange = json.TryGetValue(key:=NameOf(timeChange), value) AndAlso Boolean.Parse(value)
+                Me.TimeChange = json.TryGetValue(key:=NameOf(TimeChange), value) AndAlso Boolean.Parse(value)
             Else
-                Me.sg = 0
+                Me.Sg = 0
             End If
             Dim isBackfillString As String = Nothing
-            Me.isBackfill = json.TryGetValue(key:=NameOf(isBackfill), value:=isBackfillString) AndAlso CBool(isBackfillString)
+            Me.IsBackfill = json.TryGetValue(key:=NameOf(IsBackfill), value:=isBackfillString) AndAlso CBool(isBackfillString)
             Me.Kind = json(key:=NameOf(Kind))
             Me.RecordNumber = index + 1
             Me.Version = CInt(json(key:=NameOf(Version)))
@@ -71,7 +71,7 @@ Public Class SG
     <DisplayName("Sensor Glucose (sg)")>
     <Column(Order:=3, TypeName:=NameOf([Single]))>
     <JsonPropertyName("sg")>
-    Public Property sg As Single
+    Public Property Sg As Single
         Get
             Return _sg
         End Get
@@ -84,7 +84,8 @@ Public Class SG
 
     <DisplayName("Sensor Glucose (mg/dL)")>
     <Column(Order:=4, TypeName:=NameOf([Single]))>
-    Public ReadOnly Property sgMgdL As Single
+    <JsonPropertyName("sgMgdL")>
+    Public ReadOnly Property SgMgdL As Single
         Get
             If _sg.IsSgInvalid Then Return Nothing
             Return If(NativeMmolL,
@@ -95,7 +96,8 @@ Public Class SG
 
     <DisplayName("Sensor Glucose (mmol/L)")>
     <Column(Order:=5, TypeName:=NameOf([Single]))>
-    Public ReadOnly Property sgMmolL As Single
+    <JsonPropertyName("sgMmolL")>
+    Public ReadOnly Property SgMmolL As Single
         Get
             If Single.IsNaN(_sg) Then Return Nothing
             Return If(NativeMmolL,
@@ -128,7 +130,8 @@ Public Class SG
 
     <DisplayName("Time Change")>
     <Column(Order:=9, TypeName:=NameOf([Boolean]))>
-    Public Property timeChange As Boolean
+    <JsonPropertyName("timeChange")>
+    Public Property TimeChange As Boolean
 
     <DisplayName("Sensor State")>
     <Column(Order:=10, TypeName:=NameOf([String]))>
@@ -153,7 +156,8 @@ Public Class SG
 
     <DisplayName("Is Backfill")>
     <Column(Order:=12, TypeName:=NameOf([Boolean]))>
-    Public Property isBackfill As Boolean
+    <JsonPropertyName("isBackfill")>
+    Public Property IsBackfill As Boolean
 
     ''' <summary>
     '''  Translates the sensor state message based on the <see langword="key"/>.
@@ -206,7 +210,7 @@ Public Class SG
     '''  A format string for displaying the sensor glucose value.
     ''' </returns>
     Public Overrides Function ToString() As String
-        Return Me.sg.ToString(format:=GetSgFormat(NativeMmolL), provider:=CultureInfo.CurrentUICulture)
+        Return Me.Sg.ToString(format:=GetSgFormat(NativeMmolL), provider:=CultureInfo.CurrentUICulture)
     End Function
 
 End Class

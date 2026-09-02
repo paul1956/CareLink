@@ -70,7 +70,7 @@ Friend Module Form1CollectMarkersHelper
                 tmpList.Add(item)
                 Continue For
             End If
-            If tmpList.Last.deliverySuspended OrElse item.deliverySuspended Then
+            If tmpList.Last.DeliverySuspended OrElse item.DeliverySuspended Then
                 tmpList.Add(item)
             End If
         Next

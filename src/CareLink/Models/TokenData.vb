@@ -13,7 +13,7 @@ Public Class TokenData
     Public Property RefreshToken As String
 
     <JsonPropertyName("id_token")>
-    Public Property idToken As String
+    Public Property IdToken As String
 
     <JsonPropertyName("scope")>
     Public Property Scope As String

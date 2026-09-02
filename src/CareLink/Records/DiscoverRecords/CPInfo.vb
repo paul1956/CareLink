@@ -22,7 +22,7 @@ Public Class CPInfo
     Public Property UseSSOConfiguration As String
 
     <JsonPropertyName("baseUrlCms")>
-    Public Property baseUrlCms As String
+    Public Property BaseUrlCms As String
 
     <JsonPropertyName("baseUrlCareLink")>
     Public Property BaseUrlCareLink As String

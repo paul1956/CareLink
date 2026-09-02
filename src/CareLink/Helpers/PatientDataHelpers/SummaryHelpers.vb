@@ -239,7 +239,7 @@ Friend Module SummaryHelpers
                                             Stop
                                         End If
                                     Case "lastSetChange"
-                                        lastSetChange = s_oneToNineteen(index:=CInt(addInfo(key))).ToTitle
+                                        lastSetChange = OneToNineteen(index:=CInt(addInfo(key))).ToTitle
                                     Case "notDeliveredAmount"
                                         If addInfo.TryGetValue(key, value:=notDeliveredAmount) Then
                                         Else
@@ -372,10 +372,10 @@ Friend Module SummaryHelpers
                             TranslateNotificationMessageId(jsonDictionary, faultId:=kvp.Value, message)
 
                         If kvp.Value = "811" Then
-                            Dim key As String = NameOf(ActiveNotification.triggeredDateTime)
+                            Dim key As String = NameOf(ActiveNotification.TriggeredDateTime)
                             If jsonDictionary.TryGetValue(key, value:=s_suspendedSince) Then
                                 Dim result As Date = Nothing
-                                key = NameOf(ActiveNotification.triggeredDateTime)
+                                key = NameOf(ActiveNotification.TriggeredDateTime)
                                 s_suspendedSince = If(s_suspendedSince.TryParseDate(key, result),
                                                       result.ToString(format:=s_timeWithMinuteFormat),
                                                       "???")

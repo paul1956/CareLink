@@ -13,7 +13,7 @@ Public Module DgvCellStyleHelpers
 
     Private ReadOnly s_columnsToHide As New Dictionary(Of Type, List(Of String)) From {
         {GetType(ActiveInsulin), New List(Of String) From {
-            NameOf(ActiveInsulin.kind),
+            NameOf(ActiveInsulin.Kind),
             NameOf(ActiveInsulin.Version)}},
         {GetType(AutoBasalDelivery), New List(Of String) From {
             NameOf(AutoBasalDelivery.OAdateTime)}},

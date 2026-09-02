@@ -32,22 +32,22 @@ Public Class Basal
     <DisplayName("Temp Basal Percentage")>
     <Column(Order:=3, TypeName:=NameOf([Single]))>
     <JsonPropertyName("tempBasalPercentage")>
-    Public Property tempBasalPercentage As Single
+    Public Property TempBasalPercentage As Single
 
     <DisplayName("Temp Basal Type")>
     <Column(Order:=4, TypeName:=NameOf([String]))>
     <JsonPropertyName("tempBasalType")>
-    Public Property tempBasalType As String
+    Public Property TempBasalType As String
 
     <DisplayName("Preset Temp Name")>
     <Column(Order:=5, TypeName:=NameOf([String]))>
     <JsonPropertyName("presetTempName")>
-    Public Property presetTempName As String
+    Public Property PresetTempName As String
 
     <DisplayName("Temp Basal Duration Remaining")>
     <Column(Order:=6, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("tempBasalDurationRemaining")>
-    Public Property tempBasalDurationRemaining As Integer
+    Public Property TempBasalDurationRemaining As Integer
 
     Public Shared Operator <>(left As Basal, right As Basal) As Boolean
         Return Not left = right
@@ -91,7 +91,7 @@ Public Class Basal
                  "SICKDAY"
                 Return Me.BasalRate
             Case Else
-                Return If(Me.tempBasalPercentage > 0,
+                Return If(Me.TempBasalPercentage > 0,
                           Math.Max(Me.BasalRate, Me.TempBasalRate),
                           Math.Min(Me.BasalRate, Me.TempBasalRate))
         End Select
@@ -108,10 +108,10 @@ Public Class Basal
         Select Case True
             Case IsNotNullOrWhiteSpace(Me.ActiveBasalPattern)
                 Return Me.ActiveBasalPattern
-            Case IsNotNullOrWhiteSpace(Me.presetTempName)
-                Return Me.presetTempName
-            Case IsNotNullOrWhiteSpace(Me.tempBasalType)
-                Return Me.tempBasalType
+            Case IsNotNullOrWhiteSpace(Me.PresetTempName)
+                Return Me.PresetTempName
+            Case IsNotNullOrWhiteSpace(Me.TempBasalType)
+                Return Me.TempBasalType
             Case Else
                 Return "MANUAL_BASAL_DELIVERY"
         End Select
@@ -127,11 +127,11 @@ Public Class Basal
         Return HashCode.Combine(
             Me.ActiveBasalPattern,
             Me.BasalRate,
-            Me.presetTempName,
-            Me.tempBasalDurationRemaining,
-            Me.tempBasalPercentage,
+            Me.PresetTempName,
+            Me.TempBasalDurationRemaining,
+            Me.TempBasalPercentage,
             Me.TempBasalRate,
-            Me.tempBasalType)
+            Me.TempBasalType)
     End Function
 
     ''' <summary>
@@ -148,11 +148,11 @@ Public Class Basal
         Return other IsNot Nothing AndAlso
                Me.ActiveBasalPattern = other.ActiveBasalPattern AndAlso
                Me.BasalRate = other.BasalRate AndAlso
-               Me.presetTempName = other.presetTempName AndAlso
-               Me.tempBasalDurationRemaining = other.tempBasalDurationRemaining AndAlso
-               Me.tempBasalPercentage = other.tempBasalPercentage AndAlso
+               Me.PresetTempName = other.PresetTempName AndAlso
+               Me.TempBasalDurationRemaining = other.TempBasalDurationRemaining AndAlso
+               Me.TempBasalPercentage = other.TempBasalPercentage AndAlso
                Me.TempBasalRate = other.TempBasalRate AndAlso
-               Me.tempBasalType = other.tempBasalType
+               Me.TempBasalType = other.TempBasalType
     End Function
 
 End Class

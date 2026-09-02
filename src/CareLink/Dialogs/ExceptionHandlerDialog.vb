@@ -117,7 +117,7 @@ Public Class ExceptionHandlerDialog
                                                         extension:="txt",
                                                         mustBeUnique:=True)
 
-            Dim fileLink As String = $"{uniqueFileName.withoutPath}: file://{uniqueFileName.withPath}"
+            Dim fileLink As String = $"{uniqueFileName.WithoutPath}: file://{uniqueFileName.WithPath}"
             AppendTextNewFont(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
             AppendTextNewFont(rtb, text:="and stored in", newFont, padRight:=0)
             AppendTextNewFont(rtb, text:=GetProjectDataDirectory(), newFont:=fontBold, padRight:=0)
@@ -133,7 +133,7 @@ Public Class ExceptionHandlerDialog
             CreateReportFile(
                 exceptionText:=Me.exTextBox.Text,
                 stackTraceText:=Me.traceTextBox.Text,
-                uniqueFileName.withPath)
+                uniqueFileName.WithPath)
         Else
             CurrentDateCulture = Me.ReportNameWithPath.ExtractCulture(FixedPart:=BaseErrorReportName)
             If CurrentDateCulture Is Nothing Then

@@ -92,9 +92,9 @@ Friend Module SgExtensions
         Dim result As Integer = 0
 
         For Each sg As SG In sgList
-            Dim sgValue As Single = sg.sg
+            Dim sgValue As Single = sg.Sg
             If sgValue.IsSgValid Then
-                Dim mgdL As Double = sg.sgMgdL
+                Dim mgdL As Double = sg.SgMgdL
                 If mgdL >= lowThreshold AndAlso mgdL <= highThreshold Then
                     result += 1
                 End If
@@ -119,7 +119,7 @@ Friend Module SgExtensions
     Public Function GetValidSgRecords() As IEnumerable(Of SG)
         Dim predicate As Func(Of SG, Boolean) =
             Function(entry As SG) As Boolean
-                Return entry.sg.IsSgValid
+                Return entry.Sg.IsSgValid
             End Function
 
         Return s_sgRecords.Where(predicate)

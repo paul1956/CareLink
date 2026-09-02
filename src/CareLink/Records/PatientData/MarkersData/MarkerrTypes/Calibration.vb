@@ -19,7 +19,7 @@ Public Class Calibration
             Const digits As Integer = 0
             Const considerValue As Boolean = True
             Me.UnitValue = .UnitValue.RoundToSingle(digits, considerValue)
-            Me.bgUnits = .bgUnits
+            Me.BgUnits = .BgUnits
         End With
     End Sub
 
@@ -91,7 +91,8 @@ Public Class Calibration
 
     <DisplayName("Blood Glucose Units")>
     <Column(Order:=10, TypeName:=NameOf([String]))>
-    Public Property bgUnits As String
+    <JsonPropertyName("bgUnits")>
+    Public Property BgUnits As String
 
     <DisplayName("Calibration Success")>
     <Column(Order:=11, TypeName:=NameOf([Boolean]))>

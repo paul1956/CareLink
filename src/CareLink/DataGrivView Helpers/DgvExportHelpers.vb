@@ -14,7 +14,7 @@ Imports ClosedXML.Excel
 ''' </summary>
 Friend Module DgvExportHelpers
 
-    Private ReadOnly Property zeroX37 As String = StrDup(Number:=37, Character:="0"c)
+    Private ReadOnly Property ZeroX37 As String = StrDup(Number:=37, Character:="0"c)
 
     ''' <summary>
     '''  Determines whether any cell is selected in the specified column
@@ -213,7 +213,7 @@ Friend Module DgvExportHelpers
                                     .Value = CInt(valueObject)
                                 Case NameOf(OADate)
                                     align = XLAlignmentHorizontalValues.Left
-                                    Dim format As String = $"0{DecimalSeparator}{zeroX37}"
+                                    Dim format As String = $"0{DecimalSeparator}{ZeroX37}"
                                     Dim result As Double
                                     If Double.TryParse(value, result) Then
                                         .Value = result

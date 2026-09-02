@@ -56,7 +56,7 @@ Public Module FileIoHelpers
             baseName:=BaseDownloadName,
             cultureName:=CultureInfo.CurrentUICulture.Name,
             extension:="json",
-            mustBeUnique:=False).withPath
+            mustBeUnique:=False).WithPath
     End Function
 
     ''' <summary>

@@ -3,12 +3,12 @@
 ' See the LICENSE file in the project root for more information.
 
 Friend Structure TabLocation
-    Public page As Integer
-    Public tab As Integer
+    Public Page As Integer
+    Public Tab As Integer
 
     Public Sub New(page As Integer, tab As Integer)
-        Me.page = page
-        Me.tab = tab
+        Me.Page = page
+        Me.Tab = tab
     End Sub
 
     Public Overrides Function Equals(obj As Object) As Boolean
@@ -17,25 +17,25 @@ Friend Structure TabLocation
         End If
 
         Dim other As TabLocation = DirectCast(obj, TabLocation)
-        Return page = other.page AndAlso
-               tab = other.tab
+        Return Page = other.Page AndAlso
+               Tab = other.Tab
     End Function
 
     Public Overrides Function GetHashCode() As Integer
-        Return HashCode.Combine(page, tab)
+        Return HashCode.Combine(Page, Tab)
     End Function
 
     '''  Deconstructs the TabLocation into its components.
     Public Sub Deconstruct(ByRef page As Integer, ByRef tab As Integer)
-        page = Me.page
-        tab = Me.tab
+        page = Me.Page
+        tab = Me.Tab
     End Sub
 
     '''  Converts a TabLocation to a tuple (Page As Integer, Tab As Integer).
     Public Shared Widening Operator CType(value As TabLocation) As _
         (Page As Integer, Tab As Integer)
 
-        Return (value.page, value.tab)
+        Return (value.Page, value.Tab)
     End Operator
 
     '''  Converts a tuple (Page As Integer, Tab As Integer) to a TabLocation.

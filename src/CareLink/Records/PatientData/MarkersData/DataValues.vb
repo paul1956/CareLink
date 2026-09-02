@@ -14,7 +14,7 @@ Public Class DataValues
     Public Property Amount As Single
 
     <JsonPropertyName("bgUnits")>
-    Public Property bgUnits As String
+    Public Property BgUnits As String
 
     <JsonPropertyName("bolusAmount")>
     Public Property BolusAmount As Single

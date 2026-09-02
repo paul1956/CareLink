@@ -108,17 +108,17 @@ Friend Module DllImports
 
     <StructLayout(LayoutKind.Sequential)>
     Friend Structure STRUCT_CHARRANGE
-        Public cpMin As Integer
-        Public cpMax As Integer
+        Public CpMin As Integer
+        Public CpMax As Integer
     End Structure
 
     <StructLayout(LayoutKind.Sequential)>
     Friend Structure STRUCT_FORMATRANGE
-        Public hdc As IntPtr
-        Public hdcTarget As IntPtr
-        Public rc As STRUCT_RECT
-        Public rcPage As STRUCT_RECT
-        Public chrg As STRUCT_CHARRANGE
+        Public Hdc As IntPtr
+        Public HdcTarget As IntPtr
+        Public Rc As STRUCT_RECT
+        Public RcPage As STRUCT_RECT
+        Public Chrg As STRUCT_CHARRANGE
     End Structure
 
     ' Windows API for printing RichTextBox content with formatting
