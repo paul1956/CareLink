@@ -6,6 +6,7 @@ Imports System.IO
 Imports System.Runtime.InteropServices
 Imports System.Text
 Imports System.Text.Json
+Imports System.Threading
 Imports Microsoft.Web.WebView2.Core
 
 Public Class OAuthBrowserForm
@@ -14,13 +15,9 @@ Public Class OAuthBrowserForm
 
     Private ReadOnly _password As String
     Private ReadOnly _redirectUri As String
-
     Private ReadOnly _startUrl As String
-
     Private ReadOnly _userName As String
-
     Private _clientSecret As String
-    Private _loginFilled As Boolean = False
     Private _state As String
 
     ''' <summary>
@@ -244,7 +241,14 @@ Public Class OAuthBrowserForm
 
     End Function
 
-    Private Async Sub OAuthBrowserForm_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+    Private Async Function IsInputEmpty(inputId As String) As Task(Of Boolean)
+        Dim script As String = $"document.getElementById('{inputId}').value.trim() === ''"
+        Dim result As String = Await Me.WebView21.ExecuteScriptAsync(script)
+        Return result = "true"
+    End Function
+
+    Private Async Sub OAuthBrowserForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+        Me.Visible = Not s_firstTimeNavigationCompleted
         Await Me.InitializeAsync()
     End Sub
 
@@ -273,12 +277,63 @@ Public Class OAuthBrowserForm
                 return true;
             }})()"
 
-        Dim result As String = Await Me.WebView21.CoreWebView2.ExecuteScriptAsync(javaScript)
+        Dim result As String =
+            Await Me.WebView21.CoreWebView2.ExecuteScriptAsync(javaScript)
+
+        ' ExecuteScriptAsync returns a JSON encoded value like "true" or the element value.
+        Const comparisonType As StringComparison = StringComparison.OrdinalIgnoreCase
+        If Not String.IsNullOrWhiteSpace(value:=result) AndAlso result.Contains(value:="true", comparisonType:=comparisonType) Then
+            Return
+        End If
+
+        ' Fallback: try typing with SendKeys if programmatic set did not stick
+        Try
+            Dim typedOk As Boolean = Await Me.TypeWithSendKeysAsync(selector, value)
+            If typedOk Then Return
+        Catch
+            ' ignore sendkeys failures
+        End Try
+    End Function
+
+    Private Async Function TypeWithSendKeysAsync(selector As String, value As String) As Task(Of Boolean)
+        ' serialize selector like existing code
+        Dim selectorJson As String = Nothing
+        If Not selector.TryToJson(selectorJson) Then
+            selectorJson = JsonSerializer.Serialize(selector)
+        End If
+
+        ' focus element in page
+        Dim focusScript As String = $"(function(){{ var el = document.querySelector({selectorJson}); if(el) {{ el.focus(); return true; }} return false; }})();"
+        Dim focused As String = Await Me.WebView21.CoreWebView2.ExecuteScriptAsync(focusScript)
+
+        If String.IsNullOrWhiteSpace(focused) OrElse Not focused.Contains("true") Then
+            Return False
+        End If
+
+        ' short delay to allow focus
+        Await Task.Delay(millisecondsDelay:=200)
+
+        ' send keystrokes on UI thread
+        Me.Invoke(New Action(Sub()
+                                 For Each ch As Char In value
+                                     SendKeys.SendWait(keys:=ch.ToString())
+                                     ' small pause between chars
+                                     Thread.Sleep(millisecondsTimeout:=20)
+                                 Next
+                             End Sub))
+
+        ' small delay, then verify value
+        Await Task.Delay(millisecondsDelay:=120)
+        Dim readScript As String = $"(function(){{ var el = document.querySelector({selectorJson}); return el ? el.value : null; }})();"
+        Dim result As String = Await Me.WebView21.CoreWebView2.ExecuteScriptAsync(readScript)
+        Return Not String.IsNullOrWhiteSpace(value:=result) AndAlso result.Trim() = JsonSerializer.Serialize(value)
     End Function
 
     Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs)
         Dim currentUrl As String = Me.WebView21.Source?.ToString()
-        If IsNullOrWhiteSpace(value:=currentUrl) Then Return
+        If IsNullOrWhiteSpace(value:=currentUrl) Then
+            Return
+        End If
 
         ' If we've reached the redirect URI, capture result and close.
         If currentUrl.StartsWithNoCase(value:=_redirectUri) Then
@@ -287,8 +342,10 @@ Public Class OAuthBrowserForm
         End If
 
         ' Fill the login fields once after the first successful navigation to the login page.
-        If Not _loginFilled Then
-            _loginFilled = True
+        If Not s_firstTimeNavigationCompleted Then
+            s_firstTimeNavigationCompleted = True
+            Me.Close()
+        Else
             Try
                 Await Me.FillLoginAsync()
             Catch

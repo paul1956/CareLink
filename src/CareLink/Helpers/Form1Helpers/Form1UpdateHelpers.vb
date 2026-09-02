@@ -928,7 +928,7 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.Text = typeValue.ToTitle()
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
-                            .PumpBannerStateLabel.Font = s_font7Bold
+                            .PumpBannerStateLabel.Font = s_font_7Bold
                         Case "TEMP_BASAL"
                             .PumpBannerStateLabel.BackColor = Color.Lime
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
@@ -937,7 +937,7 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.Text = $"Temp Basal {hours} hr"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
-                            .PumpBannerStateLabel.Font = s_font7Bold
+                            .PumpBannerStateLabel.Font = s_font_7Bold
                         Case "WAIT_TO_ENTER_BG"
                             Stop
                         Case Else

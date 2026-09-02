@@ -72,15 +72,22 @@ Public Class CareLinkService
         ' Ensure the UI dialog and WebView2 initialization run on the UI thread.
         redirectResult = Await InvokeOnUiThreadAsync(
            work:=Function()
-                     Using frm As New OAuthBrowserForm(startUrl:=fullUrl,
-                         redirectUri:=redirectUri,
-                         userName:=userName,
-                         password:=password)
-                         If frm.ShowDialog() <> DialogResult.OK Then
-                             Throw New Exception(message:="Login was cancelled.")
-                         End If
-                         Return frm.Result
-                     End Using
+                     Do
+                         Using frm As New OAuthBrowserForm(startUrl:=fullUrl,
+                                                           redirectUri,
+                                                           userName,
+                                                           password)
+                             Dim dr As DialogResult = frm.ShowDialog()
+                             If dr = DialogResult.OK Then
+                                 Return frm.Result
+                             ElseIf dr = DialogResult.Retry Then
+                                 ' Caller will recreate the dialog and try again
+                                 Continue Do
+                             Else
+                                 Throw New Exception(message:="Login was cancelled.")
+                             End If
+                         End Using
+                     Loop
                  End Function)
 
         If redirectResult Is Nothing OrElse IsNullOrWhiteSpace(value:=redirectResult.Code) Then
@@ -214,15 +221,22 @@ Public Class CareLinkService
                                                  GetProperty(propertyName:="auth_url").GetString()
 
                     Dim redirectResult As RedirectResult
-                    Using frm As New OAuthBrowserForm(startUrl:=captchaUrl,
-                        redirectUri:=redirectUri,
-                        userName:=userName,
-                        password:=password)
-                        If frm.ShowDialog() <> DialogResult.OK Then
-                            Throw New Exception(message:="Login was cancelled.")
-                        End If
-                        redirectResult = frm.Result
-                    End Using
+                    Do
+                        Using frm As New OAuthBrowserForm(startUrl:=captchaUrl,
+                            redirectUri:=redirectUri,
+                            userName:=userName,
+                            password:=password)
+                            Dim dr As DialogResult = frm.ShowDialog()
+                            If dr = DialogResult.OK Then
+                                redirectResult = frm.Result
+                                Exit Do
+                            ElseIf dr = DialogResult.Retry Then
+                                Continue Do
+                            Else
+                                Throw New Exception(message:="Login was cancelled.")
+                            End If
+                        End Using
+                    Loop
 
                     If redirectResult Is Nothing OrElse IsNullOrWhiteSpace(value:=redirectResult.Code) Then
                         Throw New Exception(message:="Captcha authorization code was not captured.")

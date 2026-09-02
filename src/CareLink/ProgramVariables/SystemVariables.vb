@@ -16,9 +16,20 @@ Public Module SystemVariables
 
 #End Region ' Used for painting
 
+    ' Cached fonts
+    Friend ReadOnly s_font11Bold As New Font(FamilyName, emSize:=11.0F, style:=FontStyle.Bold)
+
+    Friend ReadOnly s_font_7Bold As New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
+    Friend ReadOnly s_font12 As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
+    Friend ReadOnly s_font12Bold As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
+    Friend ReadOnly s_font14Bold As New Font(FamilyName, emSize:=14.0F, style:=FontStyle.Bold)
+    Friend ReadOnly s_font18Bold As New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold)
+
+    Friend ReadOnly s_font8Bold As New Font(FamilyName, emSize:=8.0F, style:=FontStyle.Bold)
     Friend s_allUserSettingsData As New CareLinkUserDataList
     Friend s_countryCode As String = String.Empty
     Friend s_currentSummaryRow As Integer = 0
+    Friend s_firstTimeNavigationCompleted As Boolean = False
     Friend s_formLoaded As Boolean = False
     Friend s_password As String = String.Empty
     Friend s_useLocalTimeZone As Boolean
@@ -28,16 +39,6 @@ Public Module SystemVariables
     Friend Property DecimalSeparator As String = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator
     Friend Property MaxBasalPerDose As Double
     Friend Property TreatmentInsulinRow As Single
-
-    ' Cached fonts
-    Friend ReadOnly s_font7Bold As New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
-
-    Friend ReadOnly s_font8Bold As New Font(FamilyName, emSize:=8.0F, style:=FontStyle.Bold)
-    Friend ReadOnly s_font11Bold As New Font(FamilyName, emSize:=11.0F, style:=FontStyle.Bold)
-    Friend ReadOnly s_font12 As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
-    Friend ReadOnly s_font12Bold As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
-    Friend ReadOnly s_font14Bold As New Font(FamilyName, emSize:=14.0F, style:=FontStyle.Bold)
-    Friend ReadOnly s_font18Bold As New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold)
 
     Friend Function GetUserName() As String
         If IsNullOrWhiteSpace(value:=s_userName) Then

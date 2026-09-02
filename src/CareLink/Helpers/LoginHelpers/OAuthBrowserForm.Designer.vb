@@ -40,15 +40,15 @@ Partial Class OAuthBrowserForm
         WebView21.Name = "WebView21"
         WebView21.Size = New Size(800, 450)
         WebView21.TabIndex = 0
-        WebView21.ZoomFactor = 1.0R
+        WebView21.ZoomFactor = 1R
         ' 
-        ' BrowserForm
+        ' OAuthBrowserForm
         ' 
-        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.ClientSize = New Size(800, 450)
         Me.Controls.Add(WebView21)
-        Me.Name = "BrowserForm"
+        Me.Name = "OAuthBrowserForm"
         Me.Text = "BrowserForm"
         CType(WebView21, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
