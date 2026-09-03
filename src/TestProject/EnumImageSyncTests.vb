@@ -34,7 +34,9 @@ Public Class EnumImageSyncTests
             End Function
 
         Dim filesInDir As List(Of String) =
-            Directory.GetFiles(path:=imageDirectory) _
+            Directory.GetFiles(path:=imageDirectory,
+                               searchPattern:="*.png",
+                               searchOption:=SearchOption.TopDirectoryOnly) _
                      .Where(predicate) _
                      .Select(selector) _
                      .ToList()

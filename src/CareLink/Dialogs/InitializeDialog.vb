@@ -221,7 +221,7 @@ Public Class InitializeDialog
         Me.Text = $"Initialize CareLink™ For {Me.CurrentUser.UserName}"
 
         With Me.PumpAitComboBox
-            .DataSource = New BindingSource(dataSource:=s_aitLengths, dataMember:=Nothing)
+            .DataSource = New BindingSource(dataSource:=AitLengths, dataMember:=Nothing)
             .DisplayMember = "Key"
             .ValueMember = "Value"
             If Me.CurrentUser.PumpAit = 0 Then

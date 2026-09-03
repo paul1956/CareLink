@@ -45,6 +45,8 @@ Public Class Form1
     Private _summaryChartAbsoluteRectangle As RectangleF
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _updating As Boolean
+
+    ' Pump battery timestamp/lock removed: images and PictureBox sizes are constant.
     Private Shared Property TimeInTightRange As (Uint As UInteger, Str As String)
 
     ''' <summary>
@@ -68,6 +70,19 @@ Public Class Form1
                                height:=_formScale.Height * factor.Height)
         MyBase.ScaleControl(factor, specified)
     End Sub
+
+    ''' <summary>
+    ''' Example: call ReplacePumpBatteryCompositeAndUpdate when a parameter changes.
+    '''
+    ''' Private Sub OnSolutChanged(newSolut As String)
+    '''     ' If "solut" affects battery overlay, include it in the cache key so ReplacePumpBatteryComposite
+    '''     ' will replace the existing composite for that key and update the UI.
+    '''     ReplacePumpBatteryCompositeAndUpdate(extraKey:=newSolut)
+    ''' End Sub
+    '''
+    ''' Use the method above (or call CompositeGenerators.ReplacePumpBatteryComposite directly)
+    ''' from any place that changes rendering parameters.
+    ''' </summary>
 
     ''' <summary>
     '''  Overloaded System Windows Handler.
@@ -272,15 +287,6 @@ Public Class Form1
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub Chart_MouseLeave(sender As Object, e As EventArgs) Handles _
         SummaryChart.MouseLeave ',
-        'ActiveInsulinChart.MouseLeave,
-        'TreatmentMarkersChart.MouseLeave()
-
-        'Dim chart As Chart = CType(sender, Chart)
-        'With s_calloutAnnotations(key:=chart.Name)
-        '    If .Visible Then
-        '        .Visible = False
-        '    End If
-        'End With
         Me.InfusionSetDataRestore()
     End Sub
 
@@ -384,8 +390,7 @@ Public Class Form1
                                 If split.Length = 1 AndAlso amount.AlmostZero Then
                                     Me.CursorMessage1Label.Text = "Calibration"
                                     Me.CursorMessage2Label.Text = "Only"
-                                    Me.InfusionSetUpdate(id:=ImageEnum.CalibrationDotRed,
-                                                         IsInfusionSet:=False)
+                                    Me.CursorPictureBoxUpdate(imageId:=ImageEnum.CalibrationDotRed)
                                 Else
                                     Me.CursorMessage1Label.Text = markerTag0
                                     Me.CursorMessage2Label.Text = markerTag1
@@ -395,14 +400,11 @@ Public Class Form1
                                              "Manual Basal",
                                              "Basal",
                                              "Min Auto Basal"
-                                            Me.InfusionSetUpdate(id:=ImageEnum.InsulinVial,
-                                                                 IsInfusionSet:=False)
+                                            Me.CursorPictureBoxUpdate(imageId:=ImageEnum.InsulinVial)
                                         Case "Bolus"
-                                            Me.InfusionSetUpdate(id:=ImageEnum.InsulinVial,
-                                                                 IsInfusionSet:=False)
+                                            Me.CursorPictureBoxUpdate(imageId:=ImageEnum.InsulinVial)
                                         Case "Meal"
-                                            Me.InfusionSetUpdate(id:=ImageEnum.MealImage,
-                                                                 IsInfusionSet:=False)
+                                            Me.CursorPictureBoxUpdate(imageId:=ImageEnum.MealImage)
                                         Case Else
                                             Stop
                                             Me.InfusionSetDataRestore()
@@ -428,11 +430,9 @@ Public Class Form1
                                 Select Case markerTags(index:=1).Trim
                                     Case "Calibration accepted",
                                          "Calibration not accepted"
-                                        Me.InfusionSetUpdate(id:=ImageEnum.CalibrationDotRed,
-                                                             IsInfusionSet:=False)
+                                        Me.CursorPictureBoxUpdate(imageId:=ImageEnum.CalibrationDotRed)
                                     Case "Not used for calibration"
-                                        Me.InfusionSetUpdate(id:=ImageEnum.CalibrationDot,
-                                                             IsInfusionSet:=False)
+                                        Me.CursorPictureBoxUpdate(imageId:=ImageEnum.CalibrationDot)
                                         Me.CursorMessage2Label.SetFontIfChanged(newFont:=s_font11Bold)
                                     Case Else
                                         Stop
@@ -476,6 +476,19 @@ Public Class Form1
         End Try
     End Sub
 
+    Private Sub CursorPictureBoxUpdate(imageId As ImageEnum)
+        Try
+            Dim bitmap As Bitmap = GetBitmapFromCache(imageId)
+            Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.Normal
+            Me.CursorSetPictureBox.Size = bitmap.Size
+            Me.CursorSetPictureBox.GetBitmapFromCache(imageId)
+            Me.CursorSetPictureBox.Visible = True
+            Me.CursorSetPictureBox.CenterXOnControl(parent:=Me.CursorMessage2Label)
+        Catch ex As Exception
+            Stop
+        End Try
+    End Sub
+
     Private Sub InfusionSetDataRestore()
         Try
             Me.CursorMessage2Label.Text = _infusionSetLabel2Backup
@@ -492,23 +505,17 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub InfusionSetUpdate(id As ImageEnum, IsInfusionSet As Boolean)
+    Private Sub InfusionSetUpdate(imageId As ImageEnum)
         Try
-            Dim bitmap As Bitmap = GetBitmapFromCache(id)
-            If IsInfusionSet Then
-                Me.CursorMessage1Label.Visible = False
-                _infusionSetLabel2Backup = Me.CursorMessage2Label.Text
-                _infusionSetLabel3Backup = Me.CursorMessage3Label.Text
-                _infusionSetLabel4Backup = Me.CursorMessage4Label.Text
-                Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
-                _infusionSetImageBackup = Nothing
-                _infusionSetImageBackup = bitmap
-                Me.CursorSetPictureBox.GetBitmapFromCache(id)
-            Else
-                Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.Normal
-                Me.CursorSetPictureBox.Size = bitmap.Size
-                Me.CursorSetPictureBox.GetBitmapFromCache(id)
-            End If
+            Dim bitmap As Bitmap = GetBitmapFromCache(imageId)
+            Me.CursorMessage1Label.Visible = False
+            _infusionSetLabel2Backup = Me.CursorMessage2Label.Text
+            _infusionSetLabel3Backup = Me.CursorMessage3Label.Text
+            _infusionSetLabel4Backup = Me.CursorMessage4Label.Text
+            Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
+            _infusionSetImageBackup = Nothing
+            _infusionSetImageBackup = bitmap
+            Me.CursorSetPictureBox.GetBitmapFromCache(imageId)
             Me.CursorSetPictureBox.Visible = True
             Me.CursorSetPictureBox.CenterXOnControl(parent:=Me.CursorMessage2Label)
         Catch ex As Exception
@@ -526,7 +533,7 @@ Public Class Form1
         Application.DoEvents()
     End Sub
 
-#Region "Post Paint Events"
+#Region "Paint Events"
 
     ''' <summary>
     '''  Handles the <see cref="Chart.PostPaint"/> event
@@ -560,6 +567,70 @@ Public Class Form1
                 offsetInsulinImage:=True,
                 paintOnY2:=True)
         End SyncLock
+    End Sub
+
+    Private Sub SchedulePumpBatteryRefresh()
+        ' Generate and assign the pump battery composite on a background thread.
+        If Me.PumpBatteryPictureBox Is Nothing OrElse
+           Me.PumpBatteryPictureBox.Width = 0 OrElse
+           Me.PumpBatteryPictureBox.Height = 0 Then
+
+            Return
+        End If
+
+        Dim targetSize As New Size(Me.PumpBatteryPictureBox.Width, Me.PumpBatteryPictureBox.Height)
+
+        Dim action As Action =
+            Sub()
+                Dim newBmp As Bitmap = Nothing
+                Try
+                    Dim pumpMinutes As Integer = 0
+                    If PatientData IsNot Nothing Then
+                        pumpMinutes = PatientData.PumpBatteryLevelTime
+                    End If
+
+                    newBmp = GetOrCreatePumpBatteryComposite(imageId:=ImageEnum.PumpBatteryFlexMaster,
+                                                             targetSize,
+                                                             pumpBatteryLevelMinutes:=pumpMinutes)
+
+                    If newBmp Is Nothing Then Return
+
+                    ' Assign on UI thread
+                    If Me IsNot Nothing AndAlso Me.IsHandleCreated Then
+                        Dim method As New MethodInvoker(
+                            Sub()
+                                Dim prev As Image = Nothing
+                                If Me.PumpBatteryPictureBox IsNot Nothing Then
+                                    prev = Me.PumpBatteryPictureBox.Image
+                                    Me.PumpBatteryPictureBox.Image = newBmp
+                                    Me.PumpBatteryPictureBox.Invalidate()
+                                End If
+                                If prev IsNot Nothing AndAlso Not Object.ReferenceEquals(prev, newBmp) Then
+                                    Try
+                                        prev.Dispose()
+                                    Catch
+                                    End Try
+                                End If
+                            End Sub)
+                        Me.BeginInvoke(method)
+                    Else
+                        ' UI not available: dispose generated image
+                        Try
+                            newBmp.Dispose()
+                        Catch
+                        End Try
+                    End If
+                Catch ex As Exception
+                    If newBmp IsNot Nothing Then
+                        Try
+                            newBmp.Dispose()
+                        Catch
+                        End Try
+                    End If
+                End Try
+            End Sub
+
+        Task.Run(action)
     End Sub
 
     ''' <summary>
@@ -883,9 +954,9 @@ Public Class Form1
                             .DefaultCellStyle.WrapMode = DataGridViewTriState.True
                         End If
                     Else
-                        If WrappedDataGridView.Contains(item:=dgv.Name) Then
+                        If s_wrappedDataGridView.Contains(item:=dgv.Name) Then
                             Dim result As String = String.Empty
-                            If WrappedStrings.TryGetPrefixMatch(.HeaderText, result) Then
+                            If s_wrappedStrings.TryGetPrefixMatch(.HeaderText, result) Then
                                 Dim trimChars As Char() = {" "c, NonBreakingSpace}
                                 Dim newValue As String = $"{result.TrimEnd(trimChars)}{vbCrLf}"
                                 .HeaderText = .HeaderText.Replace(oldValue:=result, newValue)
@@ -2454,6 +2525,8 @@ Public Class Form1
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         BitmapCache.CleanUp()
         Me.NotifyIcon1?.Dispose()
+        Me.NotifyIcon1 = Nothing
+        End
     End Sub
 
     ''' <summary>
@@ -2500,14 +2573,14 @@ Public Class Form1
         End If
 
         PreloadBitmaps()
-        Me.CalibrationDueImage.GetBitmapFromCache(id:=ImageEnum.CalibrationUnavailable)
-        Me.CursorSetPictureBox.GetBitmapFromCache(id:=ImageEnum.InfusionLifeOver24Hours)
-        Me.InsulinLevelPictureBox.GetBitmapFromCache(id:=ImageEnum.ReservoirRemainsOver85Percent)
-        Me.SmartGuardShieldPictureBox.GetBitmapFromCache(id:=ImageEnum.SmartGuardShield)
-        Me.CursorSetPictureBox.GetBitmapFromCache(id:=ImageEnum.InfusionLifeOver24Hours)
-        Me.TransmitterBatteryPictureBox.GetBitmapFromCache(id:=ImageEnum.PumpConnectivityToSimpleraOK)
-        Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorLifeOK)
-        Me.PumpBatteryPictureBox.GetBitmapFromCache(id:=ImageEnum.PumpBatteryFlexFull)
+        Me.CalibrationDueImage.GetBitmapFromCache(imageId:=ImageEnum.CalibrationUnavailable)
+        Me.CursorSetPictureBox.GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeOver24Hours)
+        Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirRemainsOver85Percent)
+        Me.SmartGuardShieldPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SmartGuardShield)
+        Me.CursorSetPictureBox.GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeOver24Hours)
+        Me.TransmitterBatteryPictureBox.GetBitmapFromCache(imageId:=ImageEnum.PumpConnectivityToSimpleraOK)
+        Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorLifeOK)
+        Me.PumpBatteryPictureBox.GetBitmapFromCache(imageId:=ImageEnum.PumpBatteryFlexMaster)
 
         Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
@@ -2584,8 +2657,7 @@ Public Class Form1
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
         Me.SensorTimeLeftPictureBox.CenterXOnParent()
 
-        Me.InfusionSetUpdate(id:=ImageEnum.InfusionLifeOver24Hours,
-                             IsInfusionSet:=True)
+        Me.InfusionSetUpdate(imageId:=ImageEnum.InfusionLifeOver24Hours)
         Me.CursorMessage1Label.Hide()
         _infusionSetLabel2Backup = Me.CursorMessage2Label.Text
         _infusionSetLabel3Backup = Me.CursorMessage3Label.Text
@@ -2631,8 +2703,6 @@ Public Class Form1
         Me.PositionControlsInPanel()
 
         Me.NotifyIcon1.Visible = True
-        Application.DoEvents()
-        Me.NotifyIcon1.Visible = False
         Application.DoEvents()
 
         If Await OptionalLoginUpdateDataAsync(owner:=Me,
@@ -4829,18 +4899,18 @@ Public Class Form1
                 Select Case PatientData.SensorState
                     Case "CALIBRATION_REQUIRED"
                         If IsFlex() Then
-                            Me.SmartGuardShieldPictureBox.GetBitmapFromCache(id:=ImageEnum.SmartGuardFlexSuspended)
+                            Me.SmartGuardShieldPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SmartGuardFlexSuspended)
                         Else
-                            Me.SmartGuardShieldPictureBox.GetBitmapFromCache(id:=ImageEnum.ShieldDisabled)
+                            Me.SmartGuardShieldPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ShieldDisabled)
                         End If
                     Case "NO_ERROR_MESSAGE", "CALIBRATING"
-                        Me.SmartGuardShieldPictureBox.GetBitmapFromCache(id:=ImageEnum.SmartGuardShield)
+                        Me.SmartGuardShieldPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SmartGuardShield)
                     Case "WARM_UP"
-                        Me.SmartGuardShieldPictureBox.GetBitmapFromCache(id:=ImageEnum.ShieldDisabled)
+                        Me.SmartGuardShieldPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ShieldDisabled)
                     Case "UNKNOWN"
-                        Me.SmartGuardShieldPictureBox.GetBitmapFromCache(id:=ImageEnum.FlexActiveInsulinReset)
+                        Me.SmartGuardShieldPictureBox.GetBitmapFromCache(imageId:=ImageEnum.FlexActiveInsulinReset)
                     Case Else
-                        Me.SmartGuardShieldPictureBox.GetBitmapFromCache(id:=ImageEnum.SmartGuardShield)
+                        Me.SmartGuardShieldPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SmartGuardShield)
                 End Select
                 Me.ShieldUnitsLabel.Visible = True
                 Me.LastSgOrExitTimeLabel.Visible = True
@@ -4934,7 +5004,7 @@ Public Class Form1
                             PatientData.SensorState = "WARM_UP" OrElse
                             PatientData.SensorState = "CHANGE_SENSOR"
                     If notReady Then
-                        Me.CalibrationDueImage.GetBitmapFromCache(id:=ImageEnum.CalibrationNotReady)
+                        Me.CalibrationDueImage.GetBitmapFromCache(imageId:=ImageEnum.CalibrationNotReady)
                     Else
                         Dim minutesToNextCalibration As Short =
                             s_timeToNextCalibrationMinutes
@@ -5113,23 +5183,17 @@ Public Class Form1
         Me.CursorMessage3Label.Text = _infusionSetLabel3Backup
         Me.CursorMessage4Label.Text = _infusionSetLabel4Backup
         Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showPictureBox:=True)
-        Const isInfusionSet As Boolean = True
         Select Case infusionRemainingDuration \ 60
             Case > 24
-                Me.InfusionSetUpdate(id:=ImageEnum.InfusionLifeOver24Hours,
-                                     isInfusionSet)
+                Me.InfusionSetUpdate(imageId:=ImageEnum.InfusionLifeOver24Hours)
             Case > 12
-                Me.InfusionSetUpdate(id:=ImageEnum.InfusionLife12To24Hours,
-                                     isInfusionSet)
+                Me.InfusionSetUpdate(imageId:=ImageEnum.InfusionLife12To24Hours)
             Case > 0
-                Me.InfusionSetUpdate(id:=ImageEnum.InfusionLifeUnder12Hours,
-                                     isInfusionSet)
+                Me.InfusionSetUpdate(imageId:=ImageEnum.InfusionLifeUnder12Hours)
             Case = 0
-                Me.InfusionSetUpdate(id:=ImageEnum.InfusionLifeExpired,
-                                     isInfusionSet)
+                Me.InfusionSetUpdate(imageId:=ImageEnum.InfusionLifeExpired)
             Case Else
-                Me.InfusionSetUpdate(id:=ImageEnum.InfusionLifeUnknown,
-                                     isInfusionSet)
+                Me.InfusionSetUpdate(imageId:=ImageEnum.InfusionLifeUnknown)
         End Select
     End Sub
 
@@ -5146,7 +5210,7 @@ Public Class Form1
         Try
             Me.InsulinLevelPictureBox.SizeMode = PictureBoxSizeMode.CenterImage
             If Not PatientData.ConduitInRange Then
-                Me.InsulinLevelPictureBox.GetBitmapFromCache(id:=ImageEnum.ReservoirRemainsUnknown)
+                Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirRemainsUnknown)
                 Me.RemainingInsulinUnits.Text = "???U"
             Else
                 Dim remainingUnits As Double =
@@ -5154,21 +5218,21 @@ Public Class Form1
                 Me.RemainingInsulinUnits.Text = $"{remainingUnits:N1} U"
                 Select Case PatientData.ReservoirLevelPercent
                     Case >= 85
-                        Me.InsulinLevelPictureBox.GetBitmapFromCache(id:=ImageEnum.ReservoirRemainsOver85Percent)
+                        Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirRemainsOver85Percent)
                     Case >= 71
-                        Me.InsulinLevelPictureBox.GetBitmapFromCache(id:=ImageEnum.ReservoirRemainsOver71Percent)
+                        Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirRemainsOver71Percent)
                     Case >= 57
-                        Me.InsulinLevelPictureBox.GetBitmapFromCache(id:=ImageEnum.ReservoirRemainsOver57Percent)
+                        Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirRemainsOver57Percent)
                     Case >= 43
-                        Me.InsulinLevelPictureBox.GetBitmapFromCache(id:=ImageEnum.ReservoirRemainsOver43Percent)
+                        Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirRemainsOver43Percent)
                     Case >= 29
-                        Me.InsulinLevelPictureBox.GetBitmapFromCache(id:=ImageEnum.ReservoirRemainsOver29Percent)
+                        Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirRemainsOver29Percent)
                     Case >= 15
-                        Me.InsulinLevelPictureBox.GetBitmapFromCache(id:=ImageEnum.ReservoirRemainsOver15Percent)
+                        Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirRemainsOver15Percent)
                     Case >= 1
-                        Me.InsulinLevelPictureBox.GetBitmapFromCache(id:=ImageEnum.ReservoirRemainsOver01Percent)
+                        Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirRemainsOver01Percent)
                     Case Else
-                        Me.InsulinLevelPictureBox.GetBitmapFromCache(id:=ImageEnum.ReservoirEmpty)
+                        Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirEmpty)
                 End Select
             End If
         Finally
@@ -5200,45 +5264,31 @@ Public Class Form1
         End If
 
         If IsFlex() Then
-            Dim hours As Integer = PatientData.PumpBatteryLevelTime \ 60
-            Dim tsp As New TimeSpanParts(hours, shortHr:=True)
-
-            Me.PumpBatteryRemaining1Label.Text = tsp.DayPart
-            Me.PumpBatteryRemaining2Label.Text = tsp.HourPart
-            Dim minutes As Double = hours Mod 60
-            Dim id As ImageEnum
-            Select Case True
-                Case PatientData.PumpBatteryIconSelection = "8xx_battery_full"
-                    id = ImageEnum.PumpBatteryFlexFull
-                Case hours > 1
-                    id = ImageEnum.PumpBatteryFlex1To10Hours
-                Case minutes > 1
-                    id = ImageEnum.PumpBatteryFlexLessThen1Hour
-                Case Else
-                    id = ImageEnum.PumpBatteryFlexDepleted
-            End Select
-            Me.PumpBatteryPictureBox.GetBitmapFromCache(id)
+            ' Ensure cached composed image is updated for flex battery state
+            Me.SchedulePumpBatteryRefresh()
         Else
-            Dim batteryLeftPercent As Integer
+            ' Read the battery level once and reuse the value below so the
+            ' UI is consistent and we don't reference an uninitialized variable.
+            Dim batteryLeftPercent As Integer =
+                PatientData.PumpBatteryLevelPercent
+
             Me.PumpBatteryRemaining2Label.Text = $"{Math.Abs(value:=batteryLeftPercent)}%"
-            Select Case PatientData.PumpBatteryLevelPercent
+            Select Case batteryLeftPercent
                 Case > 90
-                    Me.PumpBatteryPictureBox.GetBitmapFromCache(id:=ImageEnum.PumpBattery780GFull)
+                    Me.PumpBatteryPictureBox.GetBitmapFromCache(imageId:=ImageEnum.PumpBattery780GFull)
                     Me.PumpBatteryRemaining1Label.Text = "Full"
                 Case > 50
-                    Me.PumpBatteryPictureBox.GetBitmapFromCache(id:=ImageEnum.PumpBattery780GHigh)
+                    Me.PumpBatteryPictureBox.GetBitmapFromCache(imageId:=ImageEnum.PumpBattery780GHigh)
                     Me.PumpBatteryRemaining1Label.Text = "High"
                 Case > 25
-                    Me.PumpBatteryPictureBox.GetBitmapFromCache(id:=ImageEnum.PumpBattery780GMedium)
-                    Me.PumpBatteryRemaining1Label.Text = $"Medium"
+                    Me.PumpBatteryPictureBox.GetBitmapFromCache(imageId:=ImageEnum.PumpBattery780GMedium)
+                    Me.PumpBatteryRemaining1Label.Text = "Medium"
                 Case > 10
-                    Me.PumpBatteryPictureBox.GetBitmapFromCache(id:=ImageEnum.PumpBattery780GLow)
+                    Me.PumpBatteryPictureBox.GetBitmapFromCache(imageId:=ImageEnum.PumpBattery780GLow)
                     Me.PumpBatteryRemaining1Label.Text = "Low"
-
                 Case Else
-                    Me.PumpBatteryPictureBox.GetBitmapFromCache(id:=ImageEnum.PumpBattery780GCritical)
+                    Me.PumpBatteryPictureBox.GetBitmapFromCache(imageId:=ImageEnum.PumpBattery780GCritical)
                     Me.PumpBatteryRemaining1Label.Text = "Critical"
-
             End Select
         End If
     End Sub
@@ -5279,20 +5329,20 @@ Public Class Form1
                     Select Case sensorDurationHours
                         Case Is >= 255
                             Me.SensorDaysLeftLabel.Text = EmptyString
-                            Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorExpirationUnknown)
+                            Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorExpirationUnknown)
                             Me.SensorTimeLeftLabel.Text = "Unknown"
                         Case Is >= 168
                             Me.SensorDaysLeftLabel.Text = "~7"
-                            Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorLifeOK)
+                            Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorLifeOK)
                             Me.SensorTimeLeftLabel.Text = "7 Days"
                         Case Is >= 24
                             Me.SensorDaysLeftLabel.Text = sensorDurationDays.ToString()
-                            Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorLifeOK)
+                            Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorLifeOK)
                             Me.SensorTimeLeftLabel.Text = $"{sensorDurationDays} Days"
                         Case Is > 0
                             Me.SensorDaysLeftLabel.Text =
                                 $"<{sensorDurationDays}"
-                            Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorLifeNotOK)
+                            Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorLifeNotOK)
                             Me.SensorTimeLeftLabel.Text =
                                 $"{sensorDurationHours} Hours"
                         Case Is = 0
@@ -5303,29 +5353,29 @@ Public Class Form1
                             Select Case sensorDurationMinutes
                                 Case Is > 0
                                     Me.SensorDaysLeftLabel.Text = "0"
-                                    Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorLifeNotOK)
+                                    Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorLifeNotOK)
                                     Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
                                 Case Is = 0
                                     Me.SensorDaysLeftLabel.Text = EmptyString
-                                    Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorExpired)
+                                    Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorExpired)
                                     Me.SensorTimeLeftLabel.Text = "Expired"
                                 Case Else
                                     Me.SensorDaysLeftLabel.Text = EmptyString
-                                    Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorExpirationUnknown)
+                                    Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorExpirationUnknown)
                                     Me.SensorTimeLeftLabel.Text = "Unknown"
                             End Select
 
                         Case Else
                             Me.SensorDaysLeftLabel.Text =
                                 sensorDurationDays.ToString()
-                            Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorExpirationUnknown)
+                            Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorExpirationUnknown)
                             Me.SensorTimeLeftLabel.Text = "Unknown"
                     End Select
                 Case Else ' Instinct
                     If sensorDurationHours > 24 Then
-                        Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorLifeOK)
+                        Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorLifeOK)
                     Else
-                        Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorLifeNotOK)
+                        Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorLifeNotOK)
                     End If
 
                     Me.SensorDaysLeftLabel.Text =
@@ -5334,7 +5384,7 @@ Public Class Form1
             End Select
         Else
             Me.SensorDaysLeftLabel.Text = EmptyString
-            Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorExpirationUnknown)
+            Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorExpirationUnknown)
             Me.SensorTimeLeftLabel.Text = "Unknown"
             Me.SensorTimeLeftPanel.Visible = True
         End If
@@ -5349,21 +5399,21 @@ Public Class Form1
         Select Case sensorDurationHours
             Case Is >= 255
                 Me.SensorDaysLeftLabel.Text = EmptyString
-                Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorExpirationUnknown)
+                Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorExpirationUnknown)
                 Me.SensorTimeLeftLabel.Text = "Unknown"
             Case Is >= 48
                 Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(durationWithoutGrace / 24))
-                Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorLifeOK)
+                Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorLifeOK)
                 Me.SensorTimeLeftLabel.Text = GetSimpleraTimeLeftMessage(sensorDurationHours)
             Case Is > 24
                 Me.SensorDaysLeftLabel.Text =
                     Math.Ceiling(durationWithoutGrace / 24).ToString()
-                Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorLifeOK)
+                Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorLifeOK)
                 Me.SensorTimeLeftLabel.Text =
                     GetSimpleraTimeLeftMessage(sensorDurationHours)
             Case Is > 0 ' Grace
                 Me.SensorDaysLeftLabel.Text = EmptyString
-                Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorExpiringSoon)
+                Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorExpiringSoon)
                 Me.SensorTimeLeftLabel.Text =
                     GetSimpleraTimeLeftMessage(sensorDurationHours)
             Case Is = 0
@@ -5374,20 +5424,20 @@ Public Class Form1
                 Select Case sensorDurationMinutes
                     Case Is > 0
                         Me.SensorDaysLeftLabel.Text = "0"
-                        Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorLifeNotOK)
+                        Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorLifeNotOK)
                         Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
                     Case Is = 0
                         Me.SensorDaysLeftLabel.Text = EmptyString
-                        Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorExpired)
+                        Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorExpired)
                         Me.SensorTimeLeftLabel.Text = "Expired"
                     Case Else
                         Me.SensorDaysLeftLabel.Text = EmptyString
-                        Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorExpirationUnknown)
+                        Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorExpirationUnknown)
                         Me.SensorTimeLeftLabel.Text = "Unknown"
                 End Select
             Case Else
                 Me.SensorDaysLeftLabel.Text = EmptyString
-                Me.SensorTimeLeftPictureBox.GetBitmapFromCache(id:=ImageEnum.SensorExpirationUnknown)
+                Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorExpirationUnknown)
                 Me.SensorTimeLeftLabel.Text = "Unknown"
         End Select
         Me.SensorDaysLeftLabel.AdjustFontToFitWidth(maxWidth:=70)
@@ -5641,7 +5691,7 @@ Public Class Form1
                                           s_font18Bold,
                                           s_font14Bold)
 
-            Me.TrendArrowsLabel.Text = Trends(key)
+            Me.TrendArrowsLabel.Text = s_trends(key)
         End If
         Me.SgTrendLabel.Visible = PatientData.ConduitInRange
         Me.TrendValueLabel.Visible = PatientData.ConduitInRange

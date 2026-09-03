@@ -16,7 +16,7 @@ Friend Module PlotMarkers
     Friend ReadOnly Property MealImage As Bitmap
         Get
             If s_mealImage Is Nothing Then
-                s_mealImage = GetBitmapFromCache(id:=ImageEnum.MealImage)
+                s_mealImage = GetBitmapFromCache(imageId:=ImageEnum.MealImage)
             End If
             Return s_mealImage
         End Get
@@ -25,7 +25,7 @@ Friend Module PlotMarkers
     Friend ReadOnly Property InsulinVialTiny As Bitmap
         Get
             If s_insulinVialTiny Is Nothing Then
-                s_insulinVialTiny = GetBitmapFromCache(id:=ImageEnum.InsulinVialTiny)
+                s_insulinVialTiny = GetBitmapFromCache(imageId:=ImageEnum.InsulinVialTiny)
             End If
             Return s_insulinVialTiny
         End Get

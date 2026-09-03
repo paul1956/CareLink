@@ -239,7 +239,7 @@ Friend Module SummaryHelpers
                                             Stop
                                         End If
                                     Case "lastSetChange"
-                                        lastSetChange = OneToNineteen(index:=CInt(addInfo(key))).ToTitle
+                                        lastSetChange = s_oneToNineteen(index:=CInt(addInfo(key))).ToTitle
                                     Case "notDeliveredAmount"
                                         If addInfo.TryGetValue(key, value:=notDeliveredAmount) Then
                                         Else

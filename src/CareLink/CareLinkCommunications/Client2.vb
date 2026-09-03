@@ -172,18 +172,26 @@ Friend Class Client2
                 LoggerManager.LogMessage(message)
                 Return False
             End If
-
+            Dim startKey As String
             If tDiff < 600 Then
-                Dim startKey As String = $"In {NameOf(IsTokenValid)} access token is about to expire in "
+                startKey = $"In {NameOf(IsTokenValid)} access token is about to expire in "
                 message = $"In {NameOf(IsTokenValid)} access token is about to expire in {tDiff}s"
                 LoggerManager.UpdateMessage(startKey, endKey:="", message)
                 Return False
             End If
 
             Const format As String = "ddd MMM dd HH:mm:ss UTC yyyy"
-            Dim authTokenValidTo As String = DateTimeOffset.FromUnixTimeSeconds(seconds:=unixTime).ToString(format)
-            message = $"In {NameOf(IsTokenValid)} access token expires in {tDiff} seconds at {authTokenValidTo}"
-            LoggerManager.LogMessage(message)
+            Dim utcTime As DateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(seconds:=unixTime)
+            Dim authTokenValidTo As String = utcTime.ToString(format)
+
+            ' Convert to local time
+            Dim localTime As DateTimeOffset = utcTime.ToLocalTime()
+            ' Format as needed
+            Dim formatted As String = localTime.ToString(format:="ddd MMM dd HH:mm:ss yyyy")
+
+            startKey = $"In {NameOf(IsTokenValid)} access token expires in"
+            message = $"{startKey} {tDiff.ToHoursMinutes()} at {authTokenValidTo} or {formatted}"
+            LoggerManager.UpdateMessage(startKey, endKey:="", message)
             Return True
         Catch ex As Exception
             message =

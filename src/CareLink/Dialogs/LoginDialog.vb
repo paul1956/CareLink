@@ -192,7 +192,7 @@ Public Class LoginDialog
         With Me.RegionComboBox
             .DisplayMember = NameOf(KeyValuePair(Of WorldRegion, String).Value)
             .ValueMember = NameOf(KeyValuePair(Of WorldRegion, String).Key)
-            .DataSource = New BindingSource(dataSource:=RegionDictionary, dataMember:=Nothing)
+            .DataSource = New BindingSource(dataSource:=s_regionDictionary, dataMember:=Nothing)
         End With
 
         If IsNullOrEmpty(value:=My.Settings.CountryCode) Then
@@ -417,10 +417,10 @@ Public Class LoginDialog
         Handles RegionComboBox.SelectedIndexChanged
 
         Dim countriesInRegion As New Dictionary(Of String, String)
-        Dim selectedRegion As WorldRegion = RegionToServerMapping.Keys(index:=Me.RegionComboBox.SelectedIndex)
-        For Each kvp As KeyValuePair(Of String, WorldRegion) In CountryNameToRegionList
+        Dim selectedRegion As WorldRegion = s_regionToServerMapping.Keys(index:=Me.RegionComboBox.SelectedIndex)
+        For Each kvp As KeyValuePair(Of String, WorldRegion) In s_countryNameToRegionList
             If kvp.Value = selectedRegion Then
-                countriesInRegion.Add(kvp.Key, value:=CountryToCodeList(kvp.Key))
+                countriesInRegion.Add(kvp.Key, value:=s_countryToCodeList(kvp.Key))
             End If
         Next
         If countriesInRegion.Count > 0 Then

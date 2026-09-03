@@ -376,6 +376,46 @@ Friend Module DateTimeExtensions
     End Function
 
     ''' <summary>
+    '''  Converts a <see langword="Long"/> representing minutes into
+    '''  a <see langword="String"/> formatted as hours and minutes.
+    ''' </summary>
+    ''' <param name="minutes">The number of minutes to convert.</param>
+    ''' <returns>
+    '''  A <see langword="String"/> representing the time in hours and minutes.
+    ''' </returns>
+    <Extension>
+    Public Function ToHoursMinutes(minutes As Long) As String
+        ' Minutes must be positive and non-zero
+        If minutes <= 0 Then
+            Const message As String = "minutes must be positive and non-zero"
+            Throw New ArgumentOutOfRangeException(paramName:=NameOf(minutes), message)
+        End If
+
+        Dim hrs As Long = minutes \ 60
+        Dim mins As Long = minutes Mod 60
+
+        Dim parts As New List(Of String)
+        Dim item As String
+        If hrs > 0 Then
+            item = $"{hrs} {If(hrs = 1, "hr", "hrs")}"
+            parts.Add(item)
+        End If
+        If mins > 0 Then
+            item = $"{mins} {If(mins = 1, "min", "mins")}"
+            parts.Add(item)
+        End If
+
+        If parts.Count = 0 Then
+            ' This should not happen because minutes > 0, but handle defensively
+            Return "0 mins"
+        ElseIf parts.Count = 1 Then
+            Return parts(index:=0)
+        Else
+            Return $"{parts(index:=0)} and {parts(index:=1)}"
+        End If
+    End Function
+
+    ''' <summary>
     '''  Converts a <see langword="Date"/> to a <see langword="String"/>
     '''  formatted as "MMM dd, yyyy HH:mm".
     ''' </summary>

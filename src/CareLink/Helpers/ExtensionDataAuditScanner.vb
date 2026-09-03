@@ -151,7 +151,7 @@ Public NotInheritable Class ExtensionDataAuditScanner
         End Property
 
         Friend Sub AddField(key As String, value As String)
-            Fields.Add(New KeyValuePair(Of String, String)(key, value))
+            Me.Fields.Add(item:=New KeyValuePair(Of String, String)(key, value))
         End Sub
 
         Friend Sub AppendLine(line As String)

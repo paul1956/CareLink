@@ -13,6 +13,10 @@ Public Module PumpInfo
     '''  otherwise, "Unknown".
     ''' </returns>
     Public Function GetPumpName() As String
+        If PatientData Is Nothing Then
+            Return "Unknown"
+        End If
+
         Select Case PatientData.MedicalDeviceInformation.ModelNumber
             Case "MMT-1812"
                 Return "MiniMed™ 740G--mg/dL"

@@ -74,6 +74,9 @@ Public Module ImageEnums
         <Description("InfusionLifeExpired")>
         InfusionLifeExpired
 
+        <Description("InfusionLifeMaster")>
+        InfusionLifeMaster
+
         <Description("InfusionLifeOver24Hours")>
         InfusionLifeOver24Hours
 
@@ -143,6 +146,8 @@ Public Module ImageEnums
         <Description("PumpBattery780GUnknown")>
         PumpBattery780GUnknown
 
+#If False Then
+
         <Description("PumpBatteryFlex1To10Hours")>
         PumpBatteryFlex1To10Hours
 
@@ -152,8 +157,17 @@ Public Module ImageEnums
         <Description("PumpBatteryFlexFull")>
         PumpBatteryFlexFull
 
+#End If
+
+        <Description("PumpBatteryFlexMaster")>
+        PumpBatteryFlexMaster
+
+#If False Then
+
         <Description("PumpBatteryFlexLessThen1Hour")>
         PumpBatteryFlexLessThen1Hour
+
+#End If
 
         <Description("PumpBatteryFlexUnknown")>
         PumpBatteryFlexUnknown

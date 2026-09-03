@@ -10,7 +10,7 @@ Public Class BolusWizardRecord
         Dim key As String = sTable.GetSingleLineValue(Of String)(key:="Active Insulin Time", endsWith:="(h:mm)")
         Me.ActiveInsulinTime = If(key = String.Empty,
                                   2,
-                                  s_aitLengths(key))
+                                  AitLengths(key))
 
         Me.MaximumBolus = sTable.GetSingleLineValue(Of Single)(key:="Maximum Bolus")
     End Sub

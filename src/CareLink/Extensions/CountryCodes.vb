@@ -18,7 +18,7 @@ Public Module RegionCountryLists
     '''  The regions are defined as per the ISO 3166-1 standard,
     '''  grouping countries into continents or major geographic areas.
     ''' </remarks>
-    Public ReadOnly CountryNameToRegionList As New Dictionary(Of String, WorldRegion) From {
+    Public ReadOnly s_countryNameToRegionList As New Dictionary(Of String, WorldRegion) From {
         {"United States", WorldRegion.UnitedStates},
         {"Afghanistan", WorldRegion.Asia},
         {"Åland Islands", WorldRegion.Europe},
@@ -262,7 +262,7 @@ Public Module RegionCountryLists
     ''' <summary>
     '''  A dictionary mapping country names to their ISO 2-letter country codes.
     ''' </summary>
-    Public ReadOnly CountryToCodeList As New Dictionary(Of String, String) From {
+    Public ReadOnly s_countryToCodeList As New Dictionary(Of String, String) From {
         {"Afghanistan", "AF"},
         {"Åland Islands", "AX"},
         {"Albania", "AL"},
@@ -504,7 +504,7 @@ Public Module RegionCountryLists
         {"Zambia", "ZM"},
         {"Zimbabwe", "ZW"}}
 
-    Public ReadOnly RegionDictionary As New Dictionary(Of WorldRegion, String) From {
+    Public ReadOnly s_regionDictionary As New Dictionary(Of WorldRegion, String) From {
         {WorldRegion.UnitedStates, "United States"},
         {WorldRegion.Trial, "Trial"},
         {WorldRegion.Africa, "Africa"},
@@ -514,7 +514,7 @@ Public Module RegionCountryLists
         {WorldRegion.Oceania, "Oceania"},
         {WorldRegion.SouthAmerica, "South America"}}
 
-    Public ReadOnly RegionToServerMapping As New Dictionary(Of WorldRegion, String) From {
+    Public ReadOnly s_regionToServerMapping As New Dictionary(Of WorldRegion, String) From {
         {WorldRegion.UnitedStates, WorldRegion.UnitedStates.ToString},
         {WorldRegion.Trial, WorldRegion.Trial.ToString},
         {WorldRegion.Africa, WorldRegion.Europe.ToString},
@@ -640,7 +640,7 @@ Public Module RegionCountryLists
     Public Function GetCountryFromCode(countryCode As String) As String
         If s_countryCodeToCountry.Count = 0 Then
             ' Create the reverse lookup Dictionary only once
-            For Each kvp As KeyValuePair(Of String, String) In CountryToCodeList
+            For Each kvp As KeyValuePair(Of String, String) In s_countryToCodeList
                 s_countryCodeToCountry(key:=kvp.Value) = kvp.Key
             Next
         End If
@@ -664,7 +664,7 @@ Public Module RegionCountryLists
         If IsNullOrWhiteSpace(value:=countryCode) Then
             countryCode = "US"
         End If
-        Return CountryNameToRegionList(key:=GetCountryFromCode(countryCode))
+        Return s_countryNameToRegionList(key:=GetCountryFromCode(countryCode))
     End Function
 
 End Module
