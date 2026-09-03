@@ -31,7 +31,8 @@ Partial Class RawDataViewerDialog
         Cancel_Button = New Button()
         RawDataRTB = New RichTextBox()
         txtFind = New TextBox()
-        btnFind = New Button()
+        btnFindNext = New Button()
+        btnFindAll = New Button()
         TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         ' 
@@ -49,7 +50,7 @@ Partial Class RawDataViewerDialog
         TableLayoutPanel1.RowCount = 1
         TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
         TableLayoutPanel1.Size = New Size(170, 33)
-        TableLayoutPanel1.TabIndex = 0
+        TableLayoutPanel1.TabIndex = 2
         ' 
         ' OK_Button
         ' 
@@ -85,17 +86,26 @@ Partial Class RawDataViewerDialog
         ' 
         txtFind.Location = New Point(21, 584)
         txtFind.Name = "txtFind"
-        txtFind.Size = New Size(170, 23)
-        txtFind.TabIndex = 2
+        txtFind.Size = New Size(200, 23)
+        txtFind.TabIndex = 0
         ' 
-        ' btnFind
+        ' btnFindNext
         ' 
-        btnFind.Location = New Point(221, 584)
-        btnFind.Name = "btnFind"
-        btnFind.Size = New Size(75, 23)
-        btnFind.TabIndex = 3
-        btnFind.Text = "Find"
-        btnFind.UseVisualStyleBackColor = True
+        btnFindNext.Location = New Point(235, 582)
+        btnFindNext.Name = "btnFindNext"
+        btnFindNext.Size = New Size(103, 27)
+        btnFindNext.TabIndex = 1
+        btnFindNext.Text = "Find Next"
+        btnFindNext.UseVisualStyleBackColor = True
+        ' 
+        ' btnFindAll
+        ' 
+        btnFindAll.Location = New Point(352, 582)
+        btnFindAll.Name = "btnFindAll"
+        btnFindAll.Size = New Size(113, 27)
+        btnFindAll.TabIndex = 1
+        btnFindAll.Text = "Find All"
+        btnFindAll.UseVisualStyleBackColor = True
         ' 
         ' RawDataViewerDialog
         ' 
@@ -104,7 +114,8 @@ Partial Class RawDataViewerDialog
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = Cancel_Button
         Me.ClientSize = New Size(838, 619)
-        Me.Controls.Add(btnFind)
+        Me.Controls.Add(btnFindAll)
+        Me.Controls.Add(btnFindNext)
         Me.Controls.Add(txtFind)
         Me.Controls.Add(RawDataRTB)
         Me.Controls.Add(TableLayoutPanel1)
@@ -126,6 +137,7 @@ Partial Class RawDataViewerDialog
     Friend WithEvents Cancel_Button As System.Windows.Forms.Button
     Friend WithEvents RawDataRTB As RichTextBox
     Friend WithEvents txtFind As TextBox
-    Friend WithEvents btnFind As Button
+    Friend WithEvents btnFindNext As Button
+    Friend WithEvents btnFindAll As Button
 
 End Class

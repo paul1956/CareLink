@@ -23,35 +23,14 @@ Public Class RawDataViewerDialog
         Me.Close()
     End Sub
 
-    Private Sub FindNext(sender As Object, e As EventArgs) Handles btnFind.Click
-        Dim searchText As String = Me.txtFind.Text
+    Private Sub FindAll(sender As Object, e As EventArgs) Handles btnFindAll.Click
+        Dim rtb As RichTextBox = Me.RawDataRTB
+        rtb.FindAll(Me.txtFind.Text)
+    End Sub
 
-        ' Validate input
-        If String.IsNullOrWhiteSpace(searchText) Then
-            MessageBox.Show("Please enter text to search.", "No Search Text", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            Return
-        End If
-
-        ' Search for the text starting from the last found position
-        Dim index As Integer = Me.RawDataRTB.Find(searchText, _lastSearchIndex, RichTextBoxFinds.None)
-
-        ' If not found, wrap around and search from the beginning
-        If index = -1 AndAlso _lastSearchIndex > 0 Then
-            index = Me.RawDataRTB.Find(searchText, 0, RichTextBoxFinds.None)
-        End If
-
-        ' Highlight if found
-        If index <> -1 Then
-            Me.RawDataRTB.Select(index, searchText.Length)
-            Me.RawDataRTB.ScrollToCaret()
-            _lastSearchIndex = index + searchText.Length
-        Else
-            MessageBox.Show(text:="No more occurrences found.",
-                            caption:="Search Complete",
-                            buttons:=MessageBoxButtons.OK,
-                            icon:=MessageBoxIcon.Information)
-            _lastSearchIndex = 0
-        End If
+    Private Sub FindNext(sender As Object, e As EventArgs) Handles btnFindNext.Click
+        Dim rtb As RichTextBox = Me.RawDataRTB
+        rtb.FindNext(Me.txtFind.Text, lastSearchIndex:=_lastSearchIndex)
     End Sub
 
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
@@ -65,9 +44,17 @@ Public Class RawDataViewerDialog
         Me.txtFind.Width = 200
 
         ' Find Button setup
-        Me.btnFind.Text = "Find Next"
-        Me.btnFind.Top = Me.RawDataRTB.Bottom + 8
-        Me.btnFind.Left = Me.txtFind.Right + 10
+        Me.btnFindNext.Text = "Find Next"
+        Me.btnFindNext.Top = Me.RawDataRTB.Bottom + 8
+        Me.btnFindNext.Left = Me.txtFind.Right + 10
+    End Sub
+
+    Private Sub txtFind_TextChanged(sender As Object, e As EventArgs) Handles txtFind.TextChanged
+        Dim rtb As RichTextBox = Me.RawDataRTB
+        rtb.SelectAll()
+        rtb.SelectionColor = rtb.ForeColor
+        rtb.Select(start:=0, length:=0) ' Move caret to start
+        rtb.FindNext(Me.txtFind.Text, lastSearchIndex:=_lastSearchIndex)
     End Sub
 
 End Class

@@ -187,7 +187,7 @@ Friend Class Client2
             ' Convert to local time
             Dim localTime As DateTimeOffset = utcTime.ToLocalTime()
             ' Format as needed
-            Dim formatted As String = localTime.ToString(format:="ddd MMM dd HH:mm:ss yyyy")
+            Dim formatted As String = localTime.ToString(format:="M/d/yyyy h:mm tt")
 
             startKey = $"In {NameOf(IsTokenValid)} access token expires in"
             message = $"{startKey} {(tDiff \ 60).ToHoursMinutes()} at {authTokenValidTo} or {formatted}"

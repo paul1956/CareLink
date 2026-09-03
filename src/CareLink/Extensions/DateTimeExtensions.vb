@@ -444,7 +444,7 @@ Friend Module DateTimeExtensions
     ''' </returns>
     <Extension>
     Public Function ToShortDateTime(dateValue As Date,
-                                Optional showSeconds As Boolean = True) As String
+                                    Optional showSeconds As Boolean = True) As String
 
         Dim timeFormat As String = If(showSeconds, "T", "t")
         Return $"{dateValue:d} {dateValue.ToString(format:=timeFormat)}"

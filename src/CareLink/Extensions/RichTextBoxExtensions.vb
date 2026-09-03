@@ -278,4 +278,96 @@ Public Module RichTextBoxExtensions
         rtb.SelectionLength = 0
     End Sub
 
+    ''' <summary>
+    '''  Finds all occurrences of a specified string in a <see cref="RichTextBox"/>
+    '''  and highlights them with bold formatting and blue color.
+    ''' </summary>
+    ''' <param name="rtb">
+    '''  The <see cref="RichTextBox"/> to search in.
+    ''' </param>
+    ''' <param name="text">
+    '''  The string to find and highlight.
+    ''' </param>
+    <Extension>
+    Public Sub FindAll(rtb As RichTextBox, text As String)
+        ' Validate input
+        If String.IsNullOrWhiteSpace(value:=text) Then
+            Return
+        End If
+        rtb.SelectAll()
+        rtb.SelectionColor = rtb.ForeColor
+        rtb.Select(start:=0, length:=0) ' Move caret to start
+
+        Dim searchText As String = text
+        Dim startIndex As Integer = 0
+
+        While startIndex < rtb.Text.Length
+            ' Find the index of the search word
+            Dim wordIndex As Integer = rtb.Find(str:=searchText,
+                                                start:=startIndex,
+                                                options:=RichTextBoxFinds.None)
+            If wordIndex = -1 Then Exit While
+
+            ' Select the found word
+            rtb.Select(start:=wordIndex, length:=searchText.Length)
+
+            ' Apply formatting: Bold and LimeGreen
+            rtb.SelectionFont =
+                New Font(prototype:=rtb.SelectionFont, newStyle:=FontStyle.Bold)
+            rtb.SelectionColor = Color.LimeGreen
+
+            ' Move to the next occurrence
+            startIndex = wordIndex + searchText.Length
+        End While
+
+        ' Reset selection to avoid highlighting other text
+        rtb.Select(start:=rtb.Text.Length, length:=0)
+    End Sub
+
+    ''' <summary>
+    '''  Searches for the next occurrence of a specified string in
+    '''  a <see cref="RichTextBox"/> and highlights it.
+    ''' </summary>
+    ''' <param name="rtb">
+    '''  The <see cref="RichTextBox"/> to search in.
+    ''' </param>
+    ''' <param name="text">
+    '''  The string to search for.
+    ''' </param>
+    ''' <param name="lastSearchIndex">
+    '''  The index of the last found occurrence.
+    ''' </param>
+    <Extension>
+    Public Sub FindNext(rtb As RichTextBox, text As String, ByRef lastSearchIndex As Integer)
+        ' Validate input
+        If String.IsNullOrWhiteSpace(value:=text) Then
+            Return
+        End If
+
+        ' Search for the text starting from the last found position
+        Dim index As Integer =
+            rtb.Find(str:=text,
+                     start:=lastSearchIndex,
+                     options:=RichTextBoxFinds.None)
+
+        ' If not found, wrap around and search from the beginning
+        If index = -1 AndAlso lastSearchIndex > 0 Then
+            index = rtb.Find(str:=text,
+                             start:=0,
+                             options:=RichTextBoxFinds.None)
+        End If
+
+        ' Highlight if found
+        If index <> -1 Then
+            rtb.Select(start:=index, length:=text.Length)
+            rtb.ScrollToCaret()
+            lastSearchIndex = index + text.Length
+            rtb.SelectionFont =
+                New Font(prototype:=rtb.SelectionFont, newStyle:=FontStyle.Bold)
+            rtb.SelectionColor = Color.LimeGreen
+        Else
+            lastSearchIndex = 0
+        End If
+    End Sub
+
 End Module
