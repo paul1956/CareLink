@@ -190,7 +190,7 @@ Friend Class Client2
             Dim formatted As String = localTime.ToString(format:="ddd MMM dd HH:mm:ss yyyy")
 
             startKey = $"In {NameOf(IsTokenValid)} access token expires in"
-            message = $"{startKey} {tDiff.ToHoursMinutes()} at {authTokenValidTo} or {formatted}"
+            message = $"{startKey} {(tDiff \ 60).ToHoursMinutes()} at {authTokenValidTo} or {formatted}"
             LoggerManager.UpdateMessage(startKey, endKey:="", message)
             Return True
         Catch ex As Exception
