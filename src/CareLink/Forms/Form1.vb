@@ -4657,9 +4657,9 @@ Public Class Form1
         Try
             Dim activeInsulinStr As String
             If s_activeInsulin IsNot Nothing AndAlso s_activeInsulin.Amount >= 0 Then
-                activeInsulinStr = $"Active Insulin {$"{s_activeInsulin.Amount:N3}"} U"
+                activeInsulinStr = $"Active Insulin {$"{s_activeInsulin.Amount:N1}"} U"
             ElseIf IsFlex() AndAlso _latestActiveInsulin >= 0 Then
-                activeInsulinStr = $"Active Insulin Est. {_latestActiveInsulin:N3} U"
+                activeInsulinStr = $"Active Insulin Est. {_latestActiveInsulin:N1} U"
             Else
                 activeInsulinStr = $"Active Insulin --- U"
             End If
