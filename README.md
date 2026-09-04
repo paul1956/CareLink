@@ -47,6 +47,9 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 9/4/2026
 
 ## What's New
+New in 6.0.1.3
+Fix non US/Europe Login
+
 New in 6.0.1.2
 Restructure Image handling to make it reusable
 Add support for production logging

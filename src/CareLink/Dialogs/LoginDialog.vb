@@ -261,8 +261,10 @@ Public Class LoginDialog
             If Me.ClientDiscover IsNot Nothing Then
                 Me.Ok_Button.Enabled = False
                 Application.DoEvents()
-                Dim value As String = Me.RegionComboBox.SelectedValue.ToString().Replace(oldValue:=" ", newValue:="")
-                Dim serverRegion As Region = [Enum].Parse(Of Region)(value:=value)
+                Dim territory As WorldRegion =
+                    CType(Me.RegionComboBox.SelectedValue, WorldRegion)
+                Dim serverMapping As String = s_regionToServerMapping(key:=territory)
+                Dim serverRegion As Region = [Enum].Parse(Of Region)(value:=serverMapping)
                 Await Client2.GetLoginData(serverRegion:=serverRegion,
                                            userName:=s_userName,
                                            password:=s_password,
