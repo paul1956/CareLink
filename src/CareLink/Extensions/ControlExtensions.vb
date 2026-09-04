@@ -25,8 +25,11 @@ Public Module ControlExtensions
         End If
     End Sub
 
-    ''' Centers a form relative to another form, even if it's not the parent.
+    ''' <summary>
+    '''  Centers a form relative to another form, even if it's not the parent.
     ''' </summary>
+    ''' <param name="child">The form to be centered.</param>
+    ''' <param name="reference">The reference form.</param>
     <Extension>
     Friend Sub CenterFormOnAnother(child As Form, reference As Form)
         If child Is Nothing OrElse reference Is Nothing Then Exit Sub
@@ -45,8 +48,10 @@ Public Module ControlExtensions
     End Sub
 
     ''' <summary>
-    ''' Adjusts the label's font size so that its width does not exceed maxWidth.
+    '''  Adjusts the label's font size so that its width does not exceed maxWidth.
     ''' </summary>
+    ''' <param name="lbl">The label whose font size is to be adjusted.</param>
+    ''' <param name="maxWidth">The maximum allowed width for the label.</param>
     <Extension>
     Public Sub AdjustFontToFitWidth(lbl As Label, maxWidth As Integer)
         If String.IsNullOrEmpty(value:=lbl.Text) Then Exit Sub
@@ -350,7 +355,9 @@ Public Module ControlExtensions
     ''' <param name="lbl">
     '''  The <see cref="Label"/> whose <see cref="Font"/> to check.
     ''' </param>
-    ''' <param name="newFont">The desired <see cref="Font"/>.</param>
+    ''' <param name="newFont">
+    '''  The desired <see cref="Font"/>.
+    ''' </param>
     <Extension>
     Public Sub SetFontIfChanged(lbl As Label, newFont As Font)
         If lbl.Font.Equals(newFont) Then

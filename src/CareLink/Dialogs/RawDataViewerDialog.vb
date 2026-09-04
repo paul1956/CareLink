@@ -8,6 +8,13 @@ Imports System.Text.Json.Nodes
 Public Class RawDataViewerDialog
     Private _lastSearchIndex As Integer = 0
 
+    ''' <summary>
+    '''  Initializes a new instance of the <see cref="RawDataViewerDialog"/> class
+    '''  with the specified JSON data.
+    ''' </summary>
+    ''' <param name="json">
+    '''  The JSON data to display.
+    ''' </param>
     Public Sub New(json As JsonElement)
         Me.InitializeComponent()
         Dim rootNode As JsonNode = JsonNode.Parse(json:=json.ToString())

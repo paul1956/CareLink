@@ -31,7 +31,7 @@ Public Module BitmapCache
     End Sub
 
     ''' <summary>
-    ''' Clears temporary composite cache.
+    '''  Clears temporary composite cache.
     ''' </summary>
     Public Sub ClearTempCache()
         SyncLock s_tempLock
@@ -66,8 +66,12 @@ Public Module BitmapCache
     '''  Gets <see cref="Bitmap"/> from <see cref="s_bitmaps"/> after translating imageId
     '''  to Name and assigns it to PictureBox.Image
     ''' </summary>
-    ''' <param name="pictureBox">The PictureBox to assign the bitmap to.</param>
-    ''' <param name="imageId">The image ID.</param>
+    ''' <param name="pictureBox">
+    '''  The PictureBox to assign the bitmap to.
+    ''' </param>
+    ''' <param name="imageId">
+    '''  The image ID.
+    ''' </param>
     <Extension>
     Public Sub GetBitmapFromCache(pictureBox As PictureBox, imageId As ImageEnum)
         pictureBox.Image = Nothing

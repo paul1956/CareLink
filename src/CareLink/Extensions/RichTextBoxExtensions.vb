@@ -29,10 +29,10 @@ Public Module RichTextBoxExtensions
     Private Function StandardWidth(tOnly As TimeOnly, timeFormat As String) As String
         If timeFormat = "12 Hr" Then
             ' Ensure the hour is always two digits in 12-hour format
-            Return tOnly.ToString("hh:mm tt", provider:=CultureInfo.InvariantCulture)
+            Return tOnly.ToString(format:="hh:mm tt", provider:=CultureInfo.InvariantCulture)
         Else
             ' Ensure the hour is always two digits in 24-hour format
-            Return tOnly.ToString("HH:mm", provider:=CultureInfo.InvariantCulture)
+            Return tOnly.ToString(format:="HH:mm", provider:=CultureInfo.InvariantCulture)
         End If
     End Function
 

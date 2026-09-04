@@ -14,6 +14,14 @@ Public Class LoggerForm
         Me.Close()
     End Sub
 
+    ''' <summary>
+    '''  Logs a message to the logger form. If the method is called
+    '''  from a thread other than the UI thread, it uses BeginInvoke to marshal
+    '''  the call to the UI thread.
+    ''' </summary>
+    ''' <param name="message">
+    '''  The message to log.
+    ''' </param>
     Public Sub LogMessage(message As String)
         If Me.InvokeRequired Then
             Dim method As New Action(Of String)(AddressOf Me.LogMessage)
@@ -34,8 +42,12 @@ Public Class LoggerForm
     '''  If endKey is <see cref="String.Empty"/> then replace the whole line.
     ''' </summary>
     ''' <param name="startKey">The Text that starts the message to </param>
-    ''' <param name="endKey"></param>
-    ''' <param name="message">Message to be added to Log</param>
+    ''' <param name="endKey">
+    '''  The key identifying the end of the message to update.
+    ''' </param>
+    ''' <param name="message">
+    '''  The new message to replace the existing one.
+    ''' </param>
     Public Sub UpdateLogMessage(startKey As String,
                                 endKey As String,
                                 message As String)
