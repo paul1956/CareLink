@@ -942,7 +942,7 @@ Friend Module Form1UpdateHelpers
                             Stop
                         Case Else
                             Dim stackFrame As StackFrame
-                            If Debugger.IsAttached Then
+                            If s_showLogger Then
                                 stackFrame = New StackFrame(skipFrames:=0, needFileInfo:=True)
                                 MsgBox(
                                     heading:=$"{typeValue} Is unknown banner message!",
@@ -972,5 +972,41 @@ Friend Module Form1UpdateHelpers
             table:=ClassCollectionToDataTable(classCollection:=listOfBannerState),
             className:=NameOf(BannerState), rowIndex:=ServerDataEnum.pumpBannerState)
     End Sub
+
+    ''' <summary>
+    '''  Creates a pump battery composite image by filling the transparent area of the base image
+    '''  with a vertical fill representing the battery level in minutes, scaling the
+    '''  transparent paint rectangle from the base image to the target size.
+    ''' </summary>
+    ''' <param name="imageId">The image ID.</param>
+    ''' <param name="targetSize">The target size.</param>
+    ''' <param name="pumpBatteryLevelMinutes">
+    '''  The pump battery level in minutes.
+    ''' </param>
+    ''' <returns>The composite bitmap.</returns>
+    Public Function GetOrCreatePumpBatteryComposite(imageId As ImageEnum,
+                                                    targetSize As Size,
+                                                    pumpBatteryLevelMinutes As Integer) As Bitmap
+        Dim hours As Integer = pumpBatteryLevelMinutes \ 60
+        Dim remainingMinutes As Integer = pumpBatteryLevelMinutes Mod 60
+
+        Dim currentPercent As Single
+        Dim fillColor As Color
+        If hours > 10 Then
+            currentPercent = 100.0F
+            fillColor = Color.Lime
+        ElseIf hours > 1 Then
+            currentPercent = hours * 5.0F
+            fillColor = Color.Yellow
+        Else
+            currentPercent = remainingMinutes * 0.167F
+            fillColor = Color.Red
+        End If
+
+        Return GetOrCreateComposite(imageId,
+                                    targetSize,
+                                    currentPercent,
+                                    fillColor)
+    End Function
 
 End Module

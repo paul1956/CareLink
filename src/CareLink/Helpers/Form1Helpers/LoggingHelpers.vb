@@ -11,10 +11,10 @@ Public Module LoggerManager
     '''  Initializes the logger form. If the logger form is not already created
     '''  or has been disposed, it creates a new instance of LoggerForm. If a debugger is attached, it shows the logger form.
     ''' </summary>
-    Public Sub InitLogger()
+    Public Sub InitLogger(show As Boolean)
         If s_loggerForm Is Nothing OrElse s_loggerForm.IsDisposed Then
             s_loggerForm = New LoggerForm()
-            If Debugger.IsAttached Then
+            If show Then
                 s_loggerForm.Show()
             End If
         End If
@@ -28,7 +28,7 @@ Public Module LoggerManager
     ''' </param>
     <Extension>
     Public Sub LogMessage(message As String)
-        If Debugger.IsAttached Then
+        If s_showLogger Then
             ' Also send to Visual Studio Output window
             Debug.WriteLine(message)
 
@@ -42,20 +42,19 @@ Public Module LoggerManager
     '''  Updates a log message in the logger form based on the provided start and
     '''  end keys. If the end key is an empty string, it replaces the entire line starting from the start key.
     ''' </summary>
+    ''' <param name="message">
+    '''  The new message to replace the existing one.
+    ''' </param>
     ''' <param name="startKey">
     '''  The key identifying the start of the message to update.
     ''' </param>
     ''' <param name="endKey">
     '''  The key identifying the end of the message to update.
     '''  </param>
-    ''' <param name="message">
-    '''  The new message to replace the existing one.
-    ''' </param>
-    <Extension>
-    Public Sub UpdateMessage(startKey As String,
-                             endKey As String,
-                             message As String)
-        If Debugger.IsAttached Then
+    Public Sub UpdateMessage(message As String,
+                             Optional startKey As String = "",
+                             Optional endKey As String = "")
+        If s_showLogger Then
             If s_loggerForm IsNot Nothing AndAlso Not s_loggerForm.IsDisposed Then
                 s_loggerForm.UpdateLogMessage(startKey, endKey, message)
             End If

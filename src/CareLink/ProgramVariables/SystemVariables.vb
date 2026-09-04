@@ -32,6 +32,7 @@ Public Module SystemVariables
     Friend s_firstTimeNavigationCompleted As Boolean = False
     Friend s_formLoaded As Boolean = False
     Friend s_password As String = String.Empty
+    Friend s_showLogger As Boolean = False
     Friend s_useLocalTimeZone As Boolean
     Friend s_userName As String
     Friend ReadOnly Property CareLinkDecimalSeparator As Char = "."c

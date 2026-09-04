@@ -176,7 +176,7 @@ Friend Class Client2
             If tDiff < 600 Then
                 startKey = $"In {NameOf(IsTokenValid)} access token is about to expire in "
                 message = $"In {NameOf(IsTokenValid)} access token is about to expire in {tDiff}s"
-                LoggerManager.UpdateMessage(startKey, endKey:="", message)
+                LoggerManager.UpdateMessage(message, startKey)
                 Return False
             End If
 
@@ -191,7 +191,7 @@ Friend Class Client2
 
             startKey = $"In {NameOf(IsTokenValid)} access token expires in"
             message = $"{startKey} {(tDiff \ 60).ToHoursMinutes()} at {authTokenValidTo} or {formatted}"
-            LoggerManager.UpdateMessage(startKey, endKey:="", message)
+            LoggerManager.UpdateMessage(message, startKey)
             Return True
         Catch ex As Exception
             message =
@@ -264,9 +264,8 @@ Friend Class Client2
 
                         Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).ConfigureAwait(continueOnCapturedContext:=False)
                             _lastHttpStatusCode = response.StatusCode
-                            LoggerManager.UpdateMessage(startKey:=$"   status: ",
-                                                        endKey:="",
-                                                        message:=$"   status: {_lastHttpStatusCode}")
+                            LoggerManager.UpdateMessage(message:=$"   status: {_lastHttpStatusCode}",
+                                                        startKey:=$"   status: ")
 
                             ' Centralized resp inspection; may throw UnauthorizedAccessException,
                             ' ArgumentException (bad request) or HttpRequestException (transient/server).

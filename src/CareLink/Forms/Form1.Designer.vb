@@ -97,6 +97,7 @@ Partial Class Form1
         MaxBasalPerHourLabel = New Label()
         MenuHelp = New ToolStripMenuItem()
         MenuHelpShowControlPositions = New ToolStripMenuItem()
+        MenuHelpShowLogger = New ToolStripMenuItem()
         MenuHelpReportAnIssue = New ToolStripMenuItem()
         MenuHelpCheckForUpdates = New ToolStripMenuItem()
         MenuHelpAbout = New ToolStripMenuItem()
@@ -1095,7 +1096,7 @@ Partial Class Form1
         ' 
         ' MenuHelp
         ' 
-        MenuHelp.DropDownItems.AddRange(New ToolStripItem() {MenuHelpShowControlPositions, MenuHelpReportAnIssue, MenuHelpCheckForUpdates, MenuHelpAbout})
+        MenuHelp.DropDownItems.AddRange(New ToolStripItem() {MenuHelpShowControlPositions, MenuHelpShowLogger, MenuHelpReportAnIssue, MenuHelpCheckForUpdates, MenuHelpAbout})
         MenuHelp.Name = "MenuHelp"
         MenuHelp.ShortcutKeys = Keys.Alt Or Keys.H
         MenuHelp.Size = New Size(44, 20)
@@ -1107,6 +1108,12 @@ Partial Class Form1
         MenuHelpShowControlPositions.Name = "MenuHelpShowControlPositions"
         MenuHelpShowControlPositions.Size = New Size(197, 22)
         MenuHelpShowControlPositions.Text = "Show Control Positions"
+        ' 
+        ' MenuHelpShowLogger
+        ' 
+        MenuHelpShowLogger.Name = "MenuHelpShowLogger"
+        MenuHelpShowLogger.Size = New Size(197, 22)
+        MenuHelpShowLogger.Text = "Show Logger"
         ' 
         ' MenuHelpReportAnIssue
         ' 
@@ -3195,6 +3202,7 @@ Partial Class Form1
     Friend WithEvents MenuHelpCheckForUpdates As ToolStripMenuItem
     Friend WithEvents MenuHelpReportAnIssue As ToolStripMenuItem
     Friend WithEvents MenuHelpShowControlPositions As ToolStripMenuItem
+    Friend WithEvents MenuHelpShowLogger As ToolStripMenuItem
     Friend WithEvents MenuOptions As ToolStripMenuItem
     Friend WithEvents MenuOptionsAdvancedOptions As ToolStripMenuItem
     Friend WithEvents MenuOptionsAudioAlerts As ToolStripMenuItem

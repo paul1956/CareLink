@@ -28,7 +28,7 @@ Friend Module FileUtilities
         Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As JsonElement
 
         Dim path As String = GetLoginDataFileName(tokenBaseFileName)
-        LoggerManager.UpdateMessage(startKey:="Reading token file: ", endKey:="", message:=$"Reading token file: {path}")
+        LoggerManager.UpdateMessage(message:=$"Reading token file: {path}", startKey:="Reading token file: ")
         If Not File.Exists(path) Then
             LoggerManager.LogMessage(message:=$"ERROR: token file {path} not found")
             Return Nothing

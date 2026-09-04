@@ -569,30 +569,23 @@ Public Class Form1
         End SyncLock
     End Sub
 
-    Private Sub SchedulePumpBatteryRefresh()
-        ' Generate and assign the pump battery composite on a background thread.
-        If Me.PumpBatteryPictureBox Is Nothing OrElse
-           Me.PumpBatteryPictureBox.Width = 0 OrElse
-           Me.PumpBatteryPictureBox.Height = 0 Then
-
+    ''' <summary>
+    ''' Schedules generation of an image on a background thread and assigns it to the provided PictureBox.
+    ''' The generator function receives the target size and must return a Bitmap (or Nothing on failure).
+    ''' The UI assignment and previous-image disposal are handled automatically on the UI thread.
+    ''' </summary>
+    Private Sub ScheduleImageRefresh(puctureBox As PictureBox, generator As Func(Of Size, Bitmap))
+        If puctureBox Is Nothing OrElse
+           puctureBox.Width = 0 OrElse
+           puctureBox.Height = 0 Then
             Return
         End If
-
-        Dim targetSize As New Size(Me.PumpBatteryPictureBox.Width, Me.PumpBatteryPictureBox.Height)
 
         Dim action As Action =
             Sub()
                 Dim newBmp As Bitmap = Nothing
                 Try
-                    Dim pumpMinutes As Integer = 0
-                    If PatientData IsNot Nothing Then
-                        pumpMinutes = PatientData.PumpBatteryLevelTime
-                    End If
-
-                    newBmp = GetOrCreatePumpBatteryComposite(imageId:=ImageEnum.PumpBatteryFlexMaster,
-                                                             targetSize,
-                                                             pumpBatteryLevelMinutes:=pumpMinutes)
-
+                    newBmp = generator.Invoke(puctureBox.Size)
                     If newBmp Is Nothing Then Return
 
                     ' Assign on UI thread
@@ -600,10 +593,10 @@ Public Class Form1
                         Dim method As New MethodInvoker(
                             Sub()
                                 Dim prev As Image = Nothing
-                                If Me.PumpBatteryPictureBox IsNot Nothing Then
-                                    prev = Me.PumpBatteryPictureBox.Image
-                                    Me.PumpBatteryPictureBox.Image = newBmp
-                                    Me.PumpBatteryPictureBox.Invalidate()
+                                If puctureBox IsNot Nothing Then
+                                    prev = puctureBox.Image
+                                    puctureBox.Image = newBmp
+                                    puctureBox.Invalidate()
                                 End If
                                 If prev IsNot Nothing AndAlso Not Object.ReferenceEquals(prev, newBmp) Then
                                     Try
@@ -631,6 +624,27 @@ Public Class Form1
             End Sub
 
         Task.Run(action)
+    End Sub
+
+    ''' <summary>
+    ''' Backwards-compatible wrapper that uses the general ScheduleImageRefresh
+    ''' and passes the pump-battery-specific generator. The generator closure
+    ''' captures PatientData at execution time so no hard-coded image or patient
+    ''' references remain in the scheduling infrastructure.
+    ''' </summary>
+    Private Sub SchedulePumpBatteryRefresh(puctureBox As PictureBox)
+        Dim generator As Func(Of Size, Bitmap) =
+            Function(targetSize As Size)
+                Dim pumpMinutes As Integer = 0
+                If PatientData IsNot Nothing Then
+                    pumpMinutes = PatientData.PumpBatteryLevelTime
+                End If
+                Return GetOrCreatePumpBatteryComposite(imageId:=ImageEnum.PumpBatteryFlexMaster,
+                                                       targetSize,
+                                                       pumpBatteryLevelMinutes:=pumpMinutes)
+            End Function
+
+        Me.ScheduleImageRefresh(puctureBox, generator)
     End Sub
 
     ''' <summary>
@@ -2566,13 +2580,11 @@ Public Class Form1
             My.Settings.AutoLogin = False
         End If
 
-        If Debugger.IsAttached Then
-            ' Show logger only in Debug mode
-            InitLogger()
-            LogMessage(message:="Application started in DEBUG mode.")
-        End If
+        s_showLogger = Debugger.IsAttached
+        InitLogger(show:=s_showLogger)
+        LoggerManager.UpdateMessage(message:="Application started in DEBUG mode.")
 
-        PreloadBitmaps()
+            PreloadBitmaps()
         Me.CalibrationDueImage.GetBitmapFromCache(imageId:=ImageEnum.CalibrationUnavailable)
         Me.CursorSetPictureBox.GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeOver24Hours)
         Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirRemainsOver85Percent)
@@ -2643,9 +2655,6 @@ Public Class Form1
     ''' </remarks>
     Private Async Sub Form1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.Fix(c:=Me)
-        If Debugger.IsAttached Then
-            InitLogger()
-        End If
         Me.CurrentSgLabel.Parent = Me.SmartGuardShieldPictureBox
         Me.CurrentSgLabel.CenterLabelOnParent
         Me.ShieldUnitsLabel.Parent = Me.SmartGuardShieldPictureBox
@@ -3535,6 +3544,18 @@ Public Class Form1
     Private Sub MenuHelpShowControlPositions_Click(sender As Object, e As EventArgs) _
         Handles MenuHelpShowControlPositions.Click
         Me.ShowControlPositions()
+    End Sub
+
+    Private Sub MenuHelpShowLogger_Click(sender As Object, e As EventArgs) Handles MenuHelpShowLogger.Click
+        If s_showLogger Then
+            s_showLogger = False
+            Me.MenuHelpShowLogger.Checked = False
+            LoggerForm.Hide()
+        Else
+            s_showLogger = True
+            Me.MenuHelpShowLogger.Checked = True
+            InitLogger(show:=True)
+        End If
     End Sub
 
 #End Region ' Help Menu Events
@@ -5265,7 +5286,7 @@ Public Class Form1
 
         If IsFlex() Then
             ' Ensure cached composed image is updated for flex battery state
-            Me.SchedulePumpBatteryRefresh()
+            Me.SchedulePumpBatteryRefresh(puctureBox:=Me.PumpBatteryPictureBox)
         Else
             ' Read the battery level once and reuse the value below so the
             ' UI is consistent and we don't reference an uninitialized variable.

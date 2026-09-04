@@ -58,7 +58,7 @@ Public Class SummaryRecord
                         message = "N/A"
 
                     Case Else
-                        If Debugger.IsAttached Then
+                        If s_showLogger Then
                             Stop
                             Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
                             MsgBox(
