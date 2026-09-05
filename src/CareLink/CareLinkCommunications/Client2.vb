@@ -132,6 +132,9 @@ Friend Class Client2
 
     Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, JsonElement)
         Try
+            If token_data.IsEmpty Then
+                Return Nothing
+            End If
             Dim token As String = token_data.JsonElementToDictionary(key:="access_token").ToString
             Dim payload_b64 As String = token.Split(separator:="."c)(1)
             Dim payload_b64_bytes As Byte() = Encoding.UTF8.GetBytes(s:=payload_b64)
@@ -163,7 +166,13 @@ Friend Class Client2
     ''' <param name="message"></param>
     Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, JsonElement),
                                          ByRef message As String) As Boolean
+
+        If access_token_payload Is Nothing Then
+            message = "AccessToken Empty"
+            Return False
+        End If
         Try
+
             Dim unixTime As Long = access_token_payload(key:="exp").GetInt64()
             Dim unixCurrentTime As Long = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             Dim tDiff As Long = unixTime - unixCurrentTime
@@ -584,7 +593,12 @@ Friend Class Client2
                                                        userName,
                                                        password)
             Catch ex As Exception
-                MessageBox.Show(text:=ex.Message, caption:="Error", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Error)
+                If ex.Message <> "Login was cancelled." Then
+                    MessageBox.Show(text:=ex.Message,
+                                    caption:="Error",
+                                    buttons:=MessageBoxButtons.OK,
+                                    icon:=MessageBoxIcon.Error)
+                End If
             End Try
         End If
     End Function

@@ -5748,7 +5748,8 @@ Public Class Form1
             If fromFile Then
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
             Else
-                Dim msg As String = $"Last Update Time: {PumpNow()}"
+                Dim d As Date = PumpNow()
+                Dim msg As String = $"Last Update Time: {d:d} {d:t}"
                 Me.SetLastUpdateTime(msg, isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)
             End If
             Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showPictureBox:=True)

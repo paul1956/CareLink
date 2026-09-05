@@ -200,9 +200,12 @@ Friend Module FileUtilities
     ''' </param>
     Public Sub WriteTokenFile(token As JsonElement,
         Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME)
+        If token.IsEmpty Then
+            Exit Sub
+        End If
         Dim path As String = GetLoginDataFileName(tokenBaseFileName)
         Dim contents As String = String.Empty
-        If Not token.TryToJson(contents) Then
+        If Not token.TryToJson(json:=contents) Then
             LoggerManager.LogMessage(message:=$"ERROR: failed serializing token for file {path}")
             Return
         End If

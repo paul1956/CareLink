@@ -47,7 +47,7 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 9/4/2026
 
 ## What's New
-New in 6.0.1.5
+New in 6.0.1.6
 Add additional logging to help debug login issues
 
 New in 6.0.1.3
