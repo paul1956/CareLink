@@ -46,8 +46,9 @@ Public Class CareLinkService
                                                     userName As String,
                                                     password As String) As Task(Of TokenData)
 
+        Dim message As String
         Dim ssoConfig As SsoConfig = Nothing
-        If Not endpointConfig.SsoJson.TryFromJson(Of SsoConfig)(options:=DeserializationOptions, result:=ssoConfig) Then
+        If Not endpointConfig.SsoJson.TryFromJson(result:=ssoConfig) Then
             Throw New ApplicationException(message:="Failed to parse SSO configuration JSON.")
         End If
         Dim client As Client = ssoConfig.Client
@@ -91,7 +92,8 @@ Public Class CareLinkService
                  End Function)
 
         If redirectResult Is Nothing OrElse IsNullOrWhiteSpace(value:=redirectResult.Code) Then
-            Throw New Exception(message:="Authorization code was not captured.")
+            message = "Authorization code was not captured."
+            Throw New Exception(message)
         End If
 
         Dim tokenUrl As String = $"{endpointConfig.ApiBaseUrl}{tokenPath}"
@@ -106,12 +108,14 @@ Public Class CareLinkService
         Dim body As String = Await response.Content.ReadAsStringAsync()
 
         If Not response.IsSuccessStatusCode Then
-            Throw New Exception(message:=$"Could not get token data: {body}")
+            message = $"Could not get token data in {NameOf(DoLoginAuth0Async)}: {body}"
+            Throw New Exception(message)
         End If
 
         Dim token As TokenData = Nothing
-        If Not body.TryFromJson(Of TokenData)(options:=DeserializationOptions, result:=token) Then
-            Throw New ApplicationException("Failed to parse token response JSON.")
+        If Not body.TryFromJson(result:=token) Then
+            message = "Failed to parse token response JSON."
+            Throw New ApplicationException(message)
         End If
         token.ClientId = clientId
         WriteTokenFile(token, path:=outputFile)
@@ -124,8 +128,9 @@ Public Class CareLinkService
                                                        password As String) As Task(Of TokenData)
 
         Dim ssoConfig As SsoConfig = Nothing
-        If Not endpointConfig.SsoJson.TryFromJson(Of SsoConfig)(options:=DeserializationOptions, result:=ssoConfig) Then
-            Throw New ApplicationException("Failed to parse SSO configuration JSON.")
+        If Not endpointConfig.SsoJson.TryFromJson(result:=ssoConfig) Then
+            Const message As String = "Failed to parse SSO configuration JSON."
+            Throw New ApplicationException(message)
         End If
 
         Using ssoDoc As JsonDocument = JsonDocument.Parse(json:=endpointConfig.SsoJson)
@@ -309,7 +314,8 @@ Public Class CareLinkService
                     Dim tokenBody As String = Await tokenResponse.Content.ReadAsStringAsync()
 
                     If Not tokenResponse.IsSuccessStatusCode Then
-                        Throw New Exception(message:=$"Could not get token data: {tokenBody}")
+                        Dim message1 As String = $"Could not get token data in {NameOf(DoLoginNonAuth0Async)} : {tokenBody}"
+                        Throw New Exception(message:=message1)
                     End If
 
                     Using tokenDoc As JsonDocument = JsonDocument.Parse(json:=tokenBody)
@@ -409,13 +415,22 @@ Public Class CareLinkService
                                               outputFile As String,
                                               userName As String,
                                               password As String) As Task(Of TokenData)
-#Disable Warning IDE0046 ' Convert to conditional expression
         If endpointConfig.IsAuth0 Then
             Return Await DoLoginAuth0Async(endpointConfig, outputFile, userName, password)
         Else
+            Dim message As String =
+                $"{NameOf(DoLoginNonAuth0Async)} we should not reach this point"
+            LoggerManager.LogMessage(message)
+            Dim result As DialogResult =
+                MessageBox.Show(text:=message & " Do you want to continue?",
+                caption:="DoLoginNonAuth0Async",
+                buttons:=MessageBoxButtons.YesNo,
+                icon:=MessageBoxIcon.Question)
+            If result = DialogResult.No Then
+                Throw New Exception(message:="User chose to cancel the operation.")
+            End If
             Return Await DoLoginNonAuth0Async(endpointConfig, outputFile, userName, password)
         End If
-#Enable Warning IDE0046 ' Convert to conditional expression
     End Function
 
     Public Shared Function ParseRegion(value As String) As String

@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Net
 Imports System.Net.Http
 Imports System.Text.Json
 
@@ -55,13 +56,13 @@ Public Module Discover
         End If
         LoggerManager.LogMessage(message:=$"   region: {region.ElementToString()}")
         Dim countryInfo As CountryInfo = Nothing
-        If Not region.TryFromJson(Of CountryInfo)(result:=countryInfo) Then
+        If Not region.TryFromJson(result:=countryInfo) Then
             Throw New ApplicationException(message:="Failed to parse country info from discovery data.")
         End If
         For Each value As JsonElement In discoveryElement.GetProperty(propertyName:="CP").EnumerateArray()
             Try
                 Dim cpInfo As CPInfo = Nothing
-                If Not value.TryFromJson(Of CPInfo)(result:=cpInfo) Then
+                If Not value.TryFromJson(result:=cpInfo) Then
                     ' ignore here error will be handled outside the loop
                     Stop
                     Continue For
@@ -113,13 +114,13 @@ Public Module Discover
             Await httpClient.GetStringAsync(requestUri).
                 ConfigureAwait(continueOnCapturedContext:=False)
         Dim discoveryElement As JsonElement
-        If Not json.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=discoveryElement) Then
-            Throw New ApplicationException("Failed to parse discovery JSON.")
+        If Not json.TryFromJson(result:=discoveryElement) Then
+            Throw New ApplicationException(message:="Failed to parse discovery JSON.")
         End If
         Dim configJson As JsonElement =
             GetConfigJson(country, serverRegion, discoveryElement)
         Dim config As ConfigRecord = Nothing
-        If Not configJson.TryFromJson(Of ConfigRecord)(result:=config) Then
+        If Not configJson.TryFromJson(result:=config) Then
             Throw New ApplicationException(message:="Failed to parse config JSON.")
         End If
         Dim ssoConfigurationKey As String = config.UseSSOConfiguration
@@ -128,7 +129,7 @@ Public Module Discover
             Await httpClient.GetStringAsync(requestUri) _
                             .ConfigureAwait(continueOnCapturedContext:=False)
         Dim ssoConfig As SsoConfig = Nothing
-        If Not resp.TryFromJson(Of SsoConfig)(options:=DeserializationOptions, result:=ssoConfig) Then
+        If Not resp.TryFromJson(result:=ssoConfig) Then
             Throw New ApplicationException(message:="Failed to parse SSO configuration JSON.")
         End If
 
@@ -142,21 +143,25 @@ Public Module Discover
 
         Dim mutableConfig As Dictionary(Of String, JsonElement) =
            Nothing
-        If Not configJson.GetRawText().TryFromJson(Of Dictionary(Of String, JsonElement))(options:=DeserializationOptions, result:=mutableConfig) Then
-            Throw New ApplicationException("Failed to parse mutable config JSON.")
+        If Not configJson.GetRawText().TryFromJson(result:=mutableConfig) Then
+            Const message As String = "Failed to parse mutable config JSON."
+            Throw New ApplicationException(message)
         End If
         Dim tokenElem As JsonElement
-        If Not $"{Quote}{tokenUrl}{Quote}".TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=tokenElem) Then
-            Throw New ApplicationException("Failed to create token Url JSON element.")
+        If Not $"{Quote}{tokenUrl}{Quote}".TryFromJson(result:=tokenElem) Then
+            Const message As String = "Failed to create token Url JSON element."
+            Throw New ApplicationException(message)
         End If
         mutableConfig(key:="token_url") = tokenElem
         Dim mcJson As String = String.Empty
         If Not mutableConfig.TryToJson(mcJson) Then
-            Throw New ApplicationException("Failed to serialize mutable config to JSON.")
+            Const message As String = "Failed to serialize mutable config to JSON."
+            Throw New ApplicationException(message)
         End If
         Dim outElem As JsonElement
-        If Not mcJson.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=outElem) Then
-            Throw New ApplicationException("Failed to parse mutable config to JsonElement.")
+        If Not mcJson.TryFromJson(result:=outElem) Then
+            Const message As String = "Failed to parse mutable config to JsonElement."
+            Throw New ApplicationException(message)
         End If
         Return outElem
     End Function
@@ -171,12 +176,12 @@ Public Module Discover
     ''' A <see cref="DiscoveryRecord"/> containing the configuration data for the specified country,
     ''' or <see langword="Nothing"/> if an error occurs.
     ''' </returns>
-    Public Async Function GetDiscoveryDataAsync() As Task(Of (DiscoveryRecord, String, Integer))
+    Public Async Function GetDiscoveryDataAsync() As Task(Of DiscoveryRecord)
         Dim discoveryUrl As String = If(s_countryCode.EqualsNoCase("US"),
                                         s_discoverUrl(key:="US"),
                                         s_discoverUrl(key:="EU"))
         Dim lastErrorMsg As String
-        Dim httpStatusCode As Integer = 0 ' Default value meaning no response received yet
+        Dim httpStatusCode As HttpStatusCode = 0 ' Default value meaning no response received yet
         Try
             Using client As New HttpClient()
                 Using response As HttpResponseMessage = Await client.GetAsync(requestUri:=discoveryUrl).ConfigureAwait(continueOnCapturedContext:=False)
@@ -188,15 +193,21 @@ Public Module Discover
                     Catch uaEx As UnauthorizedAccessException
                         lastErrorMsg = $"Unauthorized access when fetching discovery data: {uaEx.Message}"
                         LoggerManager.LogMessage(message:=lastErrorMsg)
-                        Return (Nothing, lastErrorMsg, httpStatusCode)
+                        Return New DiscoveryRecord With {
+                            .httpStatusCode = httpStatusCode,
+                            .lastErrorMsg = lastErrorMsg}
                     Catch argEx As ArgumentException
                         lastErrorMsg = $"Bad request fetching discovery data: {argEx.Message}"
                         LoggerManager.LogMessage(message:=lastErrorMsg)
-                        Return (Nothing, lastErrorMsg, httpStatusCode)
+                        Return New DiscoveryRecord With {
+                            .httpStatusCode = httpStatusCode,
+                            .lastErrorMsg = lastErrorMsg}
                     Catch httpEx As HttpRequestException
                         lastErrorMsg = $"HTTP request failed: {httpEx.Message}"
                         LoggerManager.LogMessage(message:=lastErrorMsg)
-                        Return (Nothing, lastErrorMsg, httpStatusCode)
+                        Return New DiscoveryRecord With {
+                            .httpStatusCode = httpStatusCode,
+                            .lastErrorMsg = lastErrorMsg}
                     End Try
 
                     Dim result As DiscoveryRecord
@@ -204,16 +215,19 @@ Public Module Discover
                         Dim json As String = Await response.Content.ReadAsStringAsync() _
                                                                    .ConfigureAwait(continueOnCapturedContext:=False)
                         Dim dr As DiscoveryRecord = Nothing
-                        If Not json.TryFromJson(Of DiscoveryRecord)(options:=DeserializationOptions, result:=dr) Then
+                        If Not json.TryFromJson(result:=dr) Then
                             Stop
-                            Throw New ApplicationException("Failed to parse discovery response.")
+                            Const message As String = "Failed to parse discovery response."
+                            Throw New ApplicationException(message)
                         End If
                         result = dr
                     Catch ex As Exception
                         Stop
                         Throw
                     End Try
-                    Return (result, String.Empty, httpStatusCode)
+                    Return New DiscoveryRecord With {
+                        .lastErrorMsg = String.Empty,
+                        .httpStatusCode = httpStatusCode}
                 End Using
             End Using
         Catch ex As AggregateException
@@ -223,13 +237,13 @@ Public Module Discover
             If ex.InnerExceptions.Count = 1 Then
                 lastErrorMsg = ex.InnerExceptions(index:=0).Message
                 If lastErrorMsg.Contains(value:="No such host is known") Then
-                    httpStatusCode = 1
+                    httpStatusCode = HttpStatusCode.NotFound
                 End If
             Else
                 For Each innerEx As Exception In ex.InnerExceptions
-                    messages.Add(innerEx.Message)
+                    messages.Add(item:=innerEx.Message)
                 Next
-                lastErrorMsg = $"Multiple errors: {String.Join("; ", messages)}"
+                lastErrorMsg = $"Multiple errors: {String.Join(separator:="; ", values:=messages)}"
             End If
             LoggerManager.LogMessage(message:=lastErrorMsg)
         Catch ex As HttpRequestException
@@ -247,7 +261,9 @@ Public Module Discover
             Stop
         End Try
 
-        Return (Nothing, lastErrorMsg, httpStatusCode)
+        Return New DiscoveryRecord With {
+            .lastErrorMsg = lastErrorMsg,
+            .httpStatusCode = httpStatusCode}
     End Function
 
 End Module

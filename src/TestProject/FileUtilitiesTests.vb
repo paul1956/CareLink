@@ -10,7 +10,7 @@ Public Class FileUtilitiesTests
     Public Sub DeserializeJsonElementFromString_ValidJson_ReturnsElement()
         Dim json As String = "{""a"":1,""b"":""text""}"
         Dim elem As JsonElement
-        If Not json.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=elem) Then
+        If Not json.TryFromJson(result:=elem) Then
             elem = Nothing
         End If
         elem.ValueKind.Should().Be(expected:=JsonValueKind.Object)

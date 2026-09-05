@@ -9,6 +9,7 @@ Imports System.Net.Http
 Imports System.Net.Http.Headers
 Imports System.Text
 Imports System.Text.Json
+Imports DocumentFormat.OpenXml.Office2016.Excel
 
 ' This class is intentionally not part of the public API.
 ' It is designed to be used internally within the assembly and is not intended for external consumption.
@@ -141,7 +142,7 @@ Friend Class Client2
             Dim bytes As Byte() = Convert.FromBase64String(s:=payload_b64)
             Dim json As String = Encoding.UTF8.GetString(bytes)
             Dim dict As Dictionary(Of String, JsonElement) = Nothing
-            Return If(Not json.TryFromJson(options:=DeserializationOptions, result:=dict),
+            Return If(Not json.TryFromJson(result:=dict),
                                            Nothing,
                                            dict)
         Catch ex As Exception
@@ -273,7 +274,7 @@ Friend Class Client2
 
                             Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
                             Dim d As Dictionary(Of String, JsonElement) = Nothing
-                            Return If(Not json.TryFromJson(options:=DeserializationOptions, result:=d),
+                            Return If(Not json.TryFromJson(result:=d),
                                                            Nothing,
                                                            d)
                         End Using
@@ -359,7 +360,7 @@ Friend Class Client2
                 Dim json As String =
                     Await response.Content.ReadAsStringAsync()
                 Dim p As List(Of Dictionary(Of String, String)) = Nothing
-                patients = If(Not json.TryFromJson(options:=DeserializationOptions, result:=p),
+                patients = If(Not json.TryFromJson(result:=p),
                               New List(Of Dictionary(Of String, String))(),
                               p)
                 If patients.Count > 0 Then
@@ -450,7 +451,7 @@ Friend Class Client2
             Application.DoEvents()
             Dim element As JsonElement = _accessTokenPayload(key:="token_details")
             Dim payload As AccessTokenDetails = Nothing
-            If Not element.TryFromJson(Of AccessTokenDetails)(payload) Then
+            If Not element.TryFromJson(result:=payload) Then
                 payload = Nothing
             End If
             _country = If(payload.Country, s_countryCode)
@@ -459,7 +460,7 @@ Friend Class Client2
                 Await GetConfigAsync(httpClient:=_httpClient, country:=_country, Me.ServerRegion)
 
             Dim cfg As ConfigRecord = Nothing
-            If Not configJsonElement.TryFromJson(Of ConfigRecord)(result:=cfg) Then
+            If Not configJsonElement.TryFromJson(result:=cfg) Then
                 Throw New ApplicationException(message:="Failed to parse configuration JSON.")
             End If
             Me.Config = cfg
@@ -472,13 +473,13 @@ Friend Class Client2
             End If
 
             Dim tmpDict As Dictionary(Of String, JsonElement) = Nothing
-            If Not json.TryFromJson(Of Dictionary(Of String, JsonElement))(options:=DeserializationOptions, result:=tmpDict) Then
+            If Not json.TryFromJson(result:=tmpDict) Then
                 tmpDict = New Dictionary(Of String, JsonElement)()
             End If
             Me.UserElementDictionary = tmpDict
 
             Dim ppd As PatientPersonalInfo = Nothing
-            If Not json.TryFromJson(options:=DeserializationOptions, result:=ppd) Then
+            If Not json.TryFromJson(result:=ppd) Then
                 ppd = New PatientPersonalInfo()
             End If
             _PatientPersonalData = ppd
@@ -600,32 +601,42 @@ Friend Class Client2
     ''' </returns>
     Public Async Function DoRefreshAsync(config As ConfigRecord,
                                          tokenElement As JsonElement) As Task(Of JsonElement)
-        Dim teDict As Dictionary(Of String, JsonElement) = Nothing
-        If Not tokenElement.TryFromJson(Of Dictionary(Of String, JsonElement))(teDict) Then
-            LoggerManager.LogMessage(message:=$"DoRefreshAsync: token element could not be parsed")
+        Dim result As Dictionary(Of String, JsonElement) = Nothing
+        Dim message As String
+        If Not tokenElement.TryFromJson(result) Then
+            message = $"{NameOf(DoRefreshAsync)}: token element could not be parsed"
+            LoggerManager.LogMessage(message)
             Return Nothing
         End If
-        Dim tokenData As Dictionary(Of String, JsonElement) = teDict
+        Dim tokenData As Dictionary(Of String, JsonElement) = result
 
         ' Validate required keys
         Dim refreshTok As String = Nothing
         Dim clientId As String = Nothing
         If tokenData.TryGetValue(key:="refresh_token", value:=New JsonElement) Then
             Try
-                refreshTok = tokenData("refresh_token").GetString()
+                refreshTok = tokenData(key:="refresh_token").GetString()
             Catch
                 refreshTok = Nothing
             End Try
         End If
         If tokenData.TryGetValue(key:="client_id", value:=New JsonElement) Then
             Try
-                clientId = tokenData("client_id").GetString()
+                clientId = tokenData(key:="client_id").GetString()
             Catch
                 clientId = Nothing
             End Try
         End If
-        If IsNullOrWhiteSpace(refreshTok) OrElse IsNullOrWhiteSpace(clientId) Then
-            LoggerManager.LogMessage(message:=$"DoRefreshAsync: missing refresh_token or client_id in stored token data")
+        If IsNullOrWhiteSpace(value:=refreshTok) Then
+            message =
+                $"{NameOf(DoRefreshAsync)}: Missing refresh_token in stored token data."
+            LoggerManager.LogMessage(message)
+            Return Nothing
+        End If
+        If IsNullOrWhiteSpace(value:=clientId) Then
+            message =
+                $"{NameOf(DoRefreshAsync)}: Missing client_id in stored token data."
+            LoggerManager.LogMessage(message)
             Return Nothing
         End If
 
@@ -665,13 +676,15 @@ Friend Class Client2
             Dim succeeded As Boolean = False
             Dim lastResponseBody As String = String.Empty
 
-            ' Strategy: if we have a client_secret, try Basic auth first (preferred). If that fails and provider may expect client_secret in body, retry with client_secret in form.
+            ' Strategy: if we have a client_secret, try Basic auth first (preferred).
+            ' If that fails and provider may expect client_secret in body,
+            ' retry with client_secret in form.
             Dim attempts As New List(Of Tuple(Of Boolean, Boolean))
             If hasClientSecret Then
-                attempts.Add(Tuple.Create(True, False))   ' Basic auth, no client_secret in form
-                attempts.Add(Tuple.Create(False, True))   ' No basic auth, include client_secret in form
+                attempts.Add(item:=Tuple.Create(True, False))   ' Basic auth, no client_secret in form
+                attempts.Add(item:=Tuple.Create(False, True))   ' No basic auth, include client_secret in form
             Else
-                attempts.Add(Tuple.Create(False, False))  ' No client_secret available
+                attempts.Add(item:=Tuple.Create(False, False))  ' No client_secret available
             End If
 
             For Each attempt As Tuple(Of Boolean, Boolean) In attempts
@@ -695,57 +708,49 @@ Friend Class Client2
                         resp = Await client.PostAsync(requestUri:=config.TokenUrl, content).ConfigureAwait(continueOnCapturedContext:=False)
                     End Using
                 Catch ex As Exception
-                    LoggerManager.LogMessage(message:=$"DoRefreshAsync: HTTP request failed: {ex.Message}")
+                    message = $"{NameOf(DoRefreshAsync)}: HTTP request failed: {ex.Message}"
+                    LoggerManager.LogMessage(message)
                     Continue For
                 End Try
 
                 _lastHttpStatusCode = resp.StatusCode
-                Dim respBody As String = Await resp.Content.ReadAsStringAsync().ConfigureAwait(False)
+                Dim respBody As String =
+                    Await resp.Content.ReadAsStringAsync().
+                                       ConfigureAwait(continueOnCapturedContext:=False)
                 lastResponseBody = respBody
 
                 If resp.StatusCode = HttpStatusCode.OK Then
                     Try
-                        Using newData As JsonDocument = JsonDocument.Parse(respBody)
+                        Using newData As JsonDocument = JsonDocument.Parse(json:=respBody)
                             Dim root As JsonElement = newData.RootElement
-                            tokenData("access_token") = root.GetProperty("access_token").Clone()
-                            tokenData("refresh_token") = root.GetProperty("refresh_token").Clone()
+                            tokenData(key:="access_token") =
+                                root.GetProperty(propertyName:="access_token").Clone()
+                            tokenData(key:="refresh_token") =
+                                root.GetProperty(propertyName:="refresh_token").Clone()
                         End Using
                         succeeded = True
                         Exit For
                     Catch ex As Exception
-                        LoggerManager.LogMessage(message:=$"DoRefreshAsync: failed parsing token refresh response: {ex.Message}")
+                        message =
+                            $"{NameOf(DoRefreshAsync)}: failed parsing token refresh response: {ex.Message}"
+                        LoggerManager.LogMessage(message)
                         Return Nothing
                     End Try
                 Else
-                    LoggerManager.LogMessage(message:=$"DoRefreshAsync: token refresh attempt failed. useBasic={attempt.Item1} includeSecret={attempt.Item2} Status={CInt(resp.StatusCode)} Body={respBody}")
+                    message =
+                        $"{NameOf(DoRefreshAsync)}: token refresh attempt failed. useBasic={attempt.Item1} " &
+                        $"includeSecret={attempt.Item2} Status={CInt(resp.StatusCode)} Body={respBody}"
+                    LoggerManager.LogMessage(message)
                 End If
             Next
 
             If Not succeeded Then
-                LoggerManager.LogMessage(message:=$"DoRefreshAsync: all refresh attempts failed. Last response: {lastResponseBody}")
+                message =
+                    $"{NameOf(DoRefreshAsync)}: all refresh attempts failed. Last response: {lastResponseBody}"
+                LoggerManager.LogMessage(message)
 
                 ' Attempt interactive login using WebView2 (fallback)
                 Try
-                    'Try
-                    ' Notify the user that interactive re-authentication is required
-                    '    Dim method As Action =
-                    '        Sub()
-                    '            Dim owner As Form =
-                    '                If(LoginDialog.Visible,
-                    '                   DirectCast(My.Forms.LoginDialog, Form),
-                    '                   DirectCast(My.Forms.Form1, Form))
-                    '            MessageBox.Show(owner,
-                    '                            text:="Re-authentication required, please sign in.",
-                    '                            caption:="Sign in required",
-                    '                            buttons:=MessageBoxButtons.OK,
-                    '                            icon:=MessageBoxIcon.Information)
-                    '        End Sub
-
-                    '    Invoke(owner:=My.Forms.Form1, method)
-                    'Catch
-                    '    ' Best-effort UI notify; continue to interactive login even if notification fails
-                    'End Try
-
                     Dim discoveryUrl As String =
                         If(Me.ServerRegion = Region.NorthAmerica,
                            s_discoverUrl(key:="US"),
@@ -754,26 +759,38 @@ Friend Class Client2
                         Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, Me.ServerRegion)
 
                     ' Do interactive login (user will be prompted). DoLoginAsync writes token file.
-                    Dim tokenResult As TokenData = Await CareLinkService.DoLoginAsync(endpointConfig, outputFile:=_tokenBaseFileName, userName:=String.Empty, password:=String.Empty)
+                    Dim tokenResult As TokenData =
+                        Await CareLinkService.DoLoginAsync(endpointConfig,
+                                                           outputFile:=_tokenBaseFileName,
+                                                           userName:=String.Empty,
+                                                           password:=String.Empty)
                     If tokenResult Is Nothing Then
-                        LoggerManager.LogMessage(message:=$"DoRefreshAsync: interactive login returned no token.")
+                        message =
+                            $"{NameOf(DoRefreshAsync)}: interactive login returned no token."
+                        LoggerManager.LogMessage(message)
                         Return Nothing
                     End If
 
                     ' Convert TokenData to JsonElement
                     Dim tdJson2 As String = String.Empty
                     If Not tokenResult.TryToJson(json:=tdJson2) Then
-                        LoggerManager.LogMessage(message:=$"DoRefreshAsync: failed serializing TokenData after interactive login.")
+                        message =
+                            $"{NameOf(DoRefreshAsync)}: failed serializing TokenData after interactive login."
+                        LoggerManager.LogMessage(message)
                         Return Nothing
                     End If
                     Dim tdElem2 As JsonElement
-                    If Not tdJson2.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=tdElem2) Then
-                        LoggerManager.LogMessage(message:=$"DoRefreshAsync: failed parsing TokenData JSON after interactive login.")
+                    If Not tdJson2.TryFromJson(result:=tdElem2) Then
+                        message =
+                            $"{NameOf(DoRefreshAsync)}: failed parsing TokenData JSON after interactive login."
+                        LoggerManager.LogMessage(message)
                         Return Nothing
                     End If
                     Return tdElem2
                 Catch ex As Exception
-                    LoggerManager.LogMessage(message:=$"DoRefreshAsync: interactive login failed: {ex.Message}")
+                    message =
+                        $"{NameOf(DoRefreshAsync)}: interactive login failed: {ex.Message}"
+                    LoggerManager.LogMessage(message)
                     Return Nothing
                 End Try
             End If
@@ -781,11 +798,13 @@ Friend Class Client2
 
         Dim tdJson As String = String.Empty
         If Not tokenData.TryToJson(json:=tdJson) Then
-            LoggerManager.LogMessage(message:=$"ERROR: failed serializing token data to JSON.")
+            message =
+                $"{NameOf(DoRefreshAsync)}: failed serializing token data to JSON."
+            LoggerManager.LogMessage(message)
             Return Nothing
         End If
         Dim tdElem As JsonElement
-        Return If(Not tdJson.TryFromJson(options:=DeserializationOptions, result:=tdElem),
+        Return If(Not tdJson.TryFromJson(result:=tdElem),
                   Nothing,
                   tdElem)
     End Function
@@ -906,9 +925,10 @@ Friend Class Client2
             Dim metaDataElement As JsonElement =
                 CType(data.Values(index:=0), JsonElement)
             Dim metaData As Metadata = Nothing
-            If Not metaDataElement.TryFromJson(Of Metadata)(metaData) Then
+            If Not metaDataElement.TryFromJson(metaData) Then
                 Stop
-                Throw New ApplicationException("Failed to parse metadata element.")
+                Const message As String = "Failed to parse metadata element."
+                Throw New ApplicationException(message)
             End If
             Dim requestUri As String = metaData.IconResourceBundle.IconBundleUrl
             Dim zipFileName As String = requestUri.Split(separator:="/").Last

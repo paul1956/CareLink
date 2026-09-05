@@ -47,7 +47,7 @@ Public Module JsonExtensions
             Case JsonValueKind.Object
                 Dim jsonItem As String = item.Value.ElementToString()
                 Dim extendedInfo As Dictionary(Of String, JsonElement) = Nothing
-                If Not jsonItem.TryFromJson(Of Dictionary(Of String, JsonElement))(options:=DeserializationOptions, result:=extendedInfo) Then
+                If Not jsonItem.TryFromJson(result:=extendedInfo) Then
                     Return
                 End If
                 For Each kvp As KeyValuePair(Of String, JsonElement) In extendedInfo
@@ -69,6 +69,21 @@ Public Module JsonExtensions
                 Exit Select
         End Select
     End Sub
+
+    ''' <summary>
+    '''  Non-throwing Try pattern for deserializing a JSON string to T using provided options.
+    ''' </summary>
+    <Extension>
+    Private Function TryFromJson(Of T)(json As String, options As JsonSerializerOptions, ByRef result As T) As Boolean
+        Try
+            result = JsonSerializer.Deserialize(Of T)(json, options:=options)
+            Return True
+        Catch ex As JsonException
+            LoggerManager.LogMessage(message:=$"TryFromJson failed: {ex.Message}")
+            result = Nothing
+            Return False
+        End Try
+    End Function
 
     ''' <summary>
     ''' Centralized conversion of a JsonElement to a String.
@@ -216,7 +231,7 @@ Public Module JsonExtensions
         Dim item As KeyValuePair(Of String, JsonElement)
         Dim rawJsonData As List(Of KeyValuePair(Of String, JsonElement)) = Nothing
         Dim tmpDict As Dictionary(Of String, JsonElement) = Nothing
-        If Not json.TryFromJson(Of Dictionary(Of String, JsonElement))(options:=DeserializationOptions, result:=tmpDict) Then
+        If Not json.TryFromJson(result:=tmpDict) Then
             Return resultDictionary
         End If
         rawJsonData = tmpDict.ToList()
@@ -319,7 +334,7 @@ Public Module JsonExtensions
         End If
 
         Dim jsonList As List(Of Dictionary(Of String, JsonElement)) = Nothing
-        If Not json.TryFromJson(Of List(Of Dictionary(Of String, JsonElement)))(options:=DeserializationOptions, result:=jsonList) Then
+        If Not json.TryFromJson(result:=jsonList) Then
             Return resultListOfDictionary
         End If
 
@@ -400,7 +415,7 @@ Public Module JsonExtensions
     <Extension>
     Public Function ToStringDictionary(Json As String) As Dictionary(Of String, String)
         Dim raw As Dictionary(Of String, JsonElement) = Nothing
-        If Not Json.TryFromJson(Of Dictionary(Of String, JsonElement))(options:=DeserializationOptions, result:=raw) Then
+        If Not Json.TryFromJson(result:=raw) Then
             Return New Dictionary(Of String, String)()
         End If
 
@@ -460,26 +475,11 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Non-throwing Try pattern for deserializing a JSON string to T using provided options.
-    ''' </summary>
-    <Extension>
-    Public Function TryFromJson(Of T)(json As String, options As JsonSerializerOptions, ByRef result As T) As Boolean
-        Try
-            result = JsonSerializer.Deserialize(Of T)(json, options:=options)
-            Return True
-        Catch ex As JsonException
-            LoggerManager.LogMessage(message:=$"TryFromJson failed: {ex.Message}")
-            result = Nothing
-            Return False
-        End Try
-    End Function
-
-    ''' <summary>
     '''  Non-throwing Try pattern for deserializing a JSON string to T using module-level options.
     ''' </summary>
     <Extension>
     Public Function TryFromJson(Of T)(json As String, ByRef result As T) As Boolean
-        Return TryFromJson(Of T)(json, DeserializationOptions, result)
+        Return TryFromJson(Of T)(json, options:=DeserializationOptions, result)
     End Function
 
     ''' <summary>

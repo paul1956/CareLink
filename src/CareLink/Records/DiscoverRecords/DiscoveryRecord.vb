@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Net
 Imports System.Text.Json.Serialization
 
 Public Class DiscoveryRecord
@@ -17,5 +18,9 @@ Public Class DiscoveryRecord
 
     <JsonPropertyName("certificates")>
     Public Property Certificates As List(Of CertificateInfo)
+
+    Public Property httpStatusCode As HttpStatusCode
+
+    Public Property lastErrorMsg As String
 
 End Class

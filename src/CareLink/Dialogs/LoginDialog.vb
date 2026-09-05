@@ -61,7 +61,7 @@ Public Class LoginDialog
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         _doCancel = True
         If _showTcs IsNot Nothing Then
-            _showTcs.TrySetResult(DialogResult.Cancel)
+            _showTcs.TrySetResult(result:=DialogResult.Cancel)
             Me.Close()
         Else
             Me.DialogResult = DialogResult.Cancel
@@ -167,8 +167,8 @@ Public Class LoginDialog
         If AllUserLoginInfoFileExists() Then
             _mySource.AddRange(s_allUserSettingsData.Keys.ToArray)
             Me.UsernameComboBox.DataSource = s_allUserSettingsData.Keys
-        ElseIf IsNotNullOrWhiteSpace(My.Settings.CareLinkUserName) Then
-            _mySource.Add(My.Settings.CareLinkUserName)
+        ElseIf IsNotNullOrWhiteSpace(value:=My.Settings.CareLinkUserName) Then
+            _mySource.Add(value:=My.Settings.CareLinkUserName)
             Me.UsernameComboBox.Text = My.Settings.CareLinkUserName
         Else
             _mySource.Clear()
@@ -253,11 +253,10 @@ Public Class LoginDialog
             Me.LoginStatus.Text = "Checking token file..."
             Dim lastErrorMsg As String
             Dim discovertTupleStatusCode As HttpStatusCode = HttpStatusCode.OK
-            Dim discoveryTuple As (discoveryRecord As DiscoveryRecord, lastErrorMsg As String, httpStatusCode As HttpStatusCode) =
-                CType(Await GetDiscoveryDataAsync(), (discoveryRecord As DiscoveryRecord, lastErrorMsg As String, httpStatusCode As HttpStatusCode))
-            Me.ClientDiscover = discoveryTuple.discoveryRecord
-            lastErrorMsg = discoveryTuple.lastErrorMsg
-            discovertTupleStatusCode = discoveryTuple.httpStatusCode
+            Dim discoveryResult As DiscoveryRecord = Await GetDiscoveryDataAsync()
+            Me.ClientDiscover = discoveryResult
+            lastErrorMsg = discoveryResult.lastErrorMsg
+            discovertTupleStatusCode = discoveryResult.httpStatusCode
             If Me.ClientDiscover IsNot Nothing Then
                 Me.Ok_Button.Enabled = False
                 Application.DoEvents()

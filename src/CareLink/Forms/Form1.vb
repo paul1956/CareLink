@@ -2909,9 +2909,10 @@ Public Class Form1
                             Try
                                 Dim json As String = ExceptionHandlerDialog.LocalRawData
                                 Dim pde As JsonElement
-                                If Not json.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=pde) Then
+                                If Not json.TryFromJson(result:=pde) Then
                                     Stop
-                                    Throw New ApplicationException("Failed to parse patient data from file.")
+                                    Const message As String = "Failed to parse patient data from file."
+                                    Throw New ApplicationException(message)
                                 End If
                                 PatientDataElement = pde
                                 DeserializePatientElement()
@@ -3279,7 +3280,7 @@ Public Class Form1
         Dim element As JsonElement = ReadJsonElementFromFile(path:=GetUserSettingsPath())
         If Not element.IsEmpty Then
             Dim cur As CurrentUserRecord = Nothing
-            If Not element.TryFromJson(Of CurrentUserRecord)(cur) Then
+            If Not element.TryFromJson(result:=cur) Then
                 cur = Nothing
             End If
             CurrentUser = cur

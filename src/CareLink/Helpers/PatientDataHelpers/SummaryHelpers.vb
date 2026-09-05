@@ -181,7 +181,7 @@ Friend Module SummaryHelpers
                         Dim resolvedValue As String = String.Empty
                         If jsonDictionary.TryGetValue(key:="acknowledged", value:=resolvedValue) Then
                             Dim acknowledgedRecord As AcknowledgedRecord = Nothing
-                            If resolvedValue.TryFromJson(Of AcknowledgedRecord)(options:=DeserializationOptions, result:=acknowledgedRecord) Then
+                            If resolvedValue.TryFromJson(result:=acknowledgedRecord) Then
                                 resolved = $" {acknowledgedRecord.Time.ToNotificationString}"
                             End If
                         End If
@@ -408,8 +408,11 @@ Friend Module SummaryHelpers
                                                  kvp,
                                                  messages:=s_plgmLgsMessages,
                                                  messageTableName:=NameOf(s_plgmLgsMessages))
-                    Case "dateTime"
-                        Dim key As String = "dateTime"
+                    Case "dateTime",
+                         "triggeredDateTime",
+                         "secondaryTime",
+                         "secondaryTimeReminder"
+                        Dim key As String = kvp.Key
                         item = New SummaryRecord(recordNumber,
                                                  kvp,
                                                  message:=kvp.Value.ParseDate(key).ToShortDateTime)

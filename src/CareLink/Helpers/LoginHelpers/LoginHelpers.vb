@@ -34,7 +34,7 @@ Friend Module LoginHelpers
     Friend Sub DeserializePatientElement()
         Try
             Dim pd As PatientDataInfo = Nothing
-            If Not PatientDataElement.TryFromJson(Of PatientDataInfo)(result:=pd) Then
+            If Not PatientDataElement.TryFromJson(result:=pd) Then
                 MessageBox.Show(text:=$"Error deserializing patient data (parse failed).",
                                 caption:="Deserialization Error",
                                 buttons:=MessageBoxButtons.OK,
@@ -357,11 +357,11 @@ Friend Module LoginHelpers
     Friend Sub SetUpCareLinkUser()
         Dim path As String = GetUserSettingsPath()
         Dim json As String = File.ReadAllText(path)
-        Dim cu As CurrentUserRecord = Nothing
-        If Not json.TryFromJson(Of CurrentUserRecord)(options:=DeserializationOptions, result:=cu) Then
-            cu = Nothing
+        Dim result As CurrentUserRecord = Nothing
+        If Not json.TryFromJson(result) Then
+            result = Nothing
         End If
-        CurrentUser = cu
+        CurrentUser = result
     End Sub
 
     ''' <summary>
@@ -404,7 +404,7 @@ Friend Module LoginHelpers
                 Dim element As JsonElement = ReadJsonElementFromFile(userSettingsFileFullPath)
                 If Not element.IsEmpty Then
                     Dim cur As CurrentUserRecord = Nothing
-                    If Not element.TryFromJson(Of CurrentUserRecord)(cur) Then
+                    If Not element.TryFromJson(result:=cur) Then
                         cur = Nothing
                     End If
                     CurrentUser = cur

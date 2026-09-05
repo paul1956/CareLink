@@ -279,9 +279,9 @@ Friend Module DateTimeExtensions
         <CallerMemberName> Optional memberName As String = Nothing,
         <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Date
 
-        Dim resultDate As Date
-        If dateAsString.TryParseDate(key, resultDate) Then
-            Return resultDate
+        Dim result As Date
+        If dateAsString.TryParseDate(key, result) Then
+            Return result
         End If
         Stop
         Dim message As String = $"String '{dateAsString}' with {NameOf(key)} = {key} from " &

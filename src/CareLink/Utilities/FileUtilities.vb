@@ -28,23 +28,28 @@ Friend Module FileUtilities
         Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As JsonElement
 
         Dim path As String = GetLoginDataFileName(tokenBaseFileName)
-        LoggerManager.UpdateMessage(message:=$"Reading token file: {path}", startKey:="Reading token file: ")
+        Dim message As String
+        Const startKey As String = "Reading token file: "
+        message = $"{startKey}{path}"
+        LoggerManager.UpdateMessage(message, startKey)
         If Not File.Exists(path) Then
-            LoggerManager.LogMessage(message:=$"ERROR: token file {path} not found")
+            message = $"ERROR: token file {path} not found"
+            LoggerManager.LogMessage(message)
             Return Nothing
         End If
 
         Try
             Dim json As String = File.ReadAllText(path)
             Dim tokenData As JsonElement
-            If Not json.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=tokenData) Then
-                Debug.WriteLine(message:=$"ERROR: failed parsing token file {path}")
+            If Not json.TryFromJson(result:=tokenData) Then
+                message = $"ERROR: failed parsing token file {path}"
+                Debug.WriteLine(message)
                 Return Nothing
             End If
             For Each propertyName As String In s_requiredFields
                 Dim propElem As JsonElement = Nothing
                 If Not tokenData.TryGetProperty(propertyName, value:=propElem) Then
-                    Dim message As String = $"ERROR: field {propertyName} is missing from token file"
+                    message = $"ERROR: field {propertyName} is missing from token file"
                     LoggerManager.LogMessage(message)
                     Return Nothing
                 End If
@@ -52,8 +57,7 @@ Friend Module FileUtilities
 
             Return tokenData
         Catch ex As JsonException
-            Dim message As String =
-                $"ERROR: failed parsing token file {path}: {ex.Message}"
+            message = $"ERROR: failed parsing token file {path}: {ex.Message}"
             LoggerManager.LogMessage(message)
             Return Nothing
         End Try
@@ -121,12 +125,14 @@ Friend Module FileUtilities
 
         Try
             Dim json As String = File.ReadAllText(path)
-            Dim elem As JsonElement
-            Return If(Not json.TryFromJson(options:=DeserializationOptions, result:=elem),
+            Dim result As JsonElement
+            Return If(Not json.TryFromJson(result),
                       Nothing,
-                      elem)
+                      result)
         Catch ex As Exception
-            LoggerManager.LogMessage(message:=$"ERROR: failed reading file {path}: {ex.Message}")
+            Dim message As String =
+                $"ERROR: failed reading file {path}: {ex.Message}"
+            LoggerManager.LogMessage(message)
             Return Nothing
         End Try
     End Function
@@ -155,9 +161,13 @@ Friend Module FileUtilities
         Try
             Dim json As String = tokenElement.GetRawText()
             Dim td As TokenData = Nothing
-            Return If(Not json.TryFromJson(options:=DeserializationOptions, result:=td), Nothing, td)
+            Return If(Not json.TryFromJson(result:=td),
+                      Nothing,
+                      td)
         Catch ex As JsonException
-            LoggerManager.LogMessage(message:=$"Failed parsing token data to TokenData: {ex.Message}")
+            Dim message As String =
+                $"Failed parsing token data to TokenData: {ex.Message}"
+            LoggerManager.LogMessage(message)
             Return Nothing
         End Try
     End Function

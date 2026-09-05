@@ -121,7 +121,7 @@ Friend Module Form1UpdateHelpers
     ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
     Private Function ToListOfSgs(json As String) As List(Of SG)
         Dim jsonList As List(Of Dictionary(Of String, JsonElement)) = Nothing
-        If Not json.TryFromJson(Of List(Of Dictionary(Of String, JsonElement)))(options:=DeserializationOptions, result:=jsonList) Then
+        If Not json.TryFromJson(result:=jsonList) Then
             Return New List(Of SG)()
         End If
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
@@ -298,7 +298,7 @@ Friend Module Form1UpdateHelpers
         If IsNotNullOrWhiteSpace(kvp.Value) Then
             Try
                 Dim elem As JsonElement
-                If Not kvp.Value.TryFromJson(Of JsonElement)(options:=DeserializationOptions, result:=elem) Then
+                If Not kvp.Value.TryFromJson(result:=elem) Then
                     elem = Nothing
                 End If
                 If Not elem.IsEmpty AndAlso elem.ValueKind = JsonValueKind.Object Then
