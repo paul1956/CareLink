@@ -22,33 +22,34 @@ Public Class FileUtilitiesTests
     Public Sub ReadJsonElementFromFile_ValidFile_ReturnsElement()
         Dim temp As String = Path.GetTempFileName()
         Try
-            File.WriteAllText(temp, "{""x"":true}")
+            File.WriteAllText(path:=temp, contents:="{""x"":true}")
             Dim elem As JsonElement = FileUtilities.ReadJsonElementFromFile(temp)
             elem.ValueKind.Should().Be(expected:=JsonValueKind.Object)
-            elem.GetProperty("x").GetBoolean().Should().BeTrue()
+            elem.GetProperty(propertyName:="x").GetBoolean().Should().BeTrue()
         Finally
-            If File.Exists(temp) Then File.Delete(temp)
+            If File.Exists(path:=temp) Then File.Delete(path:=temp)
         End Try
     End Sub
 
     <Fact>
     Public Sub ReadTokenFileAndDataFile_ValidToken_ReturnsValues()
         Dim temp As String = Path.GetTempFileName()
-        Dim json As String = "{""access_token"":""a"",""refresh_token"":""r"",""scope"":""s"",""client_id"":""c""}"
+        Dim json As String =
+            "{""access_token"":""a"",""refresh_token"":""r"",""scope"":""s"",""client_id"":""c""}"
         Try
-            File.WriteAllText(temp, json)
+            File.WriteAllText(path:=temp, contents:=json)
             Dim elem As JsonElement = FileUtilities.ReadTokenFile(tokenBaseFileName:=temp)
             elem.ValueKind.Should().Be(expected:=JsonValueKind.Object)
-            elem.GetProperty("access_token").GetString().Should().Be("a")
+            elem.GetProperty(propertyName:="access_token").GetString().Should().Be("a")
 
             Dim tokenData As TokenData = FileUtilities.ReadTokenDataFile(tokenBaseFileName:=temp)
             tokenData.Should().NotBeNull()
-            tokenData.AccessToken.Should().Be("a")
-            tokenData.RefreshToken.Should().Be("r")
-            tokenData.Scope.Should().Be("s")
-            tokenData.ClientId.Should().Be("c")
+            tokenData.AccessToken.Should().Be(expected:="a")
+            tokenData.RefreshToken.Should().Be(expected:="r")
+            tokenData.Scope.Should().Be(expected:="s")
+            tokenData.ClientId.Should().Be(expected:="c")
         Finally
-            If File.Exists(temp) Then File.Delete(temp)
+            If File.Exists(path:=temp) Then File.Delete(path:=temp)
         End Try
     End Sub
 

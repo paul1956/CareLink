@@ -9,7 +9,6 @@ Imports System.Net.Http
 Imports System.Net.Http.Headers
 Imports System.Text
 Imports System.Text.Json
-Imports DocumentFormat.OpenXml.Office2016.Excel
 
 ' This class is intentionally not part of the public API.
 ' It is designed to be used internally within the assembly and is not intended for external consumption.
@@ -249,7 +248,7 @@ Friend Class Client2
         End If
 
         Dim contentJson As String = String.Empty
-        If Not value.TryToJson(contentJson) Then
+        If Not value.TryToJson(json:=contentJson) Then
             LoggerManager.LogMessage(message:=$"ERROR: failed serializing request body for GetDataAsync")
             contentJson = "{}"
         End If

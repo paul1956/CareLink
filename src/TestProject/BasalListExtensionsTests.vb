@@ -49,8 +49,7 @@ Public Class BasalListExtensionsTests
         ' Arrange
         Dim b As New Basal With {
             .ActiveBasalPattern = "BASAL1",
-            .BasalRate = 1.25
-        }
+            .BasalRate = 1.25}
         Dim list As New List(Of Basal) From {b}
 
         ' Act / Assert
@@ -69,8 +68,7 @@ Public Class BasalListExtensionsTests
             .ActiveBasalPattern = "TEMP",
             .BasalRate = 1.0,
             .TempBasalRate = 2.0,
-            .TempBasalPercentage = 10.0F
-        }
+            .TempBasalPercentage = 10.0F}
         Dim list As New List(Of Basal) From {b}
 
         ' Act / Assert
@@ -84,8 +82,7 @@ Public Class BasalListExtensionsTests
             .ActiveBasalPattern = "TEMP",
             .BasalRate = 1.0,
             .TempBasalRate = 2.0,
-            .TempBasalPercentage = 0.0F
-        }
+            .TempBasalPercentage = 0.0F}
         Dim list As New List(Of Basal) From {b}
 
         ' Act / Assert

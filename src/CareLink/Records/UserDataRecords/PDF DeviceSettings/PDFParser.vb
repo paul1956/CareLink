@@ -50,9 +50,8 @@ Public Module PDFParser
     '''  otherwise, a new empty <see cref="StringTable"/>.
     ''' </returns>
     <Extension>
-    Public Function PdfTableToStringTable(
-        table As PdfTable,
-        tableHeader As String) As StringTable
+    Public Function PdfTableToStringTable(table As PdfTable,
+                                          tableHeader As String) As StringTable
 
         Dim sTable As StringTable = table.ExtractTableText()
         If sTable.IsValid AndAlso
@@ -73,10 +72,9 @@ Public Module PDFParser
     '''  The ending page number (zero-based). If 0, only the start page is used.
     ''' </param>
     ''' <returns>The extracted text from the specified page range.</returns>
-    Public Function ExtractTextFromPage(
-        filename As String,
-        startPageNumber As Integer,
-        Optional endPageNumber As Integer = 0) As String
+    Public Function ExtractTextFromPage(filename As String,
+                                        startPageNumber As Integer,
+                                        Optional endPageNumber As Integer = 0) As String
 
         'Create a PdfDocument object
         Dim doc As New PdfDocument()
@@ -95,8 +93,7 @@ Public Module PDFParser
             'Create a PdfTextExtractOptions object
             'Set isExtractAllText to true
             Dim options As New PdfTextExtractOptions With {
-                .IsExtractAllText = True
-            }
+                .IsExtractAllText = True}
             text &= textExtractor.ExtractText(options)
         Next
         Return text
@@ -126,7 +123,9 @@ Public Module PDFParser
     '''  returns them in a dictionary with descriptive keys.
     ''' </summary>
     ''' <param name="fileName">The path to the PDF file.</param>
-    ''' <param name="startPageNumber">The starting page number (zero-based).</param>
+    ''' <param name="startPageNumber">
+    '''  The starting page number (zero-based).
+    ''' </param>
     ''' <param name="endPageNumber">
     '''  The ending page number (zero-based). If 0, only the start page is used.
     ''' </param>
