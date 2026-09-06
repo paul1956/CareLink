@@ -176,7 +176,7 @@ Friend Class Client2
             Dim unixTime As Long = access_token_payload(key:="exp").GetInt64()
             Dim unixCurrentTime As Long = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
             Dim tDiff As Long = unixTime - unixCurrentTime
-            If tDiff < 0 Then
+            If tDiff <= 0 Then
                 Dim absDiff As Long = Math.Abs(value:=tDiff)
                 message = $"In {NameOf(IsTokenValid)} access token has expired {absDiff}s ago"
                 LoggerManager.LogMessage(message)
@@ -448,7 +448,8 @@ Friend Class Client2
 
         _accessTokenPayload =
             GetAccessTokenPayload(token_data:=_tokenDataElement)
-        If _accessTokenPayload Is Nothing Then
+        Dim message As String = Nothing
+        If _accessTokenPayload Is Nothing OrElse Not IsTokenValid(access_token_payload:=_accessTokenPayload, message) Then
             Return False
         End If
 
@@ -587,11 +588,10 @@ Friend Class Client2
                 Dim endpointConfig As EndpointConfig =
                     Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, serverRegion)
 
-                Dim result As TokenData =
-                    Await CareLinkService.DoLoginAsync(endpointConfig,
-                                                       outputFile,
-                                                       userName,
-                                                       password)
+                Await CareLinkService.DoLoginAsync(endpointConfig,
+                                                   outputFile,
+                                                   userName,
+                                                   password)
             Catch ex As Exception
                 If ex.Message <> "Login was cancelled." Then
                     MessageBox.Show(text:=ex.Message,
@@ -614,7 +614,9 @@ Friend Class Client2
     '''  A task representing the asynchronous operation, containing the refreshed token as a JSON tokenDataElement.
     ''' </returns>
     Public Async Function DoRefreshAsync(config As ConfigRecord,
-                                         tokenElement As JsonElement) As Task(Of JsonElement)
+                                         tokenElement As JsonElement,
+                                         Optional httpClient As HttpClient = Nothing,
+                                         Optional endpointResolver As Func(Of ConfigRecord, Task(Of EndpointConfig)) = Nothing) As Task(Of JsonElement)
         Dim result As Dictionary(Of String, JsonElement) = Nothing
         Dim message As String
         If Not tokenElement.TryFromJson(result) Then
@@ -674,7 +676,38 @@ Friend Class Client2
             End Try
         End If
 
-        Using client As New HttpClient()
+        ' If client_secret is not present in token data, try resolving SSO endpoint
+        ' to obtain client information (fallback). Use injected endpointResolver if provided
+        ' to allow unit tests to override network calls.
+        If Not hasClientSecret Then
+            Try
+                Dim endpointConfig As EndpointConfig = Nothing
+                If endpointResolver IsNot Nothing Then
+                    endpointConfig = Await endpointResolver(config).ConfigureAwait(False)
+                Else
+                    Dim discoveryUrl As String = If(Me.ServerRegion = Region.NorthAmerica,
+                                                    s_discoverUrl(key:="US"),
+                                                    s_discoverUrl(key:="EU"))
+                    endpointConfig = Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, Me.ServerRegion)
+                End If
+
+                If endpointConfig IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(endpointConfig.SsoJson) Then
+                    Dim sso As SsoConfig = Nothing
+                    If endpointConfig.SsoJson.TryFromJson(result:=sso) AndAlso sso IsNot Nothing Then
+                        If sso.Client_Secret IsNot Nothing AndAlso Not IsNullOrWhiteSpace(sso.Client_Secret.ClientSecret) Then
+                            clientSecret = sso.Client_Secret.ClientSecret
+                            hasClientSecret = True
+                            ' Add client_secret into token data so refresh attempts include it
+                            tokenData(key:="client_secret") = clientSecret.ToJsonElement()
+                        End If
+                    End If
+                End If
+            Catch ex As Exception
+                LoggerManager.LogMessage(message:=$"{NameOf(DoRefreshAsync)}: failed resolving SSO for client_secret: {ex.Message}")
+            End Try
+        End If
+
+        Using client As HttpClient = If(httpClient, New HttpClient())
             ' Add mag-identifier header if present
             Dim magElem As JsonElement = Nothing
             If tokenData.TryGetValue(key:="mag-identifier", value:=magElem) Then
@@ -757,57 +790,6 @@ Friend Class Client2
                     LoggerManager.LogMessage(message)
                 End If
             Next
-
-            If Not succeeded Then
-                message =
-                    $"{NameOf(DoRefreshAsync)}: all refresh attempts failed. Last response: {lastResponseBody}"
-                LoggerManager.LogMessage(message)
-
-                ' Attempt interactive login using WebView2 (fallback)
-                Try
-                    Dim discoveryUrl As String =
-                        If(Me.ServerRegion = Region.NorthAmerica,
-                           s_discoverUrl(key:="US"),
-                           s_discoverUrl(key:="EU"))
-                    Dim endpointConfig As EndpointConfig =
-                        Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, Me.ServerRegion)
-
-                    ' Do interactive login (user will be prompted). DoLoginAsync writes token file.
-                    Dim tokenResult As TokenData =
-                        Await CareLinkService.DoLoginAsync(endpointConfig,
-                                                           outputFile:=_tokenBaseFileName,
-                                                           userName:=String.Empty,
-                                                           password:=String.Empty)
-                    If tokenResult Is Nothing Then
-                        message =
-                            $"{NameOf(DoRefreshAsync)}: interactive login returned no token."
-                        LoggerManager.LogMessage(message)
-                        Return Nothing
-                    End If
-
-                    ' Convert TokenData to JsonElement
-                    Dim tdJson2 As String = String.Empty
-                    If Not tokenResult.TryToJson(json:=tdJson2) Then
-                        message =
-                            $"{NameOf(DoRefreshAsync)}: failed serializing TokenData after interactive login."
-                        LoggerManager.LogMessage(message)
-                        Return Nothing
-                    End If
-                    Dim tdElem2 As JsonElement
-                    If Not tdJson2.TryFromJson(result:=tdElem2) Then
-                        message =
-                            $"{NameOf(DoRefreshAsync)}: failed parsing TokenData JSON after interactive login."
-                        LoggerManager.LogMessage(message)
-                        Return Nothing
-                    End If
-                    Return tdElem2
-                Catch ex As Exception
-                    message =
-                        $"{NameOf(DoRefreshAsync)}: interactive login failed: {ex.Message}"
-                    LoggerManager.LogMessage(message)
-                    Return Nothing
-                End Try
-            End If
         End Using
 
         Dim tdJson As String = String.Empty

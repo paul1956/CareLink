@@ -681,8 +681,19 @@ Friend Module Form1UpdateHelpers
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
-                Case ServerDataEnum.systemStatusMessage,
-                     ServerDataEnum.sensorState
+                Case ServerDataEnum.systemStatusMessage
+                    item = New SummaryRecord(
+                        recordNumber,
+                        kvp,
+                        messages:=s_sensorMessages,
+                        messageTableName:=NameOf(s_sensorMessages))
+                    s_listOfSummaryRecords.Add(item)
+                    If kvp.Value <> "NO_ERROR_MESSAGE" Then
+                        Dim startKey As String = "System Status Message: "
+                        LoggerManager.UpdateMessage(message:=$"{startKey}{kvp.Value}.", startKey)
+                    End If
+
+                Case ServerDataEnum.sensorState
                     item = New SummaryRecord(
                         recordNumber,
                         kvp,

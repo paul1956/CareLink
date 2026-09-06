@@ -24,6 +24,9 @@ Public Class TokenData
     <JsonPropertyName("client_secret")>
     Public Property ClientSecret As String
 
+    <JsonPropertyName("mag-identifier")>
+    Public Property MagIdentifier As String
+
     <JsonPropertyName("expires_in")>
     Public Property ExpiresIn As Integer?
 

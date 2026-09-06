@@ -14,9 +14,9 @@ Public Module LoggerManager
     Public Sub InitLogger(show As Boolean)
         If s_loggerForm Is Nothing OrElse s_loggerForm.IsDisposed Then
             s_loggerForm = New LoggerForm()
-            If show Then
-                s_loggerForm.Show()
-            End If
+        End If
+        If show Then
+            s_loggerForm.Show()
         End If
     End Sub
 

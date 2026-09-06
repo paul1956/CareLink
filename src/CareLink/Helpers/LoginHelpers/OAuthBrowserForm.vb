@@ -303,10 +303,13 @@ Public Class OAuthBrowserForm
         End If
 
         ' focus element in page
-        Dim focusScript As String = $"(function(){{ var el = document.querySelector({selectorJson}); if(el) {{ el.focus(); return true; }} return false; }})();"
-        Dim focused As String = Await Me.WebView21.CoreWebView2.ExecuteScriptAsync(focusScript)
+        Dim focusScript As String =
+            $"(function(){{ var el = document.querySelector({selectorJson}); if(el) {{ el.focus(); return true; }} return false; }})();"
+        Dim focused As String =
+            Await Me.WebView21.CoreWebView2.ExecuteScriptAsync(javaScript:=focusScript)
 
-        If String.IsNullOrWhiteSpace(focused) OrElse Not focused.Contains("true") Then
+        If String.IsNullOrWhiteSpace(value:=focused) OrElse
+            Not focused.Contains(value:="true") Then
             Return False
         End If
 

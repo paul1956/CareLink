@@ -74,6 +74,7 @@ Public Class CareLinkService
         redirectResult = Await InvokeOnUiThreadAsync(
            work:=Function()
                      Do
+                         Dim retryCount As Integer = 1
                          Using frm As New OAuthBrowserForm(startUrl:=fullUrl,
                                                            redirectUri,
                                                            userName,
@@ -85,6 +86,10 @@ Public Class CareLinkService
                                  ' Caller will recreate the dialog and try again
                                  Continue Do
                              Else
+                                 If retryCount > 0 Then
+                                     retryCount -= 1
+                                     Continue Do
+                                 End If
                                  Throw New Exception(message:="Login was cancelled.")
                              End If
                          End Using
@@ -184,6 +189,20 @@ Public Class CareLinkService
                 Dim initClientId As String =
                     initDoc.RootElement.GetProperty(propertyName:="client_id").GetString()
 
+                ' Try to get client_secret from the init response (if present).
+                Dim initClientSecret As String = Nothing
+                Try
+                    Dim initSecretElem As JsonElement
+                    If initDoc.RootElement.TryGetProperty(propertyName:="client_secret", value:=initSecretElem) Then
+                        Try
+                            initClientSecret = initSecretElem.GetString()
+                        Catch
+                            initClientSecret = Nothing
+                        End Try
+                    End If
+                Catch
+                End Try
+
                 Dim codeVerifier As String = Convert.ToBase64String(inArray:=RandomNumberGenerator.GetBytes(count:=40))
                 codeVerifier = Regex.Replace(input:=codeVerifier,
                                               pattern:="[^a-zA-Z0-9]+",
@@ -256,10 +275,8 @@ Public Class CareLinkService
                                                         dc:=androidModelSafe,
                                                         o:=organization,
                                                         keySizeInBits:=KeySizeInBits)
-#If False Then
                     Dim clientAuth As String =
                         Convert.ToBase64String(inArray:=Encoding.UTF8.GetBytes($"{initClientId}:{initClientSecret}"))
-#End If
 
                     Dim requestUri As String = $"{endpointConfig.ApiBaseUrl}{registerPath}"
                     Dim regRequest As New HttpRequestMessage(method:=HttpMethod.Post, requestUri)
@@ -269,11 +286,8 @@ Public Class CareLinkService
                                            value:=$"Bearer {redirectResult.Code}")
                     regRequest.Headers.Add(name:="cert-format",
                                            value:="pem")
-#If False Then
-
                     regRequest.Headers.Add(name:="client-authorization",
                                            value:=$"Basic {clientAuth}")
-#End If
                     regRequest.Headers.Add(name:="create-session",
                                            value:="true")
                     regRequest.Headers.Add(name:="code-verifier",
@@ -324,14 +338,28 @@ Public Class CareLinkService
                             .RefreshToken = tokenDoc.RootElement.GetProperty(propertyName:="refresh_token").GetString(),
                             .Scope = tokenDoc.RootElement.GetProperty(propertyName:="scope").GetString(),
                             .ClientId = initClientId}
-#If False Then
-                        If initClientSecret IsNot Nothing Then
-                            token.ClientSecret = initClientSecret
-                        End If
-                        If magIdentifier IsNot Nothing Then
+
+                        ' If the init response or registration provided a client secret or mag-identifier,
+                        ' persist them in the token data so refresh requests can include them.
+                        Try
+                            Dim initSecretElem As JsonElement
+                            If initDoc.RootElement.TryGetProperty(propertyName:="client_secret", value:=initSecretElem) Then
+                                Try
+                                    initClientSecret = initSecretElem.GetString()
+                                Catch
+                                    initClientSecret = Nothing
+                                End Try
+                                If Not IsNullOrWhiteSpace(value:=initClientSecret) Then
+                                    token.ClientSecret = initClientSecret
+                                End If
+                            End If
+                        Catch
+                        End Try
+
+                        If Not String.IsNullOrWhiteSpace(magIdentifier) Then
                             token.MagIdentifier = magIdentifier
                         End If
-#End If
+
                         WriteTokenFile(token, path:=outputFile)
                         Return token
                     End Using

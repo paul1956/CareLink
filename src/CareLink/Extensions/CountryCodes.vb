@@ -128,7 +128,7 @@ Public Module RegionCountryLists
         {"Japan", WorldRegion.Asia},
         {"Jersey", WorldRegion.Europe},
         {"Jordan", WorldRegion.Asia},
-        {"Kazakhstan", WorldRegion.Transcontinental},
+        {"Kazakhstan", WorldRegion.Europe},
         {"Kenya", WorldRegion.Africa},
         {"Kiribati", WorldRegion.Oceania},
         {"Kosovo", WorldRegion.Europe},
