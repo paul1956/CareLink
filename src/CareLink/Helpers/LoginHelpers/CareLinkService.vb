@@ -17,8 +17,7 @@ Public Class CareLinkService
 
     Private Shared Function Base64UrlEncode(bytes As Byte()) As String
         Dim s As String = Convert.ToBase64String(inArray:=bytes)
-        s = s.Replace(oldValue:="+",
-                      newValue:="-").Replace(oldValue:="/", newValue:="_").TrimEnd(trimChar:="="c)
+        s = s.Replace("+", "-").Replace("/", "_").TrimEnd("="c)
         Return s
     End Function
 
@@ -41,7 +40,7 @@ Public Class CareLinkService
         End Using
     End Function
 
-    Private Shared Async Function DoLoginAuth0Async(endpointConfig As EndpointConfig,
+    Public Shared Async Function DoLoginAuth0Async(endpointConfig As EndpointConfig,
                                                     outputFile As String,
                                                     userName As String,
                                                     password As String) As Task(Of TokenData)
@@ -127,254 +126,13 @@ Public Class CareLinkService
         Return token
     End Function
 
-    Private Shared Async Function DoLoginNonAuth0Async(endpointConfig As EndpointConfig,
-                                                       outputFile As String,
-                                                       userName As String,
-                                                       password As String) As Task(Of TokenData)
-
-        Dim ssoConfig As SsoConfig = Nothing
-        If Not endpointConfig.SsoJson.TryFromJson(result:=ssoConfig) Then
-            Const message As String = "Failed to parse SSO configuration JSON."
-            Throw New ApplicationException(message)
-        End If
-
-        Using ssoDoc As JsonDocument = JsonDocument.Parse(json:=endpointConfig.SsoJson)
-            Dim oauthClient As JsonElement =
-                ssoDoc.RootElement.GetProperty(propertyName:="oauth").
-                                   GetProperty(propertyName:="client").
-                                   GetProperty(propertyName:="client_ids")(index:=0)
-            Dim clientId As String = oauthClient.GetProperty(propertyName:="client_id").GetString()
-            Dim scope As String = oauthClient.GetProperty(propertyName:="scope").GetString()
-            Dim redirectUri As String = oauthClient.GetProperty(propertyName:="redirect_uri").GetString()
-            Dim organization As String =
-                ssoDoc.RootElement.GetProperty(propertyName:="oauth").
-                                   GetProperty(propertyName:="client").
-                                   GetProperty(propertyName:="organization").GetString()
-
-            Dim initPath As String =
-                ssoDoc.RootElement.GetProperty(propertyName:="mag").
-                                   GetProperty(propertyName:="system_endpoints").
-                                   GetProperty(propertyName:="client_credential_init_endpoint_path").GetString()
-            Dim authPath As String =
-                ssoDoc.RootElement.GetProperty(propertyName:="oauth").
-                                   GetProperty(propertyName:="system_endpoints").
-                                   GetProperty(propertyName:="authorization_endpoint_path").GetString()
-            Dim registerPath As String =
-                ssoDoc.RootElement.GetProperty(propertyName:="mag").
-                                   GetProperty(propertyName:="system_endpoints").
-                                   GetProperty(propertyName:="device_register_endpoint_path").GetString()
-            Dim tokenPath As String =
-                ssoDoc.RootElement.GetProperty(propertyName:="oauth").
-                                   GetProperty(propertyName:="system_endpoints").
-                                   GetProperty(propertyName:="token_endpoint_path").GetString()
-
-            Dim initUrl As String = $"{endpointConfig.ApiBaseUrl}{initPath}"
-            Dim nameValueCollection As New Dictionary(Of String, String) From {
-                {"client_id", clientId},
-                {"nonce", RandomUuidString()}}
-            Dim initForm As New FormUrlEncodedContent(nameValueCollection)
-
-            Dim initRequest As New HttpRequestMessage(method:=HttpMethod.Post, requestUri:=initUrl) With {
-                .Content = initForm}
-            Dim inArray As Byte() = Encoding.UTF8.GetBytes(RandomDeviceId())
-            initRequest.Headers.Add(name:="device-id", value:=Convert.ToBase64String(inArray))
-
-            Dim initResponse As HttpResponseMessage = Await s_http.SendAsync(request:=initRequest)
-            Dim initBody As String = Await initResponse.Content.ReadAsStringAsync()
-            If Not initResponse.IsSuccessStatusCode Then
-                Throw New Exception(message:=$"Client init failed: {initBody}")
-            End If
-
-            Using initDoc As JsonDocument = JsonDocument.Parse(json:=initBody)
-                Dim initClientId As String =
-                    initDoc.RootElement.GetProperty(propertyName:="client_id").GetString()
-
-                ' Try to get client_secret from the init response (if present).
-                Dim initClientSecret As String = Nothing
-                Try
-                    Dim initSecretElem As JsonElement
-                    If initDoc.RootElement.TryGetProperty(propertyName:="client_secret", value:=initSecretElem) Then
-                        Try
-                            initClientSecret = initSecretElem.GetString()
-                        Catch
-                            initClientSecret = Nothing
-                        End Try
-                    End If
-                Catch
-                End Try
-
-                Dim codeVerifier As String = Convert.ToBase64String(inArray:=RandomNumberGenerator.GetBytes(count:=40))
-                codeVerifier = Regex.Replace(input:=codeVerifier,
-                                              pattern:="[^a-zA-Z0-9]+",
-                                              replacement:="")
-                Dim challengeBytes As Byte() = SHA256.HashData(source:=Encoding.UTF8.GetBytes(codeVerifier))
-                Dim codeChallenge As String =
-                    Convert.ToBase64String(inArray:=challengeBytes).Replace(oldValue:="+", newValue:="-").
-                                                                    Replace(oldValue:="/", newValue:="_").
-                                                                    TrimEnd(trimChar:="="c)
-                Dim state As String = RandomB64String(length:=22)
-
-                Dim authParams As New Dictionary(Of String, String) From {
-                    {"client_id", initClientId},
-                    {"response_type", "code"},
-                    {"display", "social_login"},
-                    {"scope", scope},
-                    {"redirect_uri", redirectUri},
-                    {"code_challenge", codeChallenge},
-                    {"code_challenge_method", "S256"},
-                    {"state", state}}
-
-                Dim selector As Func(Of KeyValuePair(Of String, String), String) =
-                    Function(kvp As KeyValuePair(Of String, String))
-                        Return $"{kvp.Key}={Uri.EscapeDataString(stringToEscape:=kvp.Value)}"
-                    End Function
-                Dim values As IEnumerable(Of String) = authParams.Select(selector)
-                Dim authUrl As String =
-                    $"{endpointConfig.ApiBaseUrl}{authPath}?{String.Join(separator:="&", values)}"
-                Dim providersJson As String
-
-                Using request As New HttpRequestMessage(method:=HttpMethod.Get, requestUri:=authUrl)
-                    Dim resp As HttpResponseMessage = Await s_http.SendAsync(request)
-                    providersJson = Await resp.Content.ReadAsStringAsync()
-                End Using
-
-                Using providersDoc As JsonDocument = JsonDocument.Parse(json:=providersJson)
-                    Dim captchaUrl As String =
-                        providersDoc.RootElement.GetProperty(propertyName:="providers")(index:=0).
-                                                 GetProperty(propertyName:="provider").
-                                                 GetProperty(propertyName:="auth_url").GetString()
-
-                    Dim redirectResult As RedirectResult
-                    Do
-                        Using frm As New OAuthBrowserForm(startUrl:=captchaUrl,
-                            redirectUri:=redirectUri,
-                            userName:=userName,
-                            password:=password)
-                            Dim dr As DialogResult = frm.ShowDialog()
-                            If dr = DialogResult.OK Then
-                                redirectResult = frm.Result
-                                Exit Do
-                            ElseIf dr = DialogResult.Retry Then
-                                Continue Do
-                            Else
-                                Throw New Exception(message:="Login was cancelled.")
-                            End If
-                        End Using
-                    Loop
-
-                    If redirectResult Is Nothing OrElse IsNullOrWhiteSpace(value:=redirectResult.Code) Then
-                        Throw New Exception(message:="Captcha authorization code was not captured.")
-                    End If
-
-                    Dim registerDeviceId As String = RandomDeviceId()
-                    Dim androidModel As String = RandomAndroidModel()
-                    Dim androidModelSafe As String =
-                        Regex.Replace(input:=androidModel, pattern:="[^a-zA-Z0-9]", replacement:="")
-                    Dim csrPem As String = CreateCsrPem(cn:="socialLogin",
-                                                        ou:=registerDeviceId,
-                                                        dc:=androidModelSafe,
-                                                        o:=organization,
-                                                        keySizeInBits:=KeySizeInBits)
-                    Dim clientAuth As String =
-                        Convert.ToBase64String(inArray:=Encoding.UTF8.GetBytes($"{initClientId}:{initClientSecret}"))
-
-                    Dim requestUri As String = $"{endpointConfig.ApiBaseUrl}{registerPath}"
-                    Dim regRequest As New HttpRequestMessage(method:=HttpMethod.Post, requestUri)
-                    regRequest.Headers.Add(name:="device-name",
-                                           value:=Convert.ToBase64String(inArray:=Encoding.UTF8.GetBytes(androidModel)))
-                    regRequest.Headers.Add(name:="authorization",
-                                           value:=$"Bearer {redirectResult.Code}")
-                    regRequest.Headers.Add(name:="cert-format",
-                                           value:="pem")
-                    regRequest.Headers.Add(name:="client-authorization",
-                                           value:=$"Basic {clientAuth}")
-                    regRequest.Headers.Add(name:="create-session",
-                                           value:="true")
-                    regRequest.Headers.Add(name:="code-verifier",
-                                           value:=codeVerifier)
-                    regRequest.Headers.Add(name:="device-id",
-                                           value:=Convert.ToBase64String(inArray:=Encoding.UTF8.GetBytes(registerDeviceId)))
-                    regRequest.Headers.Add(name:="redirect-uri",
-                                           value:=redirectUri)
-
-                    Dim content As String = ReformatCsr(csrPem)
-                    regRequest.Content = New StringContent(content:=content, encoding:=Encoding.UTF8, mediaType:="text/plain")
-
-                    Dim regResponse As HttpResponseMessage = Await s_http.SendAsync(request:=regRequest)
-                    Dim regBody As String = Await regResponse.Content.ReadAsStringAsync()
-                    If Not regResponse.IsSuccessStatusCode Then
-                        Throw New Exception(message:=$"Could not register: {regBody}")
-                    End If
-
-                    Dim magIdentifier As String = regResponse.GetValueOrNothing(key:="mag-identifier")
-                    Dim idToken As String = regResponse.GetValueOrNothing(key:="id-token")
-                    Dim idTokenType As String = regResponse.GetValueOrNothing(key:="id-token-type")
-
-                    Dim tokenUrl As String = $"{endpointConfig.ApiBaseUrl}{tokenPath}"
-                    Dim tokenForm As New FormUrlEncodedContent(nameValueCollection:=New Dictionary(Of String, String) From {
-                        {"assertion", idToken},
-                        {"client_id", initClientId},
-                        {"scope", scope},
-                        {"grant_type", idTokenType}})
-
-                    Dim tokenRequest As New HttpRequestMessage(method:=HttpMethod.Post, requestUri:=tokenUrl)
-                    If String.IsNullOrWhiteSpace(value:=magIdentifier) Then
-                        tokenRequest.Headers.Add(name:="mag-identifier", value:=magIdentifier)
-                    End If
-
-                    tokenRequest.Content = tokenForm
-
-                    Dim tokenResponse As HttpResponseMessage = Await s_http.SendAsync(tokenRequest)
-                    Dim tokenBody As String = Await tokenResponse.Content.ReadAsStringAsync()
-
-                    If Not tokenResponse.IsSuccessStatusCode Then
-                        Dim message1 As String = $"Could not get token data in {NameOf(DoLoginNonAuth0Async)} : {tokenBody}"
-                        Throw New Exception(message:=message1)
-                    End If
-
-                    Using tokenDoc As JsonDocument = JsonDocument.Parse(json:=tokenBody)
-                        Dim token As New TokenData With {
-                            .AccessToken = tokenDoc.RootElement.GetProperty(propertyName:="access_token").GetString(),
-                            .RefreshToken = tokenDoc.RootElement.GetProperty(propertyName:="refresh_token").GetString(),
-                            .Scope = tokenDoc.RootElement.GetProperty(propertyName:="scope").GetString(),
-                            .ClientId = initClientId}
-
-                        ' If the init response or registration provided a client secret or mag-identifier,
-                        ' persist them in the token data so refresh requests can include them.
-                        Try
-                            Dim initSecretElem As JsonElement
-                            If initDoc.RootElement.TryGetProperty(propertyName:="client_secret", value:=initSecretElem) Then
-                                Try
-                                    initClientSecret = initSecretElem.GetString()
-                                Catch
-                                    initClientSecret = Nothing
-                                End Try
-                                If Not IsNullOrWhiteSpace(value:=initClientSecret) Then
-                                    token.ClientSecret = initClientSecret
-                                End If
-                            End If
-                        Catch
-                        End Try
-
-                        If Not String.IsNullOrWhiteSpace(magIdentifier) Then
-                            token.MagIdentifier = magIdentifier
-                        End If
-
-                        WriteTokenFile(token, path:=outputFile)
-                        Return token
-                    End Using
-                End Using
-            End Using
-        End Using
-    End Function
-
     Private Shared Function EscapeKVP(Name As String, value As String) As String
         Return $"{Name}={Uri.EscapeDataString(stringToEscape:=value)}"
     End Function
 
     ''' <summary>
     ''' Invokes the provided work on the application's UI thread (if an open form exists) and returns the result.
-    ''' This ensures COM/STA-bound UI components (like WebView2) are created and used on the UI thread.
+    ''' This ensures COM/STA-bound UI operations execute correctly.
     ''' </summary>
     Private Shared Function InvokeOnUiThreadAsync(Of T)(work As Func(Of T)) As Task(Of T)
         Dim tcs As New TaskCompletionSource(Of T)()
@@ -439,27 +197,7 @@ Public Class CareLinkService
         Return Base64UrlEncode(bytes)
     End Function
 
-    Public Shared Async Function DoLoginAsync(endpointConfig As EndpointConfig,
-                                              outputFile As String,
-                                              userName As String,
-                                              password As String) As Task(Of TokenData)
-        If endpointConfig.IsAuth0 Then
-            Return Await DoLoginAuth0Async(endpointConfig, outputFile, userName, password)
-        Else
-            Dim message As String =
-                $"{NameOf(DoLoginNonAuth0Async)} we should not reach this point"
-            LoggerManager.LogMessage(message)
-            Dim result As DialogResult =
-                MessageBox.Show(text:=message & " Do you want to continue?",
-                caption:="DoLoginNonAuth0Async",
-                buttons:=MessageBoxButtons.YesNo,
-                icon:=MessageBoxIcon.Question)
-            If result = DialogResult.No Then
-                Throw New Exception(message:="User chose to cancel the operation.")
-            End If
-            Return Await DoLoginNonAuth0Async(endpointConfig, outputFile, userName, password)
-        End If
-    End Function
+    ' Note: legacy DoLoginAsync/NonAuth0 paths removed; Auth0 is the supported login flow.
 
     Public Shared Function ParseRegion(value As String) As String
         Dim v As String = value.Trim().ToUpperInvariant()
@@ -510,7 +248,6 @@ Public Class CareLinkService
                     End If
 
                     Dim ssoUrl As String = c.GetProperty(propertyName:=keyName).GetString()
-                    Dim isAuth0 As Boolean = keyName.ContainsNoCase(value:="Auth0")
                     Dim ssoJson As String = Await s_http.GetStringAsync(requestUri:=ssoUrl)
 
                     Using ssoDoc As JsonDocument = JsonDocument.Parse(json:=ssoJson)
@@ -524,8 +261,7 @@ Public Class CareLinkService
 
                             Return New EndpointConfig With {
                                 .SsoJson = ssoJson,
-                                .ApiBaseUrl = apiBaseUrl,
-                                .IsAuth0 = isAuth0}
+                                .ApiBaseUrl = apiBaseUrl}
                         Catch ex As Exception
                             Stop
                         End Try

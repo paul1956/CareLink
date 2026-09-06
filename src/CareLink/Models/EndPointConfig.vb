@@ -5,5 +5,4 @@
 Public Class EndpointConfig
     Public Property SsoJson As String
     Public Property ApiBaseUrl As String
-    Public Property IsAuth0 As Boolean
 End Class

@@ -588,10 +588,10 @@ Friend Class Client2
                 Dim endpointConfig As EndpointConfig =
                     Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, serverRegion)
 
-                Await CareLinkService.DoLoginAsync(endpointConfig,
-                                                   outputFile,
-                                                   userName,
-                                                   password)
+                Await CareLinkService.DoLoginAuth0Async(endpointConfig,
+                                                        outputFile,
+                                                        userName,
+                                                        password)
             Catch ex As Exception
                 If ex.Message <> "Login was cancelled." Then
                     MessageBox.Show(text:=ex.Message,

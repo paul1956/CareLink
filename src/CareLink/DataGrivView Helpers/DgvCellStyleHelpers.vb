@@ -32,8 +32,11 @@ Public Module DgvCellStyleHelpers
             NameOf(CareLinkUserDataRecord.ID),
             NameOf(CareLinkUserDataRecord.CareLinkPassword)}},
         {GetType(Insulin), New List(Of String) From {
+            NameOf(Insulin.DisplayTime),
+            NameOf(Insulin.Kind),
             NameOf(Insulin.Kind),
             NameOf(Insulin.OAdateTime),
+            NameOf(Insulin.Timestamp),
             NameOf(Insulin.Type)}},
         {GetType(CurrentUserRecord), New List(Of String) From {}},
         {GetType(LastAlarm), New List(Of String) From {}},

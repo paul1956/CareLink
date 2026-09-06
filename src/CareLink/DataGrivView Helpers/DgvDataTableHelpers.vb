@@ -11,6 +11,7 @@ Imports System.Runtime.CompilerServices
 '''  data binding, and optional column visibility.
 ''' </summary>
 Friend Module DgvDataTableHelpers
+    Private ReadOnly s_separator As Char() = New Char() {" "c}
 
     ''' <summary>
     '''  Delegate for attaching event handlers to a <see cref="DataGridView"/>.
@@ -19,6 +20,41 @@ Friend Module DgvDataTableHelpers
     '''  The <see cref="DataGridView"/> to attach handlers to.
     ''' </param>
     Friend Delegate Sub attachHandlers(dgv As DataGridView)
+
+    Private Sub WrapColumnHeaderTextOneWordPerLine(dgv As DataGridView)
+        If dgv Is Nothing OrElse dgv.Columns Is Nothing OrElse dgv.Columns.Count = 0 Then
+            Return
+        End If
+        If dgv.Name <> "dgvInsulin" Then
+            Return
+        End If
+        dgv.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True
+        Dim headerFont As Font = If(dgv.ColumnHeadersDefaultCellStyle.Font, dgv.Font)
+
+        Dim maxWords As Integer = 1
+        For Each col As DataGridViewColumn In dgv.Columns
+            Dim text As String = If(col.HeaderText, String.Empty)
+            text = text.Replace(oldValue:=vbCrLf, newValue:=" ").
+                        Replace(oldValue:=vbLf, newValue:=" ").
+                        Replace(oldValue:=vbCr, newValue:=" ")
+            Const removeEmptyEntries As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
+            Dim words As String() =
+                text.Split(separator:=s_separator, options:=removeEmptyEntries)
+            If words.Length = 0 Then
+                Continue For
+            End If
+            If words.Length > 1 Then
+                col.HeaderText = String.Join(separator:=Environment.NewLine, value:=words)
+            End If
+            If words.Length > maxWords Then
+                maxWords = words.Length
+            End If
+        Next
+
+        dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.EnableResizing
+        Dim padding As Integer = 6
+        dgv.ColumnHeadersHeight = CInt(((headerFont.Height + 2) * maxWords) + padding)
+    End Sub
 
     ''' <summary>
     '''  Displays a <see cref="DataTable"/> in a <see cref="DataGridView"/> within
@@ -34,11 +70,10 @@ Friend Module DgvDataTableHelpers
     '''  The row index in the panel, typically of type <see cref="ServerDataEnum"/>.
     ''' </param>
     <Extension>
-    Friend Sub DisplayDataTableInDGV(
-        realPanel As TableLayoutPanel,
-        table As DataTable,
-        dgv As DataGridView,
-        rowIndex As ServerDataEnum)
+    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel,
+                                     table As DataTable,
+                                     dgv As DataGridView,
+                                     rowIndex As ServerDataEnum)
 
         realPanel?.SetTableName(rowIndex, isClearedNotifications:=False)
         dgv.InitializeDgv()
@@ -65,17 +100,17 @@ Friend Module DgvDataTableHelpers
     '''  If <see langword="True"/>, hides the "RecordNumber" column if present.
     ''' </param>
     <Extension>
-    Friend Sub DisplayDataTableInDGV(
-        realPanel As TableLayoutPanel,
-        table As DataTable,
-        className As String,
-        rowIndex As ServerDataEnum,
-        Optional hideRecordNumberColumn As Boolean = False)
+    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel,
+                                     table As DataTable,
+                                     className As String,
+                                     rowIndex As ServerDataEnum,
+                                     Optional hideRecordNumberColumn As Boolean = False)
 
         realPanel.SetTableName(rowIndex, isClearedNotifications:=False)
         If table?.Rows.Count > 0 Then
             Dim index As Integer = realPanel.Controls.Count - 1
-            Dim dgv As DataGridView = TryCast(realPanel.Controls(index), DataGridView)
+            Dim dgv As DataGridView =
+                TryCast(realPanel.Controls(index), DataGridView)
 
             If dgv Is Nothing Then
                 Stop
@@ -87,6 +122,7 @@ Friend Module DgvDataTableHelpers
             dgv.DataSource = Nothing
             dgv.DataSource = table
             dgv.RowHeadersVisible = False
+            WrapColumnHeaderTextOneWordPerLine(dgv)
             If hideRecordNumberColumn AndAlso dgv.Columns(index:=0).Name = "RecordNumber" Then
                 dgv.Columns(columnName:="RecordNumber").Visible = False
             End If

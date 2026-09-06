@@ -12,10 +12,12 @@ Public Class Client2IntegrationTests
     Public Async Function ResolveEndpointConfigAsync_Integration_Works() As Task
         ' This is an integration test that requires network access to the real discovery endpoint.
         ' It is skipped by default — set environment variable RUN_INTEGRATION_TESTS=1 to enable.
+#If Not DEBUG Then
         If Environment.GetEnvironmentVariable(variable:="RUN_INTEGRATION_TESTS") <> "1" Then
             ' Skip the test when the environment variable is not set. Return early so the test is effectively skipped.
             Return
         End If
+#End If
 
         Dim discoveryUrl As String = CareLinkService.DiscoveryUrlNa
         Dim endpointConfig As EndpointConfig = Nothing
