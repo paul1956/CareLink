@@ -30,7 +30,7 @@ Public Module Discover
     '''  cannot be found.
     ''' </exception>
     Private Function GetConfigJson(country As String,
-                                   serverRegion As Region,
+                                   serverRegion As ServerLocation,
                                    discoveryElement As JsonElement) As JsonElement
         Dim config As JsonElement
         Dim region As JsonElement
@@ -39,7 +39,7 @@ Public Module Discover
             discoveryElement.GetProperty(propertyName:="supportedCountries").EnumerateArray()
 
         For Each c As JsonElement In arrayEnumerator
-            If serverRegion = Regions.Region.Trial Then
+            If serverRegion = ServerLocation.Clinical Then
                 If c.TryGetProperty(propertyName:="CLINICAL", value:=region) Then
                     Exit For
                 End If
@@ -61,7 +61,7 @@ Public Module Discover
         End If
         For Each value As JsonElement In discoveryElement.GetProperty(propertyName:="CP").EnumerateArray()
             Try
-                Dim cpInfo As CPInfo = Nothing
+                Dim cpInfo As CPEntry = Nothing
                 If Not value.TryFromJson(result:=cpInfo) Then
                     ' ignore here error will be handled outside the loop
                     Stop
@@ -81,6 +81,21 @@ Public Module Discover
             Throw New ApplicationException(message)
         End If
         Return config
+    End Function
+
+    ''' <summary>
+    '''  Returns the discovery URL for the specified server region.
+    ''' </summary>
+    ''' <param name="serverRegion">
+    '''  The server region for which to retrieve the discovery URL.
+    ''' </param>
+    ''' <returns>
+    '''  A string representing the discovery URL for the specified server region.
+    ''' </returns>
+    Friend Function GetDiscoverUri(serverRegion As ServerLocation) As String
+        Return If(serverRegion = ServerLocation.Eu,
+                  s_discoverUrl(key:="EU"),
+                  s_discoverUrl(key:="US"))
     End Function
 
     ''' <summary>
@@ -105,13 +120,9 @@ Public Module Discover
     '''  Thrown if the country code is not supported or if configuration
     '''  data cannot be retrieved.
     ''' </exception>
-    Public Async Function GetConfigAsync(httpClient As HttpClient, country As String, serverRegion As Region) As Task(Of JsonElement)
-
-        Dim requestUri As String = If(serverRegion <> Region.Europe,
-                                      s_discoverUrl(key:="US"),
-                                      s_discoverUrl(key:="EU"))
+    Public Async Function GetConfigAsync(httpClient As HttpClient, country As String, serverRegion As ServerLocation) As Task(Of JsonElement)
         Dim json As String =
-            Await httpClient.GetStringAsync(requestUri).
+            Await httpClient.GetStringAsync(requestUri:=GetDiscoverUri(serverRegion)).
                 ConfigureAwait(continueOnCapturedContext:=False)
         Dim discoveryElement As JsonElement
         If Not json.TryFromJson(result:=discoveryElement) Then
@@ -123,8 +134,8 @@ Public Module Discover
         If Not configJson.TryFromJson(result:=config) Then
             Throw New ApplicationException(message:="Failed to parse config JSON.")
         End If
-        Dim ssoConfigurationKey As String = config.UseSSOConfiguration
-        requestUri = config.GetPropertyValue(propertyName:=ssoConfigurationKey)
+        Dim requestUri As String =
+            config.GetPropertyValue(propertyName:=config.UseSSOConfiguration)
         Dim resp As String =
             Await httpClient.GetStringAsync(requestUri) _
                             .ConfigureAwait(continueOnCapturedContext:=False)
@@ -176,7 +187,7 @@ Public Module Discover
     ''' A <see cref="DiscoveryRecord"/> containing the configuration data for the specified country,
     ''' or <see langword="Nothing"/> if an error occurs.
     ''' </returns>
-    Public Async Function GetDiscoveryDataAsync() As Task(Of DiscoveryRecord)
+    Public Async Function GetDiscoveryDataAsync() As Task(Of DiscoveryRoot)
         Dim discoveryUrl As String = If(s_countryCode.EqualsNoCase("US"),
                                         s_discoverUrl(key:="US"),
                                         s_discoverUrl(key:="EU"))
@@ -193,28 +204,28 @@ Public Module Discover
                     Catch uaEx As UnauthorizedAccessException
                         lastErrorMsg = $"Unauthorized access when fetching discovery data: {uaEx.Message}"
                         LoggerManager.LogMessage(message:=lastErrorMsg)
-                        Return New DiscoveryRecord With {
+                        Return New DiscoveryRoot With {
                             .httpStatusCode = httpStatusCode,
                             .lastErrorMsg = lastErrorMsg}
                     Catch argEx As ArgumentException
                         lastErrorMsg = $"Bad request fetching discovery data: {argEx.Message}"
                         LoggerManager.LogMessage(message:=lastErrorMsg)
-                        Return New DiscoveryRecord With {
+                        Return New DiscoveryRoot With {
                             .httpStatusCode = httpStatusCode,
                             .lastErrorMsg = lastErrorMsg}
                     Catch httpEx As HttpRequestException
                         lastErrorMsg = $"HTTP request failed: {httpEx.Message}"
                         LoggerManager.LogMessage(message:=lastErrorMsg)
-                        Return New DiscoveryRecord With {
+                        Return New DiscoveryRoot With {
                             .httpStatusCode = httpStatusCode,
                             .lastErrorMsg = lastErrorMsg}
                     End Try
 
-                    Dim result As DiscoveryRecord
+                    Dim result As DiscoveryRoot
                     Try
                         Dim json As String = Await response.Content.ReadAsStringAsync() _
                                                                    .ConfigureAwait(continueOnCapturedContext:=False)
-                        Dim dr As DiscoveryRecord = Nothing
+                        Dim dr As DiscoveryRoot = Nothing
                         If Not json.TryFromJson(result:=dr) Then
                             Stop
                             Const message As String = "Failed to parse discovery response."
@@ -225,9 +236,9 @@ Public Module Discover
                         Stop
                         Throw
                     End Try
-                    Return New DiscoveryRecord With {
-                        .lastErrorMsg = String.Empty,
-                        .httpStatusCode = httpStatusCode}
+                    result.lastErrorMsg = String.Empty
+                    result.httpStatusCode = httpStatusCode
+                    Return result
                 End Using
             End Using
         Catch ex As AggregateException
@@ -261,7 +272,7 @@ Public Module Discover
             Stop
         End Try
 
-        Return New DiscoveryRecord With {
+        Return New DiscoveryRoot With {
             .lastErrorMsg = lastErrorMsg,
             .httpStatusCode = httpStatusCode}
     End Function

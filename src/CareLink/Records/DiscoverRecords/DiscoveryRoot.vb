@@ -5,7 +5,7 @@
 Imports System.Net
 Imports System.Text.Json.Serialization
 
-Public Class DiscoveryRecord
+Public Class DiscoveryRoot
 
     <JsonPropertyName("config")>
     Public Property Config As String
@@ -14,7 +14,7 @@ Public Class DiscoveryRecord
     Public Property SupportedCountries As List(Of Dictionary(Of String, CountryInfo))
 
     <JsonPropertyName("CP")>
-    Public Property CP As List(Of CPInfo)
+    Public Property CP As List(Of CPEntry)
 
     <JsonPropertyName("certificates")>
     Public Property Certificates As List(Of CertificateInfo)

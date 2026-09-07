@@ -2,16 +2,44 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+#If False Then
+
 Imports System.Net.Http
 Imports System.Security.Cryptography
 Imports System.Security.Cryptography.X509Certificates
 Imports System.Text
 Imports System.Text.Json
 
-Public Class CareLinkService
+Public Class CareLinkServiceOld
     Private Shared ReadOnly s_http As New HttpClient With {.Timeout = TimeSpan.FromSeconds(120)}
     Public Const DiscoveryUrlEu As String = "https://clcloud.minimed.eu/connect/carepartner/v13/discover/android/3.6"
     Public Const DiscoveryUrlUs As String = "https://clcloud.minimed.com/connect/carepartner/v13/discover/android/3.6"
+    Public Const KeySizeInBits As Integer = 2048
+
+    Private Shared Function Base64UrlEncode(bytes As Byte()) As String
+        Dim s As String = Convert.ToBase64String(inArray:=bytes)
+        s = s.Replace("+", "-").Replace("/", "_").TrimEnd("="c)
+        Return s
+    End Function
+
+    Private Shared Function CreateCsrPem(cn As String, ou As String, dc As String, o As String, keySizeInBits As Integer) As String
+        Using rsa As RSA = RSA.Create(keySizeInBits)
+            Dim subjectName As New X500DistinguishedName(distinguishedName:=$"CN={cn},OU={ou},DC={dc},O={o}")
+            Dim req As New CertificateRequest(subjectName:=subjectName,
+                                              key:=rsa,
+                                              hashAlgorithm:=HashAlgorithmName.SHA256,
+                                              padding:=RSASignaturePadding.Pkcs1)
+            Dim csr As Byte() = req.CreateSigningRequest()
+            Dim b64 As String = Convert.ToBase64String(inArray:=csr)
+            Dim sb As New StringBuilder()
+            sb.AppendLine(value:="-----BEGIN CERTIFICATE REQUEST-----")
+            For i As Integer = 0 To b64.Length - 1 Step 64
+                sb.AppendLine(value:=b64.Substring(startIndex:=i, length:=Math.Min(64, b64.Length - i)))
+            Next
+            sb.AppendLine(value:="-----END CERTIFICATE REQUEST-----")
+            Return sb.ToString()
+        End Using
+    End Function
 
     Public Shared Async Function DoLoginAuth0Async(endpointConfig As EndpointConfig,
                                                     outputFile As String,
@@ -135,6 +163,41 @@ Public Class CareLinkService
         Return tcs.Task
     End Function
 
+    Private Shared Function RandomAndroidModel() As String
+        Dim models As String() = {"SM-G973F", "SM-G988U1", "SM-G981W", "SM-G9600"}
+        Dim index As Integer = RandomNumberGenerator.GetInt32(toExclusive:=models.Length)
+        Return models(index)
+    End Function
+
+    Private Shared Function RandomB64String(length As Integer) As String
+        Dim bytes As Byte() = New Byte(length + 10 - 1) {}
+        RandomNumberGenerator.Fill(data:=bytes)
+        Dim s As String = Convert.ToBase64String(inArray:=bytes)
+        If s.Length >= length Then Return s.Substring(startIndex:=0, length:=length)
+        Return s.PadRight(totalWidth:=length, paddingChar:="A"c)
+    End Function
+
+    Private Shared Function RandomDeviceId() As String
+        Dim bytes(39) As Byte
+        RandomNumberGenerator.Fill(data:=bytes)
+        Dim inArray As Byte() = SHA256.HashData(source:=bytes)
+        Return Convert.ToHexString(inArray)
+    End Function
+
+    Private Shared Function RandomUuidString() As String
+        Return Guid.NewGuid().ToString()
+    End Function
+
+    Private Shared Function ReformatCsr(csrPem As String) As String
+        Dim raw As String = csrPem.Replace("-----BEGIN CERTIFICATE REQUEST-----", "").
+            Replace(oldValue:="-----END CERTIFICATE REQUEST-----", newValue:="").
+            Replace(oldValue:=vbCr, newValue:="").
+            Replace(oldValue:=vbLf, newValue:="").
+            Trim()
+        Dim bytes As Byte() = Convert.FromBase64String(raw)
+        Return Base64UrlEncode(bytes)
+    End Function
+
     Public Shared Async Function ResolveEndpointConfigAsync(discoveryUri As String, serverRegion As ServerLocation) As Task(Of EndpointConfig)
         Dim discoveryJson As String =
             Await s_http.GetStringAsync(requestUri:=discoveryUri)
@@ -195,3 +258,4 @@ Public Class CareLinkService
     End Function
 
 End Class
+#End If

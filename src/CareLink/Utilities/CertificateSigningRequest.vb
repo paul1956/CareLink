@@ -6,6 +6,7 @@ Imports System.Security.Cryptography
 Imports System.Security.Cryptography.X509Certificates
 Imports System.Text
 
+<Obsolete("This module is deprecated. Use the CertificateRequest class directly instead.", True)>
 Public Module CertificateSigningRequest
 
     ''' <summary>
@@ -20,12 +21,11 @@ Public Module CertificateSigningRequest
     ''' <returns>
     '''  A string containing the CSR in PEM format, including header and footer.
     ''' </returns>
-    Public Function CreateCertificateSigningRequest(
-        key As RSA,
-        cn As String,
-        ou As String,
-        dc As String,
-        o As String) As String
+    Public Function CreateCertificateSigningRequest(key As RSA,
+                                                    cn As String,
+                                                    ou As String,
+                                                    dc As String,
+                                                    o As String) As String
 
         Dim distinguishedName As String = $"CN={cn}, OU={ou}, DC={dc}, O={o}"
         Dim subjectName As New X500DistinguishedName(distinguishedName)

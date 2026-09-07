@@ -19,12 +19,12 @@ Public Class Client2IntegrationTests
         End If
 #End If
 
-        Dim discoveryUrl As String = CareLinkService.DiscoveryUrlNa
+        Dim discoveryUri As String = CareLinkService.DiscoveryUrlUs
         Dim endpointConfig As EndpointConfig = Nothing
         Try
             endpointConfig =
-                Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl,
-                                                                 serverRegion:=Region.NorthAmerica)
+                Await CareLinkService.ResolveEndpointConfigAsync(discoveryUri,
+                                                                 serverRegion:=ServerLocation.US)
         Catch ex As Exception
             Assert.True(condition:=False,
                         userMessage:=$"ResolveEndpointConfigAsync threw: {ex.Message}")

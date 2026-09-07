@@ -12,8 +12,8 @@ Public Module WorldRegions
         <Description("United States")>
         UnitedStates
 
-        <Description("Trial")>
-        Trial
+        <Description("Clinical")>
+        Clinical
 
         <Description("Africa")>
         Africa
@@ -46,8 +46,8 @@ Public Module WorldRegions
         Select Case region
             Case WorldRegion.UnitedStates
                 Return WorldRegion.UnitedStates.ToString
-            Case WorldRegion.Trial
-                Return WorldRegion.Trial.ToString
+            Case WorldRegion.Clinical
+                Return WorldRegion.Clinical.ToString
         End Select
         Return WorldRegion.Europe.ToString
 

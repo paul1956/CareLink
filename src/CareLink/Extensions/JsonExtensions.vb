@@ -479,7 +479,7 @@ Public Module JsonExtensions
     ''' </summary>
     <Extension>
     Public Function TryFromJson(Of T)(json As String, ByRef result As T) As Boolean
-        Return TryFromJson(Of T)(json, options:=DeserializationOptions, result)
+        Return TryFromJson(json, options:=DeserializationOptions, result)
     End Function
 
     ''' <summary>

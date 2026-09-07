@@ -4,7 +4,7 @@
 
 Imports System.Text.Json.Serialization
 
-Public Class CPInfo
+Public Class CPEntry
 
     <JsonPropertyName("region")>
     Public Property Region As String

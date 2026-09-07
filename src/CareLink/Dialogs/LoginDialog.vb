@@ -14,7 +14,7 @@ Public Class LoginDialog
     Private _showTcs As TaskCompletionSource(Of DialogResult)
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
 
-    Public Property ClientDiscover As DiscoveryRecord
+    Public Property ClientDiscover As DiscoveryRoot
     Public Property LoggedOnUser As CareLinkUserDataRecord
     Public Property LoginSourceAutomatic As FileToLoadOptions
 
@@ -252,18 +252,17 @@ Public Class LoginDialog
         Try
             Me.LoginStatus.Text = "Checking token file..."
             Dim lastErrorMsg As String
-            Dim discovertTupleStatusCode As HttpStatusCode = HttpStatusCode.OK
-            Dim discoveryResult As DiscoveryRecord = Await GetDiscoveryDataAsync()
-            Me.ClientDiscover = discoveryResult
-            lastErrorMsg = discoveryResult.lastErrorMsg
-            discovertTupleStatusCode = discoveryResult.httpStatusCode
+            Me.ClientDiscover = Await GetDiscoveryDataAsync()
+            lastErrorMsg = Me.ClientDiscover.lastErrorMsg
+            Dim discoveryTupleStatusCode As HttpStatusCode =
+                Me.ClientDiscover.httpStatusCode
             If Me.ClientDiscover IsNot Nothing Then
                 Me.Ok_Button.Enabled = False
                 Application.DoEvents()
                 Dim territory As WorldRegion =
                     CType(Me.RegionComboBox.SelectedValue, WorldRegion)
                 Dim serverMapping As String = s_regionToServerMapping(key:=territory)
-                Dim serverRegion As Region = [Enum].Parse(Of Region)(value:=serverMapping)
+                Dim serverRegion As ServerLocation = [Enum].Parse(Of ServerLocation)(value:=serverMapping)
                 Await Client2.GetLoginData(serverRegion:=serverRegion,
                                            userName:=s_userName,
                                            password:=s_password,
@@ -302,13 +301,13 @@ Public Class LoginDialog
                     Me.Hide()
                 End If
             Else
-                discovertTupleStatusCode =
-                    If(discovertTupleStatusCode = HttpStatusCode.OK,
+                discoveryTupleStatusCode =
+                    If(discoveryTupleStatusCode = HttpStatusCode.OK,
                        Form1.Client.HttpStatusCode,
-                       discovertTupleStatusCode)
+                       discoveryTupleStatusCode)
                 Me.LoginStatus.Text = lastErrorMsg
-                ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMsg, discovertTupleStatusCode)
-                If Client2.Auth_Error_Codes.Contains(value:=discovertTupleStatusCode) Then
+                ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMsg, discoveryTupleStatusCode)
+                If Client2.Auth_Error_Codes.Contains(value:=discoveryTupleStatusCode) Then
                     Me.PasswordTextBox.Text = String.Empty
                     Dim userRecord As CareLinkUserDataRecord = Nothing
                     If s_allUserSettingsData.TryGetValue(key:=GetUserName(), userRecord) Then
@@ -319,13 +318,13 @@ Public Class LoginDialog
                 Dim networkDownMessage As String =
                     If(NetworkUnavailable(),
                        "Due to network being unavailable",
-                       $"Network Response Code = {discovertTupleStatusCode}")
+                       $"Network Response Code = {discoveryTupleStatusCode}")
 
                 Dim heading As String
 
                 Dim buttonsAvailable As MsgBoxStyle
                 Dim buttonStyle As MsgBoxStyle
-                If discovertTupleStatusCode <> 1 Then
+                If discoveryTupleStatusCode <> 1 Then
                     buttonsAvailable = MsgBoxStyle.AbortRetryIgnore
                     buttonStyle = buttonsAvailable Or MsgBoxStyle.DefaultButton2 Or MsgBoxStyle.Question
                     heading = $"Login Unsuccessful, try again?{vbCrLf}Abort, will exit program!"
@@ -404,7 +403,7 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the Region ComboBox selected index changed event,
+    '''  Handles the ServerLocation ComboBox selected index changed event,
     '''  updates the Country ComboBox based on the selected region.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>

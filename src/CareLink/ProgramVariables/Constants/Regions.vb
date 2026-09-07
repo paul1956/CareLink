@@ -2,12 +2,21 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Public Module Regions
+Imports System.ComponentModel
 
-    Public Enum Region As Integer
-        NorthAmerica
-        Europe
-        Trial
+Public Module ServerLocations
+
+    Public Enum ServerLocation As Integer
+
+        <Description("us")>
+        US
+
+        <Description("eu")>
+        Eu
+
+        <Description("clinical")>
+        Clinical
+
     End Enum
 
 End Module

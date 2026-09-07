@@ -8,7 +8,8 @@ Public Class FileUtilitiesTests
 
     <Fact>
     Public Sub DeserializeJsonElementFromString_ValidJson_ReturnsElement()
-        Dim json As String = "{""a"":1,""b"":""text""}"
+        Dim jsonPath As String = Path.Combine(AppContext.BaseDirectory, "TestData", "simple_object.json")
+        Dim json As String = File.ReadAllText(path:=jsonPath)
         Dim elem As JsonElement
         If Not json.TryFromJson(result:=elem) Then
             elem = Nothing
@@ -22,7 +23,8 @@ Public Class FileUtilitiesTests
     Public Sub ReadJsonElementFromFile_ValidFile_ReturnsElement()
         Dim temp As String = Path.GetTempFileName()
         Try
-            File.WriteAllText(path:=temp, contents:="{""x"":true}")
+            Dim xTruePath As String = Path.Combine(AppContext.BaseDirectory, "TestData", "x_true.json")
+            File.WriteAllText(path:=temp, contents:=File.ReadAllText(path:=xTruePath))
             Dim elem As JsonElement = FileUtilities.ReadJsonElementFromFile(temp)
             elem.ValueKind.Should().Be(expected:=JsonValueKind.Object)
             elem.GetProperty(propertyName:="x").GetBoolean().Should().BeTrue()
@@ -34,8 +36,8 @@ Public Class FileUtilitiesTests
     <Fact>
     Public Sub ReadTokenFileAndDataFile_ValidToken_ReturnsValues()
         Dim temp As String = Path.GetTempFileName()
-        Dim json As String =
-            "{""access_token"":""a"",""refresh_token"":""r"",""scope"":""s"",""client_id"":""c""}"
+        Dim tokenPath As String = Path.Combine(AppContext.BaseDirectory, "TestData", "token_basic.json")
+        Dim json As String = File.ReadAllText(path:=tokenPath)
         Try
             File.WriteAllText(path:=temp, contents:=json)
             Dim elem As JsonElement = FileUtilities.ReadTokenFile(tokenBaseFileName:=temp)

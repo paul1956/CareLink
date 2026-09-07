@@ -30,7 +30,7 @@ Friend Class Client2
     ''' <remarks>
     '''  This Class is intentionally not part of the public API.
     ''' </remarks>
-    Friend Sub New(serverRegion As Region,
+    Friend Sub New(serverRegion As ServerLocation,
                    Optional httpClient As HttpClient = Nothing,
                    Optional tokenFile As String = TokenBaseFileName)
 
@@ -55,7 +55,7 @@ Friend Class Client2
     Friend Property Config As ConfigRecord
     Friend Property LoggedIn As Boolean
     Friend Property PatientPersonalData As New PatientPersonalInfo
-    Friend Property ServerRegion As Region
+    Friend Property ServerRegion As ServerLocation
     Friend Property UserElementDictionary As Dictionary(Of String, JsonElement)
 
     ''' <summary>
@@ -125,7 +125,7 @@ Friend Class Client2
             File.SetCreationTime(path, creationTime:=localTime)
             File.SetLastAccessTime(path, lastAccessTime:=localTime)
         Catch ex As Exception
-            LoggerManager.LogMessage(message:=$"Error downloading file: {ex.Message}")
+            LogMessage(message:=$"Error downloading file: {ex.Message}")
         End Try
     End Function
 
@@ -151,7 +151,7 @@ Friend Class Client2
             Dim str As String = ex.DecodeException()
             Dim location As String = NameOf(GetAccessTokenPayload)
             Dim message As String = $"No access token found or malformed access token: {str} in {location}"
-            LoggerManager.LogMessage(message)
+            LogMessage(message)
             Stop
             Return Nothing
         End Try
@@ -178,14 +178,14 @@ Friend Class Client2
             If tDiff <= 0 Then
                 Dim absDiff As Long = Math.Abs(value:=tDiff)
                 message = $"In {NameOf(IsTokenValid)} access token has expired {absDiff}s ago"
-                LoggerManager.LogMessage(message)
+                LogMessage(message)
                 Return False
             End If
             Dim startKey As String
             If tDiff < 600 Then
                 startKey = $"In {NameOf(IsTokenValid)} access token is about to expire in "
                 message = $"In {NameOf(IsTokenValid)} access token is about to expire in {tDiff}s"
-                LoggerManager.UpdateMessage(message, startKey)
+                UpdateMessage(message, startKey)
                 Return False
             End If
 
@@ -200,12 +200,12 @@ Friend Class Client2
 
             startKey = $"In {NameOf(IsTokenValid)} access token expires in"
             message = $"{startKey} {(tDiff \ 60).ToHoursMinutes()} at {authTokenValidTo} or {formatted}"
-            LoggerManager.UpdateMessage(message, startKey)
+            UpdateMessage(message, startKey)
             Return True
         Catch ex As Exception
             message =
                 $"In {NameOf(IsTokenValid)} missing nameValueCollection in access token. {ex.DecodeException()}"
-            LoggerManager.LogMessage(message)
+            LogMessage(message)
             Return False
         End Try
     End Function
@@ -249,7 +249,7 @@ Friend Class Client2
 
         Dim contentJson As String = String.Empty
         If Not value.TryToJson(json:=contentJson) Then
-            LoggerManager.LogMessage(message:=$"ERROR: failed serializing request body for GetDataAsync")
+            LogMessage(message:=$"ERROR: failed serializing request body for GetDataAsync")
             contentJson = "{}"
         End If
         Using content As New StringContent(content:=contentJson,
@@ -273,7 +273,7 @@ Friend Class Client2
 
                         Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).ConfigureAwait(continueOnCapturedContext:=False)
                             _lastHttpStatusCode = response.StatusCode
-                            LoggerManager.UpdateMessage(message:=$"   status: {_lastHttpStatusCode}",
+                            UpdateMessage(message:=$"   status: {_lastHttpStatusCode}",
                                                         startKey:=$"   status: ")
 
                             ' Centralized resp inspection; may throw UnauthorizedAccessException,
@@ -352,7 +352,7 @@ Friend Class Client2
             Using response As HttpResponseMessage = Await _httpClient.SendAsync(request)
                 _lastHttpStatusCode = response.StatusCode
                 If _lastHttpStatusCode <> HttpStatusCode.OK Then
-                    LoggerManager.LogMessage(message:=$"   status: {_lastHttpStatusCode}")
+                    LogMessage(message:=$"   status: {_lastHttpStatusCode}")
                 End If
 
                 ' Ensure non-success status codes are not silently ignored.
@@ -360,7 +360,7 @@ Friend Class Client2
                     Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
                 Catch ex As Exception
                     response.Dispose()
-                    LoggerManager.LogMessage(message:=$"GetPatient HTTP failure: {ex.Message}")
+                    LogMessage(message:=$"GetPatient HTTP failure: {ex.Message}")
                     Return Nothing
                 End Try
 
@@ -411,19 +411,19 @@ Friend Class Client2
                 Await _httpClient.SendAsync(request).
                                   ConfigureAwait(continueOnCapturedContext:=False)
                 _lastHttpStatusCode = response.StatusCode
-                LoggerManager.LogMessage(message:=$"   status: {_lastHttpStatusCode}")
+                LogMessage(message:=$"   status: {_lastHttpStatusCode}")
 
                 ' Use centralized failure handling and translate to Nothing for older call-sites.
                 Try
                     Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
                 Catch ex As UnauthorizedAccessException
-                    LoggerManager.LogMessage(message:=$"GetUserString unauthorized: {ex.Message}")
+                    LogMessage(message:=$"GetUserString unauthorized: {ex.Message}")
                     Return Nothing
                 Catch ex As ArgumentException
-                    LoggerManager.LogMessage(message:=$"GetUserString bad request: {ex.Message}")
+                    LogMessage(message:=$"GetUserString bad request: {ex.Message}")
                     Return Nothing
                 Catch ex As HttpRequestException
-                    LoggerManager.LogMessage(message:=$"GetUserString HTTP error: {ex.Message}")
+                    LogMessage(message:=$"GetUserString HTTP error: {ex.Message}")
                     Return Nothing
                 End Try
 
@@ -507,7 +507,7 @@ Friend Class Client2
                         refreshTask = Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement)
                     End If
                 Catch innerEx As Exception
-                    LoggerManager.LogMessage(message:=innerEx.ToString())
+                    LogMessage(message:=innerEx.ToString())
                 End Try
             End If
         End Try
@@ -524,7 +524,7 @@ Friend Class Client2
                         WriteTokenFile(token:=_tokenDataElement)
                     End If
                 Catch refreshEx As Exception
-                    LoggerManager.LogMessage(message:=refreshEx.ToString())
+                    LogMessage(message:=refreshEx.ToString())
                 End Try
             End If
 
@@ -568,24 +568,22 @@ Friend Class Client2
     '''  Asynchronously retrieves login data for the specified server region,
     '''  username, and password.
     ''' </summary>
-    ''' <param name="serverRegion">The server <see cref="Region"/> to use.</param>
+    ''' <param name="serverRegion">The server <see cref="ServerLocation"/> to use.</param>
     ''' <param name="userName">The username for login.</param>
     ''' <param name="password">The password for login.</param>
     ''' <param name="tokenData">The current token data.</param>
     ''' <returns>A task representing the asynchronous operation.</returns>
-    Public Shared Async Function GetLoginData(serverRegion As Region,
+    Public Shared Async Function GetLoginData(serverRegion As ServerLocation,
                                               userName As String,
                                               password As String,
                                               Optional tokenData As TokenData = Nothing) As Task
         If tokenData Is Nothing Then
             Try
-                Dim discoveryUrl As String = If(serverRegion <> Region.Europe,
-                                                CareLinkService.DiscoveryUrlNa,
-                                                CareLinkService.DiscoveryUrlEu)
                 Dim outputFile As String = GetLoginDataFileName()
 
+                Dim discoveryUri As String = GetDiscoverUri(serverRegion)
                 Dim endpointConfig As EndpointConfig =
-                    Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, serverRegion)
+                    Await CareLinkService.ResolveEndpointConfigAsync(discoveryUri, serverRegion)
 
                 Await CareLinkService.DoLoginAuth0Async(endpointConfig,
                                                         outputFile,
@@ -620,7 +618,7 @@ Friend Class Client2
         Dim message As String
         If Not tokenElement.TryFromJson(result) Then
             message = $"{NameOf(DoRefreshAsync)}: token element could not be parsed"
-            LoggerManager.LogMessage(message)
+            LogMessage(message)
             Return Nothing
         End If
         Dim tokenData As Dictionary(Of String, JsonElement) = result
@@ -639,19 +637,16 @@ Friend Class Client2
             Try
                 clientId = tokenData(key:="client_id").GetString()
             Catch
-                clientId = Nothing
+                message =
+                    $"{NameOf(DoRefreshAsync)}: Missing client_id in stored token data."
+                LogMessage(message)
+                Return Nothing
             End Try
         End If
         If IsNullOrWhiteSpace(value:=refreshTok) Then
             message =
                 $"{NameOf(DoRefreshAsync)}: Missing refresh_token in stored token data."
-            LoggerManager.LogMessage(message)
-            Return Nothing
-        End If
-        If IsNullOrWhiteSpace(value:=clientId) Then
-            message =
-                $"{NameOf(DoRefreshAsync)}: Missing client_id in stored token data."
-            LoggerManager.LogMessage(message)
+            LogMessage(message)
             Return Nothing
         End If
 
@@ -682,15 +677,13 @@ Friend Class Client2
             Try
                 Dim endpointConfig As EndpointConfig = Nothing
                 If endpointResolver IsNot Nothing Then
-                    endpointConfig = Await endpointResolver(config).ConfigureAwait(False)
+                    endpointConfig = Await endpointResolver(arg:=config).ConfigureAwait(continueOnCapturedContext:=False)
                 Else
-                    Dim discoveryUrl As String = If(Me.ServerRegion = Region.NorthAmerica,
-                                                    s_discoverUrl(key:="US"),
-                                                    s_discoverUrl(key:="EU"))
-                    endpointConfig = Await CareLinkService.ResolveEndpointConfigAsync(discoveryUrl, Me.ServerRegion)
+                    Dim discoveryUri As String = GetDiscoverUri(Me.ServerRegion)
+                    endpointConfig = Await CareLinkService.ResolveEndpointConfigAsync(discoveryUri, Me.ServerRegion)
                 End If
 
-                If endpointConfig IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(endpointConfig.SsoJson) Then
+                If endpointConfig IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(value:=endpointConfig.SsoJson) Then
                     Dim sso As SsoConfig = Nothing
                     If endpointConfig.SsoJson.TryFromJson(result:=sso) AndAlso sso IsNot Nothing Then
                         If sso.Client_Secret IsNot Nothing AndAlso Not IsNullOrWhiteSpace(sso.Client_Secret.ClientSecret) Then
@@ -702,7 +695,7 @@ Friend Class Client2
                     End If
                 End If
             Catch ex As Exception
-                LoggerManager.LogMessage(message:=$"{NameOf(DoRefreshAsync)}: failed resolving SSO for client_secret: {ex.Message}")
+                LogMessage(message:=$"{NameOf(DoRefreshAsync)}: failed resolving SSO for client_secret: {ex.Message}")
             End Try
         End If
 
@@ -712,7 +705,7 @@ Friend Class Client2
             If tokenData.TryGetValue(key:="mag-identifier", value:=magElem) Then
                 Try
                     Dim mag As String = magElem.GetString()
-                    If Not IsNullOrWhiteSpace(mag) Then
+                    If Not IsNullOrWhiteSpace(value:=mag) Then
                         client.DefaultRequestHeaders.Add(name:="mag-identifier", value:=mag)
                     End If
                 Catch
@@ -738,8 +731,8 @@ Friend Class Client2
                 Try
                     ' Configure auth header for this attempt
                     If attempt.Item1 AndAlso hasClientSecret Then
-                        Dim cred As String = Convert.ToBase64String(inArray:=System.Text.Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}"))
-                        client.DefaultRequestHeaders.Authorization = New System.Net.Http.Headers.AuthenticationHeaderValue("Basic", cred)
+                        Dim cred As String = Convert.ToBase64String(inArray:=Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}"))
+                        client.DefaultRequestHeaders.Authorization = New AuthenticationHeaderValue(scheme:="Basic", parameter:=cred)
                     Else
                         client.DefaultRequestHeaders.Authorization = Nothing
                     End If
@@ -755,7 +748,7 @@ Friend Class Client2
                     End Using
                 Catch ex As Exception
                     message = $"{NameOf(DoRefreshAsync)}: HTTP request failed: {ex.Message}"
-                    LoggerManager.LogMessage(message)
+                    LogMessage(message)
                     Continue For
                 End Try
 
@@ -779,14 +772,14 @@ Friend Class Client2
                     Catch ex As Exception
                         message =
                             $"{NameOf(DoRefreshAsync)}: failed parsing token refresh response: {ex.Message}"
-                        LoggerManager.LogMessage(message)
+                        LogMessage(message)
                         Return Nothing
                     End Try
                 Else
                     message =
                         $"{NameOf(DoRefreshAsync)}: token refresh attempt failed. useBasic={attempt.Item1} " &
                         $"includeSecret={attempt.Item2} Status={CInt(resp.StatusCode)} Body={respBody}"
-                    LoggerManager.LogMessage(message)
+                    LogMessage(message)
                 End If
             Next
         End Using
@@ -795,7 +788,7 @@ Friend Class Client2
         If Not tokenData.TryToJson(json:=tdJson) Then
             message =
                 $"{NameOf(DoRefreshAsync)}: failed serializing token data to JSON."
-            LoggerManager.LogMessage(message)
+            LogMessage(message)
             Return Nothing
         End If
         Dim tdElem As JsonElement
@@ -822,11 +815,11 @@ Friend Class Client2
                 _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
                 WriteTokenFile(token:=_tokenDataElement)
             Catch ex As Exception
-                LoggerManager.LogMessage(message:=ex.ToString())
+                LogMessage(message:=ex.ToString())
             End Try
 
             If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
-                LoggerManager.LogMessage(message:=lastErrorMessage)
+                LogMessage(message:=lastErrorMessage)
                 Return lastErrorMessage
             End If
         End If
@@ -845,13 +838,13 @@ Friend Class Client2
                 Try
                     refreshTask = Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement)
                 Catch innerEx As Exception
-                    LoggerManager.LogMessage(message:=innerEx.ToString())
+                    LogMessage(message:=innerEx.ToString())
                 End Try
             Catch argEx As ArgumentException
-                LoggerManager.LogMessage(message:=$"GetRecentData bad request: {argEx.Message}")
+                LogMessage(message:=$"GetRecentData bad request: {argEx.Message}")
                 Return argEx.Message
             Catch httpEx As HttpRequestException
-                LoggerManager.LogMessage(message:=$"GetRecentData network/server error: {httpEx.Message}")
+                LogMessage(message:=$"GetRecentData network/server error: {httpEx.Message}")
                 Return $"Network/server error: {httpEx.Message}"
             End Try
 
@@ -869,7 +862,7 @@ Friend Class Client2
                                                      patientId:=EmptyString)
                     End If
                 Catch refreshEx As Exception
-                    LoggerManager.LogMessage(message:=refreshEx.ToString())
+                    LogMessage(message:=refreshEx.ToString())
                     Return "ERROR: failed to refresh token"
                 End Try
             End If
@@ -881,12 +874,12 @@ Friend Class Client2
                 PatientData = Nothing
                 Dim message As String =
                     $"{NameOf(GetRecentDataAsync)}: No nameValueCollection returned from GetData for user {GetUserName()}"
-                LoggerManager.LogMessage(message)
+                LogMessage(message)
                 Return "No nameValueCollection received from server"
             End If
         Catch ex As Exception
             PatientData = Nothing
-            LoggerManager.LogMessage(message:=ex.DecodeException())
+            LogMessage(message:=ex.DecodeException())
             Return ex.DecodeException()
         End Try
 
@@ -897,7 +890,7 @@ Friend Class Client2
                 _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
                 WriteTokenFile(token:=_tokenDataElement)
             Catch ex As Exception
-                LoggerManager.LogMessage(message:=ex.ToString())
+                LogMessage(message:=ex.ToString())
             End Try
         End If
 
@@ -956,7 +949,7 @@ Friend Class Client2
             DeserializePatientElement()
             WriteTokenFile(token:=PatientDataElement, path:=GetLastDownloadFileWithPath())
         Catch ex As Exception
-            LoggerManager.LogMessage(message:=ex.DecodeException())
+            LogMessage(message:=ex.DecodeException())
             Return ex.DecodeException()
         End Try
 

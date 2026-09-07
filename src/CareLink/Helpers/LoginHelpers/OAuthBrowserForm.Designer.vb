@@ -27,6 +27,7 @@ Partial Class OAuthBrowserForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         WebView21 = New Microsoft.Web.WebView2.WinForms.WebView2()
+        urlLabel = New Label()
         CType(WebView21, ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         ' 
@@ -42,11 +43,20 @@ Partial Class OAuthBrowserForm
         WebView21.TabIndex = 0
         WebView21.ZoomFactor = 1R
         ' 
+        ' urlLabel
+        ' 
+        urlLabel.Dock = DockStyle.Top
+        urlLabel.Location = New Point(0, 0)
+        urlLabel.Name = "urlLabel"
+        urlLabel.Size = New Size(800, 25)
+        urlLabel.TabIndex = 1
+        ' 
         ' OAuthBrowserForm
         ' 
         Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.ClientSize = New Size(800, 450)
+        Me.Controls.Add(urlLabel)
         Me.Controls.Add(WebView21)
         Me.Name = "OAuthBrowserForm"
         Me.Text = "BrowserForm"
@@ -55,4 +65,5 @@ Partial Class OAuthBrowserForm
     End Sub
 
     Friend WithEvents WebView21 As Microsoft.Web.WebView2.WinForms.WebView2
+    Friend WithEvents urlLabel As Label
 End Class

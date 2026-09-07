@@ -4,6 +4,7 @@
 
 Imports System.Net
 Imports System.Net.Http
+Imports System.IO
 Imports System.Reflection
 Imports System.Text.Json
 Imports System.Threading
@@ -19,7 +20,8 @@ Public Class Client2TransientErrorsTests
         handler.EnqueueException(ex:=New HttpRequestException(message:="transient 1"))
         handler.EnqueueException(ex:=New HttpRequestException(message:="transient 2"))
 
-        Dim validContent As String = "{""meta"":{},""patientData"":[] }"
+        Dim validContentPath As String = Path.Combine(AppContext.BaseDirectory, "TestData", "patient_valid_content.json")
+        Dim validContent As String = File.ReadAllText(path:=validContentPath)
         Dim responseFactory As Func(Of HttpResponseMessage) =
             Function()
                 Return New HttpResponseMessage(statusCode:=HttpStatusCode.OK) With
@@ -29,14 +31,15 @@ Public Class Client2TransientErrorsTests
         handler.EnqueueResponse(responseFactory)
 
         Dim httpClient As New HttpClient(handler)
-        Dim client As New Client2(serverRegion:=Region.NorthAmerica, httpClient) With {
+        Dim client As New Client2(serverRegion:=ServerLocation.US, httpClient) With {
             .Config = New ConfigRecord With {
                 .BaseUrlCumulus = "https://example.com"}}
         ' Wrap it in JSON string syntax (quotes) so it's valid JSON
         Dim value As New Dictionary(Of String, JsonElement) From {{"role", "patient".ToJsonElement()}}
         client.SetUserElementDictionaryForTests(value)
 
-        Dim tokenJson As String = "{""access_token"":""aaa.bbb.ccc"",""refresh_token"":""r"",""client_id"":""cid"",""mag-identifier"":""m""}"
+        Dim tokenPath As String = Path.Combine(AppContext.BaseDirectory, "TestData", "token_with_mag.json")
+        Dim tokenJson As String = File.ReadAllText(path:=tokenPath)
         Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
         Const bindingAttr As BindingFlags = BindingFlags.NonPublic Or BindingFlags.Instance
         Dim tokenField As FieldInfo = client.GetType().GetField(name:="_tokenDataElement", bindingAttr)

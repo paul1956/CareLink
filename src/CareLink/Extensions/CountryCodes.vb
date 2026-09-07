@@ -65,6 +65,7 @@ Public Module RegionCountryLists
         {"Chile", WorldRegion.SouthAmerica},
         {"China", WorldRegion.Asia},
         {"Christmas Island", WorldRegion.Oceania},
+        {"Clinical", WorldRegion.Clinical},
         {"Colombia", WorldRegion.SouthAmerica},
         {"Comoros (the)", WorldRegion.Africa},
         {"Cook Islands (the)", WorldRegion.Oceania},
@@ -128,7 +129,7 @@ Public Module RegionCountryLists
         {"Japan", WorldRegion.Asia},
         {"Jersey", WorldRegion.Europe},
         {"Jordan", WorldRegion.Asia},
-        {"Kazakhstan", WorldRegion.Europe},
+        {"Kazakhstan", WorldRegion.Asia},
         {"Kenya", WorldRegion.Africa},
         {"Kiribati", WorldRegion.Oceania},
         {"Kosovo", WorldRegion.Europe},
@@ -235,7 +236,6 @@ Public Module RegionCountryLists
         {"Togo", WorldRegion.Africa},
         {"Tokelau", WorldRegion.Oceania},
         {"Tonga", WorldRegion.Oceania},
-        {"Trial", WorldRegion.Trial},
         {"Trinidad & Tobago", WorldRegion.NorthAmerica},
         {"Tunisia", WorldRegion.Africa},
         {"Turkey", WorldRegion.Transcontinental},
@@ -309,6 +309,7 @@ Public Module RegionCountryLists
         {"Chile", "CL"},
         {"China", "CN"},
         {"Christmas Island", "CX"},
+        {"Clinical", "Clinical"},
         {"Colombia", "CO"},
         {"Comoros (the)", "KM"},
         {"Cook Islands (the)", "CK"},
@@ -479,7 +480,6 @@ Public Module RegionCountryLists
         {"Togo", "TG"},
         {"Tokelau", "TK"},
         {"Tonga", "TO"},
-        {"Trial", "Trial"},
         {"Trinidad & Tobago", "TT"},
         {"Tunisia", "TN"},
         {"Turkey", "TR"},
@@ -506,23 +506,23 @@ Public Module RegionCountryLists
 
     Public ReadOnly s_regionDictionary As New Dictionary(Of WorldRegion, String) From {
         {WorldRegion.UnitedStates, "United States"},
-        {WorldRegion.Trial, "Trial"},
         {WorldRegion.Africa, "Africa"},
         {WorldRegion.Asia, "Asia"},
+        {WorldRegion.Clinical, "Clinical"},
         {WorldRegion.Europe, "Europe"},
         {WorldRegion.NorthAmerica, "North America"},
         {WorldRegion.Oceania, "Oceania"},
         {WorldRegion.SouthAmerica, "South America"}}
 
     Public ReadOnly s_regionToServerMapping As New Dictionary(Of WorldRegion, String) From {
-        {WorldRegion.UnitedStates, WorldRegion.UnitedStates.ToString},
-        {WorldRegion.Trial, WorldRegion.Trial.ToString},
-        {WorldRegion.Africa, WorldRegion.Europe.ToString},
-        {WorldRegion.Asia, WorldRegion.Europe.ToString},
-        {WorldRegion.Europe, WorldRegion.Europe.ToString},
-        {WorldRegion.NorthAmerica, WorldRegion.Europe.ToString},
-        {WorldRegion.Oceania, WorldRegion.Europe.ToString},
-        {WorldRegion.SouthAmerica, WorldRegion.Europe.ToString}}
+        {WorldRegion.UnitedStates, "US"},
+        {WorldRegion.Africa, "Eu"},
+        {WorldRegion.Asia, "Eu"},
+        {WorldRegion.Clinical, "Clinical"},
+        {WorldRegion.Europe, "Eu"},
+        {WorldRegion.NorthAmerica, "Eu"},
+        {WorldRegion.Oceania, "Eu"},
+        {WorldRegion.SouthAmerica, "Eu"}}
 
     ''' <summary>
     '''  Extracts the <see cref="CultureInfo"/> from a report file name.

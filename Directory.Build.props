@@ -1,0 +1,6 @@
+<Project>
+  <ItemGroup>
+    <!-- Add Roslyn analyzers to all projects in the repo -->
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.*" PrivateAssets="All" />
+  </ItemGroup>
+</Project>

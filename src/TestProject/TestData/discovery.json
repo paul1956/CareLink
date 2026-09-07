@@ -1,0 +1,9 @@
+{
+  "CP": [
+    {
+      "region": "US",
+      "SSOConfiguration": "https://example.com/sso.json",
+      "UseSSOConfiguration": "SSOConfiguration"
+    }
+  ]
+}

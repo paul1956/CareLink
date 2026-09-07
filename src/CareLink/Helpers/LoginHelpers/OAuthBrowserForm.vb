@@ -249,6 +249,7 @@ Public Class OAuthBrowserForm
 
     Private Async Sub OAuthBrowserForm_Load(sender As Object, e As EventArgs) Handles Me.Load
         Me.Visible = Not s_firstTimeNavigationCompleted
+        Me.urlLabel.Text = $"Server URL: {_startUrl.Split(separator:=":443")(0)}"
         Await Me.InitializeAsync()
     End Sub
 
