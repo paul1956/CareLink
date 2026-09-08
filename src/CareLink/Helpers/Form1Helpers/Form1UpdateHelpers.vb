@@ -985,6 +985,59 @@ Friend Module Form1UpdateHelpers
     End Sub
 
     ''' <summary>
+    '''  Creates a infusion set composite image by filling the transparent area of the base image
+    '''  with a vertical fill representing the infusion set life, scaling the
+    '''  transparent paint rectangle from the base image to the target size.
+    ''' </summary>
+    ''' <param name="imageId">The image ID.</param>
+    ''' <param name="emptyImageId">
+    '''  The image ID to use when the infusion set is empty.
+    ''' </param>
+    ''' <param name="targetSize">The target size.</param>
+    ''' <param name="infusionRemainingDuration">
+    '''  The infusion remaining duration in minutes.
+    ''' </param>
+    ''' <returns>The composite bitmap.</returns>
+    Public Function GetOrCreateInfusionComposite(imageId As ImageEnum,
+                                                 emptyImageId As ImageEnum,
+                                                 targetSize As Size,
+                                                 infusionRemainingDuration As Integer) As Bitmap
+        Dim hours As Integer = infusionRemainingDuration \ 60
+        Dim remainingMinutes As Integer = infusionRemainingDuration Mod 60
+
+        Dim currentPercent As Single
+        Dim fillColor As Color
+
+        Const mode As MidpointRounding = MidpointRounding.AwayFromZero
+        If hours > 24 Then
+            currentPercent = 100.0F
+            fillColor = Color.Lime
+        ElseIf hours > 12 Then
+            currentPercent = CSng(Math.Round(value:=(hours - 12) * 25.0F,
+                                             digits:=0,
+                                             mode))
+            fillColor = Color.Yellow
+        ElseIf hours > 0 Then
+            currentPercent = CSng(Math.Round(value:=hours / 12.0 * 25.0,
+                                             digits:=0,
+                                             mode))
+            fillColor = Color.Red
+        ElseIf remainingMinutes > 0 Then
+            currentPercent = CSng(Math.Round(value:=remainingMinutes / 6.0,
+                                             digits:=0,
+                                             mode))
+            fillColor = Color.IndianRed
+        Else
+            Return GetBitmapFromCache(imageId:=emptyImageId)
+        End If
+
+        Return GetOrCreateComposite(imageId,
+                                    targetSize,
+                                    currentPercent,
+                                    fillColor)
+    End Function
+
+    ''' <summary>
     '''  Creates a pump battery composite image by filling the transparent area of the base image
     '''  with a vertical fill representing the battery level in minutes, scaling the
     '''  transparent paint rectangle from the base image to the target size.

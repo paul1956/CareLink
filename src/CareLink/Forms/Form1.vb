@@ -491,6 +491,10 @@ Public Class Form1
 
     Private Sub InfusionSetDataRestore()
         Try
+            If _inInfusionSetDataRestore Then
+                Exit Sub
+            End If
+            _inInfusionSetDataRestore = True
             Me.CursorMessage2Label.Text = _infusionSetLabel2Backup
             Me.CursorMessage3Label.Text = _infusionSetLabel3Backup
             Me.CursorMessage4Label.Text = _infusionSetLabel4Backup
@@ -498,33 +502,62 @@ Public Class Form1
             If Me.CursorSetPictureBox.SizeMode <> PictureBoxSizeMode.AutoSize Then
                 Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
             End If
-            Me.CursorSetPictureBox.Image = _infusionSetImageBackup
+            Me.CursorSetPictureBox.Image = Nothing
+            Me.CursorSetPictureBox.Image = CType(_infusionSetImageBackup.Clone, Image)
             Me.CursorSetPictureBox.Show()
         Catch ex As Exception
             Stop
+        Finally
+            _inInfusionSetDataRestore = False
         End Try
     End Sub
 
-    Private Sub InfusionSetUpdate(imageId As ImageEnum)
+    Private Sub InfusionSetInitialize()
+        _infusionSetLabel2Backup = "Infusion Set"
+        _infusionSetLabel3Backup = "Life"
+        _infusionSetLabel4Backup = "Unknown!"
         Try
-            Dim bitmap As Bitmap = GetBitmapFromCache(imageId)
             Me.CursorMessage1Label.Visible = False
-            _infusionSetLabel2Backup = Me.CursorMessage2Label.Text
-            _infusionSetLabel3Backup = Me.CursorMessage3Label.Text
-            _infusionSetLabel4Backup = Me.CursorMessage4Label.Text
             Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
-            _infusionSetImageBackup = Nothing
-            _infusionSetImageBackup = bitmap
-            Me.CursorSetPictureBox.GetBitmapFromCache(imageId)
-            Me.CursorSetPictureBox.Visible = True
-            Me.CursorSetPictureBox.CenterXOnControl(parent:=Me.CursorMessage2Label)
+            _infusionSetImageBackup =
+                GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeUnknown)
+            Me.InfusionSetDataRestore()
         Catch ex As Exception
             Stop
         End Try
     End Sub
 
+    Private Sub InfusionSetUpdate()
+        If PatientData Is Nothing Then
+            _infusionSetLabel2Backup = "Infusion Set"
+            _infusionSetLabel3Backup = "Life"
+            _infusionSetLabel4Backup = "Unknown!"
+        Else
+            Dim infusionRemainingDuration As Integer =
+                PatientData.InfusionRemainingDuration
+            ' Assign tooltip text to PictureBox
+            If infusionRemainingDuration = 0 Then
+                _infusionSetLabel2Backup = "Infusion Set"
+                _infusionSetLabel3Backup = "Expired"
+                _infusionSetLabel4Backup = "Change Now"
+            Else
+                Const showMinutes As Boolean = False
+                Dim caption As String =
+                $"{infusionRemainingDuration.MinutesToDaysHoursMinutes(showMinutes)}"
+                _infusionSetLabel2Backup = "Infusion Set Life"
+                _infusionSetLabel3Backup = caption
+                _infusionSetLabel4Backup = "Left"
+            End If
+        End If
+        Me.CursorMessage2Label.Text = _infusionSetLabel2Backup
+        Me.CursorMessage3Label.Text = _infusionSetLabel3Backup
+        Me.CursorMessage4Label.Text = _infusionSetLabel4Backup
+        Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showPictureBox:=True)
+        Me.ScheduleInfusionSetRefresh(pictureBox:=Me.CursorSetPictureBox)
+    End Sub
+
     Private Sub ShowCursorControls(showWhat As CursorInfo,
-                                   showPictureBox As Boolean)
+                                           showPictureBox As Boolean)
         Me.CursorMessage1Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Show1) <> 0)
         Me.CursorMessage2Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Mask2) <> 0)
         Me.CursorMessage3Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Mask3) <> 0)
@@ -570,14 +603,20 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    ''' Schedules generation of an image on a background thread and assigns it to the provided PictureBox.
-    ''' The generator function receives the target size and must return a Bitmap (or Nothing on failure).
-    ''' The UI assignment and previous-image disposal are handled automatically on the UI thread.
+    '''  Schedules generation of an image on a background thread and assigns it to the provided PictureBox.
+    '''  The generator function receives the target size and must return a Bitmap (or Nothing on failure).
+    '''  The UI assignment and previous-image disposal are handled automatically on the UI thread.
     ''' </summary>
-    Private Sub ScheduleImageRefresh(puctureBox As PictureBox, generator As Func(Of Size, Bitmap))
-        If puctureBox Is Nothing OrElse
-           puctureBox.Width = 0 OrElse
-           puctureBox.Height = 0 Then
+    ''' <param name="pictureBox">
+    '''  The PictureBox to update with the generated image.
+    ''' </param>
+    ''' <param name="generator">
+    '''  A function that generates a Bitmap given a Size.
+    ''' </param>
+    Private Sub ScheduleImageRefresh(pictureBox As PictureBox, generator As Func(Of Size, Bitmap))
+        If pictureBox Is Nothing OrElse
+           pictureBox.Width = 0 OrElse
+           pictureBox.Height = 0 Then
             Return
         End If
 
@@ -585,7 +624,7 @@ Public Class Form1
             Sub()
                 Dim newBmp As Bitmap = Nothing
                 Try
-                    newBmp = generator.Invoke(puctureBox.Size)
+                    newBmp = generator.Invoke(arg:=pictureBox.Size)
                     If newBmp Is Nothing Then Return
 
                     ' Assign on UI thread
@@ -593,10 +632,10 @@ Public Class Form1
                         Dim method As New MethodInvoker(
                             Sub()
                                 Dim prev As Image = Nothing
-                                If puctureBox IsNot Nothing Then
-                                    prev = puctureBox.Image
-                                    puctureBox.Image = newBmp
-                                    puctureBox.Invalidate()
+                                If pictureBox IsNot Nothing Then
+                                    prev = pictureBox.Image
+                                    pictureBox.Image = newBmp
+                                    pictureBox.Invalidate()
                                 End If
                                 If prev IsNot Nothing AndAlso Not Object.ReferenceEquals(prev, newBmp) Then
                                     Try
@@ -627,12 +666,45 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    ''' Backwards-compatible wrapper that uses the general ScheduleImageRefresh
-    ''' and passes the pump-battery-specific generator. The generator closure
-    ''' captures PatientData at execution time so no hard-coded image or patient
-    ''' references remain in the scheduling infrastructure.
+    '''  Backwards-compatible wrapper that uses the general ScheduleImageRefresh
+    '''  and passes the pump-battery-specific generator. The generator closure
+    '''  captures PatientData at execution time so no hard-coded image
+    '''  or PatientData references remain in the scheduling infrastructure.
     ''' </summary>
-    Private Sub SchedulePumpBatteryRefresh(puctureBox As PictureBox)
+    ''' <param name="puctureBox">
+    '''  The PictureBox to update with the generated image.
+    ''' </param>
+    Private Sub ScheduleInfusionSetRefresh(pictureBox As PictureBox)
+        Dim generator As Func(Of Size, Bitmap) =
+            Function(targetSize As Size)
+                Dim infusionRemainingDuration As Integer = 0
+                Dim image As Bitmap = Nothing
+                If PatientData IsNot Nothing AndAlso PatientData.InfusionRemainingDuration >= 0 Then
+                    infusionRemainingDuration = PatientData.InfusionRemainingDuration
+                    image = GetOrCreateInfusionComposite(imageId:=ImageEnum.InfusionLifeMaster,
+                                                        emptyImageId:=ImageEnum.InfusionLifeExpired,
+                                                        targetSize,
+                                                        infusionRemainingDuration)
+                Else
+                    image = GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeUnknown)
+                End If
+                _infusionSetImageBackup = CType(image.Clone, Bitmap)
+                Return _infusionSetImageBackup
+            End Function
+
+        Me.ScheduleImageRefresh(pictureBox, generator)
+    End Sub
+
+    ''' <summary>
+    '''  Backwards-compatible wrapper that uses the general ScheduleImageRefresh
+    '''  and passes the pump-battery-specific generator. The generator closure
+    '''  captures PatientData at execution time so no hard-coded image or patient
+    '''  references remain in the scheduling infrastructure.
+    ''' </summary>
+    ''' <param name="puctureBox">
+    '''  The PictureBox to update with the generated image.
+    ''' </param>
+    Private Sub SchedulePumpBatteryRefresh(pictureBox As PictureBox)
         Dim generator As Func(Of Size, Bitmap) =
             Function(targetSize As Size)
                 Dim pumpMinutes As Integer = 0
@@ -644,7 +716,7 @@ Public Class Form1
                                                        pumpBatteryLevelMinutes:=pumpMinutes)
             End Function
 
-        Me.ScheduleImageRefresh(puctureBox, generator)
+        Me.ScheduleImageRefresh(pictureBox, generator)
     End Sub
 
     ''' <summary>
@@ -1117,6 +1189,7 @@ Public Class Form1
 
     Private WithEvents DgvCopyWithExcelMenuStrip As New ContextMenuStrip
     Friend WithEvents DgvCopyWithoutExcelMenuStrip As New ContextMenuStrip
+    Private _inInfusionSetDataRestore As Boolean
 
     ''' <summary>
     '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event
@@ -2586,11 +2659,11 @@ Public Class Form1
         LoggerManager.LogMessage(message:="Application started in DEBUG mode.")
 
         PreloadBitmaps()
+
         Me.CalibrationDueImage.GetBitmapFromCache(imageId:=ImageEnum.CalibrationUnavailable)
-        Me.CursorSetPictureBox.GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeOver24Hours)
+
         Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirRemainsOver85Percent)
         Me.SmartGuardShieldPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SmartGuardShield)
-        Me.CursorSetPictureBox.GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeOver24Hours)
         Me.TransmitterBatteryPictureBox.GetBitmapFromCache(imageId:=ImageEnum.PumpConnectivityToSimpleraOK)
         Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorLifeOK)
         Me.PumpBatteryPictureBox.GetBitmapFromCache(imageId:=ImageEnum.PumpBatteryFlexMaster)
@@ -2667,14 +2740,10 @@ Public Class Form1
         Me.SensorDaysLeftLabel.Parent = Me.SensorTimeLeftPictureBox
         Me.SensorTimeLeftPictureBox.CenterXOnParent()
 
-        Me.InfusionSetUpdate(imageId:=ImageEnum.InfusionLifeOver24Hours)
-        Me.CursorMessage1Label.Hide()
-        _infusionSetLabel2Backup = Me.CursorMessage2Label.Text
-        _infusionSetLabel3Backup = Me.CursorMessage3Label.Text
-        _infusionSetLabel4Backup = Me.CursorMessage4Label.Text
+        Me.InfusionSetInitialize()
+
         s_useLocalTimeZone = My.Settings.UseLocalTimeZone
         Me.MenuOptionsUseLocalTimeZone.Checked = s_useLocalTimeZone
-        CheckForUpdatesAsync(reportSuccessfulResult:=False)
 
         Me.ToolTip1.SetToolTip(control:=Me.TirComplianceLabel, caption:=CheckComplianceValues)
         Me.ToolTip1.SetToolTip(control:=Me.LowTirComplianceLabel, caption:=TirToolTip)
@@ -2714,6 +2783,7 @@ Public Class Form1
 
         Me.NotifyIcon1.Visible = True
         Application.DoEvents()
+        CheckForUpdatesAsync(reportSuccessfulResult:=False)
 
         If Await OptionalLoginUpdateDataAsync(owner:=Me,
                                               updateAllTabs:=False,
@@ -5185,40 +5255,6 @@ Public Class Form1
         Me.Last24HrCarbsValueLabel.Text = $"{s_totalCarbs} {GetCarbDefaultUnit()}{Superscript3}"
     End Sub
 
-    Private Sub UpdateInfusionImage()
-        Dim infusionRemainingDuration As Integer =
-            PatientData.InfusionRemainingDuration
-        ' Assign tooltip text to PictureBox
-        If infusionRemainingDuration = 0 Then
-            _infusionSetLabel2Backup = "Infusion Set"
-            _infusionSetLabel3Backup = "Expired"
-            _infusionSetLabel4Backup = "Change Now"
-        Else
-            Const showMinutes As Boolean = False
-            Dim caption As String =
-                $"{infusionRemainingDuration.MinutesToDaysHoursMinutes(showMinutes)}"
-            _infusionSetLabel2Backup = "Insusion Set Life"
-            _infusionSetLabel3Backup = caption
-            _infusionSetLabel4Backup = "Left"
-        End If
-        Me.CursorMessage2Label.Text = _infusionSetLabel2Backup
-        Me.CursorMessage3Label.Text = _infusionSetLabel3Backup
-        Me.CursorMessage4Label.Text = _infusionSetLabel4Backup
-        Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showPictureBox:=True)
-        Select Case infusionRemainingDuration \ 60
-            Case > 24
-                Me.InfusionSetUpdate(imageId:=ImageEnum.InfusionLifeOver24Hours)
-            Case > 12
-                Me.InfusionSetUpdate(imageId:=ImageEnum.InfusionLife12To24Hours)
-            Case > 0
-                Me.InfusionSetUpdate(imageId:=ImageEnum.InfusionLifeUnder12Hours)
-            Case = 0
-                Me.InfusionSetUpdate(imageId:=ImageEnum.InfusionLifeExpired)
-            Case Else
-                Me.InfusionSetUpdate(imageId:=ImageEnum.InfusionLifeUnknown)
-        End Select
-    End Sub
-
     ''' <summary>
     '''  Updates the insulin level display on the home tab.
     '''  This method updates the insulin level picture box and remaining
@@ -5287,7 +5323,7 @@ Public Class Form1
 
         If IsFlex() Then
             ' Ensure cached composed image is updated for flex battery state
-            Me.SchedulePumpBatteryRefresh(puctureBox:=Me.PumpBatteryPictureBox)
+            Me.SchedulePumpBatteryRefresh(pictureBox:=Me.PumpBatteryPictureBox)
         Else
             ' Read the battery level once and reuse the value below so the
             ' UI is consistent and we don't reference an uninitialized variable.
@@ -5772,7 +5808,7 @@ Public Class Form1
         Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()
         Me.UpdateInsulinLevel()
-        Me.UpdateInfusionImage()
+        Me.InfusionSetUpdate()
         Me.UpdatePumpBattery()
         Me.UpdateSensorLife()
         ThreadSafeForm1SensorDataUpdate()

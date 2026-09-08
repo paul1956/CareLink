@@ -68,20 +68,11 @@ Public Module ImageEnums
         <Description("GridLight")>
         GridLight
 
-        <Description("InfusionLife12To24Hours")>
-        InfusionLife12To24Hours
-
         <Description("InfusionLifeExpired")>
         InfusionLifeExpired
 
         <Description("InfusionLifeMaster")>
         InfusionLifeMaster
-
-        <Description("InfusionLifeOver24Hours")>
-        InfusionLifeOver24Hours
-
-        <Description("InfusionLifeUnder12Hours")>
-        InfusionLifeUnder12Hours
 
         <Description("InfusionLifeUnknown")>
         InfusionLifeUnknown

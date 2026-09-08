@@ -234,8 +234,8 @@
     <Content Include="Images\IconImage.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\InfusionLife12To24Hours.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Images\Backup\InfusionLife12To24Hours.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\InfusionLifeExpired.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -243,11 +243,11 @@
     <Content Include="Images\InfusionLifeMaster.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\InfusionLifeOver24Hours.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Images\Backup\InfusionLifeOver24Hours.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\InfusionLifeUnder12Hours.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Images\Backup\InfusionLifeUnder12Hours.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\InfusionLifeUnknown.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -509,6 +509,7 @@
 
   <ItemGroup>
     <None Include="..\..\.editorconfig" Link=".editorconfig" />
+    <None Include="Images\Backup\InfusionLife12To24Hours.png" />
   </ItemGroup>
 
   <ItemGroup>
