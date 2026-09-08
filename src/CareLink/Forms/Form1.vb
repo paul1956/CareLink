@@ -780,7 +780,7 @@ Public Class Form1
 
                 Case NameOf(AutoBasalDelivery.BolusAmount)
                     If dgv.CellFormattingSingleValue(e, digits:=3).IsMinBasal Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
+                        dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
                     Else
                         dgv.CellFormattingSetForegroundColor(e)
                     End If
@@ -828,7 +828,8 @@ Public Class Form1
                      NameOf(Calibration.UnitValueMgdL),
                      NameOf(Calibration.UnitValueMmolL)
 
-                    dgv.CellFormattingSg(e, partialKey:=NameOf(Calibration.UnitValue))
+                    Const partialKey As String = NameOf(Calibration.UnitValue)
+                    dgv.CellFormattingSg(e, partialKey)
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
                     dgv.CellFormattingSetForegroundColor(e)
 
@@ -837,7 +838,7 @@ Public Class Form1
                         Case "AUTOCORRECTION"
                             e.Value = "Auto Correction"
                             Dim textColor As Color = GetGraphLineColor(key:="Auto Correction")
-                            dgv.CellFormattingApplyBoldColor(e, textColor)
+                            dgv.CellFormattingApplyColor(e, textColor)
                         Case "FAST", "RECOMMENDED", "UNDETERMINED"
                             dgv.CellFormattingToTitle(e)
                         Case Else
@@ -852,7 +853,7 @@ Public Class Form1
 
                 Case NameOf(Insulin.SafeMealReduction)
                     If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.OrangeRed)
+                        dgv.CellFormattingApplyColor(e, textColor:=Color.OrangeRed)
                     Else
                         e.Value = EmptyString
                         dgv.CellFormattingSetForegroundColor(e)
@@ -885,7 +886,7 @@ Public Class Form1
                     If Equals(e.Value, "NO_ERROR_MESSAGE") Then
                         dgv.CellFormattingToTitle(e)
                     Else
-                        dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Red)
+                        dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
                         dgv.CellFormattingToTitle(e)
                     End If
 
@@ -2060,7 +2061,7 @@ Public Class Form1
                 ' Determine if this column is sorted and which direction
                 Dim glyphDir As SortOrder = col.HeaderCell.SortGlyphDirection
                 If glyphDir <> SortOrder.None Then
-                    Dim color As Color = color.White
+                    Dim color As Color = Color.White
                     Dim x As Integer = e.CellBounds.Right - 18
                     Dim y As Integer = e.CellBounds.Top + (e.CellBounds.Height \ 2) - 4
                     Dim points() As Point =
@@ -2287,7 +2288,7 @@ Public Class Form1
                             e.CellStyle.SetCellStyle(
                                 align:=DataGridViewContentAlignment.MiddleCenter,
                                 pad:=New Padding(all:=1))
-                            dgv.CellFormattingApplyBoldColor(e, textColor:=Color.Black, emIncrease:=1)
+                            e.CellFormattingApplyBold()
 
                         Case Else
                             Stop
@@ -5765,7 +5766,10 @@ Public Class Form1
         Dim mdi As MedicalDeviceInformation = PatientData.MedicalDeviceInformation
         FinishInitialization(mainForm:=Me)
         Me.UpdateTrendArrows()
-        UpdateSummaryTab(dgv:=Me.DgvSummary, classCollection:=s_listOfSummaryRecords, sort:=True)
+        UpdateSummaryTab(dgv:=Me.DgvSummary,
+                         classCollection:=s_listOfSummaryRecords,
+                         sort:=True,
+                         hideHeaderColumn:=False)
         Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()
         Me.UpdateInsulinLevel()
@@ -5785,49 +5789,60 @@ Public Class Form1
         Me.PumpNameLabel.Text = GetPumpName()
         Me.ReadingsLabel.Text = $"{GetValidSgRecords().Count()}/{288} SG Readings"
 
-        Me.TlpLastSG.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:={s_lastSg}.ToList),
-            className:=NameOf(LastSG), rowIndex:=ServerDataEnum.lastSG,
-            hideRecordNumberColumn:=True)
+        Dim table As DataTable = ClassCollectionToDataTable(classCollection:={s_lastSg}.ToList)
+        Me.TlpLastSG.DisplayDataTable(table,
+                                           className:=NameOf(LastSG),
+                                           rowIndex:=ServerDataEnum.lastSG,
+                                           hideRecordNumberColumn:=True)
 
-        UpdateSummaryTab(
-            dgv:=Me.DgvLastAlarm,
-            classCollection:=GetSummaryRecords(jsonDictionary:=s_lastAlarmValue),
-            sort:=True)
-        Me.DgvLastAlarm.Columns(index:=0).Visible = False
-
-        Me.TlpActiveInsulin.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:={s_activeInsulin}.ToList),
-            className:=NameOf(ActiveInsulin), rowIndex:=ServerDataEnum.activeInsulin,
-            hideRecordNumberColumn:=True)
+        If s_lastAlarmValue IsNot Nothing Then
+            Dim classCollection1 As List(Of SummaryRecord) =
+                GetSummaryRecords(jsonDictionary:=s_lastAlarmValue)
+            UpdateSummaryTab(dgv:=Me.DgvLastAlarm,
+                classCollection:=classCollection1,
+                sort:=True, hideHeaderColumn:=True)
+        Else
+            Me.TlpLastAlarm.DisplayDataTable(
+                table:=Nothing,
+                className:=NameOf(LastAlarm),
+                rowIndex:=ServerDataEnum.lastAlarm,
+                hideRecordNumberColumn:=True)
+        End If
+        table = ClassCollectionToDataTable(classCollection:={s_activeInsulin}.ToList)
+        Me.TlpActiveInsulin.DisplayDataTable(table,
+                                             className:=NameOf(ActiveInsulin),
+                                             rowIndex:=ServerDataEnum.activeInsulin,
+                                             hideRecordNumberColumn:=True)
 
         Dim keySelector As Func(Of SG, Integer) =
             Function(x As SG) As Integer
                 Return x.RecordNumber
             End Function
-        Dim classCollection As List(Of SG) = s_sgRecords.OrderByDescending(keySelector).ToList()
-        Me.TlpSgs.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection),
-            dgv:=Me.DgvSGs,
-            rowIndex:=ServerDataEnum.sgs)
+        Dim classCollection As List(Of SG) =
+            s_sgRecords.OrderByDescending(keySelector).ToList()
+        table = ClassCollectionToDataTable(classCollection)
+        Me.TlpSgs.DisplayDataTable(table,
+                                   dgv:=Me.DgvSGs,
+                                   rowIndex:=ServerDataEnum.sgs)
         Me.DgvSGs.AutoSize = True
         Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
-        Me.TlpLimits.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(classCollection:=s_limitRecords),
-            className:=NameOf(Limit), rowIndex:=ServerDataEnum.limits)
+        table = ClassCollectionToDataTable(classCollection:=s_limitRecords)
+        Me.TlpLimits.DisplayDataTable(table,
+                                      className:=NameOf(Limit),
+                                      rowIndex:=ServerDataEnum.limits)
 
-        UpdateSummaryTab(
-            dgv:=Me.DgvTherapyAlgorithmState,
-            classCollection:=GetSummaryRecords(jsonDictionary:=PatientData.TherapyAlgorithmState.InstanceToDictionary),
-            sort:=False)
-        Me.DgvTherapyAlgorithmState.Columns(index:=0).Visible = False
+        Dim classCollection2 As List(Of SummaryRecord) =
+            GetSummaryRecords(jsonDictionary:=PatientData.TherapyAlgorithmState.InstanceToDictionary)
+        UpdateSummaryTab(dgv:=Me.DgvTherapyAlgorithmState,
+                         classCollection:=classCollection2,
+                         sort:=False, hideHeaderColumn:=True)
 
-        Me.DgvLastAlarm.Columns(index:=0).Visible = False
-        Me.TlpBasal.DisplayDataTableInDGV(
-            table:=ClassCollectionToDataTable(s_basalList.ClassCollection),
-            className:=NameOf(Basal), rowIndex:=ServerDataEnum.basal,
-            hideRecordNumberColumn:=True)
+        table = ClassCollectionToDataTable(s_basalList.ClassCollection)
+        Me.TlpBasal.DisplayDataTable(table,
+                                     className:=NameOf(Basal),
+                                     rowIndex:=ServerDataEnum.basal,
+                                     hideRecordNumberColumn:=True)
 
         UpdateMarkerTabs(mainForm:=Me)
         UpdateNotificationTabs(mainForm:=Me)
@@ -5841,7 +5856,9 @@ Public Class Form1
 
         Me.ShowHideLegends()
 
-        If My.Settings.SystemAudioAlertsEnabled AndAlso My.Settings.SystemSpeechRecognitionThreshold <> 1 Then
+        If My.Settings.SystemAudioAlertsEnabled AndAlso
+            My.Settings.SystemSpeechRecognitionThreshold <> 1 Then
+
             InitializeSpeechRecognition()
         Else
             CancelSpeechRecognition()

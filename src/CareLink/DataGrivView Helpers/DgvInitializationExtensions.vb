@@ -37,7 +37,7 @@ Public Module DgvInitializationExtensions
             .BorderStyle = BorderStyle.None
             .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
                 .Alignment = DataGridViewContentAlignment.MiddleCenter,
-                .BackColor = Color.Black,
+                .BackColor = Color.FromArgb(red:=38, green:=47, blue:=58),
                 .Font = New Font(FamilyName, emSize, style:=FontStyle.Bold),
                 .WrapMode = DataGridViewTriState.True}
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize

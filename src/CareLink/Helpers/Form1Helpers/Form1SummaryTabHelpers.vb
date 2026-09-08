@@ -19,11 +19,12 @@ Friend Module Form1SummaryTabHelpers
     ''' <param name="sort">
     '''  If set to <see langword="True"/> sorts the summary records before displaying.
     ''' </param>
+    ''' <param name="hideHeaderColumn"></param>
     <Extension>
-    Friend Sub UpdateSummaryTab(
-        dgv As DataGridView,
-        classCollection As List(Of SummaryRecord),
-        sort As Boolean)
+    Friend Sub UpdateSummaryTab(dgv As DataGridView,
+                                classCollection As List(Of SummaryRecord),
+                                sort As Boolean,
+                                hideHeaderColumn As Boolean)
 
         If sort Then
             s_listOfSummaryRecords.Sort()
@@ -38,6 +39,7 @@ Friend Module Form1SummaryTabHelpers
             End If
         End If
         dgv.AutoResizeColumns(autoSizeColumnsMode:=DataGridViewAutoSizeColumnsMode.AllCells)
+        dgv.Columns(index:=0).Visible = Not hideHeaderColumn
     End Sub
 
 End Module

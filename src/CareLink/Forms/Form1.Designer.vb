@@ -1602,14 +1602,14 @@ Partial Class Form1
         SplitContainer1.TabIndex = 0
         ' 
         ' TempUseAdvanceAITDecayCheckBox
-        ' 
+        '
+        TempUseAdvanceAITDecayCheckBox.Appearance = Appearance.ToggleSwitch
         TempUseAdvanceAITDecayCheckBox.AutoSize = True
         TempUseAdvanceAITDecayCheckBox.Location = New Point(12, 6)
         TempUseAdvanceAITDecayCheckBox.Name = "TempUseAdvanceAITDecayCheckBox"
         TempUseAdvanceAITDecayCheckBox.Size = New Size(147, 19)
         TempUseAdvanceAITDecayCheckBox.TabIndex = 0
         TempUseAdvanceAITDecayCheckBox.Text = "AIT Decay over 3 hours"
-        TempUseAdvanceAITDecayCheckBox.UseVisualStyleBackColor = False
         ' 
         ' SplitContainer2
         ' 

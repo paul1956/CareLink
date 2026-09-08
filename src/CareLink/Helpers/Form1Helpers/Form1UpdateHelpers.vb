@@ -847,39 +847,39 @@ Friend Module Form1UpdateHelpers
     ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdateMarkerTabs(mainForm As Form1)
         With mainForm
-            .TlpAutoBasalDelivery.DisplayDataTableInDGV(
+            .TlpAutoBasalDelivery.DisplayDataTable(
                 table:=ClassCollectionToDataTable(classCollection:=s_autoBasalDeliveryMarkers),
                 className:=NameOf(AutoBasalDelivery), rowIndex:=ServerDataEnum.markers)
 
-            .TlpAutoModeStatus.DisplayDataTableInDGV(
+            .TlpAutoModeStatus.DisplayDataTable(
                 table:=ClassCollectionToDataTable(classCollection:=s_autoModeStatusMarkers),
                 className:=NameOf(AutoModeStatus), rowIndex:=ServerDataEnum.markers)
 
-            .TlpBgReadings.DisplayDataTableInDGV(
+            .TlpBgReadings.DisplayDataTable(
                 table:=ClassCollectionToDataTable(classCollection:=s_bgReadingMarkers),
                 className:=NameOf(BgReading), rowIndex:=ServerDataEnum.markers)
 
-            .TlpInsulin.DisplayDataTableInDGV(
+            .TlpInsulin.DisplayDataTable(
                 table:=ClassCollectionToDataTable(classCollection:=s_insulinMarkers),
                 className:=NameOf(Insulin), rowIndex:=ServerDataEnum.markers)
 
-            .TlpMeal.DisplayDataTableInDGV(
+            .TlpMeal.DisplayDataTable(
                 table:=ClassCollectionToDataTable(classCollection:=s_mealMarkers),
                 className:=NameOf(Meal), rowIndex:=ServerDataEnum.markers)
 
-            .TlpCalibration.DisplayDataTableInDGV(
+            .TlpCalibration.DisplayDataTable(
                 table:=ClassCollectionToDataTable(classCollection:=s_calibrationMarkers),
                 className:=NameOf(Calibration), rowIndex:=ServerDataEnum.markers)
 
-            .TlpLowGlucoseSuspended.DisplayDataTableInDGV(
+            .TlpLowGlucoseSuspended.DisplayDataTable(
                 table:=ClassCollectionToDataTable(classCollection:=s_suspendedMarkers),
                 className:=NameOf(LowGlucoseSuspended), rowIndex:=ServerDataEnum.markers)
 
-            .TlpTimeChange.DisplayDataTableInDGV(
+            .TlpTimeChange.DisplayDataTable(
                 table:=ClassCollectionToDataTable(classCollection:=s_timeChangeMarkers),
                 className:=NameOf(TimeChange), rowIndex:=ServerDataEnum.markers)
 
-            DisplayDataTableInDGV(
+            DisplayDataTable(
                 realPanel:=Nothing,
                 table:=ClassCollectionToDataTable(classCollection:=s_basalPerHour),
                 dgv:=mainForm.DgvBasalPerHour,
@@ -979,7 +979,7 @@ Friend Module Form1UpdateHelpers
         Else
             mainForm.LastSgOrExitTimeLabel.Visible = False
         End If
-        mainForm.TlpPumpBannerState.DisplayDataTableInDGV(
+        mainForm.TlpPumpBannerState.DisplayDataTable(
             table:=ClassCollectionToDataTable(classCollection:=listOfBannerState),
             className:=NameOf(BannerState), rowIndex:=ServerDataEnum.pumpBannerState)
     End Sub

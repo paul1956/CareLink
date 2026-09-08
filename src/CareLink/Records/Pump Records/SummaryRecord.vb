@@ -29,11 +29,10 @@ Public Class SummaryRecord
     '''  The name of the message table for error reporting.
     ''' </param>
     ''' <remarks>Handles messages that are not in the message table.</remarks>
-    Protected Friend Sub New(
-        recordNumber As Single,
-        kvp As KeyValuePair(Of String, String),
-        messages As Dictionary(Of String, String),
-        messageTableName As String)
+    Protected Friend Sub New(recordNumber As Single,
+                             kvp As KeyValuePair(Of String, String),
+                             messages As Dictionary(Of String, String),
+                             messageTableName As String)
 
         Me.New(recordNumber, kvp)
         Dim message As String = ""

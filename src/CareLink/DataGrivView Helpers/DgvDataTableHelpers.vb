@@ -70,7 +70,7 @@ Friend Module DgvDataTableHelpers
     '''  The row index in the panel, typically of type <see cref="ServerDataEnum"/>.
     ''' </param>
     <Extension>
-    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel,
+    Friend Sub DisplayDataTable(realPanel As TableLayoutPanel,
                                      table As DataTable,
                                      dgv As DataGridView,
                                      rowIndex As ServerDataEnum)
@@ -100,7 +100,7 @@ Friend Module DgvDataTableHelpers
     '''  If <see langword="True"/>, hides the "RecordNumber" column if present.
     ''' </param>
     <Extension>
-    Friend Sub DisplayDataTableInDGV(realPanel As TableLayoutPanel,
+    Friend Sub DisplayDataTable(realPanel As TableLayoutPanel,
                                      table As DataTable,
                                      className As String,
                                      rowIndex As ServerDataEnum,

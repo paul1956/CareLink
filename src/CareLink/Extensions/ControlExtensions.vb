@@ -338,7 +338,7 @@ Public Module ControlExtensions
             Dim dgv As DataGridView = TryCast(c, DataGridView)
             If dgv IsNot Nothing AndAlso Not dgv.IsDisposed Then
                 dgv.EnableHeadersVisualStyles = False
-                dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.Black
+                dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(red:=38, green:=47, blue:=58)
                 dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White
             End If
             ' Recursively search child controls

@@ -187,7 +187,9 @@ Friend Module DgvExportHelpers
             For i As Integer = 0 To dgv.Rows.Count - 1
                 column = 1
                 For index As Integer = 0 To dgv.Columns.Count - 1
-                    If Not dgv.Columns(index).Visible Then Continue For
+                    If Not dgv.Columns(index).Visible Then
+                        Continue For
+                    End If
                     Dim dgvCell As DataGridViewCell = dgv.Rows(index:=i).Cells(index)
                     Dim valueObject As Object = dgvCell.Value
                     Dim value As String = valueObject?.ToString
@@ -365,13 +367,13 @@ Friend Module DgvExportHelpers
     '''  This keeps sorting behavior deterministic for grids bound to lists.
     ''' </summary>
     ''' <param name="dgv">The DataGridView to sort.</param>
-    ''' <param name="columnIndex">The column index to sort by.</param>
+    ''' <param name="index">The column index to sort by.</param>
     <Extension>
-    Public Sub SortByColumn(dgv As DataGridView, columnIndex As Integer)
+    Public Sub SortByColumn(dgv As DataGridView, index As Integer)
         If dgv Is Nothing Then Return
-        If columnIndex < 0 OrElse columnIndex >= dgv.Columns.Count Then Return
+        If index < 0 OrElse index >= dgv.Columns.Count Then Return
 
-        Dim col As DataGridViewColumn = dgv.Columns(columnIndex)
+        Dim col As DataGridViewColumn = dgv.Columns(index)
         If Not col.Visible Then Return
 
         ' Determine direction (toggle)
@@ -384,10 +386,10 @@ Friend Module DgvExportHelpers
         End Select
 
         ' Build a DataTable snapshot with string values (keeps things simple and safe)
-        Dim dt As New DataTable()
+        Dim dt As New DataTable(tableName:="Snapshot")
         For Each c As DataGridViewColumn In dgv.Columns
             ' Use column Name as data column name to allow matching after rebind.
-            dt.Columns.Add(c.Name, GetType(String))
+            dt.Columns.Add(columnName:=c.Name, type:=GetType(String))
         Next
 
         For Each row As DataGridViewRow In dgv.Rows
@@ -395,9 +397,11 @@ Friend Module DgvExportHelpers
             Dim dr As DataRow = dt.NewRow()
             For Each c As DataGridViewColumn In dgv.Columns
                 Dim cellValue As Object = row.Cells(c.Index).FormattedValue
-                dr(c.Name) = If(cellValue Is Nothing, String.Empty, cellValue.ToString())
+                dr(columnName:=c.Name) = If(cellValue Is Nothing,
+                                            String.Empty,
+                                            cellValue.ToString())
             Next
-            dt.Rows.Add(dr)
+            dt.Rows.Add(row:=dr)
         Next
 
         Dim dv As DataView = dt.DefaultView
@@ -419,23 +423,26 @@ Friend Module DgvExportHelpers
                 ' Try to locate the new column by Name or DataPropertyName
                 Dim predicate As Func(Of DataGridViewColumn, Boolean) =
                     Function(c As DataGridViewColumn)
-                        Return c.Name = col.Name OrElse c.DataPropertyName = col.DataPropertyName
+                        Return c.Name = col.Name OrElse
+                               c.DataPropertyName = col.DataPropertyName
                     End Function
 
                 Dim newCol As DataGridViewColumn =
                     dgv.Columns.Cast(Of DataGridViewColumn)().FirstOrDefault(predicate)
 
                 If newCol IsNot Nothing Then
-                    newCol.HeaderCell.SortGlyphDirection = If(direction = ListSortDirection.Ascending,
-                                                              SortOrder.Ascending,
-                                                              SortOrder.Descending)
+                    newCol.HeaderCell.SortGlyphDirection =
+                        If(direction = ListSortDirection.Ascending,
+                           SortOrder.Ascending,
+                           SortOrder.Descending)
                 End If
 
-                dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+                dgv.AutoSizeColumnsMode =
+                    DataGridViewAutoSizeColumnsMode.AllCells
             End Sub
 
         If dgv.InvokeRequired Then
-            dgv.Invoke(updateAction)
+            dgv.Invoke(method:=updateAction)
         Else
             updateAction()
         End If

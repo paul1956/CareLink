@@ -504,7 +504,9 @@ Friend Class Client2
                 ' Start refresh task without Await inside Catch
                 Try
                     If Not configJsonElement.ValueKind = JsonValueKind.Undefined Then
-                        refreshTask = Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement)
+                        refreshTask = Me.DoRefreshAsync(Me.Config,
+                                                        tokenElement:=_tokenDataElement,
+                                                        httpClient:=_httpClient)
                     End If
                 Catch innerEx As Exception
                     LogMessage(message:=innerEx.ToString())
@@ -612,7 +614,7 @@ Friend Class Client2
     ''' </returns>
     Public Async Function DoRefreshAsync(config As ConfigRecord,
                                          tokenElement As JsonElement,
-                                         Optional httpClient As HttpClient = Nothing,
+                                         httpClient As HttpClient,
                                          Optional endpointResolver As Func(Of ConfigRecord, Task(Of EndpointConfig)) = Nothing) As Task(Of JsonElement)
         Dim result As Dictionary(Of String, JsonElement) = Nothing
         Dim message As String
@@ -811,7 +813,10 @@ Friend Class Client2
         Dim hadAuthException As Boolean = False
         If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
             Try
-                _tokenDataElement = Await Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement)
+                _tokenDataElement =
+                    Await Me.DoRefreshAsync(Me.Config,
+                                            tokenElement:=_tokenDataElement,
+                                            httpClient:=_httpClient)
                 _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
                 WriteTokenFile(token:=_tokenDataElement)
             Catch ex As Exception
@@ -836,7 +841,9 @@ Friend Class Client2
                 ' schedule refresh, will await below and then retry once
                 hadAuthException = True
                 Try
-                    refreshTask = Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement)
+                    refreshTask = Me.DoRefreshAsync(Me.Config,
+                                                    tokenElement:=_tokenDataElement,
+                                                    httpClient:=_httpClient)
                 Catch innerEx As Exception
                     LogMessage(message:=innerEx.ToString())
                 End Try
@@ -886,7 +893,10 @@ Friend Class Client2
         ' If a call earlier produced an auth status code, attempt refresh proactively.
         If Auth_Error_Codes.Contains(value:=_lastHttpStatusCode) Then
             Try
-                _tokenDataElement = Await Me.DoRefreshAsync(Me.Config, tokenElement:=_tokenDataElement)
+                _tokenDataElement =
+                    Await Me.DoRefreshAsync(Me.Config,
+                                            tokenElement:=_tokenDataElement,
+                                            httpClient:=_httpClient)
                 _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
                 WriteTokenFile(token:=_tokenDataElement)
             Catch ex As Exception
