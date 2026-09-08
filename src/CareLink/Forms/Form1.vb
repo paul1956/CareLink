@@ -31,7 +31,6 @@ Public Class Form1
     Private _dgvSummaryPrevColIndex As Integer = -1
     Private _dgvSummaryPrevRowIndex As Integer = -1
     Private _formScale As New SizeF(width:=1.0F, height:=1.0F)
-    Private _infusionSetImageBackup As Bitmap
     Private _infusionSetLabel2Backup As String
     Private _infusionSetLabel3Backup As String
     Private _infusionSetLabel4Backup As String
@@ -327,7 +326,7 @@ Public Class Form1
         End Try
         If Double.IsNaN(yInPixels) Then
             _inMouseMove = False
-            Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showPictureBox:=True)
+            Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showInfusionSet:=True)
             Exit Sub
         End If
         Dim result As HitTestResult
@@ -353,7 +352,7 @@ Public Class Form1
             Dim showWhat As CursorInfo = CursorInfo.Hide1
             Select Case result.Series.Name
                 Case HighLimitSeriesName, HighTiTRSeriesName, LowLimitSeriesName, TargetSgSeriesName
-                    Me.ShowCursorControls(showWhat, showPictureBox:=True)
+                    Me.ShowCursorControls(showWhat, showInfusionSet:=True)
                 Case MarkerSeriesName, BasalSeriesName
                     Dim markerTags As List(Of String) =
                         currentDataPoint.Tag.
@@ -366,7 +365,7 @@ Public Class Form1
                                 chart1.FindAnnotation(lastDataPoint:=currentDataPoint)
                             callout.BringToFront()
                         Else
-                            Me.ShowCursorControls(showWhat:=CursorInfo.Show1, showPictureBox:=False)
+                            Me.ShowCursorControls(showWhat:=CursorInfo.Show1, showInfusionSet:=False)
                         End If
                         Exit Sub
                     End If
@@ -413,7 +412,7 @@ Public Class Form1
                                 End If
                                 Me.CursorMessage3Label.Text =
                                     Date.FromOADate(currentDataPoint.XValue).ToString(format:=s_timeWithMinuteFormat)
-                                Me.ShowCursorControls(showWhat, showPictureBox:=True)
+                                Me.ShowCursorControls(showWhat, showInfusionSet:=False)
                             Case 3
                                 Me.CursorMessage1Label.Text =
                                     $"{markerTag0}@{xValue.ToString(format:=s_timeWithMinuteFormat)}"
@@ -437,7 +436,7 @@ Public Class Form1
                                     Case Else
                                         Stop
                                 End Select
-                                Me.ShowCursorControls(showWhat:=CursorInfo.ShowAll, showPictureBox:=True)
+                                Me.ShowCursorControls(showWhat:=CursorInfo.ShowAll, showInfusionSet:=False)
                             Case Else
                                 Stop
                                 Me.InfusionSetDataRestore()
@@ -456,15 +455,15 @@ Public Class Form1
 
                     Dim format As String = s_timeWithMinuteFormat
                     Me.CursorMessage4Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(format)
-                    Me.ShowCursorControls(showWhat:=CursorInfo.ShowAll, showPictureBox:=False)
+                    Me.ShowCursorControls(showWhat:=CursorInfo.ShowAll, showInfusionSet:=False)
                 Case ActiveInsulinSeriesName
                     chart1.SetupCallout(currentDataPoint, text:=$"Sensor Glucose {Me.CursorMessage2Label.Text}")
                 Case SuspendSeriesName, TimeChangeSeriesName
-                    Me.ShowCursorControls(showWhat:=CursorInfo.Show3, showPictureBox:=False)
+                    Me.ShowCursorControls(showWhat:=CursorInfo.Show3, showInfusionSet:=False)
                 Case ActiveInsulinSeriesName
                     Dim yValue As Single = currentDataPoint.YValues.FirstOrDefault().RoundToSingle(digits:=3)
                     chart1.SetupCallout(currentDataPoint, text:=$"Theoretical Active Insulin {yValue:F3} U")
-                    Me.ShowCursorControls(showWhat:=CursorInfo.Show3, showPictureBox:=False)
+                    Me.ShowCursorControls(showWhat:=CursorInfo.Show3, showInfusionSet:=False)
                 Case Else
                     Stop
             End Select
@@ -479,7 +478,10 @@ Public Class Form1
     Private Sub CursorPictureBoxUpdate(imageId As ImageEnum)
         Try
             Dim bitmap As Bitmap = GetBitmapFromCache(imageId)
-            If bitmap Is Nothing Then Return
+            If bitmap Is Nothing Then
+                Stop
+                Return
+            End If
 
             ' We have a dedicated marker PictureBox use it.
             ' Hide the infusion image while showing transient marker to avoid
@@ -490,7 +492,6 @@ Public Class Form1
             Me.CursorMarkerPictureBox.Size = bitmap.Size
             Me.CursorMarkerPictureBox.GetBitmapFromCache(imageId)
             Me.CursorMarkerPictureBox.Visible = True
-            Me.CursorMarkerPictureBox.BringToFront()
             Me.CursorMarkerPictureBox.CenterXOnControl(parent:=Me.CursorMessage2Label)
         Catch ex As Exception
             Stop
@@ -498,30 +499,11 @@ Public Class Form1
     End Sub
 
     Private Sub InfusionSetDataRestore()
-        Try
-            If _inInfusionSetDataRestore Then
-                Exit Sub
-            End If
-            _inInfusionSetDataRestore = True
-            Me.CursorMessage2Label.Text = _infusionSetLabel2Backup
-            Me.CursorMessage3Label.Text = _infusionSetLabel3Backup
+        Me.CursorMessage2Label.Text = _infusionSetLabel2Backup
+        Me.CursorMessage3Label.Text = _infusionSetLabel3Backup
             Me.CursorMessage4Label.Text = _infusionSetLabel4Backup
-            Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showPictureBox:=True)
-
-            ' Ensure marker is hidden when restoring infusion-set image to avoid
-            ' overlay flicker between the two images.
-            Me.CursorMarkerPictureBox.Visible = False
-            Me.CursorMarkerPictureBox.Image?.Dispose()
-            Me.CursorMarkerPictureBox.Image = Nothing
-
-            Me.InfustionSetPictureBox.Image = Nothing
-            Me.InfustionSetPictureBox.Image = CType(_infusionSetImageBackup.Clone, Image)
-            Me.InfustionSetPictureBox.Show()
-        Catch ex As Exception
-            Stop
-        Finally
-            _inInfusionSetDataRestore = False
-        End Try
+            Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showInfusionSet:=True)
+        Me.InfustionSetPictureBox.Show()
     End Sub
 
     Private Sub InfusionSetInitialize()
@@ -533,8 +515,6 @@ Public Class Form1
             Me.InfustionSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
             ' Create a dedicated PictureBox for transient cursor/marker icons so
             ' updates to markers do not change the infusion PictureBox SizeMode/Size.
-            _infusionSetImageBackup =
-                GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeUnknown)
             Me.InfusionSetDataRestore()
         Catch ex As Exception
             Stop
@@ -566,22 +546,20 @@ Public Class Form1
         Me.CursorMessage2Label.Text = _infusionSetLabel2Backup
         Me.CursorMessage3Label.Text = _infusionSetLabel3Backup
         Me.CursorMessage4Label.Text = _infusionSetLabel4Backup
-        Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showPictureBox:=True)
+        Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showInfusionSet:=True)
         Me.ScheduleInfusionSetRefresh(pictureBox:=Me.InfustionSetPictureBox)
     End Sub
 
     Private Sub ShowCursorControls(showWhat As CursorInfo,
-                                   showPictureBox As Boolean)
+                                   showInfusionSet As Boolean)
         Me.CursorMessage1Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Show1) <> 0)
         Me.CursorMessage2Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Mask2) <> 0)
         Me.CursorMessage3Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Mask3) <> 0)
         Me.CursorMessage4Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Mask4) <> 0)
         ' If a transient marker is currently visible, keep the infusion image hidden
         ' to prevent both PictureBoxes appearing at the same time.
-        Me.InfustionSetPictureBox.Visible = showPictureBox
-        If Me.CursorMarkerPictureBox.Visible Then
-            Me.InfustionSetPictureBox.Visible = False
-        End If
+        Me.CursorMarkerPictureBox.Visible = Not showInfusionSet
+        Me.InfustionSetPictureBox.Visible = showInfusionSet
         Application.DoEvents()
     End Sub
 
@@ -707,9 +685,7 @@ Public Class Form1
                 Else
                     image = GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeUnknown)
                 End If
-                _infusionSetImageBackup = Nothing
-                _infusionSetImageBackup = CType(image.Clone, Bitmap)
-                Return _infusionSetImageBackup
+                Return image
             End Function
 
         Me.ScheduleImageRefresh(pictureBox, generator)
@@ -5808,7 +5784,7 @@ Public Class Form1
                 Dim msg As String = $"Last Update Time: {d:d} {d:t}"
                 Me.SetLastUpdateTime(msg, isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)
             End If
-            Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showPictureBox:=True)
+            Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showInfusionSet:=True)
 
             Me.Cursor = Cursors.WaitCursor
             Application.DoEvents()
