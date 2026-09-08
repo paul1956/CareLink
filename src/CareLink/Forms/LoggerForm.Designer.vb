@@ -57,7 +57,7 @@ Partial Class LoggerForm
         OK_Button.Name = "OK_Button"
         OK_Button.Size = New Size(77, 27)
         OK_Button.TabIndex = 0
-        OK_Button.Text = "OK"
+        OK_Button.Text = "Close"
         ' 
         ' Cancel_Button
         ' 
@@ -67,7 +67,7 @@ Partial Class LoggerForm
         Cancel_Button.Name = "Cancel_Button"
         Cancel_Button.Size = New Size(77, 27)
         Cancel_Button.TabIndex = 1
-        Cancel_Button.Text = "Cancel"
+        Cancel_Button.Text = "Hide"
         ' 
         ' txtLog
         ' 

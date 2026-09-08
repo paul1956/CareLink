@@ -2583,9 +2583,9 @@ Public Class Form1
 
         s_showLogger = Debugger.IsAttached
         InitLogger(show:=s_showLogger)
-        LoggerManager.UpdateMessage(message:="Application started in DEBUG mode.")
+        LoggerManager.LogMessage(message:="Application started in DEBUG mode.")
 
-            PreloadBitmaps()
+        PreloadBitmaps()
         Me.CalibrationDueImage.GetBitmapFromCache(imageId:=ImageEnum.CalibrationUnavailable)
         Me.CursorSetPictureBox.GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeOver24Hours)
         Me.InsulinLevelPictureBox.GetBitmapFromCache(imageId:=ImageEnum.ReservoirRemainsOver85Percent)
