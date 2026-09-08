@@ -688,6 +688,7 @@ Public Class Form1
                 Else
                     image = GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeUnknown)
                 End If
+                _infusionSetImageBackup = Nothing
                 _infusionSetImageBackup = CType(image.Clone, Bitmap)
                 Return _infusionSetImageBackup
             End Function
