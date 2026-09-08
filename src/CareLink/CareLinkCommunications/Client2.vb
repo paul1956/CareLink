@@ -171,35 +171,32 @@ Friend Class Client2
             Return False
         End If
         Try
-
             Dim unixTime As Long = access_token_payload(key:="exp").GetInt64()
             Dim unixCurrentTime As Long = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-            Dim tDiff As Long = unixTime - unixCurrentTime
-            If tDiff <= 0 Then
-                Dim absDiff As Long = Math.Abs(value:=tDiff)
-                message = $"In {NameOf(IsTokenValid)} access token has expired {absDiff}s ago"
+            Dim tDiffSeconds As Long = unixTime - unixCurrentTime
+            Dim absDiffMinutes As Long = Math.Abs(value:=tDiffSeconds \ 60)
+            If tDiffSeconds <= 0 Then
+                message = $"In {NameOf(IsTokenValid)} access token has expired {absDiffMinutes.ToHoursMinutes} ago"
                 LogMessage(message)
                 Return False
             End If
             Dim startKey As String
-            If tDiff < 600 Then
+            If tDiffSeconds < 600 Then
                 startKey = $"In {NameOf(IsTokenValid)} access token is about to expire in "
-                message = $"In {NameOf(IsTokenValid)} access token is about to expire in {tDiff}s"
+                message = $"In {NameOf(IsTokenValid)} access token is about to expire in {absDiffMinutes.ToHoursMinutes}"
                 UpdateMessage(message, startKey)
                 Return False
             End If
 
-            Const format As String = "ddd MMM dd HH:mm:ss UTC yyyy"
-            Dim utcTime As DateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(seconds:=unixTime)
-            Dim authTokenValidTo As String = utcTime.ToString(format)
-
+            Dim utcTime As DateTimeOffset =
+                DateTimeOffset.FromUnixTimeSeconds(seconds:=unixTime)
             ' Convert to local time
             Dim localTime As DateTimeOffset = utcTime.ToLocalTime()
-            ' Format as needed
-            Dim formatted As String = localTime.ToString(format:="M/d/yyyy h:mm tt")
+            Dim formatted As String =
+                localTime.ToString(format:="M/d/yyyy h:mm tt")
 
-            startKey = $"In {NameOf(IsTokenValid)} access token expires in"
-            message = $"{startKey} {(tDiff \ 60).ToHoursMinutes()} at {authTokenValidTo} or {formatted}"
+            startKey = $"Access token expires in "
+            message = $"{startKey}{absDiffMinutes.ToHoursMinutes()} at {formatted}"
             UpdateMessage(message, startKey)
             Return True
         Catch ex As Exception
