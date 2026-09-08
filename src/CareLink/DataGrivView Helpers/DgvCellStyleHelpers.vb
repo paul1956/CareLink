@@ -96,7 +96,7 @@ Public Module DgvCellStyleHelpers
     Friend Sub CellFormattingApplyBold(e As DataGridViewCellFormattingEventArgs)
         With e.CellStyle
             .Font = New Font(family:= .Font.FontFamily,
-                             emSize:= .Font.Size + CSng(1.5),
+                             emSize:=CSng(10.5),
                              style:=FontStyle.Bold)
 
         End With
@@ -120,9 +120,9 @@ Public Module DgvCellStyleHelpers
     ''' <param name="isUri">Indicates if the cell value is a URI.</param>
     <Extension>
     Friend Sub CellFormattingApplyColor(dgv As DataGridView,
-                                            e As DataGridViewCellFormattingEventArgs,
-                                            textColor As Color,
-                                            Optional isUri As Boolean = False)
+                                        e As DataGridViewCellFormattingEventArgs,
+                                        textColor As Color,
+                                        Optional isUri As Boolean = False)
 
         Dim value As String = Convert.ToString(e.Value)
         If IsNullOrEmpty(value) Then

@@ -3987,10 +3987,9 @@ Public Class Form1
                 lastErrorMessage = Await Client.GetRecentDataAsync()
             End If
 
-            ReportLoginStatus(
-                Me.LoginStatus,
-                hasErrors:=IsPatientDataEmpty,
-                lastErrorMessage)
+            ReportLoginStatus(Me.LoginStatus,
+                              hasErrors:=IsPatientDataEmpty,
+                              lastErrorMessage)
 
             Me.Cursor = Cursors.Default
             Application.DoEvents()

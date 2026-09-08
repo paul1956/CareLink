@@ -219,9 +219,10 @@ Public Class ControlExtensionsTests
             ' Assert
             dgv1.EnableHeadersVisualStyles.Should().BeFalse()
             dgv2.EnableHeadersVisualStyles.Should().BeFalse()
-            dgv1.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(expected:=Drawing.Color.Black)
+            Dim expectedBackColor As Drawing.Color = Drawing.Color.FromArgb(red:=38, green:=47, blue:=58)
+            dgv1.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(expected:=expectedBackColor)
             dgv1.ColumnHeadersDefaultCellStyle.ForeColor.Should().Be(expected:=Drawing.Color.White)
-            dgv2.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(expected:=Drawing.Color.Black)
+            dgv2.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(expected:=expectedBackColor)
             dgv2.ColumnHeadersDefaultCellStyle.ForeColor.Should().Be(expected:=Drawing.Color.White)
         End Using
     End Sub

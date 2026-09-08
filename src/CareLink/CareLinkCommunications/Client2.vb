@@ -701,90 +701,88 @@ Friend Class Client2
             End Try
         End If
 
-        Using client As HttpClient = If(httpClient, New HttpClient())
-            ' Add mag-identifier header if present
-            Dim magElem As JsonElement = Nothing
-            If tokenData.TryGetValue(key:="mag-identifier", value:=magElem) Then
-                Try
-                    Dim mag As String = magElem.GetString()
-                    If Not IsNullOrWhiteSpace(value:=mag) Then
-                        client.DefaultRequestHeaders.Add(name:="mag-identifier", value:=mag)
-                    End If
-                Catch
-                End Try
-            End If
-
-            Dim succeeded As Boolean = False
-            Dim lastResponseBody As String = String.Empty
-
-            ' Strategy: if we have a client_secret, try Basic auth first (preferred).
-            ' If that fails and provider may expect client_secret in body,
-            ' retry with client_secret in form.
-            Dim attempts As New List(Of Tuple(Of Boolean, Boolean))
-            If hasClientSecret Then
-                attempts.Add(item:=Tuple.Create(True, False))   ' Basic auth, no client_secret in form
-                attempts.Add(item:=Tuple.Create(False, True))   ' No basic auth, include client_secret in form
-            Else
-                attempts.Add(item:=Tuple.Create(False, False))  ' No client_secret available
-            End If
-
-            For Each attempt As Tuple(Of Boolean, Boolean) In attempts
-                Dim resp As HttpResponseMessage = Nothing
-                Try
-                    ' Configure auth header for this attempt
-                    If attempt.Item1 AndAlso hasClientSecret Then
-                        Dim cred As String = Convert.ToBase64String(inArray:=Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}"))
-                        client.DefaultRequestHeaders.Authorization = New AuthenticationHeaderValue(scheme:="Basic", parameter:=cred)
-                    Else
-                        client.DefaultRequestHeaders.Authorization = Nothing
-                    End If
-
-                    ' Build actual form for this attempt
-                    Dim actualForm As New List(Of KeyValuePair(Of String, String))(collection:=formData)
-                    If attempt.Item2 AndAlso hasClientSecret Then
-                        actualForm.Add(item:=New KeyValuePair(Of String, String)(key:="client_secret", value:=clientSecret))
-                    End If
-
-                    Using content As New FormUrlEncodedContent(nameValueCollection:=actualForm)
-                        resp = Await client.PostAsync(requestUri:=config.TokenUrl, content).ConfigureAwait(continueOnCapturedContext:=False)
-                    End Using
-                Catch ex As Exception
-                    message = $"{NameOf(DoRefreshAsync)}: HTTP request failed: {ex.Message}"
-                    LogMessage(message)
-                    Continue For
-                End Try
-
-                _lastHttpStatusCode = resp.StatusCode
-                Dim respBody As String =
-                    Await resp.Content.ReadAsStringAsync().
-                                       ConfigureAwait(continueOnCapturedContext:=False)
-                lastResponseBody = respBody
-
-                If resp.StatusCode = HttpStatusCode.OK Then
-                    Try
-                        Using newData As JsonDocument = JsonDocument.Parse(json:=respBody)
-                            Dim root As JsonElement = newData.RootElement
-                            tokenData(key:="access_token") =
-                                root.GetProperty(propertyName:="access_token").Clone()
-                            tokenData(key:="refresh_token") =
-                                root.GetProperty(propertyName:="refresh_token").Clone()
-                        End Using
-                        succeeded = True
-                        Exit For
-                    Catch ex As Exception
-                        message =
-                            $"{NameOf(DoRefreshAsync)}: failed parsing token refresh response: {ex.Message}"
-                        LogMessage(message)
-                        Return Nothing
-                    End Try
-                Else
-                    message =
-                        $"{NameOf(DoRefreshAsync)}: token refresh attempt failed. useBasic={attempt.Item1} " &
-                        $"includeSecret={attempt.Item2} Status={CInt(resp.StatusCode)} Body={respBody}"
-                    LogMessage(message)
+        ' Add mag-identifier header if present
+        Dim magElem As JsonElement = Nothing
+        If tokenData.TryGetValue(key:="mag-identifier", value:=magElem) Then
+            Try
+                Dim mag As String = magElem.GetString()
+                If Not IsNullOrWhiteSpace(value:=mag) Then
+                    httpClient.DefaultRequestHeaders.Add(name:="mag-identifier", value:=mag)
                 End If
-            Next
-        End Using
+            Catch
+            End Try
+        End If
+
+        Dim succeeded As Boolean
+        Dim lastResponseBody As String
+
+        ' Strategy: if we have a client_secret, try Basic auth first (preferred).
+        ' If that fails and provider may expect client_secret in body,
+        ' retry with client_secret in form.
+        Dim attempts As New List(Of Tuple(Of Boolean, Boolean))
+        If hasClientSecret Then
+            attempts.Add(item:=Tuple.Create(True, False))   ' Basic auth, no client_secret in form
+            attempts.Add(item:=Tuple.Create(False, True))   ' No basic auth, include client_secret in form
+        Else
+            attempts.Add(item:=Tuple.Create(False, False))  ' No client_secret available
+        End If
+
+        For Each attempt As Tuple(Of Boolean, Boolean) In attempts
+            Dim resp As HttpResponseMessage = Nothing
+            Try
+                ' Configure auth header for this attempt
+                If attempt.Item1 AndAlso hasClientSecret Then
+                    Dim cred As String = Convert.ToBase64String(inArray:=Encoding.UTF8.GetBytes($"{clientId}:{clientSecret}"))
+                    httpClient.DefaultRequestHeaders.Authorization = New AuthenticationHeaderValue(scheme:="Basic", parameter:=cred)
+                Else
+                    httpClient.DefaultRequestHeaders.Authorization = Nothing
+                End If
+
+                ' Build actual form for this attempt
+                Dim actualForm As New List(Of KeyValuePair(Of String, String))(collection:=formData)
+                If attempt.Item2 AndAlso hasClientSecret Then
+                    actualForm.Add(item:=New KeyValuePair(Of String, String)(key:="client_secret", value:=clientSecret))
+                End If
+
+                Using content As New FormUrlEncodedContent(nameValueCollection:=actualForm)
+                    resp = Await httpClient.PostAsync(requestUri:=config.TokenUrl, content).ConfigureAwait(continueOnCapturedContext:=False)
+                End Using
+            Catch ex As Exception
+                message = $"{NameOf(DoRefreshAsync)}: HTTP request failed: {ex.Message}"
+                LogMessage(message)
+                Continue For
+            End Try
+
+            _lastHttpStatusCode = resp.StatusCode
+            Dim respBody As String =
+                Await resp.Content.ReadAsStringAsync().
+                                   ConfigureAwait(continueOnCapturedContext:=False)
+            lastResponseBody = respBody
+
+            If resp.StatusCode = HttpStatusCode.OK Then
+                Try
+                    Using newData As JsonDocument = JsonDocument.Parse(json:=respBody)
+                        Dim root As JsonElement = newData.RootElement
+                        tokenData(key:="access_token") =
+                            root.GetProperty(propertyName:="access_token").Clone()
+                        tokenData(key:="refresh_token") =
+                            root.GetProperty(propertyName:="refresh_token").Clone()
+                    End Using
+                    succeeded = True
+                    Exit For
+                Catch ex As Exception
+                    message =
+                        $"{NameOf(DoRefreshAsync)}: failed parsing token refresh response: {ex.Message}"
+                    LogMessage(message)
+                    Return Nothing
+                End Try
+            Else
+                message =
+                    $"{NameOf(DoRefreshAsync)}: token refresh attempt failed. useBasic={attempt.Item1} " &
+                    $"includeSecret={attempt.Item2} Status={CInt(resp.StatusCode)} Body={respBody}"
+                LogMessage(message)
+            End If
+        Next
 
         Dim tdJson As String = String.Empty
         If Not tokenData.TryToJson(json:=tdJson) Then
@@ -825,7 +823,25 @@ Friend Class Client2
 
             If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
                 LogMessage(message:=lastErrorMessage)
-                Return lastErrorMessage
+
+                ' Attempt interactive login (show OAuthBrowserForm) as a fallback when refresh failed
+                Try
+                    Await GetLoginData(Me.ServerRegion,
+                                       userName:=s_userName,
+                                       password:=s_password)
+
+                    ' Reload token data written by the interactive login and update payload
+                    _tokenDataElement = ReadTokenFile(tokenBaseFileName:=_tokenBaseFileName)
+                    _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
+
+                    If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
+                        LogMessage(message:=lastErrorMessage)
+                        Return lastErrorMessage
+                    End If
+                Catch ex As Exception
+                    LogMessage(message:=ex.ToString())
+                    Return lastErrorMessage
+                End Try
             End If
         End If
 
@@ -857,6 +873,7 @@ Friend Class Client2
 
             ' If we scheduled a refresh due to auth, await it now and retry GetDataAsync once.
             If hadAuthException AndAlso refreshTask IsNot Nothing Then
+                Dim refreshFailed As Boolean = False
                 Try
                     Dim refreshedToken As JsonElement = Await refreshTask
                     If Not refreshedToken.IsEmpty Then
@@ -870,8 +887,27 @@ Friend Class Client2
                     End If
                 Catch refreshEx As Exception
                     LogMessage(message:=refreshEx.ToString())
-                    Return "ERROR: failed to refresh token"
+                    refreshFailed = True
                 End Try
+
+                If refreshFailed Then
+                    Try
+                        Await GetLoginData(Me.ServerRegion,
+                                           userName:=s_userName,
+                                           password:=s_password)
+
+                        _tokenDataElement = ReadTokenFile(tokenBaseFileName:=_tokenBaseFileName)
+                        _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
+
+                        If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
+                            LogMessage(message:=lastErrorMessage)
+                            Return "ERROR: failed to refresh token"
+                        End If
+                    Catch ex As Exception
+                        LogMessage(message:=ex.ToString())
+                        Return "ERROR: failed to refresh token"
+                    End Try
+                End If
             End If
 
             If data Is Nothing OrElse data.Count = DataKeyCount.NoData OrElse
