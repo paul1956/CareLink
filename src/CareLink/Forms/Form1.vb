@@ -479,11 +479,19 @@ Public Class Form1
     Private Sub CursorPictureBoxUpdate(imageId As ImageEnum)
         Try
             Dim bitmap As Bitmap = GetBitmapFromCache(imageId)
-            Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.Normal
-            Me.CursorSetPictureBox.Size = bitmap.Size
-            Me.CursorSetPictureBox.GetBitmapFromCache(imageId)
-            Me.CursorSetPictureBox.Visible = True
-            Me.CursorSetPictureBox.CenterXOnControl(parent:=Me.CursorMessage2Label)
+            If bitmap Is Nothing Then Return
+
+            ' We have a dedicated marker PictureBox use it.
+            ' Hide the infusion image while showing transient marker to avoid
+            ' both PictureBoxes appearing simultaneously.
+            Me.InfustionSetPictureBox.Visible = False
+
+            Me.CursorMarkerPictureBox.SizeMode = PictureBoxSizeMode.Normal
+            Me.CursorMarkerPictureBox.Size = bitmap.Size
+            Me.CursorMarkerPictureBox.GetBitmapFromCache(imageId)
+            Me.CursorMarkerPictureBox.Visible = True
+            Me.CursorMarkerPictureBox.BringToFront()
+            Me.CursorMarkerPictureBox.CenterXOnControl(parent:=Me.CursorMessage2Label)
         Catch ex As Exception
             Stop
         End Try
@@ -499,12 +507,16 @@ Public Class Form1
             Me.CursorMessage3Label.Text = _infusionSetLabel3Backup
             Me.CursorMessage4Label.Text = _infusionSetLabel4Backup
             Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showPictureBox:=True)
-            If Me.CursorSetPictureBox.SizeMode <> PictureBoxSizeMode.AutoSize Then
-                Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
-            End If
-            Me.CursorSetPictureBox.Image = Nothing
-            Me.CursorSetPictureBox.Image = CType(_infusionSetImageBackup.Clone, Image)
-            Me.CursorSetPictureBox.Show()
+
+            ' Ensure marker is hidden when restoring infusion-set image to avoid
+            ' overlay flicker between the two images.
+            Me.CursorMarkerPictureBox.Visible = False
+            Me.CursorMarkerPictureBox.Image?.Dispose()
+            Me.CursorMarkerPictureBox.Image = Nothing
+
+            Me.InfustionSetPictureBox.Image = Nothing
+            Me.InfustionSetPictureBox.Image = CType(_infusionSetImageBackup.Clone, Image)
+            Me.InfustionSetPictureBox.Show()
         Catch ex As Exception
             Stop
         Finally
@@ -518,7 +530,9 @@ Public Class Form1
         _infusionSetLabel4Backup = "Unknown!"
         Try
             Me.CursorMessage1Label.Visible = False
-            Me.CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
+            Me.InfustionSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
+            ' Create a dedicated PictureBox for transient cursor/marker icons so
+            ' updates to markers do not change the infusion PictureBox SizeMode/Size.
             _infusionSetImageBackup =
                 GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeUnknown)
             Me.InfusionSetDataRestore()
@@ -553,16 +567,21 @@ Public Class Form1
         Me.CursorMessage3Label.Text = _infusionSetLabel3Backup
         Me.CursorMessage4Label.Text = _infusionSetLabel4Backup
         Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showPictureBox:=True)
-        Me.ScheduleInfusionSetRefresh(pictureBox:=Me.CursorSetPictureBox)
+        Me.ScheduleInfusionSetRefresh(pictureBox:=Me.InfustionSetPictureBox)
     End Sub
 
     Private Sub ShowCursorControls(showWhat As CursorInfo,
-                                           showPictureBox As Boolean)
+                                   showPictureBox As Boolean)
         Me.CursorMessage1Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Show1) <> 0)
         Me.CursorMessage2Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Mask2) <> 0)
         Me.CursorMessage3Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Mask3) <> 0)
         Me.CursorMessage4Label.SetControlVisibility(visible:=(showWhat And CursorInfo.Mask4) <> 0)
-        Me.CursorSetPictureBox.Visible = showPictureBox
+        ' If a transient marker is currently visible, keep the infusion image hidden
+        ' to prevent both PictureBoxes appearing at the same time.
+        Me.InfustionSetPictureBox.Visible = showPictureBox
+        If Me.CursorMarkerPictureBox.Visible Then
+            Me.InfustionSetPictureBox.Visible = False
+        End If
         Application.DoEvents()
     End Sub
 

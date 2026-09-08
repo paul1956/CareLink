@@ -12,6 +12,13 @@ Imports System.Text.Json
 ''' </summary>
 Public Module Discover
 
+    ' Cached discovery root and associated region. Cached so we only fetch discovery JSON
+    ' at startup or when the requested server region changes.
+    Private s_cachedDiscovery As DiscoveryRoot = Nothing
+
+    Private s_cachedDiscoveryRegion As ServerLocation
+    Private s_haveCachedDiscovery As Boolean = False
+
     ''' <summary>
     '''  Retrieves the configuration JSON element for a specific country
     '''  from the provided JSON data.
@@ -99,6 +106,45 @@ Public Module Discover
     End Function
 
     ''' <summary>
+    '''  Returns a cached DiscoveryRoot for the requested serverRegion. If the cache
+    '''  is empty or for a different region, the discovery JSON will be fetched and
+    '''  cached. This avoids re-fetching discovery data repeatedly.
+    ''' </summary>
+    ''' <param name="serverRegion">
+    '''  The server region for which to retrieve the cached discovery data.
+    ''' </param>
+    ''' <returns>
+    '''  A <see cref="DiscoveryRoot"/> containing the configuration data for the
+    '''  specified server region.
+    ''' </returns>
+    Friend Async Function GetCachedDiscoveryAsync(serverRegion As ServerLocation) As Task(Of DiscoveryRoot)
+        If s_haveCachedDiscovery AndAlso s_cachedDiscoveryRegion = serverRegion AndAlso s_cachedDiscovery IsNot Nothing Then
+            Return s_cachedDiscovery
+        End If
+
+        Dim json As String =
+            Await New HttpClient().GetStringAsync(requestUri:=GetDiscoverUri(serverRegion)).ConfigureAwait(continueOnCapturedContext:=False)
+
+        Dim options As JsonSerializerOptions = JsonExtensions.DeserializationOptions
+        Dim discovery As DiscoveryRoot
+        Try
+            discovery = JsonSerializer.Deserialize(Of DiscoveryRoot)(json:=json, options)
+        Catch ex As Exception
+            Throw New Exception(message:=$"Failed to parse discovery JSON: {ex.Message}")
+        End Try
+
+        If discovery Is Nothing Then
+            Throw New Exception(message:="Discovery JSON was empty or invalid.")
+        End If
+
+        s_cachedDiscovery = discovery
+        s_cachedDiscoveryRegion = serverRegion
+        s_haveCachedDiscovery = True
+
+        Return s_cachedDiscovery
+    End Function
+
+    ''' <summary>
     '''  Retrieves the configuration element for a given country using
     '''  the provided <see cref="HttpClient"/>.
     ''' </summary>
@@ -178,11 +224,15 @@ Public Module Discover
     End Function
 
     ''' <summary>
-    ''' Downloads and decodes the discovery configuration data for a given country,
-    ''' capturing the HTTP status code and any error messages.
+    '''  Downloads and decodes the discovery configuration data for a given country,
+    '''  capturing the HTTP status code and any error messages.
     ''' </summary>
-    ''' <param name="lastErrorMsg">Output parameter to receive the last error message if any.</param>
-    ''' <param name="httpStatusCode">Output parameter to receive the HTTP status code of the response.</param>
+    ''' <param name="lastErrorMsg">
+    '''  Output parameter to receive the last error message if any.
+    ''' </param>
+    ''' <param name="httpStatusCode">
+    '''  Output parameter to receive the HTTP status code of the response.
+    ''' </param>
     ''' <returns>
     ''' A <see cref="DiscoveryRecord"/> containing the configuration data for the specified country,
     ''' or <see langword="Nothing"/> if an error occurs.

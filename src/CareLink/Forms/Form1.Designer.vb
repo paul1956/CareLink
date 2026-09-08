@@ -50,7 +50,8 @@ Partial Class Form1
         CursorMessage2Label = New Label()
         CursorMessage3Label = New Label()
         CursorMessage4Label = New Label()
-        CursorSetPictureBox = New PictureBox()
+        CursorMarkerPictureBox = New PictureBox()
+        InfustionSetPictureBox = New PictureBox()
         CursorTimer = New Timer(components)
         DgvActiveInsulin = New DataGridView()
         DgvAutoBasalDelivery = New DataGridView()
@@ -256,7 +257,8 @@ Partial Class Form1
         CalibrationShieldPanel.SuspendLayout()
         CType(SmartGuardShieldPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(CareLinkUserDataRecordBindingSource, ComponentModel.ISupportInitialize).BeginInit()
-        CType(CursorSetPictureBox, ComponentModel.ISupportInitialize).BeginInit()
+        CType(InfustionSetPictureBox, ComponentModel.ISupportInitialize).BeginInit()
+        CType(CursorMarkerPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvActiveInsulin, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvAutoModeStatus, ComponentModel.ISupportInitialize).BeginInit()
@@ -602,15 +604,25 @@ Partial Class Form1
         CursorMessage4Label.Text = "Left"
         CursorMessage4Label.TextAlign = ContentAlignment.MiddleCenter
         ' 
-        ' CursorSetPictureBox
+        ' InfustionSetPictureBox
         ' 
-        CursorSetPictureBox.InitialImage = Nothing
-        CursorSetPictureBox.Location = New Point(350, 3)
-        CursorSetPictureBox.Name = "CursorSetPictureBox"
-        CursorSetPictureBox.Size = New Size(46, 53)
-        CursorSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
-        CursorSetPictureBox.TabIndex = 42
-        CursorSetPictureBox.TabStop = False
+        InfustionSetPictureBox.InitialImage = Nothing
+        InfustionSetPictureBox.Location = New Point(350, 3)
+        InfustionSetPictureBox.Name = "InfustionSetPictureBox"
+        InfustionSetPictureBox.Size = New Size(46, 53)
+        InfustionSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
+        InfustionSetPictureBox.TabIndex = 42
+        InfustionSetPictureBox.TabStop = False
+        ' 
+        ' CursorMarkerPictureBox
+        ' 
+        CursorMarkerPictureBox = New PictureBox()
+        CursorMarkerPictureBox.BackColor = Color.Transparent
+        CursorMarkerPictureBox.Location = New Point(350, 3)
+        CursorMarkerPictureBox.Parent = Me.InfustionSetPictureBox.Parent
+        CursorMarkerPictureBox.Size = New Size(24, 24)
+        CursorMarkerPictureBox.SizeMode = PictureBoxSizeMode.Normal
+        CursorMarkerPictureBox.Visible = False
         ' 
         ' CursorTimer
         ' 
@@ -1638,7 +1650,8 @@ Partial Class Form1
         SplitContainer2.Panel1.Controls.Add(Last24HrAutoCorrectionUnitsLabel)
         SplitContainer2.Panel1.Controls.Add(Last24HrBasalUnitsLabel)
         SplitContainer2.Panel1.Controls.Add(Last24HrMealBolusUnitsLabel)
-        SplitContainer2.Panel1.Controls.Add(CursorSetPictureBox)
+        SplitContainer2.Panel1.Controls.Add(InfustionSetPictureBox)
+        SplitContainer2.Panel1.Controls.Add(CursorMarkerPictureBox)
         SplitContainer2.Panel1.Controls.Add(CursorMessage1Label)
         SplitContainer2.Panel1.Controls.Add(CursorMessage2Label)
         SplitContainer2.Panel1.Controls.Add(CursorMessage3Label)
@@ -3001,7 +3014,8 @@ Partial Class Form1
         CalibrationShieldPanel.PerformLayout()
         CType(SmartGuardShieldPictureBox, ComponentModel.ISupportInitialize).EndInit()
         CType(CareLinkUserDataRecordBindingSource, ComponentModel.ISupportInitialize).EndInit()
-        CType(CursorSetPictureBox, ComponentModel.ISupportInitialize).EndInit()
+        CType(InfustionSetPictureBox, ComponentModel.ISupportInitialize).EndInit()
+        CType(CursorMarkerPictureBox, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvActiveInsulin, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvAutoModeStatus, ComponentModel.ISupportInitialize).EndInit()
@@ -3145,11 +3159,11 @@ Partial Class Form1
     Friend WithEvents CalibrationShieldPanel As Panel
     Friend WithEvents CareLinkUserDataRecordBindingSource As BindingSource
     Friend WithEvents CurrentSgLabel As Label
+    Friend WithEvents CursorMarkerPictureBox As PictureBox
     Friend WithEvents CursorMessage1Label As Label
     Friend WithEvents CursorMessage2Label As Label
     Friend WithEvents CursorMessage3Label As Label
     Friend WithEvents CursorMessage4Label As Label
-    Friend WithEvents CursorSetPictureBox As PictureBox
     Friend WithEvents CursorTimer As Timer
     Friend WithEvents DgvActiveInsulin As DataGridView
     Friend WithEvents DgvAutoBasalDelivery As DataGridView
@@ -3175,6 +3189,7 @@ Partial Class Form1
     Friend WithEvents FullNameLabel As Label
     Friend WithEvents GraphLast24HoursLabel As Label
     Friend WithEvents HighTirComplianceLabel As Label
+    Friend WithEvents InfustionSetPictureBox As PictureBox
     Friend WithEvents InsulinLevelPictureBox As PictureBox
     Friend WithEvents InsulinTypeLabel As Label
     Friend WithEvents Last24HrAutoCorrectionLabel As Label
@@ -3230,6 +3245,7 @@ Partial Class Form1
     Friend WithEvents MenuStartManuallyImportDeviceSettings As ToolStripMenuItem
     Friend WithEvents MenuStartSaveSnapshot As ToolStripMenuItem
     Friend WithEvents MenuStartShowPumpSetup As ToolStripMenuItem
+    Friend WithEvents MenuStartShowRawJsonData As ToolStripMenuItem
     Friend WithEvents MenuStartUseLastFile As ToolStripMenuItem
     Friend WithEvents MenuStartUserLogin As ToolStripMenuItem
     Friend WithEvents MenuStartUseTestData As ToolStripMenuItem
@@ -3239,8 +3255,8 @@ Partial Class Form1
     Friend WithEvents PumpAITLabel As Label
     Friend WithEvents PumpBannerStateLabel As Label
     Friend WithEvents PumpBatteryPictureBox As PictureBox
-    Friend WithEvents PumpBatteryRemaining2Label As Label
     Friend WithEvents PumpBatteryRemaining1Label As Label
+    Friend WithEvents PumpBatteryRemaining2Label As Label
     Friend WithEvents PumpNameLabel As Label
     Friend WithEvents ReadingsLabel As Label
     Friend WithEvents RemainingInsulinUnits As Label
@@ -3357,5 +3373,4 @@ Partial Class Form1
     Friend WithEvents TransmitterBatteryPictureBox As PictureBox
     Friend WithEvents TrendArrowsLabel As Label
     Friend WithEvents TrendValueLabel As Label
-    Friend WithEvents MenuStartShowRawJsonData As ToolStripMenuItem
 End Class

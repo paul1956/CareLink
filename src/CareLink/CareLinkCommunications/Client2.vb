@@ -581,9 +581,8 @@ Friend Class Client2
             Try
                 Dim outputFile As String = GetLoginDataFileName()
 
-                Dim discoveryUri As String = GetDiscoverUri(serverRegion)
                 Dim endpointConfig As EndpointConfig =
-                    Await CareLinkService.ResolveEndpointConfigAsync(discoveryUri, serverRegion)
+                    Await CareLinkService.GetEndpointConfigAsync(serverRegion)
 
                 Await CareLinkService.DoLoginAuth0Async(endpointConfig,
                                                         outputFile,
@@ -675,13 +674,10 @@ Friend Class Client2
         ' to allow unit tests to override network calls.
         If Not hasClientSecret Then
             Try
-                Dim endpointConfig As EndpointConfig = Nothing
-                If endpointResolver IsNot Nothing Then
-                    endpointConfig = Await endpointResolver(arg:=config).ConfigureAwait(continueOnCapturedContext:=False)
-                Else
-                    Dim discoveryUri As String = GetDiscoverUri(Me.ServerRegion)
-                    endpointConfig = Await CareLinkService.ResolveEndpointConfigAsync(discoveryUri, Me.ServerRegion)
-                End If
+                Dim endpointConfig As EndpointConfig =
+                    If(endpointResolver IsNot Nothing,
+                       Await endpointResolver(arg:=config).ConfigureAwait(continueOnCapturedContext:=False),
+                       Await CareLinkService.GetEndpointConfigAsync(Me.ServerRegion).ConfigureAwait(continueOnCapturedContext:=False))
 
                 If endpointConfig IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(value:=endpointConfig.SsoJson) Then
                     Dim sso As SsoConfig = Nothing
