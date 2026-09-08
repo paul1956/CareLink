@@ -51,15 +51,6 @@ Friend Module ErrorReportingHelpers
     End Sub
 
     ''' <summary>
-    '''  Reports a default login status indicating no internet connection.
-    ''' </summary>
-    ''' <param name="loginStatus">The <see cref="ToolStripStatusLabel"/> to update.</param>
-    Friend Sub ReportLoginStatus(loginStatus As ToolStripStatusLabel)
-        Dim lastErrorMessage As String = "Login Status: No Internet Connection!"
-        ReportLoginStatus(loginStatus, hasErrors:=True, lastErrorMessage)
-    End Sub
-
-    ''' <summary>
     '''  Reports the login status with error handling and custom message.
     ''' </summary>
     ''' <param name="loginStatus">The <see cref="ToolStripStatusLabel"/> to update.</param>
@@ -68,10 +59,9 @@ Friend Module ErrorReportingHelpers
     '''  The last error message to display. Defaults to empty string.
     ''' </param>
     <Extension>
-    Friend Sub ReportLoginStatus(
-        loginStatus As ToolStripStatusLabel,
-        hasErrors As Boolean,
-        Optional lastErrorMessage As String = EmptyString)
+    Friend Sub ReportLoginStatus(loginStatus As ToolStripStatusLabel,
+                                 hasErrors As Boolean,
+                                 lastErrorMessage As String)
 
         If hasErrors Then
             loginStatus.ForeColor = If(lastErrorMessage = "OK",

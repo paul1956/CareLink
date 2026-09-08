@@ -3987,9 +3987,8 @@ Public Class Form1
                 lastErrorMessage = Await Client.GetRecentDataAsync()
             End If
 
-            ReportLoginStatus(Me.LoginStatus,
-                              hasErrors:=IsPatientDataEmpty,
-                              lastErrorMessage)
+            Me.LoginStatus.ReportLoginStatus(hasErrors:=IsPatientDataEmpty(),
+                                             lastErrorMessage)
 
             Me.Cursor = Cursors.Default
             Application.DoEvents()
@@ -4028,7 +4027,8 @@ Public Class Form1
                 Me.UpdateAllTabPages(fromFile:=False)
             End If
         Else
-            ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMessage)
+            Me.LoginStatus.ReportLoginStatus(hasErrors:=True,
+                                             lastErrorMessage)
             _sgMiniDisplay.SetCurrentSgString(sgString, f:=0)
         End If
         SetServerUpdateTimer(Start:=True, interval:=OneMinuteInMilliseconds)

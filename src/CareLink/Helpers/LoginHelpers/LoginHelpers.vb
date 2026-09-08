@@ -123,11 +123,12 @@ Friend Module LoginHelpers
                     SetServerUpdateTimer(Start:=True, interval:=FiveMinutesInMilliseconds)
                     Dim hasErrors As Boolean = True
                     If NetworkUnavailable() Then
-                        owner.LoginStatus.ReportLoginStatus(hasErrors, lastErrorMessage:="Network Unavailable")
-                        Return False
-                    ElseIf IsNullOrWhiteSpace(LoginDialog.LoginStatus.Text) Then
                         owner.LoginStatus.ReportLoginStatus(hasErrors,
-                                                            lastErrorMessage:=LoginDialog.LoginStatus.Text)
+                                                            lastErrorMessage:="Network Unavailable")
+                        Return False
+                    ElseIf IsNullOrWhiteSpace(value:=LoginDialog.LoginStatus.Text) Then
+                        owner.LoginStatus.ReportLoginStatus(hasErrors,
+                                                            lastErrorMessage:="")
                         Return False
                     End If
 
@@ -135,16 +136,19 @@ Friend Module LoginHelpers
                     owner.SetLastUpdateTime(msg, suffixMessage:=EmptyString, highLight:=True)
                     Return False
                 End If
-                Dim lastErrorMessage As String = Await Form1.Client.GetRecentDataAsync()
+                Dim lastErrorMessage As String =
+                    Await Form1.Client.GetRecentDataAsync()
 
                 SetUpCareLinkUser(forceUI:=False)
                 SetServerUpdateTimer(Start:=True, interval:=OneMinuteInMilliseconds)
 
                 If NetworkUnavailable() Then
-                    ReportLoginStatus(owner.LoginStatus)
+                    owner.LoginStatus.ReportLoginStatus(hasErrors:=True,
+                                                        lastErrorMessage:="Network Unavailable")
                     Return False
                 End If
-                ReportLoginStatus(owner.LoginStatus, hasErrors:=IsPatientDataEmpty, lastErrorMessage)
+                owner.LoginStatus.ReportLoginStatus(hasErrors:=IsPatientDataEmpty(),
+                                                    lastErrorMessage)
                 owner.MenuShowMiniDisplay.Visible = True
                 fromFile = False
                 owner.TabControlPage1.Visible = True

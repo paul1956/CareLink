@@ -522,7 +522,8 @@ Friend Class Client2
                         Await refreshTask.ConfigureAwait(continueOnCapturedContext:=False)
                     If Not refreshedToken.IsEmpty Then
                         _tokenDataElement = refreshedToken
-                        _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
+                        _accessTokenPayload =
+                            GetAccessTokenPayload(token_data:=_tokenDataElement)
                         WriteTokenFile(token:=_tokenDataElement)
                     End If
                 Catch refreshEx As Exception
@@ -815,7 +816,8 @@ Friend Class Client2
                     Await Me.DoRefreshAsync(Me.Config,
                                             tokenElement:=_tokenDataElement,
                                             httpClient:=_httpClient)
-                _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
+                _accessTokenPayload =
+                    GetAccessTokenPayload(token_data:=_tokenDataElement)
                 WriteTokenFile(token:=_tokenDataElement)
             Catch ex As Exception
                 LogMessage(message:=ex.ToString())
@@ -832,7 +834,8 @@ Friend Class Client2
 
                     ' Reload token data written by the interactive login and update payload
                     _tokenDataElement = ReadTokenFile(tokenBaseFileName:=_tokenBaseFileName)
-                    _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
+                    _accessTokenPayload =
+                        GetAccessTokenPayload(token_data:=_tokenDataElement)
 
                     If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
                         LogMessage(message:=lastErrorMessage)
@@ -878,7 +881,8 @@ Friend Class Client2
                     Dim refreshedToken As JsonElement = Await refreshTask
                     If Not refreshedToken.IsEmpty Then
                         _tokenDataElement = refreshedToken
-                        _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
+                        _accessTokenPayload =
+                            GetAccessTokenPayload(token_data:=_tokenDataElement)
                         WriteTokenFile(token:=_tokenDataElement)
                         ' retry
                         data = Await Me.GetDataAsync(username:=GetUserName(),
@@ -897,7 +901,8 @@ Friend Class Client2
                                            password:=s_password)
 
                         _tokenDataElement = ReadTokenFile(tokenBaseFileName:=_tokenBaseFileName)
-                        _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
+                        _accessTokenPayload =
+                            GetAccessTokenPayload(token_data:=_tokenDataElement)
 
                         If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
                             LogMessage(message:=lastErrorMessage)
@@ -933,7 +938,8 @@ Friend Class Client2
                     Await Me.DoRefreshAsync(Me.Config,
                                             tokenElement:=_tokenDataElement,
                                             httpClient:=_httpClient)
-                _accessTokenPayload = GetAccessTokenPayload(token_data:=_tokenDataElement)
+                _accessTokenPayload =
+                    GetAccessTokenPayload(token_data:=_tokenDataElement)
                 WriteTokenFile(token:=_tokenDataElement)
             Catch ex As Exception
                 LogMessage(message:=ex.ToString())
