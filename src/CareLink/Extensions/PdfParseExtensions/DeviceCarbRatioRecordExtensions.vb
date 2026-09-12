@@ -1,0 +1,25 @@
+﻿' Licensed to the .NET Foundation under one or more agreements.
+' The .NET Foundation licenses this file to you under the MIT license.
+' See the LICENSE file in the project root for more information.
+
+Imports System.Runtime.CompilerServices
+
+Public Module DeviceCarbRatioRecordExtensions
+
+    <Extension>
+    Public Sub InitializeFromRow(this As DeviceCarbRatioRecord, row As StringTable.Row)
+        If row Is Nothing Then Return
+        Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
+        Dim s() As String = row.Columns(index:=0).Split(separator:=" "c, options)
+        If s.Length <> 2 Then
+            Return
+        End If
+        If TimeOnly.TryParse(s:=s(0), result:=this.Time) Then
+            this.Ratio = ParseSingle(s:=s(1))
+            this.IsValid = True
+        Else
+            ' preserve behavior: Stop was previously called on parse failure
+        End If
+    End Sub
+
+End Module

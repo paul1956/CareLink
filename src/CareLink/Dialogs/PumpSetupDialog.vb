@@ -282,8 +282,8 @@ Public Class PumpSetupDialog
             .AppendKeyValue(key:="Volume:", value:=$"{Me.Pdf.Utilities.AlarmVolume}")
 
             Dim audioOptions As String = Me.Pdf.Utilities.AudioOptions
-            .AppendKeyValue(key:="Sound:", value:=$"{audioOptions.ContainsNoCase(value:="Audio").BoolToOnOff()}")
-            value = $"{audioOptions.ContainsNoCase(value:="Vibrate").BoolToOnOff()}"
+            .AppendKeyValue(key:="Sound:", value:=$"{audioOptions.ContainsNoCase(value:="Audio")}")
+            value = $"{audioOptions.ContainsNoCase(value:="Vibrate")}"
             .AppendKeyValue(key:="Vibration:", value)
 
             .ReadOnly = True
@@ -336,13 +336,18 @@ Public Class PumpSetupDialog
                     If Not basalRate.IsValid Then
                         Exit For
                     End If
-                    Dim startTime As TimeOnly = basalRate.Time
-                    Dim endTime As TimeOnly = If(e.IsLast,
-                                                 Eleven59,
-                                                 item.Value.BasalRates(index:=e.Index + 1).Time)
+                    Dim startTime As String = basalRate.Time.ToString()
+                    Dim endTime As String = If(e.IsLast,
+                                               Eleven59.ToString,
+                                               item.Value.BasalRates(index:=e.Index + 1).Time.ToString)
 
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
-                    .AppendTimeValueRow(startTime, endTime, value, Me.Pdf.Utilities.TimeFormat)
+                    Dim format As String = Me.Pdf.Utilities.TimeFormat
+                    .AppendTimeValueRow(startTime:=startTime,
+                                        endTime:=endTime,
+                                        value,
+                                        indent:=Indent4,
+                                        heading:=True)
                 Next
             Next
         End With

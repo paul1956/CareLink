@@ -42,11 +42,15 @@ Namespace My
             ' is obtained at application startup instead of on first use. This runs
             ' on a background thread to avoid delaying UI initialization.
             Try
-                Dim country As String = If(IsNullOrWhiteSpace(value:=My.Settings.CountryCode), "US", My.Settings.CountryCode)
+                Dim country As String = If(IsNullOrWhiteSpace(value:=Settings.CountryCode), "US", Settings.CountryCode)
                 Dim worldRegion As WorldRegion = country.GetRegionFromCode()
                 Dim serverMapping As String = s_regionToServerMapping(key:=worldRegion)
                 Dim serverRegion As ServerLocation = If(serverMapping.EqualsNoCase("US"), ServerLocation.US, If(serverMapping.EqualsNoCase("Eu"), ServerLocation.Eu, ServerLocation.Clinical))
-                Task.Run(Function() Discover.GetCachedDiscoveryAsync(serverRegion))
+                Dim [function] As Func(Of Task(Of DiscoveryRoot)) =
+                    Function()
+                        Return GetCachedDiscoveryAsync(serverRegion)
+                    End Function
+                Task.Run([function])
             Catch
                 ' Ignore errors during prefetch; discovery will be fetched lazily if needed.
             End Try

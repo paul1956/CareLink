@@ -119,7 +119,7 @@ Public Class CareLinkService
         End SyncLock
 
         ' Ensure discovery JSON is cached per region and only fetched when needed.
-        Dim discovery As DiscoveryRoot = Await Discover.GetCachedDiscoveryAsync(serverRegion).ConfigureAwait(False)
+        Dim discovery As DiscoveryRoot = Await GetCachedDiscoveryAsync(serverRegion).ConfigureAwait(False)
         Dim resolved As EndpointConfig = Await ResolveEndpointConfigFromDiscoveryAsync(discovery, serverRegion).ConfigureAwait(False)
 
         SyncLock s_endpointCacheLock
@@ -157,7 +157,7 @@ Public Class CareLinkService
                 Dim ssoJson As String = Await s_http.GetStringAsync(requestUri:=ssoUrl).ConfigureAwait(False)
                 Dim ssoDoc As SsoConfig = Nothing
                 Try
-                    ssoDoc = JsonSerializer.Deserialize(Of SsoConfig)(json:=ssoJson, options:=JsonExtensions.DeserializationOptions)
+                    ssoDoc = JsonSerializer.Deserialize(Of SsoConfig)(json:=ssoJson, options:=DeserializationOptions)
                 Catch ex As Exception
                     Throw New Exception(message:=$"Failed to parse SSO JSON: {ex.Message}")
                 End Try
@@ -219,7 +219,7 @@ Public Class CareLinkService
 
     Public Shared Async Function ResolveEndpointConfigAsync(serverRegion As ServerLocation) As Task(Of EndpointConfig)
         ' Use the cached discovery (or fetch it once if missing) and resolve from that.
-        Dim discovery As DiscoveryRoot = Await Discover.GetCachedDiscoveryAsync(serverRegion).ConfigureAwait(False)
+        Dim discovery As DiscoveryRoot = Await GetCachedDiscoveryAsync(serverRegion).ConfigureAwait(False)
         Return Await ResolveEndpointConfigFromDiscoveryAsync(discovery, serverRegion).ConfigureAwait(False)
     End Function
 

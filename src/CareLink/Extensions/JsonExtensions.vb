@@ -79,7 +79,7 @@ Public Module JsonExtensions
             result = JsonSerializer.Deserialize(Of T)(json, options:=options)
             Return True
         Catch ex As JsonException
-            LoggerManager.LogMessage(message:=$"TryFromJson failed: {ex.Message}")
+            LogMessage(message:=$"TryFromJson failed: {ex.Message}")
             result = Nothing
             Return False
         End Try
@@ -128,7 +128,7 @@ Public Module JsonExtensions
             Return JsonSerializer.Deserialize(Of T)(json, options:=options)
         Catch ex As JsonException
             Stop
-            LoggerManager.LogMessage(message:=$"ERROR: failed deserializing JSON string: {ex.Message}")
+            LogMessage(message:=$"ERROR: failed deserializing JSON string: {ex.Message}")
             Throw
         End Try
     End Function
@@ -147,7 +147,7 @@ Public Module JsonExtensions
             Return elem
         Catch ex As JsonException
             Stop
-            LoggerManager.LogMessage(message:=$"ERROR: failed deserializing JSON element: {ex.Message}")
+            LogMessage(message:=$"ERROR: failed deserializing JSON element: {ex.Message}")
             Throw
         End Try
     End Function
@@ -387,7 +387,7 @@ Public Module JsonExtensions
             json = JsonSerializer.Serialize(value, options:=SerializerOptions)
         Catch ex As Exception
             Stop
-            LoggerManager.LogMessage(message:=$"ERROR: failed serializing object to JSON: {ex.Message}")
+            LogMessage(message:=$"ERROR: failed serializing object to JSON: {ex.Message}")
             Throw
         End Try
         Return json
@@ -495,7 +495,7 @@ Public Module JsonExtensions
             result = JsonSerializer.Deserialize(Of T)(element, options:=DeserializationOptions)
             Return True
         Catch ex As JsonException
-            LoggerManager.LogMessage(message:=$"TryFromJson(JsonElement) failed: {ex.Message}")
+            LogMessage(message:=$"TryFromJson(JsonElement) failed: {ex.Message}")
             result = Nothing
             Return False
         End Try
@@ -527,7 +527,7 @@ Public Module JsonExtensions
             json = JsonSerializer.Serialize(value, options:=SerializerOptions)
             Return True
         Catch ex As Exception
-            LoggerManager.LogMessage(message:=$"TryToJson failed: {ex.Message}")
+            LogMessage(message:=$"TryToJson failed: {ex.Message}")
             json = String.Empty
             Return False
         End Try

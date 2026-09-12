@@ -690,7 +690,7 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
                     If kvp.Value <> "NO_ERROR_MESSAGE" Then
                         Dim startKey As String = "System Status Message: "
-                        LoggerManager.UpdateMessage(message:=$"{startKey}{kvp.Value}.", startKey)
+                        UpdateMessage(message:=$"{startKey}{kvp.Value}.", startKey)
                     End If
 
                 Case ServerDataEnum.sensorState

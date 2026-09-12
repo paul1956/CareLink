@@ -12,6 +12,9 @@ Imports System.Text.RegularExpressions
 ''' </summary>
 Public Module StringExtensions
 
+    Private Const ComparisonType As StringComparison =
+        StringComparison.OrdinalIgnoreCase
+
     ''' <summary>
     '''  Characters used as decimal separators for parsing numbers.
     ''' </summary>
@@ -49,6 +52,41 @@ Public Module StringExtensions
             End Function
 
         Return s.Count(predicate)
+    End Function
+
+    ''' <summary>
+    '''  Extracts the text between two specified words in a given string.
+    ''' </summary>
+    ''' <param name="source">The full source string.</param>
+    ''' <param name="startWord">The starting word or phrase.</param>
+    ''' <param name="endWord">The ending word or phrase.</param>
+    ''' <returns>
+    '''  The substring found between startWord and endWord,
+    '''  or an empty string if not found.
+    ''' </returns>
+    <Extension>
+    Public Function ExtractBetween(source As String,
+                                   startWord As String,
+                                   Optional endWord As String = Nothing) As String
+        If String.IsNullOrEmpty(value:=source) OrElse String.IsNullOrEmpty(value:=startWord) Then
+            Return String.Empty
+        End If
+
+        Dim startIndex As Integer = source.IndexOf(value:=startWord, ComparisonType)
+        If startIndex = -1 Then
+            Return String.Empty
+        End If
+
+        startIndex += startWord.Length
+
+        If endWord Is Nothing Then
+            Return source.Substring(startIndex).Trim()
+        End If
+
+        Dim endIndex As Integer = source.IndexOf(value:=endWord, startIndex, ComparisonType)
+        Return If(endIndex = -1,
+                 String.Empty,
+                 source.Substring(startIndex, length:=endIndex - startIndex).Trim())
     End Function
 
     ''' <summary>
@@ -204,9 +242,9 @@ Public Module StringExtensions
                                  Optional comparison As StringComparison = StringComparison.Ordinal) As String
         Return If(String.IsNullOrEmpty(value) OrElse String.IsNullOrEmpty(suffix),
                   value,
-                  If(value.EndsWith(suffix, comparison),
-                      value.Substring(0, value.Length - suffix.Length),
-                      value))
+                  If(value.EndsWith(value:=suffix, comparisonType:=comparison),
+                     value.Substring(startIndex:=0, length:=value.Length - suffix.Length),
+                     value))
     End Function
 
     ''' <summary>
@@ -369,12 +407,11 @@ Public Module StringExtensions
     '''  A formatted string representing the total units with optional prefix and suffix.
     ''' </returns>
     <Extension>
-    Public Function ToUnits(
-        totalUnits As Integer,
-        unit As String,
-        Optional prefix As String = EmptyString,
-        Optional suffix As String = EmptyString,
-        Optional includeValue As Boolean = True) As String
+    Public Function ToUnits(totalUnits As Integer,
+                            unit As String,
+                            Optional prefix As String = EmptyString,
+                            Optional suffix As String = EmptyString,
+                            Optional includeValue As Boolean = True) As String
 
         Dim unitOnly As String = If(totalUnits = 1,
                                     unit,
@@ -382,6 +419,30 @@ Public Module StringExtensions
         Return If(includeValue,
                   $"{prefix}{totalUnits:N0}{unitOnly}{suffix}",
                   $"{prefix}{unitOnly}{suffix}")
+    End Function
+
+    ''' </summary>
+    ''' <param name="input">The original string.</param>
+    ''' <param name="key">The key to truncate at.</param>
+    ''' <returns>Truncated string, or original if key not found.</returns>
+    <Extension>
+    Public Function TruncateAtKeyword(input As String, key As String) As String
+        ' Validate inputs
+        If String.IsNullOrEmpty(value:=input) OrElse String.IsNullOrEmpty(value:=key) Then
+            Return input
+        End If
+
+        ' Find key position (case-insensitive)
+        Dim index As Integer =
+            input.IndexOf(value:=key, ComparisonType)
+
+        ' If key not found, return original string
+        If index = -1 Then
+            Return input
+        End If
+
+        ' Return substring before key
+        Return input.Substring(startIndex:=0, length:=index).TrimEnd()
     End Function
 
     ''' <summary>
@@ -426,7 +487,7 @@ Public Module StringExtensions
     <Extension()>
     Public Function ContainsNoCase(s1 As String, value As String) As Boolean
         If s1 Is Nothing Then Return False
-        Return s1.Contains(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
+        Return s1.Contains(value, ComparisonType)
     End Function
 
     ''' <summary>
@@ -442,7 +503,7 @@ Public Module StringExtensions
     <Extension()>
     Public Function EndsWithNoCase(s As String, value As String) As Boolean
         If s Is Nothing OrElse value Is Nothing Then Return False
-        Return s.EndsWith(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
+        Return s.EndsWith(value, ComparisonType)
     End Function
 
     ''' <summary>
@@ -458,7 +519,7 @@ Public Module StringExtensions
     <Extension()>
     Public Function EqualsNoCase(a As String, b As String) As Boolean
         If a Is Nothing OrElse b Is Nothing Then Return False
-        Return String.Equals(a, b, comparisonType:=StringComparison.OrdinalIgnoreCase)
+        Return String.Equals(a, b, ComparisonType)
     End Function
 
     ''' <summary>
@@ -495,7 +556,7 @@ Public Module StringExtensions
     <Extension()>
     Public Function IndexOfNoCase(s1 As String, value As String) As Integer
         If s1 Is Nothing OrElse value Is Nothing Then Return -1
-        Return s1.IndexOf(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
+        Return s1.IndexOf(value, ComparisonType)
     End Function
 
     ''' <summary>
@@ -519,7 +580,10 @@ Public Module StringExtensions
         If input Is Nothing Then Return Nothing
 
         Dim culture As CultureInfo = CultureInfo.CurrentUICulture
-        Return input.Replace(oldValue:=s, newValue:=String.Empty, ignoreCase:=True, culture)
+        Return input.Replace(oldValue:=s,
+                             newValue:=String.Empty,
+                             ignoreCase:=True,
+                             culture)
     End Function
 
     ''' <summary>
@@ -545,10 +609,9 @@ Public Module StringExtensions
     '''  ensuring that the replacement respects the current UI culture.
     ''' </remarks>
     <Extension()>
-    Public Function ReplaceNoCase(
-        s As String,
-        oldValue As String,
-        newValue As String) As String
+    Public Function ReplaceNoCase(s As String,
+                                  oldValue As String,
+                                  newValue As String) As String
 
         If s Is Nothing Then
             Return Nothing
@@ -570,7 +633,7 @@ Public Module StringExtensions
     <Extension()>
     Public Function StartsWithNoCase(s As String, value As String) As Boolean
         If s Is Nothing OrElse value Is Nothing Then Return False
-        Return s.StartsWith(value, comparisonType:=StringComparison.OrdinalIgnoreCase)
+        Return s.StartsWith(value, ComparisonType)
     End Function
 
 #End Region ' IgnoreCase String Comparisons

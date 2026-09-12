@@ -20,7 +20,9 @@ Friend Module DeliverySettings
 
             Dim timeFormat As String = pdf.Utilities.TimeFormat
             For Each item As CarbRatioRecord In pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
-                .AppendTimeValueRow(item.StartTime, item.EndTime, value:=$"{item.CarbRatio} g/U", timeFormat)
+                .AppendTimeValueRow(startTime:=item.StartTime.ToString(),
+                                    endTime:=item.EndTime.ToString(),
+                                    value:=$"{item.CarbRatio} g/U")
             Next
             .AppendNewLine
 
@@ -40,16 +42,22 @@ Friend Module DeliverySettings
                 End If
 
                 Dim startTime As TimeOnly = item.Time
-                Dim endTime As TimeOnly = If(e.IsLast,
-                                             Midnight,
-                                             pdf.Bolus.InsulinSensitivity(index:=e.Index + 1).Time)
+                Dim endTime As TimeOnly =
+                    If(e.IsLast,
+                       Midnight,
+                       pdf.Bolus.InsulinSensitivity(index:=e.Index + 1).Time)
 
-                Dim sensitivity As String = If(item.Sensitivity < 0.01,
-                                               "0.00",
-                                               item.Sensitivity.RoundTo025.ToString(format:="F3"))
+                Dim sensitivity As String =
+                    If(item.Sensitivity < 0.01,
+                       "0.00",
+                       item.Sensitivity.RoundTo025.ToString(format:="F3"))
 
-                Dim value As String = $"{sensitivity} {pdf.Bolus.BolusWizard.Units.CarbUnits}/U"
-                .AppendTimeValueRow(startTime, endTime, value, pdf.Utilities.TimeFormat)
+                Dim value As String =
+                    $"{sensitivity} {pdf.Bolus.BolusWizard.Units.CarbUnits}/U"
+                .AppendTimeValueRow(startTime:=startTime.ToString,
+                                    endTime:=endTime.ToString,
+                                    value,
+                                    indent:=pdf.Utilities.TimeFormat)
             Next
             .AppendNewLine
 
@@ -69,7 +77,10 @@ Friend Module DeliverySettings
                                              pdf.Bolus.BloodGlucoseTarget(index:=e.Index + 1).Time)
 
                 Dim value As String = $"{item.Low}-{item.High} {pdf.Bolus.BolusWizard.Units.BgUnits}"
-                .AppendTimeValueRow(startTime, endTime, value, pdf.Utilities.TimeFormat)
+                .AppendTimeValueRow(startTime,
+                                    endTime,
+                                    value,
+                                    indent:=pdf.Utilities.TimeFormat)
             Next
             .AppendNewLine
         End With
@@ -93,7 +104,10 @@ Friend Module DeliverySettings
                                                  item.Value.BasalRates(index:=e.Index + 1).Time)
 
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
-                    .AppendTimeValueRow(startTime, endTime, value, pdf.Utilities.TimeFormat)
+                    .AppendTimeValueRow(startTime:=startTime.ToString(),
+                                        endTime:=endTime.ToString(),
+                                        value,
+                                        indent:=pdf.Utilities.TimeFormat)
                 Next
             Next
         End With

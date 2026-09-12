@@ -19,24 +19,6 @@ Public Module RichTextBoxExtensions
     Public ReadOnly Property HeadingFont As New Font(familyName:="Segoe UI", emSize:=16, style:=FontStyle.Regular)
 
     ''' <summary>
-    '''  Returns a string representation of a <see cref="TimeOnly"/> value,
-    '''  padded to a standard width if necessary.
-    ''' </summary>
-    ''' <param name="tOnly">The <see cref="TimeOnly"/> value to format.</param>
-    ''' <returns>A string representation of the time, padded to a standard width.</returns>
-    ''' <param name="timeFormat"></param>
-    <Extension>
-    Private Function StandardWidth(tOnly As TimeOnly, timeFormat As String) As String
-        If timeFormat = "12 Hr" Then
-            ' Ensure the hour is always two digits in 12-hour format
-            Return tOnly.ToString(format:="hh:mm tt", provider:=CultureInfo.InvariantCulture)
-        Else
-            ' Ensure the hour is always two digits in 24-hour format
-            Return tOnly.ToString(format:="HH:mm", provider:=CultureInfo.InvariantCulture)
-        End If
-    End Function
-
-    ''' <summary>
     '''  Returns a string representation of the given text, centered within
     '''  a specified total width.
     ''' </summary>
@@ -175,29 +157,50 @@ Public Module RichTextBoxExtensions
     ''' <param name="startTime">The start time of the row.</param>
     ''' <param name="endTime">The end time of the row.</param>
     ''' <param name="value">The value associated with the time range.</param>
-    ''' <param name="timeFormat"></param>
+    ''' <param name="indent">If true, applies a single indent to the row.</param>
     ''' <remarks>
     '''  The time values are formatted to a standard width for consistency.
     ''' </remarks>
-    ''' <param name="indent">If true, applies a single indent to the row.</param>
     ''' <param name="heading"></param>
+    '''
     <Extension>
     Friend Sub AppendTimeValueRow(rtb As RichTextBox,
-                                  startTime As TimeOnly,
-                                  endTime As TimeOnly,
+                                  startTime As String,
+                                  endTime As String,
                                   value As String,
-                                  timeFormat As String,
                                   Optional indent As String = Indent8,
                                   Optional heading As Boolean = False)
 
-        Dim startTimeStr As String = startTime.StandardWidth(timeFormat)
-        Dim endTimeStr As String = endTime.StandardWidth(timeFormat)
-        Dim timeRange As String = $"{startTimeStr} - {endTimeStr}"
+        Dim timeRange As String = $"{startTime} - {endTime}"
         Dim newFont As Font = If(heading, FixedWidthBoldFont, FixedWidthFont)
 
         rtb.AppendTextNewFont(text:=$"{indent}{timeRange}", newFont)
         Dim text As String = value.AlignCenter()
         rtb.AppendTextNewFont(text, newFont:=FixedWidthFont, includeNewLine:=True)
+    End Sub
+
+    ''' <summary>
+    '''  Appends a time value row to the <see cref="RichTextBox"/> with start
+    '''  and end times as <see cref="TimeOnly"/> values.
+    ''' </summary>
+    ''' <param name="rtb">The <see cref="RichTextBox"/> to append the time value row to.</param>
+    ''' <param name="startTime">The start time of the row as a <see cref="TimeOnly"/> value.</param>
+    ''' <param name="endTime">The end time of the row as a <see cref="TimeOnly"/> value.</param>
+    ''' <param name="value">The value associated with the time range.</param>
+    ''' <param name="indent">If true, applies a single indent to the row.</param>
+    ''' <param name="heading">If true, formats the row as a heading.</param>
+    <Extension>
+    Friend Sub AppendTimeValueRow(rtb As RichTextBox,
+                                  startTime As TimeOnly,
+                                  endTime As TimeOnly,
+                                  value As String,
+                                  Optional indent As String = Indent8,
+                                  Optional heading As Boolean = False)
+        rtb.AppendTimeValueRow(startTime:=startTime.ToString(),
+                               endTime:=endTime.ToString(),
+                               value,
+                               indent,
+                               heading)
     End Sub
 
     ' <summary>
@@ -233,16 +236,6 @@ Public Module RichTextBoxExtensions
         text = $"{startTime}{separator}{endTime}".AlignCenter()
         rtb.AppendTextNewFont(text, newFont:=FixedWidthFont, includeNewLine:=True)
     End Sub
-
-    ''' <summary>
-    '''  Converts a boolean value to "On" or "Off" string representation.
-    ''' </summary>
-    ''' <param name="boolValue"></param>
-    ''' <returns> "On" if true, "Off" if false</returns>
-    <Extension>
-    Friend Function BoolToOnOff(boolValue As Boolean) As String
-        Return If(boolValue, "On", "Off")
-    End Function
 
     ''' <summary>
     '''  Makes all occurrences of a specified string in a <see cref="RichTextBox"/> bold.

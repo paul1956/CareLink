@@ -22,6 +22,7 @@
     <None Remove="TestData\Test08.PDF" />
     <None Remove="TestData\Test09.pdf" />
     <None Remove="TestData\Test10.pdf" />
+    <None Remove="TestData\TestDataV2.pdf" />
   </ItemGroup>
 
   <ItemGroup>

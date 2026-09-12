@@ -409,7 +409,7 @@ Public Class InitializeDialog
         If Me.CurrentUser.TryToJson(contents) Then
             File.WriteAllTextAsync(path:=GetUserSettingsPath(), contents)
         Else
-            LoggerManager.LogMessage(message:=$"ERROR: failed serializing CurrentUser settings to {GetUserSettingsPath()}")
+            LogMessage(message:=$"ERROR: failed serializing CurrentUser settings to {GetUserSettingsPath()}")
         End If
         Me.Close()
     End Sub

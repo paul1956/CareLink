@@ -61,7 +61,7 @@ Public Module Discover
             message = $"ERROR: country code {country} is not supported"
             Throw New ApplicationException(message)
         End If
-        LoggerManager.LogMessage(message:=$"   region: {region.ElementToString()}")
+        LogMessage(message:=$"   region: {region.ElementToString()}")
         Dim countryInfo As CountryInfo = Nothing
         If Not region.TryFromJson(result:=countryInfo) Then
             Throw New ApplicationException(message:="Failed to parse country info from discovery data.")
@@ -125,7 +125,7 @@ Public Module Discover
         Dim json As String =
             Await New HttpClient().GetStringAsync(requestUri:=GetDiscoverUri(serverRegion)).ConfigureAwait(continueOnCapturedContext:=False)
 
-        Dim options As JsonSerializerOptions = JsonExtensions.DeserializationOptions
+        Dim options As JsonSerializerOptions = DeserializationOptions
         Dim discovery As DiscoveryRoot
         Try
             discovery = JsonSerializer.Deserialize(Of DiscoveryRoot)(json:=json, options)
@@ -253,19 +253,19 @@ Public Module Discover
                         Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
                     Catch uaEx As UnauthorizedAccessException
                         lastErrorMsg = $"Unauthorized access when fetching discovery data: {uaEx.Message}"
-                        LoggerManager.LogMessage(message:=lastErrorMsg)
+                        LogMessage(message:=lastErrorMsg)
                         Return New DiscoveryRoot With {
                             .httpStatusCode = httpStatusCode,
                             .lastErrorMsg = lastErrorMsg}
                     Catch argEx As ArgumentException
                         lastErrorMsg = $"Bad request fetching discovery data: {argEx.Message}"
-                        LoggerManager.LogMessage(message:=lastErrorMsg)
+                        LogMessage(message:=lastErrorMsg)
                         Return New DiscoveryRoot With {
                             .httpStatusCode = httpStatusCode,
                             .lastErrorMsg = lastErrorMsg}
                     Catch httpEx As HttpRequestException
                         lastErrorMsg = $"HTTP request failed: {httpEx.Message}"
-                        LoggerManager.LogMessage(message:=lastErrorMsg)
+                        LogMessage(message:=lastErrorMsg)
                         Return New DiscoveryRoot With {
                             .httpStatusCode = httpStatusCode,
                             .lastErrorMsg = lastErrorMsg}
@@ -306,13 +306,13 @@ Public Module Discover
                 Next
                 lastErrorMsg = $"Multiple errors: {String.Join(separator:="; ", values:=messages)}"
             End If
-            LoggerManager.LogMessage(message:=lastErrorMsg)
+            LogMessage(message:=lastErrorMsg)
         Catch ex As HttpRequestException
             lastErrorMsg = $"HTTP request error: {ex.Message}"
-            LoggerManager.LogMessage(message:=lastErrorMsg)
+            LogMessage(message:=lastErrorMsg)
         Catch ex As TaskCanceledException
             lastErrorMsg = "The request timed out."
-            LoggerManager.LogMessage(message:=lastErrorMsg)
+            LogMessage(message:=lastErrorMsg)
         Catch ex As JsonException
             lastErrorMsg = $"JSON deserialization error: {ex.Message}"
             Debug.WriteLine(message:=lastErrorMsg)

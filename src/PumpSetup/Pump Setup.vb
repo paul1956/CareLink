@@ -146,22 +146,26 @@ Public Class PumpSetup
         Dim settingExist As Boolean = IO.Directory.Exists(path:=GetSettingsDirectory)
         _pdfFilesInDownLoadDirectory = IO.Directory.GetFiles(path:=GetDownloadsDirectory(), searchPattern:=$"*.pdf")
 
-        Dim downloadFilesExist As Boolean = _pdfFilesInDownLoadDirectory.Length = 0
+        Dim downloadFilesExist As Boolean = _pdfFilesInDownLoadDirectory.Length > 0
         Dim caption As String = "CareLink PDF Settings File Required"
         If downloadFilesExist AndAlso Not settingExist Then
             Dim text As String = $"No PDF files exist, Please download from {CareLinkUrl} and restart program."
             MessageBox.Show(text, caption, buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)
             Me.Close()
         End If
-        If downloadFilesExist Then
+        If Not downloadFilesExist Then
             Dim text As String =
                 $"No PDF files exist in download directory, Please download from {CareLinkUrl} and restart program."
             MessageBox.Show(text, caption, buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)
             Me.Close()
         End If
 
-        Dim keySelector As Func(Of String, Date) = Function(path) IO.File.GetLastWriteTime(path)
-        _pdfFilesInDownLoadDirectory = _pdfFilesInDownLoadDirectory.OrderByDescending(keySelector).ToArray()
+        Dim keySelector As Func(Of String, Date) =
+            Function(path As String) As Date
+                Return IO.File.GetLastWriteTime(path)
+            End Function
+        _pdfFilesInDownLoadDirectory =
+            _pdfFilesInDownLoadDirectory.OrderByDescending(keySelector).ToArray()
 
         Dim step1 As String
         Dim existingUserMessageStart As String =

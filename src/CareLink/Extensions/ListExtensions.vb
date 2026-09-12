@@ -6,6 +6,9 @@ Imports System.Runtime.CompilerServices
 
 Public Module ListExtensions
 
+    Private Const ComparisonType As StringComparison =
+        StringComparison.OrdinalIgnoreCase
+
     ''' <summary>
     '''  Tries to find a string in the list that <paramref name="headerText"/>
     '''  starts with, ignoring case.
@@ -53,19 +56,19 @@ Public Module ListExtensions
 
     ''' <summary>
     '''  Finds the index of the first line in the <see cref="List"/> that contains
-    '''  the specified <paramref name="value"/> <see langword="String"/>.
+    '''  the specified <paramref name="searchWord"/> <see langword="String"/>.
     ''' </summary>
     ''' <param name="lines">The list of strings to search.</param>
-    ''' <param name="value">The string to search for within each line.</param>
+    ''' <param name="searchWord">The string to search for within each line.</param>
     ''' <returns>
     '''  The zero-based index of the first line containing the target string;
     '''  otherwise, -1 if not found.
     ''' </returns>
     <Extension>
-    Public Function FindLineNumber(lines As List(Of String), value As String) As Integer
+    Public Function FindLineNumber(lines As List(Of String), searchWord As String) As Integer
         For Each e As IndexClass(Of String) In lines.WithIndex
             Dim line As String = e.Value
-            If line.Contains(value) Then
+            If line.Contains(value:=searchWord, ComparisonType) Then
                 Return e.Index
             End If
         Next

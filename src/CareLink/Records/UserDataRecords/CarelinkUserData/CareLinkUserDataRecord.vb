@@ -225,35 +225,35 @@ Partial Public Class CareLinkUserDataRecord
 #Region "Implements IEditableObject"
 
     Public Sub BeginEdit() Implements IEditableObject.BeginEdit
-        LoggerManager.LogMessage(message:=$"Start EndEdit{_userData._iD}{_userData._careLinkUserName}")
+        LogMessage(message:=$"Start EndEdit{_userData._iD}{_userData._careLinkUserName}")
         If Not _inTxn Then
             _backupData = _userData
             _inTxn = True
 
             Dim message As String = $"BeginEdit  - {_userData._iD}{_userData._careLinkUserName}"
-            LoggerManager.LogMessage(message)
+            LogMessage(message)
         End If
     End Sub
 
     Public Sub CancelEdit() Implements IEditableObject.CancelEdit
-        LoggerManager.LogMessage(message:="Start CancelEdit")
+        LogMessage(message:="Start CancelEdit")
         If _inTxn Then
             _userData = _backupData
             Dim message As String = $"CancelEdit - {_userData._iD}{_userData._careLinkUserName}"
-            LoggerManager.LogMessage(message)
+            LogMessage(message)
         End If
-        LoggerManager.LogMessage(message:="End CancelEdit")
+        LogMessage(message:="End CancelEdit")
     End Sub
 
     Public Sub EndEdit() Implements IEditableObject.EndEdit
-        LoggerManager.LogMessage(message:=$"Start EndEdit{_userData._iD}{_userData._careLinkUserName}")
+        LogMessage(message:=$"Start EndEdit{_userData._iD}{_userData._careLinkUserName}")
         If _inTxn Then
             _backupData = New CareLinkUserData()
             _inTxn = False
             Dim message As String = $"Done EndEdit - {_userData._iD}{_userData._careLinkUserName}"
-            LoggerManager.LogMessage(message)
+            LogMessage(message)
         End If
-        LoggerManager.LogMessage(message:="End EndEdit")
+        LogMessage(message:="End EndEdit")
     End Sub
 
     Public Overrides Function Equals(obj As Object) As Boolean

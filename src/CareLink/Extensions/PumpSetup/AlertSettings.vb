@@ -10,26 +10,24 @@ Public Module AlertSettings
     Friend Sub AlertSettings1HighAlert(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
             For Each h As HighAlertRecord In pdf.HighAlerts.HighAlert
-                .AppendTimeValueRow(
-                    startTime:=h.Start,
-                    endTime:=h.End,
-                    value:=$"{h.HighLimit}",
-                    timeFormat:=pdf.Utilities.TimeFormat,
-                    indent:=Indent4,
-                    heading:=True)
+                .AppendTimeValueRow(startTime:=h.Start,
+                                    endTime:=h.End,
+                                    value:=$"{h.HighLimit}",
+                                    indent:=Indent4,
+                                    heading:=True)
                 .AppendKeyValue(
                     key:="Alert Before High:",
-                    value:=h.AlertBeforeHigh.BoolToOnOff(),
+                    value:=h.AlertBeforeHigh,
                     indent:=Indent8)
                 .AppendKeyValue(
                     key:="Time Before High:",
                     value:=h.TimeBeforeHigh,
                     indent:=Indent8)
                 .AppendKeyValue(key:="Alert on High:",
-                    value:=h.AlertOnHigh.BoolToOnOff(),
+                    value:=h.AlertOnHigh,
                     indent:=Indent8)
                 .AppendKeyValue(key:="Rise Alert:",
-                    value:=h.RiseAlert.BoolToOnOff(),
+                    value:=h.RiseAlert,
                     indent:=Indent8)
             Next
             .AppendNewLine
@@ -44,11 +42,11 @@ Public Module AlertSettings
                     startTime:=l.Start,
                     endTime:=l.End,
                     value:=$"{l.LowLimit}",
-                    timeFormat:=pdf.Utilities.TimeFormat,
-                    indent:=Indent4, heading:=True)
+                    indent:=Indent4,
+                    heading:=True)
                 .AppendKeyValue(key:=$"Suspend:", value:=$"{l.Suspend}", indent:=Indent8)
-                .AppendKeyValue(key:="Alert Before Low:", value:=l.AlertBeforeLow.BoolToOnOff(), indent:=Indent8)
-                .AppendKeyValue(key:="Alert on Low:", value:=l.AlertOnLow.BoolToOnOff(), indent:=Indent8)
+                .AppendKeyValue(key:="Alert Before Low:", value:=l.AlertBeforeLow, indent:=Indent8)
+                .AppendKeyValue(key:="Alert on Low:", value:=l.AlertOnLow, indent:=Indent8)
                 .AppendKeyValue(key:="Resume Basal Alert:", value:=$"{l.ResumeBasalAlert}", indent:=Indent8)
             Next
             .AppendNewLine
@@ -72,9 +70,9 @@ Public Module AlertSettings
             .AppendKeyValue(key:="Less than 24 hours:",
                             value:=$"{pdf.Sensor.SensorEnding.LessThan24Hours}")
             .AppendKeyValue(key:="Custom Reminder:",
-                            value:=pdf.Sensor.SensorEnding.CustomSensorEndReminder.State)
+                            value:=pdf.Sensor.SensorEnding.LessThan2State)
             .AppendKeyValue(key:="Less than:",
-                            value:=pdf.Sensor.SensorEnding.CustomSensorEndReminder.LessThan)
+                            value:=pdf.Sensor.SensorEnding.LessThan2)
             .AppendNewLine
 
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings>Reminders > Bolus BG Check", symbol)

@@ -47,7 +47,7 @@ Friend Module ImageHelper
                 Return composed
             End Function
 
-        Return BitmapCache.GetOrCreateTempBitmap(key, generator)
+        Return GetOrCreateTempBitmap(key, generator)
     End Function
 
 End Module

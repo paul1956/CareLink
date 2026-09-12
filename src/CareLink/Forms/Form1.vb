@@ -634,7 +634,7 @@ Public Class Form1
                                     pictureBox.Image = newBmp
                                     pictureBox.Invalidate()
                                 End If
-                                If prev IsNot Nothing AndAlso Not Object.ReferenceEquals(prev, newBmp) Then
+                                If prev IsNot Nothing AndAlso Not ReferenceEquals(prev, newBmp) Then
                                     Try
                                         prev.Dispose()
                                     Catch
@@ -1185,7 +1185,6 @@ Public Class Form1
 
     Private WithEvents DgvCopyWithExcelMenuStrip As New ContextMenuStrip
     Friend WithEvents DgvCopyWithoutExcelMenuStrip As New ContextMenuStrip
-    Private _inInfusionSetDataRestore As Boolean
 
     ''' <summary>
     '''  Handles the <see cref="DgvCopyWithExcelMenuStrip.Opening"/> event
@@ -2607,7 +2606,7 @@ Public Class Form1
     '''  Ensures proper resource cleanup before the application exits
     ''' </remarks>
     Private Sub Form1_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        BitmapCache.CleanUp()
+        CleanUp()
         Me.NotifyIcon1?.Dispose()
         Me.NotifyIcon1 = Nothing
         End
@@ -2652,7 +2651,7 @@ Public Class Form1
 
         s_showLogger = Debugger.IsAttached
         InitLogger(show:=s_showLogger)
-        LoggerManager.LogMessage(message:="Application started in DEBUG mode.")
+        LogMessage(message:="Application started in DEBUG mode.")
 
         PreloadBitmaps()
 
