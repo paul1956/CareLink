@@ -6,14 +6,16 @@ Imports System.Runtime.CompilerServices
 
 Public Module InsulinSensitivityRecordExtensions
 
+    Private ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
     <Extension>
     Public Sub InitializeFromRow(this As InsulinSensitivityRecord, row As StringTable.Row)
         If row Is Nothing Then Return
         If IsNullOrWhiteSpace(value:=row.Columns(index:=0)) Then
             Return
         End If
-        Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
-        Dim s() As String = row.Columns(index:=0).Split(separator:=" "c, options)
+        Dim s() As String = row.Columns(index:=0).Split(separator:=" "c, Options)
         If s.Length <> 2 Then
             Return
         End If

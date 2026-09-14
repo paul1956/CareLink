@@ -18,11 +18,13 @@ Public Class PumpSetupDialog
 
     Private Sub DeliverySettingsAutoSuspend(rtb As RichTextBox)
         With rtb
-            .AppendKeyValue(key:="Alarm:", value:=Me.Pdf.Utilities.AutoSuspend.Alarm)
+            .AppendKeyValue(leftPanel:=True,
+                            title:="Alarm:",
+                            value:=Me.Pdf.Utilities.AutoSuspend.Alarm)
             Dim bufferLength As Integer = .Text.Length
             .AppendTextNewFont(text:=$"{Indent4}Time:", newFont:=FixedWidthBoldFont)
             If Me.Pdf.Utilities.AutoSuspend.Alarm = "Off" Then
-                .AppendTextNewFont(text:="12:00 hr".AlignCenter(), newFont:=FixedWidthFont, includeNewLine:=True)
+                .AppendTextNewFont(text:="12:00 hr".AlignCenter(leftPanel:=True), newFont:=FixedWidthFont, includeNewLine:=True)
                 .Select(start:=bufferLength, length:= .Text.Length - bufferLength)
                 .SelectionBackColor = SystemColors.Window
                 .SelectionColor = SystemColors.GrayText
@@ -37,15 +39,7 @@ Public Class PumpSetupDialog
         End With
     End Sub
 
-    ''' <summary>
-    '''  Handles the <see cref="OK_Button"/> click event.
-    '''  Sets the dialog result to OK and closes the dialog.
-    ''' </summary>
-    ''' <param name="sender">The event sender.</param>
-    ''' <param name="e">The <see cref="EventArgs"/>
-    '''  instance containing the event data.
-    ''' </param>
-    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
+    Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         Me.PrintToolStripMenuItem.Enabled = False
         Application.DoEvents()
         Me.DialogResult = DialogResult.OK
@@ -193,6 +187,7 @@ Public Class PumpSetupDialog
         Me.Text = $"Pump Setup Instructions For {Me.Pdf.UserName}"
         Application.DoEvents()
 
+        Dim symbol As String
         Dim rtb As RichTextBox = Me.RtbMainLeft
         With rtb
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Bolus Wizard Setup")
@@ -207,84 +202,102 @@ Public Class PumpSetupDialog
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Dual/Square Wave")
             rtb.DeliverySettings4DualSquareWave(Me.Pdf)
 
-            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Bolus Increment")
-            rtb.DeliverySettings5BolusIncrement(Me.Pdf)
+            If Not Me.Pdf.IsFlex Then
+                .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Bolus Increment")
+                rtb.DeliverySettings5BolusIncrement(Me.Pdf)
+            End If
 
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Bolus Speed")
             rtb.DeliverySettings6BolusSpeed(Me.Pdf)
 
-            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Preset Bolus Setup")
-            rtb.DeliverySettings7PresetBolusSetup(Me.Pdf)
+            If Not Me.Pdf.IsFlex Then
+                rtb.DeliverySettings7PresetBolusSetup(Me.Pdf)
 
-            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Preset Temp Setup")
-            rtb.DeliverySettings8PresetTempSetup(Me.Pdf)
+                rtb.DeliverySettings8PresetTempSetup(Me.Pdf)
 
-            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Auto Suspend")
-            Me.DeliverySettingsAutoSuspend(rtb)
+                .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Auto Suspend")
+                Me.DeliverySettingsAutoSuspend(rtb)
+                .AppendNewLine
+            End If
+            symbol = Shield
             .AppendNewLine
+            .AppendTextWithSymbol(text:=$"Menu>{Shield}>SmartGuard > SmartGuard Settings", symbol)
+
+            .AppendKeyValue(leftPanel:=True, title:="Target:",
+                            value:=$"{Me.Pdf.SmartGuard.
+                                             Target.
+                                             RoundToSingle(digits:=0, considerValue:=True)}")
+
+            .AppendKeyValue(leftPanel:=True,
+                            title:="Auto Correction:",
+                            value:=$"{Me.Pdf.SmartGuard.SmartGuard}")
+            .AppendNewLine
+
+            .AppendTextWithSymbol(text:=$"Menu>{Shield}>SmartGuard", symbol)
+            .AppendKeyValue(leftPanel:=True,
+                            title:="SmartGuard:",
+                            value:=$"{Me.Pdf.SmartGuard.AutoCorrection}")
+            .AppendNewLine
+
+            .AppendTextWithSymbol(text:=$"Menu>{"🔊"}>Sound & Vibration", symbol)
+
+            If Me.Pdf.IsFlex Then
+                .AppendKeyValue(leftPanel:=False,
+                                title:="Lost Communication:",
+                                value:=$"{Me.Pdf.Utilities.LostCommunication}")
+                .AppendKeyValue(leftPanel:=False,
+                                title:="Pump Sound:",
+                                value:=Me.Pdf.Utilities.PumpSounds)
+                .AppendKeyValue(leftPanel:=False,
+                                title:="Vibration:",
+                                value:=Me.Pdf.Utilities.PumpVibrations)
+            Else
+                .AppendKeyValue(leftPanel:=False,
+                                title:="Alarm Volume:",
+                                value:=$"{Me.Pdf.Utilities.AlarmVolume}")
+
+            End If
 
             .ReadOnly = True
             .SelectionStart = 0
         End With
 
         rtb = Me.RtbMainRight
-        Dim symbol As String
         With rtb
-            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings > High Alert")
-            .AlertSettings1HighAlert(Me.Pdf)
-
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings > Low Alert")
             .AlertSettings2LowAlert(Me.Pdf)
 
-            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings > Snooze High & Low")
-            .AppendKeyValue(key:="High Snooze:", value:=$"{Me.Pdf.HighAlerts}")
-
-            .AppendKeyValue(key:="Low Snooze:", value:=$"{Me.Pdf.LowAlerts}")
-            .AppendNewLine
+            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings > High Alert")
+            .AlertSettings1HighAlert(Me.Pdf)
 
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Alert Settings>Reminders > Low Reservoir")
             .AlertSettings4Reminders(Me.Pdf)
 
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Device Settings")
-            .AppendKeyValue(key:=$"Sensor:", value:=$"{Me.Pdf.Sensor.SensorOn}")
+            .AppendKeyValue(leftPanel:=False, title:=$"Sensor:", value:=$"{Me.Pdf.Sensor.SensorOn}")
             .AppendNewLine
 
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Device Settings > Time & Date")
-            .AppendKeyValue(key:="Time Format:", value:=Me.Pdf.Utilities.TimeFormat)
-
-            .AppendNewLine
-            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Device Settings > Display")
-            .AppendKeyValue(key:="Brightness:", value:=Me.Pdf.Utilities.Brightness)
-            Dim value As String = Me.Pdf.Utilities.BackLightTimeout.ToFormattedTimeSpan(unit:="min")
-            .AppendKeyValue(key:="Backlight:", value)
-
-            .AppendNewLine
-            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Device Settings > Easy Bolus")
-            .AppendKeyValue(key:="Easy Bolus:", value:=Me.Pdf.Bolus.EasyBolus.EasyBolus)
-            .AppendKeyValue(key:="Step Size: ", value:=$"{Me.Pdf.Bolus.EasyBolus.BolusIncrement} U")
+            .AppendKeyValue(leftPanel:=False, title:="Time Format:", value:=Me.Pdf.Utilities.TimeFormat)
             .AppendNewLine
 
-            symbol = Shield
-            .AppendNewLine
-            .AppendTextWithSymbol(text:=$"Menu>{Shield}>SmartGuard > SmartGuard Settings", symbol)
+            If Not Me.Pdf.IsFlex Then
+                .AppendTextWithSymbol(text:=$"Menu>{Gear}>Device Settings > Display")
+                .AppendKeyValue(leftPanel:=False, title:="Brightness:", value:=Me.Pdf.Utilities.Brightness)
+                Dim value As String = Me.Pdf.Utilities.BackLightTimeout.ToFormattedTimeSpan(unit:="min")
+                .AppendKeyValue(leftPanel:=False, title:="Backlight:", value:=value)
 
-            value = $"{Me.Pdf.SmartGuard.Target.RoundToSingle(digits:=0, considerValue:=True)}"
-            .AppendKeyValue(key:="Target:", value)
-            .AppendKeyValue(key:="Auto Correction:", value:=$"{Me.Pdf.SmartGuard.SmartGuard}")
+                .AppendNewLine
+                .AppendTextWithSymbol(text:=$"Menu>{Gear}>Device Settings > Easy Bolus")
+                .AppendKeyValue(leftPanel:=False, title:="Easy Bolus:", value:=Me.Pdf.Bolus.EasyBolus.EasyBolus)
+                .AppendKeyValue(leftPanel:=False, title:="Step Size: ", value:=$"{Me.Pdf.Bolus.EasyBolus.BolusIncrement} U")
+                .AppendNewLine
+            End If
 
-            .AppendNewLine
-            .AppendTextWithSymbol(text:=$"Menu>{Shield}>SmartGuard", symbol)
-            .AppendKeyValue(key:="SmartGuard:", value:=$"{Me.Pdf.SmartGuard.AutoCorrection}")
-
-            .AppendNewLine
-            symbol = "🔊"
-            .AppendTextWithSymbol(text:=$"Menu>{"🔊"}>Sound & Vibration", symbol)
-            .AppendKeyValue(key:="Volume:", value:=$"{Me.Pdf.Utilities.AlarmVolume}")
-
-            Dim audioOptions As String = Me.Pdf.Utilities.AudioOptions
-            .AppendKeyValue(key:="Sound:", value:=$"{audioOptions.ContainsNoCase(value:="Audio")}")
-            value = $"{audioOptions.ContainsNoCase(value:="Vibrate")}"
-            .AppendKeyValue(key:="Vibration:", value)
+            ' Not Flex
+            'Public Property AutoSuspend As New AutoSuspendRecord
+            'Public Property BackLightTimeout As New TimeSpan
+            'Public Property Brightness As String = "Unknown"
 
             .ReadOnly = True
             .SelectionStart = 0
@@ -343,11 +356,10 @@ Public Class PumpSetupDialog
 
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
                     Dim format As String = Me.Pdf.Utilities.TimeFormat
-                    .AppendTimeValueRow(startTime:=startTime,
-                                        endTime:=endTime,
+                    .AppendTimeValueRow(startTime,
+                                        endTime,
                                         value,
-                                        indent:=Indent4,
-                                        heading:=True)
+                                        indent:=Indent4, heading:=True)
                 Next
             Next
         End With

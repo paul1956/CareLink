@@ -20,5 +20,5 @@ Public Class UtilitiesRecord
     Public Property LostCommunication As String = "N/A"
     Public Property PumpSounds As String = "N/A"
     Public Property PumpVibrations As String = "N/A"
-    Public Property TimeFormat As String = ""
+    Public Property TimeFormat As String = "12 hr"
 End Class

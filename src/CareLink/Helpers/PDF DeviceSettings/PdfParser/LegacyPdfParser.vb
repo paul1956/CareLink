@@ -30,9 +30,12 @@ Public Module LegacyPdfParser
     Private Const SmartGuardHeader As String = "SmartGuard"
     Private Const UtilitiesHeader As String = "Block Mode"
 
+    Private ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
     Public Sub ParseLegacy(record As PdfSettingsRecord, tables As Dictionary(Of String, PdfTable), pageText As String)
-        Dim listOfAllTextLines As List(Of String) =
-            pageText.SplitLines(Trim:=True)
+        record.IsFlex = False
+        Dim listOfTextLines As List(Of String) = pageText.SplitLines(Trim:=True)
 
         Dim length As Integer
         Dim startIndex As Integer
@@ -43,7 +46,9 @@ Public Module LegacyPdfParser
             tempString = pageText.Substring(startIndex:=startIndex + DeviceSettings.Length).TrimStart()
             length = tempString.IndexOf(value:="  ")
             If length > 0 Then
-                record.UserName = tempString.Trim().Substring(startIndex:=0, length).Trim()
+                record.UserName = tempString.Trim().
+                                             Substring(startIndex:=0, length).
+                                             Trim()
             End If
             If record.UserName.Contains(value:=", ") Then
                 Dim split As String() = record.UserName.Split(separator:=", ")
@@ -184,7 +189,6 @@ Public Module LegacyPdfParser
 
                         Dim key As String = record.Basal.NamedBasal.Keys(index)
                         record.Basal.NamedBasal(key).UpdateBasalRates(sTable)
-
                     Case itemKey.StartsWith(value:=PresetTempHeader)
                         tableHeader = PresetTempHeader
                         sTable = table.PdfTableToStringTable(tableHeader)
@@ -210,13 +214,12 @@ Public Module LegacyPdfParser
                             record.SmartGuard = sg
                         Else
                             Dim smartGuard As String = "Off"
-                            Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
                             For Each s As IndexClass(Of String) In
-                            listOfAllTextLines.WithIndex
+                            listOfTextLines.WithIndex
 
                                 If s.Value.StartsWith(value:=SmartGuardHeader) Then
                                     s.MoveNext()
-                                    smartGuard = s.Value.Split(separator:=" ", options).ToList()(1)
+                                    smartGuard = s.Value.Split(separator:=" ", Options).ToList()(1)
                                     Exit For
                                 End If
                             Next
@@ -236,7 +239,7 @@ Public Module LegacyPdfParser
                         tableHeader = HighAlertsHeader
                         sTable = table.PdfTableToStringTable(tableHeader)
                         Dim ha As New HighAlertsRecord()
-                        ha.InitializeFromStringTable(sTable, listOfAllTextLines)
+                        ha.InitializeFromStringTable(sTable, listOfTextLines)
                         record.HighAlerts = ha
 
                     Case itemKey.StartsWith(value:=MissedMealBolusHeader)
@@ -254,7 +257,7 @@ Public Module LegacyPdfParser
                         tableHeader = LowAlertsHeader
                         sTable = table.PdfTableToStringTable(tableHeader)
                         Dim la As New LowAlertsRecord()
-                        la.InitializeFromStringTable(sTable, listOfAllTextLines)
+                        la.InitializeFromStringTable(sTable, listOfTextLines)
                         record.LowAlerts = la
 
                     Case itemKey.StartsWith(value:=SensorHeader)

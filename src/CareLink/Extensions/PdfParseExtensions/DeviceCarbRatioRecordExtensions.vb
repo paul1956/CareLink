@@ -6,11 +6,13 @@ Imports System.Runtime.CompilerServices
 
 Public Module DeviceCarbRatioRecordExtensions
 
+    Private ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
     <Extension>
     Public Sub InitializeFromRow(this As DeviceCarbRatioRecord, row As StringTable.Row)
         If row Is Nothing Then Return
-        Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
-        Dim s() As String = row.Columns(index:=0).Split(separator:=" "c, options)
+        Dim s() As String = row.Columns(index:=0).Split(separator:=" "c, Options)
         If s.Length <> 2 Then
             Return
         End If

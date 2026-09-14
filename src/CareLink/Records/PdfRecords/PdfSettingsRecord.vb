@@ -4,6 +4,9 @@
 
 Public Class PdfSettingsRecord
 
+    Private Shared ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
     ''' <summary>
     ''' Initializes an empty PdfSettingsRecord without parsing a file.
     ''' Use this constructor in tests or when you want to populate fields manually.
@@ -54,6 +57,8 @@ Public Class PdfSettingsRecord
     Public Property DeviceModel As String
 
     Public Property HighAlerts As New HighAlertsRecord
+
+    Public Property IsFlex As Boolean = False
 
     Public ReadOnly Property IsValid As Boolean
         Get
@@ -109,8 +114,7 @@ Public Class PdfSettingsRecord
             snoozeLine = snoozeLine.Substring(startIndex:=0, length:=index + 1)
             index = snoozeLine.IndexOf(value:="Snooze ")
             snoozeLine = snoozeLine.Substring(startIndex:=index).Trim(trimChar:=")"c)
-            Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
-            Dim splitSnoozeLine As String() = snoozeLine.Split(separator:=" ", options)
+            Dim splitSnoozeLine As String() = snoozeLine.Split(separator:=" ", Options)
             If splitSnoozeLine.Length = 2 Then
                 snoozeOn = "On"
                 snoozeTime = splitSnoozeLine(1)

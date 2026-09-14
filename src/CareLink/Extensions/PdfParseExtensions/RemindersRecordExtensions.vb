@@ -16,8 +16,14 @@ Public Module RemindersRecordExtensions
                 sTable.GetSingleLineValue(Of String)(key:="Amount ")
             this.BolusBgCheck =
                 sTable.GetSingleLineValue(Of String)(key:="Bolus BG Check ")
-            this.SetChange =
+            Dim timeLeft As String =
                 sTable.GetSingleLineValue(Of String)(key:="Set Change ")
+            Dim onOff As String = "On"
+            If timeLeft Is Nothing Then
+                onOff = "Off"
+                timeLeft = ""
+            End If
+            this.SetChange = New AlertRecord(onOff, timeLeft)
         Catch
         End Try
     End Sub

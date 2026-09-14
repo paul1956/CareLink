@@ -13,23 +13,4 @@ Public Class HighAlertsRecord
 
     Public Property HighAlert As New List(Of HighAlertRecord)
 
-    Public Overrides Function ToString() As String
-        Dim highAlertRecord As HighAlertRecord = Me.HighAlert(index:=0)
-        Dim ret As String = "Daytime Snooze: " &
-            If(highAlertRecord.SnoozeOn = "On",
-               highAlertRecord.SnoozeTime,
-               "Off")
-
-        If Me.HighAlert.Count > 1 Then
-            highAlertRecord = Me.HighAlert(index:=1)
-            Dim nightSnooze As String =
-                If(highAlertRecord.SnoozeOn = "On",
-                   highAlertRecord.SnoozeTime,
-                   "Off")
-            ret &= $"Nighttime Snooze: {nightSnooze}"
-
-        End If
-        Return ret
-    End Function
-
 End Class

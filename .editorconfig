@@ -96,7 +96,6 @@ end_of_line = crlf
 dotnet_style_allow_multiple_blank_lines_experimental = true:suggestion
 dotnet_style_allow_statement_immediately_after_block_experimental = true:suggestion
 dotnet_code_quality_unused_parameters = all:suggestion
-dotnet_style_qualification_for_method = true:warning
 dotnet_diagnostic.CA1051.severity = suggestion
 dotnet_style_prefer_collection_expression = when_types_exactly_match:suggestion
 
@@ -179,6 +178,24 @@ csharp_space_between_square_brackets = false
 
 # Visual Basic files
 [*.vb]
+# Enforce Option Strict
+option_strict = on
+
+# Enforce Option Explicit (must declare all variables)
+option_explicit = on
+
+# Disable Option Infer (no implicit type inference)
+option_infer = false
+
+# Disallow late binding
+dotnet_style_prefer_inferred_type_in_variable_declaration = false:suggestion
+dotnet_style_prefer_inferred_type_in_member_access = false:suggestion
+
+# Require explicit type for all variables
+dotnet_style_require_explicit_type_for_locals = true:error
+dotnet_style_require_explicit_type_for_fields = true:error
+dotnet_style_require_explicit_type_for_parameters = true:error
+
 # Modifier preferences
 visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion
 dotnet_style_qualification_for_method = true:warning
@@ -190,22 +207,6 @@ dotnet_naming_style.camel_case_style.capitalization = camel_case
 dotnet_naming_rule.locals_must_have_camel_case.symbols = locals
 dotnet_naming_rule.locals_must_have_camel_case.severity = warning
 dotnet_naming_rule.locals_must_have_camel_case.style = camel_case_style
-
-# See https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions?view=vs-2019
-# Also see https://github.com/canton7/RestEase/blob/f7efb7684b96ce9da4f55d52f7abfa94eb7c0340/src/.editorconfig#L215
-
-# Symbols: async and method
-#dotnet_naming_symbols.async_methods.applicable_kinds = method
-#dotnet_naming_symbols.async_methods.required_modifiers = async
-
-# Style: must be Pascal case and end in Async
-#dotnet_naming_style.async_suffix.required_suffix = Async
-#dotnet_naming_style.async_suffix.capitalization = pascal_case
-
-# Rule: async methods must be pascal case and end with "Async"
-#dotnet_naming_rule.async_methods_must_have_async_suffix.symbols = async_methods
-#dotnet_naming_rule.async_methods_must_have_async_suffix.style = async_suffix
-#dotnet_naming_rule.async_methods_must_have_async_suffix.severity = warning
 
 # CA1031: Do not catch general exception types
 dotnet_diagnostic.ca1031.severity = silent
@@ -221,7 +222,6 @@ dotnet_diagnostic.ca1308.severity = suggestion
 
 # CA1826: Do not use Enumerable methods on indexable collections. Instead use the collection directly
 dotnet_diagnostic.ca1826.severity = suggestion
-
 
 # CA2224: Override Equals on overloading operator equals
 dotnet_diagnostic.CA2224.severity = none

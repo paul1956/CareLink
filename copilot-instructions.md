@@ -1,4 +1,9 @@
 ﻿# Markdown File
+For all VB.NET code, always respect:
+Option Strict On
+Option Explicit On
+Option Infer Off
+
 Always use 2 spaces for each indentation level in xml-doc comments.
 
 Suggest to break lines that are longer than 120 characters in VB files

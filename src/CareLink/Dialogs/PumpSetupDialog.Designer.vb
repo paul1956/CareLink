@@ -28,15 +28,10 @@ Partial Class PumpSetupDialog
     Private Sub InitializeComponent()
         RtbMainLeft = New RichTextBox()
         RtbMainRight = New RichTextBox()
-        SplitContainer1 = New SplitContainer()
-        OK_Button = New Button()
         MenuStrip1 = New MenuStrip()
         PrintToolStripMenuItem = New ToolStripMenuItem()
+        ExitToolStripMenuItem = New ToolStripMenuItem()
         PrintDocument1 = New Printing.PrintDocument()
-        CType(SplitContainer1, ComponentModel.ISupportInitialize).BeginInit()
-        SplitContainer1.Panel1.SuspendLayout()
-        SplitContainer1.Panel2.SuspendLayout()
-        SplitContainer1.SuspendLayout()
         MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         ' 
@@ -54,48 +49,18 @@ Partial Class PumpSetupDialog
         ' 
         RtbMainRight.BorderStyle = BorderStyle.None
         RtbMainRight.Dock = DockStyle.Right
-        RtbMainRight.Location = New Point(588, 0)
+        RtbMainRight.Location = New Point(541, 0)
         RtbMainRight.Name = "RtbMainRight"
-        RtbMainRight.Size = New Size(586, 901)
+        RtbMainRight.Size = New Size(681, 901)
         RtbMainRight.TabIndex = 1
         RtbMainRight.Text = ""
         ' 
-        ' SplitContainer1
-        ' 
-        SplitContainer1.Dock = DockStyle.Fill
-        SplitContainer1.Location = New Point(0, 24)
-        SplitContainer1.Name = "SplitContainer1"
-        SplitContainer1.Orientation = Orientation.Horizontal
-        ' 
-        ' SplitContainer1.Panel1
-        ' 
-        SplitContainer1.Panel1.Controls.Add(RtbMainRight)
-        SplitContainer1.Panel1.Controls.Add(RtbMainLeft)
-        ' 
-        ' SplitContainer1.Panel2
-        ' 
-        SplitContainer1.Panel2.AutoScroll = True
-        SplitContainer1.Panel2.Controls.Add(OK_Button)
-        SplitContainer1.Size = New Size(1174, 952)
-        SplitContainer1.SplitterDistance = 901
-        SplitContainer1.TabIndex = 1
-        ' 
-        ' OK_Button
-        ' 
-        OK_Button.Anchor = AnchorStyles.None
-        OK_Button.Location = New Point(1081, 10)
-        OK_Button.Margin = New Padding(4, 3, 4, 3)
-        OK_Button.Name = "OK_Button"
-        OK_Button.Size = New Size(77, 27)
-        OK_Button.TabIndex = 0
-        OK_Button.Text = "OK"
-        ' 
         ' MenuStrip1
         ' 
-        MenuStrip1.Items.AddRange(New ToolStripItem() {PrintToolStripMenuItem})
+        MenuStrip1.Items.AddRange(New ToolStripItem() {PrintToolStripMenuItem, ExitToolStripMenuItem})
         MenuStrip1.Location = New Point(0, 0)
         MenuStrip1.Name = "MenuStrip1"
-        MenuStrip1.Size = New Size(1174, 24)
+        MenuStrip1.Size = New Size(1222, 24)
         MenuStrip1.TabIndex = 2
         MenuStrip1.Text = "MenuStrip1"
         ' 
@@ -103,20 +68,23 @@ Partial Class PumpSetupDialog
         ' 
         PrintToolStripMenuItem.Name = "PrintToolStripMenuItem"
         PrintToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.P
-        PrintToolStripMenuItem.ShowShortcutKeys = False
         PrintToolStripMenuItem.Size = New Size(44, 20)
         PrintToolStripMenuItem.Text = "Print"
         ' 
-        ' PrintDocument1
+        ' ExitToolStripMenuItem
         ' 
+        ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
+        ExitToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.X
+        ExitToolStripMenuItem.Size = New Size(37, 20)
+        ExitToolStripMenuItem.Text = "Exit"
         ' 
         ' PumpSetupDialog
         ' 
-        Me.AcceptButton = OK_Button
         Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
-        Me.ClientSize = New Size(1174, 976)
-        Me.Controls.Add(SplitContainer1)
+        Me.ClientSize = New Size(1222, 976)
+        Me.Controls.Add(RtbMainRight)
+        Me.Controls.Add(RtbMainLeft)
         Me.Controls.Add(MenuStrip1)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
         Me.MainMenuStrip = MenuStrip1
@@ -127,20 +95,15 @@ Partial Class PumpSetupDialog
         Me.ShowInTaskbar = False
         Me.StartPosition = FormStartPosition.CenterParent
         Me.Text = "Pump Setup Instructions"
-        SplitContainer1.Panel1.ResumeLayout(False)
-        SplitContainer1.Panel2.ResumeLayout(False)
-        CType(SplitContainer1, ComponentModel.ISupportInitialize).EndInit()
-        SplitContainer1.ResumeLayout(False)
         MenuStrip1.ResumeLayout(False)
         MenuStrip1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
     Friend WithEvents MenuStrip1 As MenuStrip
-    Friend WithEvents OK_Button As Button
     Friend WithEvents PrintDocument1 As Drawing.Printing.PrintDocument
     Friend WithEvents PrintToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents RtbMainLeft As RichTextBox
     Friend WithEvents RtbMainRight As RichTextBox
-    Friend WithEvents SplitContainer1 As SplitContainer
+    Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
 End Class

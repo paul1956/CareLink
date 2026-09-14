@@ -6,6 +6,9 @@ Imports System.Runtime.CompilerServices
 
 Public Module PresetAmountRecordExtensions
 
+    Private ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
     <Extension>
     Public Sub InitializeFromString(this As PresetAmountRecord, s As String)
         If s Is Nothing Then Return
@@ -17,8 +20,7 @@ Public Module PresetAmountRecordExtensions
                 this.TypeIsRate = False
                 this.PercentValue = percentVal
             Else
-                Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
-                Dim sSplit As String() = s.Split(separator:=" "c, options)
+                Dim sSplit As String() = s.Split(separator:=" "c, Options)
                 Dim rateVal As Single = sSplit(0).ParseSingleInvariant
                 Dim unitsVal As String = sSplit(1)
                 this.TypeIsRate = True

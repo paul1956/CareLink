@@ -9,9 +9,11 @@ Friend Module DeviceSettingsExtensions
     Private Const ComparisonType As StringComparison =
         StringComparison.OrdinalIgnoreCase
 
+    Private ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
     <Extension>
     Friend Function GetSingleLineValue(Of T)(line As String, key As String, Optional endsWith As String = "") As T
-        Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
         Dim typeOfT As Type = GetType(T)
         If line.StartsWith(value:=key, ComparisonType) Then
             line = line.Replace(oldValue:=key, newValue:=EmptyString, ComparisonType).Trim
@@ -19,7 +21,7 @@ Friend Module DeviceSettingsExtensions
             If typeOfT Is GetType(String) Then
                 Return CType(CObj(value), T)
             End If
-            value = value.Split(separator:=" ", options)(0)
+            value = value.Split(separator:=" ", Options)(0)
             If typeOfT Is GetType(Single) Then
                 value = value.Replace(oldChar:=","c, newChar:=CareLinkDecimalSeparator)
                 Return If(IsNumeric(Expression:=value),
@@ -76,7 +78,6 @@ Friend Module DeviceSettingsExtensions
 
     <Extension>
     Friend Function GetSingleLineValue(Of T)(sTable As StringTable, key As String, Optional endsWith As String = "") As T
-        Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
         Dim typeOfT As Type = GetType(T)
         For Each r As StringTable.Row In sTable.Rows
             Dim v As String = r.Columns(index:=0)
@@ -91,7 +92,7 @@ Friend Module DeviceSettingsExtensions
                 If typeOfT Is GetType(String) Then
                     Return CType(CObj(value), T)
                 End If
-                value = value.Split(separator:=" ", options)(0)
+                value = value.Split(separator:=" ", Options)(0)
                 If typeOfT Is GetType(Single) Then
                     value = value.Replace(oldChar:=","c, newChar:=CareLinkDecimalSeparator)
                     Return If(IsNumeric(Expression:=value),

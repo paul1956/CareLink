@@ -11,7 +11,11 @@ Imports System.Runtime.CompilerServices
 '''  data binding, and optional column visibility.
 ''' </summary>
 Friend Module DgvDataTableHelpers
-    Private ReadOnly s_separator As Char() = New Char() {" "c}
+
+    Private ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
+    Private ReadOnly Property Separator As Char() = New Char() {" "c}
 
     ''' <summary>
     '''  Delegate for attaching event handlers to a <see cref="DataGridView"/>.
@@ -37,9 +41,8 @@ Friend Module DgvDataTableHelpers
             text = text.Replace(oldValue:=vbCrLf, newValue:=" ").
                         Replace(oldValue:=vbLf, newValue:=" ").
                         Replace(oldValue:=vbCr, newValue:=" ")
-            Const removeEmptyEntries As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
             Dim words As String() =
-                text.Split(separator:=s_separator, options:=removeEmptyEntries)
+                text.Split(Separator, Options)
             If words.Length = 0 Then
                 Continue For
             End If

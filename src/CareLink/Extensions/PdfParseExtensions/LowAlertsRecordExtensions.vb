@@ -6,12 +6,17 @@ Imports System.Runtime.CompilerServices
 
 Public Module LowAlertsRecordExtensions
 
+    Private ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
     <Extension>
     Public Sub InitializeFromStringTable(this As LowAlertsRecord, sTable As StringTable, listOfAllTextLines As List(Of String))
         If sTable Is Nothing Then Return
         Try
             Dim snoozeTime As String =
-                New TimeSpan(hours:=0, minutes:=20, seconds:=0).ToString()
+                New TimeSpan(hours:=0,
+                             minutes:=20,
+                             seconds:=0).ToString()
             PdfSettingsRecord.GetSnoozeInfo(listOfAllTextLines,
                                             target:="Low Alerts",
                                             this.SnoozeOn,
@@ -21,23 +26,21 @@ Public Module LowAlertsRecordExtensions
             For Each e As IndexClass(Of StringTable.Row) In sTable.Rows.WithIndex
                 Dim s As StringTable.Row = e.Value
                 If e.IsFirst Then
-                    valueUnits = s.Columns(index:=0) _
-                              .Replace(oldValue:="Start Low Time (", newValue:=EmptyString) _
-                              .Trim(trimChar:=")"c)
+                    valueUnits =
+                        s.Columns(index:=0) _
+                         .Replace(oldValue:="Start Low Time (", newValue:=EmptyString) _
+                         .Trim(trimChar:=")"c)
                     Continue For
                 End If
 
                 Dim value As String = sTable.Rows(index:=e.Index + 1).Columns(index:=0)
-                Dim endTimeOnly As TimeOnly
-                If e.IsLast OrElse IsNullOrWhiteSpace(value) Then
-                    endTimeOnly = Midnight
-                Else
-                    Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
-                    endTimeOnly = TimeOnly.Parse(
+                Dim endTimeOnly As TimeOnly =
+                    If(e.IsLast OrElse IsNullOrWhiteSpace(value),
+                       Midnight,
+                       TimeOnly.Parse(
                         s:=sTable.Rows(index:=e.Index + 1) _
                                  .Columns(index:=0) _
-                                 .Split(separator:=" ", options)(0))
-                End If
+                                 .Split(separator:=" ", Options)(0)))
 
                 Dim item As New LowAlertRecord()
                 item.InitializeFromRow(row:=s, valueUnits)

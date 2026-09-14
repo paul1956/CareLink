@@ -9,6 +9,9 @@ Imports Spire.Pdf.Utilities
 
 Public Module PdfSettingsParserRoot
 
+    Private ReadOnly Property ComparisonType As StringComparison =
+            StringComparison.OrdinalIgnoreCase
+
     ''' <summary>
     '''  Top-level parser facade that dispatches to format-specific parsers
     '''  and populates a PdfSettingsRecord instance.
@@ -18,17 +21,15 @@ Public Module PdfSettingsParserRoot
             Throw New FileNotFoundException(message:="PDF file not found", fileName:=pdfFilePath)
         End If
 
-        ' Try Flex (page 2) detection first
+        ' Try Flex detection first
         Dim pageText As String = String.Empty
         Try
             pageText = ExtractTextFromPage(filename:=pdfFilePath,
-                                                              startPageNumber:=0,
-                                                              endPageNumber:=1)
+                                           startPageNumber:=0,
+                                           endPageNumber:=1)
         Catch
         End Try
 
-        Const comparisonType As StringComparison =
-            StringComparison.OrdinalIgnoreCase
         Dim tables As Dictionary(Of String, PdfTable) =
             GetTableList(fileName:=pdfFilePath)
         If String.IsNullOrEmpty(value:=pageText) Then
@@ -40,7 +41,7 @@ Public Module PdfSettingsParserRoot
         record.DeviceModel = deviceFamilyAndModel.Model
         record.DeviceFamily = deviceFamilyAndModel.Family
 
-        If pageText.Contains(value:="MiniMed Flex", comparisonType) Then
+        If pageText.Contains(value:="MiniMed Flex", ComparisonType) Then
             ParseFlex(record, pageText)
         Else
             ParseLegacy(record, tables, pageText)

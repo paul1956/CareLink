@@ -130,6 +130,9 @@ Public Class PdfTests
 
         because = $"The bolus record for {path} should be valid after loading the file."
         currentPdf.Bolus.Should().NotBeNull(because)
+
+        because = $"The this test should only the Flex base Version 2 PDF Files."
+        currentPdf.IsFlex.Should().BeTrue(because)
     End Sub
 
 End Class

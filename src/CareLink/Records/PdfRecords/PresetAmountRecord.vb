@@ -3,10 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Public Class PresetAmountRecord
-    Friend Property UnitsValue As String
-    Friend Property RateValue As Single
-    Friend Property PercentValue As Single
-    Friend Property TypeIsRate As Boolean
 
     Public Sub New()
     End Sub
@@ -16,13 +12,20 @@ Public Class PresetAmountRecord
             Me.TypeIsRate = False
             Me.PercentValue = Integer.Parse(s:=s.Trim(trimChar:="%"c).Trim)
         Else
-            Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
             Me.TypeIsRate = True
-            Dim sSplit As String() = s.Split(separator:=" ", options)
+            Dim sSplit As String() = s.Split(separator:=" ", Options)
             Me.RateValue = sSplit(0).ParseSingleInvariant
             Me.UnitsValue = sSplit(1)
         End If
     End Sub
+
+    Private Shared ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
+    Friend Property PercentValue As Single
+    Friend Property RateValue As Single
+    Friend Property TypeIsRate As Boolean
+    Friend Property UnitsValue As String
 
     Public Overrides Function ToString() As String
         Return If(Me.TypeIsRate,

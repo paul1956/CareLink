@@ -41,6 +41,7 @@ Public Module PDFParserUtilities
     ''' Finds the index of the first line in the provided list that contains the given search word
     ''' using the supplied string-comparison. Returns -1 if not found.
     ''' </summary>
+    <Extension>
     Public Function FindLineIndexContaining(allLines As List(Of String), searchWord As String) As Integer
         If allLines Is Nothing OrElse String.IsNullOrEmpty(value:=searchWord) Then
             Return -1

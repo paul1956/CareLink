@@ -42,5 +42,5 @@ Public Class RemindersRecord
             {"BG Check", New PersonalRemindersRecord()},
             {"Medication", New PersonalRemindersRecord()}}
 
-    Public Property SetChange As String
+    Public Property SetChange As AlertRecord
 End Class

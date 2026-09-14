@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.IO
 Imports CareLink
 
 Public Class PumpSetup
@@ -85,7 +86,7 @@ Public Class PumpSetup
         End If
         If validPdf Then
             ' If a valid PDF is selected, set the current PDF name with path
-            Me.PdfFilePath = IO.Path.Combine(GetDownloadsDirectory(), Me.ComboBoxPDFs.SelectedItem.ToString())
+            Me.PdfFilePath = Path.Combine(GetDownloadsDirectory(), Me.ComboBoxPDFs.SelectedItem.ToString())
         Else
             ' If "(None)" is selected, clear the current PDF name with path
             Me.PdfFilePath = ""
@@ -143,26 +144,36 @@ Public Class PumpSetup
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">The EventArgs for the Load event.</param>
     Private Sub PumpSetup_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim settingExist As Boolean = IO.Directory.Exists(path:=GetSettingsDirectory)
-        _pdfFilesInDownLoadDirectory = IO.Directory.GetFiles(path:=GetDownloadsDirectory(), searchPattern:=$"*.pdf")
+        Dim settingExist As Boolean =
+            Directory.Exists(path:=GetSettingsDirectory)
+        _pdfFilesInDownLoadDirectory =
+            Directory.GetFiles(path:=GetDownloadsDirectory(),
+                               searchPattern:=$"*.pdf")
 
-        Dim downloadFilesExist As Boolean = _pdfFilesInDownLoadDirectory.Length > 0
+        Dim downloadFilesExist As Boolean =
+            _pdfFilesInDownLoadDirectory.Length > 0
         Dim caption As String = "CareLink PDF Settings File Required"
         If downloadFilesExist AndAlso Not settingExist Then
             Dim text As String = $"No PDF files exist, Please download from {CareLinkUrl} and restart program."
-            MessageBox.Show(text, caption, buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)
+            MessageBox.Show(text,
+                            caption,
+                            buttons:=MessageBoxButtons.OK,
+                            icon:=MessageBoxIcon.Warning)
             Me.Close()
         End If
         If Not downloadFilesExist Then
             Dim text As String =
                 $"No PDF files exist in download directory, Please download from {CareLinkUrl} and restart program."
-            MessageBox.Show(text, caption, buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Warning)
+            MessageBox.Show(text,
+                            caption,
+                            buttons:=MessageBoxButtons.OK,
+                            icon:=MessageBoxIcon.Warning)
             Me.Close()
         End If
 
         Dim keySelector As Func(Of String, Date) =
             Function(path As String) As Date
-                Return IO.File.GetLastWriteTime(path)
+                Return File.GetLastWriteTime(path)
             End Function
         _pdfFilesInDownLoadDirectory =
             _pdfFilesInDownLoadDirectory.OrderByDescending(keySelector).ToArray()
@@ -186,11 +197,13 @@ Public Class PumpSetup
 
         Me.ComboBoxPDFs.Items.Add(item:="(None)")
         For Each pdfFile As String In _pdfFilesInDownLoadDirectory
-            Me.ComboBoxPDFs.Items.Add(item:=IO.Path.GetFileName(path:=pdfFile))
+            Me.ComboBoxPDFs.Items.Add(item:=Path.GetFileName(path:=pdfFile))
         Next
 
-        ' Set default selection to 'None'
-        Me.ComboBoxPDFs.SelectedIndex = 0
+        ' Set default selection to first PDF or 'None'
+        Me.ComboBoxPDFs.SelectedIndex = If(Me.ComboBoxPDFs.Items.Count = 0,
+                                           0,
+                                           1)
     End Sub
 
     ''' <summary>
@@ -212,7 +225,7 @@ Public Class PumpSetup
     Private Sub UserName_TextChanged(sender As Object, e As EventArgs) Handles UserName.TextChanged
         Dim userName As String = Me.UserName.Text.Trim
         Dim path As String = IO.Path.Combine(GetSettingsDirectory(), $"{userName}Settings.pdf")
-        Dim validPdf As Boolean = IO.File.Exists(path)
+        Dim validPdf As Boolean = File.Exists(path)
         Me.Accept_Button.Enabled = validPdf OrElse userName <> ClickAccept
         Me.ComboBoxPDFs.Enabled = Not validPdf
         If validPdf Then

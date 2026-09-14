@@ -2,13 +2,15 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Globalization
 Imports System.Runtime.CompilerServices
 
 Public Module RichTextBoxExtensions
-    Private Const TotalWidth As Integer = 28
+    Public Const LeftPanelTotalWidth As Integer = 54
+    Public Const RightPanelTotalWidth As Integer = 66
+    Public Const LeftColumnTotalWidth As Integer = 34
     Public Const Indent4 As String = "    "
     Public Const Indent8 As String = "        "
+    Public Const Indent32 As String = "                                "
 
     Public ReadOnly Property FixedWidthBoldFont As New Font(familyName:="Consolas", emSize:=14, style:=FontStyle.Bold)
 
@@ -23,13 +25,32 @@ Public Module RichTextBoxExtensions
     '''  a specified total width.
     ''' </summary>
     ''' <param name="text">The text to center.</param>
+    ''' <param name="leftPanel">Indicates whether the text is in the left panel.</param>
     ''' <returns>A centered string representation of the text.</returns>
     <Extension>
-    Friend Function AlignCenter(text As String) As String
-        Dim pad As Integer = (TotalWidth - text.Length) \ 2
+    Friend Function AlignCenter(text As String, leftPanel As Boolean) As String
+        Dim totalWidth As Integer =
+            If(leftPanel,
+               LeftPanelTotalWidth - LeftColumnTotalWidth,
+               RightPanelTotalWidth)
+        Dim pad As Integer = (totalWidth - text.Length) \ 2
         Return If(pad > 0,
-                  text.PadLeft(totalWidth:=text.Length + pad).PadRight(TotalWidth),
-                  text.PadRight(TotalWidth))
+                  text.PadLeft(totalWidth:=text.Length + pad).PadRight(totalWidth),
+                  text.PadRight(totalWidth))
+    End Function
+
+    ''' <summary>
+    '''  Centers text within an explicit fixed-width column (characters).
+    ''' </summary>
+    <Extension>
+    Friend Function AlignCenter(text As String, totalWidth As Integer) As String
+        If text.Length Mod 2 <> 0 Then
+            text = " " & text
+        End If
+        Dim pad As Integer = (totalWidth - text.Length) \ 2
+        Return If(pad > 0,
+                  text.PadLeft(totalWidth:=text.Length + pad).PadRight(totalWidth),
+                  text.PadRight(totalWidth))
     End Function
 
     ''' <summary>
@@ -39,7 +60,7 @@ Public Module RichTextBoxExtensions
     ''' <param name="rtb">
     '''  The <see cref="RichTextBox"/> to append text to.
     ''' </param>
-    ''' <param name="key">
+    ''' <param name="title">
     '''  The label or description text to append.
     ''' </param>
     ''' <param name="value">
@@ -47,10 +68,37 @@ Public Module RichTextBoxExtensions
     ''' </param>
     ''' <param name="singleIndent"></param>
     <Extension>
-    Friend Sub AppendKeyValue(rtb As RichTextBox, key As String, value As String, Optional indent As String = Indent4)
-        Dim text As String = $"{indent}{key}"
+    Friend Sub AppendKeyValue(rtb As RichTextBox,
+                              leftPanel As Boolean,
+                              title As String,
+                              value As String,
+                              Optional secondValue As String = "",
+                              Optional indent As String = Indent4)
+        Dim text As String = $"{indent}{title}"
         rtb.AppendTextNewFont(text, newFont:=FixedWidthBoldFont)
-        rtb.AppendTextNewFont(text:=value.AlignCenter(), newFont:=FixedWidthFont, includeNewLine:=True)
+
+        ' Determine the available width on the right side (in characters)
+        Dim totalRightWidth As Integer =
+            If(leftPanel,
+               LeftPanelTotalWidth - LeftColumnTotalWidth,
+               RightPanelTotalWidth - LeftColumnTotalWidth)
+
+        If String.IsNullOrEmpty(value:=secondValue) Then
+            ' Single value: center it in the entire right area
+            rtb.AppendTextNewFont(text:=value.AlignCenter(totalWidth:=totalRightWidth), newFont:=FixedWidthFont, padRight:=False, includeNewLine:=True)
+        Else
+            ' Two values: split the right area into two fixed-width columns
+            Dim leftHalf As Integer = totalRightWidth \ 2
+            Dim rightHalf As Integer = totalRightWidth - leftHalf
+
+            Dim leftText As String = value.AlignCenter(totalWidth:=leftHalf)
+            Dim rightText As String = secondValue.AlignCenter(totalWidth:=rightHalf)
+
+            Dim combined As String = leftText & rightText
+            rtb.AppendTextNewFont(text:=combined, newFont:=FixedWidthFont, padRight:=False, includeNewLine:=True)
+        End If
+
+        Application.DoEvents()
     End Sub
 
     ''' <summary>
@@ -77,22 +125,37 @@ Public Module RichTextBoxExtensions
     '''  The <see cref="Font"/> to use for future appended text.
     ''' </param>
     <Extension>
-    Friend Sub AppendTextNewFont(
-        rtb As RichTextBox,
-        text As String,
-        newFont As Font,
-        Optional padRight As Integer = TotalWidth,
-        Optional includeNewLine As Boolean = False)
+    Friend Sub AppendTextNewFont(rtb As RichTextBox,
+                                 text As String,
+                                 newFont As Font,
+                                 Optional padRight As Boolean = True,
+                                 Optional includeNewLine As Boolean = False)
 
         Dim start As Integer = rtb.TextLength
-        If padRight > 0 Then
-            text = text.PadRight(totalWidth:=padRight)
+        Dim originalLength As Integer = text.Length
+
+        If padRight Then
+            Dim padLength As Integer = LeftColumnTotalWidth - originalLength
+            If padLength < 0 Then
+                padLength = 0
+            End If
+
+            If Debugger.IsAttached AndAlso padLength > 0 Then
+                Dim nbsp As Char = Convert.ToChar(value:=160)
+                text &= New String(c:=nbsp, count:=padLength)
+            Else
+                text = text.PadRight(totalWidth:=LeftColumnTotalWidth)
+            End If
         End If
+
         rtb.AppendText(text)
+
+        ' Apply the new font to the entire appended text
         rtb.Select(start, length:=text.Length)
         rtb.SelectionFont = newFont
         rtb.SelectionStart = rtb.TextLength
         rtb.SelectionLength = 0
+
         If includeNewLine Then
             rtb.AppendNewLine
         End If
@@ -114,17 +177,16 @@ Public Module RichTextBoxExtensions
     '''  If <see langword="True"/>, appends a new line after the text.
     ''' </param>
     <Extension>
-    Friend Sub AppendTextWithSymbol(
-        rtb As RichTextBox,
-        text As String,
-        Optional symbol As String = Gear,
-        Optional includeNewLine As Boolean = True)
+    Friend Sub AppendTextWithSymbol(rtb As RichTextBox,
+                                    text As String,
+                                    Optional symbol As String = Gear,
+                                    Optional includeNewLine As Boolean = True)
 
         Dim splitText() As String = text.Split(separator:=symbol, options:=StringSplitOptions.None)
-        rtb.AppendTextNewFont(text:=splitText(0), newFont:=HeadingBoldFont, padRight:=0)
+        rtb.AppendTextNewFont(text:=splitText(0), newFont:=HeadingBoldFont, padRight:=False)
         If splitText.Length > 1 Then
             Dim bufferLength As Integer = rtb.Text.Length
-            rtb.AppendTextNewFont(text:=symbol, newFont:=HeadingBoldFont, padRight:=0)
+            rtb.AppendTextNewFont(text:=symbol, newFont:=HeadingBoldFont, padRight:=False)
             rtb.Select(start:=bufferLength, length:=symbol.Length)
             rtb.SelectionBackColor = SystemColors.Window
             Select Case symbol
@@ -138,10 +200,9 @@ Public Module RichTextBoxExtensions
             rtb.SelectionStart = rtb.Text.Length
             rtb.SelectionBackColor = SystemColors.Window
             rtb.SelectionColor = SystemColors.WindowText
-            rtb.AppendTextNewFont(
-                text:=splitText(1),
-                newFont:=HeadingBoldFont,
-                padRight:=0)
+            rtb.AppendTextNewFont(text:=splitText(1),
+                                  newFont:=HeadingBoldFont,
+                                  padRight:=False)
         End If
         If includeNewLine Then
             rtb.AppendNewLine
@@ -163,6 +224,7 @@ Public Module RichTextBoxExtensions
     ''' </remarks>
     ''' <param name="heading"></param>
     '''
+    '''
     <Extension>
     Friend Sub AppendTimeValueRow(rtb As RichTextBox,
                                   startTime As String,
@@ -171,12 +233,22 @@ Public Module RichTextBoxExtensions
                                   Optional indent As String = Indent8,
                                   Optional heading As Boolean = False)
 
-        Dim timeRange As String = $"{startTime} - {endTime}"
+        Dim timeRange As String
+        Dim leftPanel As Boolean = True
+        If endTime = "N/A" Then
+            timeRange = $"{startTime}     {endTime}"
+            leftPanel = False
+        Else
+            timeRange = $"{startTime} - {endTime}"
+        End If
         Dim newFont As Font = If(heading, FixedWidthBoldFont, FixedWidthFont)
 
         rtb.AppendTextNewFont(text:=$"{indent}{timeRange}", newFont)
-        Dim text As String = value.AlignCenter()
-        rtb.AppendTextNewFont(text, newFont:=FixedWidthFont, includeNewLine:=True)
+        Dim text As String = value.AlignCenter(leftPanel).TrimEnd
+        rtb.AppendTextNewFont(text,
+                              newFont:=FixedWidthFont,
+                              padRight:=False,
+                              includeNewLine:=True)
     End Sub
 
     ''' <summary>
@@ -197,10 +269,9 @@ Public Module RichTextBoxExtensions
                                   Optional indent As String = Indent8,
                                   Optional heading As Boolean = False)
         rtb.AppendTimeValueRow(startTime:=startTime.ToString(),
-                               endTime:=endTime.ToString(),
-                               value,
-                               indent,
-                               heading)
+            endTime:=endTime.ToString(),
+            value:=value,
+            indent:=indent, heading:=heading)
     End Sub
 
     ' <summary>
@@ -219,7 +290,7 @@ Public Module RichTextBoxExtensions
                                   startTime As String,
                                   Optional endTime As String = EmptyString)
 
-        Dim text As String = $"{Indent4}{key}".PadRight(TotalWidth)
+        Dim text As String = $"{Indent4}{key}".PadRight(LeftColumnTotalWidth)
         rtb.AppendTextNewFont(text, newFont:=FixedWidthFont)
 
         Dim separator As String
@@ -233,7 +304,7 @@ Public Module RichTextBoxExtensions
             End If
         End If
 
-        text = $"{startTime}{separator}{endTime}".AlignCenter()
+        text = $"{startTime}{separator}{endTime}".AlignCenter(leftPanel:=False)
         rtb.AppendTextNewFont(text, newFont:=FixedWidthFont, includeNewLine:=True)
     End Sub
 

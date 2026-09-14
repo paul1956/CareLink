@@ -1,6 +1,7 @@
 ﻿Imports CareLink
 Imports FluentAssertions
 Imports System.IO
+Imports System.Text.Json
 Imports Xunit
 
 Public Class DiscoverySsoParsingTests
@@ -13,7 +14,7 @@ Public Class DiscoverySsoParsingTests
         Dim discovery As DiscoveryRoot = Nothing
         Dim parsed As Boolean
         Try
-            discovery = System.Text.Json.JsonSerializer.Deserialize(Of DiscoveryRoot)(json)
+            discovery = JsonSerializer.Deserialize(Of DiscoveryRoot)(json)
             parsed = discovery IsNot Nothing AndAlso discovery.CP IsNot Nothing AndAlso discovery.CP.Count = 1
         Catch ex As Exception
             parsed = False
@@ -33,7 +34,7 @@ Public Class DiscoverySsoParsingTests
         Dim ssoConfig As SsoConfig = Nothing
         Dim parsed As Boolean
         Try
-            ssoConfig = System.Text.Json.JsonSerializer.Deserialize(Of SsoConfig)(ssoJson)
+            ssoConfig = JsonSerializer.Deserialize(Of SsoConfig)(ssoJson)
             parsed = ssoConfig IsNot Nothing
         Catch ex As Exception
             parsed = False

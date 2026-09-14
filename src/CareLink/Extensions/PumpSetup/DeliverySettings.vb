@@ -9,14 +9,20 @@ Friend Module DeliverySettings
     <Extension>
     Friend Sub DeliverySettings1BolusWizardSetup(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
-            .AppendKeyValue(key:="Bolus Wizard:", value:=$"{pdf.Bolus.BolusWizard.BolusWizard}")
+            .AppendKeyValue(leftPanel:=True,
+                title:="Bolus Wizard:",
+                value:=$"{pdf.Bolus.BolusWizard.BolusWizard}")
             .AppendNewLine
 
             Dim count As Integer = pdf.Bolus.DeviceCarbohydrateRatios.Count
             Dim text As String =
-                count.ToUnits(unit:=$"{Indent4}Carbohydrate Ratio", suffix:=":", includeValue:=False)
+                count.ToUnits(unit:=$"{Indent4}Carbohydrate Ratio",
+                              suffix:=":",
+                              includeValue:=False)
 
-            .AppendTextNewFont(text, newFont:=FixedWidthBoldFont, includeNewLine:=True)
+            .AppendTextNewFont(text,
+                               newFont:=FixedWidthBoldFont,
+                               includeNewLine:=True)
 
             Dim timeFormat As String = pdf.Utilities.TimeFormat
             For Each item As CarbRatioRecord In pdf.Bolus.DeviceCarbohydrateRatios.ToCarbRatioList
@@ -28,7 +34,9 @@ Friend Module DeliverySettings
 
             Dim timeUnits As String = pdf.Bolus.BolusWizard.ActiveInsulinTime.ToHoursMinutes()
             With rtb
-                .AppendKeyValue(key:="Active Insulin Time:", value:=$"{timeUnits} hr")
+                .AppendKeyValue(leftPanel:=True,
+                    title:="Active Insulin Time:",
+                    value:=$"{timeUnits} hr")
                 .AppendNewLine
             End With
 
@@ -49,15 +57,15 @@ Friend Module DeliverySettings
 
                 Dim sensitivity As String =
                     If(item.Sensitivity < 0.01,
-                       "0.00",
-                       item.Sensitivity.RoundTo025.ToString(format:="F3"))
+                       "0",
+                       item.Sensitivity.RoundTo025.ToString(format:="F1"))
 
                 Dim value As String =
                     $"{sensitivity} {pdf.Bolus.BolusWizard.Units.CarbUnits}/U"
                 .AppendTimeValueRow(startTime:=startTime.ToString,
-                                    endTime:=endTime.ToString,
-                                    value,
-                                    indent:=pdf.Utilities.TimeFormat)
+                    endTime:=endTime.ToString,
+                    value:=value,
+                    indent:=pdf.Utilities.TimeFormat)
             Next
             .AppendNewLine
 
@@ -87,11 +95,14 @@ Friend Module DeliverySettings
     End Sub
 
     <Extension>
-    Friend Sub DeliverySettings2BasalPatternSetup(
-        rtb As RichTextBox, pdf As PdfSettingsRecord)
+    Friend Sub DeliverySettings2BasalPatternSetup(rtb As RichTextBox,
+                                                  pdf As PdfSettingsRecord)
 
         With rtb
             For Each item As KeyValuePair(Of String, NamedBasalRecord) In pdf.Basal.NamedBasal
+                If Not item.Value.IsValid Then
+                    Continue For
+                End If
                 .AppendTextNewFont(text:=$"{Indent4}{item.Key}:", newFont:=FixedWidthBoldFont, includeNewLine:=True)
                 For Each e As IndexClass(Of BasalRateRecord) In item.Value.BasalRates.WithIndex
                     Dim basalRate As BasalRateRecord = e.Value
@@ -105,19 +116,20 @@ Friend Module DeliverySettings
 
                     Dim value As String = $"{basalRate.UnitsPerHr:F3} U/hr"
                     .AppendTimeValueRow(startTime:=startTime.ToString(),
-                                        endTime:=endTime.ToString(),
-                                        value,
-                                        indent:=pdf.Utilities.TimeFormat)
+                        endTime:=endTime.ToString(),
+                        value:=value,
+                        indent:=pdf.Utilities.TimeFormat)
                 Next
             Next
+            .AppendNewLine
         End With
     End Sub
 
     <Extension>
     Friend Sub DeliverySettings3MaxBasalBolus(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
-            .AppendKeyValue(key:="Max Basal:", value:=$"{pdf.Basal.MaximumBasalRate:2} U/hr")
-            .AppendKeyValue(key:="Max Bolus:", value:=$"{pdf.Bolus.BolusWizard.MaximumBolus:2} U")
+            .AppendKeyValue(leftPanel:=True, title:="Max Basal:", value:=$"{pdf.Basal.MaximumBasalRate} U/hr")
+            .AppendKeyValue(leftPanel:=True, title:="Max Bolus:", value:=$"{pdf.Bolus.BolusWizard.MaximumBolus} U")
             .AppendNewLine
         End With
     End Sub
@@ -125,8 +137,8 @@ Friend Module DeliverySettings
     <Extension>
     Friend Sub DeliverySettings4DualSquareWave(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
-            .AppendKeyValue(key:="Dual:", value:=$"{pdf.Bolus.EasyBolus.DualSquare.Dual,3}")
-            .AppendKeyValue(key:="Square:", value:=$"{pdf.Bolus.EasyBolus.DualSquare.Square,3}")
+            .AppendKeyValue(leftPanel:=True, title:="Dual:", value:=$"{pdf.Bolus.EasyBolus.DualSquare.Dual,3}")
+            .AppendKeyValue(leftPanel:=True, title:="Square:", value:=$"{pdf.Bolus.EasyBolus.DualSquare.Square,3}")
             .AppendNewLine
         End With
     End Sub
@@ -134,7 +146,13 @@ Friend Module DeliverySettings
     <Extension>
     Friend Sub DeliverySettings5BolusIncrement(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
-            .AppendKeyValue(key:="Increment:", value:=$"{pdf.Bolus.EasyBolus.BolusIncrement:F3} U")
+            Dim bolusIncrement As Single = pdf.Bolus.EasyBolus.BolusIncrement
+            Dim bolusIncrementText As String = If(Single.IsNaN(bolusIncrement),
+                                                  "---",
+                                                  $"{bolusIncrement:F1} U")
+            .AppendKeyValue(leftPanel:=True,
+                title:="Increment:",
+                value:=bolusIncrementText)
             .AppendNewLine
         End With
     End Sub
@@ -142,28 +160,33 @@ Friend Module DeliverySettings
     <Extension>
     Friend Sub DeliverySettings6BolusSpeed(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
-            .AppendKeyValue(key:="Bolus Speed:", value:=$"{pdf.Bolus.EasyBolus.BolusSpeed}")
-            .AppendNewLine
+            .AppendKeyValue(leftPanel:=True, title:="Bolus Speed:", value:=$"{pdf.Bolus.EasyBolus.BolusSpeed}")
         End With
     End Sub
 
     <Extension>
     Friend Sub DeliverySettings7PresetBolusSetup(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
+            Dim firstFound As Boolean = False
             For Each item As KeyValuePair(Of String, PresetBolusRecord) In pdf.PresetBolus
-                .AppendTextNewFont(text:=$"{Indent4}{item.Key}:", newFont:=FixedWidthBoldFont)
-
                 If item.Value.IsValid Then
-                    Dim presetBolus As PresetBolusRecord = item.Value
-                    Dim bolusType As String = If(presetBolus.BolusTypeNormal,
-                                                 "Normal",
-                                                 "Square")
-                    Dim text As String = $"{Indent4}Bolus: {presetBolus.Bolus}{Indent4}Type: {bolusType}"
-                    .AppendTextNewFont(text, newFont:=FixedWidthFont)
-                    If Not item.Value.BolusTypeNormal Then
-                        text = $"{Indent4}Duration: {presetBolus.Duration} hr"
-                        .AppendTextNewFont(text, newFont:=FixedWidthFont)
+                    If Not firstFound Then
+                        .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Preset Bolus Setup")
+                        firstFound = True
                     End If
+                    .AppendTextNewFont(text:=$"{Indent4}{item.Key}:", newFont:=FixedWidthBoldFont)
+                Else
+                    Continue For
+                End If
+                Dim presetBolus As PresetBolusRecord = item.Value
+                Dim bolusType As String = If(presetBolus.BolusTypeNormal,
+                                             "Normal",
+                                             "Square")
+                Dim text As String = $"{Indent4}Bolus: {presetBolus.Bolus}{Indent4}Type: {bolusType}"
+                .AppendTextNewFont(text, newFont:=FixedWidthFont)
+                If Not item.Value.BolusTypeNormal Then
+                    text = $"{Indent4}Duration: {presetBolus.Duration} hr"
+                    .AppendTextNewFont(text, newFont:=FixedWidthFont)
                 End If
                 .AppendNewLine
             Next
@@ -174,7 +197,17 @@ Friend Module DeliverySettings
     <Extension>
     Friend Sub DeliverySettings8PresetTempSetup(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
+            Dim firstFound As Boolean = False
             For Each item As KeyValuePair(Of String, PresetTempRecord) In pdf.PresetTemp
+                If item.Value.IsValid Then
+                    If Not firstFound Then
+                        .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Preset Temp Setup")
+                        firstFound = True
+                    End If
+                    .AppendTextNewFont(text:=$"{Indent4}{item.Key}:", newFont:=FixedWidthBoldFont)
+                Else
+                    Continue For
+                End If
                 .AppendTextNewFont(text:=$"{Indent4}{item.Key}:", newFont:=FixedWidthBoldFont)
                 Dim presetTempRecord As PresetTempRecord = item.Value
                 If presetTempRecord.IsValid Then

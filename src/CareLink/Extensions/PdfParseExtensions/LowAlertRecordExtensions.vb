@@ -6,13 +6,15 @@ Imports System.Runtime.CompilerServices
 
 Public Module LowAlertRecordExtensions
 
+    Private ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
     <Extension>
     Public Sub InitializeFromRow(this As LowAlertRecord, row As StringTable.Row, valueUnits As String)
         If row Is Nothing Then Return
         Try
             If row.Columns.Count <> 5 Then Return
-            Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
-            Dim s1() As String = row.Columns(index:=0).Split(separator:=" "c, options)
+            Dim s1() As String = row.Columns(index:=0).Split(separator:=" "c, Options)
             If s1.Length = 0 Then Return
             If s1.Length = 1 Then
                 If s1(0).Length = 0 Then Return

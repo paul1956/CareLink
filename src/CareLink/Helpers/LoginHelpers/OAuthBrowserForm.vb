@@ -11,8 +11,6 @@ Imports Microsoft.Web.WebView2.Core
 
 Public Class OAuthBrowserForm
 
-    Private Shared ReadOnly s_separator As Char() = New Char() {"&"c}
-
     Private ReadOnly _password As String
     Private ReadOnly _redirectUri As String
     Private ReadOnly _startUrl As String
@@ -44,6 +42,10 @@ Public Class OAuthBrowserForm
         Me.Height = Math.Min(900, Screen.PrimaryScreen.WorkingArea.Height - 100)
     End Sub
 
+    Private Shared ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
+    Private Shared ReadOnly Property Separator As Char() = New Char() {"&"c}
     Public Property Result As RedirectResult
 
     Private Shared Function GetResponseHeaderValue(headers As CoreWebView2HttpResponseHeaders,
@@ -140,7 +142,7 @@ Public Class OAuthBrowserForm
 
         Dim parameters As Dictionary(Of String, String) =
             uri.Query.TrimStart(trimChar:="?"c).
-                      Split(separator:="&"c, options:=StringSplitOptions.RemoveEmptyEntries).
+                      Split(Separator, Options).
                       Select(selector).
                       ToDictionary(keySelector,
                                    elementSelector,

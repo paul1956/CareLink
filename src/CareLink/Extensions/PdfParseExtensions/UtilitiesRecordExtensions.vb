@@ -6,11 +6,13 @@ Imports System.Runtime.CompilerServices
 
 Public Module UtilitiesRecordExtensions
 
+    Private ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
     <Extension>
     Public Sub InitializeFromStringTable(this As UtilitiesRecord, sTable As StringTable)
         If sTable Is Nothing Then Return
         Try
-            Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
             If Not sTable.IsValid Then
                 Stop
                 Exit Sub
@@ -22,7 +24,7 @@ Public Module UtilitiesRecordExtensions
                 this.BackLightTimeout = New TimeSpan(
                 hours:=0,
                 minutes:=0,
-                seconds:=CInt(s.Split(separator:=" ", options)(0)))
+                seconds:=CInt(s.Split(separator:=" ", Options)(0)))
             Else
                 Stop
             End If

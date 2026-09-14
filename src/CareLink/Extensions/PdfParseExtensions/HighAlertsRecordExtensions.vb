@@ -6,6 +6,9 @@ Imports System.Runtime.CompilerServices
 
 Public Module HighAlertsRecordExtensions
 
+    Private ReadOnly Property Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
     <Extension>
     Public Sub InitializeFromStringTable(this As HighAlertsRecord, sTable As StringTable, listOfAllTextLines As List(Of String))
         If sTable Is Nothing Then Return
@@ -24,7 +27,6 @@ Public Module HighAlertsRecordExtensions
                     Continue For
                 End If
 
-                Const options As StringSplitOptions = StringSplitOptions.RemoveEmptyEntries
                 Dim value As String = sTable.Rows(index:=e.Index + 1).Columns(index:=0)
                 Dim item As New HighAlertRecord()
                 item.InitializeFromRow(row, valueUnits)
@@ -32,7 +34,7 @@ Public Module HighAlertsRecordExtensions
                               Midnight.ToString,
                               sTable.Rows(index:=e.Index + 1) _
                                                  .Columns(index:=0) _
-                                                 .Split(separator:=" ", options)(0)).ToString
+                                                 .Split(separator:=" ", Options)(0)).ToString
                 If item.IsValid Then
                     this.HighAlert.Add(item)
                 Else

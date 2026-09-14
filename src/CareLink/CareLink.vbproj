@@ -447,7 +447,9 @@
     <PackageReference Include="ClosedXML" Version="0.105.1" />
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.8" />
     <PackageReference Include="FreeSpire.PDF" Version="12.4.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4191.47" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4191.47">
+      <ExcludeAssets>runtime;native;contentFiles</ExcludeAssets>
+    </PackageReference>
     <PackageReference Include="Octokit" Version="14.0.0" />
     <PackageReference Include="System.Speech" Version="11.0.0-rc.1.26425.128" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.3" />
@@ -513,7 +515,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="11.0.100-rc.1.26425.128" />
+    <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.401" />
   </ItemGroup>
+
+  <Target Name="RemoveDuplicateWebView2" BeforeTargets="CopyFilesToOutputDirectory">
+    <PropertyGroup>
+      <_WebView2Dll>$(OutputPath)Microsoft.Web.WebView2.Core.dll</_WebView2Dll>
+    </PropertyGroup>
+    <Message Importance="High" Text="Removing duplicate WebView2 DLL if present: $(_WebView2Dll)" />
+    <Delete Files="$(_WebView2Dll)" />
+  </Target>
 
 </Project>

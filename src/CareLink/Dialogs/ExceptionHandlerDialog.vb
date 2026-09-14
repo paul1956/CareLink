@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.IO
 Imports System.Text
 Imports Microsoft.VisualBasic.ApplicationServices
 
@@ -39,13 +40,12 @@ Public Class ExceptionHandlerDialog
     ''' </summary>
     ''' <param name="exceptionText">The exception message text.</param>
     ''' <param name="stackTraceText">The stack trace text.</param>
-    ''' <param name="UniqueFileNameWithPath">The full path for the report file.</param>
-    Private Shared Sub CreateReportFile(
-        exceptionText As String,
-        stackTraceText As String,
-        UniqueFileNameWithPath As String)
+    ''' <param name="withPath">The full path for the report file.</param>
+    Private Shared Sub CreateReportFile(exceptionText As String,
+                                        stackTraceText As String,
+                                        withPath As String)
 
-        Using stream As IO.StreamWriter = IO.File.CreateText(UniqueFileNameWithPath)
+        Using stream As StreamWriter = File.CreateText(path:=withPath)
             ' write exception header
             stream.WriteLine(value:=ExceptionStartingString)
             ' write exception
@@ -98,56 +98,80 @@ Public Class ExceptionHandlerDialog
     Private Async Sub ExceptionHandlerForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         SetServerUpdateTimer(Start:=False)
         Dim rtb As RichTextBox = Me.InstructionRtb
-        Dim newFont As Font = rtb.Font
-        _gitClient = New GitHubClient(
+        With rtb
+            Dim newFont As Font = .Font
+            _gitClient = New GitHubClient(
             productInformation:=New ProductHeaderValue(name:="CareLink.Issues"),
             baseAddress:=New Uri(uriString:=GitHubCareLinkUrl))
-        Dim fontBold As New Font(prototype:=rtb.Font, newStyle:=FontStyle.Bold)
-        If IsNullOrWhiteSpace(value:=Me.ReportNameWithPath) Then
-            ' Create error report and issue
-            Me.exTextBox.Text = Me.UnhandledException.Exception.Message
-            Me.traceTextBox.Text = TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
+            Dim fontBold As New Font(prototype:= .Font, newStyle:=FontStyle.Bold)
+            If IsNullOrWhiteSpace(value:=Me.ReportNameWithPath) Then
+                ' Create error report and issue
+                Me.exTextBox.Text = Me.UnhandledException.Exception.Message
+                Me.traceTextBox.Text = TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
 
-            rtb.Text = "By clicking OK, the Stack Trace, Exception and the CareLink™ data" &
-                       $" that caused the error will be package as a text file called{vbCrLf}"
+                .Text = "By clicking OK, the Stack Trace, Exception and the CareLink™ data" &
+                         $" that caused the error will be package as a text file called{vbCrLf}"
 
-            Dim uniqueFileName As FileNameStruct = GetUniqueDataFileName(
-                                                        baseName:=BaseErrorReportName,
-                                                        cultureName:=CurrentDateCulture.Name,
-                                                        extension:="txt",
-                                                        mustBeUnique:=True)
+                Dim uniqueFileName As FileNameStruct =
+                    GetUniqueDataFileName(baseName:=BaseErrorReportName,
+                                          cultureName:=CurrentDateCulture.Name,
+                                          extension:="txt",
+                                          mustBeUnique:=True)
 
-            Dim fileLink As String = $"{uniqueFileName.WithoutPath}: file://{uniqueFileName.WithPath}"
-            AppendTextNewFont(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
-            AppendTextNewFont(rtb, text:="and stored in", newFont, padRight:=0)
-            AppendTextNewFont(rtb, text:=GetProjectDataDirectory(), newFont:=fontBold, padRight:=0)
-            Dim text As String = "You can review what is being stored and then attach it to a new issue at"
-            AppendTextNewFont(rtb, text, newFont, padRight:=0)
-            text = "You can review what is being stored and then attach it to a new issue at"
-            AppendTextNewFont(rtb, text, newFont, padRight:=0)
-            Dim repo As Repository = Await _gitClient.Repository.Get(owner:=GitOwnerName, name:="CareLink")
-            text = $"{repo.HtmlUrl}/issues."
-            AppendTextNewFont(rtb, text, newFont, padRight:=0)
-            text = "This will help me isolate issues quickly."
-            AppendTextNewFont(rtb, text, newFont, padRight:=0)
-            CreateReportFile(
-                exceptionText:=Me.exTextBox.Text,
-                stackTraceText:=Me.traceTextBox.Text,
-                uniqueFileName.WithPath)
-        Else
-            CurrentDateCulture = Me.ReportNameWithPath.ExtractCulture(FixedPart:=BaseErrorReportName)
-            If CurrentDateCulture Is Nothing Then
-                Me.Close()
-                Exit Sub
+                Dim fileLink As String = $"{uniqueFileName.WithoutPath}: file://{uniqueFileName.WithPath}"
+                .AppendTextNewFont(text:=fileLink,
+                                   newFont:=fontBold,
+                                   padRight:=False)
+                .AppendTextNewFont(text:="and stored in",
+                                   newFont,
+                                   padRight:=False)
+                .AppendTextNewFont(text:=GetProjectDataDirectory(), newFont:=fontBold, padRight:=False)
+                Dim text As String = "You can review what is being stored and then attach it to a new issue at"
+                .AppendTextNewFont(text,
+                                   newFont,
+                                   padRight:=False)
+                text = "You can review what is being stored and then attach it to a new issue at"
+                .AppendTextNewFont(text,
+                                   newFont,
+                                   padRight:=False)
+                Dim repo As Repository = Await _gitClient.Repository.Get(owner:=GitOwnerName, name:="CareLink")
+                text = $"{repo.HtmlUrl}/issues."
+                .AppendTextNewFont(text,
+                                   newFont,
+                                   padRight:=False)
+                text = "This will help me isolate issues quickly."
+                .AppendTextNewFont(text,
+                                   newFont,
+                                   padRight:=False)
+                CreateReportFile(exceptionText:=Me.exTextBox.Text,
+                                 stackTraceText:=Me.traceTextBox.Text,
+                                 uniqueFileName.WithPath)
+            Else
+                CurrentDateCulture =
+                    Me.ReportNameWithPath.ExtractCulture(FixedPart:=BaseErrorReportName)
+                If CurrentDateCulture Is Nothing Then
+                    Me.Close()
+                    Exit Sub
+                End If
+                .Text = $"Clicking OK will rerun the data file that caused the error{vbCrLf}"
+                Dim path As String =
+                IO.Path.GetFileName(path:=Me.ReportNameWithPath)
+                Dim fileLink As String =
+                $"{path}: file://{Me.ReportNameWithPath}"
+                .AppendTextNewFont(text:=fileLink,
+                                   newFont:=fontBold,
+                                   padRight:=False)
+                .AppendTextNewFont(text:="and stored in",
+                                   newFont,
+                                   padRight:=False)
+                .AppendTextNewFont(text:=GetProjectDataDirectory(),
+                                   newFont:=fontBold,
+                                   padRight:=False)
+                Me.LocalRawData = Me.ReportFile(Me.exTextBox,
+                                                Me.traceTextBox,
+                                                Me.ReportNameWithPath)
             End If
-            rtb.Text = $"Clicking OK will rerun the data file that caused the error{vbCrLf}"
-            Dim path As String = IO.Path.GetFileName(path:=Me.ReportNameWithPath)
-            Dim fileLink As String = $"{path}: file://{Me.ReportNameWithPath}"
-            AppendTextNewFont(rtb, text:=fileLink, newFont:=fontBold, padRight:=0)
-            AppendTextNewFont(rtb, text:="and stored in", newFont, padRight:=0)
-            AppendTextNewFont(rtb, text:=GetProjectDataDirectory(), newFont:=fontBold, padRight:=0)
-            Me.LocalRawData = Me.ReportFile(Me.exTextBox, Me.traceTextBox, Me.ReportNameWithPath)
-        End If
+        End With
     End Sub
 
     ''' <summary>
@@ -230,7 +254,7 @@ Public Class ExceptionHandlerDialog
     ''' <param name="reportNameWithPath">The full path to the report file.</param>
     ''' <returns>The raw data portion of the report file.</returns>
     Friend Function ReportFile(exTextBox As TextBox, traceTextBox As TextBox, reportNameWithPath As String) As String
-        Using stream As IO.StreamReader = IO.File.OpenText(reportNameWithPath)
+        Using stream As StreamReader = IO.File.OpenText(reportNameWithPath)
             ' read exception header
             Dim currentLine As String = stream.ReadLine()
             If currentLine <> ExceptionStartingString Then
