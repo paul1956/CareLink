@@ -4652,7 +4652,7 @@ Public Class Form1
         Dim title As String = EmptyString
         If InAutoMode Then
             Dim autoModeState As String =
-                PatientData.TherapyAlgorithmState.AutoModeShieldState.ToTitle
+                PatientData.TherapyAlgorithmState.AutoModeShieldState
             Select Case autoModeState
                 Case "AUTO_BASAL"
                     title = If(Is700Series(),
@@ -4670,6 +4670,9 @@ Public Class Form1
                         End If
                     End If
             End Select
+            If Debugger.IsAttached Then
+                title &= $" - {Client.IsTokenValid(log:=False)}"
+            End If
         Else
             Dim pattern As String = s_basalList.ActiveBasalPattern
             Return $"{pattern} rate = {s_basalList.GetBasalPerHour} U Per Hour".CleanSpaces

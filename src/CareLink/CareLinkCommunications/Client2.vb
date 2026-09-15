@@ -16,7 +16,6 @@ Friend Class Client2
     Private Const TokenBaseFileName As String = "loginData.json"
     Private ReadOnly _httpClient As HttpClient
     Private ReadOnly _tokenBaseFileName As String
-    Private _accessTokenPayload As Dictionary(Of String, JsonElement)
     Private _country As String
     Private _lastHttpStatusCode As HttpStatusCode
     Private _tokenDataElement As JsonElement
@@ -36,7 +35,7 @@ Friend Class Client2
 
         _tokenBaseFileName = tokenFile
         _tokenDataElement = Nothing
-        _accessTokenPayload = Nothing
+        Me.AccessTokenPayload = Nothing
         _Config = Nothing
         _country = Nothing
         Me.ServerRegion = serverRegion
@@ -51,12 +50,12 @@ Friend Class Client2
     End Enum
 
     Friend Shared ReadOnly Property Auth_Error_Codes As Integer() = {401, 403}
-
     Friend Property Config As ConfigRecord
     Friend Property LoggedIn As Boolean
     Friend Property PatientPersonalData As New PatientPersonalInfo
     Friend Property ServerRegion As ServerLocation
     Friend Property UserElementDictionary As Dictionary(Of String, JsonElement)
+    Public Property AccessTokenPayload As Dictionary(Of String, JsonElement)
 
     ''' <summary>
     '''  Gets the last HTTP status code from the most recent operation.
@@ -94,41 +93,6 @@ Friend Class Client2
         Return headers
     End Function
 
-    Public Async Function DownloadFileAsync(requestUri As String,
-                                            path As String,
-                                            localTime As Date) As Task
-        ' Create a single static instance of HttpClient for performance (recommended)
-        Try
-            ' Send a GET request to fetch the file data
-            Const completionOption As HttpCompletionOption = HttpCompletionOption.ResponseHeadersRead
-            Dim tokenData As Dictionary(Of String, String) =
-                _tokenDataElement.ToStringDictionary()
-
-            ' Set the Authorization header with the Bearer token
-            _httpClient.DefaultRequestHeaders.Authorization =
-                New AuthenticationHeaderValue(scheme:="Bearer",
-                                              parameter:=tokenData(key:="access_token"))
-
-            Using response As HttpResponseMessage =
-                Await _httpClient.GetAsync(requestUri, completionOption)
-                response.EnsureSuccessStatusCode() ' Throw if not successful
-
-                ' Read the file bytes as a stream
-                Using fileStream As Stream = Await response.Content.ReadAsStreamAsync(),
-                      destination As Stream = File.Create(path)
-
-                    ' Copy the content to the local file stream
-                    Await fileStream.CopyToAsync(destination)
-                End Using
-            End Using
-
-            File.SetCreationTime(path, creationTime:=localTime)
-            File.SetLastAccessTime(path, lastAccessTime:=localTime)
-        Catch ex As Exception
-            LogMessage(message:=$"Error downloading file: {ex.Message}")
-        End Try
-    End Function
-
     Private Shared Function GetAccessTokenPayload(token_data As JsonElement) As Dictionary(Of String, JsonElement)
         Try
             If token_data.IsEmpty Then
@@ -154,56 +118,6 @@ Friend Class Client2
             LogMessage(message)
             Stop
             Return Nothing
-        End Try
-    End Function
-
-    ''' <summary>
-    ''' Validates the access token based on its expiration time.
-    ''' </summary>
-    ''' <param name="access_token_payload">The payload of the access token as a dictionary.</param>
-    ''' <returns>True if the token is valid; otherwise, false.</returns>
-    ''' <param name="message"></param>
-    Private Shared Function IsTokenValid(access_token_payload As Dictionary(Of String, JsonElement),
-                                         ByRef message As String) As Boolean
-
-        If access_token_payload Is Nothing Then
-            message = "AccessToken Empty"
-            Return False
-        End If
-        Try
-            Dim unixTime As Long = access_token_payload(key:="exp").GetInt64()
-            Dim unixCurrentTime As Long = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
-            Dim tDiffSeconds As Long = unixTime - unixCurrentTime
-            Dim absDiffMinutes As Long = Math.Abs(value:=tDiffSeconds \ 60)
-            If tDiffSeconds <= 0 Then
-                message = $"In {NameOf(IsTokenValid)} access token has expired {absDiffMinutes.ToHoursMinutes} ago"
-                LogMessage(message)
-                Return False
-            End If
-            Dim startKey As String
-            If tDiffSeconds < 600 Then
-                startKey = $"In {NameOf(IsTokenValid)} access token is about to expire in "
-                message = $"In {NameOf(IsTokenValid)} access token is about to expire in {absDiffMinutes.ToHoursMinutes}"
-                UpdateMessage(message, startKey)
-                Return False
-            End If
-
-            Dim utcTime As DateTimeOffset =
-                DateTimeOffset.FromUnixTimeSeconds(seconds:=unixTime)
-            ' Convert to local time
-            Dim localTime As DateTimeOffset = utcTime.ToLocalTime()
-            Dim formatted As String =
-                localTime.ToString(format:="M/d/yyyy h:mm tt")
-
-            startKey = $"Access token expires in "
-            message = $"{startKey}{absDiffMinutes.ToHoursMinutes()} at {formatted}"
-            UpdateMessage(message, startKey)
-            Return True
-        Catch ex As Exception
-            message =
-                $"In {NameOf(IsTokenValid)} missing nameValueCollection in access token. {ex.DecodeException()}"
-            LogMessage(message)
-            Return False
         End Try
     End Function
 
@@ -448,10 +362,11 @@ Friend Class Client2
             Return False
         End If
 
-        _accessTokenPayload =
+        Me.AccessTokenPayload =
             GetAccessTokenPayload(token_data:=_tokenDataElement)
         Dim message As String = Nothing
-        If _accessTokenPayload Is Nothing OrElse Not IsTokenValid(access_token_payload:=_accessTokenPayload, message) Then
+        Dim tokenMsg As String = Me.IsTokenValid()
+        If Not String.IsNullOrEmpty(tokenMsg) Then
             Return False
         End If
 
@@ -461,7 +376,8 @@ Friend Class Client2
 
         Try
             Application.DoEvents()
-            Dim element As JsonElement = _accessTokenPayload(key:="token_details")
+            Dim element As JsonElement =
+                Me.AccessTokenPayload(key:="token_details")
             Dim payload As AccessTokenDetails = Nothing
             If Not element.TryFromJson(result:=payload) Then
                 payload = Nothing
@@ -525,7 +441,7 @@ Friend Class Client2
                         Await refreshTask.ConfigureAwaitFalse()
                     If Not refreshedToken.IsEmpty Then
                         _tokenDataElement = refreshedToken
-                        _accessTokenPayload =
+                        Me.AccessTokenPayload =
                             GetAccessTokenPayload(token_data:=_tokenDataElement)
                         WriteTokenFile(token:=_tokenDataElement)
                     End If
@@ -799,6 +715,41 @@ Friend Class Client2
                   tdElem)
     End Function
 
+    Public Async Function DownloadFileAsync(requestUri As String,
+                                                                                    path As String,
+                                            localTime As Date) As Task
+        ' Create a single static instance of HttpClient for performance (recommended)
+        Try
+            ' Send a GET request to fetch the file data
+            Const completionOption As HttpCompletionOption = HttpCompletionOption.ResponseHeadersRead
+            Dim tokenData As Dictionary(Of String, String) =
+                _tokenDataElement.ToStringDictionary()
+
+            ' Set the Authorization header with the Bearer token
+            _httpClient.DefaultRequestHeaders.Authorization =
+                New AuthenticationHeaderValue(scheme:="Bearer",
+                                              parameter:=tokenData(key:="access_token"))
+
+            Using response As HttpResponseMessage =
+                Await _httpClient.GetAsync(requestUri, completionOption)
+                response.EnsureSuccessStatusCode() ' Throw if not successful
+
+                ' Read the file bytes as a stream
+                Using fileStream As Stream = Await response.Content.ReadAsStreamAsync(),
+                      destination As Stream = File.Create(path)
+
+                    ' Copy the content to the local file stream
+                    Await fileStream.CopyToAsync(destination)
+                End Using
+            End Using
+
+            File.SetCreationTime(path, creationTime:=localTime)
+            File.SetLastAccessTime(path, lastAccessTime:=localTime)
+        Catch ex As Exception
+            LogMessage(message:=$"Error downloading file: {ex.Message}")
+        End Try
+    End Function
+
     ''' <summary>
     '''  Async variant of GetRecentData that uses Await and centralized resp inspection.
     ''' </summary>
@@ -808,23 +759,25 @@ Friend Class Client2
     '''  the PatientData and RecentData public variables.
     ''' </returns>
     Public Async Function GetRecentDataAsync() As Task(Of String)
-        Dim lastErrorMessage As String = Nothing
+        Dim lastErrorMessage As String
         Dim refreshTask As Task(Of JsonElement) = Nothing
         Dim hadAuthException As Boolean = False
-        If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
+        lastErrorMessage = Me.IsTokenValid()
+        If Not String.IsNullOrEmpty(lastErrorMessage) Then
             Try
                 _tokenDataElement =
                     Await Me.DoRefreshAsync(Me.Config,
                                             tokenElement:=_tokenDataElement,
                                             httpClient:=_httpClient)
-                _accessTokenPayload =
+                Me.AccessTokenPayload =
                     GetAccessTokenPayload(token_data:=_tokenDataElement)
                 WriteTokenFile(token:=_tokenDataElement)
             Catch ex As Exception
                 LogMessage(message:=ex.ToString())
             End Try
 
-            If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
+            lastErrorMessage = Me.IsTokenValid()
+            If Not String.IsNullOrEmpty(lastErrorMessage) Then
                 LogMessage(message:=lastErrorMessage)
 
                 ' Attempt interactive login (show OAuthBrowserForm) as a fallback when refresh failed
@@ -835,10 +788,11 @@ Friend Class Client2
 
                     ' Reload token data written by the interactive login and update payload
                     _tokenDataElement = ReadTokenFile(tokenBaseFileName:=_tokenBaseFileName)
-                    _accessTokenPayload =
+                    Me.AccessTokenPayload =
                         GetAccessTokenPayload(token_data:=_tokenDataElement)
 
-                    If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
+                    lastErrorMessage = Me.IsTokenValid()
+                    If Not String.IsNullOrEmpty(lastErrorMessage) Then
                         LogMessage(message:=lastErrorMessage)
                         Return lastErrorMessage
                     End If
@@ -882,7 +836,7 @@ Friend Class Client2
                     Dim refreshedToken As JsonElement = Await refreshTask
                     If Not refreshedToken.IsEmpty Then
                         _tokenDataElement = refreshedToken
-                        _accessTokenPayload =
+                        Me.AccessTokenPayload =
                             GetAccessTokenPayload(token_data:=_tokenDataElement)
                         WriteTokenFile(token:=_tokenDataElement)
                         ' retry
@@ -902,10 +856,11 @@ Friend Class Client2
                                            password:=s_password)
 
                         _tokenDataElement = ReadTokenFile(tokenBaseFileName:=_tokenBaseFileName)
-                        _accessTokenPayload =
+                        Me.AccessTokenPayload =
                             GetAccessTokenPayload(token_data:=_tokenDataElement)
 
-                        If Not IsTokenValid(access_token_payload:=_accessTokenPayload, message:=lastErrorMessage) Then
+                        lastErrorMessage = Me.IsTokenValid()
+                        If Not String.IsNullOrEmpty(lastErrorMessage) Then
                             LogMessage(message:=lastErrorMessage)
                             Return "ERROR: failed to refresh token"
                         End If
@@ -939,7 +894,7 @@ Friend Class Client2
                     Await Me.DoRefreshAsync(Me.Config,
                                             tokenElement:=_tokenDataElement,
                                             httpClient:=_httpClient)
-                _accessTokenPayload =
+                Me.AccessTokenPayload =
                     GetAccessTokenPayload(token_data:=_tokenDataElement)
                 WriteTokenFile(token:=_tokenDataElement)
             Catch ex As Exception

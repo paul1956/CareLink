@@ -520,7 +520,15 @@
        to avoid packaging conflicts when building tests or MSIX packages. Only delete the output
        copy when the package-provided DLL exists. This avoids deleting the only copy during
        normal debug builds on machines without the runtime installed. -->
-  <Target Name="RemoveDuplicateWebView2" BeforeTargets="CopyFilesToOutputDirectory"
+  <!--
+       Ensure duplicate WebView2 native DLL from the project output is removed when creating
+       a package/publishing so the package contains only the package-provided native DLL.
+       Keep the output copy during normal local Debug builds to allow running without the
+       system WebView2 runtime installed. The deletion runs for Publish/CreateAppxPackage
+       (packaging) as well as the normal CopyFilesToOutputDirectory step when the package
+       copy exists.
+  -->
+  <Target Name="RemoveDuplicateWebView2" BeforeTargets="Publish;CreateAppxPackage"
           Condition="Exists('$(NuGetPackageRoot)microsoft.web.webview2\1.0.4255-prerelease\runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll')">
     <PropertyGroup>
       <_WebView2Dll>$(OutputPath)Microsoft.Web.WebView2.Core.dll</_WebView2Dll>
@@ -528,6 +536,27 @@
     </PropertyGroup>
     <Message Importance="High" Text="Removing duplicate WebView2 DLL from output if present: $(_WebView2Dll) (package copy at $(_WebView2PackageDll))" />
     <Delete Files="$(_WebView2Dll)" Condition="Exists('$(_WebView2Dll)')" />
+  </Target>
+
+  <!-- Ensure the required WebView2 native and managed DLLs are present in output for local Debug runs.
+       This copies the package-provided native DLLs into the build output when they exist.
+       Keeps the files available at runtime even when the system WebView2 runtime is not installed.
+  -->
+  <Target Name="CopyWebView2PackageFilesToOutput" AfterTargets="Build">
+    <PropertyGroup>
+      <_WebView2PackageRoot>$(NuGetPackageRoot)microsoft.web.webview2\1.0.4255-prerelease\</_WebView2PackageRoot>
+      <_WebView2NativeUap>$(_WebView2PackageRoot)runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll</_WebView2NativeUap>
+      <_WebView2Loader>$(_WebView2PackageRoot)runtimes\win-x64\native\WebView2Loader.dll</_WebView2Loader>
+      <_WebView2Managed>$(_WebView2PackageRoot)lib\net462\Microsoft.Web.WebView2.Core.dll</_WebView2Managed>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_FilesToCopy Include="$(_WebView2NativeUap)" Condition="Exists('$(_WebView2NativeUap)')" />
+      <_FilesToCopy Include="$(_WebView2Loader)" Condition="Exists('$(_WebView2Loader)')" />
+      <_FilesToCopy Include="$(_WebView2Managed)" Condition="Exists('$(_WebView2Managed)')" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_FilesToCopy)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
   </Target>
 
 </Project>
