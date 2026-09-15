@@ -38,17 +38,24 @@ Public Class Client2TransientErrorsTests
         Dim value As New Dictionary(Of String, JsonElement) From {{"role", "patient".ToJsonElement()}}
         client.SetUserElementDictionaryForTests(value)
 
-        Dim tokenPath As String = Path.Combine(AppContext.BaseDirectory, "TestData", "token_with_mag.json")
+        Dim tokenPath As String =
+            Path.Combine(AppContext.BaseDirectory, "TestData", "token_with_mag.json")
         Dim tokenJson As String = File.ReadAllText(path:=tokenPath)
-        Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
-        Const bindingAttr As BindingFlags = BindingFlags.NonPublic Or BindingFlags.Instance
-        Dim tokenField As FieldInfo = client.GetType().GetField(name:="_tokenDataElement", bindingAttr)
+        Dim tokenElement As JsonElement =
+            JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
+        Const bindingAttr As BindingFlags =
+            BindingFlags.Public Or BindingFlags.NonPublic Or BindingFlags.Instance
+        Dim tokenField As FieldInfo =
+            client.GetType().GetField(name:="_tokenDataElement", bindingAttr)
         tokenField.SetValue(obj:=client, value:=tokenElement)
 
         Dim accessPayload As New Dictionary(Of String, JsonElement) From
             {{"exp", JsonElement.Parse(json:="10000000000")}}
-        Dim accessField As FieldInfo = client.GetType().GetField(name:="_accessTokenPayload", bindingAttr)
-        accessField.SetValue(obj:=client, value:=accessPayload)
+
+        Dim accessProp As PropertyInfo =
+            client.GetType().GetProperty(name:="AccessTokenPayload", bindingAttr)
+
+        accessProp.SetValue(obj:=client, value:=accessPayload)
 
         Dim result As String = Nothing
         Dim ex As Exception = Nothing

@@ -528,7 +528,7 @@
        (packaging) as well as the normal CopyFilesToOutputDirectory step when the package
        copy exists.
   -->
-  <Target Name="RemoveDuplicateWebView2" BeforeTargets="Publish;CreateAppxPackage"
+  <Target Name="RemoveDuplicateWebView2" BeforeTargets="Pack;Publish;CreateAppxPackage"
           Condition="Exists('$(NuGetPackageRoot)microsoft.web.webview2\1.0.4255-prerelease\runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll')">
     <PropertyGroup>
       <_WebView2Dll>$(OutputPath)Microsoft.Web.WebView2.Core.dll</_WebView2Dll>

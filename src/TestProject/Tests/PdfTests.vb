@@ -50,11 +50,6 @@ Public Class PdfTests
         End Get
     End Property
 
-    Private Shared Function GetTestDataPath(<CallerFilePath> Optional path As String = "") As String
-        ' Get the currently executing assembly location
-        Return IO.Path.Combine(Directory.GetParent(path).FullName, "TestData")
-    End Function
-
     <Fact>
     Public Sub PdfFileExists()
         If Not Debugger.IsAttached Then

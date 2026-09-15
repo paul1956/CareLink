@@ -27,10 +27,6 @@ Public Class LegacyPdfTests
         End Get
     End Property
 
-    Private Shared Function GetTestDataPath(<CallerFilePath> Optional path As String = "") As String
-        Return IO.Path.Combine(Directory.GetParent(path).FullName, "TestData")
-    End Function
-
     <Theory>
     <MemberData(NameOf(PdfFiles))>
     Public Sub LegacyParserParsesFiles(pdfFilePath As String)
