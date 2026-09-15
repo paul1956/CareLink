@@ -54,7 +54,7 @@ Public Class Client2TransientErrorsTests
         Dim ex As Exception = Nothing
         Try
             result = Await client.GetRecentDataAsync() _
-                                 .ConfigureAwait(continueOnCapturedContext:=False)
+                                 .ConfigureAwaitFalse()
         Catch e As Exception
             ex = e
         End Try

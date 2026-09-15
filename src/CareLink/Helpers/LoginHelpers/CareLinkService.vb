@@ -87,7 +87,7 @@ Public Class CareLinkService
                 End If
 
                 Dim ssoJson As String =
-                    Await s_http.GetStringAsync(requestUri:=ssoUrl).ConfigureAwait(continueOnCapturedContext:=False)
+                    Await s_http.GetStringAsync(requestUri:=ssoUrl).ConfigureAwaitFalse()
                 Dim ssoDoc As SsoConfig = Nothing
                 Try
                     ssoDoc = JsonSerializer.Deserialize(Of SsoConfig)(json:=ssoJson,
@@ -215,8 +215,10 @@ Public Class CareLinkService
         End SyncLock
 
         ' Ensure discovery JSON is cached per region and only fetched when needed.
-        Dim discovery As DiscoveryRoot = Await GetCachedDiscoveryAsync(serverRegion).ConfigureAwait(continueOnCapturedContext:=False)
-        Dim resolved As EndpointConfig = Await ResolveEndpointConfigFromDiscoveryAsync(discovery, serverRegion).ConfigureAwait(continueOnCapturedContext:=False)
+        Dim discovery As DiscoveryRoot =
+            Await GetCachedDiscoveryAsync(serverRegion).ConfigureAwaitFalse()
+        Dim resolved As EndpointConfig =
+            Await ResolveEndpointConfigFromDiscoveryAsync(discovery, serverRegion).ConfigureAwaitFalse()
 
         SyncLock s_endpointCacheLock
             s_endpointCache(key:=serverRegion) = resolved

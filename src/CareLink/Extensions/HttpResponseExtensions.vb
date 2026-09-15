@@ -24,7 +24,7 @@ Friend Module HttpResponseExtensions
         Dim body As String
 
         Try
-            body = Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
+            body = Await response.Content.ReadAsStringAsync().ConfigureAwaitFalse()
         Catch ex As Exception
             ' Could not read body — continue with empty body.
             body = $"<unable to read response body: {ex.Message}>"

@@ -268,16 +268,19 @@ Friend Class Client2
                             request.Headers.TryAddWithoutValidation(name:=header.Key, value:=header.Value)
                         Next
 
-                        Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).ConfigureAwait(continueOnCapturedContext:=False)
+                        Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).
+                                                                                  ConfigureAwaitFalse()
+
                             _lastHttpStatusCode = response.StatusCode
                             UpdateMessage(message:=$"   status: {_lastHttpStatusCode}",
                                                         startKey:=$"   status: ")
 
                             ' Centralized resp inspection; may throw UnauthorizedAccessException,
                             ' ArgumentException (bad request) or HttpRequestException (transient/server).
-                            Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
+                            Await response.ThrowIfFailureAsync().
+                                           ConfigureAwaitFalse()
 
-                            Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
+                            Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwaitFalse()
                             Dim d As Dictionary(Of String, JsonElement) = Nothing
                             Return If(Not json.TryFromJson(result:=d),
                                                            Nothing,
@@ -354,7 +357,8 @@ Friend Class Client2
 
                 ' Ensure non-success status codes are not silently ignored.
                 Try
-                    Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
+                    Await response.ThrowIfFailureAsync().
+                                   ConfigureAwaitFalse()
                 Catch ex As Exception
                     response.Dispose()
                     LogMessage(message:=$"GetPatient HTTP failure: {ex.Message}")
@@ -406,13 +410,14 @@ Friend Class Client2
 
             Using response As HttpResponseMessage =
                 Await _httpClient.SendAsync(request).
-                                  ConfigureAwait(continueOnCapturedContext:=False)
+                                  ConfigureAwaitFalse()
                 _lastHttpStatusCode = response.StatusCode
                 LogMessage(message:=$"   status: {_lastHttpStatusCode}")
 
                 ' Use centralized failure handling and translate to Nothing for older call-sites.
                 Try
-                    Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
+                    Await response.ThrowIfFailureAsync().
+                                   ConfigureAwaitFalse()
                 Catch ex As UnauthorizedAccessException
                     LogMessage(message:=$"GetUserString unauthorized: {ex.Message}")
                     Return Nothing
@@ -424,7 +429,8 @@ Friend Class Client2
                     Return Nothing
                 End Try
 
-                Return Await response.Content.ReadAsStringAsync().ConfigureAwait(continueOnCapturedContext:=False)
+                Return Await response.Content.ReadAsStringAsync().
+                                              ConfigureAwaitFalse()
             End Using
         End Using
     End Function
@@ -516,7 +522,7 @@ Friend Class Client2
             If refreshTask IsNot Nothing Then
                 Try
                     Dim refreshedToken As JsonElement =
-                        Await refreshTask.ConfigureAwait(continueOnCapturedContext:=False)
+                        Await refreshTask.ConfigureAwaitFalse()
                     If Not refreshedToken.IsEmpty Then
                         _tokenDataElement = refreshedToken
                         _accessTokenPayload =
@@ -675,9 +681,10 @@ Friend Class Client2
         If Not hasClientSecret Then
             Try
                 Dim endpointConfig As EndpointConfig =
-                    If(endpointResolver IsNot Nothing,
-                       Await endpointResolver(arg:=config).ConfigureAwait(continueOnCapturedContext:=False),
-                       Await CareLinkService.GetEndpointConfigAsync(Me.ServerRegion).ConfigureAwait(continueOnCapturedContext:=False))
+                        If(endpointResolver IsNot Nothing,
+                           Await endpointResolver(arg:=config).ConfigureAwaitFalse(),
+                           Await CareLinkService.GetEndpointConfigAsync(Me.ServerRegion).
+                                                 ConfigureAwaitFalse())
 
                 If endpointConfig IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(value:=endpointConfig.SsoJson) Then
                     Dim sso As SsoConfig = Nothing
@@ -739,7 +746,8 @@ Friend Class Client2
                 End If
 
                 Using content As New FormUrlEncodedContent(nameValueCollection:=actualForm)
-                    resp = Await httpClient.PostAsync(requestUri:=config.TokenUrl, content).ConfigureAwait(continueOnCapturedContext:=False)
+                    resp = Await httpClient.PostAsync(requestUri:=config.TokenUrl, content).
+                                            ConfigureAwaitFalse()
                 End Using
             Catch ex As Exception
                 message = $"{NameOf(DoRefreshAsync)}: HTTP request failed: {ex.Message}"
@@ -750,7 +758,7 @@ Friend Class Client2
             _lastHttpStatusCode = resp.StatusCode
             Dim respBody As String =
                 Await resp.Content.ReadAsStringAsync().
-                                   ConfigureAwait(continueOnCapturedContext:=False)
+                                   ConfigureAwaitFalse()
             lastResponseBody = respBody
 
             If resp.StatusCode = HttpStatusCode.OK Then

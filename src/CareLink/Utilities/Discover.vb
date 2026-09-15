@@ -46,7 +46,7 @@ Public Module Discover
             discoveryElement.GetProperty(propertyName:="supportedCountries").EnumerateArray()
 
         For Each c As JsonElement In arrayEnumerator
-            If serverRegion = ServerLocation.Clinical Then
+            If serverRegion = ServerLocation.CLINICAL Then
                 If c.TryGetProperty(propertyName:="CLINICAL", value:=region) Then
                     Exit For
                 End If
@@ -100,7 +100,7 @@ Public Module Discover
     '''  A string representing the discovery URL for the specified server region.
     ''' </returns>
     Friend Function GetDiscoverUri(serverRegion As ServerLocation) As String
-        Return If(serverRegion = ServerLocation.Eu,
+        Return If(serverRegion = ServerLocation.EU,
                   s_discoverUrl(key:="EU"),
                   s_discoverUrl(key:="US"))
     End Function
@@ -123,7 +123,8 @@ Public Module Discover
         End If
 
         Dim json As String =
-            Await New HttpClient().GetStringAsync(requestUri:=GetDiscoverUri(serverRegion)).ConfigureAwait(continueOnCapturedContext:=False)
+            Await New HttpClient().GetStringAsync(requestUri:=GetDiscoverUri(serverRegion)).
+                                   ConfigureAwaitFalse()
 
         Dim options As JsonSerializerOptions = DeserializationOptions
         Dim discovery As DiscoveryRoot
@@ -169,7 +170,7 @@ Public Module Discover
     Public Async Function GetConfigAsync(httpClient As HttpClient, country As String, serverRegion As ServerLocation) As Task(Of JsonElement)
         Dim json As String =
             Await httpClient.GetStringAsync(requestUri:=GetDiscoverUri(serverRegion)).
-                ConfigureAwait(continueOnCapturedContext:=False)
+                             ConfigureAwaitFalse()
         Dim discoveryElement As JsonElement
         If Not json.TryFromJson(result:=discoveryElement) Then
             Throw New ApplicationException(message:="Failed to parse discovery JSON.")
@@ -184,7 +185,7 @@ Public Module Discover
             config.GetPropertyValue(propertyName:=config.UseSSOConfiguration)
         Dim resp As String =
             Await httpClient.GetStringAsync(requestUri) _
-                            .ConfigureAwait(continueOnCapturedContext:=False)
+                            .ConfigureAwaitFalse()
         Dim ssoConfig As SsoConfig = Nothing
         If Not resp.TryFromJson(result:=ssoConfig) Then
             Throw New ApplicationException(message:="Failed to parse SSO configuration JSON.")
@@ -245,12 +246,14 @@ Public Module Discover
         Dim httpStatusCode As HttpStatusCode = 0 ' Default value meaning no response received yet
         Try
             Using client As New HttpClient()
-                Using response As HttpResponseMessage = Await client.GetAsync(requestUri:=discoveryUrl).ConfigureAwait(continueOnCapturedContext:=False)
+                Using response As HttpResponseMessage =
+                    Await client.GetAsync(requestUri:=discoveryUrl).ConfigureAwaitFalse()
+
                     httpStatusCode = response.StatusCode
 
                     ' Use centralized response inspection to ensure common statuses are surfaced.
                     Try
-                        Await response.ThrowIfFailureAsync().ConfigureAwait(continueOnCapturedContext:=False)
+                        Await response.ThrowIfFailureAsync().ConfigureAwaitFalse()
                     Catch uaEx As UnauthorizedAccessException
                         lastErrorMsg = $"Unauthorized access when fetching discovery data: {uaEx.Message}"
                         LogMessage(message:=lastErrorMsg)
@@ -273,8 +276,9 @@ Public Module Discover
 
                     Dim result As DiscoveryRoot
                     Try
-                        Dim json As String = Await response.Content.ReadAsStringAsync() _
-                                                                   .ConfigureAwait(continueOnCapturedContext:=False)
+                        Dim json As String = Await response.Content.
+                                                            ReadAsStringAsync().
+                                                            ConfigureAwaitFalse()
                         Dim dr As DiscoveryRoot = Nothing
                         If Not json.TryFromJson(result:=dr) Then
                             Stop
