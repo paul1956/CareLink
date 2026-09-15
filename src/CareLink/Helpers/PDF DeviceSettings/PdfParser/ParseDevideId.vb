@@ -4,14 +4,16 @@
 
 Friend Module ParseDeviceModel
 
+    Private Const ComparisonType As StringComparison =
+        StringComparison.OrdinalIgnoreCase
+
     Friend Function GetDeviceFamilyAndModel(pageText As String) As PdfDeviceInfo
         ' Attempt to extract a more complete device model / data source string from page2
         Dim deviceFamily As String
         Dim deviceModel As String = String.Empty
         Try
-            Const comparisonType As StringComparison = StringComparison.OrdinalIgnoreCase
             ' Prefer an explicit "Data source(s)" header when present
-            Dim dsIndex As Integer = pageText.IndexOf(value:="Data source", comparisonType)
+            Dim dsIndex As Integer = pageText.IndexOf(value:="Data source", ComparisonType)
             If dsIndex >= 0 Then
                 ' Move to the end of the header and take the remainder of that line
                 Dim afterHeader As String = pageText.Substring(startIndex:=dsIndex)
@@ -36,7 +38,7 @@ Friend Module ParseDeviceModel
                 ' Fallback: search for "Flex"
                 deviceModel = String.Empty
                 deviceFamily =
-                    If(pageText.Contains(value:="Flex", comparisonType),
+                    If(pageText.Contains(value:="Flex", ComparisonType),
                        "MiniMed Flex",
                        "MiniMed 780G")
             End If

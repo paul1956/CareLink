@@ -25,7 +25,7 @@ Public Class FileUtilitiesTests
         Try
             Dim xTruePath As String = Path.Combine(AppContext.BaseDirectory, "TestData", "x_true.json")
             File.WriteAllText(path:=temp, contents:=File.ReadAllText(path:=xTruePath))
-            Dim elem As JsonElement = FileUtilities.ReadJsonElementFromFile(temp)
+            Dim elem As JsonElement = ReadJsonElementFromFile(temp)
             elem.ValueKind.Should().Be(expected:=JsonValueKind.Object)
             elem.GetProperty(propertyName:="x").GetBoolean().Should().BeTrue()
         Finally
@@ -40,11 +40,11 @@ Public Class FileUtilitiesTests
         Dim json As String = File.ReadAllText(path:=tokenPath)
         Try
             File.WriteAllText(path:=temp, contents:=json)
-            Dim elem As JsonElement = FileUtilities.ReadTokenFile(tokenBaseFileName:=temp)
+            Dim elem As JsonElement = ReadTokenFile(tokenBaseFileName:=temp)
             elem.ValueKind.Should().Be(expected:=JsonValueKind.Object)
             elem.GetProperty(propertyName:="access_token").GetString().Should().Be("a")
 
-            Dim tokenData As TokenData = FileUtilities.ReadTokenDataFile(tokenBaseFileName:=temp)
+            Dim tokenData As TokenData = ReadTokenDataFile(tokenBaseFileName:=temp)
             tokenData.Should().NotBeNull()
             tokenData.AccessToken.Should().Be(expected:="a")
             tokenData.RefreshToken.Should().Be(expected:="r")

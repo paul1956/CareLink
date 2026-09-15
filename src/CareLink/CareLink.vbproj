@@ -22,9 +22,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>6.0.1.8</Version>
-    <AssemblyVersion>6.0.1.8</AssemblyVersion>
-    <FileVersion>6.0.1.8</FileVersion>
+    <Version>6.0.2.0</Version>
+    <AssemblyVersion>6.0.2.0</AssemblyVersion>
+    <FileVersion>6.0.2.0</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
@@ -447,9 +447,7 @@
     <PackageReference Include="ClosedXML" Version="0.105.1" />
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.8" />
     <PackageReference Include="FreeSpire.PDF" Version="12.4.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4191.47">
-      <ExcludeAssets>runtime;native;contentFiles</ExcludeAssets>
-    </PackageReference>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4255-prerelease" />
     <PackageReference Include="Octokit" Version="14.0.0" />
     <PackageReference Include="System.Speech" Version="11.0.0-rc.1.26425.128" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.3" />
@@ -515,15 +513,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.401" />
+    <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="11.0.100-rc.1.26425.128" />
   </ItemGroup>
 
-  <Target Name="RemoveDuplicateWebView2" BeforeTargets="CopyFilesToOutputDirectory">
+  <!-- If NuGet package provides the WebView2 native Core DLL, remove duplicate copy from output
+       to avoid packaging conflicts when building tests or MSIX packages. Only delete the output
+       copy when the package-provided DLL exists. This avoids deleting the only copy during
+       normal debug builds on machines without the runtime installed. -->
+  <Target Name="RemoveDuplicateWebView2" BeforeTargets="CopyFilesToOutputDirectory"
+          Condition="Exists('$(NuGetPackageRoot)microsoft.web.webview2\1.0.4255-prerelease\runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll')">
     <PropertyGroup>
       <_WebView2Dll>$(OutputPath)Microsoft.Web.WebView2.Core.dll</_WebView2Dll>
+      <_WebView2PackageDll>$(NuGetPackageRoot)microsoft.web.webview2\1.0.4255-prerelease\runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll</_WebView2PackageDll>
     </PropertyGroup>
-    <Message Importance="High" Text="Removing duplicate WebView2 DLL if present: $(_WebView2Dll)" />
-    <Delete Files="$(_WebView2Dll)" />
+    <Message Importance="High" Text="Removing duplicate WebView2 DLL from output if present: $(_WebView2Dll) (package copy at $(_WebView2PackageDll))" />
+    <Delete Files="$(_WebView2Dll)" Condition="Exists('$(_WebView2Dll)')" />
   </Target>
 
 </Project>

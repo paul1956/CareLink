@@ -230,19 +230,19 @@ Public Module StringExtensions
 
     ''' <summary>
     '''  Removes the specified suffix from the end of the string if it exists,
-    '''  using the specified string comparison.
+    '''  using the specified string comparisonType.
     ''' </summary>
     ''' <param name="value">The string to remove the suffix from.</param>
     ''' <param name="suffix">The suffix to remove.</param>
-    ''' <param name="comparison">The string comparison to use.</param>
+    ''' <param name="comparisonType">The string comparisonType to use.</param>
     ''' <returns>The string with the suffix removed, if it existed.</returns>
     <Extension>
     Public Function RemoveSuffix(value As String,
                                  suffix As String,
-                                 Optional comparison As StringComparison = StringComparison.Ordinal) As String
+                                 Optional comparisonType As StringComparison = StringComparison.Ordinal) As String
         Return If(String.IsNullOrEmpty(value) OrElse String.IsNullOrEmpty(suffix),
                   value,
-                  If(value.EndsWith(value:=suffix, comparisonType:=comparison),
+                  If(value.EndsWith(value:=suffix, comparisonType),
                      value.Substring(startIndex:=0, length:=value.Length - suffix.Length),
                      value))
     End Function

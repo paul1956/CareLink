@@ -21,9 +21,9 @@ Public Class DiscoverySsoParsingTests
         End Try
 
         parsed.Should().BeTrue()
-        discovery.CP(0).Region.Should().Be("US")
-        discovery.CP(0).SSOConfiguration.Should().Be("https://example.com/sso.json")
-        discovery.CP(0).UseSSOConfiguration.Should().Be("SSOConfiguration")
+        discovery.CP(index:=0).Region.Should().Be(expected:="US")
+        discovery.CP(index:=0).SSOConfiguration.Should().Be(expected:="https://example.com/sso.json")
+        discovery.CP(index:=0).UseSSOConfiguration.Should().Be(expected:="SSOConfiguration")
     End Sub
 
     <Fact>

@@ -237,10 +237,10 @@ Public Module Discover
     ''' A <see cref="DiscoveryRecord"/> containing the configuration data for the specified country,
     ''' or <see langword="Nothing"/> if an error occurs.
     ''' </returns>
-    Public Async Function GetDiscoveryDataAsync() As Task(Of DiscoveryRoot)
-        Dim discoveryUrl As String = If(s_countryCode.EqualsNoCase("US"),
-                                        s_discoverUrl(key:="US"),
-                                        s_discoverUrl(key:="EU"))
+    Public Async Function GetDiscoveryDataAsync(countryCode As String) As Task(Of DiscoveryRoot)
+        Dim discoveryUrl As String = If(countryCode.EqualsNoCase("EU"),
+                                        s_discoverUrl(key:="EU"),
+                                        s_discoverUrl(key:="US"))
         Dim lastErrorMsg As String
         Dim httpStatusCode As HttpStatusCode = 0 ' Default value meaning no response received yet
         Try

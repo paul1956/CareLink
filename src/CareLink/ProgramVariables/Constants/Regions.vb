@@ -8,14 +8,14 @@ Public Module ServerLocations
 
     Public Enum ServerLocation As Integer
 
-        <Description("us")>
+        <Description("US")>
         US
 
-        <Description("eu")>
-        Eu
+        <Description("EU")>
+        EU
 
-        <Description("clinical")>
-        Clinical
+        <Description("CLINICAL")>
+        CLINICAL
 
     End Enum
 

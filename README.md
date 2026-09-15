@@ -44,9 +44,13 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-9/7/2026
+9/15/2026
 
 ## What's New
+New in 6.0.2.0
+Resctucture code to support new CareLink™ API changes.
+Support Flex PDF report and other new Flex features.
+
 New in 6.0.1.8
 Update OAuthBrowserForm to display server URL.
 Fix issue with login when using non-US/Europe server.

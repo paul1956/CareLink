@@ -58,7 +58,7 @@ Public Class ParserSmokeTests
         Dim pageText As String = String.Join(Environment.NewLine, lines)
 
         Dim record As New PdfSettingsRecord()
-        FlexPdfParser.ParseFlex(record, pageText)
+        ParseFlex(record, pageText)
 
         ' Smoke assertions: parsing should complete and mark the record valid.
         record.IsValid.Should().BeTrue("ParseFlex should mark a well-formed page text as valid")

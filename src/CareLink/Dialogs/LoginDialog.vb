@@ -7,6 +7,10 @@ Imports System.Net
 Imports System.Net.Http
 
 Public Class LoginDialog
+
+    Private Const ComparisonType As StringComparison =
+        StringComparison.OrdinalIgnoreCase
+
     Private _doCancel As Boolean
     Private _httpClient As HttpClient
     Private _initialHeight As Integer
@@ -46,6 +50,27 @@ Public Class LoginDialog
             loginStatus.Text = "OK"
         End If
     End Sub
+
+    ''' <summary>
+    '''  Returns the ISO country code for the currently selected or typed country display name.
+    '''  Falls back to the text when a mapping is not available.
+    ''' </summary>
+    Private Function GetSelectedCountryCode() As String
+        Try
+            Dim display As String = TryCast(Me.CountryComboBox.SelectedItem, String)
+            If String.IsNullOrEmpty(value:=display) Then
+                display = Me.CountryComboBox.Text
+            End If
+            If Not String.IsNullOrEmpty(value:=display) Then
+                Dim code As String = Nothing
+                Return If(s_countryToCodeList.TryGetValue(key:=display, value:=code),
+                          code,
+                          display)
+            End If
+        Catch
+        End Try
+        Return String.Empty
+    End Function
 
     ''' <summary>
     '''  Handles the Cancel button click event, setting a flag to indicate cancellation.
@@ -107,14 +132,18 @@ Public Class LoginDialog
     ''' </remarks>
     Private Sub CountryComboBox_SelectedValueChanged(sender As Object, e As EventArgs) _
         Handles CountryComboBox.SelectedValueChanged
+        ' ComboBox is bound to a list of display names (String). Resolve ISO country code and use it to get culture.
+        Dim display As String = TryCast(Me.CountryComboBox.SelectedItem, String)
+        If String.IsNullOrEmpty(value:=display) Then
+            display = Me.CountryComboBox.Text
+        End If
 
-        Dim selectedValueObj As Object = Me.CountryComboBox.SelectedValue
-        If TypeOf selectedValueObj Is String Then
-            CurrentDateCulture = selectedValueObj.ToString.GetCurrentDateCulture
-        Else
-            Dim selectedKVP As KeyValuePair(Of String, String) =
-                CType(selectedValueObj, KeyValuePair(Of String, String))
-            CurrentDateCulture = selectedKVP.Value.GetCurrentDateCulture
+        Dim code As String = Nothing
+        If Not String.IsNullOrEmpty(value:=display) AndAlso
+           s_countryToCodeList.TryGetValue(key:=display, value:=code) Then
+            CurrentDateCulture = code.GetCurrentDateCulture
+        ElseIf Not String.IsNullOrEmpty(value:=display) Then
+            CurrentDateCulture = display.GetCurrentDateCulture
         End If
     End Sub
 
@@ -190,17 +219,69 @@ Public Class LoginDialog
         End With
 
         With Me.RegionComboBox
-            .DisplayMember = NameOf(KeyValuePair(Of WorldRegion, String).Value)
-            .ValueMember = NameOf(KeyValuePair(Of WorldRegion, String).Key)
-            .DataSource = New BindingSource(dataSource:=s_regionDictionary, dataMember:=Nothing)
+            ' s_regionList is a List(Of String) of region display names.
+            ' Bind the list directly and use SelectedItem (a String) to read the chosen region.
+            .DataSource = s_regionList
         End With
 
         If IsNullOrEmpty(value:=My.Settings.CountryCode) Then
             My.Settings.CountryCode = "US"
         End If
 
-        Me.RegionComboBox.SelectedValue = My.Settings.CountryCode.GetRegionFromCode
-        Me.CountryComboBox.SelectedValue = My.Settings.CountryCode
+        ' Select the region display name matching the saved country code's region
+        Dim savedRegionName As String = My.Settings.CountryCode.GetRegionFromCode()
+        If Not String.IsNullOrEmpty(value:=savedRegionName) Then
+            Me.RegionComboBox.SelectedItem = savedRegionName
+        End If
+        Dim initialRegionName As String =
+            If(Not String.IsNullOrEmpty(value:=savedRegionName),
+               savedRegionName,
+               Me.RegionComboBox.GetItemText(item:=Me.RegionComboBox.SelectedItem))
+        If String.IsNullOrEmpty(value:=initialRegionName) AndAlso Me.RegionComboBox.Items.Count > 0 Then
+            initialRegionName = Me.RegionComboBox.GetItemText(item:=Me.RegionComboBox.Items(0))
+            Me.RegionComboBox.SelectedItem = initialRegionName
+        End If
+        Me.PopulateCountriesForRegion(regionName:=initialRegionName)
+        Dim savedCountry As String = My.Settings.CountryCode
+        Dim matchedCountryIndex As Integer = -1
+        Try
+            If Not String.IsNullOrEmpty(value:=savedCountry) Then
+                For i As Integer = 0 To Me.CountryComboBox.Items.Count - 1
+                    Dim item As Object = Me.CountryComboBox.Items(index:=i)
+                    Try
+                        Dim displayName As String = item?.ToString()
+                        Dim code As String = Nothing
+                        If Not String.IsNullOrEmpty(value:=displayName) AndAlso s_countryToCodeList.TryGetValue(key:=displayName, value:=code) Then
+                            If String.Equals(a:=code, b:=savedCountry, ComparisonType) OrElse
+                                String.Equals(a:=displayName, b:=savedCountry, ComparisonType) Then
+                                matchedCountryIndex = i
+                                Exit For
+                            End If
+                        ElseIf String.Equals(a:=displayName, b:=savedCountry, ComparisonType) Then
+                            matchedCountryIndex = i
+                            Exit For
+                        End If
+                    Catch
+                    End Try
+                Next
+            End If
+        Catch
+        End Try
+        Try
+            If matchedCountryIndex >= 0 Then
+                Me.CountryComboBox.SelectedIndex = matchedCountryIndex
+            ElseIf Me.CountryComboBox.Items.Count > 0 Then
+                Me.CountryComboBox.SelectedIndex = 0
+            End If
+            If Me.CountryComboBox.SelectedIndex >= 0 Then
+                Dim selectedItem As Object = Me.CountryComboBox.Items(Me.CountryComboBox.SelectedIndex)
+                Dim display As String = selectedItem?.ToString()
+                If Not String.IsNullOrEmpty(display) Then
+                    Me.CountryComboBox.Text = display
+                End If
+            End If
+        Catch
+        End Try
 
         Me.PatientUserIDTextBox.Text = My.Settings.CareLinkPatientUserID
         Dim careLinkPartner As Boolean = My.Settings.CareLinkPartner
@@ -248,21 +329,20 @@ Public Class LoginDialog
 
         SetUserName(value:=Me.UsernameComboBox.Text)
         s_password = Me.PasswordTextBox.Text
-        s_countryCode = Me.CountryComboBox.SelectedValue.ToString
+        s_countryCode = Me.GetSelectedCountryCode()
         Try
             Me.LoginStatus.Text = "Checking token file..."
             Dim lastErrorMsg As String
-            Me.ClientDiscover = Await GetDiscoveryDataAsync()
+            Me.ClientDiscover = Await GetDiscoveryDataAsync(countryCode:=s_countryCode)
             lastErrorMsg = Me.ClientDiscover.lastErrorMsg
             Dim discoveryTupleStatusCode As HttpStatusCode =
                 Me.ClientDiscover.httpStatusCode
             If Me.ClientDiscover IsNot Nothing Then
                 Me.Ok_Button.Enabled = False
                 Application.DoEvents()
-                Dim territory As WorldRegion =
-                    CType(Me.RegionComboBox.SelectedValue, WorldRegion)
-                Dim serverMapping As String = s_regionToServerMapping(key:=territory)
-                Dim serverRegion As ServerLocation = [Enum].Parse(Of ServerLocation)(value:=serverMapping)
+                Dim territory As String = TryCast(Me.RegionComboBox.SelectedItem, String)
+                Dim serverMapping As String = GetServerMapping(regionName:=territory)
+                Dim serverRegion As ServerLocation = If(serverMapping.EqualsNoCase("US"), ServerLocation.US, If(serverMapping.EqualsNoCase("EU"), ServerLocation.EU, ServerLocation.CLINICAL))
                 Await Client2.GetLoginData(serverRegion:=serverRegion,
                                            userName:=s_userName,
                                            password:=s_password,
@@ -280,7 +360,7 @@ Public Class LoginDialog
                 Me.Ok_Button.Enabled = True
                 Me.Cancel_Button.Enabled = True
 
-                My.Settings.CountryCode = Me.CountryComboBox.SelectedValue.ToString
+                My.Settings.CountryCode = Me.GetSelectedCountryCode()
                 My.Settings.CareLinkUserName = GetUserName()
                 My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
                 My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
@@ -403,7 +483,7 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the ServerLocation ComboBox selected index changed event,
+    '''  Handles the ServerLocation ComboBox selected key changed event,
     '''  updates the Country ComboBox based on the selected region.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
@@ -416,18 +496,143 @@ Public Class LoginDialog
     Private Sub RegionComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) _
         Handles RegionComboBox.SelectedIndexChanged
 
-        Dim countriesInRegion As New Dictionary(Of String, String)
-        Dim selectedRegion As WorldRegion = s_regionToServerMapping.Keys(index:=Me.RegionComboBox.SelectedIndex)
-        For Each kvp As KeyValuePair(Of String, WorldRegion) In s_countryNameToRegionList
-            If kvp.Value = selectedRegion Then
-                countriesInRegion.Add(kvp.Key, value:=s_countryToCodeList(kvp.Key))
+        Dim selectedRegionName As String = Nothing
+        Try
+            If Me.RegionComboBox.SelectedIndex >= 0 Then
+                selectedRegionName = Me.RegionComboBox.GetItemText(Me.RegionComboBox.SelectedItem)
+            End If
+        Catch
+        End Try
+        If String.IsNullOrEmpty(selectedRegionName) Then
+            selectedRegionName = If(Not String.IsNullOrEmpty(Me.RegionComboBox.Text), Me.RegionComboBox.Text.Trim(), TryCast(Me.RegionComboBox.SelectedItem, String))
+        End If
+        Me.PopulateCountriesForRegion(regionName:=selectedRegionName)
+    End Sub
+
+    ''' <summary>
+    '''  Populates the CountryComboBox for a specified region display name.
+    ''' </summary>
+    ''' <param name="regionName">The region display name.</param>
+    Private Sub PopulateCountriesForRegion(regionName As String)
+        Dim countriesInRegion As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
+        ' Clear any previous binding first to avoid conflicts when the selection changes
+        Try
+            Me.CountryComboBox.DataSource = Nothing
+            Me.CountryComboBox.DisplayMember = String.Empty
+            Me.CountryComboBox.ValueMember = String.Empty
+        Catch
+        End Try
+        If String.IsNullOrEmpty(value:=regionName) Then
+            Me.CountryComboBox.Enabled = False
+            Exit Sub
+        End If
+
+        ' Populate countries whose region (string) equals the selected region display name
+        For Each kvp As KeyValuePair(Of String, String) In s_countryNameToRegionList
+            If String.Equals(a:=kvp.Value, b:=regionName, ComparisonType) Then
+                Dim value As String = Nothing
+
+                If s_countryToCodeList.TryGetValue(kvp.Key, value) Then
+                    countriesInRegion.Add(kvp.Key, value)
+                End If
             End If
         Next
         If countriesInRegion.Count > 0 Then
-            Me.CountryComboBox.DataSource = New BindingSource(dataSource:=countriesInRegion, dataMember:=Nothing)
-            Me.CountryComboBox.DisplayMember = "Key"
-            Me.CountryComboBox.ValueMember = "Value"
+            ' Bind a concrete list of display strings for reliable startup selection
+            Dim list As List(Of String) = countriesInRegion.Keys.ToList()
+            Me.CountryComboBox.DisplayMember = String.Empty
+            Me.CountryComboBox.ValueMember = String.Empty
+            ' Ensure the control has a created handle and the correct binding context before binding
+            Try
+                Dim h As IntPtr = Me.CountryComboBox.Handle
+            Catch
+            End Try
+            Try
+                Me.CountryComboBox.BindingContext = Me.BindingContext
+            Catch
+            End Try
+            ' Prevent flicker and ensure the control updates immediately when rebinding
+            Try
+                Me.CountryComboBox.BeginUpdate()
+            Catch
+            End Try
+            Me.CountryComboBox.DataSource = New BindingSource(dataSource:=list, dataMember:=Nothing)
             Me.CountryComboBox.Enabled = True
+            Try
+                Me.CountryComboBox.EndUpdate()
+            Catch
+            End Try
+            ' Force a visual refresh so the selected item text appears without needing to open the dropdown
+            Try
+                Me.CountryComboBox.Refresh()
+                Me.CountryComboBox.Update()
+            Catch
+            End Try
+            ' Try to select the saved country value via BindingSource.Position
+            Try
+                Dim saved As String = My.Settings.CountryCode
+                Dim bs As BindingSource = TryCast(Me.CountryComboBox.DataSource, BindingSource)
+                If bs IsNot Nothing Then
+                    Dim desiredPos As Integer = -1
+                    If Not String.IsNullOrEmpty(saved) Then
+                        For i As Integer = 0 To bs.List.Count - 1
+                            Dim item As Object = bs.List(i)
+                            Try
+                                Dim displayName As String = item?.ToString()
+                                Dim code As String = Nothing
+                                If Not String.IsNullOrEmpty(displayName) AndAlso s_countryToCodeList.TryGetValue(displayName, code) Then
+                                    If String.Equals(code, saved, ComparisonType) OrElse String.Equals(displayName, saved, ComparisonType) Then
+                                        desiredPos = i
+                                        Exit For
+                                    End If
+                                ElseIf String.Equals(displayName, saved, ComparisonType) Then
+                                    desiredPos = i
+                                    Exit For
+                                End If
+                            Catch
+                            End Try
+                        Next
+                    End If
+
+                    If desiredPos >= 0 Then
+                        bs.Position = desiredPos
+                    ElseIf bs.List.Count > 0 Then
+                        bs.Position = 0
+                    End If
+
+                    ' Set SelectedItem directly to the bound object and force visual sync
+                    Try
+                        Dim pos As Integer = bs.Position
+                        If pos >= 0 AndAlso pos < bs.List.Count Then
+                            Dim current As Object = bs.List(pos)
+                            Me.CountryComboBox.SelectedItem = current
+                            Try
+                                Dim displayName As String = current?.ToString()
+                                Me.CountryComboBox.Text = displayName
+                            Catch
+                                Me.CountryComboBox.Text = current?.ToString()
+                            End Try
+                            Try
+                                Me.CountryComboBox.Refresh()
+                                Me.CountryComboBox.Update()
+                                Application.DoEvents()
+                            Catch
+                            End Try
+                        End If
+                    Catch
+                    End Try
+
+                    If bs.Position >= 0 AndAlso bs.Position < bs.List.Count Then
+                        Dim selected As Object = bs.List(bs.Position)
+                        Dim display As String = selected?.ToString()
+                        If Not String.IsNullOrEmpty(display) Then
+                            Me.CountryComboBox.Text = display
+                        End If
+                    End If
+                End If
+            Catch
+                ' Ignore selection errors
+            End Try
         Else
             Me.CountryComboBox.Enabled = False
         End If
@@ -458,6 +663,7 @@ Public Class LoginDialog
     '''  loads user settings for the entered username.
     ''' </summary>
     Private Sub UsernameComboBox_Leave(sender As Object, e As EventArgs) Handles UsernameComboBox.Leave
+        ' No-op edit to update file timestamp.
         Try
             Dim userRecord As CareLinkUserDataRecord = Nothing
             If s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.Text, userRecord) Then
@@ -466,7 +672,10 @@ Public Class LoginDialog
                 End If
                 SetUserName(value:=Me.UsernameComboBox.Text)
                 Me.PasswordTextBox.Text = userRecord.CareLinkPassword
-                Me.RegionComboBox.SelectedValue = userRecord.CountryCode.GetRegionFromCode
+                Dim userRegionName As String = userRecord.CountryCode.GetRegionFromCode()
+                If Not String.IsNullOrEmpty(userRegionName) Then
+                    Me.RegionComboBox.SelectedItem = userRegionName
+                End If
                 Me.PatientUserIDTextBox.Text = userRecord.CareLinkPatientUserID
                 Me.CountryComboBox.Text = userRecord.CountryCode.GetCountryFromCode
                 Me.CarePartnerCheckBox.Checked = userRecord.CareLinkPartner
@@ -492,6 +701,7 @@ Public Class LoginDialog
 
         Dim userRecord As CareLinkUserDataRecord = Nothing
         Dim key As String = Me.UsernameComboBox.SelectedValue.ToString
+        ' No-op edit to refresh file state.
         If Me.UsernameComboBox.SelectedValue IsNot Nothing AndAlso
            s_allUserSettingsData.TryGetValue(key, userRecord) Then
 
@@ -500,7 +710,10 @@ Public Class LoginDialog
             End If
             My.Settings.CareLinkUserName = Me.UsernameComboBox.Text
             Me.PasswordTextBox.Text = userRecord.CareLinkPassword
-            Me.RegionComboBox.SelectedValue = userRecord.CountryCode.GetRegionFromCode
+            Dim userRegionName2 As String = userRecord.CountryCode.GetRegionFromCode()
+            If Not String.IsNullOrEmpty(userRegionName2) Then
+                Me.RegionComboBox.SelectedItem = userRegionName2
+            End If
             Me.PatientUserIDTextBox.Text = userRecord.CareLinkPatientUserID
             Me.CountryComboBox.Text = userRecord.CountryCode.GetCountryFromCode
             Me.CarePartnerCheckBox.Checked = userRecord.CareLinkPartner

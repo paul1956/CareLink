@@ -9,14 +9,116 @@ Imports System.Text
 Imports System.Text.Json
 
 Public Class CareLinkService
+
+    Private Const ComparisonType As StringComparison =
+        StringComparison.OrdinalIgnoreCase
+
+    ' Cache resolved endpoint configurations per server region so we only resolve
+    ' them when the region changes.
+    Private Shared ReadOnly s_endpointCache As New Dictionary(Of ServerLocation, EndpointConfig)()
+
+    Private Shared ReadOnly s_endpointCacheLock As New Object()
     Private Shared ReadOnly s_http As New HttpClient With {.Timeout = TimeSpan.FromSeconds(120)}
-    Public Const DiscoveryUrlEu As String = "https://clcloud.minimed.eu/connect/carepartner/v13/discover/android/3.6"
-    Public Const DiscoveryUrlUs As String = "https://clcloud.minimed.com/connect/carepartner/v13/discover/android/3.6"
+
+    Public Const DiscoveryUrlEu As String =
+        "https://clcloud.minimed.eu/connect/carepartner/v13/discover/android/3.6"
+
+    Public Const DiscoveryUrlUs As String =
+        "https://clcloud.minimed.com/connect/carepartner/v13/discover/android/3.6"
+
+    Private Shared Function EscapeKVP(Name As String, value As String) As String
+        Return $"{Name}={Uri.EscapeDataString(stringToEscape:=value)}"
+    End Function
+
+    ''' <summary>
+    ''' Invokes the provided work on the application's UI thread (if an open form exists) and returns the result.
+    ''' This ensures COM/STA-bound UI operations execute correctly.
+    ''' </summary>
+    Private Shared Function InvokeOnUiThreadAsync(Of T)(work As Func(Of T)) As Task(Of T)
+        Dim tcs As New TaskCompletionSource(Of T)()
+
+        Try
+            If Application.OpenForms IsNot Nothing AndAlso Application.OpenForms.Count > 0 Then
+                Dim ctrl As Control = Application.OpenForms(index:=0)
+                ctrl.BeginInvoke(method:=New MethodInvoker(
+                                             Sub()
+                                                 Try
+                                                     Dim result As T = work()
+                                                     tcs.SetResult(result)
+                                                 Catch ex As Exception
+                                                     tcs.SetException(ex)
+                                                 End Try
+                                             End Sub))
+            Else
+                ' No open forms available; run synchronously on the current thread as a fallback.
+                ' This may still fail if not on an STA/UI thread, but in normal app lifetime there is a main form.
+                Dim result As T = work()
+                tcs.SetResult(result)
+            End If
+        Catch ex As Exception
+            tcs.SetException(ex)
+        End Try
+
+        Return tcs.Task
+    End Function
+
+    ''' <summary>
+    ''' Resolve endpoint configuration from an already-obtained DiscoveryRoot.
+    ''' This contains the logic that previously lived in ResolveEndpointConfigAsync
+    ''' after discovery JSON was fetched.
+    ''' </summary>
+    Private Shared Async Function ResolveEndpointConfigFromDiscoveryAsync(discovery As DiscoveryRoot, serverRegion As ServerLocation) As Task(Of EndpointConfig)
+        If discovery Is Nothing OrElse discovery.CP Is Nothing Then
+            Throw New Exception(message:="Discovery JSON did not contain CP entries.")
+        End If
+
+        Dim targetRegion As String = serverRegion.ToString()
+        For Each c As CPEntry In discovery.CP
+
+            If String.Equals(c.Region, targetRegion, ComparisonType) Then
+                Dim lookupName As String = c.UseSSOConfiguration
+                If String.IsNullOrWhiteSpace(value:=lookupName) Then
+                    Throw New Exception(message:=$"SSO lookup name missing for region {serverRegion}")
+                End If
+
+                Dim ssoUrl As String = ClassHelpers.GetPropertyValue(instance:=c, propertyName:=lookupName)
+                If String.IsNullOrWhiteSpace(value:=ssoUrl) Then
+                    Throw New Exception(message:=$"SSO URL is empty for region {serverRegion}")
+                End If
+
+                Dim ssoJson As String =
+                    Await s_http.GetStringAsync(requestUri:=ssoUrl).ConfigureAwait(continueOnCapturedContext:=False)
+                Dim ssoDoc As SsoConfig = Nothing
+                Try
+                    ssoDoc = JsonSerializer.Deserialize(Of SsoConfig)(json:=ssoJson,
+                                                                      options:=DeserializationOptions)
+                Catch ex As Exception
+                    Throw New Exception(message:=$"Failed to parse SSO JSON: {ex.Message}")
+                End Try
+
+                If ssoDoc Is Nothing OrElse ssoDoc.Server Is Nothing Then
+                    Throw New Exception(message:=$"Invalid SSO JSON for region {serverRegion}")
+                End If
+
+                Dim hostname As String = ssoDoc.Server.Hostname
+                Dim port As String = ssoDoc.Server.Port.ToString()
+                Dim prefix As String = ssoDoc.Server.Prefix
+                Dim apiBaseUrl As String =
+                    $"https://{hostname}:{port}/{prefix}".TrimEnd(trimChar:="/"c)
+
+                Return New EndpointConfig With {
+                    .SsoJson = ssoJson,
+                    .ApiBaseUrl = apiBaseUrl}
+            End If
+        Next
+
+        Throw New Exception(message:=$"Could not find server configuration for region {serverRegion}")
+    End Function
 
     Public Shared Async Function DoLoginAuth0Async(endpointConfig As EndpointConfig,
-                                                    outputFile As String,
-                                                    userName As String,
-                                                    password As String) As Task(Of TokenData)
+                                                   outputFile As String,
+                                                   userName As String,
+                                                   password As String) As Task(Of TokenData)
 
         Dim message As String
         Dim ssoConfig As SsoConfig = Nothing
@@ -99,12 +201,6 @@ Public Class CareLinkService
         Return token
     End Function
 
-    ' Cache resolved endpoint configurations per server region so we only resolve
-    ' them when the region changes.
-    Private Shared ReadOnly s_endpointCache As New Dictionary(Of ServerLocation, EndpointConfig)()
-
-    Private Shared ReadOnly s_endpointCacheLock As New Object()
-
     ''' <summary>
     ''' Gets the EndpointConfig for the given serverRegion. Uses an in-memory cache
     ''' and only resolves (network calls) when the region hasn't been resolved yet
@@ -119,108 +215,21 @@ Public Class CareLinkService
         End SyncLock
 
         ' Ensure discovery JSON is cached per region and only fetched when needed.
-        Dim discovery As DiscoveryRoot = Await GetCachedDiscoveryAsync(serverRegion).ConfigureAwait(False)
-        Dim resolved As EndpointConfig = Await ResolveEndpointConfigFromDiscoveryAsync(discovery, serverRegion).ConfigureAwait(False)
+        Dim discovery As DiscoveryRoot = Await GetCachedDiscoveryAsync(serverRegion).ConfigureAwait(continueOnCapturedContext:=False)
+        Dim resolved As EndpointConfig = Await ResolveEndpointConfigFromDiscoveryAsync(discovery, serverRegion).ConfigureAwait(continueOnCapturedContext:=False)
 
         SyncLock s_endpointCacheLock
-            s_endpointCache(serverRegion) = resolved
+            s_endpointCache(key:=serverRegion) = resolved
         End SyncLock
 
         Return resolved
     End Function
 
-    ''' <summary>
-    ''' Resolve endpoint configuration from an already-obtained DiscoveryRoot.
-    ''' This contains the logic that previously lived in ResolveEndpointConfigAsync
-    ''' after discovery JSON was fetched.
-    ''' </summary>
-    Private Shared Async Function ResolveEndpointConfigFromDiscoveryAsync(discovery As DiscoveryRoot, serverRegion As ServerLocation) As Task(Of EndpointConfig)
-        If discovery Is Nothing OrElse discovery.CP Is Nothing Then
-            Throw New Exception(message:="Discovery JSON did not contain CP entries.")
-        End If
-
-        Dim targetRegion As String = serverRegion.ToString()
-        Const comparisonType As StringComparison = StringComparison.OrdinalIgnoreCase
-        For Each c As CPEntry In discovery.CP
-
-            If String.Equals(c.Region, targetRegion, comparisonType) Then
-                Dim lookupName As String = c.UseSSOConfiguration
-                If String.IsNullOrWhiteSpace(value:=lookupName) Then
-                    Throw New Exception(message:=$"SSO lookup name missing for region {serverRegion}")
-                End If
-
-                Dim ssoUrl As String = ClassHelpers.GetPropertyValue(c, lookupName)
-                If String.IsNullOrWhiteSpace(value:=ssoUrl) Then
-                    Throw New Exception(message:=$"SSO URL is empty for region {serverRegion}")
-                End If
-
-                Dim ssoJson As String = Await s_http.GetStringAsync(requestUri:=ssoUrl).ConfigureAwait(False)
-                Dim ssoDoc As SsoConfig = Nothing
-                Try
-                    ssoDoc = JsonSerializer.Deserialize(Of SsoConfig)(json:=ssoJson, options:=DeserializationOptions)
-                Catch ex As Exception
-                    Throw New Exception(message:=$"Failed to parse SSO JSON: {ex.Message}")
-                End Try
-
-                If ssoDoc Is Nothing OrElse ssoDoc.Server Is Nothing Then
-                    Throw New Exception(message:=$"Invalid SSO JSON for region {serverRegion}")
-                End If
-
-                Dim hostname As String = ssoDoc.Server.Hostname
-                Dim port As String = ssoDoc.Server.Port.ToString()
-                Dim prefix As String = ssoDoc.Server.Prefix
-                Dim apiBaseUrl As String =
-                    $"https://{hostname}:{port}/{prefix}".TrimEnd(trimChar:="/"c)
-
-                Return New EndpointConfig With {
-                    .SsoJson = ssoJson,
-                    .ApiBaseUrl = apiBaseUrl}
-            End If
-        Next
-
-        Throw New Exception(message:=$"Could not find server configuration for region {serverRegion}")
-    End Function
-
-    Private Shared Function EscapeKVP(Name As String, value As String) As String
-        Return $"{Name}={Uri.EscapeDataString(stringToEscape:=value)}"
-    End Function
-
-    ''' <summary>
-    ''' Invokes the provided work on the application's UI thread (if an open form exists) and returns the result.
-    ''' This ensures COM/STA-bound UI operations execute correctly.
-    ''' </summary>
-    Private Shared Function InvokeOnUiThreadAsync(Of T)(work As Func(Of T)) As Task(Of T)
-        Dim tcs As New TaskCompletionSource(Of T)()
-
-        Try
-            If Application.OpenForms IsNot Nothing AndAlso Application.OpenForms.Count > 0 Then
-                Dim ctrl As Control = Application.OpenForms(index:=0)
-                ctrl.BeginInvoke(method:=New MethodInvoker(
-                                             Sub()
-                                                 Try
-                                                     Dim result As T = work()
-                                                     tcs.SetResult(result)
-                                                 Catch ex As Exception
-                                                     tcs.SetException(ex)
-                                                 End Try
-                                             End Sub))
-            Else
-                ' No open forms available; run synchronously on the current thread as a fallback.
-                ' This may still fail if not on an STA/UI thread, but in normal app lifetime there is a main form.
-                Dim result As T = work()
-                tcs.SetResult(result)
-            End If
-        Catch ex As Exception
-            tcs.SetException(ex)
-        End Try
-
-        Return tcs.Task
-    End Function
-
     Public Shared Async Function ResolveEndpointConfigAsync(serverRegion As ServerLocation) As Task(Of EndpointConfig)
         ' Use the cached discovery (or fetch it once if missing) and resolve from that.
-        Dim discovery As DiscoveryRoot = Await GetCachedDiscoveryAsync(serverRegion).ConfigureAwait(False)
-        Return Await ResolveEndpointConfigFromDiscoveryAsync(discovery, serverRegion).ConfigureAwait(False)
+        Dim discovery As DiscoveryRoot =
+            Await GetCachedDiscoveryAsync(serverRegion).ConfigureAwaitFalse()
+        Return Await ResolveEndpointConfigFromDiscoveryAsync(discovery, serverRegion).ConfigureAwaitFalse()
     End Function
 
 End Class

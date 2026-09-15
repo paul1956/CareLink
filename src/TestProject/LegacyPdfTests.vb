@@ -11,6 +11,9 @@ Imports Xunit
 
 Public Class LegacyPdfTests
 
+    Private Const ComparisonType As StringComparison =
+        StringComparison.OrdinalIgnoreCase
+
     Public Shared ReadOnly Property PdfFiles As IEnumerable(Of Object())
         Get
             Dim path As String = GetTestDataPath()
@@ -41,14 +44,12 @@ Public Class LegacyPdfTests
         ' Detect V2 (Flex) by checking page 2 for known marker; skip if V2
         Dim page2Text As String = String.Empty
         Try
-            page2Text = PDFParserUtilities.ExtractTextFromPage(filename:=pdfFilePath, startPageNumber:=1, endPageNumber:=1)
+            page2Text = ExtractTextFromPage(filename:=pdfFilePath, startPageNumber:=1, endPageNumber:=1)
         Catch
         End Try
 
-        Const comparisonType As StringComparison =
-            StringComparison.OrdinalIgnoreCase
         If Not String.IsNullOrEmpty(value:=page2Text) AndAlso
-            page2Text.Contains(value:="MiniMed Flex", comparisonType) Then
+            page2Text.Contains(value:="MiniMed Flex", ComparisonType) Then
             ' Skip V2 files - this test file set is intended for Legacy format only
             Return
         End If
@@ -59,13 +60,13 @@ Public Class LegacyPdfTests
         ' Extract tables and text once and pass into the legacy parser
         Dim pageText As String = String.Empty
         Try
-            pageText = PDFParserUtilities.ExtractTextFromPage(filename:=pdfFilePath, startPageNumber:=0, endPageNumber:=1)
+            pageText = ExtractTextFromPage(filename:=pdfFilePath, startPageNumber:=0, endPageNumber:=1)
         Catch
         End Try
 
         Dim tables As Dictionary(Of String, PdfTable) =
             GetTableList(fileName:=pdfFilePath)
-        LegacyPdfParser.ParseLegacy(record, tables, pageText)
+        ParseLegacy(record, tables, pageText)
 
         ' Basic assertions to ensure parser produced a usable record
         record.Should().NotBeNull(because:=$"Record should not be null after legacy parsing of {Path.GetFileName(pdfFilePath)}")

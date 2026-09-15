@@ -11,6 +11,9 @@ Imports Microsoft.Web.WebView2.Core
 
 Public Class OAuthBrowserForm
 
+    Private Const ComparisonType As StringComparison =
+        StringComparison.OrdinalIgnoreCase
+
     Private ReadOnly _password As String
     Private ReadOnly _redirectUri As String
     Private ReadOnly _startUrl As String
@@ -95,18 +98,17 @@ Public Class OAuthBrowserForm
                contentType.Substring(startIndex:=0, length:=semicolonIndex).Trim(),
                contentType.Trim())
 
-        Const comparisonType As StringComparison = StringComparison.OrdinalIgnoreCase
-        Return mediaType.StartsWith(value:="text/", comparisonType) OrElse
-               mediaType.Equals(value:="application/json", comparisonType) OrElse
-               mediaType.EndsWith(value:="+json", comparisonType) OrElse
-               mediaType.Equals(value:="application/xml", comparisonType) OrElse
-               mediaType.EndsWith(value:="+xml", comparisonType) OrElse
-               mediaType.Equals(value:="application/javascript", comparisonType) OrElse
-               mediaType.Equals(value:="application/x-javascript", comparisonType) OrElse
-               mediaType.Equals(value:="application/xhtml+xml", comparisonType) OrElse
-               mediaType.Equals(value:="application/graphql", comparisonType) OrElse
-               mediaType.Equals(value:="application/wasm", comparisonType) OrElse
-               mediaType.Equals(value:="application/sql", comparisonType)
+        Return mediaType.StartsWith(value:="text/", ComparisonType) OrElse
+               mediaType.Equals(value:="application/json", ComparisonType) OrElse
+               mediaType.EndsWith(value:="+json", ComparisonType) OrElse
+               mediaType.Equals(value:="application/xml", ComparisonType) OrElse
+               mediaType.EndsWith(value:="+xml", ComparisonType) OrElse
+               mediaType.Equals(value:="application/javascript", ComparisonType) OrElse
+               mediaType.Equals(value:="application/x-javascript", ComparisonType) OrElse
+               mediaType.Equals(value:="application/xhtml+xml", ComparisonType) OrElse
+               mediaType.Equals(value:="application/graphql", ComparisonType) OrElse
+               mediaType.Equals(value:="application/wasm", ComparisonType) OrElse
+               mediaType.Equals(value:="application/sql", ComparisonType)
     End Function
 
     Private Shared Function ResponseCanHaveBody(statusCode As Integer) As Boolean
@@ -210,16 +212,14 @@ Public Class OAuthBrowserForm
                 value:=$"Body: [not read; Content-Type={contentType}]")
         End If
 
-        Const comparisonType As StringComparison = StringComparison.InvariantCulture
-
         Dim logEntryAsString As String = logEntry.ToString
 
         Const separator As String = "/authorize/resume?state="
-        If logEntryAsString.Contains(value:=separator, comparisonType) Then
+        If logEntryAsString.Contains(value:=separator, ComparisonType) Then
             Dim logEntrySplit As String() = logEntryAsString.Split(separator)
             _state = logEntrySplit(1)
         End If
-        If logEntryAsString.Contains(value:="client_secret", comparisonType) Then
+        If logEntryAsString.Contains(value:="client_secret", ComparisonType) Then
             Dim logEntrySplit As String() = logEntryAsString.Split(separator)
             _clientSecret = logEntrySplit(1)
         End If
@@ -284,8 +284,7 @@ Public Class OAuthBrowserForm
             Await Me.WebView21.CoreWebView2.ExecuteScriptAsync(javaScript)
 
         ' ExecuteScriptAsync returns a JSON encoded value like "true" or the element value.
-        Const comparisonType As StringComparison = StringComparison.OrdinalIgnoreCase
-        If Not String.IsNullOrWhiteSpace(value:=result) AndAlso result.Contains(value:="true", comparisonType:=comparisonType) Then
+        If Not String.IsNullOrWhiteSpace(value:=result) AndAlso result.Contains(value:="true", ComparisonType) Then
             Return
         End If
 

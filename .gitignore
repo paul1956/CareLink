@@ -309,6 +309,10 @@ _Pvt_Extensions
 .paket/paket.exe
 paket-files/
 
+# Test outputs created by src/TestProject/ValidateDiscoveryMappings test
+# These files are generated for debugging and should not be committed to the repository
+/src/TestProject/TestOutputs/
+
 # FAKE - F# Make
 .fake/
 

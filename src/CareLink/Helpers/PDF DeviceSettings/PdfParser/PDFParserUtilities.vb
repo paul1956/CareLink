@@ -49,7 +49,7 @@ Public Module PDFParserUtilities
         For index As Integer = 0 To allLines.Count - 1
             Dim line As String = allLines(index)
             If line Is Nothing Then Continue For
-            If line.Contains(value:=searchWord, comparisonType:=ComparisonType) Then
+            If line.Contains(value:=searchWord, ComparisonType) Then
                 Return index
             End If
         Next
