@@ -1,1 +1,4 @@
-{"access_token":"tok","refresh_token":"r"}
+{
+  "access_token": "tok",
+  "refresh_token": "r"
+}

@@ -3,9 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Net.Http
-Imports System.Security.Cryptography
-Imports System.Security.Cryptography.X509Certificates
-Imports System.Text
 Imports System.Text.Json
 
 Public Class CareLinkService

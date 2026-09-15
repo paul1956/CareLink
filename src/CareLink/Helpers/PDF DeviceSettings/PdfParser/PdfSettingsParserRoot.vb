@@ -4,7 +4,6 @@
 
 Imports System.IO
 Imports System.Reflection
-Imports DocumentFormat.OpenXml.EMMA
 Imports Spire.Pdf.Utilities
 
 Public Module PdfSettingsParserRoot

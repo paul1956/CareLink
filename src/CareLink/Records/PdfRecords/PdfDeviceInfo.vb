@@ -13,8 +13,10 @@ Public Class PdfDeviceInfo
     '''  The major device family like MiniMed Flex or MiniMed 780G
     ''' </summary>
     Public Property Family As String
+
     ''' <summary>
     '''  The device model like MMT-XXXX
     ''' </summary>
     Public Property Model As String
+
 End Class

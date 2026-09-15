@@ -1,1 +1,4 @@
-{"access_token":"fromresolver.token","refresh_token":"refreshed"}
+{
+  "access_token": "fromresolver.token",
+  "refresh_token": "refreshed"
+}

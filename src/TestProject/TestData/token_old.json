@@ -1,1 +1,5 @@
-{"access_token":"old","refresh_token":"r","client_id":"cid"}
+{
+  "access_token": "old",
+  "refresh_token": "r",
+  "client_id": "cid"
+}

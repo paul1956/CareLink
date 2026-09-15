@@ -1,1 +1,4 @@
-{"access_token":"new.access.token","refresh_token":"new.refresh"}
+{
+  "access_token": "new.access.token",
+  "refresh_token": "new.refresh"
+}

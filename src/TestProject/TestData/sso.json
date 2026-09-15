@@ -1,11 +1,11 @@
 {
-  "server":{
-    "hostname" : "sso.example.com",
-    "port" : 443,
-    "prefix" : "auth"
+  "server": {
+    "hostname": "sso.example.com",
+    "port": 443,
+    "prefix": "auth"
   },
-  "client":{
-    "client_id":"test-client",
-    "client_secret":"test-secret"
+  "client": {
+    "client_id": "test-client",
+    "client_secret": "test-secret"
   }
 }
