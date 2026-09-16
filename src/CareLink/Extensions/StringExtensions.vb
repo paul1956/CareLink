@@ -20,6 +20,19 @@ Public Module StringExtensions
     ''' </summary>
     Private ReadOnly s_commaOrPeriod As Char() = {CareLinkDecimalSeparator, ","c}
 
+    Private ReadOnly Property EmojiPattern As String =
+            "[\u2190-\u21FF" &      ' Arrows
+        "\u2300-\u23FF" &       ' Misc technical
+        "\u2600-\u26FF" &       ' Misc symbols
+        "\u2700-\u27BF" &       ' Dingbats
+        "\u1F000-\u1F02F" &     ' Mahjong tiles
+        "\u1F0A0-\u1F0FF" &     ' Playing cards
+        "\u1F100-\u1F64F" &     ' Enclosed alphanumerics + emoticons
+        "\u1F680-\u1F6FF" &     ' Transport & map symbols
+        "\u1F900-\u1F9FF" &     ' Supplemental symbols & pictographs
+        "\u1FA70-\u1FAFF" &     ' Extended pictographs
+        "]"
+
     ''' <summary>
     '''  Replace multiple spaces with 1 and trim the ends
     ''' </summary>
@@ -33,6 +46,21 @@ Public Module StringExtensions
         Return If(IsNullOrWhiteSpace(value:=input),
                   String.Empty,
                   Regex.Replace(input, pattern:="\s+", replacement:=" ").Trim)
+    End Function
+
+    ''' <summary>
+    '''  Checks if the input string contains any emoji characters.
+    ''' </summary>
+    ''' <param name="input">
+    '''  The input string to check for emoji characters.
+    ''' </param>
+    ''' <returns>
+    '''  <see langword="True"/> if the input contains any emoji characters;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    Public Function ContainsEmoji(input As String) As Boolean
+        If String.IsNullOrEmpty(value:=input) Then Return False
+        Return Regex.IsMatch(input, pattern:=EmojiPattern)
     End Function
 
     ''' <summary>
@@ -486,24 +514,8 @@ Public Module StringExtensions
     ''' </returns>
     <Extension()>
     Public Function ContainsNoCase(s1 As String, value As String) As Boolean
-        If s1 Is Nothing Then Return False
-        Return s1.Contains(value, ComparisonType)
-    End Function
-
-    ''' <summary>
-    '''  Checks if a string ends with another string, ignoring case.
-    ''' </summary>
-    ''' <param name="s">The string to search in.</param>
-    ''' <param name="value">The string to search for.</param>
-    ''' <returns>
-    '''  <see langword="True"/> if <paramref name="s"/> ends with <paramref name="value"/>;
-    '''  otherwise, <see langword="False"/>.
-    ''' </returns>
-    ''' <remarks>Used for case-insensitive substring checks.</remarks>
-    <Extension()>
-    Public Function EndsWithNoCase(s As String, value As String) As Boolean
-        If s Is Nothing OrElse value Is Nothing Then Return False
-        Return s.EndsWith(value, ComparisonType)
+        Return s1 IsNot Nothing AndAlso
+               s1.Contains(value, ComparisonType)
     End Function
 
     ''' <summary>
@@ -518,27 +530,9 @@ Public Module StringExtensions
     ''' <remarks>Used for case-insensitive string comparisons.</remarks>
     <Extension()>
     Public Function EqualsNoCase(a As String, b As String) As Boolean
-        If a Is Nothing OrElse b Is Nothing Then Return False
-        Return String.Equals(a, b, ComparisonType)
-    End Function
-
-    ''' <summary>
-    '''  Checks if an object is equal to a string, ignoring case.
-    '''  This method is useful for comparing an object that may be a string
-    '''  or null with a string.
-    ''' </summary>
-    ''' <param name="a">The first object to compare.</param>
-    ''' <param name="b">The second string to compare.</param>
-    ''' <returns>
-    '''  <see langword="True"/> if the strings are equal, ignoring case;
-    '''  otherwise, <see langword="False"/>.
-    ''' </returns>
-    ''' <remarks>
-    '''  Used for case-insensitive <see langword="Object"/> to string comparisons.
-    ''' </remarks>
-    Public Function EqualsNoCase(a As Object, b As String) As Boolean
-        If a Is Nothing OrElse b Is Nothing OrElse TypeOf a IsNot String Then Return False
-        Return EqualsNoCase(a.ToString, b)
+        Return a IsNot Nothing AndAlso
+               b IsNot Nothing AndAlso
+               String.Equals(a, b, ComparisonType)
     End Function
 
     ''' <summary>
@@ -555,8 +549,9 @@ Public Module StringExtensions
     ''' <remarks>Used for case-insensitive substring searches.</remarks>
     <Extension()>
     Public Function IndexOfNoCase(s1 As String, value As String) As Integer
-        If s1 Is Nothing OrElse value Is Nothing Then Return -1
-        Return s1.IndexOf(value, ComparisonType)
+        Return If(s1 Is Nothing OrElse value Is Nothing,
+                  -1,
+                  s1.IndexOf(value, ComparisonType))
     End Function
 
     ''' <summary>
@@ -577,7 +572,9 @@ Public Module StringExtensions
     ''' </remarks>
     <Extension()>
     Public Function Remove(input As String, s As String) As String
-        If input Is Nothing Then Return Nothing
+        If input Is Nothing Then
+            Return Nothing
+        End If
 
         Dim culture As CultureInfo = CultureInfo.CurrentUICulture
         Return input.Replace(oldValue:=s,
@@ -632,7 +629,9 @@ Public Module StringExtensions
     ''' <remarks>Used for case-insensitive substring checks.</remarks>
     <Extension()>
     Public Function StartsWithNoCase(s As String, value As String) As Boolean
-        If s Is Nothing OrElse value Is Nothing Then Return False
+        If s Is Nothing OrElse value Is Nothing Then
+            Return False
+        End If
         Return s.StartsWith(value, ComparisonType)
     End Function
 

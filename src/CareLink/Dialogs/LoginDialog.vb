@@ -252,12 +252,12 @@ Public Class LoginDialog
                         Dim displayName As String = item?.ToString()
                         Dim code As String = Nothing
                         If Not String.IsNullOrEmpty(value:=displayName) AndAlso s_countryToCodeList.TryGetValue(key:=displayName, value:=code) Then
-                            If String.Equals(a:=code, b:=savedCountry, ComparisonType) OrElse
-                                String.Equals(a:=displayName, b:=savedCountry, ComparisonType) Then
+                            If EqualsNoCase(a:=code, b:=savedCountry) OrElse
+                                EqualsNoCase(a:=displayName, b:=savedCountry) Then
                                 matchedCountryIndex = i
                                 Exit For
                             End If
-                        ElseIf String.Equals(a:=displayName, b:=savedCountry, ComparisonType) Then
+                        ElseIf EqualsNoCase(a:=displayName, b:=savedCountry) Then
                             matchedCountryIndex = i
                             Exit For
                         End If
@@ -529,7 +529,7 @@ Public Class LoginDialog
 
         ' Populate countries whose region (string) equals the selected region display name
         For Each kvp As KeyValuePair(Of String, String) In s_countryNameToRegionList
-            If String.Equals(a:=kvp.Value, b:=regionName, ComparisonType) Then
+            If EqualsNoCase(a:=kvp.Value, b:=regionName) Then
                 Dim value As String = Nothing
 
                 If s_countryToCodeList.TryGetValue(kvp.Key, value) Then
@@ -581,11 +581,11 @@ Public Class LoginDialog
                                 Dim displayName As String = item?.ToString()
                                 Dim code As String = Nothing
                                 If Not String.IsNullOrEmpty(displayName) AndAlso s_countryToCodeList.TryGetValue(displayName, code) Then
-                                    If String.Equals(code, saved, ComparisonType) OrElse String.Equals(displayName, saved, ComparisonType) Then
+                                    If EqualsNoCase(a:=code, b:=saved) OrElse EqualsNoCase(a:=displayName, b:=saved) Then
                                         desiredPos = i
                                         Exit For
                                     End If
-                                ElseIf String.Equals(displayName, saved, ComparisonType) Then
+                                ElseIf EqualsNoCase(a:=displayName, b:=saved) Then
                                     desiredPos = i
                                     Exit For
                                 End If

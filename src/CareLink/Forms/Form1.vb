@@ -18,6 +18,9 @@ Imports TableLayputPanelTop
 
 Public Class Form1
 
+    Private Const ComparisonType As StringComparison =
+        StringComparison.OrdinalIgnoreCase
+
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _carbRatio As New ToolTip()
 
@@ -2198,7 +2201,7 @@ Public Class Form1
         dgv.Columns(index:=lastColumnIndex).DefaultCellStyle.WrapMode = DataGridViewTriState.True
         dgv.Columns(index:=0).HeaderCell.SortGlyphDirection =
             If(dgv.RowCount > 0,
-               If(String.Equals(dgv.Rows(index:=0).Cells(index:=0).Value.ToString(), "1"),
+               If(EqualsNoCase(a:=dgv.Rows(index:=0).Cells(index:=0).Value.ToString(), b:="1"),
                   SortOrder.Ascending,
                   SortOrder.Descending),
                SortOrder.None)
@@ -3728,7 +3731,12 @@ Public Class Form1
         If e.SettingName.StartsWithNoCase(value:="System") Then Exit Sub
 
         Dim value As String = Convert.ToString(value:=e.NewValue)
-        If EqualsNoCase(My.Settings(propertyName:=e.SettingName), value) Then Exit Sub
+        Dim settingName As String =
+            Convert.ToString(value:=My.Settings(propertyName:=e.SettingName))
+
+        If String.Equals(a:=settingName, b:=value, ComparisonType) Then
+            Exit Sub
+        End If
 
         If e.SettingName = "CareLinkUserName" Then
             If s_allUserSettingsData?.ContainsKey(key:=value) Then

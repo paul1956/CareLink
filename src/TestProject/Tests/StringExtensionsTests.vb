@@ -55,16 +55,6 @@ Public Class StringExtensionsTests
     End Sub
 
     <Fact>
-    Public Sub EndsWithIgnoreCase_ReturnsTrueIfEndsWith()
-        Dim input As String = "Hello World"
-        Dim value As String = "WORLD"
-
-        Dim result As Boolean = input.EndsWithNoCase(value)
-
-        result.Should().BeTrue()
-    End Sub
-
-    <Fact>
     Public Sub EqualsIgnoreCase_ReturnsTrueIfEqual()
         Dim a As String = "test"
         Dim b As String = "TEST"

@@ -219,7 +219,7 @@ Public Class CareLinkServiceOld
         Const comparisonType As StringComparison = StringComparison.OrdinalIgnoreCase
         For Each c As CPEntry In discovery.CP
 
-            If String.Equals(c.Region, targetRegion, comparisonType) Then
+            If EqualsNoCase(c.Region, targetRegion) Then
                 Dim lookupName As String = c.UseSSOConfiguration
                 If String.IsNullOrWhiteSpace(value:=lookupName) Then
                     Throw New Exception(message:=$"SSO lookup name missing for region {serverRegion}")

@@ -381,7 +381,7 @@ Public Module RegionCountryLists
         Dim toRemove As New List(Of String)()
         For Each kvp As KeyValuePair(Of String, String) In s_countryNameToRegionList
             ' Never remove the special "Clinical" entry — it is handled specially by the app
-            If String.Equals(a:=kvp.Key, b:="Clinical", ComparisonType) Then
+            If EqualsNoCase(a:=kvp.Key, b:="Clinical") Then
                 Continue For
             End If
 

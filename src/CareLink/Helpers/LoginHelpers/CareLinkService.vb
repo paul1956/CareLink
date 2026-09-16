@@ -72,7 +72,7 @@ Public Class CareLinkService
         Dim targetRegion As String = serverRegion.ToString()
         For Each c As CPEntry In discovery.CP
 
-            If String.Equals(c.Region, targetRegion, ComparisonType) Then
+            If EqualsNoCase(a:=c.Region, b:=targetRegion) Then
                 Dim lookupName As String = c.UseSSOConfiguration
                 If String.IsNullOrWhiteSpace(value:=lookupName) Then
                     Throw New Exception(message:=$"SSO lookup name missing for region {serverRegion}")
