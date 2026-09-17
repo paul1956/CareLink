@@ -33,7 +33,6 @@ Partial Class OAuthBrowserForm
         ' 
         ' WebView21
         ' 
-        WebView21.AllowExternalDrop = True
         WebView21.CreationProperties = Nothing
         WebView21.DefaultBackgroundColor = Color.White
         WebView21.Dock = DockStyle.Fill

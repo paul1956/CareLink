@@ -629,10 +629,9 @@ Public Module StringExtensions
     ''' <remarks>Used for case-insensitive substring checks.</remarks>
     <Extension()>
     Public Function StartsWithNoCase(s As String, value As String) As Boolean
-        If s Is Nothing OrElse value Is Nothing Then
-            Return False
-        End If
-        Return s.StartsWith(value, ComparisonType)
+        Return s IsNot Nothing AndAlso
+               value IsNot Nothing AndAlso
+               s.StartsWith(value, ComparisonType)
     End Function
 
 #End Region ' IgnoreCase String Comparisons

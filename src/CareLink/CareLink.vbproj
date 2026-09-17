@@ -447,7 +447,7 @@
     <PackageReference Include="ClosedXML" Version="0.105.1" />
     <PackageReference Include="DataGridViewDisableButtonColumnEx" Version="1.0.8" />
     <PackageReference Include="FreeSpire.PDF" Version="12.4.0" />
-    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4255-prerelease" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.818.41" />
     <PackageReference Include="Octokit" Version="14.0.0" />
     <PackageReference Include="System.Speech" Version="11.0.0-rc.1.26425.128" />
     <PackageReference Include="TableLayputPanelTop" Version="1.0.0.3" />
@@ -512,6 +512,14 @@
     <None Include="Images\Backup\InfusionLife12To24Hours.png" />
   </ItemGroup>
 
+  <!-- Copy WebView2 bootstrapper into build output when present in BuildAssets -->
+  <ItemGroup>
+    <!-- Bootstrapper is stored at repository root BuildAssets; include via relative path from project folder -->
+    <None Include="..\..\BuildAssets\WebView2\MicrosoftEdgeWebView2RuntimeInstallerX64.exe" Condition="Exists('..\..\BuildAssets\WebView2\MicrosoftEdgeWebView2RuntimeInstallerX64.exe')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="11.0.100-rc.1.26425.128" />
   </ItemGroup>
@@ -544,7 +552,7 @@
   -->
   <Target Name="CopyWebView2PackageFilesToOutput" AfterTargets="Build">
     <PropertyGroup>
-      <_WebView2PackageRoot>$(NuGetPackageRoot)microsoft.web.webview2\1.0.4255-prerelease\</_WebView2PackageRoot>
+      <_WebView2PackageRoot>$(NuGetPackageRoot)microsoft.web.webview2\1.0.818.41\</_WebView2PackageRoot>
       <_WebView2NativeUap>$(_WebView2PackageRoot)runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll</_WebView2NativeUap>
       <_WebView2Loader>$(_WebView2PackageRoot)runtimes\win-x64\native\WebView2Loader.dll</_WebView2Loader>
       <_WebView2Managed>$(_WebView2PackageRoot)lib\net462\Microsoft.Web.WebView2.Core.dll</_WebView2Managed>
@@ -557,6 +565,24 @@
     </ItemGroup>
 
     <Copy SourceFiles="@(_FilesToCopy)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <!-- Ensure managed and native WebView2 package files are present in output for debug/run
+       This copies any matching files from the NuGet package cache into the build output
+       for developer machines where the system runtime may be present but the app
+       still requires the managed wrapper and/or native loader in the app folder. -->
+  <Target Name="EnsureWebView2FilesInOutput" AfterTargets="Build">
+    <ItemGroup>
+      <!-- Managed wrapper (any target framework folder) -->
+      <_WebView2ManagedPackageFiles Include="$(NuGetPackageRoot)microsoft.web.webview2\**\lib\**\Microsoft.Web.WebView2.Core.dll" />
+      <!-- Native loader for x64 -->
+      <_WebView2NativePackageFiles Include="$(NuGetPackageRoot)microsoft.web.webview2\**\runtimes\win-x64\native\WebView2Loader.dll" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="Copying WebView2 package files to output: %(_WebView2ManagedPackageFiles.Identity) %(_WebView2NativePackageFiles.Identity)" Condition="'@(_WebView2ManagedPackageFiles)' != '' Or '@(_WebView2NativePackageFiles)' != ''" />
+
+    <Copy SourceFiles="@(_WebView2ManagedPackageFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" Condition="'@(_WebView2ManagedPackageFiles)' != ''" />
+    <Copy SourceFiles="@(_WebView2NativePackageFiles)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" Condition="'@(_WebView2NativePackageFiles)' != ''" />
   </Target>
 
 </Project>

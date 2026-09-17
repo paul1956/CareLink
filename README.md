@@ -50,6 +50,7 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 New in 6.0.2.0
 Resctucture code to support new CareLink™ API changes.
 Support Flex PDF report and other new Flex features.
+Use WebView2 from MicrosoftEdgeWebView2RuntimeInstallerX64.exe instead of NuGet Package.
 
 New in 6.0.1.8
 Update OAuthBrowserForm to display server URL.

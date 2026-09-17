@@ -374,7 +374,7 @@ Public Class LoginDialog
                         key:=NameOf(CareLinkUserDataRecord.CareLinkUserName), value:=GetUserName())
                 End If
                 If _showTcs IsNot Nothing Then
-                    _showTcs.TrySetResult(DialogResult.OK)
+                    _showTcs.TrySetResult(result:=DialogResult.OK)
                     Me.Close()
                 Else
                     Me.DialogResult = DialogResult.OK
@@ -754,9 +754,6 @@ Public Class LoginDialog
             ownerForm.Enabled = False
         End If
 
-        If Me.Visible Then
-            Me.Visible = False
-        End If
         ' Show modelessly with owner so dialog is positioned properly
         Me.Show(owner)
 

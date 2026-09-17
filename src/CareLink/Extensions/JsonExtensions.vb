@@ -76,7 +76,7 @@ Public Module JsonExtensions
     <Extension>
     Private Function TryFromJson(Of T)(json As String, options As JsonSerializerOptions, ByRef result As T) As Boolean
         Try
-            result = JsonSerializer.Deserialize(Of T)(json, options:=options)
+            result = JsonSerializer.Deserialize(Of T)(json, options)
             Return True
         Catch ex As JsonException
             LogMessage(message:=$"TryFromJson failed: {ex.Message}")

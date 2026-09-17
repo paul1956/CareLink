@@ -7,9 +7,6 @@ Imports System.Text.Json
 
 Public Class CareLinkService
 
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
-
     ' Cache resolved endpoint configurations per server region so we only resolve
     ' them when the region changes.
     Private Shared ReadOnly s_endpointCache As New Dictionary(Of ServerLocation, EndpointConfig)()
@@ -145,22 +142,24 @@ Public Class CareLinkService
         redirectResult = Await InvokeOnUiThreadAsync(
            work:=Function()
                      Do
-                         Dim retryCount As Integer = 1
                          Using frm As New OAuthBrowserForm(startUrl:=fullUrl,
                                                            redirectUri,
                                                            userName,
                                                            password)
                              Dim dr As DialogResult = frm.ShowDialog()
                              If dr = DialogResult.OK Then
+                                 LoginRetryCount = 1
                                  Return frm.Result
                              ElseIf dr = DialogResult.Retry Then
                                  ' Caller will recreate the dialog and try again
                                  Continue Do
                              Else
-                                 If retryCount > 0 Then
-                                     retryCount -= 1
+                                 If LoginRetryCount > 0 Then
+                                     LoginRetryCount -= 1
                                      Continue Do
                                  End If
+                                 LoginRetryCount = 1
+                                 s_firstTimeNavigationCompleted = False
                                  Throw New Exception(message:="Login was cancelled.")
                              End If
                          End Using

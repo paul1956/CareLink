@@ -98,12 +98,9 @@ Friend Module LoginHelpers
                 owner.TabControlPage2.Visible = True
             Case FileToLoadOptions.Login, FileToLoadOptions.NewUser
                 owner.Text = SavedTitle
+                Dim retryCount As Integer = 2
                 Do While True
                     LoginDialog.LoginSourceAutomatic = fileToLoad
-                    If LoginDialog.Visible Then
-                        LoginDialog.Visible = False
-                    End If
-                    Application.DoEvents()
                     Dim result As DialogResult = Await LoginDialog.ShowDialogAsync(owner)
                     Select Case result
                         Case DialogResult.OK
@@ -116,6 +113,14 @@ Friend Module LoginHelpers
                             SetServerUpdateTimer(Start:=serverTimerEnabled)
                             Return False
                         Case DialogResult.Retry
+                            retryCount -= 1
+                            If retryCount <= 0 Then
+                                MessageBox.Show(text:="Maximum login attempts exceeded.",
+                                                caption:="Login Error",
+                                                buttons:=MessageBoxButtons.OK,
+                                                icon:=MessageBoxIcon.Error)
+                                Return False
+                            End If
                     End Select
                 Loop
 
@@ -343,12 +348,10 @@ Friend Module LoginHelpers
                 Form1.ServerUpdateTimer.Interval = interval
             End If
             Form1.ServerUpdateTimer.Start()
-            DebugPrint(message:=$"started at {Date.Now:T}")
             Return True
         Else
             If Form1.ServerUpdateTimer.Enabled Then
                 Form1.ServerUpdateTimer.Stop()
-                DebugPrint(message:=$"stopped at {Date.Now:T}")
                 Return True
             End If
         End If
