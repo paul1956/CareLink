@@ -12,32 +12,6 @@ Public Module UnicodeNewline
     '''  Determines if a char is a new line delimiter.
     ''' </summary>
     ''' <param name="curChar">The current character.</param>
-    ''' <param name="nextChar">
-    '''  The next character (if != LF then length will always be 0 or 1).
-    ''' </param>
-    ''' <returns>
-    '''  0 = no new line;
-    '''  otherwise it returns either 1 or 2 depending on the length of the delimiter.
-    ''' </returns>
-    Public Function GetDelimiterLength(curChar As Char, nextChar As Char) As Integer
-        Return If(curChar = Cr,
-                  If(nextChar = Lf,
-                     2,
-                     1),
-                  If(curChar = Lf OrElse
-                     curChar = Nel OrElse
-                     curChar = Vt OrElse
-                     curChar = Ff OrElse
-                     curChar = Ls OrElse
-                     curChar = Ps,
-                     1,
-                     0))
-    End Function
-
-    ''' <summary>
-    '''  Determines if a char is a new line delimiter.
-    ''' </summary>
-    ''' <param name="curChar">The current character.</param>
     ''' <param name = "length">The length of the delimiter</param>
     ''' <param name = "type">The type of the delimiter</param>
     ''' <param name="nextChar">A callback getting the next character (may be null).</param>
@@ -45,11 +19,10 @@ Public Module UnicodeNewline
     '''  0 = no new line;
     '''  otherwise it returns either 1 or 2 depending on the length of the delimiter.
     ''' </returns>
-    Friend Function TryGetDelimiterLengthAndType(
-        curChar As Char,
-        <Out()> ByRef length As Integer,
-        <Out()> ByRef type As UnicodeNewlines,
-        Optional nextChar As Func(Of Char) = Nothing) As Boolean
+    Private Function TryGetDelimiterInfo(curChar As Char,
+                                        <Out()> ByRef length As Integer,
+                                        <Out()> ByRef type As UnicodeNewlines,
+                                        Optional nextChar As Func(Of Char) = Nothing) As Boolean
 
         If curChar = Cr Then
             If nextChar IsNot Nothing AndAlso nextChar() = Lf Then
@@ -97,38 +70,9 @@ Public Module UnicodeNewline
     ''' <summary>
     '''  Determines if a string is a new line delimiter.
     ''' </summary>
-    ''' <remarks>
-    '''  Note that the only 2 character wide new line is CR LF
-    ''' </remarks>
     <Extension>
-    Friend Function IsNewLine(str As String) As Boolean
-        If IsNullOrEmpty(str) Then
-            Return False
-        End If
-        Dim ch As Char = str.Chars(index:=0)
-        Select Case str.Length
-            Case 0
-                Return False
-            Case 1, 2
-                Return ch = Cr OrElse
-                       ch = Lf OrElse
-                       ch = Nel OrElse
-                       ch = Vt OrElse
-                       ch = Ff OrElse
-                       ch = Ls OrElse
-                       ch = Ps
-            Case Else
-                Return False
-        End Select
-    End Function
-
-    ''' <summary>
-    '''  Determines if a string is a new line delimiter.
-    ''' </summary>
-    <Extension>
-    Public Function SplitLines(
-        text As String,
-        Optional Trim As Boolean = False) As List(Of String)
+    Public Function SplitLines(text As String,
+                               Optional Trim As Boolean = False) As List(Of String)
 
         Dim result As New List(Of String)()
         If text Is Nothing Then
@@ -143,98 +87,34 @@ Public Module UnicodeNewline
             Dim curChar As Char = text.Chars(index)
             ' Do not delete the next line
             Dim j As Integer = index
-            Dim nextChar As Func(Of Char) = Function() As Char
-                                                Return If(j < text.Length - 1,
-                                                          text.Chars(index:=j + 1),
-                                                          ControlChars.NullChar)
-                                            End Function
+            Dim nextChar As Func(Of Char) =
+                Function() As Char
+                    Return If(j < text.Length - 1,
+                              text.Chars(index:=j + 1),
+                              ControlChars.NullChar)
+                End Function
 
-            If TryGetDelimiterLengthAndType(curChar, length, type, nextChar) Then
+            If TryGetDelimiterInfo(curChar, length, type, nextChar) Then
                 If Trim Then
-                    result.Add(sb.ToString.Trim)
+                    result.Add(item:=sb.ToString.Trim)
                 Else
-                    result.Add(sb.ToString)
+                    result.Add(item:=sb.ToString)
                 End If
                 sb.Length = 0
                 index += length - 1
                 Continue For
             End If
-            sb.Append(curChar)
+            sb.Append(value:=curChar)
         Next index
         If sb.Length > 0 Then
             If Trim Then
-                result.Add(sb.ToString.Trim)
+                result.Add(item:=sb.ToString.Trim)
             Else
-                result.Add(sb.ToString)
+                result.Add(item:=sb.ToString)
             End If
         End If
 
         Return result
-    End Function
-
-    ''' <summary>
-    '''  Joins an array of strings into a single string with the specified delimiter.
-    ''' </summary>
-    ''' <param name="lines">Array of strings to join.</param>
-    ''' <param name="delimiter">Delimiter to use between each string.</param>
-    ''' <returns>
-    '''  A single string with all elements joined by the specified delimiter.
-    ''' </returns>
-    <Extension>
-    Friend Function JoinLines(lines As String(), delimiter As String) As String
-        Return String.Join(separator:=delimiter, lines)
-    End Function
-
-    ''' <summary>
-    '''  Normalizes line endings in a string to a specified delimiter (default is vbCrLf).
-    ''' </summary>
-    ''' <param name="lines">String containing lines to normalize.</param>
-    ''' <param name="delimiter">
-    '''  Delimiter to use for normalization (default is vbCrLf).
-    ''' </param>
-    ''' <returns>A string with normalized line endings.</returns>
-    <Extension>
-    Friend Function NormalizeLineEndings(
-        lines As String,
-        Optional delimiter As String = vbCrLf) As String
-
-        Return lines.SplitLines.ToArray.JoinLines(delimiter)
-    End Function
-
-    ''' <summary>
-    '''  Replace Unicode NewLines with ControlChars.NullChar or Specified Character
-    ''' </summary>
-    ''' <param name="text">Source Text</param>
-    ''' <param name="substituteChar">Default is vbNullChar</param>
-    ''' <returns>String with Unicode NewLines replaced with SubstituteChar</returns>
-    <Extension>
-    Public Function WithoutNewLines(
-        text As String,
-        Optional substituteChar As Char = ControlChars.NullChar) As String
-
-        ArgumentNullException.ThrowIfNull(text)
-
-        Dim sb As New StringBuilder()
-        Dim length As Integer = Nothing
-        Dim type As UnicodeNewlines = Nothing
-
-        For index As Integer = 0 To text.Length - 1
-            Dim curChar As Char = text.Chars(index)
-            ' Do not delete the next line
-            Dim j As Integer = index
-
-            Dim nextChar As Func(Of Char) = Function() As Char
-                                                Return If(j < text.Length - 1,
-                                                          text.Chars(index:=j + 1),
-                                                          substituteChar)
-                                            End Function
-            If TryGetDelimiterLengthAndType(curChar, length, type, nextChar) Then
-                index += length - 1
-                Continue For
-            End If
-            sb.Append(curChar)
-        Next index
-        Return sb.ToString
     End Function
 
 End Module

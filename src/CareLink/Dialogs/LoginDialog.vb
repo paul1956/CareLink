@@ -499,12 +499,16 @@ Public Class LoginDialog
         Dim selectedRegionName As String = Nothing
         Try
             If Me.RegionComboBox.SelectedIndex >= 0 Then
-                selectedRegionName = Me.RegionComboBox.GetItemText(Me.RegionComboBox.SelectedItem)
+                selectedRegionName =
+                    Me.RegionComboBox.GetItemText(item:=Me.RegionComboBox.SelectedItem)
             End If
         Catch
         End Try
-        If String.IsNullOrEmpty(selectedRegionName) Then
-            selectedRegionName = If(Not String.IsNullOrEmpty(Me.RegionComboBox.Text), Me.RegionComboBox.Text.Trim(), TryCast(Me.RegionComboBox.SelectedItem, String))
+        If String.IsNullOrEmpty(value:=selectedRegionName) Then
+            selectedRegionName =
+                If(Not String.IsNullOrEmpty(value:=Me.RegionComboBox.Text),
+                   Me.RegionComboBox.Text.Trim(),
+                   TryCast(Me.RegionComboBox.SelectedItem, String))
         End If
         Me.PopulateCountriesForRegion(regionName:=selectedRegionName)
     End Sub
