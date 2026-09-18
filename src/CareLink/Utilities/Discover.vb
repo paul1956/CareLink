@@ -186,10 +186,12 @@ Public Module Discover
         Dim resp As String =
             Await httpClient.GetStringAsync(requestUri) _
                             .ConfigureAwaitFalse()
-        Dim ssoConfig As SsoConfig = Nothing
-        If Not resp.TryFromJson(result:=ssoConfig) Then
+        Dim ssoConfig As SsoConfig
+        Try
+            ssoConfig = JsonSerializer.Deserialize(Of SsoConfig)(json:=resp, options:=DeserializationOptions)
+        Catch ex As Exception
             Throw New ApplicationException(message:="Failed to parse SSO configuration JSON.")
-        End If
+        End Try
 
         Dim hostname As String = ssoConfig.Server.Hostname
         Dim ssoBaseUrl As String =
@@ -197,7 +199,23 @@ Public Module Discover
         If ssoBaseUrl.EndsWith(value:="/"c) Then
             ssoBaseUrl = ssoBaseUrl.TrimEnd(trimChar:="/"c)
         End If
-        Dim tokenUrl As String = $"{ssoBaseUrl}{ssoConfig.OAuth.UserInfoEndpointPath}"
+        Dim tokenPath As String
+        Try
+            tokenPath = ssoConfig.SystemEndpoints.TokenEndpointPath
+        Catch
+            tokenPath = String.Empty
+        End Try
+        If String.IsNullOrEmpty(value:=tokenPath) Then
+            tokenPath = ssoConfig.OAuth.UserInfoEndpointPath
+        End If
+        Dim tokenUrl As String
+        If String.IsNullOrEmpty(value:=tokenPath) Then
+            tokenUrl = ssoBaseUrl
+        ElseIf tokenPath.StartsWith(value:="/"c) Then
+            tokenUrl = $"{ssoBaseUrl}{tokenPath}"
+        Else
+            tokenUrl = $"{ssoBaseUrl}/{tokenPath}"
+        End If
 
         Dim mutableConfig As Dictionary(Of String, JsonElement) =
            Nothing

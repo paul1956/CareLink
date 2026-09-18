@@ -4789,7 +4789,8 @@ Public Class Form1
                     End If
             End Select
             If Debugger.IsAttached Then
-                title &= $" - {Client.IsTokenValid(log:=False)}"
+                Dim message As String = ""
+                title &= $" - {Client.IsTokenValid(message, log:=False)}"
             End If
         Else
             Dim pattern As String = s_basalList.ActiveBasalPattern

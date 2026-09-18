@@ -13,17 +13,20 @@ Friend Module ClientExtensions
     ''' <param name="client2">
     '''  The client instance containing the access token.
     ''' </param>
+    ''' <param name="message">
+    '''  Output message describing the validation result.
+    ''' </param>
     ''' <param name="log">
-    '''  Indicates whether to use a short form of the message.
+    '''  Indicates whether to log/update a short form of the message.
     ''' </param>
     ''' <returns>
-    '''  A string message indicating the validation result. Returns Nothing if the token is valid.
+    '''  True if the token is valid (not expired and not about to expire); otherwise False.
     ''' </returns>
     <Extension>
-    Public Function IsTokenValid(client2 As Client2, Optional log As Boolean = True) As String
-        Dim message As String = If(log,
-                                   $"In {NameOf(IsTokenValid)} ",
-                                   String.Empty)
+    Public Function IsTokenValid(client2 As Client2, ByRef message As String, Optional log As Boolean = True) As Boolean
+        message = If(log,
+                     $"In {NameOf(IsTokenValid)} ",
+                     String.Empty)
 
         Dim startKey As String
         If client2.AccessTokenPayload Is Nothing Then
@@ -32,7 +35,7 @@ Friend Module ClientExtensions
             If log Then
                 UpdateMessage(message, startKey)
             End If
-            Return message
+            Return False
         End If
         Try
             Dim unixTime As Long = client2.AccessTokenPayload(key:="exp").GetInt64()
@@ -45,7 +48,7 @@ Friend Module ClientExtensions
                 If log Then
                     UpdateMessage(message, startKey)
                 End If
-                Return message
+                Return False
             End If
             If tDiffSeconds < 600 Then
                 startKey = $"access token is about to expire in "
@@ -53,7 +56,7 @@ Friend Module ClientExtensions
                 If log Then
                     UpdateMessage(message, startKey)
                 End If
-                Return message
+                Return False
             End If
 
             Dim utcTime As DateTimeOffset =
@@ -65,18 +68,20 @@ Friend Module ClientExtensions
                                    formatProvider:=CultureInfo.InvariantCulture)
 
             startKey = $"Access token expires in "
-            message &= $"{startKey}{absDiffMinutes.ToHoursMinutes()} at {formatted}"
-            ' Valid token: return String.Empty to indicate success;
-            ' For logging callers treat empty as success;
-            ' When used for DisplayMessage we always want text.
-            Return If(Not log,
-                      message,
-                      String.Empty)
+            Dim fullMsg As String = $"{startKey}{absDiffMinutes.ToHoursMinutes()} at {formatted}"
+            message &= fullMsg
+            ' Valid token: return True. If log is true we keep message short/empty as before;
+            ' otherwise return the detailed message via the out parameter.
+            If log Then
+                ' For logging callers treat empty as success; but UpdateMessage with startKey for visibility
+                UpdateMessage(message, startKey)
+                message = String.Empty
+            End If
+            Return True
         Catch ex As Exception
-            message &=
-                $"missing nameValueCollection in access token. {ex.DecodeException()}"
+            message &= $"missing nameValueCollection in access token. {ex.DecodeException()}"
             LogMessage(message)
-            Return message
+            Return False
         End Try
     End Function
 

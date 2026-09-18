@@ -359,16 +359,12 @@ Friend Class Client2
         _tokenDataElement = ReadTokenFile(tokenBaseFileName:=_tokenBaseFileName)
         If _tokenDataElement.IsEmpty Then
             Me.LoggedIn = False
-            Return False
+            Return Me.LoggedIn
         End If
 
         Me.AccessTokenPayload =
             GetAccessTokenPayload(token_data:=_tokenDataElement)
         Dim message As String = Nothing
-        Dim tokenMsg As String = Me.IsTokenValid()
-        If Not String.IsNullOrEmpty(tokenMsg) Then
-            Return False
-        End If
 
         Dim refreshTask As Task(Of JsonElement) = Nothing
         Dim hadException As Boolean = False
@@ -451,11 +447,11 @@ Friend Class Client2
             End If
 
             Me.LoggedIn = False
-            Return False
+            Return Me.LoggedIn
         End If
 
         Me.LoggedIn = True
-        Return True
+        Return Me.LoggedIn
     End Function
 
     ''' <summary>
@@ -467,10 +463,10 @@ Friend Class Client2
     ''' </returns>
     Friend Async Function InitAsync() As Task(Of Boolean)
         If Not Await Me.internalInit() Then
-            ' Force user login
-            Await GetLoginData(Me.ServerRegion,
-                               userName:=s_userName,
-                               password:=s_password)
+            '' Force user login
+            'Await GetLoginData(Me.ServerRegion,
+            '                   userName:=s_userName,
+            '                   password:=s_password)
             If Not Await Me.internalInit() Then
                 Return False
             End If
@@ -603,15 +599,18 @@ Friend Class Client2
                                                  ConfigureAwaitFalse())
 
                 If endpointConfig IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(value:=endpointConfig.SsoJson) Then
-                    Dim sso As SsoConfig = Nothing
-                    If endpointConfig.SsoJson.TryFromJson(result:=sso) AndAlso sso IsNot Nothing Then
-                        If sso.Client_Secret IsNot Nothing AndAlso Not IsNullOrWhiteSpace(sso.Client_Secret.ClientSecret) Then
+                    Try
+                        Dim sso As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(json:=endpointConfig.SsoJson,
+                                                                                         options:=DeserializationOptions)
+                        If sso IsNot Nothing AndAlso sso.Client_Secret IsNot Nothing AndAlso Not IsNullOrWhiteSpace(sso.Client_Secret.ClientSecret) Then
                             clientSecret = sso.Client_Secret.ClientSecret
                             hasClientSecret = True
                             ' Add client_secret into token data so refresh attempts include it
                             tokenData(key:="client_secret") = clientSecret.ToJsonElement()
                         End If
-                    End If
+                    Catch ex As Exception
+                        ' Ignore parse failures here and continue without client_secret
+                    End Try
                 End If
             Catch ex As Exception
                 LogMessage(message:=$"{NameOf(DoRefreshAsync)}: failed resolving SSO for client_secret: {ex.Message}")
@@ -759,11 +758,11 @@ Friend Class Client2
     '''  the PatientData and RecentData public variables.
     ''' </returns>
     Public Async Function GetRecentDataAsync() As Task(Of String)
-        Dim lastErrorMessage As String
+        Dim message As String = ""
         Dim refreshTask As Task(Of JsonElement) = Nothing
         Dim hadAuthException As Boolean = False
-        lastErrorMessage = Me.IsTokenValid()
-        If Not String.IsNullOrEmpty(lastErrorMessage) Then
+
+        If Not Me.IsTokenValid(message) Then
             Try
                 _tokenDataElement =
                     Await Me.DoRefreshAsync(Me.Config,
@@ -775,32 +774,29 @@ Friend Class Client2
             Catch ex As Exception
                 LogMessage(message:=ex.ToString())
             End Try
+        End If
+        If Not Me.IsTokenValid(message) Then
+            LogMessage(message)
 
-            lastErrorMessage = Me.IsTokenValid()
-            If Not String.IsNullOrEmpty(lastErrorMessage) Then
-                LogMessage(message:=lastErrorMessage)
+            ' Attempt interactive login (show OAuthBrowserForm) as a fallback when refresh failed
+            Try
+                Await GetLoginData(Me.ServerRegion,
+                                   userName:=s_userName,
+                                   password:=s_password)
 
-                ' Attempt interactive login (show OAuthBrowserForm) as a fallback when refresh failed
-                Try
-                    Await GetLoginData(Me.ServerRegion,
-                                       userName:=s_userName,
-                                       password:=s_password)
+                ' Reload token data written by the interactive login and update payload
+                _tokenDataElement = ReadTokenFile(tokenBaseFileName:=_tokenBaseFileName)
+                Me.AccessTokenPayload =
+                    GetAccessTokenPayload(token_data:=_tokenDataElement)
 
-                    ' Reload token data written by the interactive login and update payload
-                    _tokenDataElement = ReadTokenFile(tokenBaseFileName:=_tokenBaseFileName)
-                    Me.AccessTokenPayload =
-                        GetAccessTokenPayload(token_data:=_tokenDataElement)
-
-                    lastErrorMessage = Me.IsTokenValid()
-                    If Not String.IsNullOrEmpty(lastErrorMessage) Then
-                        LogMessage(message:=lastErrorMessage)
-                        Return lastErrorMessage
-                    End If
-                Catch ex As Exception
-                    LogMessage(message:=ex.ToString())
-                    Return lastErrorMessage
-                End Try
-            End If
+                If Not Me.IsTokenValid(message) Then
+                    LogMessage(message)
+                    Return message
+                End If
+            Catch ex As Exception
+                LogMessage(message:=ex.ToString())
+                Return message
+            End Try
         End If
 
         Dim data As Dictionary(Of String, JsonElement) = Nothing
@@ -859,10 +855,9 @@ Friend Class Client2
                         Me.AccessTokenPayload =
                             GetAccessTokenPayload(token_data:=_tokenDataElement)
 
-                        lastErrorMessage = Me.IsTokenValid()
-                        If Not String.IsNullOrEmpty(lastErrorMessage) Then
-                            LogMessage(message:=lastErrorMessage)
-                            Return "ERROR: failed to refresh token"
+                        If Not Me.IsTokenValid(message) Then
+                            LogMessage(message)
+                            Return message
                         End If
                     Catch ex As Exception
                         LogMessage(message:=ex.ToString())
@@ -876,10 +871,11 @@ Friend Class Client2
                 CType(data("patientData"), JsonElement).ValueKind = JsonValueKind.Array) Then
 
                 PatientData = Nothing
-                Dim message As String =
-                    $"{NameOf(GetRecentDataAsync)}: No nameValueCollection returned from GetData for user {GetUserName()}"
+                Const messageDetails As String = "No nameValueCollection received from server"
+                message =
+                    $"{NameOf(GetRecentDataAsync)}: {messageDetails} for user {GetUserName()}"
                 LogMessage(message)
-                Return "No nameValueCollection received from server"
+                Return messageDetails
             End If
         Catch ex As Exception
             PatientData = Nothing
@@ -904,17 +900,17 @@ Friend Class Client2
 
         Select Case data.Keys.Count
             Case DataKeyCount.NoData
-                lastErrorMessage = "No Data Found"
+                message = "No Data Found"
             Case DataKeyCount.SingleData
-                lastErrorMessage = $"No Data Found for {data.Keys(index:=0)}"
+                message = $"No Data Found for {data.Keys(index:=0)}"
             Case DataKeyCount.RecentData
-                lastErrorMessage = Nothing
+                message = Nothing
             Case Else
-                lastErrorMessage = $"Unexpected keys in Data: {String.Join(separator:=", ", values:=data.Keys)}"
+                message = $"Unexpected keys in Data: {String.Join(separator:=", ", values:=data.Keys)}"
         End Select
 
         If data.Values.Count < DataKeyCount.RecentData Then
-            Return lastErrorMessage
+            Return message
         End If
 
         Try
@@ -923,8 +919,8 @@ Friend Class Client2
             Dim metaData As Metadata = Nothing
             If Not metaDataElement.TryFromJson(metaData) Then
                 Stop
-                Const message As String = "Failed to parse metadata element."
-                Throw New ApplicationException(message)
+                Const parseFailed As String = "Failed to parse metadata element."
+                Throw New ApplicationException(message:=parseFailed)
             End If
             Dim requestUri As String = metaData.IconResourceBundle.IconBundleUrl
             Dim zipFileName As String = requestUri.Split(separator:="/").Last
@@ -961,7 +957,7 @@ Friend Class Client2
             Return ex.DecodeException()
         End Try
 
-        Return lastErrorMessage
+        Return message
     End Function
 
 End Class

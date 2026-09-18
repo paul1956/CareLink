@@ -116,7 +116,14 @@ Public Class CareLinkService
 
         Dim message As String
         Dim ssoConfig As SsoConfig = Nothing
-        If Not endpointConfig.SsoJson.TryFromJson(result:=ssoConfig) Then
+        Try
+            ssoConfig =
+                JsonSerializer.Deserialize(Of SsoConfig)(json:=endpointConfig.SsoJson,
+                                                         options:=DeserializationOptions)
+        Catch ex As Exception
+            Throw New ApplicationException(message:="Failed to parse SSO configuration JSON.")
+        End Try
+        If ssoConfig Is Nothing Then
             Throw New ApplicationException(message:="Failed to parse SSO configuration JSON.")
         End If
         Dim client As Client = ssoConfig.Client
