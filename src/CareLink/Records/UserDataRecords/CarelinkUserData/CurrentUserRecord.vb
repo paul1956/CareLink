@@ -7,7 +7,13 @@ Public Class CurrentUserRecord
 
     Public Sub New(userName As String, useAdvancedAitDecay As CheckState)
         Me.UserName = userName
-        Me.UseAdvancedAitDecay = useAdvancedAitDecay
+        If IsFlex() Then
+            Me.UseAdvancedAitDecay = CheckState.Unchecked
+            Form1.TempUseAdvanceAITDecayCheckBox.Enabled = False
+        Else
+            Me.UseAdvancedAitDecay = useAdvancedAitDecay
+            Form1.TempUseAdvanceAITDecayCheckBox.Enabled = True
+        End If
         Me.CurrentTarget = If(NativeMmolL,
                               Target6_7mmol,
                               Target120mgDl)
@@ -46,8 +52,7 @@ Public Class CurrentUserRecord
                 .CurrentTarget = Me.CurrentTarget,
                 .InsulinRealAit = Me.InsulinRealAit,
                 .InsulinTypeName = Me.InsulinTypeName,
-                .PumpAit = Me.PumpAit
-                }
+                .PumpAit = Me.PumpAit}
     End Function
 
     Public Overrides Function Equals(obj As Object) As Boolean

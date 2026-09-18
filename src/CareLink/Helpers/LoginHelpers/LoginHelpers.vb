@@ -455,10 +455,15 @@ Friend Module LoginHelpers
                     End If
                 End If
             Else
-                Dim useAdvancedAitDecay As CheckState = If(Is700Series(),
-                                                           CheckState.Indeterminate,
-                                                           CheckState.Checked)
-
+                Dim useAdvancedAitDecay As CheckState
+                Select Case True
+                    Case Is700Series()
+                        useAdvancedAitDecay = CheckState.Indeterminate
+                    Case IsFlex()
+                        useAdvancedAitDecay = CheckState.Unchecked
+                    Case Else
+                        useAdvancedAitDecay = CheckState.Checked
+                End Select
                 CurrentUser = New CurrentUserRecord(userName:=GetUserName(), useAdvancedAitDecay)
                 currentUserUpdateNeeded = True
             End If

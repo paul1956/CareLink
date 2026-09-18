@@ -5,6 +5,8 @@
 Imports System.ComponentModel
 Imports System.Net
 Imports System.Net.Http
+Imports System.Drawing
+Imports System.IO
 
 Public Class LoginDialog
 
@@ -16,6 +18,9 @@ Public Class LoginDialog
     Private _initialHeight As Integer
     Private _mySource As AutoCompleteStringCollection
     Private _showTcs As TaskCompletionSource(Of DialogResult)
+    Private _countryComboBoxOwnerDrawn As Boolean = False
+    Private _previousCountryText As String = String.Empty
+    Private ReadOnly _flagImageCache As New Dictionary(Of String, Image)(StringComparer.OrdinalIgnoreCase)
     Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
 
     Public Property ClientDiscover As DiscoveryRoot
@@ -34,7 +39,7 @@ Public Class LoginDialog
                                          Optional lastErrorMsg As String = Nothing,
                                          Optional lastHttpStatusCode As Integer = HttpStatusCode.OK)
 
-        If Client2.Auth_Error_Codes.Contains(lastHttpStatusCode) Then
+        If Client2.Auth_Error_Codes.Contains(value:=lastHttpStatusCode) Then
             loginStatus.ForeColor = Color.Red
             loginStatus.Text = "Invalid Login Credentials"
             My.Settings.AutoLogin = False
@@ -51,13 +56,329 @@ Public Class LoginDialog
         End If
     End Sub
 
+    Private Shared Function IsColorDark(c As Color) As Boolean
+        ' Perceived luminance formula
+        Dim lum As Double =
+            ((0.2126 * c.R) + (0.7152 * c.G) + (0.0722 * c.B)) / 255.0
+        Return lum < 0.5
+    End Function
+
+    Private Shared Function GetContrastingBackground(controlBack As Color) As Color
+        ' Choose a neutral contrasting background for flags so they don't visually blend
+        ' If control background is dark, use a light background behind the flag, and vice versa.
+        If IsColorDark(c:=controlBack) Then
+            Return Color.FromArgb(red:=240, green:=240, blue:=240) ' light
+        Else
+            Return Color.FromArgb(red:=32, green:=32, blue:=32) ' dark
+        End If
+    End Function
+
+    <CodeAnalysis.SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase", Justification:="Keys must be lowercase to match file names")>
+    Private Function TryGetFlagImage(code As String) As Image
+        Try
+            If String.IsNullOrEmpty(value:=code) Then
+                Return Nothing
+            End If
+            Dim key As String = code.ToLowerInvariant()
+            Dim img As Image = Nothing
+            If _flagImageCache.TryGetValue(key, value:=img) Then
+                Return img
+            End If
+
+            ' Look for a flags folder next to the executable: <appdir>\images\flags\xx.png
+            Dim baseDir As String =
+                AppDomain.CurrentDomain.BaseDirectory
+            Dim flagsDir As String =
+                Path.Combine(baseDir, "images", "flags")
+            Dim filePath As String =
+                Path.Combine(flagsDir, $"{key}.png")
+            If File.Exists(path:=filePath) Then
+                img = LoadImageFromFileWithoutLock(filePath)
+                If img IsNot Nothing Then
+                    _flagImageCache(key) = img
+                    Return img
+                End If
+            End If
+
+            ' Also check the project images folder (useful during development)
+            Try
+                Dim projectFlagsDir As String =
+                    Path.GetFullPath(path:=Path.Combine(baseDir,
+                                                        "..",
+                                                        "..",
+                                                        "..",
+                                                        "src",
+                                                        "CareLink",
+                                                        "Images",
+                                                        "Flags"))
+                Dim projectFile As String = Path.Combine(projectFlagsDir, $"{key}.png")
+                If File.Exists(path:=projectFile) Then
+                    img = LoadImageFromFileWithoutLock(filePath:=projectFile)
+                    If img IsNot Nothing Then
+                        _flagImageCache(key) = img
+                        Return img
+                    End If
+                End If
+            Catch
+                ' ignore path resolution issues
+            End Try
+
+            ' No image available
+            Return Nothing
+        Catch
+            Return Nothing
+        End Try
+    End Function
+
+    Private Shared Function LoadImageFromFileWithoutLock(filePath As String) As Image
+        Try
+            Using fs As FileStream =
+                File.Open(path:=filePath,
+                          mode:=FileMode.Open,
+                          access:=FileAccess.Read,
+                          share:=FileShare.Read)
+
+                Using ms As New MemoryStream()
+                    fs.CopyTo(destination:=ms)
+                    ms.Position = 0
+                    Return Image.FromStream(ms)
+                End Using
+            End Using
+        Catch
+            Return Nothing
+        End Try
+    End Function
+
+    Private Sub CountryComboBox_Validating(sender As Object, e As CancelEventArgs) Handles CountryComboBox.Validating
+        Try
+            Dim text As String = Me.CountryComboBox.Text
+            If String.IsNullOrEmpty(value:=text) Then
+                ' Allow empty selection but remember it
+                _previousCountryText = String.Empty
+                Return
+            End If
+
+            ' If the text matches a known country display name, accept and remember it
+            If s_countryToCodeList.ContainsKey(key:=text) Then
+                _previousCountryText = text
+                Return
+            End If
+
+            ' Try case-insensitive match against the list items
+            Dim match As String = Nothing
+            For Each obj As Object In Me.CountryComboBox.Items
+                Dim item As String = TryCast(obj, String)
+                If Not String.IsNullOrEmpty(value:=item) AndAlso String.Equals(item, text, StringComparison.OrdinalIgnoreCase) Then
+                    match = item
+                    Exit For
+                End If
+            Next
+            If match IsNot Nothing Then
+                Me.CountryComboBox.Text = match
+                _previousCountryText = match
+                Return
+            End If
+
+            ' Invalid text entered; revert to previous valid value or first item
+            If Not String.IsNullOrEmpty(value:=_previousCountryText) Then
+                Me.CountryComboBox.Text = _previousCountryText
+            ElseIf Me.CountryComboBox.Items.Count > 0 Then
+                Dim first As String =
+                    TryCast(Me.CountryComboBox.Items(index:=0), String)
+                Me.CountryComboBox.Text = If(first, String.Empty)
+                _previousCountryText = Me.CountryComboBox.Text
+            Else
+                Me.CountryComboBox.Text = String.Empty
+                _previousCountryText = String.Empty
+            End If
+        Catch
+            ' Swallow errors and revert to previous
+            Try
+                Me.CountryComboBox.Text = _previousCountryText
+            Catch
+            End Try
+        End Try
+    End Sub
+
+    Private Sub CountryComboBox_DrawItem(sender As Object, e As DrawItemEventArgs)
+        e.DrawBackground()
+        Try
+            ' Support both dropdown item rendering and closed selection rendering (e.Index = -1).
+            Dim itemText As String = String.Empty
+            itemText =
+                If(e.Index >= 0 AndAlso e.Index < Me.CountryComboBox.Items.Count,
+                   TryCast(Me.CountryComboBox.Items(e.Index), String),
+                   Me.CountryComboBox.Text)
+            If itemText Is Nothing Then itemText = String.Empty
+
+            Dim code As String = Nothing
+            Dim flagText As String = String.Empty
+            If String.Equals(a:=itemText, b:="Clinical", ComparisonType) Then
+                flagText = "⚕️"
+                ' Prefer an image named clinical.png if present in the flags folder
+                code = "clinical"
+            ElseIf Not String.IsNullOrEmpty(value:=itemText) AndAlso
+                s_countryToCodeList.TryGetValue(key:=itemText, value:=code) Then
+                flagText = IsoCountryCodeToFlagEmoji(countryCode:=code)
+            End If
+
+            Dim g As Graphics = e.Graphics
+            Dim nameFont As Font = e.Font
+            Dim isSelected As Boolean = (e.State And DrawItemState.Selected) =
+                DrawItemState.Selected
+            Dim effectiveForeColor As Color = If(isSelected,
+                                                 SystemColors.HighlightText,
+                                                 Me.CountryComboBox.ForeColor)
+
+            Dim x As Integer = e.Bounds.X + 2
+            Dim yOffset As Integer =
+                Math.Max(0, CInt((e.Bounds.Height - nameFont.Height) \ 2))
+            Dim y As Integer = e.Bounds.Y + yOffset
+
+            Dim previousTextRenderingHint As Text.TextRenderingHint =
+                g.TextRenderingHint
+            Try
+                g.TextRenderingHint =
+                    System.Drawing.Text.TextRenderingHint.ClearTypeGridFit
+            Catch
+            End Try
+
+            Using foreBrush As New SolidBrush(color:=effectiveForeColor)
+                Using emojiFont As New Font(familyName:="Segoe UI Emoji",
+                                            emSize:=e.Font.Size,
+                                            style:=FontStyle.Regular,
+                                            unit:=GraphicsUnit.Pixel)
+                    ' Draw country name first, then flag (image preferred for color emoji)
+                    If Not String.IsNullOrEmpty(value:=itemText) Then
+                        g.DrawString(s:=itemText,
+                                     font:=nameFont,
+                                     brush:=foreBrush,
+                                     x:=x,
+                                     y:=y)
+                        If Not String.IsNullOrEmpty(value:=flagText) Then
+                            Dim nameSize As SizeF = g.MeasureString(text:=itemText, font:=nameFont)
+                            Dim nameWidth As Integer = CInt(Math.Ceiling(nameSize.Width))
+                            Dim flagX As Integer = x + nameWidth + 6
+                            Dim img As Image = Nothing
+                            If Not String.IsNullOrEmpty(value:=code) Then
+                                img = Me.TryGetFlagImage(code:=code)
+                            End If
+                            If img IsNot Nothing Then
+                                ' Preserve source aspect ratio when drawing flags (flags may be 2:1 or square)
+                                Dim imgHeight As Integer = Math.Max(12, e.Bounds.Height - 6)
+                                Dim imgWidth As Integer = CInt(Math.Round(img.Width * imgHeight / img.Height))
+                                Dim imgRect As New Rectangle(flagX, e.Bounds.Y + ((e.Bounds.Height - imgHeight) \ 2), imgWidth, imgHeight)
+                                ' Draw a contrasting background + border behind the flag to avoid blending with dialog background
+                                Dim bgColor As Color = GetContrastingBackground(Me.CountryComboBox.BackColor)
+                                Dim borderColor As Color = If(IsColorDark(bgColor), Color.White, Color.Black)
+                                Dim innerRect As New Rectangle(imgRect.X + 1, imgRect.Y + 1, Math.Max(1, imgRect.Width - 2), Math.Max(1, imgRect.Height - 2))
+                                Using bgBrush As New SolidBrush(bgColor)
+                                    g.FillRectangle(bgBrush, imgRect)
+                                End Using
+                                Using borderPen As New Pen(borderColor)
+                                    g.DrawRectangle(borderPen, imgRect)
+                                End Using
+                                ' Improve image scaling quality and draw into inner rect
+                                Dim prevInterp As Drawing2D.InterpolationMode = g.InterpolationMode
+                                Dim prevSmooth As Drawing2D.SmoothingMode = g.SmoothingMode
+                                Dim prevPixel As Drawing2D.PixelOffsetMode = g.PixelOffsetMode
+                                Try
+                                    g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+                                    g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+                                    g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
+                                    g.DrawImage(img, innerRect)
+                                Finally
+                                    g.InterpolationMode = prevInterp
+                                    g.SmoothingMode = prevSmooth
+                                    g.PixelOffsetMode = prevPixel
+                                End Try
+                            Else
+                                ' Fallback to text rendering for emoji glyphs
+                                Try
+                                    Dim flagRect As New Rectangle(flagX, y, e.Bounds.Right - flagX, e.Bounds.Height)
+                                    Const flags As TextFormatFlags = TextFormatFlags.Left Or TextFormatFlags.VerticalCenter Or TextFormatFlags.SingleLine
+                                    TextRenderer.DrawText(g, flagText, emojiFont, flagRect, effectiveForeColor, flags)
+                                Catch
+                                    g.DrawString(s:=flagText, font:=emojiFont, brush:=foreBrush, x:=flagX, y:=y)
+                                End Try
+                            End If
+                        End If
+                    ElseIf Not String.IsNullOrEmpty(value:=flagText) Then
+                        Dim img2 As Image = Nothing
+                        If Not String.IsNullOrEmpty(value:=code) Then
+                            img2 = Me.TryGetFlagImage(code:=code)
+                        End If
+                        If img2 IsNot Nothing Then
+                            ' Preserve source aspect ratio for standalone flag
+                            Dim imgHeight2 As Integer = Math.Max(12, e.Bounds.Height - 6)
+                            Dim imgWidth2 As Integer = CInt(Math.Round(img2.Width * imgHeight2 / img2.Height))
+                            Dim imgRect2 As New Rectangle(x, e.Bounds.Y + ((e.Bounds.Height - imgHeight2) \ 2), imgWidth2, imgHeight2)
+                            ' Draw a contrasting background + border behind the flag to avoid blending with dialog background
+                            Dim bgColor2 As Color = GetContrastingBackground(Me.CountryComboBox.BackColor)
+                            Dim borderColor2 As Color = If(IsColorDark(bgColor2), Color.White, Color.Black)
+                            Dim innerRect2 As New Rectangle(imgRect2.X + 1, imgRect2.Y + 1, Math.Max(1, imgRect2.Width - 2), Math.Max(1, imgRect2.Height - 2))
+                            Using bgBrush2 As New SolidBrush(bgColor2)
+                                g.FillRectangle(bgBrush2, imgRect2)
+                            End Using
+                            Using borderPen2 As New Pen(borderColor2)
+                                g.DrawRectangle(borderPen2, imgRect2)
+                            End Using
+                            Dim prevInterp2 As Drawing2D.InterpolationMode = g.InterpolationMode
+                            Dim prevSmooth2 As Drawing2D.SmoothingMode = g.SmoothingMode
+                            Dim prevPixel2 As Drawing2D.PixelOffsetMode = g.PixelOffsetMode
+                            Try
+                                g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+                                g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+                                g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
+                                g.DrawImage(img2, innerRect2)
+                            Finally
+                                g.InterpolationMode = prevInterp2
+                                g.SmoothingMode = prevSmooth2
+                                g.PixelOffsetMode = prevPixel2
+                            End Try
+                        Else
+                            Try
+                                Dim flagRect2 As New Rectangle(x, y, width:=e.Bounds.Right - x, e.Bounds.Height)
+                                TextRenderer.DrawText(dc:=g,
+                                                      text:=flagText,
+                                                      font:=emojiFont,
+                                                      bounds:=flagRect2,
+                                                      foreColor:=effectiveForeColor,
+                                                      flags:=TextFormatFlags.Left Or
+                                                             TextFormatFlags.VerticalCenter Or
+                                                             TextFormatFlags.SingleLine)
+                            Catch
+                                g.DrawString(s:=flagText,
+                                             font:=emojiFont,
+                                             brush:=foreBrush,
+                                             x,
+                                             y)
+                            End Try
+                        End If
+                    End If
+                End Using
+            End Using
+            Try
+                g.TextRenderingHint = previousTextRenderingHint
+            Catch
+            End Try
+
+            If e.Index >= 0 Then
+                e.DrawFocusRectangle()
+            End If
+        Catch
+            ' Swallow drawing errors to avoid crashing UI
+        End Try
+    End Sub
+
     ''' <summary>
     '''  Returns the ISO country code for the currently selected or typed country display name.
     '''  Falls back to the text when a mapping is not available.
     ''' </summary>
     Private Function GetSelectedCountryCode() As String
         Try
-            Dim display As String = TryCast(Me.CountryComboBox.SelectedItem, String)
+            Dim display As String =
+                TryCast(Me.CountryComboBox.SelectedItem, String)
             If String.IsNullOrEmpty(value:=display) Then
                 display = Me.CountryComboBox.Text
             End If
@@ -145,6 +466,11 @@ Public Class LoginDialog
         ElseIf Not String.IsNullOrEmpty(value:=display) Then
             CurrentDateCulture = display.GetCurrentDateCulture
         End If
+        ' Remember the last valid displayed country text so we can revert invalid input
+        Try
+            _previousCountryText = Me.CountryComboBox.Text
+        Catch
+        End Try
     End Sub
 
     ''' <summary>
@@ -274,9 +600,9 @@ Public Class LoginDialog
                 Me.CountryComboBox.SelectedIndex = 0
             End If
             If Me.CountryComboBox.SelectedIndex >= 0 Then
-                Dim selectedItem As Object = Me.CountryComboBox.Items(Me.CountryComboBox.SelectedIndex)
+                Dim selectedItem As Object = Me.CountryComboBox.Items(index:=Me.CountryComboBox.SelectedIndex)
                 Dim display As String = selectedItem?.ToString()
-                If Not String.IsNullOrEmpty(display) Then
+                If Not String.IsNullOrEmpty(value:=display) Then
                     Me.CountryComboBox.Text = display
                 End If
             End If
@@ -544,6 +870,22 @@ Public Class LoginDialog
         If countriesInRegion.Count > 0 Then
             ' Bind a concrete list of display strings for reliable startup selection
             Dim list As List(Of String) = countriesInRegion.Keys.ToList()
+
+            ' Ensure the ComboBox is owner-drawn so we can render emoji flags reliably.
+            Try
+                If Not _countryComboBoxOwnerDrawn Then
+                    Me.CountryComboBox.DrawMode = DrawMode.OwnerDrawFixed
+                    ' Set a reasonable item height based on the current font
+                    Me.CountryComboBox.ItemHeight = CInt(Math.Max(16, Me.CountryComboBox.Font.Height + 6))
+                    ' Allow typing to select but prevent entering new items via validation
+                    Me.CountryComboBox.DropDownStyle = ComboBoxStyle.DropDown
+                    Me.CountryComboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend
+                    Me.CountryComboBox.AutoCompleteSource = AutoCompleteSource.ListItems
+                    AddHandler Me.CountryComboBox.DrawItem, AddressOf Me.CountryComboBox_DrawItem
+                    _countryComboBoxOwnerDrawn = True
+                End If
+            Catch
+            End Try
             Me.CountryComboBox.DisplayMember = String.Empty
             Me.CountryComboBox.ValueMember = String.Empty
             ' Ensure the control has a created handle and the correct binding context before binding
@@ -617,6 +959,10 @@ Public Class LoginDialog
                                 Me.CountryComboBox.Text = current?.ToString()
                             End Try
                             Try
+                                _previousCountryText = Me.CountryComboBox.Text
+                            Catch
+                            End Try
+                            Try
                                 Me.CountryComboBox.Refresh()
                                 Me.CountryComboBox.Update()
                                 Application.DoEvents()
@@ -631,6 +977,10 @@ Public Class LoginDialog
                         Dim display As String = selected?.ToString()
                         If Not String.IsNullOrEmpty(display) Then
                             Me.CountryComboBox.Text = display
+                            Try
+                                _previousCountryText = Me.CountryComboBox.Text
+                            Catch
+                            End Try
                         End If
                     End If
                 End If
@@ -681,13 +1031,21 @@ Public Class LoginDialog
                     Me.RegionComboBox.SelectedItem = userRegionName
                 End If
                 Me.PatientUserIDTextBox.Text = userRecord.CareLinkPatientUserID
-                Me.CountryComboBox.Text = userRecord.CountryCode.GetCountryFromCode
+                Me.CountryComboBox.Text = userRecord.CountryCode.GetCountryFromCode()
+                Try
+                    _previousCountryText = Me.CountryComboBox.Text
+                Catch
+                End Try
                 Me.CarePartnerCheckBox.Checked = userRecord.CareLinkPartner
             Else
                 Me.PasswordTextBox.Text = String.Empty
                 Me.RegionComboBox.SelectedIndex = 0
                 Me.PatientUserIDTextBox.Text = String.Empty
                 Me.CountryComboBox.Text = String.Empty
+                Try
+                    _previousCountryText = Me.CountryComboBox.Text
+                Catch
+                End Try
                 Me.CarePartnerCheckBox.Checked = False
             End If
         Catch ex As Exception
@@ -719,7 +1077,11 @@ Public Class LoginDialog
                 Me.RegionComboBox.SelectedItem = userRegionName2
             End If
             Me.PatientUserIDTextBox.Text = userRecord.CareLinkPatientUserID
-            Me.CountryComboBox.Text = userRecord.CountryCode.GetCountryFromCode
+            Me.CountryComboBox.Text = userRecord.CountryCode.GetCountryFromCode()
+            Try
+                _previousCountryText = Me.CountryComboBox.Text
+            Catch
+            End Try
             Me.CarePartnerCheckBox.Checked = userRecord.CareLinkPartner
         End If
 

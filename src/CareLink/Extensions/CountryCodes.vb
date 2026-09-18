@@ -8,11 +8,11 @@ Imports System.Runtime.CompilerServices
 
 Public Module RegionCountryLists
 
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
+    Private ReadOnly Property Comparer As StringComparer =
+        StringComparer.OrdinalIgnoreCase
 
     Private ReadOnly s_countryCodeToCountry As New Dictionary(Of String, String) _
-        (comparer:=StringComparer.OrdinalIgnoreCase)
+        (Comparer)
 
     ''' <summary>
     '''  A dictionary mapping country names to their corresponding regions.
@@ -423,7 +423,7 @@ Public Module RegionCountryLists
     ''' </summary>
     Public Function GetServerMapping(regionName As String) As String
         Dim value As String = Nothing
-        If s_regionToServerMapping.TryGetValue(regionName, value) Then
+        If s_regionToServerMapping.TryGetValue(key:=regionName, value) Then
             Return value
         End If
         ' default to US if unknown
@@ -450,29 +450,31 @@ Public Module RegionCountryLists
     '''  If the culture name is invalid, returns <see cref="CultureInfo.CurrentCulture"/>.
     ''' </returns>
     <Extension>
-    Public Function ExtractCulture(
-        ReportFileNameWithPath As String,
-        FixedPart As String,
-        Optional fuzzy As Boolean = False) As CultureInfo
+    Public Function ExtractCulture(ReportFileNameWithPath As String,
+                                   FixedPart As String,
+                                   Optional fuzzy As Boolean = False) As CultureInfo
 
-        Dim filename As String = Path.GetFileNameWithoutExtension(ReportFileNameWithPath)
+        Dim filename As String =
+            Path.GetFileNameWithoutExtension(path:=ReportFileNameWithPath)
         Dim prompt As String
+        Const buttonStyle As MsgBoxStyle =
+            MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation
+
         If filename.Count(c:="("c) = 0 Then
             prompt = $"'{filename}' malformed,{vbCrLf}it must contain at least one '('."
-            MsgBox(
-                heading:="Invalid Filename",
-                prompt,
-                buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                title:="Malformed Error Report Filename")
+            MsgBox(heading:="Invalid Filename",
+                   prompt,
+                   buttonStyle,
+                   title:="Malformed Error Report Filename")
             Return Nothing
         End If
 
-        If filename.Count(")"c) = 0 Then
+        If filename.Count(c:=")"c) = 0 Then
             prompt = $"Filename '{filename}' malformed,{vbCrLf}it must contain at least one ')'."
             MsgBox(
                 heading:="Invalid Filename",
                 prompt,
-                buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                buttonStyle,
                 title:="Malformed Error Report Filename")
             Return Nothing
         End If
@@ -482,7 +484,7 @@ Public Module RegionCountryLists
             MsgBox(
                 heading:="Invalid Filename",
                 prompt,
-                buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                buttonStyle,
                 title:="Malformed Error Report Filename")
             Return Nothing
         End If
@@ -491,32 +493,29 @@ Public Module RegionCountryLists
         prompt = $"Filename '{filename}' malformed,{vbCrLf}it must contain '(' after '{FixedPart}'."
         If fuzzy Then
             If indexOfOpenParenthesis < FixedPart.Length Then
-                MsgBox(
-                    heading:="Invalid Filename",
-                    prompt,
-                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                    title:="Malformed Error Report Filename")
+                MsgBox(heading:="Invalid Filename",
+                       prompt,
+                       buttonStyle,
+                       title:="Malformed Error Report Filename")
                 Return Nothing
             End If
         Else
             prompt = $"Filename '{filename}' malformed,{vbCrLf}it must contain '(' immediately after '{FixedPart}'."
             If indexOfOpenParenthesis <> FixedPart.Length Then
-                MsgBox(
-                    heading:="Invalid Filename",
-                    prompt,
-                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                    title:="Malformed Error Report Filename")
+                MsgBox(heading:="Invalid Filename",
+                       prompt,
+                       buttonStyle,
+                       title:="Malformed Error Report Filename")
                 Return Nothing
             End If
         End If
 
         Dim indexOfClosedParenthesis As Integer = filename.IndexOf(")"c)
         If indexOfClosedParenthesis < 0 Then
-            MsgBox(
-                heading:="Invalid Filename",
-                prompt:=$"Filename '{filename}' malformed,{vbCrLf}it must contain ')'.",
-                buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                title:="Malformed Error Report Filename")
+            MsgBox(heading:="Invalid Filename",
+                   prompt:=$"Filename '{filename}' malformed,{vbCrLf}it must contain ')'.",
+                   buttonStyle,
+                   title:="Malformed Error Report Filename")
             Return Nothing
         End If
 
@@ -533,7 +532,7 @@ Public Module RegionCountryLists
             MsgBox(
                 heading:="Invalid Filename",
                 prompt:=$"Culture name '{cultureName}' is not a valid culture name.",
-                buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                buttonStyle,
                 title:="Invalid Culture Name")
             Return CultureInfo.CurrentCulture
         End If

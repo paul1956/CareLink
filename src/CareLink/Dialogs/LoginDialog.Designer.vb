@@ -133,11 +133,12 @@ Partial Class LoginDialog
         CountryComboBox.Anchor = AnchorStyles.Left
         CountryComboBox.DropDownStyle = ComboBoxStyle.DropDownList
         CountryComboBox.Enabled = False
+        CountryComboBox.Font = New Font("Segoe UI Emoji", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         CountryComboBox.FormattingEnabled = True
         CountryComboBox.Location = New Point(201, 179)
         CountryComboBox.Margin = New Padding(9, 10, 9, 10)
         CountryComboBox.Name = "CountryComboBox"
-        CountryComboBox.Size = New Size(220, 23)
+        CountryComboBox.Size = New Size(220, 24)
         CountryComboBox.TabIndex = 8
         ' 
         ' RegionComboBox

@@ -3782,8 +3782,10 @@ Public Class Form1
 
         ' Update the checkbox text based on the current state and insulin type.
         With CurrentUser
-            Dim checkState As CheckState = Me.TempUseAdvanceAITDecayCheckBox.CheckState
-            Dim whileUsing As String = $" hours, while using { .InsulinTypeName}"
+            Dim checkState As CheckState =
+                Me.TempUseAdvanceAITDecayCheckBox.CheckState
+            Dim whileUsing As String =
+                $" hours, while using { .InsulinTypeName}"
             Me.TempUseAdvanceAITDecayCheckBox.Text =
                 If(checkState = checkState.Checked,
                    $"Advanced Decay, AIT will decay over { .InsulinRealAit}{ whileUsing}",
@@ -4904,7 +4906,9 @@ Public Class Form1
         End If
 
         Try
-            Me.TempUseAdvanceAITDecayCheckBox.Checked = CurrentUser.UseAdvancedAitDecay = CheckState.Checked
+            Me.TempUseAdvanceAITDecayCheckBox.Checked =
+                Not IsFlex() AndAlso
+                CurrentUser.UseAdvancedAitDecay = CheckState.Checked
             If Me.ActiveInsulinChart Is Nothing Then
                 Return
             End If
@@ -4975,15 +4979,15 @@ Public Class Form1
                 Dim timestamp As Date = s_sgRecords(index:=0).Timestamp
                 Dim insulinIncrements As Integer = CurrentUser.GetActiveInsulinIncrements
                 ' set up table that holds active insulin for every 5 minutes
-                If _remainingInsulinList.Count >= 288 Then
-                    If _remainingInsulinList.Count > 288 + insulinIncrements Then
+                If _remainingInsulinList.Count >= PatientData.Sgs.Count Then
+                    If _remainingInsulinList.Count > PatientData.Sgs.Count + insulinIncrements Then
                         _remainingInsulinList.RemoveAt(index:=0)
                     End If
-                    Dim n As Integer = _remainingInsulinList.Count - 287
+                    Dim n As Integer = _remainingInsulinList.Count - Math.Min(PatientData.Sgs.Count - 1, 0)
                     _remainingInsulinList = _remainingInsulinList.Take(count:=n).ToList()
                 End If
                 Dim currentMarker As Integer = 0
-                For i As Integer = 0 To 287
+                For i As Integer = 0 To PatientData.Sgs.Count - 1
                     Dim initialInsulinLevel As Single = 0
                     Dim timeSpan As TimeSpan = FiveMinuteSpan * i
                     Dim firstValidOaTime As _
@@ -5005,8 +5009,8 @@ Public Class Form1
                 ' walk all markers, adjust active insulin and then add new markerWithIndex
                 Dim maxActiveInsulin As Double = 0
                 Dim count As Integer = CurrentUser.GetActiveInsulinIncrements
-                Dim startIndex As Integer = _remainingInsulinList.Count - 288
-                For i As Integer = startIndex To startIndex + 287
+                Dim startIndex As Integer = _remainingInsulinList.Count - PatientData.Sgs.Count
+                For i As Integer = startIndex To startIndex + PatientData.Sgs.Count - 1
                     If i < windowSize - 1 Then
                         With Me.ActiveInsulinActiveInsulinSeries
                             .Points.AddXY(xValue:=_remainingInsulinList(index:=i).OaDateTime, yValue:=Double.NaN)
@@ -5936,7 +5940,7 @@ Public Class Form1
         Dim modelNumber As String = mdi.ModelNumber
         Me.ModelLabel.Text = $"{modelNumber} HW Version = {mdi.HardwareRevision}"
         Me.PumpNameLabel.Text = GetPumpName()
-        Me.ReadingsLabel.Text = $"{GetValidSgRecords().Count()}/{288} SG Readings"
+        Me.ReadingsLabel.Text = $"{GetValidSgRecords().Count()}/{PatientData.Sgs.Count} SG Readings"
 
         Dim table As DataTable = ClassCollectionToDataTable(classCollection:={s_lastSg}.ToList)
         Me.TlpLastSG.DisplayDataTable(table,

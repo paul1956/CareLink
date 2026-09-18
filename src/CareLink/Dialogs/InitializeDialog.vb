@@ -255,6 +255,9 @@ Public Class InitializeDialog
         If Is700Series() Then
             Me.UseAITAdvancedDecayCheckBox.CheckState = Me.CurrentUser.UseAdvancedAitDecay
             Me.UseAITAdvancedDecayCheckBox.Enabled = True
+        ElseIf IsFlex() Then
+            Me.UseAITAdvancedDecayCheckBox.CheckState = CheckState.Unchecked
+            Me.UseAITAdvancedDecayCheckBox.Enabled = False
         Else
             Me.UseAITAdvancedDecayCheckBox.CheckState = CheckState.Checked
             Me.UseAITAdvancedDecayCheckBox.Enabled = False
@@ -383,8 +386,10 @@ Public Class InitializeDialog
         Me.CurrentUser.InsulinTypeName = Me.InsulinTypeComboBox.Text
         Me.CurrentUser.InsulinRealAit = CType(Me.InsulinTypeComboBox.SelectedValue, InsulinActivationRecord).AitHours
 
-        Me.CurrentUser.UseAdvancedAitDecay = Me.UseAITAdvancedDecayCheckBox.CheckState
-        Me.CurrentUser.CurrentTarget = CType(Me.TargetSgComboBox.SelectedItem, KeyValuePair(Of String, Single)).Value
+        Me.CurrentUser.UseAdvancedAitDecay =
+            Me.UseAITAdvancedDecayCheckBox.CheckState
+        Me.CurrentUser.CurrentTarget =
+            CType(Me.TargetSgComboBox.SelectedItem, KeyValuePair(Of String, Single)).Value
 
         Me.CurrentUser.CarbRatios.Clear()
 
@@ -443,7 +448,9 @@ Public Class InitializeDialog
 
         Dim chkBox As CheckBox = CType(sender, CheckBox)
         Select Case chkBox.CheckState
-            Case CheckState.Indeterminate, CheckState.Unchecked
+            Case CheckState.Indeterminate
+                chkBox.CheckState = CheckState.Checked
+            Case CheckState.Unchecked
                 chkBox.CheckState = CheckState.Checked
             Case CheckState.Checked
                 chkBox.CheckState = CheckState.Unchecked
