@@ -45,15 +45,14 @@ Public Class Client2TransientErrorsTests
             JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
         Const bindingAttr As BindingFlags =
             BindingFlags.Public Or BindingFlags.NonPublic Or BindingFlags.Instance
-        Dim tokenField As FieldInfo =
-            client.GetType().GetField(name:="_tokenDataElement", bindingAttr)
-        tokenField.SetValue(obj:=client, value:=tokenElement)
+        ' Use friend test helper to set token data element; avoids reflection and is explicit
+        client.SetTokenDataElementForTests(token:=tokenElement)
 
         Dim accessPayload As New Dictionary(Of String, JsonElement) From
             {{"exp", JsonElement.Parse(json:="10000000000")}}
 
         Dim accessProp As PropertyInfo =
-            client.GetType().GetProperty(name:="AccessTokenPayload", bindingAttr)
+            client.GetType().GetProperty(name:=NameOf(Client2.AccessTokenPayload), bindingAttr)
 
         accessProp.SetValue(obj:=client, value:=accessPayload)
 

@@ -660,7 +660,7 @@ Public Class LoginDialog
             Else
                 discoveryTupleStatusCode =
                     If(discoveryTupleStatusCode = HttpStatusCode.OK,
-                       Form1.Client.HttpStatusCode,
+                       Form1.Client.LastHttpStatusCode,
                        discoveryTupleStatusCode)
                 Me.LoginStatus.Text = lastErrorMsg
                 ReportLoginStatus(Me.LoginStatus, hasErrors:=True, lastErrorMsg, discoveryTupleStatusCode)

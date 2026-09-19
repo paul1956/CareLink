@@ -19,6 +19,9 @@
     <Compile Update="Dialogs\CleanUpObsoleteFilesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Forms\Form1.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\LoggerForm.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -47,9 +50,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\ControlPositionsForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Forms\Form1.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\SgMiniForm.vb">

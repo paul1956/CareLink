@@ -41,7 +41,7 @@ Public Class LoggerForm
     '''  Replace message in log with new message.
     '''  If endKey is <see cref="String.Empty"/> then replace the whole line.
     ''' </summary>
-    ''' <param name="startKey">The Text that starts the message to </param>
+    ''' <param name="startKey">The Text that starts the message.</param>
     ''' <param name="endKey">
     '''  The key identifying the end of the message to update.
     ''' </param>

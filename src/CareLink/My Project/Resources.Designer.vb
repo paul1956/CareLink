@@ -103,9 +103,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
-        Friend ReadOnly Property CalibrationDot() As System.Drawing.Bitmap
+        Friend ReadOnly Property CalibrationDotRedSmall() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("CalibrationDot", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("CalibrationDotRedSmall", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -113,9 +113,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
-        Friend ReadOnly Property CalibrationDotRed() As System.Drawing.Bitmap
+        Friend ReadOnly Property CalibrationDotSmall() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("CalibrationDotRed", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("CalibrationDotSmall", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

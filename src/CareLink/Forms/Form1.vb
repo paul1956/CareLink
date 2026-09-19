@@ -502,18 +502,24 @@ Public Class Form1
                                     Me.CursorMessage2Label.Text = "Only"
                                     Me.CursorPictureBoxUpdate(imageId:=ImageEnum.CalibrationDotRed)
                                 Else
-                                    Me.CursorMessage1Label.Text = markerTag0
-                                    Me.CursorMessage2Label.Text = markerTag1
                                     Select Case markerTag0
                                         Case "Auto Correction",
                                              "Auto Basal",
                                              "Manual Basal",
                                              "Basal",
                                              "Min Auto Basal"
+                                            Me.CursorMessage1Label.Text = markerTag0
+                                            Me.CursorMessage2Label.Text = markerTag1
                                             Me.CursorPictureBoxUpdate(imageId:=ImageEnum.InsulinVial)
                                         Case "Bolus"
+                                            Me.CursorMessage2Label.Text = markerTag0
+                                            Me.CursorMessage3Label.Text = markerTag1
+                                            showWhat = CursorInfo.Show2_3
                                             Me.CursorPictureBoxUpdate(imageId:=ImageEnum.InsulinVial)
                                         Case "Meal"
+                                            Me.CursorMessage2Label.Text = markerTag0
+                                            Me.CursorMessage3Label.Text = markerTag1
+                                            showWhat = CursorInfo.Show2_3
                                             Me.CursorPictureBoxUpdate(imageId:=ImageEnum.MealImage)
                                         Case Else
                                             Stop
@@ -3783,6 +3789,8 @@ Public Class Form1
     Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(sender As Object, e As EventArgs) _
         Handles TempUseAdvanceAITDecayCheckBox.CheckedChanged
 
+        If CurrentUser Is Nothing Then Exit Sub
+
         ' Update the checkbox text based on the current state and insulin type.
         With CurrentUser
             Dim checkState As CheckState =
@@ -5209,7 +5217,7 @@ Public Class Form1
             Me.CalibrationDueImage.Image = Nothing
             If PatientData.ConduitInRange Then
                 If PatientData.TimeToNextCalibHours >= Byte.MaxValue Then
-                    Dim calibrationDot As Bitmap = My.Resources.CalibrationDot
+                    Dim calibrationDot As Bitmap = My.Resources.CalibrationDotSmall
                     Me.CalibrationDueImage.Image =
                         calibrationDot.DrawCenteredArc(minutesToNextCalibration:=720)
                 ElseIf PatientData.TimeToNextCalibHours = 0 Then
@@ -5223,7 +5231,7 @@ Public Class Form1
                     Else
                         Dim minutesToNextCalibration As Short =
                             s_timeToNextCalibrationMinutes
-                        Dim calibrationDotRed As Bitmap = My.Resources.CalibrationDotRed
+                        Dim calibrationDotRed As Bitmap = My.Resources.CalibrationDotRedSmall
                         Me.CalibrationDueImage.Image =
                             calibrationDotRed.DrawCenteredArc(minutesToNextCalibration)
                     End If
@@ -5233,7 +5241,7 @@ Public Class Form1
                     Dim minutesToNextCalibration As Short =
                         s_timeToNextCalibrationMinutes
                     Me.CalibrationDueImage.Image =
-                        My.Resources.CalibrationDot.DrawCenteredArc(minutesToNextCalibration)
+                        My.Resources.CalibrationDotSmall.DrawCenteredArc(minutesToNextCalibration)
                 End If
             End If
             Me.CalibrationDueImage.Visible = PatientData.ConduitInRange
@@ -5874,7 +5882,7 @@ Public Class Form1
 
             Me.TrendArrowsLabel.Text = s_trends(key)
         End If
-        Me.SgTrendLabel.Visible = PatientData.ConduitInRange
+        Me.TrendSgLabel.Visible = PatientData.ConduitInRange
         Me.TrendValueLabel.Visible = PatientData.ConduitInRange
         Me.TrendArrowsLabel.Visible = PatientData.ConduitInRange
     End Sub

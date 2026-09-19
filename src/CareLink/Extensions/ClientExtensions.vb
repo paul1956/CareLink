@@ -26,16 +26,11 @@ Friend Module ClientExtensions
     Public Function IsTokenValid(client2 As Client2,
                                  ByRef message As String,
                                  Optional log As Boolean = True) As Boolean
-        message = If(log,
-                     $"In {NameOf(IsTokenValid)} ",
-                     String.Empty)
-
         Dim startKey As String
         If client2.AccessTokenPayload Is Nothing Then
             startKey = "AccessToken Empty"
-            message &= startKey
             If log Then
-                UpdateMessage(message, startKey)
+                UpdateMessage(message:=startKey, startKey)
             End If
             Return False
         End If
@@ -45,16 +40,16 @@ Friend Module ClientExtensions
             Dim tDiffSeconds As Long = unixTime - unixCurrentTime
             Dim absDiffMinutes As Long = Math.Abs(value:=tDiffSeconds \ 60)
             If tDiffSeconds <= 0 Then
-                startKey = $"access token has expired "
-                message &= $"access token has expired {absDiffMinutes.ToHoursMinutes} ago"
+                startKey = $"Access token has expired"
+                message = $"{startKey} {absDiffMinutes.ToHoursMinutes} ago."
                 If log Then
                     UpdateMessage(message, startKey)
                 End If
                 Return False
             End If
             If tDiffSeconds < 600 Then
-                startKey = $"access token is about to expire in "
-                message &= $"access token is about to expire in {absDiffMinutes.ToHoursMinutes}"
+                startKey = $"Access token is about to expire in"
+                message = $"{startKey} {absDiffMinutes.ToHoursMinutes}."
                 If log Then
                     UpdateMessage(message, startKey)
                 End If
@@ -69,15 +64,11 @@ Friend Module ClientExtensions
                 localTime.ToString(format:="M/d/yyyy h:mm tt",
                                    formatProvider:=CultureInfo.InvariantCulture)
 
-            startKey = $"Access token expires in "
-            Dim fullMsg As String = $"{startKey}{absDiffMinutes.ToHoursMinutes()} at {formatted}"
-            message &= fullMsg
-            ' Valid token: return True. If log is true we keep message short/empty as before;
-            ' otherwise return the detailed message via the out parameter.
+            startKey = $"Access token expires in"
+            message = $"{startKey} {absDiffMinutes.ToHoursMinutes()} at {formatted}"
+            ' Valid token: return True.
             If log Then
-                ' For logging callers treat empty as success; but UpdateMessage with startKey for visibility
                 UpdateMessage(message, startKey)
-                message = String.Empty
             End If
             Return True
         Catch ex As Exception

@@ -35,11 +35,8 @@ Public Class Client2RefreshTests
         Dim tokenPath As String = GetTestDataFile("token_with_client_secret.json")
         Dim tokenJson As String = File.ReadAllText(path:=tokenPath)
         Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
-        Dim bindingAttr As BindingFlags = BindingFlags.NonPublic Or
-                                          BindingFlags.Instance
-        Dim tokenField As FieldInfo =
-            client.GetType().GetField(name:="_tokenDataElement", bindingAttr)
-        tokenField.SetValue(obj:=client, value:=tokenElement)
+        ' Use friend test helper to set token data element; avoids reflection and is explicit
+        client.SetTokenDataElementForTests(token:=tokenElement)
 
         ' Act
         Dim result As JsonElement =
@@ -83,11 +80,8 @@ Public Class Client2RefreshTests
         Dim originalTokenJson As String =
             File.ReadAllText(path:=originalTokenPath)
         Dim originalTokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=originalTokenJson)
-        Dim bindingAttr As BindingFlags = BindingFlags.NonPublic Or
-                                          BindingFlags.Instance
-        Dim tokenField As FieldInfo =
-            client.GetType().GetField(name:="_tokenDataElement", bindingAttr)
-        tokenField.SetValue(obj:=client, value:=originalTokenElement)
+        ' Use friend test helper to set token data element; avoids reflection and is explicit
+        client.SetTokenDataElementForTests(token:=originalTokenElement)
 
         ' Act
         Dim result As JsonElement =
@@ -134,8 +128,17 @@ Public Class Client2RefreshTests
         Dim tokenJson As String = File.ReadAllText(path:=tokenOldPath)
         Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
         Dim bindingAttr As BindingFlags = BindingFlags.NonPublic Or BindingFlags.Instance
-        Dim tokenField As FieldInfo = client.GetType().GetField(name:="_tokenDataElement", bindingAttr)
-        tokenField.SetValue(obj:=client, value:=tokenElement)
+        Dim tokenProp As PropertyInfo = client.GetType().GetProperty(NameOf(Client2.TokenDataElement), bindingAttr)
+        If tokenProp IsNot Nothing Then
+            tokenProp.SetValue(obj:=client, value:=tokenElement)
+        Else
+            Dim tokenField As FieldInfo = client.GetType().GetField(name:="_tokenDataElement", bindingAttr)
+            If tokenField IsNot Nothing Then
+                tokenField.SetValue(obj:=client, value:=tokenElement)
+            Else
+                Assert.True(condition:=False, userMessage:="Could not locate TokenDataElement property or backing field on Client2")
+            End If
+        End If
 
         ' Create fake endpoint resolver that returns SsoJson containing client_secret
         Dim endpointResolver As Func(Of ConfigRecord, Task(Of EndpointConfig)) =
@@ -193,11 +196,8 @@ Public Class Client2RefreshTests
             File.ReadAllText(path:=tokenWithMagPath)
         Dim tokenElement As JsonElement =
             JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
-        Dim bindingAttr As BindingFlags = BindingFlags.NonPublic Or
-                                          BindingFlags.Instance
-        Dim tokenField As FieldInfo =
-            client.GetType().GetField(name:="_tokenDataElement", bindingAttr)
-        tokenField.SetValue(obj:=client, value:=tokenElement)
+        ' Set the friend property directly (tests have InternalsVisibleTo access)
+        client.TokenDataElement = tokenElement
 
         ' Act
         Dim result As JsonElement =
