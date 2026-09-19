@@ -34,13 +34,15 @@ Friend Module LoginHelpers
     Friend Sub DeserializePatientElement()
         Try
             Dim pd As PatientDataInfo = Nothing
-            If Not PatientDataElement.TryFromJson(result:=pd) Then
-                MessageBox.Show(text:=$"Error deserializing patient data (parse failed).",
+            Try
+                pd = PatientDataElement.FromJson(Of PatientDataInfo)()
+            Catch ex As JsonException
+                MessageBox.Show(text:=$"Error deserializing patient data (parse failed): {ex.Message}",
                                 caption:="Deserialization Error",
                                 buttons:=MessageBoxButtons.OK,
                                 icon:=MessageBoxIcon.Error)
                 Stop
-            End If
+            End Try
             PatientData = pd
         Catch ex As Exception
             MessageBox.Show(text:=$"Error deserializing patient data: {ex.Message}",
@@ -364,10 +366,12 @@ Friend Module LoginHelpers
     Friend Sub SetUpCareLinkUser()
         Dim path As String = GetUserSettingsPath()
         Dim json As String = File.ReadAllText(path)
-        Dim result As CurrentUserRecord = Nothing
-        If Not json.TryFromJson(result) Then
+        Dim result As CurrentUserRecord
+        Try
+            result = json.FromJson(Of CurrentUserRecord)()
+        Catch ex As Exception
             result = Nothing
-        End If
+        End Try
         CurrentUser = result
     End Sub
 
@@ -411,9 +415,11 @@ Friend Module LoginHelpers
                 Dim element As JsonElement = ReadJsonElementFromFile(userSettingsFileFullPath)
                 If Not element.IsEmpty Then
                     Dim cur As CurrentUserRecord = Nothing
-                    If Not element.TryFromJson(result:=cur) Then
+                    Try
+                        cur = JsonExtensions.FromJson(Of CurrentUserRecord)(element)
+                    Catch ex As Exception
                         cur = Nothing
-                    End If
+                    End Try
                     CurrentUser = cur
                 End If
 

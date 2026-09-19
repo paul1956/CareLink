@@ -3,29 +3,73 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.ComponentModel
-Imports System.Net
-Imports System.Net.Http
-Imports System.Drawing
 Imports System.IO
 
+Imports System.Net
+Imports System.Net.Http
+
 Public Class LoginDialog
+#If True Then ' Keep on top
 
     Private Const ComparisonType As StringComparison =
         StringComparison.OrdinalIgnoreCase
 
+    Private Shared ReadOnly Property Comparer As StringComparer =
+        StringComparer.OrdinalIgnoreCase
+
+#End If
+
+    Private ReadOnly _flagImageCache As New Dictionary(Of String, Image)(Comparer)
+    Private _countryComboBoxOwnerDrawn As Boolean = False
     Private _doCancel As Boolean
     Private _httpClient As HttpClient
     Private _initialHeight As Integer
     Private _mySource As AutoCompleteStringCollection
-    Private _showTcs As TaskCompletionSource(Of DialogResult)
-    Private _countryComboBoxOwnerDrawn As Boolean = False
     Private _previousCountryText As String = String.Empty
-    Private ReadOnly _flagImageCache As New Dictionary(Of String, Image)(StringComparer.OrdinalIgnoreCase)
-    Public Const CareLinkAuthTokenCookieName As String = "auth_tmp_token"
+    Private _showTcs As TaskCompletionSource(Of DialogResult)
+
+    Public Const CareLinkAuthTokenCookieName As String =
+        "auth_tmp_token"
 
     Public Property ClientDiscover As DiscoveryRoot
     Public Property LoggedOnUser As CareLinkUserDataRecord
     Public Property LoginSourceAutomatic As FileToLoadOptions
+
+    Private Shared Function GetContrastingBackground(controlBack As Color) As Color
+        ' Choose a neutral contrasting background for flags so they don't visually blend
+        ' If control background is dark, use a light background behind the flag, and vice versa.
+        If IsColorDark(c:=controlBack) Then
+            Return Color.FromArgb(red:=240, green:=240, blue:=240) ' light
+        Else
+            Return Color.FromArgb(red:=32, green:=32, blue:=32) ' dark
+        End If
+    End Function
+
+    Private Shared Function IsColorDark(c As Color) As Boolean
+        ' Perceived luminance formula
+        Dim lum As Double =
+            ((0.2126 * c.R) + (0.7152 * c.G) + (0.0722 * c.B)) / 255.0
+        Return lum < 0.5
+    End Function
+
+    Private Shared Function LoadImageFromFileWithoutLock(filePath As String) As Image
+        Try
+            Using fs As FileStream =
+                File.Open(path:=filePath,
+                          mode:=FileMode.Open,
+                          access:=FileAccess.Read,
+                          share:=FileShare.Read)
+
+                Using ms As New MemoryStream()
+                    fs.CopyTo(destination:=ms)
+                    ms.Position = 0
+                    Return Image.FromStream(ms)
+                End Using
+            End Using
+        Catch
+            Return Nothing
+        End Try
+    End Function
 
     ''' <summary>
     '''  Updates the login status UI based on the result of the login attempt.
@@ -56,148 +100,50 @@ Public Class LoginDialog
         End If
     End Sub
 
-    Private Shared Function IsColorDark(c As Color) As Boolean
-        ' Perceived luminance formula
-        Dim lum As Double =
-            ((0.2126 * c.R) + (0.7152 * c.G) + (0.0722 * c.B)) / 255.0
-        Return lum < 0.5
-    End Function
-
-    Private Shared Function GetContrastingBackground(controlBack As Color) As Color
-        ' Choose a neutral contrasting background for flags so they don't visually blend
-        ' If control background is dark, use a light background behind the flag, and vice versa.
-        If IsColorDark(c:=controlBack) Then
-            Return Color.FromArgb(red:=240, green:=240, blue:=240) ' light
+    ''' <summary>
+    '''  Handles the Cancel button click event, setting a flag to indicate cancellation.
+    ''' </summary>
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">
+    '''  The <see cref="EventArgs"/> instance containing the event data.
+    ''' </param>
+    ''' <remarks>
+    '''  This method sets a flag to indicate that the operation was cancelled
+    '''  and hides the dialog.
+    ''' </remarks>
+    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
+        _doCancel = True
+        If _showTcs IsNot Nothing Then
+            _showTcs.TrySetResult(result:=DialogResult.Cancel)
+            Me.Close()
         Else
-            Return Color.FromArgb(red:=32, green:=32, blue:=32) ' dark
+            Me.DialogResult = DialogResult.Cancel
+            Me.Hide()
         End If
-    End Function
+    End Sub
 
-    <CodeAnalysis.SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase", Justification:="Keys must be lowercase to match file names")>
-    Private Function TryGetFlagImage(code As String) As Image
-        Try
-            If String.IsNullOrEmpty(value:=code) Then
-                Return Nothing
-            End If
-            Dim key As String = code.ToLowerInvariant()
-            Dim img As Image = Nothing
-            If _flagImageCache.TryGetValue(key, value:=img) Then
-                Return img
-            End If
+    ''' <summary>
+    '''  Handles the Care Partner checkbox checked change event,
+    '''  toggling visibility of the Patient User ID controls.
+    ''' </summary>
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">
+    '''  The <see cref="EventArgs"/> instance containing the event data.
+    ''' </param>
+    ''' <remarks>
+    '''  If the Care Partner checkbox is checked, the Patient User ID label
+    '''  and textbox are made visible. If unchecked, they are hidden.
+    ''' </remarks>
+    Private Sub CarePartnerCheckBox_CheckedChanged(sender As Object, e As EventArgs) _
+        Handles CarePartnerCheckBox.CheckedChanged
 
-            ' Look for a flags folder next to the executable: <appdir>\images\flags\xx.png
-            Dim baseDir As String =
-                AppDomain.CurrentDomain.BaseDirectory
-            Dim flagsDir As String =
-                Path.Combine(baseDir, "images", "flags")
-            Dim filePath As String =
-                Path.Combine(flagsDir, $"{key}.png")
-            If File.Exists(path:=filePath) Then
-                img = LoadImageFromFileWithoutLock(filePath)
-                If img IsNot Nothing Then
-                    _flagImageCache(key) = img
-                    Return img
-                End If
-            End If
-
-            ' Also check the project images folder (useful during development)
-            Try
-                Dim projectFlagsDir As String =
-                    Path.GetFullPath(path:=Path.Combine(baseDir,
-                                                        "..",
-                                                        "..",
-                                                        "..",
-                                                        "src",
-                                                        "CareLink",
-                                                        "Images",
-                                                        "Flags"))
-                Dim projectFile As String = Path.Combine(projectFlagsDir, $"{key}.png")
-                If File.Exists(path:=projectFile) Then
-                    img = LoadImageFromFileWithoutLock(filePath:=projectFile)
-                    If img IsNot Nothing Then
-                        _flagImageCache(key) = img
-                        Return img
-                    End If
-                End If
-            Catch
-                ' ignore path resolution issues
-            End Try
-
-            ' No image available
-            Return Nothing
-        Catch
-            Return Nothing
-        End Try
-    End Function
-
-    Private Shared Function LoadImageFromFileWithoutLock(filePath As String) As Image
-        Try
-            Using fs As FileStream =
-                File.Open(path:=filePath,
-                          mode:=FileMode.Open,
-                          access:=FileAccess.Read,
-                          share:=FileShare.Read)
-
-                Using ms As New MemoryStream()
-                    fs.CopyTo(destination:=ms)
-                    ms.Position = 0
-                    Return Image.FromStream(ms)
-                End Using
-            End Using
-        Catch
-            Return Nothing
-        End Try
-    End Function
-
-    Private Sub CountryComboBox_Validating(sender As Object, e As CancelEventArgs) Handles CountryComboBox.Validating
-        Try
-            Dim text As String = Me.CountryComboBox.Text
-            If String.IsNullOrEmpty(value:=text) Then
-                ' Allow empty selection but remember it
-                _previousCountryText = String.Empty
-                Return
-            End If
-
-            ' If the text matches a known country display name, accept and remember it
-            If s_countryToCodeList.ContainsKey(key:=text) Then
-                _previousCountryText = text
-                Return
-            End If
-
-            ' Try case-insensitive match against the list items
-            Dim match As String = Nothing
-            For Each obj As Object In Me.CountryComboBox.Items
-                Dim item As String = TryCast(obj, String)
-                If Not String.IsNullOrEmpty(value:=item) AndAlso String.Equals(item, text, StringComparison.OrdinalIgnoreCase) Then
-                    match = item
-                    Exit For
-                End If
-            Next
-            If match IsNot Nothing Then
-                Me.CountryComboBox.Text = match
-                _previousCountryText = match
-                Return
-            End If
-
-            ' Invalid text entered; revert to previous valid value or first item
-            If Not String.IsNullOrEmpty(value:=_previousCountryText) Then
-                Me.CountryComboBox.Text = _previousCountryText
-            ElseIf Me.CountryComboBox.Items.Count > 0 Then
-                Dim first As String =
-                    TryCast(Me.CountryComboBox.Items(index:=0), String)
-                Me.CountryComboBox.Text = If(first, String.Empty)
-                _previousCountryText = Me.CountryComboBox.Text
-            Else
-                Me.CountryComboBox.Text = String.Empty
-                _previousCountryText = String.Empty
-            End If
-        Catch
-            ' Swallow errors and revert to previous
-            Try
-                Me.CountryComboBox.Text = _previousCountryText
-            Catch
-            End Try
-        End Try
+        Dim careLinkPartner As Boolean = Me.CarePartnerCheckBox.Checked
+        Me.PatientUserIDLabel.Visible = careLinkPartner
+        Me.PatientUserIDTextBox.Visible = careLinkPartner
+        If careLinkPartner AndAlso
+           IsNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text) Then
+            Me.PatientUserIDTextBox.Focus()
+        End If
     End Sub
 
     Private Sub CountryComboBox_DrawItem(sender As Object, e As DrawItemEventArgs)
@@ -372,74 +318,6 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Returns the ISO country code for the currently selected or typed country display name.
-    '''  Falls back to the text when a mapping is not available.
-    ''' </summary>
-    Private Function GetSelectedCountryCode() As String
-        Try
-            Dim display As String =
-                TryCast(Me.CountryComboBox.SelectedItem, String)
-            If String.IsNullOrEmpty(value:=display) Then
-                display = Me.CountryComboBox.Text
-            End If
-            If Not String.IsNullOrEmpty(value:=display) Then
-                Dim code As String = Nothing
-                Return If(s_countryToCodeList.TryGetValue(key:=display, value:=code),
-                          code,
-                          display)
-            End If
-        Catch
-        End Try
-        Return String.Empty
-    End Function
-
-    ''' <summary>
-    '''  Handles the Cancel button click event, setting a flag to indicate cancellation.
-    ''' </summary>
-    ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">
-    '''  The <see cref="EventArgs"/> instance containing the event data.
-    ''' </param>
-    ''' <remarks>
-    '''  This method sets a flag to indicate that the operation was cancelled
-    '''  and hides the dialog.
-    ''' </remarks>
-    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
-        _doCancel = True
-        If _showTcs IsNot Nothing Then
-            _showTcs.TrySetResult(result:=DialogResult.Cancel)
-            Me.Close()
-        Else
-            Me.DialogResult = DialogResult.Cancel
-            Me.Hide()
-        End If
-    End Sub
-
-    ''' <summary>
-    '''  Handles the Care Partner checkbox checked change event,
-    '''  toggling visibility of the Patient User ID controls.
-    ''' </summary>
-    ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">
-    '''  The <see cref="EventArgs"/> instance containing the event data.
-    ''' </param>
-    ''' <remarks>
-    '''  If the Care Partner checkbox is checked, the Patient User ID label
-    '''  and textbox are made visible. If unchecked, they are hidden.
-    ''' </remarks>
-    Private Sub CarePartnerCheckBox_CheckedChanged(sender As Object, e As EventArgs) _
-        Handles CarePartnerCheckBox.CheckedChanged
-
-        Dim careLinkPartner As Boolean = Me.CarePartnerCheckBox.Checked
-        Me.PatientUserIDLabel.Visible = careLinkPartner
-        Me.PatientUserIDTextBox.Visible = careLinkPartner
-        If careLinkPartner AndAlso
-           IsNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text) Then
-            Me.PatientUserIDTextBox.Focus()
-        End If
-    End Sub
-
-    ''' <summary>
     '''  Handles the Country ComboBox selected value changed event,
     '''  updating the current date culture.
     ''' </summary>
@@ -472,6 +350,79 @@ Public Class LoginDialog
         Catch
         End Try
     End Sub
+
+    Private Sub CountryComboBox_Validating(sender As Object, e As CancelEventArgs) Handles CountryComboBox.Validating
+        Try
+            Dim text As String = Me.CountryComboBox.Text
+            If String.IsNullOrEmpty(value:=text) Then
+                ' Allow empty selection but remember it
+                _previousCountryText = String.Empty
+                Return
+            End If
+
+            ' If the text matches a known country display name, accept and remember it
+            If s_countryToCodeList.ContainsKey(key:=text) Then
+                _previousCountryText = text
+                Return
+            End If
+
+            ' Try case-insensitive match against the list items
+            Dim match As String = Nothing
+            For Each obj As Object In Me.CountryComboBox.Items
+                Dim item As String = TryCast(obj, String)
+                If Not String.IsNullOrEmpty(value:=item) AndAlso String.Equals(item, text, ComparisonType) Then
+                    match = item
+                    Exit For
+                End If
+            Next
+            If match IsNot Nothing Then
+                Me.CountryComboBox.Text = match
+                _previousCountryText = match
+                Return
+            End If
+
+            ' Invalid text entered; revert to previous valid value or first item
+            If Not String.IsNullOrEmpty(value:=_previousCountryText) Then
+                Me.CountryComboBox.Text = _previousCountryText
+            ElseIf Me.CountryComboBox.Items.Count > 0 Then
+                Dim first As String =
+                    TryCast(Me.CountryComboBox.Items(index:=0), String)
+                Me.CountryComboBox.Text = If(first, String.Empty)
+                _previousCountryText = Me.CountryComboBox.Text
+            Else
+                Me.CountryComboBox.Text = String.Empty
+                _previousCountryText = String.Empty
+            End If
+        Catch
+            ' Swallow errors and revert to previous
+            Try
+                Me.CountryComboBox.Text = _previousCountryText
+            Catch
+            End Try
+        End Try
+    End Sub
+
+    ''' <summary>
+    '''  Returns the ISO country code for the currently selected or typed country display name.
+    '''  Falls back to the text when a mapping is not available.
+    ''' </summary>
+    Private Function GetSelectedCountryCode() As String
+        Try
+            Dim display As String =
+                TryCast(Me.CountryComboBox.SelectedItem, String)
+            If String.IsNullOrEmpty(value:=display) Then
+                display = Me.CountryComboBox.Text
+            End If
+            If Not String.IsNullOrEmpty(value:=display) Then
+                Dim code As String = Nothing
+                Return If(s_countryToCodeList.TryGetValue(key:=display, value:=code),
+                          code,
+                          display)
+            End If
+        Catch
+        End Try
+        Return String.Empty
+    End Function
 
     ''' <summary>
     '''  Handles the dialog <see cref="Load"/> event,
@@ -809,42 +760,11 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the ServerLocation ComboBox selected key changed event,
-    '''  updates the Country ComboBox based on the selected region.
-    ''' </summary>
-    ''' <param name="sender">The source of the event.</param>
-    ''' <param name="e">
-    '''  The <see cref="EventArgs"/> instance containing the event data.
-    ''' </param>
-    ''' <remarks>
-    '''  This method populates the CountryComboBox with countries from the selected region.
-    ''' </remarks>
-    Private Sub RegionComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) _
-        Handles RegionComboBox.SelectedIndexChanged
-
-        Dim selectedRegionName As String = Nothing
-        Try
-            If Me.RegionComboBox.SelectedIndex >= 0 Then
-                selectedRegionName =
-                    Me.RegionComboBox.GetItemText(item:=Me.RegionComboBox.SelectedItem)
-            End If
-        Catch
-        End Try
-        If String.IsNullOrEmpty(value:=selectedRegionName) Then
-            selectedRegionName =
-                If(Not String.IsNullOrEmpty(value:=Me.RegionComboBox.Text),
-                   Me.RegionComboBox.Text.Trim(),
-                   TryCast(Me.RegionComboBox.SelectedItem, String))
-        End If
-        Me.PopulateCountriesForRegion(regionName:=selectedRegionName)
-    End Sub
-
-    ''' <summary>
     '''  Populates the CountryComboBox for a specified region display name.
     ''' </summary>
     ''' <param name="regionName">The region display name.</param>
     Private Sub PopulateCountriesForRegion(regionName As String)
-        Dim countriesInRegion As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
+        Dim countriesInRegion As New Dictionary(Of String, String)(Comparer)
         ' Clear any previous binding first to avoid conflicts when the selection changes
         Try
             Me.CountryComboBox.DataSource = Nothing
@@ -993,6 +913,37 @@ Public Class LoginDialog
     End Sub
 
     ''' <summary>
+    '''  Handles the ServerLocation ComboBox selected key changed event,
+    '''  updates the Country ComboBox based on the selected region.
+    ''' </summary>
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">
+    '''  The <see cref="EventArgs"/> instance containing the event data.
+    ''' </param>
+    ''' <remarks>
+    '''  This method populates the CountryComboBox with countries from the selected region.
+    ''' </remarks>
+    Private Sub RegionComboBox_SelectedIndexChanged(sender As Object, e As EventArgs) _
+        Handles RegionComboBox.SelectedIndexChanged
+
+        Dim selectedRegionName As String = Nothing
+        Try
+            If Me.RegionComboBox.SelectedIndex >= 0 Then
+                selectedRegionName =
+                    Me.RegionComboBox.GetItemText(item:=Me.RegionComboBox.SelectedItem)
+            End If
+        Catch
+        End Try
+        If String.IsNullOrEmpty(value:=selectedRegionName) Then
+            selectedRegionName =
+                If(Not String.IsNullOrEmpty(value:=Me.RegionComboBox.Text),
+                   Me.RegionComboBox.Text.Trim(),
+                   TryCast(Me.RegionComboBox.SelectedItem, String))
+        End If
+        Me.PopulateCountriesForRegion(regionName:=selectedRegionName)
+    End Sub
+
+    ''' <summary>
     '''  Handles the Show Password checkbox checked change event,
     '''  toggles the visibility of the password in the PasswordTextBox.
     ''' </summary>
@@ -1011,6 +962,63 @@ Public Class LoginDialog
                                              Nothing,
                                              "*"c)
     End Sub
+
+    <CodeAnalysis.SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase", Justification:="Keys must be lowercase to match file names")>
+    Private Function TryGetFlagImage(code As String) As Image
+        Try
+            If String.IsNullOrEmpty(value:=code) Then
+                Return Nothing
+            End If
+            Dim key As String = code.ToLowerInvariant()
+            Dim img As Image = Nothing
+            If _flagImageCache.TryGetValue(key, value:=img) Then
+                Return img
+            End If
+
+            ' Look for a flags folder next to the executable: <appdir>\images\flags\xx.png
+            Dim baseDir As String =
+                AppDomain.CurrentDomain.BaseDirectory
+            Dim flagsDir As String =
+                Path.Combine(baseDir, "images", "flags")
+            Dim filePath As String =
+                Path.Combine(flagsDir, $"{key}.png")
+            If File.Exists(path:=filePath) Then
+                img = LoadImageFromFileWithoutLock(filePath)
+                If img IsNot Nothing Then
+                    _flagImageCache(key) = img
+                    Return img
+                End If
+            End If
+
+            ' Also check the project images folder (useful during development)
+            Try
+                Dim projectFlagsDir As String =
+                    Path.GetFullPath(path:=Path.Combine(baseDir,
+                                                        "..",
+                                                        "..",
+                                                        "..",
+                                                        "src",
+                                                        "CareLink",
+                                                        "Images",
+                                                        "Flags"))
+                Dim projectFile As String = Path.Combine(projectFlagsDir, $"{key}.png")
+                If File.Exists(path:=projectFile) Then
+                    img = LoadImageFromFileWithoutLock(filePath:=projectFile)
+                    If img IsNot Nothing Then
+                        _flagImageCache(key) = img
+                        Return img
+                    End If
+                End If
+            Catch
+                ' ignore path resolution issues
+            End Try
+
+            ' No image available
+            Return Nothing
+        Catch
+            Return Nothing
+        End Try
+    End Function
 
     ''' <summary>
     '''  Handles the <see cref="UsernameComboBox"/> leave event,

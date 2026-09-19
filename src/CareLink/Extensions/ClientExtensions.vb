@@ -23,7 +23,9 @@ Friend Module ClientExtensions
     '''  True if the token is valid (not expired and not about to expire); otherwise False.
     ''' </returns>
     <Extension>
-    Public Function IsTokenValid(client2 As Client2, ByRef message As String, Optional log As Boolean = True) As Boolean
+    Public Function IsTokenValid(client2 As Client2,
+                                 ByRef message As String,
+                                 Optional log As Boolean = True) As Boolean
         message = If(log,
                      $"In {NameOf(IsTokenValid)} ",
                      String.Empty)

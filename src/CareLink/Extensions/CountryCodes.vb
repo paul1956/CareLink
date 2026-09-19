@@ -8,11 +8,14 @@ Imports System.Runtime.CompilerServices
 
 Public Module RegionCountryLists
 
-    Private ReadOnly Property Comparer As StringComparer =
-        StringComparer.OrdinalIgnoreCase
+#If True Then ' Keep on top
 
-    Private ReadOnly s_countryCodeToCountry As New Dictionary(Of String, String) _
-        (Comparer)
+    Private ReadOnly Property Comparer As StringComparer =
+            StringComparer.OrdinalIgnoreCase
+
+#End If
+
+    Private ReadOnly s_countryCodeToCountry As New Dictionary(Of String, String)(Comparer)
 
     ''' <summary>
     '''  A dictionary mapping country names to their corresponding regions.
@@ -26,8 +29,6 @@ Public Module RegionCountryLists
         {"Albania", "Europe"},
         {"Algeria", "Africa"},
         {"Andorra", "Europe"},
-        {"Angola", "Africa"},
-        {"Anguilla", "North America"},
         {"Argentina", "South America"},
         {"Armenia", "Transcontinental"},
         {"Aruba", "North America"},

@@ -26,6 +26,9 @@ Friend Module Form1UpdateHelpers
         {"AUTO_BASAL",
         "SAFE_BASAL"}
 
+    Private ReadOnly Property Comparer As StringComparer =
+        StringComparer.OrdinalIgnoreCase
+
     ''' <summary>
     '''  Converts a date string to a formatted date string using the specified provider,
     '''  or returns an empty string if parsing fails.
@@ -120,14 +123,15 @@ Friend Module Form1UpdateHelpers
     ''' <param name="json">The JSON string to convert.</param>
     ''' <returns>A <see cref="List"/> of <see cref="SG"/> objects.</returns>
     Private Function ToListOfSgs(json As String) As List(Of SG)
-        Dim jsonList As List(Of Dictionary(Of String, JsonElement)) = Nothing
-        If Not json.TryFromJson(result:=jsonList) Then
+        Dim jsonList As List(Of Dictionary(Of String, JsonElement))
+        Try
+            jsonList = json.FromJson(Of List(Of Dictionary(Of String, JsonElement)))()
+        Catch ex As Exception
             Return New List(Of SG)()
-        End If
+        End Try
         Dim resultDictionaryArray As New List(Of Dictionary(Of String, String))
-        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
         For Each e As IndexClass(Of Dictionary(Of String, JsonElement)) In jsonList.WithIndex
-            Dim resultDictionary As New Dictionary(Of String, String)(comparer)
+            Dim resultDictionary As New Dictionary(Of String, String)(Comparer)
             For Each item As KeyValuePair(Of String, JsonElement) In e.Value
                 If item.Key = "sg" Then
                     resultDictionary.Add(item.Key, value:=item.ScaleSg)
@@ -298,9 +302,11 @@ Friend Module Form1UpdateHelpers
         If IsNotNullOrWhiteSpace(kvp.Value) Then
             Try
                 Dim elem As JsonElement
-                If Not kvp.Value.TryFromJson(result:=elem) Then
+                Try
+                    elem = kvp.Value.FromJson(Of JsonElement)()
+                Catch ex As Exception
                     elem = Nothing
-                End If
+                End Try
                 If Not elem.IsEmpty AndAlso elem.ValueKind = JsonValueKind.Object Then
                     Dim idx As Integer = 0
                     For Each prop As JsonProperty In elem.EnumerateObject()

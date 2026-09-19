@@ -3086,11 +3086,12 @@ Public Class Form1
                             Try
                                 Dim json As String = ExceptionHandlerDialog.LocalRawData
                                 Dim pde As JsonElement
-                                If Not json.TryFromJson(result:=pde) Then
-                                    Stop
+                                Try
+                                    pde = json.FromJson(Of JsonElement)()
+                                Catch ex As Exception
                                     Const message As String = "Failed to parse patient data from file."
                                     Throw New ApplicationException(message)
-                                End If
+                                End Try
                                 PatientDataElement = pde
                                 DeserializePatientElement()
                                 Me.TabControlPage2.Visible = True
@@ -3156,7 +3157,7 @@ Public Class Form1
             .CheckPathExists = True,
             .DefaultExt = "pdf",
             .Filter = "Settings file (*.pdf)|*.pdf",
-            .initialDirectory = initialDirectory,
+            .InitialDirectory = initialDirectory,
             .Multiselect = False,
             .ReadOnlyChecked = True,
             .RestoreDirectory = True,
@@ -3206,11 +3207,11 @@ Public Class Form1
     ''' </remarks>
     Private Sub MenuStartSaveSnapshot_Click(sender As Object, e As EventArgs) Handles MenuStartSaveSnapshot.Click
         If IsPatientDataEmpty() Then Exit Sub
-        Dim path As String = GetUniqueDataFileName(
-            baseName:=BaseSnapshotName,
-            cultureName:=CurrentDateCulture.Name,
-            extension:="json",
-            mustBeUnique:=True).WithPath
+        Dim path As String =
+            GetUniqueDataFileName(baseName:=BaseSnapshotName,
+                                  cultureName:=CurrentDateCulture.Name,
+                                  extension:="json",
+                                  mustBeUnique:=True).WithPath
         File.WriteAllTextAsync(path, contents:=CleanPatientData())
     End Sub
 
@@ -3456,10 +3457,12 @@ Public Class Form1
         SetUpCareLinkUser(forceUI:=True)
         Dim element As JsonElement = ReadJsonElementFromFile(path:=GetUserSettingsPath())
         If Not element.IsEmpty Then
-            Dim cur As CurrentUserRecord = Nothing
-            If Not element.TryFromJson(result:=cur) Then
+            Dim cur As CurrentUserRecord
+            Try
+                cur = element.FromJson(Of CurrentUserRecord)()
+            Catch ex As JsonException
                 cur = Nothing
-            End If
+            End Try
             CurrentUser = cur
         End If
     End Sub
@@ -4790,7 +4793,8 @@ Public Class Form1
             End Select
             If Debugger.IsAttached Then
                 Dim message As String = ""
-                title &= $" - {Client.IsTokenValid(message, log:=False)}"
+                Client.IsTokenValid(message, log:=False)
+                title &= $" - {message}"
             End If
         Else
             Dim pattern As String = s_basalList.ActiveBasalPattern

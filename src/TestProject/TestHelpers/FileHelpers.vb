@@ -7,6 +7,9 @@ Imports System.Runtime.CompilerServices
 
 Public Module FileHelpers
 
+    Private Const ComparisonType As StringComparison =
+        StringComparison.OrdinalIgnoreCase
+
     Friend Function GetTestDataPath(<CallerFilePath> Optional path As String = "") As String
         ' Robust lookup for TestData:
         ' 1) Walk up from the caller file and return the first <dir>\TestData found.
@@ -14,29 +17,31 @@ Public Module FileHelpers
         ' 3) If a solution file (*.slnx) is found, treat that directory as repo root and probe common locations.
         ' 4) Fall back to the previous behavior.
         Try
-            Dim fileDirectory As DirectoryInfo = New FileInfo(path).Directory
+            Dim fileDirectory As DirectoryInfo = New FileInfo(fileName:=path).Directory
             Dim current As DirectoryInfo = fileDirectory
             Dim repoRoot As DirectoryInfo = Nothing
 
             While current IsNot Nothing
                 Dim candidate As String = IO.Path.Combine(current.FullName, "TestData")
-                If IO.Directory.Exists(candidate) Then
+                If Directory.Exists(path:=candidate) Then
                     Return candidate
                 End If
 
-                If String.Equals(current.Name, "Tests", StringComparison.OrdinalIgnoreCase) OrElse _
-                   current.Name.EndsWith(".Tests", StringComparison.OrdinalIgnoreCase) Then
+                If String.Equals(current.Name, "Tests", ComparisonType) OrElse
+                   current.Name.EndsWith(value:=".Tests", ComparisonType) Then
                     Dim siblingParent As DirectoryInfo = current.Parent
                     If siblingParent IsNot Nothing Then
-                        Dim siblingCandidate As String = IO.Path.Combine(siblingParent.FullName, "TestData")
-                        If IO.Directory.Exists(siblingCandidate) Then
+                        Dim siblingCandidate As String =
+                            IO.Path.Combine(siblingParent.FullName, "TestData")
+                        If Directory.Exists(siblingCandidate) Then
                             Return siblingCandidate
                         End If
                     End If
                 End If
 
                 Try
-                    Dim slnxFiles As FileInfo() = current.GetFiles("*.slnx")
+                    Dim slnxFiles As FileInfo() =
+                        current.GetFiles(searchPattern:="*.slnx")
                     If slnxFiles IsNot Nothing AndAlso slnxFiles.Length > 0 Then
                         repoRoot = current
                         Exit While
@@ -52,12 +57,18 @@ Public Module FileHelpers
                 Dim probes As String() = {
                     IO.Path.Combine(repoRoot.FullName, "TestData"),
                     IO.Path.Combine(repoRoot.FullName, "tests", "TestData"),
-                    IO.Path.Combine(repoRoot.FullName, "src", "TestProject", "TestData"),
-                    IO.Path.Combine(repoRoot.FullName, "src", "TestProject", "Tests", "TestData")
-                }
+                    IO.Path.Combine(repoRoot.FullName,
+                                    "src",
+                                    "TestProject",
+                                    "TestData"),
+                    IO.Path.Combine(repoRoot.FullName,
+                                    "src",
+                                    "TestProject",
+                                    "Tests",
+                                    "TestData")}
 
                 For Each probe As String In probes
-                    If IO.Directory.Exists(probe) Then
+                    If Directory.Exists(path:=probe) Then
                         Return probe
                     End If
                 Next
@@ -67,10 +78,17 @@ Public Module FileHelpers
         End Try
 
         ' Fallback: use the direct parent of the caller file (previous behavior)
-        Dim parent As DirectoryInfo = IO.Directory.GetParent(path)
+        Dim parent As DirectoryInfo = Directory.GetParent(path)
         Return If(parent Is Nothing,
                   String.Empty,
                   IO.Path.Combine(parent.FullName, "TestData"))
+    End Function
+
+    Friend Function GetTestDataFile(fileName As String, <CallerFilePath> Optional path As String = "") As String
+        Dim dataPath As String = GetTestDataPath(path:=path)
+        Return If(String.IsNullOrEmpty(value:=dataPath),
+                  String.Empty,
+                  IO.Path.Combine(dataPath, fileName))
     End Function
 
 End Module

@@ -21,7 +21,7 @@ Public Module StringExtensions
     Private ReadOnly s_commaOrPeriod As Char() = {CareLinkDecimalSeparator, ","c}
 
     Private ReadOnly Property EmojiPattern As String =
-            "[\u2190-\u21FF" &      ' Arrows
+        "[\u2190-\u21FF" &      ' Arrows
         "\u2300-\u23FF" &       ' Misc technical
         "\u2600-\u26FF" &       ' Misc symbols
         "\u2700-\u27BF" &       ' Dingbats

@@ -15,9 +15,11 @@ Public Class FileUtilitiesTests
         Dim jsonPath As String = Path.Combine(AppContext.BaseDirectory, "TestData", "simple_object.json")
         Dim json As String = File.ReadAllText(path:=jsonPath)
         Dim elem As JsonElement
-        If Not json.TryFromJson(result:=elem) Then
+        Try
+            elem = JsonSerializer.Deserialize(Of JsonElement)(json)
+        Catch ex As JsonException
             elem = Nothing
-        End If
+        End Try
         elem.ValueKind.Should().Be(expected:=JsonValueKind.Object)
         elem.GetProperty(propertyName:="a").GetInt32().Should().Be(expected:=1)
         elem.GetProperty(propertyName:="b").GetString().Should().Be(expected:="text")

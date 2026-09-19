@@ -8,6 +8,9 @@ Imports System.Text.Json.Serialization
 
 Public Module JsonExtensions
 
+    Private ReadOnly Property Comparer As StringComparer =
+                StringComparer.OrdinalIgnoreCase
+
     ''' <summary>
     '''  Default <see cref="JsonSerializerOptions"/> for deserialization.
     '''  - Allows reading numbers that are encoded as JSON strings (backwards compatibility with older files).
@@ -17,8 +20,7 @@ Public Module JsonExtensions
     Public ReadOnly Property DeserializationOptions As New JsonSerializerOptions() With {
         .NumberHandling = JsonNumberHandling.AllowReadingFromString,
         .PropertyNameCaseInsensitive = True,
-        .UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow
-    }
+        .UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow}
 
     ''' <summary>
     '''  Default <see cref="JsonSerializerOptions"/> for serialization with indented output.
@@ -46,10 +48,12 @@ Public Module JsonExtensions
                 Stop
             Case JsonValueKind.Object
                 Dim jsonItem As String = item.Value.ElementToString()
-                Dim extendedInfo As Dictionary(Of String, JsonElement) = Nothing
-                If Not jsonItem.TryFromJson(result:=extendedInfo) Then
+                Dim extendedInfo As Dictionary(Of String, JsonElement)
+                Try
+                    extendedInfo = jsonItem.FromJson(Of Dictionary(Of String, JsonElement))()
+                Catch ex As Exception
                     Return
-                End If
+                End Try
                 For Each kvp As KeyValuePair(Of String, JsonElement) In extendedInfo
                     resultDictionary.Add(key:=$"{item.Key}:{kvp.Key}", value:=kvp.Value.ElementToString())
                 Next
@@ -69,21 +73,6 @@ Public Module JsonExtensions
                 Exit Select
         End Select
     End Sub
-
-    ''' <summary>
-    '''  Non-throwing Try pattern for deserializing a JSON string to T using provided options.
-    ''' </summary>
-    <Extension>
-    Private Function TryFromJson(Of T)(json As String, options As JsonSerializerOptions, ByRef result As T) As Boolean
-        Try
-            result = JsonSerializer.Deserialize(Of T)(json, options)
-            Return True
-        Catch ex As JsonException
-            LogMessage(message:=$"TryFromJson failed: {ex.Message}")
-            result = Nothing
-            Return False
-        End Try
-    End Function
 
     ''' <summary>
     ''' Centralized conversion of a JsonElement to a String.
@@ -123,9 +112,10 @@ Public Module JsonExtensions
     ''' <returns>The deserialized object.</returns>
     ''' <param name="DeserializationOptions"></param>
     <Extension>
-    Public Function FromJson(Of T)(json As String, options As JsonSerializerOptions) As T
+    Public Function FromJson(Of T)(json As String) As T
+
         Try
-            Return JsonSerializer.Deserialize(Of T)(json, options:=options)
+            Return JsonSerializer.Deserialize(Of T)(json, options:=DeserializationOptions)
         Catch ex As JsonException
             Stop
             LogMessage(message:=$"ERROR: failed deserializing JSON string: {ex.Message}")
@@ -195,8 +185,7 @@ Public Module JsonExtensions
     ''' </summary>
     <Extension>
     Public Function JsonElementToDictionary(element As JsonElement) As Dictionary(Of String, JsonElement)
-        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
-        Dim result As New Dictionary(Of String, JsonElement)(comparer)
+        Dim result As New Dictionary(Of String, JsonElement)(Comparer)
 
         ' Ensure the element is an object
         If element.ValueKind <> JsonValueKind.Object Then
@@ -223,17 +212,18 @@ Public Module JsonExtensions
     ''' </returns>
     <Extension>
     Public Function JsonToDictionary(json As String) As Dictionary(Of String, String)
-        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
-        Dim resultDictionary As New Dictionary(Of String, String)(comparer)
+        Dim resultDictionary As New Dictionary(Of String, String)(Comparer)
         If IsNullOrWhiteSpace(value:=json) Then
             Return resultDictionary
         End If
         Dim item As KeyValuePair(Of String, JsonElement)
         Dim rawJsonData As List(Of KeyValuePair(Of String, JsonElement)) = Nothing
         Dim tmpDict As Dictionary(Of String, JsonElement) = Nothing
-        If Not json.TryFromJson(result:=tmpDict) Then
+        Try
+            tmpDict = json.FromJson(Of Dictionary(Of String, JsonElement))()
+        Catch ex As Exception
             Return resultDictionary
-        End If
+        End Try
         rawJsonData = tmpDict.ToList()
 
         For Each item In rawJsonData
@@ -333,15 +323,15 @@ Public Module JsonExtensions
             Return resultListOfDictionary
         End If
 
-        Dim jsonList As List(Of Dictionary(Of String, JsonElement)) = Nothing
-        If Not json.TryFromJson(result:=jsonList) Then
+        Dim jsonList As List(Of Dictionary(Of String, JsonElement))
+        Try
+            jsonList = json.FromJson(Of List(Of Dictionary(Of String, JsonElement)))()
+        Catch ex As Exception
             Return resultListOfDictionary
-        End If
-
-        Dim comparer As StringComparer = StringComparer.OrdinalIgnoreCase
+        End Try
 
         For Each e As IndexClass(Of Dictionary(Of String, JsonElement)) In jsonList.WithIndex
-            Dim item As New Dictionary(Of String, String)(comparer)
+            Dim item As New Dictionary(Of String, String)(Comparer)
             Dim defaultTime As Date = PumpNow() - Eleven55Span
             Dim index As Integer = -1
             For Each e1 As IndexClass(Of KeyValuePair(Of String, JsonElement)) In e.Value.WithIndex
@@ -415,9 +405,11 @@ Public Module JsonExtensions
     <Extension>
     Public Function ToStringDictionary(Json As String) As Dictionary(Of String, String)
         Dim raw As Dictionary(Of String, JsonElement) = Nothing
-        If Not Json.TryFromJson(result:=raw) Then
+        Try
+            raw = Json.FromJson(Of Dictionary(Of String, JsonElement))()
+        Catch ex As Exception
             Return New Dictionary(Of String, String)()
-        End If
+        End Try
 
         Dim keySelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
                 Function(kvp As KeyValuePair(Of String, JsonElement)) As String
@@ -449,7 +441,7 @@ Public Module JsonExtensions
     ''' </returns>
     <Extension>
     Public Function ToStringDictionary(jsonElement As JsonElement) As Dictionary(Of String, String)
-        Dim result As New Dictionary(Of String, String)(comparer:=StringComparer.OrdinalIgnoreCase)
+        Dim result As New Dictionary(Of String, String)(Comparer)
 
         For Each prop As JsonProperty In jsonElement.EnumerateObject()
             Dim v As JsonElement = prop.Value
@@ -472,33 +464,6 @@ Public Module JsonExtensions
         Next
 
         Return result
-    End Function
-
-    ''' <summary>
-    '''  Non-throwing Try pattern for deserializing a JSON string to T using module-level options.
-    ''' </summary>
-    <Extension>
-    Public Function TryFromJson(Of T)(json As String, ByRef result As T) As Boolean
-        Return TryFromJson(json, options:=DeserializationOptions, result)
-    End Function
-
-    ''' <summary>
-    '''  Non-throwing Try pattern for deserializing a JsonElement to T using module-level options.
-    ''' </summary>
-    ''' <typeparam name="T"></typeparam>
-    ''' <param name="element"></param>
-    ''' <param name="result"></param>
-    ''' <returns></returns>
-    <Extension>
-    Public Function TryFromJson(Of T)(element As JsonElement, ByRef result As T) As Boolean
-        Try
-            result = JsonSerializer.Deserialize(Of T)(element, options:=DeserializationOptions)
-            Return True
-        Catch ex As JsonException
-            LogMessage(message:=$"TryFromJson(JsonElement) failed: {ex.Message}")
-            result = Nothing
-            Return False
-        End Try
     End Function
 
     ''' <summary>

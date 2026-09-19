@@ -62,18 +62,21 @@ Public Module Discover
             Throw New ApplicationException(message)
         End If
         LogMessage(message:=$"   region: {region.ElementToString()}")
-        Dim countryInfo As CountryInfo = Nothing
-        If Not region.TryFromJson(result:=countryInfo) Then
+        Dim countryInfo As CountryInfo
+        Try
+            countryInfo = region.FromJson(Of CountryInfo)()
+        Catch ex As Exception
             Throw New ApplicationException(message:="Failed to parse country info from discovery data.")
-        End If
+        End Try
         For Each value As JsonElement In discoveryElement.GetProperty(propertyName:="CP").EnumerateArray()
             Try
                 Dim cpInfo As CPEntry = Nothing
-                If Not value.TryFromJson(result:=cpInfo) Then
+                Try
+                    cpInfo = value.FromJson(Of CPEntry)()
+                Catch ex As Exception
                     ' ignore here error will be handled outside the loop
-                    Stop
                     Continue For
-                End If
+                End Try
                 If countryInfo.Region = cpInfo.Region Then
                     config = value
                     Exit For
@@ -126,10 +129,9 @@ Public Module Discover
             Await New HttpClient().GetStringAsync(requestUri:=GetDiscoverUri(serverRegion)).
                                    ConfigureAwaitFalse()
 
-        Dim options As JsonSerializerOptions = DeserializationOptions
         Dim discovery As DiscoveryRoot
         Try
-            discovery = JsonSerializer.Deserialize(Of DiscoveryRoot)(json:=json, options)
+            discovery = json.FromJson(Of DiscoveryRoot)()
         Catch ex As Exception
             Throw New Exception(message:=$"Failed to parse discovery JSON: {ex.Message}")
         End Try
@@ -172,15 +174,19 @@ Public Module Discover
             Await httpClient.GetStringAsync(requestUri:=GetDiscoverUri(serverRegion)).
                              ConfigureAwaitFalse()
         Dim discoveryElement As JsonElement
-        If Not json.TryFromJson(result:=discoveryElement) Then
+        Try
+            discoveryElement = json.FromJson(Of JsonElement)()
+        Catch ex As Exception
             Throw New ApplicationException(message:="Failed to parse discovery JSON.")
-        End If
+        End Try
         Dim configJson As JsonElement =
             GetConfigJson(country, serverRegion, discoveryElement)
-        Dim config As ConfigRecord = Nothing
-        If Not configJson.TryFromJson(result:=config) Then
+        Dim config As ConfigRecord
+        Try
+            config = configJson.GetRawText().FromJson(Of ConfigRecord)()
+        Catch ex As Exception
             Throw New ApplicationException(message:="Failed to parse config JSON.")
-        End If
+        End Try
         Dim requestUri As String =
             config.GetPropertyValue(propertyName:=config.UseSSOConfiguration)
         Dim resp As String =
@@ -188,7 +194,7 @@ Public Module Discover
                             .ConfigureAwaitFalse()
         Dim ssoConfig As SsoConfig
         Try
-            ssoConfig = JsonSerializer.Deserialize(Of SsoConfig)(json:=resp, options:=DeserializationOptions)
+            ssoConfig = resp.FromJson(Of SsoConfig)()
         Catch ex As Exception
             Throw New ApplicationException(message:="Failed to parse SSO configuration JSON.")
         End Try
@@ -217,28 +223,37 @@ Public Module Discover
             tokenUrl = $"{ssoBaseUrl}/{tokenPath}"
         End If
 
-        Dim mutableConfig As Dictionary(Of String, JsonElement) =
-           Nothing
-        If Not configJson.GetRawText().TryFromJson(result:=mutableConfig) Then
+        Dim mutableConfig As Dictionary(Of String, JsonElement)
+        Try
+            mutableConfig = configJson.GetRawText().FromJson(Of Dictionary(Of String, JsonElement))()
+        Catch ex As Exception
             Const message As String = "Failed to parse mutable config JSON."
             Throw New ApplicationException(message)
-        End If
+        End Try
+
+        ' Create a JsonElement for the token URL string and insert it into the mutable config
         Dim tokenElem As JsonElement
-        If Not $"{Quote}{tokenUrl}{Quote}".TryFromJson(result:=tokenElem) Then
-            Const message As String = "Failed to create token Url JSON element."
-            Throw New ApplicationException(message)
-        End If
+        Using doc As JsonDocument = JsonDocument.Parse(json:=JsonSerializer.Serialize(tokenUrl))
+            tokenElem = doc.RootElement.Clone()
+        End Using
         mutableConfig(key:="token_url") = tokenElem
+
         Dim mcJson As String = String.Empty
-        If Not mutableConfig.TryToJson(mcJson) Then
-            Const message As String = "Failed to serialize mutable config to JSON."
+        If Not mutableConfig.TryToJson(json:=mcJson) Then
+            Const message As String =
+                "Failed to serialize mutable config to JSON."
             Throw New ApplicationException(message)
         End If
+
         Dim outElem As JsonElement
-        If Not mcJson.TryFromJson(result:=outElem) Then
-            Const message As String = "Failed to parse mutable config to JsonElement."
+        Try
+            outElem = mcJson.FromJson(Of JsonElement)()
+        Catch ex As Exception
+            Const message As String =
+                "Failed to parse mutable config to JsonElement."
             Throw New ApplicationException(message)
-        End If
+        End Try
+
         Return outElem
     End Function
 
@@ -253,8 +268,9 @@ Public Module Discover
     '''  Output parameter to receive the HTTP status code of the response.
     ''' </param>
     ''' <returns>
-    ''' A <see cref="DiscoveryRecord"/> containing the configuration data for the specified country,
-    ''' or <see langword="Nothing"/> if an error occurs.
+    '''  A <see cref="DiscoveryRecord"/> containing the configuration data
+    '''  for the specified country, or <see langword="Nothing"/>
+    '''  if an error occurs.
     ''' </returns>
     Public Async Function GetDiscoveryDataAsync(countryCode As String) As Task(Of DiscoveryRoot)
         Dim discoveryUrl As String = If(countryCode.EqualsNoCase("EU"),
@@ -294,15 +310,18 @@ Public Module Discover
 
                     Dim result As DiscoveryRoot
                     Try
-                        Dim json As String = Await response.Content.
-                                                            ReadAsStringAsync().
-                                                            ConfigureAwaitFalse()
+                        Dim json As String =
+                            Await response.Content.
+                                           ReadAsStringAsync().
+                                           ConfigureAwaitFalse()
                         Dim dr As DiscoveryRoot = Nothing
-                        If Not json.TryFromJson(result:=dr) Then
+                        Try
+                            dr = json.FromJson(Of DiscoveryRoot)()
+                        Catch ex As Exception
                             Stop
                             Const message As String = "Failed to parse discovery response."
                             Throw New ApplicationException(message)
-                        End If
+                        End Try
                         result = dr
                     Catch ex As Exception
                         Stop
@@ -326,7 +345,8 @@ Public Module Discover
                 For Each innerEx As Exception In ex.InnerExceptions
                     messages.Add(item:=innerEx.Message)
                 Next
-                lastErrorMsg = $"Multiple errors: {String.Join(separator:="; ", values:=messages)}"
+                lastErrorMsg =
+                    $"Multiple errors: {String.Join(separator:="; ", values:=messages)}"
             End If
             LogMessage(message:=lastErrorMsg)
         Catch ex As HttpRequestException

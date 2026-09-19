@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Text.Json
 Imports CareLink
 Imports FluentAssertions
 Imports Xunit
@@ -33,8 +34,12 @@ Public Class Client2IntegrationTests
         endpointConfig.SsoJson.Should().NotBeNullOrWhiteSpace()
 
         Dim sso As SsoConfig = Nothing
-        Dim parsed As Boolean = endpointConfig.SsoJson.TryFromJson(result:=sso)
-        parsed.Should().BeTrue(because:="SSO JSON should parse into SsoConfig")
+        Try
+            sso = JsonSerializer.Deserialize(Of SsoConfig)(json:=endpointConfig.SsoJson)
+        Catch ex As Exception
+            Assert.True(condition:=False,
+                        userMessage:="SSO JSON should parse into SsoConfig: " & ex.Message)
+        End Try
         sso.Server.Should().NotBeNull()
     End Function
 

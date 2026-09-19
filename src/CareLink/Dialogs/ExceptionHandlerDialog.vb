@@ -118,7 +118,8 @@ Public Class ExceptionHandlerDialog
                                           extension:="txt",
                                           mustBeUnique:=True)
 
-                Dim fileLink As String = $"{uniqueFileName.WithoutPath}: file://{uniqueFileName.WithPath}"
+                Dim fileLink As String =
+                    $"{uniqueFileName.WithoutPath}: file://{uniqueFileName.WithPath}"
                 .AppendTextNewFont(text:=fileLink,
                                    newFont:=fontBold,
                                    padRight:=False)

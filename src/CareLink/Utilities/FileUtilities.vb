@@ -41,11 +41,13 @@ Friend Module FileUtilities
         Try
             Dim json As String = File.ReadAllText(path)
             Dim tokenData As JsonElement
-            If Not json.TryFromJson(result:=tokenData) Then
+            Try
+                tokenData = json.FromJson(Of JsonElement)()
+            Catch ex As Exception
                 message = $"ERROR: failed parsing token file {path}"
                 Debug.WriteLine(message)
                 Return Nothing
-            End If
+            End Try
             For Each propertyName As String In s_requiredFields
                 Dim propElem As JsonElement = Nothing
                 If Not tokenData.TryGetProperty(propertyName, value:=propElem) Then
@@ -57,7 +59,8 @@ Friend Module FileUtilities
 
             Return tokenData
         Catch ex As JsonException
-            message = $"ERROR: failed parsing token file {path}: {ex.Message}"
+            message =
+                $"ERROR: failed parsing token file {path}: {ex.Message}"
             LogMessage(message)
             Return Nothing
         End Try
@@ -79,17 +82,14 @@ Friend Module FileUtilities
         End Try
     End Sub
 
-    Friend Function DeleteTokenFile() As JsonElement
-        Dim path As String = GetLoginDataFileName(tokenBaseFileName:=LOGIN_DATA_FILENAME)
-        SafeDeleteFile(path)
-    End Function
-
     ''' <summary>
     '''  Gets the full path for the login data file based on the user name
     '''  and base file name.
     ''' </summary>
     ''' <param name="userName">The user name.</param>
-    ''' <param name="tokenBaseFileName">The base file name for the token data file.</param>
+    ''' <param name="tokenBaseFileName">
+    '''  The base file name for the token data file.
+    ''' </param>
     ''' <returns>The full path to the login data file.</returns>
     ''' <exception cref="ArgumentException">
     '''  Thrown if <paramref name="tokenBaseFileName"/> is null or whitespace.
@@ -126,9 +126,12 @@ Friend Module FileUtilities
         Try
             Dim json As String = File.ReadAllText(path)
             Dim result As JsonElement
-            Return If(Not json.TryFromJson(result),
-                      Nothing,
-                      result)
+            Try
+                result = json.FromJson(Of JsonElement)()
+            Catch ex As Exception
+                Return Nothing
+            End Try
+            Return result
         Catch ex As Exception
             Dim message As String =
                 $"ERROR: failed reading file {path}: {ex.Message}"
@@ -161,9 +164,12 @@ Friend Module FileUtilities
         Try
             Dim json As String = tokenElement.GetRawText()
             Dim td As TokenData = Nothing
-            Return If(Not json.TryFromJson(result:=td),
-                      Nothing,
-                      td)
+            Try
+                td = json.FromJson(Of TokenData)()
+            Catch ex As Exception
+                Return Nothing
+            End Try
+            Return td
         Catch ex As JsonException
             Dim message As String =
                 $"Failed parsing token data to TokenData: {ex.Message}"

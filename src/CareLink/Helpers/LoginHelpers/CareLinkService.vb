@@ -84,8 +84,7 @@ Public Class CareLinkService
                     Await s_http.GetStringAsync(requestUri:=ssoUrl).ConfigureAwaitFalse()
                 Dim ssoDoc As SsoConfig = Nothing
                 Try
-                    ssoDoc = JsonSerializer.Deserialize(Of SsoConfig)(json:=ssoJson,
-                                                                      options:=DeserializationOptions)
+                    ssoDoc = ssoJson.FromJson(Of SsoConfig)()
                 Catch ex As Exception
                     Throw New Exception(message:=$"Failed to parse SSO JSON: {ex.Message}")
                 End Try
@@ -117,9 +116,7 @@ Public Class CareLinkService
         Dim message As String
         Dim ssoConfig As SsoConfig = Nothing
         Try
-            ssoConfig =
-                JsonSerializer.Deserialize(Of SsoConfig)(json:=endpointConfig.SsoJson,
-                                                         options:=DeserializationOptions)
+            ssoConfig = endpointConfig.SsoJson.FromJson(Of SsoConfig)()
         Catch ex As Exception
             Throw New ApplicationException(message:="Failed to parse SSO configuration JSON.")
         End Try
@@ -195,10 +192,12 @@ Public Class CareLinkService
         End If
 
         Dim token As TokenData = Nothing
-        If Not body.TryFromJson(result:=token) Then
+        Try
+            token = body.FromJson(Of TokenData)()
+        Catch ex As Exception
             message = "Failed to parse token response JSON."
             Throw New ApplicationException(message)
-        End If
+        End Try
         token.ClientId = clientId
         WriteTokenFile(token, path:=outputFile)
         Return token

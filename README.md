@@ -47,6 +47,9 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 9/18/2026
 
 ## What's New
+New in 6.0.3.0
+Finally fix refresh issue
+
 New in 6.0.2.5
 Add Flag Support to login
 Fix Active Insulin Estimate for FLex

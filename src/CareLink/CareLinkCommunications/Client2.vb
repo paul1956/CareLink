@@ -108,9 +108,12 @@ Friend Class Client2
             Dim bytes As Byte() = Convert.FromBase64String(s:=payload_b64)
             Dim json As String = Encoding.UTF8.GetString(bytes)
             Dim dict As Dictionary(Of String, JsonElement) = Nothing
-            Return If(Not json.TryFromJson(result:=dict),
-                                           Nothing,
-                                           dict)
+            Try
+                dict = json.FromJson(Of Dictionary(Of String, JsonElement))()
+            Catch ex As Exception
+                dict = Nothing
+            End Try
+            Return dict
         Catch ex As Exception
             Dim str As String = ex.DecodeException()
             Dim location As String = NameOf(GetAccessTokenPayload)
@@ -149,7 +152,8 @@ Friend Class Client2
         value(key:="appVersion") = "3.6.0"
 
         Dim headers As New Dictionary(Of String, String)
-        headers(key:="Authorization") = $"Bearer {tokenData(key:="access_token")}"
+        headers(key:="Authorization") =
+            $"Bearer {tokenData(key:="access_token")}"
 
         Dim magidentifier As String = Nothing
         If tokenData.TryGetValue(key:="mag-identifier", value:=magidentifier) AndAlso
@@ -196,9 +200,12 @@ Friend Class Client2
 
                             Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwaitFalse()
                             Dim d As Dictionary(Of String, JsonElement) = Nothing
-                            Return If(Not json.TryFromJson(result:=d),
-                                                           Nothing,
-                                                           d)
+                            Try
+                                d = json.FromJson(Of Dictionary(Of String, JsonElement))()
+                            Catch ex As Exception
+                                d = Nothing
+                            End Try
+                            Return d
                         End Using
                     End Using
                 Catch hex As HttpRequestException
@@ -283,9 +290,12 @@ Friend Class Client2
                 Dim json As String =
                     Await response.Content.ReadAsStringAsync()
                 Dim p As List(Of Dictionary(Of String, String)) = Nothing
-                patients = If(Not json.TryFromJson(result:=p),
-                              New List(Of Dictionary(Of String, String))(),
-                              p)
+                Try
+                    p = json.FromJson(Of List(Of Dictionary(Of String, String)))()
+                Catch ex As Exception
+                    p = New List(Of Dictionary(Of String, String))()
+                End Try
+                patients = p
                 If patients.Count > 0 Then
                     Return patients(index:=0)
                 End If
@@ -313,7 +323,13 @@ Friend Class Client2
         If TryGetStringProperty(element:=tokenData, propertyName:="mag-identifier", value:=magId) Then
             headers(key:="mag-identifier") = magId
         End If
-        headers(key:="Authorization") = $"Bearer {tokenData.GetProperty(propertyName:="access_token").GetString()}"
+        Dim accessToken As String = Nothing
+        If TryGetStringProperty(element:=tokenData, propertyName:="access_token", value:=accessToken) Then
+            headers(key:="Authorization") = $"Bearer {accessToken}"
+        Else
+            ' No access token present; leave Authorization header unset and allow downstream to fail/handle
+            LogMessage(message:=$"{NameOf(GetUserStringAsync)}: access_token missing from token data.")
+        End If
         headers(key:="Accept-Language") = "en-US"
 
         Using request As New HttpRequestMessage(method:=HttpMethod.Get, requestUri:=requestUri)
@@ -375,18 +391,22 @@ Friend Class Client2
             Dim element As JsonElement =
                 Me.AccessTokenPayload(key:="token_details")
             Dim payload As AccessTokenDetails = Nothing
-            If Not element.TryFromJson(result:=payload) Then
+            Try
+                payload = element.FromJson(Of AccessTokenDetails)()
+            Catch ex As Exception
                 payload = Nothing
-            End If
+            End Try
             _country = If(payload.Country, s_countryCode)
 
             configJsonElement =
                 Await GetConfigAsync(httpClient:=_httpClient, country:=_country, Me.ServerRegion)
 
             Dim cfg As ConfigRecord = Nothing
-            If Not configJsonElement.TryFromJson(result:=cfg) Then
+            Try
+                cfg = configJsonElement.FromJson(Of ConfigRecord)()
+            Catch ex As Exception
                 Throw New ApplicationException(message:="Failed to parse configuration JSON.")
-            End If
+            End Try
             Me.Config = cfg
 
             ' Call user string; handle typed failures
@@ -397,15 +417,19 @@ Friend Class Client2
             End If
 
             Dim tmpDict As Dictionary(Of String, JsonElement) = Nothing
-            If Not json.TryFromJson(result:=tmpDict) Then
+            Try
+                tmpDict = json.FromJson(Of Dictionary(Of String, JsonElement))()
+            Catch ex As Exception
                 tmpDict = New Dictionary(Of String, JsonElement)()
-            End If
+            End Try
             Me.UserElementDictionary = tmpDict
 
             Dim ppd As PatientPersonalInfo = Nothing
-            If Not json.TryFromJson(result:=ppd) Then
+            Try
+                ppd = json.FromJson(Of PatientPersonalInfo)()
+            Catch ex As Exception
                 ppd = New PatientPersonalInfo()
-            End If
+            End Try
             _PatientPersonalData = ppd
 
             Dim role As String = _PatientPersonalData.Role
@@ -531,13 +555,15 @@ Friend Class Client2
                                          tokenElement As JsonElement,
                                          httpClient As HttpClient,
                                          Optional endpointResolver As Func(Of ConfigRecord, Task(Of EndpointConfig)) = Nothing) As Task(Of JsonElement)
-        Dim result As Dictionary(Of String, JsonElement) = Nothing
+        Dim result As Dictionary(Of String, JsonElement)
         Dim message As String
-        If Not tokenElement.TryFromJson(result) Then
+        Try
+            result = tokenElement.FromJson(Of Dictionary(Of String, JsonElement))()
+        Catch ex As Exception
             message = $"{NameOf(DoRefreshAsync)}: token element could not be parsed"
             LogMessage(message)
             Return Nothing
-        End If
+        End Try
         Dim tokenData As Dictionary(Of String, JsonElement) = result
 
         ' Validate required keys
@@ -600,8 +626,7 @@ Friend Class Client2
 
                 If endpointConfig IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(value:=endpointConfig.SsoJson) Then
                     Try
-                        Dim sso As SsoConfig = JsonSerializer.Deserialize(Of SsoConfig)(json:=endpointConfig.SsoJson,
-                                                                                         options:=DeserializationOptions)
+                        Dim sso As SsoConfig = endpointConfig.SsoJson.FromJson(Of SsoConfig)()
                         If sso IsNot Nothing AndAlso sso.Client_Secret IsNot Nothing AndAlso Not IsNullOrWhiteSpace(sso.Client_Secret.ClientSecret) Then
                             clientSecret = sso.Client_Secret.ClientSecret
                             hasClientSecret = True
@@ -680,10 +705,21 @@ Friend Class Client2
                 Try
                     Using newData As JsonDocument = JsonDocument.Parse(json:=respBody)
                         Dim root As JsonElement = newData.RootElement
-                        tokenData(key:="access_token") =
-                            root.GetProperty(propertyName:="access_token").Clone()
-                        tokenData(key:="refresh_token") =
-                            root.GetProperty(propertyName:="refresh_token").Clone()
+
+                        Dim accessProp As JsonElement
+                        If root.TryGetProperty(propertyName:="access_token", value:=accessProp) AndAlso Not accessProp.IsEmpty Then
+                            tokenData(key:="access_token") = accessProp.Clone()
+                        Else
+                            LogMessage(message:=$"{NameOf(DoRefreshAsync)}: access_token missing from token response body.")
+                        End If
+
+                        Dim refreshProp As JsonElement
+                        If root.TryGetProperty(propertyName:="refresh_token", value:=refreshProp) AndAlso Not refreshProp.IsEmpty Then
+                            tokenData(key:="refresh_token") = refreshProp.Clone()
+                        Else
+                            ' Preserve existing refresh_token if the response did not include one
+                            LogMessage(message:=$"{NameOf(DoRefreshAsync)}: refresh_token not present in token response; keeping existing refresh_token.")
+                        End If
                     End Using
                     succeeded = True
                     Exit For
@@ -709,9 +745,12 @@ Friend Class Client2
             Return Nothing
         End If
         Dim tdElem As JsonElement
-        Return If(Not tdJson.TryFromJson(result:=tdElem),
-                  Nothing,
-                  tdElem)
+        Try
+            tdElem = tdJson.FromJson(Of JsonElement)()
+        Catch ex As Exception
+            Return Nothing
+        End Try
+        Return tdElem
     End Function
 
     Public Async Function DownloadFileAsync(requestUri As String,
@@ -917,11 +956,13 @@ Friend Class Client2
             Dim metaDataElement As JsonElement =
                 CType(data.Values(index:=0), JsonElement)
             Dim metaData As Metadata = Nothing
-            If Not metaDataElement.TryFromJson(metaData) Then
+            Try
+                metaData = metaDataElement.FromJson(Of Metadata)()
+            Catch ex As Exception
                 Stop
                 Const parseFailed As String = "Failed to parse metadata element."
                 Throw New ApplicationException(message:=parseFailed)
-            End If
+            End Try
             Dim requestUri As String = metaData.IconResourceBundle.IconBundleUrl
             Dim zipFileName As String = requestUri.Split(separator:="/").Last
             Dim destinationPath As String =

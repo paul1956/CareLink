@@ -6,19 +6,25 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 
 Public Module BitmapCache
+#If True Then ' Keep on top
+
+    Private ReadOnly Property Comparer As StringComparer =
+        StringComparer.OrdinalIgnoreCase
+
+#End If
 
     Private Const MaxTempBitmaps As Integer = 6
 
     ' Temporary composite images cache (small, bounded). Keys are application-defined
     ' and should include any parameters that affect rendering (eg: percent, state, size).
-    Private ReadOnly s_tempBitmaps As New Dictionary(Of String, Bitmap)(comparer:=StringComparer.OrdinalIgnoreCase)
+    Private ReadOnly s_tempBitmaps As New Dictionary(Of String, Bitmap)(Comparer)
 
     Private ReadOnly s_tempLock As New Object()
 
     Private ReadOnly s_tempOrder As New List(Of String)()
 
     ' Storage for the preloaded Bitmaps
-    Friend ReadOnly s_bitmaps As New Dictionary(Of String, Bitmap)(comparer:=StringComparer.OrdinalIgnoreCase)
+    Friend ReadOnly s_bitmaps As New Dictionary(Of String, Bitmap)(Comparer)
 
     ''' <summary>
     '''  Cleans up all Bitmaps from memory.

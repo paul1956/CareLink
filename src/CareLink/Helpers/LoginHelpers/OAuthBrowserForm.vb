@@ -11,14 +11,26 @@ Imports Microsoft.Web.WebView2.Core
 
 Public Class OAuthBrowserForm
 
+#If True Then ' Keep on top
+
     Private Const ComparisonType As StringComparison =
         StringComparison.OrdinalIgnoreCase
 
+    Private Shared ReadOnly Property Comparer As StringComparer =
+            StringComparer.OrdinalIgnoreCase
+
+#End If
+
     Private ReadOnly _password As String
+
     Private ReadOnly _redirectUri As String
+
     Private ReadOnly _startUrl As String
+
     Private ReadOnly _userName As String
+
     Private _clientSecret As String
+
     Private _state As String
 
     ''' <summary>
@@ -148,7 +160,7 @@ Public Class OAuthBrowserForm
                       Select(selector).
                       ToDictionary(keySelector,
                                    elementSelector,
-                                   comparer:=StringComparer.OrdinalIgnoreCase)
+                                   Comparer)
 
         Dim code As String = Nothing
         parameters.TryGetValue(key:="code", value:=code)

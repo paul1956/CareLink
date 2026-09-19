@@ -10,7 +10,12 @@ Imports System.Text.RegularExpressions
 '''  extracting variables from messages, and generating summary records.
 ''' </summary>
 Friend Module SummaryHelpers
+#If True Then ' Keep on top
 
+    Private ReadOnly Property Comparer As StringComparer =
+            StringComparer.OrdinalIgnoreCase
+
+#End If
     Private s_secondaryTimeReminder As String
 
     ''' <summary>
@@ -181,9 +186,12 @@ Friend Module SummaryHelpers
                         Dim resolvedValue As String = String.Empty
                         If jsonDictionary.TryGetValue(key:="acknowledged", value:=resolvedValue) Then
                             Dim acknowledgedRecord As AcknowledgedRecord = Nothing
-                            If resolvedValue.TryFromJson(result:=acknowledgedRecord) Then
+                            Try
+                                acknowledgedRecord = resolvedValue.FromJson(Of AcknowledgedRecord)()
                                 resolved = $" {acknowledgedRecord.Time.ToNotificationString}"
-                            End If
+                            Catch ex As Exception
+                                ' ignore parse failures
+                            End Try
                         End If
                     Case "alertClearType"
                         Dim resolvedValue As String = String.Empty
@@ -357,7 +365,7 @@ Friend Module SummaryHelpers
                     Continue For
                 End If
                 If rowsToHide IsNot Nothing AndAlso
-                   rowsToHide.Contains(value:=kvp.Key, comparer:=StringComparer.OrdinalIgnoreCase) Then
+                   rowsToHide.Contains(value:=kvp.Key, Comparer) Then
 
                     Continue For
                 End If
