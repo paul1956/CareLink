@@ -11,7 +11,8 @@ Imports System.Text
 Imports System.Text.Json
 
 ' This class is intentionally not part of the public API.
-' It is designed to be used internally within the assembly and is not intended for external consumption.
+' It is designed to be used internally within the assembly and is not intended
+' for external consumption.
 Friend Class Client2
     Private ReadOnly _httpClient As HttpClient
     Private _country As String
@@ -76,7 +77,9 @@ Friend Class Client2
 
         Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
         Dim access As String = Nothing
-        If TryGetStringProperty(element:=token_data, propertyName:="access_token", value:=access) Then
+        If TryGetStringProperty(element:=token_data,
+                                propertyName:="access_token",
+                                value:=access) Then
             headers(key:="Authorization") = $"Bearer {access}"
         End If
 
@@ -84,7 +87,8 @@ Friend Class Client2
     End Function
 
     ''' <summary>
-    '''  Extracts the payload from the access tokenDataElement in the provided tokenDataElement JSON tokenDataElement.
+    '''  Extracts the payload from the access tokenDataElement in
+    '''  the provided tokenDataElement JSON tokenDataElement.
     ''' </summary>
     ''' <param name="tokenDataElement">
     '''  The JSON tokenDataElement containing the access tokenDataElement.
@@ -98,7 +102,8 @@ Friend Class Client2
             If tokenDataElement.IsEmpty Then
                 Return Nothing
             End If
-            Dim token As String = tokenDataElement.JsonElementToDictionary(key:="access_token").ToString
+            Dim token As String =
+                tokenDataElement.JsonElementToDictionary(key:="access_token").ToString
             Dim payload_b64 As String = token.Split(separator:="."c)(1)
             Dim payload_b64_bytes As Byte() = Encoding.UTF8.GetBytes(s:=payload_b64)
             Dim count As Integer = (4 - (payload_b64_bytes.Length Mod 4)) Mod 4
@@ -175,24 +180,30 @@ Friend Class Client2
                 Dim retryDelayMs As Integer = 0
                 Try
                     Using request As New HttpRequestMessage(method:=HttpMethod.Post,
-                                                            requestUri:=requestUri) With {.Content = content}
+                                                            requestUri:=requestUri) With {
+                                                            .Content = content}
                         For Each header As KeyValuePair(Of String, String) In headers
-                            request.Headers.TryAddWithoutValidation(name:=header.Key, value:=header.Value)
+                            request.Headers.TryAddWithoutValidation(name:=header.Key,
+                                                                    header.Value)
                         Next
 
-                        Using response As HttpResponseMessage = Await _httpClient.SendAsync(request).
-                                                                                  ConfigureAwaitFalse()
+                        Using response As HttpResponseMessage =
+                            Await _httpClient.SendAsync(request).
+                                              ConfigureAwaitFalse()
 
                             _lastHttpStatus = response.StatusCode
                             UpdateMessage(message:=$"   status: {_lastHttpStatus}",
-                                                        startKey:=$"   status: ")
+                                          startKey:=$"   status: ")
 
                             ' Centralized resp inspection; may throw UnauthorizedAccessException,
-                            ' ArgumentException (bad request) or HttpRequestException (transient/server).
+                            ' ArgumentException (bad request) or HttpRequestException
+                            ' (transient/server).
                             Await response.ThrowIfFailureAsync().
                                            ConfigureAwaitFalse()
 
-                            Dim json As String = Await response.Content.ReadAsStringAsync().ConfigureAwaitFalse()
+                            Dim json As String =
+                                Await response.Content.ReadAsStringAsync().
+                                                       ConfigureAwaitFalse()
                             Dim d As Dictionary(Of String, JsonElement) = Nothing
                             Try
                                 d = json.FromJson(Of Dictionary(Of String, JsonElement))()
@@ -231,13 +242,21 @@ Friend Class Client2
     ''' <summary>
     ''' Retrieves patient information asynchronously.
     ''' </summary>
-    ''' <param name="configJsonElement">The configuration JSON tokenDataElement containing base URL information.</param>
-    ''' <param name="token_data">The tokenDataElement nameValueCollection JSON tokenDataElement containing authentication tokens.</param>
+    ''' <param name="configJsonElement">
+    '''  The configuration JSON tokenDataElement containing base URL information.
+    ''' </param>
+    ''' <param name="token_data">
+    '''  The tokenDataElement nameValueCollection JSON tokenDataElement
+    '''  containing authentication tokens.
+    ''' </param>
     ''' <returns>
-    '''  A task representing the asynchronous operation, containing a dictionary of patient information.
+    '''  A task representing the asynchronous operation,
+    '''  containing a dictionary of patient information.
     ''' </returns>
-    Private Async Function GetPatient(configJsonElement As JsonElement,
-                                      token_data As JsonElement) As Task(Of Dictionary(Of String, String))
+    Private Async Function GetPatient(
+        configJsonElement As JsonElement,
+        token_data As JsonElement) As Task(Of Dictionary(Of String, String))
+
         _lastHttpStatus = HttpStatusCode.OK
         Const key As String = "baseUrlCareLink"
         Dim configDict As Dictionary(Of String, JsonElement) =
@@ -298,24 +317,35 @@ Friend Class Client2
     '''  The configuration JSON tokenDataElement containing base URL information.
     ''' </param>
     ''' <param name="tokenData">
-    '''  The tokenDataElement nameValueCollection JSON tokenDataElement containing authentication tokens.
+    '''  The tokenDataElement nameValueCollection JSON tokenDataElement containing
+    '''  authentication tokens.
     ''' </param>
-    ''' <returns>A JSON string representing the user information.</returns>
-    Private Async Function GetUserStringAsync(config As ConfigRecord, tokenData As JsonElement) As Task(Of String)
-        Dim requestUri As String = $"{config.BaseUrlCareLink}/users/me"
+    ''' <returns>
+    '''  A JSON string representing the user information.
+    ''' </returns>
+    Private Async Function GetUserStringAsync(config As ConfigRecord,
+                                              tokenData As JsonElement) As Task(Of String)
+        Dim requestUri As String =
+            $"{config.BaseUrlCareLink}/users/me"
         Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
 
         Dim accessToken As String = Nothing
-        If TryGetStringProperty(element:=tokenData, propertyName:="access_token", value:=accessToken) Then
+        If TryGetStringProperty(element:=tokenData,
+                                propertyName:="access_token",
+                                value:=accessToken) Then
             headers(key:="Authorization") = $"Bearer {accessToken}"
         Else
-            ' No access tokenDataElement present; leave Authorization header unset and allow downstream to fail/handle
-            LogMessage(message:=$"{NameOf(GetUserStringAsync)}: access_token missing from tokenDataElement data.")
+            ' No access tokenDataElement present;
+            ' leave Authorization header unset and allow downstream to fail/handle
+            Dim message As String =
+                $"{NameOf(GetUserStringAsync)}: access_token missing from tokenDataElement data."
+            LogMessage(message)
         End If
         headers(key:="Accept-Language") = "en-US"
 
         Using request As New HttpRequestMessage(method:=HttpMethod.Get, requestUri:=requestUri)
-            request.Headers.Accept.Add(item:=New MediaTypeWithQualityHeaderValue(mediaType:="application/json"))
+            Dim item As New MediaTypeWithQualityHeaderValue(mediaType:="application/json")
+            request.Headers.Accept.Add(item)
             For Each header As KeyValuePair(Of String, String) In headers.Sort
                 request.Headers.Add(name:=header.Key, header.Value)
             Next
@@ -351,7 +381,8 @@ Friend Class Client2
     '''  Initializes the client by reading tokenDataElement nameValueCollection and user information.
     ''' </summary>
     ''' <returns>
-    '''  A task representing the asynchronous operation, containing a boolean indicating success or failure.
+    '''  A task representing the asynchronous operation,
+    '''  containing a boolean indicating success or failure.
     ''' </returns>
     Private Async Function internalInit() As Task(Of Boolean)
         Me.TokenDataElement = ReadTokenFile(Me.TokenBaseFileName)
@@ -482,8 +513,9 @@ Friend Class Client2
     End Sub
 
     ''' <summary>
-    '''  Sets the user element dictionary for testing purposes to allow access to UserElementDictionary.
-    '''  This method is Friend to allow access from test assemblies.
+    '''  Sets the user element dictionary for testing purposes to allow access
+    '''  to UserElementDictionary. This method is Friend to allow access from
+    '''  test assemblies.
     ''' </summary>
     Friend Sub SetUserElementDictionaryForTests(value As Dictionary(Of String, JsonElement))
         Me.UserElementDictionary = value
@@ -532,17 +564,19 @@ Friend Class Client2
     '''  The JSON tokenDataElement containing tokenDataElement information.
     ''' </param>
     ''' <returns>
-    '''  A task representing the asynchronous operation, containing the refreshed tokenDataElement as a JSON tokenDataElement.
+    '''  A task representing the asynchronous operation,
+    '''  containing the refreshed tokenDataElement as a JSON tokenDataElement.
     ''' </returns>
     Public Async Function DoRefreshAsync(config As ConfigRecord,
                                          tokenElement As JsonElement,
                                          httpClient As HttpClient) As Task(Of JsonElement)
+        Dim fnName As String = NameOf(DoRefreshAsync)
         Dim result As Dictionary(Of String, JsonElement)
         Dim message As String
         Try
             result = tokenElement.FromJson(Of Dictionary(Of String, JsonElement))()
         Catch ex As Exception
-            message = $"{NameOf(DoRefreshAsync)}: tokenDataElement element could not be parsed"
+            message = $"{fnName}: tokenDataElement element could not be parsed"
             LogMessage(message)
             Return Nothing
         End Try
@@ -563,14 +597,14 @@ Friend Class Client2
                 clientId = tokenData(key:="client_id").GetString()
             Catch
                 message =
-                    $"{NameOf(DoRefreshAsync)}: Missing client_id in stored tokenDataElement data."
+                    $"{fnName}: Missing client_id in stored tokenDataElement data."
                 LogMessage(message)
                 Return Nothing
             End Try
         End If
         If IsNullOrWhiteSpace(value:=refreshTok) Then
             message =
-                $"{NameOf(DoRefreshAsync)}: Missing refresh_token in stored tokenDataElement data."
+                $"{fnName}: Missing refresh_token in stored tokenDataElement data."
             LogMessage(message)
             Return Nothing
         End If
@@ -588,10 +622,11 @@ Friend Class Client2
         Try
             httpClient.DefaultRequestHeaders.Authorization = Nothing
             Using content As New FormUrlEncodedContent(nameValueCollection:=formData)
-                resp = Await httpClient.PostAsync(requestUri:=config.TokenUrl, content).ConfigureAwaitFalse()
+                resp = Await httpClient.PostAsync(requestUri:=config.TokenUrl, content).
+                                        ConfigureAwaitFalse()
             End Using
         Catch ex As Exception
-            message = $"{NameOf(DoRefreshAsync)}: HTTP request failed: {ex.Message}"
+            message = $"{fnName}: HTTP request failed: {ex.Message}"
             LogMessage(message)
             Return Nothing
         End Try
@@ -607,25 +642,31 @@ Friend Class Client2
                     Dim root As JsonElement = newData.RootElement
 
                     Dim accessProp As JsonElement
-                    If root.TryGetProperty(propertyName:="access_token", value:=accessProp) AndAlso Not accessProp.IsEmpty Then
+                    If root.TryGetProperty(propertyName:="access_token", value:=accessProp) _
+                        AndAlso Not accessProp.IsEmpty Then
+
                         tokenData(key:="access_token") = accessProp.Clone()
                     Else
-                        LogMessage(message:=$"{NameOf(DoRefreshAsync)}: access_token missing from tokenDataElement response body.")
+                        message = $"{fnName}: access_token missing from tokenDataElement response body."
+                        LogMessage(message)
                     End If
 
                     Dim refreshProp As JsonElement
-                    If root.TryGetProperty(propertyName:="refresh_token", value:=refreshProp) AndAlso Not refreshProp.IsEmpty Then
+                    If root.TryGetProperty(propertyName:="refresh_token", value:=refreshProp) _
+                        AndAlso Not refreshProp.IsEmpty Then
+
                         tokenData(key:="refresh_token") = refreshProp.Clone()
                     End If
                 End Using
                 succeeded = True
             Catch ex As Exception
-                message = $"{NameOf(DoRefreshAsync)}: failed parsing tokenDataElement refresh response: {ex.Message}"
+                message = $"{fnName}: failed parsing tokenDataElement refresh response: {ex.Message}"
                 LogMessage(message)
                 Return Nothing
             End Try
         Else
-            message = $"{NameOf(DoRefreshAsync)}: tokenDataElement refresh attempt failed. Status={CInt(resp.StatusCode)} Body={respBody}"
+            message = $"{fnName}: tokenDataElement refresh attempt failed." &
+                      $"Status={CInt(resp.StatusCode)} Body={respBody}"
             LogMessage(message)
             Return Nothing
         End If
@@ -633,7 +674,7 @@ Friend Class Client2
         Dim tdJson As String = String.Empty
         If Not tokenData.TryToJson(json:=tdJson) Then
             message =
-                $"{NameOf(DoRefreshAsync)}: failed serializing tokenDataElement data to JSON."
+                $"{fnName}: failed serializing tokenDataElement data to JSON."
             LogMessage(message)
             Return Nothing
         End If
@@ -840,7 +881,8 @@ Friend Class Client2
             Case DataKeyCount.RecentData
                 message = Nothing
             Case Else
-                message = $"Unexpected keys in Data: {String.Join(separator:=", ", values:=data.Keys)}"
+                message =
+                    $"Unexpected keys in Data: {String.Join(separator:=", ", values:=data.Keys)}"
         End Select
 
         If data.Values.Count < DataKeyCount.RecentData Then

@@ -151,8 +151,20 @@ Public Class Form1
 
             If expected <> "(not referenced)" AndAlso actual <> "(not present)" AndAlso expected <> actual Then
                 Dim msg As String =
-                    $"WebView2 managed DLL version mismatch detected.{Environment.NewLine}{Environment.NewLine}Expected: {expected}{Environment.NewLine}Found:    {actual}{Environment.NewLine}{Environment.NewLine}Fix: rebuild the project or include the matching Microsoft.Web.WebView2.Core.dll in the app folder (see README)."
-                If MessageBox.Show(text:=msg, caption:="WebView2 version mismatch", buttons:=MessageBoxButtons.OKCancel, icon:=MessageBoxIcon.Warning) = DialogResult.OK Then
+                    "WebView2 managed DLL version mismatch detected." &
+                    Environment.NewLine &
+                    Environment.NewLine &
+                    $"Expected: {expected}" &
+                    Environment.NewLine &
+                    $"Found:    {actual}" &
+                    Environment.NewLine &
+                    Environment.NewLine &
+                    "Fix: rebuild the project or include the matching " &
+                    "Microsoft.Web.WebView2.Core.dll in the app folder (see README)."
+                If MessageBox.Show(text:=msg,
+                                   caption:="WebView2 version mismatch",
+                                   buttons:=MessageBoxButtons.OKCancel,
+                                   icon:=MessageBoxIcon.Warning) = DialogResult.OK Then
                     ' Optionally open README:
                     Dim fileName As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "README.txt")
                     Dim startInfo As New ProcessStartInfo(fileName) With {
@@ -525,7 +537,8 @@ Public Class Form1
                                     End Select
                                 End If
 
-                                Dim eventTime As String = Date.FromOADate(currentDataPoint.XValue).ToString(format:=s_timeWithMinuteFormat)
+                                Dim eventTime As String =
+                                    Date.FromOADate(currentDataPoint.XValue).ToString(format:=s_timeWithMinuteFormat)
                                 If showWhat = CursorInfo.Hide1 Then
                                     Me.CursorMessage4Label.Text = eventTime
                                 Else
@@ -3938,7 +3951,8 @@ Public Class Form1
         If PatientData Is Nothing Then Exit Sub
         Dim caption As String = $"Sensor will expire In {PatientData.SensorDurationHours} hours"
         If PatientData.CgmInfo.SensorProductModel?.Trim = "MMT-5120" Then
-            _sensorLifeToolTip.SetToolTip(control:=Me.SensorDaysLeftLabel, GetSimpleraTimeLeftMessage(PatientData.SensorDurationHours))
+            _sensorLifeToolTip.SetToolTip(control:=Me.SensorDaysLeftLabel,
+                                          caption:=GetSimpleraTimeLeftMessage(PatientData.SensorDurationHours))
         Else
             If PatientData.SensorDurationHours < 24 Then
                 _sensorLifeToolTip.SetToolTip(control:=Me.SensorDaysLeftLabel, caption)
@@ -4679,7 +4693,8 @@ Public Class Form1
                             Else
                                 deltaString = If(Math.Abs(value:=delta) < 0.001,
                                                  "0",
-                                                 delta.ToString(format:=GetSgFormat(NativeMmolL, withSign:=True), provider))
+                                                 delta.ToString(format:=GetSgFormat(NativeMmolL, withSign:=True),
+                                                                provider))
 
                                 Me.TrendValueLabel.Text = deltaString
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta)
@@ -5557,7 +5572,8 @@ Public Class Form1
                                     Me.SensorTimeLeftLabel.Text = "Expired"
                                 Case Else
                                     Me.SensorDaysLeftLabel.Text = EmptyString
-                                    Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorExpirationUnknown)
+                                    Const imageId As ImageEnum = ImageEnum.SensorExpirationUnknown
+                                    Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId)
                                     Me.SensorTimeLeftLabel.Text = "Unknown"
                             End Select
 

@@ -59,7 +59,8 @@ Friend Module FileUtilities
 
             ' Strip unsupported fields (client_secret, mag-identifier) from the token JSON
             Try
-                Dim dict As Dictionary(Of String, JsonElement) = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(tokenData.GetRawText())
+                Dim dict As Dictionary(Of String, JsonElement) =
+                    JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(json:=tokenData.GetRawText())
                 If dict IsNot Nothing Then
                     ' Strip deprecated fields if present. These may appear in legacy files
                     ' but should not be part of the runtime token model.

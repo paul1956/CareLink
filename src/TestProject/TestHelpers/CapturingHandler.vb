@@ -4,6 +4,7 @@
 
 Imports System.Net.Http
 Imports System.Threading
+
 ' Lightweight handler types exposed at Friend scope for tests that don't import the TestUtilities namespace.
 Friend Class CapturingHandler
     Inherits HttpMessageHandler

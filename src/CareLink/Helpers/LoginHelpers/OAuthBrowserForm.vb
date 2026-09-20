@@ -311,7 +311,14 @@ Public Class OAuthBrowserForm
 
         ' focus element in page
         Dim focusScript As String =
-            $"(function(){{ var el = document.querySelector({selectorJson}); if(el) {{ el.focus(); return true; }} return false; }})();"
+            "(function(){" & vbCrLf &
+            "  var el = document.querySelector(" & selectorJson & ");" & vbCrLf &
+            "  if (el) {" & vbCrLf &
+            "    el.focus();" & vbCrLf &
+            "    return true;" & vbCrLf &
+            "  }" & vbCrLf &
+            "  return false;" & vbCrLf &
+            "})();"
         Dim focused As String =
             Await Me.WebView21.CoreWebView2.ExecuteScriptAsync(javaScript:=focusScript)
 
@@ -324,19 +331,27 @@ Public Class OAuthBrowserForm
         Await Task.Delay(millisecondsDelay:=200)
 
         ' send keystrokes on UI thread
-        Me.Invoke(New Action(Sub()
-                                 For Each ch As Char In value
-                                     SendKeys.SendWait(keys:=ch.ToString())
-                                     ' small pause between chars
-                                     Thread.Sleep(millisecondsTimeout:=20)
-                                 Next
-                             End Sub))
+        Dim method As New Action(
+            Sub()
+                For Each ch As Char In value
+                    SendKeys.SendWait(keys:=ch.ToString())
+                    ' small pause between chars
+                    Thread.Sleep(millisecondsTimeout:=20)
+                Next
+            End Sub)
+        Me.Invoke(method)
 
         ' small delay, then verify value
         Await Task.Delay(millisecondsDelay:=120)
-        Dim readScript As String = $"(function(){{ var el = document.querySelector({selectorJson}); return el ? el.value : null; }})();"
-        Dim result As String = Await Me.WebView21.CoreWebView2.ExecuteScriptAsync(readScript)
-        Return Not String.IsNullOrWhiteSpace(value:=result) AndAlso result.Trim() = JsonSerializer.Serialize(value)
+        Dim readScript As String =
+            "(function(){" & vbCrLf &
+            "  var el = document.querySelector(" & selectorJson & ");" & vbCrLf &
+            "  return el ? el.value : null;" & vbCrLf &
+            "})();"
+        Dim result As String =
+            Await Me.WebView21.CoreWebView2.ExecuteScriptAsync(javaScript:=readScript)
+        Return Not String.IsNullOrWhiteSpace(value:=result) AndAlso
+                result.Trim() = JsonSerializer.Serialize(value)
     End Function
 
     Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs)
