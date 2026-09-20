@@ -60,11 +60,10 @@ Public Class SummaryRecord
                         If s_showLogger Then
                             Stop
                             Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
-                            MsgBox(
-                        heading:=$"{kvp.Value} is unknown message for {messageTableName}!",
-                        prompt:="",
-                        buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                        title:=GetTitleFromStack(stackFrame))
+                            MsgBox(heading:=$"{kvp.Value} is unknown message for {messageTableName}!",
+                                   prompt:="",
+                                   buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                                   title:=GetTitleFromStack(stackFrame))
                         End If
                         message = kvp.Value.ToTitle
                 End Select

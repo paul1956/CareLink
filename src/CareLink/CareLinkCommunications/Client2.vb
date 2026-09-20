@@ -535,6 +535,14 @@ Friend Class Client2
                                               password As String,
                                               Optional tokenData As TokenData = Nothing) As Task
         If tokenData Is Nothing Then
+            ' Enhanced logging for first-time failures: capture environment and context
+            Try
+                Dim envInfo As String = $"GetLoginData: tokenData is Nothing. Server={serverRegion}, User={userName}, OS={Environment.OSVersion}, Culture={Globalization.CultureInfo.CurrentCulture.Name}, Machine={Environment.MachineName}"
+                LoggerManager.LogMessage(envInfo)
+            Catch
+                ' Best-effort logging; swallow any failures here
+            End Try
+
             Try
                 Dim outputFile As String = GetLoginDataFileName()
 
@@ -546,6 +554,11 @@ Friend Class Client2
                                                         userName,
                                                         password)
             Catch ex As Exception
+                Try
+                    LoggerManager.LogMessage(message:=$"GetLoginData Exception: {ex}")
+                Catch
+                End Try
+
                 If ex.Message <> "Login was cancelled." Then
                     MessageBox.Show(text:=ex.Message,
                                     caption:="Error",
