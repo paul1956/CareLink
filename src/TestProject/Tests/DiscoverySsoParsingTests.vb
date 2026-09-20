@@ -49,6 +49,7 @@ Public Class DiscoverySsoParsingTests
         ssoConfig.Server.Port.Should().Be(443)
         ssoConfig.Server.Prefix.Should().Be("auth")
         ssoConfig.Client.ClientId.Should().Be("test-client")
+        ' Keep validating client_secret parsing from SSO config (not token files).
         ssoConfig.Client.ClientSecret.Should().Be("test-secret")
     End Sub
 

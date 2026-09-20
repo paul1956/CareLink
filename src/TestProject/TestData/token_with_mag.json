@@ -1,6 +1,5 @@
 {
   "access_token": "aaa.bbb.ccc",
   "refresh_token": "r",
-  "client_id": "cid",
-  "mag-identifier": "m"
+  "client_id": "cid"
 }

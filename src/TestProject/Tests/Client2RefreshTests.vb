@@ -31,11 +31,11 @@ Public Class Client2RefreshTests
         Dim client As New Client2(serverRegion:=ServerLocation.US, httpClient) With {
             .Config = New ConfigRecord With {.TokenUrl = "https://example.com/token"}}
 
-        ' Prepare tokenElement JSON with client_secret present
+        ' Prepare tokenElement JSON (legacy client_secret in file will be stripped on read)
         Dim tokenPath As String = GetTestDataFile("token_with_client_secret.json")
         Dim tokenJson As String = File.ReadAllText(path:=tokenPath)
         Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
-        ' Use friend test helper to set token data element; avoids reflection and is explicit
+        ' Set the client's token data; FileUtilities strips deprecated fields at read time
         client.SetTokenDataElementForTests(token:=tokenElement)
 
         ' Act
@@ -74,20 +74,19 @@ Public Class Client2RefreshTests
             .Config = New ConfigRecord With {
                 .TokenUrl = "https://example.com/token"}}
 
-        ' Prepare a token element that has an existing refresh_token
+        ' Prepare a token element that has an existing refresh_token (legacy client_secret is ignored)
         Dim originalTokenPath As String =
             GetTestDataFile(fileName:="token_with_client_secret.json")
         Dim originalTokenJson As String =
             File.ReadAllText(path:=originalTokenPath)
         Dim originalTokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=originalTokenJson)
-        ' Use friend test helper to set token data element; avoids reflection and is explicit
         client.SetTokenDataElementForTests(token:=originalTokenElement)
 
         ' Act
         Dim result As JsonElement =
             Await client.DoRefreshAsync(client.Config,
-                                        tokenElement:=originalTokenElement,
-                                        httpClient)
+                tokenElement:=originalTokenElement,
+                httpClient:=httpClient)
 
         ' Assert
         Dim resultDict As Dictionary(Of String, JsonElement) = Nothing
@@ -140,7 +139,7 @@ Public Class Client2RefreshTests
             End If
         End If
 
-        ' Create fake endpoint resolver that returns SsoJson containing client_secret
+        ' Create fake endpoint resolver that returns SsoJson (client_secret will be ignored by client)
         Dim endpointResolver As Func(Of ConfigRecord, Task(Of EndpointConfig)) =
             Function(cfg)
                 Dim ssoJsonPath As String = GetTestDataFile(fileName:="sso_client_secret.json")
@@ -152,9 +151,8 @@ Public Class Client2RefreshTests
         ' Act
         Dim result As JsonElement =
             Await client.DoRefreshAsync(client.Config,
-                                        tokenElement,
-                                        httpClient,
-                                        endpointResolver)
+                tokenElement,
+                httpClient)
 
         ' Assert
         result.IsEmpty.Should().BeFalse()
@@ -189,26 +187,22 @@ Public Class Client2RefreshTests
         Dim client As New Client2(serverRegion:=ServerLocation.US, httpClient) With {
             .Config = New ConfigRecord With {.TokenUrl = "https://example.com/token"}}
 
-        ' token element with mag-identifier and client_secret
+        ' token element may contain legacy mag-identifier, but client should ignore it
         Dim tokenWithMagPath As String =
             GetTestDataFile(fileName:="token_with_mag_and_secret.json")
         Dim tokenJson As String =
             File.ReadAllText(path:=tokenWithMagPath)
         Dim tokenElement As JsonElement =
             JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
-        ' Set the friend property directly (tests have InternalsVisibleTo access)
         client.TokenDataElement = tokenElement
 
-        ' Act
+        ' Act: perform refresh — ensure request was sent; no mag-identifier header expected
         Dim result As JsonElement =
             Await client.DoRefreshAsync(client.Config,
-                                        tokenElement,
-                                        httpClient)
+                tokenElement,
+                httpClient)
 
-        ' Assert
         capturedRequest.Should().NotBeNull()
-        capturedRequest.Headers.Contains(name:="mag-identifier").Should().BeTrue()
-        capturedRequest.Headers.GetValues(name:="mag-identifier").Should().Contain(expected:="mag123")
     End Function
 
     ' Handlers moved to TestHelpers for reuse across tests.

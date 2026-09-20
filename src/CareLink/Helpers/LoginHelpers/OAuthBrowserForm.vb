@@ -29,8 +29,6 @@ Public Class OAuthBrowserForm
 
     Private ReadOnly _userName As String
 
-    Private _clientSecret As String
-
     Private _state As String
 
     ''' <summary>
@@ -230,10 +228,6 @@ Public Class OAuthBrowserForm
         If logEntryAsString.Contains(value:=separator, ComparisonType) Then
             Dim logEntrySplit As String() = logEntryAsString.Split(separator)
             _state = logEntrySplit(1)
-        End If
-        If logEntryAsString.Contains(value:="client_secret", ComparisonType) Then
-            Dim logEntrySplit As String() = logEntryAsString.Split(separator)
-            _clientSecret = logEntrySplit(1)
         End If
 
     End Sub

@@ -460,7 +460,7 @@ Public Class Form1
                 Exit Sub
             End If
 
-            Dim showWhat As CursorInfo = CursorInfo.Hide1
+            Dim showWhat As CursorInfo
             Select Case result.Series.Name
                 Case HighLimitSeriesName, HighTiTRSeriesName, LowLimitSeriesName, TargetSgSeriesName
                     Me.ShowCursorControls(showWhat, showInfusionSet:=True)
@@ -496,30 +496,27 @@ Public Class Form1
                                     Dim trimChars As Char() = {" "c, "U"c}
                                     amount = CDbl(markerTag1.TrimEnd(trimChars))
                                 End If
-                                showWhat = CursorInfo.Show3
                                 If split.Length = 1 AndAlso amount.AlmostZero Then
+                                    showWhat = CursorInfo.Show3
                                     Me.CursorMessage1Label.Text = "Calibration"
                                     Me.CursorMessage2Label.Text = "Only"
                                     Me.CursorPictureBoxUpdate(imageId:=ImageEnum.CalibrationDotRed)
                                 Else
                                     Select Case markerTag0
-                                        Case "Auto Correction",
-                                             "Auto Basal",
-                                             "Manual Basal",
+                                        Case "Auto Basal",
+                                             "Auto Correction",
                                              "Basal",
+                                             "Bolus",
+                                             "Manual Basal",
                                              "Min Auto Basal"
-                                            Me.CursorMessage1Label.Text = markerTag0
-                                            Me.CursorMessage2Label.Text = markerTag1
-                                            Me.CursorPictureBoxUpdate(imageId:=ImageEnum.InsulinVial)
-                                        Case "Bolus"
+                                            showWhat = CursorInfo.Hide1
                                             Me.CursorMessage2Label.Text = markerTag0
                                             Me.CursorMessage3Label.Text = markerTag1
-                                            showWhat = CursorInfo.Show2_3
                                             Me.CursorPictureBoxUpdate(imageId:=ImageEnum.InsulinVial)
                                         Case "Meal"
+                                            showWhat = CursorInfo.Hide1
                                             Me.CursorMessage2Label.Text = markerTag0
                                             Me.CursorMessage3Label.Text = markerTag1
-                                            showWhat = CursorInfo.Show2_3
                                             Me.CursorPictureBoxUpdate(imageId:=ImageEnum.MealImage)
                                         Case Else
                                             Stop
@@ -527,8 +524,13 @@ Public Class Form1
                                             Return
                                     End Select
                                 End If
-                                Me.CursorMessage3Label.Text =
-                                    Date.FromOADate(currentDataPoint.XValue).ToString(format:=s_timeWithMinuteFormat)
+
+                                Dim eventTime As String = Date.FromOADate(currentDataPoint.XValue).ToString(format:=s_timeWithMinuteFormat)
+                                If showWhat = CursorInfo.Hide1 Then
+                                    Me.CursorMessage4Label.Text = eventTime
+                                Else
+                                    Me.CursorMessage3Label.Text = eventTime
+                                End If
                                 Me.ShowCursorControls(showWhat, showInfusionSet:=False)
                             Case 3
                                 Me.CursorMessage1Label.Text =
@@ -550,12 +552,9 @@ Public Class Form1
                                     Case "Not used for calibration"
                                         Me.CursorPictureBoxUpdate(imageId:=ImageEnum.CalibrationDot)
                                         Me.CursorMessage2Label.SetFontIfChanged(newFont:=s_font11Bold)
-                                    Case Else
-                                        Stop
                                 End Select
                                 Me.ShowCursorControls(showWhat:=CursorInfo.ShowAll, showInfusionSet:=False)
                             Case Else
-                                Stop
                                 Me.InfusionSetDataRestore()
                         End Select
                     End If
@@ -563,24 +562,32 @@ Public Class Form1
 
                 Case SgSeriesName
                     Me.CursorMessage1Label.Text = "Sensor Glucose"
+                    Dim yValue As Double = currentDataPoint.YValues(0)
                     Me.CursorMessage2Label.Text =
-                        $"{currentDataPoint.YValues(0).RoundToSingle(digits:=3)} {BgUnits}"
+                        $"{yValue.RoundToSingle(digits:=3)} {BgUnits}"
                     Me.CursorMessage3Label.Text =
                         If(NativeMmolL,
-                           $"{CInt(currentDataPoint.YValues(0) * MmolLUnitsDivisor)} mg/dL",
-                           $"{currentDataPoint.YValues(0) / MmolLUnitsDivisor:F1} mmol/L")
+                           $"{CInt(yValue * MmolLUnitsDivisor)} mg/dL",
+                           $"{yValue / MmolLUnitsDivisor:F1} mmol/L")
 
                     Dim format As String = s_timeWithMinuteFormat
-                    Me.CursorMessage4Label.Text = Date.FromOADate(currentDataPoint.XValue).ToString(format)
-                    Me.ShowCursorControls(showWhat:=CursorInfo.ShowAll, showInfusionSet:=False)
+                    Me.CursorMessage4Label.Text =
+                        Date.FromOADate(currentDataPoint.XValue).ToString(format)
+                    Me.ShowCursorControls(showWhat:=CursorInfo.ShowAll,
+                                          showInfusionSet:=False)
                 Case ActiveInsulinSeriesName
-                    chart1.SetupCallout(currentDataPoint, text:=$"Sensor Glucose {Me.CursorMessage2Label.Text}")
+                    chart1.SetupCallout(currentDataPoint,
+                                        text:=$"Sensor Glucose {Me.CursorMessage2Label.Text}")
                 Case SuspendSeriesName, TimeChangeSeriesName
-                    Me.ShowCursorControls(showWhat:=CursorInfo.Show3, showInfusionSet:=False)
+                    Me.ShowCursorControls(showWhat:=CursorInfo.Show3,
+                                          showInfusionSet:=False)
                 Case ActiveInsulinSeriesName
-                    Dim yValue As Single = currentDataPoint.YValues.FirstOrDefault().RoundToSingle(digits:=3)
-                    chart1.SetupCallout(currentDataPoint, text:=$"Theoretical Active Insulin {yValue:F3} U")
-                    Me.ShowCursorControls(showWhat:=CursorInfo.Show3, showInfusionSet:=False)
+                    Dim yValue As Single =
+                        currentDataPoint.YValues.FirstOrDefault().RoundToSingle(digits:=3)
+                    chart1.SetupCallout(currentDataPoint,
+                                        text:=$"Theoretical Active Insulin {yValue:F3} U")
+                    Me.ShowCursorControls(showWhat:=CursorInfo.Show3,
+                                          showInfusionSet:=False)
                 Case Else
                     Stop
             End Select
@@ -2751,7 +2758,7 @@ Public Class Form1
         Encoding.RegisterProvider(provider:=CodePagesEncodingProvider.Instance)
         Me.StatusStripDotNetVersion.Text = RuntimeInformation.FrameworkDescription
         If Not Directory.Exists(path:=GetProjectDataDirectory()) Then
-            Dim lastError As String = $"Can't create required project directories!"
+            Dim lastError As String = $"Can'eventTime create required project directories!"
             Directory.CreateDirectory(path:=GetProjectDataDirectory())
             Directory.CreateDirectory(path:=GetSettingsDirectory())
         End If
@@ -5457,7 +5464,7 @@ Public Class Form1
             Me.SchedulePumpBatteryRefresh(pictureBox:=Me.PumpBatteryPictureBox)
         Else
             ' Read the battery level once and reuse the value below so the
-            ' UI is consistent and we don't reference an uninitialized variable.
+            ' UI is consistent and we don'eventTime reference an uninitialized variable.
             Dim batteryLeftPercent As Integer =
                 PatientData.PumpBatteryLevelPercent
 
@@ -5916,7 +5923,7 @@ Public Class Form1
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
             Else
                 Dim d As Date = PumpNow()
-                Dim msg As String = $"Last Update Time: {d:d} {d:t}"
+                Dim msg As String = $"Last Update Time: {d:d} {d:eventTime}"
                 Me.SetLastUpdateTime(msg, isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)
             End If
             Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showInfusionSet:=True)

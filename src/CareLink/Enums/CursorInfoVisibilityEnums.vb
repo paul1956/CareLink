@@ -10,6 +10,7 @@ Friend Module CursorInfoVisibilityEnums
         Mask3 = &B_100
         Mask4 = &B1000
         Show1 = &B___1
+        Show2 = &B_011
         Show2_3 = &B_110
         Show3 = &B_111
         ShowAll = &B1111
