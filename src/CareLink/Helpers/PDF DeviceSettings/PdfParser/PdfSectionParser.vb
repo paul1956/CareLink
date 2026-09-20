@@ -61,37 +61,58 @@ Public Class PdfSectionParser
         Dim nameDay As String = If(split.Length > 1, split(1), String.Empty)
         Dim nameNight As String = If(split.Length > 2, split(2), String.Empty)
 
-        Dim startTimeDay As String = Me.SafeLineAt(index:=baseIndex + 1).Split(Separator, Options).ElementAtOrDefault(index:=1)
-        Dim startTimeNight As String = Me.SafeLineAt(index:=baseIndex + 1).Split(Separator, Options).ElementAtOrDefault(index:=2)
+        Dim startTimeDay As String =
+            Me.SafeLineAt(index:=baseIndex + 1).Split(Separator, Options).ElementAtOrDefault(index:=1)
+        Dim startTimeNight As String =
+            Me.SafeLineAt(index:=baseIndex + 1).Split(Separator, Options).ElementAtOrDefault(index:=2)
 
-        Dim lowLimitDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 2)).ElementAtOrDefault(index:=1)
-        Dim lowLimitNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 2)).ElementAtOrDefault(index:=2)
+        Dim lowLimitDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 2)).ElementAtOrDefault(index:=1)
+        Dim lowLimitNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 2)).ElementAtOrDefault(index:=2)
 
-        Dim fallLimitDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 3)).ElementAtOrDefault(index:=1)
-        Dim fallLimitNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 3)).ElementAtOrDefault(index:=2)
+        Dim fallLimitDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 3)).ElementAtOrDefault(index:=1)
+        Dim fallLimitNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 3)).ElementAtOrDefault(index:=2)
 
-        Dim alertOnLowDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 4)).ElementAtOrDefault(index:=1)
-        Dim alertOnLowNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 4)).ElementAtOrDefault(index:=2)
+        Dim alertOnLowDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 4)).ElementAtOrDefault(index:=1)
+        Dim alertOnLowNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 4)).ElementAtOrDefault(index:=2)
 
-        Dim alertBeforeLowDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 5)).ElementAtOrDefault(index:=1)
-        Dim alertBeforeLowNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 5)).ElementAtOrDefault(index:=2)
+        Dim alertBeforeLowDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 5)).ElementAtOrDefault(index:=1)
+        Dim alertBeforeLowNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 5)).ElementAtOrDefault(index:=2)
 
-        Dim maxVolumeAtNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 6)).ElementAtOrDefault(index:=2)
+        Dim maxVolumeAtNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 6)).ElementAtOrDefault(index:=2)
 
-        Dim snoozeDurationDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 7)).ElementAtOrDefault(index:=1)
-        Dim snoozeDurationNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 7)).ElementAtOrDefault(index:=2)
+        Dim snoozeDurationDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 7)).ElementAtOrDefault(index:=1)
+        Dim snoozeDurationNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 7)).ElementAtOrDefault(index:=2)
 
-        Dim suspendLimitDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 8)).ElementAtOrDefault(index:=1)
-        Dim suspendLimitNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 8)).ElementAtOrDefault(index:=2)
+        Dim suspendLimitDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 8)).ElementAtOrDefault(index:=1)
+        Dim suspendLimitNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 8)).ElementAtOrDefault(index:=2)
 
-        Dim suspendBeforeLowDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 9)).ElementAtOrDefault(index:=1)
-        Dim suspendBeforeLowNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 9)).ElementAtOrDefault(index:=2)
+        Dim suspendBeforeLowDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 9)).ElementAtOrDefault(index:=1)
+        Dim suspendBeforeLowNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 9)).ElementAtOrDefault(index:=2)
 
-        Dim alertForSuspendBeforeLowDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 10)).ElementAtOrDefault(index:=1)
-        Dim alertForSuspendBeforeLowNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 10)).ElementAtOrDefault(index:=2)
+        Dim alertForSuspendBeforeLowDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 10)).ElementAtOrDefault(index:=1)
+        Dim alertForSuspendBeforeLowNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 10)).ElementAtOrDefault(index:=2)
 
-        Dim suspendOnLowDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 11)).ElementAtOrDefault(index:=1)
-        Dim suspendOnLowNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 11)).ElementAtOrDefault(index:=2)
+        Dim suspendOnLowDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 11)).ElementAtOrDefault(index:=1)
+        Dim suspendOnLowNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 11)).ElementAtOrDefault(index:=2)
 
         Dim itemLow As New LowAlertRecord With {
             .Name = nameDay,
@@ -253,8 +274,12 @@ Public Class PdfSectionParser
         If line = String.Empty Then
             bw.ActiveInsulinTime = 2
         Else
-            extractWord = Me.GetValueForSearchWord(searchWord, endsWith:="h").Replace(oldValue:="(", newValue:="")
-            bw.ActiveInsulinTime = If(extractWord.Contains(value:=":"c), AitLengths(key:=extractWord), ParseSingle(s:=extractWord))
+            extractWord =
+                Me.GetValueForSearchWord(searchWord, endsWith:="h").Replace(oldValue:="(", newValue:="")
+            bw.ActiveInsulinTime =
+                If(extractWord.Contains(value:=":"c),
+                   AitLengths(key:=extractWord),
+                   ParseSingle(s:=extractWord))
         End If
         bw.BolusWizard = "On"
         _record.Bolus.BolusWizard = bw

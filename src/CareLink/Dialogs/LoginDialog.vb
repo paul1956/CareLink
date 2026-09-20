@@ -213,26 +213,43 @@ Public Class LoginDialog
                                 ' Preserve source aspect ratio when drawing flags (flags may be 2:1 or square)
                                 Dim imgHeight As Integer = Math.Max(12, e.Bounds.Height - 6)
                                 Dim imgWidth As Integer = CInt(Math.Round(img.Width * imgHeight / img.Height))
-                                Dim imgRect As New Rectangle(flagX, e.Bounds.Y + ((e.Bounds.Height - imgHeight) \ 2), imgWidth, imgHeight)
-                                ' Draw a contrasting background + border behind the flag to avoid blending with dialog background
-                                Dim bgColor As Color = GetContrastingBackground(Me.CountryComboBox.BackColor)
-                                Dim borderColor As Color = If(IsColorDark(bgColor), Color.White, Color.Black)
-                                Dim innerRect As New Rectangle(imgRect.X + 1, imgRect.Y + 1, Math.Max(1, imgRect.Width - 2), Math.Max(1, imgRect.Height - 2))
-                                Using bgBrush As New SolidBrush(bgColor)
-                                    g.FillRectangle(bgBrush, imgRect)
+                                Dim imgRect As New Rectangle(x:=flagX,
+                                                             y:=e.Bounds.Y + ((e.Bounds.Height - imgHeight) \ 2),
+                                                             width:=imgWidth,
+                                                             height:=imgHeight)
+                                ' Draw a contrasting background + border behind the flag
+                                ' to avoid blending with dialog background
+                                Dim bgColor As Color =
+                                    GetContrastingBackground(controlBack:=Me.CountryComboBox.BackColor)
+                                Dim borderColor As Color =
+                                    If(IsColorDark(c:=bgColor),
+                                                   Color.White,
+                                                   Color.Black)
+                                Dim innerRect As New Rectangle(x:=imgRect.X + 1,
+                                                               y:=imgRect.Y + 1,
+                                                               width:=Math.Max(1, imgRect.Width - 2),
+                                                               height:=Math.Max(1, imgRect.Height - 2))
+                                Using bgBrush As New SolidBrush(color:=bgColor)
+                                    g.FillRectangle(brush:=bgBrush, rect:=imgRect)
                                 End Using
-                                Using borderPen As New Pen(borderColor)
-                                    g.DrawRectangle(borderPen, imgRect)
+                                Using borderPen As New Pen(color:=borderColor)
+                                    g.DrawRectangle(pen:=borderPen, rect:=imgRect)
                                 End Using
                                 ' Improve image scaling quality and draw into inner rect
-                                Dim prevInterp As Drawing2D.InterpolationMode = g.InterpolationMode
-                                Dim prevSmooth As Drawing2D.SmoothingMode = g.SmoothingMode
-                                Dim prevPixel As Drawing2D.PixelOffsetMode = g.PixelOffsetMode
+                                Dim prevInterp As Drawing2D.InterpolationMode =
+                                    g.InterpolationMode
+                                Dim prevSmooth As Drawing2D.SmoothingMode =
+                                    g.SmoothingMode
+                                Dim prevPixel As Drawing2D.PixelOffsetMode =
+                                    g.PixelOffsetMode
                                 Try
-                                    g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
-                                    g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
-                                    g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
-                                    g.DrawImage(img, innerRect)
+                                    g.InterpolationMode =
+                                        Drawing2D.InterpolationMode.HighQualityBicubic
+                                    g.SmoothingMode =
+                                        Drawing2D.SmoothingMode.AntiAlias
+                                    g.PixelOffsetMode =
+                                        Drawing2D.PixelOffsetMode.HighQuality
+                                    g.DrawImage(image:=img, rect:=innerRect)
                                 Finally
                                     g.InterpolationMode = prevInterp
                                     g.SmoothingMode = prevSmooth
@@ -241,11 +258,26 @@ Public Class LoginDialog
                             Else
                                 ' Fallback to text rendering for emoji glyphs
                                 Try
-                                    Dim flagRect As New Rectangle(flagX, y, e.Bounds.Right - flagX, e.Bounds.Height)
-                                    Const flags As TextFormatFlags = TextFormatFlags.Left Or TextFormatFlags.VerticalCenter Or TextFormatFlags.SingleLine
-                                    TextRenderer.DrawText(g, flagText, emojiFont, flagRect, effectiveForeColor, flags)
+                                    Dim flagRect As New Rectangle(x:=flagX,
+                                                                  y,
+                                                                  width:=e.Bounds.Right - flagX,
+                                                                  e.Bounds.Height)
+                                    Const flags As TextFormatFlags =
+                                        TextFormatFlags.Left Or
+                                        TextFormatFlags.VerticalCenter Or
+                                        TextFormatFlags.SingleLine
+                                    TextRenderer.DrawText(dc:=g,
+                                                          text:=flagText,
+                                                          font:=emojiFont,
+                                                          bounds:=flagRect,
+                                                          foreColor:=effectiveForeColor,
+                                                          flags)
                                 Catch
-                                    g.DrawString(s:=flagText, font:=emojiFont, brush:=foreBrush, x:=flagX, y:=y)
+                                    g.DrawString(s:=flagText,
+                                                 font:=emojiFont,
+                                                 brush:=foreBrush,
+                                                 x:=flagX,
+                                                 y)
                                 End Try
                             End If
                         End If
@@ -258,16 +290,27 @@ Public Class LoginDialog
                             ' Preserve source aspect ratio for standalone flag
                             Dim imgHeight2 As Integer = Math.Max(12, e.Bounds.Height - 6)
                             Dim imgWidth2 As Integer = CInt(Math.Round(img2.Width * imgHeight2 / img2.Height))
-                            Dim imgRect2 As New Rectangle(x, e.Bounds.Y + ((e.Bounds.Height - imgHeight2) \ 2), imgWidth2, imgHeight2)
-                            ' Draw a contrasting background + border behind the flag to avoid blending with dialog background
-                            Dim bgColor2 As Color = GetContrastingBackground(Me.CountryComboBox.BackColor)
-                            Dim borderColor2 As Color = If(IsColorDark(bgColor2), Color.White, Color.Black)
-                            Dim innerRect2 As New Rectangle(imgRect2.X + 1, imgRect2.Y + 1, Math.Max(1, imgRect2.Width - 2), Math.Max(1, imgRect2.Height - 2))
-                            Using bgBrush2 As New SolidBrush(bgColor2)
-                                g.FillRectangle(bgBrush2, imgRect2)
+                            Dim imgRect2 As New Rectangle(x,
+                                                          y:=e.Bounds.Y + ((e.Bounds.Height - imgHeight2) \ 2),
+                                                          width:=imgWidth2,
+                                                          height:=imgHeight2)
+                            ' Draw a contrasting background + border behind the flag
+                            ' to avoid blending with dialog background
+                            Dim bgColor2 As Color =
+                                GetContrastingBackground(controlBack:=Me.CountryComboBox.BackColor)
+                            Dim borderColor2 As Color =
+                                If(IsColorDark(bgColor2),
+                                   Color.White,
+                                   Color.Black)
+                            Dim innerRect2 As New Rectangle(x:=imgRect2.X + 1,
+                                                            y:=imgRect2.Y + 1,
+                                                            width:=Math.Max(1, imgRect2.Width - 2),
+                                                            height:=Math.Max(1, imgRect2.Height - 2))
+                            Using bgBrush2 As New SolidBrush(color:=bgColor2)
+                                g.FillRectangle(brush:=bgBrush2, rect:=imgRect2)
                             End Using
-                            Using borderPen2 As New Pen(borderColor2)
-                                g.DrawRectangle(borderPen2, imgRect2)
+                            Using borderPen2 As New Pen(color:=borderColor2)
+                                g.DrawRectangle(pen:=borderPen2, rect:=imgRect2)
                             End Using
                             Dim prevInterp2 As Drawing2D.InterpolationMode = g.InterpolationMode
                             Dim prevSmooth2 As Drawing2D.SmoothingMode = g.SmoothingMode
@@ -276,7 +319,7 @@ Public Class LoginDialog
                                 g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
                                 g.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
                                 g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
-                                g.DrawImage(img2, innerRect2)
+                                g.DrawImage(image:=img2, rect:=innerRect2)
                             Finally
                                 g.InterpolationMode = prevInterp2
                                 g.SmoothingMode = prevSmooth2
@@ -528,7 +571,9 @@ Public Class LoginDialog
                     Try
                         Dim displayName As String = item?.ToString()
                         Dim code As String = Nothing
-                        If Not String.IsNullOrEmpty(value:=displayName) AndAlso s_countryToCodeList.TryGetValue(key:=displayName, value:=code) Then
+                        If Not String.IsNullOrEmpty(value:=displayName) AndAlso
+                            s_countryToCodeList.TryGetValue(key:=displayName, value:=code) Then
+
                             If EqualsNoCase(a:=code, b:=savedCountry) OrElse
                                 EqualsNoCase(a:=displayName, b:=savedCountry) Then
                                 matchedCountryIndex = i
@@ -619,7 +664,12 @@ Public Class LoginDialog
                 Application.DoEvents()
                 Dim territory As String = TryCast(Me.RegionComboBox.SelectedItem, String)
                 Dim serverMapping As String = GetServerMapping(regionName:=territory)
-                Dim serverRegion As ServerLocation = If(serverMapping.EqualsNoCase("US"), ServerLocation.US, If(serverMapping.EqualsNoCase("EU"), ServerLocation.EU, ServerLocation.CLINICAL))
+                Dim serverRegion As ServerLocation =
+                    If(serverMapping.EqualsNoCase("US"),
+                       ServerLocation.US,
+                       If(serverMapping.EqualsNoCase("EU"),
+                          ServerLocation.EU,
+                          ServerLocation.CLINICAL))
                 Await Client2.GetLoginData(serverRegion:=serverRegion,
                                            userName:=s_userName,
                                            password:=s_password,
@@ -846,8 +896,11 @@ Public Class LoginDialog
                             Try
                                 Dim displayName As String = item?.ToString()
                                 Dim code As String = Nothing
-                                If Not String.IsNullOrEmpty(displayName) AndAlso s_countryToCodeList.TryGetValue(displayName, code) Then
-                                    If EqualsNoCase(a:=code, b:=saved) OrElse EqualsNoCase(a:=displayName, b:=saved) Then
+                                If Not String.IsNullOrEmpty(value:=displayName) AndAlso
+                                    s_countryToCodeList.TryGetValue(key:=displayName, value:=code) Then
+                                    If EqualsNoCase(a:=code, b:=saved) OrElse
+                                        EqualsNoCase(a:=displayName, b:=saved) Then
+
                                         desiredPos = i
                                         Exit For
                                     End If

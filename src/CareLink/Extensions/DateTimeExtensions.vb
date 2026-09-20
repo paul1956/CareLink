@@ -234,7 +234,8 @@ Friend Module DateTimeExtensions
     '''  The amount of time to subtract from <paramref name="referenceDate"/> to establish the cutoff threshold.
     ''' </param>
     ''' <returns>
-    '''  True if <paramref name="dateTime"/> is earlier than (<paramref name="referenceDate"/> minus <paramref name="span"/>);
+    '''  True if <paramref name="dateTime"/> is earlier than
+    '''  (<paramref name="referenceDate"/> minus <paramref name="span"/>);
     '''  otherwise, false.
     ''' </returns>
     ''' <example>

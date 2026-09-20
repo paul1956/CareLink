@@ -387,7 +387,10 @@ Friend Module SpeechSupport
             Return
         End If
 
-        If s_lastSpokenMessage = textToSpeak AndAlso Not s_timeOfLastAlert.IsDateOlderThan(Date.Now, ThirtySecondSpan) Then
+        If s_lastSpokenMessage =
+            textToSpeak AndAlso
+            Not s_timeOfLastAlert.IsDateOlderThan(referenceDate:=Date.Now, span:=ThirtySecondSpan) Then
+
             Form1.StatusStripSpeech.Text = $"Rejected: '{textToSpeak}' too soon, Listening"
             s_statusStripSpeechText = textToSpeak
         End If

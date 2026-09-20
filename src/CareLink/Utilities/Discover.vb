@@ -121,7 +121,10 @@ Public Module Discover
     '''  specified server region.
     ''' </returns>
     Friend Async Function GetCachedDiscoveryAsync(serverRegion As ServerLocation) As Task(Of DiscoveryRoot)
-        If s_haveCachedDiscovery AndAlso s_cachedDiscoveryRegion = serverRegion AndAlso s_cachedDiscovery IsNot Nothing Then
+        If s_haveCachedDiscovery AndAlso
+            s_cachedDiscoveryRegion = serverRegion AndAlso
+            s_cachedDiscovery IsNot Nothing Then
+
             Return s_cachedDiscovery
         End If
 
@@ -169,7 +172,9 @@ Public Module Discover
     '''  Thrown if the country code is not supported or if configuration
     '''  data cannot be retrieved.
     ''' </exception>
-    Public Async Function GetConfigAsync(httpClient As HttpClient, country As String, serverRegion As ServerLocation) As Task(Of JsonElement)
+    Public Async Function GetConfigAsync(httpClient As HttpClient,
+                                         country As String,
+                                         serverRegion As ServerLocation) As Task(Of JsonElement)
         Dim json As String =
             Await httpClient.GetStringAsync(requestUri:=GetDiscoverUri(serverRegion)).
                              ConfigureAwaitFalse()

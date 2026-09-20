@@ -10,7 +10,9 @@ Public Module LowAlertsRecordExtensions
         StringSplitOptions.RemoveEmptyEntries
 
     <Extension>
-    Public Sub InitializeFromStringTable(this As LowAlertsRecord, sTable As StringTable, listOfAllTextLines As List(Of String))
+    Public Sub InitializeFromStringTable(this As LowAlertsRecord,
+                                         sTable As StringTable,
+                                         listOfAllTextLines As List(Of String))
         If sTable Is Nothing Then Return
         Try
             Dim snoozeTime As String =

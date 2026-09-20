@@ -470,7 +470,9 @@ Public Module JsonExtensions
     ''' Try to get a string property from a JsonElement safely.
     ''' </summary>
     <Extension>
-    Public Function TryGetStringProperty(element As JsonElement, propertyName As String, ByRef value As String) As Boolean
+    Public Function TryGetStringProperty(element As JsonElement,
+                                         propertyName As String,
+                                         ByRef value As String) As Boolean
         value = Nothing
         If element.IsEmpty Then
             Return False

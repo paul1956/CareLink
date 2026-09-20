@@ -10,7 +10,9 @@ Public Module HighAlertsRecordExtensions
         StringSplitOptions.RemoveEmptyEntries
 
     <Extension>
-    Public Sub InitializeFromStringTable(this As HighAlertsRecord, sTable As StringTable, listOfAllTextLines As List(Of String))
+    Public Sub InitializeFromStringTable(this As HighAlertsRecord,
+                                         sTable As StringTable,
+                                         listOfAllTextLines As List(Of String))
         If sTable Is Nothing Then Return
         Try
             this.HighAlert(index:=0).SnoozeTime = OneHourSpan.ToString

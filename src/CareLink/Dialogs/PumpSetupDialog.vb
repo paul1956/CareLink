@@ -24,7 +24,9 @@ Public Class PumpSetupDialog
             Dim bufferLength As Integer = .Text.Length
             .AppendTextNewFont(text:=$"{Indent4}Time:", newFont:=FixedWidthBoldFont)
             If Me.Pdf.Utilities.AutoSuspend.Alarm = "Off" Then
-                .AppendTextNewFont(text:="12:00 hr".AlignCenter(leftPanel:=True), newFont:=FixedWidthFont, includeNewLine:=True)
+                .AppendTextNewFont(text:="12:00 hr".AlignCenter(leftPanel:=True),
+                                   newFont:=FixedWidthFont,
+                                   includeNewLine:=True)
                 .Select(start:=bufferLength, length:= .Text.Length - bufferLength)
                 .SelectionBackColor = SystemColors.Window
                 .SelectionColor = SystemColors.GrayText
@@ -289,15 +291,14 @@ Public Class PumpSetupDialog
 
                 .AppendNewLine
                 .AppendTextWithSymbol(text:=$"Menu>{Gear}>Device Settings > Easy Bolus")
-                .AppendKeyValue(leftPanel:=False, title:="Easy Bolus:", value:=Me.Pdf.Bolus.EasyBolus.EasyBolus)
-                .AppendKeyValue(leftPanel:=False, title:="Step Size: ", value:=$"{Me.Pdf.Bolus.EasyBolus.BolusIncrement} U")
+                .AppendKeyValue(leftPanel:=False,
+                                title:="Easy Bolus:",
+                                value:=Me.Pdf.Bolus.EasyBolus.EasyBolus)
+                .AppendKeyValue(leftPanel:=False,
+                                title:="Step Size: ",
+                                value:=$"{Me.Pdf.Bolus.EasyBolus.BolusIncrement} U")
                 .AppendNewLine
             End If
-
-            ' Not Flex
-            'Public Property AutoSuspend As New AutoSuspendRecord
-            'Public Property BackLightTimeout As New TimeSpan
-            'Public Property Brightness As String = "Unknown"
 
             .ReadOnly = True
             .SelectionStart = 0

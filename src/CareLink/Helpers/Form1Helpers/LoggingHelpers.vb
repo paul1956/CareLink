@@ -9,7 +9,8 @@ Public Module LoggerManager
 
     ''' <summary>
     '''  Initializes the logger form. If the logger form is not already created
-    '''  or has been disposed, it creates a new instance of LoggerForm. If a debugger is attached, it shows the logger form.
+    '''  or has been disposed, it creates a new instance of LoggerForm.
+    '''  If a debugger is attached, it shows the logger form.
     ''' </summary>
     Public Sub InitLogger(show As Boolean)
         If s_loggerForm Is Nothing OrElse s_loggerForm.IsDisposed Then

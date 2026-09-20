@@ -273,7 +273,8 @@ Friend Module CreateChartItems
                             text:=axisText,
                             labelRow:=0,
                             markStyle:=LabelMarkStyle.None) With {.ForeColor = baseColor})
-                    axisText = secondAxis(index:=i).ToString(GetSgFormat(nativeMmolL:=Not NativeMmolL, withSign:=False), provider)
+                    Dim format As String = GetSgFormat(nativeMmolL:=Not NativeMmolL, withSign:=False)
+                    axisText = secondAxis(index:=i).ToString(format, provider)
                     .CustomLabels.Add(
                         item:=New CustomLabel(
                             fromPosition:=firstAxis(index:=i) - yMin,

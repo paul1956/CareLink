@@ -85,7 +85,10 @@ Public Module RichTextBoxExtensions
 
         If String.IsNullOrEmpty(value:=secondValue) Then
             ' Single value: center it in the entire right area
-            rtb.AppendTextNewFont(text:=value.AlignCenter(totalWidth:=totalRightWidth), newFont:=FixedWidthFont, padRight:=False, includeNewLine:=True)
+            rtb.AppendTextNewFont(text:=value.AlignCenter(totalWidth:=totalRightWidth),
+                                  newFont:=FixedWidthFont,
+                                  padRight:=False,
+                                  includeNewLine:=True)
         Else
             ' Two values: split the right area into two fixed-width columns
             Dim leftHalf As Integer = totalRightWidth \ 2

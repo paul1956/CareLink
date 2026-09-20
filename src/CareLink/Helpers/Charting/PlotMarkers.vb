@@ -252,7 +252,9 @@ Friend Module PlotMarkers
                                                     tag)
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 Dim baseColor As Color
-                                If markerInsulinDictionary.TryAdd(key:=markerOADateTime, value:=CInt(GetInsulinYValue())) Then
+
+                                Dim value As Integer = CInt(GetInsulinYValue())
+                                If markerInsulinDictionary.TryAdd(key:=markerOADateTime, value) Then
                                     Dim yValue As Double = GetInsulinYValue() - If(NativeMmolL, 0.555, 10)
                                     markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue)
                                     markerSeriesPoints.Last.MarkerBorderWidth = 2
@@ -417,7 +419,9 @@ Friend Module PlotMarkers
                                         Continue For
                                     End If
                                 End If
-                                If s_treatmentMarkersInsulin.TryAdd(key:=markerOADateTime, value:=TreatmentInsulinRow) Then
+                                If s_treatmentMarkersInsulin.TryAdd(key:=markerOADateTime,
+                                                                    value:=TreatmentInsulinRow) Then
+
                                     markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=TreatmentInsulinRow)
                                     Dim lastDataPoint As DataPoint = markerSeriesPoints.Last
                                     If Double.IsNaN(GetInsulinYValue()) Then

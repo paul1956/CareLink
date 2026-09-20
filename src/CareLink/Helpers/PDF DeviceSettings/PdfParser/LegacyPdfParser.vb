@@ -309,8 +309,10 @@ Public Module LegacyPdfParser
                     Case itemKey.StartsWith(value:=Sensor24HourEndReminder)
                         tableHeader = Sensor24HourEndReminder
                         sTable = table.PdfTableToStringTable(tableHeader)
-                        record.Sensor.SensorEnding.LessThan24Hours = sTable.GetSingleLineValue(Of String)(Sensor24HourEndReminder)
-                        Dim result As String = sTable.GetSingleLineValue(Of String)(SensorCustimerEndReminder)
+                        record.Sensor.SensorEnding.LessThan24Hours =
+                            sTable.GetSingleLineValue(Of String)(key:=Sensor24HourEndReminder)
+                        Dim result As String =
+                            sTable.GetSingleLineValue(Of String)(key:=SensorCustimerEndReminder)
                         Dim state As String = result.Split(separator:=" "c)(0)
                         record.Sensor.SensorEnding.LessThan2State = state
                         If state = "On" Then

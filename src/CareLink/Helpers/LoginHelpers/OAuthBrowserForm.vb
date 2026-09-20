@@ -16,8 +16,14 @@ Public Class OAuthBrowserForm
     Private Const ComparisonType As StringComparison =
         StringComparison.OrdinalIgnoreCase
 
+    Private Const Options As StringSplitOptions =
+        StringSplitOptions.RemoveEmptyEntries
+
     Private Shared ReadOnly Property Comparer As StringComparer =
             StringComparer.OrdinalIgnoreCase
+
+    Private Shared ReadOnly Property Separator As Char() =
+        New Char() {"&"c}
 
 #End If
 
@@ -55,10 +61,6 @@ Public Class OAuthBrowserForm
         Me.Height = Math.Min(900, Screen.PrimaryScreen.WorkingArea.Height - 100)
     End Sub
 
-    Private Shared ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
-    Private Shared ReadOnly Property Separator As Char() = New Char() {"&"c}
     Public Property Result As RedirectResult
 
     Private Shared Function GetResponseHeaderValue(headers As CoreWebView2HttpResponseHeaders,
@@ -173,8 +175,8 @@ Public Class OAuthBrowserForm
     End Sub
 
     Private Async Sub CoreWebView2_WebResourceResponseReceived(
-                        sender As Object,
-                        e As CoreWebView2WebResourceResponseReceivedEventArgs)
+        sender As Object,
+        e As CoreWebView2WebResourceResponseReceivedEventArgs)
 
         Dim request As CoreWebView2WebResourceRequest = e.Request
         Dim response As CoreWebView2WebResourceResponseView = e.Response
@@ -182,15 +184,16 @@ Public Class OAuthBrowserForm
         Dim responseHeaders As String = HeadersToText(response.Headers)
         Dim logEntry As New StringBuilder()
         Dim contentType As String =
-            GetResponseHeaderValue(response.Headers, name:="Content-Type")
-        logEntry.AppendLine($"URI: {request.Uri}")
-        logEntry.AppendLine($"Method: {request.Method}")
+            GetResponseHeaderValue(response.Headers,
+                                   name:="Content-Type")
+        logEntry.AppendLine(value:=$"URI: {request.Uri}")
+        logEntry.AppendLine(value:=$"Method: {request.Method}")
         logEntry.AppendLine(
             value:=$"Status: {response.StatusCode} {response.ReasonPhrase}")
-        logEntry.AppendLine("Request headers:")
-        logEntry.AppendLine(requestHeaders)
-        logEntry.AppendLine("Response headers:")
-        logEntry.AppendLine(responseHeaders)
+        logEntry.AppendLine(value:="Request headers:")
+        logEntry.AppendLine(value:=requestHeaders)
+        logEntry.AppendLine(value:="Response headers:")
+        logEntry.AppendLine(value:=responseHeaders)
 
         If IsTextResponse(contentType) AndAlso
            ResponseCanHaveBody(response.StatusCode) Then

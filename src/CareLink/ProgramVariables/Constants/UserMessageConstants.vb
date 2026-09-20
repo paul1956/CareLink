@@ -193,9 +193,10 @@ Friend Module UserMessageConstants
         {"2.326", "Reservoir Low(triggeredDateTime), Change reservoir soon."},
         {"2.340", "?(triggeredDateTime), ."},
         {"2.500", "Reservoir Low(triggeredDateTime). (unitsRemaining) units remaining. " &
-                   "Change reservoir?"},
+                  "Change reservoir?"},
         {"2.353", "Bolus not delivered(triggeredDateTime). (alertClearType)!"},
-        {"3.221", "Sensor grace period ending soon(triggeredDateTime), you will need to change your sensor within 12 hours."},
+        {"3.221", "Sensor grace period ending soon(triggeredDateTime), " &
+                  "you will need to change your sensor within 12 hours."},
         {"3.327", "Low reservoir(triggeredDateTime)."},
         {"3.328", "Change Infusion Set(triggeredDateTime)."},
         {"3.329", "Prolonged low sensor glucose?"},
