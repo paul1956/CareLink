@@ -17,7 +17,10 @@ Public Module DgvInitializationExtensions
     ''' <param name="dgv">
     '''  The <see cref="DataGridView"/> to initialize.
     ''' </param>
-    ''' <param name="dock"></param>
+    ''' <param name="dock">
+    '''  The docking style for the <see cref="DataGridView"/>.
+    '''  If not specified , defaults to <see cref="DockStyle.Fill"/>.
+    ''' </param>
     <Extension>
     Friend Sub InitializeDgv(dgv As DataGridView, Optional dock As DockStyle = DockStyle.Fill)
         Dim emSize As Single = If(dgv.Name = NameOf(Form1.DgvBasalPerHour),

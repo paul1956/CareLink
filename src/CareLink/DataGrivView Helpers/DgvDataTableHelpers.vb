@@ -33,7 +33,8 @@ Friend Module DgvDataTableHelpers
             Return
         End If
         dgv.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True
-        Dim headerFont As Font = If(dgv.ColumnHeadersDefaultCellStyle.Font, dgv.Font)
+        Dim headerFont As Font =
+            If(dgv.ColumnHeadersDefaultCellStyle.Font, dgv.Font)
 
         Dim maxWords As Integer = 1
         For Each col As DataGridViewColumn In dgv.Columns
@@ -115,13 +116,7 @@ Friend Module DgvDataTableHelpers
             Dim dgv As DataGridView =
                 TryCast(realPanel.Controls(index), DataGridView)
 
-            If dgv Is Nothing Then
-                Stop
-            Else
-                dgv.InitializeDgv()
-                dgv.AutoSize = True
-            End If
-            dgv.Dock = DockStyle.Fill
+            dgv.InitializeDgv()
             dgv.DataSource = Nothing
             dgv.DataSource = table
             dgv.RowHeadersVisible = False

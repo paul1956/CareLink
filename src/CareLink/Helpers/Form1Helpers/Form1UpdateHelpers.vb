@@ -320,13 +320,15 @@ Friend Module Form1UpdateHelpers
                         End If
                         If childKey = "time" Then
                             Dim result As Date
-                            message = If(childValue.TryParseDate(key:="", result),
-                                         result.ToShortDateTime(showSeconds:=False),
-                                         String.Empty)
+                            message =
+                                If(childValue.TryParseDate(key:="", result),
+                                   result.ToShortDateTime(showSeconds:=False),
+                                   String.Empty)
                         End If
-                        Dim value As String = If(isTitle,
-                                                 childValue?.Trim.ToTitle,
-                                                 childValue)
+                        Dim value As String =
+                            If(isTitle,
+                               childValue?.Trim.ToTitle,
+                               childValue)
 
                         Dim item As New SummaryRecord(
                                 recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
@@ -427,9 +429,10 @@ Friend Module Form1UpdateHelpers
                          New List(Of SG),
                          ToListOfSgs(json:=PatientData.Sgs.ToJson))
 
-        mainForm.MaxBasalPerHourLabel.Text = If(PatientData.Markers.Count > 0,
-                                                CollectMarkers(),
-                                                String.Empty)
+        mainForm.MaxBasalPerHourLabel.Text =
+            If(PatientData.Markers.Count > 0,
+               CollectMarkers(),
+               String.Empty)
 
         s_systemStatusTimeRemaining = Nothing
 
@@ -613,9 +616,10 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case ServerDataEnum.gstBatteryLevel
-                    message = If(kvp.Value = "-1" OrElse kvp.Value = "255",
-                                 "Integrated Transmitter so N/A.",
-                                 $"Transmitter battery is at {kvp.Value}%.")
+                    message =
+                        If(kvp.Value = "-1" OrElse kvp.Value = "255",
+                           "Integrated Transmitter so N/A.",
+                           $"Transmitter battery is at {kvp.Value}%.")
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
@@ -649,9 +653,11 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
 
                 Case ServerDataEnum.isPumpCharging
-                    message = If(Boolean.Parse(kvp.Value),
-                                 $"Pump is charging!",
-                                 $"Pump is not charging!")
+                    Dim pumpCharging As String =
+                        If(Boolean.Parse(kvp.Value),
+                           "is",
+                           "is not")
+                    message = $"Pump {pumpCharging} charging!"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
@@ -673,17 +679,29 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item)
 
                 Case ServerDataEnum.conduitInRange
-                    message = $"Phone {If(PatientData.ConduitInRange, "is", "is not")} in range of pump."
+                    Dim conduitInRange As String =
+                        If(PatientData.ConduitInRange,
+                           "is",
+                           "is not")
+                    message = $"Phone {conduitInRange} in range of pump."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
                 Case ServerDataEnum.conduitMedicalDeviceInRange
-                    message = $"Pump {If(CBool(kvp.Value), "is", "is not")} in range of phone"
+                    Dim pumpInRange As String =
+                        If(CBool(kvp.Value),
+                           "is",
+                           "is not")
+                    message = $"Pump {pumpInRange} in range of phone"
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
                 Case ServerDataEnum.conduitSensorInRange
-                    message = $"Transmitter {If(PatientData.ConduitSensorInRange, "is", "is not")} in range of pump."
+                    Dim transmitterInRange As String =
+                        If(PatientData.ConduitSensorInRange,
+                           "is",
+                           "is not")
+                    message = $"Transmitter {transmitterInRange} in range of pump."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     s_listOfSummaryRecords.Add(item)
 
@@ -753,9 +771,10 @@ Friend Module Form1UpdateHelpers
                 Case ServerDataEnum.basal
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
-                    s_basalList(index:=0) = If(IsNullOrWhiteSpace(kvp.Value),
-                                               New Basal,
-                                               PatientData.Basal)
+                    s_basalList(index:=0) =
+                        If(IsNullOrWhiteSpace(kvp.Value),
+                           New Basal,
+                           PatientData.Basal)
 
                 Case ServerDataEnum.lastSensorTime
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -920,8 +939,12 @@ Friend Module Form1UpdateHelpers
                             Dim minutes As Integer = bannerStateRecord1.TimeRemaining
                             .PumpBannerStateLabel.BackColor = Color.FromArgb(44, 90, 247)
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
-                            Dim target150 As String = If(NativeMmolL, "8.3", "150")
-                            .PumpBannerStateLabel.Text = $"Temp Target {minutes.ToHoursMinutes} hr"
+                            Dim target150 As String =
+                                If(NativeMmolL,
+                                   "8.3",
+                                   "150")
+                            .PumpBannerStateLabel.Text =
+                                $"Temp Target {minutes.ToHoursMinutes} hr"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Top
                         Case "BG_REQUIRED"

@@ -136,7 +136,10 @@ Public Class Form1
             Dim ref As Reflection.AssemblyName =
                 Reflection.Assembly.GetEntryAssembly()?.GetReferencedAssemblies() _
                                             .FirstOrDefault(predicate)
-            Dim expected As String = If(ref IsNot Nothing, ref.Version.ToString(), "(not referenced)")
+            Dim expected As String =
+                If(ref IsNot Nothing,
+                   ref.Version.ToString(),
+                   "(not referenced)")
             Dim localPath As String =
                 Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Microsoft.Web.WebView2.Core.dll")
             Dim actual As String = "(not present)"
@@ -2216,9 +2219,10 @@ Public Class Form1
         Handles DgvLastSensorGlucose.ColumnAdded, DgvSGs.ColumnAdded
 
         With e.Column
-            .AutoSizeMode = If(e.Column.Name = "Message",
-                               DataGridViewAutoSizeColumnMode.Fill,
-                               DataGridViewAutoSizeColumnMode.AllCells)
+            .AutoSizeMode =
+                If(e.Column.Name = "Message",
+                   DataGridViewAutoSizeColumnMode.Fill,
+                   DataGridViewAutoSizeColumnMode.AllCells)
 
             If HideColumn(Of SG)(item:= .Name) Then
                 .Visible = False
@@ -2386,8 +2390,8 @@ Public Class Form1
                 If e.Value IsNot Nothing Then
                     Dim value As String =
                         If(e.Value Is Nothing,
-                        "",
-                        e.Value.ToString)
+                           "",
+                           e.Value.ToString)
 
                     If value.Contains(value:="_"c) Then
                         e.Value = value.ToTitle
@@ -2442,9 +2446,10 @@ Public Class Form1
                         ' Not Clickable - Data Dependent
                         Case ServerDataEnum.appModelNumber,
                              ServerDataEnum.transmitterPairedTime
-                            align = If(eValue.IsNumericInAnyCulture,
-                                       DataGridViewContentAlignment.MiddleRight,
-                                       DataGridViewContentAlignment.MiddleCenter)
+                            align =
+                                If(eValue.IsNumericInAnyCulture,
+                                   DataGridViewContentAlignment.MiddleRight,
+                                   DataGridViewContentAlignment.MiddleCenter)
                             e.CellStyle.SetCellStyle(align, pad:=New Padding(all:=1))
 
                         ' Not Clickable Cells - Right
@@ -2546,9 +2551,10 @@ Public Class Form1
                     Case ServerDataEnum.limits
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage09Limits))
                     Case ServerDataEnum.notificationHistory
-                        .SelectedIndex = If(key = "activeNotification",
-                                            GetTabIndexFromName(tabPageName:=NameOf(TabPage10NotificationActive)),
-                                            GetTabIndexFromName(tabPageName:=NameOf(TabPage11NotificationsCleared)))
+                        .SelectedIndex =
+                            If(key = "activeNotification",
+                               GetTabIndexFromName(tabPageName:=NameOf(TabPage10NotificationActive)),
+                               GetTabIndexFromName(tabPageName:=NameOf(TabPage11NotificationsCleared)))
 
                     Case ServerDataEnum.pumpBannerState
                         .SelectedIndex = GetTabIndexFromName(tabPageName:=NameOf(TabPage12PumpBannerState))
@@ -3966,9 +3972,10 @@ Public Class Form1
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not HideColumn(Of CareLinkUserDataRecord)(c.DataPropertyName)
                 Next
-                Me.TabControlPage2.SelectedIndex = If(_lastMarkerTabLocation.Page = 0,
-                                                      0,
-                                                      _lastMarkerTabLocation.Tab)
+                Me.TabControlPage2.SelectedIndex =
+                    If(_lastMarkerTabLocation.Page = 0,
+                       0,
+                       _lastMarkerTabLocation.Tab)
                 Me.TabControlPage1.Visible = False
                 Exit Sub
         End Select
@@ -4673,10 +4680,11 @@ Public Class Form1
                                 Me.TrendValueLabel.Text = EmptyString
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta:=0)
                             Else
-                                deltaString = If(Math.Abs(value:=delta) < 0.001,
-                                                 "0",
-                                                 delta.ToString(format:=GetSgFormat(NativeMmolL, withSign:=True),
-                                                                provider))
+                                deltaString =
+                                    If(Math.Abs(value:=delta) < 0.001,
+                                       "0",
+                                       delta.ToString(format:=GetSgFormat(NativeMmolL, withSign:=True),
+                                                      provider))
 
                                 Me.TrendValueLabel.Text = deltaString
                                 _sgMiniDisplay.SetCurrentDeltaValue(deltaString, delta)
@@ -5341,9 +5349,10 @@ Public Class Form1
             End If
         End If
 
-        Dim totalPercent As String = If(s_totalDailyDose = 0,
-                                        "???",
-                                        $"{CInt(s_totalBasal / s_totalDailyDose * 100)}")
+        Dim totalPercent As String =
+            If(s_totalDailyDose = 0,
+               "???",
+               $"{CInt(s_totalBasal / s_totalDailyDose * 100)}")
 
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Me.Last24HrBasalUnitsLabel.Text = String.Format(provider, format:=$"{s_totalBasal:F1} U")
@@ -5724,8 +5733,8 @@ Public Class Form1
         Dim averageSgStr As String = PatientData.AverageSG.ToString
         Me.AverageSGValueLabel.Text =
             If(NativeMmolL,
-              (PatientData.AverageSG / 18).RoundToSingle(digits:=2),
-              PatientData.AverageSG).ToString
+               (PatientData.AverageSG / 18).RoundToSingle(digits:=2),
+               PatientData.AverageSG).ToString
 
         Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnits}"
 
