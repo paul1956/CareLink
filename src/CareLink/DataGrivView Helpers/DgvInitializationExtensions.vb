@@ -22,27 +22,32 @@ Public Module DgvInitializationExtensions
     '''  If not specified , defaults to <see cref="DockStyle.Fill"/>.
     ''' </param>
     <Extension>
-    Friend Sub InitializeDgv(dgv As DataGridView, Optional dock As DockStyle = DockStyle.Fill)
-        Dim emSize As Single = If(dgv.Name = NameOf(Form1.DgvBasalPerHour),
-                                  12.0!,
-                                  10.0!)
+    Friend Sub InitializeDgv(dgv As DataGridView,
+                             Optional dock As DockStyle = DockStyle.Fill)
+
+        Dim emSize As Single =
+            If(dgv.Name = NameOf(Form1.DgvBasalPerHour),
+               12.0!,
+               10.0!)
 
         With dgv
             .AllowUserToAddRows = False
             .AllowUserToDeleteRows = False
             .AllowUserToResizeColumns = False
             .AllowUserToResizeRows = False
-            .AlternatingRowsDefaultCellStyle = New DataGridViewCellStyle With {
-                .BackColor = Color.FromArgb(red:=45, green:=45, blue:=45),
-                .ForeColor = Color.White,
-                .SelectionBackColor = Color.FromArgb(red:=51, green:=153, blue:=255),
-                .SelectionForeColor = Color.White}
+            .AlternatingRowsDefaultCellStyle =
+                New DataGridViewCellStyle With {
+                    .BackColor = Color.FromArgb(red:=45, green:=45, blue:=45),
+                    .ForeColor = Color.White,
+                    .SelectionBackColor = Color.FromArgb(red:=51, green:=153, blue:=255),
+                    .SelectionForeColor = Color.White}
             .BorderStyle = BorderStyle.None
-            .ColumnHeadersDefaultCellStyle = New DataGridViewCellStyle With {
-                .Alignment = DataGridViewContentAlignment.MiddleCenter,
-                .BackColor = Color.FromArgb(red:=38, green:=47, blue:=58),
-                .Font = New Font(FamilyName, emSize, style:=FontStyle.Bold),
-                .WrapMode = DataGridViewTriState.True}
+            .ColumnHeadersDefaultCellStyle =
+                New DataGridViewCellStyle With {
+                    .Alignment = DataGridViewContentAlignment.MiddleCenter,
+                    .BackColor = Color.FromArgb(red:=38, green:=47, blue:=58),
+                    .Font = New Font(FamilyName, emSize, style:=FontStyle.Bold),
+                    .WrapMode = DataGridViewTriState.True}
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .DataSource = Nothing
             .Dock = dock
@@ -50,12 +55,13 @@ Public Module DgvInitializationExtensions
             .Padding = New Padding(all:=0)
             .ReadOnly = True
             .Rows.Clear()
-            .RowsDefaultCellStyle = New DataGridViewCellStyle With {
-                .BackColor = Color.FromArgb(red:=180, green:=180, blue:=180),
-                .Font = New Font(FamilyName, emSize, style:=FontStyle.Bold),
-                .ForeColor = Color.Black,
-                .SelectionBackColor = Color.FromArgb(red:=51, green:=153, blue:=255),
-                .SelectionForeColor = Color.White}
+            .RowsDefaultCellStyle =
+                New DataGridViewCellStyle With {
+                    .BackColor = Color.FromArgb(red:=180, green:=180, blue:=180),
+                    .Font = New Font(FamilyName, emSize, style:=FontStyle.Bold),
+                    .ForeColor = Color.Black,
+                    .SelectionBackColor = Color.FromArgb(red:=51, green:=153, blue:=255),
+                    .SelectionForeColor = Color.White}
             .RowTemplate.Height = 24
             .TabIndex = 0
         End With
