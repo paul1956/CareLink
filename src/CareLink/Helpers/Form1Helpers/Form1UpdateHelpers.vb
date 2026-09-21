@@ -739,6 +739,11 @@ Friend Module Form1UpdateHelpers
 
                 Case ServerDataEnum.activeInsulin
                     s_activeInsulin = PatientData.ActiveInsulin
+                    If IsNullOrEmpty(value:=PatientData.ActiveInsulin.DateTimeAsString) Then
+                        s_activeInsulin.DateTimeAsString =
+                            PatientData.ActiveInsulin.DateTime.ToString()
+                    End If
+
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
                     If True Then

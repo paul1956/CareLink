@@ -967,6 +967,10 @@ Public Class Form1
                 Case NameOf(ActiveInsulin.DateTime)
                     dgv.CellFormattingDateTime(e)
 
+                Case NameOf(ActiveInsulin.DateTimeAsString)
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                    dgv.CellFormattingSetForegroundColor(e)
+
                 Case NameOf(ActiveInsulin.Precision)
                     dgv.CellFormattingToTitle(e)
 
@@ -2771,7 +2775,7 @@ Public Class Form1
         Encoding.RegisterProvider(provider:=CodePagesEncodingProvider.Instance)
         Me.StatusStripDotNetVersion.Text = RuntimeInformation.FrameworkDescription
         If Not Directory.Exists(path:=GetProjectDataDirectory()) Then
-            Dim lastError As String = $"Can'eventTime create required project directories!"
+            Dim lastError As String = $"Can't create required project directories!"
             Directory.CreateDirectory(path:=GetProjectDataDirectory())
             Directory.CreateDirectory(path:=GetSettingsDirectory())
         End If
@@ -2887,29 +2891,6 @@ Public Class Form1
         Me.ToolTip2.ShowAlways = False    ' Show only if form is active
 
         Me.SetDgvCustomHeadersVisualStyles()
-
-#Region "Status Strip Colors"
-
-        Me.StatusStrip1.BackColor = Me.MenuStrip1.BackColor
-
-        Me.StripStatusLastUpdateTime.BackColor = Me.MenuStrip1.BackColor
-        Me.StripStatusLastUpdateTime.ForeColor = Me.MenuStrip1.ForeColor
-
-        Me.LoginStatus.BackColor = Me.MenuStrip1.BackColor
-        Me.LoginStatus.ForeColor = Me.MenuStrip1.ForeColor
-
-        Me.StatusStripSpacerRight.BackColor = Me.MenuStrip1.BackColor
-
-        Me.StatusStripSpeech.BackColor = Me.MenuStrip1.BackColor
-        Me.StatusStripSpeech.ForeColor = Me.MenuStrip1.ForeColor
-
-        Me.StripStatusTimeZoneToolLabel.BackColor = Me.MenuStrip1.BackColor
-        Me.StripStatusTimeZoneToolLabel.ForeColor = Me.MenuStrip1.ForeColor
-
-        Me.StatusStripUpdateAvailable.BackColor = Me.MenuStrip1.BackColor
-        Me.StatusStripUpdateAvailable.ForeColor = Color.Red
-
-#End Region ' Status Strip Colors
 
         Me.PositionControlsInPanel()
 
@@ -4425,7 +4406,8 @@ Public Class Form1
             .TitleForeColor = labelColor
         End With
         Me.ActiveInsulinChart.ChartAreas.Add(item:=activeInsulinChartArea)
-        _activeInsulinChartLegend = CreateChartLegend(legendName:=NameOf(_activeInsulinChartLegend))
+        _activeInsulinChartLegend =
+            CreateChartLegend(legendName:=NameOf(_activeInsulinChartLegend))
         Me.ActiveInsulinChartTitle = CreateTitle(
             chartTitle:=$"Running Insulin On Board (IOB)",
             name:=NameOf(ActiveInsulinChartTitle),
@@ -4821,7 +4803,7 @@ Public Class Form1
                         End If
                     End If
             End Select
-            If Debugger.IsAttached Then
+            If Debugger.IsAttached AndAlso Client IsNot Nothing Then
                 Dim message As String = ""
                 Client.IsTokenValid(message, log:=False)
                 title &= $" - {message}"
@@ -5479,7 +5461,7 @@ Public Class Form1
             Me.SchedulePumpBatteryRefresh(pictureBox:=Me.PumpBatteryPictureBox)
         Else
             ' Read the battery level once and reuse the value below so the
-            ' UI is consistent and we don'eventTime reference an uninitialized variable.
+            ' UI is consistent and we don't reference an uninitialized variable.
             Dim batteryLeftPercent As Integer =
                 PatientData.PumpBatteryLevelPercent
 
@@ -5939,7 +5921,7 @@ Public Class Form1
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
             Else
                 Dim d As Date = PumpNow()
-                Dim msg As String = $"Last Update Time: {d:d} {d:eventTime}"
+                Dim msg As String = $"Last Update Time: {d:d} {d:t}"
                 Me.SetLastUpdateTime(msg, isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)
             End If
             Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showInfusionSet:=True)

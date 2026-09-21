@@ -104,10 +104,10 @@ Friend Module DgvDataTableHelpers
     ''' </param>
     <Extension>
     Friend Sub DisplayDataTable(realPanel As TableLayoutPanel,
-                                     table As DataTable,
-                                     className As String,
-                                     rowIndex As ServerDataEnum,
-                                     Optional hideRecordNumberColumn As Boolean = False)
+                                table As DataTable,
+                                className As String,
+                                rowIndex As ServerDataEnum,
+                                Optional hideRecordNumberColumn As Boolean = False)
 
         realPanel.SetTableName(rowIndex, isClearedNotifications:=False)
         If table?.Rows.Count > 0 Then

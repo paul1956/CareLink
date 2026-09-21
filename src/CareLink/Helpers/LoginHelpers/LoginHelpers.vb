@@ -286,20 +286,18 @@ Friend Module LoginHelpers
     '''  otherwise, <see langword="True"/> or <see langword="False"/>.
     ''' </param>
     <Extension>
-    Friend Sub SetLastUpdateTime(
-        form1 As Form1,
-        Optional msg As String = Nothing,
-        Optional suffixMessage As String = EmptyString,
-        Optional highLight As Boolean = False,
-        Optional isDaylightSavingTime? As Boolean = Nothing)
+    Friend Sub SetLastUpdateTime(form1 As Form1,
+                                 Optional msg As String = Nothing,
+                                 Optional suffixMessage As String = EmptyString,
+                                 Optional highLight As Boolean = False,
+                                 Optional isDaylightSavingTime? As Boolean = Nothing)
 
         With form1.StripStatusLastUpdateTime
-            If IsNotNullOrWhiteSpace(msg) Then
+            If IsNotNullOrWhiteSpace(value:=msg) Then
                 .Text = msg
             End If
             If highLight Then
                 .ForeColor = GetGraphLineColor(key:="High Alert")
-
                 .BackColor = .ForeColor.ContrastingColor()
             Else
                 .BackColor = form1.MenuStrip1.BackColor

@@ -28,7 +28,7 @@ Public Class ActiveInsulin
     <JsonPropertyName("datetime")>
     Public Property DateTimeAsString As String
         Get
-            Return If(_dateTimeAsString, String.Empty)
+            Return If(_dateTimeAsString, String.Empty).ToUpperInvariant()
         End Get
         Set
             _dateTimeAsString = Value
