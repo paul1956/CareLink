@@ -29,24 +29,10 @@ Public Class LastSG
     <JsonPropertyName("sensorState")>
     Public Property SensorState As String
 
-    <DisplayName("Timestamp From Pump")>
+    <DisplayName("Timestamp")>
     <Column(Order:=5, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
-
-    <DisplayName("Timestamp As Date")>
-    <Column(Order:=6, TypeName:="Date")>
-    <JsonPropertyName("timestampAsDate")>
-    Public ReadOnly Property Timestamp As Date
-        Get
-            Return Me.TimestampAsString.TryParseDateStr()
-        End Get
-    End Property
-
-    <DisplayName("Is Backfill")>
-    <Column(Order:=5, TypeName:="Boolean")>
-    <JsonPropertyName("isBackfill")>
-    Public Property IsBackfill As Boolean
 
     Public Overrides Function ToString() As String
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture

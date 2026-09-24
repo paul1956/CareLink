@@ -10,7 +10,7 @@ Imports System.Globalization
 '''  formatting, and layout for notification tables.
 ''' </summary>
 Friend Module NotificationHelpers
-    Private ReadOnly s_columnsToHide As New List(Of String)
+    Private ReadOnly s_notificationColumnsToHide As New List(Of String)
 
     Private ReadOnly s_rowsToHide As New List(Of String) From {
         NameOf(ActiveNotification.Version),
@@ -64,57 +64,6 @@ Friend Module NotificationHelpers
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellFormatting"/> event to format notification
-    '''  cell values.
-    ''' </summary>
-    ''' <param name="sender">The event sender.</param>
-    ''' <param name="e">Event arguments containing formatting information.</param>
-    Private Sub DgvNotification_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        ' Ignore header/invalid rows and only handle format the "Message" column
-        If e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then
-            Exit Sub
-        End If
-
-        Dim input As String = e.Value.ToString()
-
-        ' Normalize spacing around colons but preserve any time-like tokens (HH:mm or HH:mm:ss)
-        e.Value = NormalizeColonSpacingPreservingTimes(input)
-        dgv.CellFormattingSetForegroundColor(e)
-
-        If e.ColumnIndex <> dgv.Columns(columnName:="Message").Index Then
-            Exit Sub
-        End If
-        Try
-            ' Safely get the Key cell as a string (handles DBNull/Nothing)
-            Dim keyValue As String =
-                Convert.ToString(dgv.Rows(index:=e.RowIndex).Cells(columnName:="Key").Value)
-            ' Only apply if Key column equals "backgroundColor"
-            If keyValue.EqualsNoCase("backgroundColor") Then
-                Dim colorString As String =
-                    dgv.Rows(index:=e.RowIndex).Cells(columnName:="Value").Value?.ToString()
-
-                ' Validate and parse color string
-                If IsNotNullOrWhiteSpace(value:=colorString) AndAlso
-                    colorString.StartsWithNoCase(value:="0x") Then
-                    Dim argb As Integer
-                    If Integer.TryParse(colorString.AsSpan(start:=2),
-                                         style:=NumberStyles.HexNumber,
-                                         provider:=Nothing,
-                                         result:=argb) Then
-                        ' Convert ARGB integer to Color
-                        Dim c As Color = Color.FromArgb(argb)
-                        e.CellStyle.BackColor = c
-                    End If
-                End If
-            End If
-        Catch ex As Exception
-            MessageBox.Show(text:=$"Error formatting cell: {ex.Message}")
-        End Try
-
-    End Sub
-
-    ''' <summary>
     '''  Handles the <see cref="DataGridView.ColumnAdded"/> event to configure
     '''  column properties for notification tables.
     ''' </summary>
@@ -124,16 +73,14 @@ Friend Module NotificationHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
-            If s_filterJsonData AndAlso s_columnsToHide.Contains(item:= .Name) Then
-                .Visible = False
-            End If
+            ' Notification tables are not filtered by the global JSON filter.
+            ' Do not change visibility here so notification tables remain untouched.
             Dim cellStyle As DataGridViewCellStyle =
                 ClassPropertiesToColumnAlignment(Of SummaryRecord)(alignmentTable:=s_alignmentTable, .Name)
 
-            e.DgvColumnAdded(
-                cellStyle,
-                forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+            Dim caption As String =
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption
+            e.DgvColumnAdded(cellStyle, forceReadOnly:=True, caption)
             If e.Column.Index = 0 Then
                 e.Column.MinimumWidth = 45
                 e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
@@ -245,6 +192,57 @@ Friend Module NotificationHelpers
             column.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         Next
         dgv.DataSource = table
+    End Sub
+
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.CellFormatting"/> event to format notification
+    '''  cell values.
+    ''' </summary>
+    ''' <param name="sender">The event sender.</param>
+    ''' <param name="e">Event arguments containing formatting information.</param>
+    Friend Sub DgvNotification_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs)
+        Dim dgv As DataGridView = CType(sender, DataGridView)
+        ' Ignore header/invalid rows and only handle format the "Message" column
+        If e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then
+            Exit Sub
+        End If
+
+        Dim input As String = e.Value.ToString()
+
+        ' Normalize spacing around colons but preserve any time-like tokens (HH:mm or HH:mm:ss)
+        e.Value = NormalizeColonSpacingPreservingTimes(input)
+        dgv.CellFormattingDefault(e)
+
+        If e.ColumnIndex <> dgv.Columns(columnName:="Message").Index Then
+            Exit Sub
+        End If
+        Try
+            ' Safely get the Key cell as a string (handles DBNull/Nothing)
+            Dim keyValue As String =
+                Convert.ToString(dgv.Rows(index:=e.RowIndex).Cells(columnName:="Key").Value)
+            ' Only apply if Key column equals "backgroundColor"
+            If keyValue.EqualsNoCase("backgroundColor") Then
+                Dim colorString As String =
+                    dgv.Rows(index:=e.RowIndex).Cells(columnName:="Value").Value?.ToString()
+
+                ' Validate and parse color string
+                If IsNotNullOrWhiteSpace(value:=colorString) AndAlso
+                    colorString.StartsWithNoCase(value:="0x") Then
+                    Dim argb As Integer
+                    If Integer.TryParse(colorString.AsSpan(start:=2),
+                                         style:=NumberStyles.HexNumber,
+                                         provider:=Nothing,
+                                         result:=argb) Then
+                        ' Convert ARGB integer to Color
+                        Dim c As Color = Color.FromArgb(argb)
+                        e.CellStyle.BackColor = c
+                    End If
+                End If
+            End If
+        Catch ex As Exception
+            MessageBox.Show(text:=$"Error formatting cell: {ex.Message}")
+        End Try
+
     End Sub
 
     ''' <summary>

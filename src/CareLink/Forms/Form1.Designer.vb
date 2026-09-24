@@ -63,12 +63,12 @@ Partial Class Form1
         DgvCurrentUser = New DataGridView()
         DgvInsulin = New DataGridView()
         DgvLastAlarm = New DataGridView()
-        DgvLastSensorGlucose = New DataGridView()
+        DgvLastSG = New DataGridView()
         DgvLimits = New DataGridView()
         DgvLowGlucoseSuspended = New DataGridView()
         DgvMeal = New DataGridView()
         DgvPumpBannerState = New DataGridView()
-        DgvSensorBgReadings = New DataGridView()
+        DgvBgReadings = New DataGridView()
         DgvSGs = New DataGridView()
         DgvSummary = New DataGridView()
         DgvTherapyAlgorithmState = New DataGridView()
@@ -269,12 +269,12 @@ Partial Class Form1
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvInsulin, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvLastAlarm, ComponentModel.ISupportInitialize).BeginInit()
-        CType(DgvLastSensorGlucose, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvLastSG, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvLimits, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvLowGlucoseSuspended, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvMeal, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvPumpBannerState, ComponentModel.ISupportInitialize).BeginInit()
-        CType(DgvSensorBgReadings, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvBgReadings, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSGs, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvTherapyAlgorithmState, ComponentModel.ISupportInitialize).BeginInit()
@@ -749,15 +749,15 @@ Partial Class Form1
         DgvLastAlarm.Size = New Size(1364, 600)
         DgvLastAlarm.TabIndex = 0
         ' 
-        ' DgvLastSensorGlucose
+        ' DgvLastSG
         ' 
-        DgvLastSensorGlucose.Dock = DockStyle.Fill
-        DgvLastSensorGlucose.Location = New Point(6, 52)
-        DgvLastSensorGlucose.Name = "DgvLastSensorGlucose"
-        DgvLastSensorGlucose.ReadOnly = True
-        DgvLastSensorGlucose.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvLastSensorGlucose.Size = New Size(1364, 600)
-        DgvLastSensorGlucose.TabIndex = 0
+        DgvLastSG.Dock = DockStyle.Fill
+        DgvLastSG.Location = New Point(6, 52)
+        DgvLastSG.Name = "DgvLastSG"
+        DgvLastSG.ReadOnly = True
+        DgvLastSG.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvLastSG.Size = New Size(1364, 600)
+        DgvLastSG.TabIndex = 0
         ' 
         ' DgvLimits
         ' 
@@ -799,15 +799,15 @@ Partial Class Form1
         DgvPumpBannerState.Size = New Size(1364, 600)
         DgvPumpBannerState.TabIndex = 0
         ' 
-        ' DgvSensorBgReadings
+        ' DgvBgReadings
         ' 
-        DgvSensorBgReadings.Dock = DockStyle.Fill
-        DgvSensorBgReadings.Location = New Point(6, 52)
-        DgvSensorBgReadings.Name = "DgvSensorBgReadings"
-        DgvSensorBgReadings.ReadOnly = True
-        DgvSensorBgReadings.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvSensorBgReadings.Size = New Size(1364, 600)
-        DgvSensorBgReadings.TabIndex = 2
+        DgvBgReadings.Dock = DockStyle.Fill
+        DgvBgReadings.Location = New Point(6, 52)
+        DgvBgReadings.Name = "DgvBgReadings"
+        DgvBgReadings.ReadOnly = True
+        DgvBgReadings.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvBgReadings.Size = New Size(1364, 600)
+        DgvBgReadings.TabIndex = 2
         ' 
         ' DgvSGs
         ' 
@@ -2223,7 +2223,7 @@ Partial Class Form1
         TlpLastSG.ColumnCount = 1
         TlpLastSG.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpLastSG.Controls.Add(TlpLastSgTop, 0, 0)
-        TlpLastSG.Controls.Add(DgvLastSensorGlucose, 0, 1)
+        TlpLastSG.Controls.Add(DgvLastSG, 0, 1)
         TlpLastSG.Dock = DockStyle.Fill
         TlpLastSG.Location = New Point(0, 0)
         TlpLastSG.Name = "TlpLastSG"
@@ -2624,7 +2624,7 @@ Partial Class Form1
         TlpBgReadings.ColumnCount = 1
         TlpBgReadings.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
         TlpBgReadings.Controls.Add(TlpBgReadingsTop, 0, 0)
-        TlpBgReadings.Controls.Add(DgvSensorBgReadings, 0, 1)
+        TlpBgReadings.Controls.Add(DgvBgReadings, 0, 1)
         TlpBgReadings.Dock = DockStyle.Fill
         TlpBgReadings.Location = New Point(0, 0)
         TlpBgReadings.Name = "TlpBgReadings"
@@ -2908,7 +2908,7 @@ Partial Class Form1
         TabPage11AllUsers.Name = "TabPage11AllUsers"
         TabPage11AllUsers.Size = New Size(1376, 658)
         TabPage11AllUsers.TabIndex = 11
-        TabPage11AllUsers.Text = "ShowAll Users"
+        TabPage11AllUsers.Text = "Show All Users"
         TabPage11AllUsers.UseVisualStyleBackColor = True
         ' 
         ' TabPage12BackToHomePage
@@ -2974,12 +2974,12 @@ Partial Class Form1
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvInsulin, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvLastAlarm, ComponentModel.ISupportInitialize).EndInit()
-        CType(DgvLastSensorGlucose, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvLastSG, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvLimits, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvLowGlucoseSuspended, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvMeal, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvPumpBannerState, ComponentModel.ISupportInitialize).EndInit()
-        CType(DgvSensorBgReadings, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvBgReadings, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSGs, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvTherapyAlgorithmState, ComponentModel.ISupportInitialize).EndInit()
@@ -3124,12 +3124,12 @@ Partial Class Form1
     Friend WithEvents DgvCurrentUser As DataGridView
     Friend WithEvents DgvInsulin As DataGridView
     Friend WithEvents DgvLastAlarm As DataGridView
-    Friend WithEvents DgvLastSensorGlucose As DataGridView
+    Friend WithEvents DgvLastSG As DataGridView
     Friend WithEvents DgvLimits As DataGridView
     Friend WithEvents DgvLowGlucoseSuspended As DataGridView
     Friend WithEvents DgvMeal As DataGridView
     Friend WithEvents DgvPumpBannerState As DataGridView
-    Friend WithEvents DgvSensorBgReadings As DataGridView
+    Friend WithEvents DgvBgReadings As DataGridView
     Friend WithEvents DgvSGs As DataGridView
     Friend WithEvents DgvSummary As DataGridView
     Friend WithEvents DgvTherapyAlgorithmState As DataGridView

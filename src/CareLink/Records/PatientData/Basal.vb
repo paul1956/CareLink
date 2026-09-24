@@ -39,15 +39,15 @@ Public Class Basal
     <JsonPropertyName("tempBasalType")>
     Public Property TempBasalType As String
 
-    <DisplayName("Preset Temp Name")>
-    <Column(Order:=5, TypeName:=NameOf([String]))>
-    <JsonPropertyName("presetTempName")>
-    Public Property PresetTempName As String
-
     <DisplayName("Temp Basal Duration Remaining")>
-    <Column(Order:=6, TypeName:=NameOf([Int32]))>
+    <Column(Order:=5, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("tempBasalDurationRemaining")>
     Public Property TempBasalDurationRemaining As Integer
+
+    <DisplayName("Preset Temp Name")>
+    <Column(Order:=6, TypeName:=NameOf([String]))>
+    <JsonPropertyName("presetTempName")>
+    Public Property PresetTempName As String
 
     Public Shared Operator <>(left As Basal, right As Basal) As Boolean
         Return Not left = right

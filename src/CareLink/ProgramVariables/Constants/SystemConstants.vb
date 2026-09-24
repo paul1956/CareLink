@@ -67,7 +67,7 @@ Public Module SystemConstants
     Public ReadOnly s_wrappedDataGridView As New List(Of String) From {
         NameOf(Form1.DgvCalibration),
         NameOf(Form1.DgvInsulin),
-        NameOf(Form1.DgvLastSensorGlucose),
+        NameOf(Form1.DgvLastSG),
         NameOf(Form1.DgvSGs)}
 
     Public ReadOnly s_wrappedStrings As New List(Of String) From {
@@ -77,6 +77,7 @@ Public Module SystemConstants
         "Record ",
         "Safe Meal ",
         "Sensor Glucose ",
+        "Temp Basal ",
         "Timestamp ",
         "Unit Value ",
         $"Delivered{NonBreakingSpace}",

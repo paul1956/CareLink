@@ -41,10 +41,11 @@ Public Module PumpVariables
 
     Friend s_activeInsulin As ActiveInsulin
     Friend s_autoModeReadinessState As SummaryRecord
-    Friend s_filterJsonData As Boolean = True
+
+    ' s_filterJsonData removed: column hiding is applied explicitly per-grid
     Friend s_lastAlarmValue As Dictionary(Of String, String)
+
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
-    Friend s_lastSg As SG  ' Do not replace this, it is used in the UI
     Friend s_lastSgValue As Single = 0 ' Do not replace this, it is used in the UI
     Friend s_notificationHistoryValue As Dictionary(Of String, String)
     Friend s_suspendedSince As String = "???"

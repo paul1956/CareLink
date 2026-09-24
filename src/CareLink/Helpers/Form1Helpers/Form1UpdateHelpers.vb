@@ -780,7 +780,6 @@ Friend Module Form1UpdateHelpers
                     s_listOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case ServerDataEnum.lastSG
-                    s_lastSg = New SG(PatientData.LastSG)
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     s_listOfSummaryRecords.Add(item)
 
@@ -877,39 +876,39 @@ Friend Module Form1UpdateHelpers
     ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdateMarkerTabs(mainForm As Form1)
         With mainForm
-            .TlpAutoBasalDelivery.DisplayDataTable(
+            .TlpAutoBasalDelivery.DisplayDataTable(Of AutoBasalDelivery)(
                 table:=ClassCollectionToDataTable(classCollection:=s_autoBasalDeliveryMarkers),
                 className:=NameOf(AutoBasalDelivery), rowIndex:=ServerDataEnum.markers)
 
-            .TlpAutoModeStatus.DisplayDataTable(
+            .TlpAutoModeStatus.DisplayDataTable(Of AutoModeStatus)(
                 table:=ClassCollectionToDataTable(classCollection:=s_autoModeStatusMarkers),
                 className:=NameOf(AutoModeStatus), rowIndex:=ServerDataEnum.markers)
 
-            .TlpBgReadings.DisplayDataTable(
+            .TlpBgReadings.DisplayDataTable(Of BgReading)(
                 table:=ClassCollectionToDataTable(classCollection:=s_bgReadingMarkers),
                 className:=NameOf(BgReading), rowIndex:=ServerDataEnum.markers)
 
-            .TlpInsulin.DisplayDataTable(
+            .TlpInsulin.DisplayDataTable(Of Insulin)(
                 table:=ClassCollectionToDataTable(classCollection:=s_insulinMarkers),
                 className:=NameOf(Insulin), rowIndex:=ServerDataEnum.markers)
 
-            .TlpMeal.DisplayDataTable(
+            .TlpMeal.DisplayDataTable(Of Meal)(
                 table:=ClassCollectionToDataTable(classCollection:=s_mealMarkers),
                 className:=NameOf(Meal), rowIndex:=ServerDataEnum.markers)
 
-            .TlpCalibration.DisplayDataTable(
+            .TlpCalibration.DisplayDataTable(Of Calibration)(
                 table:=ClassCollectionToDataTable(classCollection:=s_calibrationMarkers),
                 className:=NameOf(Calibration), rowIndex:=ServerDataEnum.markers)
 
-            .TlpLowGlucoseSuspended.DisplayDataTable(
+            .TlpLowGlucoseSuspended.DisplayDataTable(Of LowGlucoseSuspended)(
                 table:=ClassCollectionToDataTable(classCollection:=s_suspendedMarkers),
                 className:=NameOf(LowGlucoseSuspended), rowIndex:=ServerDataEnum.markers)
 
-            .TlpTimeChange.DisplayDataTable(
+            .TlpTimeChange.DisplayDataTable(Of TimeChange)(
                 table:=ClassCollectionToDataTable(classCollection:=s_timeChangeMarkers),
                 className:=NameOf(TimeChange), rowIndex:=ServerDataEnum.markers)
 
-            DisplayDataTable(
+            DisplayDataTable(Of BasalPerHour)(
                 realPanel:=Nothing,
                 table:=ClassCollectionToDataTable(classCollection:=s_basalPerHour),
                 dgv:=mainForm.DgvBasalPerHour,
@@ -1013,9 +1012,10 @@ Friend Module Form1UpdateHelpers
         Else
             mainForm.LastSgOrExitTimeLabel.Visible = False
         End If
-        mainForm.TlpPumpBannerState.DisplayDataTable(
-            table:=ClassCollectionToDataTable(classCollection:=listOfBannerState),
-            className:=NameOf(BannerState), rowIndex:=ServerDataEnum.pumpBannerState)
+        mainForm.TlpPumpBannerState.
+            DisplayDataTable(Of BannerState)(
+                table:=ClassCollectionToDataTable(classCollection:=listOfBannerState),
+                className:=NameOf(BannerState), rowIndex:=ServerDataEnum.pumpBannerState)
     End Sub
 
     ''' <summary>

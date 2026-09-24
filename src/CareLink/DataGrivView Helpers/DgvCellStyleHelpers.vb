@@ -6,12 +6,12 @@ Imports System.Globalization
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
 
-Public Module DgvCellStyleHelpers
+Friend Module DgvCellStyleHelpers
 
     Private ReadOnly s_alignmentTable As _
         New Dictionary(Of Type, Dictionary(Of String, DataGridViewCellStyle))
 
-    Private ReadOnly s_columnsToHide As New Dictionary(Of Type, List(Of String)) From {
+    Friend ReadOnly s_columnsToHide As New Dictionary(Of Type, List(Of String)) From {
         {GetType(ActiveInsulin), New List(Of String) From {
             NameOf(ActiveInsulin.Kind),
             NameOf(ActiveInsulin.Version)}},
@@ -19,6 +19,7 @@ Public Module DgvCellStyleHelpers
             NameOf(AutoBasalDelivery.OAdateTime)}},
         {GetType(AutoModeStatus), New List(Of String) From {
             NameOf(AutoModeStatus.Kind),
+            NameOf(AutoModeStatus.RecordNumber),
             NameOf(AutoModeStatus.Type)}},
         {GetType(BannerState), New List(Of String) From {}},
         {GetType(Basal), New List(Of String) From {}},
@@ -32,8 +33,6 @@ Public Module DgvCellStyleHelpers
             NameOf(CareLinkUserDataRecord.ID),
             NameOf(CareLinkUserDataRecord.CareLinkPassword)}},
         {GetType(Insulin), New List(Of String) From {
-            NameOf(Insulin.DisplayTime),
-            NameOf(Insulin.Kind),
             NameOf(Insulin.Kind),
             NameOf(Insulin.OAdateTime),
             NameOf(Insulin.Timestamp),
@@ -41,7 +40,6 @@ Public Module DgvCellStyleHelpers
         {GetType(CurrentUserRecord), New List(Of String) From {}},
         {GetType(LastAlarm), New List(Of String) From {}},
         {GetType(LastSG), New List(Of String) From {
-            "RecordNumber",
             NameOf(LastSG.Kind),
             NameOf(LastSG.Version)}},
         {GetType(Limit), New List(Of String) From {
@@ -96,7 +94,7 @@ Public Module DgvCellStyleHelpers
     Friend Sub CellFormattingApplyBold(e As DataGridViewCellFormattingEventArgs)
         With e.CellStyle
             .Font = New Font(family:= .Font.FontFamily,
-                             emSize:=CSng(10.5),
+                             emSize:=CSng(11.0),
                              style:=FontStyle.Bold)
 
         End With
@@ -151,7 +149,6 @@ Public Module DgvCellStyleHelpers
             Else
                 .ForeColor = textColor
             End If
-            e.CellFormattingApplyBold()
         End With
         e.FormattingApplied = True
     End Sub
@@ -177,7 +174,27 @@ Public Module DgvCellStyleHelpers
                 e.Value = value
             End Try
         End If
-        dgv.CellFormattingSetForegroundColor(e)
+        dgv.CellFormattingDefault(e)
+    End Sub
+
+    ''' <summary>
+    '''  Sets font to default (non-bold) and applies default formatting to the cell.
+    ''' </summary>
+    ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
+    '''  the cell being formatted.
+    ''' </param>
+    <Extension>
+    Friend Sub CellFormattingDefault(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs)
+        Dim col As DataGridViewTextBoxColumn =
+            TryCast(dgv.Columns(index:=e.ColumnIndex), DataGridViewTextBoxColumn)
+        If col IsNot Nothing Then
+            e.Value = $"{e.Value}"
+            e.CellStyle.Font = New Font(prototype:=e.CellStyle.Font,
+                                        newStyle:=FontStyle.Regular)
+            e.FormattingApplied = True
+        End If
     End Sub
 
     ''' <summary>
@@ -195,31 +212,7 @@ Public Module DgvCellStyleHelpers
                                      e As DataGridViewCellFormattingEventArgs,
                                      message As String)
         e.Value = $"{e.Value} {message}"
-        dgv.CellFormattingSetForegroundColor(e)
-    End Sub
-
-    ''' <summary>
-    '''  Sets the foreground <see cref="Color"/> of a cell based on the row's text color.
-    ''' </summary>
-    ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
-    ''' <param name="e">
-    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
-    '''  the cell being formatted.
-    ''' </param>
-    <Extension>
-    Friend Sub CellFormattingSetForegroundColor(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs)
-        Dim col As DataGridViewTextBoxColumn =
-            TryCast(dgv.Columns(index:=e.ColumnIndex), DataGridViewTextBoxColumn)
-        If col IsNot Nothing Then
-            e.Value = $"{e.Value}"
-            Dim argb As Integer = e.CellStyle.ForeColor.ToArgb()
-            If argb <> BlackAsArgb AndAlso argb <> WhiteAsArgb Then
-                e.CellStyle.ForeColor =
-                    dgv.Rows(index:=e.RowIndex).GetTextColor(textColor:=e.CellStyle.ForeColor)
-            End If
-            e.CellStyle.Font = New Font(prototype:=e.CellStyle.Font, newStyle:=FontStyle.Regular)
-            e.FormattingApplied = True
-        End If
+        dgv.CellFormattingDefault(e)
     End Sub
 
     ''' <summary>
@@ -243,47 +236,101 @@ Public Module DgvCellStyleHelpers
             dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
         Else
             Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-            Dim format As String = GetSgFormat(NativeMmolL)
             Select Case sgColumnName
                 Case partialKey
-                    e.Value = sensorValue.ToString(format, provider)
-                    If sensorValue < GetTirLowLimit() Then
-                        dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
-                    ElseIf sensorValue > GetTirHighLimit() Then
-                        dgv.CellFormattingApplyColor(e, textColor:=Color.Yellow)
+                    e.Value = sensorValue.ToString(format:=GetSgFormat(NativeMmolL),
+                                                   provider)
+                    If partialKey = "HighLimit" Then
+                        If sensorValue > GetTirHighLimit() Then
+                            dgv.CellFormattingApplyColor(e, textColor:=Color.Yellow)
+                        Else
+                            dgv.CellFormattingDefault(e)
+                        End If
                     Else
-                        dgv.CellFormattingSetForegroundColor(e)
-                        e.CellFormattingApplyBold()
+                        If sensorValue < GetTirLowLimit() Then
+                            dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
+                        Else
+                            dgv.CellFormattingDefault(e)
+                        End If
                     End If
+                    e.CellFormattingApplyBold()
                 Case $"{partialKey}MgdL"
-                    e.Value = Convert.ToString(e.Value)
-                    If sensorValue < GetTirLowLimit(asMmolL:=False) Then
-                        dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
-                    ElseIf sensorValue > GetTirHighLimit(asMmolL:=False) Then
-                        dgv.CellFormattingApplyColor(e, textColor:=Color.Yellow)
+                    e.Value = sensorValue.ToString(format:=GetSgFormat(nativeMmolL:=False),
+                                                   provider)
+                    If partialKey = "HighLimit" Then
+                        If sensorValue > GetTirHighLimit(asMmolL:=False) Then
+                            dgv.CellFormattingApplyColor(e, textColor:=Color.Yellow)
+                        Else
+                            dgv.CellFormattingDefault(e)
+                        End If
+                    Else
+                        If sensorValue < GetTirLowLimit(asMmolL:=False) Then
+                            dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
+                        Else
+                            dgv.CellFormattingDefault(e)
+                        End If
                     End If
                     If Not NativeMmolL Then
                         e.CellFormattingApplyBold()
                     End If
-                    dgv.CellFormattingSetForegroundColor(e)
                 Case $"{partialKey}MmolL"
-                    e.Value = sensorValue.ToString(format:="F1", provider)
-
-                    Dim tirLowLimit As Single = GetTirLowLimit(asMmolL:=True)
-                    If sensorValue.RoundToSingle(digits:=1) < tirLowLimit Then
-                        dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
-                    ElseIf sensorValue > GetTirHighLimit(asMmolL:=True) Then
-                        dgv.CellFormattingApplyColor(e, textColor:=Color.Yellow)
+                    e.Value = sensorValue.ToString(format:=GetSgFormat(nativeMmolL:=True),
+                                                   provider)
+                    If partialKey = "HighLimit" Then
+                        If sensorValue > GetTirHighLimit(asMmolL:=True) Then
+                            dgv.CellFormattingApplyColor(e, textColor:=Color.Yellow)
+                        Else
+                            dgv.CellFormattingDefault(e)
+                        End If
+                    Else
+                        If sensorValue < GetTirLowLimit(asMmolL:=True) Then
+                            dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
+                        Else
+                            dgv.CellFormattingDefault(e)
+                        End If
                     End If
                     If NativeMmolL Then
                         e.CellFormattingApplyBold()
                     End If
-                    dgv.CellFormattingSetForegroundColor(e)
             End Select
             e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
         End If
         e.FormattingApplied = True
     End Sub
+
+    ''' <summary>
+    '''  Formats the cell value as a single-precision floating point
+    '''  value with the specified number of digits.
+    '''  Also sets the foreground color.
+    ''' </summary>
+    ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
+    '''  the cell being formatted.
+    ''' </param>
+    ''' <param name="digits">The number of decimal digits to display.</param>
+    ''' <returns>The parsed single value.</returns>
+    ''' <param name="TrailingText"></param>
+    <Extension>
+    Friend Function CellFormattingSingleValue(
+        dgv As DataGridView,
+        e As DataGridViewCellFormattingEventArgs,
+        digits As Integer,
+        Optional TrailingText As String = EmptyString) As Single
+
+        Dim amount As Single = ParseSingle(e.Value, digits)
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+        If TrailingText <> EmptyString Then
+            TrailingText = $" {TrailingText}"
+        End If
+        e.Value =
+            $"{amount.ToString(format:=$"F{digits}", provider)}{TrailingText}"
+        dgv.CellFormattingDefault(e)
+        e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+
+        e.FormattingApplied = True
+        Return amount
+    End Function
 
     ''' <summary>
     '''  Formats the cell value to center-align it if it contains
@@ -307,7 +354,7 @@ Public Module DgvCellStyleHelpers
         e.Value = If(e.Value.ToString = "NA",
                      "N/A",
                      e.Value.ToString.ToTitle)
-        dgv.CellFormattingSetForegroundColor(e)
+        dgv.CellFormattingDefault(e)
     End Sub
 
     ''' <summary>
@@ -321,7 +368,7 @@ Public Module DgvCellStyleHelpers
     <Extension>
     Friend Sub CellFormattingToTitle(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs)
         e.Value = Convert.ToString(e.Value).Replace(oldValue:=vbCrLf, newValue:=" ").ToTitle
-        dgv.CellFormattingSetForegroundColor(e)
+        dgv.CellFormattingDefault(e)
     End Sub
 
     ''' <summary>
@@ -343,6 +390,29 @@ Public Module DgvCellStyleHelpers
         End If
         e.FormattingApplied = True
     End Sub
+
+    ''' <summary>
+    '''  Gets the <see cref="DataGridViewCellStyle"/> for a given column name and data type.
+    ''' </summary>
+    ''' <typeparam name="T">
+    '''  The data record type.
+    ''' </typeparam>
+    ''' <param name="name">
+    '''  The name of the column for which to retrieve the cell style.
+    ''' </param>
+    ''' <returns>
+    '''  The <see cref="DataGridViewCellStyle"/> for the specified column.
+    ''' </returns>
+    Friend Function GetCellStyle(Of T As Class)(name As String) As DataGridViewCellStyle
+        Dim key As Type = GetType(T)
+        Dim value As Dictionary(Of String, DataGridViewCellStyle) = Nothing
+
+        If Not s_alignmentTable.TryGetValue(key, value) Then
+            value = New Dictionary(Of String, DataGridViewCellStyle)()
+            s_alignmentTable.Add(key, value)
+        End If
+        Return ClassPropertiesToColumnAlignment(Of T)(alignmentTable:=value, name)
+    End Function
 
     ''' <summary>
     '''  Gets the formatted <see cref="DataGridViewCellStyle"/> for the
@@ -390,8 +460,7 @@ Public Module DgvCellStyleHelpers
     ''' <param name="alignment">The desired align for the column.</param>
     Friend Function HideColumn(Of T)(item As String) As Boolean
         Dim key As Type = GetType(T)
-        Return s_filterJsonData AndAlso
-               IsNotNullOrWhiteSpace(value:=item) AndAlso
+        Return IsNotNullOrWhiteSpace(value:=item) AndAlso
                s_columnsToHide.ContainsKey(key) AndAlso
                s_columnsToHide(key).Contains(item)
     End Function
@@ -421,7 +490,7 @@ Public Module DgvCellStyleHelpers
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the column.</param>
     ''' <param name="columnName">The name of the column to check.</param>
     ''' <param name="value">The value to compare against each cell in the column.</param>
-    Friend Sub HideUnneededColumns(ByRef dgv As DataGridView, columnName As String, value As String)
+    Friend Sub HideUnneededColumns(ByRef dgv As DataGridView, columnName As String, valueList As List(Of String))
         Dim isColumnNeeded As Boolean = False
         Dim column As DataGridViewColumn = dgv.Columns(columnName)
 
@@ -430,9 +499,8 @@ Public Module DgvCellStyleHelpers
             ' Skip checking new rows (if AllowUserToAddRows is True)
             If Not row.IsNewRow Then
                 Dim cellValue As Object = row.Cells(column.Index).Value
-
-                ' If the cell has value different then string then the column is needed
-                If cellValue IsNot Nothing AndAlso cellValue.ToString <> value Then
+                ' If the cell has value different then valueList then the column is needed
+                If cellValue IsNot Nothing AndAlso Not valueList.Contains(item:=cellValue.ToString) Then
                     isColumnNeeded = True
                     Exit For
                 End If
@@ -465,70 +533,12 @@ Public Module DgvCellStyleHelpers
     ''' </param>
     ''' <param name="pad">The <see cref="Padding"/> to set.</param>
     <Extension>
-    Friend Sub SetCellStyle(
-        cellStyle As DataGridViewCellStyle,
-        align As DataGridViewContentAlignment,
-        pad As Padding)
+    Friend Sub SetCellStyle(cellStyle As DataGridViewCellStyle,
+                            align As DataGridViewContentAlignment,
+                            pad As Padding)
 
         cellStyle.Alignment = align
         cellStyle.Padding = pad
     End Sub
-
-    ''' <summary>
-    '''  Formats the cell value as a single-precision floating point
-    '''  value with the specified number of digits.
-    '''  Also sets the foreground color.
-    ''' </summary>
-    ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
-    ''' <param name="e">
-    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
-    '''  the cell being formatted.
-    ''' </param>
-    ''' <param name="digits">The number of decimal digits to display.</param>
-    ''' <returns>The parsed single value.</returns>
-    ''' <param name="TrailingText"></param>
-    <Extension>
-    Public Function CellFormattingSingleValue(
-        dgv As DataGridView,
-        e As DataGridViewCellFormattingEventArgs,
-        digits As Integer,
-        Optional TrailingText As String = EmptyString) As Single
-
-        Dim amount As Single = ParseSingle(e.Value, digits)
-        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        If TrailingText <> EmptyString Then
-            TrailingText = $" {TrailingText}"
-        End If
-        e.Value =
-            $"{amount.ToString(format:=$"F{digits}", provider)}{TrailingText}"
-        dgv.CellFormattingSetForegroundColor(e)
-        e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-
-        e.FormattingApplied = True
-        Return amount
-    End Function
-
-    ''' <summary>
-    '''  Gets the <see cref="DataGridViewCellStyle"/> for a given column name and data type.
-    ''' </summary>
-    ''' <typeparam name="T">
-    '''  The data record type.
-    ''' </typeparam>
-    ''' <param name="name">
-    '''  The name of the column for which to retrieve the cell style.
-    ''' </param>
-    ''' <returns>
-    '''  The <see cref="DataGridViewCellStyle"/> for the specified column.
-    ''' </returns>
-    Public Function GetCellStyle(Of T As Class)(name As String) As DataGridViewCellStyle
-        Dim key As Type = GetType(T)
-        Dim value As Dictionary(Of String, DataGridViewCellStyle) = Nothing
-
-        If Not s_alignmentTable.TryGetValue(key, value) Then
-            value = New Dictionary(Of String, DataGridViewCellStyle)()
-            s_alignmentTable(key) = value
-        End If
-        Return ClassPropertiesToColumnAlignment(Of T)(alignmentTable:=value, name)
-    End Function
 
 End Module

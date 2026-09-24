@@ -31,14 +31,32 @@ Friend Module DgvColumnEventArgsExtensions
     '''  the default header text is used.
     ''' </param>
     <Extension>
-    Public Sub DgvColumnAdded(
-        e As DataGridViewColumnEventArgs,
-        cellStyle As DataGridViewCellStyle,
-        forceReadOnly As Boolean,
-        caption As String)
+    Public Sub DgvColumnAdded(e As DataGridViewColumnEventArgs,
+                              cellStyle As DataGridViewCellStyle,
+                              forceReadOnly As Boolean,
+                              caption As String)
 
         With e.Column
-            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            ' If the owning grid is already using Fill at the grid level, leave
+            ' the column AutoSizeMode as NotSet so the grid-level Fill behavior
+            ' and any post-bind conversion can control per-column sizing.
+            If .DataGridView IsNot Nothing Then
+                ' Preserve explicit behavior for DgvBasalPerHour: do not alter its
+                ' per-column sizing — leave as AllCells so this grid remains unchanged.
+                If .DataGridView.Name = NameOf(Form1.DgvBasalPerHour) Then
+                    .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                ElseIf .DataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill Then
+                    ' Grid-level Fill: let post-bind conversion control per-column sizing
+                    .AutoSizeMode =
+                        DataGridViewAutoSizeColumnMode.NotSet
+                Else
+                    .AutoSizeMode =
+                        DataGridViewAutoSizeColumnMode.AllCells
+                End If
+            Else
+                .AutoSizeMode =
+                    DataGridViewAutoSizeColumnMode.AllCells
+            End If
             .ReadOnly = forceReadOnly OrElse .DataPropertyName = "ID"
             .Resizable = DataGridViewTriState.False
             Dim title As New StringBuilder

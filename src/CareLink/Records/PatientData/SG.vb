@@ -15,21 +15,6 @@ Public Class SG
     Public Sub New()
     End Sub
 
-    Public Sub New(lastSg As LastSG)
-        Me.IsBackfill = lastSg.IsBackfill
-        Me.Kind = lastSg.Kind
-        Me.RecordNumber = 0
-        _sensorState = lastSg.SensorState
-        _sg = If(lastSg.Sg.IsSgValid,
-                 If(NativeMmolL,
-                    lastSg.Sg / MmolLUnitsDivisor,
-                    lastSg.Sg),
-                 Single.NaN)
-        Me.TimeChange = False
-        Me.TimestampAsString = lastSg.TimestampAsString
-        Me.Version = lastSg.Version
-    End Sub
-
     Public Sub New(json As Dictionary(Of String, String), index As Integer)
         Try
             Dim value1 As String = json(key:=NameOf(Sg))

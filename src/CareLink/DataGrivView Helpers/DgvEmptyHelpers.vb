@@ -30,12 +30,18 @@ Friend Module DgvEmptyHelpers
                 .RowHeadersVisible = False}
             realPanel.Controls.Add(control:=dgv, column:=0, row:=1)
         Else
-            If dgv.DataSource IsNot Nothing Then
-                dgv.DataSource = Nothing
-            Else
-                dgv.Rows.Clear()
+            ' Avoid calling Rows.Clear() directly while we may be in a restricted
+            ' event handler (e.g., TabControl.Selecting). Clear the DataSource
+            ' and then clear columns. If clearing columns is not allowed in the
+            ' current context, defer the operation using BeginInvoke so it runs
+            ' after the event handler completes.
+            dgv.DataSource = Nothing
+            Try
                 dgv.Columns.Clear()
-            End If
+            Catch ex As InvalidOperationException
+                ' Defer clearing columns to avoid InvalidOperationException
+                dgv.BeginInvoke(New MethodInvoker(Sub() dgv.Columns.Clear()))
+            End Try
         End If
         dgv.BorderStyle = BorderStyle.None
         dgv.Margin = New Padding(all:=0)

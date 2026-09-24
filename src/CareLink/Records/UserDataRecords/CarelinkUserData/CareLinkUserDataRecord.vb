@@ -43,19 +43,20 @@ Partial Public Class CareLinkUserDataRecord
     ''' <param name="parent">The parent <see cref="CareLinkUserDataList"/>.</param>
     ''' <param name="headerRow">The header row of the CSV file.</param>
     ''' <param name="currentRow">The current data row from the CSV file.</param>
-    Public Sub New(
-        parent As CareLinkUserDataList,
-        headerRow As String(),
-        currentRow As String())
+    Public Sub New(parent As CareLinkUserDataList,
+                   headerRow As String(),
+                   currentRow As String())
 
         _userData = New CareLinkUserData With {
-            ._iD = parent.Count
-        }
+            ._iD = parent.Count}
+
         For Each e As IndexClass(Of String) In currentRow.WithIndex
             Dim value As String = If(e.Value, EmptyString)
-            Me.UpdateValue(headerRow(e.Index), value)
+            Me.UpdateValue(key:=headerRow(e.Index), value)
         Next
     End Sub
+
+    Public Property Parent As CareLinkUserDataList
 
 #If True Then
 
@@ -153,8 +154,6 @@ Partial Public Class CareLinkUserDataRecord
 
 #End If
 
-    Public Property Parent As CareLinkUserDataList
-
     ''' <summary>
     '''  Notifies the parent list that the user data has changed, unless in a transaction.
     ''' </summary>
@@ -224,6 +223,31 @@ Partial Public Class CareLinkUserDataRecord
 
 #Region "Implements IEditableObject"
 
+    ''' <summary>
+    '''   Performs a hash step calculation to combine the current
+    '''   hash with a new value's hash.
+    ''' </summary>
+    ''' <param name="currentHash">The current hash value.</param>
+    ''' <param name="valueHash">The hash value of the new value to combine.</param>
+    ''' <returns>The combined hash value.</returns>
+    Private Shared Function HashStep(currentHash As Integer, valueHash As Integer) As Integer
+        Dim result As Long = (CLng(currentHash) * 23L) + CLng(valueHash)
+
+        'Reduce to the equivalent signed Int32 value without an overflowing conversion.
+        result = result Mod &H100000000L
+
+        If result > Integer.MaxValue Then
+            result -= &H100000000L
+        ElseIf result < Integer.MinValue Then
+            result += &H100000000L
+        End If
+
+        Return CInt(result)
+    End Function
+
+    ''' <summary>
+    '''  Begins an edit transaction by backing up the current user data.
+    ''' </summary>
     Public Sub BeginEdit() Implements IEditableObject.BeginEdit
         LogMessage(message:=$"Start EndEdit{_userData._iD}{_userData._careLinkUserName}")
         If Not _inTxn Then
@@ -235,6 +259,9 @@ Partial Public Class CareLinkUserDataRecord
         End If
     End Sub
 
+    ''' <summary>
+    '''  Cancels the current edit transaction, restoring the backed-up user data.
+    ''' </summary>
     Public Sub CancelEdit() Implements IEditableObject.CancelEdit
         LogMessage(message:="Start CancelEdit")
         If _inTxn Then
@@ -245,6 +272,9 @@ Partial Public Class CareLinkUserDataRecord
         LogMessage(message:="End CancelEdit")
     End Sub
 
+    ''' <summary>
+    '''  Ends the current edit transaction, committing the changes.
+    ''' </summary>
     Public Sub EndEdit() Implements IEditableObject.EndEdit
         LogMessage(message:=$"Start EndEdit{_userData._iD}{_userData._careLinkUserName}")
         If _inTxn Then
@@ -256,6 +286,14 @@ Partial Public Class CareLinkUserDataRecord
         LogMessage(message:="End EndEdit")
     End Sub
 
+    ''' <summary>
+    '''  Determines whether the specified object is equal to the current user data record.
+    ''' </summary>
+    ''' <param name="obj">The object to compare with the current record.</param>
+    ''' <returns>
+    '''  True if the specified object is equal;
+    '''  otherwise, false.
+    ''' </returns>
     Public Overrides Function Equals(obj As Object) As Boolean
         Dim record As CareLinkUserDataRecord = TryCast(obj, CareLinkUserDataRecord)
         Return record IsNot Nothing AndAlso
@@ -269,8 +307,27 @@ Partial Public Class CareLinkUserDataRecord
                Me.CareLinkPatientUserID = record.CareLinkPatientUserID
     End Function
 
+    ''' <summary>
+    '''  Returns a hash code for the current user data record.
+    ''' </summary>
+    ''' <returns>A hash code for the current record.</returns>
     Public Overrides Function GetHashCode() As Integer
-        Throw New NotImplementedException()
+        Dim h As Integer = 17
+
+        h = HashStep(currentHash:=h, valueHash:=Me.ID)
+        h = HashStep(currentHash:=h, valueHash:=If(Me.CareLinkUserName, String.Empty).GetHashCode())
+        h = HashStep(currentHash:=h, valueHash:=If(Me.CareLinkPassword, String.Empty).GetHashCode())
+        h = HashStep(currentHash:=h, valueHash:=If(Me.CountryCode, String.Empty).GetHashCode())
+        h = HashStep(currentHash:=h, valueHash:=Me.UseLocalTimeZone.GetHashCode())
+        h = HashStep(currentHash:=h, valueHash:=Me.AutoLogin.GetHashCode())
+        h = HashStep(currentHash:=h, valueHash:=Me.CareLinkPartner.GetHashCode())
+        h = HashStep(currentHash:=h, valueHash:=If(Me.CareLinkPatientUserID, String.Empty).GetHashCode())
+
+        If Me.Parent IsNot Nothing Then
+            h = HashStep(currentHash:=h, valueHash:=Me.Parent.GetHashCode())
+        End If
+
+        Return h
     End Function
 
 #End Region ' Implements IEditableObject
