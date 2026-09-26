@@ -188,7 +188,9 @@ Friend Module UserMessageConstants
         {"1.200", "Change Infusion Set(triggeredDateTime)."},
         {"1.050", "Unknown(triggeredDateTime) 1.050"},
         {"1.205", "No SG values (> 30 minutes)(triggeredDateTime), (alertClearType)"},
-        {"2.210", "Blood glucose not accepted(triggeredDateTime). Wait at least a 15 minutes before trying again."},
+        {"2.209", "Check blood glucose with meter(triggeredDateTime)," &
+                  "Sensor glucose not available until a BG is accepted."},
+        {"2.210", "blood glucose not accepted(triggeredDateTime). Wait at least a 15 minutes before trying again."},
         {"2.253", "Bolus not delivered (alertClearType)"},
         {"2.326", "Reservoir Low(triggeredDateTime), Change reservoir soon."},
         {"2.340", "?(triggeredDateTime), ."},

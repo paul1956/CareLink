@@ -39,25 +39,20 @@ Partial Class Form1
         BelowLowLimitValueLabel = New Label()
         CalibrationDueImage = New PictureBox()
         CalibrationShieldPanel = New Panel()
-        LastSgOrExitTimeLabel = New Label()
-        PumpBannerStateLabel = New Label()
-        ShieldUnitsLabel = New Label()
-        CurrentSgLabel = New Label()
-        SensorMessageLabel = New Label()
-        SmartGuardShieldPictureBox = New PictureBox()
         CareLinkUserDataRecordBindingSource = New BindingSource(components)
+        CurrentSgLabel = New Label()
+        CursorMarkerPictureBox = New PictureBox()
         CursorMessage1Label = New Label()
         CursorMessage2Label = New Label()
         CursorMessage3Label = New Label()
         CursorMessage4Label = New Label()
-        CursorMarkerPictureBox = New PictureBox()
-        InfustionSetPictureBox = New PictureBox()
         CursorTimer = New Timer(components)
         DgvActiveInsulin = New DataGridView()
         DgvAutoBasalDelivery = New DataGridView()
         DgvAutoModeStatus = New DataGridView()
         DgvBasal = New DataGridView()
         DgvBasalPerHour = New DataGridView()
+        DgvBgReadings = New DataGridView()
         DgvCalibration = New DataGridView()
         DgvCareLinkUsers = New DataGridView()
         DgvCurrentUser = New DataGridView()
@@ -68,7 +63,6 @@ Partial Class Form1
         DgvLowGlucoseSuspended = New DataGridView()
         DgvMeal = New DataGridView()
         DgvPumpBannerState = New DataGridView()
-        DgvBgReadings = New DataGridView()
         DgvSGs = New DataGridView()
         DgvSummary = New DataGridView()
         DgvTherapyAlgorithmState = New DataGridView()
@@ -76,6 +70,7 @@ Partial Class Form1
         FullNameLabel = New Label()
         GraphLast24HoursLabel = New Label()
         HighTirComplianceLabel = New Label()
+        InfustionSetPictureBox = New PictureBox()
         InsulinLevelPictureBox = New PictureBox()
         InsulinTypeLabel = New Label()
         Last24HrAutoCorrectionLabel = New Label()
@@ -93,58 +88,53 @@ Partial Class Form1
         Last24HrTotalInsulinLabel = New Label()
         Last24HrTotalInsulinUnitsLabel = New Label()
         Last24HrTotalsPanel = New Panel()
+        LastSgOrExitTimeLabel = New Label()
         LoginStatus = New ToolStripStatusLabel()
         LowTirComplianceLabel = New Label()
         MaxBasalPerHourLabel = New Label()
         MenuHelp = New ToolStripMenuItem()
-        MenuHelpShowControlPositions = New ToolStripMenuItem()
-        MenuHelpShowLogger = New ToolStripMenuItem()
-        MenuHelpReportAnIssue = New ToolStripMenuItem()
-        MenuHelpCheckForUpdates = New ToolStripMenuItem()
         MenuHelpAbout = New ToolStripMenuItem()
+        MenuHelpCheckForUpdates = New ToolStripMenuItem()
+        MenuHelpReportAnIssue = New ToolStripMenuItem()
+        MenuHelpShowControlPositions = New ToolStripMenuItem()
         MenuOptions = New ToolStripMenuItem()
-        MenuOptionsAudioAlerts = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognitionEnabled = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognitionDisabled = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognitionConfidence = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition95 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition90 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition85 = New ToolStripMenuItem()
-        MenuOptionsSpeechRecognition80 = New ToolStripMenuItem()
-        MenuOptionsShowChartLegends = New ToolStripMenuItem()
-        MenuOptionsSpeechHelpShown = New ToolStripMenuItem()
-        ToolStripSeparator1 = New ToolStripSeparator()
-        MenuOptionsAutoLogin = New ToolStripMenuItem()
-        ToolStripSeparator2 = New ToolStripSeparator()
         MenuOptionsAdvancedOptions = New ToolStripMenuItem()
-        MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
-        MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
-        ToolStripSeparator3 = New ToolStripSeparator()
+        MenuOptionsAudioAlerts = New ToolStripMenuItem()
+        MenuOptionsAutoLogin = New ToolStripMenuItem()
         MenuOptionsColorPicker = New ToolStripMenuItem()
         MenuOptionsConfigureTiTR = New ToolStripMenuItem()
         MenuOptionsEditPumpSettings = New ToolStripMenuItem()
+        MenuOptionsFilterRawJSONData = New ToolStripMenuItem()
+        MenuOptionsSpeechHelpShown = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition80 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition85 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition90 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognition95 = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognitionConfidence = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognitionDisabled = New ToolStripMenuItem()
+        MenuOptionsSpeechRecognitionEnabled = New ToolStripMenuItem()
+        MenuOptionsUseLocalTimeZone = New ToolStripMenuItem()
         MenuShowMiniDisplay = New ToolStripMenuItem()
         MenuStartCleanUpObsoleteFiles = New ToolStripMenuItem()
         MenuStartExit = New ToolStripMenuItem()
         MenuStartHere = New ToolStripMenuItem()
-        MenuStartUserLogin = New ToolStripMenuItem()
-        ToolStripSeparator4 = New ToolStripSeparator()
-        MenuStartManuallyImportDeviceSettings = New ToolStripMenuItem()
-        MenuStartShowPumpSetup = New ToolStripMenuItem()
-        ToolStripSeparator5 = New ToolStripSeparator()
         MenuStartLoadDataFile = New ToolStripMenuItem()
         MenuStartLoadExceptionReport = New ToolStripMenuItem()
-        ToolStripSeparator6 = New ToolStripSeparator()
-        MenuStartShowRawJsonData = New ToolStripMenuItem()
-        MenuStartUseLastFile = New ToolStripMenuItem()
-        MenuStartUseTestData = New ToolStripMenuItem()
-        ToolStripSeparator7 = New ToolStripSeparator()
+        MenuStartManuallyImportDeviceSettings = New ToolStripMenuItem()
         MenuStartSaveSnapshot = New ToolStripMenuItem()
-        ToolStripSeparator8 = New ToolStripSeparator()
+        MenuStartUseLastFile = New ToolStripMenuItem()
+        MenuStartUserLogin = New ToolStripMenuItem()
+        MenuStartUseTestData = New ToolStripMenuItem()
         MenuStrip1 = New MenuStrip()
+        MenuView = New ToolStripMenuItem()
+        MenuViewPumpSetup = New ToolStripMenuItem()
+        MenuViewRawJsonData = New ToolStripMenuItem()
+        MenuViewShowChartLegends = New ToolStripMenuItem()
+        MenuViewShowLogger = New ToolStripMenuItem()
         ModelLabel = New Label()
         NotifyIcon1 = New NotifyIcon(components)
         PumpAITLabel = New Label()
+        PumpBannerStateLabel = New Label()
         PumpBatteryPictureBox = New PictureBox()
         PumpBatteryRemaining1Label = New Label()
         PumpBatteryRemaining2Label = New Label()
@@ -152,118 +142,129 @@ Partial Class Form1
         ReadingsLabel = New Label()
         RemainingInsulinUnits = New Label()
         SensorDaysLeftLabel = New Label()
+        SensorMessageLabel = New Label()
         SensorTimeLeftLabel = New Label()
         SensorTimeLeftPanel = New Panel()
         SensorTimeLeftPictureBox = New PictureBox()
         SerialNumberButton = New Button()
         ServerUpdateTimer = New Timer(components)
-        TrendSgLabel = New Label()
+        ShieldUnitsLabel = New Label()
         SmartGuardLabel = New Label()
+        SmartGuardShieldPictureBox = New PictureBox()
         SplitContainer1 = New SplitContainer()
-        TempUseAdvanceAITDecayCheckBox = New CheckBox()
         SplitContainer2 = New SplitContainer()
-        TrendValueLabel = New Label()
-        TrendArrowsLabel = New Label()
-        TransmitterBatteryPercentLabel = New Label()
-        TransmitterBatteryPictureBox = New PictureBox()
         SplitContainer3 = New SplitContainer()
-        TirHeaderLabel = New Label()
-        TirChartLabel = New Label()
-        TirSummaryPercentCharLabel = New Label()
-        TirValueLabel = New Label()
-        TiTRValueLabel = New Label()
-        TirMsgLabel = New Label()
-        TirComplianceLabel = New Label()
-        TiTRMgsLabel = New Label()
-        TiTRMgsLabel2 = New Label()
         SplitContainerNotificationsCleared = New SplitContainer()
-        TlpNotificationsClearedTop = New TableLayoutPanelTopEx()
-        TlpNotificationsCleared = New TableLayoutPanel()
         StatusStrip1 = New StatusStrip()
+        StatusStripDotNetVersion = New ToolStripStatusLabel()
+        StatusStripSpacerRight = New ToolStripStatusLabel()
         StatusStripSpeech = New ToolStripStatusLabel()
+        StatusStripUpdateAvailable = New ToolStripStatusLabel()
         StripStatusLastUpdateTime = New ToolStripStatusLabel()
         StripStatusTimeZoneToolLabel = New ToolStripStatusLabel()
-        StatusStripSpacerRight = New ToolStripStatusLabel()
-        StatusStripDotNetVersion = New ToolStripStatusLabel()
-        StatusStripUpdateAvailable = New ToolStripStatusLabel()
         TabControlPage1 = New TabControl()
-        TabPage01HomePage = New TabPage()
-        TabPage02RunningIOB = New TabPage()
-        TabPage03TreatmentDetails = New TabPage()
-        TabPage04SummaryData = New TabPage()
-        TabPage05ActiveInsulin = New TabPage()
-        TlpActiveInsulin = New TableLayoutPanel()
-        TlpActiveInsulinTop = New TableLayoutPanelTopEx()
-        TabPage06Basal = New TabPage()
-        TlpBasal = New TableLayoutPanel()
-        TlpBasalTop = New TableLayoutPanelTopEx()
-        TabPage07LastAlarm = New TabPage()
-        TlpLastAlarm = New TableLayoutPanel()
-        TlpLastAlarmTop = New TableLayoutPanelTopEx()
-        TabPage08LastSG = New TabPage()
-        TlpLastSG = New TableLayoutPanel()
-        TlpLastSgTop = New TableLayoutPanelTopEx()
-        TabPage09Limits = New TabPage()
-        TlpLimits = New TableLayoutPanel()
-        TlpLimitsTop = New TableLayoutPanelTopEx()
-        TabPage10NotificationActive = New TabPage()
-        TlpNotificationActive = New TableLayoutPanel()
-        TlpNotificationActiveTop = New TableLayoutPanelTopEx()
-        TabPage11NotificationsCleared = New TabPage()
-        TabPage12PumpBannerState = New TabPage()
-        TlpPumpBannerState = New TableLayoutPanel()
-        TlpPumpBannerStateTop = New TableLayoutPanelTopEx()
-        TabPage13SensorGlucose = New TabPage()
-        TlpSgs = New TableLayoutPanel()
-        TlpSgsTop = New TableLayoutPanelTopEx()
-        TabPage14TherapyAlgorithmState = New TabPage()
-        TlpTherapyAlgorithmState = New TableLayoutPanel()
-        TlpTherapyAlgorithmStateTop = New TableLayoutPanelTopEx()
-        TabPage15More = New TabPage()
         TabControlPage2 = New TabControl()
         TabPage01AutoBasalDelivery = New TabPage()
-        TlpAutoBasalDelivery = New TableLayoutPanel()
-        TlpAutoBasalDeliveryTop = New TableLayoutPanelTopEx()
+        TabPage01HomePage = New TabPage()
         TabPage02AutoModeStatus = New TabPage()
-        TlpAutoModeStatus = New TableLayoutPanel()
-        TlpAutoModeStatusTop = New TableLayoutPanelTopEx()
+        TabPage02RunningIOB = New TabPage()
         TabPage03BgReadings = New TabPage()
-        TlpBgReadings = New TableLayoutPanel()
-        TlpBgReadingsTop = New TableLayoutPanelTopEx()
+        TabPage03TreatmentDetails = New TabPage()
         TabPage04Calibration = New TabPage()
-        TlpCalibration = New TableLayoutPanel()
-        TlpCalibrationTop = New TableLayoutPanelTopEx()
+        TabPage04SummaryData = New TabPage()
+        TabPage05ActiveInsulin = New TabPage()
         TabPage05Insulin = New TabPage()
-        TlpInsulin = New TableLayoutPanel()
-        TlpInsulinTop = New TableLayoutPanelTopEx()
+        TabPage06Basal = New TabPage()
         TabPage06LowGlucoseSuspended = New TabPage()
-        TlpLowGlucoseSuspended = New TableLayoutPanel()
-        TlpLowGlucoseSuspendedTop = New TableLayoutPanelTopEx()
+        TabPage07LastAlarm = New TabPage()
         TabPage07Meal = New TabPage()
-        TlpMeal = New TableLayoutPanel()
-        TlpMealTop = New TableLayoutPanelTopEx()
+        TabPage08LastSG = New TabPage()
         TabPage08TimeChange = New TabPage()
-        TlpTimeChange = New TableLayoutPanel()
-        TlpTimeChangeTop = New TableLayoutPanelTopEx()
         TabPage09BasalPerHour = New TabPage()
+        TabPage09Limits = New TabPage()
         TabPage10CurrentUser = New TabPage()
+        TabPage10NotificationActive = New TabPage()
         TabPage11AllUsers = New TabPage()
+        TabPage11NotificationsCleared = New TabPage()
         TabPage12BackToHomePage = New TabPage()
+        TabPage12PumpBannerState = New TabPage()
+        TabPage13SensorGlucose = New TabPage()
+        TabPage14TherapyAlgorithmState = New TabPage()
+        TabPage15More = New TabPage()
+        TempUseAdvanceAITDecayCheckBox = New CheckBox()
         TimeChangeLabel = New Label()
         TimeInTightRangeLabel = New Label()
+        TirChartLabel = New Label()
+        TirComplianceLabel = New Label()
+        TirHeaderLabel = New Label()
+        TirMsgLabel = New Label()
+        TirSummaryPercentCharLabel = New Label()
+        TirValueLabel = New Label()
+        TiTRMgsLabel = New Label()
+        TiTRMgsLabel2 = New Label()
+        TiTRValueLabel = New Label()
+        TlpActiveInsulin = New TableLayoutPanel()
+        TlpActiveInsulinTop = New TableLayoutPanelTopEx()
+        TlpAutoBasalDelivery = New TableLayoutPanel()
+        TlpAutoBasalDeliveryTop = New TableLayoutPanelTopEx()
+        TlpAutoModeStatus = New TableLayoutPanel()
+        TlpAutoModeStatusTop = New TableLayoutPanelTopEx()
+        TlpBasal = New TableLayoutPanel()
+        TlpBasalTop = New TableLayoutPanelTopEx()
+        TlpBgReadings = New TableLayoutPanel()
+        TlpBgReadingsTop = New TableLayoutPanelTopEx()
+        TlpCalibration = New TableLayoutPanel()
+        TlpCalibrationTop = New TableLayoutPanelTopEx()
+        TlpInsulin = New TableLayoutPanel()
+        TlpInsulinTop = New TableLayoutPanelTopEx()
+        TlpLastAlarm = New TableLayoutPanel()
+        TlpLastAlarmTop = New TableLayoutPanelTopEx()
+        TlpLastSG = New TableLayoutPanel()
+        TlpLastSgTop = New TableLayoutPanelTopEx()
+        TlpLimits = New TableLayoutPanel()
+        TlpLimitsTop = New TableLayoutPanelTopEx()
+        TlpLowGlucoseSuspended = New TableLayoutPanel()
+        TlpLowGlucoseSuspendedTop = New TableLayoutPanelTopEx()
+        TlpMeal = New TableLayoutPanel()
+        TlpMealTop = New TableLayoutPanelTopEx()
+        TlpNotificationActive = New TableLayoutPanel()
+        TlpNotificationActiveTop = New TableLayoutPanelTopEx()
+        TlpNotificationsCleared = New TableLayoutPanel()
+        TlpNotificationsClearedTop = New TableLayoutPanelTopEx()
+        TlpPumpBannerState = New TableLayoutPanel()
+        TlpPumpBannerStateTop = New TableLayoutPanelTopEx()
+        TlpSgs = New TableLayoutPanel()
+        TlpSgsTop = New TableLayoutPanelTopEx()
+        TlpTherapyAlgorithmState = New TableLayoutPanel()
+        TlpTherapyAlgorithmStateTop = New TableLayoutPanelTopEx()
+        TlpTimeChange = New TableLayoutPanel()
+        TlpTimeChangeTop = New TableLayoutPanelTopEx()
+        ToolStripSeparator1 = New ToolStripSeparator()
+        ToolStripSeparator2 = New ToolStripSeparator()
+        ToolStripSeparator3 = New ToolStripSeparator()
+        ToolStripSeparator4 = New ToolStripSeparator()
+        ToolStripSeparator5 = New ToolStripSeparator()
+        ToolStripSeparator6 = New ToolStripSeparator()
+        ToolStripSeparator7 = New ToolStripSeparator()
+        ToolStripSeparator8 = New ToolStripSeparator()
         ToolTip1 = New ToolTip(components)
         ToolTip2 = New ToolTip(components)
+        TransmitterBatteryPercentLabel = New Label()
+        TransmitterBatteryPictureBox = New PictureBox()
+        TrendArrowsLabel = New Label()
+        TrendSgLabel = New Label()
+        TrendValueLabel = New Label()
         CType(CalibrationDueImage, ComponentModel.ISupportInitialize).BeginInit()
         CalibrationShieldPanel.SuspendLayout()
         CType(SmartGuardShieldPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(CareLinkUserDataRecordBindingSource, ComponentModel.ISupportInitialize).BeginInit()
         CType(CursorMarkerPictureBox, ComponentModel.ISupportInitialize).BeginInit()
-        CType(InfustionSetPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvActiveInsulin, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvAutoModeStatus, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvBasal, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvBasalPerHour, ComponentModel.ISupportInitialize).BeginInit()
+        CType(DgvBgReadings, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvCalibration, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvCareLinkUsers, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).BeginInit()
@@ -274,11 +275,11 @@ Partial Class Form1
         CType(DgvLowGlucoseSuspended, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvMeal, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvPumpBannerState, ComponentModel.ISupportInitialize).BeginInit()
-        CType(DgvBgReadings, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSGs, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvTherapyAlgorithmState, ComponentModel.ISupportInitialize).BeginInit()
         CType(DgvTimeChange, ComponentModel.ISupportInitialize).BeginInit()
+        CType(InfustionSetPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).BeginInit()
         MenuStrip1.SuspendLayout()
         CType(PumpBatteryPictureBox, ComponentModel.ISupportInitialize).BeginInit()
@@ -559,6 +560,16 @@ Partial Class Form1
         ' 
         CareLinkUserDataRecordBindingSource.DataSource = GetType(CareLinkUserDataRecord)
         ' 
+        ' CursorMarkerPictureBox
+        ' 
+        CursorMarkerPictureBox.BackColor = Color.Transparent
+        CursorMarkerPictureBox.Location = New Point(350, 3)
+        CursorMarkerPictureBox.Name = "CursorMarkerPictureBox"
+        CursorMarkerPictureBox.Size = New Size(24, 24)
+        CursorMarkerPictureBox.TabIndex = 75
+        CursorMarkerPictureBox.TabStop = False
+        CursorMarkerPictureBox.Visible = False
+        ' 
         ' CursorMessage1Label
         ' 
         CursorMessage1Label.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
@@ -603,26 +614,6 @@ Partial Class Form1
         CursorMessage4Label.TabIndex = 41
         CursorMessage4Label.Text = "Left"
         CursorMessage4Label.TextAlign = ContentAlignment.MiddleCenter
-        ' 
-        ' CursorMarkerPictureBox
-        ' 
-        CursorMarkerPictureBox.BackColor = Color.Transparent
-        CursorMarkerPictureBox.Location = New Point(350, 3)
-        CursorMarkerPictureBox.Name = "CursorMarkerPictureBox"
-        CursorMarkerPictureBox.Size = New Size(24, 24)
-        CursorMarkerPictureBox.TabIndex = 75
-        CursorMarkerPictureBox.TabStop = False
-        CursorMarkerPictureBox.Visible = False
-        ' 
-        ' InfustionSetPictureBox
-        ' 
-        InfustionSetPictureBox.InitialImage = Nothing
-        InfustionSetPictureBox.Location = New Point(350, 3)
-        InfustionSetPictureBox.Name = "InfustionSetPictureBox"
-        InfustionSetPictureBox.Size = New Size(46, 53)
-        InfustionSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
-        InfustionSetPictureBox.TabIndex = 42
-        InfustionSetPictureBox.TabStop = False
         ' 
         ' CursorTimer
         ' 
@@ -679,6 +670,16 @@ Partial Class Form1
         DgvBasalPerHour.SelectionMode = DataGridViewSelectionMode.CellSelect
         DgvBasalPerHour.Size = New Size(1376, 658)
         DgvBasalPerHour.TabIndex = 0
+        ' 
+        ' DgvBgReadings
+        ' 
+        DgvBgReadings.Dock = DockStyle.Fill
+        DgvBgReadings.Location = New Point(6, 52)
+        DgvBgReadings.Name = "DgvBgReadings"
+        DgvBgReadings.ReadOnly = True
+        DgvBgReadings.SelectionMode = DataGridViewSelectionMode.CellSelect
+        DgvBgReadings.Size = New Size(1364, 600)
+        DgvBgReadings.TabIndex = 2
         ' 
         ' DgvCalibration
         ' 
@@ -799,16 +800,6 @@ Partial Class Form1
         DgvPumpBannerState.Size = New Size(1364, 600)
         DgvPumpBannerState.TabIndex = 0
         ' 
-        ' DgvBgReadings
-        ' 
-        DgvBgReadings.Dock = DockStyle.Fill
-        DgvBgReadings.Location = New Point(6, 52)
-        DgvBgReadings.Name = "DgvBgReadings"
-        DgvBgReadings.ReadOnly = True
-        DgvBgReadings.SelectionMode = DataGridViewSelectionMode.CellSelect
-        DgvBgReadings.Size = New Size(1364, 600)
-        DgvBgReadings.TabIndex = 2
-        ' 
         ' DgvSGs
         ' 
         DgvSGs.Dock = DockStyle.Fill
@@ -868,7 +859,7 @@ Partial Class Form1
         GraphLast24HoursLabel.AutoSize = True
         GraphLast24HoursLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         GraphLast24HoursLabel.ForeColor = Color.Gray
-        GraphLast24HoursLabel.Location = New Point(1354, 22)
+        GraphLast24HoursLabel.Location = New Point(1558, 22)
         GraphLast24HoursLabel.Name = "GraphLast24HoursLabel"
         GraphLast24HoursLabel.Size = New Size(109, 21)
         GraphLast24HoursLabel.TabIndex = 34
@@ -886,6 +877,16 @@ Partial Class Form1
         HighTirComplianceLabel.TabIndex = 37
         HighTirComplianceLabel.Text = "High" & vbCrLf & "Excellent²"
         HighTirComplianceLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
+        ' InfustionSetPictureBox
+        ' 
+        InfustionSetPictureBox.InitialImage = Nothing
+        InfustionSetPictureBox.Location = New Point(350, 3)
+        InfustionSetPictureBox.Name = "InfustionSetPictureBox"
+        InfustionSetPictureBox.Size = New Size(46, 53)
+        InfustionSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
+        InfustionSetPictureBox.TabIndex = 42
+        InfustionSetPictureBox.TabStop = False
         ' 
         ' InsulinLevelPictureBox
         ' 
@@ -1108,7 +1109,7 @@ Partial Class Form1
         ' 
         ' MenuHelp
         ' 
-        MenuHelp.DropDownItems.AddRange(New ToolStripItem() {MenuHelpShowControlPositions, MenuHelpShowLogger, MenuHelpReportAnIssue, MenuHelpCheckForUpdates, MenuHelpAbout})
+        MenuHelp.DropDownItems.AddRange(New ToolStripItem() {MenuHelpShowControlPositions, MenuHelpReportAnIssue, MenuHelpCheckForUpdates, MenuHelpAbout})
         MenuHelp.Name = "MenuHelp"
         MenuHelp.ShortcutKeys = Keys.Alt Or Keys.H
         MenuHelp.Size = New Size(44, 20)
@@ -1121,11 +1122,11 @@ Partial Class Form1
         MenuHelpShowControlPositions.Size = New Size(197, 22)
         MenuHelpShowControlPositions.Text = "Show Control Positions"
         ' 
-        ' MenuHelpShowLogger
+        ' MenuViewShowLogger
         ' 
-        MenuHelpShowLogger.Name = "MenuHelpShowLogger"
-        MenuHelpShowLogger.Size = New Size(197, 22)
-        MenuHelpShowLogger.Text = "Show Logger"
+        MenuViewShowLogger.Name = "MenuViewShowLogger"
+        MenuViewShowLogger.Size = New Size(197, 22)
+        MenuViewShowLogger.Text = "Show Logger"
         ' 
         ' MenuHelpReportAnIssue
         ' 
@@ -1149,7 +1150,7 @@ Partial Class Form1
         ' 
         ' MenuOptions
         ' 
-        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsAudioAlerts, MenuOptionsSpeechRecognitionEnabled, MenuOptionsShowChartLegends, MenuOptionsSpeechHelpShown, ToolStripSeparator1, MenuOptionsAutoLogin, ToolStripSeparator2, MenuOptionsAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator3, MenuOptionsColorPicker, MenuOptionsConfigureTiTR, MenuOptionsEditPumpSettings})
+        MenuOptions.DropDownItems.AddRange(New ToolStripItem() {MenuOptionsAudioAlerts, MenuOptionsSpeechRecognitionEnabled, MenuOptionsSpeechHelpShown, ToolStripSeparator1, MenuOptionsAutoLogin, ToolStripSeparator2, MenuOptionsAdvancedOptions, MenuOptionsFilterRawJSONData, MenuOptionsUseLocalTimeZone, ToolStripSeparator3, MenuOptionsColorPicker, MenuOptionsConfigureTiTR, MenuOptionsEditPumpSettings})
         MenuOptions.Name = "MenuOptions"
         MenuOptions.Size = New Size(61, 20)
         MenuOptions.Text = "Options"
@@ -1217,14 +1218,14 @@ Partial Class Form1
         MenuOptionsSpeechRecognition80.Size = New Size(135, 22)
         MenuOptionsSpeechRecognition80.Text = "80%"
         ' 
-        ' MenuOptionsShowChartLegends
+        ' MenuViewShowChartLegends
         ' 
-        MenuOptionsShowChartLegends.Checked = True
-        MenuOptionsShowChartLegends.CheckOnClick = True
-        MenuOptionsShowChartLegends.CheckState = CheckState.Checked
-        MenuOptionsShowChartLegends.Name = "MenuOptionsShowChartLegends"
-        MenuOptionsShowChartLegends.Size = New Size(186, 22)
-        MenuOptionsShowChartLegends.Text = "Show Chart Legends"
+        MenuViewShowChartLegends.Checked = True
+        MenuViewShowChartLegends.CheckOnClick = True
+        MenuViewShowChartLegends.CheckState = CheckState.Checked
+        MenuViewShowChartLegends.Name = "MenuViewShowChartLegends"
+        MenuViewShowChartLegends.Size = New Size(186, 22)
+        MenuViewShowChartLegends.Text = "Show Chart Legends"
         ' 
         ' MenuOptionsSpeechHelpShown
         ' 
@@ -1330,7 +1331,7 @@ Partial Class Form1
         ' 
         ' MenuStartHere
         ' 
-        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartUserLogin, ToolStripSeparator4, MenuStartManuallyImportDeviceSettings, MenuStartShowPumpSetup, ToolStripSeparator5, MenuStartLoadDataFile, MenuStartLoadExceptionReport, ToolStripSeparator6, MenuStartShowRawJsonData, MenuStartUseLastFile, MenuStartUseTestData, ToolStripSeparator7, MenuStartSaveSnapshot, MenuStartCleanUpObsoleteFiles, ToolStripSeparator8, MenuStartExit})
+        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartUserLogin, ToolStripSeparator4, MenuStartManuallyImportDeviceSettings, ToolStripSeparator5, MenuStartLoadDataFile, MenuStartLoadExceptionReport, ToolStripSeparator6, MenuStartUseLastFile, MenuStartUseTestData, ToolStripSeparator7, MenuStartSaveSnapshot, MenuStartCleanUpObsoleteFiles, ToolStripSeparator8, MenuStartExit})
         MenuStartHere.Name = "MenuStartHere"
         MenuStartHere.Size = New Size(71, 20)
         MenuStartHere.Text = "Start Here"
@@ -1351,13 +1352,6 @@ Partial Class Form1
         MenuStartManuallyImportDeviceSettings.Name = "MenuStartManuallyImportDeviceSettings"
         MenuStartManuallyImportDeviceSettings.Size = New Size(245, 22)
         MenuStartManuallyImportDeviceSettings.Text = "Manually Import Device Settings"
-        ' 
-        ' MenuStartShowPumpSetup
-        ' 
-        MenuStartShowPumpSetup.Enabled = False
-        MenuStartShowPumpSetup.Name = "MenuStartShowPumpSetup"
-        MenuStartShowPumpSetup.Size = New Size(245, 22)
-        MenuStartShowPumpSetup.Text = "Show Pump Setup"
         ' 
         ' ToolStripSeparator5
         ' 
@@ -1380,12 +1374,6 @@ Partial Class Form1
         ' 
         ToolStripSeparator6.Name = "ToolStripSeparator6"
         ToolStripSeparator6.Size = New Size(242, 6)
-        ' 
-        ' MenuStartShowRawJsonData
-        ' 
-        MenuStartShowRawJsonData.Name = "MenuStartShowRawJsonData"
-        MenuStartShowRawJsonData.Size = New Size(245, 22)
-        MenuStartShowRawJsonData.Text = "Show Raw Json Data"
         ' 
         ' MenuStartUseLastFile
         ' 
@@ -1418,12 +1406,32 @@ Partial Class Form1
         ' 
         ' MenuStrip1
         ' 
-        MenuStrip1.Items.AddRange(New ToolStripItem() {MenuStartHere, MenuOptions, MenuHelp, MenuShowMiniDisplay})
+        MenuStrip1.Items.AddRange(New ToolStripItem() {MenuStartHere, MenuView, MenuOptions, MenuHelp, MenuShowMiniDisplay})
         MenuStrip1.Location = New Point(0, 0)
         MenuStrip1.Name = "MenuStrip1"
         MenuStrip1.Size = New Size(1384, 24)
         MenuStrip1.TabIndex = 0
         MenuStrip1.Text = "MenuStrip1"
+        ' 
+        ' MenuView
+        ' 
+        MenuView.DropDownItems.AddRange(New ToolStripItem() {MenuViewRawJsonData, MenuViewShowLogger, MenuViewPumpSetup, MenuViewShowChartLegends})
+        MenuView.Name = "MenuView"
+        MenuView.Size = New Size(44, 20)
+        MenuView.Text = "View"
+        ' 
+        ' MenuViewPumpSetup
+        ' 
+        MenuViewPumpSetup.Enabled = False
+        MenuViewPumpSetup.Name = "MenuViewPumpSetup"
+        MenuViewPumpSetup.Size = New Size(180, 22)
+        MenuViewPumpSetup.Text = "Pump Setup"
+        ' 
+        ' MenuViewRawJsonData
+        ' 
+        MenuViewRawJsonData.Name = "MenuViewRawJsonData"
+        MenuViewRawJsonData.Size = New Size(180, 22)
+        MenuViewRawJsonData.Text = "Raw Json Data"
         ' 
         ' ModelLabel
         ' 
@@ -1577,18 +1585,6 @@ Partial Class Form1
         ' 
         ServerUpdateTimer.Interval = 300000
         ' 
-        ' TrendSgLabel
-        ' 
-        TrendSgLabel.BackColor = Color.Black
-        TrendSgLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
-        TrendSgLabel.ForeColor = Color.LightGray
-        TrendSgLabel.Location = New Point(461, 67)
-        TrendSgLabel.Name = "TrendSgLabel"
-        TrendSgLabel.Size = New Size(84, 21)
-        TrendSgLabel.TabIndex = 61
-        TrendSgLabel.Text = "SG Trend"
-        TrendSgLabel.TextAlign = ContentAlignment.MiddleCenter
-        ' 
         ' SmartGuardLabel
         ' 
         SmartGuardLabel.Anchor = AnchorStyles.Top
@@ -1596,7 +1592,7 @@ Partial Class Form1
         SmartGuardLabel.BackColor = Color.Transparent
         SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
         SmartGuardLabel.ForeColor = Color.DodgerBlue
-        SmartGuardLabel.Location = New Point(1388, 421)
+        SmartGuardLabel.Location = New Point(1592, 421)
         SmartGuardLabel.Name = "SmartGuardLabel"
         SmartGuardLabel.Size = New Size(176, 25)
         SmartGuardLabel.TabIndex = 35
@@ -1714,6 +1710,18 @@ Partial Class Form1
         TrendArrowsLabel.Text = "↑↔↓"
         TrendArrowsLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
+        ' TrendSgLabel
+        ' 
+        TrendSgLabel.BackColor = Color.Black
+        TrendSgLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
+        TrendSgLabel.ForeColor = Color.LightGray
+        TrendSgLabel.Location = New Point(461, 67)
+        TrendSgLabel.Name = "TrendSgLabel"
+        TrendSgLabel.Size = New Size(84, 21)
+        TrendSgLabel.TabIndex = 61
+        TrendSgLabel.Text = "SG Trend"
+        TrendSgLabel.TextAlign = ContentAlignment.MiddleCenter
+        ' 
         ' TransmitterBatteryPercentLabel
         ' 
         TransmitterBatteryPercentLabel.AutoSize = True
@@ -1778,7 +1786,7 @@ Partial Class Form1
         TirHeaderLabel.AutoSize = True
         TirHeaderLabel.Font = New Font("Segoe UI", 14.0F, FontStyle.Bold)
         TirHeaderLabel.ForeColor = Color.Gray
-        TirHeaderLabel.Location = New Point(1407, 0)
+        TirHeaderLabel.Location = New Point(1611, 0)
         TirHeaderLabel.Name = "TirHeaderLabel"
         TirHeaderLabel.Size = New Size(138, 25)
         TirHeaderLabel.TabIndex = 46
@@ -1792,7 +1800,7 @@ Partial Class Form1
         TirChartLabel.BackColor = Color.Black
         TirChartLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TirChartLabel.ForeColor = Color.LightGray
-        TirChartLabel.Location = New Point(1442, 74)
+        TirChartLabel.Location = New Point(1646, 74)
         TirChartLabel.Name = "TirChartLabel"
         TirChartLabel.Size = New Size(68, 40)
         TirChartLabel.TabIndex = 2
@@ -1806,7 +1814,7 @@ Partial Class Form1
         TirSummaryPercentCharLabel.BackColor = Color.Transparent
         TirSummaryPercentCharLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TirSummaryPercentCharLabel.ForeColor = Color.LightGray
-        TirSummaryPercentCharLabel.Location = New Point(1455, 113)
+        TirSummaryPercentCharLabel.Location = New Point(1659, 113)
         TirSummaryPercentCharLabel.Name = "TirSummaryPercentCharLabel"
         TirSummaryPercentCharLabel.Size = New Size(42, 40)
         TirSummaryPercentCharLabel.TabIndex = 3
@@ -1820,7 +1828,7 @@ Partial Class Form1
         TirValueLabel.BackColor = Color.Black
         TirValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TirValueLabel.ForeColor = Color.DarkGreen
-        TirValueLabel.Location = New Point(1371, 234)
+        TirValueLabel.Location = New Point(1575, 234)
         TirValueLabel.Name = "TirValueLabel"
         TirValueLabel.Size = New Size(84, 40)
         TirValueLabel.TabIndex = 24
@@ -1834,7 +1842,7 @@ Partial Class Form1
         TiTRValueLabel.BackColor = Color.Black
         TiTRValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TiTRValueLabel.ForeColor = Color.Red
-        TiTRValueLabel.Location = New Point(1496, 234)
+        TiTRValueLabel.Location = New Point(1700, 234)
         TiTRValueLabel.Name = "TiTRValueLabel"
         TiTRValueLabel.Size = New Size(84, 40)
         TiTRValueLabel.TabIndex = 24
@@ -1861,7 +1869,7 @@ Partial Class Form1
         TirComplianceLabel.BackColor = Color.Transparent
         TirComplianceLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
         TirComplianceLabel.ForeColor = Color.LightGray
-        TirComplianceLabel.Location = New Point(1397, 448)
+        TirComplianceLabel.Location = New Point(1601, 448)
         TirComplianceLabel.Name = "TirComplianceLabel"
         TirComplianceLabel.Size = New Size(157, 25)
         TirComplianceLabel.TabIndex = 35
@@ -2963,12 +2971,12 @@ Partial Class Form1
         CType(SmartGuardShieldPictureBox, ComponentModel.ISupportInitialize).EndInit()
         CType(CareLinkUserDataRecordBindingSource, ComponentModel.ISupportInitialize).EndInit()
         CType(CursorMarkerPictureBox, ComponentModel.ISupportInitialize).EndInit()
-        CType(InfustionSetPictureBox, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvActiveInsulin, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvAutoBasalDelivery, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvAutoModeStatus, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvBasal, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvBasalPerHour, ComponentModel.ISupportInitialize).EndInit()
+        CType(DgvBgReadings, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCalibration, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCareLinkUsers, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvCurrentUser, ComponentModel.ISupportInitialize).EndInit()
@@ -2979,11 +2987,11 @@ Partial Class Form1
         CType(DgvLowGlucoseSuspended, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvMeal, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvPumpBannerState, ComponentModel.ISupportInitialize).EndInit()
-        CType(DgvBgReadings, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSGs, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvSummary, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvTherapyAlgorithmState, ComponentModel.ISupportInitialize).EndInit()
         CType(DgvTimeChange, ComponentModel.ISupportInitialize).EndInit()
+        CType(InfustionSetPictureBox, ComponentModel.ISupportInitialize).EndInit()
         CType(InsulinLevelPictureBox, ComponentModel.ISupportInitialize).EndInit()
         MenuStrip1.ResumeLayout(False)
         MenuStrip1.PerformLayout()
@@ -3118,6 +3126,7 @@ Partial Class Form1
     Friend WithEvents DgvAutoModeStatus As DataGridView
     Friend WithEvents DgvBasal As DataGridView
     Friend WithEvents DgvBasalPerHour As DataGridView
+    Friend WithEvents DgvBgReadings As DataGridView
     Friend WithEvents DgvCalibration As DataGridView
     Friend WithEvents DgvCareLinkUsers As DataGridView
     Friend WithEvents DgvCareLinkUsersUserPassword As DataGridViewTextBoxColumn
@@ -3129,7 +3138,6 @@ Partial Class Form1
     Friend WithEvents DgvLowGlucoseSuspended As DataGridView
     Friend WithEvents DgvMeal As DataGridView
     Friend WithEvents DgvPumpBannerState As DataGridView
-    Friend WithEvents DgvBgReadings As DataGridView
     Friend WithEvents DgvSGs As DataGridView
     Friend WithEvents DgvSummary As DataGridView
     Friend WithEvents DgvTherapyAlgorithmState As DataGridView
@@ -3165,7 +3173,6 @@ Partial Class Form1
     Friend WithEvents MenuHelpCheckForUpdates As ToolStripMenuItem
     Friend WithEvents MenuHelpReportAnIssue As ToolStripMenuItem
     Friend WithEvents MenuHelpShowControlPositions As ToolStripMenuItem
-    Friend WithEvents MenuHelpShowLogger As ToolStripMenuItem
     Friend WithEvents MenuOptions As ToolStripMenuItem
     Friend WithEvents MenuOptionsAdvancedOptions As ToolStripMenuItem
     Friend WithEvents MenuOptionsAudioAlerts As ToolStripMenuItem
@@ -3174,7 +3181,6 @@ Partial Class Form1
     Friend WithEvents MenuOptionsConfigureTiTR As ToolStripMenuItem
     Friend WithEvents MenuOptionsEditPumpSettings As ToolStripMenuItem
     Friend WithEvents MenuOptionsFilterRawJSONData As ToolStripMenuItem
-    Friend WithEvents MenuOptionsShowChartLegends As ToolStripMenuItem
     Friend WithEvents MenuOptionsSpeechHelpShown As ToolStripMenuItem
     Friend WithEvents MenuOptionsSpeechRecognition80 As ToolStripMenuItem
     Friend WithEvents MenuOptionsSpeechRecognition85 As ToolStripMenuItem
@@ -3192,12 +3198,15 @@ Partial Class Form1
     Friend WithEvents MenuStartLoadExceptionReport As ToolStripMenuItem
     Friend WithEvents MenuStartManuallyImportDeviceSettings As ToolStripMenuItem
     Friend WithEvents MenuStartSaveSnapshot As ToolStripMenuItem
-    Friend WithEvents MenuStartShowPumpSetup As ToolStripMenuItem
-    Friend WithEvents MenuStartShowRawJsonData As ToolStripMenuItem
     Friend WithEvents MenuStartUseLastFile As ToolStripMenuItem
     Friend WithEvents MenuStartUserLogin As ToolStripMenuItem
     Friend WithEvents MenuStartUseTestData As ToolStripMenuItem
     Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents MenuView As ToolStripMenuItem
+    Friend WithEvents MenuViewPumpSetup As ToolStripMenuItem
+    Friend WithEvents MenuViewRawJsonData As ToolStripMenuItem
+    Friend WithEvents MenuViewShowChartLegends As ToolStripMenuItem
+    Friend WithEvents MenuViewShowLogger As ToolStripMenuItem
     Friend WithEvents ModelLabel As Label
     Friend WithEvents NotifyIcon1 As NotifyIcon
     Friend WithEvents PumpAITLabel As Label

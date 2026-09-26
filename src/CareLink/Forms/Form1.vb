@@ -1333,13 +1333,13 @@ Public Class Form1
         Try
             Select Case columnName
                 Case NameOf(ActiveInsulin.Amount)
-                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     If e.Value.ToString = "-1" Then
                         e.Value = $"Active Insulin Estimate {_latestActiveInsulin:N3} U"
                         dgv.CellFormattingDefault(e)
                     Else
                         dgv.CellFormattingSingleValue(e, digits:=3, TrailingText:=" U")
                     End If
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
                 Case NameOf(ActiveInsulin.DateTimeAsString)
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
@@ -3595,7 +3595,7 @@ Public Class Form1
         Me.SensorTimeLeftPictureBox.GetBitmapFromCache(imageId:=ImageEnum.SensorLifeOK)
         Me.PumpBatteryPictureBox.GetBitmapFromCache(imageId:=ImageEnum.PumpBatteryFlexMaster)
 
-        Me.MenuOptionsShowChartLegends.Checked = My.Settings.SystemShowLegends
+        Me.MenuViewShowChartLegends.Checked = My.Settings.SystemShowLegends
         Me.MenuOptionsSpeechHelpShown.Checked = My.Settings.SystemSpeechHelpShown
         Me.InitializeDgvCareLinkUsers(dgv:=Me.DgvCareLinkUsers)
         s_formLoaded = True
@@ -3794,21 +3794,17 @@ Public Class Form1
         Me.MenuStartUseTestData.Available = debuggerIsAttached
         Me.MenuStartUseTestData.Visible = debuggerIsAttached
 
-        Dim show As Boolean = debuggerIsAttached AndAlso
-            Not PatientDataElement.IsEmpty
-
-        Me.MenuStartShowRawJsonData.Available = show
-        Me.MenuStartShowRawJsonData.Enabled = show
-        Me.MenuStartShowRawJsonData.Visible = debuggerIsAttached
-
         Dim searchPattern As String = $"CareLink*.json"
         Dim path As String = GetProjectDataDirectory()
-        show = debuggerIsAttached AndAlso AnyMatchingFiles(path, searchPattern)
-        Me.MenuStartLoadDataFile.Enabled = show
+        Me.MenuStartLoadDataFile.Enabled =
+            debuggerIsAttached AndAlso
+            Not PatientDataElement.IsEmpty AndAlso
+            AnyMatchingFiles(path, searchPattern)
 
         Me.MenuStartSaveSnapshot.Enabled = Not IsPatientDataEmpty()
 
-        Dim enabled As Boolean = debuggerIsAttached AndAlso
+        Dim enabled As Boolean =
+            debuggerIsAttached AndAlso
             File.Exists(path:=GetLastDownloadFileWithPath)
         Me.MenuStartUseLastFile.Enabled = enabled
 
@@ -3819,12 +3815,13 @@ Public Class Form1
 
         searchPattern = $"{GetUserName()}Settings.pdf"
 
-        Dim validUser As Boolean = IsNullOrWhiteSpace(value:=GetUserName())
+        Dim validUser As Boolean =
+            IsNullOrWhiteSpace(value:=GetUserName())
         Dim userPdfExists As Boolean =
             Not (validUser OrElse Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern))
-        Me.MenuStartShowPumpSetup.Enabled = userPdfExists AndAlso
-                                            CurrentPdf IsNot Nothing AndAlso
-                                            CurrentPdf.IsValid
+        Me.MenuViewPumpSetup.Enabled = userPdfExists AndAlso
+                                       CurrentPdf IsNot Nothing AndAlso
+                                       CurrentPdf.IsValid
 
         enabled = Directory.GetFiles(path:=GetDownloadsDirectory(),
                                      searchPattern:=$"*.pdf").Length > 0
@@ -3836,6 +3833,19 @@ Public Class Form1
         ' (MenuStartCleanUpObsoleteFiles) is only enabled,
         ' when the application Is the only instance running, as a safety precaution.
         Me.MenuStartCleanUpObsoleteFiles.Enabled = Process.GetProcessesByName(processName:=_processName).Length = 1
+    End Sub
+
+    Private Sub MenuView_DropDownOpening(sender As Object, e As EventArgs) Handles MenuView.DropDownOpening
+        Dim debuggerIsAttached As Boolean = Debugger.IsAttached
+
+        Dim show As Boolean =
+            True AndAlso
+            Not PatientDataElement.IsEmpty
+
+        Me.MenuViewRawJsonData.Enabled = show
+        Me.MenuViewPumpSetup.Enabled = show AndAlso
+                                       CurrentPdf IsNot Nothing AndAlso
+                                       CurrentPdf.IsValid
     End Sub
 
     ''' <summary>
@@ -4021,7 +4031,7 @@ Public Class Form1
     ''' </summary>
     ''' <param name="sender">The source of the event, a ToolStripMenuItem control.</param>
     ''' <param name="e">An EventArgs that contains the event data.</param>
-    Private Sub MenuStartShowPumpSetup_Click(sender As Object, e As EventArgs) Handles MenuStartShowPumpSetup.Click
+    Private Sub MenuViewShowPumpSetup_Click(sender As Object, e As EventArgs) Handles MenuViewPumpSetup.Click
         If File.Exists(path:=GetUserPdfPath()) Then
             If CurrentPdf IsNot Nothing AndAlso CurrentPdf.IsValid Then
                 SetServerUpdateTimer(Start:=False)
@@ -4048,7 +4058,7 @@ Public Class Form1
         End If
     End Sub
 
-    Private Sub MenuStartShowRawJsonData_Click(sender As Object, e As EventArgs) Handles MenuStartShowRawJsonData.Click
+    Private Sub MenuViewShowRawJsonData_Click(sender As Object, e As EventArgs) Handles MenuViewRawJsonData.Click
         Dim rawDataDialog As New RawDataViewerDialog(json:=PatientDataElement)
         rawDataDialog.ShowDialog(owner:=My.Forms.Form1)
     End Sub
@@ -4301,7 +4311,7 @@ Public Class Form1
 
     ''' <summary>
     '''  Handles the <see cref="ToolStripMenuItem.Click"/> event for
-    '''  the <see cref="MenuOptionsShowChartLegends"/> menu item.
+    '''  the <see cref="MenuViewShowChartLegends"/> menu item.
     '''  Toggles the visibility of chart legends for all main charts and updates
     '''  the application settings.
     ''' </summary>
@@ -4309,10 +4319,10 @@ Public Class Form1
     '''  The source of the event, a <see cref="ToolStripMenuItem"/> control.
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Private Sub MenuOptionsShowChartLegends_Click(sender As Object, e As EventArgs) _
-        Handles MenuOptionsShowChartLegends.Click
+    Private Sub MenuViewShowChartLegends_Click(sender As Object, e As EventArgs) _
+        Handles MenuViewShowChartLegends.Click
 
-        Dim showLegend As Boolean = Me.MenuOptionsShowChartLegends.Checked
+        Dim showLegend As Boolean = Me.MenuViewShowChartLegends.Checked
         _activeInsulinChartLegend.Enabled = showLegend
         _summaryChartLegend.Enabled = showLegend
         _treatmentMarkersChartLegend.Enabled = showLegend
@@ -4523,14 +4533,14 @@ Public Class Form1
         Me.ShowControlPositions()
     End Sub
 
-    Private Sub MenuHelpShowLogger_Click(sender As Object, e As EventArgs) Handles MenuHelpShowLogger.Click
+    Private Sub MenuHelpShowLogger_Click(sender As Object, e As EventArgs) Handles MenuViewShowLogger.Click
         If s_showLogger Then
             s_showLogger = False
-            Me.MenuHelpShowLogger.Checked = False
+            Me.MenuViewShowLogger.Checked = False
             LoggerForm.Hide()
         Else
             s_showLogger = True
-            Me.MenuHelpShowLogger.Checked = True
+            Me.MenuViewShowLogger.Checked = True
             InitLogger(show:=True)
         End If
     End Sub

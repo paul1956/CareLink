@@ -321,7 +321,7 @@ Friend Module CreateChartItems
             .BackColor = Color.Gray,
             .BorderWidth = 0,
             .Docking = Docking.Bottom,
-            .Enabled = Form1.MenuOptionsShowChartLegends.Checked,
+            .Enabled = Form1.MenuViewShowChartLegends.Checked,
             .Font = New Font(FamilyName, emSize:=20.0F, style:=FontStyle.Bold),
             .ForeColor = .BackColor.ContrastingColor(),
             .IsTextAutoFit = True}
