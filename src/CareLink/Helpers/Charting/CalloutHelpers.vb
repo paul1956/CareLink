@@ -62,6 +62,10 @@ Friend Module CalloutHelpers
             Case 1
                 annotationText = $"{markerTag0}"
             Case 2
+                If markerTag0 = "Note" Then
+                    annotationText = $"{markerTag0}: {markerTags(index:=1)}"
+                    Return annotationText
+                End If
                 Dim markerTag1 As String = markerTags(index:=1).Trim()
                 annotationText = If(markerTag1 = "0U",
                                     "Calibration Only!",

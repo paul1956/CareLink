@@ -878,35 +878,43 @@ Friend Module Form1UpdateHelpers
         With mainForm
             .TlpAutoBasalDelivery.DisplayDataTable(Of AutoBasalDelivery)(
                 table:=ClassCollectionToDataTable(classCollection:=s_autoBasalDeliveryMarkers),
-                className:=NameOf(AutoBasalDelivery), rowIndex:=ServerDataEnum.markers)
+                className:=NameOf(AutoBasalDelivery),
+                rowIndex:=ServerDataEnum.markers)
 
             .TlpAutoModeStatus.DisplayDataTable(Of AutoModeStatus)(
                 table:=ClassCollectionToDataTable(classCollection:=s_autoModeStatusMarkers),
-                className:=NameOf(AutoModeStatus), rowIndex:=ServerDataEnum.markers)
+                className:=NameOf(AutoModeStatus),
+                rowIndex:=ServerDataEnum.markers)
 
             .TlpBgReadings.DisplayDataTable(Of BgReading)(
                 table:=ClassCollectionToDataTable(classCollection:=s_bgReadingMarkers),
-                className:=NameOf(BgReading), rowIndex:=ServerDataEnum.markers)
+                className:=NameOf(BgReading),
+                rowIndex:=ServerDataEnum.markers)
 
             .TlpInsulin.DisplayDataTable(Of Insulin)(
                 table:=ClassCollectionToDataTable(classCollection:=s_insulinMarkers),
-                className:=NameOf(Insulin), rowIndex:=ServerDataEnum.markers)
+                className:=NameOf(Insulin),
+                rowIndex:=ServerDataEnum.markers)
 
             .TlpMeal.DisplayDataTable(Of Meal)(
                 table:=ClassCollectionToDataTable(classCollection:=s_mealMarkers),
-                className:=NameOf(Meal), rowIndex:=ServerDataEnum.markers)
+                className:=NameOf(Meal),
+                rowIndex:=ServerDataEnum.markers)
 
             .TlpCalibration.DisplayDataTable(Of Calibration)(
                 table:=ClassCollectionToDataTable(classCollection:=s_calibrationMarkers),
-                className:=NameOf(Calibration), rowIndex:=ServerDataEnum.markers)
+                className:=NameOf(Calibration),
+                rowIndex:=ServerDataEnum.markers)
 
             .TlpLowGlucoseSuspended.DisplayDataTable(Of LowGlucoseSuspended)(
                 table:=ClassCollectionToDataTable(classCollection:=s_suspendedMarkers),
-                className:=NameOf(LowGlucoseSuspended), rowIndex:=ServerDataEnum.markers)
+                className:=NameOf(LowGlucoseSuspended),
+                rowIndex:=ServerDataEnum.markers)
 
             .TlpTimeChange.DisplayDataTable(Of TimeChange)(
                 table:=ClassCollectionToDataTable(classCollection:=s_timeChangeMarkers),
-                className:=NameOf(TimeChange), rowIndex:=ServerDataEnum.markers)
+                className:=NameOf(TimeChange),
+                rowIndex:=ServerDataEnum.markers)
 
             DisplayDataTable(Of BasalPerHour)(
                 realPanel:=Nothing,

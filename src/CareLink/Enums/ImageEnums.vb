@@ -98,6 +98,9 @@ Public Module ImageEnums
         <Description("MealImageLarge")>
         MealImageLarge
 
+        <Description("NoteImage")>
+        NoteImage
+
         <Description("NotificationAlert_16x")>
         NotificationAlert_16x
 
@@ -137,28 +140,8 @@ Public Module ImageEnums
         <Description("PumpBattery780GUnknown")>
         PumpBattery780GUnknown
 
-#If False Then
-
-        <Description("PumpBatteryFlex1To10Hours")>
-        PumpBatteryFlex1To10Hours
-
-        <Description("PumpBatteryFlexDepleted")>
-        PumpBatteryFlexDepleted
-
-        <Description("PumpBatteryFlexFull")>
-        PumpBatteryFlexFull
-
-#End If
-
         <Description("PumpBatteryFlexMaster")>
         PumpBatteryFlexMaster
-
-#If False Then
-
-        <Description("PumpBatteryFlexLessThen1Hour")>
-        PumpBatteryFlexLessThen1Hour
-
-#End If
 
         <Description("PumpBatteryFlexUnknown")>
         PumpBatteryFlexUnknown

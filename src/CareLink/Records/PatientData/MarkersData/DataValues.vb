@@ -46,6 +46,9 @@ Public Class DataValues
     <JsonPropertyName("maxAutoBasalRate")>
     Public Property MaxAutoBasalRate As Single
 
+    <JsonPropertyName("notes")>
+    Public Property Notes As String
+
     <JsonPropertyName("programmedDuration")>
     Public Property ProgrammedDuration As Integer
 

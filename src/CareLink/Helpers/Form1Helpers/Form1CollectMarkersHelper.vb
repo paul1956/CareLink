@@ -169,6 +169,8 @@ Friend Module Form1CollectMarkersHelper
                     s_timeChangeMarkers.Add(item:=New TimeChange(
                         item,
                         recordNumber:=s_timeChangeMarkers.Count + 1))
+                Case "OTHER"
+                    s_markers.Add(item)
                 Case Else
                     Stop
                     Throw UnreachableException(paramName:=item.Type)

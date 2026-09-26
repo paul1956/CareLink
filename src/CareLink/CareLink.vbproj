@@ -102,6 +102,7 @@
     <None Remove="Images\Mail_16x.ico" />
     <None Remove="Images\MealImage.png" />
     <None Remove="Images\MealImageLarge.png" />
+    <None Remove="Images\NoteImage.png" />
     <None Remove="Images\NotificationAlert_16x.png" />
     <None Remove="Images\NotificationAlertGray_16x.png" />
     <None Remove="Images\NotificationAlertRed_16x.png" />
@@ -277,6 +278,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\MealImageLarge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\NoteImage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\NotificationAlertGray_16x.png">
@@ -482,6 +486,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Images\CalibrationDotRedSmall.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\CalibrationDotSmall.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Images\Flags\ad.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

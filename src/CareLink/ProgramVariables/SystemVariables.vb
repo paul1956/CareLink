@@ -11,6 +11,7 @@ Public Module SystemVariables
     Friend ReadOnly s_activeInsulinMarkers As New Dictionary(Of OADate, Single)
     Friend ReadOnly s_summaryMarkersInsulin As New Dictionary(Of OADate, Single)
     Friend ReadOnly s_summaryMarkersMeal As New Dictionary(Of OADate, Single)
+    Friend ReadOnly s_summaryMarkersOther As New Dictionary(Of OADate, Single)
     Friend ReadOnly s_treatmentMarkersInsulin As New Dictionary(Of OADate, Single)
     Friend ReadOnly s_treatmentMarkersMeal As New Dictionary(Of OADate, Single)
 

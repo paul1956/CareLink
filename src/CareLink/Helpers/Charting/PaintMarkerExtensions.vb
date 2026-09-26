@@ -78,6 +78,72 @@ Friend Module PaintMarkerExtensions
     End Sub
 
     ''' <summary>
+    '''  Paints markers on the chart using the specified image and dictionary of markers.
+    '''  The markers are drawn at their respective positions on the X-axis and Y-axis.
+    '''  If <paramref name="noImageOffset"/> is <see langword="True"/>,
+    '''  the image is drawn without any vertical offset.
+    '''  If <paramref name="paintOnY2"/> is <see langword="True"/>,
+    '''  the markers are painted on the Y2 axis; otherwise, they are painted on the Y axis.
+    ''' </summary>
+    ''' <param name="e">
+    '''  The <see cref="ChartPaintEventArgs"/> containing chart graphics context.
+    ''' </param>
+    ''' <param name="markerImage">
+    '''  The <see cref="Bitmap"/> image to use for the marker.
+    ''' </param>
+    ''' <param name="markerDictionary">
+    '''  A dictionary mapping OADate values to Y-axis values for marker positions.
+    ''' </param>
+    ''' <param name="noImageOffset">
+    '''  If <see langword="True"/>, the image is drawn without vertical offset;
+    '''  otherwise, it is centered on the marker position.</param>
+    ''' <param name="paintOnY2">
+    '''  If <see langword="True"/>, markers are painted on the Y2 axis;
+    '''  otherwise, on the Y axis.
+    ''' </param>
+    <Extension>
+    Private Sub PaintMarker(e As ChartPaintEventArgs,
+                            markerImage As Bitmap,
+                            markerDictionary As Dictionary(Of OADate, String),
+                            noImageOffset As Boolean,
+                            paintOnY2 As Boolean)
+
+        ' Draw the cloned portion of the Bitmap object.
+        Dim halfHeight As Single = CSng(If(noImageOffset,
+                                           0,
+                                           markerImage.Height / 2))
+
+        Dim halfWidth As Single = CSng(markerImage.Width / 2)
+        For Each markerKvp As KeyValuePair(Of OADate, String) In markerDictionary
+            Dim rectangle As RectangleF = RectangleF.Empty
+            rectangle.X =
+                CSng(e.ChartGraphics.GetPositionFromAxis(
+                        ChartAreaName,
+                        axis:=AxisName.X,
+                        axisValue:=markerKvp.Key))
+
+            rectangle.Y = If(paintOnY2,
+                             CSng(e.ChartGraphics.GetPositionFromAxis(
+                                  ChartAreaName,
+                                  axis:=AxisName.Y2,
+                                  axisValue:=30.0)),
+                             CSng(e.ChartGraphics.GetPositionFromAxis(
+                                ChartAreaName,
+                                axis:=AxisName.Y,
+                                axisValue:=30.0)))
+
+            rectangle.Width = markerImage.Width
+            rectangle.Height = markerImage.Height
+
+            Dim imagePosition As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(rectangle)
+            imagePosition.Y -= halfHeight
+            imagePosition.X -= halfWidth
+            ' Draw image
+            e.ChartGraphics.Graphics.DrawImage(image:=markerImage, imagePosition.X, imagePosition.Y)
+        Next
+    End Sub
+
+    ''' <summary>
     '''  Provides post-painting support for the chart, including filling high/low limit
     '''  rectangles and painting insulin/meal markers.
     ''' </summary>
@@ -108,6 +174,7 @@ Friend Module PaintMarkerExtensions
                                 ByRef chartRelativePosition As RectangleF,
                                 insulinDictionary As Dictionary(Of OADate, Single),
                                 mealDictionary As Dictionary(Of OADate, Single),
+                                otherDictionary As Dictionary(Of OADate, Single),
                                 offsetInsulinImage As Boolean,
                                 paintOnY2 As Boolean)
 
@@ -184,6 +251,12 @@ Friend Module PaintMarkerExtensions
             e.PaintMarker(markerImage:=MealImage,
                           markerDictionary:=mealDictionary,
                           noImageOffset:=False,
+                          paintOnY2)
+        End If
+        If otherDictionary IsNot Nothing Then
+            e.PaintMarker(markerImage:=NoteImage,
+                          markerDictionary:=otherDictionary,
+                          noImageOffset:=offsetInsulinImage,
                           paintOnY2)
         End If
     End Sub

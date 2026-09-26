@@ -623,6 +623,9 @@ Public Class Form1
                         Select Case markerTags.Count
                             Case 2
                                 Dim markerTag1 As String = markerTags(index:=1).Trim
+                                If markerTag0 = "Note" Then
+                                    Exit Select
+                                End If
                                 Dim amount As Double
                                 Dim split As String() = markerTag1.Split(separator:=" "c)
                                 If split.Length = 2 Then
@@ -854,6 +857,7 @@ Public Class Form1
                 chartRelativePosition:=_activeInsulinChartAbsoluteRectangle,
                 insulinDictionary:=s_activeInsulinMarkers,
                 mealDictionary:=Nothing,
+                otherDictionary:=Nothing,
                 offsetInsulinImage:=True,
                 paintOnY2:=True)
         End SyncLock
@@ -1001,6 +1005,7 @@ Public Class Form1
                 chartRelativePosition:=_summaryChartAbsoluteRectangle,
                 insulinDictionary:=s_summaryMarkersInsulin,
                 mealDictionary:=s_summaryMarkersMeal,
+                otherDictionary:=s_summaryMarkersOther,
                 offsetInsulinImage:=False,
                 paintOnY2:=True)
         End SyncLock
@@ -1035,6 +1040,7 @@ Public Class Form1
                 chartRelativePosition:=_treatmentMarkerAbsoluteRectangle,
                 insulinDictionary:=s_treatmentMarkersInsulin,
                 mealDictionary:=s_treatmentMarkersMeal,
+                otherDictionary:=Nothing,
                 offsetInsulinImage:=False,
                 paintOnY2:=False)
         End SyncLock
@@ -5758,7 +5764,8 @@ Public Class Form1
                     Dim shouldAdd As Boolean = False
 
                     Select Case marker.Type
-                        Case "AUTO_BASAL_DELIVERY", "MANUAL_BASAL_DELIVERY"
+                        Case "AUTO_BASAL_DELIVERY",
+                             "MANUAL_BASAL_DELIVERY"
                             bolusAmount = marker.Data.DataValues.BolusAmount
                             shouldAdd = True
 
@@ -5780,7 +5787,11 @@ Public Class Form1
                                 Next
                             End If
 
-                        Case "BG_READING", "CALIBRATION", "MEAL", "TIME_CHANGE"
+                        Case "BG_READING",
+                             "CALIBRATION",
+                             "MEAL",
+                             "OTHER",
+                             "TIME_CHANGE"
                             ' Ignored marker types
 
                         Case Else
@@ -5858,7 +5869,8 @@ Public Class Form1
                 .PlotSuspendArea(SuspendSeries:=Me.ActiveInsulinSuspendSeries)
                 .PlotMarkers(timeChangeSeries:=Me.ActiveInsulinTimeChangeSeries,
                              markerInsulinDictionary:=s_activeInsulinMarkers,
-                             markerMealDictionary:=Nothing)
+                             markerMealDictionary:=Nothing,
+                             markerOtherDictionary:=Nothing)
                 .PlotSgSeries(HomePageMealRow:=GetYMinNativeMmolL())
                 .PlotHighLowLimitsAndTargetSg(targetSgOnly:=True)
             End With
@@ -5899,7 +5911,8 @@ Public Class Form1
                 .PlotMarkers(
                     timeChangeSeries:=Me.SummaryTimeChangeSeries,
                     markerInsulinDictionary:=s_summaryMarkersInsulin,
-                    markerMealDictionary:=s_summaryMarkersMeal)
+                    markerMealDictionary:=s_summaryMarkersMeal,
+                    markerOtherDictionary:=s_summaryMarkersOther)
                 .PlotSgSeries(HomePageMealRow:=GetYMinNativeMmolL())
                 .PlotHighLowLimitsAndTargetSg(targetSgOnly:=False)
                 Application.DoEvents()
@@ -6113,6 +6126,8 @@ Public Class Form1
                 Case "BG_READING"
                     ' IGNORE HERE
                 Case "LOW_GLUCOSE_SUSPENDED"
+                    ' IGNORE HERE
+                Case "OTHER"
                     ' IGNORE HERE
                 Case "TIME_CHANGE"
                     ' IGNORE HERE
