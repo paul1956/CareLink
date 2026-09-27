@@ -487,10 +487,10 @@
 
   <ItemGroup>
     <None Update="Images\CalibrationDotRedSmall.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Images\CalibrationDotSmall.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Images\Flags\ad.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

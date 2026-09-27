@@ -186,6 +186,7 @@ Friend Module PlotMarkers
     '''  Dictionary to store insulin marker positions.
     ''' </param>
     ''' <param name="markerMealDictionary">Dictionary to store meal marker positions.</param>
+    ''' <param name="markerOtherDictionary">Dictionary to store other marker positions.</param>
     ''' <param name="memberName">
     '''  Optional. The name of the calling member, automatically supplied by the compiler.
     ''' </param>

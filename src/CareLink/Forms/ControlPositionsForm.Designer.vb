@@ -44,14 +44,14 @@ Partial Class ControlPositionsForm
         DataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         DataGridView1.Size = New Size(800, 450)
         DataGridView1.TabIndex = 0
-        ' 
-        ' PositionForm
+        '       
+        ' ControlPositionsForm
         ' 
         Me.AutoScaleDimensions = New SizeF(7F, 15F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.ClientSize = New Size(900, 500)
         Me.Controls.Add(DataGridView1)
-        Me.Name = "PositionForm"
+        Me.Name = "ControlPositionsForm"
         Me.Text = "Control Positions"
         CType(DataGridView1, ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
