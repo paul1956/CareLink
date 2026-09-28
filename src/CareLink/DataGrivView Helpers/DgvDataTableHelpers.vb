@@ -282,8 +282,8 @@ Friend Module DgvDataTableHelpers
                     dgv.Columns.Cast(Of DataGridViewColumn)().Sum(selector)
                 If dgv.Columns(index:=0).Name = "RecordNumber" Then
                     dgv.Columns(index:=0).AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-                    dgv.Columns(index:=0).Width = 50
-                    totalWidth -= 50
+                    dgv.Columns(index:=0).Width = 60
+                    totalWidth -= 60
                 End If
                 If totalWidth > 0 Then
                     For Each c As DataGridViewColumn In dgv.Columns

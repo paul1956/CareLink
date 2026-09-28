@@ -118,7 +118,7 @@ Public Class Meal
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Public Shared Function TryGetMealRecord(timestamp As Date, ByRef meal As Meal) As Boolean
-        For Each m As Meal In s_mealMarkers
+        For Each m As Meal In MealMarkers
             If timestamp = m.Timestamp Then
                 meal = m
                 Return True

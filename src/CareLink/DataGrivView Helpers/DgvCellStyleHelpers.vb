@@ -326,7 +326,10 @@ Friend Module DgvCellStyleHelpers
         e.Value =
             $"{amount.ToString(format:=$"F{digits}", provider)}{TrailingText}"
         dgv.CellFormattingDefault(e)
-        e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+        e.CellStyle.Alignment =
+            If(e.ColumnIndex > 0,
+               DataGridViewContentAlignment.MiddleRight,
+               DataGridViewContentAlignment.MiddleCenter)
 
         e.FormattingApplied = True
         Return amount

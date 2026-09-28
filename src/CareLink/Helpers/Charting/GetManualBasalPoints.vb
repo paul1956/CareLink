@@ -30,10 +30,10 @@ Friend Module GetManualBasalPoints
         End If
         Dim nextPumpSuspendTime As OADate
         Dim markerDateTime? As Date
-        If s_markers.Count > 1 AndAlso markerWithIndex.Index = s_markers.Count - 2 Then
-            Dim activationType As String = s_markers.Last().Data.DataValues.ActivationType
+        If AllMarkers.Count > 1 AndAlso markerWithIndex.Index = AllMarkers.Count - 2 Then
+            Dim activationType As String = AllMarkers.Last().Data.DataValues.ActivationType
             If activationType = "MANUAL" Then
-                markerDateTime = s_markers.Last().GetMarkerTimestamp
+                markerDateTime = AllMarkers.Last().GetMarkerTimestamp
                 If markerDateTime Is Nothing Then
                     Return New SortedDictionary(Of OADate, Single)
                 End If
@@ -42,7 +42,7 @@ Friend Module GetManualBasalPoints
                 nextPumpSuspendTime = New OADate(asDate:=PumpNow)
             End If
         Else
-            markerDateTime = s_markers(index:=markerWithIndex.Index + 1).GetMarkerTimestamp
+            markerDateTime = AllMarkers(index:=markerWithIndex.Index + 1).GetMarkerTimestamp
             If markerDateTime Is Nothing Then
                 Return New SortedDictionary(Of OADate, Single)
             End If
@@ -50,8 +50,8 @@ Friend Module GetManualBasalPoints
         End If
 
         Dim lowGlucoseSuspend As New LowGlucoseSuspended(
-            item:=s_markers.Last(),
-            recordNumber:=s_markers.Count)
+            item:=AllMarkers.Last(),
+            recordNumber:=AllMarkers.Count)
         If lowGlucoseSuspend.DeliverySuspended Then
             Return New SortedDictionary(Of OADate, Single)
         End If

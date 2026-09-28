@@ -8,32 +8,25 @@ Public Module PumpVariables
 
 #Region "Lists"
 
-    Friend ReadOnly s_basalPerHour As New List(Of BasalPerHour)
-    Friend s_basalList As New List(Of Basal) From {New Basal}
-    Friend s_limitRecords As New List(Of Limit)
-    Friend s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
-    Friend s_sgRecords As New List(Of SG)
+    Friend ReadOnly Property BasalList As New List(Of Basal) From {New Basal}
+    Friend ReadOnly Property BasalPerHourList As New List(Of BasalPerHour)
+    Friend Property LimitRecordsList As New List(Of Limit)
+    Friend Property s_pumpBannerStateValue As New List(Of Dictionary(Of String, String))
+    Friend Property s_sgRecords As New List(Of SG)
 
 #Region "Markers"
 
-    Friend ReadOnly s_autoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
-    Friend ReadOnly s_autoModeStatusMarkers As New List(Of AutoModeStatus)
-    Friend ReadOnly s_bgReadingMarkers As New List(Of BgReading)
-    Friend ReadOnly s_calibrationMarkers As New List(Of Calibration)
-    Friend ReadOnly s_insulinMarkers As New List(Of Insulin)
-    Friend ReadOnly s_listOfSummaryRecords As New List(Of SummaryRecord)
-    Friend ReadOnly s_mealMarkers As New List(Of Meal)
-
-    Friend s_markers As New List(Of Marker)
-
-    ''' <summary>
-    '''  Represents a list of low glucose suspended markers.
-    '''  These markers indicate when the pump has suspended insulin
-    '''  delivery due to low glucose levels.
-    ''' </summary>
-    Friend s_suspendedMarkers As New List(Of LowGlucoseSuspended)
-
-    Friend s_timeChangeMarkers As New List(Of TimeChange)
+    Friend ReadOnly Property AllMarkers As New List(Of Marker)
+    Friend ReadOnly Property AutoBasalDeliveryMarkers As New List(Of AutoBasalDelivery)
+    Friend ReadOnly Property AutoModeStatusMarkers As New List(Of AutoModeStatus)
+    Friend ReadOnly Property BgReadingMarkers As New List(Of BgReading)
+    Friend ReadOnly Property CalibrationMarkers As New List(Of Calibration)
+    Friend ReadOnly Property InsulinMarkers As New List(Of Insulin)
+    Friend ReadOnly Property ListOfSummaryRecords As New List(Of SummaryRecord)
+    Friend ReadOnly Property MealMarkers As New List(Of Meal)
+    Friend ReadOnly Property OtherMarkers As New List(Of Marker)
+    Friend ReadOnly Property SuspendedMarkers As New List(Of LowGlucoseSuspended)
+    Friend ReadOnly Property TimeChangeMarkers As New List(Of TimeChange)
 
 #End Region ' Markers
 
@@ -42,7 +35,6 @@ Public Module PumpVariables
     Friend s_activeInsulin As ActiveInsulin
     Friend s_autoModeReadinessState As SummaryRecord
 
-    ' s_filterJsonData removed: column hiding is applied explicitly per-grid
     Friend s_lastAlarmValue As Dictionary(Of String, String)
 
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long

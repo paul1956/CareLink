@@ -193,7 +193,7 @@ Friend Module UserMessageConstants
         {"2.210", "blood glucose not accepted(triggeredDateTime). Wait at least a 15 minutes before trying again."},
         {"2.253", "Bolus not delivered (alertClearType)"},
         {"2.326", "Reservoir Low(triggeredDateTime), Change reservoir soon."},
-        {"2.340", "?(triggeredDateTime), ."},
+        {"2.340", "Delivery suspended(triggeredDateTime), Insulin delivery has been stopped for > 30 minutes."},
         {"2.500", "Reservoir Low(triggeredDateTime). (unitsRemaining) units remaining. " &
                   "Change reservoir?"},
         {"2.353", "Bolus not delivered(triggeredDateTime). (alertClearType)!"},

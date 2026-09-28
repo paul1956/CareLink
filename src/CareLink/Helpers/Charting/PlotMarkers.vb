@@ -212,9 +212,9 @@ Friend Module PlotMarkers
         Dim noteRow As Single = GetNoteYValue()
         Dim yMinNativeMmolL As Single = GetYMinNativeMmolL()
         Dim markersSorted As IOrderedEnumerable(Of Marker) =
-            s_markers.OrderBy(keySelector:=Function(m As Marker)
-                                               Return m.Timestamp
-                                           End Function).
+            AllMarkers.OrderBy(keySelector:=Function(m As Marker)
+                                                Return m.Timestamp
+                                            End Function).
                       ThenByDescending(keySelector:=Function(m As Marker)
                                                         Return m.Type
                                                     End Function)
@@ -371,7 +371,7 @@ Friend Module PlotMarkers
                 Throw New ApplicationException(message, innerException)
             End Try
         Next
-        If s_timeChangeMarkers.Count > 0 Then
+        If TimeChangeMarkers.Count > 0 Then
             timeChangeSeries.IsVisibleInLegend = True
             Const name As String = NameOf(ChartArea)
             pageChart.ChartAreas(name).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
@@ -407,7 +407,7 @@ Friend Module PlotMarkers
         Dim lastTimeChangeRecord As TimeChange = Nothing
         s_treatmentMarkersInsulin.Clear()
         s_treatmentMarkersMeal.Clear()
-        For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
+        For Each markerWithIndex As IndexClass(Of Marker) In AllMarkers.WithIndex()
             Try
                 Dim item As Marker = markerWithIndex.Value
                 Dim markerDateTime As Date = item.GetMarkerTimestamp
@@ -552,7 +552,7 @@ Friend Module PlotMarkers
         Next
         chart.Annotations.Last.BringToFront()
 
-        If s_timeChangeMarkers.Count <> 0 Then
+        If TimeChangeMarkers.Count <> 0 Then
             treatmentTimeChangeSeries.IsVisibleInLegend = True
             chart.ChartAreas(name:=NameOf(ChartArea)).AxisX.AdjustXAxisStartTime(lastTimeChangeRecord)
             chart.Legends(index:=0).CustomItems.Last.Enabled = True

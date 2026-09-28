@@ -79,7 +79,7 @@ Friend Module LoginHelpers
                                                        fileToLoad As FileToLoadOptions) As Task(Of Boolean)
 
         Dim serverTimerEnabled As Boolean = SetServerUpdateTimer(Start:=False)
-        s_autoBasalDeliveryMarkers.Clear()
+        AutoBasalDeliveryMarkers.Clear()
         ProgramInitialized = False
         Dim fromFile As Boolean
         Select Case fileToLoad

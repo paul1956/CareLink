@@ -19,13 +19,13 @@ Friend Module PlotSeriesLimits
     Private Function GetLimitsList(count As Integer) As Integer()
         Dim limitsIndexList(count) As Integer
         Dim index As Integer
-        For index = 0 To s_limitRecords.Count - 1
-            s_limitRecords(index).Index = index
+        For index = 0 To LimitRecordsList.Count - 1
+            LimitRecordsList(index).Index = index
         Next
 
         index = 0
         For i As Integer = 0 To limitsIndexList.GetUpperBound(dimension:=0)
-            If index + 1 < s_limitRecords.Count AndAlso s_limitRecords(index:=index + 1).Index < i Then
+            If index + 1 < LimitRecordsList.Count AndAlso LimitRecordsList(index:=index + 1).Index < i Then
                 index += 1
             End If
             limitsIndexList(i) = index
@@ -44,13 +44,13 @@ Friend Module PlotSeriesLimits
     ''' </param>
     ''' <remarks>
     '''  This method uses the global lists <see cref="s_sgRecords"/> and
-    '''  <see cref="s_limitRecords"/> to determine the data points for plotting.
+    '''  <see cref="LimitRecordsList"/> to determine the data points for plotting.
     '''  It adds points to the chart's series for target SG, high limit, and low limit.
     ''' </remarks>
     ''' <exception cref="ApplicationException">If an error occurs while plotting.</exception>
     <Extension>
     Friend Sub PlotHighLowLimitsAndTargetSg(chart As Chart, targetSgOnly As Boolean)
-        If s_limitRecords.Count = 0 Then Exit Sub
+        If LimitRecordsList.Count = 0 Then Exit Sub
         Dim limitsIndexList() As Integer = GetLimitsList(count:=s_sgRecords.Count - 1)
         Dim yValue As Single = If(CurrentUser Is Nothing, 0, CurrentUser.CurrentTarget)
         If Not yValue.AlmostZero() Then
@@ -65,8 +65,8 @@ Friend Module PlotSeriesLimits
         For Each sgListIndex As IndexClass(Of SG) In s_sgRecords.WithIndex()
             Dim xValue As OADate = sgListIndex.Value.OaDateTime()
             Try
-                Dim limitsLowValue As Single = s_limitRecords(index:=limitsIndexList(sgListIndex.Index)).LowLimit
-                Dim limitsHighValue As Single = s_limitRecords(index:=limitsIndexList(sgListIndex.Index)).HighLimit
+                Dim limitsLowValue As Single = LimitRecordsList(index:=limitsIndexList(sgListIndex.Index)).LowLimit
+                Dim limitsHighValue As Single = LimitRecordsList(index:=limitsIndexList(sgListIndex.Index)).HighLimit
                 If limitsHighValue <> 0 Then
                     chart.Series(name:=HighLimitSeriesName).Points.AddXY(xValue, yValue:=limitsHighValue)
                 End If

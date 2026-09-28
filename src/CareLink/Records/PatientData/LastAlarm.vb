@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports System.Text.Json
 Imports System.Text.Json.Serialization
 
 Public Class LastAlarm
@@ -121,8 +122,8 @@ Public Class LastAlarm
     Public Property BackgroundColor As String
 
     <DisplayName("Additional Info")>
-    <Column(Order:=22, TypeName:=NameOf(AdditionalInfo))>
+    <Column(Order:=22, TypeName:=NameOf(Json.AdditionalInfo))>
     <JsonPropertyName("additionalInfo")>
-    Public Property AdditionalInfo As Dictionary(Of String, Object)
+    Public Property AdditionalInfo As Json.AdditionalInfo
 
 End Class

@@ -349,6 +349,9 @@ Public Class Form1
                         End If
                     Else
                         If s_wrappedDataGridView.Contains(item:=dgv.Name) Then
+                            If .Index = 0 Then
+                                Stop
+                            End If
                             Dim result As String = String.Empty
                             If s_wrappedStrings.TryGetPrefixMatch(.HeaderText, result) Then
                                 Dim trimChars As Char() = {" "c, NonBreakingSpace}
@@ -395,17 +398,17 @@ Public Class Form1
             Next
         End If
 
-        If dgv.Name = NameOf(DgvSummary) AndAlso
-           _dgvSummaryPrevRowIndex > 0 AndAlso
-           _dgvSummaryPrevRowIndex < dgv.RowCount AndAlso
-           _dgvSummaryPrevColIndex > 0 AndAlso
-           _dgvSummaryPrevColIndex < dgv.ColumnCount Then
-
-            ' Restore the previous selection in the Summary DataGridView
-            ' if its not empty or Row(0).Cell(0).
-            dgv.CurrentCell = dgv.Rows(index:=_dgvSummaryPrevRowIndex).Cells(index:=_dgvSummaryPrevColIndex)
-            dgv.Rows(index:=_dgvSummaryPrevRowIndex).Selected = True
-            dgv.FirstDisplayedScrollingRowIndex = _dgvSummaryPrevRowIndex
+        If dgv.Name = NameOf(DgvSummary) Then
+            If _dgvSummaryPrevRowIndex > 0 AndAlso
+              _dgvSummaryPrevRowIndex < dgv.RowCount AndAlso
+              _dgvSummaryPrevColIndex > 0 AndAlso
+              _dgvSummaryPrevColIndex < dgv.ColumnCount Then
+                ' Restore the previous selection in the Summary DataGridView
+                ' if its not empty or Row(0).Cell(0).
+                dgv.CurrentCell = dgv.Rows(index:=_dgvSummaryPrevRowIndex).Cells(index:=_dgvSummaryPrevColIndex)
+                dgv.Rows(index:=_dgvSummaryPrevRowIndex).Selected = True
+                dgv.FirstDisplayedScrollingRowIndex = _dgvSummaryPrevRowIndex
+            End If
         Else
             ' Clear the selection of all DataGridViews except Summary DataGridView.
             dgv.ClearSelection()
@@ -445,7 +448,7 @@ Public Class Form1
                 Return s.DeliverySuspended
             End Function
 
-        showLegend = s_suspendedMarkers.Any(predicate)
+        showLegend = SuspendedMarkers.Any(predicate)
 
         ShowHideLegendItem(showLegend,
                            legendString:="Suspend",
@@ -2514,12 +2517,12 @@ Public Class Form1
         Try
             Select Case columnName
                 Case NameOf(LastSG.Sg)
-                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     dgv.CellFormattingSg(e, partialKey:=NameOf(LastSG.Sg))
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
                 Case NameOf(LastSG.TimestampAsString)
-                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     dgv.CellFormattingDefault(e)
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
                 Case NameOf(LastSG.SensorState)
                     If Equals(e.Value, "NO_ERROR_MESSAGE") Then
@@ -2545,26 +2548,17 @@ Public Class Form1
 
         With e.Column
             .AutoSizeMode =
-                If(e.Column.Name = "Message",
+                If(e.Column.Name = "SensorState",
                    DataGridViewAutoSizeColumnMode.Fill,
                    DataGridViewAutoSizeColumnMode.AllCells)
 
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
             Dim dgv As DataGridView = CType(sender, DataGridView)
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of SG)(.Name),
+                cellStyle:=GetCellStyle(Of LastSG)(.Name),
                 forceReadOnly:=True,
                 caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
-            Select Case .Index
-                Case 0
-                    .SortMode = DataGridViewColumnSortMode.Programmatic
-                    .HeaderCell.SortGlyphDirection = SortOrder.Descending
-                Case 1
-                    .SortMode = DataGridViewColumnSortMode.Automatic
-                    .HeaderCell.SortGlyphDirection = SortOrder.None
-                Case Else
-                    .SortMode = DataGridViewColumnSortMode.NotSortable
-            End Select
+            .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
 
@@ -2585,7 +2579,6 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         HideDataGridViewColumnsByName(Of LastSG)(dgv)
         ' Hide Record Index
-        dgv.Columns(index:=0).Visible = False
         dgv.ApplyDisplayNames(Of LastSG)()
         dgv.ClearSelection()
     End Sub
@@ -2838,6 +2831,12 @@ Public Class Form1
         If Not dgv.Columns.Contains(columnName) Then Return
         Try
             Select Case columnName
+                Case NameOf(BannerState.RecordNumber)
+                    ' ignore
+
+                Case NameOf(BannerState.Type)
+                    dgv.CellFormattingToTitle(e)
+
                 Case NameOf(BannerState.Message)
                     dgv.CellFormattingToTitle(e)
 
@@ -2871,6 +2870,14 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.ApplyDisplayNames(Of BannerState)()
+
+        Dim last As Integer = dgv.Columns.Count - 1
+        For index As Integer = 0 To last
+            dgv.Columns(index).AutoSizeMode =
+                If(index = last,
+                   DataGridViewAutoSizeColumnMode.Fill,
+                   DataGridViewAutoSizeColumnMode.AllCells)
+        Next
         dgv.ClearSelection()
     End Sub
 
@@ -5621,8 +5628,8 @@ Public Class Form1
                 title &= $" - {message}"
             End If
         Else
-            Dim pattern As String = s_basalList.ActiveBasalPattern
-            Return $"{pattern} rate = {s_basalList.GetBasalPerHour} U Per Hour".CleanSpaces
+            Dim pattern As String = BasalList.ActiveBasalPattern
+            Return $"{pattern} rate = {BasalList.GetBasalPerHour} U Per Hour".CleanSpaces
         End If
         Return title
     End Function
@@ -5747,17 +5754,17 @@ Public Class Form1
 
             With Me.ActiveInsulinChart
                 Const name As String = NameOf(ActiveInsulinChartTitle)
-                .Titles(name).Text = $"Running Insulin On Board (IOB){s_basalList.Subtitle()}"
+                .Titles(name).Text = $"Running Insulin On Board (IOB){BasalList.Subtitle()}"
                 .ChartAreas(name:=NameOf(ChartArea)).UpdateChartAreaSgAxisX()
 
-                If s_markers.Count = 0 Then
+                If AllMarkers.Count = 0 Then
                     Exit Sub
                 End If
 
                 ' Order all markers by time and sum bolus amounts for the same key
                 Dim timeOrderedMarkers As New SortedDictionary(Of OADate, Single)
 
-                For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
+                For Each markerWithIndex As IndexClass(Of Marker) In AllMarkers.WithIndex()
                     Dim marker As Marker = markerWithIndex.Value
                     Dim key As New OADate(asDate:=marker.GetMarkerTimestamp)
                     Dim bolusAmount As Single = 0
@@ -6095,7 +6102,7 @@ Public Class Form1
         s_totalDailyDose = 0
         s_totalManualBolus = 0
 
-        For Each markerWithIndex As IndexClass(Of Marker) In s_markers.WithIndex()
+        For Each markerWithIndex As IndexClass(Of Marker) In AllMarkers.WithIndex()
             Dim marker As Marker = markerWithIndex.Value
             Select Case marker.Type
                 Case "INSULIN"
@@ -6194,7 +6201,7 @@ Public Class Form1
             Me.Last24HrMealBolusPercentLabel.Text = $"{totalPercent}%"
         Else
             Me.Last24HrAutoCorrectionLabel.ForeColor = Color.FromArgb(red:=64, green:=64, blue:=64)
-            If s_autoModeStatusMarkers.Count = 0 Then
+            If AutoModeStatusMarkers.Count = 0 Then
                 Me.Last24HrAutoCorrectionUnitsLabel.Visible = False
                 Me.Last24HrAutoCorrectionPercentLabel.Visible = False
             Else
@@ -6553,9 +6560,9 @@ Public Class Form1
 
         ' Calculate Time in AutoMode
 
-        If s_autoModeStatusMarkers.Count = 0 AndAlso Not IsFlex() Then
+        If AutoModeStatusMarkers.Count = 0 AndAlso Not IsFlex() Then
             Me.SmartGuardLabel.Text = "SmartGuard 0%"
-        ElseIf s_autoModeStatusMarkers.Count = 1 Then
+        ElseIf AutoModeStatusMarkers.Count = 1 Then
             Me.SmartGuardLabel.Text = "SmartGuard 100%"
         Else
             Try
@@ -6563,17 +6570,17 @@ Public Class Form1
                 Dim autoModeStartTime As New Date
                 Dim timeInAutoMode As TimeSpan = ZeroTickSpan
                 Dim timestamp As Date
-                For Each r As IndexClass(Of AutoModeStatus) In s_autoModeStatusMarkers.WithIndex
+                For Each r As IndexClass(Of AutoModeStatus) In AutoModeStatusMarkers.WithIndex
                     If r.IsFirst Then
-                        If r.Value.AutoModeOn OrElse s_autoModeStatusMarkers.Count = 1 Then
+                        If r.Value.AutoModeOn OrElse AutoModeStatusMarkers.Count = 1 Then
                             autoModeStartTime = r.Value.Timestamp
-                            timestamp = s_autoModeStatusMarkers.First.Timestamp
+                            timestamp = AutoModeStatusMarkers.First.Timestamp
                             timeInAutoMode += timestamp.AddDays(value:=1) - autoModeStartTime
                         End If
                     Else
                         If r.Value.AutoModeOn Then
                             If r.IsLast Then
-                                timestamp = s_autoModeStatusMarkers.First.Timestamp
+                                timestamp = AutoModeStatusMarkers.First.Timestamp
                                 timeInAutoMode += timestamp.AddDays(value:=1) - r.Value.Timestamp
                             Else
                                 autoModeStartTime = r.Value.Timestamp
@@ -6585,7 +6592,7 @@ Public Class Form1
                     End If
                 Next
                 Me.SmartGuardLabel.Text =
-                    If(timeInAutoMode >= OneDaySpan OrElse (s_autoModeStatusMarkers.Count = 0 AndAlso IsFlex()),
+                    If(timeInAutoMode >= OneDaySpan OrElse (AutoModeStatusMarkers.Count = 0 AndAlso IsFlex()),
                        "SmartGuard 100%",
                        $"SmartGuard {CInt(timeInAutoMode / OneDaySpan * 100)}%")
             Catch ex As Exception
@@ -6675,7 +6682,7 @@ Public Class Form1
         Try
             Me.InitializeTreatmentMarkersChart()
             With Me.TreatmentMarkersChart
-                .Titles(name:=NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details{s_basalList.Subtitle()}"
+                .Titles(name:=NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details{BasalList.Subtitle()}"
                 .ChartAreas(name:=NameOf(ChartArea)).UpdateChartAreaSgAxisX()
                 .PlotSuspendArea(SuspendSeries:=Me.TreatmentSuspendSeries)
                 .PlotTreatmentMarkers(Me.TreatmentTimeChangeSeries)
@@ -6760,7 +6767,7 @@ Public Class Form1
         FinishInitialization(mainForm:=Me)
         Me.UpdateTrendArrows()
         UpdateSummaryTab(dgv:=Me.DgvSummary,
-                         classCollection:=s_listOfSummaryRecords,
+                         classCollection:=ListOfSummaryRecords,
                          sort:=True,
                          hideHeaderColumn:=False)
         Me.UpdateAutoModeShield()
@@ -6791,7 +6798,7 @@ Public Class Form1
 
         If s_lastAlarmValue IsNot Nothing Then
             Dim classCollection1 As List(Of SummaryRecord) =
-                GetSummaryRecords(jsonDictionary:=s_lastAlarmValue)
+                GetSummaryRecords(jsonDictionary:=PatientData.LastAlarm.InstanceToDictionary)
             UpdateSummaryTab(dgv:=Me.DgvLastAlarm,
                 classCollection:=classCollection1,
                 sort:=True, hideHeaderColumn:=True)
@@ -6823,7 +6830,7 @@ Public Class Form1
         Me.DgvSGs.AutoSize = True
         Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
-        table = ClassCollectionToDataTable(classCollection:=s_limitRecords)
+        table = ClassCollectionToDataTable(classCollection:=LimitRecordsList)
         Me.TlpLimits.
             DisplayDataTable(Of Limit)(table,
                                       className:=NameOf(Limit),
@@ -6835,7 +6842,7 @@ Public Class Form1
                          classCollection:=classCollection2,
                          sort:=False, hideHeaderColumn:=True)
 
-        table = ClassCollectionToDataTable(s_basalList.ClassCollection)
+        table = ClassCollectionToDataTable(BasalList.ClassCollection)
         Me.TlpBasal.
             DisplayDataTable(Of Basal)(table,
                                        className:=NameOf(Basal),

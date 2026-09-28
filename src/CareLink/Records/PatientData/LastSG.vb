@@ -24,15 +24,15 @@ Public Class LastSG
     <JsonPropertyName("sg")>
     Public Property Sg As Single
 
-    <DisplayName("Sensor State")>
-    <Column(Order:=4, TypeName:=NameOf([String]))>
-    <JsonPropertyName("sensorState")>
-    Public Property SensorState As String
-
     <DisplayName("Timestamp")>
-    <Column(Order:=5, TypeName:="String")>
+    <Column(Order:=4, TypeName:="String")>
     <JsonPropertyName("timestamp")>
     Public Property TimestampAsString As String
+
+    <DisplayName("Sensor State")>
+    <Column(Order:=5, TypeName:=NameOf([String]))>
+    <JsonPropertyName("sensorState")>
+    Public Property SensorState As String
 
     Public Overrides Function ToString() As String
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture

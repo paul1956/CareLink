@@ -12,12 +12,13 @@ Imports System.Globalization
 Friend Module NotificationHelpers
     Private ReadOnly s_notificationColumnsToHide As New List(Of String)
 
-    Private ReadOnly s_rowsToHide As New List(Of String) From {
+    Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+
+    Friend ReadOnly s_rowsToHide As New List(Of String) From {
         NameOf(ActiveNotification.Version),
         NameOf(ClearedNotifications.RecordNumber),
-        NameOf(ClearedNotifications.ReferenceGUID)}
-
-    Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+        NameOf(ClearedNotifications.ReferenceGUID),
+        NameOf(LastAlarm.GUID)}
 
     ''' <summary>
     '''  Attaches the handlers to the <see cref="DataGridView"/> for notifications.

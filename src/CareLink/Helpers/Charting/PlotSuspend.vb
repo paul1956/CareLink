@@ -23,8 +23,8 @@ Friend Module PlotSuspend
     ''' </remarks>
     <Extension>
     Friend Sub PlotSuspendArea(pageChart As Chart, SuspendSeries As Series)
-        If s_suspendedMarkers.Count = 1 AndAlso
-            Not s_suspendedMarkers(index:=0).DeliverySuspended Then
+        If SuspendedMarkers.Count = 1 AndAlso
+            Not SuspendedMarkers(index:=0).DeliverySuspended Then
 
             Exit Sub
         End If
@@ -32,7 +32,7 @@ Friend Module PlotSuspend
         Dim lineColor As Color = GetGraphLineColor(key:="Suspend")
         With pageChart.Series(name:=SuspendSeriesName).Points
             Dim suspended As Boolean = False
-            For Each e As IndexClass(Of LowGlucoseSuspended) In s_suspendedMarkers.WithIndex
+            For Each e As IndexClass(Of LowGlucoseSuspended) In SuspendedMarkers.WithIndex
 
                 Dim suspendRecord As LowGlucoseSuspended = e.Value
                 Dim xValue As Date = suspendRecord.Timestamp
@@ -45,7 +45,7 @@ Friend Module PlotSuspend
                     Dim stopTimeSpan As TimeSpan =
                         If(e.IsLast,
                             PumpNow() - xValue,
-                            s_suspendedMarkers(index:=e.Index + 1).Timestamp - xValue)
+                            SuspendedMarkers(index:=e.Index + 1).Timestamp - xValue)
 
                     Dim incrementSpans As Integer = CInt(Math.Ceiling(stopTimeSpan.TotalMinutes / 5)) - 1
                     For i As Long = 1 To incrementSpans
@@ -59,7 +59,7 @@ Friend Module PlotSuspend
 
                     If Not e.IsLast Then
                         .AddXY(
-                            s_suspendedMarkers(index:=e.Index + 1).Timestamp,
+                            SuspendedMarkers(index:=e.Index + 1).Timestamp,
                             Double.NaN)
                     End If
                     .Last.Color = Color.Transparent

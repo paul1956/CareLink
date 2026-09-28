@@ -27,7 +27,7 @@ Friend Module Form1SummaryTabHelpers
                                 hideHeaderColumn As Boolean)
 
         If sort Then
-            s_listOfSummaryRecords.Sort()
+            ListOfSummaryRecords.Sort()
         End If
         dgv.InitializeDgv()
         dgv.DataSource = ClassCollectionToDataTable(classCollection)

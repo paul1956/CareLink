@@ -164,13 +164,12 @@ Friend Module SummaryHelpers
         End If
 
         Dim triggerTime As TimeOnly
-        Dim additionalInfo As Dictionary(Of String, String) = Nothing
+        Dim additionalInfo As New Dictionary(Of String, String)
         key = "AdditionalInfo"
         Dim jsonString As String = String.Empty
         If jsonDictionary.TryGetValue(key, value:=jsonString) Then
             additionalInfo = jsonString.ToStringDictionary()
         Else
-            additionalInfo = New Dictionary(Of String, String)
             For Each kvp As KeyValuePair(Of String, String) In jsonDictionary
                 If kvp.Key.StartsWithNoCase(value:="AdditionalInfo") Then
                     Dim split() As String = kvp.Key.Split(separator:=":")
