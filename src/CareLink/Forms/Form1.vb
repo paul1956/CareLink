@@ -6839,11 +6839,13 @@ Public Class Form1
                                       className:=NameOf(Limit),
                                       rowIndex:=ServerDataEnum.limits)
 
-        Dim classCollection2 As List(Of SummaryRecord) =
+        If PatientData.TherapyAlgorithmState IsNot Nothing Then
+            Dim classCollection2 As List(Of SummaryRecord) =
             GetSummaryRecords(jsonDictionary:=PatientData.TherapyAlgorithmState.InstanceToDictionary)
-        UpdateSummaryTab(dgv:=Me.DgvTherapyAlgorithmState,
+            UpdateSummaryTab(dgv:=Me.DgvTherapyAlgorithmState,
                          classCollection:=classCollection2,
                          sort:=False, hideHeaderColumn:=True)
+        End If
 
         table = ClassCollectionToDataTable(BasalList.ClassCollection)
         Me.TlpBasal.

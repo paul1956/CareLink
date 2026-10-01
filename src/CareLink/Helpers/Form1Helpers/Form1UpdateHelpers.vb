@@ -1117,7 +1117,9 @@ Friend Module Form1UpdateHelpers
         Next
 
         Dim safeBasalDuration As Integer =
-            PatientData.TherapyAlgorithmState.SafeBasalDuration
+            If(PatientData.TherapyAlgorithmState IsNot Nothing,
+               PatientData.TherapyAlgorithmState.SafeBasalDuration,
+               0)
         If safeBasalDuration > 0 Then
             mainForm.LastSgOrExitTimeLabel.Text =
                 $"Exit In:{ TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(unit:="hr")}"
