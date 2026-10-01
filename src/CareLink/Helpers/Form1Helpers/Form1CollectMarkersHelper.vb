@@ -51,7 +51,7 @@ Friend Module Form1CollectMarkersHelper
     '''  Collect up markers
     ''' </summary>
     ''' <param name="jsonRow">JSON Marker Row</param>
-    ''' <returns>Max Basal/Hr</returns>
+    ''' <returns>Max InsulinAmount/Hr</returns>
     Friend Function CollectMarkers() As String
         AutoBasalDeliveryMarkers.Clear()
         AutoModeStatusMarkers.Clear()
@@ -193,7 +193,7 @@ Friend Module Form1CollectMarkersHelper
                 maxBasalPerHour = 10
             End If
         End If
-        Return $"Max Basal/Hr ~{maxBasalPerHour.RoundTo025}U"
+        Return $"Max InsulinAmount/Hr ~{maxBasalPerHour.RoundToStep(IsFlex())}U"
     End Function
 
 End Module

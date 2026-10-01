@@ -13,8 +13,8 @@ Public Class ParserSmokeTests
         ' Minimal synthetic page text that includes the main sections the parser expects.
         Dim lines As New List(Of String) From {
             "John Doe  Header",
-            "Max Basal Rate  2.5 U/Hr",
-            "Basal pattern settings",
+            "Max Bolus Amount Rate  2.5 U/Hr",
+            "Bolus Amount pattern settings",
             "normal (active)  (U/Hr)  12:00 AM - 12:00 AM  0.8",
             "Active insulin time  2 h",
             "Max bolus  10 u",

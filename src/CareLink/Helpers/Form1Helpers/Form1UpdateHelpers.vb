@@ -4,6 +4,7 @@
 
 Imports System.Globalization
 Imports System.IO
+Imports System.Linq
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
@@ -28,6 +29,9 @@ Friend Module Form1UpdateHelpers
 
     Private ReadOnly Property Comparer As StringComparer =
         StringComparer.OrdinalIgnoreCase
+
+    Private Const ComparisonType As StringComparison =
+        StringComparison.OrdinalIgnoreCase
 
     ''' <summary>
     '''  Converts a date string to a formatted date string using the specified provider,
@@ -292,8 +296,66 @@ Friend Module Form1UpdateHelpers
     '''  The list to which summary records are added.
     ''' </param>
     ''' <param name="isTitle"></param>
+    Friend Sub HandleComplexItemsString(kvp As KeyValuePair(Of String, String),
+                                        ByRef recordNumber As Single,
+                                        key As String,
+                                        listOfSummaryRecords As List(Of SummaryRecord),
+                                        isTitle As Boolean)
+
+        ' First try to parse the value as JSON object and enumerate properties.
+        If IsNotNullOrWhiteSpace(kvp.Value) Then
+            Dim t As Type = kvp.Value.GetType
+            Select Case t
+                Case GetType(JsonElement)
+                    Stop
+                Case GetType(String)
+                    If Not kvp.Value.IsValidJson() Then
+                        Dim idx As Integer = 0
+                        For Each r As SummaryRecord In listOfSummaryRecords
+                            If r.Key.StartsWithNoCase(value:=key) Then
+                                idx += 1
+                            End If
+                        Next
+                        If idx > 0 Then
+                            recordNumber -= 1
+                        End If
+
+                        Dim message As String = ""
+                        If isTitle Then
+                            message = kvp.Value.ToTitle
+                        End If
+                        Dim item As New SummaryRecord(
+                                recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
+                                kvp.Key,
+                                kvp.Value,
+                                message)
+                        listOfSummaryRecords.Add(item)
+                    Else
+                        HandleComplexItems(kvp,
+                                           recordNumber,
+                                           key,
+                                           listOfSummaryRecords,
+                                           isTitle)
+                    End If
+                Case Else
+                    Stop
+            End Select
+        End If
+    End Sub
+
+    ''' <summary>
+    '''  Handles complex items in a key-value row, splitting and processing values
+    '''  for summary records.
+    ''' </summary>
+    ''' <param name="kvp">The key-value pair row to process.</param>
+    ''' <param name="recordNumber">The index of the row.</param>
+    ''' <param name="key">The key for the summary record.</param>
+    ''' <param name="listOfSummaryRecords">
+    '''  The list to which summary records are added.
+    ''' </param>
+    ''' <param name="isTitle"></param>
     Friend Sub HandleComplexItems(kvp As KeyValuePair(Of String, String),
-                                  recordNumber As Single,
+                                  ByRef recordNumber As Single,
                                   key As String,
                                   listOfSummaryRecords As List(Of SummaryRecord),
                                   isTitle As Boolean)
@@ -302,46 +364,107 @@ Friend Module Form1UpdateHelpers
         If IsNotNullOrWhiteSpace(kvp.Value) Then
             Try
                 Dim elem As JsonElement
+                Dim idx As Integer = 0
                 Try
-                    elem = kvp.Value.FromJson(Of JsonElement)()
+                    Dim t As Type
+                    Try
+                        elem = kvp.Value.FromJson(Of JsonElement)()
+                        t = elem.GetType
+                    Catch ex As Exception
+                        elem = Nothing
+                        t = GetType(String)
+                    End Try
+                    Select Case t
+                        Case GetType(JsonElement)
+                            elem = kvp.Value.FromJson(Of JsonElement)()
+                            If Not elem.IsEmpty Then
+                                Select Case elem.ValueKind
+                                    Case JsonValueKind.Object
+                                        For Each prop As JsonProperty In elem.EnumerateObject()
+                                            Dim childKey As String = prop.Name
+                                            Dim childValue As String = prop.Value.ElementToString()
+                                            Dim message As String = String.Empty
+                                            If kvp.Key.EqualsNoCase("AdditionalInfo") Then
+                                                If childKey.EqualsNoCase("sensorUpdateTime") Then
+                                                    message = GetSensorUpdateTime(key:=childValue)
+                                                End If
+                                            End If
+                                            If childKey = "time" Then
+                                                Dim result As Date
+                                                message =
+                                        If(childValue.TryParseDate(key:="", result),
+                                           result.ToShortDateTime(showSeconds:=False),
+                                           String.Empty)
+                                            End If
+                                            Dim value As String =
+                                                If(isTitle,
+                                                   childValue?.Trim.ToTitle,
+                                                   childValue)
+                                            Dim item As New SummaryRecord(
+                                                recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
+                                                key:=$"{key}:{childKey.Trim}",
+                                                value,
+                                                message)
+                                            listOfSummaryRecords.Add(item)
+                                            idx += 1
+                                        Next
+                                        Return
+                                    Case JsonValueKind.Undefined
+                                        Stop
+                                    Case JsonValueKind.Array
+                                        Stop
+                                    Case JsonValueKind.String
+                                        Dim item As New SummaryRecord(
+                                            recordNumber:=recordNumber,
+                                            kvp.Key,
+                                            value:=kvp.Value.ToString(),
+                                            message:="")
+
+                                    Case JsonValueKind.Number,
+                                         JsonValueKind.String,
+                                         JsonValueKind.True,
+                                         JsonValueKind.False
+                                        Dim item As New SummaryRecord(
+                                            recordNumber:=recordNumber,
+                                            kvp.Key,
+                                            value:=kvp.Value.ToString(),
+                                            message:="")
+                                        listOfSummaryRecords.Add(item)
+                                    Case JsonValueKind.Null
+                                        Stop
+                                End Select
+
+                            End If
+                        Case GetType(String)
+                            ' Legacy fallback: defensive handling of "key = value" style entries.
+                            Dim valueDictionary As Dictionary(Of String, String) =
+                            kvp.Value.ToStringDictionary()
+                            Dim separator As String() = New String() {" = "}
+                            For Each e As IndexClass(Of String) In valueDictionary.Keys.WithIndex
+                                Dim message As String = String.Empty
+                                Dim strings As String() = e.Value.Split(separator, options:=StringSplitOptions.None)
+                                If strings.Length < 2 Then
+                                    ' Skip malformed entry
+                                    Continue For
+                                End If
+                                If kvp.Key.EqualsNoCase("AdditionalInfo") AndAlso
+                                    strings(0).EqualsNoCase("sensorUpdateTime") Then
+
+                                    message = GetSensorUpdateTime(key:=strings(1))
+                                End If
+                                Dim item As New SummaryRecord(
+                                    recordNumber:=CSng(recordNumber + ((e.Index + 1) / 10)),
+                                    key:=$"{key}:{strings(0).Trim}",
+                                    value:=strings(1).Trim,
+                                    message)
+                                listOfSummaryRecords.Add(item)
+                            Next
+                        Case Else
+                            Stop
+                    End Select
                 Catch ex As Exception
                     elem = Nothing
                 End Try
-                If Not elem.IsEmpty AndAlso elem.ValueKind = JsonValueKind.Object Then
-                    Dim idx As Integer = 0
-                    For Each prop As JsonProperty In elem.EnumerateObject()
-                        Dim childKey As String = prop.Name
-                        Dim childValue As String = prop.Value.ElementToString()
-                        Dim message As String = String.Empty
-                        If kvp.Key.EqualsNoCase("AdditionalInfo") Then
-                            If childKey.EqualsNoCase("sensorUpdateTime") Then
-                                message = GetSensorUpdateTime(key:=childValue)
-                            End If
-                        End If
-                        If childKey = "time" Then
-                            Dim result As Date
-                            message =
-                                If(childValue.TryParseDate(key:="", result),
-                                   result.ToShortDateTime(showSeconds:=False),
-                                   String.Empty)
-                        End If
-                        Dim value As String =
-                            If(isTitle,
-                               childValue?.Trim.ToTitle,
-                               childValue)
-
-                        Dim item As New SummaryRecord(
-                                recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
-                                key:=$"{key}:{childKey.Trim}",
-                                value,
-                                message)
-                        listOfSummaryRecords.Add(item)
-                        idx += 1
-                    Next
-                    Return
-                Else
-                    Stop
-                End If
             Catch ex As JsonException
                 ' Not JSON or malformed; fall through to legacy parsing.
                 Stop
@@ -349,36 +472,11 @@ Friend Module Form1UpdateHelpers
         End If
 
         listOfSummaryRecords.Add(
-            item:=New SummaryRecord(recordNumber:=CSng(recordNumber),
+            item:=New SummaryRecord(recordNumber:=recordNumber,
                                     key:=key,
                                     value:="",
                                     message:=""))
         Return
-#If False Then
-        ' Legacy fallback: defensive handling of "key = value" style entries.
-        Dim valueDictionary As Dictionary(Of String, String) =
-                kvp.Value.ToStringDictionary()
-        Dim separator As String() = New String() {" = "}
-        For Each e As IndexClass(Of String) In valueDictionary.Keys.WithIndex
-            Dim message As String = String.Empty
-            Dim strings As String() = e.Value.Split(separator, options:=StringSplitOptions.None)
-            If strings.Length < 2 Then
-                ' Skip malformed entry
-                Continue For
-            End If
-            If kvp.Key.EqualsNoCase("AdditionalInfo") AndAlso
-                strings(0).EqualsNoCase("sensorUpdateTime") Then
-
-                message = GetSensorUpdateTime(key:=strings(1))
-            End If
-            Dim item As New SummaryRecord(
-                recordNumber:=CSng(recordNumber + ((e.Index + 1) / 10)),
-                key:=$"{key}:{strings(0).Trim}",
-                value:=strings(1).Trim,
-                message)
-            listOfSummaryRecords.Add(item)
-        Next
-#End If
     End Sub
 
     ''' <summary>
@@ -447,7 +545,7 @@ Friend Module Form1UpdateHelpers
         ' Get all public instance properties
         Const bindingAttr As BindingFlags = BindingFlags.Public Or BindingFlags.Instance
         Dim props As PropertyInfo() =
-            PatientData.GetType.GetProperties(bindingAttr)
+            PatientData.GetType().GetProperties(bindingAttr)
 
         Dim recentData As Dictionary(Of String, String) =
                 PatientDataElement.ToStringDictionary()
@@ -761,7 +859,6 @@ Friend Module Form1UpdateHelpers
                 Case ServerDataEnum.lastAlarm
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     ListOfSummaryRecords.Add(item)
-                    s_lastAlarmValue = kvp.Value.JsonToDictionary()
 
                 Case ServerDataEnum.activeInsulin
                     s_activeInsulin = PatientData.ActiveInsulin
@@ -995,7 +1092,7 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
                             Dim bannerState As BannerState = PatientData.PumpBannerState(index:=0)
                             Dim hours As String = bannerState.TimeRemaining.ToHoursMinutes
-                            .PumpBannerStateLabel.Text = $"Temp Basal {hours} hr"
+                            .PumpBannerStateLabel.Text = $"Temp InsulinAmount {hours} hr"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
                             .PumpBannerStateLabel.Font = s_font_7Bold

@@ -254,7 +254,7 @@ Public Class PdfSectionParser
                 Dim timeText As String = split(2)
                 Dim timePart As String = timeText.Split(separator:=" - ")(0)
                 Dim parsedTime As TimeOnly = TimeOnly.Parse(s:=timePart)
-                Dim units As Single = ParseSingle(s:=split(3))
+                Dim units As Single = split(3).ParseSingle().RoundToStep(IsFlex)
                 _record.Basal.NamedBasal(key:=name) = namedBasal
                 namedBasal.BasalRates.Add(item:=New BasalRateRecord With {
                     .[Time] = parsedTime,
@@ -279,14 +279,14 @@ Public Class PdfSectionParser
             bw.ActiveInsulinTime =
                 If(extractWord.Contains(value:=":"c),
                    AitLengths(key:=extractWord),
-                   ParseSingle(s:=extractWord))
+                   ParseSingle(s:=extractWord).RoundToStep(IsFlex))
         End If
         bw.BolusWizard = "On"
         _record.Bolus.BolusWizard = bw
 
         searchWord = "Max bolus"
         extractWord = Me.GetValueForSearchWord(searchWord, endsWith:="u")
-        bw.MaximumBolus = ParseSingle(s:=extractWord)
+        bw.MaximumBolus = ParseSingle(s:=extractWord).RoundToStep(IsFlex)
 
         bw.Units = New DeviceUnitsRecord With {
             .CarbUnits = "grams",
@@ -301,7 +301,7 @@ Public Class PdfSectionParser
             Dim split3 As String = split(3).RemoveSuffix(suffix:=" U")
             bolusIncrement = If(split3.Contains(value:="--"),
                                 Single.NaN,
-                                ParseSingle(s:=split3))
+                                split3.ParseSingle().RoundToStep(IsFlex))
         End If
 
         Dim dualSquareRecord As New DualSquareRecord With {.Dual = "Off", .Square = "Off"}
@@ -316,7 +316,7 @@ Public Class PdfSectionParser
             line = Me.SafeLineAt(lineNumber + 1)
             Dim carbRatio As String = line
             _record.Bolus.DeviceCarbohydrateRatios.Add(item:=New DeviceCarbRatioRecord With {
-                .Ratio = ParseSingle(s:=carbRatio),
+                .Ratio = ParseSingle(s:=carbRatio).RoundToSingle(digits:=1),
                 .Time = TimeOnly.Parse("0:00"),
                 .IsValid = True})
         End If
@@ -325,7 +325,7 @@ Public Class PdfSectionParser
         If lineNumber >= 0 Then
             line = Me.SafeLineAt(lineNumber - 1)
             _record.Bolus.InsulinSensitivity.Add(item:=New InsulinSensitivityRecord With {
-                .Sensitivity = ParseSingle(s:=line),
+                .Sensitivity = ParseSingle(s:=line).RoundToSingle(digits:=1),
                 .Time = TimeOnly.Parse(s:="0:00"),
                 .IsValid = True})
         End If
@@ -338,8 +338,8 @@ Public Class PdfSectionParser
                 Dim low As String = split(0).Trim()
                 Dim high As String = split(1).Trim()
                 _record.Bolus.BloodGlucoseTarget.Add(item:=New BloodGlucoseTargetRecord With {
-                    .Low = ParseSingle(s:=low),
-                    .High = ParseSingle(s:=high),
+                    .Low = ParseSingle(s:=low).RoundSg(),
+                    .High = ParseSingle(s:=high).RoundSg(),
                     .Time = TimeOnly.Parse(s:="0:00"),
                     .IsValid = True})
             End If
@@ -377,7 +377,7 @@ Public Class PdfSectionParser
 
         Dim sg As New SmartGuardRecord With {
             .SmartGuard = smartGuard,
-            .Target = ParseSingle(s:=target),
+            .Target = ParseSingle(s:=target).RoundSg(),
             .AutoCorrection = autoCorrection}
         _record.SmartGuard = sg
 

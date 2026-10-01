@@ -15,8 +15,8 @@ Public Module BloodGlucoseTargetRecordExtensions
         Dim s() As String = row.Columns(index:=0).Split(separator:=" "c, Options)
         If s.Length = 2 Then
             If TimeOnly.TryParse(s:=s(0), result:=this.Time) Then
-                this.Low = ParseSingle(s:=s(1))
-                this.High = ParseSingle(s:=row.Columns(index:=1))
+                this.Low = ParseSingle(s:=s(1)).RoundSg()
+                this.High = ParseSingle(s:=row.Columns(index:=1)).RoundSg()
                 this.IsValid = True
             Else
                 ' preserve behavior

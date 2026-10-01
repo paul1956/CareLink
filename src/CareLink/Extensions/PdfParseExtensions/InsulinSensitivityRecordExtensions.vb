@@ -20,7 +20,7 @@ Public Module InsulinSensitivityRecordExtensions
             Return
         End If
         If TimeOnly.TryParse(s:=s(0), result:=this.Time) Then
-            this.Sensitivity = ParseSingle(s:=s(1))
+            this.Sensitivity = ParseSingle(s:=s(1)).RoundToSingle(digits:=1)
             this.IsValid = True
         Else
             ' preserve behavior

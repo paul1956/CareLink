@@ -16,7 +16,7 @@ Public Class BgReading
         Me.DisplayTimeAsString = item.DisplayTimeAsString
         With item.Data.DataValues
             Me.UnitValue =
-                .UnitValue.RoundToSingle(digits:=0, considerValue:=True)
+                .UnitValue.RoundSg()
             Me.BgUnits = .BgUnits
         End With
     End Sub
@@ -88,7 +88,7 @@ Public Class BgReading
             If Me.UnitValue.IsSgInvalid Then Return Me.UnitValue
             Return If(Me.BgUnits <> "MGDL",
                       Me.UnitValue,
-                      (Me.UnitValue / MmolLUnitsDivisor).RoundToSingle(digits:=2))
+                      (Me.UnitValue / MmolLUnitsDivisor).RoundSg())
         End Get
     End Property
 

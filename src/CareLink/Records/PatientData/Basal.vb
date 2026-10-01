@@ -9,37 +9,37 @@ Imports System.Text.Json.Serialization
 Public Class Basal
     Implements IEquatable(Of Basal)
 
-    <DisplayName("Active Basal Pattern")>
+    <DisplayName("Active InsulinAmount Pattern")>
     <Column(Order:=0, TypeName:=NameOf([String]))>
     <JsonPropertyName("activeBasalPattern")>
     Public Property ActiveBasalPattern As String
 
-    <DisplayName("Basal Rate")>
+    <DisplayName("Bolus Amount Rate")>
     <Column(Order:=1, TypeName:=NameOf([Double]))>
     <JsonPropertyName("basalRate")>
     Public Property BasalRate As Double
 
-    <DisplayName("Temp Basal Name")>
+    <DisplayName("Temp InsulinAmount Name")>
     <Column(Order:=2, TypeName:=NameOf([String]))>
     <JsonPropertyName("tempBasalName")>
     Public Property TempBasalName As String
 
-    <DisplayName("Temp Basal Rate")>
+    <DisplayName("Temp InsulinAmount Rate")>
     <Column(Order:=2, TypeName:=NameOf([Double]))>
     <JsonPropertyName("tempBasalRate")>
     Public Property TempBasalRate As Double
 
-    <DisplayName("Temp Basal Percentage")>
+    <DisplayName("Temp InsulinAmount Percentage")>
     <Column(Order:=3, TypeName:=NameOf([Single]))>
     <JsonPropertyName("tempBasalPercentage")>
     Public Property TempBasalPercentage As Single
 
-    <DisplayName("Temp Basal Type")>
+    <DisplayName("Temp InsulinAmount Type")>
     <Column(Order:=4, TypeName:=NameOf([String]))>
     <JsonPropertyName("tempBasalType")>
     Public Property TempBasalType As String
 
-    <DisplayName("Temp Basal Duration Remaining")>
+    <DisplayName("Temp InsulinAmount Duration Remaining")>
     <Column(Order:=5, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("tempBasalDurationRemaining")>
     Public Property TempBasalDurationRemaining As Integer

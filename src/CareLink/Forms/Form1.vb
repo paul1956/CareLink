@@ -682,7 +682,7 @@ Public Class Form1
                                 Dim sgVal As Single =
                                     markerTags(index:=2).Trim.
                                                          Split(separator:=" ")(0).
-                                                         ParseSingle(digits:=2)
+                                                         ParseSingle().RoundSg()
                                 Me.CursorMessage4Label.Text =
                                     If(NativeMmolL,
                                        $"{CInt(sgVal * MmolLUnitsDivisor)} mg/dL",
@@ -706,7 +706,7 @@ Public Class Form1
                     Me.CursorMessage1Label.Text = "Sensor Glucose"
                     Dim yValue As Double = currentDataPoint.YValues(0)
                     Me.CursorMessage2Label.Text =
-                        $"{yValue.RoundToSingle(digits:=3)} {BgUnits}"
+                        $"{yValue.RoundToStep(IsFlex)} {BgUnits}"
                     Me.CursorMessage3Label.Text =
                         If(NativeMmolL,
                            $"{CInt(yValue * MmolLUnitsDivisor)} mg/dL",
@@ -725,7 +725,7 @@ Public Class Form1
                                           showInfusionSet:=False)
                 Case ActiveInsulinSeriesName
                     Dim yValue As Single =
-                        currentDataPoint.YValues.FirstOrDefault().RoundToSingle(digits:=3)
+                        currentDataPoint.YValues.FirstOrDefault().RoundToStep(IsFlex)
                     chart1.SetupCallout(currentDataPoint,
                                         text:=$"Theoretical Active Insulin {yValue:F3} U")
                     Me.ShowCursorControls(showWhat:=CursorInfo.Show3,
@@ -1344,9 +1344,9 @@ Public Class Form1
                 Case NameOf(ActiveInsulin.Amount)
                     If e.Value.ToString = "-1" Then
                         e.Value = $"Active Insulin Estimate {_latestActiveInsulin:N3} U"
-                        dgv.CellFormattingDefault(e)
+                        dgv.CellFormattingBasal(e)
                     Else
-                        dgv.CellFormattingSingleValue(e, digits:=3, TrailingText:=" U")
+                        dgv.CellFormattingBasal(e, TrailingText:=" U")
                     End If
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
@@ -1462,7 +1462,7 @@ Public Class Form1
                     End If
 
                 Case NameOf(AutoBasalDelivery.MaxAutoBasalRate)
-                    dgv.CellFormattingSingleValue(e, digits:=3)
+                    dgv.CellFormattingBasal(e)
 
                 Case NameOf(AutoBasalDelivery.OAdateTime)
                     ' Ignore
@@ -1641,7 +1641,7 @@ Public Class Form1
                 Case NameOf(Basal.BasalRate),
                      NameOf(Basal.TempBasalRate)
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
-                    dgv.CellFormattingSingleValue(e, digits:=3)
+                    dgv.CellFormattingBasal(e)
 
                 Case NameOf(Basal.PresetTempName),
                      NameOf(Basal.TempBasalName),
@@ -1660,7 +1660,7 @@ Public Class Form1
                         e.Value = EmptyString
                         e.FormattingApplied = True
                     Else
-                        dgv.CellFormattingSingleValue(e, digits:=3, TrailingText:=" %")
+                        dgv.CellFormattingSingleValue(e, digits:=0, TrailingText:=" %")
                     End If
 
                 Case NameOf(Basal.TempBasalDurationRemaining)
@@ -1737,7 +1737,7 @@ Public Class Form1
                 Case NameOf(BasalPerHour.BasalRate),
                      NameOf(BasalPerHour.BasalRate2)
                     If dgv.Name = NameOf(DgvBasalPerHour) Then
-                        dgv.CellFormattingSingleValue(e, digits:=3, TrailingText:=" U/h")
+                        dgv.CellFormattingBasal(e, TrailingText:=" U/h")
                         e.CellStyle.Font = s_font12
                     End If
 
@@ -2372,7 +2372,7 @@ Public Class Form1
                     dgv.CellFormattingToTitle(e)
 
                 Case NameOf(Insulin.SafeMealReduction)
-                    If dgv.CellFormattingSingleValue(e, digits:=3) >= 0.0025 Then
+                    If dgv.CellFormattingBasal(e) >= GetMinBasal() Then
                         dgv.CellFormattingApplyColor(e, textColor:=Color.OrangeRed)
                     Else
                         e.Value = EmptyString
@@ -2383,7 +2383,7 @@ Public Class Form1
                      NameOf(Insulin.DeliveredFastAmount),
                      NameOf(Insulin.ProgrammedExtendedAmount),
                      NameOf(Insulin.ProgrammedFastAmount)
-                    dgv.CellFormattingSingleValue(e, digits:=3)
+                    dgv.CellFormattingBasal(e)
 
                 Case NameOf(Insulin.ProgrammedDuration),
                      NameOf(Insulin.EffectiveDuration)
@@ -5332,13 +5332,13 @@ Public Class Form1
             Case < 2
                 TreatmentInsulinRow = 2
             Case Else
-                TreatmentInsulinRow = (MaxBasalPerDose + 0.025).RoundTo025
+                TreatmentInsulinRow = (MaxBasalPerDose + GetMinBasal()).RoundToStep(IsFlex)
         End Select
 
         Dim baseColor As Color = Me.TreatmentMarkersChart.BackColor.ContrastingColor()
 
         With treatmentMarkersChartArea.AxisY
-            Dim interval As Single = (TreatmentInsulinRow / 10).RoundToSingle(digits:=3)
+            Dim interval As Single = (TreatmentInsulinRow / 10).RoundToStep(IsFlex)
             .Interval = interval
             .IsInterlaced = False
             .IsMarginVisible = False
@@ -6108,26 +6108,27 @@ Public Class Form1
                 Case "INSULIN"
                     Dim deliveredAmount As String =
                         marker.Data.DataValues.DeliveredFastAmount.ToString
-                    s_totalDailyDose += deliveredAmount.ParseSingle(digits:=3)
+                    s_totalDailyDose += deliveredAmount.ParseSingle().RoundToStep(IsFlex)
                     Select Case marker.Data.DataValues.ActivationType
                         Case "AUTOCORRECTION"
-                            s_totalAutoCorrection += deliveredAmount.ParseSingle(digits:=3)
+                            s_totalAutoCorrection += deliveredAmount.ParseSingle().RoundToStep(IsFlex)
                         Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                            s_totalManualBolus += deliveredAmount.ParseSingle(digits:=3)
+                            s_totalManualBolus += deliveredAmount.ParseSingle().RoundToStep(IsFlex)
                     End Select
 
                 Case "AUTO_BASAL_DELIVERY"
                     Dim amount As Single =
-                        marker.Data.DataValues.BolusAmount.RoundToSingle(digits:=3)
+                        marker.Data.DataValues.BolusAmount.RoundToStep(IsFlex)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MANUAL_BASAL_DELIVERY"
                     Dim amount As Single =
-                        marker.Data.DataValues.BolusAmount.RoundToSingle(digits:=3)
+                        marker.Data.DataValues.BolusAmount.RoundToStep(IsFlex)
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MEAL"
-                    s_totalCarbs += marker.Data.DataValues.Amount.RoundToSingle(digits:=3)
+                    s_totalCarbs +=
+                        marker.Data.DataValues.Amount.RoundToStep(IsFlex)
                 Case "CALIBRATION"
                     ' IGNORE HERE
                 Case "BG_READING"
@@ -6485,12 +6486,12 @@ Public Class Form1
         With Me.TimeInRangeChart
             With .Series(name:=NameOf(TimeInRangeSeries)).Points
                 .Clear()
-                Dim yValue As Single = PatientData.BelowHypoLimit.RoundToSingle(digits:=1) / 100
+                Dim yValue As Single = PatientData.BelowHypoLimit.RoundSg() / 100
                 .AddXY($"{GetBelowHypoLimit.Str}% Below {GetTirLowLimitWithUnits()}", yValue)
                 .Last().Color = Color.Red
                 .Last().BorderColor = Color.Black
                 .Last().BorderWidth = 2
-                yValue = PatientData.AboveHyperLimit.RoundToSingle(digits:=1) / 100
+                yValue = PatientData.AboveHyperLimit.RoundSg() / 100
                 .AddXY($"{GetAboveHyperLimit.Str}% Above {GetTirHighLimitWithUnits()}", yValue)
                 .Last().Color = Color.Yellow
                 .Last().BorderColor = Color.Black
@@ -6553,7 +6554,7 @@ Public Class Form1
         Dim averageSgStr As String = PatientData.AverageSG.ToString
         Me.AverageSGValueLabel.Text =
             If(NativeMmolL,
-               (PatientData.AverageSG / 18).RoundToSingle(digits:=2),
+               CSng(PatientData.AverageSG / 18).RoundSg(),
                PatientData.AverageSG).ToString
 
         Me.AverageSGMessageLabel.Text = $"Average SG in {BgUnits}"
@@ -6633,7 +6634,8 @@ Public Class Form1
             Me.LowTirComplianceLabel.Text = EmptyString
             Me.HighTirComplianceLabel.Text = EmptyString
         Else
-            Dim lowDeviation As Single = Math.Sqrt(lowDeviations / (elements - highCount)).RoundToSingle(digits:=1)
+            Dim lowDeviation As Single =
+              CSng(Math.Sqrt(lowDeviations / (elements - highCount))).RoundSg()
             Select Case True
                 Case lowDeviation <= 2
                     Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}Excellent{Superscript2}"
@@ -6647,7 +6649,8 @@ Public Class Form1
                     Me.LowTirComplianceLabel.ForeColor = Color.Red
             End Select
 
-            Dim highDeviation As Single = Math.Sqrt(highDeviations / (elements - lowCount)).RoundToSingle(digits:=1)
+            Dim highDeviation As Single =
+              CSng(Math.Sqrt(highDeviations / (elements - lowCount))).RoundSg()
             Select Case True
                 Case highDeviation <= 2
                     Me.HighTirComplianceLabel.Text = $"High{vbCrLf}Excellent{Superscript2}"
@@ -6796,12 +6799,12 @@ Public Class Form1
                                     rowIndex:=ServerDataEnum.lastSG,
                                     hideRecordNumberColumn:=True)
 
-        If s_lastAlarmValue IsNot Nothing Then
+        If PatientData.LastAlarm IsNot Nothing Then
             Dim classCollection1 As List(Of SummaryRecord) =
                 GetSummaryRecords(jsonDictionary:=PatientData.LastAlarm.InstanceToDictionary)
             UpdateSummaryTab(dgv:=Me.DgvLastAlarm,
-                classCollection:=classCollection1,
-                sort:=True, hideHeaderColumn:=True)
+                             classCollection:=classCollection1,
+                             sort:=True, hideHeaderColumn:=True)
         Else
             Me.TlpLastAlarm.
                 DisplayDataTable(Of LastAlarm)(table:=Nothing,

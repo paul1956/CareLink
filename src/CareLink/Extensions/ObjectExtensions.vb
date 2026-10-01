@@ -4,6 +4,7 @@
 
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
+Imports System.Text.Json
 
 Friend Module ObjectExtensions
 
@@ -11,33 +12,50 @@ Friend Module ObjectExtensions
     <Extension>
     Public Function InstanceToDictionary(Of T)(instance As T, Optional prefix As String = "") As Dictionary(Of String, String)
         Dim result As New Dictionary(Of String, String)()
-        Dim tmpDictionary As New Dictionary(Of String, String)
+        Dim second As New Dictionary(Of String, String)
         Try
+            Dim elementSelector As Func(Of KeyValuePair(Of String, String), String) =
+                Function(v As KeyValuePair(Of String, String))
+                    Return v.Value
+                End Function
+            Dim keySelector As Func(Of KeyValuePair(Of String, String), String) =
+                Function(k As KeyValuePair(Of String, String)) As String
+                    Return k.Key
+                End Function
             For Each pi As PropertyInfo In GetType(T).GetProperties
-                Dim value As String = $"{pi.GetValue(obj:=instance)?.ToString}"
+                Dim obj As Object = pi.GetValue(obj:=instance)
+                If pi.PropertyType.IsGenericType AndAlso
+                   pi.PropertyType.GetGenericTypeDefinition() = GetType(Nullable(Of )) AndAlso
+                   obj Is Nothing Then
+                    Continue For
+                ElseIf obj Is Nothing Then
+                    Continue For
+                ElseIf TypeOf obj Is Color AndAlso
+                    CType(obj, Color).IsEmpty Then
+                    Continue For
+                End If
+                Dim value As String = obj.ToString()
                 Select Case pi.Name
                     Case NameOf(AdditionalInfo)
-                        tmpDictionary =
-                            CType(pi.GetValue(obj:=instance), Json.AdditionalInfo).
+                        second =
+                            CType(obj, AdditionalInfo).
                                 InstanceToDictionary(prefix:="AdditionalInfo:")
-                        tmpDictionary =
-                            CType(pi.GetValue(obj:=instance), Json.AdditionalInfo).
-                                InstanceToDictionary(prefix:="AdditionalInfo:")
-
+                        result = result.Concat(second).ToDictionary(keySelector, elementSelector)
+                        second.Clear()
+                    Case NameOf(AdditionalInfo.AdditionalProperties)
+                        Dim source As Dictionary(Of String, JsonElement) =
+                            CType(obj, Dictionary(Of String, JsonElement))
+                        second = ConvertJsonElementDict(source)
+                        result = result.Concat(second).ToDictionary(keySelector, elementSelector)
+                        second.Clear()
                     Case "Acknowledged"
-                        tmpDictionary =
-                            CType(pi.GetValue(obj:=instance), AcknowledgedRecord).
+                        second =
+                            CType(obj, AcknowledgedRecord).
                                 InstanceToDictionary(prefix:="Acknowledged:")
-                        tmpDictionary =
-                        CType(pi.GetValue(obj:=instance), AcknowledgedRecord).
-                            InstanceToDictionary(prefix:="Acknowledged:")
-                        Continue For
+                        result = result.Concat(second).ToDictionary(keySelector, elementSelector)
+                        second.Clear()
                     Case Else
-                        If s_rowsToHide.Contains(item:=pi.Name) OrElse
-                            IsNullOrEmpty(value) OrElse
-                            value = "0" OrElse
-                            value = "Color [Empty]" OrElse
-                            value = "1/1/0001 12:00:00 AM" Then
+                        If s_rowsToHide.Contains(item:=pi.Name) Then
                             Continue For
                         End If
                         result.Add(key:=$"{prefix}{pi.Name}", value)
@@ -50,8 +68,8 @@ Friend Module ObjectExtensions
         Catch ex As Exception
             Stop
         End Try
-        If tmpDictionary.Count > 0 Then
-            For Each kvp As KeyValuePair(Of String, String) In tmpDictionary
+        If second.Count > 0 Then
+            For Each kvp As KeyValuePair(Of String, String) In second
                 result.Add(kvp.Key, kvp.Value)
             Next
         End If

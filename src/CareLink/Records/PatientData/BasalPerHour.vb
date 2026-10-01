@@ -19,7 +19,7 @@ Friend Class BasalPerHour
     <Column(Order:=0, TypeName:=NameOf([Int32]))>
     Public Property Hour As Integer
 
-    <DisplayName("Basal Rate")>
+    <DisplayName("Bolus Rate")>
     <Column(Order:=1, TypeName:="Double")>
     Public Property BasalRate As Double
 
@@ -27,7 +27,7 @@ Friend Class BasalPerHour
     <Column(Order:=2, TypeName:=NameOf([Int32]))>
     Public Property Hour2 As Integer
 
-    <DisplayName("Basal Rate")>
+    <DisplayName("Bolus Rate")>
     <Column(Order:=3, TypeName:="Double")>
     Public Property BasalRate2 As Double
 

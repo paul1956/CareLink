@@ -28,7 +28,7 @@ Public Class Meal
         Me.Kind = "Marker"
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
-        Me.Amount = CInt(item.Data.DataValues.Amount.RoundToSingle(digits:=0))
+        Me.Amount = CInt(Math.Round(item.Data.DataValues.Amount))
     End Sub
 
     ''' <summary>

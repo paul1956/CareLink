@@ -58,7 +58,7 @@ Friend Module DeliverySettings
                 Dim sensitivity As String =
                     If(item.Sensitivity < 0.01,
                        "0",
-                       item.Sensitivity.RoundTo025.ToString(format:="F1"))
+                       item.Sensitivity.RoundToStep(IsFlex).ToString(format:="F1"))
 
                 Dim value As String =
                     $"{sensitivity} {pdf.Bolus.BolusWizard.Units.CarbUnits}/U"
@@ -128,7 +128,7 @@ Friend Module DeliverySettings
     <Extension>
     Friend Sub DeliverySettings3MaxBasalBolus(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb
-            .AppendKeyValue(leftPanel:=True, title:="Max Basal:", value:=$"{pdf.Basal.MaximumBasalRate} U/hr")
+            .AppendKeyValue(leftPanel:=True, title:="Max InsulinAmount:", value:=$"{pdf.Basal.MaximumBasalRate} U/hr")
             .AppendKeyValue(leftPanel:=True, title:="Max Bolus:", value:=$"{pdf.Bolus.BolusWizard.MaximumBolus} U")
             .AppendNewLine
         End With

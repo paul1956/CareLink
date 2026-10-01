@@ -17,7 +17,7 @@ Public Module DeviceCarbRatioRecordExtensions
             Return
         End If
         If TimeOnly.TryParse(s:=s(0), result:=this.Time) Then
-            this.Ratio = ParseSingle(s:=s(1))
+            this.Ratio = ParseSingle(s:=s(1)).RoundToSingle(digits:=1)
             this.IsValid = True
         Else
             ' preserve behavior: Stop was previously called on parse failure

@@ -68,7 +68,8 @@ Public Class SgExtensionsTests
         ' Arrange
         NativeMmolL = True
         Dim value As Single = 100.0F
-        Dim scaled As Single = (value / MmolLUnitsDivisor).RoundToSingle(digits:=1, considerValue:=True)
+        Dim scaled As Single =
+            (value / MmolLUnitsDivisor).RoundSg()
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Dim expected As String = scaled.ToString(provider)
 
@@ -88,7 +89,7 @@ Public Class SgExtensionsTests
         NativeMmolL = True
         Dim input As String = "100"
         Dim parsed As Single = input.ParseSingle()
-        Dim scaled As Single = (parsed / MmolLUnitsDivisor).RoundToSingle(digits:=1, considerValue:=True)
+        Dim scaled As Single = (parsed / MmolLUnitsDivisor).RoundSg()
         Dim expected As String = scaled.ToString(provider:=CultureInfo.CurrentUICulture)
 
         ' Act

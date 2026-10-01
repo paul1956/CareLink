@@ -80,14 +80,14 @@ Friend Module GetManualBasalPoints
                 If currentTimeOnly.IsBetween(start, [end]) Then
                     Dim rate As Single = basalRecord.UnitsPerHr / 12
                     Dim value As TimeSpan
-                    If rate < 0.025 Then
+                    If rate < GetMinBasal() Then
                         If timeOrderedMarkers.ContainsKey(key:=currentMarkerTime) Then
-                            timeOrderedMarkers(key:=currentMarkerTime) += 0.025!
+                            timeOrderedMarkers(key:=currentMarkerTime) += GetMinBasal()
                         Else
-                            timeOrderedMarkers.Add(key:=currentMarkerTime, value:=0.025)
+                            timeOrderedMarkers.Add(key:=currentMarkerTime, value:=GetMinBasal())
                         End If
                         Dim oaBaseDate As Date = Date.FromOADate(currentMarkerTime)
-                        Dim increments As Integer = CInt(Math.Ceiling((basalRecord.UnitsPerHr / 0.025).RoundTo025))
+                        Dim increments As Integer = CInt(Math.Ceiling((basalRecord.UnitsPerHr / GetMinBasal()).RoundToStep(IsFlex)))
                         value = New TimeSpan(hours:=0, minutes:=60 \ increments, seconds:=0)
                         currentMarkerTime = New OADate(asDate:=oaBaseDate.Add(value))
                     Else

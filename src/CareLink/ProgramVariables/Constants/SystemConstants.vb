@@ -77,7 +77,7 @@ Public Module SystemConstants
         "Record ",
         "Safe Meal ",
         "Sensor Glucose ",
-        "Temp Basal ",
+        "Temp InsulinAmount ",
         "Timestamp ",
         "Unit Value ",
         $"Delivered{NonBreakingSpace}",

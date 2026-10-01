@@ -17,7 +17,7 @@ Public Class LastAlarm
     <DisplayName("Version")>
     <Column(Order:=2, TypeName:=NameOf([String]))>
     <JsonPropertyName("version")>
-    Public Property Version As String
+    Public Property Version As String = Nothing
 
     <DisplayName("GUID")>
     <Column(Order:=3, TypeName:=NameOf([String]))>
@@ -25,25 +25,25 @@ Public Class LastAlarm
     Public Property GUID As String = Nothing
 
     <JsonPropertyName("acknowledged")>
-    Public Property Acknowledged As AcknowledgedRecord
+    Public Property Acknowledged As AcknowledgedRecord = Nothing
 
     <JsonPropertyName("snoozed")>
-    Public Property Snoozed As SnoozedRecord
+    Public Property Snoozed As SnoozedRecord = Nothing
 
     <DisplayName("Date Time")>
     <Column(Order:=4, TypeName:="Date")>
     <JsonPropertyName("dateTime")>
-    Public Property [Datetime] As Date
+    Public Property [Datetime] As Date? = Nothing
 
     <DisplayName("Type")>
     <Column(Order:=5, TypeName:=NameOf([String]))>
     <JsonPropertyName("type")>
-    Public Property Type As String
+    Public Property Type As String = Nothing
 
     <DisplayName("Color")>
     <Column(Order:=6, TypeName:=NameOf(Color))>
     <JsonPropertyName("color")>
-    Public Property Color As Color
+    Public Property Color As Color = Nothing
 
     <DisplayName("Code")>
     <Column(Order:=7, TypeName:=NameOf([String]))>
@@ -53,39 +53,39 @@ Public Class LastAlarm
     <DisplayName("Flash")>
     <Column(Order:=8, TypeName:=NameOf([Boolean]))>
     <JsonPropertyName("flash")>
-    Public Property Flash As Boolean = Nothing
+    Public Property Flash As Boolean? = Nothing
 
     <DisplayName("Message Id")>
     <Column(Order:=9, TypeName:=NameOf([String]))>
     <JsonPropertyName("messageId")>
-    Public Property MessageId As String
+    Public Property MessageId As String = Nothing
 
     <DisplayName("Last Set Change")>
     <Column(Order:=10, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("lastSetChange")>
-    Public Property LastSetChange As Integer = Nothing
+    Public Property LastSetChange As Integer? = Nothing
 
     <DisplayName("Units Remaining")>
     <Column(Order:=11, TypeName:=NameOf([Single]))>
     <JsonPropertyName("unitsRemaining")>
-    Public Property UnitsRemaining As Single = Nothing
+    Public Property UnitsRemaining As Single? = Nothing
 
     <DisplayName("Pump Delivery Suspend State")>
     <Column(Order:=12, TypeName:=NameOf([Boolean]))>
     <JsonPropertyName("pumpDeliverySuspendState")>
-    Public Property PumpDeliverySuspendState As Boolean = Nothing
+    Public Property PumpDeliverySuspendState As Boolean? = Nothing
 
     <DisplayName("Reference GUID")>
     <Column(Order:=13, TypeName:=NameOf([String]))>
     <JsonPropertyName("referenceGUID")>
-    Public Property ReferenceGUID As String
+    Public Property ReferenceGUID As String = Nothing
 
     <DisplayName("Kind")>
     <Column(Order:=14, TypeName:=NameOf([String]))>
     <JsonPropertyName("kind")>
     Public Property Kind As String = Nothing
 
-    <DisplayName("Basal Name")>
+    <DisplayName("Bolus Name")>
     <Column(Order:=15, TypeName:=NameOf([String]))>
     <JsonPropertyName("basalName")>
     Public Property BasalName As String = Nothing
@@ -93,13 +93,13 @@ Public Class LastAlarm
     <DisplayName("Triggered DateTime")>
     <Column(Order:=16, TypeName:="Date")>
     <JsonPropertyName("triggeredDateTime")>
-    Public Property TriggeredDateTime As Date = Nothing
+    Public Property TriggeredDateTime As Date? = Nothing
 
     ' DO NOT RENAME
     <DisplayName("bgValue")>
     <Column(Order:=17, TypeName:=NameOf([Single]))>
     <JsonPropertyName("bgValue")>
-    Public Property BgValue As Single = Nothing
+    Public Property BgValue As Single? = Nothing
 
     <DisplayName("Reminder Name")>
     <Column(Order:=18, TypeName:=NameOf([String]))>
@@ -109,21 +109,21 @@ Public Class LastAlarm
     <DisplayName("Secondary Time")>
     <Column(Order:=19, TypeName:="Date")>
     <JsonPropertyName("secondaryTime")>
-    Public Property SecondaryTime As Date = Nothing
+    Public Property SecondaryTime As Date? = Nothing
 
     <DisplayName("Sensor Glucose")>
     <Column(Order:=20, TypeName:=NameOf([Single]))>
     <JsonPropertyName("sg")>
-    Public Property Sg As Single
+    Public Property Sg As Single? = Nothing
 
     <DisplayName("Background Color")>
     <Column(Order:=21, TypeName:=NameOf([String]))>
     <JsonPropertyName("backgroundColor")>
-    Public Property BackgroundColor As String
+    Public Property BackgroundColor As String = Nothing
 
     <DisplayName("Additional Info")>
-    <Column(Order:=22, TypeName:=NameOf(Json.AdditionalInfo))>
+    <Column(Order:=22, TypeName:=NameOf(AdditionalInfo))>
     <JsonPropertyName("additionalInfo")>
-    Public Property AdditionalInfo As Json.AdditionalInfo
+    Public Property AdditionalInfo As AdditionalInfo = Nothing
 
 End Class

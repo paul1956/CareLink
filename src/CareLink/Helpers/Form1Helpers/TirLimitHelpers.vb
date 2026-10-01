@@ -12,7 +12,7 @@ Friend Module TirLimitHelpers
     '''  its string representation.
     ''' </returns>
     Friend Function GetAboveHyperLimit() As (int As Integer, Str As String)
-        Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.RoundToSingle(digits:=1, considerValue:=True)
+        Dim aboveHyperLimit As Single = PatientData.AboveHyperLimit.RoundSg()
         Return If(aboveHyperLimit >= 0,
                   (CInt(aboveHyperLimit), aboveHyperLimit.ToString),
                   (0, "??? "))
@@ -26,7 +26,8 @@ Friend Module TirLimitHelpers
     '''  its string representation.
     ''' </returns>
     Friend Function GetBelowHypoLimit() As (Uint As UInteger, Str As String)
-        Dim belowHyperLimit As Single = PatientData.BelowHypoLimit.RoundToSingle(digits:=1, considerValue:=True)
+        Dim belowHyperLimit As Single =
+            PatientData.BelowHypoLimit.RoundSg()
         Return If(belowHyperLimit >= 0,
                   (CUInt(belowHyperLimit), belowHyperLimit.ToString),
                   (CUInt(0), "??? "))

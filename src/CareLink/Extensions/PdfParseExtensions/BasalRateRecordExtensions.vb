@@ -16,7 +16,7 @@ Public Module BasalRateRecordExtensions
             Dim lineParts() As String = value.Split(separator:=" "c)
             If lineParts.Length >= 2 AndAlso IsNumeric(Expression:=lineParts(1)) Then
                 this.[Time] = TimeOnly.Parse(s:=lineParts(0))
-                this.UnitsPerHr = ParseSingle(s:=lineParts(1))
+                this.UnitsPerHr = ParseSingle(s:=lineParts(1)).RoundToSingle(digits:=1)
                 this.IsValid = True
             End If
         End If

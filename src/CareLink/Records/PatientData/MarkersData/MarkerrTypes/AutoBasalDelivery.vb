@@ -13,8 +13,8 @@ Public Class AutoBasalDelivery
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
         With item.Data.DataValues
-            Me.BolusAmount = .BolusAmount.RoundToSingle(digits:=10)
-            Me.MaxAutoBasalRate = .MaxAutoBasalRate.RoundToSingle(digits:=10)
+            Me.BolusAmount = .BolusAmount.RoundToStep(IsFlex)
+            Me.MaxAutoBasalRate = .MaxAutoBasalRate.RoundToStep(IsFlex)
         End With
     End Sub
 
@@ -63,7 +63,7 @@ Public Class AutoBasalDelivery
     <JsonPropertyName("bolusAmount")>
     Public Property BolusAmount As Single
 
-    <DisplayName("Max Auto Basal Rate")>
+    <DisplayName("Max Auto Basal Amount Rate")>
     <Column(Order:=7, TypeName:=NameOf([Single]))>
     <JsonPropertyName("maxAutoBasalRate")>
     Public Property MaxAutoBasalRate As Single

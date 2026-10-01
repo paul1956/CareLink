@@ -19,7 +19,7 @@ Public Class ActiveInsulin
             Return _amount
         End Get
         Set
-            _amount = Value.RoundToSingle(digits:=3)
+            _amount = Value.RoundToStep(IsFlex)
         End Set
     End Property
 

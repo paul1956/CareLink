@@ -74,7 +74,8 @@ Public Module NativeMmolLSupport
     ''' <returns>
     '''  The standard format string for blood glucose values.
     ''' </returns>
-    Public Function GetSgFormat(nativeMmolL As Boolean, Optional withSign As Boolean? = Nothing) As String
+    Public Function GetSgFormat(nativeMmolL As Boolean,
+                                Optional withSign As Boolean? = Nothing) As String
         If nativeMmolL Then
             ' One required decimal place
             If withSign Is Nothing Then

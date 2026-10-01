@@ -359,6 +359,7 @@ Friend Module SummaryHelpers
 
         Dim listOfSummaryRecords As New List(Of SummaryRecord)
         If jsonDictionary IsNot Nothing Then
+            Dim recordNumber As Single = 0
             For Each kvp As KeyValuePair(Of String, String) In jsonDictionary
                 If kvp.Value Is Nothing Then
                     Continue For
@@ -368,10 +369,9 @@ Friend Module SummaryHelpers
 
                     Continue For
                 End If
-                Dim recordNumber As Integer = listOfSummaryRecords.Count
                 Dim item As SummaryRecord = Nothing
-                Select Case kvp.Key
-                    Case "faultId"
+                Select Case True
+                    Case kvp.Key = "faultId"
                         Dim faultId As String = kvp.Value
                         Dim message As String = String.Empty
 
@@ -398,51 +398,51 @@ Friend Module SummaryHelpers
                             message = kvp.Value.ToTitle
                         End If
                         item = New SummaryRecord(recordNumber, kvp, message)
-                    Case "autoModeReadinessState"
+                    Case kvp.Key = "autoModeReadinessState"
                         s_autoModeReadinessState =
                             New SummaryRecord(recordNumber,
                                               kvp,
                                               messages:=s_sensorMessages,
                                               messageTableName:=NameOf(s_sensorMessages))
                         listOfSummaryRecords.Add(item:=s_autoModeReadinessState)
-                    Case "autoModeShieldState"
+                    Case kvp.Key = "autoModeShieldState"
                         item = New SummaryRecord(recordNumber,
                                                   kvp,
                                                   messages:=s_autoModeShieldMessages,
                                                   messageTableName:=NameOf(s_autoModeShieldMessages))
-                    Case "plgmLgsState"
+                    Case kvp.Key = "plgmLgsState"
                         item = New SummaryRecord(recordNumber,
                                                  kvp,
                                                  messages:=s_plgmLgsMessages,
                                                  messageTableName:=NameOf(s_plgmLgsMessages))
-                    Case "dateTime",
-                         "triggeredDateTime",
-                         "secondaryTime",
-                         "secondaryTimeReminder"
+                    Case kvp.Key = "dateTime" OrElse
+                         kvp.Key = "triggeredDateTime" OrElse
+                         kvp.Key = "secondaryTime" OrElse
+                         kvp.Key = "secondaryTimeReminder"
                         Dim key As String = kvp.Key
                         item = New SummaryRecord(recordNumber,
                                                  kvp,
                                                  message:=kvp.Value.ParseDate(key).ToShortDateTime)
-                    Case "additionalInfo"
-                        HandleComplexItems(kvp,
-                                           recordNumber,
-                                           key:="additionalInfo",
-                                           listOfSummaryRecords,
-                                           isTitle:=True)
-                    Case "cleared"
-                        HandleComplexItems(kvp,
-                                           recordNumber,
-                                           key:="cleared",
-                                           listOfSummaryRecords,
-                                           isTitle:=True)
-                    Case "acknowledged"
-                        HandleComplexItems(kvp,
-                                           recordNumber,
-                                           key:="acknowledged",
-                                           listOfSummaryRecords,
-                                           isTitle:=True)
-                    Case "snoozed"
-                        HandleComplexItems(kvp,
+                    Case kvp.Key.StartsWithNoCase(value:="additionalInfo")
+                        HandleComplexItemsString(kvp,
+                                                 recordNumber,
+                                                 key:="additionalInfo",
+                                                 listOfSummaryRecords,
+                                                 isTitle:=Not kvp.Key.ContainsNoCase(value:="bundle"))
+                    Case kvp.Key.StartsWithNoCase(value:="cleared")
+                        HandleComplexItemsString(kvp,
+                                                 recordNumber,
+                                                 key:="cleared",
+                                                 listOfSummaryRecords,
+                                                 isTitle:=True)
+                    Case kvp.Key.StartsWithNoCase(value:="acknowledged")
+                        HandleComplexItemsString(kvp,
+                                                 recordNumber,
+                                                 key:="acknowledged",
+                                                 listOfSummaryRecords,
+                                                 isTitle:=True)
+                    Case kvp.Key.StartsWithNoCase(value:="snoozed")
+                        HandleComplexItemsString(kvp,
                                            recordNumber,
                                            key:="snoozed",
                                            listOfSummaryRecords,
@@ -450,6 +450,7 @@ Friend Module SummaryHelpers
                     Case Else
                         item = New SummaryRecord(recordNumber, kvp)
                 End Select
+                recordNumber += 1
                 If item IsNot Nothing Then
                     listOfSummaryRecords.Add(item)
                 End If

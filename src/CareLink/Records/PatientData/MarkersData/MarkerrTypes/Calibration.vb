@@ -16,9 +16,7 @@ Public Class Calibration
         Me.DisplayTimeAsString = item.DisplayTimeAsString
         With item.Data.DataValues
             Me.CalibrationSuccess = .CalibrationSuccess
-            Const digits As Integer = 0
-            Const considerValue As Boolean = True
-            Me.UnitValue = .UnitValue.RoundToSingle(digits, considerValue)
+            Me.UnitValue = .UnitValue.RoundSg()
             Me.BgUnits = .BgUnits
         End With
     End Sub
@@ -85,7 +83,7 @@ Public Class Calibration
             If Me.UnitValue.IsSgInvalid Then Return Me.UnitValue
             Return If(NativeMmolL,
                       Me.UnitValue,
-                      (Me.UnitValue / MmolLUnitsDivisor).RoundToSingle(digits:=2))
+                      (Me.UnitValue / MmolLUnitsDivisor).RoundSg())
         End Get
     End Property
 

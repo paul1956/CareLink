@@ -198,7 +198,7 @@ Public Class PumpSetupDialog
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Basal Pattern Setup")
             rtb.DeliverySettings2BasalPatternSetup(Me.Pdf)
 
-            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Max Basal/Bolus")
+            .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Max Basal Rate")
             rtb.DeliverySettings3MaxBasalBolus(Me.Pdf)
 
             .AppendTextWithSymbol(text:=$"Menu>{Gear}>Delivery Settings > Dual/Square Wave")
@@ -228,7 +228,7 @@ Public Class PumpSetupDialog
             .AppendKeyValue(leftPanel:=True, title:="Target:",
                             value:=$"{Me.Pdf.SmartGuard.
                                              Target.
-                                             RoundToSingle(digits:=0, considerValue:=True)}")
+                                             RoundSg()}")
 
             .AppendKeyValue(leftPanel:=True,
                             title:="Auto Correction:",

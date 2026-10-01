@@ -22,10 +22,10 @@ Public Class MathExtensionsTests
         Dim expected As Single = 1.05F
 
         ' Act
-        Dim actual As Single = value.RoundToSingle(digits:=3)
+        Dim actual As Single = value.RoundToStep(isFlex:=False)
 
         ' Assert
-        actual.Should().BeApproximately(expected, 0.0001F)
+        actual.Should().BeApproximately(expectedValue:=expected, precision:=0.0001F)
     End Sub
 
     <Fact>
@@ -35,20 +35,7 @@ Public Class MathExtensionsTests
         Dim expected As Single = 1.23F
 
         ' Act
-        Dim actual As Single = value.RoundToSingle(digits:=2)
-
-        ' Assert
-        actual.Should().Be(expected)
-    End Sub
-
-    <Fact>
-    Public Sub RoundToSingle_DoubleOverload_DelegatesToSingle()
-        ' Arrange
-        Dim value As Double = 1.2345
-        Dim expected As Single = 1.23F
-
-        ' Act
-        Dim actual As Single = value.RoundToSingle(digits:=2)
+        Dim actual As Single = value.RoundSg()
 
         ' Assert
         actual.Should().Be(expected)
@@ -113,37 +100,37 @@ Public Class MathExtensionsTests
     Public Sub ParseSingle_StringAndObject_ParsesAndRounds()
         ' Simple string
         Dim s As String = "100"
-        s.ParseSingle().Should().Be(100.0F)
+        s.ParseSingle().RoundSg().Should().Be(expected:=100.0F)
 
         ' String with rounding to 3 -> uses 0.025 increments
         Dim s2 As String = "1.0375"
-        Dim parsed2 As Single = s2.ParseSingle(digits:=3)
-        parsed2.Should().BeApproximately(1.05F, 0.0001F)
+        Dim parsed2 As Single = s2.ParseSingle().RoundToStep(isFlex:=False)
+        parsed2.Should().BeApproximately(expectedValue:=1.05F, precision:=0.0001F)
 
         ' Object overloads
         Dim fromSingle As Object = 2.345F
         Dim fromDouble As Object = 2.345
         Dim fromDecimal As Object = CDec(2.345)
 
-        ParseSingle(fromSingle, digits:=2).Should().BeApproximately(2.34F, 0.01)
-        ParseSingle(fromDouble, digits:=2).Should().BeApproximately(2.34F, 0.01)
-        ParseSingle(fromDecimal, digits:=2).Should().BeApproximately(2.34F, 0.01)
+        ParseAsSingle(value:=fromSingle).RoundSg().Should().BeApproximately(expectedValue:=2.34F, precision:=0.01)
+        ParseAsSingle(value:=fromDouble).RoundSg().Should().BeApproximately(expectedValue:=2.34F, precision:=0.01)
+        ParseAsSingle(value:=fromDecimal).RoundSg().Should().BeApproximately(expectedValue:=2.34F, precision:=0.01)
     End Sub
 
     <Fact>
     Public Sub RoundTo025_SingleAndDouble_And_NaN()
         Dim s As Single = 1.0375F
-        Dim expected As Single = 1.05F
-        s.RoundTo025().Should().BeApproximately(expected, 0.0001F)
+        Dim expectedValue As Single = 1.05F
+        s.RoundToStep(isFlex:=False).Should().BeApproximately(expectedValue, precision:=0.0001F)
 
         Dim d As Double = 1.0375
-        d.RoundTo025().Should().BeApproximately(expected, 0.0001F)
+        d.RoundToStep(isFlex:=False).Should().BeApproximately(expectedValue, precision:=0.0001F)
 
         Dim nanS As Single = Single.NaN
-        Assert.True(Single.IsNaN(nanS.RoundTo025()))
+        Assert.True(condition:=Single.IsNaN(nanS.RoundToStep(isFlex:=False)))
 
         Dim nanD As Double = Double.NaN
-        Assert.True(Single.IsNaN(nanD.RoundTo025()))
+        Assert.True(condition:=Double.IsNaN(nanD.RoundToStep(isFlex:=False)))
     End Sub
 
 End Class

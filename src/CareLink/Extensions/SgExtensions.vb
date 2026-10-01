@@ -142,7 +142,7 @@ Friend Module SgExtensions
     Public Function ScaleSg(value As Single) As Single
         Dim result As Single = value
         If NativeMmolL Then
-            result = (value / MmolLUnitsDivisor).RoundToSingle(digits:=1, considerValue:=True)
+            result = (value / MmolLUnitsDivisor).RoundSg()
         End If
         Return result
     End Function
@@ -178,7 +178,7 @@ Friend Module SgExtensions
     ''' </exception>
     <Extension>
     Public Function ScaleSg(value As String) As String
-        Return value.ParseSingle().ScaleSgStr()
+        Return value.ParseSingle().RoundSg().ScaleSgStr()
     End Function
 
     ''' <summary>
@@ -192,10 +192,6 @@ Friend Module SgExtensions
     '''  A culture-aware string representation of the value. When <see cref="NativeMmolL"/> is <c>True</c>,
     '''  the numeric value is divided by <see cref="MmolLUnitsDivisor"/> and rounded to one decimal place.
     ''' </returns>
-    ''' <remarks>
-    '''  - Uses <see cref="CultureInfo.CurrentUICulture"/> for numeric formatting.
-    '''  - Rounding is performed by <see cref="RoundToSingle"/> with <c>digits:=1</c>.
-    ''' </remarks>
     <Extension>
     Public Function ScaleSgStr(value As Single) As String
         Dim result As Single = ScaleSg(value)

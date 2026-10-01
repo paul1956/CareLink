@@ -75,6 +75,36 @@ Public Module JsonExtensions
     End Sub
 
     ''' <summary>
+    '''  Converts Dictionary(Of String, JsonElement) to Dictionary(Of String, String)
+    ''' </summary>
+    ''' <Property name="source">The source dictionary to convert.</Property>
+    ''' <returns>A new dictionary with string values.</returns>
+    Friend Function ConvertJsonElementDict(source As Dictionary(Of String, JsonElement)) As Dictionary(Of String, String)
+        Dim result As New Dictionary(Of String, String)(Comparer)
+
+        If source Is Nothing Then
+            Return result
+        End If
+
+        For Each kvp As KeyValuePair(Of String, JsonElement) In source
+            Try
+                If kvp.Value.ValueKind = JsonValueKind.String Then
+                    result(kvp.Key) = kvp.Value.GetString()
+                ElseIf kvp.Value.IsEmpty Then
+                    result(kvp.Key) = Nothing
+                Else
+                    result(kvp.Key) = kvp.Value.ToString()
+                End If
+            Catch ex As Exception
+                ' Handle unexpected conversion issues
+                result(kvp.Key) = Nothing
+            End Try
+        Next
+
+        Return result
+    End Function
+
+    ''' <summary>
     ''' Centralized conversion of a JsonElement to a String.
     ''' - Returns String.Empty for Null/Undefined/Empty elements.
     ''' - Returns unwrapped string for JSON strings.
@@ -171,6 +201,33 @@ Public Module JsonExtensions
                 Return False
         End Select
         Return False
+    End Function
+
+    ''' <summary>
+    ''' Checks if a string is valid JSON using System.Text.Json
+    ''' </summary>
+    ''' <param name="jsonString">The JSON string to validate</param>
+    ''' <returns>True if valid JSON, otherwise False</returns>
+    <Extension>
+    Public Function IsValidJson(jsonString As String) As Boolean
+        ' Null or empty strings are not valid JSON
+        If String.IsNullOrWhiteSpace(jsonString) Then
+            Return False
+        End If
+
+        Try
+            ' Attempt to parse the JSON
+            Using doc As JsonDocument = JsonDocument.Parse(jsonString)
+                ' If parsing succeeds, it's valid JSON
+                Return True
+            End Using
+        Catch jex As JsonException
+            ' JSON is invalid
+            Return False
+        Catch ex As Exception
+            ' Other unexpected errors (e.g., OutOfMemoryException)
+            Return False
+        End Try
     End Function
 
     ''' <summary>
@@ -408,7 +465,7 @@ Public Module JsonExtensions
         Try
             raw = Json.FromJson(Of Dictionary(Of String, JsonElement))()
         Catch ex As Exception
-            Return New Dictionary(Of String, String)()
+            Return New Dictionary(Of String, String)(Comparer)
         End Try
 
         Dim keySelector As Func(Of KeyValuePair(Of String, JsonElement), String) =

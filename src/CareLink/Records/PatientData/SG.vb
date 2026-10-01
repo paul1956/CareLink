@@ -21,7 +21,7 @@ Public Class SG
             If value1 = "0" OrElse value1 = "NaN" Then
                 Me.Sg = Single.NaN
             ElseIf json.Count >= 5 Then
-                Me.Sg = json(key:=NameOf(Sg)).ParseSingle(digits:=2)
+                Me.Sg = json(key:=NameOf(Sg)).ParseSingle().RoundSg()
                 Me.SensorState = json(key:=NameOf(SensorState))
                 Me.TimestampAsString = json(key:=NameOf(Me.Timestamp))
                 Dim value As String = "False"
@@ -87,7 +87,7 @@ Public Class SG
             If Single.IsNaN(_sg) Then Return Nothing
             Return If(NativeMmolL,
                       _sg,
-                      (_sg / MmolLUnitsDivisor).RoundToSingle(digits:=2))
+                      (_sg / MmolLUnitsDivisor).RoundSg())
         End Get
     End Property
 

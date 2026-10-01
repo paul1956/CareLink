@@ -230,7 +230,7 @@ Friend Module DgvCellStyleHelpers
     <Extension>
     Friend Sub CellFormattingSg(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs, partialKey As String)
         Dim sgColumnName As String = dgv.Columns(index:=e.ColumnIndex).Name
-        Dim sensorValue As Single = ParseSingle(e.Value, digits:=1)
+        Dim sensorValue As Single = ParseAsSingle(e.Value).RoundSg
         If Single.IsNaN(sensorValue) OrElse sensorValue.AlmostZero Then
             e.Value = "NaN"
             dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
@@ -300,7 +300,7 @@ Friend Module DgvCellStyleHelpers
 
     ''' <summary>
     '''  Formats the cell value as a single-precision floating point
-    '''  value with the specified number of digits.
+    '''  value with 3 digit roundingType.
     '''  Also sets the foreground color.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
@@ -308,7 +308,42 @@ Friend Module DgvCellStyleHelpers
     '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
     '''  the cell being formatted.
     ''' </param>
-    ''' <param name="digits">The number of decimal digits to display.</param>
+    ''' <param name="TrailingText"></param>
+    <Extension>
+    Friend Function CellFormattingBasal(
+        dgv As DataGridView,
+        e As DataGridViewCellFormattingEventArgs,
+        Optional TrailingText As String = EmptyString) As Single
+
+        If TrailingText <> EmptyString Then
+            TrailingText = $" {TrailingText}"
+        End If
+
+        Dim amount As Single = ParseAsSingle(e.Value)
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+        e.Value =
+            $"{amount.ToString(format:="F3", provider)}{TrailingText}"
+        dgv.CellFormattingDefault(e)
+        e.CellStyle.Alignment =
+            If(e.ColumnIndex > 0,
+               DataGridViewContentAlignment.MiddleRight,
+               DataGridViewContentAlignment.MiddleCenter)
+
+        e.FormattingApplied = True
+        Return amount
+    End Function
+
+    ''' <summary>
+    '''  Formats the cell value as a single-precision floating point
+    '''  value with the specified number of roundingType.
+    '''  Also sets the foreground color.
+    ''' </summary>
+    ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
+    '''  the cell being formatted.
+    ''' </param>
+    ''' <param name="roundingType">The rounding rules to apply.</param>
     ''' <returns>The parsed single value.</returns>
     ''' <param name="TrailingText"></param>
     <Extension>
@@ -318,13 +353,15 @@ Friend Module DgvCellStyleHelpers
         digits As Integer,
         Optional TrailingText As String = EmptyString) As Single
 
-        Dim amount As Single = ParseSingle(e.Value, digits)
+        Dim amount As Single = ParseAsSingle(e.Value).RoundToSingle(digits)
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         If TrailingText <> EmptyString Then
             TrailingText = $" {TrailingText}"
         End If
+
+        Dim format As String = $"F{digits}"
         e.Value =
-            $"{amount.ToString(format:=$"F{digits}", provider)}{TrailingText}"
+            $"{amount.ToString(format, provider)}{TrailingText}"
         dgv.CellFormattingDefault(e)
         e.CellStyle.Alignment =
             If(e.ColumnIndex > 0,
