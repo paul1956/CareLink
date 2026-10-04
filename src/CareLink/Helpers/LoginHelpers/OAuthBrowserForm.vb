@@ -74,26 +74,44 @@ Public Class OAuthBrowserForm
 
     Private Shared Function HeadersToText(
         headers As CoreWebView2HttpRequestHeaders) As String
+        If headers Is Nothing Then
+            Return String.Empty
+        End If
 
-        Dim result As New StringBuilder()
-        Dim header As KeyValuePair(Of String, String)
+        Try
+            Dim result As New StringBuilder()
+            Dim header As KeyValuePair(Of String, String)
 
-        For Each header In headers
-            result.AppendLine(value:=$"{header.Key}: {header.Value}")
-        Next
+            For Each header In headers
+                result.AppendLine(value:=$"{header.Key}: {header.Value}")
+            Next
 
-        Return result.ToString()
+            Return result.ToString()
+        Catch ex As COMException
+            ' Defensive: underlying native header collection can throw if it's in an
+            ' invalid state (for example when the WebView is closing). Return a
+            ' stable textual placeholder instead of letting the exception escape.
+            Return $"[headers unavailable: {ex.Message}]"
+        End Try
     End Function
 
     Private Shared Function HeadersToText(headers As CoreWebView2HttpResponseHeaders) As String
-        Dim result As New StringBuilder()
-        Dim header As KeyValuePair(Of String, String)
+        If headers Is Nothing Then
+            Return String.Empty
+        End If
 
-        For Each header In headers
-            result.AppendLine(value:=$"{header.Key}: {header.Value}")
-        Next
+        Try
+            Dim result As New StringBuilder()
+            Dim header As KeyValuePair(Of String, String)
 
-        Return result.ToString()
+            For Each header In headers
+                result.AppendLine(value:=$"{header.Key}: {header.Value}")
+            Next
+
+            Return result.ToString()
+        Catch ex As COMException
+            Return String.Empty
+        End Try
     End Function
 
     Private Shared Function IsTextResponse(contentType As String) As Boolean
@@ -165,7 +183,6 @@ Public Class OAuthBrowserForm
         Dim code As String = Nothing
         parameters.TryGetValue(key:="code", value:=code)
 
-        parameters.TryGetValue(key:="state", value:=_state)
         Me.Result = New RedirectResult With {
             .Code = code,
             .State = _state}
@@ -195,6 +212,31 @@ Public Class OAuthBrowserForm
         logEntry.AppendLine(value:="Response headers:")
         logEntry.AppendLine(value:=responseHeaders)
 
+        ' Local helper to extract a query param value from arbitrary text.
+        Dim extractParamFromText As Func(Of String, String, String) =
+            Function(text As String, param As String) As String
+                If String.IsNullOrWhiteSpace(value:=text) Then Return Nothing
+                Dim idx As Integer = text.IndexOf(value:=param & "=", comparisonType:=StringComparison.OrdinalIgnoreCase)
+                If idx < 0 Then Return Nothing
+                Dim startIdx As Integer = idx + param.Length + 1
+                Dim sb As New Text.StringBuilder()
+                For index As Integer = startIdx To text.Length - 1
+                    Dim ch As Char = text(index)
+                    If ch = "&"c OrElse ch = "#"c OrElse ch = ControlChars.Cr OrElse ch = ControlChars.Lf OrElse Char.IsWhiteSpace(ch) OrElse ch = """"c Then
+                        Exit For
+                    End If
+                    sb.Append(value:=ch)
+                Next
+                If sb.Length = 0 Then
+                    Return Nothing
+                End If
+                Try
+                    Return Uri.UnescapeDataString(sb.ToString())
+                Catch
+                    Return sb.ToString()
+                End Try
+            End Function
+
         If IsTextResponse(contentType) AndAlso
            ResponseCanHaveBody(response.StatusCode) Then
 
@@ -216,7 +258,14 @@ Public Class OAuthBrowserForm
                     End If
                 End Using
             Catch ex As COMException
-                logEntry.AppendLine(value:=$"Body: [unavailable: {ex.Message}]")
+                If ex.Message.StartsWith("The pipe is being closed.") Then ' E_FAIL with message
+                    ' THE PIPE IS BEING CLOSED. This can happen if the content is not accessible because
+                    ' brower closed. This is expected its not an error.
+                    ' We can ignore this and return and not log.
+                    logEntry.Clear()
+                Else
+                    logEntry.AppendLine(value:=$"Body: [unavailable: {ex.Message}]")
+                End If
             Catch ex As IOException
                 logEntry.AppendLine(value:=$"Body: [read error: {ex.Message}]")
             End Try
@@ -227,12 +276,24 @@ Public Class OAuthBrowserForm
 
         Dim logEntryAsString As String = logEntry.ToString
 
-        Const separator As String = "/authorize/resume?state="
-        If logEntryAsString.Contains(value:=separator, ComparisonType) Then
-            Dim logEntrySplit As String() = logEntryAsString.Split(separator)
-            _state = logEntrySplit(1)
+        ' Robust extraction of state and code: prefer Location header, then e.Uri, then the logged body.
+        Dim locationHeader As String = GetResponseHeaderValue(response.Headers, name:="Location")
+        'Dim foundCode As String
+
+        ' Try Location header first
+        Dim foundState As String = extractParamFromText(locationHeader, "state")
+        'foundCode = extractParamFromText(locationHeader, "code")
+
+        If Not String.IsNullOrWhiteSpace(value:=foundState) Then
+            _state = foundState
         End If
 
+        Try
+            Dim message As String =
+                $"OAuthBrowserForm.WebResourceResponseReceived:\n{logEntryAsString}"
+            LogMessage(message)
+        Catch
+        End Try
     End Sub
 
     Private Async Function FillLoginAsync() As Task
@@ -362,7 +423,10 @@ Public Class OAuthBrowserForm
         If IsNullOrWhiteSpace(value:=currentUrl) Then
             Return
         End If
-
+        Try
+            LogMessage(message:=$"OAuthBrowserForm.NavigationCompleted: Url={currentUrl}, IsSuccess={e.IsSuccess}, WebErrorStatus={e.WebErrorStatus}", verbose:=True)
+        Catch
+        End Try
         ' If we've reached the redirect URI, capture result and close.
         If currentUrl.StartsWithNoCase(value:=_redirectUri) Then
             Me.CaptureAndClose(uriString:=currentUrl)
@@ -383,6 +447,11 @@ Public Class OAuthBrowserForm
     End Sub
 
     Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs)
+        Try
+            LogMessage(message:=$"OAuthBrowserForm.NavigationStarting: Uri={e.Uri}, IsUserInitiated={e.IsUserInitiated}", verbose:=True)
+        Catch
+        End Try
+
         If IsNullOrWhiteSpace(value:=e.Uri) Then Return
         If e.Uri.StartsWithNoCase(value:=_redirectUri) Then
             Me.CaptureAndClose(uriString:=e.Uri)
@@ -392,6 +461,10 @@ Public Class OAuthBrowserForm
     Private Sub WebView21_SourceChanged(sender As Object, e As CoreWebView2SourceChangedEventArgs)
         Dim currentUrl As String = Me.WebView21.Source?.ToString()
         If IsNullOrWhiteSpace(value:=currentUrl) Then Return
+        Try
+            LogMessage(message:=$"OAuthBrowserForm.SourceChanged: Url={currentUrl}", verbose:=True)
+        Catch
+        End Try
         If currentUrl.StartsWithNoCase(value:=_redirectUri) Then
             Me.CaptureAndClose(uriString:=currentUrl)
         End If

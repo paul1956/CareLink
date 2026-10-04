@@ -4,14 +4,118 @@
 
 Public Class LoggerForm
 
-    Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
-        Me.DialogResult = DialogResult.Cancel
-        Me.Visible = False
+    Private Sub ClearToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClearToolStripMenuItem.Click
+        Try
+            Me.txtLog.Clear()
+        Catch
+        End Try
     End Sub
 
-    Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
-        Me.DialogResult = DialogResult.OK
+    Private Sub ContextMenuClear_Click(sender As Object, e As EventArgs) Handles ContextMenuClear.Click
+        Try
+            Me.txtLog.Clear()
+        Catch
+        End Try
+    End Sub
+
+    Private Sub ContextMenuCopy_Click(sender As Object, e As EventArgs) Handles ContextMenuCopy.Click
+        Me.CopyTextToClipboard()
+    End Sub
+
+    Private Sub ContextMenuSaveSelection_Click(sender As Object, e As EventArgs) Handles ContextMenuSaveSelection.Click
+        ' Save only the selected text when user chooses Save Selection
+        Me.SaveText(SelectionOnly:=True)
+    End Sub
+
+    Private Sub CopyTextToClipboard()
+        Try
+            If Me.txtLog.SelectionLength > 0 Then
+                Me.txtLog.Copy()
+            End If
+        Catch
+        End Try
+    End Sub
+
+    Private Sub CopyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyToolStripMenuItem.Click
+        Me.CopyTextToClipboard()
+    End Sub
+
+    Private Sub EditClearToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EditMenuClearToolStripMenuItem.Click
+        Me.txtLog.Clear()
+    End Sub
+
+    Private Sub EditCopyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EditMenuCopyToolStripMenuItem.Click
+        Me.CopyTextToClipboard()
+    End Sub
+
+    Private Sub FileMenuExitMenuItem_Click(sender As Object, e As EventArgs) Handles FileMenuExitMenuItem.Click
         Me.Close()
+    End Sub
+
+    Private Sub FileMenuSaveAllToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FileMenuSaveAllToolStripMenuItem.Click
+        Try
+            Me.SaveText()
+        Catch ex As Exception
+            Try
+                MessageBox.Show(text:=ex.Message, caption:="Save failed", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Error)
+            Catch
+            End Try
+        End Try
+    End Sub
+
+    Private Sub FileMenuSaveSelectionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FileMenuSaveSelectionToolStripMenuItem.Click
+        Try
+            ' Save only the selected text when user chooses Save Selection
+            Me.SaveText(SelectionOnly:=True)
+        Catch ex As Exception
+            Try
+                MessageBox.Show(text:=ex.Message, caption:="Save failed", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Error)
+            Catch
+            End Try
+        End Try
+    End Sub
+
+    Private Sub HideToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles HideToolStripMenuItem.Click
+        Me.Hide()
+    End Sub
+
+    Private Sub SaveText(Optional SelectionOnly As Boolean = False)
+        Using dlg As New SaveFileDialog()
+            dlg.Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*"
+            dlg.DefaultExt = "txt"
+            dlg.FileName = "CareLink_Log.txt"
+            If dlg.ShowDialog(owner:=Me) = DialogResult.OK Then
+                Dim contents As String = Me.txtLog.Text
+                If SelectionOnly AndAlso Me.txtLog.SelectionLength > 0 Then
+                    contents = Me.txtLog.SelectedText
+                End If
+
+                IO.File.WriteAllText(path:=dlg.FileName, contents)
+            End If
+        End Using
+    End Sub
+
+    Private Sub tsbSave_Click(sender As Object, e As EventArgs)
+        ' Delegate to shared SaveText implementation
+        Me.SaveText()
+    End Sub
+
+    Private Sub txtLog_KeyDown(sender As Object, e As KeyEventArgs) Handles txtLog.KeyDown
+        Try
+            If e.Control AndAlso e.KeyCode = Keys.C Then
+                If Me.txtLog.SelectionLength > 0 Then
+                    Me.txtLog.Copy()
+                End If
+            End If
+        Catch
+        End Try
+    End Sub
+
+    Private Sub ViewTopmostToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ViewTopmostToolStripMenuItem.Click
+        Try
+            Me.TopMost = Me.ViewTopmostToolStripMenuItem.Checked
+        Catch
+        End Try
     End Sub
 
     ''' <summary>
@@ -34,6 +138,7 @@ Public Class LoggerForm
             Me.txtLog.AppendText(text:=message)
             Me.txtLog.AppendNewLine
             Me.Visible = Me.txtLog.Lines.Length > 1
+            Me.txtLog.ScrollToCaret()
         End If
     End Sub
 

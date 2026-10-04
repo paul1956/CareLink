@@ -2,7 +2,12 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Net
 Imports System.Net.Http
+Imports System.Text.Json
+Imports System.Text
+Imports System.IO
+Imports System.IO.Compression
 
 Public Class CareLinkService
 
@@ -11,7 +16,15 @@ Public Class CareLinkService
     Private Shared ReadOnly s_endpointCache As New Dictionary(Of ServerLocation, EndpointConfig)()
 
     Private Shared ReadOnly s_endpointCacheLock As New Object()
-    Private Shared ReadOnly s_http As New HttpClient With {.Timeout = TimeSpan.FromSeconds(120)}
+    Private Shared ReadOnly s_http As New HttpClient(
+        New HttpClientHandler() With {
+            .AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate Or DecompressionMethods.Brotli
+        }) With {.Timeout = TimeSpan.FromSeconds(120)}
+
+    ' Reuse JsonSerializerOptions to avoid allocations on each parse
+    Private Shared ReadOnly s_jsonOptions As New JsonSerializerOptions With {
+        .PropertyNameCaseInsensitive = True
+    }
 
     Public Const DiscoveryUrlEu As String =
         "https://clcloud.minimed.eu/connect/carepartner/v13/discover/android/3.6"
@@ -57,6 +70,50 @@ Public Class CareLinkService
         Return tcs.Task
     End Function
 
+    ' Normalize and validate SSO JSON returned by the discovery endpoint.
+    Private Shared Function NormalizeSsoJson(s As String) As String
+        If s Is Nothing Then Return s
+
+        ' Replace common VB literal concatenation tokens with actual whitespace/newlines.
+        s = s.Replace(" & vbCrLf & ", vbCrLf) _
+             .Replace(" & vbTab & ", vbTab) _
+             .Replace(""" & vbCrLf & """, vbCrLf)
+
+        Return s.Trim()
+    End Function
+
+    Private Shared Function ParseAndValidateSsoJson(ssoJson As String) As SsoConfig
+        Dim normalized As String = NormalizeSsoJson(ssoJson)
+
+        Dim opts As JsonSerializerOptions = s_jsonOptions
+
+        Dim sso As SsoConfig
+        Try
+            sso = JsonSerializer.Deserialize(Of SsoConfig)(normalized, opts)
+        Catch ex As Exception
+            Throw New Exception(message:=$"Failed to parse SSO JSON: {ex.Message}", innerException:=ex)
+        End Try
+
+        If sso Is Nothing OrElse sso.Server Is Nothing Then
+            Throw New Exception(message:="SSO JSON missing 'server' node.")
+        End If
+
+        If sso.Server.ServerCerts IsNot Nothing Then
+            For Each certLines As List(Of String) In sso.Server.ServerCerts
+                Dim pem As String =
+                    String.Join(separator:=vbCrLf, values:=certLines)
+                If Not (pem.Contains(value:="-----BEGIN CERTIFICATE-----") AndAlso
+                    pem.Contains(value:="-----END CERTIFICATE-----")) Then
+                    Const message As String =
+                        "One or more server certificates appear incomplete or truncated."
+                    Throw New Exception(message:=message)
+                End If
+            Next
+        End If
+
+        Return sso
+    End Function
+
     ''' <summary>
     ''' Resolve endpoint configuration from an already-obtained DiscoveryRoot.
     ''' This contains the logic that previously lived in ResolveEndpointConfigAsync
@@ -91,7 +148,7 @@ Public Class CareLinkService
                     Await s_http.GetStringAsync(requestUri:=ssoUrl).ConfigureAwaitFalse()
                 Dim ssoDoc As SsoConfig = Nothing
                 Try
-                    ssoDoc = ssoJson.FromJson(Of SsoConfig)()
+                    ssoDoc = ParseAndValidateSsoJson(ssoJson)
                 Catch ex As Exception
                     Throw New Exception(message:=$"Failed to parse SSO JSON: {ex.Message}")
                 End Try
@@ -101,10 +158,10 @@ Public Class CareLinkService
                 End If
 
                 Dim hostname As String = ssoDoc.Server.Hostname
-                Dim port As String = ssoDoc.Server.Port.ToString()
+                Dim portNum As Integer = ssoDoc.Server.Port
                 Dim prefix As String = ssoDoc.Server.Prefix
-                Dim apiBaseUrl As String =
-                    $"https://{hostname}:{port}/{prefix}".TrimEnd(trimChar:="/"c)
+                Dim hostPart As String = If(portNum = 443, hostname, $"{hostname}:{portNum}")
+                Dim apiBaseUrl As String = $"https://{hostPart}/{prefix}".TrimEnd("/"c)
 
                 Return New EndpointConfig With {
                     .SsoJson = ssoJson,
@@ -125,7 +182,7 @@ Public Class CareLinkService
         Dim message As String
         Dim ssoConfig As SsoConfig = Nothing
         Try
-            ssoConfig = endpointConfig.SsoJson.FromJson(Of SsoConfig)()
+            ssoConfig = ParseAndValidateSsoJson(endpointConfig.SsoJson)
         Catch ex As Exception
             Throw New ApplicationException(message:="Failed to parse SSO configuration JSON.")
         End Try
@@ -156,10 +213,14 @@ Public Class CareLinkService
            work:=Function()
                      Do
                          Using frm As New OAuthBrowserForm(startUrl:=fullUrl,
-                                                           redirectUri,
-                                                           userName,
-                                                           password)
-                             Dim dr As DialogResult = frm.ShowDialog()
+                                                            redirectUri,
+                                                            userName,
+                                                            password)
+                             ' Determine the best owner for the OAuth dialog. Prefer the
+                             ' currently active form (which may be a modal dialog like
+                             ' the LoginDialog). Fall back to the main Form1 if none.
+                             Dim ownerForm As System.Windows.Forms.Form = If(System.Windows.Forms.Form.ActiveForm, My.Forms.Form1)
+                             Dim dr As DialogResult = frm.ShowDialog(owner:=ownerForm)
                              If dr = DialogResult.OK Then
                                  LoginRetryCount = 1
                                  Return frm.Result
@@ -192,20 +253,137 @@ Public Class CareLinkService
             New KeyValuePair(Of String, String)(key:="redirect_uri", value:=redirectUri)}
 
         Dim content As New FormUrlEncodedContent(nameValueCollection:=form)
-        Dim response As HttpResponseMessage = Await s_http.PostAsync(requestUri:=tokenUrl, content)
-        Dim body As String = Await response.Content.ReadAsStringAsync()
+        ' Use an explicit HttpRequestMessage and mimic python-requests headers to reduce
+        ' the chance of triggering WAF/edge rules that differ by User-Agent/Accept.
+        Dim response As HttpResponseMessage
+        Using req As New HttpRequestMessage(method:=HttpMethod.Post, requestUri:=New Uri(tokenUrl))
+            req.Content = content
+            Try
+                req.Headers.TryAddWithoutValidation("User-Agent", "python-requests/2.31.0")
+            Catch
+            End Try
+            Try
+                req.Headers.TryAddWithoutValidation("Accept", "*/*")
+            Catch
+            End Try
+
+            response = Await s_http.SendAsync(request:=req)
+        End Using
+
+        ' Read raw bytes first to allow robust decoding when the response contains
+        ' unexpected binary/encoding; then produce a best-effort string for logging.
+        Dim rawBytes As Byte() = Nothing
+        Try
+            rawBytes = Await response.Content.ReadAsByteArrayAsync()
+        Catch
+            rawBytes = Nothing
+        End Try
+
+        Dim body As String = String.Empty
+        If rawBytes IsNot Nothing Then
+            Dim charset As String = Nothing
+            If response.Content IsNot Nothing AndAlso response.Content.Headers IsNot Nothing AndAlso response.Content.Headers.ContentType IsNot Nothing Then
+                charset = response.Content.Headers.ContentType.CharSet
+            End If
+
+            Dim enc As Encoding = Nothing
+            If Not String.IsNullOrWhiteSpace(charset) Then
+                Try
+                    enc = Encoding.GetEncoding(charset)
+                Catch
+                    enc = Nothing
+                End Try
+            End If
+            If enc Is Nothing Then enc = Encoding.UTF8
+
+            ' HttpClientHandler.AutomaticDecompression is enabled for s_http.
+            ' The content returned by HttpClient will be decompressed automatically
+            ' when the server sends Content-Encoding (gzip/deflate/brotli). Therefore,
+            ' we can safely decode the received bytes using the declared charset or
+            ' UTF-8 fallback.
+            Try
+                body = enc.GetString(rawBytes)
+            Catch
+                Try
+                    body = Encoding.GetEncoding(28591).GetString(rawBytes)
+                Catch
+                    body = String.Empty
+                End Try
+            End Try
+        End If
 
         If Not response.IsSuccessStatusCode Then
-            message = $"Could not get token data in {NameOf(DoLoginAuth0Async)}: {body}"
+            ' Previously we wrote diagnostic dumps containing sensitive token data.
+            ' Remove persistent dumps in favor of throwing a non-descriptive error
+            ' and logging a short message to the in-memory logger only.
+            Try
+                LogMessage(message:=$"Token request failed with status {CInt(response.StatusCode)} {response.ReasonPhrase}")
+            Catch
+            End Try
+
+            message = $"Could not get token data in {NameOf(DoLoginAuth0Async)}"
             Throw New Exception(message)
         End If
 
         Dim token As TokenData = Nothing
         Try
-            token = body.FromJson(Of TokenData)()
-        Catch ex As Exception
-            message = "Failed to parse token response JSON."
-            Throw New ApplicationException(message)
+            Dim mediaType As String = Nothing
+            If response.Content IsNot Nothing AndAlso response.Content.Headers IsNot Nothing AndAlso response.Content.Headers.ContentType IsNot Nothing Then
+                mediaType = response.Content.Headers.ContentType.MediaType
+            End If
+
+            If mediaType IsNot Nothing AndAlso mediaType.Contains("json", StringComparison.OrdinalIgnoreCase) Then
+                Try
+                    ' First attempt: parse as-is
+                    token = body.FromJson(Of TokenData)()
+                Catch jex As JsonException
+                    ' The body may contain unexpected binary or encoding. Use rawBytes already read above.
+                    ' rawBytes was pre-read before attempting JSON parsing.
+
+                    Dim parsed As Boolean = False
+                    If rawBytes IsNot Nothing Then
+                        Dim encodings As Encoding() = New Encoding() {
+                            Encoding.UTF8,
+                            Encoding.Unicode,
+                            Encoding.BigEndianUnicode,
+                            Encoding.UTF32,
+                            Encoding.GetEncoding(28591) ' ISO-8859-1
+                        }
+
+                        For Each enc As Encoding In encodings
+                            Try
+                                Dim candidate As String = enc.GetString(rawBytes)
+                                token = candidate.FromJson(Of TokenData)()
+                                parsed = True
+                                Exit For
+                            Catch
+                                ' try next encoding
+                            End Try
+                        Next
+                    End If
+
+                    If Not parsed Then
+                        ' Persist raw bytes and text to temp files for offline inspection then throw
+                        Try
+                            Dim dumpBase As String = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"carelink_token_raw_{Date.UtcNow:yyyyMMddHHmmss}")
+                            If rawBytes IsNot Nothing Then
+                                System.IO.File.WriteAllBytes(path:=dumpBase & ".bin", bytes:=rawBytes)
+                            End If
+                            System.IO.File.WriteAllText(path:=dumpBase & ".txt", contents:=body)
+                        Catch
+                        End Try
+
+                        message = $"Failed to parse token response JSON after multiple encodings. Raw dump: see temp files starting with carelink_token_raw_. Body starts with: {If(body?.Substring(0, Math.Min(200, body.Length)), "<empty>")}"
+                        Throw New ApplicationException(message, jex)
+                    End If
+                End Try
+            Else
+                message = $"Token endpoint returned non-JSON content. Content-Type={mediaType}. Body={body}"
+                Throw New ApplicationException(message)
+            End If
+        Catch ex As JsonException
+            message = $"Failed to parse token response JSON. Body={body}"
+            Throw New ApplicationException(message, ex)
         End Try
         token.ClientId = clientId
         WriteTokenFile(token, path:=outputFile)

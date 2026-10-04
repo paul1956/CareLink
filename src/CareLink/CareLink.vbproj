@@ -22,9 +22,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>6.0.3.1</Version>
-    <AssemblyVersion>6.0.3.1</AssemblyVersion>
-    <FileVersion>6.0.3.1</FileVersion>
+    <Version>6.0.5.0</Version>
+    <AssemblyVersion>6.0.5.0</AssemblyVersion>
+    <FileVersion>6.0.5.0</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
@@ -40,15 +40,25 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
+  <!-- Force x64 runtime for this application to match native WebView2 binaries -->
+  <PropertyGroup>
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <!-- Keep Configuration/Platform combinations compatible with VS solution settings -->
+    <Platform>x64</Platform>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
     <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
     <Optimize>True</Optimize>
     <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
 
   <ItemGroup>
@@ -57,6 +67,50 @@
     <None Remove="Images\Backup\**" />
     <Page Remove="Images\Backup\**" />
   </ItemGroup>
+
+  <!-- Ensure committed WebView2 binaries are copied to the app output for deterministic runtime binding -->
+  <ItemGroup>
+    <None Include="lib\Microsoft.Web.WebView2.Core.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="lib\WebView2Loader.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- Ensure the pinned WebView2 managed/native binaries from the NuGet package are copied to output
+       and remove any stale WebView2 managed DLLs to avoid mixed-version runtime loads. -->
+  <Target Name="EnsurePinnedWebView2InOutput" AfterTargets="Build" Condition="'$(DesignTimeBuild)' != 'true'">
+    <PropertyGroup>
+      <_NuGetManaged>$(NuGetPackageRoot)$(WebView2PackageId)\$(WebView2Version)\lib\net462\Microsoft.Web.WebView2.Core.dll</_NuGetManaged>
+      <_NuGetManagedAlt>$(NuGetPackageRoot)$(WebView2PackageId)\$(WebView2Version)\lib\net45\Microsoft.Web.WebView2.Core.dll</_NuGetManagedAlt>
+      <_NuGetLoader>$(NuGetPackageRoot)$(WebView2PackageId)\$(WebView2Version)\runtimes\win-x64\native\WebView2Loader.dll</_NuGetLoader>
+    </PropertyGroup>
+
+    <!-- Remove any managed WebView2 assemblies that may linger in the output to prevent mixed versions -->
+    <Delete Files="$(OutputPath)Microsoft.Web.WebView2.Core*.dll" ContinueOnError="true" />
+    <Delete Files="$(OutputPath)Microsoft.Web.WebView2.WinForms*.dll" ContinueOnError="true" />
+    <Delete Files="$(OutputPath)Microsoft.Web.WebView2.Wpf*.dll" ContinueOnError="true" />
+
+    <!-- Copy managed wrapper from NuGet package (prefer net462, fallback to net45) -->
+    <Copy SourceFiles="$(_NuGetManaged)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" Condition="Exists('$(_NuGetManaged)')" />
+    <Copy SourceFiles="$(_NuGetManagedAlt)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" Condition="Exists('$(_NuGetManagedAlt)') and !Exists('$(_NuGetManaged)')" />
+
+    <!-- Copy native loader from NuGet package if present -->
+    <Copy SourceFiles="$(_NuGetLoader)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" Condition="Exists('$(_NuGetLoader)')" />
+
+    <!-- Log the identity of the managed wrapper now present in the output (if any) -->
+    <GetAssemblyIdentity AssemblyFiles="$(OutputPath)Microsoft.Web.WebView2.Core.dll">
+      <Output TaskParameter="Assemblies" ItemName="CoreAssemblyIdentity" />
+    </GetAssemblyIdentity>
+    <Message Importance="High" Text="WebView2 Core identity in output: %(CoreAssemblyIdentity.Identity)" Condition=" '@(CoreAssemblyIdentity)' != '' " />
+  </Target>
+
+  <!-- Fail the build if any WebView2 managed assembly in the output does not match the pinned version -->
+  <Target Name="EnforceWebView2Version" AfterTargets="Build" Condition="'$(DesignTimeBuild)' != 'true'">
+    <!-- Use -Command wrapper so PowerShell returns a proper exit code to MSBuild -->
+    <Exec Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;&amp; '$(MSBuildThisFileDirectory)scripts\enforce-webview2.ps1' -Version '$(WebView2Version)' -OutputPath '$(OutputPath)'; exit $LASTEXITCODE&quot;" ContinueOnError="false" />
+  </Target>
 
   <ItemGroup>
     <None Remove="Images\AboutBox.png" />
@@ -1303,10 +1357,10 @@
        (packaging) as well as the normal CopyFilesToOutputDirectory step when the package
        copy exists.
   -->
-  <Target Name="RemoveDuplicateWebView2" BeforeTargets="Pack;Publish;CreateAppxPackage" Condition="Exists('$(NuGetPackageRoot)microsoft.web.webview2\1.0.4255-prerelease\runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll')">
+  <Target Name="RemoveDuplicateWebView2" BeforeTargets="Pack;Publish;CreateAppxPackage" Condition="Exists('$(NuGetPackageRoot)microsoft.web.webview2\1.0.4258.31\runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll')">
     <PropertyGroup>
       <_WebView2Dll>$(OutputPath)Microsoft.Web.WebView2.Core.dll</_WebView2Dll>
-      <_WebView2PackageDll>$(NuGetPackageRoot)microsoft.web.webview2\1.0.4255-prerelease\runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll</_WebView2PackageDll>
+      <_WebView2PackageDll>$(NuGetPackageRoot)microsoft.web.webview2\1.0.4258.31\runtimes\win-x64\native_uap\Microsoft.Web.WebView2.Core.dll</_WebView2PackageDll>
     </PropertyGroup>
     <Message Importance="High" Text="Removing duplicate WebView2 DLL from output if present: $(_WebView2Dll) (package copy at $(_WebView2PackageDll))" />
     <Delete Files="$(_WebView2Dll)" Condition="Exists('$(_WebView2Dll)')" />
@@ -1331,6 +1385,89 @@
     </ItemGroup>
 
     <Copy SourceFiles="@(_FilesToCopy)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <!-- Placeholder: add BeforeBuild WebView2 package copy target below -->
+
+  <!-- Deterministic copy from NuGet package cache as an additional safety net -->
+  <ItemGroup>
+    <None Include="$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\lib\net462\Microsoft.Web.WebView2.Core.dll" Condition="Exists('$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\lib\net462\Microsoft.Web.WebView2.Core.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\lib\net45\Microsoft.Web.WebView2.Core.dll" Condition="Exists('$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\lib\net45\Microsoft.Web.WebView2.Core.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\runtimes\win-x64\native\WebView2Loader.dll" Condition="Exists('$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\runtimes\win-x64\native\WebView2Loader.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <!-- Deterministic local lib fallback: copy managed/native DLLs from NuGet cache into src/CareLink/lib
+       when they are present in the cache but not yet in the repo. This ensures a stable shipped set. -->
+  <ItemGroup>
+    <None Include="lib\Microsoft.Web.WebView2.Core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="lib\WebView2Loader.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="PopulateLocalWebView2Lib" BeforeTargets="BeforeBuild" Condition="'$(MSBuildProjectName)'=='CareLink'">
+    <PropertyGroup>
+      <_PkgManaged>$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\lib\net462\Microsoft.Web.WebView2.Core.dll</_PkgManaged>
+      <_PkgManagedAlt>$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\lib\net45\Microsoft.Web.WebView2.Core.dll</_PkgManagedAlt>
+      <_PkgLoader>$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\runtimes\win-x64\native\WebView2Loader.dll</_PkgLoader>
+      <_LocalLib>$(MSBuildThisFileDirectory)lib\</_LocalLib>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(_LocalLib)" Condition="!Exists('$(_LocalLib)')" />
+
+    <!-- Always copy from the NuGet cache when present to ensure local lib matches the pinned package version. -->
+    <Copy SourceFiles="$(_PkgManaged)" DestinationFiles="$(_LocalLib)Microsoft.Web.WebView2.Core.dll" SkipUnchangedFiles="true" Condition="Exists('$(_PkgManaged)')" />
+    <Copy SourceFiles="$(_PkgManagedAlt)" DestinationFiles="$(_LocalLib)Microsoft.Web.WebView2.Core.dll" SkipUnchangedFiles="true" Condition="Exists('$(_PkgManagedAlt)')" />
+    <Copy SourceFiles="$(_PkgLoader)" DestinationFiles="$(_LocalLib)WebView2Loader.dll" SkipUnchangedFiles="true" Condition="Exists('$(_PkgLoader)')" />
+  </Target>
+
+  <!-- Ensure files are present in output before build finishes (for debug runs) -->
+  <Target Name="EnsureWebView2CopiedToOutput" BeforeTargets="BeforeBuild" Condition="'$(MSBuildProjectName)'=='CareLink'">
+    <ItemGroup>
+      <_PkgManaged Include="$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\lib\net462\Microsoft.Web.WebView2.Core.dll" Condition="Exists('$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\lib\net462\Microsoft.Web.WebView2.Core.dll')" />
+      <_PkgManaged Include="$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\lib\net45\Microsoft.Web.WebView2.Core.dll" Condition="Exists('$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\lib\net45\Microsoft.Web.WebView2.Core.dll')" />
+      <_PkgLoader Include="$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\runtimes\win-x64\native\WebView2Loader.dll" Condition="Exists('$(NuGetPackageRoot)microsoft.web.webview2\$(WebView2Version)\runtimes\win-x64\native\WebView2Loader.dll')" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(_PkgManaged)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" Condition="@(_PkgManaged) != ''" />
+    <Copy SourceFiles="@(_PkgLoader)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="true" Condition="@(_PkgLoader) != ''" />
+  </Target>
+
+  <!-- Force-copy committed local lib DLLs into the build output every build and log their versions. -->
+  <Target Name="ForceCopyLocalWebView2Libs" BeforeTargets="BeforeBuild" Condition="'$(MSBuildProjectName)'=='CareLink'">
+    <ItemGroup>
+      <_LocalPkgLib Include="$(MSBuildThisFileDirectory)lib\Microsoft.Web.WebView2.Core.dll" Condition="Exists('$(MSBuildThisFileDirectory)lib\Microsoft.Web.WebView2.Core.dll')" />
+      <_LocalPkgLib Include="$(MSBuildThisFileDirectory)lib\WebView2Loader.dll" Condition="Exists('$(MSBuildThisFileDirectory)lib\WebView2Loader.dll')" />
+    </ItemGroup>
+
+    <Message Importance="high" Text="Forcing copy of WebView2 local lib files to output: @(_LocalPkgLib)" />
+
+    <!-- Always copy to ensure output probe path contains the exact DLLs used by the app. -->
+    <Copy SourceFiles="@(_LocalPkgLib)" DestinationFolder="$(OutputPath)" SkipUnchangedFiles="false" />
+
+    <!-- Log assembly identity/version so build output shows what will be loaded at runtime. -->
+    <!-- Only attempt assembly identity for the managed wrapper; native loader is not a managed assembly. -->
+    <ItemGroup>
+      <_LocalManaged Include="$(MSBuildThisFileDirectory)lib\Microsoft.Web.WebView2.Core.dll" Condition="Exists('$(MSBuildThisFileDirectory)lib\Microsoft.Web.WebView2.Core.dll')" />
+      <_LocalNative Include="$(MSBuildThisFileDirectory)lib\WebView2Loader.dll" Condition="Exists('$(MSBuildThisFileDirectory)lib\WebView2Loader.dll')" />
+    </ItemGroup>
+
+    <Message Importance="high" Text="WebView2 managed wrapper to log: @(_LocalManaged)" Condition="@(_LocalManaged) != ''" />
+    <GetAssemblyIdentity AssemblyFiles="@(_LocalManaged)" Condition="@(_LocalManaged) != ''">
+      <Output TaskParameter="Assemblies" ItemName="_WVAssemblies" />
+    </GetAssemblyIdentity>
+    <Message Importance="high" Text="WebView2 assemblies in output:" Condition="@(_WVAssemblies) != ''" />
+    <Message Importance="high" Text="%(_WVAssemblies.Identity) Version=%(_WVAssemblies.Version) PublicKeyToken=%(_WVAssemblies.PublicKeyToken)" Condition="@(_WVAssemblies) != ''" />
+
+    <Message Importance="high" Text="WebView2 native loader present: @(_LocalNative)" Condition="@(_LocalNative) != ''" />
   </Target>
 
   <!-- Ensure managed and native WebView2 package files are present in output for debug/run

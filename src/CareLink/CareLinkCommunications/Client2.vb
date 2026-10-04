@@ -192,7 +192,7 @@ Friend Class Client2
                                               ConfigureAwaitFalse()
 
                             _lastHttpStatus = response.StatusCode
-                            UpdateMessage(message:=$"   status: {_lastHttpStatus}",
+                            LoggerManager.UpdateMessage(message:=$"   status: {_lastHttpStatus}",
                                           startKey:=$"   status: ")
 
                             ' Centralized resp inspection; may throw UnauthorizedAccessException,
@@ -278,7 +278,10 @@ Friend Class Client2
             Using response As HttpResponseMessage = Await _httpClient.SendAsync(request)
                 _lastHttpStatus = response.StatusCode
                 If _lastHttpStatus <> HttpStatusCode.OK Then
-                    LogMessage(message:=$"   status: {_lastHttpStatus}")
+                    LogMessage(message:=$"   status: {_lastHttpStatus}", verbose:=False)
+                Else
+                    ' Explicitly mark non-error status logs as verbose.
+                    LogMessage(message:=$"   status: {_lastHttpStatus}", verbose:=True)
                 End If
 
                 ' Ensure non-success status codes are not silently ignored.
@@ -287,7 +290,7 @@ Friend Class Client2
                                    ConfigureAwaitFalse()
                 Catch ex As Exception
                     response.Dispose()
-                    LogMessage(message:=$"GetPatient HTTP failure: {ex.Message}")
+                    LogMessage(message:=$"GetPatient HTTP failure: {ex.Message}", verbose:=False)
                     Return Nothing
                 End Try
 
@@ -458,7 +461,8 @@ Friend Class Client2
                             httpClient:=_httpClient)
                     End If
                 Catch innerEx As Exception
-                    LogMessage(message:=innerEx.ToString())
+                    ' Inner exceptions can be noisy; log as verbose.
+                    LogMessage(message:=innerEx.ToString(), verbose:=True)
                 End Try
             End If
         End Try
@@ -476,7 +480,9 @@ Friend Class Client2
                         WriteTokenFile(Me.TokenDataElement)
                     End If
                 Catch refreshEx As Exception
-                    LogMessage(message:=refreshEx.ToString())
+                    ' Token refresh failures are important but often verbose; mark verbose here
+                    ' to reduce noise during normal operation while keeping data available when needed.
+                    LogMessage(message:=refreshEx.ToString(), verbose:=True)
                 End Try
             End If
 
@@ -538,7 +544,7 @@ Friend Class Client2
             ' Enhanced logging for first-time failures: capture environment and context
             Try
                 Dim envInfo As String = $"GetLoginData: tokenData is Nothing. Server={serverRegion}, User={userName}, OS={Environment.OSVersion}, Culture={Globalization.CultureInfo.CurrentCulture.Name}, Machine={Environment.MachineName}"
-                LoggerManager.LogMessage(envInfo)
+                LogMessage(envInfo)
             Catch
                 ' Best-effort logging; swallow any failures here
             End Try
@@ -555,7 +561,7 @@ Friend Class Client2
                                                         password)
             Catch ex As Exception
                 Try
-                    LoggerManager.LogMessage(message:=$"GetLoginData Exception: {ex}")
+                    LogMessage(message:=$"GetLoginData Exception: {ex}")
                 Catch
                 End Try
 
@@ -758,7 +764,8 @@ Friend Class Client2
                     GetAccessTokenPayload(Me.TokenDataElement)
                 WriteTokenFile(Me.TokenDataElement)
             Catch ex As Exception
-                LogMessage(message:=ex.ToString())
+                ' Exceptions during refresh/login attempt can be verbose; demote.
+                LogMessage(message:=ex.ToString(), verbose:=True)
             End Try
         End If
         If Not Me.IsTokenValid(message) Then
@@ -781,7 +788,7 @@ Friend Class Client2
                     Return message
                 End If
             Catch ex As Exception
-                LogMessage(message:=ex.ToString())
+                LogMessage(message:=ex.ToString(), verbose:=True)
                 Return message
             End Try
         End If

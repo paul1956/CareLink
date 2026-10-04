@@ -44,107 +44,112 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-9/20/2026
+10/03/2026
 
 ## What's New
+New in 6.0.5.0
+- Add support for new CareLink™ API changes in EU.
+- Add improved logging
+
 New in 6.0.3.1
-Finally fix refresh issue
+- Finally fix refresh issue
 
 New in 6.0.2.5
-Add Flag Support to login
-Fix Active Insulin Estimate for FLex
+- Add Flag Support to login
+- Fix Active Insulin Estimate for FLex
 
 New in 6.0.2.0
-Resctucture code to support new CareLink™ API changes.
-Support Flex PDF report and other new Flex features.
-Use WebView2 from MicrosoftEdgeWebView2RuntimeInstallerX64.exe instead of NuGet Package.
+- Resctucture code to support new CareLink™ API changes.
+- Support Flex PDF report and other new Flex features.
+- Use WebView2 from MicrosoftEdgeWebView2RuntimeInstallerX64.exe instead of NuGet Package.
 
 New in 6.0.1.8
-Update OAuthBrowserForm to display server URL.
-Fix issue with login when using non-US/Europe server.
+- Update OAuthBrowserForm to display server URL.
+- Fix issue with login when using non-US/Europe server.
 
 New in 6.0.1.7
-Fix DataGridView formatting.
+- Fix DataGridView formatting.
 
 New in 6.0.1.6
-Add additional logging to help debug login issues
+- Add additional logging to help debug login issues
 
 New in 6.0.1.3
-Fix non US/Europe Login
+- Fix non US/Europe Login
 
 New in 6.0.1.2
-Restructure Image handling to make it reusable
-Add support for production logging
+- Restructure Image handling to make it reusable
+- Add support for production logging
 
 New in 6.0.1.1
-Cleanup Formatting
-Login improvements
-Improve handling of new CareLink™ API changes
-Improve Flex support
+- Cleanup Formatting
+- Login improvements
+- Improve handling of new CareLink™ API changes
+- Improve Flex support
 
 New in 6.0.1.0
 Minor improvements in Json handling
 
 New in 6.0.0.3
-Add AdjustFontToFitWidth
-Add Description support for Enums
-Cleanup CursorSetPictureBox handling
-Fix Formatting in multiple files
-Fix Shield control formatting
-Redo all CountryCode Handling to handle other Regions in DropDowns
-Restore full Region list
+- Add AdjustFontToFitWidth
+- Add Description support for Enums
+- Cleanup CursorSetPictureBox handling
+- Fix Formatting in multiple files
+- Fix Shield control formatting
+- Redo all CountryCode Handling to handle other Regions in DropDowns
+- Restore full Region list
+
 New in 6.0.0.2
-Support for Flex including improved graphics
-FireFox was replaced with WebView2
-Support for Clinical Logins
-.Net 11 graphics
+- Support for Flex including improved graphics
+- FireFox was replaced with WebView2
+- Support for Clinical Logins
+- .Net 11 graphics
 
 New in 6.0.0.1
-Cached Fonts to improve performance.
-Fix issue with new login process that broke login for some users.
-Fixed formating of Time variables where the colon was surrounded by a space.
-Added new message to support new CareLink™ API.
+- Cached Fonts to improve performance.
+- Fix issue with new login process that broke login for some users.
+- Fixed formating of Time variables where the colon was surrounded by a space.
+- Added new message to support new CareLink™ API.
 
 New in 6.0.0.0
-Support for new new MiniMed Flex pump and new CareLink™ API including Clinical participants.
-Work needed to support new Flex PDF settings report and other new Flex features.
+- Support for new new MiniMed Flex pump and new CareLink™ API including Clinical participants.
+- Work needed to support new Flex PDF settings report and other new Flex features.
 
 New in 5.2.3.4
-Fix GetCarbRatio to handle boundries better
+- Fix GetCarbRatio to handle boundries better
 
 New in 5.2.3.3
-Add misssing License headers for tests.
-Replace Now with Date.Now
-Add Tests
-Improve login and recovery code
+- Add misssing License headers for tests.
+- Replace Now with Date.Now
+- Add Tests
+- Improve login and recovery code
 
 New in 5.2.3.2
-Update support for new Sensor Ending alerts
+- Update support for new Sensor Ending alerts
 
 New in 5.2.3.1
-Fix memory leak in login process and improve error handling for login issues.
-Fix color of StartWidget when using Dark Mode in .Net 10.0.
-Remove unused code related to new login flow in HttpClientExtensions.
+- Fix memory leak in login process and improve error handling for login issues.
+- Fix color of StartWidget when using Dark Mode in .Net 10.0.
+- Remove unused code related to new login flow in HttpClientExtensions.
 
 
 New in 5.2.3.0
-Remove .Net 9.0 workarounds and make .Net 10.0 the minimum target framework.
-Fix some issues with the new login process and improve error handling.
+- Remove .Net 9.0 workarounds and make .Net 10.0 the minimum target framework.
+- Fix some issues with the new login process and improve error handling.
 
 New in 5.2.2.1
-Add SafeDeleteFile to handle deleting files that are in use by another process, such as the login file that may be left behind if the login process is interrupted. This will help prevent issues with stale login files and improve the overall user experience.
-Add new sensor message DURATION_CHANGED_TO_SHORT
+- Add SafeDeleteFile to handle deleting files that are in use by another process, such as the login file that may be left behind if the login process is interrupted. This will help prevent issues with stale login files and improve the overall user experience.
+- Add new sensor message DURATION_CHANGED_TO_SHORT
 
 New in 5.2.2.0
-Make .Net 10.0 the default target framework.
+- Make .Net 10.0 the default target framework.
 
 New in 5.2.1.1
-Force FireFox to close after login to prevent
+- Force FireFox to close after login to prevent
   multiple instances running.
 
 New in 5.2.1.0
-Fixes new login process that broke login.
-Temporary fix until I can figure out how to handle the new
+- Fixes new login process that broke login.
+- Temporary fix until I can figure out how to handle the new
   login process.
 
 New in 5.2.0.0

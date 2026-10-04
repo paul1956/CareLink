@@ -11,6 +11,11 @@
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
    </PropertyGroup>
 
+  <!-- Ensure package assemblies are copied to output so runtime can load them -->
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="TestData\Test01.pdf" />
     <None Remove="TestData\Test02.PDF" />
@@ -25,14 +30,13 @@
     <None Remove="TestData\TestDataV2.pdf" />
   </ItemGroup>
 
-  <ItemGroup>
+    <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="8.11.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="4.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Xunit.StaFact" Version="4.1.15-beta" />
     <PackageReference Include="xunit.v3" Version="4.0.1" />
   </ItemGroup>
 

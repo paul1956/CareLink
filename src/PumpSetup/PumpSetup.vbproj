@@ -42,12 +42,24 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
 
+  <!-- Force x64 runtime to match solution and main CareLink project -->
+  <PropertyGroup>
+    <PlatformTarget>x64</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <Platform>x64</Platform>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <WarningsAsErrors>
       41999,42016,42017,42018,42019,42020,42021,42022,42032,42036
     </WarningsAsErrors>
     <Optimize>True</Optimize>
     <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <!-- Ensure package assemblies are copied to output so runtime can load them -->
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <ItemGroup>
@@ -61,6 +73,8 @@
     <Import Include="System.Drawing" />
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
+
+  <!-- PumpSetup does not use WebView2; package reference removed to avoid duplicate dependency -->
 
   <ItemGroup>
     <ProjectReference Include="..\CareLink\CareLink.vbproj" />

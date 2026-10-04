@@ -196,7 +196,6 @@ Friend Module SpeechSupport
         Dim confidence As Single = e.Result.Confidence.RoundToSingle(digits:=2)
         If confidence < 0.8 Then
             message = $"Rejected: {recognizedText} with confidence {confidence}%"
-            LogMessage(message)
             Form1.StatusStripSpeech.Text = message
             Exit Sub
         End If
@@ -205,7 +204,6 @@ Friend Module SpeechSupport
             If confidence >= My.Settings.SystemSpeechRecognitionThreshold Then
                 s_speechWakeWordFound = True
                 message = $"Heard: Wake word {recognizedText} with confidence {confidence}%), waiting.."
-                LogMessage(message)
                 Form1.StatusStripSpeech.Text = message
                 Application.DoEvents()
                 If recognizedText = "carelink" Then
@@ -214,21 +212,18 @@ Friend Module SpeechSupport
                 recognizedText = recognizedText.Replace(oldValue:="carelink", newValue:=EmptyString).TrimEnd
             Else
                 message = $"Rejected: {recognizedText} with confidence {confidence}%"
-                LogMessage(message)
                 Form1.StatusStripSpeech.Text = message
                 Exit Sub
             End If
         End If
 
         message = $"Heard: {e.Result.Text.ToLower} with confidence {confidence}%."
-        LogMessage(message)
         Form1.StatusStripSpeech.Text = message
         Application.DoEvents()
         If s_speechWakeWordFound Then
             s_speechWakeWordFound = False
             If confidence < My.Settings.SystemSpeechRecognitionThreshold - 0.05 Then
                 message = $"Rejected: {recognizedText} with confidence {confidence}%"
-                LogMessage(message)
                 Form1.StatusStripSpeech.Text = message
                 Exit Sub
             End If

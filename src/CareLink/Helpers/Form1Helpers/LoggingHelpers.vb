@@ -6,15 +6,39 @@ Imports System.Runtime.CompilerServices
 Imports System.IO
 Imports System.Reflection
 Imports System.Globalization
+Imports System.Threading
 
 Public Module LoggerManager
     Private s_loggerForm As LoggerForm
+    Private s_loggerThread As Thread
+    Private s_loggerReady As AutoResetEvent
 
     ' Controls whether the on-screen logger is shown/used. Initialized in InitLogger.
-    Private s_showLogger As Boolean = Debugger.IsAttached
+    ' Do NOT base this on Debugger.IsAttached — the app is frequently run under
+    ' a debugger during development and that should not change runtime logging.
+    Private s_showLogger As Boolean = False
+
+    ' Controls whether verbose logging is enabled. Verbose messages are only
+    ' emitted when this flag is true.
+    Private s_verboseLogging As Boolean = False
+
+    ''' <summary>
+    ''' Enable or disable verbose logging at runtime. Verbose messages passed to
+    ''' LogMessage(message, verbose:=True) will only be logged when enabled.
+    ''' </summary>
+    Public Sub SetVerboseLogging(enabled As Boolean)
+        s_verboseLogging = enabled
+    End Sub
+
+    Public Enum LogLevel
+        ErrorLevel
+        WarningLevel
+        InfoLevel
+        VerboseLevel
+    End Enum
 
     ' Fallback log folder for first-run users when the logger window is not visible.
-    Private ReadOnly s_logFolder As String = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CareLink", "Logs")
+    Private ReadOnly s_logFolder As String = Path.Combine(Environment.GetFolderPath(folder:=Environment.SpecialFolder.LocalApplicationData), "CareLink", "Logs")
 
     ''' <summary>
     '''  Initializes the logger form. If the logger form is not already created
@@ -23,11 +47,65 @@ Public Module LoggerManager
     ''' </summary>
     Public Sub InitLogger(show As Boolean)
         If s_loggerForm Is Nothing OrElse s_loggerForm.IsDisposed Then
-            s_loggerForm = New LoggerForm()
+            ' Start the logger on a dedicated STA UI thread so it remains
+            ' responsive while modal dialogs run on the main UI thread.
+            s_loggerReady = New AutoResetEvent(initialState:=False)
+            s_loggerThread = New Thread(
+                start:=Sub()
+                           Dim form As New LoggerForm()
+                           s_loggerForm = form
+                           Try
+                               ' Ensure the form's window handle is created on this (logger) thread
+                               Dim handle As IntPtr = form.Handle
+
+                               s_loggerReady.Set()
+                               Application.Run(mainForm:=form)
+                           Finally
+                               ' Ensure the event is set if Run exits unexpectedly
+                               s_loggerReady.Set()
+                           End Try
+                       End Sub)
+            s_loggerThread.SetApartmentState(state:=ApartmentState.STA)
+            s_loggerThread.IsBackground = True
+            s_loggerThread.Start()
+
+            ' Wait for the logger form to be created on its thread
+            Try
+                s_loggerReady.WaitOne()
+            Catch
+            End Try
+
+            ' Keep the menu checkbox in sync when possible.
+            Try
+                Form1.MenuViewShowLogger.Checked = show
+            Catch
+                ' Ignore failures accessing the main form
+            End Try
         End If
-        s_showLogger = show Or Debugger.IsAttached
+        ' Only enable the on-screen logger when explicitly requested by the caller.
+        s_showLogger = show
         If s_showLogger Then
-            s_loggerForm.Show()
+            ' Show it on its own thread so it remains
+            ' clickable/movable while modal dialogs are displayed on the main UI thread.
+            Try
+                If s_loggerForm IsNot Nothing Then
+                    Dim act As New Action(
+                        start:=Sub()
+                                   Try
+                                       If Not s_loggerForm.Visible Then
+                                           s_loggerForm.Show()
+                                       End If
+                                   Catch
+                                   End Try
+                               End Sub)
+                    If s_loggerForm.InvokeRequired Then
+                        s_loggerForm.BeginInvoke(act)
+                    Else
+                        act()
+                    End If
+                End If
+            Catch
+            End Try
         End If
     End Sub
 
@@ -38,19 +116,30 @@ Public Module LoggerManager
     '''  The message to log.
     ''' </param>
     <Extension>
-    Public Sub LogMessage(message As String)
+    Public Sub LogMessage(message As String, Optional verbose As Boolean = False, Optional level As LogLevel = LogLevel.InfoLevel)
         Try
+            ' If this is a verbose message and verbose logging is disabled, skip it.
+            If verbose AndAlso Not s_verboseLogging Then
+                Return
+            End If
+
+            ' Compose an output string that includes the log level for clarity.
+            Dim output As String =
+                If(level = LogLevel.InfoLevel,
+                   message,
+                   $"[{level}] {message}")
+
             ' Always write to Debug output so developers can see messages when attached
-            Debug.WriteLine(message)
+            'Debug.WriteLine(output)
 
             If s_showLogger Then
                 If s_loggerForm IsNot Nothing AndAlso Not s_loggerForm.IsDisposed Then
-                    s_loggerForm.LogMessage(message)
+                    s_loggerForm.LogMessage(message:=output)
                 End If
             Else
                 ' Logger window not visible (likely a first-time user). Write a fallback log
                 ' to disk so the user can attach it when reporting failures.
-                WriteFallbackLog(message)
+                WriteFallbackLog(message:=output)
             End If
         Catch
             ' Swallow any logging exceptions; logging should never crash the app
@@ -81,7 +170,8 @@ Public Module LoggerManager
         Else
             ' Provide a best-effort update to the fallback log if available
             Try
-                WriteFallbackLog($"UPDATE {startKey}->{endKey}: {message}")
+                WriteFallbackLog(
+                    message:=$"UPDATE {startKey}->{endKey}: {message}")
             Catch
             End Try
         End If

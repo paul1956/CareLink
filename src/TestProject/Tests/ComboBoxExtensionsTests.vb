@@ -8,7 +8,6 @@ Imports FluentAssertions
 Imports Xunit
 
 <Collection("Sequential")>
-<UISettings(MaxAttempts:=10)>
 Public Class ComboBoxExtensionsTests
 
     <Fact>

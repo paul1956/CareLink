@@ -424,3 +424,7 @@ FodyWeavers.xsd
 /src/TestProject/TestData/Test10.pdf
 /src/CareLink/Sign in to CareLink™ Personal_files
 *.pdf
+
+# Allow committing the WebView2 managed/native DLLs for deterministic builds
+!/src/CareLink/lib/Microsoft.Web.WebView2.Core.dll
+!/src/CareLink/lib/WebView2Loader.dll

@@ -61,7 +61,7 @@ Public Module Discover
             message = $"ERROR: country code {country} is not supported"
             Throw New ApplicationException(message)
         End If
-        LogMessage(message:=$"   region: {region.ElementToString()}")
+        LogMessage(message:=$"   region: {region.ElementToString()}", verbose:=True)
         Dim countryInfo As CountryInfo
         Try
             countryInfo = region.FromJson(Of CountryInfo)()
@@ -295,19 +295,19 @@ Public Module Discover
                         Await response.ThrowIfFailureAsync().ConfigureAwaitFalse()
                     Catch uaEx As UnauthorizedAccessException
                         lastErrorMsg = $"Unauthorized access when fetching discovery data: {uaEx.Message}"
-                        LogMessage(message:=lastErrorMsg)
+                        LogMessage(message:=lastErrorMsg, verbose:=True)
                         Return New DiscoveryRoot With {
                             .httpStatusCode = httpStatusCode,
                             .lastErrorMsg = lastErrorMsg}
                     Catch argEx As ArgumentException
                         lastErrorMsg = $"Bad request fetching discovery data: {argEx.Message}"
-                        LogMessage(message:=lastErrorMsg)
+                        LogMessage(message:=lastErrorMsg, verbose:=True)
                         Return New DiscoveryRoot With {
                             .httpStatusCode = httpStatusCode,
                             .lastErrorMsg = lastErrorMsg}
                     Catch httpEx As HttpRequestException
                         lastErrorMsg = $"HTTP request failed: {httpEx.Message}"
-                        LogMessage(message:=lastErrorMsg)
+                        LogMessage(message:=lastErrorMsg, verbose:=True)
                         Return New DiscoveryRoot With {
                             .httpStatusCode = httpStatusCode,
                             .lastErrorMsg = lastErrorMsg}
@@ -353,19 +353,19 @@ Public Module Discover
                 lastErrorMsg =
                     $"Multiple errors: {String.Join(separator:="; ", values:=messages)}"
             End If
-            LogMessage(message:=lastErrorMsg)
+            LogMessage(message:=lastErrorMsg, verbose:=True)
         Catch ex As HttpRequestException
             lastErrorMsg = $"HTTP request error: {ex.Message}"
-            LogMessage(message:=lastErrorMsg)
+            LogMessage(message:=lastErrorMsg, verbose:=True)
         Catch ex As TaskCanceledException
             lastErrorMsg = "The request timed out."
-            LogMessage(message:=lastErrorMsg)
+            LogMessage(message:=lastErrorMsg, verbose:=True)
         Catch ex As JsonException
             lastErrorMsg = $"JSON deserialization error: {ex.Message}"
-            Debug.WriteLine(message:=lastErrorMsg)
+            LogMessage(message:=lastErrorMsg, verbose:=True)
         Catch ex As Exception
             lastErrorMsg = $"Unexpected error: {ex.Message}"
-            Debug.WriteLine(message:=lastErrorMsg)
+            LogMessage(message:=lastErrorMsg, verbose:=True)
             Stop
         End Try
 

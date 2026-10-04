@@ -3,4 +3,33 @@
     <!-- Add Roslyn analyzers to all projects in the repo -->
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.*" PrivateAssets="All" />
   </ItemGroup>
+  <PropertyGroup>
+    <!-- Pin WebView2 for the whole solution -->
+    <WebView2Version>1.0.818.41</WebView2Version>
+    <WebView2PackageId>microsoft.web.webview2</WebView2PackageId>
+  </PropertyGroup>
+
+  <!-- Only run validation/fallback for the CareLink project (only CareLink uses WebView2) -->
+  <Target Name="EnsureWebView2AssetsExist" BeforeTargets="BeforeBuild" Condition="'$(MSBuildProjectName)'=='CareLink'">
+    <PropertyGroup>
+      <_ManagedPath>$(NuGetPackageRoot)$(WebView2PackageId)\$(WebView2Version)\lib\net462\Microsoft.Web.WebView2.Core.dll</_ManagedPath>
+      <_ManagedPathAlt>$(NuGetPackageRoot)$(WebView2PackageId)\$(WebView2Version)\lib\net45\Microsoft.Web.WebView2.Core.dll</_ManagedPathAlt>
+      <_LoaderX64>$(NuGetPackageRoot)$(WebView2PackageId)\$(WebView2Version)\runtimes\win-x64\native\WebView2Loader.dll</_LoaderX64>
+      <_FallbackScript>$(MSBuildThisFileDirectory)scripts\get-webview2.ps1</_FallbackScript>
+      <_FallbackOutDir>$(MSBuildThisFileDirectory)src\CareLink\lib</_FallbackOutDir>
+    </PropertyGroup>
+
+    <Message Importance="high" Text="Checking WebView2 assets for version $(WebView2Version)..." />
+
+    <!-- Try to run the existing fallback script if managed wrapper missing (non-fatal) -->
+    <Exec Condition="!Exists('$(_ManagedPath)') and !Exists('$(_ManagedPathAlt)')"
+          Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(_FallbackScript)&quot; -Version &quot;$(WebView2Version)&quot; -OutDir &quot;$(_FallbackOutDir)&quot;"
+          ContinueOnError="true" />
+
+    <!-- Fail early if still missing -->
+    <Error Condition="!Exists('$(_ManagedPath)') and !Exists('$(_ManagedPathAlt)')"
+           Text="Microsoft.Web.WebView2.Core.dll for version $(WebView2Version) not found after fallback. Run 'dotnet restore' or choose a package version that contains the managed wrapper." />
+    <Error Condition="!Exists('$(_LoaderX64)') and !Exists('$(MSBuildThisFileDirectory)src\CareLink\lib\WebView2Loader.dll')"
+           Text="WebView2Loader.dll (native) for version $(WebView2Version) not found after fallback. Run 'dotnet restore' or ensure the package includes native runtime assets." />
+  </Target>
 </Project>

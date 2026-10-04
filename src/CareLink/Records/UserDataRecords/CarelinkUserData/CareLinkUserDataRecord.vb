@@ -255,7 +255,8 @@ Partial Public Class CareLinkUserDataRecord
             _inTxn = True
 
             Dim message As String = $"BeginEdit  - {_userData._iD}{_userData._careLinkUserName}"
-            LogMessage(message)
+            ' These Begin/End edit messages are high-volume UI events; mark verbose.
+            LogMessage(message, verbose:=True)
         End If
     End Sub
 
@@ -263,27 +264,28 @@ Partial Public Class CareLinkUserDataRecord
     '''  Cancels the current edit transaction, restoring the backed-up user data.
     ''' </summary>
     Public Sub CancelEdit() Implements IEditableObject.CancelEdit
-        LogMessage(message:="Start CancelEdit")
+        ' CancelEdit events are user-initiated and frequent; mark verbose.
+        LogMessage(message:="Start CancelEdit", verbose:=True)
         If _inTxn Then
             _userData = _backupData
             Dim message As String = $"CancelEdit - {_userData._iD}{_userData._careLinkUserName}"
-            LogMessage(message)
+            LogMessage(message, verbose:=True)
         End If
-        LogMessage(message:="End CancelEdit")
+        LogMessage(message:="End CancelEdit", verbose:=True)
     End Sub
 
     ''' <summary>
     '''  Ends the current edit transaction, committing the changes.
     ''' </summary>
     Public Sub EndEdit() Implements IEditableObject.EndEdit
-        LogMessage(message:=$"Start EndEdit{_userData._iD}{_userData._careLinkUserName}")
+        LogMessage(message:=$"Start EndEdit{_userData._iD}{_userData._careLinkUserName}", verbose:=True)
         If _inTxn Then
             _backupData = New CareLinkUserData()
             _inTxn = False
             Dim message As String = $"Done EndEdit - {_userData._iD}{_userData._careLinkUserName}"
-            LogMessage(message)
+            LogMessage(message, verbose:=True)
         End If
-        LogMessage(message:="End EndEdit")
+        LogMessage(message:="End EndEdit", verbose:=True)
     End Sub
 
     ''' <summary>

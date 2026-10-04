@@ -5,12 +5,12 @@ Recommended options:
 - Standalone MSI (offline/enterprise): MicrosoftEdgeWebView2RuntimeInstallerX64.msi
 
 Project notes (current configuration):
-- The project now targets Microsoft.Web.WebView2 version 1.0.818.41. The managed wrapper (Microsoft.Web.WebView2.Core.dll) placed into the app output must match this package version.
+- The project now targets Microsoft.Web.WebView2 version 1.0.4258.31. The managed wrapper (Microsoft.Web.WebView2.Core.dll) placed into the app output must match this package version.
 - The MSBuild targets copy the WebView2 managed DLL and the x64 native WebView2Loader.dll from the NuGet package cache into the project's build output. If you clear bin manually, rebuild to restore these files.
 - The bootstrapper in this folder is copied into the application output (bin\<Configuration>) when present so it will be included in ZIP deployments.
 
 Recommended files to include in ZIP distributions (from the app output folder):
-- Microsoft.Web.WebView2.Core.dll (managed wrapper) - ensure this matches package version 1.0.818.41
+- Microsoft.Web.WebView2.Core.dll (managed wrapper) - ensure this matches package version 1.0.4258.31
 - WebView2Loader.dll (native loader, x64)
 - MicrosoftEdgeWebView2RuntimeInstallerX64.exe (bootstrapper) - optional but recommended to help non-dev users install the runtime
 
