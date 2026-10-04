@@ -14,9 +14,10 @@ Public Module LoggerManager
     Private s_loggerReady As AutoResetEvent
 
     ' Controls whether the on-screen logger is shown/used. Initialized in InitLogger.
+    ' The authoritative storage for this flag lives in ProgramVariables.SystemVariables
+    ' to avoid duplicate module-level symbols that cause ambiguous references.
     ' Do NOT base this on Debugger.IsAttached — the app is frequently run under
     ' a debugger during development and that should not change runtime logging.
-    Private s_showLogger As Boolean = False
 
     ' Controls whether verbose logging is enabled. Verbose messages are only
     ' emitted when this flag is true.
@@ -59,7 +60,14 @@ Public Module LoggerManager
                                Dim handle As IntPtr = form.Handle
 
                                s_loggerReady.Set()
-                               Application.Run(mainForm:=form)
+
+                               ' Do not pass the form to Application.Run — creating the form here
+                               ' but running Application.Run() without a main form prevents the
+                               ' form from being shown automatically. We will show it later
+                               ' on demand via Invoke/BeginInvoke when SystemVariables.s_showLogger
+                               ' is set to True. Ensure the thread exits when the form is closed.
+                               AddHandler form.FormClosed, Sub() Application.ExitThread()
+                               Application.Run()
                            Finally
                                ' Ensure the event is set if Run exits unexpectedly
                                s_loggerReady.Set()
@@ -83,8 +91,8 @@ Public Module LoggerManager
             End Try
         End If
         ' Only enable the on-screen logger when explicitly requested by the caller.
-        s_showLogger = show
-        If s_showLogger Then
+        SystemVariables.s_showLogger = show
+        If SystemVariables.s_showLogger Then
             ' Show it on its own thread so it remains
             ' clickable/movable while modal dialogs are displayed on the main UI thread.
             Try
@@ -132,7 +140,7 @@ Public Module LoggerManager
             ' Always write to Debug output so developers can see messages when attached
             'Debug.WriteLine(output)
 
-            If s_showLogger Then
+            If SystemVariables.s_showLogger Then
                 If s_loggerForm IsNot Nothing AndAlso Not s_loggerForm.IsDisposed Then
                     s_loggerForm.LogMessage(message:=output)
                 End If

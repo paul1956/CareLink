@@ -3594,8 +3594,8 @@ Public Class Form1
             My.Settings.AutoLogin = False
         End If
 
-        s_showLogger = Debugger.IsAttached
-        InitLogger(show:=s_showLogger)
+        SystemVariables.s_showLogger = Debugger.IsAttached
+        InitLogger(show:=SystemVariables.s_showLogger)
         LogMessage(message:="Application started in DEBUG mode.")
 
         PreloadBitmaps()
@@ -4547,12 +4547,12 @@ Public Class Form1
     End Sub
 
     Private Sub MenuHelpShowLogger_Click(sender As Object, e As EventArgs) Handles MenuViewShowLogger.Click
-        If s_showLogger Then
-            s_showLogger = False
+        If SystemVariables.s_showLogger Then
+            SystemVariables.s_showLogger = False
             Me.MenuViewShowLogger.Checked = False
             LoggerForm.Hide()
         Else
-            s_showLogger = True
+            SystemVariables.s_showLogger = True
             Me.MenuViewShowLogger.Checked = True
             InitLogger(show:=True)
         End If
