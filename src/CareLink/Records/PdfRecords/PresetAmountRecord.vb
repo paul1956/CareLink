@@ -19,9 +19,6 @@ Public Class PresetAmountRecord
         End If
     End Sub
 
-    Private Shared ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
     Friend Property PercentValue As Single
     Friend Property RateValue As Single
     Friend Property TypeIsRate As Boolean

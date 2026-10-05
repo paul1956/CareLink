@@ -243,54 +243,52 @@ Friend Module DgvCellStyleHelpers
                     If partialKey = "HighLimit" Then
                         If sensorValue > GetTirHighLimit() Then
                             dgv.CellFormattingApplyColor(e, textColor:=Color.Yellow)
+                            e.CellFormattingApplyBold()
                         Else
                             dgv.CellFormattingDefault(e)
                         End If
                     Else
                         If sensorValue < GetTirLowLimit() Then
                             dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
+                            e.CellFormattingApplyBold()
                         Else
                             dgv.CellFormattingDefault(e)
                         End If
                     End If
-                    e.CellFormattingApplyBold()
                 Case $"{partialKey}MgdL"
                     e.Value = sensorValue.ToString(format:=GetSgFormat(nativeMmolL:=False),
                                                    provider)
                     If partialKey = "HighLimit" Then
-                        If sensorValue > GetTirHighLimit(asMmolL:=False) Then
+                        If sensorValue > GetTirHighLimit(asMmolL:=NativeMmolL = True) Then
                             dgv.CellFormattingApplyColor(e, textColor:=Color.Yellow)
                         Else
                             dgv.CellFormattingDefault(e)
                         End If
                     Else
-                        If sensorValue < GetTirLowLimit(asMmolL:=False) Then
+                        If sensorValue < GetTirLowLimit(asMmolL:=NativeMmolL = True) Then
                             dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
                         Else
                             dgv.CellFormattingDefault(e)
                         End If
-                    End If
-                    If Not NativeMmolL Then
-                        e.CellFormattingApplyBold()
                     End If
                 Case $"{partialKey}MmolL"
                     e.Value = sensorValue.ToString(format:=GetSgFormat(nativeMmolL:=True),
                                                    provider)
                     If partialKey = "HighLimit" Then
-                        If sensorValue > GetTirHighLimit(asMmolL:=True) Then
+                        If sensorValue > GetTirHighLimit(asMmolL:=NativeMmolL = False) Then
                             dgv.CellFormattingApplyColor(e, textColor:=Color.Yellow)
                         Else
                             dgv.CellFormattingDefault(e)
                         End If
                     Else
-                        If sensorValue < GetTirLowLimit(asMmolL:=True) Then
+                        If sensorValue < GetTirLowLimit(asMmolL:=NativeMmolL = False) Then
                             dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
+                            If NativeMmolL Then
+                                e.CellFormattingApplyBold()
+                            End If
                         Else
                             dgv.CellFormattingDefault(e)
                         End If
-                    End If
-                    If NativeMmolL Then
-                        e.CellFormattingApplyBold()
                     End If
             End Select
             e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight

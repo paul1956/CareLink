@@ -26,9 +26,6 @@ Friend Module DgvDataTableHelpers
     ''' </param>
     Friend Delegate Sub attachHandlers(dgv As DataGridView)
 
-    Private ReadOnly Property Options As StringSplitOptions =
-            StringSplitOptions.RemoveEmptyEntries
-
     Private ReadOnly Property Separator As Char() = New Char() {" "c}
 
     ''' <summary>

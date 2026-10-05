@@ -26,7 +26,7 @@ Public Class SystemVariablesTests
     Public Sub GetTirLowLimit_ReturnsCorrectValue_ForUnits()
         NativeMmolL = True
         Dim lowLimitMmol As Single = GetTirLowLimit()
-        lowLimitMmol.Should().Be(expected:=TirLowMmDl3_9)
+        lowLimitMmol.Should().Be(expected:=TirLowMmDl3_89)
         NativeMmolL = False
         Dim lowLimitMgdl As Single = GetTirLowLimit()
         lowLimitMgdl.Should().Be(expected:=TirLowMmol70)
@@ -47,7 +47,7 @@ Public Class SystemVariablesTests
     Public Sub GetTirLowLimitWithUnits_UsesDecimalSeparator()
         NativeMmolL = True
         DecimalSeparator = ","
-        Dim expected As String = "3,9 Mmol/l"
+        Dim expected As String = "3,89 Mmol/l"
         GetTirLowLimitWithUnits().Should().Be(expected)
         RestoreDefaults()
     End Sub

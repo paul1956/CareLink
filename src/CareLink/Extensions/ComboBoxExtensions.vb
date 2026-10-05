@@ -28,12 +28,11 @@ Public Module ComboBoxExtensions
             Return -1
         End If
 
-        Dim comparer As EqualityComparer(Of Tk) = EqualityComparer(Of Tk).Default
         For i As Integer = 0 To count - 1
             Dim obj As Object = objCollection(index:=i)
             If TypeOf obj Is KeyValuePair(Of Tk, Tv) Then
                 Dim pair As KeyValuePair(Of Tk, Tv) = DirectCast(obj, KeyValuePair(Of Tk, Tv))
-                If comparer.Equals(pair.Key, key) Then
+                If EqualityComparer(Of Tk).Default.Equals(x:=pair.Key, y:=key) Then
                     Return i
                 End If
             End If
@@ -65,12 +64,11 @@ Public Module ComboBoxExtensions
             Return -1
         End If
 
-        Dim comparer As EqualityComparer(Of Tv) = EqualityComparer(Of Tv).Default
         For index As Integer = 0 To count - 1
             Dim obj As Object = objCollection(index)
             If TypeOf obj Is KeyValuePair(Of Tk, Tv) Then
                 Dim item As KeyValuePair(Of Tk, Tv) = DirectCast(obj, KeyValuePair(Of Tk, Tv))
-                If comparer.Equals(x:=item.Value, y) Then
+                If EqualityComparer(Of Tv).Default.Equals(x:=item.Value, y) Then
                     Return index
                 End If
             End If

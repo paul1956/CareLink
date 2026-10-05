@@ -15,12 +15,6 @@ Public Class PdfSectionParser
         _record = record
     End Sub
 
-    Private Shared ReadOnly Property ComparisonType As StringComparison =
-                    StringComparison.OrdinalIgnoreCase
-
-    Private Shared ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
     Private Shared ReadOnly Property Separator As String() = {"  "}
 
     Private Shared Function SplitColumns(line As String) As String()

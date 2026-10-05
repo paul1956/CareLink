@@ -238,17 +238,19 @@ Public Module Discover
 
         ' Create a JsonElement for the token URL string and insert it into the mutable config
         Dim tokenElem As JsonElement
-        Using doc As JsonDocument = JsonDocument.Parse(json:=JsonSerializer.Serialize(tokenUrl))
+        Using doc As JsonDocument = JsonDocument.Parse(json:=tokenUrl.ToJson())
             tokenElem = doc.RootElement.Clone()
         End Using
         mutableConfig(key:="token_url") = tokenElem
 
-        Dim mcJson As String = String.Empty
-        If Not mutableConfig.TryToJson(json:=mcJson) Then
+        Dim mcJson As String
+        Try
+            mcJson = mutableConfig.ToJson()
+        Catch ex As Exception
             Const message As String =
                 "Failed to serialize mutable config to JSON."
             Throw New ApplicationException(message)
-        End If
+        End Try
 
         Dim outElem As JsonElement
         Try

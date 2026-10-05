@@ -60,15 +60,15 @@ Friend Module FileUtilities
             ' Strip unsupported fields (client_secret, mag-identifier) from the token JSON
             Try
                 Dim dict As Dictionary(Of String, JsonElement) =
-                    JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(json:=tokenData.GetRawText())
+                    tokenData.GetRawText().FromJson(Of Dictionary(Of String, JsonElement))()
                 If dict IsNot Nothing Then
                     ' Strip deprecated fields if present. These may appear in legacy files
                     ' but should not be part of the runtime token model.
                     dict.Remove(key:="client_secret")
                     dict.Remove(key:="mag-identifier")
 
-                    Dim sanitizedJson As String = JsonSerializer.Serialize(dict, JsonExtensions.SerializerOptions)
-                    Return JsonSerializer.Deserialize(Of JsonElement)(sanitizedJson)
+                    Dim sanitizedJson As String = dict.ToJson()
+                    Return sanitizedJson.FromJson(Of JsonElement)()
                 End If
             Catch
                 ' If sanitization fails, return original tokenData for compatibility
@@ -227,27 +227,22 @@ Friend Module FileUtilities
             Exit Sub
         End If
         Dim path As String = GetLoginDataFileName(tokenBaseFileName)
-        Dim contents As String = String.Empty
+        Dim contents As String
         ' Remove unsupported fields (mag-identifier, client_secret) before writing
         Try
             Dim dict As Dictionary(Of String, JsonElement) =
-                JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(tokenDataElement.GetRawText())
+                tokenDataElement.GetRawText().FromJson(Of Dictionary(Of String, JsonElement))()
             If dict IsNot Nothing Then
                 dict.Remove(key:="mag-identifier")
                 dict.Remove(key:="client_secret")
-                contents = JsonSerializer.Serialize(dict, JsonExtensions.SerializerOptions)
+                contents = dict.ToJson()
             Else
-                If Not tokenDataElement.TryToJson(json:=contents) Then
-                    LogMessage(message:=$"ERROR: failed serializing tokenDataElement for file {path}")
-                    Return
-                End If
+                ' Fallback to raw text of JsonElement which is safe and non-throwing
+                contents = tokenDataElement.GetRawText()
             End If
         Catch ex As Exception
-            ' Fallback to original serialization if manipulation fails
-            If Not tokenDataElement.TryToJson(json:=contents) Then
-                LogMessage(message:=$"ERROR: failed serializing tokenDataElement for file {path}")
-                Return
-            End If
+            ' Fallback to raw text of JsonElement which is safe and non-throwing
+            contents = tokenDataElement.GetRawText()
         End Try
         ' Write sanitized contents to file
         Try
@@ -265,11 +260,13 @@ Friend Module FileUtilities
     ''' <param name="token">The tokenDataElement data to write.</param>
     ''' <param name="path">The path to the file where the tokenDataElement data will be written.</param>
     Public Sub WriteTokenFile(Of T)(token As T, path As String)
-        Dim contents As String = String.Empty
-        If Not token.TryToJson(contents) Then
-            LogMessage(message:=$"ERROR: failed serializing tokenDataElement to file {path}")
+        Dim contents As String
+        Try
+            contents = token.ToJson()
+        Catch ex As Exception
+            LogMessage(message:=$"ERROR: failed serializing tokenDataElement to file {path}: {ex.Message}")
             Return
-        End If
+        End Try
         File.WriteAllText(path, contents)
     End Sub
 

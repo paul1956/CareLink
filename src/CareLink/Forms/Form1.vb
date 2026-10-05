@@ -18,13 +18,10 @@ Imports TableLayputPanelTop
 
 Public Class Form1
 
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
-
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _carbRatio As New ToolTip()
 
-    Private ReadOnly _pendingHeaderUpdates As New HashSet(Of String)(StringComparer.OrdinalIgnoreCase)
+    Private ReadOnly _pendingHeaderUpdates As New HashSet(Of String)(TextComparisonConstants.Comparer)
 
     Private ReadOnly _processName As String =
             Process.GetCurrentProcess().ProcessName
@@ -4941,8 +4938,6 @@ Public Class Form1
                 Me.SetLastUpdateTime(msg:="System Awake", highLight:=True)
                 s_shuttingDown = False
                 SetServerUpdateTimer(Start:=True, interval:=TwentySecondsInMilliseconds)
-                Dim message As String = $"restarted after wake. {NameOf(ServerUpdateTimer)} started at {Now:T}"
-                DebugPrint(message)
         End Select
 
     End Sub
@@ -6735,7 +6730,6 @@ Public Class Form1
     ''' </remarks>
     Friend Sub UpdateAllTabPages(fromFile As Boolean)
         If IsPatientDataEmpty() Then
-            DebugPrint($"exiting, {NameOf(PatientData)} has no data!")
             Exit Sub
         End If
         If PatientData.LastMedicalDeviceDataUpdateServerTime = s_lastMedicalDeviceDataUpdateServerEpoch Then

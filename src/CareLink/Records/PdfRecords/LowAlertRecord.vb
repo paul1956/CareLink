@@ -4,9 +4,6 @@
 
 Public Class LowAlertRecord
 
-    Private Shared ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
     Public Sub New(s As StringTable.Row, valueUnits As String)
         If s.Columns.Count <> 5 Then
             Stop

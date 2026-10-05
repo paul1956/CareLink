@@ -14,9 +14,6 @@ Imports Spire.Pdf.Utilities
 ''' </summary>
 Public Module PDFParserUtilities
 
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
-
     ''' <summary>
     '''  Finds the first line in the provided list that contains the given search word
     '''  using the supplied string-comparison. Returns Nothing if not found.
@@ -113,6 +110,8 @@ Public Module PDFParserUtilities
         'Load a PDF file
         doc.LoadFromFile(filename)
         Dim text As String = String.Empty
+        Dim pdfOptions As New PdfTextExtractOptions With {
+            .IsExtractAllText = True}
         For i As Integer = startPageNumber To endPageNumber
 
             'Get the page
@@ -123,9 +122,7 @@ Public Module PDFParserUtilities
 
             'Create a PdfTextExtractOptions object
             'Set IsExtractAllText to true
-            Dim options As New PdfTextExtractOptions With {
-                .IsExtractAllText = True}
-            text &= textExtractor.ExtractText(options)
+            text &= textExtractor.ExtractText(options:=pdfOptions)
         Next
         Return text
     End Function

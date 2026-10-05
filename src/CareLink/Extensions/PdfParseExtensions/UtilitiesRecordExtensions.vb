@@ -6,9 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Public Module UtilitiesRecordExtensions
 
-    Private ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
     <Extension>
     Public Sub InitializeFromStringTable(this As UtilitiesRecord, sTable As StringTable)
         If sTable Is Nothing Then Return

@@ -6,9 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Public Module PresetAmountRecordExtensions
 
-    Private ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
     <Extension>
     Public Sub InitializeFromString(this As PresetAmountRecord, s As String)
         If s Is Nothing Then Return

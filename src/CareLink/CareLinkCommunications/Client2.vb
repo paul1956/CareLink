@@ -161,11 +161,13 @@ Friend Class Client2
         headers(key:="Authorization") =
             $"Bearer {tokenData(key:="access_token")}"
 
-        Dim contentJson As String = String.Empty
-        If Not value.TryToJson(json:=contentJson) Then
-            LogMessage(message:=$"ERROR: failed serializing request body for GetDataAsync")
+        Dim contentJson As String
+        Try
+            contentJson = value.ToJson()
+        Catch ex As Exception
+            LogMessage(message:=$"ERROR: failed serializing request body for GetDataAsync: {ex.Message}")
             contentJson = "{}"
-        End If
+        End Try
         Using content As New StringContent(content:=contentJson,
                                            encoding:=Encoding.UTF8,
                                            mediaType:="application/json")
@@ -690,13 +692,15 @@ Friend Class Client2
             Return Nothing
         End If
 
-        Dim tdJson As String = String.Empty
-        If Not tokenData.TryToJson(json:=tdJson) Then
+        Dim tdJson As String
+        Try
+            tdJson = tokenData.ToJson()
+        Catch ex As Exception
             message =
-                $"{fnName}: failed serializing tokenDataElement data to JSON."
+                $"{fnName}: failed serializing tokenDataElement data to JSON: {ex.Message}"
             LogMessage(message)
             Return Nothing
-        End If
+        End Try
         Dim tdElem As JsonElement
         Try
             tdElem = tdJson.FromJson(Of JsonElement)()

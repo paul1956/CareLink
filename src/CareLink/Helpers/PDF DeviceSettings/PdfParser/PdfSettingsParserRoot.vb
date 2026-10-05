@@ -8,9 +8,6 @@ Imports Spire.Pdf.Utilities
 
 Public Module PdfSettingsParserRoot
 
-    Private ReadOnly Property ComparisonType As StringComparison =
-            StringComparison.OrdinalIgnoreCase
-
     ''' <summary>
     '''  Top-level parser facade that dispatches to format-specific parsers
     '''  and populates a PdfSettingsRecord instance.

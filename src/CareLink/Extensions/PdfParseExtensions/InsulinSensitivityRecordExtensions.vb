@@ -6,9 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Public Module InsulinSensitivityRecordExtensions
 
-    Private ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
     <Extension>
     Public Sub InitializeFromRow(this As InsulinSensitivityRecord, row As StringTable.Row)
         If row Is Nothing Then Return

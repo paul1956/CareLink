@@ -17,16 +17,16 @@ Public Module SystemVariables
 
 #End Region ' Used for painting
 
+    ' Cached fonts
     Friend ReadOnly s_font_7Bold As New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
 
-    ' Cached fonts
+    Friend ReadOnly s_font_8Bold As New Font(FamilyName, emSize:=8.0F, style:=FontStyle.Bold)
     Friend ReadOnly s_font11Bold As New Font(FamilyName, emSize:=11.0F, style:=FontStyle.Bold)
-
     Friend ReadOnly s_font12 As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
     Friend ReadOnly s_font12Bold As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
     Friend ReadOnly s_font14Bold As New Font(FamilyName, emSize:=14.0F, style:=FontStyle.Bold)
     Friend ReadOnly s_font18Bold As New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold)
-    Friend ReadOnly s_font8Bold As New Font(FamilyName, emSize:=8.0F, style:=FontStyle.Bold)
+
     Friend s_allUserSettingsData As New CareLinkUserDataList
     Friend s_countryCode As String = String.Empty
     Friend s_currentSummaryRow As Integer = 0

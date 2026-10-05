@@ -30,9 +30,6 @@ Public Module LegacyPdfParser
     Private Const SmartGuardHeader As String = "SmartGuard"
     Private Const UtilitiesHeader As String = "Block Mode"
 
-    Private ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
     Public Sub ParseLegacy(record As PdfSettingsRecord, tables As Dictionary(Of String, PdfTable), pageText As String)
         record.IsFlex = False
         Dim listOfTextLines As List(Of String) = pageText.SplitLines(Trim:=True)

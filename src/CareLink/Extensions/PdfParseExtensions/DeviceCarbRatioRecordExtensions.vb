@@ -6,9 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Public Module DeviceCarbRatioRecordExtensions
 
-    Private ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
     <Extension>
     Public Sub InitializeFromRow(this As DeviceCarbRatioRecord, row As StringTable.Row)
         If row Is Nothing Then Return

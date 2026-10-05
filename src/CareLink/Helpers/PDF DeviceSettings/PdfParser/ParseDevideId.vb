@@ -4,9 +4,6 @@
 
 Friend Module ParseDeviceModel
 
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
-
     Friend Function GetDeviceFamilyAndModel(pageText As String) As PdfDeviceInfo
         ' Attempt to extract a more complete device model / data source string from page2
         Dim deviceFamily As String

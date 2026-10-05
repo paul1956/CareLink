@@ -13,15 +13,6 @@ Public Class OAuthBrowserForm
 
 #If True Then ' Keep on top
 
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
-
-    Private Const Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
-    Private Shared ReadOnly Property Comparer As StringComparer =
-            StringComparer.OrdinalIgnoreCase
-
     Private Shared ReadOnly Property Separator As Char() =
         New Char() {"&"c}
 
@@ -216,7 +207,7 @@ Public Class OAuthBrowserForm
         Dim extractParamFromText As Func(Of String, String, String) =
             Function(text As String, param As String) As String
                 If String.IsNullOrWhiteSpace(value:=text) Then Return Nothing
-                Dim idx As Integer = text.IndexOf(value:=param & "=", comparisonType:=StringComparison.OrdinalIgnoreCase)
+                Dim idx As Integer = text.IndexOf(value:=param & "=", comparisonType:=TextComparisonConstants.ComparisonType)
                 If idx < 0 Then Return Nothing
                 Dim startIdx As Integer = idx + param.Length + 1
                 Dim sb As New Text.StringBuilder()
@@ -325,15 +316,8 @@ Public Class OAuthBrowserForm
     End Sub
 
     Private Async Function SetFieldAsync(selector As String, value As String) As Task
-        Dim selectorJson As String = Nothing
-        If Not selector.TryToJson(selectorJson) Then
-            selectorJson = JsonSerializer.Serialize(selector)
-        End If
-
-        Dim valueJson As String = Nothing
-        If Not value.TryToJson(valueJson) Then
-            valueJson = JsonSerializer.Serialize(value)
-        End If
+        Dim selectorJson As String = selector.ToJson()
+        Dim valueJson As String = value.ToJson()
         Dim javaScript As String =
             $"(() => {{
                 const el = document.querySelector({selectorJson});
@@ -368,10 +352,7 @@ Public Class OAuthBrowserForm
 
     Private Async Function TypeWithSendKeysAsync(selector As String, value As String) As Task(Of Boolean)
         ' serialize selector like existing code
-        Dim selectorJson As String = Nothing
-        If Not selector.TryToJson(selectorJson) Then
-            selectorJson = JsonSerializer.Serialize(selector)
-        End If
+        Dim selectorJson As String = selector.ToJson()
 
         ' focus element in page
         Dim focusScript As String =
@@ -415,7 +396,7 @@ Public Class OAuthBrowserForm
         Dim result As String =
             Await Me.WebView21.CoreWebView2.ExecuteScriptAsync(javaScript:=readScript)
         Return Not String.IsNullOrWhiteSpace(value:=result) AndAlso
-                result.Trim() = JsonSerializer.Serialize(value)
+                result.Trim() = value.ToJson()
     End Function
 
     Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs)

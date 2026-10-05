@@ -8,13 +8,6 @@ Imports System.Runtime.CompilerServices
 
 Public Module RegionCountryLists
 
-#If True Then ' Keep on top
-
-    Private ReadOnly Property Comparer As StringComparer =
-            StringComparer.OrdinalIgnoreCase
-
-#End If
-
     Private ReadOnly s_countryCodeToCountry As New Dictionary(Of String, String)(Comparer)
 
     ''' <summary>

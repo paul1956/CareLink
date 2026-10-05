@@ -4,9 +4,6 @@
 
 Public Class HighAlertRecord
 
-    Private Shared ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
     Public Sub New(row As StringTable.Row, valueUnits As String)
         Dim s1() As String = row.Columns(index:=0).Split(separator:=" ", Options)
         Select Case s1.Length

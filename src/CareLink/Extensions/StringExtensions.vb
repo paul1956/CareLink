@@ -12,9 +12,6 @@ Imports System.Text.RegularExpressions
 ''' </summary>
 Public Module StringExtensions
 
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
-
     ''' <summary>
     '''  Characters used as decimal separators for parsing numbers.
     ''' </summary>
@@ -265,12 +262,10 @@ Public Module StringExtensions
     ''' <param name="comparisonType">The string comparisonType to use.</param>
     ''' <returns>The string with the suffix removed, if it existed.</returns>
     <Extension>
-    Public Function RemoveSuffix(value As String,
-                                 suffix As String,
-                                 Optional comparisonType As StringComparison = StringComparison.Ordinal) As String
-        Return If(String.IsNullOrEmpty(value) OrElse String.IsNullOrEmpty(suffix),
+    Public Function RemoveSuffix(value As String, suffix As String) As String
+        Return If(String.IsNullOrEmpty(value) OrElse String.IsNullOrEmpty(value:=suffix),
                   value,
-                  If(value.EndsWith(value:=suffix, comparisonType),
+                  If(value.EndsWith(value:=suffix, comparisonType:=StringComparison.Ordinal),
                      value.Substring(startIndex:=0, length:=value.Length - suffix.Length),
                      value))
     End Function
@@ -632,6 +627,27 @@ Public Module StringExtensions
         Return s IsNot Nothing AndAlso
                value IsNot Nothing AndAlso
                s.StartsWith(value, ComparisonType)
+    End Function
+
+    ''' <summary>
+    '''  Checks if a string starts with any string in a list, ignoring case.
+    ''' </summary>
+    ''' <param name="s">The list of strings to search in.</param>
+    ''' <param name="value">The string to search for.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if any string in <paramref name="s"/> starts with <paramref name="value"/>;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    ''' <remarks>Used for case-insensitive substring checks.</remarks>
+    <Extension()>
+    Public Function StartsWithAnyNoCase(s As List(Of String), value As String) As Boolean
+        Dim predicate As Func(Of String, Boolean) =
+            Function(item As String) As Boolean
+                Return item.StartsWith(value, ComparisonType)
+            End Function
+        Return s IsNot Nothing AndAlso
+               value IsNot Nothing AndAlso
+               s.Any(predicate)
     End Function
 
 #End Region ' IgnoreCase String Comparisons

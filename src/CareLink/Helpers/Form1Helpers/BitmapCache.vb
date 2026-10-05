@@ -6,12 +6,6 @@ Imports System.IO
 Imports System.Runtime.CompilerServices
 
 Public Module BitmapCache
-#If True Then ' Keep on top
-
-    Private ReadOnly Property Comparer As StringComparer =
-        StringComparer.OrdinalIgnoreCase
-
-#End If
 
     Private Const MaxTempBitmaps As Integer = 6
 

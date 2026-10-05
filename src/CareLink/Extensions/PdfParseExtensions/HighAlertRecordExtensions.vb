@@ -6,9 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Public Module HighAlertRecordExtensions
 
-    Private ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
     <Extension>
     Public Sub InitializeFromRow(this As HighAlertRecord, row As StringTable.Row, valueUnits As String)
         If row Is Nothing Then Return

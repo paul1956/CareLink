@@ -56,10 +56,10 @@ Public Class EnumImageSyncTests
         ' 4. Find exactly what is missing using case-insensitive Except
         Dim missingFiles As List(Of String) =
             enumDescriptions.Except(second:=filesInDir,
-                                    comparer:=StringComparer.OrdinalIgnoreCase).ToList()
+                                    comparer:=TextComparisonConstants.Comparer).ToList()
         Dim missingEnums As List(Of String) =
             filesInDir.Except(second:=enumDescriptions,
-                              comparer:=StringComparer.OrdinalIgnoreCase).ToList()
+                              comparer:=TextComparisonConstants.Comparer).ToList()
 
         ' 5. Assert with clean, explicit failure messages
         Const separator As String = ", "

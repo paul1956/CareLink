@@ -14,7 +14,7 @@ Public Class ValidateDiscoveryMappings
         Dim usDiscovery As DiscoveryRoot = Await GetDiscoveryDataAsync(countryCode:="US")
         Dim euDiscovery As DiscoveryRoot = Await GetDiscoveryDataAsync(countryCode:="EU")
 
-        Dim allSupportedCodes As New HashSet(Of String)(comparer:=StringComparer.OrdinalIgnoreCase)
+        Dim allSupportedCodes As New HashSet(Of String)(comparer:=TextComparisonConstants.Comparer)
 
         Dim discoveries As New List(Of DiscoveryRoot) From {usDiscovery, euDiscovery}
         For Each discovery As DiscoveryRoot In discoveries

@@ -9,15 +9,6 @@ Imports System.Net
 Imports System.Net.Http
 
 Public Class LoginDialog
-#If True Then ' Keep on top
-
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
-
-    Private Shared ReadOnly Property Comparer As StringComparer =
-        StringComparer.OrdinalIgnoreCase
-
-#End If
 
     Private ReadOnly _flagImageCache As New Dictionary(Of String, Image)(Comparer)
     Private _countryComboBoxOwnerDrawn As Boolean = False

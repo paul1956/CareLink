@@ -6,9 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Public Module ListExtensions
 
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
-
     ''' <summary>
     '''  Tries to find a string in the list that <paramref name="headerText"/>
     '''  starts with, ignoring case.

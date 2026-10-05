@@ -6,8 +6,6 @@ Imports System.Net
 Imports System.Net.Http
 Imports System.Text.Json
 Imports System.Text
-Imports System.IO
-Imports System.IO.Compression
 
 Public Class CareLinkService
 
@@ -16,6 +14,7 @@ Public Class CareLinkService
     Private Shared ReadOnly s_endpointCache As New Dictionary(Of ServerLocation, EndpointConfig)()
 
     Private Shared ReadOnly s_endpointCacheLock As New Object()
+
     Private Shared ReadOnly s_http As New HttpClient(
         New HttpClientHandler() With {
             .AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate Or DecompressionMethods.Brotli
@@ -84,12 +83,9 @@ Public Class CareLinkService
 
     Private Shared Function ParseAndValidateSsoJson(ssoJson As String) As SsoConfig
         Dim normalized As String = NormalizeSsoJson(ssoJson)
-
-        Dim opts As JsonSerializerOptions = s_jsonOptions
-
         Dim sso As SsoConfig
         Try
-            sso = JsonSerializer.Deserialize(Of SsoConfig)(normalized, opts)
+            sso = normalized.FromJson(Of SsoConfig)()
         Catch ex As Exception
             Throw New Exception(message:=$"Failed to parse SSO JSON: {ex.Message}", innerException:=ex)
         End Try
@@ -332,7 +328,7 @@ Public Class CareLinkService
                 mediaType = response.Content.Headers.ContentType.MediaType
             End If
 
-            If mediaType IsNot Nothing AndAlso mediaType.Contains("json", StringComparison.OrdinalIgnoreCase) Then
+            If mediaType IsNot Nothing AndAlso mediaType.Contains("json", TextComparisonConstants.ComparisonType) Then
                 Try
                     ' First attempt: parse as-is
                     token = body.FromJson(Of TokenData)()
@@ -365,11 +361,11 @@ Public Class CareLinkService
                     If Not parsed Then
                         ' Persist raw bytes and text to temp files for offline inspection then throw
                         Try
-                            Dim dumpBase As String = System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"carelink_token_raw_{Date.UtcNow:yyyyMMddHHmmss}")
+                            Dim dumpBase As String = IO.Path.Combine(IO.Path.GetTempPath(), $"carelink_token_raw_{Date.UtcNow:yyyyMMddHHmmss}")
                             If rawBytes IsNot Nothing Then
-                                System.IO.File.WriteAllBytes(path:=dumpBase & ".bin", bytes:=rawBytes)
+                                IO.File.WriteAllBytes(path:=dumpBase & ".bin", bytes:=rawBytes)
                             End If
-                            System.IO.File.WriteAllText(path:=dumpBase & ".txt", contents:=body)
+                            IO.File.WriteAllText(path:=dumpBase & ".txt", contents:=body)
                         Catch
                         End Try
 

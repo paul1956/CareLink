@@ -6,12 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Friend Module DeviceSettingsExtensions
 
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
-
-    Private ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
     <Extension>
     Friend Function GetSingleLineValue(Of T)(line As String, key As String, Optional endsWith As String = "") As T
         Dim typeOfT As Type = GetType(T)

@@ -412,12 +412,13 @@ Public Class InitializeDialog
             Me.CurrentUser.CarbRatios.Add(item:=carbRecord)
         Next
 
-        Dim contents As String = String.Empty
-        If Me.CurrentUser.TryToJson(contents) Then
+        Dim contents As String
+        Try
+            contents = Me.CurrentUser.ToJson()
             File.WriteAllTextAsync(path:=GetUserSettingsPath(), contents)
-        Else
+        Catch ex As Exception
             LogMessage(message:=$"ERROR: failed serializing CurrentUser settings to {GetUserSettingsPath()}")
-        End If
+        End Try
         Me.Close()
     End Sub
 

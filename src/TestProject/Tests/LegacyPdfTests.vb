@@ -10,9 +10,6 @@ Imports Xunit
 
 Public Class LegacyPdfTests
 
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
-
     Public Shared ReadOnly Property PdfFiles As IEnumerable(Of Object())
         Get
             Dim path As String = GetTestDataPath()

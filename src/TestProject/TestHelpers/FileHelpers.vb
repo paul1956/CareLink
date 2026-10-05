@@ -4,11 +4,9 @@
 
 Imports System.IO
 Imports System.Runtime.CompilerServices
+Imports CareLink
 
 Public Module FileHelpers
-
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
 
     Friend Function GetTestDataPath(<CallerFilePath> Optional path As String = "") As String
         ' Robust lookup for TestData:

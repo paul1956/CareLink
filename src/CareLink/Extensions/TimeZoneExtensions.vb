@@ -7,13 +7,6 @@
 ''' </summary>
 Friend Module TimeZoneExtensions
 
-#If True Then ' Keep on top
-
-    Private ReadOnly Property Comparer As StringComparer =
-            StringComparer.OrdinalIgnoreCase
-
-#End If
-
 #Region "Time Zone Helper"
 
     Private s_pumpTimeZoneInfo As TimeZoneInfo

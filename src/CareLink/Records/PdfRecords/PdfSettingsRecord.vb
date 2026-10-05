@@ -4,9 +4,6 @@
 
 Public Class PdfSettingsRecord
 
-    Private Shared ReadOnly Property Options As StringSplitOptions =
-        StringSplitOptions.RemoveEmptyEntries
-
     ''' <summary>
     ''' Initializes an empty PdfSettingsRecord without parsing a file.
     ''' Use this constructor in tests or when you want to populate fields manually.

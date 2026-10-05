@@ -10,12 +10,7 @@ Imports System.Text.RegularExpressions
 '''  extracting variables from messages, and generating summary records.
 ''' </summary>
 Friend Module SummaryHelpers
-#If True Then ' Keep on top
 
-    Private ReadOnly Property Comparer As StringComparer =
-            StringComparer.OrdinalIgnoreCase
-
-#End If
     Private s_secondaryTimeReminder As String
 
     ''' <summary>
@@ -370,6 +365,7 @@ Friend Module SummaryHelpers
                     Continue For
                 End If
                 Dim item As SummaryRecord = Nothing
+
                 Select Case True
                     Case kvp.Key = "faultId"
                         Dim faultId As String = kvp.Value
@@ -415,14 +411,17 @@ Friend Module SummaryHelpers
                                                  kvp,
                                                  messages:=s_plgmLgsMessages,
                                                  messageTableName:=NameOf(s_plgmLgsMessages))
-                    Case kvp.Key = "dateTime" OrElse
-                         kvp.Key = "triggeredDateTime" OrElse
-                         kvp.Key = "secondaryTime" OrElse
-                         kvp.Key = "secondaryTimeReminder"
+                    Case New List(Of String)() From {
+                        "dateTime",
+                        "secondaryTime",
+                        "secondaryTimeReminder",
+                        "triggeredDateTime"}.StartsWithAnyNoCase(value:=kvp.Key)
+
                         Dim key As String = kvp.Key
                         item = New SummaryRecord(recordNumber,
                                                  kvp,
                                                  message:=kvp.Value.ParseDate(key).ToShortDateTime)
+
                     Case kvp.Key.StartsWithNoCase(value:="additionalInfo")
                         HandleComplexItemsString(kvp,
                                                  recordNumber,
@@ -443,10 +442,18 @@ Friend Module SummaryHelpers
                                                  isTitle:=True)
                     Case kvp.Key.StartsWithNoCase(value:="snoozed")
                         HandleComplexItemsString(kvp,
-                                           recordNumber,
-                                           key:="snoozed",
-                                           listOfSummaryRecords,
-                                           isTitle:=True)
+                                                 recordNumber,
+                                                 key:="snoozed",
+                                                 listOfSummaryRecords,
+                                                 isTitle:=True)
+
+                    Case kvp.Key.StartsWithNoCase(value:="type")
+                        HandleComplexItemsString(kvp,
+                                                 recordNumber,
+                                                 key:="type",
+                                                 listOfSummaryRecords,
+                                                 isTitle:=True)
+
                     Case Else
                         item = New SummaryRecord(recordNumber, kvp)
                 End Select

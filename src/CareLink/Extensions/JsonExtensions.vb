@@ -5,11 +5,9 @@
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
 Imports System.Text.Json.Serialization
+Imports System.Text.RegularExpressions
 
 Public Module JsonExtensions
-
-    Private ReadOnly Property Comparer As StringComparer =
-                StringComparer.OrdinalIgnoreCase
 
     ''' <summary>
     '''  Default <see cref="JsonSerializerOptions"/> for deserialization.
@@ -183,21 +181,19 @@ Public Module JsonExtensions
     <Extension>
     Public Function IsEmpty(element As JsonElement) As Boolean
         Select Case element.ValueKind
-            Case JsonValueKind.Null
-                Return True
-            Case JsonValueKind.Undefined
+            Case JsonValueKind.Null,
+                 JsonValueKind.Undefined
                 Return True
             Case JsonValueKind.Object
                 Return Not element.EnumerateObject().Any()
             Case JsonValueKind.Array
                 Return element.GetArrayLength() = 0
             Case JsonValueKind.String
-                Return String.IsNullOrEmpty(element.GetString())
-            Case JsonValueKind.Number
-                Return False
-            Case JsonValueKind.True
-                Return False
-            Case JsonValueKind.False
+                Dim value As String = element.GetString()
+                Return String.IsNullOrEmpty(value)
+            Case JsonValueKind.Number,
+                 JsonValueKind.True,
+                 JsonValueKind.False
                 Return False
         End Select
         Return False
@@ -206,23 +202,66 @@ Public Module JsonExtensions
     ''' <summary>
     ''' Checks if a string is valid JSON using System.Text.Json
     ''' </summary>
-    ''' <param name="jsonString">The JSON string to validate</param>
+    ''' <param name="value">The JSON string to validate</param>
     ''' <returns>True if valid JSON, otherwise False</returns>
     <Extension>
-    Public Function IsValidJson(jsonString As String) As Boolean
+    Public Function IsValidJson(value As String) As Boolean
         ' Null or empty strings are not valid JSON
-        If String.IsNullOrWhiteSpace(jsonString) Then
+        If String.IsNullOrWhiteSpace(value) Then
             Return False
+        End If
+
+        ' Fast pre-check to avoid noisy JsonReaderException first-chance
+        ' when the string clearly does not start with a JSON token.
+        Dim s As String = value.TrimStart()
+        If s.Length = 0 Then
+            Return False
+        End If
+        Dim first As Char = s(index:=0)
+        If Not (first = "{"c OrElse
+                first = "["c OrElse
+                first = """"c OrElse
+                first = "-"c OrElse
+                Char.IsDigit(c:=first) OrElse
+                first = "t"c OrElse
+                first = "f"c OrElse
+                first = "n"c) Then
+            ' Starts with a character that cannot begin valid JSON -> avoid parsing
+            Return False
+        End If
+        If first = "-"c OrElse
+            Char.IsDigit(c:=first) Then
+
+            ' Could be a JSON number. First reject common date/time text values
+            ' that start with digits (for example: 10/4/2026 7:26:20 AM).
+            Dim dt As Date
+            If Date.TryParse(s,
+                             provider:=Globalization.CultureInfo.CurrentCulture,
+                             styles:=Globalization.DateTimeStyles.None,
+                             result:=dt) Then
+                Return False
+            End If
+
+            ' If not a date/time, require strict JSON number syntax.
+            Dim numberPattern As String = "^-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?$"
+            If Not Regex.IsMatch(input:=s, pattern:=numberPattern) Then
+                Return False
+            End If
         End If
 
         Try
             ' Attempt to parse the JSON
-            Using doc As JsonDocument = JsonDocument.Parse(jsonString)
+            Using doc As JsonDocument = JsonDocument.Parse(value)
                 ' If parsing succeeds, it's valid JSON
                 Return True
             End Using
         Catch jex As JsonException
-            ' JSON is invalid
+            ' JSON is invalid - log the offending input to help diagnose noisy parser errors
+            Try
+                LogMessage(message:=$"DEBUG: IsValidJson failed parsing input: '{value}'. Error: {jex.Message}")
+            Catch
+                ' Ensure logging failures do not propagate
+            End Try
             Return False
         Catch ex As Exception
             ' Other unexpected errors (e.g., OutOfMemoryException)
@@ -446,7 +485,7 @@ Public Module JsonExtensions
     ''' <param name="value">The String to0 be converted</param>
     <Extension>
     Public Function ToJsonElement(value As String) As JsonElement
-        Dim json As String = JsonSerializer.Serialize(value)
+        Dim json As String = value.ToJson()
         Using doc As JsonDocument = JsonDocument.Parse(json)
             Return doc.RootElement.Clone
         End Using
@@ -472,6 +511,7 @@ Public Module JsonExtensions
                 Function(kvp As KeyValuePair(Of String, JsonElement)) As String
                     Return kvp.Key
                 End Function
+
         Dim elementSelector As Func(Of KeyValuePair(Of String, JsonElement), String) =
                 Function(kvp As KeyValuePair(Of String, JsonElement)) As String
                     Return kvp.Value.ElementToString()
@@ -540,21 +580,6 @@ Public Module JsonExtensions
             Return True
         End If
         Return False
-    End Function
-
-    ''' <summary>
-    '''  Non-throwing Try pattern for serializing an object to JSON using module-level SerializerOptions.
-    ''' </summary>
-    <Extension>
-    Public Function TryToJson(Of T)(value As T, ByRef json As String) As Boolean
-        Try
-            json = JsonSerializer.Serialize(value, options:=SerializerOptions)
-            Return True
-        Catch ex As Exception
-            LogMessage(message:=$"TryToJson failed: {ex.Message}")
-            json = String.Empty
-            Return False
-        End Try
     End Function
 
 End Module

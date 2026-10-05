@@ -4,7 +4,6 @@
 
 Imports System.Globalization
 Imports System.IO
-Imports System.Linq
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports System.Text.Json
@@ -26,12 +25,6 @@ Friend Module Form1UpdateHelpers
     Private ReadOnly s_basalTypes As IEnumerable(Of String) =
         {"AUTO_BASAL",
         "SAFE_BASAL"}
-
-    Private ReadOnly Property Comparer As StringComparer =
-        StringComparer.OrdinalIgnoreCase
-
-    Private Const ComparisonType As StringComparison =
-        StringComparison.OrdinalIgnoreCase
 
     ''' <summary>
     '''  Converts a date string to a formatted date string using the specified provider,
@@ -320,10 +313,10 @@ Friend Module Form1UpdateHelpers
                             recordNumber -= 1
                         End If
 
-                        Dim message As String = ""
-                        If isTitle Then
-                            message = kvp.Value.ToTitle
-                        End If
+                        Dim message As String =
+                            If(isTitle AndAlso Not kvp.Key.Contains(value:="Time"),
+                               kvp.Value.ToTitle,
+                               kvp.Value)
                         Dim item As New SummaryRecord(
                                 recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
                                 kvp.Key,
@@ -392,18 +385,20 @@ Friend Module Form1UpdateHelpers
                                             If childKey = "time" Then
                                                 Dim result As Date
                                                 message =
-                                        If(childValue.TryParseDate(key:="", result),
-                                           result.ToShortDateTime(showSeconds:=False),
-                                           String.Empty)
+                                                    If(childValue.TryParseDate(key:="", result),
+                                                       result.ToShortDateTime(showSeconds:=False),
+                                                       String.Empty)
+                                            ElseIf childKey = "sensorType" Then
+                                                message = childValue.Trim.ToTitle
+                                            Else
+                                                message = If(isTitle,
+                                                             childValue?.Trim.ToTitle,
+                                                             childValue)
                                             End If
-                                            Dim value As String =
-                                                If(isTitle,
-                                                   childValue?.Trim.ToTitle,
-                                                   childValue)
                                             Dim item As New SummaryRecord(
                                                 recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
                                                 key:=$"{key}:{childKey.Trim}",
-                                                value,
+                                                value:=childKey,
                                                 message)
                                             listOfSummaryRecords.Add(item)
                                             idx += 1
@@ -510,7 +505,6 @@ Friend Module Form1UpdateHelpers
     ''' <param name="mainForm">The main form instance to update.</param>
     Friend Sub UpdateDataTables(mainForm As Form1)
         If IsPatientDataEmpty() Then
-            DebugPrint(message:=$"Exiting, {NameOf(PatientData)} has no data!")
             Exit Sub
         End If
 

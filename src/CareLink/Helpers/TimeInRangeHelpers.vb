@@ -81,7 +81,7 @@ Friend Module TimeInRangeHelpers
             asMmolL = NativeMmolL
         End If
         Return If(asMmolL,
-                  TirLowMmDl3_9,
+                  TirLowMmDl3_89,
                   TirLowMmol70)
     End Function
 

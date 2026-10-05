@@ -125,7 +125,7 @@ Public Module SystemConstants
     Friend Const TirHighMmol10 As Single = 10.0
     Friend Const TirHighMmDl180 As Single = 180.0
     Friend Const TirLowMmol70 As Single = 70.0
-    Friend Const TirLowMmDl3_9 As Single = 3.9
+    Friend Const TirLowMmDl3_89 As Single = 3.89
 
     Friend ReadOnly Property MgDlItems As New Dictionary(Of String, Single) From {
         {$"{Target100mgDl} mg/dL", Target100mgDl},

@@ -509,12 +509,13 @@ Friend Module LoginHelpers
                 End Using
             End If
             If currentUserUpdateNeeded Then
-                Dim cuJson As String = String.Empty
-                If CurrentUser.TryToJson(cuJson) Then
+                Dim cuJson As String
+                Try
+                    cuJson = CurrentUser.ToJson()
                     File.WriteAllTextAsync(path:=userSettingsFileFullPath, contents:=cuJson)
-                Else
-                    Debug.WriteLine(message:=$"ERROR: failed serializing CurrentUser to {userSettingsFileFullPath}")
-                End If
+                Catch ex As Exception
+                    Debug.WriteLine(message:=$"ERROR: failed serializing CurrentUser to {userSettingsFileFullPath}: {ex.Message}")
+                End Try
             Else
                 TouchFile(userSettingsFileFullPath)
             End If
