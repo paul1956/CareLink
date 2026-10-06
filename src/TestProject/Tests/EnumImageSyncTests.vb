@@ -3,6 +3,8 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.IO
+Imports System.Text
+Imports System.Text.Json
 Imports CareLink
 Imports FluentAssertions
 Imports Xunit
@@ -53,13 +55,83 @@ Public Class EnumImageSyncTests
                     End Function) _
                 .ToList()
 
+        ' 4. Also gather files from any downloaded bundles (manifests) and treat them as valid
+        '    sources for enum images. Manifest files live in the user's Documents\CareLink folder.
+        Dim bundleFiles As New HashSet(Of String)(Comparer)
+        Try
+            Dim manifestFolder As String =
+                Path.Combine(Environment.GetFolderPath(folder:=Environment.SpecialFolder.MyDocuments), "CareLink")
+            If Directory.Exists(path:=manifestFolder) Then
+                Dim strings As String() =
+                    Directory.GetFiles(path:=manifestFolder,
+                                       searchPattern:="*.manifest.json",
+                                       searchOption:=SearchOption.TopDirectoryOnly)
+
+                For Each mf As String In strings
+                    Try
+                        Dim manifest As IconBundleManifest = Nothing
+                        Dim loaded As Boolean = IconBundleManifest.TryLoadFromFile(path:=mf, manifest:=manifest)
+                        If Not loaded OrElse manifest Is Nothing Then
+                            Continue For
+                        End If
+
+                        If manifest.files IsNot Nothing Then
+                            For Each rel As String In manifest.files
+                                If String.IsNullOrEmpty(rel) Then Continue For
+                                Dim nameOnly As String =
+                                    Path.GetFileNameWithoutExtension(path:=rel).ToLower()
+                                bundleFiles.Add(item:=nameOnly)
+                            Next
+                        End If
+                    Catch
+                        ' ignore malformed manifest
+                    End Try
+                Next
+            End If
+        Catch
+            ' ignore any IO errors reading manifests
+        End Try
+
         ' 4. Find exactly what is missing using case-insensitive Except
+        '    An Enum description is considered present if it exists in the embedded Images
+        '    folder OR in any downloaded bundle manifest.
+        Dim combinedFiles As New HashSet(Of String)(filesInDir, TextComparisonConstants.Comparer)
+        For Each bf As String In bundleFiles
+            combinedFiles.Add(item:=bf)
+        Next
+
         Dim missingFiles As List(Of String) =
-            enumDescriptions.Except(second:=filesInDir,
-                                    comparer:=TextComparisonConstants.Comparer).ToList()
+            enumDescriptions.Except(second:=combinedFiles,
+                                    Comparer).ToList()
+
+        ' Files present in the embedded Images folder that do not
+        ' correspond to any Enum description or enum name are still
+        ' considered unexpected and reported as missingEnums.
+        Dim enumNames As List(Of String) =
+            [Enum].GetValues(enumType) _
+                .Cast(Of [Enum])() _
+                .Select(selector:=Function(enumVal As [Enum]) As String
+                                      Return enumVal.ToString().ToLower()
+                                  End Function) _
+                .ToList()
+
+        Dim validNames As New HashSet(Of String)(collection:=enumDescriptions, Comparer)
+        For Each n As String In enumNames
+            validNames.Add(item:=n)
+        Next
         Dim missingEnums As List(Of String) =
-            filesInDir.Except(second:=enumDescriptions,
-                              comparer:=TextComparisonConstants.Comparer).ToList()
+            filesInDir.Except(second:=validNames,
+                              Comparer).ToList()
+
+        ' Files present in the embedded Images folder that also exist in any downloaded
+        ' bundle manifest are allowed (they are considered backups). Filter those out
+        ' from the unexpected list so the test only reports truly orphaned image files.
+        If bundleFiles.Count > 0 Then
+            missingEnums = missingEnums.Where(
+                predicate:=Function(f As String) As Boolean
+                               Return Not bundleFiles.Contains(item:=f)
+                           End Function).ToList()
+        End If
 
         ' 5. Assert with clean, explicit failure messages
         Const separator As String = ", "

@@ -150,32 +150,103 @@ Public Module BitmapCache
     '''  Loads all PNG files as Bitmaps into memory.
     ''' </summary>
     Public Sub PreloadBitmaps()
-        Dim folderPath As String = Path.Combine(Application.StartupPath, "Images")
-        If Not Directory.Exists(path:=folderPath) Then Exit Sub
+        Dim manifestMap As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
 
-        Dim files As String() =
-            Directory.GetFiles(path:=folderPath,
-                               searchPattern:="*.png",
-                               searchOption:=SearchOption.TopDirectoryOnly)
+        Try
+            Dim projectDataDir As String = GetProjectDataDirectory()
+            If Directory.Exists(path:=projectDataDir) Then
+                Dim manifestFiles As String() =
+                    Directory.GetFiles(path:=projectDataDir,
+                                       searchPattern:="*.manifest.json",
+                                       searchOption:=SearchOption.TopDirectoryOnly)
 
-        For Each filePath As String In files
-            Dim fileName As String =
-                Path.GetFileName(path:=filePath).
-                     ReplaceNoCase(oldValue:=".png", newValue:="")
-            Try
-                Dim buffer As Byte() = File.ReadAllBytes(path:=filePath)
+                For Each manifestFile As String In manifestFiles
+                    Try
+                        Dim manifest As IconBundleManifest = Nothing
+                        If IconBundleManifest.TryLoadFromFile(path:=manifestFile, manifest:=manifest) AndAlso
+                           manifest IsNot Nothing AndAlso
+                           Not String.IsNullOrEmpty(value:=manifest.extractedPath) AndAlso
+                           manifest.files IsNot Nothing Then
 
-                Using ms As New MemoryStream(buffer)
-                    ' Load, clone, and cast directly to a Bitmap
-                    Dim bmp As Bitmap =
-                        DirectCast(Image.FromStream(ms).Clone(), Bitmap)
+                            For Each relativePath As String In manifest.files
+                                Try
+                                    Dim normalizedRelativePath As String =
+                                        relativePath.Replace(oldChar:="/"c, newChar:=Path.DirectorySeparatorChar)
+                                    Dim fullPath As String = Path.Combine(manifest.extractedPath, normalizedRelativePath)
+                                    Dim fileNameKey As String = Path.GetFileNameWithoutExtension(path:=normalizedRelativePath)
 
-                    s_bitmaps(key:=fileName) = bmp
-                End Using
-            Catch ex As Exception
-                ' Handle file errors here
-                Stop
-            End Try
+                                    manifestMap.TryAdd(key:=fileNameKey, value:=fullPath)
+                                Catch
+                                End Try
+                            Next
+                        End If
+                    Catch
+                    End Try
+                Next
+            End If
+        Catch
+        End Try
+
+        Dim imagesFolder As String = Path.Combine(Application.StartupPath, "Images")
+        Dim enumValues As Array = [Enum].GetValues(Of ImageEnum)()
+
+        For Each enumValue As Object In enumValues
+            Dim imageId As ImageEnum = CType(enumValue, ImageEnum)
+            Dim key As String = imageId.Description
+            Dim enumName As String = imageId.ToString()
+            Dim loaded As Boolean = False
+
+            If manifestMap.Count > 0 Then
+                Dim selectedPath As String = Nothing
+
+                If manifestMap.TryGetValue(key:=key, value:=selectedPath) OrElse
+                   manifestMap.TryGetValue(key:=enumName, value:=selectedPath) Then
+                    If File.Exists(path:=selectedPath) Then
+                        Try
+                            Dim buffer As Byte() = File.ReadAllBytes(path:=selectedPath)
+                            Using ms As New MemoryStream(buffer)
+                                Dim bmp As Bitmap = DirectCast(Image.FromStream(ms).Clone(), Bitmap)
+                                s_bitmaps(key:=key) = bmp
+                                loaded = True
+                            End Using
+                        Catch
+                        End Try
+                    End If
+                Else
+                    For Each pair As KeyValuePair(Of String, String) In manifestMap
+                        If (pair.Key.StartsWith(value:=key, comparisonType:=StringComparison.OrdinalIgnoreCase) OrElse
+                            pair.Key.StartsWith(value:=enumName, comparisonType:=StringComparison.OrdinalIgnoreCase)) AndAlso
+                           File.Exists(path:=pair.Value) Then
+                            Try
+                                Dim buffer As Byte() = File.ReadAllBytes(path:=pair.Value)
+                                Using ms As New MemoryStream(buffer)
+                                    Dim bmp As Bitmap = DirectCast(Image.FromStream(ms).Clone(), Bitmap)
+                                    s_bitmaps(key:=key) = bmp
+                                    loaded = True
+                                End Using
+                            Catch
+                            End Try
+                            Exit For
+                        End If
+                    Next
+                End If
+            End If
+
+            If loaded Then Continue For
+
+            If Directory.Exists(path:=imagesFolder) Then
+                Dim fallbackPath As String = Path.Combine(imagesFolder, key & ".png")
+                If File.Exists(path:=fallbackPath) Then
+                    Try
+                        Dim buffer As Byte() = File.ReadAllBytes(path:=fallbackPath)
+                        Using ms As New MemoryStream(buffer)
+                            Dim bmp As Bitmap = DirectCast(Image.FromStream(ms).Clone(), Bitmap)
+                            s_bitmaps(key:=key) = bmp
+                        End Using
+                    Catch
+                    End Try
+                End If
+            End If
         Next
     End Sub
 

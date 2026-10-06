@@ -330,7 +330,7 @@
     </Content>
     <Content Include="Images\MealImage.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </Content>  
     <Content Include="Images\MealImageLarge.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -8,6 +8,7 @@ Imports System.Net
 Imports System.Net.Http
 Imports System.Net.Http.Headers
 Imports System.Text
+Imports System.IO.Compression
 Imports System.Text.Json
 
 ' This class is intentionally not part of the public API.
@@ -194,7 +195,7 @@ Friend Class Client2
                                               ConfigureAwaitFalse()
 
                             _lastHttpStatus = response.StatusCode
-                            LoggerManager.UpdateMessage(message:=$"   status: {_lastHttpStatus}",
+                            UpdateMessage(message:=$"   status: {_lastHttpStatus}",
                                           startKey:=$"   status: ")
 
                             ' Centralized resp inspection; may throw UnauthorizedAccessException,
@@ -545,8 +546,8 @@ Friend Class Client2
         If tokenData Is Nothing Then
             ' Enhanced logging for first-time failures: capture environment and context
             Try
-                Dim envInfo As String = $"GetLoginData: tokenData is Nothing. Server={serverRegion}, User={userName}, OS={Environment.OSVersion}, Culture={Globalization.CultureInfo.CurrentCulture.Name}, Machine={Environment.MachineName}"
-                LogMessage(envInfo)
+                Dim envInfo As String = $"GetLoginData: tokenData is Nothing. Server={serverRegion}, User={userName}, OS={Environment.OSVersion}, Culture={CultureInfo.CurrentCulture.Name}, Machine={Environment.MachineName}"
+                LogMessage(message:=envInfo)
             Catch
                 ' Best-effort logging; swallow any failures here
             End Try
@@ -710,10 +711,9 @@ Friend Class Client2
         Return tdElem
     End Function
 
-    Public Async Function DownloadFileAsync(requestUri As String,
-                                                                                    path As String,
-                                            localTime As Date) As Task
-        ' Create a single static instance of HttpClient for performance (recommended)
+    Public Async Function DownloadFileAsync(requestUri As String, path As String,
+                                            serverTimestampUtc As Date) As Task
+        Const manifestExtension As String = ".manifest.json"
         Try
             ' Send a GET request to fetch the file data
             Const completionOption As HttpCompletionOption = HttpCompletionOption.ResponseHeadersRead
@@ -729,19 +729,231 @@ Friend Class Client2
                 Await _httpClient.GetAsync(requestUri, completionOption)
                 response.EnsureSuccessStatusCode() ' Throw if not successful
 
-                ' Read the file bytes as a stream
-                Using fileStream As Stream = Await response.Content.ReadAsStreamAsync(),
-                      destination As Stream = File.Create(path)
+                ' Read the response as bytes first so we can detect if the server returned
+                ' a base64-encoded payload (common when the server sends a zip as text).
+                Dim contentBytes As Byte() = Await response.Content.ReadAsByteArrayAsync()
+                Dim outBytes As Byte() = contentBytes
 
-                    ' Copy the content to the local file stream
-                    Await fileStream.CopyToAsync(destination)
-                End Using
+                Dim message As String
+                Try
+                    ' Quick heuristic: if the payload looks like printable ASCII text, try base64 decode.
+                    Dim printable As Boolean = True
+                    For i As Integer = 0 To Math.Min(127, contentBytes.Length - 1)
+                        Dim b As Integer = contentBytes(i)
+                        If b < 9 OrElse (b > 13 AndAlso b < 32) Then
+                            printable = False
+                            Exit For
+                        End If
+                    Next
+
+                    If printable AndAlso contentBytes.Length > 0 Then
+                        Dim candidate As String =
+                            Encoding.UTF8.GetString(bytes:=contentBytes).Trim()
+                        ' If a data URI prefix exists, strip it (e.g. data:application/zip;base64,....)
+                        Dim commaIdx As Integer = candidate.IndexOf(value:=","c)
+                        If commaIdx >= 0 AndAlso candidate.Contains(value:="base64", ComparisonType) Then
+                            candidate = candidate.Substring(startIndex:=commaIdx + 1)
+                        End If
+
+                        ' Remove whitespace/newlines which are allowed in base64
+                        candidate =
+                            RegularExpressions.Regex.Replace(input:=candidate, pattern:="\s+", replacement:="")
+                        Try
+                            Dim decoded As Byte() =
+                                Convert.FromBase64String(s:=candidate)
+                            If decoded IsNot Nothing AndAlso decoded.Length > 0 Then
+                                outBytes = decoded
+                                message =
+                                    $"Downloaded content appeared to be base64-encoded; decoded {decoded.Length} bytes."
+                                LogMessage(message, verbose:=True)
+                            End If
+                        Catch bfEx As FormatException
+                            ' Not valid base64 — fall back to raw bytes.
+                        End Try
+                    End If
+                Catch ex As Exception
+                    ' Detection failed, fall back to saving raw bytes.
+                    message = $"Base64 detection failed: {ex.Message}"
+                    LogMessage(message, verbose:=True)
+                End Try
+
+                ' Write the determined bytes to the destination file
+                File.WriteAllBytes(path, bytes:=outBytes)
+
+                ' Detect ZIP signature (PK\x03\x04) and auto-extract beside the downloaded file.
+                Try
+                    If outBytes IsNot Nothing AndAlso
+                       outBytes.Length >= 4 AndAlso
+                       outBytes(0) = &H50 AndAlso
+                       outBytes(1) = &H4B AndAlso
+                       outBytes(2) = &H3 AndAlso
+                       outBytes(3) = &H4 Then
+
+                        Dim parentDir As String =
+                            IO.Path.GetDirectoryName(path)
+
+                        If IsNullOrWhiteSpace(value:=parentDir) Then
+                            parentDir = Environment.CurrentDirectory
+                        End If
+                        Dim extractDir As String =
+                            IO.Path.Combine(parentDir, IO.Path.GetFileNameWithoutExtension(path))
+
+                        If Directory.Exists(path:=extractDir) Then
+                            Try
+                                Directory.Delete(path:=extractDir, recursive:=True)
+                                message = $"Removed existing extract directory: {extractDir}"
+                                LogMessage(message, verbose:=True)
+                            Catch delEx As Exception
+                                message = $"Failed removing extract directory '{extractDir}': {delEx.Message}"
+                                LogMessage(message, verbose:=True)
+                            End Try
+                        End If
+
+                        Dim extractedOk As Boolean = False
+                        Try
+                            ' If all entries are under a single top-level folder that matches
+                            ' the archive filename, strip that folder during extraction to avoid
+                            ' duplicate nesting.
+                            Using archive As ZipArchive = ZipFile.OpenRead(path)
+                                Dim commonRoot As String = Nothing
+                                Dim hasEntries As Boolean = False
+                                Dim hasMixedRoots As Boolean = False
+
+                                For Each ent As ZipArchiveEntry In archive.Entries
+                                    Dim fullName As String = ent.FullName
+                                    If String.IsNullOrEmpty(fullName) Then
+                                        Continue For
+                                    End If
+
+                                    Dim normalized As String = fullName.NormalizePath()
+                                    Dim firstSeg As String = normalized.Split(separator:="/"c)(0)
+                                    If String.IsNullOrEmpty(firstSeg) Then
+                                        Continue For
+                                    End If
+
+                                    hasEntries = True
+                                    If commonRoot Is Nothing Then
+                                        commonRoot = firstSeg
+                                    ElseIf Not String.Equals(commonRoot, firstSeg, StringComparison.OrdinalIgnoreCase) Then
+                                        hasMixedRoots = True
+                                        Exit For
+                                    End If
+                                Next
+
+                                Dim archiveRootName As String =
+                                    IO.Path.GetFileNameWithoutExtension(path)
+                                Dim stripMatchingRoot As Boolean =
+                                        hasEntries AndAlso
+                                        Not hasMixedRoots AndAlso
+                                        Not String.IsNullOrEmpty(value:=commonRoot) AndAlso
+                                        String.Equals(a:=commonRoot, b:=archiveRootName, ComparisonType)
+
+                                For Each ent As ZipArchiveEntry In archive.Entries
+                                    Dim fullName As String = ent.FullName
+                                    If String.IsNullOrEmpty(value:=fullName) Then
+                                        Continue For
+                                    End If
+
+                                    Dim normalized As String = fullName.NormalizePath()
+                                    Dim relativeName As String = normalized
+
+                                    If stripMatchingRoot Then
+                                        Dim rootPrefix As String = $"{commonRoot}/"
+                                        If String.Equals(normalized.TrimEnd("/"c), commonRoot, StringComparison.OrdinalIgnoreCase) Then
+                                            Directory.CreateDirectory(path:=extractDir)
+                                            Continue For
+                                        End If
+                                        If normalized.StartsWith(value:=rootPrefix,
+                                                                 comparisonType:=StringComparison.OrdinalIgnoreCase) Then
+                                            relativeName = normalized.Substring(startIndex:=rootPrefix.Length)
+                                        End If
+                                    End If
+
+                                    If String.IsNullOrEmpty(relativeName) Then
+                                        Continue For
+                                    End If
+
+                                    relativeName =
+                                        relativeName.Replace(oldValue:="/"c,
+                                                             newValue:=IO.Path.DirectorySeparatorChar)
+
+                                    Dim destinationPath As String =
+                                        IO.Path.Combine(extractDir, relativeName)
+                                    Dim isDirectory As Boolean =
+                                        normalized.EndsWith(value:="/"c)
+
+                                    If isDirectory Then
+                                        Directory.CreateDirectory(path:=destinationPath)
+                                    Else
+                                        Dim destinationParent As String =
+                                            IO.Path.GetDirectoryName(path:=destinationPath)
+                                        If Not IsNullOrWhiteSpace(value:=destinationParent) Then
+                                            Directory.CreateDirectory(path:=destinationParent)
+                                        End If
+                                        ent.ExtractToFile(destinationFileName:=destinationPath, overwrite:=True)
+                                    End If
+                                Next
+                            End Using
+                            message = $"Extracted ZIP '{path}' to '{extractDir}'."
+                            LogMessage(message, verbose:=True)
+                            extractedOk = True
+                        Catch zipEx As Exception
+                            message = $"Failed to extract ZIP '{path}': {zipEx.Message}"
+                            LogMessage(message, verbose:=True)
+                        End Try
+
+                        If extractedOk Then
+                            Try
+                                File.Delete(path)
+                            Catch delEx As Exception
+                                message = $"Failed to delete original ZIP '{path}': {delEx.Message}"
+                                LogMessage(message, verbose:=True)
+                            End Try
+
+                            Dim manifestPath As String = "Unknown"
+                            Try
+                                ' Build a small JSON manifest describing the extraction
+                                ' result instead of keeping the ZIP.
+                                Dim files As New List(Of String)
+                                Dim strings As String() =
+                                    Directory.GetFiles(path:=extractDir,
+                                                       searchPattern:="*",
+                                                       searchOption:=SearchOption.AllDirectories)
+                                For Each f As String In strings
+                                    Dim item As String =
+                                        IO.Path.GetRelativePath(relativeTo:=extractDir, path:=f).NormalizePath()
+                                    files.Add(item)
+                                Next
+
+                                Dim manifestObj As New IconBundleManifest With {
+                                    .extracted = True,
+                                    .extractedPath = extractDir,
+                                    .extractedAtUtc = Date.UtcNow,
+                                    .serverTimestamp = serverTimestampUtc,
+                                    .source = requestUri,
+                                    .files = files.ToArray()}
+
+                                manifestPath =
+                                    IO.Path.ChangeExtension(path, extension:=manifestExtension)
+                                manifestObj.SaveToFile(path:=manifestPath)
+                            Catch markerEx As Exception
+                                message =
+                                    $"Failed to create manifest file '{manifestPath}': {markerEx.Message}"
+                                LogMessage(message, verbose:=True)
+                            End Try
+                        End If
+                    Else
+                        message = $"Downloaded file is not a ZIP archive: {path}"
+                        LogMessage(message, verbose:=True)
+                    End If
+                Catch ex As Exception
+                    message = $"ZIP detection/extraction failed for '{path}': {ex.Message}"
+                    LogMessage(message, verbose:=True)
+                End Try
             End Using
 
-            File.SetCreationTime(path, creationTime:=localTime)
-            File.SetLastAccessTime(path, lastAccessTime:=localTime)
+            ' Do not set file creation/access times; manifest contains authoritative server timestamp.
         Catch ex As Exception
-            LogMessage(message:=$"Error downloading file: {ex.Message}")
         End Try
     End Function
 
@@ -924,7 +1136,8 @@ Friend Class Client2
                 Const parseFailed As String = "Failed to parse metadata element."
                 Throw New ApplicationException(message:=parseFailed)
             End Try
-            Dim requestUri As String = metaData.IconResourceBundle.IconBundleUrl
+            Dim requestUri As String =
+                metaData.IconResourceBundle.IconBundleUrl
             Dim zipFileName As String = requestUri.Split(separator:="/").Last
             Dim destinationPath As String =
                 Path.Combine(GetMyDocuments(), "CareLink", zipFileName)
@@ -932,19 +1145,32 @@ Friend Class Client2
             ' Download the file
             Dim utcString As String =
                 metaData.IconResourceBundle.IconBundleTimestamp
-            Const styles As DateTimeStyles =
-                DateTimeStyles.AdjustToUniversal Or DateTimeStyles.AssumeUniversal
-            Dim utcTime As Date = Date.Parse(s:=utcString,
-                                             provider:=Nothing,
-                                             styles)
-            ' Convert to local time
-            Dim localTime As Date = utcTime.ToLocalTime()
+            Const styles As DateTimeStyles = DateTimeStyles.AdjustToUniversal Or DateTimeStyles.AssumeUniversal
+            Dim serverUtc As Date = Date.Parse(s:=utcString, provider:=Nothing, styles)
 
-            If Not File.Exists(path:=destinationPath) OrElse
-                File.GetCreationTime(path:=destinationPath) < localTime Then
-                Await Me.DownloadFileAsync(requestUri,
-                                           path:=destinationPath,
-                                           localTime)
+            ' Decide based on manifest.serverTimestamp (source-of-truth) rather than file timestamps.
+            Dim needDownload As Boolean = False
+            Dim manifestPath As String = Path.ChangeExtension(destinationPath, ".manifest.json")
+            If Not File.Exists(path:=manifestPath) Then
+                needDownload = True
+            Else
+                Try
+                    Dim existingManifest As IconBundleManifest = Nothing
+                    If Not IconBundleManifest.TryLoadFromFile(path:=manifestPath, manifest:=existingManifest) Then
+                        needDownload = True
+                    Else
+                        If existingManifest.serverTimestamp < serverUtc Then
+                            needDownload = True
+                        End If
+                    End If
+                Catch ex As Exception
+                    ' If manifest missing/invalid, trigger download
+                    needDownload = True
+                End Try
+            End If
+
+            If needDownload Then
+                Await Me.DownloadFileAsync(requestUri, path:=destinationPath, serverTimestampUtc:=serverUtc)
             End If
         Catch ex As Exception
             Stop

@@ -650,12 +650,12 @@ Public Class Form1
                                             showWhat = CursorInfo.Hide1
                                             Me.CursorMessage2Label.Text = markerTag0
                                             Me.CursorMessage3Label.Text = markerTag1
-                                            Me.CursorPictureBoxUpdate(imageId:=ImageEnum.InsulinVial)
+                                            Me.CursorMarkerPictureBox.Visible = False
                                         Case "Meal"
                                             showWhat = CursorInfo.Hide1
                                             Me.CursorMessage2Label.Text = markerTag0
                                             Me.CursorMessage3Label.Text = markerTag1
-                                            Me.CursorPictureBoxUpdate(imageId:=ImageEnum.MealImage)
+                                            Me.CursorPictureBoxUpdate(imageId:=ImageEnum.MealImageLarge)
                                         Case Else
                                             Stop
                                             Me.InfusionSetDataRestore()
@@ -714,6 +714,7 @@ Public Class Form1
                         Date.FromOADate(currentDataPoint.XValue).ToString(format)
                     Me.ShowCursorControls(showWhat:=CursorInfo.ShowAll,
                                           showInfusionSet:=False)
+                    Me.CursorPictureBoxUpdate(imageId:=ImageEnum.InsulinVial)
                 Case ActiveInsulinSeriesName
                     chart1.SetupCallout(currentDataPoint,
                                         text:=$"Sensor Glucose {Me.CursorMessage2Label.Text}")

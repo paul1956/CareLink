@@ -80,7 +80,7 @@ Public Module ImageEnums
         <Description("InfusionNotsetup")>
         InfusionNotsetup
 
-        <Description("InsulinVial")>
+        <Description("simplera_rapid_icon-graph@2x")>
         InsulinVial
 
         <Description("InsulinVialTiny")>
@@ -92,10 +92,10 @@ Public Module ImageEnums
         <Description("LoginLight")>
         LoginLight
 
-        <Description("MealImage")>
+        <Description("ongraph_status_snack")>
         MealImage
 
-        <Description("MealImageLarge")>
+        <Description("ongraph_status_snack@3x")>
         MealImageLarge
 
         <Description("NoteImage")>

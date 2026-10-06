@@ -224,6 +224,21 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
+    '''  Normalizes the specified <paramref name="fullName"/> by replacing
+    '''  backslashes with forward slashes.
+    ''' </summary>
+    ''' <param name="fullName">
+    '''  The string to normalize.
+    ''' </param>
+    ''' <returns>
+    '''  A normalized string with backslashes replaced by forward slashes.
+    ''' </returns>
+    <Extension>
+    Public Function NormalizePath(fullName As String) As String
+        Return fullName.Replace(oldValue:="\", newValue:="/")
+    End Function
+
+    ''' <summary>
     '''  Converts a <see langword="String"/> to a <see langword="Double"/>
     '''  using <see cref="CultureInfo.InvariantCulture"/>.
     ''' </summary>
@@ -613,23 +628,6 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Checks if a string starts with another string, ignoring case.
-    ''' </summary>
-    ''' <param name="s">The string to search in.</param>
-    ''' <param name="value">The string to search for.</param>
-    ''' <returns>
-    '''  <see langword="True"/> if <paramref name="s"/> starts with <paramref name="value"/>;
-    '''  otherwise, <see langword="False"/>.
-    ''' </returns>
-    ''' <remarks>Used for case-insensitive substring checks.</remarks>
-    <Extension()>
-    Public Function StartsWithNoCase(s As String, value As String) As Boolean
-        Return s IsNot Nothing AndAlso
-               value IsNot Nothing AndAlso
-               s.StartsWith(value, ComparisonType)
-    End Function
-
-    ''' <summary>
     '''  Checks if a string starts with any string in a list, ignoring case.
     ''' </summary>
     ''' <param name="s">The list of strings to search in.</param>
@@ -648,6 +646,23 @@ Public Module StringExtensions
         Return s IsNot Nothing AndAlso
                value IsNot Nothing AndAlso
                s.Any(predicate)
+    End Function
+
+    ''' <summary>
+    '''  Checks if a string starts with another string, ignoring case.
+    ''' </summary>
+    ''' <param name="s">The string to search in.</param>
+    ''' <param name="value">The string to search for.</param>
+    ''' <returns>
+    '''  <see langword="True"/> if <paramref name="s"/> starts with <paramref name="value"/>;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    ''' <remarks>Used for case-insensitive substring checks.</remarks>
+    <Extension()>
+    Public Function StartsWithNoCase(s As String, value As String) As Boolean
+        Return s IsNot Nothing AndAlso
+               value IsNot Nothing AndAlso
+               s.StartsWith(value, ComparisonType)
     End Function
 
 #End Region ' IgnoreCase String Comparisons
