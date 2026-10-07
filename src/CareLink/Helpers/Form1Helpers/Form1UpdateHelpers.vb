@@ -1086,7 +1086,7 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
                             Dim bannerState As BannerState = PatientData.PumpBannerState(index:=0)
                             Dim hours As String = bannerState.TimeRemaining.ToHoursMinutes
-                            .PumpBannerStateLabel.Text = $"Temp InsulinAmount {hours} hr"
+                            .PumpBannerStateLabel.Text = $"Temp Basal {hours} hr"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
                             .PumpBannerStateLabel.Font = s_font_7Bold

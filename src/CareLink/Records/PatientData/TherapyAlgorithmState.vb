@@ -23,7 +23,7 @@ Public Class TherapyAlgorithmState
     <JsonPropertyName("plgmLgsState")>
     Public Property PlgmLgsState As String
 
-    <DisplayName("Safe InsulinAmount Duration")>
+    <DisplayName("Safe Basal Duration")>
     <Column(Order:=3, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("safeBasalDuration")>
     Public Property SafeBasalDuration As Integer
