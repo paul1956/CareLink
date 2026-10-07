@@ -4714,7 +4714,7 @@ Public Class Form1
     '''  if it is less than 24 hours.
     ''' </summary>
     ''' <param name="sender">
-    '''  The source of the event, typically the SensorDaysLeftLabel control.
+    '''  The source of the event.
     ''' </param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
     Private Sub Last24HrCarbLabel_MouseHover(sender As Object, e As EventArgs) Handles _
@@ -6047,7 +6047,7 @@ Public Class Form1
                     Dim calibrationDot As Bitmap =
                         GetBitmapFromCache(imageId:=ImageEnum.CalibrationDotSmall,
                                            canvasSize:=Me.CalibrationDueImage.Size,
-                                           contentMaxSize:=New Size(width:=30, height:=30),
+                                           contentMaxSize:=New Size(width:=28, height:=28),
                                            arcMinutes:=720)
                     Me.CalibrationDueImage.Image = calibrationDot
                 ElseIf PatientData.TimeToNextCalibHours = 0 Then
@@ -6064,7 +6064,7 @@ Public Class Form1
                         Dim calibrationDotRed As Bitmap =
                             GetBitmapFromCache(imageId:=ImageEnum.CalibrationDotRedSmall,
                                                canvasSize:=Me.CalibrationDueImage.Size,
-                                               contentMaxSize:=New Size(width:=30, height:=30),
+                                               contentMaxSize:=New Size(width:=28, height:=28),
                                                arcMinutes:=minutesToNextCalibration)
                         Me.CalibrationDueImage.Image = calibrationDotRed
                     End If
@@ -6076,7 +6076,7 @@ Public Class Form1
                     Me.CalibrationDueImage.Image =
                         GetBitmapFromCache(imageId:=ImageEnum.CalibrationDotSmall,
                                            canvasSize:=Me.CalibrationDueImage.Size,
-                                           contentMaxSize:=New Size(width:=30, height:=30),
+                                           contentMaxSize:=New Size(width:=28, height:=28),
                                            arcMinutes:=minutesToNextCalibration)
                 End If
             End If

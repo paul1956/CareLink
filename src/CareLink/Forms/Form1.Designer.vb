@@ -1529,12 +1529,12 @@ Partial Class Form1
         ' 
         SensorDaysLeftLabel.BackColor = Color.Transparent
         SensorDaysLeftLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
-        SensorDaysLeftLabel.ForeColor = Color.LightGray
+        SensorDaysLeftLabel.ForeColor = Color.Black
         SensorDaysLeftLabel.Location = New Point(0, 16)
         SensorDaysLeftLabel.Name = "SensorDaysLeftLabel"
         SensorDaysLeftLabel.Size = New Size(55, 40)
         SensorDaysLeftLabel.TabIndex = 45
-        SensorDaysLeftLabel.Text = "2"
+        SensorDaysLeftLabel.Text = "1"
         SensorDaysLeftLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' SensorTimeLeftLabel

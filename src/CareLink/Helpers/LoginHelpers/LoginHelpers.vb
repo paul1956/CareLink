@@ -127,7 +127,7 @@ Friend Module LoginHelpers
                 Loop
 
                 If Form1.Client Is Nothing OrElse Not Form1.Client.LoggedIn Then
-                    SetServerUpdateTimer(Start:=True, interval:=FiveMinutesInMilliseconds \ 10)
+                    SetServerUpdateTimer(Start:=True, interval:=FourMinutesInMilliseconds)
                     Dim hasErrors As Boolean = True
                     If NetworkUnavailable() Then
                         owner.LoginStatus.ReportLoginStatus(hasErrors,

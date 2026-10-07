@@ -22,13 +22,10 @@ Friend Module TimeConstants
 #Region "Minute Spans"
 
     Public ReadOnly Property ThirtySecondSpan As New TimeSpan(hours:=0, minutes:=0, seconds:=30)
-
     Public ReadOnly Property OneMinuteSpan As New TimeSpan(hours:=0, minutes:=1, seconds:=0)
-
+    Public ReadOnly Property FourMinuteSpan As New TimeSpan(hours:=0, minutes:=4, seconds:=0)
     Public ReadOnly Property FiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
-
     Public ReadOnly Property SixMinuteSpan As New TimeSpan(hours:=0, minutes:=6, seconds:=0)
-
     Public ReadOnly Property ThirtyMinuteSpan As New TimeSpan(hours:=0, minutes:=30, seconds:=0)
 
 #End Region
@@ -50,12 +47,9 @@ Friend Module TimeConstants
 #Region "Millisecond Constants"
 
     Public ReadOnly Property OneMinuteInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds)
-
     Public ReadOnly Property TwentySecondsInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds / 3)
-
     Public ReadOnly Property ThirtySecondsInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds / 2)
-
-    Public ReadOnly Property FiveMinutesInMilliseconds As Integer = CInt(FiveMinuteSpan.TotalMilliseconds)
+    Public ReadOnly Property FourMinutesInMilliseconds As Integer = CInt(FourMinuteSpan.TotalMilliseconds)
 
 #End Region ' Millisecond Constants
 
