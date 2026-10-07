@@ -3,8 +3,6 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.IO
-Imports System.Text
-Imports System.Text.Json
 Imports CareLink
 Imports FluentAssertions
 Imports Xunit

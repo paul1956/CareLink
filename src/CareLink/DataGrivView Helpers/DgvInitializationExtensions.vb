@@ -2,10 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
-Imports System.Runtime.CompilerServices
 Imports System.ComponentModel
-Imports System.Linq
-Imports System.Collections.Generic
+Imports System.Runtime.CompilerServices
 
 ''' <summary>
 '''  Provides extension methods for <see cref="DataGridView"/> to simplify

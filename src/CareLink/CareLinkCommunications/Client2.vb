@@ -4,11 +4,11 @@
 
 Imports System.Globalization
 Imports System.IO
+Imports System.IO.Compression
 Imports System.Net
 Imports System.Net.Http
 Imports System.Net.Http.Headers
 Imports System.Text
-Imports System.IO.Compression
 Imports System.Text.Json
 
 ' This class is intentionally not part of the public API.

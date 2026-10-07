@@ -4,7 +4,6 @@
 
 Imports System.IO
 Imports System.Text
-Imports System.Text.Json
 
 Friend Class IconBundleManifest
     Public Property extracted As Boolean

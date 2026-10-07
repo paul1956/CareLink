@@ -5,7 +5,6 @@
 Imports System.ComponentModel
 Imports System.Reflection
 Imports System.Runtime.CompilerServices
-Imports DocumentFormat.OpenXml.Spreadsheet
 
 ''' <summary>
 '''  Provides extension methods and delegates for displaying
