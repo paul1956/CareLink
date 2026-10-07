@@ -10,15 +10,15 @@ Friend Module Form1TransmitterBatteryHelper
     Private Sub GetBatteryImage(pictureBox As PictureBox, gstBatteryLevel As Integer)
         Select Case gstBatteryLevel
             Case 100
-                pictureBox.GetBitmapFromCache(imageId:=ImageEnum.TransmitterBatteryFull)
+                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryFull)
             Case > 50
-                pictureBox.GetBitmapFromCache(imageId:=ImageEnum.TransmitterBatteryOK)
+                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryOK)
             Case > 20
-                pictureBox.GetBitmapFromCache(imageId:=ImageEnum.TransmitterBatteryMedium)
+                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryMedium)
             Case > 0
-                pictureBox.GetBitmapFromCache(imageId:=ImageEnum.TransmitterBatteryLow)
+                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryLow)
             Case Else
-                pictureBox.GetBitmapFromCache(imageId:=ImageEnum.TransmitterBatteryUnknown)
+                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryUnknown)
         End Select
     End Sub
 
@@ -31,26 +31,26 @@ Friend Module Form1TransmitterBatteryHelper
                 Select Case $"{PatientData.CgmInfo?.SensorProductModel}".TrimEnd
                     Case "MMT-5120"
                         Const imageId As ImageEnum = ImageEnum.PumpConnectivityToSimpleraOK
-                        Form1.TransmitterBatteryPictureBox.GetBitmapFromCache(imageId)
+                        Form1.TransmitterBatteryPictureBox.UpdatePictureBox(imageId)
                         Form1.TransmitterBatteryPercentLabel.Text =
                             $"Simplera{vbCrLf}Connected"
 
                     Case "MMT-1894"
                         Const imageId As ImageEnum = ImageEnum.PumpConnectivityToInstinctOK
-                        Form1.TransmitterBatteryPictureBox.GetBitmapFromCache(imageId)
+                        Form1.TransmitterBatteryPictureBox.UpdatePictureBox(imageId)
                         Form1.TransmitterBatteryPercentLabel.Text =
                             $"Instinct{vbCrLf}Connected"
 
                     Case Else
                         ' default for Disposible sensor
                         Const imageId As ImageEnum = ImageEnum.PumpConnectivityToSimpleraOK
-                        Form1.TransmitterBatteryPictureBox.GetBitmapFromCache(imageId)
+                        Form1.TransmitterBatteryPictureBox.UpdatePictureBox(imageId)
                         Form1.TransmitterBatteryPercentLabel.Text =
                             $"Simplera{vbCrLf}Connected"
                 End Select
             End If
         Else
-            Form1.TransmitterBatteryPictureBox.GetBitmapFromCache(imageId:=ImageEnum.PumpConnectivityToTransmitterNotOK)
+            Form1.TransmitterBatteryPictureBox.UpdatePictureBox(imageId:=ImageEnum.PumpConnectivityToTransmitterNotOK)
             Form1.TransmitterBatteryPercentLabel.Text = "N/A"
         End If
     End Sub

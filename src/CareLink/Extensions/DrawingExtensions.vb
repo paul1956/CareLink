@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
+Imports System.Runtime.InteropServices
 
 Friend Module DrawingExtensions
 
@@ -44,24 +45,45 @@ Friend Module DrawingExtensions
     <Extension>
     Friend Function DrawCenteredArc(backImage As Bitmap, minutesToNextCalibration As Integer) As Bitmap
         ArgumentNullException.ThrowIfNull(argument:=backImage)
-        If minutesToNextCalibration = 0 Then
+        If minutesToNextCalibration <= 0 Then
             Return backImage
         End If
 
         Dim hoursToNextCalibration As Double = minutesToNextCalibration / 60.0
         Dim clampedMinutes As Integer = Math.Min(Math.Max(minutesToNextCalibration, 0), 720)
 
-        Using myGraphics As Graphics = Graphics.FromImage(backImage)
-            myGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+        ' Clone into a known, non-indexed pixel format and draw on the clone. This avoids
+        ' Graphics.FromImage ExternalException that can occur for some source bitmaps
+        ' (indexed formats or malformed images). We return the cloned image with the
+        ' arc drawn so callers receive a drawable Bitmap instance.
+        ' Produce a drawable 32bpp ARGB bitmap without modifying or disposing the caller's image.
+        Dim resultBmp As Bitmap = BitmapCache.ToDrawableBitmap(src:=backImage)
 
-            Using pen As New Pen(color:=GetColorFromTimeToNextCalib(hoursToNextCalibration), width:=4)
-                Dim rect As New Rectangle(x:=4, y:=2, width:=backImage.Width - 6, height:=backImage.Height - 6)
-                Dim sweepAngle As Integer = CInt(30 + (clampedMinutes / 720.0 * (360 - 30)))
-                myGraphics.DrawArc(pen, rect, startAngle:=-90, sweepAngle)
+        Try
+            Using myGraphics As Graphics = Graphics.FromImage(resultBmp)
+                myGraphics.SmoothingMode = Drawing2D.SmoothingMode.AntiAlias
+
+                Using pen As New Pen(color:=GetColorFromTimeToNextCalib(hoursToNextCalibration), width:=4)
+                    ' Ensure rectangle dimensions are valid for DrawArc
+                    Dim rectWidth As Integer = Math.Max(resultBmp.Width - 6, 1)
+                    Dim rectHeight As Integer = Math.Max(resultBmp.Height - 6, 1)
+                    Dim rect As New Rectangle(x:=4, y:=2, width:=rectWidth, height:=rectHeight)
+                    Dim sweepAngle As Integer = CInt(30 + (clampedMinutes / 720.0 * (360 - 30)))
+                    myGraphics.DrawArc(pen, rect, startAngle:=-90, sweepAngle)
+                End Using
             End Using
-        End Using
+        Catch ex As ExternalException
+            ' Diagnostics: avoid crashing the caller. Log and return the original image.
+            Try
+                Debug.WriteLine(message:=$"DrawCenteredArc Graphics.FromImage failed: {ex.GetType().FullName} - {ex.Message}")
+                Debug.WriteLine(message:=$"backImage size={backImage.Width}x{backImage.Height} format={backImage.PixelFormat}")
+            Catch
+            End Try
 
-        Return backImage
+            Return backImage
+        End Try
+
+        Return resultBmp
     End Function
 
     ''' <summary>

@@ -4,6 +4,7 @@
 
 Imports System.IO
 Imports System.Runtime.CompilerServices
+Imports System.Runtime.InteropServices
 
 Public Module BitmapCache
 
@@ -21,6 +22,175 @@ Public Module BitmapCache
     Friend ReadOnly s_bitmaps As New Dictionary(Of String, Bitmap)(Comparer)
 
     ''' <summary>
+    ''' Ensure the provided bitmap is 32bpp ARGB. If it already is, the same instance is returned.
+    ''' Otherwise a new 32bpp ARGB bitmap is created, the source is drawn into it, the source
+    ''' is disposed, and the new bitmap is returned.
+    ''' </summary>
+    Private Function EnsureBitmap32bpp(src As Bitmap) As Bitmap
+        If src Is Nothing Then
+            Return Nothing
+        End If
+
+        If src.PixelFormat = Imaging.PixelFormat.Format32bppArgb Then
+            Return src
+        End If
+
+        Try
+            Dim converted As New Bitmap(src.Width,
+                                        src.Height,
+                                        format:=Imaging.PixelFormat.Format32bppArgb)
+            Using g As Graphics = Graphics.FromImage(converted)
+                g.Clear(color:=Color.Transparent)
+                g.DrawImage(image:=src, x:=0, y:=0, src.Width, src.Height)
+            End Using
+            Try
+                src.Dispose()
+            Catch
+            End Try
+            Return converted
+        Catch
+            ' If conversion fails, fall back to returning the original (caller should handle nulls where appropriate).
+            Return src
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' Loads a bitmap from a byte buffer and converts it to 32bpp ARGB.
+    ''' Returns Nothing on failure.
+    ''' </summary>
+    Private Function LoadBitmapFromBytes(buffer As Byte()) As Bitmap
+        If buffer Is Nothing OrElse buffer.Length = 0 Then
+            Return Nothing
+        End If
+        Try
+            Using ms As New MemoryStream(buffer)
+                Using src As Image = Image.FromStream(ms)
+                    Dim bmp As New Bitmap(src.Width,
+                                          src.Height,
+                                          format:=Imaging.PixelFormat.Format32bppArgb)
+                    Using g As Graphics = Graphics.FromImage(bmp)
+                        g.Clear(color:=Color.Transparent)
+                        g.DrawImage(image:=src,
+                                    x:=0,
+                                    y:=0,
+                                    src.Width,
+                                    src.Height)
+                    End Using
+                    Return bmp
+                End Using
+            End Using
+        Catch
+            Return Nothing
+        End Try
+    End Function
+
+    ''' <summary>
+    '''  Trim fully-transparent border pixels from a 32bpp ARGB bitmap.
+    '''  Returns a new bitmap containing only the non-transparent bounds. If the
+    '''  source is fully transparent, returns a 1x1 transparent bitmap.
+    ''' </summary>
+    Private Function TrimTransparentBorder(src As Bitmap) As Bitmap
+        If src Is Nothing Then
+            Return Nothing
+        End If
+
+        Dim w As Integer = src.Width
+        Dim h As Integer = src.Height
+        Dim left As Integer = w
+        Dim top As Integer = h
+        Dim right As Integer = -1
+        Dim bottom As Integer = -1
+
+        Dim bitmapData As Imaging.BitmapData = Nothing
+        Dim bytes() As Byte = Nothing
+        Try
+            Dim rect As New Rectangle(0, 0, w, h)
+            bitmapData = src.LockBits(rect, Imaging.ImageLockMode.ReadOnly, Imaging.PixelFormat.Format32bppArgb)
+            Dim total As Integer = Math.Abs(bitmapData.Stride) * bitmapData.Height
+            ReDim bytes(total - 1)
+            Marshal.Copy(source:=bitmapData.Scan0, destination:=bytes, startIndex:=0, length:=total)
+
+            For y As Integer = 0 To h - 1
+                Dim row As Integer = y * bitmapData.Stride
+                For x As Integer = 0 To w - 1
+                    Dim alpha As Integer = bytes(row + (x * 4) + 3)
+                    If alpha <> 0 Then
+                        If x < left Then left = x
+                        If x > right Then right = x
+                        If y < top Then top = y
+                        If y > bottom Then bottom = y
+                    End If
+                Next
+            Next
+        Finally
+            If bitmapData IsNot Nothing Then
+                Try
+                    src.UnlockBits(bitmapData)
+                Catch
+                End Try
+            End If
+        End Try
+
+        ' If no non-transparent pixels found, return a 1x1 transparent bitmap.
+        If right < left OrElse bottom < top Then
+            Return New Bitmap(width:=1,
+                              height:=1,
+                              format:=Imaging.PixelFormat.Format32bppArgb)
+        End If
+
+        Dim rectW As Integer = right - left + 1
+        Dim rectH As Integer = bottom - top + 1
+        Dim outBmp As New Bitmap(width:=rectW,
+                                 height:=rectH,
+                                 format:=Imaging.PixelFormat.Format32bppArgb)
+        Using g As Graphics = Graphics.FromImage(outBmp)
+            g.Clear(color:=Color.Transparent)
+            g.DrawImage(image:=src,
+                        destRect:=New Rectangle(x:=0, y:=0, width:=rectW, height:=rectH),
+                        srcRect:=New Rectangle(x:=left, y:=top, width:=rectW, height:=rectH),
+                        srcUnit:=GraphicsUnit.Pixel)
+        End Using
+
+        Return outBmp
+    End Function
+
+    ''' <summary>
+    ''' Return a new drawable 32bpp ARGB bitmap based on the provided source.
+    ''' The returned bitmap is always a new instance and the source is not disposed.
+    ''' </summary>
+    Friend Function ToDrawableBitmap(src As Bitmap) As Bitmap
+        If src Is Nothing Then
+            Return Nothing
+        End If
+
+        Try
+            If src.PixelFormat = Imaging.PixelFormat.Format32bppArgb Then
+                Return CType(src.Clone(), Bitmap)
+            End If
+
+            Dim bmp As New Bitmap(src.Width,
+                                  src.Height,
+                                  format:=Imaging.PixelFormat.Format32bppArgb)
+            Using g As Graphics = Graphics.FromImage(bmp)
+                g.Clear(color:=Color.Transparent)
+                g.DrawImage(image:=src,
+                            x:=0,
+                            y:=0,
+                            src.Width,
+                            src.Height)
+            End Using
+            Return bmp
+        Catch
+            ' Fallback: attempt a simple clone to avoid returning the original.
+            Try
+                Return CType(src.Clone(), Bitmap)
+            Catch
+                Return Nothing
+            End Try
+        End Try
+    End Function
+
+    ''' <summary>
     '''  Cleans up all Bitmaps from memory.
     ''' </summary>
     Public Sub CleanUp()
@@ -31,31 +201,22 @@ Public Module BitmapCache
     End Sub
 
     ''' <summary>
-    '''  Clears temporary composite cache.
-    ''' </summary>
-    Public Sub ClearTempCache()
-        SyncLock s_tempLock
-            For Each kvp As KeyValuePair(Of String, Bitmap) In s_tempBitmaps
-                Try
-                    kvp.Value.Dispose()
-                Catch
-                End Try
-            Next
-            s_tempBitmaps.Clear()
-            s_tempOrder.Clear()
-        End SyncLock
-    End Sub
-
-    ''' <summary>
-    '''  Gets <see cref="Bitmap"/> from <see cref="s_bitmaps"/> after translating imageId to Name
+    '''  Gets a trimmed <see cref="Bitmap"/> from <see cref="s_bitmaps"/> after translating imageId to Name.
+    '''  Fully-transparent border pixels are removed.
     ''' </summary>
     ''' <param name="imageId"><see cref="ImageEnum"/></param>
-    ''' <returns>Bitmap from s_bitmaps</returns>
+    ''' <returns>Trimmed bitmap from s_bitmaps</returns>
     Public Function GetBitmapFromCache(imageId As ImageEnum) As Bitmap
         Dim value As Bitmap = Nothing
         If s_bitmaps.TryGetValue(key:=imageId.Description, value) Then
-            ' Assign the preloaded Bitmap safely
-            Return CType(value.Clone, Bitmap)
+            ' Cached bitmaps are stored trimmed and as 32bpp ARGB. Return a clone so
+            ' the caller owns the returned instance and can dispose it safely.
+            Try
+                Return CType(value.Clone(), Bitmap)
+            Catch
+                ' Fallback: attempt ToDrawableBitmap if clone fails for any reason
+                Return ToDrawableBitmap(src:=value)
+            End Try
         Else
             Return Nothing
         End If
@@ -63,24 +224,113 @@ Public Module BitmapCache
     End Function
 
     ''' <summary>
-    '''  Gets <see cref="Bitmap"/> from <see cref="s_bitmaps"/> after translating imageId
-    '''  to Name and assigns it to PictureBox.Image
+    '''  Gets <see cref="Bitmap"/> from <see cref="s_bitmaps"/> after translating imageId to Name.
+    '''  Returns a new image sized to canvasSize with the source image trimmed of transparent borders,
+    '''  scaled so its LARGEST dimension matches contentMaxSize largest dimension (if provided),
+    '''  otherwise the canvasSize largest dimension. The scaled content is centered on a transparent
+    '''  canvas of size canvasSize.
     ''' </summary>
-    ''' <param name="pictureBox">
-    '''  The PictureBox to assign the bitmap to.
-    ''' </param>
-    ''' <param name="imageId">
-    '''  The image ID.
-    ''' </param>
-    <Extension>
-    Public Sub GetBitmapFromCache(pictureBox As PictureBox, imageId As ImageEnum)
-        pictureBox.Image = Nothing
-        Dim value As Bitmap = Nothing
-        If s_bitmaps.TryGetValue(key:=imageId.Description, value) Then
-            ' Assign the preloaded Bitmap safely
-            pictureBox.Image = CType(value.Clone, Bitmap)
+    ''' <param name="imageId"><see cref="ImageEnum"/></param>
+    ''' <param name="canvasSize">Required target canvas size (e.g., PictureBox.Size).</param>
+    ''' <param name="contentMaxSize">Optional desired largest dimension for the content; if empty the canvas largest dimension is used.</param>
+    ''' <returns>New centered/scaled bitmap sized to canvasSize</returns>
+    Public Function GetBitmapFromCache(imageId As ImageEnum, canvasSize As Size, Optional contentMaxSize As Size = Nothing, Optional arcMinutes As Integer = -1) As Bitmap
+        If canvasSize.Width <= 0 OrElse canvasSize.Height <= 0 Then
+            Throw New ArgumentException(message:="canvasSize must have positive Width and Height.", paramName:=NameOf(canvasSize))
         End If
-    End Sub
+
+        ' Retrieve the trimmed cached bitmap (clone) and size it into the requested canvas.
+        Dim trimmed As Bitmap = GetBitmapFromCache(imageId)
+        If trimmed Is Nothing Then
+            Return Nothing
+        End If
+
+        Try
+            ' Determine the target largest dimension for content.
+            Dim contentTargetLargest As Integer = Math.Max(canvasSize.Width, canvasSize.Height)
+            If contentMaxSize.Width > 0 AndAlso contentMaxSize.Height > 0 Then
+                contentTargetLargest = Math.Max(contentMaxSize.Width, contentMaxSize.Height)
+            End If
+
+            Dim srcLargest As Integer = Math.Max(trimmed.Width, trimmed.Height)
+            Dim scale As Double = 1.0
+            If srcLargest > 0 Then
+                scale = CDbl(contentTargetLargest) / CDbl(srcLargest)
+            End If
+
+            Dim scaledW As Integer = Math.Max(1, CInt(Math.Round(trimmed.Width * scale)))
+            Dim scaledH As Integer = Math.Max(1, CInt(Math.Round(trimmed.Height * scale)))
+
+            Dim result As New Bitmap(canvasSize.Width, canvasSize.Height, Imaging.PixelFormat.Format32bppArgb)
+            Using g As Graphics = Graphics.FromImage(result)
+                g.Clear(color:=Color.Transparent)
+                g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+                g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
+                g.SmoothingMode = Drawing2D.SmoothingMode.HighQuality
+                Dim offsetX As Integer = (canvasSize.Width - scaledW) \ 2
+                Dim offsetY As Integer = (canvasSize.Height - scaledH) \ 2
+                g.DrawImage(image:=trimmed,
+                            rect:=New Rectangle(x:=offsetX,
+                                                y:=offsetY,
+                                                width:=scaledW,
+                                                height:=scaledH))
+            End Using
+
+            ' Update the cached bitmap for this imageId to the newly-sized canvas.
+            ' We only update the cache when no arc overlay is requested because the
+            ' arc is time-dependent and should not replace the stored source image.
+            Try
+                If arcMinutes < 0 Then
+                    Dim cacheKey As String = imageId.Description
+                    Dim newCacheBmp As Bitmap = Nothing
+                    Try
+                        newCacheBmp = EnsureBitmap32bpp(src:=CType(result.Clone(), Bitmap))
+                        Dim oldBmp As Bitmap = Nothing
+                        If s_bitmaps.TryGetValue(key:=cacheKey, value:=oldBmp) Then
+                            Try
+                                oldBmp.Dispose()
+                            Catch
+                            End Try
+                        End If
+                        s_bitmaps(cacheKey) = newCacheBmp
+                        newCacheBmp = Nothing ' ownership transferred to cache
+                    Finally
+                        If newCacheBmp IsNot Nothing Then
+                            Try
+                                newCacheBmp.Dispose()
+                            Catch
+                            End Try
+                        End If
+                    End Try
+                End If
+            Catch
+                ' Swallow any cache update failures; caching is best-effort.
+            End Try
+
+            ' If caller requested an arc overlay, draw it on the canvas before returning.
+            If arcMinutes >= 0 Then
+                Try
+                    Dim withArc As Bitmap = result.DrawCenteredArc(minutesToNextCalibration:=arcMinutes)
+                    Try
+                        result.Dispose()
+                    Catch
+                    End Try
+                    Return withArc
+                Catch
+                    ' If drawing fails, fall back to returning the canvas result.
+                    Return result
+                End Try
+            End If
+
+            Return result
+        Finally
+            Try
+                trimmed.Dispose()
+            Catch
+            End Try
+        End Try
+
+    End Function
 
     ''' <summary>
     ''' Get or create a temporary composite bitmap. The caller provides a stable key (includes parameters)
@@ -96,12 +346,16 @@ Public Module BitmapCache
         SyncLock s_tempLock
             Dim existing As Bitmap = Nothing
             If s_tempBitmaps.TryGetValue(key, value:=existing) Then
+                ' Cached temp bitmaps are normalized to 32bpp ARGB on insert, so a simple clone is sufficient.
                 Return CType(existing.Clone(), Bitmap)
             End If
 
             ' Create and store the new composite
             Dim created As Bitmap = generator()
             If created Is Nothing Then Return Nothing
+
+            ' Ensure temp cache stores 32bpp ARGB bitmaps to make clones cheaper and consistent.
+            created = EnsureBitmap32bpp(src:=created)
 
             ' Enforce cap
             If s_tempBitmaps.Count >= MaxTempBitmaps Then
@@ -131,26 +385,10 @@ Public Module BitmapCache
     End Function
 
     ''' <summary>
-    '''  Gets a temporary composite Bitmap from the temp cache by key. Returns a clone or Nothing.
-    ''' </summary>
-    ''' <param name="key">The key for the temporary composite Bitmap.</param>
-    ''' <returns>A clone of the Bitmap if found; otherwise, Nothing.</returns>
-    Public Function GetTempBitmapFromCache(key As String) As Bitmap
-        If String.IsNullOrEmpty(value:=key) Then Return Nothing
-        SyncLock s_tempLock
-            Dim bmp As Bitmap = Nothing
-            If s_tempBitmaps.TryGetValue(key, value:=bmp) Then
-                Return CType(bmp.Clone(), Bitmap)
-            End If
-        End SyncLock
-        Return Nothing
-    End Function
-
-    ''' <summary>
     '''  Loads all PNG files as Bitmaps into memory.
     ''' </summary>
     Public Sub PreloadBitmaps()
-        Dim manifestMap As New Dictionary(Of String, String)(StringComparer.OrdinalIgnoreCase)
+        Dim manifestMap As New Dictionary(Of String, String)(Comparer)
 
         Try
             Dim projectDataDir As String = GetProjectDataDirectory()
@@ -199,16 +437,36 @@ Public Module BitmapCache
             If manifestMap.Count > 0 Then
                 Dim selectedPath As String = Nothing
 
-                If manifestMap.TryGetValue(key:=key, value:=selectedPath) OrElse
+                If manifestMap.TryGetValue(key, value:=selectedPath) OrElse
                    manifestMap.TryGetValue(key:=enumName, value:=selectedPath) Then
                     If File.Exists(path:=selectedPath) Then
                         Try
                             Dim buffer As Byte() = File.ReadAllBytes(path:=selectedPath)
-                            Using ms As New MemoryStream(buffer)
-                                Dim bmp As Bitmap = DirectCast(Image.FromStream(ms).Clone(), Bitmap)
-                                s_bitmaps(key:=key) = bmp
-                                loaded = True
-                            End Using
+                            Dim bmpLoaded As Bitmap = LoadBitmapFromBytes(buffer:=buffer)
+                            If bmpLoaded IsNot Nothing Then
+                                ' Normalize to drawable 32bpp and trim transparent borders before caching.
+                                Dim drawable As Bitmap = ToDrawableBitmap(src:=bmpLoaded)
+                                Try
+                                    If drawable IsNot bmpLoaded Then
+                                        Try
+                                            bmpLoaded.Dispose()
+                                        Catch
+                                        End Try
+                                    End If
+                                Catch
+                                End Try
+
+                                Dim trimmed As Bitmap = TrimTransparentBorder(src:=drawable)
+                                Try
+                                    drawable.Dispose()
+                                Catch
+                                End Try
+
+                                If trimmed IsNot Nothing Then
+                                    s_bitmaps(key:=key) = trimmed
+                                    loaded = True
+                                End If
+                            End If
                         Catch
                         End Try
                     End If
@@ -219,11 +477,30 @@ Public Module BitmapCache
                            File.Exists(path:=pair.Value) Then
                             Try
                                 Dim buffer As Byte() = File.ReadAllBytes(path:=pair.Value)
-                                Using ms As New MemoryStream(buffer)
-                                    Dim bmp As Bitmap = DirectCast(Image.FromStream(ms).Clone(), Bitmap)
-                                    s_bitmaps(key:=key) = bmp
-                                    loaded = True
-                                End Using
+                                Dim bmpLoaded As Bitmap = LoadBitmapFromBytes(buffer:=buffer)
+                                If bmpLoaded IsNot Nothing Then
+                                    Dim drawable As Bitmap = ToDrawableBitmap(src:=bmpLoaded)
+                                    Try
+                                        If drawable IsNot bmpLoaded Then
+                                            Try
+                                                bmpLoaded.Dispose()
+                                            Catch
+                                            End Try
+                                        End If
+                                    Catch
+                                    End Try
+
+                                    Dim trimmed As Bitmap = TrimTransparentBorder(src:=drawable)
+                                    Try
+                                        drawable.Dispose()
+                                    Catch
+                                    End Try
+
+                                    If trimmed IsNot Nothing Then
+                                        s_bitmaps(key:=key) = trimmed
+                                        loaded = True
+                                    End If
+                                End If
                             Catch
                             End Try
                             Exit For
@@ -239,10 +516,29 @@ Public Module BitmapCache
                 If File.Exists(path:=fallbackPath) Then
                     Try
                         Dim buffer As Byte() = File.ReadAllBytes(path:=fallbackPath)
-                        Using ms As New MemoryStream(buffer)
-                            Dim bmp As Bitmap = DirectCast(Image.FromStream(ms).Clone(), Bitmap)
-                            s_bitmaps(key:=key) = bmp
-                        End Using
+                        Dim bmpLoaded As Bitmap = LoadBitmapFromBytes(buffer:=buffer)
+                        If bmpLoaded IsNot Nothing Then
+                            Dim drawable As Bitmap = ToDrawableBitmap(src:=bmpLoaded)
+                            Try
+                                If drawable IsNot bmpLoaded Then
+                                    Try
+                                        bmpLoaded.Dispose()
+                                    Catch
+                                    End Try
+                                End If
+                            Catch
+                            End Try
+
+                            Dim trimmed As Bitmap = TrimTransparentBorder(src:=drawable)
+                            Try
+                                drawable.Dispose()
+                            Catch
+                            End Try
+
+                            If trimmed IsNot Nothing Then
+                                s_bitmaps(key:=key) = trimmed
+                            End If
+                        End If
                     Catch
                     End Try
                 End If
@@ -251,49 +547,34 @@ Public Module BitmapCache
     End Sub
 
     ''' <summary>
-    '''  Replace and dispose any existing temp bitmap for the given key.
-    '''  Useful when a parameter changes and the old composite is no longer needed.
+    '''  Gets <see cref="Bitmap"/> from <see cref="s_bitmaps"/> after translating imageId
+    '''  to Name and assigns it to PictureBox.Image
     ''' </summary>
-    ''' <param name="key">The key for the temporary composite Bitmap.</param>
-    ''' <param name="newBitmap">
-    '''  The new Bitmap to replace the existing one.
+    ''' <param name="pictureBox">
+    '''  The PictureBox to assign the bitmap to.
     ''' </param>
-    Public Sub ReplaceTempBitmap(key As String, newBitmap As Bitmap)
-        If String.IsNullOrEmpty(value:=key) Then Return
-        SyncLock s_tempLock
-            Dim old As Bitmap = Nothing
-            If s_tempBitmaps.TryGetValue(key, value:=old) Then
+    ''' <param name="imageId">
+    '''  The image ID.
+    ''' </param>
+    <Extension>
+    Public Sub UpdatePictureBox(pictureBox As PictureBox, imageId As ImageEnum)
+        ' Dispose previous image to avoid leaking GDI objects
+        Try
+            Dim prev As Image = pictureBox.Image
+            pictureBox.Image = Nothing
+            If prev IsNot Nothing Then
                 Try
-                    old.Dispose()
+                    prev.Dispose()
                 Catch
                 End Try
-                s_tempBitmaps.Remove(key)
-                s_tempOrder.Remove(item:=key)
             End If
+        Catch
+        End Try
 
-            If newBitmap IsNot Nothing Then
-                If s_tempBitmaps.Count >= MaxTempBitmaps Then
-                    Dim oldestKey As String = Nothing
-                    If s_tempOrder.Count > 0 Then
-                        oldestKey = s_tempOrder(index:=0)
-                    End If
-                    If Not String.IsNullOrEmpty(value:=oldestKey) Then
-                        Dim oldBmp2 As Bitmap = Nothing
-                        If s_tempBitmaps.TryGetValue(key:=oldestKey, value:=oldBmp2) Then
-                            Try
-                                oldBmp2.Dispose()
-                            Catch
-                            End Try
-                        End If
-                        s_tempBitmaps.Remove(key:=oldestKey)
-                        s_tempOrder.RemoveAt(index:=0)
-                    End If
-                End If
-
-                s_tempBitmaps(key) = newBitmap
-                s_tempOrder.Add(item:=key)
-            End If
-        End SyncLock
+        ' Request a bitmap sized to the picture box so drawing overlays align correctly.
+        pictureBox.Image =
+            GetBitmapFromCache(imageId,
+                               canvasSize:=pictureBox.Size)
     End Sub
 
 End Module

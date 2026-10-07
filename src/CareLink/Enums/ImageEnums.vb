@@ -26,6 +26,12 @@ Public Module ImageEnums
         <Description("CalibrationDotRed")>
         CalibrationDotRed
 
+        <Description("ongraph_status_bg")>
+        CalibrationDotRedSmall
+
+        <Description("grey_blood_glucose_icon")>
+        CalibrationDotSmall
+
         <Description("CalibrationNotReady")>
         CalibrationNotReady
 
@@ -83,7 +89,7 @@ Public Module ImageEnums
         <Description("simplera_rapid_icon-graph@2x")>
         InsulinVial
 
-        <Description("InsulinVialTiny")>
+        <Description("simplera_rapid_icon-graph")>
         InsulinVialTiny
 
         <Description("LoginDark")>
@@ -98,7 +104,7 @@ Public Module ImageEnums
         <Description("ongraph_status_snack@3x")>
         MealImageLarge
 
-        <Description("NoteImage")>
+        <Description("icon_event_other_2")>
         NoteImage
 
         <Description("NotificationAlert_16x")>
@@ -209,16 +215,16 @@ Public Module ImageEnums
         <Description("SensorExpirationUnknown")>
         SensorExpirationUnknown
 
-        <Description("SensorExpired")>
+        <Description("ic_calendar_expired@3x")>
         SensorExpired
 
-        <Description("SensorExpiringSoon")>
+        <Description("ic_calendar_alert@2x")>
         SensorExpiringSoon
 
         <Description("SensorLifeNotOK")>
         SensorLifeNotOK
 
-        <Description("SensorLifeOK")>
+        <Description("ic_calendar_normal@3x")>
         SensorLifeOK
 
         <Description("Shield")>
