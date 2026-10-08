@@ -130,19 +130,19 @@ Public Class SG
         End Set
     End Property
 
+    <DisplayName("Is Backfill")>
+    <Column(Order:=11, TypeName:=NameOf([Boolean]))>
+    <JsonPropertyName("isBackfill")>
+    Public Property IsBackfill As Boolean
+
     <DisplayName("Sensor Message")>
-    <Column(Order:=11, TypeName:=NameOf([String]))>
+    <Column(Order:=12, TypeName:=NameOf([String]))>
     Public ReadOnly Property Message As String
         Get
             _sensorState = If(_sensorState, EmptyString)
             Return FormatSensorMessage(key:=PatientData.SensorState, truncate:=False)
         End Get
     End Property
-
-    <DisplayName("Is Backfill")>
-    <Column(Order:=12, TypeName:=NameOf([Boolean]))>
-    <JsonPropertyName("isBackfill")>
-    Public Property IsBackfill As Boolean
 
     ''' <summary>
     '''  Translates the sensor state message based on the <see langword="key"/>.

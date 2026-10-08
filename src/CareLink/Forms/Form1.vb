@@ -300,12 +300,9 @@ Public Class Form1
                 shouldQueue = True
             Else
                 SyncLock _pendingHeaderUpdates
-#Disable Warning CA1868 ' Unnecessary call to 'Contains(item)'
-                    If Not _pendingHeaderUpdates.Contains(item:=pendingKey) Then
-                        _pendingHeaderUpdates.Add(item:=pendingKey)
+                    If _pendingHeaderUpdates.Add(item:=pendingKey) Then
                         shouldQueue = True
                     End If
-#Enable Warning CA1868 ' Unnecessary call to 'Contains(item)'
                 End SyncLock
             End If
 
@@ -742,19 +739,11 @@ Public Class Form1
 
     Private Sub CursorPictureBoxUpdate(imageId As ImageEnum)
         Try
-            Dim bitmap As Bitmap = GetBitmapFromCache(imageId)
-            If bitmap Is Nothing Then
-                Stop
-                Return
-            End If
-
             ' We have a dedicated marker PictureBox use it.
             ' Hide the infusion image while showing transient marker to avoid
             ' both PictureBoxes appearing simultaneously.
             Me.InfustionSetPictureBox.Visible = False
-
-            Me.CursorMarkerPictureBox.SizeMode = PictureBoxSizeMode.Normal
-            Me.CursorMarkerPictureBox.Size = bitmap.Size
+            Application.DoEvents()
             Me.CursorMarkerPictureBox.UpdatePictureBox(imageId)
             Me.CursorMarkerPictureBox.Visible = True
             Me.CursorMarkerPictureBox.CenterXOnControl(parent:=Me.CursorMessage2Label)
@@ -777,7 +766,7 @@ Public Class Form1
         _infusionSetLabel4Backup = "Unknown!"
         Try
             Me.CursorMessage1Label.Visible = False
-            Me.InfustionSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
+            Me.InfustionSetPictureBox.SizeMode = PictureBoxSizeMode.Normal
             ' Create a dedicated PictureBox for transient cursor/marker icons so
             ' updates to markers do not change the infusion PictureBox SizeMode/Size.
             Me.InfusionSetDataRestore()
@@ -939,17 +928,18 @@ Public Class Form1
     ''' </param>
     Private Sub ScheduleInfusionSetRefresh(pictureBox As PictureBox)
         Dim generator As Func(Of Size, Bitmap) =
-            Function(targetSize As Size)
+            Function(canvasSize As Size)
                 Dim infusionRemainingDuration As Integer = 0
                 Dim image As Bitmap = Nothing
                 If PatientData IsNot Nothing AndAlso PatientData.InfusionRemainingDuration >= 0 Then
                     infusionRemainingDuration = PatientData.InfusionRemainingDuration
                     image = GetOrCreateInfusionComposite(imageId:=ImageEnum.InfusionLifeMaster,
                                                         emptyImageId:=ImageEnum.InfusionLifeExpired,
-                                                        targetSize,
+                                                        canvasSize,
                                                         infusionRemainingDuration)
                 Else
-                    image = GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeUnknown)
+                    image = GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeUnknown,
+                                               canvasSize)
                 End If
                 Return image
             End Function
@@ -968,13 +958,13 @@ Public Class Form1
     ''' </param>
     Private Sub SchedulePumpBatteryRefresh(pictureBox As PictureBox)
         Dim generator As Func(Of Size, Bitmap) =
-            Function(targetSize As Size)
+            Function(canvasSize As Size)
                 Dim pumpMinutes As Integer = 0
                 If PatientData IsNot Nothing Then
                     pumpMinutes = PatientData.PumpBatteryLevelTime
                 End If
                 Return GetOrCreatePumpBatteryComposite(imageId:=ImageEnum.PumpBatteryFlexMaster,
-                                                       targetSize,
+                                                       canvasSize,
                                                        pumpBatteryLevelMinutes:=pumpMinutes)
             End Function
 
@@ -2936,6 +2926,7 @@ Public Class Form1
                     dgv.CellFormattingDefault(e)
 
                 Case NameOf(SG.IsBackfill)
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     dgv.CellFormattingToTitle(e)
 
                 Case NameOf(SG.Kind),

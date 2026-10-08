@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Runtime.CompilerServices
+Imports System.Threading
 Imports System.Windows.Forms.DataVisualization.Charting
 
 ''' <summary>
@@ -16,8 +17,18 @@ Friend Module PlotMarkers
 
     Friend ReadOnly Property MealImage As Bitmap
         Get
-            If s_mealImage Is Nothing Then
-                s_mealImage = GetBitmapFromCache(imageId:=ImageEnum.MealImage)
+            Dim bmp As Bitmap = s_mealImage
+            If bmp Is Nothing Then
+                Dim newBmp As Bitmap = GetBitmapFromCache(imageId:=ImageEnum.MealImage)
+                If Interlocked.CompareExchange(location1:=s_mealImage,
+                                               value:=newBmp,
+                                               comparand:=Nothing) IsNot Nothing Then
+                    ' Another thread won the race; dispose our extra
+                    Try
+                        newBmp.Dispose()
+                    Catch
+                    End Try
+                End If
             End If
             Return s_mealImage
         End Get
@@ -25,8 +36,17 @@ Friend Module PlotMarkers
 
     Friend ReadOnly Property NoteImage As Bitmap
         Get
-            If s_notesImage Is Nothing Then
-                s_notesImage = GetBitmapFromCache(imageId:=ImageEnum.NoteImage)
+            Dim bmp As Bitmap = s_notesImage
+            If bmp Is Nothing Then
+                Dim newBmp As Bitmap = GetBitmapFromCache(imageId:=ImageEnum.NoteImage)
+                If Interlocked.CompareExchange(location1:=s_notesImage,
+                                               value:=newBmp,
+                                               comparand:=Nothing) IsNot Nothing Then
+                    Try
+                        newBmp.Dispose()
+                    Catch
+                    End Try
+                End If
             End If
             Return s_notesImage
         End Get
@@ -34,12 +54,51 @@ Friend Module PlotMarkers
 
     Friend ReadOnly Property InsulinVialTiny As Bitmap
         Get
-            If s_insulinVialTiny Is Nothing Then
-                s_insulinVialTiny = GetBitmapFromCache(imageId:=ImageEnum.InsulinVialTiny)
+            Dim bmp As Bitmap = s_insulinVialTiny
+            If bmp Is Nothing Then
+                Dim newBmp As Bitmap = GetBitmapFromCache(imageId:=ImageEnum.InsulinVialTiny)
+                If Interlocked.CompareExchange(location1:=s_insulinVialTiny,
+                                               value:=newBmp,
+                                               comparand:=Nothing) IsNot Nothing Then
+                    Try
+                        newBmp.Dispose()
+                    Catch
+                    End Try
+                End If
             End If
             Return s_insulinVialTiny
         End Get
     End Property
+
+    ''' <summary>
+    ''' Dispose module-level cached marker bitmaps.
+    ''' Call during shutdown to avoid leaking GDI objects.
+    ''' </summary>
+    Public Sub CleanUpMarkers()
+        Try
+            If s_mealImage IsNot Nothing Then
+                Try : s_mealImage.Dispose() : Catch : End Try
+                s_mealImage = Nothing
+            End If
+        Catch
+        End Try
+
+        Try
+            If s_notesImage IsNot Nothing Then
+                Try : s_notesImage.Dispose() : Catch : End Try
+                s_notesImage = Nothing
+            End If
+        Catch
+        End Try
+
+        Try
+            If s_insulinVialTiny IsNot Nothing Then
+                Try : s_insulinVialTiny.Dispose() : Catch : End Try
+                s_insulinVialTiny = Nothing
+            End If
+        Catch
+        End Try
+    End Sub
 
     ''' <summary>
     '''  Adds a calibration point to the marker series.

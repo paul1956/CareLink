@@ -155,58 +155,12 @@ Public Module BitmapCache
     End Function
 
     ''' <summary>
-    ''' Return a new drawable 32bpp ARGB bitmap based on the provided source.
-    ''' The returned bitmap is always a new instance and the source is not disposed.
-    ''' </summary>
-    Friend Function ToDrawableBitmap(src As Bitmap) As Bitmap
-        If src Is Nothing Then
-            Return Nothing
-        End If
-
-        Try
-            If src.PixelFormat = Imaging.PixelFormat.Format32bppArgb Then
-                Return CType(src.Clone(), Bitmap)
-            End If
-
-            Dim bmp As New Bitmap(src.Width,
-                                  src.Height,
-                                  format:=Imaging.PixelFormat.Format32bppArgb)
-            Using g As Graphics = Graphics.FromImage(bmp)
-                g.Clear(color:=Color.Transparent)
-                g.DrawImage(image:=src,
-                            x:=0,
-                            y:=0,
-                            src.Width,
-                            src.Height)
-            End Using
-            Return bmp
-        Catch
-            ' Fallback: attempt a simple clone to avoid returning the original.
-            Try
-                Return CType(src.Clone(), Bitmap)
-            Catch
-                Return Nothing
-            End Try
-        End Try
-    End Function
-
-    ''' <summary>
-    '''  Cleans up all Bitmaps from memory.
-    ''' </summary>
-    Public Sub CleanUp()
-        For Each kvp As KeyValuePair(Of String, Bitmap) In s_bitmaps
-            kvp.Value?.Dispose()
-        Next
-        s_bitmaps.Clear()
-    End Sub
-
-    ''' <summary>
     '''  Gets a trimmed <see cref="Bitmap"/> from <see cref="s_bitmaps"/> after translating imageId to Name.
     '''  Fully-transparent border pixels are removed.
     ''' </summary>
     ''' <param name="imageId"><see cref="ImageEnum"/></param>
     ''' <returns>Trimmed bitmap from s_bitmaps</returns>
-    Public Function GetBitmapFromCache(imageId As ImageEnum) As Bitmap
+    Friend Function GetBitmapFromCache(imageId As ImageEnum) As Bitmap
         Dim value As Bitmap = Nothing
         If s_bitmaps.TryGetValue(key:=imageId.Description, value) Then
             ' Cached bitmaps are stored trimmed and as 32bpp ARGB. Return a clone so
@@ -224,17 +178,20 @@ Public Module BitmapCache
     End Function
 
     ''' <summary>
-    '''  Gets <see cref="Bitmap"/> from <see cref="s_bitmaps"/> after translating imageId to Name.
-    '''  Returns a new image sized to canvasSize with the source image trimmed of transparent borders,
-    '''  scaled so its LARGEST dimension matches contentMaxSize largest dimension (if provided),
-    '''  otherwise the canvasSize largest dimension. The scaled content is centered on a transparent
-    '''  canvas of size canvasSize.
+    '''  Gets a bitmap from the cache and sizes it to the provided canvas. This overload
+    '''  scales the cached trimmed image so its largest dimension matches the canvas
+    '''  largest dimension and centers it on a transparent canvas of the requested size.
+    '''  This is a convenience overload that forwards to the full-parameter form.
     ''' </summary>
     ''' <param name="imageId"><see cref="ImageEnum"/></param>
-    ''' <param name="canvasSize">Required target canvas size (e.g., PictureBox.Size).</param>
-    ''' <param name="contentMaxSize">Optional desired largest dimension for the content; if empty the canvas largest dimension is used.</param>
+    ''' <param name="canvasSize">Target canvas size.</param>
     ''' <returns>New centered/scaled bitmap sized to canvasSize</returns>
-    Public Function GetBitmapFromCache(imageId As ImageEnum, canvasSize As Size, Optional contentMaxSize As Size = Nothing, Optional arcMinutes As Integer = -1) As Bitmap
+    Friend Function GetBitmapFromCache(imageId As ImageEnum, canvasSize As Size) As Bitmap
+        ' Build on the single-parameter helper: get the trimmed clone and scale/center it
+        ' onto a transparent canvas of the requested size. This overload does NOT update
+        ' the persistent cache (caching is handled by the full-parameter implementation)
+        ' so it is safe to use in a paint loop where callers only need a sized bitmap.
+
         If canvasSize.Width <= 0 OrElse canvasSize.Height <= 0 Then
             Throw New ArgumentException(message:="canvasSize must have positive Width and Height.", paramName:=NameOf(canvasSize))
         End If
@@ -246,13 +203,10 @@ Public Module BitmapCache
         End If
 
         Try
-            ' Determine the target largest dimension for content.
-            Dim contentTargetLargest As Integer = Math.Max(canvasSize.Width, canvasSize.Height)
-            If contentMaxSize.Width > 0 AndAlso contentMaxSize.Height > 0 Then
-                contentTargetLargest = Math.Max(contentMaxSize.Width, contentMaxSize.Height)
-            End If
-
-            Dim srcLargest As Integer = Math.Max(trimmed.Width, trimmed.Height)
+            Dim contentTargetLargest As Integer =
+                Math.Max(canvasSize.Width, canvasSize.Height)
+            Dim srcLargest As Integer =
+                Math.Max(trimmed.Width, trimmed.Height)
             Dim scale As Double = 1.0
             If srcLargest > 0 Then
                 scale = CDbl(contentTargetLargest) / CDbl(srcLargest)
@@ -276,52 +230,6 @@ Public Module BitmapCache
                                                 height:=scaledH))
             End Using
 
-            ' Update the cached bitmap for this imageId to the newly-sized canvas.
-            ' We only update the cache when no arc overlay is requested because the
-            ' arc is time-dependent and should not replace the stored source image.
-            Try
-                If arcMinutes < 0 Then
-                    Dim cacheKey As String = imageId.Description
-                    Dim newCacheBmp As Bitmap = Nothing
-                    Try
-                        newCacheBmp = EnsureBitmap32bpp(src:=CType(result.Clone(), Bitmap))
-                        Dim oldBmp As Bitmap = Nothing
-                        If s_bitmaps.TryGetValue(key:=cacheKey, value:=oldBmp) Then
-                            Try
-                                oldBmp.Dispose()
-                            Catch
-                            End Try
-                        End If
-                        s_bitmaps(cacheKey) = newCacheBmp
-                        newCacheBmp = Nothing ' ownership transferred to cache
-                    Finally
-                        If newCacheBmp IsNot Nothing Then
-                            Try
-                                newCacheBmp.Dispose()
-                            Catch
-                            End Try
-                        End If
-                    End Try
-                End If
-            Catch
-                ' Swallow any cache update failures; caching is best-effort.
-            End Try
-
-            ' If caller requested an arc overlay, draw it on the canvas before returning.
-            If arcMinutes >= 0 Then
-                Try
-                    Dim withArc As Bitmap = result.DrawCenteredArc(minutesToNextCalibration:=arcMinutes)
-                    Try
-                        result.Dispose()
-                    Catch
-                    End Try
-                    Return withArc
-                Catch
-                    ' If drawing fails, fall back to returning the canvas result.
-                    Return result
-                End Try
-            End If
-
             Return result
         Finally
             Try
@@ -329,6 +237,125 @@ Public Module BitmapCache
             Catch
             End Try
         End Try
+    End Function
+
+    ''' <summary>
+    '''  Gets <see cref="Bitmap"/> from <see cref="s_bitmaps"/> after translating imageId to Name.
+    '''  Returns a new image sized to canvasSize with the source image trimmed of transparent borders,
+    '''  scaled so its LARGEST dimension matches contentMaxSize largest dimension (if provided),
+    '''  otherwise the canvasSize largest dimension. The scaled content is centered on a transparent
+    '''  canvas of size canvasSize.
+    ''' </summary>
+    ''' <param name="imageId"><see cref="ImageEnum"/></param>
+    ''' <param name="canvasSize">Required target canvas size (e.g., PictureBox.Size).</param>
+    ''' <param name="contentMaxSize">Desired largest dimension for the content; if empty (0,0) the canvas largest dimension is used.</param>
+    ''' <returns>New centered/scaled bitmap sized to canvasSize</returns>
+    Friend Function GetBitmapFromCache(imageId As ImageEnum, canvasSize As Size, contentMaxSize As Size, arcMinutes As Integer) As Bitmap
+        If canvasSize.Width <= 0 OrElse canvasSize.Height <= 0 Then
+            Throw New ArgumentException(message:="canvasSize must have positive Width and Height.", paramName:=NameOf(canvasSize))
+        End If
+
+        Dim result As Bitmap = Nothing
+
+        ' If caller didn't specify a contentMaxSize,
+        ' reuse the two-parameter sizing helper.
+        If contentMaxSize.Width <= 0 AndAlso contentMaxSize.Height <= 0 Then
+            result = GetBitmapFromCache(imageId, canvasSize)
+        Else
+            ' Scale using contentMaxSize as the target largest dimension.
+            Dim trimmed As Bitmap = GetBitmapFromCache(imageId)
+            If trimmed Is Nothing Then
+                Return Nothing
+            End If
+
+            Try
+                Dim contentTargetLargest As Integer = Math.Max(contentMaxSize.Width, contentMaxSize.Height)
+                If contentTargetLargest <= 0 Then
+                    contentTargetLargest = Math.Max(canvasSize.Width, canvasSize.Height)
+                End If
+
+                Dim srcLargest As Integer = Math.Max(trimmed.Width, trimmed.Height)
+                Dim scale As Double = 1.0
+                If srcLargest > 0 Then
+                    scale = CDbl(contentTargetLargest) / CDbl(srcLargest)
+                End If
+
+                Dim scaledW As Integer = Math.Max(1, CInt(Math.Round(trimmed.Width * scale)))
+                Dim scaledH As Integer = Math.Max(1, CInt(Math.Round(trimmed.Height * scale)))
+
+                result = New Bitmap(canvasSize.Width, canvasSize.Height, Imaging.PixelFormat.Format32bppArgb)
+                Using g As Graphics = Graphics.FromImage(result)
+                    g.Clear(color:=Color.Transparent)
+                    g.InterpolationMode = Drawing2D.InterpolationMode.HighQualityBicubic
+                    g.PixelOffsetMode = Drawing2D.PixelOffsetMode.HighQuality
+                    g.SmoothingMode = Drawing2D.SmoothingMode.HighQuality
+                    Dim offsetX As Integer = (canvasSize.Width - scaledW) \ 2
+                    Dim offsetY As Integer = (canvasSize.Height - scaledH) \ 2
+                    g.DrawImage(image:=trimmed,
+                                rect:=New Rectangle(x:=offsetX,
+                                                    y:=offsetY,
+                                                    width:=scaledW,
+                                                    height:=scaledH))
+                End Using
+            Finally
+                Try
+                    trimmed.Dispose()
+                Catch
+                End Try
+            End Try
+        End If
+
+        If result Is Nothing Then
+            Return Nothing
+        End If
+
+        ' Update the cached bitmap for this imageId to the newly-sized canvas.
+        ' We only update the cache when no arc overlay is requested because the
+        ' arc is time-dependent and should not replace the stored source image.
+        Try
+            If arcMinutes < 0 Then
+                Dim cacheKey As String = imageId.Description
+                Dim newCacheBmp As Bitmap = Nothing
+                Try
+                    newCacheBmp = EnsureBitmap32bpp(src:=CType(result.Clone(), Bitmap))
+                    Dim oldBmp As Bitmap = Nothing
+                    If s_bitmaps.TryGetValue(key:=cacheKey, value:=oldBmp) Then
+                        Try
+                            oldBmp.Dispose()
+                        Catch
+                        End Try
+                    End If
+                    s_bitmaps(cacheKey) = newCacheBmp
+                    newCacheBmp = Nothing ' ownership transferred to cache
+                Finally
+                    If newCacheBmp IsNot Nothing Then
+                        Try
+                            newCacheBmp.Dispose()
+                        Catch
+                        End Try
+                    End If
+                End Try
+            End If
+        Catch
+            ' Swallow any cache update failures; caching is best-effort.
+        End Try
+
+        ' If caller requested an arc overlay, draw it on the canvas before returning.
+        If arcMinutes >= 0 Then
+            Try
+                Dim withArc As Bitmap = result.DrawCenteredArc(minutesToNextCalibration:=arcMinutes)
+                Try
+                    result.Dispose()
+                Catch
+                End Try
+                Return withArc
+            Catch
+                ' If drawing fails, fall back to returning the canvas result.
+                Return result
+            End Try
+        End If
+
+        Return result
 
     End Function
 
@@ -337,7 +364,7 @@ Public Module BitmapCache
     ''' and a generator Func that creates the Bitmap when missing. The cache size is bounded to avoid memory growth.
     ''' The returned Bitmap is a clone; ownership/disposal rules: caller may dispose the returned image.
     ''' </summary>
-    Public Function GetOrCreateTempBitmap(key As String, generator As Func(Of Bitmap)) As Bitmap
+    Friend Function GetOrCreateTempBitmap(key As String, generator As Func(Of Bitmap)) As Bitmap
         If String.IsNullOrEmpty(value:=key) Then
             Throw New ArgumentNullException(paramName:=NameOf(key))
         End If
@@ -383,6 +410,58 @@ Public Module BitmapCache
             Return CType(created.Clone(), Bitmap)
         End SyncLock
     End Function
+
+    ''' <summary>
+    ''' Return a new drawable 32bpp ARGB bitmap based on the provided source.
+    ''' The returned bitmap is always a new instance and the source is not disposed.
+    ''' </summary>
+    Friend Function ToDrawableBitmap(src As Bitmap) As Bitmap
+        If src Is Nothing Then
+            Return Nothing
+        End If
+
+        Try
+            If src.PixelFormat = Imaging.PixelFormat.Format32bppArgb Then
+                Return CType(src.Clone(), Bitmap)
+            End If
+
+            Dim bmp As New Bitmap(src.Width,
+                                  src.Height,
+                                  format:=Imaging.PixelFormat.Format32bppArgb)
+            Using g As Graphics = Graphics.FromImage(bmp)
+                g.Clear(color:=Color.Transparent)
+                g.DrawImage(image:=src,
+                            x:=0,
+                            y:=0,
+                            src.Width,
+                            src.Height)
+            End Using
+            Return bmp
+        Catch
+            ' Fallback: attempt a simple clone to avoid returning the original.
+            Try
+                Return CType(src.Clone(), Bitmap)
+            Catch
+                Return Nothing
+            End Try
+        End Try
+    End Function
+
+    ''' <summary>
+    '''  Cleans up all Bitmaps from memory.
+    ''' </summary>
+    Public Sub CleanUp()
+        ' Allow charting/plotting helpers to dispose their module-level caches first.
+        Try
+            PlotMarkers.CleanUpMarkers()
+        Catch
+        End Try
+
+        For Each kvp As KeyValuePair(Of String, Bitmap) In s_bitmaps
+            kvp.Value?.Dispose()
+        Next
+        s_bitmaps.Clear()
+    End Sub
 
     ''' <summary>
     '''  Loads all PNG files as Bitmaps into memory.

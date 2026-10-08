@@ -8,39 +8,41 @@ Friend Module ImageHelper
     '''  Builds a cache key for image composites.
     ''' </summary>
     ''' <param name="imageId">The image ID.</param>
-    ''' <param name="targetSize">The target size.</param>
+    ''' <param name="canvasSize">The target size.</param>
     ''' <param name="currentPercent">The current percentage.</param>
     ''' <returns>The cache key.</returns>
     ''' <param name="brushColor"></param>
     Private Function BuildImageKey(imageId As ImageEnum,
-                                   targetSize As Size,
+                                   canvasSize As Size,
                                    currentPercent As Single,
                                    fillColor As Color) As String
         Dim key As String =
             String.Format(format:="{0}_{1}_{2}_{3}_{4}",
-                          imageId.Description, currentPercent, targetSize.Width, targetSize.Height, fillColor.Name)
+                          imageId.Description, currentPercent, canvasSize.Width, canvasSize.Height, fillColor.Name)
         Return key
     End Function
 
     Public Function GetOrCreateComposite(imageId As ImageEnum,
-                                         targetSize As Size,
+                                         canvasSize As Size,
                                          currentPercent As Single,
                                          fillColor As Color) As Bitmap
 
         Dim key As String = BuildImageKey(imageId,
-                                          targetSize,
+                                          canvasSize,
                                           currentPercent,
                                           fillColor)
 
         Dim generator As Func(Of Bitmap) =
             Function()
-                Dim baseBmp As Bitmap = GetBitmapFromCache(imageId)
+                Dim baseBmp As Bitmap =
+                    GetBitmapFromCache(imageId, canvasSize)
+
                 If baseBmp Is Nothing Then
                     Return Nothing
                 End If
                 Dim composed As Bitmap =
                     CreateImageComposite(baseBmp,
-                                         targetSize,
+                                         canvasSize,
                                          currentPercent,
                                          fillColor)
                 baseBmp.Dispose()

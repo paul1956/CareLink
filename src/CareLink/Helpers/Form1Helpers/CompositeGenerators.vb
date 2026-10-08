@@ -68,7 +68,7 @@ Public Module CompositeGenerators
     ''' <param name="baseBmp">
     '''  The base bitmap containing the transparent area.
     ''' </param>
-    ''' <param name="targetSize">The size of the output bitmap.</param>
+    ''' <param name="canvasSize">The size of the output bitmap.</param>
     ''' <param name="currentPercent">
     '''  The percentage of the resource available.
     ''' </param>
@@ -80,7 +80,7 @@ Public Module CompositeGenerators
     ''' </param>
     ''' <returns>The created image composite bitmap.</returns>
     Public Function CreateImageComposite(baseBmp As Bitmap,
-                                         targetSize As Size,
+                                         canvasSize As Size,
                                          currentPercent As Single,
                                          fillColor As Color) As Bitmap
         If baseBmp Is Nothing Then
@@ -88,17 +88,17 @@ Public Module CompositeGenerators
         End If
         Dim paintRect As Rectangle = FindTransparentBounds(bmp:=baseBmp)
 
-        Dim outBmp As New Bitmap(targetSize.Width,
-                                 targetSize.Height,
+        Dim outBmp As New Bitmap(canvasSize.Width,
+                                 canvasSize.Height,
                                  format:=Imaging.PixelFormat.Format32bppArgb)
 
         Using g As Graphics = Graphics.FromImage(outBmp)
             g.SmoothingMode = SmoothingMode.AntiAlias
             g.Clear(color:=Color.Transparent)
 
-            ' Scale paintRect from baseBmp coordinates to targetSize
-            Dim scaleX As Single = targetSize.Width / CSng(baseBmp.Width)
-            Dim scaleY As Single = targetSize.Height / CSng(baseBmp.Height)
+            ' Scale paintRect from baseBmp coordinates to canvasSize
+            Dim scaleX As Single = canvasSize.Width / CSng(baseBmp.Width)
+            Dim scaleY As Single = canvasSize.Height / CSng(baseBmp.Height)
 
             Dim scaledRect As New RectangleF(x:=paintRect.X * scaleX,
                                              y:=paintRect.Y * scaleY,
@@ -124,8 +124,8 @@ Public Module CompositeGenerators
             g.DrawImage(image:=baseBmp,
                         x:=0,
                         y:=0,
-                        targetSize.Width,
-                        targetSize.Height)
+                        canvasSize.Width,
+                        canvasSize.Height)
         End Using
 
         Return outBmp

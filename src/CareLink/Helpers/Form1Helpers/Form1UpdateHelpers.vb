@@ -1137,14 +1137,14 @@ Friend Module Form1UpdateHelpers
     ''' <param name="emptyImageId">
     '''  The image ID to use when the infusion set is empty.
     ''' </param>
-    ''' <param name="targetSize">The target size.</param>
+    ''' <param name="canvasSize">The target size.</param>
     ''' <param name="infusionRemainingDuration">
     '''  The infusion remaining duration in minutes.
     ''' </param>
     ''' <returns>The composite bitmap.</returns>
     Public Function GetOrCreateInfusionComposite(imageId As ImageEnum,
                                                  emptyImageId As ImageEnum,
-                                                 targetSize As Size,
+                                                 canvasSize As Size,
                                                  infusionRemainingDuration As Integer) As Bitmap
         Dim hours As Integer = infusionRemainingDuration \ 60
         Dim remainingMinutes As Integer = infusionRemainingDuration Mod 60
@@ -1157,26 +1157,33 @@ Friend Module Form1UpdateHelpers
             currentPercent = 100.0F
             fillColor = Color.Lime
         ElseIf hours > 12 Then
-            currentPercent = CSng(Math.Round(value:=(hours - 12) * 25.0F,
+            ' Map hours in range 13..24 to percentage 0..100 over a 12-hour window
+            currentPercent = CSng(Math.Round(value:=(hours - 12) / 12.0F * 100.0F,
                                              digits:=0,
                                              mode))
             fillColor = Color.Yellow
         ElseIf hours > 0 Then
-            currentPercent = CSng(Math.Round(value:=hours / 12.0 * 25.0,
+            ' Map hours in range 1..12 to percentage 0..100 over a 12-hour window
+            currentPercent = CSng(Math.Round(value:=hours / 12.0F * 100.0F,
                                              digits:=0,
                                              mode))
             fillColor = Color.Red
         ElseIf remainingMinutes > 0 Then
-            currentPercent = CSng(Math.Round(value:=remainingMinutes / 6.0,
+            ' Map remainingMinutes in the range 1..59 to currentPercent 0..100 (linear)
+            ' remainingMinutes = 59 -> currentPercent = 100
+            ' remainingMinutes = 1  -> currentPercent = 0
+            Dim clampedMinutes As Integer = Math.Max(1, Math.Min(59, remainingMinutes))
+            currentPercent = CSng(Math.Round(value:=(clampedMinutes - 1) * (100.0F / 58.0F),
                                              digits:=0,
                                              mode))
             fillColor = Color.IndianRed
         Else
-            Return GetBitmapFromCache(imageId:=emptyImageId)
+            Return GetBitmapFromCache(imageId:=emptyImageId,
+                                      canvasSize)
         End If
 
         Return GetOrCreateComposite(imageId,
-                                    targetSize,
+                                    canvasSize,
                                     currentPercent,
                                     fillColor)
     End Function
@@ -1187,32 +1194,40 @@ Friend Module Form1UpdateHelpers
     '''  transparent paint rectangle from the base image to the target size.
     ''' </summary>
     ''' <param name="imageId">The image ID.</param>
-    ''' <param name="targetSize">The target size.</param>
+    ''' <param name="canvasSize">The canvas size.</param>
     ''' <param name="pumpBatteryLevelMinutes">
     '''  The pump battery level in minutes.
     ''' </param>
     ''' <returns>The composite bitmap.</returns>
     Public Function GetOrCreatePumpBatteryComposite(imageId As ImageEnum,
-                                                    targetSize As Size,
+                                                    canvasSize As Size,
                                                     pumpBatteryLevelMinutes As Integer) As Bitmap
         Dim hours As Integer = pumpBatteryLevelMinutes \ 60
         Dim remainingMinutes As Integer = pumpBatteryLevelMinutes Mod 60
 
         Dim currentPercent As Single
         Dim fillColor As Color
-        If hours > 10 Then
-            currentPercent = 100.0F
+
+        ' Linear mapping of pumpBatteryLevelMinutes (0 .. maxMinutes) to 0..100 percentage
+        Const maxHours As Integer = 11 ' cap at 11 hours -> treat >=11h as full
+        Const mode As MidpointRounding = MidpointRounding.AwayFromZero
+        Dim maxMinutes As Integer = maxHours * 60
+        Dim clampedMinutes As Integer = Math.Max(0, Math.Min(maxMinutes, pumpBatteryLevelMinutes))
+        currentPercent = CSng(Math.Round(value:=clampedMinutes / CSng(maxMinutes) * 100.0F,
+                                         digits:=0,
+                                         mode))
+
+        ' Color only changes by ranges (green/yellow/red)
+        If currentPercent >= 66.0F Then
             fillColor = Color.Lime
-        ElseIf hours > 1 Then
-            currentPercent = hours * 5.0F
+        ElseIf currentPercent >= 33.0F Then
             fillColor = Color.Yellow
         Else
-            currentPercent = remainingMinutes * 0.167F
             fillColor = Color.Red
         End If
 
         Return GetOrCreateComposite(imageId,
-                                    targetSize,
+                                    canvasSize,
                                     currentPercent,
                                     fillColor)
     End Function

@@ -565,7 +565,7 @@ Partial Class Form1
         CursorMarkerPictureBox.BackColor = Color.Transparent
         CursorMarkerPictureBox.Location = New Point(350, 3)
         CursorMarkerPictureBox.Name = "CursorMarkerPictureBox"
-        CursorMarkerPictureBox.Size = New Size(24, 24)
+        CursorMarkerPictureBox.Size = New Size(48, 48)
         CursorMarkerPictureBox.TabIndex = 75
         CursorMarkerPictureBox.TabStop = False
         CursorMarkerPictureBox.Visible = False
@@ -883,8 +883,8 @@ Partial Class Form1
         InfustionSetPictureBox.InitialImage = Nothing
         InfustionSetPictureBox.Location = New Point(350, 3)
         InfustionSetPictureBox.Name = "InfustionSetPictureBox"
-        InfustionSetPictureBox.Size = New Size(46, 53)
-        InfustionSetPictureBox.SizeMode = PictureBoxSizeMode.AutoSize
+        InfustionSetPictureBox.Size = New Size(47, 53)
+        InfustionSetPictureBox.SizeMode = PictureBoxSizeMode.Normal
         InfustionSetPictureBox.TabIndex = 42
         InfustionSetPictureBox.TabStop = False
         ' 
