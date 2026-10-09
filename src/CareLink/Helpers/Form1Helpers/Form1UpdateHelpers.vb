@@ -154,7 +154,10 @@ Friend Module Form1UpdateHelpers
 
         ' Build list first
         For index As Integer = 0 To json.Count - 1
-            sGs.Add(item:=New SG(json:=json(index), index))
+            Dim item As New SG(json:=json(index), index)
+            If index > 0 OrElse Not Single.IsNaN(item.Sg) Then
+                sGs.Add(item)
+            End If
         Next
 
         ' Do NOT sort by Timestamp directly because New Date (default) is the minimum

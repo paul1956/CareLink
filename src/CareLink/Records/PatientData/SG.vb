@@ -26,8 +26,6 @@ Public Class SG
                 Me.TimestampAsString = json(key:=NameOf(Me.Timestamp))
                 Dim value As String = "False"
                 Me.TimeChange = json.TryGetValue(key:=NameOf(TimeChange), value) AndAlso Boolean.Parse(value)
-            Else
-                Me.Sg = 0
             End If
             Dim isBackfillString As String = Nothing
             Me.IsBackfill = json.TryGetValue(key:=NameOf(IsBackfill), value:=isBackfillString) AndAlso CBool(isBackfillString)
@@ -118,8 +116,13 @@ Public Class SG
     <JsonPropertyName("timeChange")>
     Public Property TimeChange As Boolean
 
+    <DisplayName("Is Backfill")>
+    <Column(Order:=10, TypeName:=NameOf([Boolean]))>
+    <JsonPropertyName("isBackfill")>
+    Public Property IsBackfill As Boolean
+
     <DisplayName("Sensor State")>
-    <Column(Order:=10, TypeName:=NameOf([String]))>
+    <Column(Order:=11, TypeName:=NameOf([String]))>
     <JsonPropertyName("sensorState")>
     Public Property SensorState As String
         Get
@@ -129,11 +132,6 @@ Public Class SG
             _sensorState = If(Value, EmptyString)
         End Set
     End Property
-
-    <DisplayName("Is Backfill")>
-    <Column(Order:=11, TypeName:=NameOf([Boolean]))>
-    <JsonPropertyName("isBackfill")>
-    Public Property IsBackfill As Boolean
 
     <DisplayName("Sensor Message")>
     <Column(Order:=12, TypeName:=NameOf([String]))>

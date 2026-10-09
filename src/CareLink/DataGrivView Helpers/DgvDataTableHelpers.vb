@@ -38,6 +38,19 @@ Friend Module DgvDataTableHelpers
             Return input ' Return as-is if empty or null
         End If
 
+        ' Normalize non-breaking spaces to normal spaces so splitting and
+        ' prefix/matching logic treat them identically and remain idempotent.
+        If input.IndexOf(value:=NonBreakingSpace) >= 0 Then
+            input = input.Replace(oldValue:=NonBreakingSpace, newValue:=" "c)
+        End If
+
+        ' If the header already contains line breaks (from a previous pass),
+        ' normalize them to spaces so this function is idempotent and will not
+        ' insert additional line breaks on subsequent calls.
+        If input.Contains(value:=vbCrLf) OrElse input.Contains(value:=vbLf) OrElse input.Contains(value:=vbCr) Then
+            input = input.Replace(oldValue:=vbCrLf, newValue:=" ").Replace(oldValue:=vbLf, newValue:=" ").Replace(oldValue:=vbCr, newValue:=" ")
+        End If
+
         ' Normalize spaces
         Dim words() As String = input.Split(Separator, Options)
         If words.Length = 1 Then
@@ -103,6 +116,11 @@ Friend Module DgvDataTableHelpers
                 If displayNameAttr IsNot Nothing Then
                     Dim result As String = String.Empty
                     Dim input As String = displayNameAttr.DisplayName
+                    ' Preserve non-breaking-space rendering only for DgvSGs where required.
+                    If dgv IsNot Nothing AndAlso dgv.Name = NameOf(Form1.DgvSGs) AndAlso
+                       (input.Contains(value:="From Pump") OrElse input.Contains(value:="As Date")) Then
+                        input = input.Replace(oldValue:=" "c, newValue:=NonBreakingSpace)
+                    End If
                     col.HeaderText = SplitHeader(input)
                 End If
             End If
@@ -121,43 +139,6 @@ Friend Module DgvDataTableHelpers
             End If
         Next
     End Sub
-
-    'Private Sub WrapColumnHeaderTextOneWordPerLine(dgv As DataGridView)
-    '    If dgv Is Nothing OrElse dgv.Columns Is Nothing OrElse dgv.Columns.Count = 0 Then
-    '        Return
-    '    End If
-    '    dgv.ColumnHeadersDefaultCellStyle.WrapMode =
-    '        DataGridViewTriState.True
-    '    Dim headerFont As Font =
-    '        If(dgv.ColumnHeadersDefaultCellStyle.Font, dgv.Font)
-
-    '    Dim maxWords As Integer = 1
-    '    For Each col As DataGridViewColumn In dgv.Columns
-    '        Dim text As String = If(col.HeaderText, String.Empty)
-    '        text = text.Replace(oldValue:=vbCrLf, newValue:=" ").
-    '                    Replace(oldValue:=vbLf, newValue:=" ").
-    '                    Replace(oldValue:=vbCr, newValue:=" ")
-    '        Dim words As String() =
-    '            text.Split(Separator, Options)
-    '        If words.Length = 0 Then
-    '            Continue For
-    '        End If
-    '        If words.Length > 1 Then
-    '            col.HeaderText =
-    '                String.Join(separator:=Environment.NewLine,
-    '                            value:=words)
-    '        End If
-    '        If words.Length > maxWords Then
-    '            maxWords = words.Length
-    '        End If
-    '    Next
-
-    '    dgv.ColumnHeadersHeightSizeMode =
-    '        DataGridViewColumnHeadersHeightSizeMode.EnableResizing
-    '    Dim padding As Integer = 6
-    '    dgv.ColumnHeadersHeight =
-    '        ((headerFont.Height + 2) * maxWords) + padding
-    'End Sub
 
     ''' <summary>
     '''  Displays a <see cref="DataTable"/> in a <see cref="DataGridView"/> within

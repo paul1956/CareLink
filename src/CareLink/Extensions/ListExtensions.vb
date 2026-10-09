@@ -25,8 +25,12 @@ Public Module ListExtensions
                                       headerText As String,
                                       ByRef result As String) As Boolean
 
+        ' Normalize non-breaking spaces for matching so NBSP and normal spaces
+        ' are treated equivalently when checking prefixes.
+        Dim headerNormalized As String = If(headerText Is Nothing, headerText, headerText.Replace(oldValue:=NonBreakingSpace, newValue:=" "c))
         For Each value As String In list
-            If headerText.StartsWithNoCase(value) Then
+            Dim valueNormalized As String = If(value Is Nothing, value, value.Replace(oldValue:=NonBreakingSpace, newValue:=" "c))
+            If headerNormalized.StartsWithNoCase(valueNormalized) Then
                 result = value
                 Return True
             End If

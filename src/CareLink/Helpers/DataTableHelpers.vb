@@ -103,12 +103,10 @@ Friend Module DataTableHelpers
         If displayNameAttribute Is Nothing Then
             Return prop.Name
         Else
-            ' Non-breaking space for better display
-            Dim displayName As String = displayNameAttribute.DisplayName
-            If displayName.Contains(value:="From Pump") OrElse displayName.Contains(value:="As Date") Then
-                displayName = displayName.Replace(oldValue:=" ", newValue:=NonBreakingSpace)
-            End If
-            Return displayName
+            ' Return the attribute text unchanged here. UI-layer code will
+            ' handle any non-breaking-space rendering so the data model (DataColumn.Caption)
+            ' remains consistent across consumers.
+            Return displayNameAttribute.DisplayName
         End If
     End Function
 

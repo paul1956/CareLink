@@ -348,9 +348,21 @@ Public Class Form1
                             End If
                             Dim result As String = String.Empty
                             If s_wrappedStrings.TryGetPrefixMatch(.HeaderText, result) Then
+                                ' Perform an idempotent, start-of-string replacement instead of
+                                ' using String.Replace which may modify multiple occurrences
+                                ' and produce repeated insertions on subsequent refreshes.
                                 Dim trimChars As Char() = {" "c, NonBreakingSpace}
-                                Dim newValue As String = $"{result.TrimEnd(trimChars)}{vbCrLf}"
-                                .HeaderText = .HeaderText.Replace(oldValue:=result, newValue)
+                                Dim prefix As String = result.TrimEnd(trimChars)
+
+                                ' Only adjust the header if it literally starts with the matched
+                                ' result (preserves existing wrapped headers and avoids repeated
+                                ' replacements). Trim any leading spaces from the remainder.
+                                If .HeaderText.StartsWith(value:=result, comparisonType:=StringComparison.OrdinalIgnoreCase) Then
+                                    Dim rest As String = .HeaderText.Substring(startIndex:=result.Length)
+                                    rest = rest.TrimStart(trimChars)
+                                    .HeaderText = $"{prefix}{vbCrLf}{rest}"
+                                End If
+
                                 .HeaderCell.Style.WrapMode = DataGridViewTriState.True
                                 .DefaultCellStyle.WrapMode = DataGridViewTriState.True
                             Else
@@ -2906,7 +2918,7 @@ Public Class Form1
 
                 Case NameOf(SG.SensorState)
                     If Equals(e.Value, "NO_ERROR_MESSAGE") Then
-                        dgv.CellFormattingToTitle(e)
+                        dgv.CellFormattingDefault(e)
                     Else
                         dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
                         dgv.CellFormattingToTitle(e)
@@ -3072,8 +3084,14 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
-        dgv.Columns(index:=lastColumnIndex).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        dgv.Columns(index:=lastColumnIndex).DefaultCellStyle.WrapMode = DataGridViewTriState.True
+        If dgv.ColumnCount > 1 Then
+            For index As Integer = 0 To lastColumnIndex - 1
+                dgv.Columns(index).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            Next
+            dgv.Columns(index:=lastColumnIndex).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            dgv.Columns(index:=lastColumnIndex).DefaultCellStyle.WrapMode = DataGridViewTriState.True
+        End If
+
         dgv.Columns(index:=0).HeaderCell.SortGlyphDirection =
             If(dgv.RowCount > 0,
                If(EqualsNoCase(a:=dgv.Rows(index:=0).Cells(index:=0).Value.ToString(), b:="1"),
