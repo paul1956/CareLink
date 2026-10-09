@@ -153,10 +153,12 @@ Friend Module Form1UpdateHelpers
         Dim yesterday As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - Eleven55Span
 
         ' Build list first
+        Dim count As Integer = 0
         For index As Integer = 0 To json.Count - 1
-            Dim item As New SG(json:=json(index), index)
-            If index > 0 OrElse Not Single.IsNaN(item.Sg) Then
+            Dim item As New SG(json:=json(index), index:=count)
+            If index > 0 OrElse item.Sg.IsSgValid Then
                 sGs.Add(item)
+                count += 1
             End If
         Next
 
