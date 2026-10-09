@@ -428,7 +428,7 @@ Public Module JsonExtensions
 
         For Each e As IndexClass(Of Dictionary(Of String, JsonElement)) In jsonList.WithIndex
             Dim item As New Dictionary(Of String, String)(Comparer)
-            Dim defaultTime As Date = PumpNow() - Eleven55Span
+            Dim defaultTime As Date = PumpNow() - Eleven55PmSpan
             Dim index As Integer = -1
             For Each e1 As IndexClass(Of KeyValuePair(Of String, JsonElement)) In e.Value.WithIndex
                 If e1.Value.Value.ValueKind = JsonValueKind.Null Then

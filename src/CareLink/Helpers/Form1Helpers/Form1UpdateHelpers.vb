@@ -150,7 +150,7 @@ Friend Module Form1UpdateHelpers
     <Extension>
     Private Function ToSgList(json As List(Of Dictionary(Of String, String))) As List(Of SG)
         Dim sGs As New List(Of SG)
-        Dim yesterday As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - Eleven55Span
+        Dim yesterday As Date = PatientData.LastConduitUpdateServerDateTime.Epoch2PumpDateTime - Eleven55PmSpan
 
         ' Build list first
         Dim count As Integer = 0
