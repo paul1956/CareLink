@@ -952,9 +952,9 @@ Public Class Form1
                 If PatientData IsNot Nothing AndAlso PatientData.InfusionRemainingDuration >= 0 Then
                     infusionRemainingDuration = PatientData.InfusionRemainingDuration
                     image = GetOrCreateInfusionComposite(imageId:=ImageEnum.InfusionLifeMaster,
-                                                        emptyImageId:=ImageEnum.InfusionLifeExpired,
-                                                        canvasSize,
-                                                        infusionRemainingDuration)
+                                                         emptyImageId:=ImageEnum.InfusionLifeExpired,
+                                                         canvasSize,
+                                                         infusionRemainingDuration)
                 Else
                     image = GetBitmapFromCache(imageId:=ImageEnum.InfusionLifeUnknown,
                                                canvasSize)

@@ -1160,7 +1160,7 @@ Friend Module Form1UpdateHelpers
             currentPercent = CSng(Math.Round(value:=(hours - 12) / 12.0F * 100.0F,
                                              digits:=0,
                                              mode))
-            fillColor = Color.Yellow
+            fillColor = Color.Goldenrod
         ElseIf hours > 0 Then
             ' Map hours in range 1..12 to percentage 0..100 over a 12-hour window
             currentPercent = CSng(Math.Round(value:=hours / 12.0F * 100.0F,
