@@ -11,8 +11,8 @@ Friend Module ObjectExtensions
     ' Helper method to convert object to Dictionary(Of String, String)
     <Extension>
     Public Function InstanceToDictionary(Of T)(instance As T, Optional prefix As String = "") As Dictionary(Of String, String)
-        Dim result As New Dictionary(Of String, String)()
-        Dim second As New Dictionary(Of String, String)
+        Dim result As New Dictionary(Of String, String)(Comparer)
+        Dim second As New Dictionary(Of String, String)(Comparer)
         Try
             Dim elementSelector As Func(Of KeyValuePair(Of String, String), String) =
                 Function(v As KeyValuePair(Of String, String))

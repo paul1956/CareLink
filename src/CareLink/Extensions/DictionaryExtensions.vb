@@ -8,6 +8,13 @@ Imports System.Text
 
 Public Module DictionaryExtensions
 
+    Private Function IsCaseInsensitiveComparer(comparer As IEqualityComparer(Of String)) As Boolean
+        Return comparer IsNot Nothing AndAlso
+            (Object.Equals(comparer, StringComparer.OrdinalIgnoreCase) OrElse
+             Object.Equals(comparer, StringComparer.InvariantCultureIgnoreCase) OrElse
+             Object.Equals(comparer, StringComparer.CurrentCultureIgnoreCase))
+    End Function
+
     ''' <summary>
     '''  Sets a <see cref="Date"/> property on an object by assigning the
     '''   string value to a corresponding property with an "AsString" suffix.
@@ -91,7 +98,16 @@ Public Module DictionaryExtensions
     ''' </returns>
     <Extension>
     Public Function Clone(Of T)(dictionary As Dictionary(Of String, T)) As Dictionary(Of String, T)
-        Return New Dictionary(Of String, T)(dictionary)
+        ArgumentNullException.ThrowIfNull(argument:=dictionary)
+
+        ' Preserve a case-insensitive comparer if the source dictionary is case-insensitive;
+        ' otherwise create a case-insensitive clone using OrdinalIgnoreCase.
+        Dim comparer As IEqualityComparer(Of String) = dictionary.Comparer
+        If Not IsCaseInsensitiveComparer(dictionary.Comparer) Then
+            comparer = dictionary.Comparer
+        End If
+
+        Return New Dictionary(Of String, T)(dictionary, dictionary.Comparer)
     End Function
 
     ''' <summary>

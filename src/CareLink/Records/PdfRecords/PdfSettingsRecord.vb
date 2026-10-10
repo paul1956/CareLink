@@ -67,7 +67,7 @@ Public Class PdfSettingsRecord
 
     Public Property Notes As New NotesRecord
 
-    Public Property PresetBolus As New Dictionary(Of String, PresetBolusRecord) From {
+    Public Property PresetBolus As New Dictionary(Of String, PresetBolusRecord)(Comparer) From {
                 {"Bolus 1", New PresetBolusRecord},
                 {"Breakfast", New PresetBolusRecord},
                 {"Dinner", New PresetBolusRecord},
@@ -77,7 +77,7 @@ Public Class PdfSettingsRecord
                 {"Bolus 3", New PresetBolusRecord},
                 {"Bolus 4", New PresetBolusRecord}}
 
-    Public Property PresetTemp As New Dictionary(Of String, PresetTempRecord) From {
+    Public Property PresetTemp As New Dictionary(Of String, PresetTempRecord)(Comparer) From {
                 {"High Activity", New PresetTempRecord},
                 {"Moderate Activity", New PresetTempRecord},
                 {"Low Activity", New PresetTempRecord},

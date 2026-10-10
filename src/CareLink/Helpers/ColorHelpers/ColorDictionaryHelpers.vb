@@ -6,7 +6,7 @@ Imports System.IO
 
 Friend Module ColorDictionaryHelpers
 
-    Friend Property GraphColorDictionary As New Dictionary(Of String, KnownColor) From {
+    Friend Property GraphColorDictionary As New Dictionary(Of String, KnownColor)(Comparer) From {
         {"Active Insulin", KnownColor.Lime},
         {"Auto Correction", KnownColor.Aqua},
         {"Basal Series", KnownColor.HotPink},

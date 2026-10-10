@@ -76,7 +76,7 @@ Friend Class Client2
     ''' </summary>
     Private Shared Function BuildHeaders(token_data As JsonElement) As Dictionary(Of String, String)
 
-        Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
+        Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers, Comparer)
         Dim access As String = Nothing
         If TryGetStringProperty(element:=token_data,
                                 propertyName:="access_token",
@@ -149,7 +149,8 @@ Friend Class Client2
         _httpClient.SetDefaultRequestHeaders()
         Dim requestUri As String = $"{Me.Config.BaseUrlCumulus}/display/message"
         Dim tokenData As Dictionary(Of String, String) = Me.TokenDataElement.ToStringDictionary()
-        Dim value As New Dictionary(Of String, String) From {{"username", username}}
+        Dim value As New Dictionary(Of String, String)(Comparer) From
+                {{"username", username}}
         If role.ContainsNoCase(value:="Partner") Then
             value(key:="role") = "carePartner".ToLower()
             value(key:="patientId") = patientId
@@ -158,7 +159,7 @@ Friend Class Client2
         End If
         value(key:="appVersion") = "3.6.0"
 
-        Dim headers As New Dictionary(Of String, String)
+        Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers, Comparer)
         headers(key:="Authorization") =
             $"Bearer {tokenData(key:="access_token")}"
 
@@ -333,7 +334,7 @@ Friend Class Client2
                                               tokenData As JsonElement) As Task(Of String)
         Dim requestUri As String =
             $"{config.BaseUrlCareLink}/users/me"
-        Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers)
+        Dim headers As New Dictionary(Of String, String)(dictionary:=s_common_Headers, Comparer)
 
         Dim accessToken As String = Nothing
         If TryGetStringProperty(element:=tokenData,
@@ -436,7 +437,7 @@ Friend Class Client2
             Try
                 tmpDict = json.FromJson(Of Dictionary(Of String, JsonElement))()
             Catch ex As Exception
-                tmpDict = New Dictionary(Of String, JsonElement)()
+                tmpDict = New Dictionary(Of String, JsonElement)(Comparer)
             End Try
             Me.UserElementDictionary = tmpDict
 

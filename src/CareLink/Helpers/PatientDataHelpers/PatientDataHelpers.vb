@@ -4,7 +4,7 @@
 
 Public Module PatientDataHelpers
 
-    Private ReadOnly s_keyDictionary As New Dictionary(Of String, String) From {
+    Private ReadOnly s_keyDictionary As New Dictionary(Of String, String)(Comparer) From {
         {$"{Quote}{NameOf(ServerDataEnum.firstName)}{Quote}: ", $"{Quote}First{Quote}"},
         {$"{Quote}{NameOf(ServerDataEnum.lastName)}{Quote}: ", $"{Quote}Last{Quote}"},
         {$"{Quote}{NameOf(ServerDataEnum.conduitSerialNumber)}{Quote}: ", $"{Quote}{New Guid()}{Quote}"},

@@ -446,7 +446,7 @@ Friend Module DgvCellStyleHelpers
         Dim value As Dictionary(Of String, DataGridViewCellStyle) = Nothing
 
         If Not s_alignmentTable.TryGetValue(key, value) Then
-            value = New Dictionary(Of String, DataGridViewCellStyle)()
+            value = New Dictionary(Of String, DataGridViewCellStyle)(Comparer)
             s_alignmentTable.Add(key, value)
         End If
         Return ClassPropertiesToColumnAlignment(Of T)(alignmentTable:=value, name)

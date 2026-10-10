@@ -21,7 +21,7 @@ Public Class RemindersRecord
     Public Property LowReservoirWarning As String
     Public Property LowSensorLife As SensorRecord
 
-    Public Property MissedMealBolus As New Dictionary(Of String, MealStartEndRecord) From {
+    Public Property MissedMealBolus As New Dictionary(Of String, MealStartEndRecord)(Comparer) From {
         {"Meal 1", New MealStartEndRecord()},
         {"Meal 2", New MealStartEndRecord()},
         {"Meal 3", New MealStartEndRecord()},
@@ -31,7 +31,7 @@ Public Class RemindersRecord
         {"Meal 7", New MealStartEndRecord()},
         {"Meal 8", New MealStartEndRecord()}}
 
-    Public Property PersonalReminders As New Dictionary(Of String, PersonalRemindersRecord) _
+    Public Property PersonalReminders As New Dictionary(Of String, PersonalRemindersRecord)(Comparer) _
         From {
             {"Reminder 1", New PersonalRemindersRecord()},
             {"Reminder 2", New PersonalRemindersRecord()},

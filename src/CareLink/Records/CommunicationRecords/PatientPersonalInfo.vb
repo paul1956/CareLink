@@ -7,7 +7,7 @@ Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.Text.Json.Serialization
 
 Public Class PatientPersonalInfo
-    Private ReadOnly _profileDictionary As New Dictionary(Of String, String)
+    Private ReadOnly _profileDictionary As New Dictionary(Of String, String)(Comparer)
     Private _hasValue As Boolean
 
     Public Sub New()

@@ -162,7 +162,7 @@ Public Module PDFParserUtilities
     ''' </returns>
     Public Function GetTableList(fileName As String) As Dictionary(Of String, PdfTable)
 
-        Dim results As New Dictionary(Of String, PdfTable)
+        Dim results As New Dictionary(Of String, PdfTable)(Comparer)
         If Not File.Exists(path:=fileName) Then
             Return results
         End If

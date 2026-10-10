@@ -17,7 +17,7 @@ Public Module RegionCountryLists
     '''  The regions are defined as per the ISO 3166-1 standard,
     '''  grouping countries into continents or major geographic areas.
     ''' </remarks>
-    Public ReadOnly s_countryNameToRegionList As New Dictionary(Of String, String) From {
+    Public ReadOnly s_countryNameToRegionList As New Dictionary(Of String, String)(Comparer) From {
         {"United States", "United States"},
         {"Albania", "Europe"},
         {"Algeria", "Africa"},
@@ -255,7 +255,7 @@ Public Module RegionCountryLists
     ''' <summary>
     '''  A dictionary mapping country names to their ISO 2-letter country codes.
     ''' </summary>
-    Public ReadOnly s_countryToCodeList As New Dictionary(Of String, String) From {
+    Public ReadOnly s_countryToCodeList As New Dictionary(Of String, String)(Comparer) From {
         {"Albania", "AL"},
         {"Algeria", "DZ"},
         {"Andorra", "AD"},
@@ -400,7 +400,7 @@ Public Module RegionCountryLists
         {"South America"},
         {"Transcontinental"}}
 
-    Public ReadOnly s_regionToServerMapping As New Dictionary(Of String, String) From {
+    Public ReadOnly s_regionToServerMapping As New Dictionary(Of String, String)(Comparer) From {
         {"United States", "US"},
         {"Clinical", "CLINICAL"},
         {"Antarctica", "EU"},

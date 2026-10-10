@@ -28,7 +28,7 @@ Public Class InitializeDialog
     Public Property CurrentUser As CurrentUserRecord
 
     Private Shared Sub InitializeComboList(comboBoxCell As DataGridViewComboBoxCell, start As Integer)
-        Dim data As New Dictionary(Of String, TimeOnly)
+        Dim data As New Dictionary(Of String, TimeOnly)(Comparer)
         For i As Integer = start To 47
             Dim value As New TimeOnly(hour:=i \ 2, minute:=(i Mod 2) * 30)
             data.Add(key:=value.ToHoursMinutes, value)

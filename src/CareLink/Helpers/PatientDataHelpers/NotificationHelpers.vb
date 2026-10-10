@@ -12,7 +12,7 @@ Imports System.Globalization
 Friend Module NotificationHelpers
     Private ReadOnly s_notificationColumnsToHide As New List(Of String)
 
-    Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)
+    Private s_alignmentTable As New Dictionary(Of String, DataGridViewCellStyle)(Comparer)
 
     Friend ReadOnly s_rowsToHide As New List(Of String) From {
         NameOf(ActiveNotification.Version),
@@ -287,7 +287,7 @@ Friend Module NotificationHelpers
 
         Dim innerJson As New List(Of Dictionary(Of String, String))
         Dim classCollection As List(Of SummaryRecord)
-        Dim jsonDictionary As Dictionary(Of String, String)
+        Dim jsonDictionary As New Dictionary(Of String, String)(Comparer)
         Dim json As String = String.Empty
         With mainForm.TlpNotificationsCleared
             .SetTableName(rowIndex, isClearedNotifications:=True)

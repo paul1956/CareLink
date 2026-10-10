@@ -23,12 +23,12 @@ Public Module SystemConstants
     Friend Const TimeFormatTwelveHourWithMinutes As String = " h:mm tt"
     Friend Const TimeFormatTwelveHourWithoutMinutes As String = " h tt"
 
-    Friend ReadOnly s_calloutAnnotations As New Dictionary(Of String, CalloutAnnotation) From {
+    Friend ReadOnly s_calloutAnnotations As New Dictionary(Of String, CalloutAnnotation)(Comparer) From {
         {"SummaryChart", New CalloutAnnotation},
         {"ActiveInsulinChart", New CalloutAnnotation},
         {"TreatmentMarkersChart", New CalloutAnnotation}}
 
-    Friend ReadOnly s_common_Headers As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_common_Headers As New Dictionary(Of String, String)(Comparer) From {
         {"Accept", "application/json,text/html,application/xhtml+xml,application/" &
          "xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;deviceFamily=b3;q=0.9"},
         {"Accept-Language", "en-US,en;q=0.9"},
@@ -38,11 +38,11 @@ Public Module SystemConstants
         {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" &
          " (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/120.0.0.0"}}
 
-    Friend ReadOnly s_discoverUrl As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_discoverUrl As New Dictionary(Of String, String)(Comparer) From {
         {"EU", "https://clcloud.minimed.eu/connect/carepartner/v13/discover/android/3.6"},
         {"US", "https://clcloud.minimed.com/connect/carepartner/v13/discover/android/3.6"}}
 
-    Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationRecord) From {
+    Friend ReadOnly s_insulinTypes As New Dictionary(Of String, InsulinActivationRecord)(Comparer) From {
         {$"Humalog{RegisteredTrademark}", New InsulinActivationRecord(upCount:=8, aitHours:=4)},
         {$"Novolog{RegisteredTrademark}", New InsulinActivationRecord(upCount:=8, aitHours:=4)},
         {$"Generic (Insulin Lispro)", New InsulinActivationRecord(upCount:=9, aitHours:=4)},
@@ -54,7 +54,7 @@ Public Module SystemConstants
         "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
         "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"}
 
-    Public ReadOnly s_trends As New Dictionary(Of String, String) From {
+    Public ReadOnly s_trends As New Dictionary(Of String, String)(Comparer) From {
         {"DOWN", "↓"},
         {"DOWN_DOUBLE", "↓↓"},
         {"DOWN_TRIPLE", "↓↓↓"},
@@ -98,7 +98,7 @@ Public Module SystemConstants
 
 #Region "AIT Constants"
 
-    Public ReadOnly Property AitLengths As New Dictionary(Of String, Single) From {
+    Public ReadOnly Property AitLengths As New Dictionary(Of String, Single)(Comparer) From {
         {"2:00", 2}, {"2:15", 2.25}, {"2:30", 2.5}, {"2:45", 2.75},
         {"3:00", 3}, {"3:15", 3.25}, {"3:30", 3.5}, {"3:45", 3.75},
         {"4:00", 4}, {"4:15", 4.25}, {"4:30", 4.5}, {"4:45", 4.75},
@@ -126,22 +126,22 @@ Public Module SystemConstants
     Friend Const TirLowMmol70 As Single = 70.0
     Friend Const TirLowMmDl3_89 As Single = 3.89
 
-    Friend ReadOnly Property MgDlItems As New Dictionary(Of String, Single) From {
+    Friend ReadOnly Property MgDlItems As New Dictionary(Of String, Single)(Comparer) From {
         {$"{Target100mgDl} mg/dL", Target100mgDl},
         {$"{Target110mgDl} mg/dL", Target110mgDl},
         {$"{Target120mgDl} mg/dL", Target120mgDl}}
 
-    Friend ReadOnly Property MmolLItemsComma As New Dictionary(Of String, Single) From {
+    Friend ReadOnly Property MmolLItemsComma As New Dictionary(Of String, Single)(Comparer) From {
         {$"{Target5_6mmol.ToCommaDelimited} mmol/L", Target5_6mmol},
         {$"{Target6_1mmol.ToCommaDelimited} mmol/L", Target6_1mmol},
         {$"{Target6_7mmol.ToCommaDelimited} mmol/L", Target6_7mmol}}
 
-    Friend ReadOnly Property MmolLItemsPeriod As New Dictionary(Of String, Single) From {
+    Friend ReadOnly Property MmolLItemsPeriod As New Dictionary(Of String, Single)(Comparer) From {
         {$"{Target5_6mmol.ToPeriodDelimited} mmol/L", Target5_6mmol},
         {$"{Target6_1mmol.ToPeriodDelimited} mmol/L", Target6_1mmol},
         {$"{Target6_7mmol.ToPeriodDelimited} mmol/L", Target6_7mmol}}
 
-    Friend ReadOnly Property UnitsStrings As New Dictionary(Of String, String) From {
+    Friend ReadOnly Property UnitsStrings As New Dictionary(Of String, String)(Comparer) From {
         {"MG_DL", "mg/dL"},
         {"MGDL", "mg/dL"},
         {"MMOL_L", "mmol/L"},
