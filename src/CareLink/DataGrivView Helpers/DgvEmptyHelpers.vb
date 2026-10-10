@@ -40,7 +40,11 @@ Friend Module DgvEmptyHelpers
                 dgv.Columns.Clear()
             Catch ex As InvalidOperationException
                 ' Defer clearing columns to avoid InvalidOperationException
-                dgv.BeginInvoke(New MethodInvoker(Sub() dgv.Columns.Clear()))
+                Dim method As New MethodInvoker(
+                    Sub()
+                        dgv.Columns.Clear()
+                    End Sub)
+                dgv.BeginInvoke(method)
             End Try
         End If
         dgv.BorderStyle = BorderStyle.None
@@ -55,11 +59,27 @@ Friend Module DgvEmptyHelpers
     '''  Paints a "No records found." message on the <see cref="DataGridView"/>
     '''  if it contains no rows.
     ''' </summary>
-    ''' <param name="sender">The DataGridView being painted.</param>
-    ''' <param name="e">The <see cref="PaintEventArgs"/> for the paint event.</param>
+    ''' <param name="sender">
+    '''  The DataGridView being painted.
+    ''' </param>
+    ''' <param name="e">
+    '''  The <see cref="PaintEventArgs"/> for the paint event.
+    ''' </param>
     Friend Sub DgvNoRecordsFoundPaint(sender As Object, e As PaintEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.Rows.Count = 0 Then
+            ' Locate the owning TabPage by walking the parent chain instead of
+            ' assuming a fixed depth. This is more robust when the control
+            ' hierarchy changes (designer changes, panels, containers, etc.).
+            Dim tabPage As TabPage = Nothing
+            Dim c As Control = dgv
+            While c IsNot Nothing
+                If TypeOf c Is TabPage Then
+                    tabPage = CType(c, TabPage)
+                    Exit While
+                End If
+                c = c.Parent
+            End While
             TextRenderer.DrawText(
                 dc:=e.Graphics,
                 text:="No records found.",
@@ -68,6 +88,21 @@ Friend Module DgvEmptyHelpers
                 dgv.ForeColor,
                 backColor:=dgv.BackgroundColor,
                 flags:=TextFormatFlags.HorizontalCenter Or TextFormatFlags.VerticalCenter)
+            ' Ensure the TabPage receives a paint after the DataGridView paint
+            ' completes so any one-time tab-level Paint handlers (for example,
+            ' those that finish a previously-started cursor) run reliably.
+            If tabPage IsNot Nothing Then
+                Dim method As New MethodInvoker(
+                    Sub()
+                        If tabPage.Name = NameOf(Form1.TabPage11NotificationsCleared) Then
+                            tabPage.Invalidate()
+                        End If
+                    End Sub)
+                Try
+                    tabPage.BeginInvoke(method)
+                Catch
+                End Try
+            End If
         End If
     End Sub
 

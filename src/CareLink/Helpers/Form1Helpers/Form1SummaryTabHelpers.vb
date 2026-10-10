@@ -30,6 +30,12 @@ Friend Module Form1SummaryTabHelpers
             ListOfSummaryRecords.Sort()
         End If
         dgv.InitializeDgv()
+        ' Notify form that a binding is starting so the busy cursor
+        ' remains until DataBindingComplete handlers call BindingFinished.
+        Try
+            BindingStarted(owner:=My.Forms.Form1, dgv)
+        Catch
+        End Try
         dgv.DataSource = ClassCollectionToDataTable(classCollection)
         dgv.RowHeadersVisible = False
         If s_currentSummaryRow <> 0 Then

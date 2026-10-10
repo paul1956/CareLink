@@ -247,20 +247,6 @@ Friend Module LoginHelpers
     End Function
 
     ''' <summary>
-    '''  Completes initialization of the <paramref name="mainForm"/>
-    '''  after login and data loading.
-    ''' </summary>
-    ''' <param name="mainForm">The main application form.</param>
-    Friend Sub FinishInitialization(mainForm As Form1)
-        mainForm.Cursor = Cursors.Default
-
-        mainForm.InitializeSummaryTabCharts()
-        mainForm.InitializeActiveInsulinTabChart()
-        mainForm.InitializeTimeInRangeArea()
-        Application.DoEvents()
-    End Sub
-
-    ''' <summary>
     '''  Determines whether the network is unavailable.
     ''' </summary>
     ''' <returns>
@@ -313,9 +299,10 @@ Friend Module LoginHelpers
                     Dim timeZoneName As String = PatientData.ClientTimeZoneName
 
                     Dim timeZoneInfo As TimeZoneInfo = CalculateTimeZone(timeZoneName)
-                    Dim dst As String = If(isDaylightSavingTime,
-                                           timeZoneInfo.DaylightName,
-                                           timeZoneInfo.StandardName)
+                    Dim dst As String =
+                        If(isDaylightSavingTime,
+                           timeZoneInfo.DaylightName,
+                           timeZoneInfo.StandardName)
 
                     .Text = $"{dst} {suffixMessage}".Trim
                 End If
@@ -391,9 +378,10 @@ Friend Module LoginHelpers
                 CurrentUser = New CurrentUserRecord(userName:=GetUserName(),
                                                     useAdvancedAitDecay:=CheckState.Checked)
             End If
-            CurrentUser.CurrentTarget = If(NativeMmolL,
-                                           Target5mmol,
-                                           Target90mgDl)
+            CurrentUser.CurrentTarget =
+                If(NativeMmolL,
+                   Target5mmol,
+                   Target90mgDl)
             CurrentUser.InsulinRealAit = 3
             CurrentUser.PumpAit = 2
             CurrentUser.InsulinTypeName = $"Lyumjev{RegisteredTrademark}"
@@ -424,12 +412,13 @@ Friend Module LoginHelpers
                 If CurrentUser.InsulinRealAit = 0 Then
                     CurrentUser.InsulinRealAit = s_insulinTypes.Values(index:=0).AitHours
                 End If
-                If IsNullOrEmpty(CurrentUser.InsulinTypeName) Then
+                If IsNullOrEmpty(value:=CurrentUser.InsulinTypeName) Then
                     CurrentUser.InsulinTypeName = s_insulinTypes.Keys(index:=0)
                 End If
 
                 If File.Exists(path:=pdfFilePath) Then
-                    Dim lastWriteTime As Date = File.GetLastWriteTime(userSettingsFileFullPath)
+                    Dim lastWriteTime As Date =
+                        File.GetLastWriteTime(path:=userSettingsFileFullPath)
                     newPdfFile =
                         Not IsFileReadOnly(path:=userSettingsFileFullPath) AndAlso
                           File.GetLastWriteTime(path:=pdfFilePath) > lastWriteTime
@@ -453,8 +442,7 @@ Friend Module LoginHelpers
                     If Not newPdfFile Then
                         ' If the PDF file exists and is valid, load it without prompting
                         ' the user.
-                        Form1.Cursor = Cursors.WaitCursor
-                        Application.DoEvents()
+                        CursorStarted(owner:=My.Forms.Form1, pumpMessages:=True)
                         CurrentPdf = New PdfSettingsRecord(pdfFilePath)
                     End If
                 End If
@@ -472,56 +460,56 @@ Friend Module LoginHelpers
                 currentUserUpdateNeeded = True
             End If
 
-            Form1.Cursor = Cursors.WaitCursor
-            Application.DoEvents()
+            CursorStarted(owner:=My.Forms.Form1, pumpMessages:=True)
+            Try
+                Dim ait As Single = 2
+                Dim currentTarget As Single = 120
 
-            Dim ait As Single = 2
-            Dim currentTarget As Single = 120
+                If (Form1.Client IsNot Nothing AndAlso Not My.Settings.CareLinkPartner) OrElse newPdfFile Then
+                    CurrentPdf = New PdfSettingsRecord(pdfFilePath)
 
-            If (Form1.Client IsNot Nothing AndAlso Not My.Settings.CareLinkPartner) OrElse newPdfFile Then
-                CurrentPdf = New PdfSettingsRecord(pdfFilePath)
+                    If CurrentPdf.IsValid Then
+                        If CurrentUser.PumpAit <> CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime Then
+                            currentUserUpdateNeeded = True
+                        End If
+                        ait = CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime
+                        If CurrentUser.CurrentTarget <> CurrentPdf.SmartGuard.Target Then
+                            currentUserUpdateNeeded = True
+                        End If
+                        currentTarget = CurrentPdf.SmartGuard.Target
+                        Dim deviceCarbRatios As List(Of DeviceCarbRatioRecord) = CurrentPdf.Bolus.DeviceCarbohydrateRatios
 
-                If CurrentPdf.IsValid Then
-                    If CurrentUser.PumpAit <> CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime Then
-                        currentUserUpdateNeeded = True
+                        If Not deviceCarbRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
+                            currentUserUpdateNeeded = True
+                        End If
+                        carbRatios = deviceCarbRatios.ToCarbRatioList
                     End If
-                    ait = CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime
-                    If CurrentUser.CurrentTarget <> CurrentPdf.SmartGuard.Target Then
-                        currentUserUpdateNeeded = True
-                    End If
-                    currentTarget = CurrentPdf.SmartGuard.Target
-                    Dim deviceCarbRatios As List(Of DeviceCarbRatioRecord) = CurrentPdf.Bolus.DeviceCarbohydrateRatios
-
-                    If Not deviceCarbRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
-                        currentUserUpdateNeeded = True
-                    End If
-                    carbRatios = deviceCarbRatios.ToCarbRatioList
                 End If
-            End If
-            If currentUserUpdateNeeded OrElse forceUI Then
-                Using f As New InitializeDialog(ait, currentTarget, carbRatios)
-                    Dim result As DialogResult = f.ShowDialog(owner:=My.Forms.Form1)
-                    If result = DialogResult.OK Then
-                        currentUserUpdateNeeded =
-                            currentUserUpdateNeeded OrElse Not CurrentUser.Equals(other:=f.CurrentUser)
-                        CurrentUser = f.CurrentUser.Clone
-                    End If
-                End Using
-            End If
-            If currentUserUpdateNeeded Then
-                Dim cuJson As String
-                Try
-                    cuJson = CurrentUser.ToJson()
-                    File.WriteAllTextAsync(path:=userSettingsFileFullPath, contents:=cuJson)
-                Catch ex As Exception
-                    Debug.WriteLine(message:=$"ERROR: failed serializing CurrentUser to {userSettingsFileFullPath}: {ex.Message}")
-                End Try
-            Else
-                TouchFile(userSettingsFileFullPath)
-            End If
+                If currentUserUpdateNeeded OrElse forceUI Then
+                    Using f As New InitializeDialog(ait, currentTarget, carbRatios)
+                        Dim result As DialogResult = f.ShowDialog(owner:=My.Forms.Form1)
+                        If result = DialogResult.OK Then
+                            currentUserUpdateNeeded =
+                                currentUserUpdateNeeded OrElse Not CurrentUser.Equals(other:=f.CurrentUser)
+                            CurrentUser = f.CurrentUser.Clone
+                        End If
+                    End Using
+                End If
+                If currentUserUpdateNeeded Then
+                    Dim cuJson As String
+                    Try
+                        cuJson = CurrentUser.ToJson()
+                        File.WriteAllTextAsync(path:=userSettingsFileFullPath, contents:=cuJson)
+                    Catch ex As Exception
+                        Debug.WriteLine(message:=$"ERROR: failed serializing CurrentUser to {userSettingsFileFullPath}: {ex.Message}")
+                    End Try
+                Else
+                    TouchFile(path:=userSettingsFileFullPath)
+                End If
+            Finally
+                My.Forms.Form1.CursorFinished(pumpMessages:=True)
+            End Try
         End If
-        Form1.Cursor = Cursors.Default
-        Application.DoEvents()
     End Sub
 
     ''' <summary>

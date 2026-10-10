@@ -164,6 +164,19 @@ Friend Module MathExtensions
     End Function
 
     ''' <summary>
+    '''  Rounds a SG based on it f, small values are rounded to 2 decimal places,
+    '''  larger values to 1 decimal place.
+    ''' </summary>
+    ''' <param name="value">The SG f to round.</param>
+    ''' <returns>The rounded SG f.</returns>
+    <Extension>
+    Public Function RoundSg(value As Single) As Single
+        Dim digits As Integer =
+            If(value < 10, 2, 1)
+        Return CSng(Math.Round(value, digits))
+    End Function
+
+    ''' <summary>
     '''  Rounds a <see langword="Single"/> f to the specified number
     '''  of decimal <paramref name="digits"/>.
     ''' </summary>
@@ -179,16 +192,29 @@ Friend Module MathExtensions
     End Function
 
     ''' <summary>
-    '''  Rounds a SG based on it f, small values are rounded to 2 decimal places,
-    '''  larger values to 1 decimal place.
+    '''  Converts a Single f to a string with a comma as the decimal separator.
     ''' </summary>
-    ''' <param name="value">The SG f to round.</param>
-    ''' <returns>The rounded SG f.</returns>
+    ''' <param name="s">The Single f to convert.</param>
+    ''' <returns>
+    '''  The string representation of the Single f with
+    '''  a comma as the decimal separator.
+    ''' </returns>
     <Extension>
-    Public Function RoundSg(value As Single) As Single
-        Dim digits As Integer =
-            If(value < 10, 2, 1)
-        Return CSng(Math.Round(value, digits))
+    Public Function ToCommaDelimited(s As Single) As String
+        Return s.ToString.Replace(oldValue:=".", newValue:=",")
+    End Function
+
+    ''' <summary>
+    ''' Converts a Single f to a string with a period as the decimal separator.
+    ''' </summary>
+    ''' <param name="s">The Single f to convert.</param>
+    ''' <returns>
+    '''  The string representation of the Single f with
+    '''  a period as the decimal separator.
+    ''' </returns>
+    <Extension>
+    Public Function ToPeriodDelimited(s As Single) As String
+        Return s.ToString.Replace(oldValue:=",", newValue:=".")
     End Function
 
 End Module

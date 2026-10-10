@@ -40,8 +40,7 @@ Public Class OptionsColorPickerDialog
 
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
         Me.DialogResult = DialogResult.OK
-        Me.Cursor = Cursors.WaitCursor
-        Application.DoEvents()
+        Me.CursorStarted(pumpMessages:=True)
         If MsgBox(
                 heading:="Are you sure you want to continue?",
                 prompt:=$"Yes will save changes and application will restart{vbCrLf}" &
@@ -55,8 +54,7 @@ Public Class OptionsColorPickerDialog
         End If
 
         SetServerUpdateTimer(Start:=True)
-        Me.Cursor = Cursors.Default
-        Application.DoEvents()
+        Me.CursorFinished(pumpMessages:=True)
         Me.Close()
     End Sub
 

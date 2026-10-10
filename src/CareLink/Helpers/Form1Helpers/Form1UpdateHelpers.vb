@@ -516,18 +516,12 @@ Friend Module Form1UpdateHelpers
         ListOfSummaryRecords.Clear()
 
         PumpTimeZoneInfo = CalculateTimeZone(timeZoneName:=PatientData.ClientTimeZoneName)
-        Dim bgUnitsNative As String = PatientData.BgUnits
-        Dim bgUnits As String = String.Empty
-        If UnitsStrings.TryGetValue(key:=bgUnitsNative, value:=bgUnits) Then
-            NativeMmolL = bgUnits.Equals(value:="mmol/L")
-        Else
-            Stop
-        End If
+        NativeMmolL =
+            MapUnitString(key:=PatientData.BgUnits).Equals(value:="mmol/L")
 
         If PatientData.TherapyAlgorithmState IsNot Nothing Then
             InAutoMode = PatientData.TherapyAlgorithmState.AutoModeReadinessState = "NO_ACTION_REQUIRED" AndAlso
                 s_basalTypes.Contains(value:=PatientData.TherapyAlgorithmState.AutoModeShieldState)
-
         End If
 
         s_sgRecords = If(PatientData.Sgs Is Nothing,
@@ -840,7 +834,7 @@ Friend Module Form1UpdateHelpers
                     ListOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
 
                 Case ServerDataEnum.bgUnits
-                    item = New SummaryRecord(recordNumber, kvp, message:=bgUnits)
+                    item = New SummaryRecord(recordNumber, kvp, message:=BgUnits)
                     ListOfSummaryRecords.Add(item)
 
                 Case ServerDataEnum.maxAutoBasalRate

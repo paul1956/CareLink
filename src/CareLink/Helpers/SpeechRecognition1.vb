@@ -158,28 +158,6 @@ Friend Module SpeechSupport
     End Sub
 
     ''' <summary>
-    '''  Gets a description of the current trend based on the trend arrows.
-    ''' </summary>
-    ''' <returns>A string describing the trend direction and arrow count.</returns>
-    Friend Function GetTrendText(arrows As String) As String
-        Dim arrowCount As Integer
-        Const unit As String = "arrow"
-        Dim prefix As String
-        Select Case True
-            Case arrows.Contains(value:="↓"c)
-                arrowCount = arrows.Count(c:="↓"c)
-                prefix = $" and is trending down with {arrowCount} "
-                Return arrowCount.ToUnits(unit, prefix, includeValue:=False)
-            Case arrows.Contains(value:="↑"c)
-                arrowCount = arrows.Count(c:="↑"c)
-                prefix = $" and is trending up with {arrowCount} "
-                Return arrowCount.ToUnits(unit, prefix, includeValue:=False)
-            Case Else
-                Return " with no trend arrows"
-        End Select
-    End Function
-
-    ''' <summary>
     '''  Handles the SpeechRecognized event, processes recognized speech,
     '''  and triggers appropriate actions.
     ''' </summary>
@@ -296,6 +274,28 @@ Friend Module SpeechSupport
     End Sub
 
     ''' <summary>
+    '''  Gets a description of the current trend based on the trend arrows.
+    ''' </summary>
+    ''' <returns>A string describing the trend direction and arrow count.</returns>
+    Friend Function GetTrendText(arrows As String) As String
+        Dim arrowCount As Integer
+        Const unit As String = "arrow"
+        Dim prefix As String
+        Select Case True
+            Case arrows.Contains(value:="↓"c)
+                arrowCount = arrows.Count(c:="↓"c)
+                prefix = $" and is trending down with {arrowCount} "
+                Return arrowCount.ToUnits(unit, prefix, includeValue:=False)
+            Case arrows.Contains(value:="↑"c)
+                arrowCount = arrows.Count(c:="↑"c)
+                prefix = $" and is trending up with {arrowCount} "
+                Return arrowCount.ToUnits(unit, prefix, includeValue:=False)
+            Case Else
+                Return " with no trend arrows"
+        End Select
+    End Function
+
+    ''' <summary>
     '''  Initializes the speech synthesizer for audio alerts.
     ''' </summary>
     Friend Sub InitializeAudioAlerts()
@@ -345,8 +345,7 @@ Friend Module SpeechSupport
             gb_tellMe.Append(alternateChoices)
             s_speechRecognitionEngine.LoadGrammarAsync(grammar:=New Grammar(builder:=gb_tellMe))
 
-            Form1.Cursor = Cursors.WaitCursor
-            Application.DoEvents()
+            CursorStarted(owner:=My.Forms.Form1, pumpMessages:=True)
             If IsNullOrWhiteSpace(s_speechUserName) Then
                 Dim textToSpeak As String = $"Speech recognition enabled for {PatientData.FirstName}"
                 If IsNullOrWhiteSpace(value:=oldUserName) Then
@@ -360,7 +359,7 @@ Friend Module SpeechSupport
             s_speechRecognitionEngine.RecognizeAsync(RecognizeMode.Multiple)
             AddHandler s_speechRecognitionEngine.SpeechRecognized, AddressOf SpeechRecognized
 
-            Form1.Cursor = Cursors.Default
+            My.Forms.Form1.CursorFinished(pumpMessages:=True)
             AddHandler s_speechRecognitionEngine.AudioSignalProblemOccurred, AddressOf AudioSignalProblemOccurred
 
             Form1.MenuOptionsSpeechRecognitionEnabled.Checked = True

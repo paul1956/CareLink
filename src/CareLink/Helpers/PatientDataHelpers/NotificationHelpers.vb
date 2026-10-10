@@ -113,6 +113,12 @@ Friend Module NotificationHelpers
             End If
         End If
         dgv.ClearSelection()
+        Try
+            ' Signal that this binding finished so the form can clear busy cursor when all done.
+            BindingFinished(owner:=My.Forms.Form1, dgv)
+        Catch
+            Stop
+        End Try
     End Sub
 
     ''' <summary>
@@ -166,13 +172,13 @@ Friend Module NotificationHelpers
                                                   attachHandlers As attachHandlers)
 
         Dim dgv As New DataGridView With {
-                .AutoSize = True,
-                .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders,
-                .BorderStyle = BorderStyle.None,
-                .ColumnHeadersVisible = False,
-                .Dock = DockStyle.Top,
-                .Name = $"DataGridView{className}",
-                .RowHeadersVisible = False}
+            .AutoSize = True,
+            .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders,
+            .BorderStyle = BorderStyle.None,
+            .ColumnHeadersVisible = False,
+            .Dock = DockStyle.Top,
+            .Name = $"DataGridView{className}",
+            .RowHeadersVisible = False}
         realPanel.AutoSize = True
         realPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink
         realPanel.RowStyles.Add(rowStyle:=New RowStyle(sizeType:=SizeType.AutoSize))
@@ -188,11 +194,36 @@ Friend Module NotificationHelpers
         dgv.InitializeDgv(dock:=DockStyle.Top)
         dgv.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         attachHandlers?(dgv)
+
+        ' For notification tables, avoid per-row autosize when tables are large.
+        Dim largeGrid As Boolean =
+            table IsNot Nothing AndAlso table.Rows.Count > 100
+
+        If largeGrid Then
+            dgv.SuspendLayout()
+            dgv.Visible = False
+            dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
+            dgv.RowTemplate.Height = 24
+        End If
+
         For Each column As DataGridViewColumn In dgv.Columns
             column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
             column.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         Next
-        dgv.DataSource = table
+
+        Try
+            Try
+                ' Notify form that a binding is starting so cursor stays busy until all bindings finish
+                BindingStarted(owner:=My.Forms.Form1, dgv)
+            Catch
+            End Try
+            dgv.DataSource = table
+        Finally
+            If largeGrid Then
+                dgv.Visible = True
+                dgv.ResumeLayout(performLayout:=False)
+            End If
+        End Try
     End Sub
 
     ''' <summary>
@@ -254,10 +285,10 @@ Friend Module NotificationHelpers
     Friend Sub UpdateNotificationTabs(mainForm As Form1)
         Const rowIndex As ServerDataEnum = ServerDataEnum.notificationHistory
 
-        Dim innerJson As List(Of Dictionary(Of String, String))
+        Dim innerJson As New List(Of Dictionary(Of String, String))
         Dim classCollection As List(Of SummaryRecord)
         Dim jsonDictionary As Dictionary(Of String, String)
-
+        Dim json As String = String.Empty
         With mainForm.TlpNotificationsCleared
             .SetTableName(rowIndex, isClearedNotifications:=True)
             .Controls.Clear()
@@ -271,8 +302,11 @@ Friend Module NotificationHelpers
                    compacting:=False)
 
             ' clearedNotifications
-            Dim json As String = s_notificationHistoryValue(key:="clearedNotifications")
-            innerJson = JsonToListOfDictionary(json)
+            If s_notificationHistoryValue.TryGetValue(key:="clearedNotifications", value:=json) Then
+                innerJson = JsonToListOfDictionary(json)
+            Else
+                innerJson.Clear()
+            End If
             If innerJson.Count > 0 Then
                 For Each jsonDictionary In innerJson
                     classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
@@ -293,7 +327,11 @@ Friend Module NotificationHelpers
         End With
 
         ' activeNotifications
-        innerJson = JsonToListOfDictionary(json:=s_notificationHistoryValue(key:="activeNotifications"))
+        If s_notificationHistoryValue.TryGetValue(key:="activeNotifications", value:=json) Then
+            innerJson = JsonToListOfDictionary(json)
+        Else
+            innerJson.Clear()
+        End If
         With mainForm.TlpNotificationActive
             If innerJson.Count > 0 Then
                 .SetTableName(rowIndex, isClearedNotifications:=False)

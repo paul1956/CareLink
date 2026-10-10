@@ -27,12 +27,10 @@ Friend Module BrowserUtilities
     Friend Sub OpenUrlInBrowser(url As String)
         Dim mainForm As Form1 = My.Forms.Form1
         Try
-            mainForm.Cursor = Cursors.AppStarting
-            Application.DoEvents()
+            mainForm.CursorStarted(pumpMessages:=True)
             LaunchBrowser(url)
         Finally
-            mainForm.Cursor = Cursors.Default
-            Application.DoEvents()
+            mainForm.CursorFinished(pumpMessages:=True)
         End Try
     End Sub
 

@@ -54,6 +54,19 @@ Public Module NativeMmolLSupport
     End Function
 
     ''' <summary>
+    '''  Gets the standard format string for chart axis values
+    '''  based on the current mmol/L setting.
+    ''' </summary>
+    ''' <returns>
+    '''  The standard format string for chart axis values.
+    ''' </returns>
+    Public Function GetChartAxisFormat(nativeMmolL As Boolean) As String
+        Return If(nativeMmolL,
+                  "0.0",
+                  "0")
+    End Function
+
+    ''' <summary>
     '''  Gets the number of Precision Digits for String conversion based
     '''  on the current mmol/L setting.
     ''' </summary>
@@ -98,16 +111,18 @@ Public Module NativeMmolLSupport
     End Function
 
     ''' <summary>
-    '''  Gets the standard format string for chart axis values
-    '''  based on the current mmol/L setting.
+    '''   Maps a unit key to its string representation.
     ''' </summary>
-    ''' <returns>
-    '''  The standard format string for chart axis values.
-    ''' </returns>
-    Public Function GetChartAxisFormat(nativeMmolL As Boolean) As String
-        Return If(nativeMmolL,
-                  "0.0",
-                  "0")
+    ''' <param name="key">The unit key to map.</param>
+    ''' <returns>The string representation of the unit key.</returns>
+    Public Function MapUnitString(key As String) As String
+        Dim value As String = Nothing
+        If UnitsStrings.TryGetValue(key, value) Then
+            Return value
+        Else
+            ' Key becomes headerText if its unknown
+            Return key
+        End If
     End Function
 
 End Module

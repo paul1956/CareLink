@@ -148,16 +148,6 @@ Public Module SystemConstants
         {"MMOL_L", "mmol/L"},
         {"MMOLL", "mmol/L"}}
 
-    <Extension>
-    Private Function ToCommaDelimited(s As Single) As String
-        Return s.ToString.Replace(oldValue:=".", newValue:=",")
-    End Function
-
-    <Extension>
-    Private Function ToPeriodDelimited(s As Single) As String
-        Return s.ToString.Replace(oldValue:=",", newValue:=".")
-    End Function
-
 #End Region
 
 End Module

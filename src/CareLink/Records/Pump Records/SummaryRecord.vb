@@ -38,7 +38,7 @@ Public Class SummaryRecord
         Dim message As String = ""
         If IsNotNullOrWhiteSpace(kvp.Value) Then
             If Not messages.TryGetValue(key:=kvp.Value, value:=message) Then
-                Select Case kvp.Key
+                Select Case kvp.Value
                     Case "SG_ABOVE_400_MGDL"
                         message = $"SG Above{vbCrLf}{GetTirHighLimitWithUnits()}"
 

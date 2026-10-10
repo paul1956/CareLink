@@ -21,7 +21,7 @@ Public Class Form1
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _carbRatio As New ToolTip()
 
-    Private ReadOnly _pendingHeaderUpdates As New HashSet(Of String)(TextComparisonConstants.Comparer)
+    Private ReadOnly _pendingHeaderUpdates As New HashSet(Of String)(Comparer)
 
     Private ReadOnly _processName As String =
             Process.GetCurrentProcess().ProcessName
@@ -88,6 +88,7 @@ Public Class Form1
                     Process.Start(startInfo)
                 End If
             Catch
+                Stop
                 ' Fallback: open download page if launch fails
                 Try
                     Const fileName As String =
@@ -95,6 +96,7 @@ Public Class Form1
                     startInfo = New ProcessStartInfo(fileName) With {.UseShellExecute = True}
                     Process.Start(startInfo)
                 Catch
+                    Stop
                 End Try
             End Try
 
@@ -121,6 +123,7 @@ Public Class Form1
             Dim v As String = CoreWebView2Environment.GetAvailableBrowserVersionString()
             Return Not String.IsNullOrEmpty(v)
         Catch
+            Stop
             Return False
         End Try
     End Function
@@ -148,19 +151,18 @@ Public Class Form1
                                         GetAssemblyName(assemblyFile:=localPath).
                                         Version.ToString()
                 Catch
+                    Stop
                 End Try
             End If
 
             If expected <> "(not referenced)" AndAlso actual <> "(not present)" AndAlso expected <> actual Then
                 Dim msg As String =
                     "WebView2 managed DLL version mismatch detected." &
-                    Environment.NewLine &
-                    Environment.NewLine &
+                    vbCrLf & vbCrLf &
                     $"Expected: {expected}" &
-                    Environment.NewLine &
+                    vbCrLf &
                     $"Found:    {actual}" &
-                    Environment.NewLine &
-                    Environment.NewLine &
+                    vbCrLf & vbCrLf &
                     "Fix: rebuild the project or include the matching " &
                     "Microsoft.Web.WebView2.Core.dll in the app folder (see README)."
                 If MessageBox.Show(text:=msg,
@@ -393,6 +395,7 @@ Public Class Form1
                                             Next
                                         End If
                                     Catch
+                                        Stop
                                         ' If anything goes wrong, fallback to AllCells for this column.
                                         column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
                                     End Try
@@ -742,8 +745,8 @@ Public Class Form1
                     Stop
             End Select
         Catch ex As Exception
-            result = Nothing
             Stop
+            result = Nothing
         Finally
             _inMouseMove = False
         End Try
@@ -905,6 +908,7 @@ Public Class Form1
                                     Try
                                         prev.Dispose()
                                     Catch
+                                        Stop
                                     End Try
                                 End If
                             End Sub)
@@ -914,6 +918,7 @@ Public Class Form1
                         Try
                             newBmp.Dispose()
                         Catch
+                            Stop
                         End Try
                     End If
                 Catch ex As Exception
@@ -921,6 +926,7 @@ Public Class Form1
                         Try
                             newBmp.Dispose()
                         Catch
+                            Stop
                         End Try
                     End If
                 End Try
@@ -1107,34 +1113,41 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
 
-        ' Defer header/column updates to the UI message loop when the control
-        ' handle is not yet created to avoid NullReferenceExceptions inside
-        ' WinForms internals. Use BeginInvoke to run UpdateDgvHeaders on the
-        ' UI thread after the current binding work completes.
         If dgv Is Nothing Then
             Return
         End If
 
-        ' If the DataGridView may still be in an unstable state during binding,
-        ' defer a little longer to allow other binding work to finish. Use
-        ' BeginInvoke plus a short delay to run UpdateDgvHeaders off the current
-        ' binding call path. Always defer to reduce layout/binding races.
-        Dim method As Action =
-            Async Sub()
-                ' Delay briefly to allow other binding work to complete.
-                ' Do NOT use ConfigureAwait(False) here — the continuation
-                ' must run on the UI thread because UpdateDgvHeaders
-                ' accesses control properties.
-                Await Task.Delay(millisecondsDelay:=100)
-                Try
-                    Me.UpdateDgvHeaders(dgv)
-                Catch
-                    ' Swallow exceptions here to avoid crashing the UI thread
-                    ' during layout/binding races; failures are benign.
-                End Try
-            End Sub
+        Try
+            ' Defer header/column updates to the UI message loop when the control
+            ' handle is not yet created to avoid NullReferenceExceptions inside
+            ' WinForms internals. Use BeginInvoke to run UpdateDgvHeaders on the
+            ' UI thread after the current binding work completes.
+            Dim method As Action =
+                Async Sub()
+                    ' Delay briefly to allow other binding work to complete.
+                    ' Do NOT use ConfigureAwait(False) here — the continuation
+                    ' must run on the UI thread because UpdateDgvHeaders
+                    ' accesses control properties.
+                    Await Task.Delay(millisecondsDelay:=100)
+                    Try
+                        Me.UpdateDgvHeaders(dgv)
+                    Catch
+                        ' Swallow exceptions here to avoid crashing the UI thread
+                        ' during layout/binding races; failures are benign.
+                    End Try
+                End Sub
 
-        dgv.BeginInvoke(method)
+            dgv.BeginInvoke(method)
+        Finally
+            ' Ensure every BindingStarted is matched with BindingFinished even if
+            ' the post-binding formatting/updates throw. Swallow exceptions from
+            ' BindingFinished to avoid impacting the UI thread.
+            Try
+                Me.BindingFinished(dgv)
+            Catch
+                Stop
+            End Try
+        End Try
     End Sub
 
     ''' <summary>
@@ -1417,6 +1430,8 @@ Public Class Form1
         HideDataGridViewColumnsByName(Of ActiveInsulin)(dgv)
         dgv.ApplyDisplayNames(Of ActiveInsulin)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv Active Insulin Events
@@ -1524,6 +1539,8 @@ Public Class Form1
         HideDataGridViewColumnsByName(Of AutoBasalDelivery)(dgv)
         dgv.ApplyDisplayNames(Of AutoBasalDelivery)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv Auto Basal Delivery (Basal) Events
@@ -1607,6 +1624,8 @@ Public Class Form1
         HideDataGridViewColumnsByName(Of AutoModeStatus)(dgv)
         dgv.ApplyDisplayNames(Of AutoModeStatus)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv AutoMode Status Events
@@ -1708,6 +1727,8 @@ Public Class Form1
         HideDataGridViewColumnsByName(Of Basal)(dgv)
         dgv.ApplyDisplayNames(Of Basal)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv Basal Events
@@ -1822,13 +1843,8 @@ Public Class Form1
                     dgv.CellFormattingSg(e, partialKey)
 
                 Case NameOf(BgReading.BgUnits)
-                    Dim key As String = Convert.ToString(e.Value)
-                    Try
-                        e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-                        e.Value = UnitsStrings(key)
-                    Catch ex As Exception
-                        e.Value = key ' Key becomes headerText if its unknown
-                    End Try
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                    e.Value = MapUnitString(key:=Convert.ToString(e.Value))
                     dgv.CellFormattingDefault(e)
 
                 Case NameOf(BgReading.UnitValue),
@@ -1876,6 +1892,8 @@ Public Class Form1
         HideDataGridViewColumnsByName(Of BgReading)(dgv)
         dgv.ApplyDisplayNames(Of BgReading)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv Bg Readings Events
@@ -1909,12 +1927,8 @@ Public Class Form1
 
                 Case NameOf(Calibration.BgUnits)
                     Dim key As String = Convert.ToString(e.Value)
-                    Try
-                        e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-                        e.Value = UnitsStrings(key)
-                    Catch ex As Exception
-                        e.Value = key ' Key becomes headerText if its unknown
-                    End Try
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                    e.Value = MapUnitString(key)
                     dgv.CellFormattingDefault(e)
 
                 Case NameOf(Calibration.DisplayTime),
@@ -1970,6 +1984,8 @@ Public Class Form1
         HideDataGridViewColumnsByName(Of Calibration)(dgv)
         dgv.ApplyDisplayNames(Of Calibration)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv CalibrationHelpers Events
@@ -2446,6 +2462,8 @@ Public Class Form1
         HideUnneededColumns(dgv, columnName:=NameOf(Insulin.EffectiveDuration), valuelist)
         HideUnneededColumns(dgv, columnName:=NameOf(Insulin.InsulinType), valuelist)
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv Insulin Events
@@ -2493,6 +2511,8 @@ Public Class Form1
         HideDataGridViewColumnsByName(Of LastAlarm)(dgv)
         dgv.ApplyDisplayNames(Of LastAlarm)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv Last Alarm Events
@@ -2582,6 +2602,8 @@ Public Class Form1
         ' Hide Record Index
         dgv.ApplyDisplayNames(Of LastSG)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv Last SG Events
@@ -2659,6 +2681,8 @@ Public Class Form1
         HideDataGridViewColumnsByName(Of Limit)(dgv)
         dgv.ApplyDisplayNames(Of Limit)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv Limits Events
@@ -2732,6 +2756,8 @@ Public Class Form1
         HideDataGridViewColumnsByName(Of LowGlucoseSuspended)(dgv)
         dgv.ApplyDisplayNames(Of LowGlucoseSuspended)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv Low Glucose Suspended Events
@@ -2804,6 +2830,8 @@ Public Class Form1
         HideDataGridViewColumnsByName(Of Meal)(dgv)
         dgv.ApplyDisplayNames(Of Meal)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv Meal Events
@@ -3084,23 +3112,33 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
-        If dgv.ColumnCount > 1 Then
-            For index As Integer = 0 To lastColumnIndex - 1
-                dgv.Columns(index).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-            Next
-            dgv.Columns(index:=lastColumnIndex).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-            dgv.Columns(index:=lastColumnIndex).DefaultCellStyle.WrapMode = DataGridViewTriState.True
-        End If
+        Try
+            If dgv.ColumnCount > 1 Then
+                For index As Integer = 0 To lastColumnIndex - 1
+                    dgv.Columns(index).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                Next
+                dgv.Columns(index:=lastColumnIndex).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                dgv.Columns(index:=lastColumnIndex).DefaultCellStyle.WrapMode = DataGridViewTriState.True
+            End If
 
-        dgv.Columns(index:=0).HeaderCell.SortGlyphDirection =
-            If(dgv.RowCount > 0,
-               If(EqualsNoCase(a:=dgv.Rows(index:=0).Cells(index:=0).Value.ToString(), b:="1"),
-                  SortOrder.Ascending,
-                  SortOrder.Descending),
-               SortOrder.None)
-        HideDataGridViewColumnsByName(Of SG)(dgv)
-        dgv.ApplyDisplayNames(Of SG)()
-        dgv.ClearSelection()
+            dgv.Columns(index:=0).HeaderCell.SortGlyphDirection =
+                If(dgv.RowCount > 0,
+                   If(EqualsNoCase(a:=dgv.Rows(index:=0).Cells(index:=0).Value.ToString(), b:="1"),
+                      SortOrder.Ascending,
+                      SortOrder.Descending),
+                   SortOrder.None)
+            HideDataGridViewColumnsByName(Of SG)(dgv)
+            dgv.ApplyDisplayNames(Of SG)()
+            dgv.ClearSelection()
+        Finally
+            ' Ensure the binding refcount is decremented even if the formatting
+            ' or layout code throws. Swallow any exceptions from BindingFinished
+            ' to avoid destabilizing the UI thread.
+            Try
+                Me.BindingFinished(dgv)
+            Catch
+            End Try
+        End Try
     End Sub
 
 #End Region ' Dgv SGs Events
@@ -3470,6 +3508,8 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         dgv.ApplyDisplayNames(Of TherapyAlgorithmState)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv Therapy Algorithm State Events
@@ -3539,6 +3579,8 @@ Public Class Form1
         HideDataGridViewColumnsByName(Of TimeChange)(dgv)
         dgv.ApplyDisplayNames(Of TimeChange)()
         dgv.ClearSelection()
+        ' Signal that this binding finished so the form can clear busy cursor when all done.
+        Me.BindingFinished(dgv)
     End Sub
 
 #End Region ' Dgv Time Change Events
@@ -3602,8 +3644,8 @@ Public Class Form1
             My.Settings.AutoLogin = False
         End If
 
-        SystemVariables.s_showLogger = Debugger.IsAttached
-        InitLogger(show:=SystemVariables.s_showLogger)
+        s_showLogger = Debugger.IsAttached
+        InitLogger(show:=s_showLogger)
         LogMessage(message:="Application started in DEBUG mode.")
 
         PreloadBitmaps()
@@ -3986,24 +4028,24 @@ Public Class Form1
                 Return
             End If
             Try
-                Me.Cursor = Cursors.WaitCursor
-                Application.DoEvents()
-                Dim pdfSettingsRecord As New PdfSettingsRecord(pdfFilePath:=openFileDialog1.FileName)
-                Me.Cursor = Cursors.Default
-                Application.DoEvents()
-
-                If pdfSettingsRecord.IsValid Then
-                    File.Move(sourceFileName:=openFileDialog1.FileName,
-                              destFileName:=GetUserPdfPath(),
-                              overwrite:=True)
-                    Exit Sub
-                Else
-                    MsgBox(
-                        heading:=$"Device Setting PDF file Is invalid",
-                        prompt:=GetUserPdfPath(),
-                        buttonStyle:=MsgBoxStyle.OkOnly,
-                        title:="Invalid Settings PDF File")
-                End If
+                Me.CursorStarted(pumpMessages:=True)
+                Try
+                    Dim pdfSettingsRecord As New PdfSettingsRecord(
+                        pdfFilePath:=openFileDialog1.FileName)
+                    If pdfSettingsRecord.IsValid Then
+                        File.Move(sourceFileName:=openFileDialog1.FileName,
+                                  destFileName:=GetUserPdfPath(),
+                                  overwrite:=True)
+                        Exit Sub
+                    Else
+                        MsgBox(heading:=$"Device Setting PDF file Is invalid",
+                               prompt:=GetUserPdfPath(),
+                               buttonStyle:=MsgBoxStyle.OkOnly,
+                               title:="Invalid Settings PDF File")
+                    End If
+                Finally
+                    Me.CursorFinished(pumpMessages:=True)
+                End Try
             Catch ex As Exception
                 ' Ignore errors here
                 Stop
@@ -4555,12 +4597,12 @@ Public Class Form1
     End Sub
 
     Private Sub MenuHelpShowLogger_Click(sender As Object, e As EventArgs) Handles MenuViewShowLogger.Click
-        If SystemVariables.s_showLogger Then
-            SystemVariables.s_showLogger = False
+        If s_showLogger Then
+            s_showLogger = False
             Me.MenuViewShowLogger.Checked = False
             LoggerForm.Hide()
         Else
-            SystemVariables.s_showLogger = True
+            s_showLogger = True
             Me.MenuViewShowLogger.Checked = True
             InitLogger(show:=True)
         End If
@@ -4792,6 +4834,40 @@ Public Class Form1
                        _lastMarkerTabLocation.Tab)
                 Me.TabControlPage1.Visible = False
                 Exit Sub
+            Case NameOf(TabPage13SensorGlucose), NameOf(TabPage11NotificationsCleared)
+                ' Immediate user feedback: show busy cursor before potentially expensive
+                ' DataGridView population/layout operations occur. Start a cursor
+                ' operation now and clear it after the tab has painted once so the
+                ' wait cursor remains visible while the tab renders.
+                If Not _updating Then
+                    Try
+                        Me.CursorStarted(pumpMessages:=True)
+
+                        Dim tab As TabPage = e.TabPage
+                        Dim paintHandler As PaintEventHandler = Nothing
+                        paintHandler =
+                            Sub(sender1 As Object, pe As PaintEventArgs)
+                                Try
+                                    RemoveHandler tab.Paint, paintHandler
+                                    Me.CursorFinished(pumpMessages:=True)
+                                Catch
+                                End Try
+                            End Sub
+                        Try
+                            AddHandler tab.Paint, paintHandler
+                        Catch
+                            ' If adding the handler fails for any reason,
+                            ' ensure we still finish the cursor to avoid
+                            ' leaking the refcount.
+                            Try
+                                Me.CursorFinished(pumpMessages:=True)
+                            Catch
+                            End Try
+                        End Try
+                    Catch
+                        ' Swallow exceptions here to avoid breaking tab selection.
+                    End Try
+                End If
         End Select
         _lastSummaryTabIndex = e.TabPageIndex
     End Sub
@@ -5010,8 +5086,9 @@ Public Class Form1
             Me.LoginStatus.ReportLoginStatus(hasErrors:=IsPatientDataEmpty(),
                                              lastErrorMessage)
 
-            Me.Cursor = Cursors.Default
-            Application.DoEvents()
+            ' Server update finished; cursor unrelated to DataGridView bindings may be cleared.
+            Me.SetOwnerCursor(newCursor:=Cursors.Default,
+                              pumpMessages:=True)
         Finally
             SyncLock _updatingLock
                 _updating = False
@@ -5160,7 +5237,7 @@ Public Class Form1
                 .BackSecondaryColor = Color.Transparent,
                 .BorderlineColor = Color.Transparent,
                 .BorderlineWidth = 0,
-                .size = New Size(width:=size, height:=size)}
+                .Size = New Size(width:=size, height:=size)}
 
             With Me.TimeInRangeChart
                 .BorderSkin.BackSecondaryColor = Color.Transparent
@@ -6160,7 +6237,8 @@ Public Class Form1
         Next
 
         If s_totalBasal = 0 AndAlso CurrentPdf?.IsValid Then
-            Dim activeBasalRecords As List(Of BasalRateRecord) = GetActiveBasalRateRecords()
+            Dim activeBasalRecords As List(Of BasalRateRecord) =
+                GetActiveBasalRateRecords()
 
             If activeBasalRecords.Count > 0 Then
                 Dim startTime As TimeOnly
@@ -6612,6 +6690,7 @@ Public Class Form1
                        "SmartGuard 100%",
                        $"SmartGuard {CInt(timeInAutoMode / OneDaySpan * 100)}%")
             Catch ex As Exception
+                Stop
                 Me.SmartGuardLabel.Text = "SmartGuard ???%"
             End Try
         End If
@@ -6772,16 +6851,22 @@ Public Class Form1
             End If
             Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showInfusionSet:=True)
 
-            Me.Cursor = Cursors.WaitCursor
-            Application.DoEvents()
+            Try
+                Me.CursorStarted(pumpMessages:=True)
+            Catch
+                Stop
+            End Try
+
             UpdateDataTables(mainForm:=Me)
-            Application.DoEvents()
-            Me.Cursor = Cursors.Default
+
             _updating = False
         End SyncLock
 
         Dim mdi As MedicalDeviceInformation = PatientData.MedicalDeviceInformation
-        FinishInitialization(mainForm:=Me)
+        Me.InitializeSummaryTabCharts()
+        Me.InitializeActiveInsulinTabChart()
+        Me.InitializeTimeInRangeArea()
+
         Me.UpdateTrendArrows()
         UpdateSummaryTab(dgv:=Me.DgvSummary,
                          classCollection:=ListOfSummaryRecords,
@@ -6887,7 +6972,15 @@ Public Class Form1
         Else
             CancelSpeechRecognition()
         End If
-        Application.DoEvents()
+        ' Use CursorFinished to clear any cursor operations that may have been started
+        ' during initialization. Do not call SetOwnerCursor directly here because
+        ' initialization does multiple steps and may be coordinated with other
+        ' reference-counted cursor operations elsewhere.
+        ' Finish the cursor operation started at the beginning of UpdateAllTabPages,
+        ' then assert there are no pending bindings or cursor operations. The
+        ' assertion must run after CursorFinished so it observes the post-cleanup
+        ' state rather than the intentionally-started operation.
+        Me.CursorFinished(pumpMessages:=True)
     End Sub
 
 #End Region ' Update Home Tab
