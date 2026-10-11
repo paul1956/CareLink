@@ -22,7 +22,7 @@ Friend Module SummaryHelpers
     ''' <summary>
     '''  Maps sensor update time keys to their corresponding human-readable time strings.
     ''' </summary>
-    Friend ReadOnly s_sensorUpdateTimes As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_sensorUpdateTimes As New Dictionary(Of String, String)(Comparer) From {
         {"INITIAL_ALERT_SHORT", "30 minutes"},
         {"INITIAL_ALERT_MEDIUM", "60 minutes"},
         {"INITIAL_ALERT_LONG", "90 more minutes"},
@@ -55,7 +55,7 @@ Friend Module SummaryHelpers
             Return
         End If
         ' Initialize output lists
-        s_wordsInParentheses = New Dictionary(Of String, List(Of String))
+        s_wordsInParentheses = New Dictionary(Of String, List(Of String))(Comparer)
 
         ' Regex to match words in parentheses
         Dim parenthesesRegex As New Regex(pattern:="\(([^)]+)\)")
@@ -123,6 +123,7 @@ Friend Module SummaryHelpers
         Dim unitsRemaining As String = Nothing
 
         ' Initialize variables to hold extracted values Post-Flex
+        Dim activeInsulinResetTime As String = String.Empty
         Dim resolved As String = String.Empty
 
         Dim faultIdFound As Boolean =
@@ -134,11 +135,10 @@ Friend Module SummaryHelpers
             If Debugger.IsAttached Then
                 Stop
                 Dim stackFrame As New StackFrame(skipFrames:=0, needFileInfo:=True)
-                MsgBox(
-                    heading:="Unknown faultId",
-                    prompt:=faultId,
-                    buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
-                    title:=GetTitleFromStack(stackFrame))
+                MsgBox(heading:="Unknown faultId",
+                       prompt:=faultId,
+                       buttonStyle:=MsgBoxStyle.OkOnly Or MsgBoxStyle.Exclamation,
+                       title:=GetTitleFromStack(stackFrame))
             End If
             Return False
         End If
@@ -151,6 +151,11 @@ Friend Module SummaryHelpers
             If jsonDictionary.TryGetValue(key, value:=triggeredDate) Then
                 triggeredDate = $" { triggeredDate.ParseDate(key).ToNotificationString}"
             End If
+        ElseIf list.Contains(item:="activeInsulinResetTime") Then
+            If jsonDictionary.TryGetValue(key:="Datetime", value:=activeInsulinResetTime) Then
+                Dim endTime As Date = activeInsulinResetTime.ParseDate(key).AddHours(value:=2)
+                activeInsulinResetTime = $" { endTime.ToString(format:=$"{s_timeWithMinuteFormat}")}"
+            End If
         Else
             key = "dateTime"
             If jsonDictionary.TryGetValue(key, value:=triggeredDate) Then
@@ -159,7 +164,7 @@ Friend Module SummaryHelpers
         End If
 
         Dim triggerTime As TimeOnly
-        Dim additionalInfo As New Dictionary(Of String, String)
+        Dim additionalInfo As New Dictionary(Of String, String)(Comparer)
         key = "AdditionalInfo"
         Dim jsonString As String = String.Empty
         If jsonDictionary.TryGetValue(key, value:=jsonString) Then
@@ -316,6 +321,7 @@ Friend Module SummaryHelpers
             .Replace(oldValue:="(sg)", newValue:=sg) _
             .Replace(oldValue:="(sg64)", newValue:=sg64) _
             .Replace(oldValue:="(triggeredDateTime)", newValue:=triggeredDate) _
+            .Replace(oldValue:="(activeInsulinResetTime)", newValue:=activeInsulinResetTime) _
             .Replace(oldValue:="(units)", newValue:=BgUnits()) _
             .Replace(oldValue:="(unitsRemaining)", newValue:=unitsRemaining) _
             .Replace(oldValue:="(vbCrLf)", newValue:=vbCrLf)

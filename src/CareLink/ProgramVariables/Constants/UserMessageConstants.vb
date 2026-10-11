@@ -16,12 +16,12 @@ Friend Module UserMessageConstants
         vbCrLf &
         "Values > 4 suggests improvement is needed"
 
-    Friend ReadOnly s_autoModeShieldMessages As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_autoModeShieldMessages As New Dictionary(Of String, String)(Comparer) From {
         {"AUTO_BASAL", "Auto Basal"},
         {"FEATURE_OFF", "Feature Off"},
         {"SAFE_BASAL", "Safe Basal"}}
 
-    Friend ReadOnly s_calibrationIconMessages As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_calibrationIconMessages As New Dictionary(Of String, String)(Comparer) From {
         {"HCL_REQUIRES_BG_LEGACY", "BG Required"},
         {"HOURS_12", "Calibration due 12 hours"},
         {"HOURS_11", "Calibration due 11 hours"},
@@ -40,7 +40,7 @@ Friend Module UserMessageConstants
         {"NO_ICON", ""},
         {"UNDEFINED", ""}}
 
-    Friend ReadOnly s_calibrationMessages As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_calibrationMessages As New Dictionary(Of String, String)(Comparer) From {
         {"DUENOW", "Due now"},
         {"LESS_THAN_THREE_HRS", "Less then 3 hours"},
         {"LESS_THAN_SIX_HRS", "Less then 6 hours"},
@@ -51,7 +51,7 @@ Friend Module UserMessageConstants
     ''' <summary>
     '''  These messages have parameters in (), (units) will be replaced by localized units.
     ''' </summary>
-    Friend ReadOnly s_notificationMessages As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_notificationMessages As New Dictionary(Of String, String)(Comparer) From {
         {"2", "Pump Error. Delivery Stopped"},
         {"3", "Battery out of limit"},
         {"4", "Delivery stopped. Check BG"},
@@ -106,7 +106,7 @@ Friend Module UserMessageConstants
         {"104", "Battery low pump(triggeredDateTime). Replace battery soon."},
         {"105", "Low Reservoir(triggeredDateTime). (unitsRemaining) units remaining. " &
                  "Change reservoir."},
-        {"107", "Missed Meal Bolus Reminder"}, _ ' From Java
+        {"107", "Missed Meal Bolus Reminder"},
         {"109", "Set change reminder(triggeredDateTime). (lastSetChange) days since" &
                  " last set change. Time to change the infusion set."},
         {"110", "Silenced Sensor Alert. Check Alarm History"},
@@ -117,7 +117,7 @@ Friend Module UserMessageConstants
                  $"Less than (secondaryTimeReminder) before grace periods starts.{vbCrLf}Change sensor soon."},
         {"130", "Rewind Required(triggeredDateTime). Delivery stopped. " &
                  "Rewind was required due to pump error. Select OK to continue."},
-        {"140", "Delivery Suspended. Connect Infusion Set"}, _ ' From Java
+        {"140", "Delivery Suspended. Connect Infusion Set"},
         {"775", "Enter BG now(triggeredDateTime). Enter BG to calibrate sensor."},
         {"776", "Calibration Not accepted(triggeredDateTime). " &
                  "Wait at least 15 minutes. Wash hands, test BG again and calibrate."},
@@ -132,8 +132,8 @@ Friend Module UserMessageConstants
         {"787", "Alert on low (sg) (units)(triggeredDateTime)." &
                  " Low sensor glucose. Check BG."},
         {"794", "Sensor expired(triggeredDateTime). Insert New sensor."},
-        {"795", "Lost Sensor Signal. Check Transmitter"}, _ ' From Java
-        {"796", "No Sensor Signal"}, _ ' From Java
+        {"795", "Lost Sensor Signal. Check Transmitter"},
+        {"796", "No Sensor Signal"},
         {"797", "Sensor connected(triggeredDateTime). Start new sensor."},
         {"798", "Sensor connected(triggeredDateTime). If new sensor, select Start New. " &
                  "If not, select Reconnect."},
@@ -153,8 +153,8 @@ Friend Module UserMessageConstants
         {"811", "Suspend before low. Delivery stopped. " &
                  "Sensor glucose approaching Low Limit. Check BG."},
         {"812", "Call for emergency(triggeredDateTime)."},
-        {"814", "Basal Resumed. SG Still Under Low Limit. Check BG"}, _ ' From Java
-        {"815", "Low Limit Changed. Basal Manually Resumed. Check BG"}, _ ' From Java
+        {"814", "Basal Resumed. SG Still Under Low Limit. Check BG"},
+        {"815", "Low Limit Changed. Basal Manually Resumed. Check BG"},
         {"816", "Alert on high (sg) (units)(triggeredDateTime). High sensor glucose. " &
                  "Check BG."},
         {"817", "Alert before high(triggeredDateTime). Sensor glucose approaching " &
@@ -173,7 +173,7 @@ Friend Module UserMessageConstants
                  "Check BG and treat"},
         {"829", "BG required(triggeredDateTime). Enter a New BG for SmartGuard."},
         {"831", "Enter BG now(triggeredDateTime). Enter a BG to continue in SmartGuard."},
-        {"832", "Calibration Required"}, _ ' From Java
+        {"832", "Calibration Required"},
         {"833", "Bolus recommended(triggeredDateTime). For (bgValue) (units) entered, " &
                  "a correction bolus is recommended. Select Bolus to program a bolus."},
         {"838", "Calibration not accepted(triggeredDateTime).Sensor information is " &
@@ -183,24 +183,29 @@ Friend Module UserMessageConstants
         {"869", "Reminder time to take (reminderName)."},
         {"870", "Recharge transmitter within 24 hours(triggeredDateTime)."}}
 
-    Friend ReadOnly s_notificationMessagesFlex As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_notificationMessagesFlex As New Dictionary(Of String, String)(Comparer) From {
         {"1.000", "Urgent low sensor glucose(triggeredDateTime), your sensor glucose is below (sg64)."},
         {"1.200", "Change Infusion Set(triggeredDateTime)."},
         {"1.050", "Unknown(triggeredDateTime) 1.050"},
         {"1.205", "No SG values (> 30 minutes)(triggeredDateTime), (alertClearType)"},
-        {"2.209", "Check blood glucose with meter(triggeredDateTime)," &
+        {"1.301", "Pump error restart needed(triggeredDateTime), (alertClearType)"},
+        {"1.307", $"Time setting error(triggeredDateTime), Insulin delivery stopped and SG unavailable.{vbCrLf}" &
+                  "Time settings need to be transferred to pump"},
+        {"1.312", "Active insulin reset to 0, Active insulin will be incorrect until(activeInsulinResetTime)."},
+        {"2.209", $"Check blood glucose with meter(triggeredDateTime),{vbCrLf}" &
                   "Sensor glucose not available until a BG is accepted."},
         {"2.210", "blood glucose not accepted(triggeredDateTime). Wait at least a 15 minutes before trying again."},
         {"2.253", "Bolus not delivered (alertClearType)"},
         {"2.326", "Reservoir Low(triggeredDateTime), Change reservoir soon."},
         {"2.340", "Delivery suspended(triggeredDateTime), Insulin delivery has been stopped for > 30 minutes."},
-        {"2.500", "Reservoir Low(triggeredDateTime). (unitsRemaining) units remaining. " &
+        {"2.344", "Pump suspended(triggeredDateTime), insulin delivery has been stopped for > 30 minutes."},
+        {"2.500", $"Reservoir Low(triggeredDateTime). (unitsRemaining) units remaining.{vbCrLf}" &
                   "Change reservoir?"},
         {"2.353", "Bolus not delivered(triggeredDateTime). (alertClearType)!"},
-        {"3.221", "Sensor grace period ending soon(triggeredDateTime), " &
+        {"3.221", $"Sensor grace period ending soon(triggeredDateTime),{vbCrLf}" &
                   "you will need to change your sensor within 12 hours."},
         {"3.327", "Low reservoir(triggeredDateTime)."},
-        {"3.328", "Change Infusion Set(triggeredDateTime)."},
+        {"3.328", "Pump was restarted(triggeredDateTime). Rewind required to resume basal delivery."},
         {"3.329", "Prolonged low sensor glucose?"},
         {"3.330", "Sensor glucose approaching high limit?"},
         {"3.331", "Sensor glucose approaching low limit?"},
@@ -212,14 +217,14 @@ Friend Module UserMessageConstants
         {"4.600", "Lost pump communications at(triggeredDateTime). (alertClearType)!."}
         }
 
-    Friend ReadOnly s_plgmLgsMessages As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_plgmLgsMessages As New Dictionary(Of String, String)(Comparer) From {
         {"FEATURE_OFF", "Feature Off"},
         {"MONITORING", "Monitoring"},
         {"REFRACTORY_PERIOD", "Refractory Period"},
         {"SUSPEND_FIRED_LGS", "Suspend Fired due to low-glucose management"},
         {"SUSPEND_FIRED_PLGM", "Suspend Fired due to predictive low-glucose management"}}
 
-    Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String) From {
+    Friend ReadOnly s_sensorMessages As New Dictionary(Of String, String)(Comparer) From {
         {"BG_RECOMMENDED", $"BG{vbCrLf}Recommended"},
         {"BG_REQUIRED", $"BG{vbCrLf}Required"},
         {"CALIBRATING", "Calibrating..."},

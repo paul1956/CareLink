@@ -31,13 +31,13 @@ Friend Module NotificationHelpers
     ''' </param>
     Private Sub AttachHandlers(dgv As DataGridView)
         RemoveHandler dgv.CellContextMenuStripNeeded,
-            AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
+        AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
         RemoveHandler dgv.CellFormatting, AddressOf DgvNotification_CellFormatting
         RemoveHandler dgv.ColumnAdded, AddressOf DgvNotification_ColumnAdded
         RemoveHandler dgv.DataBindingComplete, AddressOf DgvNotification_DataBindingComplete
         RemoveHandler dgv.Layout, AddressOf DgvNotification_Layout
         AddHandler dgv.CellContextMenuStripNeeded,
-            AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
+        AddressOf DgvNotification_CellContextMenuStripNeededWithoutExcel
         AddHandler dgv.CellFormatting, AddressOf DgvNotification_CellFormatting
         AddHandler dgv.ColumnAdded, AddressOf DgvNotification_ColumnAdded
         AddHandler dgv.DataBindingComplete, AddressOf DgvNotification_DataBindingComplete
@@ -109,7 +109,15 @@ Friend Module NotificationHelpers
             dgv.ScrollBars = ScrollBars.None
             Dim dataGridViewLastColumn As DataGridViewColumn = dgv.Columns(index:=dgv.ColumnCount - 1)
             If dataGridViewLastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
-                dataGridViewLastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.False
+                For Each row As DataGridViewRow In dgv.Rows
+                    If row.Index = 0 Then
+                        row.Cells(index:=dgv.ColumnCount - 1).Style.WrapMode = DataGridViewTriState.True
+                        dataGridViewLastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                    Else
+                        row.Cells(index:=dgv.ColumnCount - 1).Style.WrapMode = DataGridViewTriState.False
+                        dataGridViewLastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.False
+                    End If
+                Next
             End If
         End If
         dgv.ClearSelection()
@@ -170,7 +178,6 @@ Friend Module NotificationHelpers
                                                   table As DataTable,
                                                   className As String,
                                                   attachHandlers As attachHandlers)
-
         Dim dgv As New DataGridView With {
             .AutoSize = True,
             .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders,
@@ -205,11 +212,6 @@ Friend Module NotificationHelpers
             dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
             dgv.RowTemplate.Height = 24
         End If
-
-        For Each column As DataGridViewColumn In dgv.Columns
-            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-            column.DefaultCellStyle.WrapMode = DataGridViewTriState.False
-        Next
 
         Try
             Try
@@ -308,6 +310,7 @@ Friend Module NotificationHelpers
                 innerJson.Clear()
             End If
             If innerJson.Count > 0 Then
+                mainForm.TlpNotificationsCleared.SuspendLayout()
                 For Each jsonDictionary In innerJson
                     classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
                     DisplayNotificationDataTableInDGV(
@@ -318,6 +321,7 @@ Friend Module NotificationHelpers
                 Next
                 .HorizontalScroll.Enabled = False
                 .HorizontalScroll.Visible = False
+                mainForm.TlpNotificationsCleared.ResumeLayout()
             Else
                 .AutoSizeMode = AutoSizeMode.GrowAndShrink
                 Dim className As String = "clearedNotifications"
