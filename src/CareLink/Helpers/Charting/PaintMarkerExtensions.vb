@@ -13,130 +13,69 @@ Friend Module PaintMarkerExtensions
     Private Const ChartAreaName As String = NameOf(ChartArea)
 
     ''' <summary>
-    '''  Paints markers on the chart using the specified image and dictionary of markers.
-    '''  The markers are drawn at their respective positions on the X-axis and Y-axis.
-    '''  If <paramref name="noImageOffset"/> is <see langword="True"/>,
-    '''  the image is drawn without any vertical offset.
-    '''  If <paramref name="paintOnY2"/> is <see langword="True"/>,
-    '''  the markers are painted on the Y2 axis; otherwise, they are painted on the Y axis.
+    '''  Returns the vertical offset (value subtracted from imagePosition.Y)
+    '''  for the given marker image and offset mode.
     ''' </summary>
-    ''' <param name="e">
-    '''  The <see cref="ChartPaintEventArgs"/> containing chart graphics context.
-    ''' </param>
-    ''' <param name="markerImage">
-    '''  The <see cref="Bitmap"/> image to use for the marker.
-    ''' </param>
-    ''' <param name="markerDictionary">
-    '''  A dictionary mapping OADate values to Y-axis values for marker positions.
-    ''' </param>
-    ''' <param name="noImageOffset">
-    '''  If <see langword="True"/>, the image is drawn without vertical offset;
-    '''  otherwise, it is centered on the marker position.</param>
-    ''' <param name="paintOnY2">
-    '''  If <see langword="True"/>, markers are painted on the Y2 axis;
-    '''  otherwise, on the Y axis.
-    ''' </param>
-    <Extension>
-    Private Sub PaintMarker(e As ChartPaintEventArgs,
-                            markerImage As Bitmap,
-                            markerDictionary As Dictionary(Of OADate, Single),
-                            noImageOffset As Boolean,
-                            paintOnY2 As Boolean)
-
-        ' Draw the cloned portion of the Bitmap object.
-        Dim halfHeight As Single = CSng(If(noImageOffset,
-                                           0,
-                                           markerImage.Height / 2))
-
-        Dim halfWidth As Single = CSng(markerImage.Width / 2)
-        For Each markerKvp As KeyValuePair(Of OADate, Single) In markerDictionary
-            Dim rectangle As RectangleF = RectangleF.Empty
-            rectangle.X = CSng(e.ChartGraphics.GetPositionFromAxis(
-                                ChartAreaName,
-                                axis:=AxisName.X,
-                                axisValue:=markerKvp.Key))
-
-            rectangle.Y = If(paintOnY2,
-                             CSng(e.ChartGraphics.GetPositionFromAxis(
-                                ChartAreaName,
-                                axis:=AxisName.Y2,
-                                axisValue:=markerKvp.Value)),
-                             CSng(e.ChartGraphics.GetPositionFromAxis(
-                                ChartAreaName,
-                                axis:=AxisName.Y,
-                                axisValue:=markerKvp.Value)))
-
-            rectangle.Width = markerImage.Width
-            rectangle.Height = markerImage.Height
-
-            Dim imagePosition As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(rectangle)
-            imagePosition.Y -= halfHeight
-            imagePosition.X -= halfWidth
-            ' Draw image
-            e.ChartGraphics.Graphics.DrawImage(image:=markerImage, imagePosition.X, imagePosition.Y)
-        Next
-    End Sub
+    Private Function GetVerticalOffset(markerImage As Bitmap, offset As ImageOffsetEnum) As Single
+        Select Case offset
+            Case ImageOffsetEnum.None
+                Return 0
+            Case ImageOffsetEnum.Center
+                Return CSng(markerImage.Height / 2)
+            Case ImageOffsetEnum.HeightUp
+                Return CSng(markerImage.Height)
+            Case ImageOffsetEnum.HeightDown
+                ' Negative value so subtracting it moves the image down.
+                Return CSng(-markerImage.Height)
+            Case Else
+                Return CSng(markerImage.Height / 2)
+        End Select
+    End Function
 
     ''' <summary>
-    '''  Paints markers on the chart using the specified image and dictionary of markers.
-    '''  The markers are drawn at their respective positions on the X-axis and Y-axis.
-    '''  If <paramref name="noImageOffset"/> is <see langword="True"/>,
-    '''  the image is drawn without any vertical offset.
-    '''  If <paramref name="paintOnY2"/> is <see langword="True"/>,
-    '''  the markers are painted on the Y2 axis; otherwise, they are painted on the Y axis.
+    '''  Core implementation that draws marker images for a sequence of (x,y) positions.
+    '''  The caller is responsible for converting their dictionary values into the
+    '''  supplied IEnumerable(Of KeyValuePair(Of OADate, Double)) where the Double
+    '''  represents the Y-axis data value to be passed to GetPositionFromAxis.
     ''' </summary>
-    ''' <param name="e">
-    '''  The <see cref="ChartPaintEventArgs"/> containing chart graphics context.
-    ''' </param>
-    ''' <param name="markerImage">
-    '''  The <see cref="Bitmap"/> image to use for the marker.
-    ''' </param>
-    ''' <param name="markerDictionary">
-    '''  A dictionary mapping OADate values to Y-axis values for marker positions.
-    ''' </param>
-    ''' <param name="noImageOffset">
-    '''  If <see langword="True"/>, the image is drawn without vertical offset;
-    '''  otherwise, it is centered on the marker position.</param>
-    ''' <param name="paintOnY2">
-    '''  If <see langword="True"/>, markers are painted on the Y2 axis;
-    '''  otherwise, on the Y axis.
-    ''' </param>
     <Extension>
-    Private Sub PaintMarker(e As ChartPaintEventArgs,
-                            markerImage As Bitmap,
-                            markerDictionary As Dictionary(Of OADate, String),
-                            noImageOffset As Boolean,
-                            paintOnY2 As Boolean)
+    Private Sub PaintMarkerCore(e As ChartPaintEventArgs,
+                                markerImage As Bitmap,
+                                markerPoints As IEnumerable(Of KeyValuePair(Of OADate, Double)),
+                                offset As ImageOffsetEnum,
+                                paintOnY2 As Boolean)
 
-        ' Draw the cloned portion of the Bitmap object.
-        Dim halfHeight As Single = CSng(If(noImageOffset,
-                                           0,
-                                           markerImage.Height / 2))
+        Dim verticalOffset As Single =
+            GetVerticalOffset(markerImage, offset)
+        Dim halfWidth As Single =
+            CSng(markerImage.Width / 2)
 
-        Dim halfWidth As Single = CSng(markerImage.Width / 2)
-        For Each markerKvp As KeyValuePair(Of OADate, String) In markerDictionary
+        For Each markerKvp As KeyValuePair(Of OADate, Double) In markerPoints
             Dim rectangle As RectangleF = RectangleF.Empty
-            rectangle.X =
-                CSng(e.ChartGraphics.GetPositionFromAxis(
+            rectangle.X = CSng(e.ChartGraphics.GetPositionFromAxis(
+                               ChartAreaName,
+                               axis:=AxisName.X,
+                               axisValue:=markerKvp.Key))
+            Dim y As Double
+            If paintOnY2 Then
+                y = e.ChartGraphics.GetPositionFromAxis(
+                    ChartAreaName,
+                    axis:=AxisName.Y2,
+                    axisValue:=markerKvp.Value)
+                rectangle.Y = CSng(y)
+            Else
+                y = e.ChartGraphics.GetPositionFromAxis(
                         ChartAreaName,
-                        axis:=AxisName.X,
-                        axisValue:=markerKvp.Key))
-
-            rectangle.Y = If(paintOnY2,
-                             CSng(e.ChartGraphics.GetPositionFromAxis(
-                                  ChartAreaName,
-                                  axis:=AxisName.Y2,
-                                  axisValue:=30.0)),
-                             CSng(e.ChartGraphics.GetPositionFromAxis(
-                                ChartAreaName,
-                                axis:=AxisName.Y,
-                                axisValue:=30.0)))
+                        axis:=AxisName.Y,
+                        axisValue:=markerKvp.Value)
+                rectangle.Y = CSng(y)
+            End If
 
             rectangle.Width = markerImage.Width
             rectangle.Height = markerImage.Height
 
             Dim imagePosition As RectangleF = e.ChartGraphics.GetAbsoluteRectangle(rectangle)
-            imagePosition.Y -= halfHeight
+            imagePosition.Y -= verticalOffset
             imagePosition.X -= halfWidth
             ' Draw image
             e.ChartGraphics.Graphics.DrawImage(image:=markerImage, imagePosition.X, imagePosition.Y)
@@ -152,7 +91,9 @@ Friend Module PaintMarkerExtensions
     ''' </param>
     ''' <param name="chartRelativePosition">
     '''  A <see cref="RectangleF"/> representing the relative position of the chart area.
-    '''  Will be initialized if empty.
+    '''  Will be initialized if <see langword="Nothing"/>.
+    '''  DO NOT pass a new RectangleF() each time;
+    '''  pass the same variable to avoid unnecessary recalculation.
     ''' </param>
     ''' <param name="insulinDictionary">
     '''  A dictionary mapping OADate values to Y-axis values for insulin markers. Can be null.
@@ -160,9 +101,9 @@ Friend Module PaintMarkerExtensions
     ''' <param name="mealDictionary">
     '''  A dictionary mapping OADate values to Y-axis values for meal markers. Can be null.
     ''' </param>
-    ''' <param name="offsetInsulinImage">
-    '''  If <see langword="True"/>, insulin marker images are vertically offset
-    '''  to center on the marker position.
+    ''' <param name="offset">
+    '''  Specifies the vertical offset mode for marker images.
+    '''  Uses <see cref="ImageOffsetEnum"/>.
     ''' </param>
     ''' <param name="paintOnY2">
     '''  If <see langword="True"/>, markers are painted on the Y2 axis;
@@ -170,16 +111,18 @@ Friend Module PaintMarkerExtensions
     ''' </param>
     <DebuggerNonUserCode()>
     <Extension>
-    Friend Sub PostPaintSupport(e As ChartPaintEventArgs,
-                                ByRef chartRelativePosition As RectangleF,
-                                insulinDictionary As Dictionary(Of OADate, Single),
-                                mealDictionary As Dictionary(Of OADate, Single),
-                                otherDictionary As Dictionary(Of OADate, Single),
-                                offsetInsulinImage As Boolean,
-                                paintOnY2 As Boolean)
+    Friend Sub PostPaintSupport(
+        e As ChartPaintEventArgs,
+        ByRef chartRelativePosition As RectangleF,
+        insulinDictionary As Dictionary(Of OADate, Double),
+        mealDictionary As Dictionary(Of OADate, Double),
+        otherDictionary As Dictionary(Of OADate, Double),
+        timeChangedDictionary As Dictionary(Of OADate, Double),
+        offset As ImageOffsetEnum,
+        paintOnY2 As Boolean)
 
         If s_sgRecords.Count = 0 OrElse Not ProgramInitialized Then
-            Exit Sub
+            Return
         End If
 
         If chartRelativePosition.IsEmpty Then
@@ -191,47 +134,55 @@ Friend Module PaintMarkerExtensions
                 CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
                                                          axis:=AxisName.Y2,
                                                          axisValue:=GetYMaxNativeMmolL()))
+            ' Use the native-min Y value as the axis data value, then convert to
+            ' chart pixel position for height calculation.
             Dim axisValue As Single =
-                CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
-                                                         axis:=AxisName.Y2,
-                                                         axisValue:=GetTirHighLimit()))
+                GetYMinNativeMmolL()
+
             Dim y2 As Single =
                 CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
                                                          axis:=AxisName.Y2,
-                                                         axisValue))
-            chartRelativePosition.Height = y2 - chartRelativePosition.Y
+                                                         axisValue:=axisValue))
+            chartRelativePosition.Height =
+                y2 - chartRelativePosition.Y
 
             Dim x As Single =
-                CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
-                                                         axis:=AxisName.X,
-                                                         axisValue:=s_sgRecords.Last.OaDateTime))
-            chartRelativePosition.Width = x - chartRelativePosition.X
+                CSng(e.ChartGraphics.
+                       GetPositionFromAxis(ChartAreaName,
+                                           axis:=AxisName.X,
+                                           axisValue:=s_sgRecords.Last.OaDateTime))
+            chartRelativePosition.Width =
+                x - chartRelativePosition.X
         End If
 
         Dim highLimitY As Single =
-            CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
-                                                     axis:=AxisName.Y2,
-                                                     axisValue:=GetTirHighLimit()))
+            CSng(e.ChartGraphics.
+                   GetPositionFromAxis(ChartAreaName,
+                                       axis:=AxisName.Y2,
+                                       axisValue:=GetTirHighLimit()))
         Dim lowLimitY As Single =
-            CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
-                                                     axis:=AxisName.Y2,
-                                                     axisValue:=GetTirLowLimit()))
+            CSng(e.ChartGraphics.
+                   GetPositionFromAxis(ChartAreaName,
+                                       axis:=AxisName.Y2,
+                                       axisValue:=GetTirLowLimit()))
         Dim criticalLowLimitY As Single =
-            CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
-                                                     axis:=AxisName.Y2,
-                                                     axisValue:=GetYMinNativeMmolL()))
+            CSng(e.ChartGraphics.
+                   GetPositionFromAxis(ChartAreaName,
+                                       axis:=AxisName.Y2,
+                                       axisValue:=GetYMinNativeMmolL()))
 
-        Dim height As Single = highLimitY - chartRelativePosition.Y
+        Dim height As Single =
+            highLimitY - chartRelativePosition.Y
         Dim rectangle As New RectangleF(chartRelativePosition.X,
                                         chartRelativePosition.Y,
                                         chartRelativePosition.Width,
-                                        height:=height)
+                                        height)
         Dim chartAbsoluteHighRectangle As RectangleF =
             e.ChartGraphics.GetAbsoluteRectangle(rectangle)
 
         rectangle = New RectangleF(chartRelativePosition.X,
                                    y:=lowLimitY,
-                                   width:=chartRelativePosition.Width,
+                                   chartRelativePosition.Width,
                                    height:=criticalLowLimitY - lowLimitY)
         Dim chartAbsoluteLowRectangle As RectangleF =
             e.ChartGraphics.GetAbsoluteRectangle(rectangle)
@@ -242,22 +193,28 @@ Friend Module PaintMarkerExtensions
         End Using
 
         If insulinDictionary IsNot Nothing Then
-            e.PaintMarker(markerImage:=InsulinVialTiny,
-                          markerDictionary:=insulinDictionary,
-                          noImageOffset:=offsetInsulinImage,
-                          paintOnY2)
+            e.PaintMarkerCore(markerImage:=InsulinVialTiny,
+                              markerPoints:=insulinDictionary,
+                              offset:=offset,
+                              paintOnY2:=paintOnY2)
         End If
         If mealDictionary IsNot Nothing Then
-            e.PaintMarker(markerImage:=MealImage,
-                          markerDictionary:=mealDictionary,
-                          noImageOffset:=False,
-                          paintOnY2)
+            e.PaintMarkerCore(markerImage:=MealImage,
+                              markerPoints:=mealDictionary,
+                              offset:=ImageOffsetEnum.HeightUp,
+                              paintOnY2:=paintOnY2)
         End If
         If otherDictionary IsNot Nothing Then
-            e.PaintMarker(markerImage:=NoteImage,
-                          markerDictionary:=otherDictionary,
-                          noImageOffset:=offsetInsulinImage,
-                          paintOnY2)
+            e.PaintMarkerCore(markerImage:=NoteImage,
+                              markerPoints:=otherDictionary,
+                              offset:=offset,
+                              paintOnY2:=paintOnY2)
+        End If
+        If timeChangedDictionary IsNot Nothing Then
+            e.PaintMarkerCore(markerImage:=TimeChangedImage,
+                              markerPoints:=timeChangedDictionary,
+                              offset:=ImageOffsetEnum.HeightUp,
+                              paintOnY2:=paintOnY2)
         End If
     End Sub
 

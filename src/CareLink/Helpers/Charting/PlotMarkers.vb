@@ -14,6 +14,25 @@ Friend Module PlotMarkers
     Private s_insulinVialTiny As Bitmap = Nothing
     Private s_mealImage As Bitmap = Nothing
     Private s_notesImage As Bitmap = Nothing
+    Private s_timeChangedImage As Bitmap = Nothing
+
+    Friend ReadOnly Property InsulinVialTiny As Bitmap
+        Get
+            Dim bmp As Bitmap = s_insulinVialTiny
+            If bmp Is Nothing Then
+                Dim newBmp As Bitmap = GetBitmapFromCache(imageId:=ImageEnum.InsulinVialTiny)
+                If Interlocked.CompareExchange(location1:=s_insulinVialTiny,
+                                               value:=newBmp,
+                                               comparand:=Nothing) IsNot Nothing Then
+                    Try
+                        newBmp.Dispose()
+                    Catch
+                    End Try
+                End If
+            End If
+            Return s_insulinVialTiny
+        End Get
+    End Property
 
     Friend ReadOnly Property MealImage As Bitmap
         Get
@@ -52,12 +71,12 @@ Friend Module PlotMarkers
         End Get
     End Property
 
-    Friend ReadOnly Property InsulinVialTiny As Bitmap
+    Friend ReadOnly Property TimeChangedImage As Bitmap
         Get
-            Dim bmp As Bitmap = s_insulinVialTiny
+            Dim bmp As Bitmap = s_timeChangedImage
             If bmp Is Nothing Then
-                Dim newBmp As Bitmap = GetBitmapFromCache(imageId:=ImageEnum.InsulinVialTiny)
-                If Interlocked.CompareExchange(location1:=s_insulinVialTiny,
+                Dim newBmp As Bitmap = GetBitmapFromCache(imageId:=ImageEnum.TimeChanged)
+                If Interlocked.CompareExchange(location1:=s_timeChangedImage,
                                                value:=newBmp,
                                                comparand:=Nothing) IsNot Nothing Then
                     Try
@@ -66,39 +85,9 @@ Friend Module PlotMarkers
                     End Try
                 End If
             End If
-            Return s_insulinVialTiny
+            Return s_timeChangedImage
         End Get
     End Property
-
-    ''' <summary>
-    ''' Dispose module-level cached marker bitmaps.
-    ''' Call during shutdown to avoid leaking GDI objects.
-    ''' </summary>
-    Public Sub CleanUpMarkers()
-        Try
-            If s_mealImage IsNot Nothing Then
-                Try : s_mealImage.Dispose() : Catch : End Try
-                s_mealImage = Nothing
-            End If
-        Catch
-        End Try
-
-        Try
-            If s_notesImage IsNot Nothing Then
-                Try : s_notesImage.Dispose() : Catch : End Try
-                s_notesImage = Nothing
-            End If
-        Catch
-        End Try
-
-        Try
-            If s_insulinVialTiny IsNot Nothing Then
-                Try : s_insulinVialTiny.Dispose() : Catch : End Try
-                s_insulinVialTiny = Nothing
-            End If
-        Catch
-        End Try
-    End Sub
 
     ''' <summary>
     '''  Adds a calibration point to the marker series.
@@ -256,9 +245,10 @@ Friend Module PlotMarkers
     <Extension>
     Friend Sub PlotMarkers(pageChart As Chart,
                            timeChangeSeries As Series,
-                           markerInsulinDictionary As Dictionary(Of OADate, Single),
-                           markerMealDictionary As Dictionary(Of OADate, Single),
-                           markerOtherDictionary As Dictionary(Of OADate, Single),
+                           markerInsulinDictionary As Dictionary(Of OADate, Double),
+                           markerMealDictionary As Dictionary(Of OADate, Double),
+                           markerOtherDictionary As Dictionary(Of OADate, Double),
+                           markerTimeChangedDictionary As Dictionary(Of OADate, Double),
                            <CallerMemberName> Optional memberName As String = Nothing,
                            <CallerLineNumber()> Optional sourceLineNumber As Integer = 0)
 
@@ -266,6 +256,7 @@ Friend Module PlotMarkers
         markerInsulinDictionary.Clear()
         markerMealDictionary?.Clear()
         markerOtherDictionary?.Clear()
+        markerTimeChangedDictionary?.Clear()
         Dim bolusRow As Single = GetYMaxNativeMmolL()
         Dim insulinRow As Single = GetInsulinYValue()
         Dim noteRow As Single = GetNoteYValue()
@@ -386,6 +377,7 @@ Friend Module PlotMarkers
                             .AddXY(xValue:=markerOADateTime, yValue:=0)
                             .AddXY(xValue:=markerOADateTime, yValue:=bolusRow)
                             .AddXY(xValue:=markerOADateTime, yValue:=Double.NaN)
+                            markerTimeChangedDictionary?.Add(key:=markerOADateTime, value:=bolusRow)
                         End With
                     Case "LOW_GLUCOSE_SUSPENDED"
                         Dim timeOrderedMarkers As SortedDictionary(Of OADate, Single)
@@ -466,6 +458,7 @@ Friend Module PlotMarkers
         Dim lastTimeChangeRecord As TimeChange = Nothing
         s_treatmentMarkersInsulin.Clear()
         s_treatmentMarkersMeal.Clear()
+        s_treatmentMarkersTimeChanged.Clear()
         For Each markerWithIndex As IndexClass(Of Marker) In AllMarkers.WithIndex()
             Try
                 Dim item As Marker = markerWithIndex.Value
@@ -619,6 +612,36 @@ Friend Module PlotMarkers
             treatmentTimeChangeSeries.IsVisibleInLegend = False
             chart.Legends(index:=0).CustomItems.Last.Enabled = False
         End If
+    End Sub
+
+    ''' <summary>
+    ''' Dispose module-level cached marker bitmaps.
+    ''' Call during shutdown to avoid leaking GDI objects.
+    ''' </summary>
+    Public Sub CleanUpMarkers()
+        Try
+            If s_mealImage IsNot Nothing Then
+                Try : s_mealImage.Dispose() : Catch : End Try
+                s_mealImage = Nothing
+            End If
+        Catch
+        End Try
+
+        Try
+            If s_notesImage IsNot Nothing Then
+                Try : s_notesImage.Dispose() : Catch : End Try
+                s_notesImage = Nothing
+            End If
+        Catch
+        End Try
+
+        Try
+            If s_insulinVialTiny IsNot Nothing Then
+                Try : s_insulinVialTiny.Dispose() : Catch : End Try
+                s_insulinVialTiny = Nothing
+            End If
+        Catch
+        End Try
     End Sub
 
 End Module

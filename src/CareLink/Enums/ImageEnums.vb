@@ -239,6 +239,9 @@ Public Module ImageEnums
         <Description("SmartGuardShield")>
         SmartGuardShield
 
+        <Description("icon_time_changed")>
+        TimeChanged
+
         <Description("TransmitterBatteryCritical")>
         TransmitterBatteryCritical
 

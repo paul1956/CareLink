@@ -864,7 +864,8 @@ Public Class Form1
                 insulinDictionary:=s_activeInsulinMarkers,
                 mealDictionary:=Nothing,
                 otherDictionary:=Nothing,
-                offsetInsulinImage:=True,
+                timeChangedDictionary:=s_activeTimeChangedMarkers,
+                offset:=ImageOffsetEnum.Center,
                 paintOnY2:=True)
         End SyncLock
     End Sub
@@ -1016,7 +1017,8 @@ Public Class Form1
                 insulinDictionary:=s_summaryMarkersInsulin,
                 mealDictionary:=s_summaryMarkersMeal,
                 otherDictionary:=s_summaryMarkersOther,
-                offsetInsulinImage:=False,
+                timeChangedDictionary:=s_summaryMarkersTimeChanged,
+                offset:=ImageOffsetEnum.Center,
                 paintOnY2:=True)
         End SyncLock
     End Sub
@@ -1051,7 +1053,8 @@ Public Class Form1
                 insulinDictionary:=s_treatmentMarkersInsulin,
                 mealDictionary:=s_treatmentMarkersMeal,
                 otherDictionary:=Nothing,
-                offsetInsulinImage:=False,
+                timeChangedDictionary:=s_treatmentMarkersTimeChanged,
+                offset:=ImageOffsetEnum.Center,
                 paintOnY2:=False)
         End SyncLock
     End Sub
@@ -5960,7 +5963,8 @@ Public Class Form1
                 .PlotMarkers(timeChangeSeries:=Me.ActiveInsulinTimeChangeSeries,
                              markerInsulinDictionary:=s_activeInsulinMarkers,
                              markerMealDictionary:=Nothing,
-                             markerOtherDictionary:=Nothing)
+                             markerOtherDictionary:=Nothing,
+                             markerTimeChangedDictionary:=s_activeTimeChangedMarkers)
                 .PlotSgSeries(HomePageMealRow:=GetYMinNativeMmolL())
                 .PlotHighLowLimitsAndTargetSg(targetSgOnly:=True)
             End With
@@ -6002,7 +6006,8 @@ Public Class Form1
                     timeChangeSeries:=Me.SummaryTimeChangeSeries,
                     markerInsulinDictionary:=s_summaryMarkersInsulin,
                     markerMealDictionary:=s_summaryMarkersMeal,
-                    markerOtherDictionary:=s_summaryMarkersOther)
+                    markerOtherDictionary:=s_summaryMarkersOther,
+                    markerTimeChangedDictionary:=s_summaryMarkersTimeChanged)
                 .PlotSgSeries(HomePageMealRow:=GetYMinNativeMmolL())
                 .PlotHighLowLimitsAndTargetSg(targetSgOnly:=False)
                 Application.DoEvents()
