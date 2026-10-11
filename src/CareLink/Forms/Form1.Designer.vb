@@ -353,7 +353,7 @@ Partial Class Form1
         AboveHighLimitMessageLabel.BackColor = Color.Transparent
         AboveHighLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         AboveHighLimitMessageLabel.ForeColor = Color.Yellow
-        AboveHighLimitMessageLabel.Location = New Point(1309, 211)
+        AboveHighLimitMessageLabel.Location = New Point(65, 211)
         AboveHighLimitMessageLabel.Name = "AboveHighLimitMessageLabel"
         AboveHighLimitMessageLabel.Size = New Size(144, 21)
         AboveHighLimitMessageLabel.TabIndex = 28
@@ -367,7 +367,7 @@ Partial Class Form1
         AboveHighLimitValueLabel.BackColor = Color.Black
         AboveHighLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         AboveHighLimitValueLabel.ForeColor = Color.Yellow
-        AboveHighLimitValueLabel.Location = New Point(1378, 169)
+        AboveHighLimitValueLabel.Location = New Point(108, 169)
         AboveHighLimitValueLabel.Name = "AboveHighLimitValueLabel"
         AboveHighLimitValueLabel.Size = New Size(59, 40)
         AboveHighLimitValueLabel.TabIndex = 22
@@ -394,7 +394,7 @@ Partial Class Form1
         AverageSGMessageLabel.BackColor = Color.Transparent
         AverageSGMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         AverageSGMessageLabel.ForeColor = Color.LightGray
-        AverageSGMessageLabel.Location = New Point(1323, 398)
+        AverageSGMessageLabel.Location = New Point(54, 398)
         AverageSGMessageLabel.Name = "AverageSGMessageLabel"
         AverageSGMessageLabel.Size = New Size(167, 21)
         AverageSGMessageLabel.TabIndex = 0
@@ -408,7 +408,7 @@ Partial Class Form1
         AverageSGValueLabel.BackColor = Color.Black
         AverageSGValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         AverageSGValueLabel.ForeColor = Color.LightGray
-        AverageSGValueLabel.Location = New Point(1374, 356)
+        AverageSGValueLabel.Location = New Point(103, 356)
         AverageSGValueLabel.Margin = New Padding(0)
         AverageSGValueLabel.Name = "AverageSGValueLabel"
         AverageSGValueLabel.Size = New Size(68, 40)
@@ -437,7 +437,7 @@ Partial Class Form1
         BelowLowLimitMessageLabel.BackColor = Color.Transparent
         BelowLowLimitMessageLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         BelowLowLimitMessageLabel.ForeColor = Color.Red
-        BelowLowLimitMessageLabel.Location = New Point(1314, 333)
+        BelowLowLimitMessageLabel.Location = New Point(66, 333)
         BelowLowLimitMessageLabel.Name = "BelowLowLimitMessageLabel"
         BelowLowLimitMessageLabel.Size = New Size(142, 21)
         BelowLowLimitMessageLabel.TabIndex = 32
@@ -451,7 +451,7 @@ Partial Class Form1
         BelowLowLimitValueLabel.BackColor = Color.Black
         BelowLowLimitValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         BelowLowLimitValueLabel.ForeColor = Color.Red
-        BelowLowLimitValueLabel.Location = New Point(1378, 291)
+        BelowLowLimitValueLabel.Location = New Point(108, 291)
         BelowLowLimitValueLabel.Name = "BelowLowLimitValueLabel"
         BelowLowLimitValueLabel.Size = New Size(59, 40)
         BelowLowLimitValueLabel.TabIndex = 26
@@ -859,7 +859,7 @@ Partial Class Form1
         GraphLast24HoursLabel.AutoSize = True
         GraphLast24HoursLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         GraphLast24HoursLabel.ForeColor = Color.Gray
-        GraphLast24HoursLabel.Location = New Point(1558, 22)
+        GraphLast24HoursLabel.Location = New Point(83, 22)
         GraphLast24HoursLabel.Name = "GraphLast24HoursLabel"
         GraphLast24HoursLabel.Size = New Size(109, 21)
         GraphLast24HoursLabel.TabIndex = 34
@@ -1592,7 +1592,7 @@ Partial Class Form1
         SmartGuardLabel.BackColor = Color.Transparent
         SmartGuardLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
         SmartGuardLabel.ForeColor = Color.DodgerBlue
-        SmartGuardLabel.Location = New Point(1592, 421)
+        SmartGuardLabel.Location = New Point(49, 421)
         SmartGuardLabel.Name = "SmartGuardLabel"
         SmartGuardLabel.Size = New Size(176, 25)
         SmartGuardLabel.TabIndex = 35
@@ -1786,7 +1786,7 @@ Partial Class Form1
         TirHeaderLabel.AutoSize = True
         TirHeaderLabel.Font = New Font("Segoe UI", 14.0F, FontStyle.Bold)
         TirHeaderLabel.ForeColor = Color.Gray
-        TirHeaderLabel.Location = New Point(1611, 0)
+        TirHeaderLabel.Location = New Point(68, 0)
         TirHeaderLabel.Name = "TirHeaderLabel"
         TirHeaderLabel.Size = New Size(138, 25)
         TirHeaderLabel.TabIndex = 46
@@ -1800,7 +1800,7 @@ Partial Class Form1
         TirChartLabel.BackColor = Color.Black
         TirChartLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TirChartLabel.ForeColor = Color.LightGray
-        TirChartLabel.Location = New Point(1646, 74)
+        TirChartLabel.Location = New Point(103, 74)
         TirChartLabel.Name = "TirChartLabel"
         TirChartLabel.Size = New Size(68, 40)
         TirChartLabel.TabIndex = 2
@@ -1814,7 +1814,7 @@ Partial Class Form1
         TirSummaryPercentCharLabel.BackColor = Color.Transparent
         TirSummaryPercentCharLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TirSummaryPercentCharLabel.ForeColor = Color.LightGray
-        TirSummaryPercentCharLabel.Location = New Point(1659, 113)
+        TirSummaryPercentCharLabel.Location = New Point(116, 113)
         TirSummaryPercentCharLabel.Name = "TirSummaryPercentCharLabel"
         TirSummaryPercentCharLabel.Size = New Size(42, 40)
         TirSummaryPercentCharLabel.TabIndex = 3
@@ -1828,7 +1828,7 @@ Partial Class Form1
         TirValueLabel.BackColor = Color.Black
         TirValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TirValueLabel.ForeColor = Color.DarkGreen
-        TirValueLabel.Location = New Point(1575, 234)
+        TirValueLabel.Location = New Point(15, 234)
         TirValueLabel.Name = "TirValueLabel"
         TirValueLabel.Size = New Size(84, 40)
         TirValueLabel.TabIndex = 24
@@ -1842,7 +1842,7 @@ Partial Class Form1
         TiTRValueLabel.BackColor = Color.Black
         TiTRValueLabel.Font = New Font("Segoe UI", 21.75F, FontStyle.Bold)
         TiTRValueLabel.ForeColor = Color.Red
-        TiTRValueLabel.Location = New Point(1700, 234)
+        TiTRValueLabel.Location = New Point(132, 234)
         TiTRValueLabel.Name = "TiTRValueLabel"
         TiTRValueLabel.Size = New Size(84, 40)
         TiTRValueLabel.TabIndex = 24
@@ -1869,7 +1869,7 @@ Partial Class Form1
         TirComplianceLabel.BackColor = Color.Transparent
         TirComplianceLabel.Font = New Font("Segoe UI", 14.25F, FontStyle.Bold)
         TirComplianceLabel.ForeColor = Color.LightGray
-        TirComplianceLabel.Location = New Point(1601, 448)
+        TirComplianceLabel.Location = New Point(59, 448)
         TirComplianceLabel.Name = "TirComplianceLabel"
         TirComplianceLabel.Size = New Size(157, 25)
         TirComplianceLabel.TabIndex = 35
@@ -1895,7 +1895,7 @@ Partial Class Form1
         TiTRMgsLabel2.BackColor = Color.Transparent
         TiTRMgsLabel2.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         TiTRMgsLabel2.ForeColor = Color.Red
-        TiTRMgsLabel2.Location = New Point(162, 291)
+        TiTRMgsLabel2.Location = New Point(104, 291)
         TiTRMgsLabel2.Name = "TiTRMgsLabel2"
         TiTRMgsLabel2.Size = New Size(67, 21)
         TiTRMgsLabel2.TabIndex = 30
