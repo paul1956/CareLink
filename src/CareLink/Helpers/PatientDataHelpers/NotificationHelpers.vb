@@ -101,8 +101,8 @@ Friend Module NotificationHelpers
     ''' <param name="sender">The event sender.</param>
     ''' <param name="e">Event arguments for data binding completion.</param>
     Private Sub DgvNotification_DataBindingComplete(
-            sender As Object,
-            e As DataGridViewBindingCompleteEventArgs)
+        sender As Object,
+        e As DataGridViewBindingCompleteEventArgs)
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.ColumnCount > 0 Then
@@ -174,10 +174,12 @@ Friend Module NotificationHelpers
     ''' <param name="attachHandlers">
     '''  Delegate to attach event handlers to the DataGridView.
     ''' </param>
-    Private Sub DisplayNotificationDataTableInDGV(ByRef realPanel As TableLayoutPanel,
-                                                  table As DataTable,
-                                                  className As String,
-                                                  attachHandlers As attachHandlers)
+    Private Sub DisplayNotificationDataTableInDGV(
+        realPanel As TableLayoutPanel,
+        table As DataTable,
+        className As String,
+        attachHandlers As attachHandlers)
+
         Dim dgv As New DataGridView With {
             .AutoSize = True,
             .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders,
