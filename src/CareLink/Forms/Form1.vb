@@ -4179,7 +4179,7 @@ Public Class Form1
 
             ' If the PDF file is not valid after setup, show a message box to the user.
             If CurrentPdf.IsValid Then
-                SetServerUpdateTimer(Start:=True)
+                SetServerUpdateTimer(Start:=True, interval:=RefreshRate4Min)
             Else
                 MsgBox(heading:=$"Device Setting PDF file Is invalid",
                        prompt:=GetUserPdfPath(),
@@ -5024,7 +5024,7 @@ Public Class Form1
             Case PowerModes.Resume
                 Me.SetLastUpdateTime(msg:="System Awake", highLight:=True)
                 s_shuttingDown = False
-                SetServerUpdateTimer(Start:=True, interval:=TwentySecondsInMilliseconds)
+                SetServerUpdateTimer(Start:=True, interval:=ThirtySecondsInMilliseconds)
         End Select
 
     End Sub
@@ -5128,7 +5128,7 @@ Public Class Form1
                                              lastErrorMessage)
             _sgMiniDisplay.SetCurrentSgString(sgString, f:=0)
         End If
-        SetServerUpdateTimer(Start:=True, interval:=OneMinuteInMilliseconds)
+        SetServerUpdateTimer(Start:=True, interval:=RefreshRate4Min)
     End Sub
 
 #End Region ' Timer Events

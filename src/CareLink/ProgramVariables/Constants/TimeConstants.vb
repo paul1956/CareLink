@@ -7,7 +7,7 @@ Friend Module TimeConstants
     Friend ReadOnly Property Eleven59 As TimeOnly =
         TimeOnly.FromTimeSpan(New TimeSpan(hours:=23, minutes:=59, seconds:=59))
 
-    Friend ReadOnly Property Eleven59Str As String = Eleven59.ToHoursMinutes
+    Friend ReadOnly Property Eleven59PM As String = Eleven59.ToHoursMinutes
 
     Friend ReadOnly Property Midnight As New TimeOnly(hour:=0, minute:=0)
 
@@ -46,10 +46,18 @@ Friend Module TimeConstants
 
 #Region "Millisecond Constants"
 
-    Public ReadOnly Property FourMinutesInMilliseconds As Integer = CInt(FourMinuteSpan.TotalMilliseconds)
-    Public ReadOnly Property OneMinuteInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds)
+    ''' <summary>
+    '''  Milliseconds in 4 minutes. Used for refresh rate of the main form.
+    ''' </summary>
+    ''' <returns>Milliseconds in 4 minutes.</returns>
+    Public ReadOnly Property RefreshRate4Min As Integer = CInt(FourMinuteSpan.TotalMilliseconds)
+
+    ''' <summary>
+    '''  Milliseconds in 30 seconds. Used for refresh rate of the main form
+    '''  after suspend.
+    ''' </summary>
+    ''' <returns>Milliseconds in 30 seconds.</returns>
     Public ReadOnly Property ThirtySecondsInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds / 2)
-    Public ReadOnly Property TwentySecondsInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds / 3)
 
 #End Region ' Millisecond Constants
 

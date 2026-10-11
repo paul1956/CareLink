@@ -127,7 +127,7 @@ Friend Module LoginHelpers
                 Loop
 
                 If Form1.Client Is Nothing OrElse Not Form1.Client.LoggedIn Then
-                    SetServerUpdateTimer(Start:=True, interval:=FourMinutesInMilliseconds)
+                    SetServerUpdateTimer(Start:=True, interval:=RefreshRate4Min)
                     Dim hasErrors As Boolean = True
                     If NetworkUnavailable() Then
                         owner.LoginStatus.ReportLoginStatus(hasErrors,
@@ -147,7 +147,7 @@ Friend Module LoginHelpers
                     Await Form1.Client.GetRecentDataAsync()
 
                 SetUpCareLinkUser(forceUI:=False)
-                SetServerUpdateTimer(Start:=True, interval:=OneMinuteInMilliseconds)
+                SetServerUpdateTimer(Start:=True, interval:=RefreshRate4Min)
 
                 If NetworkUnavailable() Then
                     owner.LoginStatus.ReportLoginStatus(hasErrors:=True,
@@ -331,7 +331,7 @@ Friend Module LoginHelpers
         ReportMemory()
 
         If Start Then
-            If interval > -1 Then
+            If interval > -1 AndAlso Form1.ServerUpdateTimer.Interval <> interval Then
                 Form1.ServerUpdateTimer.Interval = interval
             End If
             Form1.ServerUpdateTimer.Start()

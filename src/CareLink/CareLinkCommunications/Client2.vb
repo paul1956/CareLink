@@ -1127,8 +1127,7 @@ Friend Class Client2
         End If
 
         Try
-            Dim metaDataElement As JsonElement =
-                CType(data.Values(index:=0), JsonElement)
+            Dim metaDataElement As JsonElement = data.Values(index:=0)
             Dim metaData As Metadata = Nothing
             Try
                 metaData = metaDataElement.FromJson(Of Metadata)()

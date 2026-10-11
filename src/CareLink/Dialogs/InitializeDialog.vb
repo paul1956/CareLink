@@ -33,7 +33,7 @@ Public Class InitializeDialog
             Dim value As New TimeOnly(hour:=i \ 2, minute:=(i Mod 2) * 30)
             data.Add(key:=value.ToHoursMinutes, value)
         Next
-        data.Add(key:=Eleven59Str, value:=Eleven59)
+        data.Add(key:=Eleven59PM, value:=Eleven59)
         comboBoxCell.DataSource = data.ToArray
         comboBoxCell.DisplayMember = "Key"
         comboBoxCell.ValueMember = "Value"
@@ -113,7 +113,7 @@ Public Class InitializeDialog
                 With Me.InitializeDataGridView
                     columnName = NameOf(ColumnEnd)
                     cell = Me.InitializeDataGridView.Rows(index:=e.RowIndex).Cells(columnName)
-                    If cell.Value.ToString = Eleven59Str OrElse .RowCount = 12 Then
+                    If cell.Value.ToString = Eleven59PM OrElse .RowCount = 12 Then
                         Me.OK_Button.Enabled = True
                         columnName = NameOf(ColumnSave)
                         index = .RowCount - 1
@@ -183,7 +183,7 @@ Public Class InitializeDialog
         Else
             With Me.InitializeDataGridView
                 If .RowCount = 12 Then
-                    cell.Value = Eleven59Str
+                    cell.Value = Eleven59PM
                     cell.ErrorText = String.Empty
                     Dim obj As Object = .Rows(index).Cells(columnName:=NameOf(ColumnSave))
                     Dim buttonCell As DataGridViewDisableButtonCell = CType(obj, DataGridViewDisableButtonCell)
@@ -462,7 +462,7 @@ Public Class InitializeDialog
         Dim dgv As DataGridView = Me.InitializeDataGridView
         Dim colName As String = NameOf(ColumnEnd)
         Dim cell As DataGridViewCell = dgv.Rows(index:=Me.InitializeDataGridView.RowCount - 1).Cells(colName)
-        cell.Value = Eleven59Str
+        cell.Value = Eleven59PM
         Me.InitializeDataGridView.Enabled = True
     End Sub
 
