@@ -90,12 +90,12 @@ Friend Module PlotSeriesBasal
 
         xValue = markerOADateTime + TwoMinutes30SecondsOADate
         If DrawFromBottom Then
-            yValue = amount.RoundToStep(IsFlex)
+            yValue = amount.RoundToStep()
             basalSeries.AddBasalPoint(xValue, yValue:=0, lineColor, tag)
             basalSeries.AddBasalPoint(xValue, yValue, lineColor, tag)
             basalSeries.AddBasalPoint(xValue, yValue:=0, lineColor, tag)
         Else
-            yValue = bolusRow - ((bolusRow - insulinRow) * (amount.RoundToStep(IsFlex) / MaxBasalPerDose))
+            yValue = bolusRow - ((bolusRow - insulinRow) * (amount.RoundToStep() / MaxBasalPerDose))
             basalSeries.AddBasalPoint(xValue, yValue:=bolusRow, lineColor, tag)
             basalSeries.AddBasalPoint(xValue, yValue, lineColor, tag)
             basalSeries.AddBasalPoint(xValue, yValue:=bolusRow, lineColor, tag)

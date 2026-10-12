@@ -5421,10 +5421,11 @@ Public Class Form1
                 TreatmentInsulinRow = (MaxBasalPerDose + GetMinBasal()).RoundToStep()
         End Select
 
-        Dim baseColor As Color = Me.TreatmentMarkersChart.BackColor.ContrastingColor()
+        Dim baseColor As Color =
+            Me.TreatmentMarkersChart.BackColor.ContrastingColor()
 
         With treatmentMarkersChartArea.AxisY
-            Dim interval As Single = (TreatmentInsulinRow / 10).RoundToStep(IsFlex)
+            Dim interval As Single = (TreatmentInsulinRow / 10).RoundToStep()
             .Interval = interval
             .IsInterlaced = False
             .IsMarginVisible = False
@@ -6205,27 +6206,27 @@ Public Class Form1
                 Case "INSULIN"
                     Dim deliveredAmount As String =
                         marker.Data.DataValues.DeliveredFastAmount.ToString
-                    s_totalDailyDose += deliveredAmount.ParseSingle().RoundToStep(IsFlex)
+                    s_totalDailyDose += deliveredAmount.ParseSingle().RoundToStep()
                     Select Case marker.Data.DataValues.ActivationType
                         Case "AUTOCORRECTION"
-                            s_totalAutoCorrection += deliveredAmount.ParseSingle().RoundToStep(IsFlex)
+                            s_totalAutoCorrection += deliveredAmount.ParseSingle().RoundToStep()
                         Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                            s_totalManualBolus += deliveredAmount.ParseSingle().RoundToStep(IsFlex)
+                            s_totalManualBolus += deliveredAmount.ParseSingle().RoundToStep()
                     End Select
 
                 Case "AUTO_BASAL_DELIVERY"
                     Dim amount As Single =
-                        marker.Data.DataValues.BolusAmount.RoundToStep(IsFlex)
+                        marker.Data.DataValues.BolusAmount.RoundToStep()
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MANUAL_BASAL_DELIVERY"
                     Dim amount As Single =
-                        marker.Data.DataValues.BolusAmount.RoundToStep(IsFlex)
+                        marker.Data.DataValues.BolusAmount.RoundToStep()
                     s_totalBasal += amount
                     s_totalDailyDose += amount
                 Case "MEAL"
                     s_totalCarbs +=
-                        marker.Data.DataValues.Amount.RoundToStep(IsFlex)
+                        marker.Data.DataValues.Amount.RoundToStep()
                 Case "CALIBRATION"
                     ' IGNORE HERE
                 Case "BG_READING"

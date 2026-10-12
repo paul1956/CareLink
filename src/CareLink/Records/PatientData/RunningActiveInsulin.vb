@@ -42,7 +42,7 @@ Friend Class RunningActiveInsulin
     End Function
 
     Public Overrides Function ToString() As String
-        Return $"{Me.EventDate:t} {Me.CurrentInsulinLevel.RoundToStep(IsFlex)}"
+        Return $"{Me.EventDate:t} {Me.CurrentInsulinLevel.RoundToStep()}"
     End Function
 
 End Class

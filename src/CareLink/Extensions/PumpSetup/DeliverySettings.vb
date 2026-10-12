@@ -58,7 +58,7 @@ Friend Module DeliverySettings
                 Dim sensitivity As String =
                     If(item.Sensitivity < 0.01,
                        "0",
-                       item.Sensitivity.RoundToStep(IsFlex).ToString(format:="F1"))
+                       item.Sensitivity.RoundToStep().ToString(format:="F1"))
 
                 Dim value As String =
                     $"{sensitivity} {pdf.Bolus.BolusWizard.Units.CarbUnits}/U"

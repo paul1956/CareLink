@@ -294,7 +294,7 @@ Friend Module PlotMarkers
                         markerSeriesPoints.AddCalibrationPt(markerOA:=markerOADateTime, f, item)
                     Case "AUTO_BASAL_DELIVERY"
                         Dim amount As Single =
-                            item.Data.DataValues.BolusAmount.RoundToStep(IsFlex)
+                            item.Data.DataValues.BolusAmount.RoundToStep()
                         pageChart.Series(name:=BasalSeriesName).
                                   PlotBasalSeries(markerOADateTime,
                                                   amount,
@@ -305,7 +305,7 @@ Friend Module PlotMarkers
                                                   tag:=GetToolTip(item.Type, amount))
                     Case "MANUAL_BASAL_DELIVERY"
                         Dim amount As Single =
-                            item.Data.DataValues.BolusAmount.RoundToStep(IsFlex)
+                            item.Data.DataValues.BolusAmount.RoundToStep()
                         pageChart.Series(name:=BasalSeriesName).
                                   PlotBasalSeries(markerOADateTime,
                                                   amount,
@@ -318,9 +318,9 @@ Friend Module PlotMarkers
                         Select Case item.Data.DataValues.ActivationType
                             Case "AUTOCORRECTION"
                                 Dim amount As Single =
-                                    item.Data.DataValues.DeliveredFastAmount.RoundToStep(IsFlex)
+                                    item.Data.DataValues.DeliveredFastAmount.RoundToStep()
                                 Dim tag As String =
-                                    $"Auto Correction: {item.Data.DataValues.DeliveredFastAmount.RoundToStep(IsFlex)}U"
+                                    $"Auto Correction: {item.Data.DataValues.DeliveredFastAmount.RoundToStep()}U"
                                 pageChart.Series(name:=BasalSeriesName).
                                           PlotBasalSeries(markerOADateTime,
                                                           amount,
@@ -345,7 +345,7 @@ Friend Module PlotMarkers
                                         baseColor = Color.LightBlue
                                         markerSeriesPoints.Last.Color = Color.FromArgb(alpha:=30, baseColor)
                                         Dim autoCorrection As Single =
-                                            item.Data.DataValues.DeliveredFastAmount.RoundToStep(IsFlex)
+                                            item.Data.DataValues.DeliveredFastAmount.RoundToStep()
                                         markerSeriesPoints.Last.Tag = $"Bolus: {autoCorrection}U"
                                     End If
                                 End If
@@ -385,7 +385,7 @@ Friend Module PlotMarkers
                             timeOrderedMarkers = GetManualBasalValues(markerWithIndex)
                             For Each kvp As KeyValuePair(Of OADate, Single) In timeOrderedMarkers
                                 Dim tag As String =
-                                    $"Manual Basal: {kvp.Value.RoundToStep(IsFlex)}U"
+                                    $"Manual Basal: {kvp.Value.RoundToStep()}U"
                                 pageChart.Series(name:=BasalSeriesName).
                                           PlotBasalSeries(markerOADateTime:=kvp.Key,
                                                           amount:=kvp.Value,
@@ -473,7 +473,7 @@ Friend Module PlotMarkers
                 Select Case item.Type
                     Case "AUTO_BASAL_DELIVERY"
                         Dim amount As Single =
-                            item.Data.DataValues.BolusAmount.RoundToStep(IsFlex)
+                            item.Data.DataValues.BolusAmount.RoundToStep()
                         With chart.Series(name:=BasalSeriesName)
                             .PlotBasalSeries(markerOADateTime,
                                              amount,
@@ -493,7 +493,7 @@ Friend Module PlotMarkers
                         Select Case item.Data.DataValues.ActivationType
                             Case "AUTOCORRECTION"
                                 Dim amount As Single =
-                                    item.Data.DataValues.DeliveredFastAmount.RoundToStep(IsFlex)
+                                    item.Data.DataValues.DeliveredFastAmount.RoundToStep()
                                 chart.Series(name:=BasalSeriesName).
                                     PlotBasalSeries(markerOADateTime,
                                                     amount,
@@ -505,7 +505,7 @@ Friend Module PlotMarkers
                             Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
                                 If item.Data.DataValues.ActivationType = "RECOMMENDED" Then
                                     Dim amount As Single =
-                                        item.Data.DataValues.DeliveredFastAmount.RoundToStep(IsFlex)
+                                        item.Data.DataValues.DeliveredFastAmount.RoundToStep()
                                     If amount.AlmostZero Then
                                         Continue For
                                     End If
@@ -522,7 +522,7 @@ Friend Module PlotMarkers
                                         lastDataPoint.Color = Color.FromArgb(alpha:=30, baseColor:=Color.LightBlue)
                                         markerBorderColor = Color.FromArgb(alpha:=10, baseColor:=Color.Black)
                                         Dim singleValue As Single =
-                                            item.Data.DataValues.DeliveredFastAmount.RoundToStep(IsFlex)
+                                            item.Data.DataValues.DeliveredFastAmount.RoundToStep()
                                         Dim text As String =
                                             If(singleValue.AlmostZero,
                                                "Calibraion Only!",
@@ -545,7 +545,7 @@ Friend Module PlotMarkers
                             Not InAutoMode Then
 
                             For Each kvp As KeyValuePair(Of OADate, Single) In GetManualBasalValues(markerWithIndex)
-                                Dim tag As String = $"Manual Basal: {kvp.Value.RoundToStep(IsFlex)}U"
+                                Dim tag As String = $"Manual Basal: {kvp.Value.RoundToStep()}U"
                                 chart.Series(name:=BasalSeriesName).PlotBasalSeries(
                                     markerOADateTime:=kvp.Key,
                                     amount:=kvp.Value,
@@ -559,7 +559,7 @@ Friend Module PlotMarkers
 
                     Case "MANUAL_BASAL_DELIVERY"
                         Dim amount As Single =
-                            item.Data.DataValues.BolusAmount.RoundToStep(IsFlex)
+                            item.Data.DataValues.BolusAmount.RoundToStep()
                         chart.Series(name:=BasalSeriesName).
                             PlotBasalSeries(markerOADateTime,
                                             amount,
@@ -570,12 +570,12 @@ Friend Module PlotMarkers
                                             tag:=GetToolTip(item.Type, amount))
 
                     Case "MEAL"
-                        Dim value As Single = CSng(TreatmentInsulinRow * 0.95).RoundToStep(IsFlex)
-                        If s_treatmentMarkersMeal.TryAdd(key:=markerOADateTime, value) Then
+                        Dim value As Single = CSng(TreatmentInsulinRow * 0.95).RoundToStep()
+                        If s_treatmentMarkersMeal.TryAdd(key:=markerOADateTime, value:=0) Then
                             markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue:=value)
                             markerBorderColor = Color.FromArgb(alpha:=10, baseColor:=Color.Yellow)
                             Dim amount As Integer =
-                                CInt(item.Data.DataValues.Amount.RoundToStep(IsFlex))
+                                CInt(item.Data.DataValues.Amount.RoundToStep())
                             CreateCallout(chart,
                                           lastDataPoint:=markerSeriesPoints.Last,
                                           markerBorderColor,

@@ -248,7 +248,7 @@ Public Class PdfSectionParser
                 Dim timeText As String = split(2)
                 Dim timePart As String = timeText.Split(separator:=" - ")(0)
                 Dim parsedTime As TimeOnly = TimeOnly.Parse(s:=timePart)
-                Dim units As Single = split(3).ParseSingle().RoundToStep(IsFlex)
+                Dim units As Single = split(3).ParseSingle().RoundToStep()
                 _record.Basal.NamedBasal(key:=name) = namedBasal
                 namedBasal.BasalRates.Add(item:=New BasalRateRecord With {
                     .[Time] = parsedTime,
@@ -273,14 +273,14 @@ Public Class PdfSectionParser
             bw.ActiveInsulinTime =
                 If(extractWord.Contains(value:=":"c),
                    AitLengths(key:=extractWord),
-                   ParseSingle(s:=extractWord).RoundToStep(IsFlex))
+                   ParseSingle(s:=extractWord).RoundToStep())
         End If
         bw.BolusWizard = "On"
         _record.Bolus.BolusWizard = bw
 
         searchWord = "Max bolus"
         extractWord = Me.GetValueForSearchWord(searchWord, endsWith:="u")
-        bw.MaximumBolus = ParseSingle(s:=extractWord).RoundToStep(IsFlex)
+        bw.MaximumBolus = ParseSingle(s:=extractWord).RoundToStep()
 
         bw.Units = New DeviceUnitsRecord With {
             .CarbUnits = "grams",
@@ -295,7 +295,7 @@ Public Class PdfSectionParser
             Dim split3 As String = split(3).RemoveSuffix(suffix:=" U")
             bolusIncrement = If(split3.Contains(value:="--"),
                                 Single.NaN,
-                                split3.ParseSingle().RoundToStep(IsFlex))
+                                split3.ParseSingle().RoundToStep())
         End If
 
         Dim dualSquareRecord As New DualSquareRecord With {.Dual = "Off", .Square = "Off"}

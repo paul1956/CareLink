@@ -13,8 +13,8 @@ Public Class AutoBasalDelivery
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
         With item.Data.DataValues
-            Me.BolusAmount = .BolusAmount.RoundToStep(IsFlex)
-            Me.MaxAutoBasalRate = .MaxAutoBasalRate.RoundToStep(IsFlex)
+            Me.BolusAmount = .BolusAmount.RoundToStep()
+            Me.MaxAutoBasalRate = .MaxAutoBasalRate.RoundToStep()
         End With
     End Sub
 

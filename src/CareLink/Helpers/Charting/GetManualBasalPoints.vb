@@ -87,7 +87,7 @@ Friend Module GetManualBasalPoints
                             timeOrderedMarkers.Add(key:=currentMarkerTime, value:=GetMinBasal())
                         End If
                         Dim oaBaseDate As Date = Date.FromOADate(currentMarkerTime)
-                        Dim increments As Integer = CInt(Math.Ceiling((basalRecord.UnitsPerHr / GetMinBasal()).RoundToStep(IsFlex)))
+                        Dim increments As Integer = CInt(Math.Ceiling((basalRecord.UnitsPerHr / GetMinBasal()).RoundToStep()))
                         value = New TimeSpan(hours:=0, minutes:=60 \ increments, seconds:=0)
                         currentMarkerTime = New OADate(asDate:=oaBaseDate.Add(value))
                     Else

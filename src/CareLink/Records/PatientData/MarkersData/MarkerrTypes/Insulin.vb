@@ -26,12 +26,12 @@ Public Class Insulin
         Me.TimestampAsString = item.TimestampAsString
         Me.DisplayTimeAsString = item.DisplayTimeAsString
         With item.Data.DataValues
-            Me.ProgrammedFastAmount = .ProgrammedFastAmount.RoundToStep(IsFlex)
-            Me.DeliveredFastAmount = .DeliveredFastAmount.RoundToStep(IsFlex)
+            Me.ProgrammedFastAmount = .ProgrammedFastAmount.RoundToStep()
+            Me.DeliveredFastAmount = .DeliveredFastAmount.RoundToStep()
             Me.Completed = .Completed
             Me.BolusType = .BolusType
-            Me.ProgrammedExtendedAmount = .ProgrammedExtendedAmount.RoundToStep(IsFlex)
-            Me.DeliveredExtendedAmount = .DeliveredExtendedAmount.RoundToStep(IsFlex)
+            Me.ProgrammedExtendedAmount = .ProgrammedExtendedAmount.RoundToStep()
+            Me.DeliveredExtendedAmount = .DeliveredExtendedAmount.RoundToStep()
             Me.ProgrammedDuration = .ProgrammedDuration
             Me.EffectiveDuration = .EffectiveDuration
             Me.InsulinType = .InsulinType
@@ -187,7 +187,7 @@ Public Class Insulin
                     Dim cRatio As Single = CurrentUser.GetCarbRatio(forTime)
                     Dim expectedBolus As Single = meal.Amount / cRatio
                     If expectedBolus - GetMinBasal() > Me.ProgrammedFastAmount Then
-                        Return (expectedBolus - Me.ProgrammedFastAmount).RoundToStep(IsFlex)
+                        Return (expectedBolus - Me.ProgrammedFastAmount).RoundToStep()
                     End If
                 End If
             End If
