@@ -389,36 +389,4 @@ Public Class StringExtensionsTests
         input.ToTitleCase().Should().Be(expected:="MMOLl")
     End Sub
 
-    <Fact>
-    Public Sub TruncateSingle_WithDecimal_ShortensToDigits()
-        Dim expression As String = "123.45678"
-        Dim expected As String = "123.45"
-        Dim digits As Integer = 2
-
-        Dim result As String = TruncateSingle(expression, digits)
-
-        result.Should().Be(expected)
-    End Sub
-
-    <Fact>
-    Public Sub TruncateSingle_WithNonNumeric_ReturnsOriginal()
-        Dim expression As String = "abc"
-        Dim expected As String = "abc"
-        Dim digits As Integer = 2
-
-        Dim result As String = TruncateSingle(expression, digits)
-
-        result.Should().Be(expected)
-    End Sub
-
-    <Fact>
-    Public Sub TruncateSingle_WithoutDecimal_AppendsDecimalAndZeros()
-        Dim expression As String = "10"
-        Dim expected As String = "10.00"
-        Dim digits As Integer = 2
-        Dim result As String = TruncateSingle(expression, digits)
-
-        result.Should().Be(expected)
-    End Sub
-
 End Class

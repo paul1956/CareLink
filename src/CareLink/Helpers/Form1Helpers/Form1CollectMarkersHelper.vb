@@ -193,7 +193,7 @@ Friend Module Form1CollectMarkersHelper
                 maxBasalPerHour = 10
             End If
         End If
-        Return $"Max Basal/Hr ~{maxBasalPerHour.RoundToStep(IsFlex())}U"
+        Return $"Max Basal/Hr ~{maxBasalPerHour.RoundToStep()}U"
     End Function
 
 End Module

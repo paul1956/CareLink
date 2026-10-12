@@ -41,12 +41,15 @@ Public Module BasalHelpers
     ''' <returns>
     '''  The rounded Single value, or <see cref="Single.NaN"/> if the input is NaN.
     ''' </returns>
-    ''' <param name="isFlex"></param>
+    ''' <param name="flex">
+    '''  If <see langword="True"/>, rounds to the nearest 0.05;
+    '''  otherwise, rounds to the nearest 0.025.
+    ''' </param>
     <Extension>
-    Public Function RoundToStep(f As Single, isFlex As Boolean) As Single
-        Return If(Single.IsNaN(f),
+    Public Function RoundToStep(f As Single, Optional flex As Boolean? = Nothing) As Single
+        Return If(Single.IsNaN(f) OrElse Single.IsInfinity(f),
                   Single.NaN,
-                  CDbl(f).RoundToStep(isFlex))
+                  CDbl(f).RoundToStep(flex))
     End Function
 
     ''' <summary>
@@ -70,15 +73,22 @@ Public Module BasalHelpers
     ''' </param>
     ''' <returns>The rounded number.</returns>
     <Extension>
-    Public Function RoundToStep(value As Double, isFlex As Boolean) As Single
-        ' Determine step size using a conditional expression
-        ' not function IsFlex() to support testing
-        Dim stepSize As Double = If(isFlex, 0.05, 0.025)
-
+    Public Function RoundToStep(value As Double, Optional flex As Boolean? = Nothing) As Single
         ' Handle NaN or Infinity
         If Double.IsNaN(value) OrElse Double.IsInfinity(value) Then
             Return Double.NaN
         End If
+        ' Determine step size using a conditional expression
+        ' not function IsFlex() to support testing
+        Dim stepSize As Double
+
+        If Not flex.HasValue Then
+            flex = IsFlex()
+        End If
+
+        stepSize = If(flex.Value,
+                      0.05,
+                      0.025)
 
         ' Perform rounding
         Return CSng(Math.Round(value:=value / stepSize,

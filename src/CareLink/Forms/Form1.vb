@@ -716,7 +716,7 @@ Public Class Form1
                     Me.CursorMessage1Label.Text = "Sensor Glucose"
                     Dim yValue As Double = currentDataPoint.YValues(0)
                     Me.CursorMessage2Label.Text =
-                        $"{yValue.RoundToStep(IsFlex)} {BgUnits}"
+                        $"{yValue.RoundToStep()} {BgUnits}"
                     Me.CursorMessage3Label.Text =
                         If(NativeMmolL,
                            $"{CInt(yValue * MmolLUnitsDivisor)} mg/dL",
@@ -736,7 +736,7 @@ Public Class Form1
                                           showInfusionSet:=False)
                 Case ActiveInsulinSeriesName
                     Dim yValue As Single =
-                        currentDataPoint.YValues.FirstOrDefault().RoundToStep(IsFlex)
+                        currentDataPoint.YValues.FirstOrDefault().RoundToStep()
                     chart1.SetupCallout(currentDataPoint,
                                         text:=$"Theoretical Active Insulin {yValue:F3} U")
                     Me.ShowCursorControls(showWhat:=CursorInfo.Show3,
@@ -5418,7 +5418,7 @@ Public Class Form1
             Case < 2
                 TreatmentInsulinRow = 2
             Case Else
-                TreatmentInsulinRow = (MaxBasalPerDose + GetMinBasal()).RoundToStep(IsFlex)
+                TreatmentInsulinRow = (MaxBasalPerDose + GetMinBasal()).RoundToStep()
         End Select
 
         Dim baseColor As Color = Me.TreatmentMarkersChart.BackColor.ContrastingColor()

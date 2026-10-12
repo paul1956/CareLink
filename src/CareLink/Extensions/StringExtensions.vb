@@ -483,34 +483,6 @@ Public Module StringExtensions
         Return input.Substring(startIndex:=0, length:=index).TrimEnd()
     End Function
 
-    ''' <summary>
-    '''  Truncates a string that represents a <see langword="Single"/>
-    '''  to a specified number of decimal digits.
-    ''' </summary>
-    ''' <param name="expression">The string to truncate.</param>
-    ''' <param name="digits">
-    '''  The number of decimal digits to keep.
-    ''' </param>
-    ''' <returns>
-    '''  A truncated string representation of the <see langword="Single"/> value.
-    ''' </returns>
-    ''' <remarks>
-    '''  Used for truncating values to a specific number of decimal places.
-    ''' </remarks>
-    <Extension>
-    Public Function TruncateSingle(expression As String, digits As Integer) As String
-        Dim i As Integer = expression.IndexOfAny(anyOf:=s_commaOrPeriod)
-        If i < 0 Then
-            If Not IsNumeric(expression) Then
-                Return expression
-            End If
-            i = expression.Length
-            expression &= DecimalSeparator
-        End If
-        expression &= New String("0"c, count:=digits + 1)
-        Return expression.Substring(startIndex:=0, length:=i + digits + 1)
-    End Function
-
 #Region "IgnoreCase String Comparisons"
 
     ''' <summary>

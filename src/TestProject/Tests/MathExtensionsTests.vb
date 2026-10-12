@@ -21,7 +21,7 @@ Public Class MathExtensionsTests
         Dim expected As Single = 1.05F
 
         ' Act
-        Dim actual As Single = value.RoundToStep(isFlex:=False)
+        Dim actual As Single = value.RoundToStep(flex:=False)
 
         ' Assert
         actual.Should().BeApproximately(expectedValue:=expected, precision:=0.0001F)
@@ -103,7 +103,7 @@ Public Class MathExtensionsTests
 
         ' String with rounding to 3 -> uses 0.025 increments
         Dim s2 As String = "1.0375"
-        Dim parsed2 As Single = s2.ParseSingle().RoundToStep(isFlex:=False)
+        Dim parsed2 As Single = s2.ParseSingle().RoundToStep(flex:=False)
         parsed2.Should().BeApproximately(expectedValue:=1.05F, precision:=0.0001F)
 
         ' Object overloads
@@ -120,16 +120,16 @@ Public Class MathExtensionsTests
     Public Sub RoundTo025_SingleAndDouble_And_NaN()
         Dim s As Single = 1.0375F
         Dim expectedValue As Single = 1.05F
-        s.RoundToStep(isFlex:=False).Should().BeApproximately(expectedValue, precision:=0.0001F)
+        s.RoundToStep(flex:=False).Should().BeApproximately(expectedValue, precision:=0.0001F)
 
         Dim d As Double = 1.0375
-        d.RoundToStep(isFlex:=False).Should().BeApproximately(expectedValue, precision:=0.0001F)
+        d.RoundToStep(flex:=False).Should().BeApproximately(expectedValue, precision:=0.0001F)
 
         Dim nanS As Single = Single.NaN
-        Assert.True(condition:=Single.IsNaN(nanS.RoundToStep(isFlex:=False)))
+        Assert.True(condition:=Single.IsNaN(nanS.RoundToStep(flex:=False)))
 
         Dim nanD As Double = Double.NaN
-        Assert.True(condition:=Double.IsNaN(nanD.RoundToStep(isFlex:=False)))
+        Assert.True(condition:=Double.IsNaN(nanD.RoundToStep(flex:=False)))
     End Sub
 
 End Class
