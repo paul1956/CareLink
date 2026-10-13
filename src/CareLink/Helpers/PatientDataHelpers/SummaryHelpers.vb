@@ -454,12 +454,9 @@ Friend Module SummaryHelpers
                                                  isTitle:=True)
 
                     Case kvp.Key.StartsWithNoCase(value:="type")
-                        HandleComplexItemsString(kvp,
-                                                 recordNumber,
-                                                 key:="type",
-                                                 listOfSummaryRecords,
-                                                 isTitle:=True)
-
+                        item = New SummaryRecord(recordNumber,
+                                                 kvp,
+                                                 message:=kvp.Value.ToTitle)
                     Case Else
                         item = New SummaryRecord(recordNumber, kvp)
                 End Select
