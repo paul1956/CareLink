@@ -1941,6 +1941,7 @@ Partial Class Form1
         ' 
         TlpNotificationsCleared.AutoScroll = True
         TlpNotificationsCleared.AutoSize = True
+        TlpNotificationsCleared.BackColor = SystemColors.Window
         TlpNotificationsCleared.CellBorderStyle = TableLayoutPanelCellBorderStyle.InsetDouble
         TlpNotificationsCleared.ColumnCount = 1
         TlpNotificationsCleared.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 100.0F))
