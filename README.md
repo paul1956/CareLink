@@ -44,9 +44,13 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 - Lastly is an area where you can enter your Carb Ratio by time.
 
 ## Updated
-10/03/2026
+10/13/2026
 
 ## What's New
+New in 6.1.0.0
+- Improve Cursor handling in DataGridView controls
+- Update background color of SplitCountainer controls to match Dark Mode
+
 New in 6.0.5.0
 - Add support for new CareLink™ API changes in EU.
 - Add improved logging
