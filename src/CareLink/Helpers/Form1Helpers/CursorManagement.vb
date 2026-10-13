@@ -201,11 +201,82 @@ Friend Module CursorManagement
                 End Try
             End If
         Else
+            owner.Cursor = newCursor
             Try
-                owner.Cursor = newCursor
+                ' Manage safety timeout: if we set a WaitCursor, start/reset a 15s timer
+                ' that will clear any stuck WaitCursor. If we set the cursor back to Default
+                ' dispose the timer.
+                SyncLock state.waitTimerLock
+                    If newCursor = Cursors.WaitCursor Then
+                        ' Dispose any existing timer first
+                        If state.waitTimer IsNot Nothing Then
+                            Try
+                                state.waitTimer.Change(dueTime:=Timeout.Infinite,
+                                                       period:=Timeout.Infinite)
+                                state.waitTimer.Dispose()
+                            Catch
+                            End Try
+                            state.waitTimer = Nothing
+                        End If
+
+                        ' Capture a weak reference to the owner so the timer does not keep it alive
+                        Dim wr As New WeakReference(Of Form)(target:=owner)
+
+                        Dim callback As New TimerCallback(
+                            Sub(stateObj As Object)
+                                Try
+                                    Dim target As Form = Nothing
+                                    If wr.TryGetTarget(target) Then
+                                        ' Clear logical counts and restore cursor on the UI thread
+                                        Dim method As New Action(
+                                            Sub()
+                                                Try
+                                                    Dim s As CursorState = GetState(target)
+                                                    s.pendingBindings = 0
+                                                    s.cursorOperations = 0
+                                                    Try
+                                                        s.dgvBindingRefs.Clear()
+                                                    Catch
+                                                    End Try
+                                                    Try
+                                                        SetOwnerCursor(owner:=target,
+                                                                       newCursor:=Cursors.Default,
+                                                                       pumpMessages:=False)
+                                                    Catch
+                                                    End Try
+                                                Catch
+                                                End Try
+                                            End Sub)
+                                        If target.InvokeRequired Then
+                                            target.BeginInvoke(method)
+                                        Else
+                                            method()
+                                        End If
+                                    End If
+                                Catch
+                                End Try
+                            End Sub)
+
+                        ' Create a timer that fires once after 15 seconds (15000 ms)
+                        state.waitTimer =
+                            New Timer(callback,
+                                      state:=Nothing,
+                                      dueTime:=15000,
+                                      period:=Timeout.Infinite)
+                    Else
+                        ' Clear any existing safety timer when returning to Default
+                        If state.waitTimer IsNot Nothing Then
+                            Try
+                                state.waitTimer.Change(dueTime:=Timeout.Infinite,
+                                                       period:=Timeout.Infinite)
+                                state.waitTimer.Dispose()
+                            Catch
+                            End Try
+                            state.waitTimer = Nothing
+                        End If
+                    End If
+                End SyncLock
             Catch
-                ' Ignore errors setting cursor
-                Stop
             End Try
             If pumpMessages Then
                 Try
