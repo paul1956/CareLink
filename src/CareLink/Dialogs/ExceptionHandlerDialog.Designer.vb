@@ -18,8 +18,6 @@ Partial Class ExceptionHandlerDialog
             MyBase.Dispose(disposing)
         End Try
     End Sub
-    Friend WithEvents Cancel As Button
-    Friend WithEvents OK As Button
 
     'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
@@ -124,9 +122,11 @@ Partial Class ExceptionHandlerDialog
         Me.PerformLayout()
     End Sub
 
-    Friend WithEvents traceTextBox As TextBox
     Friend WithEvents AutoModeStatusLabel As Label
-    Friend WithEvents exTextBox As TextBox
     Friend WithEvents BgReadingLabel As Label
+    Friend WithEvents Cancel As Button
+    Friend WithEvents exTextBox As TextBox
     Friend WithEvents InstructionRtb As RichTextBox
+    Friend WithEvents OK As Button
+    Friend WithEvents traceTextBox As TextBox
 End Class

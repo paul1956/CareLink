@@ -18,15 +18,6 @@ Partial Class AboutBox1
         End Try
     End Sub
 
-    Friend WithEvents TableLayoutPanel As TableLayoutPanel
-    Friend WithEvents LogoPictureBox As PictureBox
-    Friend WithEvents LabelProductName As Label
-    Friend WithEvents LabelVersion As Label
-    Friend WithEvents LabelCompanyName As Label
-    Friend WithEvents TextBoxDescription As TextBox
-    Friend WithEvents OKButton As Button
-    Friend WithEvents LabelCopyright As Label
-
     'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
 
@@ -187,4 +178,13 @@ Partial Class AboutBox1
         Me.ResumeLayout(False)
         Me.PerformLayout()
     End Sub
+
+    Friend WithEvents LabelCompanyName As Label
+    Friend WithEvents LabelCopyright As Label
+    Friend WithEvents LabelProductName As Label
+    Friend WithEvents LabelVersion As Label
+    Friend WithEvents LogoPictureBox As PictureBox
+    Friend WithEvents OKButton As Button
+    Friend WithEvents TableLayoutPanel As TableLayoutPanel
+    Friend WithEvents TextBoxDescription As TextBox
 End Class

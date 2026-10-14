@@ -14,13 +14,6 @@ Partial Class LoginDialog
             MyBase.Dispose(disposing)
         End Try
     End Sub
-    Friend WithEvents LogoPictureBox As PictureBox
-    Friend WithEvents UsernameLabel As Label
-    Friend WithEvents PasswordLabel As Label
-    Friend WithEvents UsernameComboBox As ComboBox
-    Friend WithEvents PasswordTextBox As TextBox
-    Friend WithEvents Ok_Button As Button
-    Friend WithEvents Cancel_Button As Button
 
     'Required by the Windows Form Designer
     Private components As System.ComponentModel.IContainer
@@ -273,16 +266,23 @@ Partial Class LoginDialog
         Me.PerformLayout()
     End Sub
 
+    Friend WithEvents Cancel_Button As Button
+    Friend WithEvents CarePartnerCheckBox As CheckBox
     Friend WithEvents CountryComboBox As ComboBox
-    Friend WithEvents RegionComboBox As ComboBox
-    Friend WithEvents SelectRegionLabel As Label
-    Friend WithEvents SelectCountryLabel As Label
-    Friend WithEvents ShowPasswordCheckBox As CheckBox
-    Friend WithEvents LoginStatus As TextBox
-    Friend WithEvents SelectCultureLabel As Label
     Friend WithEvents CultureComboBox As ComboBox
+    Friend WithEvents LoginStatus As TextBox
+    Friend WithEvents LogoPictureBox As PictureBox
+    Friend WithEvents Ok_Button As Button
     Friend WithEvents Panel1 As Panel
+    Friend WithEvents PasswordLabel As Label
+    Friend WithEvents PasswordTextBox As TextBox
     Friend WithEvents PatientUserIDLabel As Label
     Friend WithEvents PatientUserIDTextBox As TextBox
-    Friend WithEvents CarePartnerCheckBox As CheckBox
+    Friend WithEvents RegionComboBox As ComboBox
+    Friend WithEvents SelectCountryLabel As Label
+    Friend WithEvents SelectCultureLabel As Label
+    Friend WithEvents SelectRegionLabel As Label
+    Friend WithEvents ShowPasswordCheckBox As CheckBox
+    Friend WithEvents UsernameComboBox As ComboBox
+    Friend WithEvents UsernameLabel As Label
 End Class
