@@ -39,7 +39,7 @@ Public Module CareLinkUserDataRecordHelpers
                     cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleRight, pad:=New Padding(all:=1))
                 Else
                     Stop
-                    Throw UnreachableException(
+                    Throw GetUnreachableException(
                         paramName:=$"Column {NameOf(columnName)} = {columnName}",
                         memberName:=NameOf(CareLinkUserDataRecordHelpers))
                 End If

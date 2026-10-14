@@ -1483,7 +1483,7 @@ Public Class Form1
                 Case NameOf(AutoBasalDelivery.MaxAutoBasalRate)
                     dgv.CellFormattingBasal(e)
 
-                Case NameOf(AutoBasalDelivery.OAdateTime)
+                Case NameOf(AutoBasalDelivery.OaDateTime)
                     ' Ignore
 
                 Case Else
@@ -2412,7 +2412,7 @@ Public Class Form1
                 Case NameOf(Insulin.Completed)
                     dgv.CellFormattingSingleWord(e)
 
-                Case NameOf(Insulin.OAdateTime)
+                Case NameOf(Insulin.OaDateTime)
                     dgv.CellFormattingDefault(e)
 
                 Case Else

@@ -12,37 +12,6 @@ Friend Module ExceptionHelpers
     Private Const InnerExceptionMessage As String = ", see inner exception."
 
     ''' <summary>
-    '''  Gets an <see cref="ArgumentOutOfRangeException"/> indicating
-    '''  an unreachable program location.
-    ''' </summary>
-    ''' <param name="paramName">
-    '''  The name of the property or parameter that caused the exception.
-    ''' </param>
-    ''' <param name="memberName">
-    '''  The name of the member where the exception occurred.
-    '''  Automatically supplied by the compiler.</param>
-    ''' <param name="sourceLineNumber">
-    '''  The line number in the source file where the exception occurred.
-    '''  Automatically supplied by the compiler.
-    ''' </param>
-    ''' <returns>
-    '''  An <see cref="ArgumentOutOfRangeException"/> describing the
-    '''  unreachable code location.
-    ''' </returns>
-    <ExcludeFromCodeCoverage>
-    Public ReadOnly Property UnreachableException(
-        paramName As String,
-        <CallerMemberName> Optional memberName As String = Nothing,
-        <CallerLineNumber()> Optional sourceLineNumber As Integer = 0) As Exception
-
-        Get
-            Dim message As String =
-                $"The program location {memberName} line {sourceLineNumber} is thought to be unreachable."
-            Return New ArgumentOutOfRangeException(paramName, message)
-        End Get
-    End Property
-
-    ''' <summary>
     '''  Decodes an <see cref="Exception"/> to a readable string,
     '''  recursively including inner exception messages.
     ''' </summary>
@@ -65,6 +34,31 @@ Friend Module ExceptionHelpers
         End If
 
         Return errorMsg
+    End Function
+
+    ''' <summary>
+    '''  Gets an <see cref="ArgumentOutOfRangeException"/> indicating
+    '''  an unreachable program location.
+    ''' </summary>
+    ''' <param name="paramName">
+    '''  The name of the property or parameter that caused the exception.
+    ''' </param>
+    ''' <param name="memberName">
+    '''  The name of the member where the exception occurred.
+    '''  Automatically supplied by the compiler.</param>
+    ''' <param name="sourceLineNumber">
+    '''  The line number in the source file where the exception occurred.
+    '''  Automatically supplied by the compiler.
+    ''' </param>
+    ''' <returns>
+    '''  An <see cref="ArgumentOutOfRangeException"/> describing the
+    '''  unreachable code location.
+    ''' </returns>
+    <ExcludeFromCodeCoverage>
+    Public Function GetUnreachableException(paramName As String, Optional memberName As String = Nothing, Optional sourceLineNumber As Integer = 0) As Exception
+        Dim message As String =
+                $"The program location {memberName} line {sourceLineNumber} is thought to be unreachable."
+        Return New ArgumentOutOfRangeException(paramName, message)
     End Function
 
 End Module

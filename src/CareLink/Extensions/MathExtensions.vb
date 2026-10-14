@@ -131,7 +131,7 @@ Friend Module MathExtensions
                 Return CSng(value)
         End Select
 
-        Throw UnreachableException(paramName:=value.GetType.Name)
+        Throw GetUnreachableException(paramName:=value.GetType.Name)
     End Function
 
     ''' <summary>

@@ -81,8 +81,8 @@ Friend Module Form1CollectMarkersHelper
                         recordNumber:=AutoBasalDeliveryMarkers.Count + 1)
                     InsulinPerHour.AddBasalAmountToInsulinPerHour(basalDelMarker)
                     AutoBasalDeliveryMarkers.Add(item:=basalDelMarker)
-                    If Not basalDic.TryAdd(key:=basalDelMarker.OAdateTime, value:=basalDelMarker.BolusAmount) Then
-                        basalDic(key:=basalDelMarker.OAdateTime) += basalDelMarker.BolusAmount
+                    If Not basalDic.TryAdd(key:=basalDelMarker.OaDateTime, value:=basalDelMarker.BolusAmount) Then
+                        basalDic(key:=basalDelMarker.OaDateTime) += basalDelMarker.BolusAmount
                     End If
                     SuspendedMarkers.Add(item:=New LowGlucoseSuspended(
                        item,
@@ -109,7 +109,7 @@ Friend Module Form1CollectMarkersHelper
                     SuspendedMarkers.Add(item:=item5)
                     Select Case item.Data.DataValues.ActivationType
                         Case "AUTOCORRECTION", "MANUAL"
-                            Dim key As OADate = lastInsulinRecord.OAdateTime
+                            Dim key As OADate = lastInsulinRecord.OaDateTime
                             Dim value As Single = lastInsulinRecord.DeliveredFastAmount
                             If Not basalDic.TryAdd(key, value) Then
                                 basalDic(key) += value
@@ -120,7 +120,7 @@ Friend Module Form1CollectMarkersHelper
                             ' handled elsewhere
                         Case Else
                             Stop
-                            Throw UnreachableException(paramName:=item.Type)
+                            Throw GetUnreachableException(paramName:=item.Type)
                     End Select
                 Case "LOW_GLUCOSE_SUSPENDED"
                     If Not InAutoMode Then
@@ -143,7 +143,7 @@ Friend Module Form1CollectMarkersHelper
                     AllMarkers.Add(item)
                 Case Else
                     Stop
-                    Throw UnreachableException(paramName:=item.Type)
+                    Throw GetUnreachableException(paramName:=item.Type)
             End Select
         Next
 

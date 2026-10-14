@@ -16,7 +16,7 @@ Friend Module DgvCellStyleHelpers
             NameOf(ActiveInsulin.Kind),
             NameOf(ActiveInsulin.Version)}},
         {GetType(AutoBasalDelivery), New List(Of String) From {
-            NameOf(AutoBasalDelivery.OAdateTime)}},
+            NameOf(AutoBasalDelivery.OaDateTime)}},
         {GetType(AutoModeStatus), New List(Of String) From {
             NameOf(AutoModeStatus.Kind),
             NameOf(AutoModeStatus.RecordNumber),
@@ -34,7 +34,7 @@ Friend Module DgvCellStyleHelpers
             NameOf(CareLinkUserDataRecord.CareLinkPassword)}},
         {GetType(Insulin), New List(Of String) From {
             NameOf(Insulin.Kind),
-            NameOf(Insulin.OAdateTime),
+            NameOf(Insulin.OaDateTime),
             NameOf(Insulin.Timestamp),
             NameOf(Insulin.Type)}},
         {GetType(CurrentUserRecord), New List(Of String) From {}},

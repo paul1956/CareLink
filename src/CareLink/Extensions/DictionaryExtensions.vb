@@ -169,7 +169,7 @@ Public Module DictionaryExtensions
                             Case "Data"
                                 Stop
                             Case Else
-                                Throw UnreachableException(
+                                Throw GetUnreachableException(
                                     paramName:=[property].PropertyType.Name)
                         End Select
 
