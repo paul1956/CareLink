@@ -209,7 +209,7 @@ Public Module BitmapCache
                 Math.Max(trimmed.Width, trimmed.Height)
             Dim scale As Double = 1.0
             If srcLargest > 0 Then
-                scale = CDbl(contentTargetLargest) / CDbl(srcLargest)
+                scale = contentTargetLargest / srcLargest
             End If
 
             Dim scaledW As Integer = Math.Max(1, CInt(Math.Round(trimmed.Width * scale)))
@@ -277,7 +277,7 @@ Public Module BitmapCache
                 Dim srcLargest As Integer = Math.Max(trimmed.Width, trimmed.Height)
                 Dim scale As Double = 1.0
                 If srcLargest > 0 Then
-                    scale = CDbl(contentTargetLargest) / CDbl(srcLargest)
+                    scale = contentTargetLargest / srcLargest
                 End If
 
                 Dim scaledW As Integer = Math.Max(1, CInt(Math.Round(trimmed.Width * scale)))

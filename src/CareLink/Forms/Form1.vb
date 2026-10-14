@@ -390,7 +390,7 @@ Public Class Form1
                                             For Each c As DataGridViewColumn In dgv.Columns
                                                 Dim w As Integer = Math.Max(c.Width, c.MinimumWidth)
                                                 ' Avoid zero FillWeight
-                                                c.FillWeight = If(totalWidth = 0, 1.0F, CSng(w) / CSng(totalWidth) * 100.0F)
+                                                c.FillWeight = If(totalWidth = 0, 1.0F, w / CSng(totalWidth) * 100.0F)
                                                 c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
                                             Next
                                         End If
@@ -6046,7 +6046,14 @@ Public Class Form1
                             Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.ShieldDisabled)
                         End If
                     Case "NO_ERROR_MESSAGE", "CALIBRATING"
-                        Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShield)
+                        If s_pumpBannerStateValue IsNot Nothing AndAlso
+                            s_pumpBannerStateValue.Count > 0 AndAlso
+                            s_pumpBannerStateValue.Last()("Type") = "TEMP_TARGET" Then
+                            Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShieldExercise)
+                        Else
+                            Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShield)
+                        End If
+
                     Case "WARM_UP"
                         Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.ShieldDisabled)
                     Case "UNKNOWN"

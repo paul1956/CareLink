@@ -169,7 +169,7 @@ Public Class LoginDialog
 
             Dim x As Integer = e.Bounds.X + 2
             Dim yOffset As Integer =
-                Math.Max(0, CInt((e.Bounds.Height - nameFont.Height) \ 2))
+                Math.Max(0, (e.Bounds.Height - nameFont.Height) \ 2)
             Dim y As Integer = e.Bounds.Y + yOffset
 
             Dim previousTextRenderingHint As Text.TextRenderingHint =
@@ -837,7 +837,7 @@ Public Class LoginDialog
                 If Not _countryComboBoxOwnerDrawn Then
                     Me.CountryComboBox.DrawMode = DrawMode.OwnerDrawFixed
                     ' Set a reasonable item height based on the current font
-                    Me.CountryComboBox.ItemHeight = CInt(Math.Max(16, Me.CountryComboBox.Font.Height + 6))
+                    Me.CountryComboBox.ItemHeight = Math.Max(16, Me.CountryComboBox.Font.Height + 6)
                     ' Allow typing to select but prevent entering new items via validation
                     Me.CountryComboBox.DropDownStyle = ComboBoxStyle.DropDown
                     Me.CountryComboBox.AutoCompleteMode = AutoCompleteMode.SuggestAppend

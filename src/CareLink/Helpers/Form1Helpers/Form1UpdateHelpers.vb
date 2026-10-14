@@ -1043,8 +1043,8 @@ Friend Module Form1UpdateHelpers
                     Select Case typeValue
                         Case "TEMP_TARGET"
                             Dim minutes As Integer = bannerStateRecord1.TimeRemaining
-                            .PumpBannerStateLabel.BackColor = Color.FromArgb(44, 90, 247)
-                            .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
+                            .PumpBannerStateLabel.BackColor = Color.LimeGreen
+                            .PumpBannerStateLabel.ForeColor = Color.Black
                             Dim target150 As String =
                                 If(NativeMmolL,
                                    "8.3",
@@ -1052,7 +1052,8 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.Text =
                                 $"Temp Target {minutes.ToHoursMinutes} hr"
                             .PumpBannerStateLabel.Visible = True
-                            .PumpBannerStateLabel.Dock = DockStyle.Top
+                            .PumpBannerStateLabel.Dock = DockStyle.Bottom
+                            .SmartGuardShieldPictureBox.Image = GetBitmapFromCache(imageId:=ImageEnum.SmartGuardShieldExercise)
                         Case "BG_REQUIRED"
                             .PumpBannerStateLabel.BackColor = Color.CadetBlue
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor

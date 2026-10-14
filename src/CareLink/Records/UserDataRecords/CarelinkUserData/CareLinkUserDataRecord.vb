@@ -231,7 +231,7 @@ Partial Public Class CareLinkUserDataRecord
     ''' <param name="valueHash">The hash value of the new value to combine.</param>
     ''' <returns>The combined hash value.</returns>
     Private Shared Function HashStep(currentHash As Integer, valueHash As Integer) As Integer
-        Dim result As Long = (CLng(currentHash) * 23L) + CLng(valueHash)
+        Dim result As Long = (currentHash * 23L) + valueHash
 
         'Reduce to the equivalent signed Int32 value without an overflowing conversion.
         result = result Mod &H100000000L

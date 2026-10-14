@@ -239,6 +239,9 @@ Public Module ImageEnums
         <Description("SmartGuardShield")>
         SmartGuardShield
 
+        <Description("SmartGuardShieldExercise")>
+        SmartGuardShieldExercise
+
         <Description("icon_time_changed")>
         TimeChanged
 

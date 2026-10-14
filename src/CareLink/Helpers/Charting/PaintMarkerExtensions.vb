@@ -23,10 +23,10 @@ Friend Module PaintMarkerExtensions
             Case ImageOffsetEnum.Center
                 Return CSng(markerImage.Height / 2)
             Case ImageOffsetEnum.HeightUp
-                Return CSng(markerImage.Height)
+                Return markerImage.Height
             Case ImageOffsetEnum.HeightDown
                 ' Negative value so subtracting it moves the image down.
-                Return CSng(-markerImage.Height)
+                Return -markerImage.Height
             Case Else
                 Return CSng(markerImage.Height / 2)
         End Select
