@@ -7,6 +7,8 @@
     <!-- Pin WebView2 for the whole solution -->
     <WebView2Version>1.0.818.41</WebView2Version>
     <WebView2PackageId>microsoft.web.webview2</WebView2PackageId>
+    <!-- When true, prevent build targets from deleting WebView2 files from the project output -->
+    <PreserveWebView2Output>true</PreserveWebView2Output>
   </PropertyGroup>
 
   <!-- Only run validation/fallback for the CareLink project (only CareLink uses WebView2) -->
