@@ -5877,10 +5877,11 @@ Public Class Form1
                         Case "BG_READING",
                              "CALIBRATION",
                              "MEAL",
-                             "OTHER",
                              "TIME_CHANGE"
                             ' Ignored marker types
-
+                        Case "OTHER"
+                            ' Ignored marker types
+                            Stop
                         Case Else
                             Stop
                     End Select
@@ -6256,6 +6257,7 @@ Public Class Form1
                 Case "LOW_GLUCOSE_SUSPENDED"
                     ' IGNORE HERE
                 Case "OTHER"
+                    Stop
                     ' IGNORE HERE
                 Case "TIME_CHANGE"
                     ' IGNORE HERE

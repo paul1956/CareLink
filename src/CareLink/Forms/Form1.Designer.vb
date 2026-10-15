@@ -489,7 +489,7 @@ Partial Class Form1
         LastSgOrExitTimeLabel.Dock = DockStyle.Bottom
         LastSgOrExitTimeLabel.Font = New Font("Segoe UI", 12.0F, FontStyle.Bold)
         LastSgOrExitTimeLabel.ForeColor = Color.LightGray
-        LastSgOrExitTimeLabel.Location = New Point(0, 113)
+        LastSgOrExitTimeLabel.Location = New Point(0, 95)
         LastSgOrExitTimeLabel.Name = "LastSgOrExitTimeLabel"
         LastSgOrExitTimeLabel.Size = New Size(125, 21)
         LastSgOrExitTimeLabel.TabIndex = 55
@@ -502,7 +502,7 @@ Partial Class Form1
         PumpBannerStateLabel.Dock = DockStyle.Bottom
         PumpBannerStateLabel.Font = New Font("Segoe UI", 8.0F)
         PumpBannerStateLabel.ForeColor = Color.White
-        PumpBannerStateLabel.Location = New Point(0, 0)
+        PumpBannerStateLabel.Location = New Point(0, 119)
         PumpBannerStateLabel.Name = "PumpBannerStateLabel"
         PumpBannerStateLabel.Size = New Size(125, 15)
         PumpBannerStateLabel.TabIndex = 56
