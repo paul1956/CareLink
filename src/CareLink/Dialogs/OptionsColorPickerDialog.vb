@@ -53,7 +53,7 @@ Public Class OptionsColorPickerDialog
             GraphColorDictionary = Me.SaveGraphColorDictionary.Clone
         End If
 
-        SetServerUpdateTimer(Start:=True, interval:=RefreshRate4Min)
+        SetServerUpdateTimer(Start:=True, interval:=RefreshRate1Min)
         Me.CursorFinished(pumpMessages:=True)
         Me.Close()
     End Sub

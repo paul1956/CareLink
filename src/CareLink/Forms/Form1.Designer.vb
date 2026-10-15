@@ -548,7 +548,7 @@ Partial Class Form1
         ' 
         ' SmartGuardShieldPictureBox
         ' 
-        SmartGuardShieldPictureBox.Location = New Point(14, 16)
+        SmartGuardShieldPictureBox.Location = New Point(14, 0)
         SmartGuardShieldPictureBox.Margin = New Padding(5)
         SmartGuardShieldPictureBox.Name = "SmartGuardShieldPictureBox"
         SmartGuardShieldPictureBox.Size = New Size(100, 100)

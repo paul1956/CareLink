@@ -22,7 +22,6 @@ Friend Module TimeConstants
 #Region "Minute Spans"
 
     Public ReadOnly Property FiveMinuteSpan As New TimeSpan(hours:=0, minutes:=5, seconds:=0)
-    Public ReadOnly Property FourMinuteSpan As New TimeSpan(hours:=0, minutes:=4, seconds:=0)
     Public ReadOnly Property OneMinuteSpan As New TimeSpan(hours:=0, minutes:=1, seconds:=0)
     Public ReadOnly Property SixMinuteSpan As New TimeSpan(hours:=0, minutes:=6, seconds:=0)
     Public ReadOnly Property ThirtyMinuteSpan As New TimeSpan(hours:=0, minutes:=30, seconds:=0)
@@ -47,10 +46,10 @@ Friend Module TimeConstants
 #Region "Millisecond Constants"
 
     ''' <summary>
-    '''  Milliseconds in 4 minutes. Used for refresh rate of the main form.
+    '''  Milliseconds in 1 minute. Used for refresh rate of the main form.
     ''' </summary>
-    ''' <returns>Milliseconds in 4 minutes.</returns>
-    Public ReadOnly Property RefreshRate4Min As Integer = CInt(FourMinuteSpan.TotalMilliseconds)
+    ''' <returns>Milliseconds in 1 minute.</returns>
+    Public ReadOnly Property RefreshRate1Min As Integer = CInt(OneMinuteSpan.TotalMilliseconds)
 
     ''' <summary>
     '''  Milliseconds in 30 seconds. Used for refresh rate of the main form
