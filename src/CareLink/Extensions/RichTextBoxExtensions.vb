@@ -405,7 +405,10 @@ Public Module RichTextBoxExtensions
     '''  The index of the last found occurrence.
     ''' </param>
     <Extension>
-    Public Sub FindNext(rtb As RichTextBox, text As String, ByRef lastSearchIndex As Integer)
+    Public Sub FindNext(rtb As RichTextBox,
+                        text As String,
+                        reportNotFound As Boolean,
+                        ByRef lastSearchIndex As Integer)
         ' Validate input
         If String.IsNullOrWhiteSpace(value:=text) Then
             Return
@@ -419,6 +422,12 @@ Public Module RichTextBoxExtensions
 
         ' If not found, wrap around and search from the beginning
         If index = -1 AndAlso lastSearchIndex > 0 Then
+            If reportNotFound Then
+                MessageBox.Show(text:="Reached end of search. No more matches found.",
+                                caption:="Search",
+                                buttons:=MessageBoxButtons.OK,
+                                icon:=MessageBoxIcon.Information)
+            End If
             index = rtb.Find(str:=text,
                              start:=0,
                              options:=RichTextBoxFinds.None)
