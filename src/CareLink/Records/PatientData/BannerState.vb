@@ -18,12 +18,12 @@ Public Class BannerState
     Public Property Type As String
 
     <DisplayName("Time Remaining")>
-    <Column(Order:=3, TypeName:=NameOf([Int32]))>
+    <Column(Order:=2, TypeName:=NameOf([Int32]))>
     <JsonPropertyName("timeRemaining")>
     Public Property TimeRemaining As Integer = Nothing
 
     <DisplayName("Message")>
-    <Column(Order:=4, TypeName:=NameOf([String]))>
+    <Column(Order:=3, TypeName:=NameOf([String]))>
     <JsonPropertyName("message")>
     Public ReadOnly Property Message As String
         Get

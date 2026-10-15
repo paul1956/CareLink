@@ -47,6 +47,7 @@ Public Class Insulin
     ''' </summary>
     <DisplayName("Record Number")>
     <Column(Order:=0, TypeName:=NameOf(RecordNumber))>
+    <JsonPropertyName("recordNumber")>
     Public Property RecordNumber As Integer
 
     ''' <summary>
@@ -54,6 +55,7 @@ Public Class Insulin
     ''' </summary>
     <DisplayName("Type")>
     <Column(Order:=1, TypeName:=NameOf([Int32]))>
+    <JsonPropertyName("type")>
     Public Property Type As String
 
     ''' <summary>
@@ -61,6 +63,7 @@ Public Class Insulin
     ''' </summary>
     <DisplayName("Kind")>
     <Column(Order:=2, TypeName:=NameOf([String]))>
+    <JsonPropertyName("kind")>
     Public ReadOnly Property Kind As String
 
     ''' <summary>
@@ -106,70 +109,67 @@ Public Class Insulin
     End Property
 
     ''' <summary>
-    '''  Gets the OA date/time representation of the timestamp.
-    ''' </summary>
-    <DisplayName("OA Timestamp")>
-    <Column(Order:=7, TypeName:=NameOf([Double]))>
-    Public ReadOnly Property OAdateTime As OADate
-        Get
-            Return New OADate(Me.Timestamp)
-        End Get
-    End Property
-
-    ''' <summary>
     '''  Gets or sets the activation type for the insulin event.
     ''' </summary>
     <DisplayName("Activation Type")>
-    <Column(Order:=8, TypeName:="String", TypeName:=NameOf([String]))>
+    <Column(Order:=7, TypeName:=NameOf([String]))>
+    <JsonPropertyName("activationType")>
     Public Property ActivationType As String
 
     ''' <summary>
     '''  Gets or sets the bolus type for the insulin event.
     ''' </summary>
     <DisplayName("Bolus Type")>
-    <Column(Order:=9, TypeName:=NameOf([String]))>
+    <Column(Order:=8, TypeName:=NameOf([String]))>
+    <JsonPropertyName("bolusType")>
     Public Property BolusType As String
 
     ''' <summary>
     '''  Gets or sets the programmed extended amount of insulin (units).
     ''' </summary>
     <DisplayName("Programmed Extended Amount")>
-    <Column(Order:=10, TypeName:=NameOf([Single]))>
+    <Column(Order:=9, TypeName:=NameOf([Single]))>
+    <JsonPropertyName("programmedExtendedAmount")>
     Public Property ProgrammedExtendedAmount As Single
 
     ''' <summary>
     '''  Gets or sets the delivered extended amount of insulin (units).
     ''' </summary>
     <DisplayName("Delivered Extended Amount")>
-    <Column(Order:=12, TypeName:=NameOf([Single]))>
+    <Column(Order:=10, TypeName:=NameOf([Single]))>
+    <JsonPropertyName("deliveredExtendedAmount")>
     Public Property DeliveredExtendedAmount As Single
 
     ''' <summary>
     '''  Gets or sets the programmed duration for the extended bolus (minutes).
     ''' </summary>
     <DisplayName("Programmed Duration")>
-    <Column(Order:=13, TypeName:=NameOf([Int32]))>
+    <Column(Order:=11, TypeName:=NameOf([Int32]))>
+    <JsonPropertyName("programmedDuration")>
     Public Property ProgrammedDuration As Integer
 
     ''' <summary>
     '''  Gets or sets the effective duration for the extended bolus (minutes).
     ''' </summary>
     <DisplayName("Effective Duration")>
-    <Column(Order:=14, TypeName:=NameOf([Int32]))>
+    <Column(Order:=12, TypeName:=NameOf([Int32]))>
+    <JsonPropertyName("effectiveDuration")>
     Public Property EffectiveDuration As Integer
 
     ''' <summary>
     '''  Gets or sets the programmed fast (immediate) amount of insulin (units).
     ''' </summary>
     <DisplayName("Programmed Fast Amount")>
-    <Column(Order:=15, TypeName:=NameOf([Single]))>
+    <Column(Order:=13, TypeName:=NameOf([Single]))>
+    <JsonPropertyName("programmedFastAmount")>
     Public Property ProgrammedFastAmount As Single
 
     ''' <summary>
     '''  Gets or sets the delivered fast (immediate) amount of insulin (units).
     ''' </summary>
     <DisplayName("Delivered Fast Amount")>
-    <Column(Order:=16, TypeName:=NameOf([Single]))>
+    <Column(Order:=14, TypeName:=NameOf([Single]))>
+    <JsonPropertyName("deliveredFastAmount")>
     Public Property DeliveredFastAmount As Single
 
     ''' <summary>
@@ -177,7 +177,8 @@ Public Class Insulin
     '''  and programmed bolus if applicable.
     ''' </summary>
     <DisplayName("Safe Meal Reduction")>
-    <Column(Order:=17, TypeName:=NameOf([Single]))>
+    <Column(Order:=15, TypeName:=NameOf([Single]))>
+    <JsonPropertyName("safeMealReduction")>
     Public ReadOnly Property SafeMealReduction As Single
         Get
             If {"RECOMMENDED", "UNDETERMINED"}.Contains(value:=Me.ActivationType) Then
@@ -199,14 +200,23 @@ Public Class Insulin
     '''  Gets or sets a value indicating whether the insulin delivery was completed.
     ''' </summary>
     <DisplayName("Completed")>
-    <Column(Order:=18, TypeName:=NameOf([Boolean]))>
+    <Column(Order:=16, TypeName:=NameOf([Boolean]))>
+    <JsonPropertyName("completed")>
     Public Property Completed As Boolean
 
     ''' <summary>
     '''  Gets or sets the type of insulin used for this event.
     ''' </summary>
     <DisplayName("Insulin Type")>
-    <Column(Order:=19, TypeName:=NameOf([String]))>
+    <Column(Order:=17, TypeName:=NameOf([String]))>
+    <JsonPropertyName("insulinType")>
     Public Property InsulinType As String
+
+    ''' <summary>
+    '''  Gets the OA date/time representation of the timestamp.
+    ''' </summary>
+    Public Function GetOaDateTime() As OADate
+        Return New OADate(asDate:=Me.Timestamp)
+    End Function
 
 End Class

@@ -1483,9 +1483,6 @@ Public Class Form1
                 Case NameOf(AutoBasalDelivery.MaxAutoBasalRate)
                     dgv.CellFormattingBasal(e)
 
-                Case NameOf(AutoBasalDelivery.OaDateTime)
-                    ' Ignore
-
                 Case Else
                     Stop
             End Select
@@ -2412,9 +2409,6 @@ Public Class Form1
                 Case NameOf(Insulin.Completed)
                     dgv.CellFormattingSingleWord(e)
 
-                Case NameOf(Insulin.OaDateTime)
-                    dgv.CellFormattingDefault(e)
-
                 Case Else
                     Stop
             End Select
@@ -2973,7 +2967,6 @@ Public Class Form1
                     dgv.CellFormattingToTitle(e)
 
                 Case NameOf(SG.Kind),
-                     NameOf(SG.OaDateTime),
                      NameOf(SG.Version)
                     ' Ignore
 
@@ -6032,7 +6025,27 @@ Public Class Form1
     ''' </remarks>
     Private Sub UpdateAutoModeShield()
         Try
-            Dim lastSgTimestamp As String = PatientData.LastSG.TimestampAsString
+            Dim lastSgTimestamp As String = String.Empty
+            Dim parsedDate As Date = Nothing
+            If Date.TryParseExact(s:=PatientData.LastSG.TimestampAsString,
+                                  format:="yyyy-MM-dd\THH:mm:ss",
+                                  provider:=CultureInfo.InvariantCulture,
+                                  style:=DateTimeStyles.AssumeLocal,
+                                  result:=parsedDate) Then
+
+                ' Calculate the time difference
+                Dim now As Date = Date.Now
+                Dim diff As TimeSpan = now - parsedDate
+
+                ' Round to nearest minute
+                Dim minutesAgo As Long = CInt(Math.Round(diff.TotalMinutes))
+
+                lastSgTimestamp =
+                    If(minutesAgo > 0,
+                       $"{minutesAgo.ToHoursMinutes} ago",
+                       "Now")
+            End If
+
             Me.LastSgOrExitTimeLabel.Text = lastSgTimestamp
             Me.ShieldUnitsLabel.Text = BgUnits
 
@@ -6040,16 +6053,18 @@ Public Class Form1
                 Me.SmartGuardShieldPictureBox.Image = Nothing
                 Select Case PatientData.SensorState
                     Case "CALIBRATION_REQUIRED"
-                        If IsFlex() Then
-                            Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardFlexSuspended)
-                        Else
-                            Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.ShieldDisabled)
-                        End If
+                        Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.ShieldDisabled)
                     Case "NO_ERROR_MESSAGE", "CALIBRATING"
                         If s_pumpBannerStateValue IsNot Nothing AndAlso
-                            s_pumpBannerStateValue.Count > 0 AndAlso
-                            s_pumpBannerStateValue.Last()("Type") = "TEMP_TARGET" Then
-                            Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShieldExercise)
+                            s_pumpBannerStateValue.Count > 0 Then
+                            Select Case s_pumpBannerStateValue.Last()("Type")
+                                Case "TEMP_TARGET"
+                                    Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShieldExercise)
+                                Case "DELIVERY_SUSPEND"
+                                    Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShieldDeliverySuspended)
+                                Case Else
+                                    Stop
+                            End Select
                         Else
                             Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShield)
                         End If
@@ -6062,13 +6077,12 @@ Public Class Form1
                         Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShield)
                 End Select
                 Me.ShieldUnitsLabel.Visible = True
-                Me.LastSgOrExitTimeLabel.Visible = True
             Else
                 Me.SmartGuardShieldPictureBox.Image = Nothing
                 Me.ShieldUnitsLabel.Visible =
                     PatientData.SensorState = "NO_ERROR_MESSAGE"
-                Me.LastSgOrExitTimeLabel.Visible = False
             End If
+            Me.LastSgOrExitTimeLabel.Visible = True
 
             Dim message As String = EmptyString
             If PatientData.LastSG.Sg.IsSgValid Then
@@ -6082,6 +6096,7 @@ Public Class Form1
                 Me.UpdateNotifyIcon(sgString)
                 _sgMiniDisplay.SetCurrentSgString(sgString, f:=PatientData.LastSG.Sg)
                 message = SG.FormatSensorMessage(key:=PatientData.SensorState, truncate:=True)
+                Me.LastSgOrExitTimeLabel.Visible = True
             Else
                 _sgMiniDisplay.SetCurrentSgString(sgString:="---", f:=PatientData.LastSG.Sg)
                 Me.CurrentSgLabel.Visible = False

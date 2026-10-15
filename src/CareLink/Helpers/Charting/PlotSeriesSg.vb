@@ -37,7 +37,7 @@ Friend Module PlotSeriesSg
             Try
                 With chart.Series(name:=SgSeriesName).Points
                     Dim sgRecord As SG = sgRecordWithIndex.Value
-                    Dim xValue As OADate = sgRecord.OaDateTime()
+                    Dim xValue As OADate = sgRecord.GetOaDateTime()
                     Dim f As Single = sgRecord.Sg
                     If Single.IsNaN(f) OrElse f.AlmostZero Then
                         .AddXY(xValue, yValue:=HomePageMealRow)

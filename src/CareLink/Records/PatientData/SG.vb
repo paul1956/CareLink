@@ -103,26 +103,18 @@ Public Class SG
         End Get
     End Property
 
-    <DisplayName("OA Date Time")>
-    <Column(Order:=8, TypeName:=NameOf([Double]))>
-    Public ReadOnly Property OaDateTime As OADate
-        Get
-            Return New OADate(Me.Timestamp)
-        End Get
-    End Property
-
     <DisplayName("Time Change")>
-    <Column(Order:=9, TypeName:=NameOf([Boolean]))>
+    <Column(Order:=8, TypeName:=NameOf([Boolean]))>
     <JsonPropertyName("timeChange")>
     Public Property TimeChange As Boolean
 
     <DisplayName("Is Backfill")>
-    <Column(Order:=10, TypeName:=NameOf([Boolean]))>
+    <Column(Order:=9, TypeName:=NameOf([Boolean]))>
     <JsonPropertyName("isBackfill")>
     Public Property IsBackfill As Boolean
 
     <DisplayName("Sensor State")>
-    <Column(Order:=11, TypeName:=NameOf([String]))>
+    <Column(Order:=10, TypeName:=NameOf([String]))>
     <JsonPropertyName("sensorState")>
     Public Property SensorState As String
         Get
@@ -134,7 +126,7 @@ Public Class SG
     End Property
 
     <DisplayName("Sensor Message")>
-    <Column(Order:=12, TypeName:=NameOf([String]))>
+    <Column(Order:=11, TypeName:=NameOf([String]))>
     Public ReadOnly Property Message As String
         Get
             _sensorState = If(_sensorState, EmptyString)
@@ -183,6 +175,10 @@ Public Class SG
             Return value.ToTitle
         End If
 
+    End Function
+
+    Public Function GetOaDateTime() As OADate
+        Return New OADate(asDate:=Me.Timestamp)
     End Function
 
     ''' <summary>

@@ -209,7 +209,6 @@
     <None Remove="Images\SensorLifeOK.png" />
     <None Remove="Images\Shield.png" />
     <None Remove="Images\ShieldDisabled.png" />
-    <None Remove="Images\SmartGuardFlexSuspended.png" />
     <None Remove="Images\SmartGuardShield.png" />
     <None Remove="Images\SmartGuardShieldExercise.png" />
     <None Remove="Images\TransmitterBatteryCritical.png" />
@@ -470,7 +469,7 @@
     <Content Include="Images\ShieldDisabled.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\SmartGuardFlexSuspended.png">
+    <Content Include="Images\SmartGuardShieldDeliverySuspended.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\SmartGuardShield.png">

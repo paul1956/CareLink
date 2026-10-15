@@ -233,11 +233,11 @@ Public Module ImageEnums
         <Description("ShieldDisabled")>
         ShieldDisabled
 
-        <Description("SmartGuardFlexSuspended")>
-        SmartGuardFlexSuspended
-
         <Description("SmartGuardShield")>
         SmartGuardShield
+
+        <Description("SmartGuardShieldDeliverySuspended")>
+        SmartGuardShieldDeliverySuspended
 
         <Description("SmartGuardShieldExercise")>
         SmartGuardShieldExercise

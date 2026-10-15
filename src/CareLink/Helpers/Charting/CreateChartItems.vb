@@ -588,18 +588,18 @@ Friend Module CreateChartItems
                     c.AxisX.Minimum = New OADate(asDate:=PumpNow.AddDays(value:=-1))
                 Else
                     Dim func As Func(Of SG, SG, SG) = Function(i1 As SG, i2 As SG) As SG
-                                                          Return If(i1.OaDateTime > i2.OaDateTime,
+                                                          Return If(i1.GetOaDateTime() > i2.GetOaDateTime(),
                                                                     i1,
                                                                     i2)
                                                       End Function
 
-                    c.AxisX.Maximum = s_sgRecords.Aggregate(func).OaDateTime
+                    c.AxisX.Maximum = s_sgRecords.Aggregate(func).GetOaDateTime()
                     func = Function(i1 As SG, i2 As SG) As SG
-                               Return If(i1.OaDateTime < i2.OaDateTime,
+                               Return If(i1.GetOaDateTime() < i2.GetOaDateTime(),
                                          i1,
                                          i2)
                            End Function
-                    c.AxisX.Minimum = s_sgRecords.Aggregate(func).OaDateTime
+                    c.AxisX.Minimum = s_sgRecords.Aggregate(func).GetOaDateTime()
                 End If
             End With
         End With

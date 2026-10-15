@@ -332,7 +332,7 @@ Public Class CareLinkService
                 Try
                     ' First attempt: parse as-is
                     token = body.FromJson(Of TokenData)()
-                Catch jex As JsonException
+                Catch innerException As JsonException
                     ' The body may contain unexpected binary or encoding. Use rawBytes already read above.
                     ' rawBytes was pre-read before attempting JSON parsing.
 
@@ -343,7 +343,7 @@ Public Class CareLinkService
                             Encoding.Unicode,
                             Encoding.BigEndianUnicode,
                             Encoding.UTF32,
-                            Encoding.GetEncoding(28591) ' ISO-8859-1
+                            Encoding.GetEncoding(codepage:=28591) ' ISO-8859-1
                         }
 
                         For Each enc As Encoding In encodings
@@ -363,14 +363,14 @@ Public Class CareLinkService
                         Try
                             Dim dumpBase As String = IO.Path.Combine(IO.Path.GetTempPath(), $"carelink_token_raw_{Date.UtcNow:yyyyMMddHHmmss}")
                             If rawBytes IsNot Nothing Then
-                                IO.File.WriteAllBytes(path:=dumpBase & ".bin", bytes:=rawBytes)
+                                IO.File.WriteAllBytes(path:=$"{dumpBase}.bin", bytes:=rawBytes)
                             End If
-                            IO.File.WriteAllText(path:=dumpBase & ".txt", contents:=body)
+                            IO.File.WriteAllText(path:=$"{dumpBase}.txt", contents:=body)
                         Catch
                         End Try
 
-                        message = $"Failed to parse token response JSON after multiple encodings. Raw dump: see temp files starting with carelink_token_raw_. Body starts with: {If(body?.Substring(0, Math.Min(200, body.Length)), "<empty>")}"
-                        Throw New ApplicationException(message, jex)
+                        message = $"Failed to parse token response JSON after multiple encodings. Raw dump: see temp files starting with carelink_token_raw_. Body starts with: {If(body?.Substring(startIndex:=0, length:=Math.Min(200, body.Length)), "<empty>")}"
+                        Throw New ApplicationException(message, innerException)
                     End If
                 End Try
             Else

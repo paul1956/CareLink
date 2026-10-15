@@ -55,15 +55,15 @@ Friend Module PlotSeriesLimits
         Dim yValue As Single = If(CurrentUser Is Nothing, 0, CurrentUser.CurrentTarget)
         If Not yValue.AlmostZero() Then
             chart.Series(name:=TargetSgSeriesName).Points.AddXY(
-                xValue:=s_sgRecords(index:=0).OaDateTime(),
+                xValue:=s_sgRecords(index:=0).GetOaDateTime(),
                 yValue)
             chart.Series(name:=TargetSgSeriesName).Points.AddXY(
-                xValue:=s_sgRecords.Last.OaDateTime(),
+                xValue:=s_sgRecords.Last.GetOaDateTime(),
                 yValue)
         End If
         If targetSgOnly Then Exit Sub
         For Each sgListIndex As IndexClass(Of SG) In s_sgRecords.WithIndex()
-            Dim xValue As OADate = sgListIndex.Value.OaDateTime()
+            Dim xValue As OADate = sgListIndex.Value.GetOaDateTime()
             Try
                 Dim limitsLowValue As Single = LimitRecordsList(index:=limitsIndexList(sgListIndex.Index)).LowLimit
                 Dim limitsHighValue As Single = LimitRecordsList(index:=limitsIndexList(sgListIndex.Index)).HighLimit

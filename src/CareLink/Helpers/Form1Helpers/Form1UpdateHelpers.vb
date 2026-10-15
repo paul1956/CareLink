@@ -1043,7 +1043,7 @@ Friend Module Form1UpdateHelpers
                     Select Case typeValue
                         Case "TEMP_TARGET"
                             Dim minutes As Integer = bannerStateRecord1.TimeRemaining
-                            .PumpBannerStateLabel.BackColor = Color.LimeGreen
+                            .PumpBannerStateLabel.BackColor = Color.Blue
                             .PumpBannerStateLabel.ForeColor = Color.Black
                             Dim target150 As String =
                                 If(NativeMmolL,
@@ -1061,7 +1061,7 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Top
                         Case "DELIVERY_SUSPEND"
-                            .PumpBannerStateLabel.BackColor = Color.IndianRed
+                            .PumpBannerStateLabel.BackColor = Color.Blue
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
                             .PumpBannerStateLabel.Text = "Delivery Suspended"
                             .PumpBannerStateLabel.Visible = True
@@ -1082,8 +1082,8 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
                             .PumpBannerStateLabel.Font = s_font_7Bold
                         Case "TEMP_BASAL"
-                            .PumpBannerStateLabel.BackColor = Color.Lime
-                            .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
+                            .PumpBannerStateLabel.BackColor = Color.Blue
+                            .PumpBannerStateLabel.ForeColor = Color.White
                             Dim bannerState As BannerState = PatientData.PumpBannerState(index:=0)
                             Dim hours As String = bannerState.TimeRemaining.ToHoursMinutes
                             .PumpBannerStateLabel.Text = $"Temp Basal {hours} hr"
@@ -1119,8 +1119,6 @@ Friend Module Form1UpdateHelpers
                 $"Exit In:{ TimeSpan.FromMinutes(safeBasalDuration).ToFormattedTimeSpan(unit:="hr")}"
             mainForm.LastSgOrExitTimeLabel.Visible = True
             mainForm.LastSgOrExitTimeLabel.CenterLabelOnParent()
-        Else
-            mainForm.LastSgOrExitTimeLabel.Visible = False
         End If
         mainForm.TlpPumpBannerState.
             DisplayDataTable(Of BannerState)(

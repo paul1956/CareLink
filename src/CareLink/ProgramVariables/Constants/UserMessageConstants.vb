@@ -205,7 +205,7 @@ Friend Module UserMessageConstants
         {"3.221", $"Sensor grace period ending soon(triggeredDateTime),{vbCrLf}" &
                   "you will need to change your sensor within 12 hours."},
         {"3.327", "Low reservoir(triggeredDateTime)."},
-        {"3.328", "Pump was restarted(triggeredDateTime). Rewind required to resume basal delivery."},
+        {"3.328", "Change Infusion Set(triggeredDateTime). Rewind required to resume basal delivery."},
         {"3.329", "Prolonged low sensor glucose?"},
         {"3.330", "Sensor glucose approaching high limit?"},
         {"3.331", "Sensor glucose approaching low limit?"},

@@ -129,7 +129,7 @@ Friend Module PaintMarkerExtensions
             chartRelativePosition.X =
                 CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
                                                          axis:=AxisName.X,
-                                                         axisValue:=s_sgRecords(index:=0).OaDateTime))
+                                                         axisValue:=s_sgRecords(index:=0).GetOaDateTime()))
             chartRelativePosition.Y =
                 CSng(e.ChartGraphics.GetPositionFromAxis(ChartAreaName,
                                                          axis:=AxisName.Y2,
@@ -150,7 +150,7 @@ Friend Module PaintMarkerExtensions
                 CSng(e.ChartGraphics.
                        GetPositionFromAxis(ChartAreaName,
                                            axis:=AxisName.X,
-                                           axisValue:=s_sgRecords.Last.OaDateTime))
+                                           axisValue:=s_sgRecords.Last.GetOaDateTime()))
             chartRelativePosition.Width =
                 x - chartRelativePosition.X
         End If

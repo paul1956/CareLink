@@ -498,10 +498,10 @@ Partial Class Form1
         ' 
         ' PumpBannerStateLabel
         ' 
-        PumpBannerStateLabel.BackColor = Color.Lime
-        PumpBannerStateLabel.Dock = DockStyle.Top
+        PumpBannerStateLabel.BackColor = Color.Blue
+        PumpBannerStateLabel.Dock = DockStyle.Bottom
         PumpBannerStateLabel.Font = New Font("Segoe UI", 8.0F)
-        PumpBannerStateLabel.ForeColor = Color.Black
+        PumpBannerStateLabel.ForeColor = Color.White
         PumpBannerStateLabel.Location = New Point(0, 0)
         PumpBannerStateLabel.Name = "PumpBannerStateLabel"
         PumpBannerStateLabel.Size = New Size(125, 15)

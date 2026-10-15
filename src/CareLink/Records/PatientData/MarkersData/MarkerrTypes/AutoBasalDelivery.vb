@@ -50,22 +50,18 @@ Public Class AutoBasalDelivery
         End Get
     End Property
 
-    <DisplayName("OA Date Time")>
-    <Column(Order:=5, TypeName:=NameOf(OADate))>
-    Public ReadOnly Property OAdateTime As OADate
-        Get
-            Return New OADate(Me.Timestamp)
-        End Get
-    End Property
-
     <DisplayName("Bolus Amount")>
-    <Column(Order:=6, TypeName:=NameOf([Single]))>
+    <Column(Order:=5, TypeName:=NameOf([Single]))>
     <JsonPropertyName("bolusAmount")>
     Public Property BolusAmount As Single
 
     <DisplayName("Max Auto Basal Amount Rate")>
-    <Column(Order:=7, TypeName:=NameOf([Single]))>
+    <Column(Order:=6, TypeName:=NameOf([Single]))>
     <JsonPropertyName("maxAutoBasalRate")>
     Public Property MaxAutoBasalRate As Single
+
+    Public Function GetOaDateTime() As OADate
+        Return New OADate(asDate:=Me.Timestamp)
+    End Function
 
 End Class

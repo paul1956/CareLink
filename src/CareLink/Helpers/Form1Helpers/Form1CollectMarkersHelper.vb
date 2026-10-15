@@ -81,8 +81,8 @@ Friend Module Form1CollectMarkersHelper
                         recordNumber:=AutoBasalDeliveryMarkers.Count + 1)
                     InsulinPerHour.AddBasalAmountToInsulinPerHour(basalDelMarker)
                     AutoBasalDeliveryMarkers.Add(item:=basalDelMarker)
-                    If Not basalDic.TryAdd(key:=basalDelMarker.OaDateTime, value:=basalDelMarker.BolusAmount) Then
-                        basalDic(key:=basalDelMarker.OaDateTime) += basalDelMarker.BolusAmount
+                    If Not basalDic.TryAdd(key:=basalDelMarker.GetOaDateTime(), value:=basalDelMarker.BolusAmount) Then
+                        basalDic(key:=basalDelMarker.GetOaDateTime()) += basalDelMarker.BolusAmount
                     End If
                     SuspendedMarkers.Add(item:=New LowGlucoseSuspended(
                        item,
@@ -109,7 +109,7 @@ Friend Module Form1CollectMarkersHelper
                     SuspendedMarkers.Add(item:=item5)
                     Select Case item.Data.DataValues.ActivationType
                         Case "AUTOCORRECTION", "MANUAL"
-                            Dim key As OADate = lastInsulinRecord.OaDateTime
+                            Dim key As OADate = lastInsulinRecord.GetOaDateTime()
                             Dim value As Single = lastInsulinRecord.DeliveredFastAmount
                             If Not basalDic.TryAdd(key, value) Then
                                 basalDic(key) += value

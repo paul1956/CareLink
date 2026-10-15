@@ -44,10 +44,10 @@ Public Class AdditionalInfo
     <JsonPropertyName("notDeliveredAmount")>
     Public Property NotDeliveredAmount As Double? = Nothing
 
-    '<DisplayName("Pump Delivery Suspend State")>
-    '<Column(Order:=8, TypeName:=NameOf([Boolean]))>
-    '<JsonPropertyName("pumpDeliverySuspendState")>
-    'Public Property PumpDeliverySuspendState As Boolean? = Nothing
+    <DisplayName("Pump Delivery Suspend State")>
+    <Column(Order:=8, TypeName:=NameOf([Boolean]))>
+    <JsonPropertyName("pumpDeliverySuspendState")>
+    Public Property PumpDeliverySuspendState As Boolean? = Nothing
 
     <DisplayName("Alert Clear Type")>
     <Column(Order:=9, TypeName:=NameOf([String]))>
