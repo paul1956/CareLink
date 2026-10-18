@@ -16,6 +16,7 @@ Friend Module ColorDictionaryHelpers
         {"SG Series", KnownColor.White},
         {"SG Target", KnownColor.Blue},
         {"Suspend", KnownColor.Red},
+        {"Temp Target", KnownColor.GreenYellow},
         {"Time Change", KnownColor.White},
         {"Tight Range High", KnownColor.LimeGreen}}
 

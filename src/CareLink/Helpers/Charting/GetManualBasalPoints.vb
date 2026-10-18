@@ -39,7 +39,7 @@ Friend Module GetManualBasalPoints
                 End If
                 nextPumpSuspendTime = New OADate(asDate:=markerDateTime.Value)
             Else
-                nextPumpSuspendTime = New OADate(asDate:=PumpNow)
+                nextPumpSuspendTime = New OADate(asDate:=LocalPumpTime)
             End If
         Else
             markerDateTime = AllMarkers(index:=markerWithIndex.Index + 1).GetMarkerTimestamp

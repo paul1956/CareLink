@@ -44,7 +44,7 @@ Friend Module PlotSuspend
                     .AddXY(xValue, GetYMaxNativeMmolL())
                     Dim stopTimeSpan As TimeSpan =
                         If(e.IsLast,
-                            PumpNow() - xValue,
+                            LocalPumpTime() - xValue,
                             SuspendedMarkers(index:=e.Index + 1).Timestamp - xValue)
 
                     Dim incrementSpans As Integer = CInt(Math.Ceiling(stopTimeSpan.TotalMinutes / 5)) - 1

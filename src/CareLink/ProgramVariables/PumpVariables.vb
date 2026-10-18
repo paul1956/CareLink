@@ -34,6 +34,7 @@ Public Module PumpVariables
 
     Friend s_activeInsulin As ActiveInsulin
     Friend s_autoModeReadinessState As SummaryRecord
+    Friend s_circularOADateBuffer As New CircularOADateBuffer(initialCapacity:=288)
     Friend s_lastMedicalDeviceDataUpdateServerEpoch As Long
     Friend s_lastSgValue As Single = 0 ' Do not replace this, it is used in the UI
     Friend s_notificationHistoryValue As Dictionary(Of String, String)

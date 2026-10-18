@@ -22,7 +22,7 @@ Friend Module Form1UpdateHelpers
         "MMT-1812",
         "MMT-1880"}
 
-    Private ReadOnly s_basalTypes As IEnumerable(Of String) =
+    Friend ReadOnly s_basalTypes As IEnumerable(Of String) =
         {"AUTO_BASAL",
         "SAFE_BASAL"}
 
@@ -294,64 +294,6 @@ Friend Module Form1UpdateHelpers
     '''  The list to which summary records are added.
     ''' </param>
     ''' <param name="isTitle"></param>
-    Friend Sub HandleComplexItemsString(kvp As KeyValuePair(Of String, String),
-                                        ByRef recordNumber As Single,
-                                        key As String,
-                                        listOfSummaryRecords As List(Of SummaryRecord),
-                                        isTitle As Boolean)
-
-        ' First try to parse the value as JSON object and enumerate properties.
-        If IsNotNullOrWhiteSpace(kvp.Value) Then
-            Dim t As Type = kvp.Value.GetType
-            Select Case t
-                Case GetType(JsonElement)
-                    Stop
-                Case GetType(String)
-                    If Not kvp.Value.IsValidJson() Then
-                        Dim idx As Integer = 0
-                        For Each r As SummaryRecord In listOfSummaryRecords
-                            If r.Key.StartsWithNoCase(value:=key) Then
-                                idx += 1
-                            End If
-                        Next
-                        If idx > 0 Then
-                            recordNumber -= 1
-                        End If
-
-                        Dim message As String =
-                            If(isTitle AndAlso Not kvp.Key.Contains(value:="Time"),
-                               kvp.Value.ToTitle,
-                               kvp.Value)
-                        Dim item As New SummaryRecord(
-                                recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
-                                kvp.Key,
-                                kvp.Value,
-                                message)
-                        listOfSummaryRecords.Add(item)
-                    Else
-                        HandleComplexItems(kvp,
-                                           recordNumber,
-                                           key,
-                                           listOfSummaryRecords,
-                                           isTitle)
-                    End If
-                Case Else
-                    Stop
-            End Select
-        End If
-    End Sub
-
-    ''' <summary>
-    '''  Handles complex items in a key-value row, splitting and processing values
-    '''  for summary records.
-    ''' </summary>
-    ''' <param name="kvp">The key-value pair row to process.</param>
-    ''' <param name="recordNumber">The index of the row.</param>
-    ''' <param name="key">The key for the summary record.</param>
-    ''' <param name="listOfSummaryRecords">
-    '''  The list to which summary records are added.
-    ''' </param>
-    ''' <param name="isTitle"></param>
     Friend Sub HandleComplexItems(kvp As KeyValuePair(Of String, String),
                                   ByRef recordNumber As Single,
                                   key As String,
@@ -480,6 +422,64 @@ Friend Module Form1UpdateHelpers
     End Sub
 
     ''' <summary>
+    '''  Handles complex items in a key-value row, splitting and processing values
+    '''  for summary records.
+    ''' </summary>
+    ''' <param name="kvp">The key-value pair row to process.</param>
+    ''' <param name="recordNumber">The index of the row.</param>
+    ''' <param name="key">The key for the summary record.</param>
+    ''' <param name="listOfSummaryRecords">
+    '''  The list to which summary records are added.
+    ''' </param>
+    ''' <param name="isTitle"></param>
+    Friend Sub HandleComplexItemsString(kvp As KeyValuePair(Of String, String),
+                                        ByRef recordNumber As Single,
+                                        key As String,
+                                        listOfSummaryRecords As List(Of SummaryRecord),
+                                        isTitle As Boolean)
+
+        ' First try to parse the value as JSON object and enumerate properties.
+        If IsNotNullOrWhiteSpace(kvp.Value) Then
+            Dim t As Type = kvp.Value.GetType
+            Select Case t
+                Case GetType(JsonElement)
+                    Stop
+                Case GetType(String)
+                    If Not kvp.Value.IsValidJson() Then
+                        Dim idx As Integer = 0
+                        For Each r As SummaryRecord In listOfSummaryRecords
+                            If r.Key.StartsWithNoCase(value:=key) Then
+                                idx += 1
+                            End If
+                        Next
+                        If idx > 0 Then
+                            recordNumber -= 1
+                        End If
+
+                        Dim message As String =
+                            If(isTitle AndAlso Not kvp.Key.Contains(value:="Time"),
+                               kvp.Value.ToTitle,
+                               kvp.Value)
+                        Dim item As New SummaryRecord(
+                                recordNumber:=CSng(recordNumber + ((idx + 1) / 10)),
+                                kvp.Key,
+                                kvp.Value,
+                                message)
+                        listOfSummaryRecords.Add(item)
+                    Else
+                        HandleComplexItems(kvp,
+                                           recordNumber,
+                                           key,
+                                           listOfSummaryRecords,
+                                           isTitle)
+                    End If
+                Case Else
+                    Stop
+            End Select
+        End If
+    End Sub
+
+    ''' <summary>
     '''  Checks if the <see cref="PatientData.MedicalDeviceInformation.ModelNumber"/>
     '''  is a 700 series model.
     ''' </summary>
@@ -508,6 +508,7 @@ Friend Module Form1UpdateHelpers
     '''  <paramref name="mainForm"/> based on the most recent data.
     ''' </summary>
     ''' <param name="mainForm">The main form instance to update.</param>
+    <Extension>
     Friend Sub UpdateDataTables(mainForm As Form1)
         If IsPatientDataEmpty() Then
             Exit Sub
@@ -973,6 +974,7 @@ Friend Module Form1UpdateHelpers
     '''  with the latest marker data.
     ''' </summary>
     ''' <param name="mainForm">The main form instance to update.</param>
+    <Extension>
     Friend Sub UpdateMarkerTabs(mainForm As Form1)
         With mainForm
             .TlpAutoBasalDelivery.DisplayDataTable(Of AutoBasalDelivery)(
@@ -1030,25 +1032,30 @@ Friend Module Form1UpdateHelpers
     '''  with the latest banner state data.
     ''' </summary>
     ''' <param name="mainForm">The main form instance to update.</param>
+    <Extension>
     Friend Sub UpdatePumpBannerStateTab(mainForm As Form1)
         Dim listOfBannerState As New List(Of BannerState)
         For Each dic As Dictionary(Of String, String) In s_pumpBannerStateValue
             Dim typeValue As String = String.Empty
             If dic.TryGetValue(key:="type", value:=typeValue) Then
                 Dim recordNumber As Integer = listOfBannerState.Count + 1
-                Dim bannerStateRecord1 As BannerState = DictionaryToClass(Of BannerState)(dic, recordNumber)
-                listOfBannerState.Add(bannerStateRecord1)
+                Dim item As BannerState = DictionaryToClass(Of BannerState)(dic, recordNumber)
+                listOfBannerState.Add(item)
                 With mainForm
-                    .PumpBannerStateLabel.Font = New Font(FamilyName, emSize:=8.25F, style:=FontStyle.Bold)
+                    .PumpBannerStateLabel.Font =
+                        New Font(FamilyName, emSize:=8.25F, style:=FontStyle.Bold)
                     Select Case typeValue
                         Case "TEMP_TARGET"
-                            Dim minutes As Integer = bannerStateRecord1.TimeRemaining
+                            Dim minutes As Integer = item.TimeRemaining
                             .PumpBannerStateLabel.BackColor = Color.Blue
                             .PumpBannerStateLabel.ForeColor = Color.Black
-                            Dim target150 As String =
-                                If(NativeMmolL,
-                                   "8.3",
-                                   "150")
+                            Dim target150 As Double = If(NativeMmolL,
+                                                         8.3,
+                                                         150)
+
+                            Dim record As New OADateValueRecord(oaDate:=s_sgRecords.Last.GetOaDateTime,
+                                                           sg:=CSng(target150))
+                            s_circularOADateBuffer.Add(record)
                             .PumpBannerStateLabel.Text =
                                 $"Temp Target {minutes.ToHoursMinutes} hr"
                             .PumpBannerStateLabel.Visible = True

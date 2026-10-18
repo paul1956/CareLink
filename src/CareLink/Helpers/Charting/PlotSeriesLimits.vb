@@ -51,7 +51,8 @@ Friend Module PlotSeriesLimits
     <Extension>
     Friend Sub PlotHighLowLimitsAndTargetSg(chart As Chart, targetSgOnly As Boolean)
         If LimitRecordsList.Count = 0 Then Exit Sub
-        Dim limitsIndexList() As Integer = GetLimitsList(count:=s_sgRecords.Count - 1)
+        Dim limitsIndexList() As Integer =
+            GetLimitsList(count:=s_sgRecords.Count - 1)
         Dim yValue As Single = If(CurrentUser Is Nothing, 0, CurrentUser.CurrentTarget)
         If Not yValue.AlmostZero() Then
             chart.Series(name:=TargetSgSeriesName).Points.AddXY(

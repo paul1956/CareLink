@@ -333,10 +333,11 @@ Friend Module CreateChartItems
     ''' </summary>
     ''' <returns>A Series object configured for active insulin values.</returns>
     Friend Function CreateSeriesActiveInsulin() As Series
-        Dim s As Series = CreateSeriesBase(name:=ActiveInsulinSeriesName,
-                                           legendText:="Active Insulin",
-                                           borderWidth:=4,
-                                           yAxisType:=AxisType.Primary)
+        Dim s As Series = CreateSeriesBase(
+            name:=ActiveInsulinSeriesName,
+            legendText:="Active Insulin",
+            borderWidth:=4,
+            yAxisType:=AxisType.Primary)
         s.MarkerColor = Color.Black
         s.MarkerSize = 4
         s.MarkerStyle = MarkerStyle.Circle
@@ -403,7 +404,7 @@ Friend Module CreateChartItems
                 key = "High Alert"
             Case HighTiTRSeriesName
                 key = "Tight Range High"
-                borderWidth = 1
+                borderWidth = 2
             Case LowLimitSeriesName
                 key = "Low Alert"
             Case Else
@@ -469,6 +470,46 @@ Friend Module CreateChartItems
             color:=Color.FromArgb(alpha:=128, baseColor:=Color.Red),
             image:=EmptyString)
         basalLegend.CustomItems.Add(item)
+        With s.EmptyPointStyle
+            .BorderWidth = 4
+            .Color = Color.Transparent
+        End With
+        Return s
+    End Function
+
+    ''' <summary>
+    '''  Creates a series for displaying "Suspend" events in a chart.
+    '''  This method initializes a <see cref="Series"/> specifically for
+    '''  representing insulin suspension data,
+    '''  configures its appearance, and adds a corresponding legend item
+    '''  to the provided <paramref name="basalLegend"/>.
+    ''' </summary>
+    ''' <param name="basalLegend">
+    '''  The <see cref="Legend"/> to which the "Suspend" legend item will be added.
+    ''' </param>
+    ''' <returns>
+    '''  A <see cref="Series"/> object configured for displaying temp target events in the chart.
+    ''' </returns>
+    Friend Function CreateSeriesTempTarget(tempLegend As Legend) As Series
+        Dim s As Series =
+            CreateSeriesBase(name:=TempTargetSeriesName,
+                             legendText:="Temp Target",
+                             borderWidth:=6,
+                             yAxisType:=AxisType.Primary)
+
+        With s
+            .IsXValueIndexed = False
+            .MarkerStyle = MarkerStyle.None
+            .EmptyPointStyle.Color = Color.Transparent
+            .EmptyPointStyle.MarkerStyle = MarkerStyle.None
+        End With
+
+        s.IsVisibleInLegend = False
+        Dim item As New LegendItem(
+            name:="Temp Target",
+            color:=GetGraphLineColor(key:="Temp Target"),
+            image:=EmptyString)
+        tempLegend.CustomItems.Add(item)
         With s.EmptyPointStyle
             .BorderWidth = 4
             .Color = Color.Transparent
@@ -584,8 +625,8 @@ Friend Module CreateChartItems
                     .IntervalType = DateTimeIntervalType.Hours
                 End With
                 If s_sgRecords.Count = 0 Then
-                    c.AxisX.Maximum = New OADate(asDate:=PumpNow)
-                    c.AxisX.Minimum = New OADate(asDate:=PumpNow.AddDays(value:=-1))
+                    c.AxisX.Maximum = New OADate(asDate:=LocalPumpTime)
+                    c.AxisX.Minimum = New OADate(asDate:=LocalPumpTime.AddDays(value:=-1))
                 Else
                     Dim func As Func(Of SG, SG, SG) = Function(i1 As SG, i2 As SG) As SG
                                                           Return If(i1.GetOaDateTime() > i2.GetOaDateTime(),

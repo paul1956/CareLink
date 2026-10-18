@@ -23,7 +23,7 @@ Friend Module DateTimeExtensions
         second:=0,
         kind:=DateTimeKind.Utc)
 
-    Private ReadOnly s_epochUTC As New Date(
+    Friend ReadOnly s_epochUTC As New Date(
         year:=1970,
         month:=1,
         day:=1,

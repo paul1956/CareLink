@@ -60,4 +60,24 @@ Friend Module TimeConstants
 
 #End Region ' Millisecond Constants
 
+    ''' <summary>
+    '''  Default period in days for the main form. Used to determine the default time range
+    '''  for displaying data.
+    ''' </summary>
+    ''' <returns>Default period in days.</returns>
+    Public ReadOnly Property DefaultPeriodDays As Double = TimeSpan.FromMinutes(5).TotalDays
+
+#Region "OaDate Constants"
+
+    Public ReadOnly Property TwoMinutes30SecondsOADate As _
+        New OADate(asDate:=Date.MinValue + New TimeSpan(hours:=0, minutes:=2, seconds:=30))
+
+    Public ReadOnly Property SixMinuteOADate As _
+        New OADate(asDate:=Date.MinValue + New TimeSpan(hours:=0, minutes:=6, seconds:=0))
+
+    Public ReadOnly Property OneHourAsOADate As _
+        New OADate(asDate:=Date.MinValue + New TimeSpan(hours:=1, minutes:=0, seconds:=0))
+
+#End Region
+
 End Module

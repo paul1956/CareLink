@@ -33,7 +33,7 @@ Public Class SgMiniForm
         Dim epoch2PumpDateTime As Date = lastConduitUpdateServerDateTime.Epoch2PumpDateTime
         If lastConduitUpdateServerDateTime > 0 Then
             Dim minutes As UInteger =
-                CUInt(Math.Round(value:=(PumpNow() - epoch2PumpDateTime).TotalMinutes, digits:=0))
+                CUInt(Math.Round(value:=(LocalPumpTime() - epoch2PumpDateTime).TotalMinutes, digits:=0))
 
             Return $"{firstName}'s Data Updated {minutes.ToUnits(unit:="Minute")} Ago"
         Else

@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Globalization
+Imports System.Runtime.CompilerServices
 
 ''' <summary>
 '''  Provides helper methods for displaying and managing notification data
@@ -286,6 +287,7 @@ Friend Module NotificationHelpers
     '''  and displays them in the main form.
     ''' </summary>
     ''' <param name="mainForm">The main form containing notification panels.</param>
+    <Extension>
     Friend Sub UpdateNotificationTabs(mainForm As Form1)
         Const rowIndex As ServerDataEnum = ServerDataEnum.notificationHistory
 

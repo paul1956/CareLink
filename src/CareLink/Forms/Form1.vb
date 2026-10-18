@@ -38,6 +38,7 @@ Public Class Form1
     Private _infusionSetLabel4Backup As String
     Private _inMouseMove As Boolean = False
     Private _lastMarkerTabLocation As (Page As Integer, Tab As Integer) = (Page:=0, Tab:=0)
+    Private _lastMedicalDeviceTime As Date = Date.MinValue
     Private _lastSummaryTabIndex As Integer = 0
     Private _latestActiveInsulin As Double = 0
     Private _previousLoc As Point
@@ -490,6 +491,7 @@ Public Class Form1
     Private Property SummarySuspendSeries As Series
     Private Property SummaryTargetSgSeries As Series
     Private Property SummaryTimeChangeSeries As Series
+    Private Property SummaryTempTargetSeries As Series
     Private Property TimeInRangeSeries As New Series
     Private Property TreatmentAutoCorrectionSeries As Series
     Private Property TreatmentBasalSeries As Series
@@ -609,7 +611,12 @@ Public Class Form1
 
             Dim showWhat As CursorInfo
             Select Case result.Series.Name
-                Case HighLimitSeriesName, HighTiTRSeriesName, LowLimitSeriesName, TargetSgSeriesName
+                Case HighLimitSeriesName,
+                     HighTiTRSeriesName,
+                     LowLimitSeriesName,
+                     TargetSgSeriesName,
+                     TempTargetSeriesName
+
                     Me.InfusionSetDataRestore()
                 Case MarkerSeriesName, BasalSeriesName
                     Dim markerTags As List(Of String) =
@@ -2867,7 +2874,8 @@ Public Class Form1
                     dgv.CellFormattingToTitle(e)
 
                 Case NameOf(BannerState.TimeRemaining)
-                    e.CellFormatting0Value()
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+                    dgv.CellFormattingDefault(e)
 
                 Case Else
                     Stop
@@ -3946,6 +3954,7 @@ Public Class Form1
                                     Const message As String = "Failed to parse patient data from file."
                                     Throw New ApplicationException(message)
                                 End Try
+                                s_circularOADateBuffer.Clear()
                                 PatientDataElement = pde
                                 DeserializePatientElement()
                                 Me.TabControlPage2.Visible = True
@@ -3967,12 +3976,6 @@ Public Class Form1
                             SetUpCareLinkUser()
 
                             Dim subName As String = NameOf(UpdateAllTabPages)
-                            Try
-                                Me.UpdateAllTabPages(fromFile:=True)
-                            Catch ex As Exception
-                                MessageBox.Show(
-                                    text:=$"Error in {subName}. Original error: {ex.Message}")
-                            End Try
                             Try
                                 Me.UpdateAllTabPages(fromFile:=True)
                             Catch ex As Exception
@@ -4749,7 +4752,7 @@ Public Class Form1
         Handles CalibrationDueImage.MouseHover
 
         If s_timeToNextCalibrationMinutes > 0 AndAlso s_timeToNextCalibrationMinutes < 1440 Then
-            Dim due As String = PumpNow.AddMinutes(value:=s_timeToNextCalibrationMinutes).ToShortTimeString()
+            Dim due As String = LocalPumpTime.AddMinutes(value:=s_timeToNextCalibrationMinutes).ToShortTimeString()
             Dim caption As String = $"Calibration Due {due}"
             _calibrationToolTip.SetToolTip(control:=Me.CalibrationDueImage, caption)
         End If
@@ -5175,6 +5178,7 @@ Public Class Form1
             limitsLegend:=_summaryChartLegend,
             seriesName:=HighTiTRSeriesName)
         Me.SummarySuspendSeries = CreateSeriesSuspend(basalLegend:=_summaryChartLegend)
+        Me.SummaryTempTargetSeries = CreateSeriesTempTarget(tempLegend:=_summaryChartLegend)
         Me.SummaryTargetSgSeries = CreateSeriesLimitsAndTarget(
             limitsLegend:=_summaryChartLegend,
             seriesName:=TargetSgSeriesName)
@@ -5191,7 +5195,7 @@ Public Class Form1
         With Me.SummaryChart
             With .Series
                 .Add(item:=Me.SummarySuspendSeries)
-
+                .Add(item:=Me.SummaryTempTargetSeries)
                 .Add(item:=Me.SummaryHighLimitSeries)
                 .Add(item:=Me.SummaryHighTiTRSeries)
                 .Add(item:=Me.SummaryTargetSgSeries)
@@ -5994,9 +5998,10 @@ Public Class Form1
                 For Each s As Series In .Series
                     s.Points.Clear()
                 Next
-                .ChartAreas(NameOf(ChartArea)).UpdateChartAreaSgAxisX()
+                .ChartAreas(name:=NameOf(ChartArea)).UpdateChartAreaSgAxisX()
                 .Titles(index:=0).Text = $"Status - {GetSubTitle()}"
                 .PlotSuspendArea(SuspendSeries:=Me.SummarySuspendSeries)
+                .PlotTempTargetArea(SummaryTempTargetSeries:=Me.SummaryTempTargetSeries)
                 .PlotMarkers(
                     timeChangeSeries:=Me.SummaryTimeChangeSeries,
                     markerInsulinDictionary:=s_summaryMarkersInsulin,
@@ -6024,31 +6029,26 @@ Public Class Form1
     '''  The shield bitmap is set based on the sensor state, and the last
     '''  sensor glucose time and shield units are displayed accordingly.
     ''' </remarks>
-    Private Sub UpdateAutoModeShield()
+    Private Sub UpdateAutoModeShield(medicalDeviceTime As Date)
         Try
-            Dim lastSgTimestamp As String = String.Empty
-            Dim parsedDate As Date = Nothing
-            If Date.TryParseExact(s:=PatientData.LastSG.TimestampAsString,
-                                  format:="yyyy-MM-dd\THH:mm:ss",
-                                  provider:=CultureInfo.InvariantCulture,
-                                  style:=DateTimeStyles.AssumeLocal,
-                                  result:=parsedDate) Then
+            ' Calculate the time difference
+            Dim now As Date = Date.Now
+            Dim diff As TimeSpan = now - medicalDeviceTime
 
-                ' Calculate the time difference
-                Dim now As Date = Date.Now
-                Dim diff As TimeSpan = now - parsedDate
+            ' Round to nearest minute
+            Dim minutesAgo As Long = CInt(Math.Round(diff.TotalMinutes))
 
-                ' Round to nearest minute
-                Dim minutesAgo As Long = CInt(Math.Round(diff.TotalMinutes))
-
-                lastSgTimestamp =
+            Dim pumpTimestamp As String =
                     If(minutesAgo > 0,
-                       $"{minutesAgo.ToHoursMinutes} ago",
+                       $"{minutesAgo.ToHoursMinutes} ago".Replace(oldValue:="and ", newValue:=""),
                        "Now")
-            End If
 
-            Me.LastSgOrExitTimeLabel.Text = lastSgTimestamp
+            Me.LastSgOrExitTimeLabel.Text = pumpTimestamp
             Me.ShieldUnitsLabel.Text = BgUnits
+            If PatientData.TherapyAlgorithmState IsNot Nothing Then
+                InAutoMode = PatientData.TherapyAlgorithmState.AutoModeReadinessState = "NO_ACTION_REQUIRED" _
+                    AndAlso s_basalTypes.Contains(value:=PatientData.TherapyAlgorithmState.AutoModeShieldState)
+            End If
 
             If InAutoMode Then
                 Me.SmartGuardShieldPictureBox.Image = Nothing
@@ -6866,18 +6866,21 @@ Public Class Form1
         Else
             s_lastMedicalDeviceDataUpdateServerEpoch = PatientData.LastMedicalDeviceDataUpdateServerTime
         End If
+        If IsPatientDataEmpty() Then
+            Exit Sub
+        End If
 
         CheckForUpdatesAsync(reportSuccessfulResult:=False)
-
+        Dim medicalDeviceTime As Date
         SyncLock _updatingLock
             _updating = True ' prevent paint
             Me.MenuStartHere.Enabled = False
             If fromFile Then
                 Me.LoginStatus.Text = "Login Status: N/A From Saved File"
             Else
-                Dim d As Date = PumpNow()
+                Dim d As Date = LocalPumpTime()
                 Dim msg As String = $"Last Update Time: {d:d} {d:t}"
-                Me.SetLastUpdateTime(msg, isDaylightSavingTime:=PumpNow.IsDaylightSavingTime)
+                Me.SetLastUpdateTime(msg, isDaylightSavingTime:=LocalPumpTime.IsDaylightSavingTime)
             End If
             Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showInfusionSet:=True)
 
@@ -6887,12 +6890,20 @@ Public Class Form1
                 Stop
             End Try
 
-            UpdateDataTables(mainForm:=Me)
+            medicalDeviceTime =
+                Date.SpecifyKind(value:=s_epochUTC.AddMilliseconds(value:=PatientData.MedicalDeviceTime),
+                                 kind:=DateTimeKind.Local)
 
+            Me.UpdateAutoModeShield(medicalDeviceTime)
+            If medicalDeviceTime = _lastMedicalDeviceTime Then
+                _updating = False
+                Exit Sub
+            End If
+            Me.UpdateDataTables()
+            _lastMedicalDeviceTime = medicalDeviceTime
             _updating = False
         End SyncLock
 
-        Dim mdi As MedicalDeviceInformation = PatientData.MedicalDeviceInformation
         Me.InitializeSummaryTabCharts()
         Me.InitializeActiveInsulinTabChart()
         Me.InitializeTimeInRangeArea()
@@ -6902,13 +6913,13 @@ Public Class Form1
                          classCollection:=ListOfSummaryRecords,
                          sort:=True,
                          hideHeaderColumn:=False)
-        Me.UpdateAutoModeShield()
         Me.UpdateCalibrationTimeRemaining()
         Me.UpdateInsulinLevel()
         Me.InfusionSetUpdate()
         Me.UpdatePumpBattery()
         Me.UpdateSensorLife()
         ThreadSafeForm1SensorDataUpdate()
+        Me.UpdatePumpBannerStateTab()
         Me.UpdateTimeInRange()
         Me.UpdateAllSummarySeries()
         Me.UpdateDosingAndCarbs()
@@ -6916,6 +6927,7 @@ Public Class Form1
         Me.FullNameLabel.Text =
             $"{PatientData.FirstName} {PatientData.LastName}"
 
+        Dim mdi As MedicalDeviceInformation = PatientData.MedicalDeviceInformation
         Dim modelNumber As String = mdi.ModelNumber
         Me.ModelLabel.Text = $"{modelNumber} HW Version = {mdi.HardwareRevision}"
         Me.PumpNameLabel.Text = GetPumpName()
@@ -6983,9 +6995,8 @@ Public Class Form1
                                        rowIndex:=ServerDataEnum.basal,
                                        hideRecordNumberColumn:=True)
 
-        UpdateMarkerTabs(mainForm:=Me)
-        UpdateNotificationTabs(mainForm:=Me)
-        UpdatePumpBannerStateTab(mainForm:=Me)
+        Me.UpdateMarkerTabs()
+        Me.UpdateNotificationTabs()
 
         Me.MenuStartHere.Enabled = True
         ProgramInitialized = True
