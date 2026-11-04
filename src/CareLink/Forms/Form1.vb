@@ -6061,7 +6061,7 @@ Public Class Form1
                             Select Case s_pumpBannerStateValue.Last()("Type")
                                 Case "TEMP_TARGET"
                                     Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShieldExercise)
-                                Case "DELIVERY_SUSPEND"
+                                Case "DELIVERY_SUSPEND", "LOAD_RESERVOIR"
                                     Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShieldDeliverySuspended)
                                 Case Else
                                     Stop
