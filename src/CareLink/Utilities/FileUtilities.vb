@@ -24,6 +24,8 @@ Friend Module FileUtilities
         "scope",
         "client_id"}
 
+    Private Const TOKEN_MAX_AGE_DAYS As Integer = 7
+
     Private Function ReadAndValidateTokenJsonElement(
         Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As JsonElement
 
@@ -39,6 +41,13 @@ Friend Module FileUtilities
         End If
 
         Try
+            Dim lastWriteTimeUtc As Date = File.GetLastWriteTimeUtc(path)
+            If lastWriteTimeUtc < Date.UtcNow.AddDays(-TOKEN_MAX_AGE_DAYS) Then
+                message = $"ERROR: tokenDataElement file {path} is older than {TOKEN_MAX_AGE_DAYS} days"
+                LogMessage(message)
+                Return Nothing
+            End If
+
             Dim json As String = File.ReadAllText(path)
             Dim tokenData As JsonElement
             Try

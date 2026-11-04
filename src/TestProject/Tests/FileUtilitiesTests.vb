@@ -40,6 +40,22 @@ Public Class FileUtilitiesTests
     End Sub
 
     <Fact>
+    Public Sub ReadTokenFile_StaleToken_ReturnsNothing()
+        Dim temp As String = Path.GetTempFileName()
+        Dim tokenPath As String = Path.Combine(AppContext.BaseDirectory, "TestData", "token_basic.json")
+        Try
+            File.WriteAllText(path:=temp, contents:=File.ReadAllText(path:=tokenPath))
+            File.SetLastWriteTimeUtc(temp, Date.UtcNow.AddDays(-8))
+
+            Dim elem As JsonElement = ReadTokenFile(tokenBaseFileName:=temp)
+
+            elem.ValueKind.Should().Be(expected:=JsonValueKind.Undefined)
+        Finally
+            If File.Exists(path:=temp) Then File.Delete(path:=temp)
+        End Try
+    End Sub
+
+    <Fact>
     Public Sub ReadTokenFileAndDataFile_ValidToken_ReturnsValues()
         Dim temp As String = Path.GetTempFileName()
         Dim tokenPath As String = Path.Combine(AppContext.BaseDirectory, "TestData", "token_basic.json")

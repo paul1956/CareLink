@@ -547,7 +547,8 @@ Friend Class Client2
         If tokenData Is Nothing Then
             ' Enhanced logging for first-time failures: capture environment and context
             Try
-                Dim envInfo As String = $"GetLoginData: tokenData is Nothing. Server={serverRegion}, User={userName}, OS={Environment.OSVersion}, Culture={CultureInfo.CurrentCulture.Name}, Machine={Environment.MachineName}"
+                Dim envInfo As String =
+                    $"GetLoginData: tokenData is Nothing. Server={serverRegion}, User={userName}, OS={Environment.OSVersion}, Culture={CultureInfo.CurrentCulture.Name}, Machine={Environment.MachineName}"
                 LogMessage(message:=envInfo)
             Catch
                 ' Best-effort logging; swallow any failures here

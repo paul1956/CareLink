@@ -59,131 +59,6 @@ Public Class Form1
 
 #Region "Overrides"
 
-    ' If runtime is missing, prompt user and launch bundled bootstrapper (if present)
-    ' or open the official download page. If installer is launched, exit so user can
-    ' restart after install.
-    Private Shared Sub EnsureWebView2Runtime()
-        If IsWebView2RuntimeInstalled() Then
-            Return
-        End If
-
-        Dim prompt As String = "Microsoft Edge WebView2 runtime is required to display web content. Install now?"
-        If MessageBox.Show(text:=prompt,
-                           caption:="WebView2 runtime required",
-                           buttons:=MessageBoxButtons.YesNo,
-                           icon:=MessageBoxIcon.Warning) = DialogResult.Yes Then
-            Dim installerName As String = "MicrosoftEdgeWebView2RuntimeInstallerX64.exe"
-            Dim installerPath As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, installerName)
-            Dim startInfo As ProcessStartInfo
-            Try
-                If File.Exists(path:=installerPath) Then
-                    ' Launch bundled bootstrapper silently (user may still see UAC)
-                    startInfo = New ProcessStartInfo(fileName:=installerPath,
-                                                     arguments:="/silent") With {.UseShellExecute = True}
-                    Process.Start(startInfo)
-                Else
-                    ' Open official download page in default browser
-                    Const filename As String =
-                        "https://developer.microsoft.com/microsoft-edge/webview2/#download-section"
-                    startInfo = New ProcessStartInfo(filename) With {.UseShellExecute = True}
-                    Process.Start(startInfo)
-                End If
-            Catch
-                Stop
-                ' Fallback: open download page if launch fails
-                Try
-                    Const fileName As String =
-                        "https://developer.microsoft.com/microsoft-edge/webview2/#download-section"
-                    startInfo = New ProcessStartInfo(fileName) With {.UseShellExecute = True}
-                    Process.Start(startInfo)
-                Catch
-                    Stop
-                End Try
-            End Try
-
-            Const text1 As String =
-                "Installer launched (or download page opened). Please install WebView2 and restart the application."
-            MessageBox.Show(text:=text1,
-                            caption:="Install started",
-                            buttons:=MessageBoxButtons.OK,
-                            icon:=MessageBoxIcon.Information)
-            Application.Exit()
-        Else
-            Const text2 As String = "WebView2 runtime not installed. The application will exit."
-            MessageBox.Show(text:=text2,
-                            caption:="WebView2 required",
-                            buttons:=MessageBoxButtons.OK,
-                            icon:=MessageBoxIcon.Error)
-            Application.Exit()
-        End If
-    End Sub
-
-    ' Check whether the WebView2 runtime is available on the machine.
-    Private Shared Function IsWebView2RuntimeInstalled() As Boolean
-        Try
-            Dim v As String = CoreWebView2Environment.GetAvailableBrowserVersionString()
-            Return Not String.IsNullOrEmpty(v)
-        Catch
-            Stop
-            Return False
-        End Try
-    End Function
-
-    Protected Overrides Sub OnShown(e As EventArgs)
-        MyBase.OnShown(e)
-        Try ' Show mismatch if present
-            Dim predicate As Func(Of Reflection.AssemblyName, Boolean) =
-                Function(a As Reflection.AssemblyName) As Boolean
-                    Return a.Name.Equals(value:="Microsoft.Web.WebView2.Core", ComparisonType)
-                End Function
-            Dim ref As Reflection.AssemblyName =
-                Reflection.Assembly.GetEntryAssembly()?.GetReferencedAssemblies() _
-                                                       .FirstOrDefault(predicate)
-            Dim expected As String =
-                If(ref IsNot Nothing,
-                   ref.Version.ToString(),
-                   "(not referenced)")
-            Dim localPath As String =
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Microsoft.Web.WebView2.Core.dll")
-            Dim actual As String = "(not present)"
-            If File.Exists(path:=localPath) Then
-                Try
-                    actual = Reflection.AssemblyName.
-                                        GetAssemblyName(assemblyFile:=localPath).
-                                        Version.ToString()
-                Catch
-                    Stop
-                End Try
-            End If
-
-            If expected <> "(not referenced)" AndAlso actual <> "(not present)" AndAlso expected <> actual Then
-                Dim msg As String =
-                    "WebView2 managed DLL version mismatch detected." &
-                    vbCrLf & vbCrLf &
-                    $"Expected: {expected}" &
-                    vbCrLf &
-                    $"Found:    {actual}" &
-                    vbCrLf & vbCrLf &
-                    "Fix: rebuild the project or include the matching " &
-                    "Microsoft.Web.WebView2.Core.dll in the app folder (see README)."
-                If MessageBox.Show(text:=msg,
-                                   caption:="WebView2 version mismatch",
-                                   buttons:=MessageBoxButtons.OKCancel,
-                                   icon:=MessageBoxIcon.Warning) = DialogResult.OK Then
-                    ' Optionally open README:
-                    Dim fileName As String = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "README.txt")
-                    Dim startInfo As New ProcessStartInfo(fileName) With {
-                        .UseShellExecute = True}
-                    Process.Start(startInfo)
-                    Application.Exit()
-                End If
-            End If
-            EnsureWebView2Runtime()
-        Catch
-            ' Ignore failures here; runtime detection is best-effort.
-        End Try
-    End Sub
-
     ''' <summary>
     '''  Scales the control based on the <paramref name="factor"/>
     '''  and <paramref name="specified"/> bounds.
@@ -3611,6 +3486,17 @@ Public Class Form1
         End
     End Sub
 
+    Private Const WebView2RuntimeDownloadUrl As String =
+        "https://developer.microsoft.com/microsoft-edge/webview2/#download-section"
+
+    Private Shared Function IsWebView2RuntimeAvailable() As Boolean
+        Try
+            Return Not String.IsNullOrWhiteSpace(CoreWebView2Environment.GetAvailableBrowserVersionString())
+        Catch ex As WebView2RuntimeNotFoundException
+            Return False
+        End Try
+    End Function
+
     ''' <summary>
     '''  Main form for the CareLink™ application.
     '''  Handles initialization, event wiring, chart setup, DataGridView formatting,
@@ -3722,6 +3608,39 @@ Public Class Form1
     '''  displayed to the user.
     ''' </remarks>
     Private Async Sub Form1_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
+        If Not IsWebView2RuntimeAvailable() Then
+            Dim result As DialogResult =
+                MessageBox.Show(
+                    text:="The Microsoft Edge WebView2 Runtime is required for CareLink login and was not found. " &
+                          "Open Microsoft's download page to install the Evergreen Runtime? Install it, then restart CareLink.",
+                    caption:="WebView2 Runtime Required",
+                    buttons:=MessageBoxButtons.YesNo,
+                    icon:=MessageBoxIcon.Warning)
+
+            If result = DialogResult.Yes Then
+                Try
+                    Dim startInfo As New ProcessStartInfo(WebView2RuntimeDownloadUrl) With {
+                        .UseShellExecute = True}
+                    Process.Start(startInfo)
+                Catch ex As ComponentModel.Win32Exception
+                    MessageBox.Show(
+                        text:=$"Could not open the WebView2 Runtime download page: {ex.Message}",
+                        caption:="Unable to Open Download Page",
+                        buttons:=MessageBoxButtons.OK,
+                        icon:=MessageBoxIcon.Error)
+                Catch ex As InvalidOperationException
+                    MessageBox.Show(
+                        text:=$"Could not open the WebView2 Runtime download page: {ex.Message}",
+                        caption:="Unable to Open Download Page",
+                        buttons:=MessageBoxButtons.OK,
+                        icon:=MessageBoxIcon.Error)
+                End Try
+            End If
+
+            Application.Exit()
+            Return
+        End If
+
         Me.Fix(c:=Me)
         Me.CurrentSgLabel.Parent = Me.SmartGuardShieldPictureBox
         Me.CurrentSgLabel.CenterLabelOnParent
