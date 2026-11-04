@@ -5952,10 +5952,11 @@ Public Class Form1
         Try
             ' Calculate the time difference
             Dim now As Date = Date.Now
-            Dim diff As TimeSpan = now - medicalDeviceTime
-
+            Dim diff As TimeSpan = medicalDeviceTime - now
+            Dim roundedDiff As TimeSpan =
+                TimeSpan.FromMinutes(value:=Math.Round(a:=diff.TotalMinutes))
             ' Round to nearest minute
-            Dim minutesAgo As Long = CInt(Math.Round(diff.TotalMinutes))
+            Dim minutesAgo As Long = 4 - CInt(Math.Round(diff.TotalMinutes))
 
             Dim pumpTimestamp As String =
                     If(minutesAgo > 0,
@@ -6811,8 +6812,7 @@ Public Class Form1
 
             medicalDeviceTime =
                 Date.SpecifyKind(value:=s_epochUTC.AddMilliseconds(value:=PatientData.MedicalDeviceTime),
-                                 kind:=DateTimeKind.Local)
-
+                                 kind:=DateTimeKind.Utc)
             Me.UpdateAutoModeShield(medicalDeviceTime)
             If medicalDeviceTime = _lastMedicalDeviceTime Then
                 _updating = False
