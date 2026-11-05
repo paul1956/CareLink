@@ -1538,7 +1538,6 @@ Partial Class Form1
         ' 
         ' SensorTimeLeftLabel
         ' 
-        SensorTimeLeftLabel.AutoSize = True
         SensorTimeLeftLabel.BackColor = Color.Transparent
         SensorTimeLeftLabel.Dock = DockStyle.Bottom
         SensorTimeLeftLabel.Font = New Font("Segoe UI", 7.0F, FontStyle.Bold)
@@ -1546,9 +1545,9 @@ Partial Class Form1
         SensorTimeLeftLabel.Location = New Point(0, 93)
         SensorTimeLeftLabel.Margin = New Padding(0)
         SensorTimeLeftLabel.Name = "SensorTimeLeftLabel"
-        SensorTimeLeftLabel.Size = New Size(80, 36)
+        SensorTimeLeftLabel.Size = New Size(80, 42)
         SensorTimeLeftLabel.TabIndex = 46
-        SensorTimeLeftLabel.Text = "1 day 2 hrs" & vbCrLf & "(Followed by 24" & vbCrLf & "hr grace period)"
+        SensorTimeLeftLabel.Text = "1 day 22 hrs" & vbCrLf & "(Followed by 24" & vbCrLf & "hr grace period)"
         SensorTimeLeftLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' SensorTimeLeftPanel

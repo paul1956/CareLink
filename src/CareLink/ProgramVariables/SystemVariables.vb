@@ -30,6 +30,9 @@ Public Module SystemVariables
     Friend ReadOnly s_font14Bold As New Font(FamilyName, emSize:=14.0F, style:=FontStyle.Bold)
     Friend ReadOnly s_font18Bold As New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold)
 
+    Friend Const SensorTimeLeftMaxFontSize As Single = 20.0F
+    Friend Const SensorTimeLeftMinFontSize As Single = 6.0F
+
     Friend s_allUserSettingsData As New CareLinkUserDataList
     Friend s_countryCode As String = String.Empty
     Friend s_currentSummaryRow As Integer = 0

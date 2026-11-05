@@ -365,8 +365,8 @@ Public Class Form1
     Private Property SummarySgSeries As Series
     Private Property SummarySuspendSeries As Series
     Private Property SummaryTargetSgSeries As Series
-    Private Property SummaryTimeChangeSeries As Series
     Private Property SummaryTempTargetSeries As Series
+    Private Property SummaryTimeChangeSeries As Series
     Private Property TimeInRangeSeries As New Series
     Private Property TreatmentAutoCorrectionSeries As Series
     Private Property TreatmentBasalSeries As Series
@@ -3468,6 +3468,17 @@ Public Class Form1
 
 #Region "Form Events"
 
+    Private Const WebView2RuntimeDownloadUrl As String =
+            "https://developer.microsoft.com/microsoft-edge/webview2/#download-section"
+
+    Private Shared Function IsWebView2RuntimeAvailable() As Boolean
+        Try
+            Return Not String.IsNullOrWhiteSpace(CoreWebView2Environment.GetAvailableBrowserVersionString())
+        Catch ex As WebView2RuntimeNotFoundException
+            Return False
+        End Try
+    End Function
+
     ''' <summary>
     '''  Handles the <see cref="Form.FormClosing"/> event for the main form.
     '''  Performs cleanup tasks such as disposing of the notification icon
@@ -3485,17 +3496,6 @@ Public Class Form1
         Me.NotifyIcon1 = Nothing
         End
     End Sub
-
-    Private Const WebView2RuntimeDownloadUrl As String =
-        "https://developer.microsoft.com/microsoft-edge/webview2/#download-section"
-
-    Private Shared Function IsWebView2RuntimeAvailable() As Boolean
-        Try
-            Return Not String.IsNullOrWhiteSpace(CoreWebView2Environment.GetAvailableBrowserVersionString())
-        Catch ex As WebView2RuntimeNotFoundException
-            Return False
-        End Try
-    End Function
 
     ''' <summary>
     '''  Main form for the CareLink™ application.
@@ -4554,6 +4554,41 @@ Public Class Form1
                                 bottomColor:=Color.LimeGreen,
                                 bottomWidth:=3,
                                 bottomStyle:=ButtonBorderStyle.Solid)
+    End Sub
+
+    Private Sub SensorTimeLeftLabel_TextChanged(sender As Object, e As EventArgs) _
+        Handles SensorTimeLeftLabel.TextChanged, SensorTimeLeftLabel.SizeChanged
+
+        Dim label As Label = Me.SensorTimeLeftLabel
+        If String.IsNullOrWhiteSpace(value:=label.Text) OrElse label.ClientSize.IsEmpty Then Return
+
+        Dim available As Size = label.ClientSize
+        Dim flags As TextFormatFlags = TextFormatFlags.NoPadding Or TextFormatFlags.WordBreak
+        Dim bestSize As Single = SensorTimeLeftMinFontSize
+        Dim size As Single = SensorTimeLeftMaxFontSize
+
+        While size >= SensorTimeLeftMinFontSize
+            Using testFont As New Font(family:=label.Font.FontFamily,
+                                       emSize:=size,
+                                       label.Font.Style)
+                Dim measured As Size =
+                TextRenderer.MeasureText(text:=label.Text,
+                                         font:=testFont,
+                                         proposedSize:=New Size(available.Width, height:=Integer.MaxValue),
+                                         flags:=flags)
+                If measured.Width <= available.Width AndAlso measured.Height <= available.Height Then
+                    bestSize = size
+                    Exit While
+                End If
+            End Using
+            size -= 0.5F
+        End While
+
+        If Math.Abs(value:=label.Font.Size - bestSize) > 0.01F Then
+            Dim oldFont As Font = label.Font
+            label.Font = New Font(family:=oldFont.FontFamily, emSize:=bestSize, oldFont.Style)
+            oldFont.Dispose()
+        End If
     End Sub
 
     ''' <summary>
@@ -6410,7 +6445,7 @@ Public Class Form1
                                 $"<{sensorDurationDays}"
                             Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeNotOK)
                             Me.SensorTimeLeftLabel.Text =
-                                $"{sensorDurationHours} Hours"
+                                $"{sensorDurationHours}{vbCrLf}Hours"
                         Case Is = 0
                             Dim sensorDurationMinutes As Integer =
                                 If(PatientData.SensorDurationMinutes Is Nothing,
@@ -6420,7 +6455,7 @@ Public Class Form1
                                 Case Is > 0
                                     Me.SensorDaysLeftLabel.Text = "0"
                                     Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeNotOK)
-                                    Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
+                                    Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes}{vbCrLf}minutes"
                                 Case Is = 0
                                     Me.SensorDaysLeftLabel.Text = EmptyString
                                     Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpired)
@@ -6492,7 +6527,7 @@ Public Class Form1
                     Case Is > 0
                         Me.SensorDaysLeftLabel.Text = "0"
                         Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeNotOK)
-                        Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes} minutes"
+                        Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes}{vbCrLf}minutes"
                     Case Is = 0
                         Me.SensorDaysLeftLabel.Text = EmptyString
                         Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpired)
