@@ -48,7 +48,7 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 CareLink uses the latest stable `Microsoft.Web.WebView2` NuGet package for its WebView2 APIs. The package does not include the browser runtime; the Evergreen WebView2 Runtime must be installed on the system. If it is missing, CareLink offers to open [Microsoft's WebView2 download page](https://developer.microsoft.com/microsoft-edge/webview2/#download-section), where you can install the Evergreen Runtime, then restart CareLink. No Evergreen bootstrapper is bundled with the application.
 
 ## Updated
-11/03/2026
+11/04/2026
 
 ## What's New
 New in 6.1.1.0
@@ -57,6 +57,7 @@ Check token-file last-write time before reading and return Nothing for
 stale files. Add a regression test for an eight-day-old token file.
 
 - Always use Latest NuGet Package for WebView2
+- Fix SensorTimeLeftLabel to improve readability
 
 New in 6.1.0.0
 - Improve Cursor handling in DataGridView controls
