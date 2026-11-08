@@ -60,6 +60,8 @@ Public Module PumpVariables
 
     Public Property PatientDataElement As JsonElement
 
+    Public Property PreviousPatientDataElement As JsonElement
+
     Public Property ProgramInitialized As Boolean = False
 
     Public Function GetCarbDefaultUnit() As String

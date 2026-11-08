@@ -29,10 +29,13 @@ Partial Class RawDataViewerDialog
         TableLayoutPanel1 = New TableLayoutPanel()
         OK_Button = New Button()
         Cancel_Button = New Button()
+        PreviousRawDataRTB = New RichTextBox()
         RawDataRTB = New RichTextBox()
         txtFind = New TextBox()
         btnFindNext = New Button()
         btnFindAll = New Button()
+        CheckBoxDifferenceOnly = New CheckBox()
+        btnRefresh = New Button()
         TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         ' 
@@ -40,15 +43,15 @@ Partial Class RawDataViewerDialog
         ' 
         TableLayoutPanel1.Anchor = AnchorStyles.Bottom Or AnchorStyles.Right
         TableLayoutPanel1.ColumnCount = 2
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
-        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50.0F))
         TableLayoutPanel1.Controls.Add(OK_Button, 0, 0)
         TableLayoutPanel1.Controls.Add(Cancel_Button, 1, 0)
-        TableLayoutPanel1.Location = New Point(654, 579)
+        TableLayoutPanel1.Location = New Point(1220, 579)
         TableLayoutPanel1.Margin = New Padding(4, 3, 4, 3)
         TableLayoutPanel1.Name = "TableLayoutPanel1"
         TableLayoutPanel1.RowCount = 1
-        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 50.0F))
         TableLayoutPanel1.Size = New Size(170, 33)
         TableLayoutPanel1.TabIndex = 2
         ' 
@@ -72,26 +75,34 @@ Partial Class RawDataViewerDialog
         Cancel_Button.TabIndex = 1
         Cancel_Button.Text = "Cancel"
         ' 
+        ' PreviousRawDataRTB
+        ' 
+        PreviousRawDataRTB.Font = New Font("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        PreviousRawDataRTB.Location = New Point(0, 0)
+        PreviousRawDataRTB.Name = "PreviousRawDataRTB"
+        PreviousRawDataRTB.Size = New Size(701, 576)
+        PreviousRawDataRTB.TabIndex = 1
+        PreviousRawDataRTB.Text = ""
+        ' 
         ' RawDataRTB
         ' 
-        RawDataRTB.Dock = DockStyle.Top
-        RawDataRTB.Font = New Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
-        RawDataRTB.Location = New Point(0, 0)
+        RawDataRTB.Font = New Font("Segoe UI", 12.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        RawDataRTB.Location = New Point(704, 0)
         RawDataRTB.Name = "RawDataRTB"
-        RawDataRTB.Size = New Size(838, 573)
-        RawDataRTB.TabIndex = 1
+        RawDataRTB.Size = New Size(701, 576)
+        RawDataRTB.TabIndex = 2
         RawDataRTB.Text = ""
         ' 
         ' txtFind
         ' 
-        txtFind.Location = New Point(21, 584)
+        txtFind.Location = New Point(12, 584)
         txtFind.Name = "txtFind"
         txtFind.Size = New Size(200, 23)
         txtFind.TabIndex = 0
         ' 
         ' btnFindNext
         ' 
-        btnFindNext.Location = New Point(235, 582)
+        btnFindNext.Location = New Point(226, 582)
         btnFindNext.Name = "btnFindNext"
         btnFindNext.Size = New Size(103, 27)
         btnFindNext.TabIndex = 1
@@ -100,23 +111,48 @@ Partial Class RawDataViewerDialog
         ' 
         ' btnFindAll
         ' 
-        btnFindAll.Location = New Point(352, 582)
+        btnFindAll.Location = New Point(343, 582)
         btnFindAll.Name = "btnFindAll"
-        btnFindAll.Size = New Size(113, 27)
+        btnFindAll.Size = New Size(103, 27)
         btnFindAll.TabIndex = 1
         btnFindAll.Text = "Find All"
         btnFindAll.UseVisualStyleBackColor = True
         ' 
+        ' CheckBoxDifferenceOnly
+        ' 
+        CheckBoxDifferenceOnly.Appearance = Appearance.ToggleSwitch
+        CheckBoxDifferenceOnly.AutoSize = True
+        CheckBoxDifferenceOnly.Checked = True
+        CheckBoxDifferenceOnly.CheckState = CheckState.Checked
+        CheckBoxDifferenceOnly.Location = New Point(526, 586)
+        CheckBoxDifferenceOnly.Name = "CheckBoxDifferenceOnly"
+        CheckBoxDifferenceOnly.Size = New Size(145, 19)
+        CheckBoxDifferenceOnly.TabIndex = 3
+        CheckBoxDifferenceOnly.Text = "Show Differences Only"
+        CheckBoxDifferenceOnly.UseVisualStyleBackColor = True
+        ' 
+        ' btnRefresh
+        ' 
+        btnRefresh.Location = New Point(714, 582)
+        btnRefresh.Name = "btnRefresh"
+        btnRefresh.Size = New Size(103, 27)
+        btnRefresh.TabIndex = 4
+        btnRefresh.Text = "Refresh"
+        btnRefresh.UseVisualStyleBackColor = True
+        ' 
         ' RawDataViewerDialog
         ' 
         Me.AcceptButton = OK_Button
-        Me.AutoScaleDimensions = New SizeF(7F, 15F)
+        Me.AutoScaleDimensions = New SizeF(7.0F, 15.0F)
         Me.AutoScaleMode = AutoScaleMode.Font
         Me.CancelButton = Cancel_Button
-        Me.ClientSize = New Size(838, 619)
+        Me.ClientSize = New Size(1404, 619)
+        Me.Controls.Add(btnRefresh)
+        Me.Controls.Add(CheckBoxDifferenceOnly)
         Me.Controls.Add(btnFindAll)
         Me.Controls.Add(btnFindNext)
         Me.Controls.Add(txtFind)
+        Me.Controls.Add(PreviousRawDataRTB)
         Me.Controls.Add(RawDataRTB)
         Me.Controls.Add(TableLayoutPanel1)
         Me.FormBorderStyle = FormBorderStyle.FixedDialog
@@ -135,9 +171,12 @@ Partial Class RawDataViewerDialog
     Friend WithEvents TableLayoutPanel1 As System.Windows.Forms.TableLayoutPanel
     Friend WithEvents OK_Button As System.Windows.Forms.Button
     Friend WithEvents Cancel_Button As System.Windows.Forms.Button
+    Friend WithEvents PreviousRawDataRTB As RichTextBox
     Friend WithEvents RawDataRTB As RichTextBox
     Friend WithEvents txtFind As TextBox
     Friend WithEvents btnFindNext As Button
     Friend WithEvents btnFindAll As Button
+    Friend WithEvents CheckBoxDifferenceOnly As CheckBox
+    Friend WithEvents btnRefresh As Button
 
 End Class

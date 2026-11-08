@@ -191,6 +191,7 @@ Friend Module UserMessageConstants
         {"1.301", "Pump error restart needed(triggeredDateTime), (alertClearType)"},
         {"1.307", $"Time setting error(triggeredDateTime), Insulin delivery stopped and SG unavailable.{vbCrLf}" &
                   "Time settings need to be transferred to pump"},
+        {"1.310", "Insulin flow blocked(triggeredDateTime), (alertClearType)"},
         {"1.312", "Active insulin reset to 0, Active insulin will be incorrect until(activeInsulinResetTime)."},
         {"2.209", $"Check blood glucose with meter(triggeredDateTime),{vbCrLf}" &
                   "Sensor glucose not available until a BG is accepted."},

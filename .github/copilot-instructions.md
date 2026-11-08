@@ -1,4 +1,12 @@
-﻿# Markdown File
+﻿## Build and test behavior
+
+- Before building or running tests, check whether the application is running or being debugged.
+- If a build reports that the app is running or being debugged (for example, "code changes have not been applied to the running app"), stop and ask me to stop execution (Shift+F5) before continuing.
+- Do not work around it by building into a temporary output folder.
+- Do not kill the app's process yourself.
+- Wait for my confirmation, then rebuild with the normal solution build and run tests through Test Explorer.
+
+# Markdown File
 For all VB.NET code, always respect:
 Option Strict On
 Option Explicit On

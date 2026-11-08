@@ -972,6 +972,7 @@ Friend Class Client2
         Dim refreshTask As Task(Of JsonElement) = Nothing
         Dim hadAuthException As Boolean = False
 
+        PreviousPatientDataElement = PatientDataElement
         If Not Me.IsTokenValid(message) Then
             Try
                 Me.TokenDataElement =

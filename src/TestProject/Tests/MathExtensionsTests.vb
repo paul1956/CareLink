@@ -28,16 +28,20 @@ Public Class MathExtensionsTests
     End Sub
 
     <Fact>
-    Public Sub RoundToSingle_WithDigits_RoundsNormally()
+    Public Sub RoundToSingle_WithDigits_RoundsToDecimalPlaces()
         ' Arrange
         Dim value As Single = 1.2345F
         Dim expected As Single = 1.23F
 
         ' Act
-        Dim actual As Single = value.RoundSg()
+        Dim actual As Single = value.RoundToSingle(digits:=2)
 
         ' Assert
         actual.Should().Be(expected)
+        Dim largerValue As Single = 12.345F
+        Dim negativeValue As Single = -1.2345F
+        largerValue.RoundToSingle(digits:=2).Should().Be(expected:=12.35F)
+        negativeValue.RoundToSingle(digits:=2).Should().Be(expected:=-1.23F)
     End Sub
 
     <Fact>
@@ -90,9 +94,9 @@ Public Class MathExtensionsTests
         Dim nearlyExact As Single = 100.0F
         Dim tooFar As Single = 100.0002F
 
-        exact.IsSingleEqualToInteger(100).Should().BeTrue()
-        nearlyExact.IsSingleEqualToInteger(100).Should().BeTrue()
-        tooFar.IsSingleEqualToInteger(100).Should().BeFalse()
+        exact.IsEqual(100).Should().BeTrue()
+        nearlyExact.IsEqual(100).Should().BeTrue()
+        tooFar.IsEqual(100).Should().BeFalse()
     End Sub
 
     <Fact>

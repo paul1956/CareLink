@@ -38,9 +38,8 @@ Public Class Form1
     Private _infusionSetLabel4Backup As String
     Private _inMouseMove As Boolean = False
     Private _lastMarkerTabLocation As (Page As Integer, Tab As Integer) = (Page:=0, Tab:=0)
-    Private _lastMedicalDeviceTime As Date = Date.MinValue
     Private _lastSummaryTabIndex As Integer = 0
-    Private _latestActiveInsulin As Double = 0
+    Private _latestActiveInsulin As Single = 0
     Private _previousLoc As Point
     Private _remainingInsulinList As New List(Of RunningActiveInsulin)
     Private _showBalloonTip As Boolean = True
@@ -3046,7 +3045,7 @@ Public Class Form1
             Case 0
                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft
                 Dim singleValue As Single = eValue.ParseSingleInvariant()
-                If singleValue.IsSingleEqualToInteger(integerValue:=CInt(e.Value)) Then
+                If singleValue.IsEqual(integerValue:=CInt(e.Value)) Then
                     dgv.CellFormattingSingleValue(e, digits:=0)
                 Else
                     dgv.CellFormattingSingleValue(e, digits:=1)
@@ -4113,7 +4112,7 @@ Public Class Form1
     End Sub
 
     Private Sub MenuViewShowRawJsonData_Click(sender As Object, e As EventArgs) Handles MenuViewRawJsonData.Click
-        Dim rawDataDialog As New RawDataViewerDialog(json:=PatientDataElement)
+        Dim rawDataDialog As New RawDataViewerDialog(prevJson:=PreviousPatientDataElement, json:=PatientDataElement)
         rawDataDialog.ShowDialog(owner:=My.Forms.Form1)
     End Sub
 
@@ -5614,6 +5613,17 @@ Public Class Form1
 
 #Region "Update Home Tab"
 
+    Private Shared Function GetFirstValueTimeStamp(sgs As List(Of SG)) As Date
+        Dim offset As New TimeSpan(ticks:=0)
+        For Each s As SG In sgs
+            If s.Sg.IsSgValid Then
+                Return s.Timestamp + offset
+            End If
+            offset += New TimeSpan(hours:=0, minutes:=5, seconds:=0)
+        Next
+        Return Date.MinValue
+    End Function
+
     Private Shared Function GetSimpleraTimeLeftMessage(SensorDurationHours As Integer) As String
         Dim hoursStr As String
         Select Case SensorDurationHours
@@ -5739,9 +5749,9 @@ Public Class Form1
         Try
             Dim activeInsulinStr As String
             If s_activeInsulin IsNot Nothing AndAlso s_activeInsulin.Amount >= 0 Then
-                activeInsulinStr = $"Active Insulin {$"{s_activeInsulin.Amount:N1}"} U"
+                activeInsulinStr = $"Active Insulin {$"{s_activeInsulin.Amount.FormatWithTrailingZero}"} U"
             ElseIf IsFlex() AndAlso _latestActiveInsulin >= 0 Then
-                activeInsulinStr = $"Active Insulin Est. {_latestActiveInsulin:N1} U"
+                activeInsulinStr = $"Active Insulin Est. {_latestActiveInsulin.FormatWithTrailingZero} U"
             Else
                 activeInsulinStr = $"Active Insulin --- U"
             End If
@@ -5903,7 +5913,7 @@ Public Class Form1
                     End If
                     Dim start As Integer = i - count + 1
                     Dim sum As Double = _remainingInsulinList.ConditionalSum(index:=start, count)
-                    _latestActiveInsulin = sum
+                    _latestActiveInsulin = CSng(sum)
                     maxActiveInsulin = Math.Max(sum, maxActiveInsulin)
                     With Me.ActiveInsulinActiveInsulinSeries
                         .Points.AddXY(xValue:=_remainingInsulinList(index:=i).OaDateTime, yValue:=sum)
@@ -5983,22 +5993,26 @@ Public Class Form1
     '''  The shield bitmap is set based on the sensor state, and the last
     '''  sensor glucose time and shield units are displayed accordingly.
     ''' </remarks>
-    Private Sub UpdateAutoModeShield(medicalDeviceTime As Date)
+    Private Sub UpdateAutoModeShield()
         Try
-            ' Calculate the time difference
-            Dim now As Date = Date.Now
-            Dim diff As TimeSpan = medicalDeviceTime - now
-            Dim roundedDiff As TimeSpan =
-                TimeSpan.FromMinutes(value:=Math.Round(a:=diff.TotalMinutes))
-            ' Round to nearest minute
-            Dim minutesAgo As Long = 4 - CInt(Math.Round(diff.TotalMinutes))
+            Dim now As Date = LocalPumpTime()
+            If PatientData.Sgs.Count <> 0 Then
+                Dim lastUpdate As Date = GetFirstValueTimeStamp(PatientData.Sgs)
+                Dim age As TimeSpan = now - lastUpdate
+                Dim minutesAgo As Long = CLng(Math.Round(value:=age.TotalMinutes,
+                                                         mode:=MidpointRounding.AwayFromZero))
+                Dim pumpTimestamp As String =
+                If(minutesAgo > 0,
+                   $"{minutesAgo.ToHoursMinutes} ago",
+                   "Now")
+                Me.LastSgOrExitTimeLabel.Text = pumpTimestamp
+            Else
+                If Not Me.LastSgOrExitTimeLabel.Text.Contains(value:="ago") AndAlso
+                    Not Me.LastSgOrExitTimeLabel.Text.Contains(value:="Now") Then
 
-            Dim pumpTimestamp As String =
-                    If(minutesAgo > 0,
-                       $"{minutesAgo.ToHoursMinutes} ago".Replace(oldValue:="and ", newValue:=""),
-                       "Now")
-
-            Me.LastSgOrExitTimeLabel.Text = pumpTimestamp
+                    Me.LastSgOrExitTimeLabel.Text = "Unknown"
+                End If
+            End If
             Me.ShieldUnitsLabel.Text = BgUnits
             If PatientData.TherapyAlgorithmState IsNot Nothing Then
                 InAutoMode = PatientData.TherapyAlgorithmState.AutoModeReadinessState = "NO_ACTION_REQUIRED" _
@@ -6818,15 +6832,9 @@ Public Class Form1
         End If
         If PatientData.LastMedicalDeviceDataUpdateServerTime = s_lastMedicalDeviceDataUpdateServerEpoch Then
             Exit Sub
-        Else
-            s_lastMedicalDeviceDataUpdateServerEpoch = PatientData.LastMedicalDeviceDataUpdateServerTime
         End If
-        If IsPatientDataEmpty() Then
-            Exit Sub
-        End If
-
+        s_lastMedicalDeviceDataUpdateServerEpoch = PatientData.LastMedicalDeviceDataUpdateServerTime
         CheckForUpdatesAsync(reportSuccessfulResult:=False)
-        Dim medicalDeviceTime As Date
         SyncLock _updatingLock
             _updating = True ' prevent paint
             Me.MenuStartHere.Enabled = False
@@ -6835,7 +6843,7 @@ Public Class Form1
             Else
                 Dim d As Date = LocalPumpTime()
                 Dim msg As String = $"Last Update Time: {d:d} {d:t}"
-                Me.SetLastUpdateTime(msg, isDaylightSavingTime:=LocalPumpTime.IsDaylightSavingTime)
+                Me.SetLastUpdateTime(msg, isDaylightSavingTime:=d.IsDaylightSavingTime)
             End If
             Me.ShowCursorControls(showWhat:=CursorInfo.Hide1, showInfusionSet:=True)
 
@@ -6845,16 +6853,8 @@ Public Class Form1
                 Stop
             End Try
 
-            medicalDeviceTime =
-                Date.SpecifyKind(value:=s_epochUTC.AddMilliseconds(value:=PatientData.MedicalDeviceTime),
-                                 kind:=DateTimeKind.Utc)
-            Me.UpdateAutoModeShield(medicalDeviceTime)
-            If medicalDeviceTime = _lastMedicalDeviceTime Then
-                _updating = False
-                Exit Sub
-            End If
+            Me.UpdateAutoModeShield()
             Me.UpdateDataTables()
-            _lastMedicalDeviceTime = medicalDeviceTime
             _updating = False
         End SyncLock
 

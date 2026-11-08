@@ -2,21 +2,16 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path="CareLink.vsext" />
-    <File Path="copilot-instructions.md" />
     <File Path="exclusion.dic" />
     <File Path="GettingStarted.MD" />
     <File Path="License.txt" />
     <File Path="README.md" />
     <File Path="Screenshot 2022-10-08 203350.png" />
-    <Project Path="src/CareLink/CareLink.vbproj" />
-    <Project Path="src/PumpSetup/PumpSetup.vbproj" />
-    <Project Path="src/TestProject/TestProject.vbproj" />
+    <File Path=".github/copilot-instructions.md" />
+    <File Path=".github/instructions/vb.instructions.md" />
+    <File Path="vb.prompt.md" />
   </Folder>
-  <Folder Name="/Solution Items/.GitHub/" />
-  <Folder Name="/Solution Items/.GitHub/Copilot/">
-    <File Path="copilot-instructions.md" />
-  </Folder>
-  <Folder Name="/Solution Items/.GitHub/Prompts/">
-    <File Path="vb.prompt.md file" />
-  </Folder>
+  <Project Path="src/CareLink/CareLink.vbproj" />
+  <Project Path="src/PumpSetup/PumpSetup.vbproj" />
+  <Project Path="src/TestProject/TestProject.vbproj" />
 </Solution>

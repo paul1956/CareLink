@@ -22,9 +22,9 @@
     <Copyright>Copyright (c) .NET Foundation and Contributors</Copyright>
     <RepositoryUrl>https://github.com/paul1956/CareLink</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <Version>6.1.1.0</Version>
-    <AssemblyVersion>6.1.1.0</AssemblyVersion>
-    <FileVersion>6.1.1.0</FileVersion>
+    <Version>6.1.2.0</Version>
+    <AssemblyVersion>6.1.2.0</AssemblyVersion>
+    <FileVersion>6.1.2.0</FileVersion>
     <PackageIcon>IconImage.png</PackageIcon>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/paul1956/CareLink</PackageProjectUrl>
@@ -1284,7 +1284,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\.editorconfig" Link=".editorconfig" />
     <None Include="Images\Backup\InfusionLife12To24Hours.png" />
   </ItemGroup>
 
