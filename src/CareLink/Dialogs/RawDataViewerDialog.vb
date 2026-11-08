@@ -14,35 +14,26 @@ Public Class RawDataViewerDialog
     Private Const EM_SETSCROLLPOS As Integer = &H4DE
 
     Private Shared ReadOnly s_timestampDifference As New Regex(
-        "^\$.*\[""[^""\]]*Time[^""\]]*""\] = (?<value>\d{10}|\d{13})$", RegexOptions.IgnoreCase)
+        pattern:="^\$.*\[""[^""\]]*Time[^""\]]*""\] = (?<value>\d{10}|\d{13})$",
+        options:=RegexOptions.IgnoreCase)
 
     Private Shared ReadOnly s_timestampLine As New Regex(
-        "^\s*""[^""]*Time[^""]*""\s*:\s*(?<value>\d{10}|\d{13}),?$", RegexOptions.IgnoreCase)
+        pattern:="^\s*""[^""]*Time[^""]*""\s*:\s*(?<value>\d{10}|\d{13}),?$",
+        options:=RegexOptions.IgnoreCase)
 
     Private ReadOnly _currentWordWrap As Boolean
     Private _contextMenu As New ContextMenuStrip
-
     Private _copyMenuItem As ToolStripMenuItem
-
     Private _currentBounds As Rectangle
-
     Private _currentDifferences As String
-
     Private _currentText As String
     Private _hasDifferences As Boolean
-
     Private _lastSearchIndex As Integer = 0
-
     Private _previousDifferences As String
-
     Private _previousScrollBars As RichTextBoxScrollBars
-
     Private _previousText As String
-
     Private _previousWordWrap As Boolean
-
     Private _synchronizingScroll As Boolean
-
     Private _updatingDataView As Boolean = True
 
     ''' <summary>
