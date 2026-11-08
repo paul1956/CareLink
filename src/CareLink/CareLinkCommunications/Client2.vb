@@ -138,13 +138,15 @@ Friend Class Client2
     ''' <param name="username">The username for the nameValueCollection request.</param>
     ''' <param name="role">The role of the user (e.g., patient, carePartner).</param>
     ''' <param name="patientId">The patient ID, if applicable.</param>
+    ''' <param name="retryTransientErrors">Whether to retry transient request failures immediately.</param>
     ''' <returns>
     '''  A task representing the asynchronous operation, containing the requested
     '''  nameValueCollection as a dictionary.
     ''' </returns>
     Private Async Function GetDataAsync(username As String,
                                         role As String,
-                                        patientId As String) As Task(Of Dictionary(Of String, JsonElement))
+                                        patientId As String,
+                                        retryTransientErrors As Boolean) As Task(Of Dictionary(Of String, JsonElement))
 
         _httpClient.SetDefaultRequestHeaders()
         Dim requestUri As String = $"{Me.Config.BaseUrlCumulus}/display/message"
@@ -174,7 +176,7 @@ Friend Class Client2
                                            encoding:=Encoding.UTF8,
                                            mediaType:="application/json")
 
-            Const maxAttempts As Integer = 3
+            Dim maxAttempts As Integer = If(retryTransientErrors, 3, 1)
             Dim attempt As Integer = 0
             Dim lastEx As Exception = Nothing
 
@@ -962,12 +964,13 @@ Friend Class Client2
     ''' <summary>
     '''  Async variant of GetRecentData that uses Await and centralized resp inspection.
     ''' </summary>
+    ''' <param name="retryTransientErrors">Whether to retry transient data requests immediately.</param>
     ''' <returns>
     '''  Returns the last error message if the operation fails;
     '''  otherwise, returns the same <see langword="String"/> result as GetRecentData after setting
     '''  the PatientData and RecentData public variables.
     ''' </returns>
-    Public Async Function GetRecentDataAsync() As Task(Of String)
+    Public Async Function GetRecentDataAsync(Optional retryTransientErrors As Boolean = True) As Task(Of String)
         Dim message As String = ""
         Dim refreshTask As Task(Of JsonElement) = Nothing
         Dim hadAuthException As Boolean = False
@@ -1019,7 +1022,8 @@ Friend Class Client2
             Try
                 data = Await Me.GetDataAsync(username:=GetUserName(),
                                              role,
-                                             patientId:=EmptyString)
+                                             patientId:=EmptyString,
+                                             retryTransientErrors)
             Catch uaEx As UnauthorizedAccessException
                 ' schedule refresh, will await below and then retry once
                 hadAuthException = True
@@ -1051,7 +1055,8 @@ Friend Class Client2
                         ' retry
                         data = Await Me.GetDataAsync(username:=GetUserName(),
                                                      role:=role,
-                                                     patientId:=EmptyString)
+                                                     patientId:=EmptyString,
+                                                     retryTransientErrors:=True)
                     End If
                 Catch refreshEx As Exception
                     LogMessage(message:=refreshEx.ToString())

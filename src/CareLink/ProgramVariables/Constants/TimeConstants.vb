@@ -52,8 +52,7 @@ Friend Module TimeConstants
     Public ReadOnly Property RefreshRate1Min As Integer = CInt(OneMinuteSpan.TotalMilliseconds)
 
     ''' <summary>
-    '''  Milliseconds in 30 seconds. Used for refresh rate of the main form
-    '''  after suspend.
+    '''  Milliseconds in 30 seconds, used for non-live refresh after suspend.
     ''' </summary>
     ''' <returns>Milliseconds in 30 seconds.</returns>
     Public ReadOnly Property ThirtySecondsInMilliseconds As Integer = CInt(OneMinuteSpan.TotalMilliseconds / 2)

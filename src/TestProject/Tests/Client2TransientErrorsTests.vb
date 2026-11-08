@@ -14,8 +14,10 @@ Imports Xunit
 
 Public Class Client2TransientErrorsTests
 
-    <Fact>
-    Public Async Function GetRecentDataAsync_DoesNotCrash_OnTransientHttpErrors() As Task
+    <Theory>
+    <InlineData(True)>
+    <InlineData(False)>
+    Public Async Function GetRecentDataAsync_DoesNotCrash_OnTransientHttpErrors(retryTransientErrors As Boolean) As Task
         Dim handler As New SequenceHandler()
         handler.EnqueueException(ex:=New HttpRequestException(message:="transient 1"))
         handler.EnqueueException(ex:=New HttpRequestException(message:="transient 2"))
@@ -59,7 +61,7 @@ Public Class Client2TransientErrorsTests
         Dim result As String = Nothing
         Dim ex As Exception = Nothing
         Try
-            result = Await client.GetRecentDataAsync() _
+            result = Await client.GetRecentDataAsync(retryTransientErrors) _
                                  .ConfigureAwaitFalse()
         Catch e As Exception
             ex = e
@@ -67,6 +69,12 @@ Public Class Client2TransientErrorsTests
 
         ex.Should().BeNull()
         result.Should().NotBeNull()
+        If retryTransientErrors Then
+            handler.RequestCount.Should().BeGreaterThan(expected:=1)
+        Else
+            handler.RequestCount.Should().Be(expected:=1)
+            result.Should().Contain(expected:="transient 1")
+        End If
     End Function
 
     Private Class SequenceHandler
@@ -75,12 +83,15 @@ Public Class Client2TransientErrorsTests
         Private ReadOnly _exceptions As Queue(Of Exception)
         Private ReadOnly _responses As Queue(Of Func(Of HttpResponseMessage))
 
+        Public Property RequestCount As Integer
+
         Public Sub New()
             _responses = New Queue(Of Func(Of HttpResponseMessage))()
             _exceptions = New Queue(Of Exception)()
         End Sub
 
         Protected Overrides Function SendAsync(request As HttpRequestMessage, cancellationToken As CancellationToken) As Task(Of HttpResponseMessage)
+            Me.RequestCount += 1
             If _exceptions.Count > 0 Then
                 Dim ex As Exception = _exceptions.Dequeue()
                 Dim tcs As New TaskCompletionSource(Of HttpResponseMessage)()

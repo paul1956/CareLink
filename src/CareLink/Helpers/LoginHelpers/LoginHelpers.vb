@@ -79,11 +79,13 @@ Friend Module LoginHelpers
                                                        fileToLoad As FileToLoadOptions) As Task(Of Boolean)
 
         Dim serverTimerEnabled As Boolean = SetServerUpdateTimer(Start:=False)
+        owner._livePolling.Reset()
         AutoBasalDeliveryMarkers.Clear()
         ProgramInitialized = False
         Dim fromFile As Boolean
         Select Case fileToLoad
             Case FileToLoadOptions.TestData
+                owner._livePollingEnabled = False
                 owner.Text = $"{SavedTitle} Using Test Data from 'SampleUserV2Data.json'"
                 CurrentDateCulture = New CultureInfo(name:="en-US")
                 Dim path As String = GetTestDataPath()
@@ -146,6 +148,10 @@ Friend Module LoginHelpers
                 Dim lastErrorMessage As String =
                     Await Form1.Client.GetRecentDataAsync()
 
+                owner._livePollingEnabled = True
+                If String.IsNullOrEmpty(lastErrorMessage) AndAlso Not IsPatientDataEmpty() Then
+                    owner._livePolling.Observe(PatientData, Stopwatch.GetTimestamp())
+                End If
                 SetUpCareLinkUser(forceUI:=False)
                 SetServerUpdateTimer(Start:=True, interval:=RefreshRate1Min)
 
@@ -221,6 +227,7 @@ Friend Module LoginHelpers
                 CurrentDateCulture = lastDownloadFileWithPath.ExtractCulture(fixedPart, fuzzy:=True)
                 PatientDataElement = ReadJsonElementFromFile(path:=lastDownloadFileWithPath)
                 DeserializePatientElement()
+                owner._livePollingEnabled = False
                 owner.MenuShowMiniDisplay.Visible = Debugger.IsAttached
                 Dim fileDate As Date = File.GetLastWriteTime(path:=lastDownloadFileWithPath)
                 Dim isDaylightSavingTime As Boolean = fileDate.IsDaylightSavingTime

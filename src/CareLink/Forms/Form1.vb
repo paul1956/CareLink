@@ -29,6 +29,8 @@ Public Class Form1
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _sgMiniDisplay As New SgMiniForm(form1:=Me)
     Private ReadOnly _updatingLock As New Object()
+    Friend ReadOnly _livePolling As New LivePollingSchedule()
+    Friend _livePollingEnabled As Boolean
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
     Private _dgvSummaryPrevColIndex As Integer = -1
     Private _dgvSummaryPrevRowIndex As Integer = -1
@@ -3875,6 +3877,8 @@ Public Class Form1
                                 s_circularOADateBuffer.Clear()
                                 PatientDataElement = pde
                                 DeserializePatientElement()
+                                _livePollingEnabled = False
+                                _livePolling.Reset()
                                 Me.TabControlPage2.Visible = True
                                 Me.TabControlPage1.Visible = True
                             Catch ex As Exception
@@ -4976,7 +4980,10 @@ Public Class Form1
             Case PowerModes.Resume
                 Me.SetLastUpdateTime(msg:="System Awake", highLight:=True)
                 s_shuttingDown = False
-                SetServerUpdateTimer(Start:=True, interval:=ThirtySecondsInMilliseconds)
+                Dim interval As Integer = If(_livePollingEnabled,
+                                             LivePollingSchedule.MinimumPollMs,
+                                             ThirtySecondsInMilliseconds)
+                SetServerUpdateTimer(Start:=True, interval)
         End Select
 
     End Sub
@@ -5009,7 +5016,7 @@ Public Class Form1
         Try
             ' Retrieve recent data asynchronously
             lastErrorMessage = If(Client IsNot Nothing,
-                                  Await Client.GetRecentDataAsync(),
+                                  Await Client.GetRecentDataAsync(retryTransientErrors:=False),
                                   String.Empty)
 
             If IsPatientDataEmpty() Then
@@ -5022,6 +5029,8 @@ Public Class Form1
                         Dim result As DialogResult = Await LoginDialog.ShowDialogAsync(owner:=Me)
                         Select Case result
                             Case DialogResult.OK
+                                _livePolling.Reset()
+                                _livePollingEnabled = True
                                 Exit Do
                             Case DialogResult.Cancel
                                 SetServerUpdateTimer(Start:=False)
@@ -5030,11 +5039,13 @@ Public Class Form1
                                 Exit Do
                         End Select
                     Loop
+                    lastErrorMessage = Await Client.GetRecentDataAsync()
                 End If
-
-                lastErrorMessage = Await Client.GetRecentDataAsync()
             End If
 
+            If _livePollingEnabled AndAlso String.IsNullOrEmpty(lastErrorMessage) AndAlso Not IsPatientDataEmpty() Then
+                _livePolling.Observe(PatientData, Stopwatch.GetTimestamp())
+            End If
             Me.LoginStatus.ReportLoginStatus(hasErrors:=IsPatientDataEmpty(),
                                              lastErrorMessage)
 
@@ -5080,7 +5091,11 @@ Public Class Form1
                                              lastErrorMessage)
             _sgMiniDisplay.SetCurrentSgString(sgString, f:=0)
         End If
-        SetServerUpdateTimer(Start:=True, interval:=RefreshRate1Min)
+        Dim nextInterval As Integer = If(_livePollingEnabled AndAlso
+                                         String.IsNullOrEmpty(lastErrorMessage) AndAlso Not IsPatientDataEmpty(),
+                                         _livePolling.NextInterval(Stopwatch.GetTimestamp()),
+                                         RefreshRate1Min)
+        SetServerUpdateTimer(Start:=True, interval:=nextInterval)
     End Sub
 
 #End Region ' Timer Events
@@ -6001,11 +6016,15 @@ Public Class Form1
                 Dim age As TimeSpan = now - lastUpdate
                 Dim minutesAgo As Long = CLng(Math.Round(value:=age.TotalMinutes,
                                                          mode:=MidpointRounding.AwayFromZero))
-                Dim pumpTimestamp As String =
-                If(minutesAgo > 0,
-                   $"{minutesAgo.ToHoursMinutes} ago",
-                   "Now")
-                Me.LastSgOrExitTimeLabel.Text = pumpTimestamp
+                Select Case minutesAgo
+                    Case Is > 10
+                        ' Display something for offline data
+                        Me.LastSgOrExitTimeLabel.Text = $"Unknown"
+                    Case Is > 0
+                        Me.LastSgOrExitTimeLabel.Text = $"{minutesAgo.ToHoursMinutes} ago"
+                    Case Else
+                        Me.LastSgOrExitTimeLabel.Text = "Now"
+                End Select
             Else
                 If Not Me.LastSgOrExitTimeLabel.Text.Contains(value:="ago") AndAlso
                     Not Me.LastSgOrExitTimeLabel.Text.Contains(value:="Now") Then
