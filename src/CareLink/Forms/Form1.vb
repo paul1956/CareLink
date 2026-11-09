@@ -6021,7 +6021,7 @@ Public Class Form1
                         ' Display something for offline data
                         Me.LastSgOrExitTimeLabel.Text = $"Unknown"
                     Case Is > 0
-                        Me.LastSgOrExitTimeLabel.Text = $"{minutesAgo.ToHoursMinutes} ago"
+                        Me.LastSgOrExitTimeLabel.Text = $"{minutesAgo.ToHrMinText} ago"
                     Case Else
                         Me.LastSgOrExitTimeLabel.Text = "Now"
                 End Select

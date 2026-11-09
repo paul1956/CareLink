@@ -41,7 +41,7 @@ Friend Module ClientExtensions
             Dim absDiffMinutes As Long = Math.Abs(value:=tDiffSeconds \ 60)
             If tDiffSeconds <= 0 Then
                 startKey = $"Access token has expired"
-                message = $"{startKey} {absDiffMinutes.ToHoursMinutes} ago."
+                message = $"{startKey} {absDiffMinutes.ToHrMinText} ago."
                 If log Then
                     UpdateMessage(message, startKey)
                 End If
@@ -49,7 +49,7 @@ Friend Module ClientExtensions
             End If
             If tDiffSeconds < 600 Then
                 startKey = $"Access token is about to expire in"
-                message = $"{startKey} {absDiffMinutes.ToHoursMinutes}."
+                message = $"{startKey} {absDiffMinutes.ToHrMinText}."
                 If log Then
                     UpdateMessage(message, startKey)
                 End If
@@ -65,7 +65,7 @@ Friend Module ClientExtensions
                                    formatProvider:=CultureInfo.InvariantCulture)
 
             startKey = $"Access token expires in"
-            message = $"{startKey} {absDiffMinutes.ToHoursMinutes()} at {formatted}"
+            message = $"{startKey} {absDiffMinutes.ToHrMinText()} at {formatted}"
             ' Valid token: return True.
             If log Then
                 UpdateMessage(message, startKey)

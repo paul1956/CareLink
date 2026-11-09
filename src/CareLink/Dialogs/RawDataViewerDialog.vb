@@ -143,7 +143,7 @@ Public Class RawDataViewerDialog
         If remainder = 0 Then
             Return dayText
         End If
-        Dim rest As String = remainder.ToHoursMinutes()
+        Dim rest As String = remainder.ToHrMinText()
         Return If(days > 0, $"{dayText}, {rest}", rest)
     End Function
 

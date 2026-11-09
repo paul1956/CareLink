@@ -110,6 +110,34 @@ Friend Module DateTimeExtensions
     End Function
 
     ''' <summary>
+    '''  Joins a larger and smaller unit as "big and small", omitting zero parts.
+    '''  Returns "0 <paramref name="smallPlural"/>" when both are zero.
+    ''' </summary>
+    Private Function JoinUnits(big As Long,
+                               bigSingular As String,
+                               bigPlural As String,
+                               small As Long,
+                               smallSingular As String,
+                               smallPlural As String) As String
+        Dim bigText As String =
+            Pluralize(count:=big, singular:=bigSingular, plural:=bigPlural)
+        Dim smallText As String =
+            Pluralize(count:=small, singular:=smallSingular, plural:=smallPlural)
+        Return If(big > 0 AndAlso small > 0,
+                  $"{bigText} and {smallText}",
+                  If(big > 0,
+                     bigText,
+                     smallText))
+    End Function
+
+    ''' <summary>
+    '''  Returns "n unit" using the singular form when <paramref name="count"/> is 1.
+    ''' </summary>
+    Private Function Pluralize(count As Long, singular As String, plural As String) As String
+        Return $"{count} {If(count = 1, singular, plural)}"
+    End Function
+
+    ''' <summary>
     '''  Converts a UNIX TimeSpan string to UTC DateTime
     ''' </summary>
     ''' <param name="unixTimeSpan">In Milliseconds As String</param>
@@ -158,7 +186,8 @@ Friend Module DateTimeExtensions
     ''' <returns>The corresponding date and time in the pump's time zone.</returns>
     <Extension>
     Friend Function Epoch2PumpDateTime(unixTimeSpan As Long) As Date
-        Return TimeZoneInfo.ConvertTimeFromUtc(dateTime:=FromUnixTime(CDbl(unixTimeSpan)), destinationTimeZone:=PumpTimeZoneInfo)
+        Return TimeZoneInfo.ConvertTimeFromUtc(dateTime:=FromUnixTime(CDbl(unixTimeSpan)),
+                                               destinationTimeZone:=PumpTimeZoneInfo)
     End Function
 
     ''' <summary>
@@ -191,9 +220,10 @@ Friend Module DateTimeExtensions
     <Extension>
     Friend Function GetCurrentDateCulture(countryCode As String) As CultureInfo
         Dim code As String = $"en-{countryCode}"
-        Dim predicate As Func(Of CultureInfo, Boolean) = Function(c As CultureInfo) As Boolean
-                                                             Return c.Name = code
-                                                         End Function
+        Dim predicate As Func(Of CultureInfo, Boolean) =
+            Function(c As CultureInfo) As Boolean
+                Return c.Name = code
+            End Function
         Dim culture As CultureInfo = CultureInfoList.FirstOrDefault(predicate)
         Return If(culture, New CultureInfo(name:="en-US"))
     End Function
@@ -302,47 +332,37 @@ Friend Module DateTimeExtensions
         Return New Date(d.Year, d.Month, d.Day, d.Hour, d.Minute, second:=0)
     End Function
 
+    ''' <summary>
+    '''  Converts a number of hours into text such as "1 day and 2 hrs".
+    ''' </summary>
+    ''' <param name="hours">The number of hours, zero or greater.</param>
+    ''' <returns>The text, or "0 hrs" when <paramref name="hours"/> is zero.</returns>
+    <Extension>
     Public Function ToDaysHours(hours As Integer) As String
-        ' Hours must be positive and non-zero
-        If hours <= 0 Then
-            Const message As String = "hours must be positive and non-zero"
+        If hours < 0 Then
+            Const message As String = "hours must not be negative"
             Throw New ArgumentOutOfRangeException(paramName:=NameOf(hours), message)
         End If
 
-        Dim days As Integer = hours \ 24
-        Dim hrs As Integer = hours Mod 24
-
-        Dim parts As New List(Of String)
-        Dim item As String
-        If days > 0 Then
-            item = $"{days} {If(days = 1, "day", "days")}"
-            parts.Add(item)
-        End If
-        If hrs > 0 Then
-            item = $"{hrs} {If(hrs = 1, "hr", "hrs")}"
-            parts.Add(item)
-        End If
-
-        If parts.Count = 0 Then
-            ' This should not happen because hours > 0, but handle defensively
-            Return "0 hrs"
-        ElseIf parts.Count = 1 Then
-            Return parts(index:=0)
-        Else
-            Return $"{parts(index:=0)} and {parts(index:=1)}"
-        End If
+        Return JoinUnits(big:=hours \ 24, bigSingular:="day", bigPlural:="days",
+                         small:=hours Mod 24, smallSingular:="hr", smallPlural:="hrs")
     End Function
 
+    ''' <summary>
+    '''  Converts an <see langword="Integer"/> number of minutes into "h:mm",
+    '''  with a leading space when the hour has a single digit.
+    ''' </summary>
+    ''' <param name="minutes">The number of minutes to convert.</param>
     <Extension>
     Public Function ToHoursMinutes(minutes As Integer) As String
-        Dim timeSpan As New TimeSpan(hours:=minutes \ 60,
-                                     minutes:=minutes Mod 60,
-                                     seconds:=0)
-        Dim result As String = timeSpan.ToString.Substring(startIndex:=0, length:=5)
-        If result.StartsWith(value:="0"c) Then
-            result = $" {result.Substring(startIndex:=1)}"
-        End If
-        Return result
+        Dim sign As String = If(minutes < 0, "-", "")
+        Dim absMinutes As Integer = Math.Abs(value:=minutes)
+        Dim hours As Integer = absMinutes \ 60
+        Dim hoursText As String = hours.ToString(provider:=CultureInfo.InvariantCulture)
+        Dim minutesText As String = (absMinutes Mod 60).ToString(format:="00",
+                                                                 provider:=CultureInfo.InvariantCulture)
+        Dim result As String = $"{sign}{hoursText}:{minutesText}"
+        Return If(result.IndexOf(value:=":"c) = 1, $" {result}", result)
     End Function
 
     ''' <summary>
@@ -355,8 +375,13 @@ Friend Module DateTimeExtensions
     ''' </returns>
     <Extension>
     Public Function ToHoursMinutes(timeInHours As Single) As String
-        Dim hours As Integer = CInt(timeInHours)
-        Return $"{New TimeSpan(hours, minutes:=CInt((timeInHours - hours) * 60), seconds:=0):h\:mm}"
+        Dim totalMinutes As Integer = CInt(Math.Round(CDbl(timeInHours) * 60.0R))
+        Dim sign As String = If(totalMinutes < 0, "-", "")
+        totalMinutes = Math.Abs(value:=totalMinutes)
+        Dim hoursText As String = (totalMinutes \ 60).ToString(provider:=CultureInfo.InvariantCulture)
+        Dim minutesText As String = (totalMinutes Mod 60).ToString(format:="00",
+                                                                   provider:=CultureInfo.InvariantCulture)
+        Return $"{sign}{hoursText}:{minutesText}"
     End Function
 
     ''' <summary>
@@ -385,35 +410,14 @@ Friend Module DateTimeExtensions
     '''  A <see langword="String"/> representing the time in hours and minutes.
     ''' </returns>
     <Extension>
-    Public Function ToHoursMinutes(minutes As Long) As String
-        ' Minutes must be positive and non-zero
-        If minutes <= 0 Then
-            Const message As String = "minutes must be positive and non-zero"
+    Public Function ToHrMinText(minutes As Long) As String
+        If minutes < 0 Then
+            Const message As String = "minutes must not be negative"
             Throw New ArgumentOutOfRangeException(paramName:=NameOf(minutes), message)
         End If
 
-        Dim hrs As Long = minutes \ 60
-        Dim mins As Long = minutes Mod 60
-
-        Dim parts As New List(Of String)
-        Dim item As String
-        If hrs > 0 Then
-            item = $"{hrs} {If(hrs = 1, "hr", "hrs")}"
-            parts.Add(item)
-        End If
-        If mins > 0 Then
-            item = $"{mins} {If(mins = 1, "min", "mins")}"
-            parts.Add(item)
-        End If
-
-        If parts.Count = 0 Then
-            ' This should not happen because minutes > 0, but handle defensively
-            Return "0 mins"
-        ElseIf parts.Count = 1 Then
-            Return parts(index:=0)
-        Else
-            Return $"{parts(index:=0)} and {parts(index:=1)}"
-        End If
+        Return JoinUnits(big:=minutes \ 60, bigSingular:="hr", bigPlural:="hrs",
+                         small:=minutes Mod 60, smallSingular:="min", smallPlural:="mins")
     End Function
 
     ''' <summary>

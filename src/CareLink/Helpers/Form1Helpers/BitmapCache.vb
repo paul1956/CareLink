@@ -457,6 +457,8 @@ Public Module BitmapCache
         Catch
         End Try
 
+        ClearCompositeCache()
+
         For Each kvp As KeyValuePair(Of String, Bitmap) In s_bitmaps
             kvp.Value?.Dispose()
         Next
