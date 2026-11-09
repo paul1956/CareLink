@@ -2827,7 +2827,7 @@ Public Class Form1
 
                 Case NameOf(SG.SensorState)
                     If Equals(e.Value, "NO_ERROR_MESSAGE") Then
-                        dgv.CellFormattingDefault(e)
+                        dgv.CellFormattingToTitle(e)
                     Else
                         dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
                         dgv.CellFormattingToTitle(e)
@@ -2923,7 +2923,7 @@ Public Class Form1
         Handles DgvSGs.ColumnAdded
 
         e.Column.AutoSizeMode =
-            If(e.Column.Name = "Message",
+            If(e.Column.Name = "SensorMessage",
                DataGridViewAutoSizeColumnMode.Fill,
                DataGridViewAutoSizeColumnMode.AllCells)
 

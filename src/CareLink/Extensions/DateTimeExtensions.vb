@@ -100,13 +100,13 @@ Friend Module DateTimeExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a Unix Milliseconds TimeSpan to UTC Date
+    '''  Converts Unix time in milliseconds to a UTC date.
     ''' </summary>
-    ''' <param name="unixTimeSpan" kind="Double">TimeSpan in Milliseconds</param>
-    ''' <returns>UTC Date</returns>
+    ''' <param name="milliseconds">Unix time in milliseconds.</param>
+    ''' <returns>A UTC date.</returns>
     <Extension>
-    Private Function FromUnixTime(unixTimeSpan As Double) As Date
-        Return s_epochUTC.AddMilliseconds(value:=unixTimeSpan)
+    Private Function FromUnixTime(milliseconds As Double) As Date
+        Return s_epochUTC.AddMilliseconds(value:=milliseconds)
     End Function
 
     ''' <summary>
@@ -145,37 +145,37 @@ Friend Module DateTimeExtensions
         End If
         Dim localAndPumpTimeEqual As Boolean = pumpTime.ToString = localTime.ToString
         Dim timeStr As String = If(localAndPumpTimeEqual,
-                                   $"    Local and  Pump Time are {localTime}",
+                                   $"    Local and Pump Time are {localTime}",
                                    $"    Local time is {localTime}, Pump Time is {pumpTime}")
 
-        Return $"{$"{unixTime} UTC"}, {timeStr}"
+        Return $"{unixTime} UTC, {timeStr}"
     End Function
 
     ''' <summary>
-    '''  Converts a Unix Milliseconds TimeSpan to Pump DateTime
+    '''  Converts Unix time in milliseconds to the pump's date and time.
     ''' </summary>
-    ''' <param name="unixTimeSpan">Long</param>
-    ''' <returns>Local DateTime</returns>
+    ''' <param name="unixTimeSpan">Unix time in milliseconds.</param>
+    ''' <returns>The corresponding date and time in the pump's time zone.</returns>
     <Extension>
     Friend Function Epoch2PumpDateTime(unixTimeSpan As Long) As Date
-        Return unixTimeSpan.ToString.Epoch2PumpDateTime
+        Return TimeZoneInfo.ConvertTimeFromUtc(dateTime:=FromUnixTime(CDbl(unixTimeSpan)), destinationTimeZone:=PumpTimeZoneInfo)
     End Function
 
     ''' <summary>
-    '''  Converts a Unix Milliseconds TimeSpan to Pump DateTime
+    '''  Converts Unix time in milliseconds to the pump's date and time.
     ''' </summary>
-    ''' <param name="unixTimeSpan>In Milliseconds As String</param>
-    ''' <returns>Local DateTime</returns>
+    ''' <param name="epoch">Unix time in milliseconds.</param>
+    ''' <returns>The corresponding date and time in the pump's time zone.</returns>
     <Extension>
     Friend Function Epoch2PumpDateTime(epoch As String) As Date
         Return TimeZoneInfo.ConvertTimeFromUtc(dateTime:=epoch.FromUnixTime(), destinationTimeZone:=PumpTimeZoneInfo)
     End Function
 
     ''' <summary>
-    '''  Converts a Unix Milliseconds TimeSpan to UTC Date
+    '''  Converts Unix time in milliseconds to a UTC date.
     ''' </summary>
-    ''' <param name="value" kind="String">In Milliseconds As String</param>
-    ''' <returns>UTC Date</returns>
+    ''' <param name="value">Unix time in milliseconds, as a string.</param>
+    ''' <returns>A UTC date.</returns>
     <Extension>
     Friend Function FromUnixTime(value As String) As Date
         Return If(IsNullOrWhiteSpace(value),
@@ -184,10 +184,10 @@ Friend Module DateTimeExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a Unix Milliseconds TimeSpan to UTC Date
+    '''  Gets the current date culture for the specified country code.
     ''' </summary>
-    ''' <param name="unixTime" kind="Double">In Milliseconds As Double</param>
-    ''' <returns>UTC Date</returns>
+    ''' <param name="countryCode">The two-letter country code.</param>
+    ''' <returns>The matching English culture, or <see cref="CultureInfo"/> for en-US if none is found.</returns>
     <Extension>
     Friend Function GetCurrentDateCulture(countryCode As String) As CultureInfo
         Dim code As String = $"en-{countryCode}"

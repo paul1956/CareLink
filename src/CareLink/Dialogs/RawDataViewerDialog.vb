@@ -21,7 +21,18 @@ Public Class RawDataViewerDialog
         pattern:="^\s*""[^""]*Time[^""]*""\s*:\s*(?<value>\d{10}|\d{13}),?$",
         options:=RegexOptions.IgnoreCase)
 
+    Private Shared ReadOnly s_durationDifference As New Regex(
+        pattern:="^\$.*\[""(?<name>[^""\]]*Duration[^""\]]*)""\] = (?<value>\d+)$",
+        options:=RegexOptions.IgnoreCase)
+
+    Private Shared ReadOnly s_durationLine As New Regex(
+        pattern:="^\s*""(?<name>[^""]*Duration[^""]*)""\s*:\s*(?<value>\d+),?$",
+        options:=RegexOptions.IgnoreCase)
+
+    Private Const MaxDurationMinutes As Long = 14L * 24L * 60L
+
     Private ReadOnly _currentWordWrap As Boolean
+    Private ReadOnly _previousScrollBars As RichTextBoxScrollBars
     Private _contextMenu As New ContextMenuStrip
     Private _copyMenuItem As ToolStripMenuItem
     Private _currentBounds As Rectangle
@@ -30,9 +41,7 @@ Public Class RawDataViewerDialog
     Private _hasDifferences As Boolean
     Private _lastSearchIndex As Integer = 0
     Private _previousDifferences As String
-    Private _previousScrollBars As RichTextBoxScrollBars
     Private _previousText As String
-    Private _previousWordWrap As Boolean
     Private _synchronizingScroll As Boolean
     Private _updatingDataView As Boolean = True
 
@@ -47,7 +56,6 @@ Public Class RawDataViewerDialog
         Me.InitializeComponent()
         Me.PreviousRawDataRTB.WordWrap = False
         Me.RawDataRTB.WordWrap = False
-        _previousWordWrap = False
         _currentWordWrap = False
         _previousScrollBars = Me.PreviousRawDataRTB.ScrollBars
         _currentBounds = Me.RawDataRTB.Bounds
@@ -69,11 +77,19 @@ Public Class RawDataViewerDialog
         Dim lines() As String = text.Split(separator:=vbLf)
         For index As Integer = 0 To lines.Length - 1
             Dim line As String = lines(index)
-            Dim trailingReturn As String = If(line.EndsWith(vbCr), vbCr, "")
+            Dim trailingReturn As String = If(line.EndsWith(value:=vbCr), vbCr, "")
             Dim body As String = line.Substring(startIndex:=0, length:=line.Length - trailingReturn.Length)
             Dim m As Match = s_timestampLine.Match(input:=body)
             If Not m.Success Then
                 m = s_timestampDifference.Match(input:=body)
+            End If
+
+            If Not m.Success Then
+                Dim duration As String = FormatDuration(body)
+                If duration.Length > 0 Then
+                    lines(index) = $"{body}  // {duration}{trailingReturn}"
+                End If
+                Continue For
             End If
 
             If m.Success Then
@@ -92,6 +108,43 @@ Public Class RawDataViewerDialog
             End If
         Next
         Return String.Join(separator:=vbLf, value:=lines)
+    End Function
+
+    ''' <summary>
+    '''  Returns a readable duration for a line holding a numeric "Duration" element,
+    '''  or an empty string. Names containing "Hour" are hours, otherwise minutes.
+    '''  Zero values and values over 14 days are not annotated.
+    ''' </summary>
+    Private Shared Function FormatDuration(body As String) As String
+        Dim m As Match = s_durationLine.Match(input:=body)
+        If Not m.Success Then
+            m = s_durationDifference.Match(input:=body)
+        End If
+        If Not m.Success Then
+            Return ""
+        End If
+
+        Dim raw As Long
+        If Not Long.TryParse(s:=m.Groups(groupname:="value").Value, style:=NumberStyles.None, Provider, result:=raw) Then
+            Return ""
+        End If
+
+        Dim name As String = m.Groups(groupname:="name").Value
+        Dim isHours As Boolean = name.Contains(value:="Hour", comparisonType:=StringComparison.OrdinalIgnoreCase) AndAlso
+                                 Not name.Contains(value:="Minute", comparisonType:=StringComparison.OrdinalIgnoreCase)
+        Dim totalMinutes As Long = If(isHours, raw * 60L, raw)
+        If totalMinutes <= 0 OrElse totalMinutes > MaxDurationMinutes OrElse raw > MaxDurationMinutes Then
+            Return ""
+        End If
+
+        Dim days As Long = totalMinutes \ 1440L
+        Dim remainder As Long = totalMinutes Mod 1440L
+        Dim dayText As String = If(days > 0, $"{days} {If(days = 1, "day", "days")}", "")
+        If remainder = 0 Then
+            Return dayText
+        End If
+        Dim rest As String = remainder.ToHoursMinutes()
+        Return If(days > 0, $"{dayText}, {rest}", rest)
     End Function
 
     Private Shared Sub CollectValues(node As JsonNode, path As String, values As Dictionary(Of String, JsonNode))
@@ -459,7 +512,7 @@ Public Class RawDataViewerDialog
                     Me.RawDataRTB.Bounds = _currentBounds
                 End If
                 Me.PreviousRawDataRTB.Visible = True
-                Me.PreviousRawDataRTB.WordWrap = Not Me.CheckBoxDifferenceOnly.Checked AndAlso _previousWordWrap
+                Me.PreviousRawDataRTB.WordWrap = False
                 Me.RawDataRTB.WordWrap = Not Me.CheckBoxDifferenceOnly.Checked AndAlso _currentWordWrap
                 Me.PreviousRawDataRTB.ScrollBars =
                     If(Me.CheckBoxDifferenceOnly.Checked,
@@ -475,7 +528,7 @@ Public Class RawDataViewerDialog
                        _currentText)
             Else
                 Me.PreviousRawDataRTB.Visible = False
-                Me.PreviousRawDataRTB.WordWrap = _previousWordWrap
+                Me.PreviousRawDataRTB.WordWrap = False
                 Me.PreviousRawDataRTB.ScrollBars = _previousScrollBars
                 Me.RawDataRTB.WordWrap = _currentWordWrap
                 Me.RawDataRTB.Text = _currentText
