@@ -10,12 +10,8 @@ Public Class TimeSpanParts
                                    "hour")
         _Days = hours \ 24
         _RemainderHours = hours Mod 24
-        _DayPart = If(_Days = 1,
-                      "1 day",
-                      $"{_Days} days")
-        _HourPart = If(_RemainderHours = 1,
-                       $"1 {hourStr}",
-                       $"{_RemainderHours} {hourStr}s")
+        _DayPart = _Days.ToUnits(unit:="day")
+        _HourPart = _RemainderHours.ToUnits(unit:=hourStr)
         If _Days > 0 And _RemainderHours > 0 Then
             _Result = $"{_DayPart}, {_HourPart}"
         ElseIf _Days > 0 Then

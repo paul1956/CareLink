@@ -4748,7 +4748,7 @@ Public Class Form1
         Handles SensorDaysLeftLabel.MouseHover
 
         If PatientData Is Nothing Then Exit Sub
-        Dim caption As String = $"Sensor will expire In {PatientData.SensorDurationHours} hours"
+        Dim caption As String = $"Sensor will expire In {PatientData.SensorDurationHours.ToUnits(unit:="hour")}"
         If PatientData.CgmInfo.SensorProductModel?.Trim = "MMT-5120" Then
             _sensorLifeToolTip.SetToolTip(control:=Me.SensorDaysLeftLabel,
                                           caption:=GetSimpleraTimeLeftMessage(PatientData.SensorDurationHours))
@@ -6472,13 +6472,13 @@ Public Class Form1
                         Case Is >= 24
                             Me.SensorDaysLeftLabel.Text = sensorDurationDays.ToString()
                             Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeOK)
-                            Me.SensorTimeLeftLabel.Text = $"{sensorDurationDays} Days"
+                            Me.SensorTimeLeftLabel.Text = sensorDurationDays.ToUnits(unit:="Day")
                         Case Is > 0
                             Me.SensorDaysLeftLabel.Text =
                                 $"<{sensorDurationDays}"
                             Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeNotOK)
                             Me.SensorTimeLeftLabel.Text =
-                                $"{sensorDurationHours}{vbCrLf}Hours"
+                                sensorDurationHours.ToUnits(unit:="Hour", separator:=vbCrLf)
                         Case Is = 0
                             Dim sensorDurationMinutes As Integer =
                                 If(PatientData.SensorDurationMinutes Is Nothing,
@@ -6488,7 +6488,7 @@ Public Class Form1
                                 Case Is > 0
                                     Me.SensorDaysLeftLabel.Text = "0"
                                     Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeNotOK)
-                                    Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes}{vbCrLf}minutes"
+                                    Me.SensorTimeLeftLabel.Text = sensorDurationMinutes.ToUnits(unit:="minute", separator:=vbCrLf)
                                 Case Is = 0
                                     Me.SensorDaysLeftLabel.Text = EmptyString
                                     Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpired)
@@ -6560,7 +6560,7 @@ Public Class Form1
                     Case Is > 0
                         Me.SensorDaysLeftLabel.Text = "0"
                         Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeNotOK)
-                        Me.SensorTimeLeftLabel.Text = $"{sensorDurationMinutes}{vbCrLf}minutes"
+                        Me.SensorTimeLeftLabel.Text = sensorDurationMinutes.ToUnits(unit:="minute", separator:=vbCrLf)
                     Case Is = 0
                         Me.SensorDaysLeftLabel.Text = EmptyString
                         Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpired)

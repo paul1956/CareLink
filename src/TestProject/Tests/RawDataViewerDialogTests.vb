@@ -375,6 +375,23 @@ Public Class RawDataViewerDialogTests
         RunOnSta(action)
     End Sub
 
+    <Theory>
+    <InlineData(1, "1 min")>
+    <InlineData(1440, "1 day")>
+    <InlineData(1501, "1 day, 1 hr and 1 min")>
+    <InlineData(2880, "2 days")>
+    Public Sub DurationElements_ShowFormattedUnits(minutes As Integer, expected As String)
+        Dim action As Action =
+            Sub()
+                Using dialog As New RawDataViewerDialog(Parse("{}"), Parse($"{{""durationMinutes"":{minutes}}}"))
+                    dialog.Show()
+                    Dim current As RichTextBox = DirectCast(dialog.Controls.Find("RawDataRTB", SearchAllChildren)(0), RichTextBox)
+                    Assert.Contains($"// {expected}", current.Text)
+                End Using
+            End Sub
+        RunOnSta(action)
+    End Sub
+
     <Fact>
     Public Sub TimeElements_ShowLocalTimeAndDoNotWrap()
         Dim action As Action =

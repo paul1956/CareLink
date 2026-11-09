@@ -62,9 +62,10 @@ Friend Module Form1UpdateHelpers
         Dim d As Decimal = CDec(Convert.ToInt32(value) * 0.24)
         Dim hours As Integer = CInt(Math.Floor(d))
         Dim minutes As Integer = CInt(d.FractionalPart() * 60)
+        Dim hoursText As String = hours.ToUnits(unit:="hour")
         Return If(d.FractionalPart().AlmostZero(),
-                  $"{hours} hours, out of last 24 hours.",
-                  $"{hours} hours and {minutes} minutes, out of last 24 hours.")
+                  $"{hoursText}, out of last 24 hours.",
+                  $"{hoursText} and {minutes.ToUnits(unit:="minute")}, out of last 24 hours.")
     End Function
 
     Private Sub SetupPumpTimeZoneInfo(mainForm As Form1, kvp As KeyValuePair(Of String, String))

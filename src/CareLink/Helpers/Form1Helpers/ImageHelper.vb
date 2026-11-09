@@ -17,6 +17,7 @@ Friend Module ImageHelper
     '''  The single cached composite for an image, with the parameters it was built from.
     ''' </summary>
     Private NotInheritable Class CompositeEntry
+
         Public Sub New(bitmap As Bitmap, canvasSize As Size, percent As Single, fillColor As Color)
             Me.Bitmap = bitmap
             Me.CanvasSize = canvasSize
@@ -100,10 +101,8 @@ Friend Module ImageHelper
                 Return Nothing
             End If
 
-            If entry IsNot Nothing Then
-                entry.Bitmap.Dispose()
-            End If
-            s_composites(imageId) = New CompositeEntry(composed, canvasSize, currentPercent, fillColor)
+            entry?.Bitmap.Dispose()
+            s_composites(key:=imageId) = New CompositeEntry(composed, canvasSize, currentPercent, fillColor)
             Return CType(composed.Clone(), Bitmap)
         End SyncLock
     End Function

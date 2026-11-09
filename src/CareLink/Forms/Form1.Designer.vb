@@ -2951,7 +2951,7 @@ Partial Class Form1
         ' 
         Me.AutoScaleDimensions = New SizeF(96.0F, 96.0F)
         Me.AutoScaleMode = AutoScaleMode.Dpi
-        Me.ClientSize = New Size(1384, 741)
+        Me.ClientSize = New Size(1384, 800)
         Me.Controls.Add(TabControlPage1)
         Me.Controls.Add(TabControlPage2)
         Me.Controls.Add(MenuStrip1)

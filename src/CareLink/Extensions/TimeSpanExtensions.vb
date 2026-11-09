@@ -20,14 +20,13 @@ Public Module TimeSpanExtensions
         Dim minutes As Integer = Integer.Parse(parts(1))
 
         If hours > 0 And minutes = 0 Then
-            Return If(hours = 1, "1 Hour", $"{hours} Hours")
+            Return hours.ToUnits(unit:="Hour")
         ElseIf hours = 0 And minutes > 0 Then
-            Return $"{minutes} Minutes"
+            Return minutes.ToUnits(unit:="Minute")
         ElseIf hours > 0 And minutes > 0 Then
-            Dim hourLabel As String = If(hours = 1, "Hour", "Hours")
-            Return $"{hours} {hourLabel} {minutes} Minutes"
+            Return $"{hours.ToUnits(unit:="Hour")} {minutes.ToUnits(unit:="Minute")}"
         Else
-            Return "0 Minutes"
+            Return 0L.ToUnits(unit:="Minute")
         End If
     End Function
 
@@ -99,9 +98,7 @@ Public Module TimeSpanExtensions
             Case unit = "hr"
                 If tSpan.Hours > 0 Then
                     r = $"{tSpan.Hours,2}:{tSpan.Minutes:D2}"
-                    unitOut = If(tSpan.Hours > 1,
-                                 "hrs",
-                                 tSpan.Hours.ToUnits(unit:="hr", includeValue:=False))
+                    unitOut = tSpan.Hours.ToUnits(unit:="hr", includeValue:=False)
                 ElseIf tSpan.Minutes > 0 Then
                     r = $"{tSpan.Minutes:D2}"
                     unitOut = tSpan.Minutes.ToUnits(unit:="min", includeValue:=False)

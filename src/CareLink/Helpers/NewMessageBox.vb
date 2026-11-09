@@ -19,7 +19,8 @@ Friend Module NewMessageBox
         remainingTenthSeconds As Integer) As String
 
         If autoCloseTimeOut < 0 Then Return prompt
-        Return $"{prompt}{vbCrLf}Closing in { (remainingTenthSeconds + 9) \ 10} seconds..."
+        Dim seconds As Integer = (remainingTenthSeconds + 9) \ 10
+        Return $"{prompt}{vbCrLf}Closing in {seconds.ToUnits(unit:="second")}..."
     End Function
 
     ''' <summary>

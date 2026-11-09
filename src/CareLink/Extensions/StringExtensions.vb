@@ -13,24 +13,6 @@ Imports System.Text.RegularExpressions
 Public Module StringExtensions
 
     ''' <summary>
-    '''  Characters used as decimal separators for parsing numbers.
-    ''' </summary>
-    Private ReadOnly s_commaOrPeriod As Char() = {CareLinkDecimalSeparator, ","c}
-
-    Private ReadOnly Property EmojiPattern As String =
-        "[\u2190-\u21FF" &      ' Arrows
-        "\u2300-\u23FF" &       ' Misc technical
-        "\u2600-\u26FF" &       ' Misc symbols
-        "\u2700-\u27BF" &       ' Dingbats
-        "\u1F000-\u1F02F" &     ' Mahjong tiles
-        "\u1F0A0-\u1F0FF" &     ' Playing cards
-        "\u1F100-\u1F64F" &     ' Enclosed alphanumerics + emoticons
-        "\u1F680-\u1F6FF" &     ' Transport & map symbols
-        "\u1F900-\u1F9FF" &     ' Supplemental symbols & pictographs
-        "\u1FA70-\u1FAFF" &     ' Extended pictographs
-        "]"
-
-    ''' <summary>
     '''  Replace multiple spaces with 1 and trim the ends
     ''' </summary>
     ''' <param name="input">The input string to clean.</param>
@@ -43,21 +25,6 @@ Public Module StringExtensions
         Return If(IsNullOrWhiteSpace(value:=input),
                   String.Empty,
                   Regex.Replace(input, pattern:="\s+", replacement:=" ").Trim)
-    End Function
-
-    ''' <summary>
-    '''  Checks if the input string contains any emoji characters.
-    ''' </summary>
-    ''' <param name="input">
-    '''  The input string to check for emoji characters.
-    ''' </param>
-    ''' <returns>
-    '''  <see langword="True"/> if the input contains any emoji characters;
-    '''  otherwise, <see langword="False"/>.
-    ''' </returns>
-    Public Function ContainsEmoji(input As String) As Boolean
-        If String.IsNullOrEmpty(value:=input) Then Return False
-        Return Regex.IsMatch(input, pattern:=EmojiPattern)
     End Function
 
     ''' <summary>
@@ -406,57 +373,6 @@ Public Module StringExtensions
 
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Return resultString.Replace(oldValue:="time", newValue:=" Time", ignoreCase:=False, culture:=provider)
-    End Function
-
-    ''' <summary>
-    '''  Converts an unsigned integer representing total units
-    '''  (years, days, months, hours, minutes, or seconds) to a formatted string.
-    ''' </summary>
-    ''' <param name="totalUnits">The total units to convert.</param>
-    ''' <param name="Unit">The unit  to use, e.g., "minute" or "hour".</param>
-    ''' <returns>A formatted string representing the total units.</returns>
-    ''' <param name="includeValue"></param>
-    <Extension>
-    Public Function ToUnits(totalUnits As UInteger,
-                            unit As String,
-                            Optional includeValue As Boolean = True) As String
-
-        Dim unitOnly As String = If(totalUnits = 1,
-                                    unit,
-                                    $"{unit}s")
-        Return If(includeValue,
-                  $"{totalUnits:N0} {unitOnly}",
-                  unitOnly)
-    End Function
-
-    ''' <summary>
-    '''  Converts an integer representing total units
-    '''  (e.g., years, days, months, hours, minutes, or seconds)
-    '''  to a formatted string with optional prefix and suffix.
-    ''' </summary>
-    ''' <param name="totalUnits">The total units to convert.</param>
-    ''' <param name="unit">The unit to use, e.g., "minute" or "hour".</param>
-    ''' <param name="prefix">Optional prefix to prepend to the formatted string.</param>
-    ''' <param name="suffix">Optional suffix to append to the formatted string.</param>
-    ''' <param name="includeValue">
-    '''  If true, includes the numeric value in the formatted string.
-    ''' </param>
-    ''' <returns>
-    '''  A formatted string representing the total units with optional prefix and suffix.
-    ''' </returns>
-    <Extension>
-    Public Function ToUnits(totalUnits As Integer,
-                            unit As String,
-                            Optional prefix As String = EmptyString,
-                            Optional suffix As String = EmptyString,
-                            Optional includeValue As Boolean = True) As String
-
-        Dim unitOnly As String = If(totalUnits = 1,
-                                    unit,
-                                    $"{unit}s")
-        Return If(includeValue,
-                  $"{prefix}{totalUnits:N0}{unitOnly}{suffix}",
-                  $"{prefix}{unitOnly}{suffix}")
     End Function
 
     ''' </summary>

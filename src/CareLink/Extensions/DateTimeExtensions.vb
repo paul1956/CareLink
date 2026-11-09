@@ -14,15 +14,6 @@ Friend Module DateTimeExtensions
 
     Private ReadOnly s_dateTimeFormatUniqueCultures As New List(Of CultureInfo)
 
-    Private ReadOnly s_epochLocal As New Date(
-        year:=1970,
-        month:=1,
-        day:=1,
-        hour:=0,
-        minute:=0,
-        second:=0,
-        kind:=DateTimeKind.Utc)
-
     Friend ReadOnly s_epochUTC As New Date(
         year:=1970,
         month:=1,
@@ -111,30 +102,19 @@ Friend Module DateTimeExtensions
 
     ''' <summary>
     '''  Joins a larger and smaller unit as "big and small", omitting zero parts.
-    '''  Returns "0 <paramref name="smallPlural"/>" when both are zero.
+    '''  Returns the smaller unit with a zero count when both are zero.
     ''' </summary>
     Private Function JoinUnits(big As Long,
-                               bigSingular As String,
-                               bigPlural As String,
+                               bigUnit As String,
                                small As Long,
-                               smallSingular As String,
-                               smallPlural As String) As String
-        Dim bigText As String =
-            Pluralize(count:=big, singular:=bigSingular, plural:=bigPlural)
-        Dim smallText As String =
-            Pluralize(count:=small, singular:=smallSingular, plural:=smallPlural)
+                               smallUnit As String) As String
+        Dim bigText As String = big.ToUnits(unit:=bigUnit)
+        Dim smallText As String = small.ToUnits(unit:=smallUnit)
         Return If(big > 0 AndAlso small > 0,
                   $"{bigText} and {smallText}",
                   If(big > 0,
                      bigText,
                      smallText))
-    End Function
-
-    ''' <summary>
-    '''  Returns "n unit" using the singular form when <paramref name="count"/> is 1.
-    ''' </summary>
-    Private Function Pluralize(count As Long, singular As String, plural As String) As String
-        Return $"{count} {If(count = 1, singular, plural)}"
     End Function
 
     ''' <summary>
@@ -208,7 +188,7 @@ Friend Module DateTimeExtensions
     <Extension>
     Friend Function FromUnixTime(value As String) As Date
         Return If(IsNullOrWhiteSpace(value),
-                  s_epochLocal,
+                  s_epochUTC,
                   value.ParseDoubleInvariant.FromUnixTime)
     End Function
 
@@ -344,8 +324,8 @@ Friend Module DateTimeExtensions
             Throw New ArgumentOutOfRangeException(paramName:=NameOf(hours), message)
         End If
 
-        Return JoinUnits(big:=hours \ 24, bigSingular:="day", bigPlural:="days",
-                         small:=hours Mod 24, smallSingular:="hr", smallPlural:="hrs")
+        Return JoinUnits(big:=hours \ 24, bigUnit:="day",
+                         small:=hours Mod 24, smallUnit:="hr")
     End Function
 
     ''' <summary>
@@ -416,8 +396,8 @@ Friend Module DateTimeExtensions
             Throw New ArgumentOutOfRangeException(paramName:=NameOf(minutes), message)
         End If
 
-        Return JoinUnits(big:=minutes \ 60, bigSingular:="hr", bigPlural:="hrs",
-                         small:=minutes Mod 60, smallSingular:="min", smallPlural:="mins")
+        Return JoinUnits(big:=minutes \ 60, bigUnit:="hr",
+                         small:=minutes Mod 60, smallUnit:="min")
     End Function
 
     ''' <summary>

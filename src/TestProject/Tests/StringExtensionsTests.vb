@@ -251,24 +251,6 @@ Public Class StringExtensionsTests
     End Sub
 
     <Fact>
-    Public Sub ToTimeUnits_With_1_Unit_Returns_Singular()
-        ' Act
-        Dim result As String = 1UI.ToUnits(unit:="hour")
-
-        ' Assert
-        result.Should().Be(expected:="1 hour")
-    End Sub
-
-    <Fact>
-    Public Sub ToTimeUnits_With_2_Units_Returns_Plural()
-        ' Act
-        Dim result As String = 2UI.ToUnits(unit:="hour")
-
-        ' Assert
-        result.Should().Be(expected:="2 hours")
-    End Sub
-
-    <Fact>
     Public Sub ToTitle_ConvertsFirstLetterToUpperAndOthersToLower()
         Dim input As String = "hello"
         Dim result As String = input.ToTitle()

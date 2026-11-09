@@ -139,7 +139,10 @@ Public Class RawDataViewerDialog
 
         Dim days As Long = totalMinutes \ 1440L
         Dim remainder As Long = totalMinutes Mod 1440L
-        Dim dayText As String = If(days > 0, $"{days} {If(days = 1, "day", "days")}", "")
+        Dim dayText As String =
+            If(days > 0,
+               days.ToUnits(unit:="day"),
+               "")
         If remainder = 0 Then
             Return dayText
         End If
