@@ -5,7 +5,6 @@
 Imports System.IO
 Imports System.Net
 Imports System.Net.Http
-Imports System.Reflection
 Imports System.Text.Json
 Imports System.Threading
 Imports CareLink
@@ -32,49 +31,33 @@ Public Class Client2TransientErrorsTests
 
         handler.EnqueueResponse(responseFactory)
 
-        Dim httpClient As New HttpClient(handler)
-        Dim client As New Client2(serverRegion:=ServerLocation.US, httpClient) With {
-            .Config = New ConfigRecord With {
-                .BaseUrlCumulus = "https://example.com"}}
-        ' Wrap it in JSON string syntax (quotes) so it's valid JSON
-        Dim value As New Dictionary(Of String, JsonElement) From {{"role", "patient".ToJsonElement()}}
-        client.SetUserElementDictionaryForTests(value)
+        Using httpClient As New HttpClient(handler)
+            Dim client As New Client2(serverRegion:=ServerLocation.US, httpClient) With {
+                .Config = New ConfigRecord With {
+                    .BaseUrlCumulus = "https://example.com"},
+                .PatientPersonalData = New PatientPersonalInfo With {.Role = "patient"},
+                .AccessTokenPayload = New Dictionary(Of String, JsonElement) From {
+                    {"exp", JsonElement.Parse(json:="10000000000")}}}
 
-        Dim tokenPath As String =
-            Path.Combine(AppContext.BaseDirectory, "TestData", "token_with_mag.json")
-        Dim tokenJson As String = File.ReadAllText(path:=tokenPath)
-        Dim tokenElement As JsonElement =
-            JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
-        Const bindingAttr As BindingFlags =
-            BindingFlags.Public Or BindingFlags.NonPublic Or BindingFlags.Instance
-        ' Use friend test helper to set token data element; avoids reflection and is explicit
-        client.SetTokenDataElementForTests(token:=tokenElement)
+            Dim tokenPath As String =
+                Path.Combine(AppContext.BaseDirectory, "TestData", "token_with_mag.json")
+            Dim tokenJson As String = File.ReadAllText(path:=tokenPath)
+            Dim tokenElement As JsonElement =
+                JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
+            client.SetTokenDataElementForTests(token:=tokenElement)
 
-        Dim accessPayload As New Dictionary(Of String, JsonElement) From
-            {{"exp", JsonElement.Parse(json:="10000000000")}}
+            Dim result As String = Await client.GetRecentDataAsync(retryTransientErrors).ConfigureAwaitFalse()
 
-        Dim accessProp As PropertyInfo =
-            client.GetType().GetProperty(name:=NameOf(Client2.AccessTokenPayload), bindingAttr)
-
-        accessProp.SetValue(obj:=client, value:=accessPayload)
-
-        Dim result As String = Nothing
-        Dim ex As Exception = Nothing
-        Try
-            result = Await client.GetRecentDataAsync(retryTransientErrors) _
-                                 .ConfigureAwaitFalse()
-        Catch e As Exception
-            ex = e
-        End Try
-
-        ex.Should().BeNull()
-        result.Should().NotBeNull()
-        If retryTransientErrors Then
-            handler.RequestCount.Should().BeGreaterThan(expected:=1)
-        Else
-            handler.RequestCount.Should().Be(expected:=1)
-            result.Should().Contain(expected:="transient 1")
-        End If
+            If retryTransientErrors Then
+                handler.RequestBodies.Should().HaveCount(expected:=3)
+                handler.RequestBodies(index:=1).Should().Be(handler.RequestBodies(0))
+                handler.RequestBodies(index:=2).Should().Be(handler.RequestBodies(0))
+                result.Should().Be(expected:="No nameValueCollection received from server")
+            Else
+                handler.RequestBodies.Should().HaveCount(expected:=1)
+                result.Should().Be(expected:="Network/server error: transient 1")
+            End If
+        End Using
     End Function
 
     Private Class SequenceHandler
@@ -83,28 +66,25 @@ Public Class Client2TransientErrorsTests
         Private ReadOnly _exceptions As Queue(Of Exception)
         Private ReadOnly _responses As Queue(Of Func(Of HttpResponseMessage))
 
-        Public Property RequestCount As Integer
+        Public ReadOnly Property RequestBodies As New List(Of String)
 
         Public Sub New()
             _responses = New Queue(Of Func(Of HttpResponseMessage))()
             _exceptions = New Queue(Of Exception)()
         End Sub
 
-        Protected Overrides Function SendAsync(request As HttpRequestMessage, cancellationToken As CancellationToken) As Task(Of HttpResponseMessage)
-            Me.RequestCount += 1
+        Protected Overrides Async Function SendAsync(request As HttpRequestMessage, cancellationToken As CancellationToken) As Task(Of HttpResponseMessage)
+            Me.RequestBodies.Add(item:=Await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwaitFalse())
             If _exceptions.Count > 0 Then
-                Dim ex As Exception = _exceptions.Dequeue()
-                Dim tcs As New TaskCompletionSource(Of HttpResponseMessage)()
-                tcs.SetException(ex)
-                Return tcs.Task
+                Throw _exceptions.Dequeue()
             End If
 
             If _responses.Count > 0 Then
                 Dim factory As Func(Of HttpResponseMessage) = _responses.Dequeue()
-                Return Task.FromResult(factory.Invoke())
+                Return factory.Invoke()
             End If
 
-            Return Task.FromResult(New HttpResponseMessage(statusCode:=HttpStatusCode.NotFound))
+            Return New HttpResponseMessage(statusCode:=HttpStatusCode.NotFound)
         End Function
 
         Public Sub EnqueueException(ex As Exception)

@@ -20,16 +20,14 @@ Public Class Form1
 
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _carbRatio As New ToolTip()
-
     Private ReadOnly _pendingHeaderUpdates As New HashSet(Of String)(Comparer)
-
     Private ReadOnly _processName As String =
-            Process.GetCurrentProcess().ProcessName
-
+        Process.GetCurrentProcess().ProcessName
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _sgMiniDisplay As New SgMiniForm(form1:=Me)
     Private ReadOnly _updatingLock As New Object()
     Friend ReadOnly _livePolling As New LivePollingSchedule()
+
     Friend _livePollingEnabled As Boolean
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
     Private _dgvSummaryPrevColIndex As Integer = -1
@@ -5043,8 +5041,8 @@ Public Class Form1
                 End If
             End If
 
-            If _livePollingEnabled AndAlso String.IsNullOrEmpty(lastErrorMessage) AndAlso Not IsPatientDataEmpty() Then
-                _livePolling.Observe(PatientData, Stopwatch.GetTimestamp())
+            If _livePollingEnabled AndAlso String.IsNullOrEmpty(value:=lastErrorMessage) AndAlso Not IsPatientDataEmpty() Then
+                _livePolling.Observe(data:=PatientData, observationTicks:=Stopwatch.GetTimestamp())
             End If
             Me.LoginStatus.ReportLoginStatus(hasErrors:=IsPatientDataEmpty(),
                                              lastErrorMessage)

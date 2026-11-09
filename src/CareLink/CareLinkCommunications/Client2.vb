@@ -172,76 +172,73 @@ Friend Class Client2
             LogMessage(message:=$"ERROR: failed serializing request body for GetDataAsync: {ex.Message}")
             contentJson = "{}"
         End Try
-        Using content As New StringContent(content:=contentJson,
-                                           encoding:=Encoding.UTF8,
-                                           mediaType:="application/json")
+        Dim maxAttempts As Integer = If(retryTransientErrors, 3, 1)
+        Dim attempt As Integer = 0
+        Dim lastEx As Exception = Nothing
 
-            Dim maxAttempts As Integer = If(retryTransientErrors, 3, 1)
-            Dim attempt As Integer = 0
-            Dim lastEx As Exception = Nothing
+        While attempt < maxAttempts
+            attempt += 1
+            Dim retryDelayMs As Integer = 0
+            Dim needRetry As Boolean
+            Try
+                Using request As New HttpRequestMessage(method:=HttpMethod.Post,
+                                                        requestUri:=requestUri) With {
+                                                        .Content = New StringContent(content:=contentJson,
+                                                                                     encoding:=Encoding.UTF8,
+                                                                                     mediaType:="application/json")}
+                    For Each header As KeyValuePair(Of String, String) In headers
+                        request.Headers.TryAddWithoutValidation(name:=header.Key,
+                                                                header.Value)
+                    Next
 
-            While attempt < maxAttempts
-                attempt += 1
-                Dim needRetry As Boolean = False
-                Dim retryDelayMs As Integer = 0
-                Try
-                    Using request As New HttpRequestMessage(method:=HttpMethod.Post,
-                                                            requestUri:=requestUri) With {
-                                                            .Content = content}
-                        For Each header As KeyValuePair(Of String, String) In headers
-                            request.Headers.TryAddWithoutValidation(name:=header.Key,
-                                                                    header.Value)
-                        Next
+                    Using response As HttpResponseMessage =
+                        Await _httpClient.SendAsync(request).
+                                          ConfigureAwaitFalse()
 
-                        Using response As HttpResponseMessage =
-                            Await _httpClient.SendAsync(request).
-                                              ConfigureAwaitFalse()
+                        _lastHttpStatus = response.StatusCode
+                        UpdateMessage(message:=$"   status: {_lastHttpStatus}",
+                                      startKey:=$"   status: ")
 
-                            _lastHttpStatus = response.StatusCode
-                            UpdateMessage(message:=$"   status: {_lastHttpStatus}",
-                                          startKey:=$"   status: ")
+                        ' Centralized resp inspection; may throw UnauthorizedAccessException,
+                        ' ArgumentException (bad request) or HttpRequestException
+                        ' (transient/server).
+                        Await response.ThrowIfFailureAsync().
+                                       ConfigureAwaitFalse()
 
-                            ' Centralized resp inspection; may throw UnauthorizedAccessException,
-                            ' ArgumentException (bad request) or HttpRequestException
-                            ' (transient/server).
-                            Await response.ThrowIfFailureAsync().
-                                           ConfigureAwaitFalse()
-
-                            Dim json As String =
-                                Await response.Content.ReadAsStringAsync().
-                                                       ConfigureAwaitFalse()
-                            Dim d As Dictionary(Of String, JsonElement) = Nothing
-                            Try
-                                d = json.FromJson(Of Dictionary(Of String, JsonElement))()
-                            Catch ex As Exception
-                                d = Nothing
-                            End Try
-                            Return d
-                        End Using
+                        Dim json As String =
+                            Await response.Content.ReadAsStringAsync().
+                                                   ConfigureAwaitFalse()
+                        Dim d As Dictionary(Of String, JsonElement) = Nothing
+                        Try
+                            d = json.FromJson(Of Dictionary(Of String, JsonElement))()
+                        Catch ex As Exception
+                            d = Nothing
+                        End Try
+                        Return d
                     End Using
-                Catch hex As HttpRequestException
-                    lastEx = hex
-                    ' Prepare retry information; do not Await inside Catch.
-                    If attempt >= maxAttempts Then
-                        ' no retry left
-                        needRetry = False
-                    Else
-                        needRetry = True
-                        retryDelayMs = CInt(200 * Math.Pow(x:=2, y:=attempt - 1))
-                    End If
-                End Try
-
-                If needRetry Then
-                    Await Task.Delay(millisecondsDelay:=retryDelayMs)
-                    Continue While
+                End Using
+            Catch hex As HttpRequestException
+                lastEx = hex
+                ' Prepare retry information; do not Await inside Catch.
+                If attempt >= maxAttempts Then
+                    ' no retry left
+                    needRetry = False
+                Else
+                    needRetry = True
+                    retryDelayMs = CInt(200 * Math.Pow(x:=2, y:=attempt - 1))
                 End If
-            End While
+            End Try
 
-            If lastEx IsNot Nothing Then
-                Throw lastEx
+            If needRetry Then
+                Await Task.Delay(millisecondsDelay:=retryDelayMs)
+                Continue While
             End If
+        End While
 
-        End Using
+        If lastEx IsNot Nothing Then
+            Throw lastEx
+        End If
+
         Return Nothing
     End Function
 
