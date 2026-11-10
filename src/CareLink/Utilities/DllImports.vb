@@ -18,10 +18,10 @@ Friend Module DllImports
 
     ''' <summary>
     '''  Specifies the use of an immersive dark mode for the window.
-    '''  This is used to enable dark mode in applications on Windows 10 and later.
+    '''  This is used to enable dark mode in applications on Windows 11 and later.
     ''' </summary>
     ''' <remarks>
-    '''  Requires Windows 10, version 1809 (build 17763) or later.
+    '''  Requires Windows 11 (build 22000) Or later.
     ''' </remarks>
     Friend Const DWMWA_USE_IMMERSIVE_DARK_MODE As Integer = 20
 

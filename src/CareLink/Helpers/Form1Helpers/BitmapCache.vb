@@ -553,8 +553,8 @@ Public Module BitmapCache
                     End If
                 Else
                     For Each pair As KeyValuePair(Of String, String) In manifestMap
-                        If (pair.Key.StartsWith(value:=key, comparisonType:=StringComparison.OrdinalIgnoreCase) OrElse
-                            pair.Key.StartsWith(value:=enumName, comparisonType:=StringComparison.OrdinalIgnoreCase)) AndAlso
+                        If (pair.Key.StartsWith(value:=key, ComparisonType) OrElse
+                            pair.Key.StartsWith(value:=enumName, ComparisonType)) AndAlso
                            File.Exists(path:=pair.Value) Then
                             Try
                                 Dim buffer As Byte() = File.ReadAllBytes(path:=pair.Value)

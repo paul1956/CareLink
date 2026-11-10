@@ -19,13 +19,13 @@
     <Compile Update="Dialogs\CleanUpObsoleteFilesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="Dialogs\RawDataViewerDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Forms\Form1.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\LoggerForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Dialogs\RawDataViewerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Dialogs\ExceptionHandlerDialog.vb">

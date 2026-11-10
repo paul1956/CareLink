@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Reflection
 Imports System.Runtime.ExceptionServices
 Imports System.Runtime.InteropServices
 Imports System.Text.Json
@@ -31,6 +32,10 @@ Public Class RawDataViewerDialogTests
             Return document.RootElement.Clone()
         End Using
     End Function
+
+    Private Shared Sub CheckForDataChanges(dialog As RawDataViewerDialog)
+        NotifyPatientDataElementUpdated()
+    End Sub
 
     Private Shared Sub RunOnSta(action As Action)
         Dim failure As Exception = Nothing
@@ -230,6 +235,7 @@ Public Class RawDataViewerDialogTests
 
                         PreviousPatientDataElement = Parse(json:="{""value"":2}")
                         PatientDataElement = Parse(json:="{""value"":3}")
+                        CheckForDataChanges(dialog)
                         refresh.PerformClick()
                         Assert.True(previous.Visible)
                         Assert.Equal(DockStyle.None, current.Dock)
@@ -239,6 +245,7 @@ Public Class RawDataViewerDialogTests
                         search.Text = "value"
 
                         PatientDataElement = Parse("{""value"":2}")
+                        CheckForDataChanges(dialog)
                         refresh.PerformClick()
                         Assert.False(condition:=previous.Visible)
                         Assert.Equal(expected:=DockStyle.Top, actual:=current.Dock)
@@ -247,12 +254,14 @@ Public Class RawDataViewerDialogTests
 
                         PreviousPatientDataElement = New JsonElement()
                         PatientDataElement = Parse("{""new"":4}")
+                        CheckForDataChanges(dialog)
                         refresh.PerformClick()
                         Assert.False(condition:=previous.Visible)
                         Assert.Contains(expectedSubstring:="""new""", actualString:=current.Text)
 
                         PreviousPatientDataElement = Parse("{""new"":4}")
                         PatientDataElement = Parse("{""new"":5}")
+                        CheckForDataChanges(dialog)
                         refresh.PerformClick()
                         Assert.True(condition:=previous.Visible)
                         Assert.Equal(expected:=DockStyle.None, actual:=current.Dock)
@@ -263,6 +272,80 @@ Public Class RawDataViewerDialogTests
                         Assert.Contains(expectedSubstring:="""new""", actualString:=previous.Text)
                         Assert.Contains(expectedSubstring:="4", actualString:=previous.Text)
                         Assert.Contains(expectedSubstring:="5", actualString:=current.Text)
+                    End Using
+                Finally
+                    PreviousPatientDataElement = originalPrevious
+                    PatientDataElement = originalCurrent
+                End Try
+            End Sub
+        RunOnSta(action)
+    End Sub
+
+    <Fact>
+    Public Sub RefreshMonitoring_IgnoresServerTimeAndRestartsAfterRefresh()
+        Dim action As Action =
+            Sub()
+                Dim originalPrevious As JsonElement = PreviousPatientDataElement
+                Dim originalCurrent As JsonElement = PatientDataElement
+                Try
+                    PreviousPatientDataElement = Parse("{""currentServerTime"":1,""value"":1}")
+                    PatientDataElement = Parse("{""currentServerTime"":1,""value"":2}")
+                    Using dialog As New RawDataViewerDialog(prevJson:=PreviousPatientDataElement, json:=PatientDataElement)
+                        dialog.Show()
+                        Dim refresh As Button = DirectCast(dialog.Controls.Find("btnRefresh", SearchAllChildren)(0), Button)
+                        Dim current As RichTextBox = DirectCast(dialog.Controls.Find("RawDataRTB", SearchAllChildren)(0), RichTextBox)
+                        Assert.False(condition:=refresh.Enabled)
+
+                        PreviousPatientDataElement = Parse("{""value"":1,""currentServerTime"":2}")
+                        PatientDataElement = Parse("{""value"":2,""currentServerTime"":2}")
+                        CheckForDataChanges(dialog)
+                        Assert.False(condition:=refresh.Enabled)
+
+                        PreviousPatientDataElement = Parse("{""currentServerTime"":3,""value"":3}")
+                        CheckForDataChanges(dialog)
+                        Assert.True(condition:=refresh.Enabled)
+                        refresh.PerformClick()
+                        Assert.False(condition:=refresh.Enabled)
+                        Assert.Contains(expectedSubstring:="2", actualString:=current.Text)
+
+                        PatientDataElement = Parse("{""currentServerTime"":4,""value"":4}")
+                        CheckForDataChanges(dialog)
+                        Assert.True(condition:=refresh.Enabled)
+                        refresh.PerformClick()
+                        Assert.False(condition:=refresh.Enabled)
+                        Assert.Contains(expectedSubstring:="4", actualString:=current.Text)
+                        CheckForDataChanges(dialog)
+                        Assert.False(condition:=refresh.Enabled)
+                    End Using
+                    ' A disposed dialog must be unsubscribed.
+                    NotifyPatientDataElementUpdated()
+                Finally
+                    PreviousPatientDataElement = originalPrevious
+                    PatientDataElement = originalCurrent
+                End Try
+            End Sub
+        RunOnSta(action)
+    End Sub
+
+    <Theory>
+    <InlineData("{""nested"":{""currentServerTime"":1}}", "{""nested"":{""currentServerTime"":2}}")>
+    <InlineData("{""value"":1}", "{""value"":1,""added"":null}")>
+    <InlineData("{""items"":[1,2]}", "{""items"":[2,1]}")>
+    <InlineData("{""value"":1}", "{""value"":2}")>
+    Public Sub RefreshMonitoring_DetectsOtherCurrentDataChanges(initial As String, updated As String)
+        Dim action As Action =
+            Sub()
+                Dim originalPrevious As JsonElement = PreviousPatientDataElement
+                Dim originalCurrent As JsonElement = PatientDataElement
+                Try
+                    PreviousPatientDataElement = New JsonElement()
+                    PatientDataElement = Parse(initial)
+                    Using dialog As New RawDataViewerDialog(prevJson:=PreviousPatientDataElement, json:=PatientDataElement)
+                        dialog.Show()
+                        Dim refresh As Button = DirectCast(dialog.Controls.Find("btnRefresh", SearchAllChildren)(0), Button)
+                        PatientDataElement = Parse(updated)
+                        CheckForDataChanges(dialog)
+                        Assert.True(condition:=refresh.Enabled)
                     End Using
                 Finally
                     PreviousPatientDataElement = originalPrevious
@@ -387,6 +470,25 @@ Public Class RawDataViewerDialogTests
                     dialog.Show()
                     Dim current As RichTextBox = DirectCast(dialog.Controls.Find("RawDataRTB", SearchAllChildren)(0), RichTextBox)
                     Assert.Contains($"// {expected}", current.Text)
+                End Using
+            End Sub
+        RunOnSta(action)
+    End Sub
+
+    <Fact>
+    Public Sub SnoozeDuration_IsDisplayedAsMinutesInRawAndDifferenceViews()
+        Dim action As Action =
+            Sub()
+                Using dialog As New RawDataViewerDialog(Parse("{""snoozed"":{""duration"":600}}"),
+                                                        Parse("{""snoozed"":{""duration"":1200}}"))
+                    dialog.Show()
+                    Dim current As RichTextBox = DirectCast(dialog.Controls.Find("RawDataRTB", SearchAllChildren)(0), RichTextBox)
+                    Dim differenceOnly As CheckBox =
+                        DirectCast(dialog.Controls.Find("CheckBoxDifferenceOnly", SearchAllChildren)(0), CheckBox)
+
+                    Assert.Contains("// 20 min", current.Text)
+                    differenceOnly.Checked = True
+                    Assert.Contains("// 20 min", current.Text)
                 End Using
             End Sub
         RunOnSta(action)

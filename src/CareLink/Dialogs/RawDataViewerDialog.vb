@@ -33,6 +33,8 @@ Public Class RawDataViewerDialog
 
     Private ReadOnly _currentWordWrap As Boolean
     Private ReadOnly _previousScrollBars As RichTextBoxScrollBars
+    Private _displayedCurrent As JsonNode
+    Private _displayedPrevious As JsonNode
     Private _contextMenu As New ContextMenuStrip
     Private _copyMenuItem As ToolStripMenuItem
     Private _currentBounds As Rectangle
@@ -49,11 +51,11 @@ Public Class RawDataViewerDialog
     '''  Initializes a new instance of the <see cref="RawDataViewerDialog"/> class
     '''  with the specified JSON data.
     ''' </summary>
-    ''' <param name="json">
-    '''  The JSON data to display.
-    ''' </param>
+    ''' <param name="prevJson">The previous JSON data to display.</param>
+    ''' <param name="json">The current JSON data to display.</param>
     Public Sub New(prevJson As JsonElement, json As JsonElement)
         Me.InitializeComponent()
+        Me.btnRefresh.Enabled = False
         Me.PreviousRawDataRTB.WordWrap = False
         Me.RawDataRTB.WordWrap = False
         _currentWordWrap = False
@@ -61,6 +63,7 @@ Public Class RawDataViewerDialog
         _currentBounds = Me.RawDataRTB.Bounds
         _updatingDataView = False
         Me.LoadData(prevJson, json)
+        AddHandler PatientDataElementUpdated, AddressOf Me.OnPatientDataElementUpdated
     End Sub
 
     Private Shared ReadOnly Property Provider As CultureInfo = CultureInfo.InvariantCulture
@@ -112,8 +115,8 @@ Public Class RawDataViewerDialog
 
     ''' <summary>
     '''  Returns a readable duration for a line holding a numeric "Duration" element,
-    '''  or an empty string. Names containing "Hour" are hours, otherwise minutes.
-    '''  Zero values and values over 14 days are not annotated.
+    '''  or an empty string. Snoozed Duration values are seconds, names containing "Hour" are hours,
+    '''  and other values are minutes. Zero values and values over 14 days are not annotated.
     ''' </summary>
     Private Shared Function FormatDuration(body As String) As String
         Dim m As Match = s_durationLine.Match(input:=body)
@@ -130,10 +133,24 @@ Public Class RawDataViewerDialog
         End If
 
         Dim name As String = m.Groups(groupname:="name").Value
-        Dim isHours As Boolean = name.Contains(value:="Hour", comparisonType:=StringComparison.OrdinalIgnoreCase) AndAlso
-                                 Not name.Contains(value:="Minute", comparisonType:=StringComparison.OrdinalIgnoreCase)
-        Dim totalMinutes As Long = If(isHours, raw * 60L, raw)
-        If totalMinutes <= 0 OrElse totalMinutes > MaxDurationMinutes OrElse raw > MaxDurationMinutes Then
+        Dim isSnoozeDuration As Boolean = name.Equals(value:="Duration", ComparisonType)
+        Dim isHours As Boolean = name.Contains(value:="Hour", ComparisonType) AndAlso
+                                 Not name.Contains(value:="Minute", ComparisonType)
+        Dim totalMinutes As Long
+        If isSnoozeDuration Then
+            If raw > MaxDurationMinutes * 60L Then
+                Return ""
+            End If
+            totalMinutes = raw \ 60L
+        ElseIf isHours Then
+            If raw > MaxDurationMinutes \ 60L Then
+                Return ""
+            End If
+            totalMinutes = raw * 60L
+        Else
+            totalMinutes = raw
+        End If
+        If totalMinutes <= 0 OrElse totalMinutes > MaxDurationMinutes Then
             Return ""
         End If
 
@@ -167,6 +184,17 @@ Public Class RawDataViewerDialog
 
     Private Shared Function FormatDifference(path As String, value As JsonNode) As String
         Return $"{path} = {If(value Is Nothing, "null", value.ToJsonString())}"
+    End Function
+
+    Private Shared Function ComparableData(json As JsonElement) As JsonNode
+        If json.ValueKind = JsonValueKind.Undefined OrElse json.ValueKind = JsonValueKind.Null Then
+            Return Nothing
+        End If
+
+        Dim node As JsonNode = JsonNode.Parse(json:=json.GetRawText())
+        Dim root As JsonObject = TryCast(node, JsonObject)
+        root?.Remove(propertyName:="currentServerTime")
+        Return node
     End Function
 
     Private Shared Sub RemoveMatchingArrayValues(previous As JsonNode, current As JsonNode, path As String,
@@ -253,6 +281,34 @@ Public Class RawDataViewerDialog
         End If
 
         Me.LoadData(prevJson:=PreviousPatientDataElement, json:=current)
+        Me.btnRefresh.Enabled = False
+    End Sub
+
+    Private Sub OnPatientDataElementUpdated()
+        If Me.IsDisposed Then
+            Return
+        End If
+
+        If Me.InvokeRequired Then
+            If Me.IsHandleCreated Then
+                Me.BeginInvoke(method:=New Action(AddressOf Me.OnPatientDataElementUpdated))
+            End If
+            Return
+        End If
+
+        ' Once Refresh is enabled there is nothing more to detect until it is clicked.
+        If Me.btnRefresh.Enabled Then
+            Return
+        End If
+
+        If Not JsonNode.DeepEquals(_displayedPrevious, ComparableData(json:=PreviousPatientDataElement)) OrElse
+           Not JsonNode.DeepEquals(_displayedCurrent, ComparableData(json:=PatientDataElement)) Then
+            Me.btnRefresh.Enabled = True
+        End If
+    End Sub
+
+    Private Sub RawDataViewerDialog_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        RemoveHandler PatientDataElementUpdated, AddressOf Me.OnPatientDataElementUpdated
     End Sub
 
     ''' <summary>
@@ -416,6 +472,8 @@ Public Class RawDataViewerDialog
             _hasDifferences = previousLines.Count > 0
         End If
         Me.UpdateDataView()
+        _displayedPrevious = ComparableData(json:=prevJson)
+        _displayedCurrent = ComparableData(json)
     End Sub
 
     ''' <summary>
@@ -435,8 +493,11 @@ Public Class RawDataViewerDialog
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">A <see cref="FormClosingEventArgs"/> that contains the event data.</param>
     Private Sub RawDataViewerDialog_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        RemoveHandler _copyMenuItem.Click, AddressOf Me.CopySelectedText
-        RemoveHandler _contextMenu.Opening, AddressOf Me._contextMenu_Opening
+        ' The menu items
+        If _copyMenuItem IsNot Nothing Then
+            RemoveHandler _copyMenuItem.Click, AddressOf Me.CopySelectedText
+            RemoveHandler _contextMenu.Opening, AddressOf Me._contextMenu_Opening
+        End If
     End Sub
 
     ''' <summary>

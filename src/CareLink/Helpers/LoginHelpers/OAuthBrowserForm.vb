@@ -206,7 +206,7 @@ Public Class OAuthBrowserForm
         Dim extractParamFromText As Func(Of String, String, String) =
             Function(text As String, param As String) As String
                 If String.IsNullOrWhiteSpace(value:=text) Then Return Nothing
-                Dim idx As Integer = text.IndexOf(value:=param & "=", comparisonType:=TextComparisonConstants.ComparisonType)
+                Dim idx As Integer = text.IndexOf(value:=$"{param}=", ComparisonType)
                 If idx < 0 Then Return Nothing
                 Dim startIdx As Integer = idx + param.Length + 1
                 Dim sb As New Text.StringBuilder()

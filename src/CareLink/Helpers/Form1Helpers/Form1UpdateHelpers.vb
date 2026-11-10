@@ -336,6 +336,8 @@ Friend Module Form1UpdateHelpers
                                                     If(childValue.TryParseDate(key:="", result),
                                                        result.ToShortDateTime(showSeconds:=False),
                                                        String.Empty)
+                                            ElseIf childKey = "duration" Then
+                                                message = (CLng(childValue) \ 60).ToHrMinText()
                                             ElseIf childKey = "sensorType" Then
                                                 message = childValue.Trim.ToTitle
                                             Else

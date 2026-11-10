@@ -54,6 +54,11 @@ Public Module PumpVariables
 
 #End Region ' Manually computed
 
+    ''' <summary>
+    '''  Occurs after live data has been stored in <see cref="PatientDataElement"/>.
+    ''' </summary>
+    Public Event PatientDataElementUpdated()
+
     Public Property InAutoMode As Boolean
 
     Public Property PatientData As PatientDataInfo
@@ -67,5 +72,12 @@ Public Module PumpVariables
     Public Function GetCarbDefaultUnit() As String
         Return "Grams"
     End Function
+
+    ''' <summary>
+    '''  Raises <see cref="PatientDataElementUpdated"/>.
+    ''' </summary>
+    Public Sub NotifyPatientDataElementUpdated()
+        RaiseEvent PatientDataElementUpdated()
+    End Sub
 
 End Module

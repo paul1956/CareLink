@@ -864,13 +864,12 @@ Friend Class Client2
                                             Directory.CreateDirectory(path:=extractDir)
                                             Continue For
                                         End If
-                                        If normalized.StartsWith(value:=rootPrefix,
-                                                                 comparisonType:=StringComparison.OrdinalIgnoreCase) Then
+                                        If normalized.StartsWith(value:=rootPrefix, ComparisonType) Then
                                             relativeName = normalized.Substring(startIndex:=rootPrefix.Length)
                                         End If
                                     End If
 
-                                    If String.IsNullOrEmpty(relativeName) Then
+                                    If String.IsNullOrEmpty(value:=relativeName) Then
                                         Continue For
                                     End If
 
@@ -1184,6 +1183,7 @@ Friend Class Client2
             PatientDataElement = data.Values(index:=1)
             DeserializePatientElement()
             WriteTokenFile(token:=PatientDataElement, path:=GetLastDownloadFileWithPath())
+            NotifyPatientDataElementUpdated()
         Catch ex As Exception
             LogMessage(message:=ex.DecodeException())
             Return ex.DecodeException()

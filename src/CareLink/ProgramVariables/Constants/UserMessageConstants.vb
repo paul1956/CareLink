@@ -196,15 +196,10 @@ Friend Module UserMessageConstants
         {"2.209", $"Check blood glucose with meter(triggeredDateTime),{vbCrLf}" &
                   "Sensor glucose not available until a BG is accepted."},
         {"2.210", "blood glucose not accepted(triggeredDateTime). Wait at least a 15 minutes before trying again."},
-        {"2.253", "Bolus not delivered (alertClearType)"},
-        {"2.326", "Reservoir Low(triggeredDateTime), Change reservoir soon."},
-        {"2.340", "Delivery suspended(triggeredDateTime), Insulin delivery has been stopped for > 30 minutes."},
-        {"2.344", "Pump suspended(triggeredDateTime), insulin delivery has been stopped for > 30 minutes."},
-        {"2.500", $"Reservoir Low(triggeredDateTime). (unitsRemaining) units remaining.{vbCrLf}" &
-                  "Change reservoir?"},
-        {"2.353", "Bolus not delivered(triggeredDateTime). (alertClearType)!"},
         {"3.221", $"Sensor grace period ending soon(triggeredDateTime),{vbCrLf}" &
                   "you will need to change your sensor within 12 hours."},
+        {"2.253", "Bolus not delivered (alertClearType)"},
+        {"2.326", "Reservoir Low(triggeredDateTime), Change reservoir soon."},
         {"3.327", "Low reservoir(triggeredDateTime)."},
         {"3.328", "Change Infusion Set(triggeredDateTime). Rewind required to resume basal delivery."},
         {"3.329", "Prolonged low sensor glucose?"},
@@ -214,7 +209,13 @@ Friend Module UserMessageConstants
         {"3.333", "Sensor glucose falling rapidly?"},
         {"3.334", "Sensor glucose under low limit?"},
         {"3.335", "Sensor glucose over high limit?"},
+        {"2.340", "Delivery suspended(triggeredDateTime), Insulin delivery has been stopped for > 30 minutes."},
+        {"2.344", "Pump suspended(triggeredDateTime), insulin delivery has been stopped for > 30 minutes."},
+        {"2.350", "Blous stopped(triggeredDateTime). (alertClearType)!"},
+        {"2.353", "Bolus not delivered(triggeredDateTime), due to time out. (alertClearType)!"},
         {"3.380", "Phones times zone has changed.(triggeredDateTime). (alertClearType)!."},
+        {"2.500", $"Reservoir Low(triggeredDateTime). (unitsRemaining) units remaining.{vbCrLf}" &
+                  "Change reservoir?"},
         {"4.600", "Lost pump communications at(triggeredDateTime). (alertClearType)!."}
         }
 

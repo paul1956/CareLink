@@ -21,14 +21,13 @@ Public Class Form1
     Private ReadOnly _calibrationToolTip As New ToolTip()
     Private ReadOnly _carbRatio As New ToolTip()
     Private ReadOnly _pendingHeaderUpdates As New HashSet(Of String)(Comparer)
+
     Private ReadOnly _processName As String =
         Process.GetCurrentProcess().ProcessName
+
     Private ReadOnly _sensorLifeToolTip As New ToolTip()
     Private ReadOnly _sgMiniDisplay As New SgMiniForm(form1:=Me)
     Private ReadOnly _updatingLock As New Object()
-    Friend ReadOnly _livePolling As New LivePollingSchedule()
-
-    Friend _livePollingEnabled As Boolean
     Private _activeInsulinChartAbsoluteRectangle As RectangleF = RectangleF.Empty
     Private _dgvSummaryPrevColIndex As Integer = -1
     Private _dgvSummaryPrevRowIndex As Integer = -1
@@ -46,6 +45,9 @@ Public Class Form1
     Private _summaryChartAbsoluteRectangle As RectangleF
     Private _treatmentMarkerAbsoluteRectangle As RectangleF
     Private _updating As Boolean
+
+    Friend ReadOnly _livePolling As New LivePollingSchedule()
+    Friend _livePollingEnabled As Boolean
 
     ' Pump battery timestamp/lock removed: images and PictureBox sizes are constant.
     Private Shared Property TimeInTightRange As (Uint As UInteger, Str As String)
@@ -234,7 +236,7 @@ Public Class Form1
                                 ' Only adjust the header if it literally starts with the matched
                                 ' result (preserves existing wrapped headers and avoids repeated
                                 ' replacements). Trim any leading spaces from the remainder.
-                                If .HeaderText.StartsWith(value:=result, comparisonType:=StringComparison.OrdinalIgnoreCase) Then
+                                If .HeaderText.StartsWith(value:=result, ComparisonType) Then
                                     Dim rest As String = .HeaderText.Substring(startIndex:=result.Length)
                                     rest = rest.TrimStart(trimChars)
                                     .HeaderText = $"{prefix}{vbCrLf}{rest}"
