@@ -742,14 +742,13 @@ Public Class Form1
                 _activeInsulinChartAbsoluteRectangle = RectangleF.Empty
                 Exit Sub
             End If
-            e.PostPaintSupport(
-                chartRelativePosition:=_activeInsulinChartAbsoluteRectangle,
-                insulinDictionary:=s_activeInsulinMarkers,
-                mealDictionary:=Nothing,
-                otherDictionary:=Nothing,
-                timeChangedDictionary:=s_activeTimeChangedMarkers,
-                offset:=ImageOffsetEnum.Center,
-                paintOnY2:=True)
+            e.PostPaintSupport(chartRelativePosition:=_activeInsulinChartAbsoluteRectangle,
+                               insulinDictionary:=s_activeInsulinMarkers,
+                               mealDictionary:=Nothing,
+                               otherDictionary:=Nothing,
+                               timeChangedDictionary:=s_activeTimeChangedMarkers,
+                               offset:=ImageOffsetEnum.Center,
+                               paintOnY2:=True)
         End SyncLock
     End Sub
 
@@ -895,14 +894,13 @@ Public Class Form1
                 _activeInsulinChartAbsoluteRectangle = RectangleF.Empty
                 Exit Sub
             End If
-            e.PostPaintSupport(
-                chartRelativePosition:=_summaryChartAbsoluteRectangle,
-                insulinDictionary:=s_summaryMarkersInsulin,
-                mealDictionary:=s_summaryMarkersMeal,
-                otherDictionary:=s_summaryMarkersOther,
-                timeChangedDictionary:=s_summaryMarkersTimeChanged,
-                offset:=ImageOffsetEnum.Center,
-                paintOnY2:=True)
+            e.PostPaintSupport(chartRelativePosition:=_summaryChartAbsoluteRectangle,
+                               insulinDictionary:=s_summaryMarkersInsulin,
+                               mealDictionary:=s_summaryMarkersMeal,
+                               otherDictionary:=s_summaryMarkersOther,
+                               timeChangedDictionary:=s_summaryMarkersTimeChanged,
+                               offset:=ImageOffsetEnum.Center,
+                               paintOnY2:=True)
         End SyncLock
     End Sub
 
@@ -931,14 +929,13 @@ Public Class Form1
                 _activeInsulinChartAbsoluteRectangle = RectangleF.Empty
                 Exit Sub
             End If
-            e.PostPaintSupport(
-                chartRelativePosition:=_treatmentMarkerAbsoluteRectangle,
-                insulinDictionary:=s_treatmentMarkersInsulin,
-                mealDictionary:=s_treatmentMarkersMeal,
-                otherDictionary:=Nothing,
-                timeChangedDictionary:=s_treatmentMarkersTimeChanged,
-                offset:=ImageOffsetEnum.Center,
-                paintOnY2:=False)
+            e.PostPaintSupport(chartRelativePosition:=_treatmentMarkerAbsoluteRectangle,
+                               insulinDictionary:=s_treatmentMarkersInsulin,
+                               mealDictionary:=s_treatmentMarkersMeal,
+                               otherDictionary:=Nothing,
+                               timeChangedDictionary:=s_treatmentMarkersTimeChanged,
+                               offset:=ImageOffsetEnum.Center,
+                               paintOnY2:=False)
         End SyncLock
     End Sub
 
