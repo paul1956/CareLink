@@ -28,7 +28,7 @@ Public Class StringExtensionsTests
         result.Should().BeFalse()
 
         input = "Hello World"
-        result = ContainsNoCase(input, value:="")
+        result = ContainsNoCase(s1:=input, value:="")
         result.Should().BeTrue()
     End Sub
 

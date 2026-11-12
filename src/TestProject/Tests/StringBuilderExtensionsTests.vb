@@ -11,46 +11,46 @@ Public Class StringBuilderExtensionsTests
 
     <Fact>
     Public Shared Sub TrimEnd_RemovesStringAtEnd_WhenPresent()
-        Dim sb As New StringBuilder("HelloWorld")
-        Dim result As StringBuilder = sb.TrimEnd("World")
-        result.Should().BeSameAs(sb)
-        sb.ToString().Should().Be("Hello")
+        Dim sb As New StringBuilder(value:="HelloWorld")
+        Dim result As StringBuilder = sb.TrimEnd(value:="World")
+        result.Should().BeSameAs(expected:=sb)
+        sb.ToString().Should().Be(expected:="Hello")
     End Sub
 
     <Fact>
     Public Sub TrimEnd_DoesNothing_WhenStringDoesNotMatchAtEnd()
-        Dim sb As New StringBuilder("HelloWorld")
-        Dim result As StringBuilder = sb.TrimEnd("world") ' case sensitive
-        sb.ToString().Should().Be("HelloWorld")
+        Dim sb As New StringBuilder(value:="HelloWorld")
+        Dim result As StringBuilder = sb.TrimEnd(value:="world") ' case sensitive
+        sb.ToString().Should().Be(expected:="HelloWorld")
     End Sub
 
     <Fact>
     Public Sub TrimEnd_ReturnsNothing_WhenStringBuilderIsNothing()
         Dim sb As StringBuilder = Nothing
-        Dim result As StringBuilder = TrimEnd(sb, "x")
+        Dim result As StringBuilder = TrimEnd(sb, value:="x")
         result.Should().BeNull()
     End Sub
 
     <Fact>
     Public Sub TrimEnd_RemovesOnlyOneOccurrence_OfValueAtEnd()
-        Dim sb As New StringBuilder("abcabc")
-        Dim result As StringBuilder = sb.TrimEnd("abc")
-        result.Should().BeSameAs(sb)
-        sb.ToString().Should().Be("abc")
+        Dim sb As New StringBuilder(value:="abcabc")
+        Dim result As StringBuilder = sb.TrimEnd(value:="abc")
+        result.Should().BeSameAs(expected:=sb)
+        sb.ToString().Should().Be(expected:="abc")
     End Sub
 
     <Fact>
     Public Sub TrimEnd_TrimChar_RemovesTrailingCharacters()
-        Dim sb As New StringBuilder("test!!!")
-        Dim result As StringBuilder = sb.TrimEnd("!"c)
-        result.Should().BeSameAs(sb)
+        Dim sb As New StringBuilder(value:="test!!!")
+        Dim result As StringBuilder = sb.TrimEnd(trimChar:="!"c)
+        result.Should().BeSameAs(expected:=sb)
     End Sub
 
     <Fact>
     Public Sub TrimEnd_TrimChar_NoTrailingCharacters_NoChange()
-        Dim sb As New StringBuilder("test")
-        Dim result As StringBuilder = sb.TrimEnd("!"c)
-        result.Should().BeSameAs(sb)
+        Dim sb As New StringBuilder(value:="test")
+        Dim result As StringBuilder = sb.TrimEnd(trimChar:="!"c)
+        result.Should().BeSameAs(expected:=sb)
     End Sub
 
 End Class

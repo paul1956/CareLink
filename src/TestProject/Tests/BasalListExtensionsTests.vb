@@ -35,7 +35,7 @@ Public Class BasalListExtensionsTests
 
         ' Act / Assert
         list.ActiveBasalPattern().Should().Be(expected:=String.Empty)
-        Double.IsNaN(list.GetBasalPerHour()).Should().BeTrue()
+        Double.IsNaN(d:=list.GetBasalPerHour()).Should().BeTrue()
         list.Subtitle().Should().Be(expected:=String.Empty)
 
         Dim cc As List(Of Basal) = list.ClassCollection()

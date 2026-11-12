@@ -46,10 +46,10 @@ Public Class Client2RefreshTests
         result.IsEmpty.Should().BeFalse()
         Dim dict As Dictionary(Of String, JsonElement) = Nothing
         Try
-            dict = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(result)
+            dict = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(element:=result)
         Catch ex As Exception
             Assert.True(condition:=False,
-                        userMessage:="Deserialization of token response failed: " & ex.Message)
+                        userMessage:=$"Deserialization of token response failed: {ex.Message}")
         End Try
         dict.Should().ContainKey(expected:="access_token")
         dict(key:="access_token").GetString().Should().Be(expected:="new.access.token")
@@ -119,15 +119,15 @@ Public Class Client2RefreshTests
         Dim httpClient As New HttpClient(handler)
 
         Dim client As New Client2(serverRegion:=ServerLocation.US, httpClient) With {
-            .Config = New ConfigRecord With {.TokenUrl = "https://example.com/token"}
-            }
+            .Config = New ConfigRecord With {.TokenUrl = "https://example.com/token"}}
 
         ' Prepare tokenElement JSON without client_secret
         Dim tokenOldPath As String = GetTestDataFile(fileName:="token_old.json")
         Dim tokenJson As String = File.ReadAllText(path:=tokenOldPath)
         Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
         Dim bindingAttr As BindingFlags = BindingFlags.NonPublic Or BindingFlags.Instance
-        Dim tokenProp As PropertyInfo = client.GetType().GetProperty(NameOf(Client2.TokenDataElement), bindingAttr)
+        Dim tokenProp As PropertyInfo =
+                client.GetType().GetProperty(NameOf(Client2.TokenDataElement), bindingAttr)
         If tokenProp IsNot Nothing Then
             tokenProp.SetValue(obj:=client, value:=tokenElement)
         Else
@@ -135,7 +135,8 @@ Public Class Client2RefreshTests
             If tokenField IsNot Nothing Then
                 tokenField.SetValue(obj:=client, value:=tokenElement)
             Else
-                Assert.True(condition:=False, userMessage:="Could not locate TokenDataElement property or backing field on Client2")
+                Assert.True(condition:=False,
+                            userMessage:="Could not locate TokenDataElement property or backing field on Client2")
             End If
         End If
 
@@ -205,5 +206,4 @@ Public Class Client2RefreshTests
         capturedRequest.Should().NotBeNull()
     End Function
 
-    ' Handlers moved to TestHelpers for reuse across tests.
 End Class

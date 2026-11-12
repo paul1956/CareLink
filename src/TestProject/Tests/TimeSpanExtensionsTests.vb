@@ -44,7 +44,7 @@ Public Class TimeSpanExtensionsTests
     <InlineData(25, "1 day, 1 hour")>
     <InlineData(50, "2 days, 2 hours")>
     Public Sub HoursToDaysAndHours_LongUnits_ReturnsExpectedString(hours As Integer, expected As String)
-        Assert.Equal(expected, hours.HoursToDaysAndHours(shortHr:=False))
+        Assert.Equal(expected, actual:=hours.HoursToDaysAndHours(shortHr:=False))
     End Sub
 
     <Theory>
@@ -54,7 +54,7 @@ Public Class TimeSpanExtensionsTests
     <InlineData(25, "1 day and 1 hr")>
     <InlineData(50, "2 days and 2 hrs")>
     Public Sub ToDaysHours_ReturnsExpectedString(hours As Integer, expected As String)
-        Assert.Equal(expected, hours.ToDaysHours())
+        Assert.Equal(expected, actual:=hours.ToDaysHours())
     End Sub
 
     <Theory>
@@ -65,13 +65,13 @@ Public Class TimeSpanExtensionsTests
     <InlineData(122, "2 hrs and 2 mins")>
     <InlineData(60000, "1000 hrs")>
     Public Sub ToHrMinText_ReturnsExpectedString(minutes As Long, expected As String)
-        Assert.Equal(expected, minutes.ToHrMinText())
+        Assert.Equal(expected, actual:=minutes.ToHrMinText())
     End Sub
 
     <Fact>
     Public Sub DurationText_RejectsNegativeValues()
-        Assert.Throws(Of ArgumentOutOfRangeException)(Sub() ToDaysHours(-1))
-        Assert.Throws(Of ArgumentOutOfRangeException)(Sub() ToHrMinText(-1L))
+        Assert.Throws(Of ArgumentOutOfRangeException)(testCode:=Sub() ToDaysHours(hours:=-1))
+        Assert.Throws(Of ArgumentOutOfRangeException)(testCode:=Sub() ToHrMinText(minutes:=-1L))
     End Sub
 
     <Theory>
@@ -98,7 +98,7 @@ Public Class TimeSpanExtensionsTests
     <InlineData(61, "1 hour")>
     <InlineData(1441, "1 day, 0 hours")>
     Public Sub MinutesToDaysHoursMinutes_WithoutMinutes_PreservesExistingLayout(totalMinutes As Integer, expected As String)
-        Assert.Equal(expected, totalMinutes.MinutesToDaysHoursMinutes(showMinutes:=False))
+        Assert.Equal(expected, actual:=totalMinutes.MinutesToDaysHoursMinutes(showMinutes:=False))
     End Sub
 
     <Theory>

@@ -61,11 +61,17 @@ Public Class LegacyPdfTests
         ParseLegacy(record, tables, pageText)
 
         ' Basic assertions to ensure parser produced a usable record
-        record.Should().NotBeNull(because:=$"Record should not be null after legacy parsing of {Path.GetFileName(pdfFilePath)}")
-        record.IsValid.Should().BeTrue(because:=$"Record should be marked valid for legacy PDF {Path.GetFileName(pdfFilePath)}")
-        record.UserName.Should().NotBeNullOrWhiteSpace(because:=$"UserName should be parsed for legacy PDF {Path.GetFileName(pdfFilePath)}")
-        record.Basal.Should().NotBeNull(because:=$"Basal section should be present for legacy PDF {Path.GetFileName(pdfFilePath)}")
-        record.Bolus.Should().NotBeNull(because:=$"Bolus section should be present for legacy PDF {Path.GetFileName(pdfFilePath)}")
+        Dim pdfPath As String = Path.GetFileName(path:=pdfFilePath)
+        record.Should() _
+              .NotBeNull(because:=$"Record should not be null after legacy parsing of {pdfPath}")
+        record.IsValid.Should() _
+                      .BeTrue(because:=$"Record should be marked valid for legacy PDF {pdfPath}")
+        record.UserName.Should() _
+                       .NotBeNullOrWhiteSpace(because:=$"UserName should be parsed for legacy PDF {pdfPath}")
+        record.Basal.Should() _
+                     .NotBeNull(because:=$"Basal section should be present for legacy PDF {pdfPath}")
+        record.Bolus.Should() _
+                     .NotBeNull(because:=$"Bolus section should be present for legacy PDF {pdfPath}")
     End Sub
 
 End Class

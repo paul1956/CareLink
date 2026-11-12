@@ -15,7 +15,7 @@ Public Class ColorDictionaryHelpersTests
 
     Private ReadOnly _graphColorsPath As String = GetGraphColorsFileNameWithPath()
     Private ReadOnly _backupPath As String = Path.Combine(Path.GetTempPath(), "GraphColors.Csv.bak")
-    Private ReadOnly _originalDictionary As New Dictionary(Of String, KnownColor)(GraphColorDictionary)
+    Private ReadOnly _originalDictionary As New Dictionary(Of String, KnownColor)(dictionary:=GraphColorDictionary)
     Private ReadOnly _backupMade As Boolean
 
     Public Sub New()
@@ -33,7 +33,7 @@ Public Class ColorDictionaryHelpersTests
 
         ' Assert
         bs.Should().NotBeNull()
-        CType(bs.DataSource, Dictionary(Of String, KnownColor)).Should().BeSameAs(GraphColorDictionary)
+        CType(bs.DataSource, Dictionary(Of String, KnownColor)).Should().BeSameAs(expected:=GraphColorDictionary)
     End Sub
 
     <Fact>
