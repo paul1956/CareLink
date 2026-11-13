@@ -325,7 +325,7 @@ Friend Module NotificationHelpers
                 Next
                 .HorizontalScroll.Enabled = False
                 .HorizontalScroll.Visible = False
-                mainForm.TlpNotificationsCleared.ResumeLayout()
+                mainForm.TlpNotificationsCleared.ResumeLayout(performLayout:=False)
             Else
                 .AutoSizeMode = AutoSizeMode.GrowAndShrink
                 Dim className As String = "clearedNotifications"

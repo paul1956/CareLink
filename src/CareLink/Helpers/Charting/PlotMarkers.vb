@@ -271,7 +271,7 @@ Friend Module PlotMarkers
                            Function(m As Marker) As String
                                Return m.Type
                            End Function)
-
+        Dim lastMarkerType As String = ""
         For Each markerWithIndex As IndexClass(Of Marker) In markersSorted.ToList().WithIndex()
             Dim item As Marker = markerWithIndex.Value
             Try
@@ -289,7 +289,49 @@ Friend Module PlotMarkers
                     Case "BG_READING"
                         If Not Single.IsNaN(f) Then
                             markerSeriesPoints.AddSgReadingPoint(markerOA:=markerOADateTime, f)
+                            lastMarkerType = "BG_READING"
                         End If
+                    Case "INSULIN"
+                        Select Case item.Data.DataValues.ActivationType
+                            Case "AUTOCORRECTION"
+                                Dim amount As Single =
+                                    item.Data.DataValues.DeliveredFastAmount.RoundToStep()
+                                Dim tag As String =
+                                    $"Auto Correction: {item.Data.DataValues.DeliveredFastAmount.RoundToStep()}U"
+                                pageChart.Series(name:=BasalSeriesName).
+                                          PlotBasalSeries(markerOADateTime,
+                                                          amount,
+                                                          bolusRow,
+                                                          insulinRow,
+                                                          legendText:="Auto Correction",
+                                                          DrawFromBottom:=False,
+                                                          tag)
+                            Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
+                                Dim baseColor As Color
+
+                                Dim value As Integer = CInt(GetInsulinYValue())
+                                Dim autoCorrection As Single =
+                                   item.Data.DataValues.DeliveredFastAmount.RoundToStep()
+                                If lastMarkerType = "BG_READING" AndAlso autoCorrection.AlmostZero Then
+                                    lastMarkerType = ""
+                                    Continue For
+                                End If
+                                lastMarkerType = ""
+                                If markerInsulinDictionary.TryAdd(key:=markerOADateTime, value) Then
+                                    Dim yValue As Double = GetInsulinYValue() - If(NativeMmolL, 0.555, 10)
+                                    markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue)
+                                    markerSeriesPoints.Last.MarkerBorderWidth = 2
+                                    baseColor = Color.Black
+                                    markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(alpha:=10, baseColor)
+                                    markerSeriesPoints.Last.MarkerSize = 20
+                                    markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
+                                    If Not Single.IsNaN(GetInsulinYValue()) Then
+                                        baseColor = Color.LightBlue
+                                        markerSeriesPoints.Last.Color = Color.FromArgb(alpha:=30, baseColor)
+                                        markerSeriesPoints.Last.Tag = $"Bolus: {autoCorrection}U"
+                                    End If
+                                End If
+                        End Select
                     Case "CALIBRATION"
                         markerSeriesPoints.AddCalibrationPt(markerOA:=markerOADateTime, f, item)
                     Case "AUTO_BASAL_DELIVERY"
@@ -314,42 +356,6 @@ Friend Module PlotMarkers
                                                   legendText:="Basal Series",
                                                   DrawFromBottom:=False,
                                                   tag:=GetToolTip(item.Type, amount))
-                    Case "INSULIN"
-                        Select Case item.Data.DataValues.ActivationType
-                            Case "AUTOCORRECTION"
-                                Dim amount As Single =
-                                    item.Data.DataValues.DeliveredFastAmount.RoundToStep()
-                                Dim tag As String =
-                                    $"Auto Correction: {item.Data.DataValues.DeliveredFastAmount.RoundToStep()}U"
-                                pageChart.Series(name:=BasalSeriesName).
-                                          PlotBasalSeries(markerOADateTime,
-                                                          amount,
-                                                          bolusRow,
-                                                          insulinRow,
-                                                          legendText:="Auto Correction",
-                                                          DrawFromBottom:=False,
-                                                          tag)
-                            Case "MANUAL", "RECOMMENDED", "UNDETERMINED"
-                                Dim baseColor As Color
-
-                                Dim value As Integer = CInt(GetInsulinYValue())
-                                If markerInsulinDictionary.TryAdd(key:=markerOADateTime, value) Then
-                                    Dim yValue As Double = GetInsulinYValue() - If(NativeMmolL, 0.555, 10)
-                                    markerSeriesPoints.AddXY(xValue:=markerOADateTime, yValue)
-                                    markerSeriesPoints.Last.MarkerBorderWidth = 2
-                                    baseColor = Color.Black
-                                    markerSeriesPoints.Last.MarkerBorderColor = Color.FromArgb(alpha:=10, baseColor)
-                                    markerSeriesPoints.Last.MarkerSize = 20
-                                    markerSeriesPoints.Last.MarkerStyle = MarkerStyle.Square
-                                    If Not Single.IsNaN(GetInsulinYValue()) Then
-                                        baseColor = Color.LightBlue
-                                        markerSeriesPoints.Last.Color = Color.FromArgb(alpha:=30, baseColor)
-                                        Dim autoCorrection As Single =
-                                            item.Data.DataValues.DeliveredFastAmount.RoundToStep()
-                                        markerSeriesPoints.Last.Tag = $"Bolus: {autoCorrection}U"
-                                    End If
-                                End If
-                        End Select
                     Case "MEAL"
                         If markerMealDictionary Is Nothing Then
                             Continue For

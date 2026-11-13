@@ -195,7 +195,7 @@ Friend Module PaintMarkerExtensions
         If insulinDictionary IsNot Nothing Then
             e.PaintMarkerCore(markerImage:=InsulinVialTiny,
                               markerPoints:=insulinDictionary,
-                              offset:=offset,
+                              offset,
                               paintOnY2)
         End If
         If mealDictionary IsNot Nothing Then
@@ -207,7 +207,7 @@ Friend Module PaintMarkerExtensions
         If otherDictionary IsNot Nothing Then
             e.PaintMarkerCore(markerImage:=NoteImage,
                               markerPoints:=otherDictionary,
-                              offset:=offset,
+                              offset,
                               paintOnY2)
         End If
         If timeChangedDictionary IsNot Nothing Then

@@ -27,8 +27,9 @@ Namespace My
             ' e.Font = New Font(FontFamily.GenericSansSerif, 12, FontStyle.Regular)
 
             ' Setting the HighDpiMode for the Application:
-            e.HighDpiMode = HighDpiMode.PerMonitorV2
+            e.HighDpiMode = HighDpiMode.SystemAware
             e.ColorMode = SystemColorMode.Dark
+            e.FormRevealMode = FormRevealMode.Deferred
             ' Setting the application-wide default Icon:
             ' If a splash dialog is used, this sets the minimum display time:
             e.MinimumSplashScreenDisplayTime = 4000
