@@ -341,6 +341,13 @@ Public Class Form1
                            activeInsulinChartLegend:=_activeInsulinChartLegend,
                            homeChartLegend:=_summaryChartLegend,
                            treatmentMarkersChartLegend:=_treatmentMarkersChartLegend)
+
+        ' Temp Target legend item only exists on the summary chart legend.
+        Dim tempTargetIndex As Integer = _summaryChartLegend.CustomItems.IndexOfLabel(legendString:="Temp Target")
+        If tempTargetIndex >= 0 Then
+            _summaryChartLegend.CustomItems(index:=tempTargetIndex).Enabled =
+                Me.SummaryTempTargetSeries IsNot Nothing AndAlso Me.SummaryTempTargetSeries.Points.Count > 0
+        End If
     End Sub
 
 #End Region
@@ -5111,7 +5118,7 @@ Public Class Form1
     ''' </summary>
     Friend Sub InitializeSummaryTabCharts()
         Me.SplitContainer3.Panel1.Controls.Clear()
-        Me.SummaryChart = CreateChart(NameOf(SummaryChart))
+        Me.SummaryChart = CreateChart(key:=NameOf(SummaryChart))
         Dim summaryTitle As Title = CreateTitle(
             chartTitle:="Summary",
             name:=NameOf(summaryTitle),
@@ -5249,7 +5256,7 @@ Public Class Form1
     ''' </remarks>
     Friend Sub InitializeActiveInsulinTabChart()
         Me.SplitContainer1.Panel2.Controls.Clear()
-        Me.ActiveInsulinChart = CreateChart(NameOf(ActiveInsulinChart))
+        Me.ActiveInsulinChart = CreateChart(key:=NameOf(ActiveInsulinChart))
         Dim activeInsulinChartArea As ChartArea = CreateChartArea(containingChart:=Me.ActiveInsulinChart)
         Dim labelColor As Color = Me.ActiveInsulinChart.BackColor.ContrastingColor()
 

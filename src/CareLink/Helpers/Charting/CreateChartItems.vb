@@ -60,75 +60,6 @@ Friend Module CreateChartItems
     End Function
 
     ''' <summary>
-    '''  Finds the index of a legend item with the specified name in a
-    '''  collection of custom legend items.
-    '''  This method iterates through the collection and returns the index
-    '''  of the first item whose Name property matches <paramref name="legendString"/>.
-    '''  If no matching item is found, the method returns -1.
-    ''' </summary>
-    ''' <param name="customItems">
-    '''  The <see cref="LegendItemsCollection"/> to search for the legend item.
-    ''' </param>
-    ''' <param name="legendString">The name of the legend item to find.</param>
-    ''' <returns>
-    '''  The zero-based index of the legend item if found; otherwise, <see langword="-1"/>.
-    ''' </returns>
-    <Extension>
-    Private Function IndexOfLabel(
-        customItems As LegendItemsCollection,
-        legendString As String) As Integer
-
-        For Each item As IndexClass(Of LegendItem) In customItems.WithIndex
-            If item.Value.Name = legendString Then
-                Return item.Index
-            End If
-        Next
-        Stop
-        Return -1
-    End Function
-
-    ''' <summary>
-    '''  Shows or hides a legend item in the active insulin chart, home chart,
-    '''  and treatment markers chart.
-    '''  This method updates the visibility of a specific legend item based
-    '''  on the provided parameters.
-    ''' </summary>
-    ''' <param name="showLegend">
-    '''  A boolean indicating whether to show (<see langword="True"/>)
-    '''  or hide (<see langword="False"/>) the legend item.
-    ''' </param>
-    ''' <param name="legendString">
-    '''  The name of the legend item to show or hide.
-    ''' </param>
-    ''' <param name="activeInsulinChartLegend">
-    '''  The legend of the active insulin chart where the item will be shown or hidden.
-    ''' </param>
-    ''' <param name="homeChartLegend">
-    '''  The legend of the home chart where the item will be shown or hidden.
-    ''' </param>
-    ''' <param name="treatmentMarkersChartLegend">
-    '''  The legend of the treatment markers chart where the item will be shown or hidden.
-    ''' </param>
-    Friend Sub ShowHideLegendItem(
-        showLegend As Boolean,
-        legendString As String,
-        activeInsulinChartLegend As Legend,
-        homeChartLegend As Legend,
-        treatmentMarkersChartLegend As Legend)
-
-        Dim i As Integer = activeInsulinChartLegend.CustomItems.IndexOfLabel(legendString)
-        If i < 0 Then
-            ' Legend item not found, nothing to do
-            Return
-        End If
-        activeInsulinChartLegend.CustomItems(index:=i).Enabled = showLegend
-        i = homeChartLegend.CustomItems.IndexOfLabel(legendString)
-        homeChartLegend.CustomItems(index:=i).Enabled = showLegend
-        i = treatmentMarkersChartLegend.CustomItems.IndexOfLabel(legendString)
-        treatmentMarkersChartLegend.CustomItems(index:=i).Enabled = showLegend
-    End Sub
-
-    ''' <summary>
     '''  Creates a new chart with specified properties.
     '''  This method initializes a <see cref="Chart"/> control for displaying
     '''  data, setting its appearance, docking, and annotations.
@@ -604,6 +535,75 @@ Friend Module CreateChartItems
             .ShadowOffset = 3,
             .Text = chartTitle}
     End Function
+
+    ''' <summary>
+    '''  Finds the index of a legend item with the specified name in a
+    '''  collection of custom legend items.
+    '''  This method iterates through the collection and returns the index
+    '''  of the first item whose Name property matches <paramref name="legendString"/>.
+    '''  If no matching item is found, the method returns -1.
+    ''' </summary>
+    ''' <param name="customItems">
+    '''  The <see cref="LegendItemsCollection"/> to search for the legend item.
+    ''' </param>
+    ''' <param name="legendString">The name of the legend item to find.</param>
+    ''' <returns>
+    '''  The zero-based index of the legend item if found; otherwise, <see langword="-1"/>.
+    ''' </returns>
+    <Extension>
+    Friend Function IndexOfLabel(
+        customItems As LegendItemsCollection,
+        legendString As String) As Integer
+
+        For Each item As IndexClass(Of LegendItem) In customItems.WithIndex
+            If item.Value.Name = legendString Then
+                Return item.Index
+            End If
+        Next
+        Stop
+        Return -1
+    End Function
+
+    ''' <summary>
+    '''  Shows or hides a legend item in the active insulin chart, home chart,
+    '''  and treatment markers chart.
+    '''  This method updates the visibility of a specific legend item based
+    '''  on the provided parameters.
+    ''' </summary>
+    ''' <param name="showLegend">
+    '''  A boolean indicating whether to show (<see langword="True"/>)
+    '''  or hide (<see langword="False"/>) the legend item.
+    ''' </param>
+    ''' <param name="legendString">
+    '''  The name of the legend item to show or hide.
+    ''' </param>
+    ''' <param name="activeInsulinChartLegend">
+    '''  The legend of the active insulin chart where the item will be shown or hidden.
+    ''' </param>
+    ''' <param name="homeChartLegend">
+    '''  The legend of the home chart where the item will be shown or hidden.
+    ''' </param>
+    ''' <param name="treatmentMarkersChartLegend">
+    '''  The legend of the treatment markers chart where the item will be shown or hidden.
+    ''' </param>
+    Friend Sub ShowHideLegendItem(
+        showLegend As Boolean,
+        legendString As String,
+        activeInsulinChartLegend As Legend,
+        homeChartLegend As Legend,
+        treatmentMarkersChartLegend As Legend)
+
+        Dim i As Integer = activeInsulinChartLegend.CustomItems.IndexOfLabel(legendString)
+        If i < 0 Then
+            ' Legend item not found, nothing to do
+            Return
+        End If
+        activeInsulinChartLegend.CustomItems(index:=i).Enabled = showLegend
+        i = homeChartLegend.CustomItems.IndexOfLabel(legendString)
+        homeChartLegend.CustomItems(index:=i).Enabled = showLegend
+        i = treatmentMarkersChartLegend.CustomItems.IndexOfLabel(legendString)
+        treatmentMarkersChartLegend.CustomItems(index:=i).Enabled = showLegend
+    End Sub
 
     ''' <summary>
     '''  Updates the X-axis of a chart area for sensor glucose (SG) data.
