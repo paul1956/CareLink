@@ -25,7 +25,7 @@ Public Class SG
                 Me.SensorState = json(key:=NameOf(SensorState))
                 Me.TimestampAsString = json(key:=NameOf(Me.Timestamp))
                 Dim value As String = "False"
-                Me.TimeChange = json.TryGetValue(key:=NameOf(TimeChange), value) AndAlso Boolean.Parse(value)
+                Me.TimeChange = json.TryGetValue(key:=NameOf(TimeChange), value) AndAlso CBool(value)
             End If
             Dim isBackfillString As String = Nothing
             Me.IsBackfill = json.TryGetValue(key:=NameOf(IsBackfill), value:=isBackfillString) AndAlso CBool(isBackfillString)

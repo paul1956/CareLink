@@ -693,7 +693,7 @@ Friend Module Form1UpdateHelpers
                     End If
 
                 Case ServerDataEnum.finalCalibration
-                    If Boolean.Parse(kvp.Value) Then
+                    If CBool(kvp.Value) Then
                         s_timeToNextCalibrationMinutes = -1
                     End If
                     ListOfSummaryRecords.Add(item:=New SummaryRecord(recordNumber, kvp))
@@ -757,7 +757,7 @@ Friend Module Form1UpdateHelpers
 
                 Case ServerDataEnum.isPumpCharging
                     Dim pumpCharging As String =
-                        If(Boolean.Parse(kvp.Value),
+                        If(CBool(kvp.Value),
                            "is",
                            "is not")
                     message = $"Pump {pumpCharging} charging!"

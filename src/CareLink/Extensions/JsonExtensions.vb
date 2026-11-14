@@ -55,20 +55,11 @@ Public Module JsonExtensions
                 For Each kvp As KeyValuePair(Of String, JsonElement) In extendedInfo
                     resultDictionary.Add(key:=$"{item.Key}:{kvp.Key}", value:=kvp.Value.ElementToString())
                 Next
-            Case JsonValueKind.Undefined
-                Stop
-                resultDictionary.Add(key:=$"{item.Key}", value:=Nothing)
-            Case JsonValueKind.String
-                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.ElementToString())
-            Case JsonValueKind.Number
-                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.ElementToString())
-            Case JsonValueKind.True
-                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.ElementToString())
-            Case JsonValueKind.False
-                resultDictionary.Add(key:=$"{item.Key}", value:=item.Value.ElementToString())
-            Case JsonValueKind.Null
-                Stop
-                Exit Select
+            Case JsonValueKind.String,
+                 JsonValueKind.Number,
+                 JsonValueKind.True,
+                 JsonValueKind.False
+                resultDictionary.Add(key:=item.Key, value:=item.Value.ElementToString())
         End Select
     End Sub
 
@@ -122,10 +113,6 @@ Public Module JsonExtensions
                 Return "True"
             Case JsonValueKind.False
                 Return "False"
-            Case JsonValueKind.Number
-                Return element.GetRawText()
-            Case JsonValueKind.Object, JsonValueKind.Array
-                Return element.GetRawText()
             Case Else
                 Return element.GetRawText()
         End Select
@@ -138,7 +125,6 @@ Public Module JsonExtensions
     ''' <typeparam name="T">The type of the object to deserialize.</typeparam>
     ''' <param name="json">The JSON string to deserialize.</param>
     ''' <returns>The deserialized object.</returns>
-    ''' <param name="DeserializationOptions"></param>
     <Extension>
     Public Function FromJson(Of T)(json As String) As T
 
@@ -161,8 +147,7 @@ Public Module JsonExtensions
     <Extension>
     Public Function FromJson(Of T)(element As JsonElement) As T
         Try
-            Dim elem As T = JsonSerializer.Deserialize(Of T)(element, options:=DeserializationOptions)
-            Return elem
+            Return JsonSerializer.Deserialize(Of T)(element, options:=DeserializationOptions)
         Catch ex As JsonException
             Stop
             LogMessage(message:=$"ERROR: failed deserializing JSON element: {ex.Message}")
@@ -189,12 +174,7 @@ Public Module JsonExtensions
             Case JsonValueKind.Array
                 Return element.GetArrayLength() = 0
             Case JsonValueKind.String
-                Dim value As String = element.GetString()
-                Return String.IsNullOrEmpty(value)
-            Case JsonValueKind.Number,
-                 JsonValueKind.True,
-                 JsonValueKind.False
-                Return False
+                Return String.IsNullOrEmpty(value:=element.GetString())
         End Select
         Return False
     End Function
@@ -214,9 +194,6 @@ Public Module JsonExtensions
         ' Fast pre-check to avoid noisy JsonReaderException first-chance
         ' when the string clearly does not start with a JSON token.
         Dim s As String = value.TrimStart()
-        If s.Length = 0 Then
-            Return False
-        End If
         Dim first As Char = s(index:=0)
         If Not (first = "{"c OrElse
                 first = "["c OrElse
@@ -270,15 +247,10 @@ Public Module JsonExtensions
     End Function
 
     ''' <summary>
-    '''  Converts a <paramref name="json"/> object to a
-    '''  <see cref="Dictionary(Of String, Object)"/>,
-    '''  recursively handling nested objects and arrays.
+    '''  Converts a JsonElement (Object) into a Dictionary(Of String, JsonElement).
     ''' </summary>
-    ''' <param name="json">The JsonElement representing a JSON object.</param>
-    ''' <returns>A dictionary representing the JSON object.</returns>
-    ''' <summary>
-    ''' Converts a JsonElement (Object) into a Dictionary(Of String, JsonElement)
-    ''' </summary>
+    ''' <param name="element">The JsonElement representing a JSON object.</param>
+    ''' <returns>A dictionary of the object's properties.</returns>
     <Extension>
     Public Function JsonElementToDictionary(element As JsonElement) As Dictionary(Of String, JsonElement)
         Dim result As New Dictionary(Of String, JsonElement)(Comparer)
@@ -547,9 +519,9 @@ Public Module JsonExtensions
             Select Case v.ValueKind
                 Case JsonValueKind.String
                     s = v.GetString()
-                Case JsonValueKind.Number, JsonValueKind.True, JsonValueKind.False
-                    s = v.GetRawText()
-                Case JsonValueKind.Object, JsonValueKind.Array
+                Case JsonValueKind.True, JsonValueKind.False
+                    s = v.ElementToString()
+                Case JsonValueKind.Number, JsonValueKind.Object, JsonValueKind.Array
                     s = v.GetRawText() ' or recursively flatten
                 Case JsonValueKind.Null, JsonValueKind.Undefined
                     s = Nothing
