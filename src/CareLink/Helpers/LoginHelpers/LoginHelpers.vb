@@ -149,8 +149,9 @@ Friend Module LoginHelpers
                     Await Form1.Client.GetRecentDataAsync()
 
                 owner._livePollingEnabled = True
-                If String.IsNullOrEmpty(lastErrorMessage) AndAlso Not IsPatientDataEmpty() Then
-                    owner._livePolling.Observe(PatientData, Stopwatch.GetTimestamp())
+                If String.IsNullOrEmpty(value:=lastErrorMessage) AndAlso Not IsPatientDataEmpty() Then
+                    owner._livePolling.Observe(data:=PatientData,
+                                               observationTicks:=Stopwatch.GetTimestamp())
                 End If
                 SetUpCareLinkUser(forceUI:=False)
                 SetServerUpdateTimer(Start:=True, interval:=RefreshRate1Min)
@@ -380,7 +381,7 @@ Friend Module LoginHelpers
         Dim carbRatios As New List(Of CarbRatioRecord)
         Dim currentUserUpdateNeeded As Boolean = False
         NativeMmolL = Not PatientData.BgUnits.Equals(value:="MGDL")
-        If mdi.ModelNumber.StartsWith("MMT-8") Then
+        If mdi.ModelNumber.StartsWith(value:="MMT-8") Then
             If CurrentUser Is Nothing Then
                 CurrentUser = New CurrentUserRecord(userName:=GetUserName(),
                                                     useAdvancedAitDecay:=CheckState.Checked)

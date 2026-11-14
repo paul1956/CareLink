@@ -248,7 +248,7 @@ Public Class OAuthBrowserForm
                     End If
                 End Using
             Catch ex As COMException
-                If ex.Message.StartsWith("The pipe is being closed.") Then ' E_FAIL with message
+                If ex.Message.StartsWith(value:="The pipe is being closed.") Then ' E_FAIL with message
                     ' THE PIPE IS BEING CLOSED. This can happen if the content is not accessible because
                     ' brower closed. This is expected its not an error.
                     ' We can ignore this and return and not log.
@@ -355,8 +355,8 @@ Public Class OAuthBrowserForm
 
         ' focus element in page
         Dim focusScript As String =
-            "(function(){" & vbCrLf &
-            "  var el = document.querySelector(" & selectorJson & ");" & vbCrLf &
+            $"(function(){{" & vbCrLf &
+            $"  var el = document.querySelector({selectorJson});" & vbCrLf &
             "  if (el) {" & vbCrLf &
             "    el.focus();" & vbCrLf &
             "    return true;" & vbCrLf &
@@ -388,8 +388,8 @@ Public Class OAuthBrowserForm
         ' small delay, then verify value
         Await Task.Delay(millisecondsDelay:=120)
         Dim readScript As String =
-            "(function(){" & vbCrLf &
-            "  var el = document.querySelector(" & selectorJson & ");" & vbCrLf &
+            $"(function(){{" & vbCrLf &
+            $"  var el = document.querySelector({selectorJson});" & vbCrLf &
             "  return el ? el.value : null;" & vbCrLf &
             "})();"
         Dim result As String =

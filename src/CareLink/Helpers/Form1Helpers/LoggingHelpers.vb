@@ -9,10 +9,13 @@ Imports System.Runtime.CompilerServices
 Imports System.Threading
 
 Public Module LoggerManager
-    Private s_loggerForm As LoggerForm
-    Private s_loggerThread As Thread
-    Private s_loggerReady As AutoResetEvent
 
+    ' Fallback log folder for first-run users when the logger window is not visible.
+    Private ReadOnly s_logFolder As String = Path.Combine(Environment.GetFolderPath(folder:=Environment.SpecialFolder.LocalApplicationData), "CareLink", "Logs")
+
+    Private s_loggerForm As LoggerForm
+    Private s_loggerReady As AutoResetEvent
+    Private s_loggerThread As Thread
     ' Controls whether the on-screen logger is shown/used. Initialized in InitLogger.
     ' The authoritative storage for this flag lives in ProgramVariables.SystemVariables
     ' to avoid duplicate module-level symbols that cause ambiguous references.
@@ -23,14 +26,6 @@ Public Module LoggerManager
     ' emitted when this flag is true.
     Private s_verboseLogging As Boolean = False
 
-    ''' <summary>
-    ''' Enable or disable verbose logging at runtime. Verbose messages passed to
-    ''' LogMessage(message, verbose:=True) will only be logged when enabled.
-    ''' </summary>
-    Public Sub SetVerboseLogging(enabled As Boolean)
-        s_verboseLogging = enabled
-    End Sub
-
     Public Enum LogLevel
         ErrorLevel
         WarningLevel
@@ -38,8 +33,52 @@ Public Module LoggerManager
         VerboseLevel
     End Enum
 
-    ' Fallback log folder for first-run users when the logger window is not visible.
-    Private ReadOnly s_logFolder As String = Path.Combine(Environment.GetFolderPath(folder:=Environment.SpecialFolder.LocalApplicationData), "CareLink", "Logs")
+    Private Sub WriteFallbackLog(message As String)
+        Try
+            If String.IsNullOrWhiteSpace(value:=s_logFolder) Then
+                Return
+            End If
+
+            Directory.CreateDirectory(path:=s_logFolder)
+
+            Dim timestamp As String =
+                Date.UtcNow.ToString(format:="yyyyMMdd_HHmmss_fff",
+                                     provider:=CultureInfo.InvariantCulture)
+            Dim fileName As String =
+                Path.Combine(s_logFolder, $"CareLink_Log_{timestamp}.log")
+
+            Dim asmVersion As String = "?"
+            Try
+                Dim entry As Assembly = Assembly.GetEntryAssembly()
+                If entry IsNot Nothing Then
+                    Dim ver As Version = entry.GetName().Version
+                    If ver IsNot Nothing Then
+                        asmVersion = ver.ToString()
+                    End If
+                Else
+                    asmVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion
+                End If
+            Catch
+            End Try
+
+            Dim lines As New List(Of String) From {
+                $"TimestampUTC: {Date.UtcNow.ToString(format:="o",
+                                                      provider:=CultureInfo.InvariantCulture)}",
+                $"AppVersion: {asmVersion}",
+                $"OS: {Environment.OSVersion}",
+                $"Machine: {Environment.MachineName}",
+                $"Culture: {CultureInfo.CurrentCulture.Name}",
+                $"UICulture: {CultureInfo.CurrentUICulture.Name}",
+                $"ThreadId: {Environment.CurrentManagedThreadId}",
+                "--- Message ---",
+                message
+            }
+
+            File.AppendAllLines(path:=fileName, contents:=lines)
+        Catch
+            ' Ignore logging failures
+        End Try
+    End Sub
 
     ''' <summary>
     '''  Initializes the logger form. If the logger form is not already created
@@ -155,6 +194,14 @@ Public Module LoggerManager
     End Sub
 
     ''' <summary>
+    ''' Enable or disable verbose logging at runtime. Verbose messages passed to
+    ''' LogMessage(message, verbose:=True) will only be logged when enabled.
+    ''' </summary>
+    Public Sub SetVerboseLogging(enabled As Boolean)
+        s_verboseLogging = enabled
+    End Sub
+
+    ''' <summary>
     '''  Updates a log message in the logger form based on the provided start and
     '''  end keys. If the end key is an empty string, it replaces the entire line
     '''  starting from the start key.
@@ -183,53 +230,6 @@ Public Module LoggerManager
             Catch
             End Try
         End If
-    End Sub
-
-    Private Sub WriteFallbackLog(message As String)
-        Try
-            If String.IsNullOrWhiteSpace(value:=s_logFolder) Then
-                Return
-            End If
-
-            Directory.CreateDirectory(path:=s_logFolder)
-
-            Dim timestamp As String =
-                Date.UtcNow.ToString(format:="yyyyMMdd_HHmmss_fff",
-                                     provider:=CultureInfo.InvariantCulture)
-            Dim fileName As String =
-                Path.Combine(s_logFolder, $"CareLink_Log_{timestamp}.log")
-
-            Dim asmVersion As String = "?"
-            Try
-                Dim entry As Assembly = Assembly.GetEntryAssembly()
-                If entry IsNot Nothing Then
-                    Dim ver As Version = entry.GetName().Version
-                    If ver IsNot Nothing Then
-                        asmVersion = ver.ToString()
-                    End If
-                Else
-                    asmVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion
-                End If
-            Catch
-            End Try
-
-            Dim lines As New List(Of String) From {
-                $"TimestampUTC: {Date.UtcNow.ToString(format:="o",
-                                                      provider:=CultureInfo.InvariantCulture)}",
-                $"AppVersion: {asmVersion}",
-                $"OS: {Environment.OSVersion}",
-                $"Machine: {Environment.MachineName}",
-                $"Culture: {CultureInfo.CurrentCulture.Name}",
-                $"UICulture: {CultureInfo.CurrentUICulture.Name}",
-                $"ThreadId: {Environment.CurrentManagedThreadId}",
-                "--- Message ---",
-                message
-            }
-
-            File.AppendAllLines(path:=fileName, contents:=lines)
-        Catch
-            ' Ignore logging failures
-        End Try
     End Sub
 
 End Module

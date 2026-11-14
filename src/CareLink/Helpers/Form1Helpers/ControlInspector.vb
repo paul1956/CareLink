@@ -26,7 +26,7 @@ Friend Module ControlInspector
 
         ' Seed with direct children of the root
         For Each c As Control In root.Controls
-            stack.Push(c)
+            stack.Push(item:=c)
         Next
 
         While stack.Count > 0
@@ -35,9 +35,9 @@ Friend Module ControlInspector
                 Continue While
             End If
 
-            If seen.Add(current) Then
-                If IsNotNullOrWhiteSpace(current.Name) Then
-                    result.Add(New ControlInfo With {
+            If seen.Add(item:=current) Then
+                If IsNotNullOrWhiteSpace(value:=current.Name) Then
+                    result.Add(item:=New ControlInfo With {
                         .ControlName = current.Name,
                         .ParentName = GetParentDisplayName(current.Parent),
                         .X = current.Location.X,
@@ -61,7 +61,7 @@ Friend Module ControlInspector
                         Dim displayName As String = If(IsNotNullOrWhiteSpace(sc.Name),
                                                        $"{sc.Name}.{panelLabel}",
                                                        panelLabel)
-                        result.Add(New ControlInfo With {
+                        result.Add(item:=New ControlInfo With {
                             .ControlName = displayName,
                             .ParentName = If(IsNotNullOrWhiteSpace(sc.Name), sc.Name, sc.GetType().Name),
                             .X = current.Location.X,
@@ -74,7 +74,7 @@ Friend Module ControlInspector
                         ' Ignore native scrollbar windows created by other controls (e.g., DataGridView).
                         ' If the unnamed control is not a native ScrollBar or other native window,
                         ' break into debugger.
-                        If Not IsNativeControl(current) Then
+                        If Not IsNativeControl(ctrl:=current) Then
                             Stop
                         End If
                     End If
@@ -82,7 +82,7 @@ Friend Module ControlInspector
 
                 ' Push children to stack to visit nested controls
                 For Each child As Control In current.Controls
-                    stack.Push(child)
+                    stack.Push(item:=child)
                 Next
             Else
                 Stop

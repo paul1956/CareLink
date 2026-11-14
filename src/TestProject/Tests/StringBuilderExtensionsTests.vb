@@ -25,13 +25,6 @@ Public Class StringBuilderExtensionsTests
     End Sub
 
     <Fact>
-    Public Sub TrimEnd_ReturnsNothing_WhenStringBuilderIsNothing()
-        Dim sb As StringBuilder = Nothing
-        Dim result As StringBuilder = TrimEnd(sb, value:="x")
-        result.Should().BeNull()
-    End Sub
-
-    <Fact>
     Public Sub TrimEnd_RemovesOnlyOneOccurrence_OfValueAtEnd()
         Dim sb As New StringBuilder(value:="abcabc")
         Dim result As StringBuilder = sb.TrimEnd(value:="abc")
@@ -40,15 +33,22 @@ Public Class StringBuilderExtensionsTests
     End Sub
 
     <Fact>
-    Public Sub TrimEnd_TrimChar_RemovesTrailingCharacters()
-        Dim sb As New StringBuilder(value:="test!!!")
-        Dim result As StringBuilder = sb.TrimEnd(trimChar:="!"c)
-        result.Should().BeSameAs(expected:=sb)
+    Public Sub TrimEnd_ReturnsNothing_WhenStringBuilderIsNothing()
+        Dim sb As StringBuilder = Nothing
+        Dim result As StringBuilder = TrimEnd(sb, value:="x")
+        result.Should().BeNull()
     End Sub
 
     <Fact>
     Public Sub TrimEnd_TrimChar_NoTrailingCharacters_NoChange()
         Dim sb As New StringBuilder(value:="test")
+        Dim result As StringBuilder = sb.TrimEnd(trimChar:="!"c)
+        result.Should().BeSameAs(expected:=sb)
+    End Sub
+
+    <Fact>
+    Public Sub TrimEnd_TrimChar_RemovesTrailingCharacters()
+        Dim sb As New StringBuilder(value:="test!!!")
         Dim result As StringBuilder = sb.TrimEnd(trimChar:="!"c)
         result.Should().BeSameAs(expected:=sb)
     End Sub

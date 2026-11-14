@@ -151,6 +151,41 @@ Friend Module DgvCellStyleHelpers
     End Sub
 
     ''' <summary>
+    '''  Formats the cell value as a single-precision floating point
+    '''  value with 3 digit roundingType.
+    '''  Also sets the foreground color.
+    ''' </summary>
+    ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
+    ''' <param name="e">
+    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
+    '''  the cell being formatted.
+    ''' </param>
+    ''' <param name="TrailingText"></param>
+    <Extension>
+    Friend Function CellFormattingBasal(
+        dgv As DataGridView,
+        e As DataGridViewCellFormattingEventArgs,
+        Optional TrailingText As String = EmptyString) As Single
+
+        If TrailingText <> EmptyString Then
+            TrailingText = $" {TrailingText}"
+        End If
+
+        Dim amount As Single = ParseAsSingle(e.Value)
+        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
+        e.Value =
+            $"{amount.ToString(format:="F3", provider)}{TrailingText}"
+        dgv.CellFormattingDefault(e)
+        e.CellStyle.Alignment =
+            If(e.ColumnIndex > 0,
+               DataGridViewContentAlignment.MiddleRight,
+               DataGridViewContentAlignment.MiddleCenter)
+
+        e.FormattingApplied = True
+        Return amount
+    End Function
+
+    ''' <summary>
     '''  Formats the cell value as a date time string.
     '''  If the value is not a valid date, it will leave the value unchanged.
     '''  It also sets the foreground color based on the row's text color.
@@ -292,41 +327,6 @@ Friend Module DgvCellStyleHelpers
         End If
         e.FormattingApplied = True
     End Sub
-
-    ''' <summary>
-    '''  Formats the cell value as a single-precision floating point
-    '''  value with 3 digit roundingType.
-    '''  Also sets the foreground color.
-    ''' </summary>
-    ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
-    ''' <param name="e">
-    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for
-    '''  the cell being formatted.
-    ''' </param>
-    ''' <param name="TrailingText"></param>
-    <Extension>
-    Friend Function CellFormattingBasal(
-        dgv As DataGridView,
-        e As DataGridViewCellFormattingEventArgs,
-        Optional TrailingText As String = EmptyString) As Single
-
-        If TrailingText <> EmptyString Then
-            TrailingText = $" {TrailingText}"
-        End If
-
-        Dim amount As Single = ParseAsSingle(e.Value)
-        Dim provider As CultureInfo = CultureInfo.CurrentUICulture
-        e.Value =
-            $"{amount.ToString(format:="F3", provider)}{TrailingText}"
-        dgv.CellFormattingDefault(e)
-        e.CellStyle.Alignment =
-            If(e.ColumnIndex > 0,
-               DataGridViewContentAlignment.MiddleRight,
-               DataGridViewContentAlignment.MiddleCenter)
-
-        e.FormattingApplied = True
-        Return amount
-    End Function
 
     ''' <summary>
     '''  Formats the cell value as a single-precision floating point

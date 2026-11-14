@@ -6,15 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Public Module AlertSettings
 
-    Private Function GetEndTime(h1 As HighAlertRecord, h2 As HighAlertRecord) As String
-        Dim endTime As String = h1.End
-        If h1.End Is Nothing OrElse h1.End.Length = 0 Then
-            endTime = h2.Start
-        End If
-
-        Return endTime
-    End Function
-
     <Extension>
     Friend Sub AlertSettings1HighAlert(rtb As RichTextBox, pdf As PdfSettingsRecord)
         With rtb

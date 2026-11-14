@@ -14,7 +14,7 @@ Friend Module HttpResponseExtensions
 
     <Extension>
     Friend Async Function ThrowIfFailureAsync(response As HttpResponseMessage) As Task
-        ArgumentNullException.ThrowIfNull(response)
+        ArgumentNullException.ThrowIfNull(argument:=response)
 
         If response.IsSuccessStatusCode Then
             Return
@@ -30,39 +30,26 @@ Friend Module HttpResponseExtensions
             body = $"<unable to read response body: {ex.Message}>"
         End Try
 
-        Dim msg As String = $"HTTP {CInt(status)} {status}: {body}"
+        Dim message As String = $"HTTP {CInt(status)} {status}: {body}"
 
         ' Map common status codes to meaningful exceptions so callers can respond correctly.
         Select Case status
             Case HttpStatusCode.Unauthorized, HttpStatusCode.Forbidden
                 ' Auth problems: caller may attempt refresh or re-auth.
-                Throw New UnauthorizedAccessException(msg)
+                Throw New UnauthorizedAccessException(message)
             Case HttpStatusCode.BadRequest
                 ' Client error: surface argument/validation-like error.
-                Throw New ArgumentException(msg)
+                Throw New ArgumentException(message)
             Case HttpStatusCode.BadGateway,
                  HttpStatusCode.GatewayTimeout,
                  HttpStatusCode.RequestTimeout,
                  HttpStatusCode.ServiceUnavailable
                 ' Transient server errors: caller can implement retry with backoff.
-                Throw New HttpRequestException(msg)
+                Throw New HttpRequestException(message)
             Case Else
                 ' Generic HTTP failure
-                Throw New HttpRequestException(msg)
+                Throw New HttpRequestException(message)
         End Select
-    End Function
-
-    <Extension>
-    Public Function GetValueOrNothing(response As HttpResponseMessage, key As String) As String
-        ArgumentNullException.ThrowIfNull(argument:=response)
-        ArgumentNullException.ThrowIfNull(argument:=key)
-        If response.Headers.Contains(name:=key) Then
-            Dim valueString As String = response.Headers.GetValues(name:=key).FirstOrDefault()
-            If valueString IsNot Nothing Then
-                Return valueString
-            End If
-        End If
-        Return Nothing
     End Function
 
 End Module

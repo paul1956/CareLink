@@ -27,15 +27,15 @@ Public Class RawDataViewerDialogTests
     Private Shared ReadOnly s_value2 As String() =
         {"$[""changed""] = 3", "", "$[""items""][1] = 4", "$[""items""][2] = 5", "$[""added""] = {}"}
 
+    Private Shared Sub CheckForDataChanges()
+        NotifyPatientDataElementUpdated()
+    End Sub
+
     Private Shared Function Parse(json As String) As JsonElement
         Using document As JsonDocument = JsonDocument.Parse(json)
             Return document.RootElement.Clone()
         End Using
     End Function
-
-    Private Shared Sub CheckForDataChanges()
-        NotifyPatientDataElementUpdated()
-    End Sub
 
     Private Shared Sub RunOnSta(action As Action)
         Dim failure As Exception = Nothing
@@ -181,6 +181,25 @@ Public Class RawDataViewerDialogTests
         RunOnSta(action)
     End Sub
 
+    <Theory>
+    <InlineData(1, "1 min")>
+    <InlineData(1440, "1 day")>
+    <InlineData(1501, "1 day, 1 hr and 1 min")>
+    <InlineData(2880, "2 days")>
+    Public Sub DurationElements_ShowFormattedUnits(minutes As Integer, expected As String)
+        Dim action As Action =
+            Sub()
+                Using dialog As New RawDataViewerDialog(prevJson:=Parse(json:="{}"),
+                                                        json:=Parse(json:=$"{{""durationMinutes"":{minutes}}}"))
+                    dialog.Show()
+                    Dim current As RichTextBox =
+                        DirectCast(dialog.Controls.Find(key:="RawDataRTB", SearchAllChildren)(0), RichTextBox)
+                    Assert.Contains(expectedSubstring:=$"// {expected}", actualString:=current.Text)
+                End Using
+            End Sub
+        RunOnSta(action)
+    End Sub
+
     <Fact>
     Public Sub IdenticalDocuments_HidePreviousAndDockCurrent_WhenToggleChanges()
         Dim action As Action =
@@ -299,6 +318,36 @@ Public Class RawDataViewerDialogTests
         RunOnSta(action)
     End Sub
 
+    <Theory>
+    <InlineData("{""nested"":{""currentServerTime"":1}}", "{""nested"":{""currentServerTime"":2}}")>
+    <InlineData("{""value"":1}", "{""value"":1,""added"":null}")>
+    <InlineData("{""items"":[1,2]}", "{""items"":[2,1]}")>
+    <InlineData("{""value"":1}", "{""value"":2}")>
+    Public Sub RefreshMonitoring_DetectsOtherCurrentDataChanges(initial As String, updated As String)
+        Dim action As Action =
+            Sub()
+                Dim originalPrevious As JsonElement = PreviousPatientDataElement
+                Dim originalCurrent As JsonElement = PatientDataElement
+                Try
+                    PreviousPatientDataElement = New JsonElement()
+                    PatientDataElement = Parse(json:=initial)
+                    Using dialog As New RawDataViewerDialog(prevJson:=PreviousPatientDataElement,
+                                                            json:=PatientDataElement)
+                        dialog.Show()
+                        Dim refresh As Button =
+                            DirectCast(dialog.Controls.Find(key:="btnRefresh", SearchAllChildren)(0), Button)
+                        PatientDataElement = Parse(json:=updated)
+                        CheckForDataChanges()
+                        Assert.True(condition:=refresh.Enabled)
+                    End Using
+                Finally
+                    PreviousPatientDataElement = originalPrevious
+                    PatientDataElement = originalCurrent
+                End Try
+            End Sub
+        RunOnSta(action)
+    End Sub
+
     <Fact>
     Public Sub RefreshMonitoring_IgnoresServerTimeAndRestartsAfterRefresh()
         Dim action As Action =
@@ -340,36 +389,6 @@ Public Class RawDataViewerDialogTests
                     End Using
                     ' A disposed dialog must be unsubscribed.
                     NotifyPatientDataElementUpdated()
-                Finally
-                    PreviousPatientDataElement = originalPrevious
-                    PatientDataElement = originalCurrent
-                End Try
-            End Sub
-        RunOnSta(action)
-    End Sub
-
-    <Theory>
-    <InlineData("{""nested"":{""currentServerTime"":1}}", "{""nested"":{""currentServerTime"":2}}")>
-    <InlineData("{""value"":1}", "{""value"":1,""added"":null}")>
-    <InlineData("{""items"":[1,2]}", "{""items"":[2,1]}")>
-    <InlineData("{""value"":1}", "{""value"":2}")>
-    Public Sub RefreshMonitoring_DetectsOtherCurrentDataChanges(initial As String, updated As String)
-        Dim action As Action =
-            Sub()
-                Dim originalPrevious As JsonElement = PreviousPatientDataElement
-                Dim originalCurrent As JsonElement = PatientDataElement
-                Try
-                    PreviousPatientDataElement = New JsonElement()
-                    PatientDataElement = Parse(json:=initial)
-                    Using dialog As New RawDataViewerDialog(prevJson:=PreviousPatientDataElement,
-                                                            json:=PatientDataElement)
-                        dialog.Show()
-                        Dim refresh As Button =
-                            DirectCast(dialog.Controls.Find(key:="btnRefresh", SearchAllChildren)(0), Button)
-                        PatientDataElement = Parse(json:=updated)
-                        CheckForDataChanges()
-                        Assert.True(condition:=refresh.Enabled)
-                    End Using
                 Finally
                     PreviousPatientDataElement = originalPrevious
                     PatientDataElement = originalCurrent
@@ -487,25 +506,6 @@ Public Class RawDataViewerDialogTests
                                       lParam:=IntPtr.Zero)
                     Assert.True(condition:=ScrollY(control:=current) > 0)
                     Assert.Equal(expected:=ScrollY(control:=current), actual:=ScrollY(control:=previous))
-                End Using
-            End Sub
-        RunOnSta(action)
-    End Sub
-
-    <Theory>
-    <InlineData(1, "1 min")>
-    <InlineData(1440, "1 day")>
-    <InlineData(1501, "1 day, 1 hr and 1 min")>
-    <InlineData(2880, "2 days")>
-    Public Sub DurationElements_ShowFormattedUnits(minutes As Integer, expected As String)
-        Dim action As Action =
-            Sub()
-                Using dialog As New RawDataViewerDialog(prevJson:=Parse(json:="{}"),
-                                                        json:=Parse(json:=$"{{""durationMinutes"":{minutes}}}"))
-                    dialog.Show()
-                    Dim current As RichTextBox =
-                        DirectCast(dialog.Controls.Find(key:="RawDataRTB", SearchAllChildren)(0), RichTextBox)
-                    Assert.Contains(expectedSubstring:=$"// {expected}", actualString:=current.Text)
                 End Using
             End Sub
         RunOnSta(action)

@@ -18,12 +18,16 @@ Public Module EnumExtensions
         Return If(attribute?.Description, enumVal.ToString())
     End Function
 
-    ' Helper to safely pull Description attribute enumVal
+    ''' <summary>
+    '''  Returns the description of an enum value, or the enum value's name if no description is present.
+    ''' </summary>
+    ''' <param name="enumVal">The enum value for which to retrieve the description.</param>
+    ''' <returns>The description of the enum value, or the enum value's name if no description is present.</returns>
     Public Function GetEnumDescription(enumVal As [Enum]) As String
         Dim field As FieldInfo =
-            enumVal.GetType().GetField(enumVal.ToString())
+            enumVal.GetType().GetField(name:=enumVal.ToString())
         Dim attribute As DescriptionAttribute() =
-            DirectCast(field.GetCustomAttributes(GetType(DescriptionAttribute), False), DescriptionAttribute())
+            DirectCast(field.GetCustomAttributes(attributeType:=GetType(DescriptionAttribute), inherit:=False), DescriptionAttribute())
 
         Return If(attribute IsNot Nothing AndAlso attribute.Length > 0, attribute(0).Description, enumVal.ToString())
     End Function

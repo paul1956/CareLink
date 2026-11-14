@@ -66,12 +66,12 @@ Public Class Client2TransientErrorsTests
         Private ReadOnly _exceptions As Queue(Of Exception)
         Private ReadOnly _responses As Queue(Of Func(Of HttpResponseMessage))
 
-        Public ReadOnly Property RequestBodies As New List(Of String)
-
         Public Sub New()
             _responses = New Queue(Of Func(Of HttpResponseMessage))()
             _exceptions = New Queue(Of Exception)()
         End Sub
+
+        Public ReadOnly Property RequestBodies As New List(Of String)
 
         Protected Overrides Async Function SendAsync(request As HttpRequestMessage, cancellationToken As CancellationToken) As Task(Of HttpResponseMessage)
             Me.RequestBodies.Add(item:=Await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwaitFalse())

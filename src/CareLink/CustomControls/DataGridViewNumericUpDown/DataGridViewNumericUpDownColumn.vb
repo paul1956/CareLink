@@ -15,15 +15,25 @@ Public Class DataGridViewNumericUpDownColumn
 
     Private Const Browsable As Boolean = False
 
-    Private ReadOnly Property Message As String =
-        $"Operation cannot be completed because this {NameOf(DataGridViewColumn)} does not have a CellTemplate."
-
     ''' <summary>
     '''  Constructor for the <see cref="DataGridViewNumericUpDownColumn"/> class.
     ''' </summary>
     Public Sub New()
         MyBase.New(cellTemplate:=New DataGridViewNumericUpDownCell)
     End Sub
+
+    Private ReadOnly Property Message As String =
+            $"Operation cannot be completed because this {NameOf(DataGridViewColumn)} does not have a CellTemplate."
+
+    ''' <summary>
+    '''  Small utility function that returns the template cell as a
+    '''  <see cref="DataGridViewNumericUpDownCell"/>
+    ''' </summary>
+    Private ReadOnly Property NumericUpDownCellTemplate As DataGridViewNumericUpDownCell
+        Get
+            Return CType(Me.CellTemplate, DataGridViewNumericUpDownCell)
+        End Get
+    End Property
 
     ''' <summary>
     '''  Represents the implicit cell that gets cloned when adding rows to the grid.
@@ -130,14 +140,6 @@ Public Class DataGridViewNumericUpDownColumn
     End Property
 
     ''' <summary>
-    '''  Indicates whether the Increment property should be persisted.
-    '''  </summary>
-    Private Function ShouldSerializeIncrement() As Boolean
-        Const value As Decimal = DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultIncrement
-        Return Not Me.Increment.Equals(value)
-    End Function
-
-    ''' <summary>
     '''  Replicates the Maximum property of the DataGridViewNumericUpDownCell cell type.
     ''' </summary>
     <Category("Data"),
@@ -174,14 +176,6 @@ Public Class DataGridViewNumericUpDownColumn
             End If
         End Set
     End Property
-
-    ''' <summary>
-    '''  Indicates whether the Maximum property should be persisted.
-    ''' </summary>
-    Private Function ShouldSerializeMaximum() As Boolean
-        Const value As Decimal = DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultMaximum
-        Return Not Me.Maximum.Equals(value)
-    End Function
 
     ''' <summary>
     '''  Replicates the Minimum property of the DataGridViewNumericUpDownCell cell type.
@@ -224,14 +218,6 @@ Public Class DataGridViewNumericUpDownColumn
     End Property
 
     ''' <summary>
-    '''  Indicates whether the Maximum property should be persisted.
-    ''' </summary>
-    Private Function ShouldSerializeMinimum() As Boolean
-        Const value As Decimal = DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultMinimum
-        Return Not Me.Minimum.Equals(value)
-    End Function
-
-    ''' <summary>
     '''  Replicates the ThousandsSeparator property of the
     '''  <see cref="DataGridViewNumericUpDownCell"/> cell type.
     ''' </summary>
@@ -272,14 +258,28 @@ Public Class DataGridViewNumericUpDownColumn
     End Property
 
     ''' <summary>
-    '''  Small utility function that returns the template cell as a
-    '''  <see cref="DataGridViewNumericUpDownCell"/>
+    '''  Indicates whether the Increment property should be persisted.
+    '''  </summary>
+    Private Function ShouldSerializeIncrement() As Boolean
+        Const value As Decimal = DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultIncrement
+        Return Not Me.Increment.Equals(value)
+    End Function
+
+    ''' <summary>
+    '''  Indicates whether the Maximum property should be persisted.
     ''' </summary>
-    Private ReadOnly Property NumericUpDownCellTemplate As DataGridViewNumericUpDownCell
-        Get
-            Return CType(Me.CellTemplate, DataGridViewNumericUpDownCell)
-        End Get
-    End Property
+    Private Function ShouldSerializeMaximum() As Boolean
+        Const value As Decimal = DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultMaximum
+        Return Not Me.Maximum.Equals(value)
+    End Function
+
+    ''' <summary>
+    '''  Indicates whether the Maximum property should be persisted.
+    ''' </summary>
+    Private Function ShouldSerializeMinimum() As Boolean
+        Const value As Decimal = DataGridViewNumericUpDownCell.DgvNumericUpDownCell_defaultMinimum
+        Return Not Me.Minimum.Equals(value)
+    End Function
 
     ''' <summary>
     '''  Returns a standard compact string representation of the column.

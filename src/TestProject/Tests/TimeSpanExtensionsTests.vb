@@ -8,6 +8,12 @@ Imports Xunit
 
 Public Class TimeSpanExtensionsTests
 
+    <Fact>
+    Public Sub DurationText_RejectsNegativeValues()
+        Assert.Throws(Of ArgumentOutOfRangeException)(testCode:=Sub() ToDaysHours(hours:=-1))
+        Assert.Throws(Of ArgumentOutOfRangeException)(testCode:=Sub() ToHrMinText(minutes:=-1L))
+    End Sub
+
     <Theory>
     <InlineData("01:00", "1 Hour")>
     <InlineData("1:00", "1 Hour")>
@@ -26,19 +32,6 @@ Public Class TimeSpanExtensionsTests
     End Sub
 
     <Theory>
-    <InlineData(0, "0 hrs")>
-    <InlineData(1, "1 hr")>
-    <InlineData(23, "23 hrs")>
-    <InlineData(24, "1 day")>
-    <InlineData(25, "1 day, 1 hr")>
-    <InlineData(48, "2 days")>
-    <InlineData(49, "2 days, 1 hr")>
-    Public Sub HoursToDaysAndHours_ReturnsExpectedString(hours As Integer, expected As String)
-        Dim result As String = HoursToDaysAndHours(hours, shortHr:=True)
-        result.Should().Be(expected)
-    End Sub
-
-    <Theory>
     <InlineData(0, "0 hours")>
     <InlineData(1, "1 hour")>
     <InlineData(25, "1 day, 1 hour")>
@@ -50,28 +43,14 @@ Public Class TimeSpanExtensionsTests
     <Theory>
     <InlineData(0, "0 hrs")>
     <InlineData(1, "1 hr")>
+    <InlineData(23, "23 hrs")>
     <InlineData(24, "1 day")>
-    <InlineData(25, "1 day and 1 hr")>
-    <InlineData(50, "2 days and 2 hrs")>
-    Public Sub ToDaysHours_ReturnsExpectedString(hours As Integer, expected As String)
-        Assert.Equal(expected, actual:=hours.ToDaysHours())
-    End Sub
-
-    <Theory>
-    <InlineData(0, "0 mins")>
-    <InlineData(1, "1 min")>
-    <InlineData(60, "1 hr")>
-    <InlineData(61, "1 hr and 1 min")>
-    <InlineData(122, "2 hrs and 2 mins")>
-    <InlineData(60000, "1000 hrs")>
-    Public Sub ToHrMinText_ReturnsExpectedString(minutes As Long, expected As String)
-        Assert.Equal(expected, actual:=minutes.ToHrMinText())
-    End Sub
-
-    <Fact>
-    Public Sub DurationText_RejectsNegativeValues()
-        Assert.Throws(Of ArgumentOutOfRangeException)(testCode:=Sub() ToDaysHours(hours:=-1))
-        Assert.Throws(Of ArgumentOutOfRangeException)(testCode:=Sub() ToHrMinText(minutes:=-1L))
+    <InlineData(25, "1 day, 1 hr")>
+    <InlineData(48, "2 days")>
+    <InlineData(49, "2 days, 1 hr")>
+    Public Sub HoursToDaysAndHours_ReturnsExpectedString(hours As Integer, expected As String)
+        Dim result As String = HoursToDaysAndHours(hours, shortHr:=True)
+        result.Should().Be(expected)
     End Sub
 
     <Theory>
@@ -99,6 +78,16 @@ Public Class TimeSpanExtensionsTests
     <InlineData(1441, "1 day, 0 hours")>
     Public Sub MinutesToDaysHoursMinutes_WithoutMinutes_PreservesExistingLayout(totalMinutes As Integer, expected As String)
         Assert.Equal(expected, actual:=totalMinutes.MinutesToDaysHoursMinutes(showMinutes:=False))
+    End Sub
+
+    <Theory>
+    <InlineData(0, "0 hrs")>
+    <InlineData(1, "1 hr")>
+    <InlineData(24, "1 day")>
+    <InlineData(25, "1 day and 1 hr")>
+    <InlineData(50, "2 days and 2 hrs")>
+    Public Sub ToDaysHours_ReturnsExpectedString(hours As Integer, expected As String)
+        Assert.Equal(expected, actual:=hours.ToDaysHours())
     End Sub
 
     <Theory>
@@ -141,6 +130,17 @@ Public Class TimeSpanExtensionsTests
         Dim tSpan As New TimeSpan(hours, minutes, seconds)
         Dim result As String = tSpan.ToFormattedTimeSpan(units)
         result.Should().Be(expected)
+    End Sub
+
+    <Theory>
+    <InlineData(0, "0 mins")>
+    <InlineData(1, "1 min")>
+    <InlineData(60, "1 hr")>
+    <InlineData(61, "1 hr and 1 min")>
+    <InlineData(122, "2 hrs and 2 mins")>
+    <InlineData(60000, "1000 hrs")>
+    Public Sub ToHrMinText_ReturnsExpectedString(minutes As Long, expected As String)
+        Assert.Equal(expected, actual:=minutes.ToHrMinText())
     End Sub
 
 End Class

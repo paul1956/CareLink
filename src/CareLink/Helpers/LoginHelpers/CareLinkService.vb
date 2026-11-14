@@ -16,14 +16,13 @@ Public Class CareLinkService
     Private Shared ReadOnly s_endpointCacheLock As New Object()
 
     Private Shared ReadOnly s_http As New HttpClient(
-        New HttpClientHandler() With {
+        handler:=New HttpClientHandler() With {
             .AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate Or DecompressionMethods.Brotli
         }) With {.Timeout = TimeSpan.FromSeconds(120)}
 
     ' Reuse JsonSerializerOptions to avoid allocations on each parse
     Private Shared ReadOnly s_jsonOptions As New JsonSerializerOptions With {
-        .PropertyNameCaseInsensitive = True
-    }
+        .PropertyNameCaseInsensitive = True}
 
     Public Const DiscoveryUrlEu As String =
         "https://clcloud.minimed.eu/connect/carepartner/v13/discover/android/3.6"
@@ -74,9 +73,9 @@ Public Class CareLinkService
         If s Is Nothing Then Return s
 
         ' Replace common VB literal concatenation tokens with actual whitespace/newlines.
-        s = s.Replace(" & vbCrLf & ", vbCrLf) _
-             .Replace(" & vbTab & ", vbTab) _
-             .Replace(""" & vbCrLf & """, vbCrLf)
+        s = s.Replace(oldValue:=" & vbCrLf & ", newValue:=vbCrLf) _
+             .Replace(oldValue:=" & vbTab & ", newValue:=vbTab) _
+             .Replace(oldValue:=""" & vbCrLf & """, newValue:=vbCrLf)
 
         Return s.Trim()
     End Function
@@ -209,9 +208,9 @@ Public Class CareLinkService
            work:=Function()
                      Do
                          Using frm As New OAuthBrowserForm(startUrl:=fullUrl,
-                                                            redirectUri,
-                                                            userName,
-                                                            password)
+                                                           redirectUri,
+                                                           userName,
+                                                           password)
                              ' Determine the best owner for the OAuth dialog. Prefer the
                              ' currently active form (which may be a modal dialog like
                              ' the LoginDialog). Fall back to the main Form1 if none.
@@ -255,11 +254,11 @@ Public Class CareLinkService
         Using req As New HttpRequestMessage(method:=HttpMethod.Post, requestUri:=New Uri(tokenUrl))
             req.Content = content
             Try
-                req.Headers.TryAddWithoutValidation("User-Agent", "python-requests/2.31.0")
+                req.Headers.TryAddWithoutValidation(name:="User-Agent", value:="python-requests/2.31.0")
             Catch
             End Try
             Try
-                req.Headers.TryAddWithoutValidation("Accept", "*/*")
+                req.Headers.TryAddWithoutValidation(name:="Accept", value:="*/*")
             Catch
             End Try
 
@@ -283,9 +282,9 @@ Public Class CareLinkService
             End If
 
             Dim enc As Encoding = Nothing
-            If Not String.IsNullOrWhiteSpace(charset) Then
+            If Not String.IsNullOrWhiteSpace(value:=charset) Then
                 Try
-                    enc = Encoding.GetEncoding(charset)
+                    enc = Encoding.GetEncoding(name:=charset)
                 Catch
                     enc = Nothing
                 End Try
@@ -298,10 +297,10 @@ Public Class CareLinkService
             ' we can safely decode the received bytes using the declared charset or
             ' UTF-8 fallback.
             Try
-                body = enc.GetString(rawBytes)
+                body = enc.GetString(bytes:=rawBytes)
             Catch
                 Try
-                    body = Encoding.GetEncoding(28591).GetString(rawBytes)
+                    body = Encoding.GetEncoding(codepage:=28591).GetString(bytes:=rawBytes)
                 Catch
                     body = String.Empty
                 End Try
@@ -328,7 +327,7 @@ Public Class CareLinkService
                 mediaType = response.Content.Headers.ContentType.MediaType
             End If
 
-            If mediaType IsNot Nothing AndAlso mediaType.Contains("json", TextComparisonConstants.ComparisonType) Then
+            If mediaType IsNot Nothing AndAlso mediaType.Contains(value:="json", ComparisonType) Then
                 Try
                     ' First attempt: parse as-is
                     token = body.FromJson(Of TokenData)()
@@ -343,12 +342,11 @@ Public Class CareLinkService
                             Encoding.Unicode,
                             Encoding.BigEndianUnicode,
                             Encoding.UTF32,
-                            Encoding.GetEncoding(codepage:=28591) ' ISO-8859-1
-                        }
+                            Encoding.GetEncoding(codepage:=28591)} ' ISO-8859-1
 
                         For Each enc As Encoding In encodings
                             Try
-                                Dim candidate As String = enc.GetString(rawBytes)
+                                Dim candidate As String = enc.GetString(bytes:=rawBytes)
                                 token = candidate.FromJson(Of TokenData)()
                                 parsed = True
                                 Exit For

@@ -14,45 +14,40 @@ Imports Xunit
 Public Class Client2RefreshTests
 
     <Fact>
-    Public Async Function DoRefreshAsync_WithClientSecretInTokenData_Succeeds() As Task
+    Public Async Function DoRefreshAsync_IncludesMagIdentifierHeader_WhenPresent() As Task
         ' Arrange
-        Dim handler As New SimpleResponseHandler()
-        Dim tokenResponsePath As String =
-            GetTestDataFile(fileName:="tokenResponse_new.json")
-        Dim tokenResponseJson As String =
-            File.ReadAllText(path:=tokenResponsePath)
-        handler.ResponseFactory =
+        Dim capturedRequest As HttpRequestMessage = Nothing
+        Dim factory As Func(Of HttpRequestMessage, HttpResponseMessage) =
             Function(req)
+                capturedRequest = req
+                Dim tokenResponsePath3 As String = GetTestDataFile("tokenResponse_tok.json")
+                Dim tokenResponseJson As String = File.ReadAllText(path:=tokenResponsePath3)
                 Return New HttpResponseMessage(statusCode:=HttpStatusCode.OK) With {
                     .Content = New StringContent(content:=tokenResponseJson)}
             End Function
+
+        Dim handler As New CapturingHandler(factory)
         Dim httpClient As New HttpClient(handler)
 
         Dim client As New Client2(serverRegion:=ServerLocation.US, httpClient) With {
             .Config = New ConfigRecord With {.TokenUrl = "https://example.com/token"}}
 
-        ' Prepare tokenElement JSON (legacy client_secret in file will be stripped on read)
-        Dim tokenPath As String = GetTestDataFile("token_with_client_secret.json")
-        Dim tokenJson As String = File.ReadAllText(path:=tokenPath)
-        Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
-        ' Set the client's token data; FileUtilities strips deprecated fields at read time
-        client.SetTokenDataElementForTests(token:=tokenElement)
+        ' token element may contain legacy mag-identifier, but client should ignore it
+        Dim tokenWithMagPath As String =
+            GetTestDataFile(fileName:="token_with_mag_and_secret.json")
+        Dim tokenJson As String =
+            File.ReadAllText(path:=tokenWithMagPath)
+        Dim tokenElement As JsonElement =
+            JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
+        client.TokenDataElement = tokenElement
 
-        ' Act
+        ' Act: perform refresh — ensure request was sent; no mag-identifier header expected
         Dim result As JsonElement =
-            Await client.DoRefreshAsync(client.Config, tokenElement, httpClient)
+            Await client.DoRefreshAsync(client.Config,
+                tokenElement,
+                httpClient)
 
-        ' Assert
-        result.IsEmpty.Should().BeFalse()
-        Dim dict As Dictionary(Of String, JsonElement) = Nothing
-        Try
-            dict = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(element:=result)
-        Catch ex As Exception
-            Assert.True(condition:=False,
-                        userMessage:=$"Deserialization of token response failed: {ex.Message}")
-        End Try
-        dict.Should().ContainKey(expected:="access_token")
-        dict(key:="access_token").GetString().Should().Be(expected:="new.access.token")
+        capturedRequest.Should().NotBeNull()
     End Function
 
     <Fact>
@@ -170,40 +165,45 @@ Public Class Client2RefreshTests
     End Function
 
     <Fact>
-    Public Async Function DoRefreshAsync_IncludesMagIdentifierHeader_WhenPresent() As Task
+    Public Async Function DoRefreshAsync_WithClientSecretInTokenData_Succeeds() As Task
         ' Arrange
-        Dim capturedRequest As HttpRequestMessage = Nothing
-        Dim factory As Func(Of HttpRequestMessage, HttpResponseMessage) =
+        Dim handler As New SimpleResponseHandler()
+        Dim tokenResponsePath As String =
+            GetTestDataFile(fileName:="tokenResponse_new.json")
+        Dim tokenResponseJson As String =
+            File.ReadAllText(path:=tokenResponsePath)
+        handler.ResponseFactory =
             Function(req)
-                capturedRequest = req
-                Dim tokenResponsePath3 As String = GetTestDataFile("tokenResponse_tok.json")
-                Dim tokenResponseJson As String = File.ReadAllText(path:=tokenResponsePath3)
                 Return New HttpResponseMessage(statusCode:=HttpStatusCode.OK) With {
                     .Content = New StringContent(content:=tokenResponseJson)}
             End Function
-
-        Dim handler As New CapturingHandler(factory)
         Dim httpClient As New HttpClient(handler)
 
         Dim client As New Client2(serverRegion:=ServerLocation.US, httpClient) With {
             .Config = New ConfigRecord With {.TokenUrl = "https://example.com/token"}}
 
-        ' token element may contain legacy mag-identifier, but client should ignore it
-        Dim tokenWithMagPath As String =
-            GetTestDataFile(fileName:="token_with_mag_and_secret.json")
-        Dim tokenJson As String =
-            File.ReadAllText(path:=tokenWithMagPath)
-        Dim tokenElement As JsonElement =
-            JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
-        client.TokenDataElement = tokenElement
+        ' Prepare tokenElement JSON (legacy client_secret in file will be stripped on read)
+        Dim tokenPath As String = GetTestDataFile("token_with_client_secret.json")
+        Dim tokenJson As String = File.ReadAllText(path:=tokenPath)
+        Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
+        ' Set the client's token data; FileUtilities strips deprecated fields at read time
+        client.SetTokenDataElementForTests(token:=tokenElement)
 
-        ' Act: perform refresh — ensure request was sent; no mag-identifier header expected
+        ' Act
         Dim result As JsonElement =
-            Await client.DoRefreshAsync(client.Config,
-                tokenElement,
-                httpClient)
+            Await client.DoRefreshAsync(client.Config, tokenElement, httpClient)
 
-        capturedRequest.Should().NotBeNull()
+        ' Assert
+        result.IsEmpty.Should().BeFalse()
+        Dim dict As Dictionary(Of String, JsonElement) = Nothing
+        Try
+            dict = JsonSerializer.Deserialize(Of Dictionary(Of String, JsonElement))(element:=result)
+        Catch ex As Exception
+            Assert.True(condition:=False,
+                        userMessage:=$"Deserialization of token response failed: {ex.Message}")
+        End Try
+        dict.Should().ContainKey(expected:="access_token")
+        dict(key:="access_token").GetString().Should().Be(expected:="new.access.token")
     End Function
 
 End Class

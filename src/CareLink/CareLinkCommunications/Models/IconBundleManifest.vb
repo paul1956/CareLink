@@ -6,20 +6,16 @@ Imports System.IO
 Imports System.Text
 
 Friend Class IconBundleManifest
-    Public Property extracted As Boolean
-    Public Property extractedPath As String
-    Public Property extractedAtUtc As Date
-    Public Property serverTimestamp As Date
-    Public Property source As String
-    Public Property files As String()
 
     Public Sub New()
     End Sub
 
-    Public Sub SaveToFile(path As String)
-        Dim contents As String = Me.ToJson()
-        File.WriteAllText(path, contents, encoding:=Encoding.UTF8)
-    End Sub
+    Public Property extracted As Boolean
+    Public Property extractedAtUtc As Date
+    Public Property extractedPath As String
+    Public Property files As String()
+    Public Property serverTimestamp As Date
+    Public Property source As String
 
     Public Shared Function TryLoadFromFile(path As String, ByRef manifest As IconBundleManifest) As Boolean
         manifest = Nothing
@@ -36,5 +32,10 @@ Friend Class IconBundleManifest
             Return False
         End Try
     End Function
+
+    Public Sub SaveToFile(path As String)
+        Dim contents As String = Me.ToJson()
+        File.WriteAllText(path, contents, encoding:=Encoding.UTF8)
+    End Sub
 
 End Class

@@ -69,6 +69,24 @@ Public Class ControlExtensionsTests
     End Sub
 
     <Fact>
+    Public Sub CenterXOnParent_LabelAutoSize_UsesPreferredWidthWhenAvailable()
+        Using parent As New Panel()
+            parent.Width = 300
+            Dim lbl As New Label() With {
+                .AutoSize = True,
+                .Text = New String(c:="X"c, count:=40)}
+            parent.Controls.Add(value:=lbl)
+
+            ' Act
+            lbl.CenterXOnParent()
+
+            ' Assert uses PreferredWidth
+            Dim ctrlWidth As Integer = lbl.PreferredWidth
+            lbl.Left.Should().Be(expected:=(parent.Width - ctrlWidth) \ 2)
+        End Using
+    End Sub
+
+    <Fact>
     Public Sub CenterXOnParent_NoParentOrDisposed_DoesNotThrowAndLeavesLeftUnchanged()
         ' No parent
         Dim ctrl As New Control With {
@@ -92,24 +110,6 @@ Public Class ControlExtensionsTests
             End Sub
         actDisposed.Should().NotThrow()
         d.Left.Should().Be(expected:=7)
-    End Sub
-
-    <Fact>
-    Public Sub CenterXOnParent_LabelAutoSize_UsesPreferredWidthWhenAvailable()
-        Using parent As New Panel()
-            parent.Width = 300
-            Dim lbl As New Label() With {
-                .AutoSize = True,
-                .Text = New String(c:="X"c, count:=40)}
-            parent.Controls.Add(value:=lbl)
-
-            ' Act
-            lbl.CenterXOnParent()
-
-            ' Assert uses PreferredWidth
-            Dim ctrlWidth As Integer = lbl.PreferredWidth
-            lbl.Left.Should().Be(expected:=(parent.Width - ctrlWidth) \ 2)
-        End Using
     End Sub
 
     <Fact>
@@ -144,19 +144,6 @@ Public Class ControlExtensionsTests
     End Sub
 
     <Fact>
-    Public Sub FindControlByName_FindsExistingControl_ReturnsControl()
-        Using parent As New Panel()
-            Dim btn As New Button() With {.Name = "myButton"}
-            parent.Controls.Add(value:=btn)
-
-            Dim result As Control =
-                parent.Controls.FindControlByName(controlName:="myButton")
-            result.Should().NotBeNull()
-            result.Should().BeSameAs(expected:=btn)
-        End Using
-    End Sub
-
-    <Fact>
     Public Sub FindControlByName_DisposedChild_ReturnsNothing()
         Using parent As New Panel()
             Dim btn As New Button() With {.Name = "btn"}
@@ -167,6 +154,19 @@ Public Class ControlExtensionsTests
             Dim result As Control =
                 parent.Controls.FindControlByName(controlName:="btn")
             result.Should().BeNull()
+        End Using
+    End Sub
+
+    <Fact>
+    Public Sub FindControlByName_FindsExistingControl_ReturnsControl()
+        Using parent As New Panel()
+            Dim btn As New Button() With {.Name = "myButton"}
+            parent.Controls.Add(value:=btn)
+
+            Dim result As Control =
+                parent.Controls.FindControlByName(controlName:="myButton")
+            result.Should().NotBeNull()
+            result.Should().BeSameAs(expected:=btn)
         End Using
     End Sub
 

@@ -8,6 +8,27 @@ Imports System.Runtime.CompilerServices
 
 Public Module ClassHelpers
 
+    Private ReadOnly s_centerAlignedTypes As New HashSet(Of String) From {
+        NameOf([Boolean]), "DeleteRow"}
+
+    Private ReadOnly s_leftAlignedTypes As New HashSet(Of String) From {
+        "additionalInfo",
+        "AdditionalInfo",
+        "Date",
+        "DateTime",
+        NameOf(OADate),
+        "RecordNumber",
+        NameOf([String]),
+        "Version"}
+
+    Private ReadOnly s_rightAlignedTypes As New HashSet(Of String) From {
+        "CustomProperty",
+        NameOf([Decimal]),
+        NameOf([Double]),
+        NameOf([Int32]),
+        NameOf([Single]),
+        NameOf([TimeSpan])}
+
     ''' <summary>
     '''  Creates a <see cref="Dictionary"/> that maps class property names to
     '''  <see cref="DataGridViewCellStyle"/> for column align.
@@ -31,27 +52,6 @@ Public Module ClassHelpers
         Dim classType As Type = GetType(T)
         Dim cellStyle As New DataGridViewCellStyle
         If alignmentTable.Count = 0 Then
-            Dim leftAlignedTypes As New HashSet(Of String) From {
-                "additionalInfo",
-                "AdditionalInfo",
-                "Date",
-                "DateTime",
-                NameOf(OADate),
-                "RecordNumber",
-                NameOf([String]),
-                "Version"}
-
-            Dim rightAlignedTypes As New HashSet(Of String) From {
-                "CustomProperty",
-                NameOf([Decimal]),
-                NameOf([Double]),
-                NameOf([Int32]),
-                NameOf([Single]),
-                NameOf([TimeSpan])}
-
-            Dim centerAlignedTypes As New HashSet(Of String) From {
-                NameOf([Boolean]), "DeleteRow"}
-
             For Each [property] As PropertyInfo In classType.GetProperties()
                 Dim objects As Object() =
                     [property].GetCustomAttributes(attributeType:=GetType(ColumnAttribute), inherit:=True)
@@ -60,13 +60,13 @@ Public Module ClassHelpers
 
                 If typeName Is Nothing Then
                     cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleLeft, pad:=New Padding(all:=1))
-                ElseIf leftAlignedTypes.Contains(item:=typeName) Then
+                ElseIf s_leftAlignedTypes.Contains(item:=typeName) Then
                     cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleLeft, pad:=New Padding(all:=1))
-                ElseIf rightAlignedTypes.Contains(item:=typeName) Then
+                ElseIf s_rightAlignedTypes.Contains(item:=typeName) Then
                     cellStyle.SetCellStyle(
                         align:=DataGridViewContentAlignment.MiddleRight,
                         pad:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
-                ElseIf centerAlignedTypes.Contains(item:=typeName) Then
+                ElseIf s_centerAlignedTypes.Contains(item:=typeName) Then
                     cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleCenter, pad:=New Padding(all:=0))
                 Else
                     cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleLeft, pad:=New Padding(all:=1))

@@ -6,22 +6,6 @@ Imports System.Runtime.CompilerServices
 
 Friend Module Form1TransmitterBatteryHelper
 
-    <Extension>
-    Private Sub GetBatteryImage(pictureBox As PictureBox, gstBatteryLevel As Integer)
-        Select Case gstBatteryLevel
-            Case 100
-                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryFull)
-            Case > 50
-                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryOK)
-            Case > 20
-                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryMedium)
-            Case > 0
-                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryLow)
-            Case Else
-                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryUnknown)
-        End Select
-    End Sub
-
     Private Sub Form1SensorDataUpdate()
         If PatientData.ConduitSensorInRange Xor PatientData.AppModelType = "INSTINCT_10" Then
             If PatientData.CgmInfo.SensorType = "DURABLE" Then
@@ -53,6 +37,22 @@ Friend Module Form1TransmitterBatteryHelper
             Form1.TransmitterBatteryPictureBox.UpdatePictureBox(imageId:=ImageEnum.PumpConnectivityToTransmitterNotOK)
             Form1.TransmitterBatteryPercentLabel.Text = "N/A"
         End If
+    End Sub
+
+    <Extension>
+    Private Sub GetBatteryImage(pictureBox As PictureBox, gstBatteryLevel As Integer)
+        Select Case gstBatteryLevel
+            Case 100
+                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryFull)
+            Case > 50
+                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryOK)
+            Case > 20
+                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryMedium)
+            Case > 0
+                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryLow)
+            Case Else
+                pictureBox.UpdatePictureBox(imageId:=ImageEnum.TransmitterBatteryUnknown)
+        End Select
     End Sub
 
     ''' <summary>

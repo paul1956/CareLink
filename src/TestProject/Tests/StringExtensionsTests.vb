@@ -289,6 +289,13 @@ Public Class StringExtensionsTests
     End Sub
 
     <Fact>
+    Public Sub ToTitle_SeparateNumberInsertsSpaceLowerDigit_WhenSeparateNumbersFirsIsDigit()
+        Dim input As String = "1test"
+        Dim result As String = input.ToTitle(separateDigits:=True)
+        result.Should().Be(expected:="1 Test")
+    End Sub
+
+    <Fact>
     Public Sub ToTitle_SeparateNumbersDoesNotSeparate_WhenSeparateNumbersIsFalse()
         Dim input As String = "test1test"
         Dim result As String = input.ToTitle(separateDigits:=False)
@@ -302,13 +309,6 @@ Public Class StringExtensionsTests
         Dim result As String = input.ToTitle(separateDigits:=True)
         ' Expects a space before and after the number
         result.Should().Be(expected:="Test 1 Test")
-    End Sub
-
-    <Fact>
-    Public Sub ToTitle_SeparateNumberInsertsSpaceLowerDigit_WhenSeparateNumbersFirsIsDigit()
-        Dim input As String = "1test"
-        Dim result As String = input.ToTitle(separateDigits:=True)
-        result.Should().Be(expected:="1 Test")
     End Sub
 
     <Fact>

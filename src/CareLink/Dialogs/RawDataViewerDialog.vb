@@ -13,13 +13,7 @@ Public Class RawDataViewerDialog
     Private Const EM_GETSCROLLPOS As Integer = &H4DD
     Private Const EM_SETSCROLLPOS As Integer = &H4DE
 
-    Private Shared ReadOnly s_timestampDifference As New Regex(
-        pattern:="^\$.*\[""[^""\]]*Time[^""\]]*""\] = (?<value>\d{10}|\d{13})$",
-        options:=RegexOptions.IgnoreCase)
-
-    Private Shared ReadOnly s_timestampLine As New Regex(
-        pattern:="^\s*""[^""]*Time[^""]*""\s*:\s*(?<value>\d{10}|\d{13}),?$",
-        options:=RegexOptions.IgnoreCase)
+    Private Const MaxDurationMinutes As Long = 14L * 24L * 60L
 
     Private Shared ReadOnly s_durationDifference As New Regex(
         pattern:="^\$.*\[""(?<name>[^""\]]*Duration[^""\]]*)""\] = (?<value>\d+)$",
@@ -29,17 +23,23 @@ Public Class RawDataViewerDialog
         pattern:="^\s*""(?<name>[^""]*Duration[^""]*)""\s*:\s*(?<value>\d+),?$",
         options:=RegexOptions.IgnoreCase)
 
-    Private Const MaxDurationMinutes As Long = 14L * 24L * 60L
+    Private Shared ReadOnly s_timestampDifference As New Regex(
+        pattern:="^\$.*\[""[^""\]]*Time[^""\]]*""\] = (?<value>\d{10}|\d{13})$",
+        options:=RegexOptions.IgnoreCase)
+
+    Private Shared ReadOnly s_timestampLine As New Regex(
+        pattern:="^\s*""[^""]*Time[^""]*""\s*:\s*(?<value>\d{10}|\d{13}),?$",
+        options:=RegexOptions.IgnoreCase)
 
     Private ReadOnly _currentWordWrap As Boolean
     Private ReadOnly _previousScrollBars As RichTextBoxScrollBars
-    Private _displayedCurrent As JsonNode
-    Private _displayedPrevious As JsonNode
     Private _contextMenu As New ContextMenuStrip
     Private _copyMenuItem As ToolStripMenuItem
     Private _currentBounds As Rectangle
     Private _currentDifferences As String
     Private _currentText As String
+    Private _displayedCurrent As JsonNode
+    Private _displayedPrevious As JsonNode
     Private _hasDifferences As Boolean
     Private _lastSearchIndex As Integer = 0
     Private _previousDifferences As String
@@ -113,6 +113,36 @@ Public Class RawDataViewerDialog
         Return String.Join(separator:=vbLf, value:=lines)
     End Function
 
+    Private Shared Sub CollectValues(node As JsonNode, path As String, values As Dictionary(Of String, JsonNode))
+        If TypeOf node Is JsonObject AndAlso DirectCast(node, JsonObject).Count > 0 Then
+            For Each entry As KeyValuePair(Of String, JsonNode) In DirectCast(node, JsonObject)
+                CollectValues(node:=entry.Value, path:=$"{path}[{entry.Key.ToJson}]", values)
+            Next
+        ElseIf TypeOf node Is JsonArray AndAlso DirectCast(node, JsonArray).Count > 0 Then
+            Dim array As JsonArray = DirectCast(node, JsonArray)
+            For index As Integer = 0 To array.Count - 1
+                CollectValues(node:=array(index), path:=$"{path}[{index.ToString(Provider)}]", values)
+            Next
+        Else
+            values.Add(key:=path, value:=node)
+        End If
+    End Sub
+
+    Private Shared Function ComparableData(json As JsonElement) As JsonNode
+        If json.ValueKind = JsonValueKind.Undefined OrElse json.ValueKind = JsonValueKind.Null Then
+            Return Nothing
+        End If
+
+        Dim node As JsonNode = JsonNode.Parse(json:=json.GetRawText())
+        Dim root As JsonObject = TryCast(node, JsonObject)
+        root?.Remove(propertyName:="currentServerTime")
+        Return node
+    End Function
+
+    Private Shared Function FormatDifference(path As String, value As JsonNode) As String
+        Return $"{path} = {If(value Is Nothing, "null", value.ToJsonString())}"
+    End Function
+
     ''' <summary>
     '''  Returns a readable duration for a line holding a numeric "Duration" element,
     '''  or an empty string. Snoozed Duration values are seconds, names containing "Hour" are hours,
@@ -165,36 +195,6 @@ Public Class RawDataViewerDialog
         End If
         Dim rest As String = remainder.ToHrMinText()
         Return If(days > 0, $"{dayText}, {rest}", rest)
-    End Function
-
-    Private Shared Sub CollectValues(node As JsonNode, path As String, values As Dictionary(Of String, JsonNode))
-        If TypeOf node Is JsonObject AndAlso DirectCast(node, JsonObject).Count > 0 Then
-            For Each entry As KeyValuePair(Of String, JsonNode) In DirectCast(node, JsonObject)
-                CollectValues(node:=entry.Value, path:=$"{path}[{entry.Key.ToJson}]", values)
-            Next
-        ElseIf TypeOf node Is JsonArray AndAlso DirectCast(node, JsonArray).Count > 0 Then
-            Dim array As JsonArray = DirectCast(node, JsonArray)
-            For index As Integer = 0 To array.Count - 1
-                CollectValues(node:=array(index), path:=$"{path}[{index.ToString(Provider)}]", values)
-            Next
-        Else
-            values.Add(key:=path, value:=node)
-        End If
-    End Sub
-
-    Private Shared Function FormatDifference(path As String, value As JsonNode) As String
-        Return $"{path} = {If(value Is Nothing, "null", value.ToJsonString())}"
-    End Function
-
-    Private Shared Function ComparableData(json As JsonElement) As JsonNode
-        If json.ValueKind = JsonValueKind.Undefined OrElse json.ValueKind = JsonValueKind.Null Then
-            Return Nothing
-        End If
-
-        Dim node As JsonNode = JsonNode.Parse(json:=json.GetRawText())
-        Dim root As JsonObject = TryCast(node, JsonObject)
-        root?.Remove(propertyName:="currentServerTime")
-        Return node
     End Function
 
     Private Shared Sub RemoveMatchingArrayValues(previous As JsonNode, current As JsonNode, path As String,
@@ -282,33 +282,6 @@ Public Class RawDataViewerDialog
 
         Me.LoadData(prevJson:=PreviousPatientDataElement, json:=current)
         Me.btnRefresh.Enabled = False
-    End Sub
-
-    Private Sub OnPatientDataElementUpdated()
-        If Me.IsDisposed Then
-            Return
-        End If
-
-        If Me.InvokeRequired Then
-            If Me.IsHandleCreated Then
-                Me.BeginInvoke(method:=New Action(AddressOf Me.OnPatientDataElementUpdated))
-            End If
-            Return
-        End If
-
-        ' Once Refresh is enabled there is nothing more to detect until it is clicked.
-        If Me.btnRefresh.Enabled Then
-            Return
-        End If
-
-        If Not JsonNode.DeepEquals(_displayedPrevious, ComparableData(json:=PreviousPatientDataElement)) OrElse
-           Not JsonNode.DeepEquals(_displayedCurrent, ComparableData(json:=PatientDataElement)) Then
-            Me.btnRefresh.Enabled = True
-        End If
-    End Sub
-
-    Private Sub RawDataViewerDialog_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
-        RemoveHandler PatientDataElementUpdated, AddressOf Me.OnPatientDataElementUpdated
     End Sub
 
     ''' <summary>
@@ -484,6 +457,33 @@ Public Class RawDataViewerDialog
     Private Sub OK_Button_Click(sender As Object, e As EventArgs) Handles OK_Button.Click
         Me.DialogResult = DialogResult.OK
         Me.Close()
+    End Sub
+
+    Private Sub OnPatientDataElementUpdated()
+        If Me.IsDisposed Then
+            Return
+        End If
+
+        If Me.InvokeRequired Then
+            If Me.IsHandleCreated Then
+                Me.BeginInvoke(method:=New Action(AddressOf Me.OnPatientDataElementUpdated))
+            End If
+            Return
+        End If
+
+        ' Once Refresh is enabled there is nothing more to detect until it is clicked.
+        If Me.btnRefresh.Enabled Then
+            Return
+        End If
+
+        If Not JsonNode.DeepEquals(_displayedPrevious, ComparableData(json:=PreviousPatientDataElement)) OrElse
+           Not JsonNode.DeepEquals(_displayedCurrent, ComparableData(json:=PatientDataElement)) Then
+            Me.btnRefresh.Enabled = True
+        End If
+    End Sub
+
+    Private Sub RawDataViewerDialog_Disposed(sender As Object, e As EventArgs) Handles Me.Disposed
+        RemoveHandler PatientDataElementUpdated, AddressOf Me.OnPatientDataElementUpdated
     End Sub
 
     ''' <summary>

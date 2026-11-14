@@ -19,14 +19,14 @@ Friend Class DataGridViewNumericUpDownEditingControl
     Private _dataGridView As DataGridView
 
     ''' <summary>
-    '''  Indicates whether the editing control's value has changed.
-    ''' </summary>
-    Private _valueChanged As Boolean
-
-    ''' <summary>
     '''  The row index in which the editing control resides.
     ''' </summary>
     Private _rowIndex As Integer
+
+    ''' <summary>
+    '''  Indicates whether the editing control's value has changed.
+    ''' </summary>
+    Private _valueChanged As Boolean
 
     ''' <summary>
     '''  Initializes a new instance of the
@@ -38,37 +38,6 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Sub
 
     ' Beginning of the IDataGridViewEditingControl interface implementation
-
-    ''' <summary>
-    '''  Gets or sets the <see cref="DataGridView"/> that uses this editing control.
-    ''' </summary>
-    Public Overridable Property EditingControlDataGridView As DataGridView _
-        Implements IDataGridViewEditingControl.EditingControlDataGridView
-
-        Get
-            Return _dataGridView
-        End Get
-
-        Set(value As DataGridView)
-            _dataGridView = value
-        End Set
-    End Property
-
-    ''' <summary>
-    '''  Gets or sets the current formatted value of the editing control.
-    ''' </summary>
-    Public Overridable Property EditingControlFormattedValue As Object _
-        Implements IDataGridViewEditingControl.EditingControlFormattedValue
-
-        Get
-            Const context As DataGridViewDataErrorContexts = DataGridViewDataErrorContexts.Formatting
-            Return Me.GetEditingControlFormattedValue(context)
-        End Get
-
-        Set(value As Object)
-            Me.Text = CStr(value)
-        End Set
-    End Property
 
     ''' <summary>
     '''  Gets or sets the row index in which the editing control resides.
@@ -102,6 +71,37 @@ Friend Class DataGridViewNumericUpDownEditingControl
     End Property
 
     ''' <summary>
+    '''  Gets or sets the <see cref="DataGridView"/> that uses this editing control.
+    ''' </summary>
+    Public Overridable Property EditingControlDataGridView As DataGridView _
+        Implements IDataGridViewEditingControl.EditingControlDataGridView
+
+        Get
+            Return _dataGridView
+        End Get
+
+        Set(value As DataGridView)
+            _dataGridView = value
+        End Set
+    End Property
+
+    ''' <summary>
+    '''  Gets or sets the current formatted value of the editing control.
+    ''' </summary>
+    Public Overridable Property EditingControlFormattedValue As Object _
+        Implements IDataGridViewEditingControl.EditingControlFormattedValue
+
+        Get
+            Const context As DataGridViewDataErrorContexts = DataGridViewDataErrorContexts.Formatting
+            Return Me.GetEditingControlFormattedValue(context)
+        End Get
+
+        Set(value As Object)
+            Me.Text = CStr(value)
+        End Set
+    End Property
+
+    ''' <summary>
     '''  Gets the cursor that must be used for the editing panel
     '''  (the parent of the editing control).
     ''' </summary>
@@ -124,6 +124,91 @@ Friend Class DataGridViewNumericUpDownEditingControl
             Return False
         End Get
     End Property
+
+    ''' <summary>
+    '''  Updates the local dirty state and notifies the grid of the value change.
+    ''' </summary>
+    Private Sub NotifyDataGridViewOfValueChange()
+        If Not _valueChanged Then
+            _valueChanged = True
+            _dataGridView.NotifyCurrentCellDirty(dirty:=True)
+        End If
+    End Sub
+
+    ''' <summary>
+    '''  Handles the <see cref="Control.KeyPress"/> event to detect value changes
+    '''  and notify the grid.
+    ''' </summary>
+    ''' <param name="e">
+    '''  A <see cref="KeyPressEventArgs"/> that contains the event data.
+    ''' </param>
+    Protected Overrides Sub OnKeyPress(e As KeyPressEventArgs)
+        MyBase.OnKeyPress(e)
+
+        ' The value changes when a digit, the decimal separator, the group separator or
+        ' the negative sign is pressed.
+        Dim notifyValueChange As Boolean = False
+        If Char.IsDigit(e.KeyChar) Then
+            notifyValueChange = True
+        Else
+            Dim numberFormatInfo As NumberFormatInfo = CultureInfo.CurrentCulture.NumberFormat
+            Dim decimalSeparator As String = numberFormatInfo.NumberDecimalSeparator
+            Dim groupSeparator As String = numberFormatInfo.NumberGroupSeparator
+            Dim negativeSign As String = numberFormatInfo.NegativeSign
+            If IsNotNullOrEmpty(decimalSeparator) AndAlso decimalSeparator.Length = 1 Then
+                notifyValueChange = decimalSeparator(index:=0) = e.KeyChar
+            End If
+            Dim validGroupSeparator As Boolean = IsNotNullOrEmpty(value:=groupSeparator)
+            If Not notifyValueChange AndAlso validGroupSeparator AndAlso groupSeparator.Length = 1 Then
+                notifyValueChange = groupSeparator(index:=0) = e.KeyChar
+            End If
+
+            Dim validnegativeSign As Boolean = IsNotNullOrEmpty(value:=negativeSign)
+            If Not notifyValueChange AndAlso validnegativeSign AndAlso negativeSign.Length = 1 Then
+                notifyValueChange = negativeSign(index:=0) = e.KeyChar
+            End If
+        End If
+
+        If notifyValueChange Then
+            ' Let the DataGridView know about the value change
+            Me.NotifyDataGridViewOfValueChange()
+        End If
+    End Sub
+
+    ''' <summary>
+    '''  Handles the <see cref="NumericUpDown.ValueChanged"/> event to notify the
+    '''  grid of value changes.
+    ''' </summary>
+    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    Protected Overrides Sub OnValueChanged(e As EventArgs)
+        MyBase.OnValueChanged(e)
+        If Me.Focused Then
+            ' Let the DataGridView know about the value change
+            Me.NotifyDataGridViewOfValueChange()
+        End If
+    End Sub
+
+    ''' <summary>
+    '''  Forwards certain keyboard messages to the inner <see cref="TextBox"/>
+    '''  of the <see cref="NumericUpDown"/> control
+    '''  so that the first character pressed appears in it.
+    ''' </summary>
+    ''' <param name="m">
+    '''  A <see cref="Message"/> that represents the window message to process.
+    ''' </param>
+    ''' <returns>
+    '''  <see langword="True"/> if the message was processed;
+    '''  otherwise, <see langword="False"/>.
+    ''' </returns>
+    Protected Overrides Function ProcessKeyEventArgs(ByRef m As Message) As Boolean
+        Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
+        If textBox IsNot Nothing Then
+            SendMessage(hWnd:=textBox.Handle, m.Msg, m.WParam, m.LParam)
+            Return True
+        Else
+            Return MyBase.ProcessKeyEventArgs(m)
+        End If
+    End Function
 
     ''' <summary>
     '''  Applies the specified cell style to the editing control.
@@ -292,90 +377,5 @@ Friend Class DataGridViewNumericUpDownEditingControl
             End If
         End If
     End Sub
-
-    ''' <summary>
-    '''  Updates the local dirty state and notifies the grid of the value change.
-    ''' </summary>
-    Private Sub NotifyDataGridViewOfValueChange()
-        If Not _valueChanged Then
-            _valueChanged = True
-            _dataGridView.NotifyCurrentCellDirty(dirty:=True)
-        End If
-    End Sub
-
-    ''' <summary>
-    '''  Handles the <see cref="Control.KeyPress"/> event to detect value changes
-    '''  and notify the grid.
-    ''' </summary>
-    ''' <param name="e">
-    '''  A <see cref="KeyPressEventArgs"/> that contains the event data.
-    ''' </param>
-    Protected Overrides Sub OnKeyPress(e As KeyPressEventArgs)
-        MyBase.OnKeyPress(e)
-
-        ' The value changes when a digit, the decimal separator, the group separator or
-        ' the negative sign is pressed.
-        Dim notifyValueChange As Boolean = False
-        If Char.IsDigit(e.KeyChar) Then
-            notifyValueChange = True
-        Else
-            Dim numberFormatInfo As NumberFormatInfo = CultureInfo.CurrentCulture.NumberFormat
-            Dim decimalSeparator As String = numberFormatInfo.NumberDecimalSeparator
-            Dim groupSeparator As String = numberFormatInfo.NumberGroupSeparator
-            Dim negativeSign As String = numberFormatInfo.NegativeSign
-            If IsNotNullOrEmpty(decimalSeparator) AndAlso decimalSeparator.Length = 1 Then
-                notifyValueChange = decimalSeparator(index:=0) = e.KeyChar
-            End If
-            Dim validGroupSeparator As Boolean = IsNotNullOrEmpty(value:=groupSeparator)
-            If Not notifyValueChange AndAlso validGroupSeparator AndAlso groupSeparator.Length = 1 Then
-                notifyValueChange = groupSeparator(index:=0) = e.KeyChar
-            End If
-
-            Dim validnegativeSign As Boolean = IsNotNullOrEmpty(value:=negativeSign)
-            If Not notifyValueChange AndAlso validnegativeSign AndAlso negativeSign.Length = 1 Then
-                notifyValueChange = negativeSign(index:=0) = e.KeyChar
-            End If
-        End If
-
-        If notifyValueChange Then
-            ' Let the DataGridView know about the value change
-            Me.NotifyDataGridViewOfValueChange()
-        End If
-    End Sub
-
-    ''' <summary>
-    '''  Handles the <see cref="NumericUpDown.ValueChanged"/> event to notify the
-    '''  grid of value changes.
-    ''' </summary>
-    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
-    Protected Overrides Sub OnValueChanged(e As EventArgs)
-        MyBase.OnValueChanged(e)
-        If Me.Focused Then
-            ' Let the DataGridView know about the value change
-            Me.NotifyDataGridViewOfValueChange()
-        End If
-    End Sub
-
-    ''' <summary>
-    '''  Forwards certain keyboard messages to the inner <see cref="TextBox"/>
-    '''  of the <see cref="NumericUpDown"/> control
-    '''  so that the first character pressed appears in it.
-    ''' </summary>
-    ''' <param name="m">
-    '''  A <see cref="Message"/> that represents the window message to process.
-    ''' </param>
-    ''' <returns>
-    '''  <see langword="True"/> if the message was processed;
-    '''  otherwise, <see langword="False"/>.
-    ''' </returns>
-    Protected Overrides Function ProcessKeyEventArgs(ByRef m As Message) As Boolean
-        Dim textBox As TextBox = TryCast(Me.Controls(index:=1), TextBox)
-        If textBox IsNot Nothing Then
-            SendMessage(hWnd:=textBox.Handle, m.Msg, m.WParam, m.LParam)
-            Return True
-        Else
-            Return MyBase.ProcessKeyEventArgs(m)
-        End If
-    End Function
 
 End Class

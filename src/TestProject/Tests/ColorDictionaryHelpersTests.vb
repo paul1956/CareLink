@@ -13,10 +13,10 @@ Imports Xunit
 Public Class ColorDictionaryHelpersTests
     Implements IDisposable
 
-    Private ReadOnly _graphColorsPath As String = GetGraphColorsFileNameWithPath()
-    Private ReadOnly _backupPath As String = Path.Combine(Path.GetTempPath(), "GraphColors.Csv.bak")
-    Private ReadOnly _originalDictionary As New Dictionary(Of String, KnownColor)(dictionary:=GraphColorDictionary)
     Private ReadOnly _backupMade As Boolean
+    Private ReadOnly _backupPath As String = Path.Combine(Path.GetTempPath(), "GraphColors.Csv.bak")
+    Private ReadOnly _graphColorsPath As String = GetGraphColorsFileNameWithPath()
+    Private ReadOnly _originalDictionary As New Dictionary(Of String, KnownColor)(dictionary:=GraphColorDictionary)
 
     Public Sub New()
         ' Backup existing file if present
@@ -24,6 +24,29 @@ Public Class ColorDictionaryHelpersTests
             File.Copy(sourceFileName:=_graphColorsPath, destFileName:=_backupPath, overwrite:=True)
             _backupMade = True
         End If
+    End Sub
+
+    Public Sub Dispose() Implements IDisposable.Dispose
+        ' CA1816 requires calling GC.SuppressFinalize in Dispose
+        GC.SuppressFinalize(obj:=Me)
+
+        ' Restore in-memory dictionary
+        GraphColorDictionary.Clear()
+        For Each kvp As KeyValuePair(Of String, KnownColor) In _originalDictionary
+            GraphColorDictionary.Add(kvp.Key, kvp.Value)
+        Next
+
+        ' Restore or remove on-disk file
+        Try
+            If _backupMade AndAlso File.Exists(path:=_backupPath) Then
+                File.Copy(sourceFileName:=_backupPath, destFileName:=_graphColorsPath, overwrite:=True)
+                File.Delete(path:=_backupPath)
+            ElseIf File.Exists(path:=_graphColorsPath) Then
+                File.Delete(path:=_graphColorsPath)
+            End If
+        Catch
+            ' Best effort - ignore errors
+        End Try
     End Sub
 
     <Fact>
@@ -34,6 +57,16 @@ Public Class ColorDictionaryHelpersTests
         ' Assert
         bs.Should().NotBeNull()
         CType(bs.DataSource, Dictionary(Of String, KnownColor)).Should().BeSameAs(expected:=GraphColorDictionary)
+    End Sub
+
+    <Fact>
+    Public Sub GetGraphLineColor_ForOtherKey_ReturnsOpaqueBaseColor()
+        ' Act
+        Dim c As Color = GetGraphLineColor(key:="Active Insulin")
+
+        ' Assert
+        c.A.Should().Be(expected:=255)
+        c.Should().Be(expected:=GraphColorDictionary(key:="Active Insulin").ToColor())
     End Sub
 
     <Fact>
@@ -50,16 +83,6 @@ Public Class ColorDictionaryHelpersTests
         c.R.Should().Be(expected:=baseColor.R)
         c.G.Should().Be(expected:=baseColor.G)
         c.B.Should().Be(expected:=baseColor.B)
-    End Sub
-
-    <Fact>
-    Public Sub GetGraphLineColor_ForOtherKey_ReturnsOpaqueBaseColor()
-        ' Act
-        Dim c As Color = GetGraphLineColor(key:="Active Insulin")
-
-        ' Assert
-        c.A.Should().Be(expected:=255)
-        c.Should().Be(expected:=GraphColorDictionary(key:="Active Insulin").ToColor())
     End Sub
 
     <Fact>
@@ -84,29 +107,6 @@ Public Class ColorDictionaryHelpersTests
         ' Assert file contains the updated KnownColor name for the key
         Dim text As String = File.ReadAllText(path:=_graphColorsPath)
         text.Should().Contain(expected:="Active Insulin,Lime,")
-    End Sub
-
-    Public Sub Dispose() Implements IDisposable.Dispose
-        ' CA1816 requires calling GC.SuppressFinalize in Dispose
-        GC.SuppressFinalize(obj:=Me)
-
-        ' Restore in-memory dictionary
-        GraphColorDictionary.Clear()
-        For Each kvp As KeyValuePair(Of String, KnownColor) In _originalDictionary
-            GraphColorDictionary.Add(kvp.Key, kvp.Value)
-        Next
-
-        ' Restore or remove on-disk file
-        Try
-            If _backupMade AndAlso File.Exists(path:=_backupPath) Then
-                File.Copy(sourceFileName:=_backupPath, destFileName:=_graphColorsPath, overwrite:=True)
-                File.Delete(path:=_backupPath)
-            ElseIf File.Exists(path:=_graphColorsPath) Then
-                File.Delete(path:=_graphColorsPath)
-            End If
-        Catch
-            ' Best effort - ignore errors
-        End Try
     End Sub
 
 End Class

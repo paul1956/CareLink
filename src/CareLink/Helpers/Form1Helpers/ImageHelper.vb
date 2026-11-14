@@ -14,24 +14,6 @@ Friend Module ImageHelper
     Private ReadOnly s_composites As New Dictionary(Of ImageEnum, CompositeEntry)
 
     ''' <summary>
-    '''  The single cached composite for an image, with the parameters it was built from.
-    ''' </summary>
-    Private NotInheritable Class CompositeEntry
-
-        Public Sub New(bitmap As Bitmap, canvasSize As Size, percent As Single, fillColor As Color)
-            Me.Bitmap = bitmap
-            Me.CanvasSize = canvasSize
-            Me.Percent = percent
-            Me.FillColor = fillColor
-        End Sub
-
-        Public ReadOnly Property Bitmap As Bitmap
-        Public ReadOnly Property CanvasSize As Size
-        Public ReadOnly Property FillColor As Color
-        Public ReadOnly Property Percent As Single
-    End Class
-
-    ''' <summary>
     '''  Determines whether the cached composite still looks the same as one built for the requested values.
     ''' </summary>
     Private Function IsCacheValid(entry As CompositeEntry,
@@ -107,4 +89,21 @@ Friend Module ImageHelper
         End SyncLock
     End Function
 
+    ''' <summary>
+    '''  The single cached composite for an image, with the parameters it was built from.
+    ''' </summary>
+    Private NotInheritable Class CompositeEntry
+
+        Public Sub New(bitmap As Bitmap, canvasSize As Size, percent As Single, fillColor As Color)
+            Me.Bitmap = bitmap
+            Me.CanvasSize = canvasSize
+            Me.Percent = percent
+            Me.FillColor = fillColor
+        End Sub
+
+        Public ReadOnly Property Bitmap As Bitmap
+        Public ReadOnly Property CanvasSize As Size
+        Public ReadOnly Property FillColor As Color
+        Public ReadOnly Property Percent As Single
+    End Class
 End Module

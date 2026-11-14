@@ -40,6 +40,21 @@ Public Module BasalListExtensions
     End Function
 
     ''' <summary>
+    '''  Returns the specified list of <see cref="Basal"/> objects,
+    '''  or a new empty list if the original is empty.
+    ''' </summary>
+    ''' <param name="basalList">The list of <see cref="Basal"/> objects.</param>
+    ''' <returns>
+    '''  The original list if not empty; otherwise, a new empty list.
+    ''' </returns>
+    <Extension>
+    Friend Function ClassCollection(basalList As List(Of Basal)) As List(Of Basal)
+        Return If(basalList.IsEmpty,
+                  New List(Of Basal),
+                  basalList)
+    End Function
+
+    ''' <summary>
     '''  Gets the basal rate per hour from the specified list
     '''  of <see cref="Basal"/> objects.
     ''' </summary>
@@ -67,21 +82,6 @@ Public Module BasalListExtensions
         Return If(basalList.IsEmpty,
                   String.Empty,
                   $"- {basalList(index:=0).ActiveBasalPattern}")
-    End Function
-
-    ''' <summary>
-    '''  Returns the specified list of <see cref="Basal"/> objects,
-    '''  or a new empty list if the original is empty.
-    ''' </summary>
-    ''' <param name="basalList">The list of <see cref="Basal"/> objects.</param>
-    ''' <returns>
-    '''  The original list if not empty; otherwise, a new empty list.
-    ''' </returns>
-    <Extension>
-    Friend Function ClassCollection(basalList As List(Of Basal)) As List(Of Basal)
-        Return If(basalList.IsEmpty,
-                  New List(Of Basal),
-                  basalList)
     End Function
 
 End Module

@@ -15,36 +15,6 @@ Public Class MathExtensionsTests
     End Sub
 
     <Fact>
-    Public Sub RoundToSingle_WithDigits3_Uses025Increment()
-        ' Arrange
-        Dim value As Single = 1.0375F
-        Dim expected As Single = 1.05F
-
-        ' Act
-        Dim actual As Single = value.RoundToStep(flex:=False)
-
-        ' Assert
-        actual.Should().BeApproximately(expectedValue:=expected, precision:=0.0001F)
-    End Sub
-
-    <Fact>
-    Public Sub RoundToSingle_WithDigits_RoundsToDecimalPlaces()
-        ' Arrange
-        Dim value As Single = 1.2345F
-        Dim expected As Single = 1.23F
-
-        ' Act
-        Dim actual As Single = value.RoundToSingle(digits:=2)
-
-        ' Assert
-        actual.Should().Be(expected)
-        Dim largerValue As Single = 12.345F
-        Dim negativeValue As Single = -1.2345F
-        largerValue.RoundToSingle(digits:=2).Should().Be(expected:=12.35F)
-        negativeValue.RoundToSingle(digits:=2).Should().Be(expected:=-1.23F)
-    End Sub
-
-    <Fact>
     Public Sub AlmostZero_DoubleAndSingle_BehaveAsExpected()
         ' Arrange
         Dim smallDouble As Double = 0.0000005
@@ -134,6 +104,36 @@ Public Class MathExtensionsTests
 
         Dim nanD As Double = Double.NaN
         Assert.True(condition:=Double.IsNaN(nanD.RoundToStep(flex:=False)))
+    End Sub
+
+    <Fact>
+    Public Sub RoundToSingle_WithDigits_RoundsToDecimalPlaces()
+        ' Arrange
+        Dim value As Single = 1.2345F
+        Dim expected As Single = 1.23F
+
+        ' Act
+        Dim actual As Single = value.RoundToSingle(digits:=2)
+
+        ' Assert
+        actual.Should().Be(expected)
+        Dim largerValue As Single = 12.345F
+        Dim negativeValue As Single = -1.2345F
+        largerValue.RoundToSingle(digits:=2).Should().Be(expected:=12.35F)
+        negativeValue.RoundToSingle(digits:=2).Should().Be(expected:=-1.23F)
+    End Sub
+
+    <Fact>
+    Public Sub RoundToSingle_WithDigits3_Uses025Increment()
+        ' Arrange
+        Dim value As Single = 1.0375F
+        Dim expected As Single = 1.05F
+
+        ' Act
+        Dim actual As Single = value.RoundToStep(flex:=False)
+
+        ' Assert
+        actual.Should().BeApproximately(expectedValue:=expected, precision:=0.0001F)
     End Sub
 
 End Class

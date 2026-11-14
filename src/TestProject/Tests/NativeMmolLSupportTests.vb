@@ -32,25 +32,6 @@ Public Class NativeMmolLSupportTests
     End Sub
 
     <Fact>
-    Public Sub GetSgFormat_WithoutSign_ReturnsCorrectFormat()
-        GetSgFormat(nativeMmolL:=True).Should().Be(expected:="0.0")
-        GetSgFormat(nativeMmolL:=False).Should().Be(expected:="0")
-    End Sub
-
-    <Fact>
-    Public Sub GetSgFormat_WithoutSign_ReturnsCorrectFormat_WithCulture()
-        GetSgFormat(nativeMmolL:=True, withSign:=False).Should().Be(expected:="0.0")
-        GetSgFormat(nativeMmolL:=False, withSign:=False).Should().Be(expected:="0")
-        RestoreDefaults()
-    End Sub
-
-    <Fact>
-    Public Sub GetSgFormat_WithSign_ReturnsCorrectFormat()
-        GetSgFormat(nativeMmolL:=True, withSign:=True).Should().Be(expected:="+0.0;-0.0;0.0")
-        GetSgFormat(nativeMmolL:=False, withSign:=True).Should().Be(expected:="+0;-0;0")
-    End Sub
-
-    <Fact>
     Public Sub GetSgFormat_UsesCurrentUICultureDecimalSeparator()
         Dim oldUi As CultureInfo = CultureInfo.CurrentUICulture
         Try
@@ -67,6 +48,25 @@ Public Class NativeMmolLSupportTests
             Threading.Thread.CurrentThread.CurrentUICulture = oldUi
             RestoreDefaults()
         End Try
+    End Sub
+
+    <Fact>
+    Public Sub GetSgFormat_WithoutSign_ReturnsCorrectFormat()
+        GetSgFormat(nativeMmolL:=True).Should().Be(expected:="0.0")
+        GetSgFormat(nativeMmolL:=False).Should().Be(expected:="0")
+    End Sub
+
+    <Fact>
+    Public Sub GetSgFormat_WithoutSign_ReturnsCorrectFormat_WithCulture()
+        GetSgFormat(nativeMmolL:=True, withSign:=False).Should().Be(expected:="0.0")
+        GetSgFormat(nativeMmolL:=False, withSign:=False).Should().Be(expected:="0")
+        RestoreDefaults()
+    End Sub
+
+    <Fact>
+    Public Sub GetSgFormat_WithSign_ReturnsCorrectFormat()
+        GetSgFormat(nativeMmolL:=True, withSign:=True).Should().Be(expected:="+0.0;-0.0;0.0")
+        GetSgFormat(nativeMmolL:=False, withSign:=True).Should().Be(expected:="+0;-0;0")
     End Sub
 
 End Class

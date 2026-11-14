@@ -5,13 +5,12 @@
 Imports System.Runtime.CompilerServices
 
 Public Module RichTextBoxExtensions
-    Public Const LeftPanelTotalWidth As Integer = 54
-    Public Const RightPanelTotalWidth As Integer = 66
-    Public Const LeftColumnTotalWidth As Integer = 34
+    Public Const Indent32 As String = "                                "
     Public Const Indent4 As String = "    "
     Public Const Indent8 As String = "        "
-    Public Const Indent32 As String = "                                "
-
+    Public Const LeftColumnTotalWidth As Integer = 34
+    Public Const LeftPanelTotalWidth As Integer = 54
+    Public Const RightPanelTotalWidth As Integer = 66
     Public ReadOnly Property FixedWidthBoldFont As New Font(familyName:="Consolas", emSize:=14, style:=FontStyle.Bold)
 
     Public ReadOnly Property FixedWidthFont As New Font(familyName:="Consolas", emSize:=14, style:=FontStyle.Regular)
@@ -45,7 +44,7 @@ Public Module RichTextBoxExtensions
     <Extension>
     Friend Function AlignCenter(text As String, totalWidth As Integer) As String
         If text.Length Mod 2 <> 0 Then
-            text = " " & text
+            text = $" {text}"
         End If
         Dim pad As Integer = (totalWidth - text.Length) \ 2
         Return If(pad > 0,
@@ -275,40 +274,6 @@ Public Module RichTextBoxExtensions
             endTime:=endTime.ToString(),
             value:=value,
             indent:=indent, heading:=heading)
-    End Sub
-
-    ' <summary>
-    '''  Appends a time value row to the <see cref="RichTextBox"/> with start
-    '''  and end times as strings.
-    ''' </summary>
-    ''' <param name="rtb">
-    '''  The <see cref="RichTextBox"/> to append the time value row to.
-    ''' </param>
-    ''' <param name="key">The label for the time value row.</param>
-    ''' <param name="startTime">The start time of the row as a string.</param>
-    ''' <param name="endTime">The end time of the row as a string.</param>
-    <Extension>
-    Friend Sub AppendTimeValueRow(rtb As RichTextBox,
-                                  key As String,
-                                  startTime As String,
-                                  Optional endTime As String = EmptyString)
-
-        Dim text As String = $"{Indent4}{key}".PadRight(LeftColumnTotalWidth)
-        rtb.AppendTextNewFont(text, newFont:=FixedWidthFont)
-
-        Dim separator As String
-        If endTime = String.Empty Then
-            separator = String.Empty
-        Else
-            separator = "-"
-            If startTime <> "Off" Then
-                startTime = startTime.PadLeft(totalWidth:=8)
-                endTime = endTime.PadLeft(totalWidth:=8)
-            End If
-        End If
-
-        text = $"{startTime}{separator}{endTime}".AlignCenter(leftPanel:=False)
-        rtb.AppendTextNewFont(text, newFont:=FixedWidthFont, includeNewLine:=True)
     End Sub
 
     ''' <summary>

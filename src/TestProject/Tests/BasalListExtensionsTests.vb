@@ -14,21 +14,6 @@ Public Class BasalListExtensionsTests
     End Sub
 
     <Fact>
-    Public Sub EmptyList_Returns_EmptyResults()
-        ' Arrange
-        Dim list As New List(Of Basal)()
-
-        ' Act / Assert
-        list.ActiveBasalPattern().Should().Be(expected:=String.Empty)
-        Double.IsNaN(list.GetBasalPerHour()).Should().BeTrue()
-        list.Subtitle().Should().Be(expected:=String.Empty)
-
-        Dim cc As List(Of Basal) = list.ClassCollection()
-        cc.Should().NotBeSameAs(unexpected:=list)
-        cc.Should().BeEmpty()
-    End Sub
-
-    <Fact>
     Public Sub DefaultBasalAsFirstElement_IsTreatedAsEmpty()
         ' Arrange
         Dim list As New List(Of Basal) From {New Basal()}
@@ -44,20 +29,18 @@ Public Class BasalListExtensionsTests
     End Sub
 
     <Fact>
-    Public Sub NonEmptyList_Returns_ValuesFromFirstBasal()
+    Public Sub EmptyList_Returns_EmptyResults()
         ' Arrange
-        Dim b As New Basal With {
-            .ActiveBasalPattern = "BASAL1",
-            .BasalRate = 1.25}
-        Dim list As New List(Of Basal) From {b}
+        Dim list As New List(Of Basal)()
 
         ' Act / Assert
-        list.ActiveBasalPattern().Should().Be(expected:="BASAL1")
-        list.GetBasalPerHour().Should().Be(expected:=1.25)
-        list.Subtitle().Should().Be(expected:="- BASAL1")
+        list.ActiveBasalPattern().Should().Be(expected:=String.Empty)
+        Double.IsNaN(list.GetBasalPerHour()).Should().BeTrue()
+        list.Subtitle().Should().Be(expected:=String.Empty)
 
         Dim cc As List(Of Basal) = list.ClassCollection()
-        cc.Should().BeSameAs(expected:=list)
+        cc.Should().NotBeSameAs(unexpected:=list)
+        cc.Should().BeEmpty()
     End Sub
 
     <Fact>
@@ -86,6 +69,23 @@ Public Class BasalListExtensionsTests
 
         ' Act / Assert
         list.GetBasalPerHour().Should().Be(expected:=1.0)
+    End Sub
+
+    <Fact>
+    Public Sub NonEmptyList_Returns_ValuesFromFirstBasal()
+        ' Arrange
+        Dim b As New Basal With {
+            .ActiveBasalPattern = "BASAL1",
+            .BasalRate = 1.25}
+        Dim list As New List(Of Basal) From {b}
+
+        ' Act / Assert
+        list.ActiveBasalPattern().Should().Be(expected:="BASAL1")
+        list.GetBasalPerHour().Should().Be(expected:=1.25)
+        list.Subtitle().Should().Be(expected:="- BASAL1")
+
+        Dim cc As List(Of Basal) = list.ClassCollection()
+        cc.Should().BeSameAs(expected:=list)
     End Sub
 
 End Class

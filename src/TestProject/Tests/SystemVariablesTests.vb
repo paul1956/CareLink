@@ -23,6 +23,14 @@ Public Class SystemVariablesTests
     End Sub
 
     <Fact>
+    Public Sub GetTirHighLimitWithUnits_UsesDecimalSeparator()
+        NativeMmolL = True
+        Dim expected As String = "10 Mmol/l"
+        GetTirHighLimitWithUnits().Should().Be(expected)
+        RestoreDefaults()
+    End Sub
+
+    <Fact>
     Public Sub GetTirLowLimit_ReturnsCorrectValue_ForUnits()
         NativeMmolL = True
         Dim lowLimitMmol As Single = GetTirLowLimit()
@@ -32,14 +40,6 @@ Public Class SystemVariablesTests
         lowLimitMgdl.Should().Be(expected:=TirLowMmol70)
         Dim convertedLowLimit As Single = lowLimitMmol * 18.0F
         convertedLowLimit.Should().BeApproximately(expectedValue:=lowLimitMgdl, precision:=0.5F)
-        RestoreDefaults()
-    End Sub
-
-    <Fact>
-    Public Sub GetTirHighLimitWithUnits_UsesDecimalSeparator()
-        NativeMmolL = True
-        Dim expected As String = "10 Mmol/l"
-        GetTirHighLimitWithUnits().Should().Be(expected)
         RestoreDefaults()
     End Sub
 
