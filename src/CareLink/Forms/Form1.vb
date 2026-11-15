@@ -148,9 +148,6 @@ Public Class Form1
                     'headerText passed when OEM Event is fired. Not sure what that is??
                     Case PBT_APMOEMEVENT
                         Stop
-
-                    Case Else
-                        'Stop
                 End Select
             Case Else
         End Select
@@ -1653,8 +1650,6 @@ Public Class Form1
                     e.Value = time.ToString(format:=s_timeWithoutMinuteFormat)
                     e.CellStyle.Font = s_font12
 
-                Case Else
-                    Stop
             End Select
         Catch ex As Exception
             Stop
@@ -1830,7 +1825,10 @@ Public Class Form1
 
                 Case NameOf(Calibration.CalibrationSuccess)
                     dgv.CellFormattingSingleWord(e)
+
                 Case Else
+                    Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
@@ -2292,6 +2290,7 @@ Public Class Form1
 
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
@@ -2436,8 +2435,10 @@ Public Class Form1
 
                 Case NameOf(LastSG.Filler)
                     ' Ignore filler column for formatting; no action needed.
+
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
@@ -2536,6 +2537,7 @@ Public Class Form1
 
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
@@ -2614,6 +2616,7 @@ Public Class Form1
 
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
@@ -2692,6 +2695,7 @@ Public Class Form1
 
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
@@ -2764,6 +2768,7 @@ Public Class Form1
 
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
@@ -2865,6 +2870,7 @@ Public Class Form1
 
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
@@ -3171,11 +3177,12 @@ Public Class Form1
 
                         Case Else
                             Stop
+                            dgv.CellFormattingDefault(e)
                     End Select
                 End If
             Case Else
+                dgv.CellFormattingDefault(e)
         End Select
-        dgv.CellFormattingDefault(e)
     End Sub
 
     ''' <summary>
@@ -3332,6 +3339,7 @@ Public Class Form1
 
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         End If
         dgv.CellFormattingDefault(e)
@@ -3427,6 +3435,7 @@ Public Class Form1
 
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
