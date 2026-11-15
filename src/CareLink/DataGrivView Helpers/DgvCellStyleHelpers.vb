@@ -59,28 +59,6 @@ Friend Module DgvCellStyleHelpers
             NameOf(TimeChange.Kind),
             NameOf(TimeChange.Type)}}}
 
-    Private ReadOnly Property BlackAsArgb As Integer = Color.Black.ToArgb()
-    Private ReadOnly Property WhiteAsArgb As Integer = Color.White.ToArgb()
-
-    ''' <summary>
-    '''  Sets the cell value to <see cref="String.Empty"/> if the
-    '''  value is <see langword="Nothing"/> or "0".
-    '''  This is used to avoid displaying "0" in cells where it is not meaningful,
-    '''  such as in a duration column.
-    ''' </summary>
-    ''' <param name="e">
-    '''  The <see cref="DataGridViewCellFormattingEventArgs"/> for the cell
-    '''  being formatted.
-    ''' </param>
-    <Extension>
-    Friend Sub CellFormatting0Value(e As DataGridViewCellFormattingEventArgs)
-        Dim value As String = Convert.ToString(e.Value)
-        If value = String.Empty OrElse value = "0" Then
-            e.Value = String.Empty
-        End If
-        e.FormattingApplied = True
-    End Sub
-
     ''' <summary>
     '''  Applies bold font style to the cell.
     ''' </summary>
