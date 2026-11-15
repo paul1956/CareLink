@@ -4795,37 +4795,15 @@ Public Class Form1
                 Me.TabControlPage1.Visible = False
                 Exit Sub
             Case NameOf(TabPage13SensorGlucose), NameOf(TabPage11NotificationsCleared)
-                ' Immediate user feedback: show busy cursor before potentially expensive
-                ' DataGridView population/layout operations occur. Start a cursor
-                ' operation now and clear it after the tab has painted once so the
-                ' wait cursor remains visible while the tab renders.
-                If Not _updating Then
+                If Not _updating AndAlso Me.TabControlPage1.Visible AndAlso Me.IsHandleCreated Then
+                    Me.CursorStarted(pumpMessages:=False)
                     Try
-                        Me.CursorStarted(pumpMessages:=True)
-
-                        Dim tab As TabPage = e.TabPage
-                        Dim paintHandler As PaintEventHandler = Nothing
-                        paintHandler =
-                            Sub(sender1 As Object, pe As PaintEventArgs)
-                                Try
-                                    RemoveHandler tab.Paint, paintHandler
-                                    Me.CursorFinished(pumpMessages:=True)
-                                Catch
-                                End Try
-                            End Sub
-                        Try
-                            AddHandler tab.Paint, paintHandler
-                        Catch
-                            ' If adding the handler fails for any reason,
-                            ' ensure we still finish the cursor to avoid
-                            ' leaking the refcount.
-                            Try
-                                Me.CursorFinished(pumpMessages:=True)
-                            Catch
-                            End Try
-                        End Try
+                        Me.BeginInvoke(method:=New Action(Sub()
+                                                              Me.CursorFinished(pumpMessages:=False)
+                                                          End Sub))
                     Catch
-                        ' Swallow exceptions here to avoid breaking tab selection.
+                        Me.CursorFinished(pumpMessages:=False)
+                        Throw
                     End Try
                 End If
         End Select

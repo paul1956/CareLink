@@ -100,26 +100,32 @@ Friend Module NotificationHelpers
         Dim dgv As DataGridView = CType(sender, DataGridView)
         If dgv.ColumnCount > 0 Then
             dgv.ScrollBars = ScrollBars.None
-            Dim dataGridViewLastColumn As DataGridViewColumn = dgv.Columns(index:=dgv.ColumnCount - 1)
-            If dataGridViewLastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
-                For Each row As DataGridViewRow In dgv.Rows
-                    If row.Index = 0 Then
-                        row.Cells(index:=dgv.ColumnCount - 1).Style.WrapMode = DataGridViewTriState.True
-                        dataGridViewLastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
-                    Else
-                        row.Cells(index:=dgv.ColumnCount - 1).Style.WrapMode = DataGridViewTriState.False
-                        dataGridViewLastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.False
-                    End If
-                Next
-            End If
+            ConfigureNotificationWrapping(dgv)
         End If
         dgv.ClearSelection()
-        Try
-            ' Signal that this binding finished so the form can clear busy cursor when all done.
-            BindingFinished(owner:=My.Forms.Form1, dgv)
-        Catch
-            Stop
-        End Try
+        If dgv.Parent IsNot Nothing Then
+            dgv.PerformLayout()
+        End If
+    End Sub
+
+    Private Sub ConfigureNotificationWrapping(dgv As DataGridView)
+        If dgv.ColumnCount = 0 OrElse dgv.Rows.Count = 0 Then Return
+        Dim lastColumn As DataGridViewColumn = dgv.Columns(index:=dgv.ColumnCount - 1)
+        If lastColumn.AutoSizeMode <> DataGridViewAutoSizeColumnMode.Fill Then Return
+
+        Dim defaultWrap As DataGridViewTriState = If(dgv.Rows.Count = 1,
+                                                    DataGridViewTriState.True,
+                                                    DataGridViewTriState.False)
+        If lastColumn.DefaultCellStyle.WrapMode <> defaultWrap Then
+            lastColumn.DefaultCellStyle.WrapMode = defaultWrap
+        End If
+        For Each row As DataGridViewRow In dgv.Rows
+            Dim wrap As DataGridViewTriState = If(row.Index = 0, DataGridViewTriState.True, DataGridViewTriState.False)
+            Dim cell As DataGridViewCell = row.Cells(index:=lastColumn.Index)
+            If cell.Style.WrapMode <> wrap Then
+                cell.Style.WrapMode = wrap
+            End If
+        Next
     End Sub
 
     ''' <summary>
@@ -130,7 +136,7 @@ Friend Module NotificationHelpers
     ''' <param name="e">Layout event arguments.</param>
     Private Sub DgvNotification_Layout(sender As Object, e As LayoutEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim dgvParent As TableLayoutPanel = CType(dgv.Parent, TableLayoutPanel)
+        Dim panel As TableLayoutPanel = CType(dgv.Parent, TableLayoutPanel)
         ' Calculate total height of rows and headers
         Dim height As Integer = 0
         For i As Integer = 0 To dgv.Rows.Count - 1
@@ -145,10 +151,9 @@ Friend Module NotificationHelpers
         End If
 
         ' Set panel row to absolute height
-        Dim index As Integer = dgv.Parent.Controls.IndexOf(control:=dgv)
-        Dim panel As TableLayoutPanel = CType(dgv.Parent, TableLayoutPanel)
+        Dim index As Integer = panel.Controls.IndexOf(control:=dgv)
         panel.RowStyles(index).SizeType = SizeType.Absolute
-        panel.RowStyles(index).Height = dgv.ClientSize.Height
+        panel.RowStyles(index).Height = dgv.Height + dgv.Margin.Vertical
         panel.BackColor = If(index > 2,
                              Color.White,
                              panel.BackColor)
@@ -159,6 +164,7 @@ Friend Module NotificationHelpers
     '''  Displays a notification data table in a <see cref="DataGridView"/> within
     '''  the specified panel.
     ''' </summary>
+    ''' <param name="owner">The form owning the notification panel.</param>
     ''' <param name="realPanel">
     '''  The <see cref="TableLayoutPanel"/> to add the DataGridView to.
     ''' </param>
@@ -168,6 +174,7 @@ Friend Module NotificationHelpers
     '''  Delegate to attach event handlers to the DataGridView.
     ''' </param>
     Private Sub DisplayNotificationDataTableInDGV(
+        owner As Form1,
         realPanel As TableLayoutPanel,
         table As DataTable,
         className As String,
@@ -208,20 +215,20 @@ Friend Module NotificationHelpers
             dgv.RowTemplate.Height = 24
         End If
 
+        BindingStarted(owner, dgv)
         Try
             Try
-                ' Notify form that a binding is starting so cursor stays busy until all bindings finish
-                BindingStarted(owner:=My.Forms.Form1, dgv)
-            Catch
+                dgv.DataSource = table
+            Finally
+                If largeGrid Then
+                    dgv.Visible = True
+                    dgv.ResumeLayout(performLayout:=False)
+                End If
             End Try
-            dgv.DataSource = table
+            dgv.ConfigureContentColumnSizing()
         Finally
-            If largeGrid Then
-                dgv.Visible = True
-                dgv.ResumeLayout(performLayout:=False)
-            End If
+            BindingFinished(owner, dgv)
         End Try
-        dgv.ConfigureContentColumnSizing()
     End Sub
 
     ''' <summary>
@@ -311,6 +318,7 @@ Friend Module NotificationHelpers
                 For Each jsonDictionary In innerJson
                     classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
                     DisplayNotificationDataTableInDGV(
+                        owner:=mainForm,
                         realPanel:=mainForm.TlpNotificationsCleared,
                         table:=ClassCollectionToDataTable(classCollection),
                         className:=NameOf(SummaryRecord),
@@ -318,12 +326,14 @@ Friend Module NotificationHelpers
                 Next
                 .HorizontalScroll.Enabled = False
                 .HorizontalScroll.Visible = False
-                mainForm.TlpNotificationsCleared.ResumeLayout(performLayout:=False)
+                mainForm.TlpNotificationsCleared.ResumeLayout(performLayout:=True)
             Else
                 .AutoSizeMode = AutoSizeMode.GrowAndShrink
                 Dim className As String = "clearedNotifications"
                 .DgvNoRecordsFound(className)
             End If
+            ' Recalculate the virtual scroll extent after the rows have been laid out.
+            .AutoScroll = False
             .AutoScroll = True
         End With
 
@@ -347,6 +357,7 @@ Friend Module NotificationHelpers
                     jsonDictionary = innerDictionary.Value
                     classCollection = GetSummaryRecords(jsonDictionary, rowsToHide:=s_rowsToHide)
                     DisplayNotificationDataTableInDGV(
+                        owner:=mainForm,
                         realPanel:=mainForm.TlpNotificationActive,
                         table:=ClassCollectionToDataTable(classCollection),
                         className:="ActiveNotifications",
