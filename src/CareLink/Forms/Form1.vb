@@ -1650,6 +1650,10 @@ Public Class Form1
                     e.Value = time.ToString(format:=s_timeWithoutMinuteFormat)
                     e.CellStyle.Font = s_font12
 
+                Case Else
+                    Stop
+                    dgv.CellFormattingDefault(e)
+
             End Select
         Catch ex As Exception
             Stop
@@ -1825,6 +1829,9 @@ Public Class Form1
 
                 Case NameOf(Calibration.CalibrationSuccess)
                     dgv.CellFormattingSingleWord(e)
+
+                Case NameOf(LastSG.Filler)
+                    ' Ignore filler column for formatting; no action needed.
 
                 Case Else
                     Stop
@@ -2430,7 +2437,8 @@ Public Class Form1
                         dgv.CellFormattingToTitle(e)
                     End If
 
-                Case NameOf(LastSG.Kind)
+                Case NameOf(LastSG.Kind),
+                     NameOf(LastSG.Version)
                     dgv.CellFormattingDefault(e)
 
                 Case NameOf(LastSG.Filler)
@@ -3339,7 +3347,6 @@ Public Class Form1
 
                 Case Else
                     Stop
-                    dgv.CellFormattingDefault(e)
             End Select
         End If
         dgv.CellFormattingDefault(e)
