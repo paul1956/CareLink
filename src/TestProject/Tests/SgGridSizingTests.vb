@@ -14,7 +14,7 @@ Public Class SgGridSizingTests
 
     <Theory>
     <InlineData(5)>
-    <InlineData(150)>
+    <InlineData(300)>
     Public Sub DisplayDataTable_SizesSensorColumnsAfterRefresh(rowCount As Integer)
         Dim failure As Exception = Nothing
         Dim start As ThreadStart =
@@ -28,10 +28,18 @@ Public Class SgGridSizingTests
                         host.Show()
 
                         table.Columns.Add(columnName:=NameOf(SG.RecordNumber), type:=GetType(Integer))
+                        table.Columns.Add(columnName:=NameOf(SG.Sg), type:=GetType(Single))
+                        table.Columns.Add(columnName:=NameOf(SG.SgMgdL), type:=GetType(Single))
+                        table.Columns.Add(columnName:=NameOf(SG.SgMmolL), type:=GetType(Single))
                         table.Columns.Add(columnName:=NameOf(SG.SensorState), type:=GetType(String))
                         table.Columns.Add(columnName:=NameOf(SG.Message), type:=GetType(String))
                         For index As Integer = 1 To rowCount
-                            table.Rows.Add(index, "NO_ERROR_MESSAGE", "---")
+                            If index = rowCount Then
+                                table.Rows.Add(index, 107.0F, 107.0F, 5.9F, "SENSOR_NOT_READY",
+                                    String.Concat(Enumerable.Repeat(element:="A long sensor message ", count:=30)))
+                            Else
+                                table.Rows.Add(index, 107.0F, 107.0F, 5.9F, "NO_ERROR_MESSAGE", "---")
+                            End If
                         Next
 
                         For refresh As Integer = 1 To 2
@@ -40,26 +48,58 @@ Public Class SgGridSizingTests
 
                             Dim state As DataGridViewColumn = dgv.Columns(NameOf(SG.SensorState))
                             Dim message As DataGridViewColumn = dgv.Columns(NameOf(SG.Message))
+                            Dim glucoseColumns As String() = {NameOf(SG.Sg), NameOf(SG.SgMgdL), NameOf(SG.SgMmolL)}
+                            For Each columnName As String In glucoseColumns
+                                Dim glucose As DataGridViewColumn = dgv.Columns(columnName)
+                                Dim headerLines As String() = glucose.HeaderText.Split(New String() {vbCrLf},
+                                                                                       StringSplitOptions.None)
+                                Assert.Equal(expected:=3, actual:=headerLines.Length)
+                                Assert.Equal(expected:=DataGridViewTriState.True,
+                                             actual:=glucose.HeaderCell.InheritedStyle.WrapMode)
+                                Dim headerFont As Drawing.Font = glucose.HeaderCell.InheritedStyle.Font
+                                For Each line As String In headerLines
+                                    Assert.True(condition:=glucose.Width >= TextRenderer.MeasureText(line, headerFont).Width)
+                                Next
+                                Dim singleLine As String = String.Join(separator:=" ", value:=headerLines)
+                                Assert.True(condition:=glucose.Width < TextRenderer.MeasureText(singleLine, headerFont).Width)
+                                Assert.True(condition:=dgv.ColumnHeadersHeight >= 3 * TextRenderer.MeasureText(
+                                    "Glucose", headerFont).Height)
+                            Next
                             Assert.Equal(expected:=DataGridViewAutoSizeColumnsMode.None, actual:=dgv.AutoSizeColumnsMode)
-                            Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.AllCells, actual:=state.AutoSizeMode)
+                            Assert.Equal(expected:=DataGridViewAutoSizeRowsMode.DisplayedCells, actual:=dgv.AutoSizeRowsMode)
+                            Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.None, actual:=state.AutoSizeMode)
                             Assert.Equal(expected:=DataGridViewTriState.False, actual:=state.DefaultCellStyle.WrapMode)
                             Assert.Equal(expected:=DataGridViewTriState.False,
                                          actual:=dgv.Rows(0).Cells(state.Index).InheritedStyle.WrapMode)
+                            dgv.Rows(0).DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                            Dim stateStyle As DataGridViewCellStyle = dgv.Rows(0).Cells(state.Index).GetFormattedStyle()
+                            Assert.Equal(expected:=DataGridViewTriState.False, actual:=stateStyle.WrapMode)
+                            Assert.Equal(expected:=DataGridViewContentAlignment.MiddleCenter, actual:=stateStyle.Alignment)
                             Assert.Equal(expected:="No Error Message", actual:=dgv.Rows(0).Cells(state.Index).FormattedValue)
+                            Assert.True(condition:=state.Width >= TextRenderer.MeasureText(
+                                "No Error Message", stateStyle.Font).Width)
+                            dgv.Rows(0).DefaultCellStyle.WrapMode = DataGridViewTriState.NotSet
                             Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill, actual:=message.AutoSizeMode)
                             Assert.Equal(expected:=DataGridViewTriState.True, actual:=message.DefaultCellStyle.WrapMode)
                             Assert.True(condition:=state.Width >= state.GetPreferredWidth(
                                 DataGridViewAutoSizeColumnMode.AllCells, fixedHeight:=True))
                             Assert.True(condition:=message.Width > state.Width)
+                            Dim stateWidth As Integer = state.Width
+                            Dim normalHeight As Integer = dgv.Rows(0).Height
+                            dgv.FirstDisplayedScrollingRowIndex = rowCount - 1
+                            Application.DoEvents()
+                            Assert.True(condition:=dgv.Rows(rowCount - 1).Height > normalHeight)
 
                             Dim oldMessageWidth As Integer = message.Width
                             host.ClientSize = New Drawing.Size(width:=host.ClientSize.Width + 200, height:=400)
                             Application.DoEvents()
                             Assert.True(condition:=message.Width > oldMessageWidth)
+                            Assert.Equal(expected:=stateWidth, actual:=state.Width)
 
                             table.DefaultView.Sort = $"{NameOf(SG.RecordNumber)} ASC"
                             Application.DoEvents()
-                            Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.AllCells, actual:=state.AutoSizeMode)
+                            Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.None, actual:=state.AutoSizeMode)
+                            Assert.Equal(expected:=stateWidth, actual:=state.Width)
                             Assert.Equal(expected:=DataGridViewTriState.False,
                                          actual:=dgv.Rows(0).Cells(state.Index).InheritedStyle.WrapMode)
                             Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill, actual:=message.AutoSizeMode)

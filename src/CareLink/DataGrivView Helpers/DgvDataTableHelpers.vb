@@ -178,6 +178,7 @@ Friend Module DgvDataTableHelpers
                     col.HeaderText = SplitHeader(input)
                 End If
             End If
+            If dgv.Name = NameOf(Form1.DgvSGs) Then Continue For
             If col.HeaderText.Contains(value:="Record") Then
                 col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
                 col.Width = If(dgv.Name = NameOf(Form1.DgvSGs),
@@ -229,6 +230,61 @@ Friend Module DgvDataTableHelpers
     End Sub
 
     ''' <summary>
+    '''  Measures the SG columns once and lets the last visible column fill the remaining space.
+    ''' </summary>
+    ''' <param name="dgv">The sensor glucose grid to size.</param>
+    <Extension>
+    Private Sub ConfigureSgColumnSizing(dgv As DataGridView)
+        dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
+        Dim lastColumn As DataGridViewColumn = Nothing
+        For Each column As DataGridViewColumn In dgv.Columns
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+            If column.Visible AndAlso (lastColumn Is Nothing OrElse column.DisplayIndex > lastColumn.DisplayIndex) Then
+                lastColumn = column
+            End If
+            If column.DataPropertyName = NameOf(SG.SensorState) Then
+                column.DefaultCellStyle.WrapMode = DataGridViewTriState.False
+                column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            End If
+        Next
+
+        For Each column As DataGridViewColumn In dgv.Columns
+            If column.Visible AndAlso column IsNot lastColumn Then
+                Select Case column.DataPropertyName
+                    Case NameOf(SG.Sg), NameOf(SG.SgMgdL), NameOf(SG.SgMmolL)
+                        column.HeaderCell.Style.WrapMode = DataGridViewTriState.True
+                        Dim headerStyle As DataGridViewCellStyle = column.HeaderCell.InheritedStyle
+                        Dim headerWidth As Integer = 0
+                        For Each line As String In column.HeaderText.Split(New String() {vbCrLf}, StringSplitOptions.None)
+                            headerWidth = Math.Max(headerWidth, TextRenderer.MeasureText(line, headerStyle.Font).Width)
+                        Next
+                        headerWidth += headerStyle.Padding.Horizontal + CInt(Math.Ceiling(8.0 * dgv.DeviceDpi / 96.0))
+                        Dim contentWidth As Integer =
+                            column.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCellsExceptHeader, fixedHeight:=True)
+                        column.Width = Math.Max(column.MinimumWidth, Math.Max(headerWidth, contentWidth))
+                    Case Else
+                        column.Width = Math.Max(column.MinimumWidth,
+                            column.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, fixedHeight:=True))
+                End Select
+            End If
+        Next
+
+        If lastColumn IsNot Nothing Then
+            If lastColumn.DataPropertyName = NameOf(SG.SensorState) Then
+                lastColumn.MinimumWidth = Math.Max(lastColumn.MinimumWidth,
+                    lastColumn.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, fixedHeight:=True))
+            Else
+                lastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                If dgv.ColumnHeadersVisible Then
+                    lastColumn.MinimumWidth = Math.Max(lastColumn.MinimumWidth,
+                        lastColumn.GetPreferredWidth(DataGridViewAutoSizeColumnMode.ColumnHeader, fixedHeight:=True))
+                End If
+            End If
+            lastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        End If
+    End Sub
+
+    ''' <summary>
     '''  Displays a <see cref="DataTable"/> in a <see cref="DataGridView"/> within
     '''  a <see cref="TableLayoutPanel"/>. Initializes the <see cref="DataGridView"/>,
     '''  sets its data source, and refreshes the panel.
@@ -250,6 +306,8 @@ Friend Module DgvDataTableHelpers
         ' Entry: DisplayDataTable
 
         realPanel?.SetTableName(rowIndex, isClearedNotifications:=False)
+        Dim isSgGrid As Boolean = dgv.Name = NameOf(Form1.DgvSGs)
+        If isSgGrid Then dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
         dgv.InitializeDgv()
         Try
             ' Notify form that a binding is starting so cursor stays busy until all bindings finish
@@ -259,6 +317,7 @@ Friend Module DgvDataTableHelpers
         End Try
         dgv.DataSource = table
         ' Binding assigned; any outstanding diagnostics removed.
+        If isSgGrid Then HideDataGridViewColumnsByName(Of SG)(dgv)
         dgv.ApplyDisplayNames(Of T)()
 
         Dim cols As Integer =
@@ -268,13 +327,18 @@ Friend Module DgvDataTableHelpers
         ' DataSource assigned
 
         ' Allow cell content to wrap and calculate row heights
-        dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         dgv.DefaultCellStyle.WrapMode = DataGridViewTriState.True
 
-        If dgv.Name = NameOf(Form1.DgvBasalPerHour) Then
-            dgv.ConfigureProportionalColumnSizing()
+        If isSgGrid Then
+            dgv.ConfigureSgColumnSizing()
+            dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCells
         Else
-            dgv.ConfigureContentColumnSizing()
+            dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
+            If dgv.Name = NameOf(Form1.DgvBasalPerHour) Then
+                dgv.ConfigureProportionalColumnSizing()
+            Else
+                dgv.ConfigureContentColumnSizing()
+            End If
         End If
         dgv.RowHeadersVisible = False
         realPanel?.Refresh()

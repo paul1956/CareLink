@@ -90,8 +90,8 @@ Public Module DgvInitializationExtensions
             .TabIndex = 0
         End With
 
-        If dgv.Name <> NameOf(Form1.DgvBasalPerHour) Then
-            RemoveHandler dgv.DataBindingComplete, AddressOf DgvContentSizing_DataBindingComplete
+        RemoveHandler dgv.DataBindingComplete, AddressOf DgvContentSizing_DataBindingComplete
+        If dgv.Name <> NameOf(Form1.DgvBasalPerHour) AndAlso dgv.Name <> NameOf(Form1.DgvSGs) Then
             AddHandler dgv.DataBindingComplete, AddressOf DgvContentSizing_DataBindingComplete
         End If
     End Sub

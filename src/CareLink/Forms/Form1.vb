@@ -2840,6 +2840,8 @@ Public Class Form1
                     dgv.CellFormattingDateTime(e)
 
                 Case NameOf(SG.SensorState)
+                    e.CellStyle.WrapMode = DataGridViewTriState.False
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     If Equals(e.Value, "NO_ERROR_MESSAGE") Then
                         dgv.CellFormattingToTitle(e)
                     Else
@@ -2989,8 +2991,7 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="DataGridView.DataBindingComplete"/> event for the
     '''  <see cref="DgvSGs"/> DataGridView control.
-    '''  This event is raised when the data binding operation is complete.
-    '''  It sets the column sizing modes and sort glyph, and wraps the sensor message column.
+    '''  Updates the sort glyph and clears the selection after binding or sorting.
     ''' </summary>
     ''' <param name="sender">
     '''  The source of the event, a <see cref="DataGridView"/> control.
@@ -3001,16 +3002,15 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         Try
-            dgv.Columns(index:=0).HeaderCell.SortGlyphDirection =
-                If(dgv.RowCount > 0,
-                   If(EqualsNoCase(a:=dgv.Rows(index:=0).Cells(index:=0).Value.ToString(), b:="1"),
-                      SortOrder.Ascending,
-                      SortOrder.Descending),
-                   SortOrder.None)
-            HideDataGridViewColumnsByName(Of SG)(dgv)
-            dgv.ApplyDisplayNames(Of SG)()
-            dgv.ConfigureContentColumnSizing()
-            dgv.ClearSelection()
+            If dgv.Columns.Count > 0 Then
+                dgv.Columns(index:=0).HeaderCell.SortGlyphDirection =
+                    If(dgv.RowCount > 0,
+                       If(EqualsNoCase(a:=dgv.Rows(index:=0).Cells(index:=0).Value.ToString(), b:="1"),
+                          SortOrder.Ascending,
+                          SortOrder.Descending),
+                       SortOrder.None)
+                dgv.ClearSelection()
+            End If
         Finally
             ' Ensure the binding refcount is decremented even if the formatting
             ' or layout code throws. Swallow any exceptions from BindingFinished
