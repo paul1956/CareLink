@@ -96,4 +96,8 @@ Public Class Calibration
     <Column(Order:=11, TypeName:=NameOf([Boolean]))>
     Public Property CalibrationSuccess As Boolean
 
+    <DisplayName("")>
+    <Column(Order:=12, TypeName:=NameOf([String]))>
+    Public Property Filler As String
+
 End Class

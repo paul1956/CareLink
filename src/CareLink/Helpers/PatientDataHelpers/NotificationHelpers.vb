@@ -83,14 +83,6 @@ Friend Module NotificationHelpers
             Dim caption As String =
                 CType(dgv.DataSource, DataTable).Columns(.Index).Caption
             e.DgvColumnAdded(cellStyle, forceReadOnly:=True, caption)
-            If e.Column.Index = 0 Then
-                e.Column.MinimumWidth = 45
-                e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-            ElseIf e.Column.Name <> "Message" Then
-                e.Column.MinimumWidth = 300
-            Else
-                e.Column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-            End If
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
@@ -229,6 +221,7 @@ Friend Module NotificationHelpers
                 dgv.ResumeLayout(performLayout:=False)
             End If
         End Try
+        dgv.ConfigureContentColumnSizing()
     End Sub
 
     ''' <summary>

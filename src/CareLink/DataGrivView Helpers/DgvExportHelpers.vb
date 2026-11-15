@@ -438,8 +438,11 @@ Friend Module DgvExportHelpers
                            SortOrder.Descending)
                 End If
 
-                dgv.AutoSizeColumnsMode =
-                    DataGridViewAutoSizeColumnsMode.AllCells
+                If dgv.Name <> NameOf(Form1.DgvBasalPerHour) Then
+                    dgv.ConfigureContentColumnSizing()
+                Else
+                    dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+                End If
             End Sub
 
         If dgv.InvokeRequired Then

@@ -27,6 +27,60 @@ Friend Module DgvDataTableHelpers
 
     Private ReadOnly Property Separator As Char() = New Char() {" "c}
 
+    <Extension>
+    Private Sub ConfigureProportionalColumnSizing(dgv As DataGridView)
+        ' Ensure columns expand to fill available width
+        dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+
+        ' Convert any per-column AutoSizeMode (for example AllCells)
+        ' to Fill and preserve relative widths by using current column
+        ' widths to compute FillWeight.
+        If dgv.Columns IsNot Nothing AndAlso dgv.Columns.Count > 0 Then
+            Dim selector As Func(Of DataGridViewColumn, Integer) =
+                Function(c As DataGridViewColumn) As Integer
+                    Return c.Width
+                End Function
+            ' Resize columns to fit content first so Width reflects content size
+            Const autoSizeColumnsMode As DataGridViewAutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+            ' If the grid is large, skip the expensive AutoResizeColumns pass and use equal Fill weights.
+            If dgv.Rows.Count <= 100 Then
+                dgv.AutoResizeColumns(autoSizeColumnsMode)
+            End If
+
+            ' Cap overly wide columns so they don't dominate FillWeight
+            Const maxColumnWidth As Integer = 400
+            Dim cappedSelector As Func(Of DataGridViewColumn, Integer) =
+                Function(c As DataGridViewColumn) As Integer
+                    Return Math.Min(c.Width, maxColumnWidth)
+                End Function
+
+            Dim totalWidth As Integer =
+                dgv.Columns.Cast(Of DataGridViewColumn)().Sum(selector:=cappedSelector)
+
+            If totalWidth > 0 Then
+                If dgv.Rows.Count > 100 Then
+                    ' Fast path: avoid per-column width dependency for very large grids
+                    Dim equalWeight As Single = 100.0F / Math.Max(1, dgv.Columns.Count)
+                    For Each c As DataGridViewColumn In dgv.Columns
+                        c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                        c.FillWeight = equalWeight
+                    Next
+                Else
+                    For Each c As DataGridViewColumn In dgv.Columns
+                        Dim capped As Integer = Math.Min(c.Width, maxColumnWidth)
+                        c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                        c.FillWeight = CSng(capped) / totalWidth * 100.0F
+                    Next
+                End If
+            Else
+                For Each c As DataGridViewColumn In dgv.Columns
+                    c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                    c.FillWeight = 100.0F
+                Next
+            End If
+        End If
+    End Sub
+
     ''' <summary>
     '''  Splits a space-separated string into two approximately equal halves,
     '''  inserting a CRLF between them without breaking words.
@@ -141,6 +195,40 @@ Friend Module DgvDataTableHelpers
     End Sub
 
     ''' <summary>
+    '''  Sizes columns to their contents and lets the last visible column fill the remaining space.
+    ''' </summary>
+    ''' <param name="dgv">The grid to size.</param>
+    <Extension>
+    Friend Sub ConfigureContentColumnSizing(dgv As DataGridView)
+        If dgv.Name = NameOf(Form1.DgvBasalPerHour) Then Return
+
+        dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
+        Dim lastColumn As DataGridViewColumn = Nothing
+        For Each column As DataGridViewColumn In dgv.Columns
+            If column.Visible AndAlso (lastColumn Is Nothing OrElse column.DisplayIndex > lastColumn.DisplayIndex) Then
+                lastColumn = column
+            End If
+            If column.DataPropertyName = NameOf(SG.SensorState) Then
+                column.DefaultCellStyle.WrapMode = DataGridViewTriState.False
+            End If
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+        Next
+
+        If lastColumn IsNot Nothing Then
+            If lastColumn.DataPropertyName = NameOf(SG.SensorState) Then
+                lastColumn.MinimumWidth = Math.Max(lastColumn.MinimumWidth, lastColumn.Width)
+            Else
+                lastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                If dgv.ColumnHeadersVisible Then
+                    lastColumn.MinimumWidth = Math.Max(lastColumn.MinimumWidth,
+                        lastColumn.GetPreferredWidth(DataGridViewAutoSizeColumnMode.ColumnHeader, fixedHeight:=True))
+                End If
+            End If
+            lastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        End If
+    End Sub
+
+    ''' <summary>
     '''  Displays a <see cref="DataTable"/> in a <see cref="DataGridView"/> within
     '''  a <see cref="TableLayoutPanel"/>. Initializes the <see cref="DataGridView"/>,
     '''  sets its data source, and refreshes the panel.
@@ -183,55 +271,10 @@ Friend Module DgvDataTableHelpers
         dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         dgv.DefaultCellStyle.WrapMode = DataGridViewTriState.True
 
-        ' Ensure columns expand to fill available width
-        dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-
-        ' Convert any per-column AutoSizeMode (for example AllCells)
-        ' to Fill and preserve relative widths by using current column
-        ' widths to compute FillWeight.
-        If dgv.Columns IsNot Nothing AndAlso dgv.Columns.Count > 0 Then
-            Dim selector As Func(Of DataGridViewColumn, Integer) =
-                Function(c As DataGridViewColumn) As Integer
-                    Return c.Width
-                End Function
-            ' Resize columns to fit content first so Width reflects content size
-            Const autoSizeColumnsMode As DataGridViewAutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
-            ' If the grid is large, skip the expensive AutoResizeColumns pass and use equal Fill weights.
-            If dgv.Rows.Count <= 100 Then
-                dgv.AutoResizeColumns(autoSizeColumnsMode)
-            End If
-
-            ' Cap overly wide columns so they don't dominate FillWeight
-            Const maxColumnWidth As Integer = 400
-            Dim cappedSelector As Func(Of DataGridViewColumn, Integer) =
-                Function(c As DataGridViewColumn) As Integer
-                    Return Math.Min(c.Width, maxColumnWidth)
-                End Function
-
-            Dim totalWidth As Integer =
-                dgv.Columns.Cast(Of DataGridViewColumn)().Sum(selector:=cappedSelector)
-
-            If totalWidth > 0 Then
-                If dgv.Rows.Count > 100 Then
-                    ' Fast path: avoid per-column width dependency for very large grids
-                    Dim equalWeight As Single = 100.0F / Math.Max(1, dgv.Columns.Count)
-                    For Each c As DataGridViewColumn In dgv.Columns
-                        c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                        c.FillWeight = equalWeight
-                    Next
-                Else
-                    For Each c As DataGridViewColumn In dgv.Columns
-                        Dim capped As Integer = Math.Min(c.Width, maxColumnWidth)
-                        c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                        c.FillWeight = CSng(capped) / totalWidth * 100.0F
-                    Next
-                End If
-            Else
-                For Each c As DataGridViewColumn In dgv.Columns
-                    c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                    c.FillWeight = 100.0F
-                Next
-            End If
+        If dgv.Name = NameOf(Form1.DgvBasalPerHour) Then
+            dgv.ConfigureProportionalColumnSizing()
+        Else
+            dgv.ConfigureContentColumnSizing()
         End If
         dgv.RowHeadersVisible = False
         realPanel?.Refresh()
@@ -299,37 +342,6 @@ Friend Module DgvDataTableHelpers
                 End If
             End Try
             dgv.ApplyDisplayNames(Of T)()
-            ' Ensure columns expand to fill available width
-            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-            ' Convert any per-column AutoSizeMode (for example AllCells) to Fill
-            If dgv.Columns IsNot Nothing AndAlso dgv.Columns.Count > 0 Then
-                Dim selector As Func(Of DataGridViewColumn, Integer) =
-                    Function(c As DataGridViewColumn) As Integer
-                        Return c.Width
-                    End Function
-
-                Dim totalWidth As Integer =
-                    dgv.Columns.Cast(Of DataGridViewColumn)().Sum(selector)
-                If dgv.Columns(index:=0).Name = "RecordNumber" Then
-                    dgv.Columns(index:=0).AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-                    dgv.Columns(index:=0).Width = 60
-                    totalWidth -= 60
-                End If
-                If totalWidth > 0 Then
-                    For Each c As DataGridViewColumn In dgv.Columns
-                        If c.Name = "RecordNumber" Then
-                            Continue For
-                        End If
-                        c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                        c.FillWeight = CSng(c.Width) / totalWidth * 100.0F
-                    Next
-                Else
-                    For Each c As DataGridViewColumn In dgv.Columns
-                        c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                        c.FillWeight = 100.0F
-                    Next
-                End If
-            End If
             dgv.RowHeadersVisible = False
             'WrapColumnHeaderTextOneWordPerLine(dgv)
 
@@ -338,6 +350,7 @@ Friend Module DgvDataTableHelpers
                 dgv.Columns(index:=0).Name = columnName Then
                 dgv.Columns(columnName).Visible = False
             End If
+            dgv.ConfigureContentColumnSizing()
             ' DisplayDataTable complete (className overload)
         Else
             DgvNoRecordsFound(realPanel, className)

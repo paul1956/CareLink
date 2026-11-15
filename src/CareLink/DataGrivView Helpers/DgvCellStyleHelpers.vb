@@ -52,6 +52,7 @@ Friend Module DgvCellStyleHelpers
             NameOf(Meal.Type)}},
         {GetType(SG), New List(Of String) From {
             NameOf(SG.Kind),
+            NameOf(SG.TimestampAsString),
             NameOf(SG.Version)}},
         {GetType(TherapyAlgorithmState), New List(Of String) From {}},
         {GetType(TimeChange), New List(Of String) From {

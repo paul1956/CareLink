@@ -336,6 +336,7 @@ Public Class InitializeDialog
             End If
         End With
 
+        Me.InitializeDataGridView.ConfigureContentColumnSizing()
         Me.OK_Button.Enabled = _fromPdf AndAlso Me.InsulinTypeComboBox.SelectedIndex >= 0
     End Sub
 

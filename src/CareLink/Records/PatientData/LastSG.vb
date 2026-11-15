@@ -34,6 +34,10 @@ Public Class LastSG
     <JsonPropertyName("sensorState")>
     Public Property SensorState As String
 
+    <DisplayName("")>
+    <Column(Order:=6, TypeName:=NameOf([String]))>
+    Public Property Filler As String
+
     Public Overrides Function ToString() As String
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         Dim format As String = GetSgFormat(NativeMmolL)

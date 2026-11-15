@@ -88,4 +88,8 @@ Public Class Limit
         End Get
     End Property
 
+    <DisplayName("")>
+    <Column(Order:=11, TypeName:=NameOf([String]))>
+    Public Property Filler As String
+
 End Class

@@ -77,7 +77,7 @@ Friend Module DgvColumnEventArgsExtensions
             End If
 
             .HeaderText = title.TrimEnd(value:=vbCrLf).ToString
-            .DefaultCellStyle = cellStyle
+            .DefaultCellStyle = cellStyle.Clone()
             If IsNullOrWhiteSpace(value:=caption) Then Return
             .HeaderText = caption.Remove(s:="_")
             If .DataPropertyName.ContainsNoCase(value:="message") Then

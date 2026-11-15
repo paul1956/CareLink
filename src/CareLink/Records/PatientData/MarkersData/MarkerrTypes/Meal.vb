@@ -103,6 +103,10 @@ Public Class Meal
     <JsonPropertyName("amount")>
     Public Property Amount As Integer
 
+    <DisplayName("")>
+    <Column(Order:=9, TypeName:=NameOf([String]))>
+    Public Property Filler As String
+
     ''' <summary>
     '''  Attempts to find a meal record with the specified timestamp.
     ''' </summary>

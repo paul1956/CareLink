@@ -62,4 +62,8 @@ Public Class LowGlucoseSuspended
     <JsonPropertyName("deliverySuspended")>
     Public Property DeliverySuspended As Boolean
 
+    <DisplayName("")>
+    <Column(Order:=8, TypeName:=NameOf([String]))>
+    Public Property Filler As String
+
 End Class

@@ -60,6 +60,10 @@ Public Class AutoBasalDelivery
     <JsonPropertyName("maxAutoBasalRate")>
     Public Property MaxAutoBasalRate As Single
 
+    <DisplayName("")>
+    <Column(Order:=7, TypeName:=NameOf([String]))>
+    Public Property Filler As String
+
     Public Function GetOaDateTime() As OADate
         Return New OADate(asDate:=Me.Timestamp)
     End Function

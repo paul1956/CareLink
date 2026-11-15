@@ -11,6 +11,11 @@ Imports System.Runtime.CompilerServices
 ''' </summary>
 Public Module DgvInitializationExtensions
 
+    Private Sub DgvContentSizing_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs)
+        Dim dgv As DataGridView = DirectCast(sender, DataGridView)
+        dgv.ConfigureContentColumnSizing()
+    End Sub
+
     ''' <summary>
     ''' Binds the specified list to the DataGridView using a BindingList and BindingSource
     ''' so that later additions/removals update the grid automatically.
@@ -84,6 +89,11 @@ Public Module DgvInitializationExtensions
             .RowTemplate.Height = 24
             .TabIndex = 0
         End With
+
+        If dgv.Name <> NameOf(Form1.DgvBasalPerHour) Then
+            RemoveHandler dgv.DataBindingComplete, AddressOf DgvContentSizing_DataBindingComplete
+            AddHandler dgv.DataBindingComplete, AddressOf DgvContentSizing_DataBindingComplete
+        End If
     End Sub
 
 End Module

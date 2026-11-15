@@ -61,4 +61,8 @@ Public Class ActiveInsulin
     <JsonPropertyName("version")>
     Public Property Version As Integer
 
+    <DisplayName("")>
+    <Column(Order:=6, TypeName:=NameOf([String]))>
+    Public Property Filler As String
+
 End Class

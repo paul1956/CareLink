@@ -246,37 +246,6 @@ Public Class Form1
                                 .DefaultCellStyle.WrapMode = DataGridViewTriState.True
                             Else
                                 column.HeaderCell.Style.WrapMode = DataGridViewTriState.False
-                                ' Do not override per-grid Fill behavior. For grids that are
-                                ' not configured to Fill, use Fill mode for all columns and
-                                ' preserve relative proportions via FillWeight so columns
-                                ' occupy the available space consistently after refresh.
-                                If dgv.AutoSizeColumnsMode <> DataGridViewAutoSizeColumnsMode.Fill Then
-                                    ' Convert columns to Fill mode while preserving widths
-                                    ' proportionally. Compute total current width and set
-                                    ' FillWeight based on current widths so layout looks
-                                    ' consistent after binding.
-                                    Try
-                                        Dim totalWidth As Integer = 0
-                                        For Each c As DataGridViewColumn In dgv.Columns
-                                            totalWidth += Math.Max(c.Width, c.MinimumWidth)
-                                        Next
-
-                                        If totalWidth <= 0 Then
-                                            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                                        Else
-                                            For Each c As DataGridViewColumn In dgv.Columns
-                                                Dim w As Integer = Math.Max(c.Width, c.MinimumWidth)
-                                                ' Avoid zero FillWeight
-                                                c.FillWeight = If(totalWidth = 0, 1.0F, w / CSng(totalWidth) * 100.0F)
-                                                c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                                            Next
-                                        End If
-                                    Catch
-                                        Stop
-                                        ' If anything goes wrong, fallback to AllCells for this column.
-                                        column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-                                    End Try
-                                End If
                             End If
                         End If
                     End If
@@ -284,6 +253,7 @@ Public Class Form1
             Next
         End If
 
+        dgv.ConfigureContentColumnSizing()
         If dgv.Name = NameOf(DgvSummary) Then
             If _dgvSummaryPrevRowIndex > 0 AndAlso
               _dgvSummaryPrevRowIndex < dgv.RowCount AndAlso
@@ -1007,6 +977,7 @@ Public Class Form1
             Return
         End If
 
+        dgv.ConfigureContentColumnSizing()
         Try
             ' Defer header/column updates to the UI message loop when the control
             ' handle is not yet created to avoid NullReferenceExceptions inside
@@ -1263,7 +1234,10 @@ Public Class Form1
                     dgv.CellFormattingDateTime(e)
 
                 Case NameOf(ActiveInsulin.Precision)
-                    dgv.CellFormattingToTitle(e)
+                    dgv.CellFormattingDefault(e)
+
+                Case NameOf(ActiveInsulin.Filler)
+                    ' Ignore filler column for formatting; no action needed.
 
                 Case Else
                     Stop
@@ -1370,8 +1344,12 @@ Public Class Form1
                 Case NameOf(AutoBasalDelivery.MaxAutoBasalRate)
                     dgv.CellFormattingBasal(e)
 
+                Case NameOf(AutoBasalDelivery.Filler)
+                    ' Ignore filler column for formatting; no action needed.
+
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
@@ -1470,8 +1448,16 @@ Public Class Form1
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     dgv.CellFormattingDefault(e)
 
+                Case NameOf(AutoModeStatus.Type),
+                     NameOf(AutoModeStatus.Kind)
+                    dgv.CellFormattingDefault(e)
+
+                Case NameOf(AutoModeStatus.Filler)
+                    ' ignore filler column for formatting; no action needed.
+
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
@@ -1574,8 +1560,12 @@ Public Class Form1
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
                     dgv.CellFormattingInteger(e, message:=" minutes")
 
+                Case NameOf(Basal.Filler)
+                    ' ignore filler column for formatting; no action needed.
+
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
@@ -1742,8 +1732,12 @@ Public Class Form1
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
                     dgv.CellFormattingSg(e, partialKey)
 
+                Case NameOf(BgReading.Filler)
+                    ' Ignore filler column for formatting; no action needed.
+
                 Case Else
                     Stop
+                    dgv.CellFormattingDefault(e)
             End Select
         Catch ex As Exception
             Stop
@@ -2438,8 +2432,10 @@ Public Class Form1
                     End If
 
                 Case NameOf(LastSG.Kind)
-                    ' No special formatting needed for this column
+                    dgv.CellFormattingDefault(e)
 
+                Case NameOf(LastSG.Filler)
+                    ' Ignore filler column for formatting; no action needed.
                 Case Else
                     Stop
             End Select
@@ -2533,7 +2529,10 @@ Public Class Form1
                     dgv.CellFormattingDefault(e)
 
                 Case NameOf(Limit.Index)
-                    ' Ignore
+                    dgv.CellFormattingDefault(e)
+
+                Case NameOf(Limit.Filler)
+                    ' Ignore filler column for formatting; no action needed.
 
                 Case Else
                     Stop
@@ -2610,6 +2609,9 @@ Public Class Form1
                 Case NameOf(LowGlucoseSuspended.DeliverySuspended)
                     dgv.CellFormattingSingleWord(e)
 
+                Case NameOf(LowGlucoseSuspended.Filler)
+                    ' Ignore filler column for formatting; no action needed.
+
                 Case Else
                     Stop
             End Select
@@ -2684,6 +2686,9 @@ Public Class Form1
 
                 Case NameOf(Meal.Amount)
                     dgv.CellFormattingInteger(e, message:=GetCarbDefaultUnit)
+
+                Case NameOf(Meal.Filler)
+                    ' Ignore filler column for formatting; no action needed.
 
                 Case Else
                     Stop
@@ -2856,7 +2861,7 @@ Public Class Form1
 
                 Case NameOf(SG.Kind),
                      NameOf(SG.Version)
-                    ' Ignore
+                    dgv.CellFormattingDefault(e)
 
                 Case Else
                     Stop
@@ -2926,11 +2931,6 @@ Public Class Form1
     Private Sub DgvSgs_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
         Handles DgvSGs.ColumnAdded
 
-        e.Column.AutoSizeMode =
-            If(e.Column.Name = "SensorMessage",
-               DataGridViewAutoSizeColumnMode.Fill,
-               DataGridViewAutoSizeColumnMode.AllCells)
-
         ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         e.DgvColumnAdded(
@@ -2982,10 +2982,9 @@ Public Class Form1
 
     ''' <summary>
     '''  Handles the <see cref="DataGridView.DataBindingComplete"/> event for the
-    '''  <see cref="DgvSGs"/> DataGridView controls.
+    '''  <see cref="DgvSGs"/> DataGridView control.
     '''  This event is raised when the data binding operation is complete.
-    '''  It sets the column <see cref="autosize"/> modes and sort glyphs,
-    '''  and ensures the last column is filled and wrapped.
+    '''  It sets the column sizing modes and sort glyph, and wraps the sensor message column.
     ''' </summary>
     ''' <param name="sender">
     '''  The source of the event, a <see cref="DataGridView"/> control.
@@ -2995,16 +2994,7 @@ Public Class Form1
         Handles DgvSGs.DataBindingComplete
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
         Try
-            If dgv.ColumnCount > 1 Then
-                For index As Integer = 0 To lastColumnIndex - 1
-                    dgv.Columns(index).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-                Next
-                dgv.Columns(index:=lastColumnIndex).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                dgv.Columns(index:=lastColumnIndex).DefaultCellStyle.WrapMode = DataGridViewTriState.True
-            End If
-
             dgv.Columns(index:=0).HeaderCell.SortGlyphDirection =
                 If(dgv.RowCount > 0,
                    If(EqualsNoCase(a:=dgv.Rows(index:=0).Cells(index:=0).Value.ToString(), b:="1"),
@@ -3013,6 +3003,7 @@ Public Class Form1
                    SortOrder.None)
             HideDataGridViewColumnsByName(Of SG)(dgv)
             dgv.ApplyDisplayNames(Of SG)()
+            dgv.ConfigureContentColumnSizing()
             dgv.ClearSelection()
         Finally
             ' Ensure the binding refcount is decremented even if the formatting
@@ -3727,7 +3718,7 @@ Public Class Form1
         Dim f As New ControlPositionsForm()
         f.DataGridView1.AutoGenerateColumns = True
         f.DataGridView1.DataSource = data
-        f.DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+        f.DataGridView1.ConfigureContentColumnSizing()
         f.Show()
     End Sub
 

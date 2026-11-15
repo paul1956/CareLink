@@ -92,4 +92,8 @@ Public Class BgReading
         End Get
     End Property
 
+    <DisplayName("")>
+    <Column(Order:=12, TypeName:=NameOf([String]))>
+    Public Property Filler As String
+
 End Class

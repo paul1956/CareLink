@@ -49,6 +49,10 @@ Public Class Basal
     <JsonPropertyName("presetTempName")>
     Public Property PresetTempName As String
 
+    <DisplayName("")>
+    <Column(Order:=7, TypeName:=NameOf([String]))>
+    Public Property Filler As String
+
     Public Shared Operator <>(left As Basal, right As Basal) As Boolean
         Return Not left = right
     End Operator
@@ -66,7 +70,7 @@ Public Class Basal
     '''  otherwise, <see langword="False"/>.
     ''' </returns>
     Public Overrides Function Equals(obj As Object) As Boolean
-        Return Me.Equals(TryCast(obj, Basal))
+        Return Me.Equals(other:=TryCast(obj, Basal))
     End Function
 
     ''' <summary>

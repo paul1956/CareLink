@@ -44,8 +44,8 @@ Friend Module Form1SummaryTabHelpers
                 dgv.UpdateDgvCellSafe(text:=dgv.Rows(index:=s_currentSummaryRow).Cells(index:=2).Value.ToString())
             End If
         End If
-        dgv.AutoResizeColumns(autoSizeColumnsMode:=DataGridViewAutoSizeColumnsMode.AllCells)
         dgv.Columns(index:=0).Visible = Not hideHeaderColumn
+        dgv.ConfigureContentColumnSizing()
     End Sub
 
 End Module

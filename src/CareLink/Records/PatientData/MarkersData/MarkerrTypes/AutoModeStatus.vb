@@ -62,4 +62,8 @@ Public Class AutoModeStatus
     <Column(Order:=7, TypeName:=NameOf([Boolean]))>
     Public ReadOnly Property AutoModeOn As Boolean
 
+    <DisplayName("")>
+    <Column(Order:=8, TypeName:=NameOf([String]))>
+    Public Property Filler As String
+
 End Class
