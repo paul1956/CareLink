@@ -42,7 +42,7 @@ Public Class CareLinkService
         Dim tcs As New TaskCompletionSource(Of T)()
 
         Try
-            If Application.OpenForms IsNot Nothing AndAlso Application.OpenForms.Count > 0 Then
+            If Application.OpenForms.Count > 0 Then
                 Dim ctrl As Control = Application.OpenForms(index:=0)
                 Dim method As New MethodInvoker(
                     Sub()

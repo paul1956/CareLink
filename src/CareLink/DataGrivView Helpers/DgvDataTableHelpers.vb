@@ -35,7 +35,7 @@ Friend Module DgvDataTableHelpers
         ' Convert any per-column AutoSizeMode (for example AllCells)
         ' to Fill and preserve relative widths by using current column
         ' widths to compute FillWeight.
-        If dgv.Columns IsNot Nothing AndAlso dgv.Columns.Count > 0 Then
+        If dgv.Columns.Count > 0 Then
             Dim selector As Func(Of DataGridViewColumn, Integer) =
                 Function(c As DataGridViewColumn) As Integer
                     Return c.Width
