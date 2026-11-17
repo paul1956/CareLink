@@ -754,7 +754,7 @@ Public Class Form1
                     End If
 
                     ' Assign on UI thread
-                    If Me IsNot Nothing AndAlso Me.IsHandleCreated Then
+                    If Me.IsHandleCreated Then
                         Dim method As New MethodInvoker(
                             Sub()
                                 Dim prev As Image = Nothing
