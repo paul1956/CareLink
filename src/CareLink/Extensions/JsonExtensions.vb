@@ -281,7 +281,7 @@ Public Module JsonExtensions
     <Extension>
     Public Function JsonToDictionary(json As String) As Dictionary(Of String, String)
         Dim resultDictionary As New Dictionary(Of String, String)(Comparer)
-        If IsNullOrWhiteSpace(value:=json) Then
+        If String.IsNullOrWhiteSpace(value:=json) Then
             Return resultDictionary
         End If
         Dim item As KeyValuePair(Of String, JsonElement)
@@ -316,7 +316,7 @@ Public Module JsonExtensions
                             Dim messageButtons As MessageBoxButtons
                             If PumpTimeZoneInfo Is Nothing Then
                                 Dim value As String = item.Value.ElementToString()
-                                If IsNullOrWhiteSpace(value) Then
+                                If String.IsNullOrWhiteSpace(value) Then
                                     text = "Your pump appears To be off-line, some " &
                                            "values will be wrong do you want to continue? " &
                                            $"If you select OK '{TimeZoneInfo.Local.Id}' " &
@@ -387,7 +387,7 @@ Public Module JsonExtensions
     ''' </returns>
     Public Function JsonToListOfDictionary(json As String) As List(Of Dictionary(Of String, String))
         Dim resultListOfDictionary As New List(Of Dictionary(Of String, String))
-        If IsNullOrWhiteSpace(value:=json) Then
+        If String.IsNullOrWhiteSpace(value:=json) Then
             Return resultListOfDictionary
         End If
 

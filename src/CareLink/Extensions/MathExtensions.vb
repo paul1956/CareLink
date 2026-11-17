@@ -166,7 +166,7 @@ Friend Module MathExtensions
     ''' </returns>
     <Extension>
     Public Function ParseSingle(s As String) As Single
-        If IsNullOrWhiteSpace(value:=s) Then
+        If String.IsNullOrWhiteSpace(value:=s) Then
             Return Single.NaN
         End If
         s = s.Trim

@@ -22,15 +22,15 @@ Public Module HighAlertRecordExtensions
             this.Start = s1(0)
 
             this.HighLimit = s1(1)
-            If IsNotNullOrWhiteSpace(value:=row.Columns(index:=1)) Then
+            If Not String.IsNullOrWhiteSpace(value:=row.Columns(index:=1)) Then
                 ' append marker to TimeBeforeHigh
                 this.TimeBeforeHigh &= " *Verify!"
                 this.AlertBeforeHigh = "True"
             End If
-            If IsNotNullOrWhiteSpace(value:=row.Columns(index:=2)) Then
+            If Not String.IsNullOrWhiteSpace(value:=row.Columns(index:=2)) Then
                 this.AlertOnHigh = "True"
             End If
-            If IsNullOrWhiteSpace(value:=row.Columns(index:=3)) Then
+            If String.IsNullOrWhiteSpace(value:=row.Columns(index:=3)) Then
                 this.RiseAlert = "False"
             Else
                 this.RiseAlert = "True"

@@ -183,6 +183,75 @@ Public Class StringExtensionsTests
     End Sub
 
     <Fact>
+    Public Sub ExtractBetween_ReturnsTextOrEmptyWhenMarkersAreMissing()
+        Dim input As String = "prefix [ value ] suffix"
+        input.ExtractBetween(startWord:="[", endWord:="]").Should().Be("value")
+
+        input = "prefix [ value"
+        input.ExtractBetween(startWord:="[", endWord:="]").Should().BeEmpty()
+        input.ExtractBetween(startWord:="[").Should().Be("value")
+
+        input = "prefix value"
+        input.ExtractBetween(startWord:="[").Should().BeEmpty()
+        DirectCast(Nothing, String).ExtractBetween(startWord:="[").Should().BeEmpty()
+
+        input = "value"
+        input.ExtractBetween(startWord:=Nothing).Should().BeEmpty()
+    End Sub
+
+    <Fact>
+    Public Sub IsNumericInAnyCulture_RecognizesNumbersAndRejectsOtherValues()
+        Dim input As String = "123.45"
+        input.IsNumericInAnyCulture().Should().BeTrue()
+
+        input = "not a number"
+        input.IsNumericInAnyCulture().Should().BeFalse()
+
+        input = "   "
+        input.IsNumericInAnyCulture().Should().BeFalse()
+    End Sub
+
+    <Fact>
+    Public Sub NormalizePath_ReplacesBackslashesWithForwardSlashes()
+        Dim input As String = "folder\subfolder\file.txt"
+        input.NormalizePath().Should().Be("folder/subfolder/file.txt")
+
+        input = "folder/file.txt"
+        input.NormalizePath().Should().Be("folder/file.txt")
+    End Sub
+
+    <Fact>
+    Public Sub TrimEnd_RemovesOnlyAnOrdinalMatchingSuffix()
+        Dim input As String = "report.pdf"
+        input.TrimEnd(suffix:=".pdf").Should().Be("report")
+        input.TrimEnd(suffix:=".PDF").Should().Be("report.pdf")
+        input.TrimEnd(suffix:=".txt").Should().Be("report.pdf")
+        input.TrimEnd(suffix:=String.Empty).Should().Be("report.pdf")
+        DirectCast(Nothing, String).TrimEnd(suffix:=".pdf").Should().BeNull()
+    End Sub
+
+    <Fact>
+    Public Sub TruncateAtKeyword_TruncatesCaseInsensitivelyOrPreservesInput()
+        Dim input As String = "  Keep this  KEY and the rest"
+        input.TruncateAtKeyword(key:="key").Should().Be("  Keep this")
+
+        input = "Keep this"
+        input.TruncateAtKeyword(key:="missing").Should().Be("Keep this")
+        input.TruncateAtKeyword(key:=String.Empty).Should().Be("Keep this")
+        DirectCast(Nothing, String).TruncateAtKeyword(key:="key").Should().BeNull()
+    End Sub
+
+    <Fact>
+    Public Sub StartsWithAnyNoCase_MatchesWithoutCaseAndHandlesMissingArguments()
+        Dim values As New List(Of String) From {"Alpha", "Beta"}
+
+        values.StartsWithAnyNoCase(value:="alpha").Should().BeTrue()
+        values.StartsWithAnyNoCase(value:="gamma").Should().BeFalse()
+        DirectCast(Nothing, List(Of String)).StartsWithAnyNoCase(value:="alpha").Should().BeFalse()
+        values.StartsWithAnyNoCase(value:=Nothing).Should().BeFalse()
+    End Sub
+
+    <Fact>
     Public Sub ParseDoubleInvariant_ParsesCorrectly()
         Dim input As String = "123.45"
         Dim expectedValue As Double = 123.45

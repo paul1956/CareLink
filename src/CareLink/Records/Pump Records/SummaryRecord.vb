@@ -36,7 +36,7 @@ Public Class SummaryRecord
 
         Me.New(recordNumber, kvp)
         Dim message As String = ""
-        If IsNotNullOrWhiteSpace(kvp.Value) Then
+        If Not String.IsNullOrWhiteSpace(kvp.Value) Then
             If Not messages.TryGetValue(key:=kvp.Value, value:=message) Then
                 Select Case kvp.Value
                     Case "SG_ABOVE_400_MGDL"

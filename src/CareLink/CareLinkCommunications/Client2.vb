@@ -428,7 +428,7 @@ Friend Class Client2
             ' Call user string; handle typed failures
             Dim json As String =
                 Await Me.GetUserStringAsync(Me.Config, tokenData:=Me.TokenDataElement)
-            If IsNullOrWhiteSpace(value:=json) Then
+            If String.IsNullOrWhiteSpace(value:=json) Then
                 Throw New UnauthorizedAccessException
             End If
 
@@ -625,7 +625,7 @@ Friend Class Client2
                 Return Nothing
             End Try
         End If
-        If IsNullOrWhiteSpace(value:=refreshTok) Then
+        If String.IsNullOrWhiteSpace(value:=refreshTok) Then
             message =
                 $"{fnName}: Missing refresh_token in stored tokenDataElement data."
             LogMessage(message)
@@ -793,7 +793,7 @@ Friend Class Client2
                         Dim parentDir As String =
                             IO.Path.GetDirectoryName(path)
 
-                        If IsNullOrWhiteSpace(value:=parentDir) Then
+                        If String.IsNullOrWhiteSpace(value:=parentDir) Then
                             parentDir = Environment.CurrentDirectory
                         End If
                         Dim extractDir As String =
@@ -887,7 +887,7 @@ Friend Class Client2
                                     Else
                                         Dim destinationParent As String =
                                             IO.Path.GetDirectoryName(path:=destinationPath)
-                                        If Not IsNullOrWhiteSpace(value:=destinationParent) Then
+                                        If Not String.IsNullOrWhiteSpace(value:=destinationParent) Then
                                             Directory.CreateDirectory(path:=destinationParent)
                                         End If
                                         ent.ExtractToFile(destinationFileName:=destinationPath, overwrite:=True)

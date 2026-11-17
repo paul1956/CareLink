@@ -384,7 +384,7 @@ Public Class DataGridViewNumericUpDownCell
             formattedValueTypeConverter,
             context)
         Dim formattedNumber As String = TryCast(formattedValue, String)
-        If IsNotNullOrEmpty(formattedNumber) AndAlso value IsNot Nothing Then
+        If Not String.IsNullOrEmpty(value:=formattedNumber) AndAlso value IsNot Nothing Then
             Dim unformattedDecimal As Decimal = Convert.ToDecimal(value)
             Dim formattedDecimal As Decimal = Convert.ToDecimal(formattedNumber)
             If unformattedDecimal = formattedDecimal Then
@@ -819,7 +819,7 @@ Public Class DataGridViewNumericUpDownCell
         Dim numberFormatInfo As NumberFormatInfo = CultureInfo.CurrentCulture.NumberFormat
         Dim negativeSignKey As Keys = Keys.None
         Dim negativeSignStr As String = numberFormatInfo.NegativeSign
-        If IsNotNullOrEmpty(value:=negativeSignStr) AndAlso negativeSignStr.Length = 1 Then
+        If Not String.IsNullOrEmpty(value:=negativeSignStr) AndAlso negativeSignStr.Length = 1 Then
             negativeSignKey = CType(VkKeyScan(key:=negativeSignStr(index:=0)), Keys)
         End If
 

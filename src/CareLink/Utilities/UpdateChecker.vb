@@ -128,7 +128,7 @@ Friend Module UpdateChecker
     ''' </example>
     Private Function IsNewerVersion(gitHubVersion As String, version As Version) As Boolean
         Return gitHubVersion IsNot Nothing AndAlso
-                IsNotNullOrWhiteSpace(value:=gitHubVersion) AndAlso
+                Not String.IsNullOrWhiteSpace(value:=gitHubVersion) AndAlso
                 Version.Parse(input:=gitHubVersion) > Version.Parse(input:=version.ToString())
     End Function
 

@@ -292,7 +292,7 @@ Public Class PdfSectionParser
                    SplitColumns(line))
         Dim bolusIncrement As Single
         If split.Length = 4 Then
-            Dim split3 As String = split(3).RemoveSuffix(suffix:=" U")
+            Dim split3 As String = split(3).TrimEnd(suffix:=" U")
             bolusIncrement = If(split3.Contains(value:="--"),
                                 Single.NaN,
                                 split3.ParseSingle().RoundToStep())

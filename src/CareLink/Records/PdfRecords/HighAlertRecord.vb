@@ -24,12 +24,12 @@ Public Class HighAlertRecord
         Me.Start = s1(0)
 
         Me.HighLimit = s1(1)
-        If IsNotNullOrWhiteSpace(value:=row.Columns(index:=1)) Then
+        If Not String.IsNullOrWhiteSpace(value:=row.Columns(index:=1)) Then
             Me.AlertBeforeHigh = "True"
             Me.TimeBeforeHigh &= " *Verify!"
         End If
-        Me.AlertOnHigh = If(IsNotNullOrWhiteSpace(value:=row.Columns(index:=2)), "True", "False")
-        If IsNullOrWhiteSpace(value:=row.Columns(index:=3)) Then
+        Me.AlertOnHigh = If(Not String.IsNullOrWhiteSpace(value:=row.Columns(index:=2)), "True", "False")
+        If String.IsNullOrWhiteSpace(value:=row.Columns(index:=3)) Then
             Me.RiseAlert = "False"
         Else
             Me.RiseAlert = "True"

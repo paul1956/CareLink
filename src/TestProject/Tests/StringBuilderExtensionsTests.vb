@@ -35,7 +35,7 @@ Public Class StringBuilderExtensionsTests
     <Fact>
     Public Sub TrimEnd_ReturnsNothing_WhenStringBuilderIsNothing()
         Dim sb As StringBuilder = Nothing
-        Dim result As StringBuilder = TrimEnd(sb, value:="x")
+        Dim result As StringBuilder = sb.TrimEnd(value:="x")
         result.Should().BeNull()
     End Sub
 

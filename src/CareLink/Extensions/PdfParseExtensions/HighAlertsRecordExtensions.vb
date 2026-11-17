@@ -29,7 +29,7 @@ Public Module HighAlertsRecordExtensions
                 Dim value As String = sTable.Rows(index:=e.Index + 1).Columns(index:=0)
                 Dim item As New HighAlertRecord()
                 item.InitializeFromRow(row, valueUnits)
-                item.End = If(e.IsLast OrElse IsNullOrWhiteSpace(value),
+                item.End = If(e.IsLast OrElse String.IsNullOrWhiteSpace(value),
                               Midnight.ToString,
                               sTable.Rows(index:=e.Index + 1) _
                                                  .Columns(index:=0) _

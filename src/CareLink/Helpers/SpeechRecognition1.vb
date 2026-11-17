@@ -346,9 +346,9 @@ Friend Module SpeechSupport
             s_speechRecognitionEngine.LoadGrammarAsync(grammar:=New Grammar(builder:=gb_tellMe))
 
             CursorStarted(owner:=My.Forms.Form1, pumpMessages:=True)
-            If IsNullOrWhiteSpace(s_speechUserName) Then
+            If String.IsNullOrWhiteSpace(s_speechUserName) Then
                 Dim textToSpeak As String = $"Speech recognition enabled for {PatientData.FirstName}"
-                If IsNullOrWhiteSpace(value:=oldUserName) Then
+                If String.IsNullOrWhiteSpace(value:=oldUserName) Then
                     textToSpeak &= " for a list of commands say, CareLink what can I say"
                 End If
 

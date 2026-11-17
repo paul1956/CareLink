@@ -22,7 +22,7 @@ Public Module StringExtensions
     ''' </returns>
     <Extension>
     Public Function CleanSpaces(input As String) As String
-        Return If(IsNullOrWhiteSpace(value:=input),
+        Return If(String.IsNullOrWhiteSpace(value:=input),
                   String.Empty,
                   Regex.Replace(input, pattern:="\s+", replacement:=" ").Trim)
     End Function
@@ -112,56 +112,6 @@ Public Module StringExtensions
     End Function
 
     ''' <summary>
-    '''  Indicates whether the specified string is <see langword="Not"/>
-    '''  <see langword="nothing"/> or an empty string("").
-    ''' </summary>
-    ''' <param name="value">The string to check.</param>
-    ''' <returns>
-    '''  <see langword="False"/> if the value parameter is <see langword="nothing"/> or an empty string("");
-    '''  otherwise, <see langword="True"/>.
-    ''' </returns>
-    Public Function IsNotNullOrEmpty(value As String) As Boolean
-        Return Not String.IsNullOrEmpty(value)
-    End Function
-
-    ''' <summary>
-    '''  Indicates whether the specified string is <see langword="Not"/> <see langword="nothing"/>,
-    '''  not an empty string(""), and does not consist only of whitespace characters.
-    ''' </summary>
-    ''' <param name="value">The string to check.</param>
-    ''' <returns>
-    '''  <see langword="False"/> if the value parameter is <see langword="nothing"/> or <see cref="String.Empty"/>
-    '''  or if the value consists exclusively of white-space characters; otherwise, <see langword="True"/>.
-    ''' </returns>
-    Public Function IsNotNullOrWhiteSpace(value As String) As Boolean
-        Return Not String.IsNullOrWhiteSpace(value)
-    End Function
-
-    ''' <summary>
-    '''  Indicates whether the specified string is <see langword="nothing"/> or an empty string("").
-    ''' </summary>
-    ''' <param name="value">The string to check.</param>
-    ''' <returns>
-    '''  <see langword="True"/> if the value parameter is <see langword="nothing"/> or an empty string("");
-    '''  otherwise, <see langword="False"/>.
-    ''' </returns>
-    Public Function IsNullOrEmpty(value As String) As Boolean
-        Return String.IsNullOrEmpty(value)
-    End Function
-
-    ''' <summary>
-    ''' Checks if the string is 'nothing, an empty string, or consists only of whitespace characters'
-    ''' </summary>
-    ''' <param name="value">The string to check.</param>
-    ''' <returns>
-    '''  <see langword="True"/> if the value parameter is <see langword="nothing"/> or <see cref="String.Empty"/>
-    '''  or if the value consists exclusively of white-space characters; otherwise, <see langword="False"/>.
-    ''' </returns>
-    Public Function IsNullOrWhiteSpace(value As String) As Boolean
-        Return String.IsNullOrWhiteSpace(value)
-    End Function
-
-    ''' <summary>
     '''   Check whether a <see langword="String"/> could be a valid numeric value
     '''   in any country/locale
     ''' </summary>
@@ -179,7 +129,7 @@ Public Module StringExtensions
         ' Try parsing with all available cultures
         For Each culture As CultureInfo In CultureInfo.GetCultures(CultureTypes.AllCultures)
             Dim number As Double
-            If Double.TryParse(value,
+            If Double.TryParse(s:=value,
                                style:=NumberStyles.Any,
                                provider:=culture,
                                result:=number) Then
@@ -244,7 +194,7 @@ Public Module StringExtensions
     ''' <param name="comparisonType">The string comparisonType to use.</param>
     ''' <returns>The string with the suffix removed, if it existed.</returns>
     <Extension>
-    Public Function RemoveSuffix(value As String, suffix As String) As String
+    Public Function TrimEnd(value As String, suffix As String) As String
         Return If(String.IsNullOrEmpty(value) OrElse String.IsNullOrEmpty(value:=suffix),
                   value,
                   If(value.EndsWith(value:=suffix, comparisonType:=StringComparison.Ordinal),
@@ -261,7 +211,7 @@ Public Module StringExtensions
     ''' <example>doNotCapitalizedFirstLetterString</example>
     <Extension()>
     Public Function ToLowerCamelCase(value As String) As String
-        If IsNullOrWhiteSpace(value) Then
+        If String.IsNullOrWhiteSpace(value) Then
             Return String.Empty
         End If
 
@@ -281,7 +231,7 @@ Public Module StringExtensions
     ''' <returns>A title-cased string.</returns>
     <Extension()>
     Public Function ToTitle(value As String, Optional separateDigits As Boolean = False) As String
-        If IsNullOrWhiteSpace(value) Then
+        If String.IsNullOrWhiteSpace(value) Then
             Return String.Empty
         End If
 
@@ -335,7 +285,7 @@ Public Module StringExtensions
     ''' <returns>A title-cased string with spaces between words.</returns>
     <Extension()>
     Public Function ToTitleCase(value As String, Optional separateNumbers As Boolean = True) As String
-        If IsNullOrWhiteSpace(value) Then
+        If String.IsNullOrWhiteSpace(value) Then
             Return String.Empty
         End If
         If value.ContainsNoCase(value:="MmolL") Then

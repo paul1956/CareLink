@@ -235,7 +235,7 @@ Public Class CareLinkService
                      Loop
                  End Function)
 
-        If redirectResult Is Nothing OrElse IsNullOrWhiteSpace(value:=redirectResult.Code) Then
+        If String.IsNullOrWhiteSpace(value:=redirectResult?.Code) Then
             message = "Authorization code was not captured."
             Throw New Exception(message)
         End If

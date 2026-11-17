@@ -76,7 +76,7 @@ Friend Module Form1UpdateHelpers
             Dim messageButtons As MessageBoxButtons
             If PumpTimeZoneInfo Is Nothing Then
                 Dim text As String
-                If IsNullOrWhiteSpace(kvp.Value) Then
+                If String.IsNullOrWhiteSpace(kvp.Value) Then
                     text = $"Your pump appears To be off-line, " &
                         "some values will be wrong do you want to continue? " &
                         $"If you select OK '{TimeZoneInfo.Local.Id}' will be " &
@@ -241,17 +241,17 @@ Friend Module Form1UpdateHelpers
                                           extension As String,
                                           mustBeUnique As Boolean) As FileNameStruct
         Dim message As String
-        If IsNullOrWhiteSpace(value:=baseName) Then
+        If String.IsNullOrWhiteSpace(value:=baseName) Then
             message = $"'{NameOf(baseName)}' cannot be null or whitespace."
             Throw New ArgumentException(message, paramName:=NameOf(baseName))
         End If
 
-        If IsNullOrWhiteSpace(value:=cultureName) Then
+        If String.IsNullOrWhiteSpace(value:=cultureName) Then
             message = $"'{NameOf(cultureName)}' cannot be null or whitespace."
             Throw New ArgumentException(message, paramName:=NameOf(cultureName))
         End If
 
-        If IsNullOrWhiteSpace(value:=extension) Then
+        If String.IsNullOrWhiteSpace(value:=extension) Then
             message = $"'{NameOf(extension)}' cannot be null or whitespace."
             Throw New ArgumentException(message, paramName:=NameOf(extension))
         End If
@@ -302,7 +302,7 @@ Friend Module Form1UpdateHelpers
                                   isTitle As Boolean)
 
         ' First try to parse the value as JSON object and enumerate properties.
-        If IsNotNullOrWhiteSpace(kvp.Value) Then
+        If Not String.IsNullOrWhiteSpace(kvp.Value) Then
             Try
                 Dim elem As JsonElement
                 Dim idx As Integer = 0
@@ -442,7 +442,7 @@ Friend Module Form1UpdateHelpers
                                         isTitle As Boolean)
 
         ' First try to parse the value as JSON object and enumerate properties.
-        If IsNotNullOrWhiteSpace(kvp.Value) Then
+        If Not String.IsNullOrWhiteSpace(kvp.Value) Then
             Dim t As Type = kvp.Value.GetType
             Select Case t
                 Case GetType(JsonElement)
@@ -859,7 +859,7 @@ Friend Module Form1UpdateHelpers
 
                 Case ServerDataEnum.activeInsulin
                     s_activeInsulin = PatientData.ActiveInsulin
-                    If IsNullOrEmpty(value:=PatientData.ActiveInsulin.DateTimeAsString) Then
+                    If String.IsNullOrEmpty(value:=PatientData.ActiveInsulin.DateTimeAsString) Then
                         s_activeInsulin.DateTimeAsString =
                             PatientData.ActiveInsulin.DateTime.ToString()
                     End If
@@ -874,7 +874,7 @@ Friend Module Form1UpdateHelpers
                     item = New SummaryRecord(recordNumber, key, value:=ClickToShowDetails)
                     ListOfSummaryRecords.Add(item)
                     BasalList(index:=0) =
-                        If(IsNullOrWhiteSpace(kvp.Value),
+                        If(String.IsNullOrWhiteSpace(kvp.Value),
                            New Basal,
                            PatientData.Basal)
 

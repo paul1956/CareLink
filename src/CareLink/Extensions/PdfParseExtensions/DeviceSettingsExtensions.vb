@@ -77,9 +77,9 @@ Friend Module DeviceSettingsExtensions
             Dim v As String = r.Columns(index:=0)
             If v.StartsWith(value:=key) Then
                 If Not String.IsNullOrEmpty(value:=endsWith) Then
-                    v = v.RemoveSuffix(suffix:=endsWith)
+                    v = v.TrimEnd(suffix:=endsWith)
                 End If
-                Dim value As String = v.Remove(key).Trim
+                Dim value As String = v.Remove(s:=key).Trim
                 If value = v Then
                     value = r.Columns(index:=1)
                 End If
@@ -136,8 +136,9 @@ Friend Module DeviceSettingsExtensions
         If typeOfT Is GetType(Boolean) Then
             Return CType(CObj(False), T)
         End If
-        Throw New ArgumentException($"Unsupported type '{typeOfT.FullName}' in GetSingleLineValue.")
-        Return Nothing
+        Dim message As String =
+            $"Unsupported type '{typeOfT.FullName}' in {NameOf(GetSingleLineValue)}."
+        Throw New ArgumentException(message)
     End Function
 
     <Extension>

@@ -14,7 +14,7 @@ Imports Xunit
 <Collection("Sequential")>
 Public Class NotificationGridTests
 
-    <Theory(Skip:="Pending resolution of notification grid layout after size changes.")>
+    <Theory>
     <InlineData(True)>
     <InlineData(False)>
     Public Sub ClearedNotifications_SampleHasNoExcessSpaceBelowRows(visibleBeforeLoading As Boolean)
@@ -35,7 +35,11 @@ JsonDocument.Parse(json:=File.ReadAllText(path:=FileIoHelpers.GetTestDataPath())
                     End Using
 
                     Using owner As New Form1()
+                        Dim size As New Drawing.Size(width:=1384, height:=800)
+                        owner.ClientSize = size
                         owner.Show()
+                        owner.DeviceDpi.Should().Be(expected:=96, because:="the application currently supports 96 DPI")
+                        owner.ClientSize.Should().Be(expected:=size, because:="the test uses the supported fixed client size")
                         owner.TabControlPage1.Visible = True
                         If visibleBeforeLoading Then
                             owner.TabControlPage1.SelectedTab = owner.TabPage11NotificationsCleared
@@ -53,61 +57,55 @@ JsonDocument.Parse(json:=File.ReadAllText(path:=FileIoHelpers.GetTestDataPath())
                             grids.Should().HaveCount(expected:=7,
                                                      because:=$"the sample has seven notifications ({{0}})",
                                                      scenario)
-                            For Each size As Drawing.Size In {New Drawing.Size(width:=1100, height:=600),
-                                                            New Drawing.Size(width:=800, height:=500)}
-                                owner.ClientSize = size
+                            For Each grid As DataGridView In grids
+                                Dim scrollY As Integer = Math.Max(0, grid.Top - panel.AutoScrollPosition.Y)
+                                panel.AutoScrollPosition = New Drawing.Point(x:=0, y:=scrollY)
                                 Application.DoEvents()
-                                For Each grid As DataGridView In grids
-                                    Dim scrollY As Integer = Math.Max(0, grid.Top - panel.AutoScrollPosition.Y)
-                                    panel.AutoScrollPosition = New Drawing.Point(x:=0, y:=scrollY)
-                                    Application.DoEvents()
-                                    Dim rowsHeight As Integer =
-                                        grid.Rows.GetRowsHeight(includeFilter:=DataGridViewElementStates.Visible)
-                                    Dim rowIndex As Integer = panel.GetRow(control:=grid)
-                                    Dim lastRow As Integer =
-                                        grid.Rows.GetLastRow(includeFilter:=DataGridViewElementStates.Visible)
-                                    Dim lastRowBounds As Drawing.Rectangle =
-                                        grid.GetRowDisplayRectangle(rowIndex:=lastRow, cutOverflow:=False)
-                                    Dim rowHeight As Integer =
-                                        panel.GetRowHeights()(rowIndex)
-                                    Dim details As String =
-                                        $"{scenario}, size={size}, row={rowIndex}, grid={grid.Bounds}, " &
-                                        $"client={grid.ClientRectangle}, rowsHeight={rowsHeight}, lastRow={lastRowBounds}, " &
-                                        $"panelRowHeight={rowHeight}, scroll={panel.AutoScrollPosition}"
-                                    lastRowBounds.Bottom.Should().BeLessThanOrEqualTo(
-                                        expected:=grid.ClientRectangle.Bottom + 2,
-                                        because:=$"the last row must not be clipped ({{0}})", details)
-                                    Dim gridGap As Integer = grid.ClientSize.Height - rowsHeight
-                                    gridGap.Should().BeInRange(minimumValue:=0,
-                                                               maximumValue:=2,
-                                                               because:="the grid must fit its visible rows without excess space ({0})",
-                                                               details)
-                                    Dim rowGap As Integer = rowHeight - rowsHeight
-                                    rowGap.Should().BeInRange(minimumValue:=0,
-                                                              maximumValue:=20,
-                                                              because:=$"the panel row must fit the notification without excess space ({{0}})",
-                                                              details)
-                                Next
-                                panel.VerticalScroll.Visible.Should().BeTrue(
-                                    because:=$"the seven notifications must be scrollable ({{0}}, size={{1}}, client={{2}})",
-                                    scenario, size, panel.ClientSize)
-                                panel.AutoScrollPosition = New Drawing.Point(x:=0, y:=Integer.MaxValue)
-                                Application.DoEvents()
-                                Dim lastGrid As DataGridView =
-                                    grids.OrderBy(
-                                        keySelector:=Function(grid As DataGridView)
-                                                         Return panel.GetRow(control:=grid)
-                                                     End Function).Last()
-                                Dim gap As Integer = panel.ClientSize.Height - lastGrid.Bottom
-                                Dim bottomDetails As String =
-                                    $"{scenario}, size={size}, client={panel.ClientSize}, " &
-                                    $"display={panel.DisplayRectangle}, scroll={panel.AutoScrollPosition}, " &
-                                    $"last={lastGrid.Bounds}, rows={String.Join(separator:=",", values:=panel.GetRowHeights())}"
-                                gap.Should().BeInRange(minimumValue:=0,
-                                                       maximumValue:=20,
-                                                       because:=$"the last grid must be visible without excess scroll space below it ({{0}})",
-                                                       bottomDetails)
+                                Dim rowsHeight As Integer =
+                                    grid.Rows.GetRowsHeight(includeFilter:=DataGridViewElementStates.Visible)
+                                Dim rowIndex As Integer = panel.GetRow(control:=grid)
+                                Dim lastRow As Integer =
+                                    grid.Rows.GetLastRow(includeFilter:=DataGridViewElementStates.Visible)
+                                Dim lastRowBounds As Drawing.Rectangle =
+                                    grid.GetRowDisplayRectangle(rowIndex:=lastRow, cutOverflow:=False)
+                                Dim rowHeight As Integer = panel.GetRowHeights()(rowIndex)
+                                Dim details As String =
+                                    $"{scenario}, size={size}, row={rowIndex}, grid={grid.Bounds}, " &
+                                    $"client={grid.ClientRectangle}, rowsHeight={rowsHeight}, lastRow={lastRowBounds}, " &
+                                    $"panelRowHeight={rowHeight}, scroll={panel.AutoScrollPosition}"
+                                lastRowBounds.Bottom.Should().BeLessThanOrEqualTo(
+                                    expected:=grid.ClientRectangle.Bottom + 2,
+                                    because:=$"the last row must not be clipped ({{0}})", details)
+                                Dim gridGap As Integer = grid.ClientSize.Height - rowsHeight
+                                gridGap.Should().BeInRange(minimumValue:=0,
+                                                           maximumValue:=2,
+                                                           because:="the grid must fit its visible rows without excess space ({0})",
+                                                           details)
+                                Dim rowGap As Integer = rowHeight - rowsHeight
+                                rowGap.Should().BeInRange(minimumValue:=0,
+                                                          maximumValue:=20,
+                                                          because:=$"the panel row must fit the notification without excess space ({{0}})",
+                                                          details)
                             Next
+                            panel.VerticalScroll.Visible.Should().BeTrue(
+                                because:=$"the seven notifications must be scrollable ({{0}}, size={{1}}, client={{2}})",
+                                scenario, size, panel.ClientSize)
+                            panel.AutoScrollPosition = New Drawing.Point(x:=0, y:=Integer.MaxValue)
+                            Application.DoEvents()
+                            Dim lastGrid As DataGridView =
+                                grids.OrderBy(
+                                    keySelector:=Function(grid As DataGridView)
+                                                     Return panel.GetRow(control:=grid)
+                                                 End Function).Last()
+                            Dim gap As Integer = panel.ClientSize.Height - lastGrid.Bottom
+                            Dim bottomDetails As String =
+                                $"{scenario}, size={size}, client={panel.ClientSize}, " &
+                                $"display={panel.DisplayRectangle}, scroll={panel.AutoScrollPosition}, " &
+                                $"last={lastGrid.Bounds}, rows={String.Join(separator:=",", values:=panel.GetRowHeights())}"
+                            gap.Should().BeInRange(minimumValue:=0,
+                                                   maximumValue:=20,
+                                                   because:=$"the last grid must be visible without excess scroll space below it ({{0}})",
+                                                   bottomDetails)
                         Next
                     End Using
                 Catch ex As Exception

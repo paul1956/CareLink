@@ -17,7 +17,7 @@ Public Module PatientDataHelpers
     ''' <returns>String without any personal information</returns>
     Public Function CleanPatientData() As String
         Dim value As String = PatientDataElement.ElementToString()
-        If IsNullOrWhiteSpace(value) Then
+        If String.IsNullOrWhiteSpace(value) Then
             Return value
         End If
         Dim charList As New List(Of Char) From {","c, CChar(vbCr)}

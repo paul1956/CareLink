@@ -43,7 +43,7 @@ Namespace My
             ' on a background thread to avoid delaying UI initialization.
             Try
                 Dim country As String =
-                    If(IsNullOrWhiteSpace(value:=Settings.CountryCode),
+                    If(String.IsNullOrWhiteSpace(value:=Settings.CountryCode),
                        "US",
                        Settings.CountryCode)
                 Dim regionName As String = country.GetRegionFromCode()

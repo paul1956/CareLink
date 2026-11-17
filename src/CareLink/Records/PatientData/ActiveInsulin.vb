@@ -40,7 +40,7 @@ Public Class ActiveInsulin
     <JsonPropertyName("timestampAsDate")>
     Public ReadOnly Property DateTime As Date
         Get
-            Return If(IsNullOrWhiteSpace(value:=Me.DateTimeAsString),
+            Return If(String.IsNullOrWhiteSpace(value:=Me.DateTimeAsString),
                       Now,
                       TryParseDateStr(s:=Me.DateTimeAsString))
         End Get

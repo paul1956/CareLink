@@ -159,7 +159,7 @@ Public Class SgMiniForm
     Friend Sub SetCurrentSgString(sgString As String, f As Single)
         _currentSgValue = f
         _normalizedSg = f
-        Dim text As String = If(IsNullOrWhiteSpace(value:=sgString) OrElse Single.IsNaN(f),
+        Dim text As String = If(String.IsNullOrWhiteSpace(value:=sgString) OrElse Single.IsNaN(f),
                                 "---",
                                 sgString)
         UpdateTextBoxSafe(txtBox:=Me.SgTextBox, text)

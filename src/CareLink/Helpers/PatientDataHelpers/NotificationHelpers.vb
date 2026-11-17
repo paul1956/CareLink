@@ -263,10 +263,10 @@ Friend Module NotificationHelpers
                     dgv.Rows(index:=e.RowIndex).Cells(columnName:="Value").Value?.ToString()
 
                 ' Validate and parse color string
-                If IsNotNullOrWhiteSpace(value:=colorString) AndAlso
+                If Not String.IsNullOrWhiteSpace(value:=colorString) AndAlso
                     colorString.StartsWithNoCase(value:="0x") Then
                     Dim argb As Integer
-                    If Integer.TryParse(colorString.AsSpan(start:=2),
+                    If Integer.TryParse(s:=colorString.AsSpan(start:=2),
                                          style:=NumberStyles.HexNumber,
                                          provider:=Nothing,
                                          result:=argb) Then

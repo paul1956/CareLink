@@ -104,7 +104,7 @@ Public Class ExceptionHandlerDialog
             productInformation:=New ProductHeaderValue(name:="CareLink.Issues"),
             baseAddress:=New Uri(uriString:=GitHubCareLinkUrl))
             Dim fontBold As New Font(prototype:= .Font, newStyle:=FontStyle.Bold)
-            If IsNullOrWhiteSpace(value:=Me.ReportNameWithPath) Then
+            If String.IsNullOrWhiteSpace(value:=Me.ReportNameWithPath) Then
                 ' Create error report and issue
                 Me.exTextBox.Text = Me.UnhandledException.Exception.Message
                 Me.traceTextBox.Text = TrimmedStackTrace(Me.UnhandledException.Exception.StackTrace)
@@ -221,7 +221,7 @@ Public Class ExceptionHandlerDialog
     Private Sub OK_Click(sender As Object, e As EventArgs) Handles OK.Click
         Me.OK.Enabled = False
         Me.Cancel.Enabled = False
-        If IsNullOrWhiteSpace(value:=Me.ReportNameWithPath) Then
+        If String.IsNullOrWhiteSpace(value:=Me.ReportNameWithPath) Then
             ' This branch creates a new report and will exit
             ' program upon return
 

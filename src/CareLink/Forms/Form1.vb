@@ -163,7 +163,7 @@ Public Class Form1
     ''' </summary>
     Friend Sub UpdateDgvHeaders(dgv As DataGridView)
         If dgv Is Nothing Then
-            Return
+            Exit Sub
         End If
         Dim pendingKey As String = dgv.Name
 
@@ -172,7 +172,7 @@ Public Class Form1
         ' requests so only one update per grid is queued at a time.
         If Not dgv.IsHandleCreated OrElse Me.IsDisposed OrElse Me.Disposing Then
             Dim shouldQueue As Boolean = False
-            If IsNullOrWhiteSpace(value:=pendingKey) Then
+            If String.IsNullOrWhiteSpace(value:=pendingKey) Then
                 shouldQueue = True
             Else
                 SyncLock _pendingHeaderUpdates
@@ -190,7 +190,7 @@ Public Class Form1
                         End Sub
                     Me.BeginInvoke(method)
                 Catch
-                    If IsNotNullOrWhiteSpace(value:=pendingKey) Then
+                    If Not String.IsNullOrWhiteSpace(value:=pendingKey) Then
                         SyncLock _pendingHeaderUpdates
                             _pendingHeaderUpdates.Remove(item:=pendingKey)
                         End SyncLock
@@ -201,7 +201,7 @@ Public Class Form1
             Return
         End If
 
-        If IsNotNullOrWhiteSpace(value:=pendingKey) Then
+        If Not String.IsNullOrWhiteSpace(value:=pendingKey) Then
             SyncLock _pendingHeaderUpdates
                 _pendingHeaderUpdates.Remove(item:=pendingKey)
             End SyncLock
@@ -741,7 +741,7 @@ Public Class Form1
         If pictureBox Is Nothing OrElse
            pictureBox.Width = 0 OrElse
            pictureBox.Height = 0 Then
-            Return
+            Exit Sub
         End If
 
         Dim action As Action =
@@ -749,7 +749,9 @@ Public Class Form1
                 Dim newBmp As Bitmap = Nothing
                 Try
                     newBmp = generator.Invoke(arg:=pictureBox.Size)
-                    If newBmp Is Nothing Then Return
+                    If newBmp Is Nothing Then
+                        Exit Sub
+                    End If
 
                     ' Assign on UI thread
                     If Me IsNot Nothing AndAlso Me.IsHandleCreated Then
@@ -971,7 +973,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
 
         If dgv Is Nothing Then
-            Return
+            Exit Sub
         End If
 
         dgv.ConfigureContentColumnSizing()
@@ -2033,15 +2035,15 @@ Public Class Form1
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             Dim headerText As String = dgv.Columns(.Index).HeaderText
-            If IsNullOrWhiteSpace(value:=headerText) Then
+            If String.IsNullOrWhiteSpace(value:=headerText) Then
                 headerText = .DataPropertyName.Remove(s:="DgvCareLinkUsers")
             End If
             If headerText.ContainsNoCase(value:="DeleteRow") Then
                 headerText = EmptyString
             Else
                 If .Index > 0 AndAlso
-                   IsNullOrWhiteSpace(value:= .DataPropertyName) AndAlso
-                   IsNullOrWhiteSpace(value:=headerText) Then
+                   String.IsNullOrWhiteSpace(value:= .DataPropertyName) AndAlso
+                   String.IsNullOrWhiteSpace(value:=headerText) Then
 
                     .DataPropertyName = s_headerColumns(index:= .Index - 2)
                 End If
@@ -2407,7 +2409,7 @@ Public Class Form1
     '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvSGs"/> and
     '''  <see cref="DgvLastSG"/> DataGridView controls.
     '''  This event is raised when a cell in the DataGridView needs to be formatted.
-    '''  It applies specific formatting rules based on the column name and value type.
+    '''  It applies specific formatting rules based on the column name and userName type.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">
@@ -2821,7 +2823,7 @@ Public Class Form1
     '''  Handles the <see cref="DataGridView.CellFormatting"/> event for the <see cref="DgvSGs"/> and
     '''  <see cref="DgvSgs"/> DataGridView controls.
     '''  This event is raised when a cell in the DataGridView needs to be formatted.
-    '''  It applies specific formatting rules based on the column name and value type.
+    '''  It applies specific formatting rules based on the column name and userName type.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">
@@ -3067,10 +3069,7 @@ Public Class Form1
                 e.Value = NormalizeColonSpacingPreservingTimes(input)
             Case 2
                 If e.Value IsNot Nothing Then
-                    Dim value As String =
-                        If(e.Value Is Nothing,
-                           "",
-                           e.Value.ToString)
+                    Dim value As String = e.Value.ToString
 
                     If value.Contains(value:="_"c) Then
                         e.Value = value.ToTitle
@@ -3792,12 +3791,11 @@ Public Class Form1
         Me.MenuStartUseTestData.Available = debuggerIsAttached
         Me.MenuStartUseTestData.Visible = debuggerIsAttached
 
-        Dim searchPattern As String = $"CareLink*.json"
         Dim path As String = GetProjectDataDirectory()
         Me.MenuStartLoadDataFile.Enabled =
             debuggerIsAttached AndAlso
             Not PatientDataElement.IsEmpty AndAlso
-            AnyMatchingFiles(path, searchPattern)
+            AnyMatchingFiles(path, searchPattern:=$"CareLink*.json")
 
         Me.MenuStartSaveSnapshot.Enabled = Not IsPatientDataEmpty()
 
@@ -3805,21 +3803,21 @@ Public Class Form1
             debuggerIsAttached AndAlso
             File.Exists(path:=GetLastDownloadFileWithPath)
         Me.MenuStartUseLastFile.Enabled = enabled
-
-        searchPattern = $"{BaseErrorReportName}*.txt"
         enabled = debuggerIsAttached AndAlso
-            AnyMatchingFiles(path, searchPattern)
+                  AnyMatchingFiles(path, searchPattern:=$"{BaseErrorReportName}*.txt")
         Me.MenuStartLoadExceptionReport.Available = enabled
 
-        searchPattern = $"{GetUserName()}Settings.pdf"
-
-        Dim validUser As Boolean =
-            IsNullOrWhiteSpace(value:=GetUserName())
-        Dim userPdfExists As Boolean =
-            Not (validUser OrElse Not AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern))
-        Me.MenuViewPumpSetup.Enabled = userPdfExists AndAlso
-                                       CurrentPdf IsNot Nothing AndAlso
-                                       CurrentPdf.IsValid
+        Dim userName As String = GetUserName()
+        If String.IsNullOrWhiteSpace(value:=userName) Then
+            Me.MenuViewPumpSetup.Enabled = False
+        Else
+            Dim userPdfExists As Boolean =
+                AnyMatchingFiles(path:=GetSettingsDirectory(), searchPattern:=$"{userName}Settings.pdf")
+            Me.MenuViewPumpSetup.Enabled =
+                userPdfExists AndAlso
+                CurrentPdf IsNot Nothing AndAlso
+                CurrentPdf.IsValid
+        End If
 
         enabled = Directory.GetFiles(path:=GetDownloadsDirectory(),
                                      searchPattern:=$"*.pdf").Length > 0
@@ -4161,7 +4159,7 @@ Public Class Form1
     <DebuggerNonUserCode()>
     Private Sub MenuOptions_DropDownOpening(sender As Object, e As EventArgs) Handles MenuOptions.DropDownOpening
         Me.MenuOptionsEditPumpSettings.Enabled = Debugger.IsAttached OrElse
-                                                 IsNotNullOrWhiteSpace(value:=CurrentUser?.UserName)
+                                                 Not String.IsNullOrWhiteSpace(value:=CurrentUser?.UserName)
     End Sub
 
     ''' <summary>
@@ -4619,7 +4617,9 @@ Public Class Form1
     Private Sub TemporaryUseAdvanceAITDecayCheckBox_CheckedChanged(sender As Object, e As EventArgs) _
         Handles TempUseAdvanceAITDecayCheckBox.CheckedChanged
 
-        If CurrentUser Is Nothing Then Exit Sub
+        If CurrentUser Is Nothing Then
+            Exit Sub
+        End If
 
         ' Update the checkbox text based on the current state and insulin type.
         With CurrentUser
@@ -4758,7 +4758,9 @@ Public Class Form1
     Private Sub SensorDaysLeftLabel_MouseHover(sender As Object, e As EventArgs) _
         Handles SensorDaysLeftLabel.MouseHover
 
-        If PatientData Is Nothing Then Exit Sub
+        If PatientData Is Nothing Then
+            Exit Sub
+        End If
         Dim caption As String = $"Sensor will expire In {PatientData.SensorDurationHours.ToUnits(unit:="hour")}"
         If PatientData.CgmInfo.SensorProductModel?.Trim = "MMT-5120" Then
             _sensorLifeToolTip.SetToolTip(control:=Me.SensorDaysLeftLabel,
@@ -5009,7 +5011,7 @@ Public Class Form1
                                   String.Empty)
 
             If IsPatientDataEmpty() Then
-                If Client Is Nothing OrElse IsNotNullOrEmpty(value:=lastErrorMessage) Then
+                If Client Is Nothing OrElse Not String.IsNullOrWhiteSpace(value:=lastErrorMessage) Then
                     Do
                         LoginDialog.LoginSourceAutomatic = FileToLoadOptions.Login
                         If LoginDialog.Visible Then
@@ -5669,7 +5671,7 @@ Public Class Form1
                     Dim safeBasalDuration As Integer =
                             PatientData.TherapyAlgorithmState.SafeBasalDuration
                     If safeBasalDuration > 0 Then
-                        If IsNotNullOrWhiteSpace(value) Then
+                        If Not String.IsNullOrWhiteSpace(value) Then
                             title &= $", {TimeSpan.FromMinutes(safeBasalDuration):h\:mm} left."
                         End If
                     End If
@@ -5798,7 +5800,7 @@ Public Class Form1
                 Not IsFlex() AndAlso
                 CurrentUser.UseAdvancedAitDecay = CheckState.Checked
             If Me.ActiveInsulinChart Is Nothing Then
-                Return
+                Exit Sub
             End If
             For Each s As Series In Me.ActiveInsulinChart?.Series
                 s.Points.Clear()
@@ -6390,7 +6392,7 @@ Public Class Form1
             ' Ensure cached composed image is updated for flex battery state
             Me.SchedulePumpBatteryRefresh(pictureBox:=Me.PumpBatteryPictureBox)
         Else
-            ' Read the battery level once and reuse the value below so the
+            ' Read the battery level once and reuse the userName below so the
             ' UI is consistent and we don't reference an uninitialized variable.
             Dim batteryLeftPercent As Integer =
                 PatientData.PumpBatteryLevelPercent

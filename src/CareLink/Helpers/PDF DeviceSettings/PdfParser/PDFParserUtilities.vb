@@ -231,7 +231,7 @@ Public Module PDFParserUtilities
                         key = "Block Mode"
                     Case value.StartsWith(value:="Basal")
                         key = "Basal"
-                    Case IsNullOrWhiteSpace(value)
+                    Case String.IsNullOrWhiteSpace(value)
                         Continue For
                     Case Else
                         key = value

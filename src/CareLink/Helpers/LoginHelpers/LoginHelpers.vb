@@ -135,7 +135,7 @@ Friend Module LoginHelpers
                         owner.LoginStatus.ReportLoginStatus(hasErrors,
                                                             lastErrorMessage:="Network Unavailable")
                         Return False
-                    ElseIf IsNullOrWhiteSpace(value:=LoginDialog.LoginStatus.Text) Then
+                    ElseIf String.IsNullOrWhiteSpace(value:=LoginDialog.LoginStatus.Text) Then
                         owner.LoginStatus.ReportLoginStatus(hasErrors,
                                                             lastErrorMessage:="")
                         Return False
@@ -287,7 +287,7 @@ Friend Module LoginHelpers
                                  Optional isDaylightSavingTime? As Boolean = Nothing)
 
         With form1.StripStatusLastUpdateTime
-            If IsNotNullOrWhiteSpace(value:=msg) Then
+            If Not String.IsNullOrWhiteSpace(value:=msg) Then
                 .Text = msg
             End If
             If highLight Then
@@ -303,7 +303,7 @@ Friend Module LoginHelpers
             .Text = String.Empty
             .ForeColor = form1.MenuStrip1.ForeColor
             If isDaylightSavingTime IsNot Nothing Then
-                If Not String.IsNullOrEmpty(value:=PatientData?.ClientTimeZoneName) Then
+                If Not String.IsNullOrWhiteSpace(value:=PatientData?.ClientTimeZoneName) Then
                     Dim timeZoneName As String = PatientData.ClientTimeZoneName
 
                     Dim timeZoneInfo As TimeZoneInfo = CalculateTimeZone(timeZoneName)
@@ -377,10 +377,10 @@ Friend Module LoginHelpers
     ''' </param>
     '''
     Friend Sub SetUpCareLinkUser(forceUI As Boolean)
-        Dim mdi As MedicalDeviceInformation = PatientData.MedicalDeviceInformation
         Dim carbRatios As New List(Of CarbRatioRecord)
         Dim currentUserUpdateNeeded As Boolean = False
         NativeMmolL = Not PatientData.BgUnits.Equals(value:="MGDL")
+        Dim mdi As MedicalDeviceInformation = PatientData.MedicalDeviceInformation
         If mdi.ModelNumber.StartsWith(value:="MMT-8") Then
             If CurrentUser Is Nothing Then
                 CurrentUser = New CurrentUserRecord(userName:=GetUserName(),
@@ -420,7 +420,7 @@ Friend Module LoginHelpers
                 If CurrentUser.InsulinRealAit = 0 Then
                     CurrentUser.InsulinRealAit = s_insulinTypes.Values(index:=0).AitHours
                 End If
-                If IsNullOrEmpty(value:=CurrentUser.InsulinTypeName) Then
+                If String.IsNullOrWhiteSpace(value:=CurrentUser.InsulinTypeName) Then
                     CurrentUser.InsulinTypeName = s_insulinTypes.Keys(index:=0)
                 End If
 

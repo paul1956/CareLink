@@ -50,7 +50,7 @@ Friend Module DateTimeExtensions
 
                     For Each item As CultureInfo In CultureInfoList
                         If formatList.Contains(item:=item.DateTimeFormat.FullDateTimePattern) OrElse
-                           IsNullOrWhiteSpace(value:=item.Name) OrElse
+                           String.IsNullOrWhiteSpace(value:=item.Name) OrElse
                            Not item.Name.Contains(value:="-"c) Then
 
                             Continue For
@@ -187,7 +187,7 @@ Friend Module DateTimeExtensions
     ''' <returns>A UTC date.</returns>
     <Extension>
     Friend Function FromUnixTime(value As String) As Date
-        Return If(IsNullOrWhiteSpace(value),
+        Return If(String.IsNullOrWhiteSpace(value),
                   s_epochUTC,
                   value.ParseDoubleInvariant.FromUnixTime)
     End Function
@@ -503,7 +503,7 @@ Friend Module DateTimeExtensions
     ''' </remarks>
     <Extension>
     Public Function TryParseDateStr(s As String) As Date
-        If IsNullOrWhiteSpace(value:=s) Then
+        If String.IsNullOrWhiteSpace(value:=s) Then
             Return Nothing
         End If
 

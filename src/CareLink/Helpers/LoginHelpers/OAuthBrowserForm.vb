@@ -400,7 +400,7 @@ Public Class OAuthBrowserForm
 
     Private Async Sub WebView21_NavigationCompleted(sender As Object, e As CoreWebView2NavigationCompletedEventArgs)
         Dim currentUrl As String = Me.WebView21.Source?.ToString()
-        If IsNullOrWhiteSpace(value:=currentUrl) Then
+        If String.IsNullOrWhiteSpace(value:=currentUrl) Then
             Return
         End If
         Try
@@ -432,7 +432,7 @@ Public Class OAuthBrowserForm
         Catch
         End Try
 
-        If IsNullOrWhiteSpace(value:=e.Uri) Then Return
+        If String.IsNullOrWhiteSpace(value:=e.Uri) Then Return
         If e.Uri.StartsWithNoCase(value:=_redirectUri) Then
             Me.CaptureAndClose(uriString:=e.Uri)
         End If
@@ -440,7 +440,7 @@ Public Class OAuthBrowserForm
 
     Private Sub WebView21_SourceChanged(sender As Object, e As CoreWebView2SourceChangedEventArgs)
         Dim currentUrl As String = Me.WebView21.Source?.ToString()
-        If IsNullOrWhiteSpace(value:=currentUrl) Then Return
+        If String.IsNullOrWhiteSpace(value:=currentUrl) Then Return
         Try
             LogMessage(message:=$"OAuthBrowserForm.SourceChanged: Url={currentUrl}", verbose:=True)
         Catch

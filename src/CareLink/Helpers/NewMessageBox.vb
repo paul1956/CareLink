@@ -57,7 +57,7 @@ Friend Module NewMessageBox
         page.Caption = title
         page.Heading = heading
         page.Text = GetPrompt(prompt, autoCloseTimeOut, remainingTenthSeconds)
-        If IsNotNullOrWhiteSpace(value:=checkBoxPrompt) Then
+        If Not String.IsNullOrWhiteSpace(value:=checkBoxPrompt) Then
             page.Verification = New TaskDialogVerificationCheckBox() With {.Text = checkBoxPrompt, .Checked = True}
         End If
 

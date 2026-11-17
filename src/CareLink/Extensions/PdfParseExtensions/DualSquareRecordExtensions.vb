@@ -14,7 +14,7 @@ Public Module DualSquareRecordExtensions
             Return
         End If
         Try
-            If IsNullOrWhiteSpace(value:=line) Then
+            If String.IsNullOrWhiteSpace(value:=line) Then
                 this.Dual = "Off"
                 this.Square = "Off"
                 Return

@@ -50,7 +50,7 @@ Public Module SystemVariables
     Friend Property TreatmentInsulinRow As Single
 
     Friend Function GetUserName() As String
-        If IsNullOrWhiteSpace(value:=s_userName) Then
+        If String.IsNullOrWhiteSpace(value:=s_userName) Then
             s_userName = $"{My.Settings.CareLinkUserName} ".Trim()
         End If
         Return s_userName

@@ -80,7 +80,7 @@ Public Module LegacyPdfParser
                 Dim table As PdfTable = kvp.Value
                 Dim tableHeader As String
                 Select Case True
-                    Case IsNullOrWhiteSpace(value:=itemKey)
+                    Case String.IsNullOrWhiteSpace(value:=itemKey)
                         Continue For
 
                     Case itemKey.StartsWith(value:=MaximumBasalRateHeader)

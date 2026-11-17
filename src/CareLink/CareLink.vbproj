@@ -46,6 +46,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <!-- Keep Configuration/Platform combinations compatible with VS solution settings -->
     <Platform>x64</Platform>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -9,7 +9,7 @@ Public Module InsulinSensitivityRecordExtensions
     <Extension>
     Public Sub InitializeFromRow(this As InsulinSensitivityRecord, row As StringTable.Row)
         If row Is Nothing Then Return
-        If IsNullOrWhiteSpace(value:=row.Columns(index:=0)) Then
+        If String.IsNullOrWhiteSpace(value:=row.Columns(index:=0)) Then
             Return
         End If
         Dim s() As String = row.Columns(index:=0).Split(separator:=" "c, Options)

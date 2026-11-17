@@ -99,7 +99,7 @@ Friend Module DgvCellStyleHelpers
                                         Optional isUri As Boolean = False)
 
         Dim value As String = Convert.ToString(e.Value)
-        If IsNullOrEmpty(value) Then
+        If String.IsNullOrEmpty(value) Then
             e.Value = String.Empty
             e.FormattingApplied = True
             Return
@@ -474,7 +474,7 @@ Friend Module DgvCellStyleHelpers
     ''' <param name="alignment">The desired align for the column.</param>
     Friend Function HideColumn(Of T)(item As String) As Boolean
         Dim key As Type = GetType(T)
-        Return IsNotNullOrWhiteSpace(value:=item) AndAlso
+        Return Not String.IsNullOrWhiteSpace(value:=item) AndAlso
                s_columnsToHide.ContainsKey(key) AndAlso
                s_columnsToHide(key).Contains(item)
     End Function
@@ -490,7 +490,7 @@ Friend Module DgvCellStyleHelpers
     Friend Sub HideDataGridViewColumnsByName(Of T)(ByRef dgv As DataGridView)
         Dim lastColumnIndex As Integer = dgv.Columns.Count - 1
         For i As Integer = 0 To lastColumnIndex
-            If i > 0 AndAlso IsNullOrWhiteSpace(value:=dgv.Columns(index:=i).DataPropertyName) Then
+            If i > 0 AndAlso String.IsNullOrWhiteSpace(value:=dgv.Columns(index:=i).DataPropertyName) Then
                 Stop
             End If
             Dim item As String = dgv.Columns(index:=i).DataPropertyName

@@ -132,7 +132,7 @@ Public Class LoginDialog
         Me.PatientUserIDLabel.Visible = careLinkPartner
         Me.PatientUserIDTextBox.Visible = careLinkPartner
         If careLinkPartner AndAlso
-           IsNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text) Then
+           String.IsNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text) Then
             Me.PatientUserIDTextBox.Focus()
         End If
     End Sub
@@ -507,7 +507,7 @@ Public Class LoginDialog
         If AllUserLoginInfoFileExists() Then
             _mySource.AddRange(s_allUserSettingsData.Keys.ToArray)
             Me.UsernameComboBox.DataSource = s_allUserSettingsData.Keys
-        ElseIf IsNotNullOrWhiteSpace(value:=My.Settings.CareLinkUserName) Then
+        ElseIf Not String.IsNullOrWhiteSpace(value:=My.Settings.CareLinkUserName) Then
             _mySource.Add(value:=My.Settings.CareLinkUserName)
             Me.UsernameComboBox.Text = My.Settings.CareLinkUserName
         Else
@@ -518,7 +518,7 @@ Public Class LoginDialog
             .AutoCompleteCustomSource = _mySource
             .AutoCompleteMode = AutoCompleteMode.SuggestAppend
             .AutoCompleteSource = AutoCompleteSource.CustomSource
-            If IsNotNullOrWhiteSpace(value:=GetUserName()) Then
+            If Not String.IsNullOrWhiteSpace(value:=GetUserName()) Then
                 .SelectedIndex = -1
             Else
             End If
@@ -535,7 +535,7 @@ Public Class LoginDialog
             .DataSource = s_regionList
         End With
 
-        If IsNullOrEmpty(value:=My.Settings.CountryCode) Then
+        If String.IsNullOrEmpty(value:=My.Settings.CountryCode) Then
             My.Settings.CountryCode = "US"
         End If
 
@@ -671,7 +671,7 @@ Public Class LoginDialog
                                   loginFailed,
                                   Await Form1.Client.GetRecentDataAsync())
             End If
-            If IsNullOrWhiteSpace(value:=lastErrorMsg) Then
+            If String.IsNullOrWhiteSpace(value:=lastErrorMsg) Then
                 s_lastMedicalDeviceDataUpdateServerEpoch = 0
                 ReportLoginStatus(Me.LoginStatus, hasErrors:=False, lastErrorMsg)
 
@@ -683,7 +683,7 @@ Public Class LoginDialog
                 My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
                 My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
                 Dim checked As Boolean = Me.CarePartnerCheckBox.Checked
-                My.Settings.CareLinkPartner = checked OrElse IsNotNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text)
+                My.Settings.CareLinkPartner = checked OrElse Not String.IsNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text)
                 My.Settings.Save()
                 Dim key As String = GetUserName()
                 If Not s_allUserSettingsData.TryGetValue(key, userRecord:=Me.LoggedOnUser) Then
@@ -787,7 +787,7 @@ Public Class LoginDialog
     '''  If a username is selected, it enables the OK button.
     ''' </remarks>
     Private Sub PasswordTextBox_Validating(sender As Object, e As CancelEventArgs) Handles PasswordTextBox.Validating
-        If IsNullOrWhiteSpace(Me.PasswordTextBox.Text) Then
+        If String.IsNullOrWhiteSpace(value:=Me.PasswordTextBox.Text) Then
             e.Cancel = True
             Me.PasswordTextBox.Focus()
         Else
@@ -1146,7 +1146,7 @@ Public Class LoginDialog
     Private Sub UsernameComboBox_Validating(sender As Object, e As CancelEventArgs) _
         Handles UsernameComboBox.Validating
 
-        If IsNullOrWhiteSpace(value:=Me.UsernameComboBox.Text) Then
+        If String.IsNullOrWhiteSpace(value:=Me.UsernameComboBox.Text) Then
             e.Cancel = True
             Me.UsernameComboBox.Focus()
         Else

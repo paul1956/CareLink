@@ -122,7 +122,7 @@ Friend Module FileUtilities
     ''' </exception>
     Friend Function GetLoginDataFileName(Optional tokenBaseFileName As String = LOGIN_DATA_FILENAME) As String
 
-        If IsNullOrWhiteSpace(value:=tokenBaseFileName) Then
+        If String.IsNullOrWhiteSpace(value:=tokenBaseFileName) Then
             Throw New ArgumentException(
                 message:=$"'{NameOf(tokenBaseFileName)}' cannot be null or whitespace.",
                 paramName:=NameOf(tokenBaseFileName))

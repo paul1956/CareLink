@@ -68,7 +68,7 @@ Friend Module TimeZoneExtensions
     '''  Otherwise, it tries to find the time zone in the cache or system time zones.
     ''' </remarks>
     Friend Function CalculateTimeZone(timeZoneName As String) As TimeZoneInfo
-        If IsNullOrWhiteSpace(value:=timeZoneName) Then
+        If String.IsNullOrWhiteSpace(value:=timeZoneName) Then
             Return Nothing
         End If
 

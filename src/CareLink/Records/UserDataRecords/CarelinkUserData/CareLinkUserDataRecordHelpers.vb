@@ -35,7 +35,7 @@ Public Module CareLinkUserDataRecordHelpers
 
                 cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleCenter, pad:=New Padding(all:=0))
             Case Else
-                If IsNullOrWhiteSpace(columnName) Then
+                If String.IsNullOrWhiteSpace(value:=columnName) Then
                     cellStyle.SetCellStyle(align:=DataGridViewContentAlignment.MiddleRight, pad:=New Padding(all:=1))
                 Else
                     Stop

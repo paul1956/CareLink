@@ -36,7 +36,7 @@ Friend Module ControlInspector
             End If
 
             If seen.Add(item:=current) Then
-                If IsNotNullOrWhiteSpace(value:=current.Name) Then
+                If Not String.IsNullOrWhiteSpace(value:=current.Name) Then
                     result.Add(item:=New ControlInfo With {
                         .ControlName = current.Name,
                         .ParentName = GetParentDisplayName(current.Parent),
@@ -58,12 +58,12 @@ Friend Module ControlInspector
                             panelLabel = "Panel2"
                         End If
 
-                        Dim displayName As String = If(IsNotNullOrWhiteSpace(sc.Name),
+                        Dim displayName As String = If(Not String.IsNullOrWhiteSpace(value:=sc.Name),
                                                        $"{sc.Name}.{panelLabel}",
                                                        panelLabel)
                         result.Add(item:=New ControlInfo With {
                             .ControlName = displayName,
-                            .ParentName = If(IsNotNullOrWhiteSpace(sc.Name), sc.Name, sc.GetType().Name),
+                            .ParentName = If(Not String.IsNullOrWhiteSpace(value:=sc.Name), sc.Name, sc.GetType().Name),
                             .X = current.Location.X,
                             .Y = current.Location.Y,
                             .Width = current.Width,
@@ -109,7 +109,7 @@ Friend Module ControlInspector
 
                 ' Other native windowed child controls may be present; treat them as native if they
                 ' don't expose a managed Name and their class indicates a native window.
-                If IsNullOrWhiteSpace(value:=ctrl.Name) Then
+                If String.IsNullOrWhiteSpace(value:=ctrl.Name) Then
                     ' Common native control class prefixes
                     If cls.StartsWithNoCase(value:="MS") OrElse cls.Contains(value:="Sys") Then
                         Return True
@@ -126,7 +126,7 @@ Friend Module ControlInspector
 
     Private Function GetNearestNamedParentName(parent As Control) As String
         While parent IsNot Nothing
-            If IsNotNullOrWhiteSpace(parent.Name) Then
+            If Not String.IsNullOrWhiteSpace(parent.Name) Then
                 Return parent.Name
             End If
             parent = parent.Parent
@@ -149,7 +149,7 @@ Friend Module ControlInspector
                 panelLabel = "Panel2"
             End If
 
-            If IsNotNullOrWhiteSpace(sc.Name) Then
+            If Not String.IsNullOrWhiteSpace(value:=sc.Name) Then
                 Return $"{sc.Name}.{panelLabel}"
             End If
 
@@ -157,7 +157,7 @@ Friend Module ControlInspector
             Return $"{sc.GetType().Name}.{panelLabel}"
         End If
 
-        If IsNotNullOrWhiteSpace(parent.Name) Then
+        If Not String.IsNullOrWhiteSpace(value:=parent.Name) Then
             Return parent.Name
         End If
 
