@@ -23,7 +23,6 @@ Public Module SystemVariables
     ' Cached fonts
     Friend ReadOnly s_font_7Bold As New Font(FamilyName, emSize:=7.0F, style:=FontStyle.Bold)
 
-    Friend ReadOnly s_font_8Bold As New Font(FamilyName, emSize:=8.0F, style:=FontStyle.Bold)
     Friend ReadOnly s_font11Bold As New Font(FamilyName, emSize:=11.0F, style:=FontStyle.Bold)
     Friend ReadOnly s_font12 As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
     Friend ReadOnly s_font12Bold As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)

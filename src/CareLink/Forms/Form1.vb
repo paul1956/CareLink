@@ -487,7 +487,7 @@ Public Class Form1
 
                     Dim markerTag0 As String = markerTags(index:=0).Trim
                     If isHomePage Then
-                        Dim xValue As Date = Date.FromOADate(currentDataPoint.XValue)
+                        Dim xValue As Date = Date.FromOADate(d:=currentDataPoint.XValue)
                         SetFontIfChanged(lbl:=Me.CursorMessage2Label, newFont:=s_font12Bold)
                         Select Case markerTags.Count
                             Case 2
