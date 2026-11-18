@@ -42,9 +42,21 @@ Public Class SummaryRecord
                     Case "SG_ABOVE_400_MGDL"
                         message = $"SG Above{vbCrLf}{GetTirHighLimitWithUnits()}"
 
-                    Case "SG_BELOW_40_MGDL"
-                        message = $"SG Below{vbCrLf}{GetTirLowLimitWithUnits()}"
+                    Case "SG_BELOW_50_MGDL"
+                        Dim lowLimit As String =
+                            If(NativeMmolL,
+                               MinMmolL2_8.ToString(format:="F2"),
+                               MinMmDl50.ToString(format:="F0"))
+                        lowLimit = lowLimit.Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
+                        message = $"SG Below{vbCrLf}{lowLimit}"
 
+                    Case "SG_BELOW_40_MGDL"
+                        Dim lowLimit As String =
+                            If(NativeMmolL,
+                               UrgentLowMmol2_22.ToString(format:="F2"),
+                               UrgentLowMmDl40.ToString(format:="F0"))
+                        lowLimit = lowLimit.Replace(oldValue:=CareLinkDecimalSeparator, newValue:=DecimalSeparator)
+                        message = $"SG Below{vbCrLf}{lowLimit}"
                     Case "WARM_UP"
                         Dim timeRemaining As String
                         message = "Warm Up..."

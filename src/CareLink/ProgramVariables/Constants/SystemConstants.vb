@@ -125,13 +125,17 @@ Public Module SystemConstants
     Friend Const TirHighMmDl180 As Single = 180.0
     Friend Const TirLowMmol70 As Single = 70.0
     Friend Const TirLowMmDl3_89 As Single = 3.89
+    Friend Const UrgentLowMmDl40 As Single = 40.0
+    Friend Const UrgentLowMmol2_22 As Single = 2.22
 
     Friend ReadOnly Property MgDlItems As New Dictionary(Of String, Single)(Comparer) From {
+        {$"{Target90mgDl} mg/dL", Target90mgDl},
         {$"{Target100mgDl} mg/dL", Target100mgDl},
         {$"{Target110mgDl} mg/dL", Target110mgDl},
         {$"{Target120mgDl} mg/dL", Target120mgDl}}
 
     Friend ReadOnly Property MmolLItemsComma As New Dictionary(Of String, Single)(Comparer) From {
+        {$"{Target5mmol.ToCommaDelimited} mmol/L", Target5mmol},
         {$"{Target5_6mmol.ToCommaDelimited} mmol/L", Target5_6mmol},
         {$"{Target6_1mmol.ToCommaDelimited} mmol/L", Target6_1mmol},
         {$"{Target6_7mmol.ToCommaDelimited} mmol/L", Target6_7mmol}}
