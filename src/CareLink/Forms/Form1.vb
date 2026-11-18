@@ -1235,6 +1235,10 @@ Public Class Form1
                 Case NameOf(ActiveInsulin.Precision)
                     dgv.CellFormattingDefault(e)
 
+                Case NameOf(ActiveInsulin.Kind),
+                     NameOf(ActiveInsulin.Version)
+                    dgv.CellFormattingDefault(e)
+
                 Case NameOf(ActiveInsulin.Filler)
                     ' Ignore filler column for formatting; no action needed.
 
@@ -1447,8 +1451,8 @@ Public Class Form1
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     dgv.CellFormattingDefault(e)
 
-                Case NameOf(AutoModeStatus.Type),
-                     NameOf(AutoModeStatus.Kind)
+                Case NameOf(AutoModeStatus.Kind),
+                     NameOf(AutoModeStatus.Type)
                     dgv.CellFormattingDefault(e)
 
                 Case NameOf(AutoModeStatus.Filler)
@@ -1733,6 +1737,10 @@ Public Class Form1
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
                     dgv.CellFormattingSg(e, partialKey)
 
+                Case NameOf(BgReading.Kind),
+                     NameOf(BgReading.Type)
+                    dgv.CellFormattingDefault(e)
+
                 Case NameOf(BgReading.Filler)
                     ' Ignore filler column for formatting; no action needed.
 
@@ -1832,7 +1840,11 @@ Public Class Form1
                 Case NameOf(Calibration.CalibrationSuccess)
                     dgv.CellFormattingSingleWord(e)
 
-                Case NameOf(LastSG.Filler)
+                Case NameOf(Calibration.Kind),
+                     NameOf(Calibration.Type)
+                    dgv.CellFormattingDefault(e)
+
+                Case NameOf(Calibration.Filler)
                     ' Ignore filler column for formatting; no action needed.
 
                 Case Else
@@ -2297,6 +2309,10 @@ Public Class Form1
                 Case NameOf(Insulin.Completed)
                     dgv.CellFormattingSingleWord(e)
 
+                Case NameOf(Insulin.Kind),
+                     NameOf(Insulin.Type)
+                    dgv.CellFormattingDefault(e)
+
                 Case Else
                     Stop
                     dgv.CellFormattingDefault(e)
@@ -2542,6 +2558,10 @@ Public Class Form1
                 Case NameOf(Limit.Index)
                     dgv.CellFormattingDefault(e)
 
+                Case NameOf(Limit.Kind),
+                     NameOf(Limit.Version)
+                    dgv.CellFormattingDefault(e)
+
                 Case NameOf(Limit.Filler)
                     ' Ignore filler column for formatting; no action needed.
 
@@ -2620,6 +2640,10 @@ Public Class Form1
 
                 Case NameOf(LowGlucoseSuspended.DeliverySuspended)
                     dgv.CellFormattingSingleWord(e)
+
+                Case NameOf(LowGlucoseSuspended.Kind),
+                     NameOf(LowGlucoseSuspended.Type)
+                    dgv.CellFormattingDefault(e)
 
                 Case NameOf(LowGlucoseSuspended.Filler)
                     ' Ignore filler column for formatting; no action needed.
@@ -2889,49 +2913,44 @@ Public Class Form1
         End Try
     End Sub
 
-    ''' <summary>
-    '''  Handles the <see cref="DataGridView.CellPainting"/> event
-    '''  for the <see cref="DgvSGs"/> DataGridView control.
-    '''  This event is raised when a cell is painted, allowing custom rendering
-    '''  of the cell's content.
-    '''  Specifically, it draws a custom sort glyph in the header cells
-    '''  of sortable columns.
-    ''' </summary>
-    ''' <param name="sender">
-    '''  The source of the event, a <see cref="DataGridView"/> control.
-    ''' </param>
-    ''' <param name="e">
-    '''  A <see cref="DataGridViewCellPaintingEventArgs"/> that contains the event data.
-    ''' </param>
     Private Sub DgvSGs_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) _
         Handles DgvSGs.CellPainting
 
-        Dim dgv As DataGridView = CType(sender, DataGridView)
-        ' Only handle header cell 0
-        If e.RowIndex = -1 AndAlso e.ColumnIndex = 0 Then
-            Dim col As DataGridViewColumn = dgv.Columns(index:=e.ColumnIndex)
-            ' Only for sortable columns
-            If col.SortMode <> DataGridViewColumnSortMode.NotSortable Then
-                e.PaintBackground(e.ClipBounds, cellsPaintSelectionBackground:=True)
-                e.PaintContent(e.ClipBounds)
+        If e.RowIndex <> -1 OrElse e.ColumnIndex < 0 Then Return
+        Dim dgv As DataGridView = DirectCast(sender, DataGridView)
+        Dim column As DataGridViewColumn = dgv.Columns(e.ColumnIndex)
+        Dim direction As SortOrder = column.HeaderCell.SortGlyphDirection
+        If dgv.EnableHeadersVisualStyles OrElse e.CellStyle.BackColor.GetBrightness() >= 0.5F OrElse
+           direction = SortOrder.None Then Return
 
-                ' Determine if this column is sorted and which direction
-                Dim glyphDir As SortOrder = col.HeaderCell.SortGlyphDirection
-                If glyphDir <> SortOrder.None Then
-                    Dim color As Color = Color.White
-                    Dim x As Integer = e.CellBounds.Right - 18
-                    Dim y As Integer = e.CellBounds.Top + (e.CellBounds.Height \ 2) - 4
-                    Dim points() As Point =
-                        If(glyphDir = SortOrder.Ascending,
-                           {New Point(x, y:=y + 6), New Point(x:=x + 8, y:=y + 6), New Point(x:=x + 4, y)},
-                           {New Point(x, y), New Point(x:=x + 8, y), New Point(x:=x + 4, y:=y + 6)})
-
-                    Dim g As Graphics = e.Graphics
-                    g.FillPolygon(brush:=New SolidBrush(color), points)
-                End If
-                e.Handled = True
-            End If
-        End If
+        ' WinForms paints a dark native glyph on the dark unthemed header.
+        e.Paint(e.ClipBounds, e.PaintParts And Not DataGridViewPaintParts.ContentBackground)
+        Dim scale As Double = dgv.DeviceDpi / 96.0
+        Dim width As Integer = CInt(Math.Ceiling(9.0 * scale))
+        Dim height As Integer = CInt(Math.Ceiling(7.0 * scale))
+        Dim margin As Integer = CInt(Math.Ceiling(5.0 * scale))
+        Dim x As Integer = If(dgv.RightToLeft = RightToLeft.Yes,
+                              e.CellBounds.Left + e.CellStyle.Padding.Left + margin,
+                              e.CellBounds.Right - e.CellStyle.Padding.Right - margin - width)
+        Dim y As Integer = e.CellBounds.Top + ((e.CellBounds.Height - height) \ 2)
+        Dim points As Point() = If(direction = SortOrder.Ascending,
+                                   {New Point(x, y:=y + height - 1),
+                                    New Point(x:=x + width - 1, y:=y + height - 1),
+                                    New Point(x:=x + (width \ 2), y)},
+                                   {New Point(x, y), New Point(x:=x + width - 1, y),
+                                    New Point(x:=x + (width \ 2), y:=y + height - 1)})
+        Dim state As Drawing2D.GraphicsState = e.Graphics.Save()
+        Try
+            e.Graphics.SetClip(e.ClipBounds, Drawing2D.CombineMode.Intersect)
+            Dim foreground As Color = If((e.State And DataGridViewElementStates.Selected) <> 0,
+                                         e.CellStyle.SelectionForeColor, e.CellStyle.ForeColor)
+            Using brush As New SolidBrush(foreground)
+                e.Graphics.FillPolygon(brush, points)
+            End Using
+        Finally
+            e.Graphics.Restore(state)
+        End Try
+        e.Handled = True
     End Sub
 
     ''' <summary>
@@ -3180,7 +3199,6 @@ Public Class Form1
                             e.CellStyle.SetCellStyle(
                                 align:=DataGridViewContentAlignment.MiddleCenter,
                                 pad:=New Padding(all:=1))
-                            e.CellFormattingApplyBold()
 
                         Case Else
                             Stop
@@ -3439,6 +3457,10 @@ Public Class Form1
                      NameOf(TimeChange.Timestamp)
                     dgv.CellFormattingDateTime(e)
 
+                Case NameOf(TimeChange.Kind),
+                     NameOf(TimeChange.Type)
+                    dgv.CellFormattingDefault(e)
+
                 Case Else
                     Stop
                     dgv.CellFormattingDefault(e)
@@ -3677,8 +3699,6 @@ Public Class Form1
         Me.ToolTip2.InitialDelay = 500    ' Delay before showing tooltip
         Me.ToolTip2.ReshowDelay = 200     ' Delay before re-showing tooltip
         Me.ToolTip2.ShowAlways = False    ' Show only if form is active
-
-        Me.SetDgvCustomHeadersVisualStyles()
 
         Me.PositionControlsInPanel()
 
@@ -5635,7 +5655,7 @@ Public Class Form1
         Select Case SensorDurationHours
             Case Is <= 24
                 hoursStr = SensorDurationHours.HoursToDaysAndHours(shortHr:=True)
-                Return $"Expiring soon{vbCrLf}(Remaining{vbCrLf}grace period:{vbCrLf}{hoursStr})"
+                Return $"{hoursStr} left{vbCrLf}in grace period"
             Case Is < 48
                 hoursStr = (SensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
                 Return $"{hoursStr} (Followed{vbCrLf}by 24 hr grace{vbCrLf}period)"
@@ -6037,7 +6057,7 @@ Public Class Form1
                     Case "NO_ERROR_MESSAGE", "CALIBRATING"
                         If s_pumpBannerStateValue IsNot Nothing AndAlso
                             s_pumpBannerStateValue.Count > 0 Then
-                            Select Case s_pumpBannerStateValue.Last()("Type")
+                            Select Case s_pumpBannerStateValue.Last()(key:="Type")
                                 Case "TEMP_TARGET"
                                     Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShieldExercise)
                                 Case "DELIVERY_SUSPEND", "LOAD_RESERVOIR"

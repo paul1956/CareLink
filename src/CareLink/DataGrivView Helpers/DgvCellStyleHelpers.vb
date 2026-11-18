@@ -11,8 +11,10 @@ Friend Module DgvCellStyleHelpers
     Private ReadOnly s_alignmentTable As _
         New Dictionary(Of Type, Dictionary(Of String, DataGridViewCellStyle))
 
+    Friend Const GridCellHorizontalPadding As Integer = 2
+
     Friend ReadOnly s_columnsToHide As New Dictionary(Of Type, List(Of String)) From {
-        {GetType(ActiveInsulin), New List(Of String) From {
+            {GetType(ActiveInsulin), New List(Of String) From {
             NameOf(ActiveInsulin.Kind),
             NameOf(ActiveInsulin.Version)}},
         {GetType(AutoBasalDelivery), New List(Of String) From {}},
@@ -78,12 +80,8 @@ Friend Module DgvCellStyleHelpers
     End Sub
 
     ''' <summary>
-    '''  Applies a <see cref="Color"/> to the cell based on whether it is a URI or not.
-    '''  If it is a URI, it applies a purple color;
-    '''  otherwise, it applies the specified highlight color.
-    '''  Colored cells are also set to bold font style.
-    '''  This is useful for highlighting important cells,
-    '''  such as those containing URIs or other significant values.
+    '''  Applies the specified highlight color to a cell, or formats its URI selection colors.
+    '''  Red and yellow highlights use contrasting backgrounds and remain recognizable when selected.
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> containing the cell.</param>
     ''' <param name="e">
@@ -124,6 +122,13 @@ Friend Module DgvCellStyleHelpers
                 End If
             Else
                 .ForeColor = textColor
+                If textColor.ToArgb() = Color.Red.ToArgb() OrElse textColor.ToArgb() = Color.Yellow.ToArgb() Then
+                    .BackColor = Color.Black
+                    .SelectionBackColor = Color.FromArgb(red:=0, green:=36, blue:=70)
+                    .SelectionForeColor = If(textColor.ToArgb() = Color.Red.ToArgb(),
+                                             Color.FromArgb(red:=255, green:=80, blue:=80),
+                                             textColor)
+                End If
             End If
         End With
         e.FormattingApplied = True
@@ -533,13 +538,11 @@ Friend Module DgvCellStyleHelpers
     ''' </returns>
     <Extension>
     Friend Function IsDarkRow(row As DataGridViewRow) As Boolean
-        Return row.Index Mod 2 = 1
+        Return row.InheritedStyle.BackColor.IsDarkColor()
     End Function
 
     ''' <summary>
-    '''  Sets the <see cref="DataGridViewCellStyle.Alignment"/> and
-    '''  <see cref="DataGridViewCellStyle.Padding"/> properties
-    '''  and returns the modified style.
+    '''  Sets the alignment and padding, adding horizontal space around the cell content.
     ''' </summary>
     ''' <param name="cellStyle">The <see cref="DataGridViewCellStyle"/> to modify.</param>
     ''' <param name="align">
@@ -552,7 +555,8 @@ Friend Module DgvCellStyleHelpers
                             pad As Padding)
 
         cellStyle.Alignment = align
-        cellStyle.Padding = pad
+        cellStyle.Padding = New Padding(left:=pad.Left + GridCellHorizontalPadding, top:=pad.Top,
+                                        right:=pad.Right + GridCellHorizontalPadding, bottom:=pad.Bottom)
     End Sub
 
 End Module

@@ -11,6 +11,12 @@ Imports System.Runtime.CompilerServices
 ''' </summary>
 Public Module DgvInitializationExtensions
 
+    Private Sub Dgv_SystemColorsChanged(sender As Object, e As EventArgs)
+        Dim dgv As DataGridView = DirectCast(sender, DataGridView)
+        dgv.SetAlternatingRowColor(Application.IsDarkModeEnabled, SystemInformation.HighContrast)
+        dgv.SetHeaderColors(Application.IsDarkModeEnabled, SystemInformation.HighContrast)
+    End Sub
+
     Private Sub DgvContentSizing_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs)
         Dim dgv As DataGridView = DirectCast(sender, DataGridView)
         dgv.ConfigureContentColumnSizing()
@@ -50,50 +56,57 @@ Public Module DgvInitializationExtensions
     Friend Sub InitializeDgv(dgv As DataGridView,
                              Optional dock As DockStyle = DockStyle.Fill)
 
-        Dim emSize As Single =
-            If(dgv.Name = NameOf(Form1.DgvBasalPerHour),
-               12.0!,
-               10.0!)
-
         With dgv
             .AllowUserToAddRows = False
             .AllowUserToDeleteRows = False
             .AllowUserToResizeColumns = False
             .AllowUserToResizeRows = False
-            .AlternatingRowsDefaultCellStyle =
-                New DataGridViewCellStyle With {
-                    .BackColor = Color.FromArgb(red:=45, green:=45, blue:=45),
-                    .ForeColor = Color.White,
-                    .SelectionBackColor = Color.FromArgb(red:=51, green:=153, blue:=255),
-                    .SelectionForeColor = Color.White}
             .BorderStyle = BorderStyle.None
-            .ColumnHeadersDefaultCellStyle =
-                New DataGridViewCellStyle With {
-                    .Alignment = DataGridViewContentAlignment.MiddleCenter,
-                    .BackColor = Color.FromArgb(red:=38, green:=47, blue:=58),
-                    .Font = New Font(FamilyName, emSize, style:=FontStyle.Bold),
-                    .WrapMode = DataGridViewTriState.True}
+            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            .ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .DataSource = Nothing
+            .DefaultCellStyle.Padding = New Padding(left:=GridCellHorizontalPadding, top:=0,
+                                                    right:=GridCellHorizontalPadding, bottom:=0)
             .Dock = dock
             .Location = New Point(x:=0, y:=0)
             .Padding = New Padding(all:=0)
             .ReadOnly = True
-            .RowsDefaultCellStyle =
-                New DataGridViewCellStyle With {
-                    .BackColor = Color.FromArgb(red:=180, green:=180, blue:=180),
-                    .Font = New Font(FamilyName, emSize, style:=FontStyle.Bold),
-                    .ForeColor = Color.Black,
-                    .SelectionBackColor = Color.FromArgb(red:=51, green:=153, blue:=255),
-                    .SelectionForeColor = Color.White}
             .RowTemplate.Height = 24
             .TabIndex = 0
         End With
+
+        dgv.SetAlternatingRowColor(isDarkMode:=Application.IsDarkModeEnabled, SystemInformation.HighContrast)
+        dgv.SetHeaderColors(isDarkMode:=Application.IsDarkModeEnabled, SystemInformation.HighContrast)
+        RemoveHandler dgv.SystemColorsChanged, AddressOf Dgv_SystemColorsChanged
+        AddHandler dgv.SystemColorsChanged, AddressOf Dgv_SystemColorsChanged
 
         RemoveHandler dgv.DataBindingComplete, AddressOf DgvContentSizing_DataBindingComplete
         If dgv.Name <> NameOf(Form1.DgvBasalPerHour) AndAlso dgv.Name <> NameOf(Form1.DgvSGs) Then
             AddHandler dgv.DataBindingComplete, AddressOf DgvContentSizing_DataBindingComplete
         End If
+    End Sub
+
+    <Extension>
+    Friend Sub SetAlternatingRowColor(dgv As DataGridView, isDarkMode As Boolean, highContrast As Boolean)
+        dgv.AlternatingRowsDefaultCellStyle.BackColor =
+            If(highContrast,
+               Color.Empty,
+               If(isDarkMode,
+                  Color.FromArgb(red:=72, green:=72, blue:=72),
+                  Color.FromArgb(red:=230, green:=230, blue:=230)))
+    End Sub
+
+    <Extension>
+    Friend Sub SetHeaderColors(dgv As DataGridView, isDarkMode As Boolean, highContrast As Boolean)
+        Dim useDarkHeaders As Boolean = isDarkMode AndAlso Not highContrast
+        dgv.EnableHeadersVisualStyles = Not useDarkHeaders
+        For Each style As DataGridViewCellStyle In {dgv.ColumnHeadersDefaultCellStyle, dgv.RowHeadersDefaultCellStyle}
+            style.BackColor = If(useDarkHeaders, Color.FromArgb(red:=38, green:=47, blue:=58), Color.Empty)
+            style.ForeColor = If(useDarkHeaders, Color.White, Color.Empty)
+            style.SelectionBackColor = If(useDarkHeaders, Color.FromArgb(red:=38, green:=47, blue:=58), Color.Empty)
+            style.SelectionForeColor = If(useDarkHeaders, Color.White, Color.Empty)
+        Next
     End Sub
 
 End Module

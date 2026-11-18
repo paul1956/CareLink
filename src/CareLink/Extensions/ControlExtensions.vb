@@ -265,41 +265,6 @@ Public Module ControlExtensions
     End Function
 
     ''' <summary>
-    '''  Sets the <see cref="DataGridView.EnableHeadersVisualStyles"/> property to <see langword="False"/>
-    '''  for all <see cref="DataGridView"/> controls within the specified control and applies a dark header
-    '''  color scheme (black background, white foreground).
-    ''' </summary>
-    ''' <param name="ctrl">
-    '''  The parent control containing the DataGridViews. If <see langword="Nothing"/> or disposed,
-    '''  the method exits without performing any action.
-    ''' </param>
-    ''' <remarks>
-    '''  The method traverses the immediate child controls recursively and sets header visual styles
-    '''  and colors directly on each <see cref="DataGridView"/> instance;
-    '''  it does not replace or clone existing styles. This routine is defensive against null/disposed
-    '''  parents to improve reliability when called during form teardown.
-    ''' </remarks>
-    <Extension>
-    Friend Sub SetDgvCustomHeadersVisualStyles(ctrl As Control)
-        If ctrl Is Nothing OrElse ctrl.IsDisposed Then
-            Exit Sub
-        End If
-
-        For Each c As Control In ctrl.Controls
-            Dim dgv As DataGridView = TryCast(c, DataGridView)
-            If dgv IsNot Nothing AndAlso Not dgv.IsDisposed Then
-                dgv.EnableHeadersVisualStyles = False
-                dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(red:=38, green:=47, blue:=58)
-                dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.White
-            End If
-            ' Recursively search child controls
-            If c.HasChildren Then
-                SetDgvCustomHeadersVisualStyles(ctrl:=c)
-            End If
-        Next
-    End Sub
-
-    ''' <summary>
     '''  Adjusts the label's font size so that its width does not exceed maxWidth.
     ''' </summary>
     ''' <param name="lbl">The label whose font size is to be adjusted.</param>

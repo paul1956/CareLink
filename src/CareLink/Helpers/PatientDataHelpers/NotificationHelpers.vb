@@ -183,7 +183,6 @@ Friend Module NotificationHelpers
         Dim dgv As New DataGridView With {
             .AutoSize = True,
             .AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.DisplayedCellsExceptHeaders,
-            .BorderStyle = BorderStyle.None,
             .ColumnHeadersVisible = False,
             .Dock = DockStyle.Top,
             .Name = $"DataGridView{className}",
@@ -201,6 +200,7 @@ Friend Module NotificationHelpers
             realPanel.Controls.Add(control:=dgv, column:=0, row:=realPanel.RowCount - 1)
         End If
         dgv.InitializeDgv(dock:=DockStyle.Top)
+        dgv.BorderStyle = BorderStyle.FixedSingle
         dgv.DefaultCellStyle.WrapMode = DataGridViewTriState.False
         attachHandlers?(dgv)
 

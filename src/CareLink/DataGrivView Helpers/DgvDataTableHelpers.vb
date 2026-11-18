@@ -82,6 +82,70 @@ Friend Module DgvDataTableHelpers
     End Sub
 
     ''' <summary>
+    '''  Measures the SG columns once and lets the last visible column fill the remaining space.
+    ''' </summary>
+    ''' <param name="dgv">The sensor glucose grid to size.</param>
+    <Extension>
+    Private Sub ConfigureSgColumnSizing(dgv As DataGridView)
+        dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
+        Dim lastColumn As DataGridViewColumn = Nothing
+        For Each column As DataGridViewColumn In dgv.Columns
+            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+            If column.Visible AndAlso (lastColumn Is Nothing OrElse column.DisplayIndex > lastColumn.DisplayIndex) Then
+                lastColumn = column
+            End If
+            If column.DataPropertyName = NameOf(SG.SensorState) Then
+                column.DefaultCellStyle.WrapMode = DataGridViewTriState.False
+                column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            End If
+        Next
+
+        For Each column As DataGridViewColumn In dgv.Columns
+            If column.Visible AndAlso column IsNot lastColumn Then
+                Select Case column.DataPropertyName
+                    Case NameOf(SG.Sg), NameOf(SG.SgMgdL), NameOf(SG.SgMmolL)
+                        column.HeaderCell.Style.WrapMode = DataGridViewTriState.True
+                        Dim headerStyle As DataGridViewCellStyle = column.HeaderCell.InheritedStyle
+                        Dim headerWidth As Integer = 0
+                        For Each line As String In column.HeaderText.Split(New String() {vbCrLf}, StringSplitOptions.None)
+                            headerWidth = Math.Max(headerWidth, TextRenderer.MeasureText(line, headerStyle.Font).Width)
+                        Next
+                        headerWidth += headerStyle.Padding.Horizontal + CInt(Math.Ceiling(8.0 * dgv.DeviceDpi / 96.0))
+                        Dim contentWidth As Integer =
+                            column.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCellsExceptHeader, fixedHeight:=True)
+                        column.Width = Math.Max(column.MinimumWidth, Math.Max(headerWidth, contentWidth))
+                    Case Else
+                        column.Width = Math.Max(column.MinimumWidth,
+                            column.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, fixedHeight:=True))
+                End Select
+                If column.SortMode <> DataGridViewColumnSortMode.NotSortable AndAlso dgv.ColumnHeadersVisible Then
+                    Dim style As DataGridViewCellStyle = column.HeaderCell.InheritedStyle
+                    Dim headerWidth As Integer = 0
+                    For Each line As String In column.HeaderText.Split(New String() {vbCrLf}, StringSplitOptions.None)
+                        headerWidth = Math.Max(headerWidth, TextRenderer.MeasureText(line, style.Font).Width)
+                    Next
+                    headerWidth += style.Padding.Horizontal + CInt(Math.Ceiling(32.0 * dgv.DeviceDpi / 96.0))
+                    column.Width = Math.Max(column.Width, headerWidth)
+                End If
+            End If
+        Next
+
+        If lastColumn IsNot Nothing Then
+            If lastColumn.DataPropertyName = NameOf(SG.SensorState) Then
+                lastColumn.MinimumWidth = Math.Max(lastColumn.MinimumWidth,
+                    lastColumn.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, fixedHeight:=True))
+            Else
+                lastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                If dgv.ColumnHeadersVisible Then
+                    lastColumn.MinimumWidth = Math.Max(lastColumn.MinimumWidth,
+                        lastColumn.GetPreferredWidth(DataGridViewAutoSizeColumnMode.ColumnHeader, fixedHeight:=True))
+                End If
+            End If
+            lastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+        End If
+    End Sub
+
+    ''' <summary>
     '''  Splits a space-separated string into two approximately equal halves,
     '''  inserting a CRLF between them without breaking words.
     ''' </summary>
@@ -212,67 +276,20 @@ Friend Module DgvDataTableHelpers
             If column.DataPropertyName = NameOf(SG.SensorState) Then
                 column.DefaultCellStyle.WrapMode = DataGridViewTriState.False
             End If
+            If dgv.Name = NameOf(Form1.DgvSummary) AndAlso
+               column.DataPropertyName = NameOf(SummaryRecord.RecordNumber) Then
+                column.HeaderCell.Style.WrapMode = DataGridViewTriState.False
+                Dim headerStyle As DataGridViewCellStyle = column.HeaderCell.InheritedStyle
+                Dim headerWidth As Integer = TextRenderer.MeasureText(column.HeaderText, headerStyle.Font).Width +
+                    headerStyle.Padding.Horizontal + CInt(Math.Ceiling(16.0 * dgv.DeviceDpi / 96.0))
+                column.MinimumWidth = Math.Max(column.MinimumWidth, headerWidth)
+            End If
             column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
         Next
 
         If lastColumn IsNot Nothing Then
             If lastColumn.DataPropertyName = NameOf(SG.SensorState) Then
                 lastColumn.MinimumWidth = Math.Max(lastColumn.MinimumWidth, lastColumn.Width)
-            Else
-                lastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
-                If dgv.ColumnHeadersVisible Then
-                    lastColumn.MinimumWidth = Math.Max(lastColumn.MinimumWidth,
-                        lastColumn.GetPreferredWidth(DataGridViewAutoSizeColumnMode.ColumnHeader, fixedHeight:=True))
-                End If
-            End If
-            lastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-        End If
-    End Sub
-
-    ''' <summary>
-    '''  Measures the SG columns once and lets the last visible column fill the remaining space.
-    ''' </summary>
-    ''' <param name="dgv">The sensor glucose grid to size.</param>
-    <Extension>
-    Private Sub ConfigureSgColumnSizing(dgv As DataGridView)
-        dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
-        Dim lastColumn As DataGridViewColumn = Nothing
-        For Each column As DataGridViewColumn In dgv.Columns
-            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-            If column.Visible AndAlso (lastColumn Is Nothing OrElse column.DisplayIndex > lastColumn.DisplayIndex) Then
-                lastColumn = column
-            End If
-            If column.DataPropertyName = NameOf(SG.SensorState) Then
-                column.DefaultCellStyle.WrapMode = DataGridViewTriState.False
-                column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-            End If
-        Next
-
-        For Each column As DataGridViewColumn In dgv.Columns
-            If column.Visible AndAlso column IsNot lastColumn Then
-                Select Case column.DataPropertyName
-                    Case NameOf(SG.Sg), NameOf(SG.SgMgdL), NameOf(SG.SgMmolL)
-                        column.HeaderCell.Style.WrapMode = DataGridViewTriState.True
-                        Dim headerStyle As DataGridViewCellStyle = column.HeaderCell.InheritedStyle
-                        Dim headerWidth As Integer = 0
-                        For Each line As String In column.HeaderText.Split(New String() {vbCrLf}, StringSplitOptions.None)
-                            headerWidth = Math.Max(headerWidth, TextRenderer.MeasureText(line, headerStyle.Font).Width)
-                        Next
-                        headerWidth += headerStyle.Padding.Horizontal + CInt(Math.Ceiling(8.0 * dgv.DeviceDpi / 96.0))
-                        Dim contentWidth As Integer =
-                            column.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCellsExceptHeader, fixedHeight:=True)
-                        column.Width = Math.Max(column.MinimumWidth, Math.Max(headerWidth, contentWidth))
-                    Case Else
-                        column.Width = Math.Max(column.MinimumWidth,
-                            column.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, fixedHeight:=True))
-                End Select
-            End If
-        Next
-
-        If lastColumn IsNot Nothing Then
-            If lastColumn.DataPropertyName = NameOf(SG.SensorState) Then
-                lastColumn.MinimumWidth = Math.Max(lastColumn.MinimumWidth,
-                    lastColumn.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, fixedHeight:=True))
             Else
                 lastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
                 If dgv.ColumnHeadersVisible Then

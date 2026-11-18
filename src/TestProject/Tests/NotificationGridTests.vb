@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Drawing
 Imports System.IO
 Imports System.Runtime.ExceptionServices
 Imports System.Text.Json
@@ -24,8 +25,8 @@ Public Class NotificationGridTests
                 Dim previousHistory As Dictionary(Of String, String) = s_notificationHistoryValue
                 Dim previousPatient As PatientDataInfo = PatientData
                 Try
-                    Using document As JsonDocument =
-JsonDocument.Parse(json:=File.ReadAllText(path:=FileIoHelpers.GetTestDataPath()))
+                    Dim json As String = File.ReadAllText(path:=FileIoHelpers.GetTestDataPath())
+                    Using document As JsonDocument = JsonDocument.Parse(json)
                         PatientData = New PatientDataInfo With {
                             .MedicalDeviceFamily = document.RootElement.GetProperty(propertyName:="medicalDeviceFamily").GetString()}
                         Dim history As JsonElement = document.RootElement.GetProperty(propertyName:="notificationHistory")
@@ -35,7 +36,7 @@ JsonDocument.Parse(json:=File.ReadAllText(path:=FileIoHelpers.GetTestDataPath())
                     End Using
 
                     Using owner As New Form1()
-                        Dim size As New Drawing.Size(width:=1384, height:=800)
+                        Dim size As New Size(width:=1384, height:=800)
                         owner.ClientSize = size
                         owner.Show()
                         owner.DeviceDpi.Should().Be(expected:=96, because:="the application currently supports 96 DPI")
@@ -59,14 +60,14 @@ JsonDocument.Parse(json:=File.ReadAllText(path:=FileIoHelpers.GetTestDataPath())
                                                      scenario)
                             For Each grid As DataGridView In grids
                                 Dim scrollY As Integer = Math.Max(0, grid.Top - panel.AutoScrollPosition.Y)
-                                panel.AutoScrollPosition = New Drawing.Point(x:=0, y:=scrollY)
+                                panel.AutoScrollPosition = New Point(x:=0, y:=scrollY)
                                 Application.DoEvents()
                                 Dim rowsHeight As Integer =
                                     grid.Rows.GetRowsHeight(includeFilter:=DataGridViewElementStates.Visible)
                                 Dim rowIndex As Integer = panel.GetRow(control:=grid)
                                 Dim lastRow As Integer =
                                     grid.Rows.GetLastRow(includeFilter:=DataGridViewElementStates.Visible)
-                                Dim lastRowBounds As Drawing.Rectangle =
+                                Dim lastRowBounds As Rectangle =
                                     grid.GetRowDisplayRectangle(rowIndex:=lastRow, cutOverflow:=False)
                                 Dim rowHeight As Integer = panel.GetRowHeights()(rowIndex)
                                 Dim details As String =
@@ -90,7 +91,7 @@ JsonDocument.Parse(json:=File.ReadAllText(path:=FileIoHelpers.GetTestDataPath())
                             panel.VerticalScroll.Visible.Should().BeTrue(
                                 because:=$"the seven notifications must be scrollable ({{0}}, size={{1}}, client={{2}})",
                                 scenario, size, panel.ClientSize)
-                            panel.AutoScrollPosition = New Drawing.Point(x:=0, y:=Integer.MaxValue)
+                            panel.AutoScrollPosition = New Point(x:=0, y:=Integer.MaxValue)
                             Application.DoEvents()
                             Dim lastGrid As DataGridView =
                                 grids.OrderBy(
@@ -155,7 +156,7 @@ JsonDocument.Parse(json:=File.ReadAllText(path:=FileIoHelpers.GetTestDataPath())
                             Assert.Equal(expected:=1, actual:=GetPendingBindingsCount(owner))
                             Assert.Equal(expected:=Cursors.WaitCursor, actual:=owner.Cursor)
                         Finally
-                            BindingFinished(owner, otherGrid)
+                            BindingFinished(owner, dgv:=otherGrid)
                         End Try
                         Assert.Equal(expected:=0, actual:=GetPendingBindingsCount(owner))
                         Assert.Equal(expected:=Cursors.Default, actual:=owner.Cursor)
@@ -224,7 +225,7 @@ JsonDocument.Parse(json:=File.ReadAllText(path:=FileIoHelpers.GetTestDataPath())
                         {"activeNotifications", "[{""type"":""sample"",""value"":""active""}]"}}
                     Using owner As New Form1(), host As New Form()
                         Dim panel As TableLayoutPanel = owner.TlpNotificationsCleared
-                        host.ClientSize = New Drawing.Size(width:=900, height:=600)
+                        host.ClientSize = New Size(width:=900, height:=600)
                         host.Controls.Add(value:=panel)
                         host.Show()
 
@@ -233,9 +234,19 @@ JsonDocument.Parse(json:=File.ReadAllText(path:=FileIoHelpers.GetTestDataPath())
                             Application.DoEvents()
                             Dim grids As DataGridView() = panel.Controls.OfType(Of DataGridView)().ToArray()
                             Assert.Equal(expected:=2, actual:=grids.Length)
-                            Assert.Single(collection:=owner.TlpNotificationActive.Controls.OfType(Of DataGridView)())
+                            Dim activeGrid As DataGridView =
+                                Assert.Single(collection:=owner.TlpNotificationActive.Controls.OfType(Of DataGridView)())
+                            Assert.Equal(expected:=BorderStyle.FixedSingle, actual:=activeGrid.BorderStyle)
                             For Each grid As DataGridView In grids
+                                Assert.Equal(expected:=BorderStyle.FixedSingle, actual:=grid.BorderStyle)
                                 Assert.True(condition:=grid.Rows.Count > 1)
+                                For Each column As DataGridViewColumn In grid.Columns
+                                    If column.Visible Then
+                                        Dim padding As Padding = grid.Rows(index:=0).Cells(column.Index).GetFormattedStyle().Padding
+                                        Assert.True(condition:=padding.Left >= 2 AndAlso padding.Right >= 2,
+                                                    userMessage:=$"{column.Name} padding was {padding}.")
+                                    End If
+                                Next
                                 Dim lastColumn As DataGridViewColumn = grid.Columns(index:=grid.ColumnCount - 1)
                                 Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill, actual:=lastColumn.AutoSizeMode)
                                 Assert.Equal(expected:=DataGridViewTriState.True,
@@ -246,16 +257,24 @@ JsonDocument.Parse(json:=File.ReadAllText(path:=FileIoHelpers.GetTestDataPath())
                                              actual:=panel.RowStyles(index:=panel.Controls.IndexOf(control:=grid)).SizeType)
                                 Assert.Equal(expected:=CSng(grid.Height + grid.Margin.Vertical),
                                              actual:=panel.RowStyles(index:=panel.Controls.IndexOf(control:=grid)).Height)
-                                Dim rowsHeight As Integer = grid.Rows.GetRowsHeight(includeFilter:=DataGridViewElementStates.Visible)
+                                Dim rowsHeight As Integer =
+                                    grid.Rows.GetRowsHeight(includeFilter:=DataGridViewElementStates.Visible)
                                 Assert.InRange(actual:=grid.ClientSize.Height - rowsHeight, low:=0, high:=2)
                                 Dim rowIndex As Integer = panel.GetRow(control:=grid)
                                 If rowIndex < panel.RowCount - 1 Then
-                                    Assert.InRange(actual:=panel.GetRowHeights()(rowIndex) - rowsHeight, low:=0, high:=20)
+                                    Assert.InRange(actual:=panel.GetRowHeights()(rowIndex) - rowsHeight,
+                                                   low:=0,
+                                                   high:=20)
                                 End If
                             Next
 
-                            host.ClientSize = New Drawing.Size(width:=host.ClientSize.Width - 100, height:=600)
+                            host.ClientSize = New Size(width:=host.ClientSize.Width - 100, height:=600)
                             Application.DoEvents()
+                            Dim orderedGrids As DataGridView() =
+                                grids.OrderBy(keySelector:=Function(grid As DataGridView)
+                                                               Return panel.GetRow(control:=grid)
+                                                           End Function).ToArray()
+                            Assert.True(condition:=orderedGrids(1).Top > orderedGrids(0).Bottom)
                             For Each grid As DataGridView In grids
                                 Assert.Equal(expected:=grid.Height + grid.Margin.Vertical,
                                              actual:=panel.RowStyles(index:=panel.Controls.IndexOf(control:=grid)).Height)
