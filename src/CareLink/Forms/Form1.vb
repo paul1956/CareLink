@@ -3603,8 +3603,8 @@ Public Class Form1
         Dim currentHeaderStyle As DataGridViewCellStyle = Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle.Clone
         currentHeaderStyle.Font = s_font12Bold
         Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle = currentHeaderStyle
-        Me.DgvBasalPerHour.DefaultCellStyle = New DataGridViewCellStyle With {
-            .Font = s_font12}
+        Me.DgvBasalPerHour.DefaultCellStyle =
+            New DataGridViewCellStyle With {.Font = s_font12}
         Me.MenuHelpShowControlPositions.Visible = Debugger.IsAttached
     End Sub
 
