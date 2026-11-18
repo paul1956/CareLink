@@ -3652,10 +3652,10 @@ Public Class Form1
 
             If result = DialogResult.Yes Then
                 Try
-                    Dim startInfo As New ProcessStartInfo(WebView2RuntimeDownloadUrl) With {
+                    Dim startInfo As New ProcessStartInfo(fileName:=WebView2RuntimeDownloadUrl) With {
                         .UseShellExecute = True}
                     Process.Start(startInfo)
-                Catch ex As ComponentModel.Win32Exception
+                Catch ex As Win32Exception
                     MessageBox.Show(
                         text:=$"Could not open the WebView2 Runtime download page: {ex.Message}",
                         caption:="Unable to Open Download Page",
