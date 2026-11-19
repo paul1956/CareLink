@@ -61,6 +61,17 @@ Friend Module DgvCellStyleHelpers
             NameOf(TimeChange.Kind),
             NameOf(TimeChange.Type)}}}
 
+    Private Function GetReadableHighlightColor(textColor As Color, backgroundColor As Color) As Color
+        Dim isDarkBackground As Boolean = backgroundColor.IsDarkColor()
+        Return If(textColor.ToArgb() = Color.Red.ToArgb(),
+                  If(isDarkBackground,
+                     Color.FromArgb(red:=255, green:=160, blue:=160),
+                     Color.FromArgb(red:=192, green:=0, blue:=0)),
+                  If(isDarkBackground,
+                     Color.Yellow,
+                     Color.FromArgb(red:=128, green:=96, blue:=0)))
+    End Function
+
     ''' <summary>
     '''  Applies bold font style to the cell.
     ''' </summary>
@@ -72,7 +83,7 @@ Friend Module DgvCellStyleHelpers
     Friend Sub CellFormattingApplyBold(e As DataGridViewCellFormattingEventArgs)
         With e.CellStyle
             .Font = New Font(family:= .Font.FontFamily,
-                             emSize:=CSng(11.0),
+                             emSize:= .Font.SizeInPoints + 2.0F,
                              style:=FontStyle.Bold)
 
         End With
@@ -121,13 +132,12 @@ Friend Module DgvCellStyleHelpers
                     .SelectionForeColor = uriColor.ContrastingColor()
                 End If
             Else
-                .ForeColor = textColor
                 If textColor.ToArgb() = Color.Red.ToArgb() OrElse textColor.ToArgb() = Color.Yellow.ToArgb() Then
-                    .BackColor = Color.Black
+                    .ForeColor = GetReadableHighlightColor(textColor, backgroundColor:= .BackColor)
                     .SelectionBackColor = Color.FromArgb(red:=0, green:=36, blue:=70)
-                    .SelectionForeColor = If(textColor.ToArgb() = Color.Red.ToArgb(),
-                                             Color.FromArgb(red:=255, green:=80, blue:=80),
-                                             textColor)
+                    .SelectionForeColor = GetReadableHighlightColor(textColor, backgroundColor:= .SelectionBackColor)
+                Else
+                    .ForeColor = textColor
                 End If
             End If
         End With
@@ -155,7 +165,7 @@ Friend Module DgvCellStyleHelpers
             TrailingText = $" {TrailingText}"
         End If
 
-        Dim amount As Single = ParseAsSingle(e.Value)
+        Dim amount As Single = ParseAsSingle(obj:=e.Value)
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         e.Value =
             $"{amount.ToString(format:="F3", provider)}{TrailingText}"
@@ -246,8 +256,8 @@ Friend Module DgvCellStyleHelpers
     <Extension>
     Friend Sub CellFormattingSg(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs, partialKey As String)
         Dim sgColumnName As String = dgv.Columns(index:=e.ColumnIndex).Name
-        Dim sensorValue As Single = ParseAsSingle(e.Value).RoundSg
-        If Single.IsNaN(sensorValue) OrElse sensorValue.AlmostZero Then
+        Dim sensorValue As Single = ParseAsSingle(obj:=e.Value).RoundSg
+        If Single.IsNaN(f:=sensorValue) OrElse sensorValue.AlmostZero Then
             e.Value = "NaN"
             dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
         Else
@@ -332,7 +342,7 @@ Friend Module DgvCellStyleHelpers
         digits As Integer,
         Optional TrailingText As String = EmptyString) As Single
 
-        Dim amount As Single = ParseAsSingle(e.Value).RoundToSingle(digits)
+        Dim amount As Single = ParseAsSingle(obj:=e.Value).RoundToSingle(digits)
         Dim provider As CultureInfo = CultureInfo.CurrentUICulture
         If TrailingText <> EmptyString Then
             TrailingText = $" {TrailingText}"
@@ -555,8 +565,8 @@ Friend Module DgvCellStyleHelpers
                             pad As Padding)
 
         cellStyle.Alignment = align
-        cellStyle.Padding = New Padding(left:=pad.Left + GridCellHorizontalPadding, top:=pad.Top,
-                                        right:=pad.Right + GridCellHorizontalPadding, bottom:=pad.Bottom)
+        cellStyle.Padding = New Padding(left:=pad.Left + GridCellHorizontalPadding, pad.Top,
+                                        right:=pad.Right + GridCellHorizontalPadding, pad.Bottom)
     End Sub
 
 End Module

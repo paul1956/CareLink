@@ -70,7 +70,7 @@ Friend Module SgExtensions
     ''' </param>
     ''' <returns>
     '''  The count of SG records that:
-    '''  - have a valid SG value (as determined by <c>entry.sg.IsSgValid</c>), and
+    '''  - have a valid SG value (as determined by <c>entry.sg.IsSgRecordValid</c>), and
     '''  - whose mg/dL equivalent is greater than or equal to <see cref="My.Settings.TiTrLowThreshold"/>
     '''    and less than or equal to 140.0.
     ''' </returns>
@@ -109,7 +109,7 @@ Friend Module SgExtensions
     ''' </summary>
     ''' <returns>
     '''  An <see cref="IEnumerable(Of SG)"/> that yields only records for which
-    '''  <c>entry.sg.IsSgValid</c> is <see langword="True"/><.
+    '''  <c>entry.sg.IsSgRecordValid</c> is <see langword="True"/><.
     ''' </returns>
     ''' <remarks>
     ''' - This method references the module-level/global collection <see cref="s_sgRecords"/>.
@@ -119,7 +119,7 @@ Friend Module SgExtensions
     Public Function GetValidSgRecords() As IEnumerable(Of SG)
         Dim predicate As Func(Of SG, Boolean) =
             Function(entry As SG) As Boolean
-                Return entry.Sg.IsSgValid
+                Return entry.IsSgRecordValid
             End Function
 
         Return s_sgRecords.Where(predicate)

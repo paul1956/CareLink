@@ -59,7 +59,7 @@ Public Module JsonExtensions
                  JsonValueKind.Number,
                  JsonValueKind.True,
                  JsonValueKind.False
-                resultDictionary.Add(key:=item.Key, value:=item.Value.ElementToString())
+                resultDictionary.Add(item.Key, value:=item.Value.ElementToString())
         End Select
     End Sub
 

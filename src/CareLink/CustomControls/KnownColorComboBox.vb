@@ -148,7 +148,7 @@ Public Class KnownColorComboBox
         Dim backColor As Color = Color.FromKnownColor(color:=item.Value)
         Dim eBounds As Rectangle = e.Bounds
         Using b As New SolidBrush(color:=backColor)
-            Dim pt As New Point(x:=eBounds.X, y:=eBounds.Top)
+            Dim pt As New Point(eBounds.X, y:=eBounds.Top)
             e.Graphics.FillRectangle(
                 brush:=b,
                 eBounds.X,

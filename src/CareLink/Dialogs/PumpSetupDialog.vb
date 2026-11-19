@@ -331,7 +331,7 @@ Public Class PumpSetupDialog
             Dim newFont As New Font(
                 family:=currentFont.FontFamily,
                 emSize:=Math.Max(1.0F, currentFont.Size * reductionFactor),
-                style:=currentFont.Style)
+                currentFont.Style)
             _printRtb.SelectionFont = newFont
 
             start = endIndex

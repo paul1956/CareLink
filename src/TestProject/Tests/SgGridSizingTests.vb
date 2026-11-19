@@ -210,13 +210,13 @@ Public Class SgGridSizingTests
                             Assert.Equal(expected:=DataGridViewTriState.False, actual:=state.DefaultCellStyle.WrapMode)
                             Assert.Equal(expected:=DataGridViewTriState.False,
                                          actual:=dgv.Rows(index:=0).Cells(state.Index).InheritedStyle.WrapMode)
-                            dgv.Rows(0).DefaultCellStyle.WrapMode = DataGridViewTriState.True
+                            dgv.Rows(index:=0).DefaultCellStyle.WrapMode = DataGridViewTriState.True
                             Dim stateStyle As DataGridViewCellStyle = dgv.Rows(index:=0).Cells(state.Index).GetFormattedStyle()
                             Assert.Equal(expected:=DataGridViewTriState.False, actual:=stateStyle.WrapMode)
                             Assert.Equal(expected:=DataGridViewContentAlignment.MiddleCenter, actual:=stateStyle.Alignment)
-                            Assert.Equal(expected:="No Error Message", actual:=dgv.Rows(index:=0).Cells(state.Index).FormattedValue)
+                            Assert.Equal(expected:="NO_ERROR_MESSAGE", actual:=dgv.Rows(index:=0).Cells(state.Index).FormattedValue)
                             Assert.True(condition:=state.Width >= TextRenderer.MeasureText(
-                                text:="No Error Message", font:=stateStyle.Font).Width)
+                                text:="NO_ERROR_MESSAGE", font:=stateStyle.Font).Width)
                             dgv.Rows(index:=0).DefaultCellStyle.WrapMode = DataGridViewTriState.NotSet
                             Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill, actual:=message.AutoSizeMode)
                             Assert.Equal(expected:=DataGridViewTriState.True, actual:=message.DefaultCellStyle.WrapMode)

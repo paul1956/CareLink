@@ -18,10 +18,10 @@ Public Class SG
     Public Sub New(json As Dictionary(Of String, String), index As Integer)
         Try
             Dim value1 As String = json(key:=NameOf(Sg))
-            If value1 = "0" OrElse value1 = "NaN" Then
-                Me.Sg = Single.NaN
-            ElseIf json.Count >= 5 Then
-                Me.Sg = json(key:=NameOf(Sg)).ParseSingle().RoundSg()
+            Me.Sg = If(value1 = "0" OrElse value1 = "NaN",
+                       Nothing,
+                       json(key:=NameOf(Sg)).ParseSingle().RoundSg())
+            If json.Count >= 5 Then
                 Me.SensorState = json(key:=NameOf(SensorState))
                 Me.TimestampAsString = json(key:=NameOf(Me.Timestamp))
                 Dim value As String = "False"
@@ -60,7 +60,7 @@ Public Class SG
         End Get
         Set
             _sg = If(Value.IsSgInvalid,
-                     Nothing,
+                     0,
                      Value)
         End Set
     End Property
@@ -70,9 +70,9 @@ Public Class SG
     <JsonPropertyName("sgMgdL")>
     Public ReadOnly Property SgMgdL As Single
         Get
-            If _sg.IsSgInvalid Then Return Nothing
+            If _sg.IsSgInvalid Then Return 0
             Return If(NativeMmolL,
-                      CSng(Math.Round(_sg * MmolLUnitsDivisor)),
+                      CSng(Math.Round(a:=_sg * MmolLUnitsDivisor)),
                       _sg)
         End Get
     End Property
@@ -82,7 +82,7 @@ Public Class SG
     <JsonPropertyName("sgMmolL")>
     Public ReadOnly Property SgMmolL As Single
         Get
-            If Single.IsNaN(_sg) Then Return Nothing
+            If _sg.IsSgInvalid Then Return 0
             Return If(NativeMmolL,
                       _sg,
                       (_sg / MmolLUnitsDivisor).RoundSg())
@@ -130,7 +130,7 @@ Public Class SG
     Public ReadOnly Property Message As String
         Get
             _sensorState = If(_sensorState, EmptyString)
-            Return FormatSensorMessage(key:=PatientData.SensorState, truncate:=False)
+            Return FormatSensorMessage(key:=_sensorState, truncate:=False)
         End Get
     End Property
 
@@ -153,8 +153,20 @@ Public Class SG
         key As String,
         Optional truncate As Boolean = False) As String
 
+        If String.IsNullOrWhiteSpace(value:=key) Then
+            Return ""
+        End If
         Dim value As String = EmptyString
         If s_sensorMessages.TryGetValue(key, value) Then
+            Dim startIndex As Integer =
+                value.IndexOf(value:="mg/dL", startIndex:=0, comparisonType:=StringComparison.Ordinal)
+            If startIndex > 0 AndAlso NativeMmolL Then
+                startIndex -= 3
+                Dim sgValue As Single =
+                    value.Substring(startIndex, length:=2).ParseSingle()
+                sgValue /= 18
+                value = $"{value.Substring(startIndex:=0, length:=startIndex)}{sgValue.RoundSg()} mmol/L"
+            End If
             If Not truncate Then
                 Return value
             End If
@@ -177,6 +189,12 @@ Public Class SG
 
     End Function
 
+    ''' <summary>
+    '''  Gets the OADate representation of the <see cref="Timestamp"/> property.
+    ''' </summary>
+    ''' <returns>
+    '''  An <see cref="OADate"/> obj representing the <see cref="Timestamp"/> property.
+    ''' </returns>
     Public Function GetOaDateTime() As OADate
         Return New OADate(asDate:=Me.Timestamp)
     End Function

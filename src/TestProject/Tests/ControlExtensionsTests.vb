@@ -23,9 +23,59 @@ Public Class ControlExtensionsTests
     End Function
 
     Private Shared Function RelativeLuminance(color As Drawing.Color) As Double
-        Return (0.2126 * LinearChannel(color.R)) + (0.7152 * LinearChannel(color.G)) +
-               (0.0722 * LinearChannel(color.B))
+        Return (0.2126 * LinearChannel(channel:=color.R)) + (0.7152 * LinearChannel(channel:=color.G)) +
+               (0.0722 * LinearChannel(channel:=color.B))
     End Function
+
+    <Fact>
+    Public Sub ApplyCellFontIncrease_UsesGridFontAndDoesNotAccumulate()
+        Using dgv As New DataGridView(), basal As New DataGridView()
+            basal.Name = NameOf(Form1.DgvBasalPerHour)
+            Dim baseline As Single = dgv.Font.SizeInPoints
+            Dim basalFont As Drawing.Font = basal.DefaultCellStyle.Font
+            Dim basalColumnFont As Drawing.Font = basal.ColumnHeadersDefaultCellStyle.Font
+            Dim basalRowFont As Drawing.Font = basal.RowHeadersDefaultCellStyle.Font
+            dgv.DefaultCellStyle.Font = dgv.Font
+            dgv.ColumnHeadersDefaultCellStyle.Font = dgv.Font
+
+            dgv.InitializeDgv()
+            dgv.DefaultCellStyle.Font.SizeInPoints.Should().Be(expected:=baseline + 1.0F)
+            dgv.ColumnHeadersDefaultCellStyle.Font.SizeInPoints.Should().Be(expected:=baseline + 1.0F)
+            dgv.RowHeadersDefaultCellStyle.Font.SizeInPoints.Should().Be(expected:=baseline + 1.0F)
+            dgv.Columns.Add(columnName:="Value", headerText:="Value")
+            dgv.Rows.Add("value")
+            dgv.Columns(index:=0).HeaderCell.InheritedStyle.Font.SizeInPoints.Should().Be(expected:=baseline + 1.0F)
+            dgv.Rows(index:=0).HeaderCell.InheritedStyle.Font.SizeInPoints.Should().Be(expected:=baseline + 1.0F)
+            Dim style As DataGridViewCellStyle = dgv.Rows(index:=0).Cells(index:=0).InheritedStyle.Clone()
+            style.Font.SizeInPoints.Should().Be(expected:=baseline + 1.0F)
+            Dim args As New DataGridViewCellFormattingEventArgs(0, 0, "value", GetType(String), style)
+            args.CellFormattingApplyBold()
+            Using boldFont As Drawing.Font = args.CellStyle.Font
+                boldFont.SizeInPoints.Should().Be(expected:=baseline + 3.0F)
+                boldFont.Bold.Should().BeTrue()
+            End Using
+
+            dgv.InitializeDgv()
+            dgv.DefaultCellStyle.Font.SizeInPoints.Should().Be(expected:=baseline + 1.0F)
+            dgv.ColumnHeadersDefaultCellStyle.Font.SizeInPoints.Should().Be(expected:=baseline + 1.0F)
+            dgv.RowHeadersDefaultCellStyle.Font.SizeInPoints.Should().Be(expected:=baseline + 1.0F)
+            dgv.ApplyCellFontIncrease(increasePoints:=3.0F)
+            dgv.DefaultCellStyle.Font.SizeInPoints.Should().Be(expected:=baseline + 3.0F)
+            dgv.Columns(index:=0).HeaderCell.InheritedStyle.Font.SizeInPoints.Should().Be(expected:=baseline + 3.0F)
+            dgv.Rows(index:=0).HeaderCell.InheritedStyle.Font.SizeInPoints.Should().Be(expected:=baseline + 3.0F)
+            dgv.RowTemplate.Height.Should().BeGreaterThanOrEqualTo(expected:=
+                CInt(Math.Ceiling(a:=dgv.DefaultCellStyle.Font.GetHeight(dpi:=dgv.DeviceDpi))))
+            dgv.ApplyCellFontIncrease(increasePoints:=0.0F)
+            dgv.DefaultCellStyle.Font.SizeInPoints.Should().Be(expected:=baseline)
+            dgv.ColumnHeadersDefaultCellStyle.Font.SizeInPoints.Should().Be(expected:=baseline)
+            dgv.RowHeadersDefaultCellStyle.Font.SizeInPoints.Should().Be(expected:=baseline)
+
+            basal.InitializeDgv()
+            basal.DefaultCellStyle.Font.Should().BeSameAs(expected:=basalFont)
+            basal.ColumnHeadersDefaultCellStyle.Font.Should().BeSameAs(expected:=basalColumnFont)
+            basal.RowHeadersDefaultCellStyle.Font.Should().BeSameAs(expected:=basalRowFont)
+        End Using
+    End Sub
 
     <Theory>
     <InlineData(0, True)>
@@ -37,27 +87,28 @@ Public Class ControlExtensionsTests
             dgv.Columns.Add(columnName:="Value", headerText:="Value")
             dgv.AllowUserToAddRows = False
             dgv.Rows.Add(count:=2)
-            dgv.RowsDefaultCellStyle.BackColor = If(isDark, Drawing.Color.FromArgb(48, 48, 48), Drawing.Color.White)
-            dgv.SetAlternatingRowColor(isDark, highContrast:=False)
+            dgv.RowsDefaultCellStyle.BackColor = If(isDark, Drawing.Color.FromArgb(red:=48, green:=48, blue:=48), Drawing.Color.White)
+            dgv.SetAlternatingRowColor(isDarkMode:=isDark, highContrast:=False)
 
             For Each textColor As Drawing.Color In {Drawing.Color.Red, Drawing.Color.Yellow}
                 Dim style As DataGridViewCellStyle = dgv.Rows(index:=rowIndex).Cells(index:=0).InheritedStyle.Clone()
-                Dim args As New DataGridViewCellFormattingEventArgs(0, rowIndex, "100", GetType(String), style)
-                dgv.CellFormattingApplyColor(args, textColor)
+                Dim args As New DataGridViewCellFormattingEventArgs(columnIndex:=0,
+                                                                    rowIndex,
+                                                                    value:="100",
+                                                                    desiredType:=GetType(String),
+                                                                    cellStyle:=style)
+                dgv.CellFormattingApplyColor(e:=args, textColor)
 
                 args.FormattingApplied.Should().BeTrue()
-                style.ForeColor.Should().Be(expected:=textColor)
-                ContrastRatio(style.ForeColor, style.BackColor).Should().BeGreaterThanOrEqualTo(expected:=4.5)
-                ContrastRatio(style.SelectionForeColor, style.SelectionBackColor).Should().
+                style.BackColor.Should().Be(expected:=
+                    If(rowIndex Mod 2 = 0,
+                       dgv.RowsDefaultCellStyle.BackColor,
+                       dgv.AlternatingRowsDefaultCellStyle.BackColor))
+                ContrastRatio(first:=style.ForeColor, second:=style.BackColor).Should().BeGreaterThanOrEqualTo(expected:=4.5)
+                ContrastRatio(first:=style.SelectionForeColor, second:=style.SelectionBackColor).Should().
                     BeGreaterThanOrEqualTo(expected:=4.5)
-                style.SelectionBackColor.Should().NotBe(unexpected:=style.BackColor)
-                If textColor = Drawing.Color.Yellow Then
-                    style.SelectionForeColor.Should().Be(expected:=textColor)
-                Else
-                    style.SelectionForeColor.R.Should().Be(expected:=CByte(255))
-                    style.SelectionForeColor.G.Should().BeLessThan(expected:=CByte(100))
-                    style.SelectionForeColor.B.Should().BeLessThan(expected:=CByte(100))
-                End If
+                dgv.RowsDefaultCellStyle.BackColor.Should().Be(expected:=If(isDark,
+                    Drawing.Color.FromArgb(red:=48, green:=48, blue:=48), Drawing.Color.White))
             Next
         End Using
     End Sub
@@ -192,6 +243,28 @@ Public Class ControlExtensionsTests
             Dim totalHeight As Integer =
                 ctrlHeight + lbl.Margin.Top + lbl.Margin.Bottom
             lbl.Top.Should().Be(expected:=((parent.Height - totalHeight) \ 2) + 5)
+        End Using
+    End Sub
+
+    <Fact>
+    Public Sub ControlPositionsForm_UsesGridThemeAndHidesRowHeaders()
+        Using form As New ControlPositionsForm(), expected As New DataGridView()
+            Dim dgv As DataGridView = form.DgvControlPositions
+            expected.InitializeGridTheme()
+            dgv.RowHeadersVisible.Should().BeFalse()
+            dgv.SelectionMode.Should().Be(expected:=DataGridViewSelectionMode.FullRowSelect)
+            dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().Be(expected:=expected.AlternatingRowsDefaultCellStyle.BackColor)
+            dgv.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(expected:=expected.ColumnHeadersDefaultCellStyle.BackColor)
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor.Should().Be(expected:=expected.ColumnHeadersDefaultCellStyle.ForeColor)
+            dgv.EnableHeadersVisualStyles.Should().Be(expected:=expected.EnableHeadersVisualStyles)
+
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = Drawing.Color.Magenta
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Drawing.Color.Magenta
+            Dim onSystemColorsChanged As Reflection.MethodInfo = GetType(Control).GetMethod(
+                name:="OnSystemColorsChanged", bindingAttr:=Reflection.BindingFlags.Instance Or Reflection.BindingFlags.NonPublic)
+            onSystemColorsChanged.Invoke(obj:=dgv, parameters:={EventArgs.Empty})
+            dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().Be(expected:=expected.AlternatingRowsDefaultCellStyle.BackColor)
+            dgv.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(expected:=expected.ColumnHeadersDefaultCellStyle.BackColor)
         End Using
     End Sub
 

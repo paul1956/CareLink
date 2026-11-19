@@ -1275,7 +1275,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of ActiveInsulin)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -1383,7 +1383,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of AutoBasalDelivery)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -1476,7 +1476,7 @@ Public Class Form1
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
             e.DgvColumnAdded(cellStyle:=GetCellStyle(Of AutoModeStatus)(.Name),
                              forceReadOnly:=True,
-                             caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -1585,7 +1585,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of Basal)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -1675,7 +1675,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of InsulinPerHour)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -1763,7 +1763,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of BgReading)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -1864,7 +1864,7 @@ Public Class Form1
             .SortMode = DataGridViewColumnSortMode.NotSortable
             e.DgvColumnAdded(cellStyle:=GetCellStyle(Of Calibration)(.Name),
                              forceReadOnly:=True,
-                             caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                             CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -2330,7 +2330,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of Insulin)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -2401,7 +2401,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of LastAlarm)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -2485,7 +2485,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of LastSG)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
             .SortMode = DataGridViewColumnSortMode.NotSortable
         End With
     End Sub
@@ -2584,7 +2584,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of Limit)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -2667,7 +2667,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of LowGlucoseSuspended)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -2724,6 +2724,10 @@ Public Class Form1
                 Case NameOf(Meal.Amount)
                     dgv.CellFormattingInteger(e, message:=GetCarbDefaultUnit)
 
+                Case NameOf(Meal.Kind),
+                     NameOf(Meal.Type)
+                    dgv.CellFormattingDefault(e)
+
                 Case NameOf(Meal.Filler)
                     ' Ignore filler column for formatting; no action needed.
 
@@ -2746,7 +2750,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of Meal)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -2819,7 +2823,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of BannerState)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -2877,17 +2881,21 @@ Public Class Form1
                     e.CellStyle.WrapMode = DataGridViewTriState.False
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     If Equals(e.Value, "NO_ERROR_MESSAGE") Then
-                        dgv.CellFormattingToTitle(e)
+                        dgv.CellFormattingDefault(e)
                     Else
                         dgv.CellFormattingApplyColor(e, textColor:=Color.Red)
-                        dgv.CellFormattingToTitle(e)
+                        dgv.CellFormattingDefault(e)
                     End If
 
                 Case NameOf(SG.Sg),
                      NameOf(SG.SgMgdL),
                      NameOf(SG.SgMmolL)
+                    Dim sgValue As Single = Convert.ToSingle(e.Value)
+                    If sgValue = 0 Then
+                        e.Value = "NaN"
+                    End If
                     dgv.CellFormattingSg(e, partialKey:=NameOf(SG.Sg))
-
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                 Case NameOf(SG.TimeChange)
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
                     dgv.CellFormattingToTitle(e)
@@ -2924,11 +2932,13 @@ Public Class Form1
            direction = SortOrder.None Then Return
 
         ' WinForms paints a dark native glyph on the dark unthemed header.
-        e.Paint(e.ClipBounds, e.PaintParts And Not DataGridViewPaintParts.ContentBackground)
+        Dim paintParts As DataGridViewPaintParts =
+            e.PaintParts And Not DataGridViewPaintParts.ContentBackground
+        e.Paint(e.ClipBounds, paintParts)
         Dim scale As Double = dgv.DeviceDpi / 96.0
-        Dim width As Integer = CInt(Math.Ceiling(9.0 * scale))
-        Dim height As Integer = CInt(Math.Ceiling(7.0 * scale))
-        Dim margin As Integer = CInt(Math.Ceiling(5.0 * scale))
+        Dim width As Integer = CInt(Math.Ceiling(a:=9.0 * scale))
+        Dim height As Integer = CInt(Math.Ceiling(a:=7.0 * scale))
+        Dim margin As Integer = CInt(Math.Ceiling(a:=5.0 * scale))
         Dim x As Integer = If(dgv.RightToLeft = RightToLeft.Yes,
                               e.CellBounds.Left + e.CellStyle.Padding.Left + margin,
                               e.CellBounds.Right - e.CellStyle.Padding.Right - margin - width)
@@ -2939,16 +2949,18 @@ Public Class Form1
                                     New Point(x:=x + (width \ 2), y)},
                                    {New Point(x, y), New Point(x:=x + width - 1, y),
                                     New Point(x:=x + (width \ 2), y:=y + height - 1)})
-        Dim state As Drawing2D.GraphicsState = e.Graphics.Save()
+        Dim gState As Drawing2D.GraphicsState = e.Graphics.Save()
         Try
-            e.Graphics.SetClip(e.ClipBounds, Drawing2D.CombineMode.Intersect)
-            Dim foreground As Color = If((e.State And DataGridViewElementStates.Selected) <> 0,
-                                         e.CellStyle.SelectionForeColor, e.CellStyle.ForeColor)
-            Using brush As New SolidBrush(foreground)
+            e.Graphics.SetClip(rect:=e.ClipBounds, combineMode:=Drawing2D.CombineMode.Intersect)
+            Dim foreground As Color =
+                If((e.State And DataGridViewElementStates.Selected) <> 0,
+                    e.CellStyle.SelectionForeColor,
+                    e.CellStyle.ForeColor)
+            Using brush As New SolidBrush(color:=foreground)
                 e.Graphics.FillPolygon(brush, points)
             End Using
         Finally
-            e.Graphics.Restore(state)
+            e.Graphics.Restore(gState)
         End Try
         e.Handled = True
     End Sub
@@ -2973,7 +2985,7 @@ Public Class Form1
         e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of SG)(e.Column.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption)
         Select Case e.Column.Index
             Case 0
                 e.Column.SortMode = DataGridViewColumnSortMode.Programmatic
@@ -3294,7 +3306,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of SummaryRecord)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -3393,7 +3405,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of TherapyAlgorithmState)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -3480,7 +3492,7 @@ Public Class Form1
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of TimeChange)(.Name),
                 forceReadOnly:=True,
-                caption:=CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+                CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
     End Sub
 
@@ -3502,11 +3514,11 @@ Public Class Form1
 #Region "Form Events"
 
     Private Const WebView2RuntimeDownloadUrl As String =
-            "https://developer.microsoft.com/microsoft-edge/webview2/#download-section"
+        "https://developer.microsoft.com/microsoft-edge/webview2/#download-section"
 
     Private Shared Function IsWebView2RuntimeAvailable() As Boolean
         Try
-            Return Not String.IsNullOrWhiteSpace(CoreWebView2Environment.GetAvailableBrowserVersionString())
+            Return Not String.IsNullOrWhiteSpace(value:=CoreWebView2Environment.GetAvailableBrowserVersionString())
         Catch ex As WebView2RuntimeNotFoundException
             Return False
         End Try
@@ -3751,9 +3763,9 @@ Public Class Form1
         Dim data As List(Of ControlInfo) =
             GetAllControlsAndNative(root:=Me.TabControlPage1)
         Dim f As New ControlPositionsForm()
-        f.DataGridView1.AutoGenerateColumns = True
-        f.DataGridView1.DataSource = data
-        f.DataGridView1.ConfigureContentColumnSizing()
+        f.DgvControlPositions.AutoGenerateColumns = True
+        f.DgvControlPositions.DataSource = data
+        f.DgvControlPositions.ConfigureContentColumnSizing()
         f.Show()
     End Sub
 
@@ -4604,10 +4616,10 @@ Public Class Form1
                                        emSize:=size,
                                        label.Font.Style)
                 Dim measured As Size =
-                TextRenderer.MeasureText(text:=label.Text,
+                TextRenderer.MeasureText(label.Text,
                                          font:=testFont,
                                          proposedSize:=New Size(available.Width, height:=Integer.MaxValue),
-                                         flags:=flags)
+                                         flags)
                 If measured.Width <= available.Width AndAlso measured.Height <= available.Height Then
                     bestSize = size
                     Exit While
@@ -5642,7 +5654,7 @@ Public Class Form1
     Private Shared Function GetFirstValueTimeStamp(sgs As List(Of SG)) As Date
         Dim offset As New TimeSpan(ticks:=0)
         For Each s As SG In sgs
-            If s.Sg.IsSgValid Then
+            If s.Timestamp <> Date.MinValue Then
                 Return s.Timestamp + offset
             End If
             offset += New TimeSpan(hours:=0, minutes:=5, seconds:=0)
@@ -5991,7 +6003,7 @@ Public Class Form1
                 .ChartAreas(name:=NameOf(ChartArea)).UpdateChartAreaSgAxisX()
                 .Titles(index:=0).Text = $"Status - {GetSubTitle()}"
                 .PlotSuspendArea(SuspendSeries:=Me.SummarySuspendSeries)
-                .PlotTempTargetArea(SummaryTempTargetSeries:=Me.SummaryTempTargetSeries)
+                .PlotTempTargetArea(Me.SummaryTempTargetSeries)
                 .PlotMarkers(
                     timeChangeSeries:=Me.SummaryTimeChangeSeries,
                     markerInsulinDictionary:=s_summaryMarkersInsulin,
@@ -6730,62 +6742,36 @@ Public Class Form1
         Dim lowCount As Integer = 0
         Dim lowDeviations As Double = 0
         Dim elements As Integer = 0
-        Dim highScale As Single =
-            (GetYMaxNativeMmolL() - GetTirHighLimit()) / (GetTirLowLimit() - GetYMinNativeMmolL())
+        Dim lowLimit As Single = GetTirLowLimit()
+        Dim highLimit As Single = GetTirHighLimit()
+        Dim scale As Single = If(NativeMmolL, MmolLUnitsDivisor, 1.0F)
 
         For Each sg As SG In GetValidSgRecords()
+            If Single.IsNaN(f:=sg.Sg) OrElse sg.Sg = 0 Then
+                Continue For
+            End If
             elements += 1
-            If sg.SgMgdL < 70 Then
+            If sg.SgMgdL < TirLowMmol70 Then
                 lowCount += 1
-                If NativeMmolL Then
-                    lowDeviations += ((GetTirLowLimit() - sg.SgMmolL) * MmolLUnitsDivisor) ^ 2
-                Else
-                    lowDeviations += (GetTirLowLimit() - sg.SgMgdL) ^ 2
-                End If
-            ElseIf sg.SgMgdL > 180 Then
+                lowDeviations += ((lowLimit - sg.Sg) * scale) ^ 2
+            ElseIf sg.SgMgdL > TirHighMmDl180 Then
                 highCount += 1
-                If NativeMmolL Then
-                    highDeviations += ((sg.SgMmolL - GetTirHighLimit()) * MmolLUnitsDivisor) ^ 2
-                Else
-                    highDeviations += (sg.SgMgdL - GetTirHighLimit()) ^ 2
-                End If
+                highDeviations += ((sg.Sg - highLimit) * scale) ^ 2
             End If
         Next
-        highDeviations /= 11
 
         If elements = 0 Then
             Me.LowTirComplianceLabel.Text = EmptyString
             Me.HighTirComplianceLabel.Text = EmptyString
         Else
-            Dim lowDeviation As Single =
-              CSng(Math.Sqrt(lowDeviations / (elements - highCount))).RoundSg()
-            Select Case True
-                Case lowDeviation <= 2
-                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}Excellent{Superscript2}"
-                    Me.LowTirComplianceLabel.ForeColor = Color.LimeGreen
-                Case lowDeviation <= 4
-                    Me.LowTirComplianceLabel.Text = $"Low{vbCrLf}({lowDeviation}) OK{Superscript2}"
-                    Me.LowTirComplianceLabel.ForeColor = Color.Yellow
-                Case Else
-                    Me.LowTirComplianceLabel.Text =
-                        $"Low{vbCrLf}({lowDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
-                    Me.LowTirComplianceLabel.ForeColor = Color.Red
-            End Select
-
-            Dim highDeviation As Single =
-              CSng(Math.Sqrt(highDeviations / (elements - lowCount))).RoundSg()
-            Select Case True
-                Case highDeviation <= 2
-                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}Excellent{Superscript2}"
-                    Me.HighTirComplianceLabel.ForeColor = Color.LimeGreen
-                Case highDeviation <= 4
-                    Me.HighTirComplianceLabel.Text = $"High{vbCrLf}({highDeviation}) OK{Superscript2}"
-                    Me.HighTirComplianceLabel.ForeColor = Color.Yellow
-                Case Else
-                    Me.HighTirComplianceLabel.Text =
-                        $"High{vbCrLf}({highDeviation}) Needs{vbCrLf}Improvement{Superscript2}"
-                    Me.HighTirComplianceLabel.ForeColor = Color.Red
-            End Select
+            UpdateTirComplianceLabel(label:=Me.LowTirComplianceLabel,
+                                     direction:="Low",
+                                     deviations:=lowDeviations,
+                                     count:=elements - highCount)
+            UpdateTirComplianceLabel(label:=Me.HighTirComplianceLabel,
+                                     direction:="High",
+                                     deviations:=highDeviations,
+                                     count:=elements - lowCount)
         End If
         Me.PositionControlsInPanel()
     End Sub

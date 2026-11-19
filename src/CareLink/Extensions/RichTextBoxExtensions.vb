@@ -153,7 +153,7 @@ Public Module RichTextBoxExtensions
         rtb.AppendText(text)
 
         ' Apply the new font to the entire appended text
-        rtb.Select(start, length:=text.Length)
+        rtb.Select(start, text.Length)
         rtb.SelectionFont = newFont
         rtb.SelectionStart = rtb.TextLength
         rtb.SelectionLength = 0
@@ -189,7 +189,7 @@ Public Module RichTextBoxExtensions
         If splitText.Length > 1 Then
             Dim bufferLength As Integer = rtb.Text.Length
             rtb.AppendTextNewFont(text:=symbol, newFont:=HeadingBoldFont, padRight:=False)
-            rtb.Select(start:=bufferLength, length:=symbol.Length)
+            rtb.Select(start:=bufferLength, symbol.Length)
             rtb.SelectionBackColor = SystemColors.Window
             Select Case symbol
                 Case Gear
@@ -341,7 +341,7 @@ Public Module RichTextBoxExtensions
             If wordIndex = -1 Then Exit While
 
             ' Select the found word
-            rtb.Select(start:=wordIndex, length:=searchText.Length)
+            rtb.Select(start:=wordIndex, searchText.Length)
 
             ' Apply formatting: Bold and LimeGreen
             rtb.SelectionFont =
@@ -400,7 +400,7 @@ Public Module RichTextBoxExtensions
 
         ' Highlight if found
         If index <> -1 Then
-            rtb.Select(start:=index, length:=text.Length)
+            rtb.Select(start:=index, text.Length)
             rtb.ScrollToCaret()
             lastSearchIndex = index + text.Length
             rtb.SelectionFont =

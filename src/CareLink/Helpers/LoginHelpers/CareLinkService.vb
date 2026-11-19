@@ -367,7 +367,8 @@ Public Class CareLinkService
                         Catch
                         End Try
 
-                        message = $"Failed to parse token response JSON after multiple encodings. Raw dump: see temp files starting with carelink_token_raw_. Body starts with: {If(body?.Substring(startIndex:=0, length:=Math.Min(200, body.Length)), "<empty>")}"
+                        message =
+                            $"Failed to parse token response JSON after multiple encodings. Raw dump: see temp files starting with carelink_token_raw_. Body starts with: {If(body?.Substring(startIndex:=0, length:=Math.Min(200, body.Length)), "<empty>")}"
                         Throw New ApplicationException(message, innerException)
                     End If
                 End Try

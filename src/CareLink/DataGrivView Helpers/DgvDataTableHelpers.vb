@@ -404,7 +404,6 @@ Friend Module DgvDataTableHelpers
                 dgv.SuspendLayout()
                 dgv.Visible = False
                 dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
-                dgv.RowTemplate.Height = 24
             End If
 
             Try

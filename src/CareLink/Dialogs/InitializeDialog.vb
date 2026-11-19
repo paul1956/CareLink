@@ -201,6 +201,8 @@ Public Class InitializeDialog
     End Sub
 
     Private Sub InitializeDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.InitializeDataGridView.ApplyCellFontIncrease()
+        Me.InitializeDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         Me.ColumnStart.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
         Me.ColumnEnd.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
         Me.CurrentUser.CurrentTarget = GetSgTarget()
@@ -277,12 +279,12 @@ Public Class InitializeDialog
                     Dim value As CarbRatioRecord = i.Value
                     .Rows.Add()
                     With .Rows(i.Index)
-                        Dim colName As String = NameOf(ColumnDeleteRow)
+                        Dim columnName As String = NameOf(ColumnDeleteRow)
                         Dim cell As DataGridViewDisableButtonCell =
-                            CType(.Cells(colName), DataGridViewDisableButtonCell)
+                            CType(.Cells(columnName), DataGridViewDisableButtonCell)
                         cell.Enabled = i.IsLast
-                        colName = NameOf(ColumnStart)
-                        With CType(.Cells(colName), DataGridViewComboBoxCell)
+                        columnName = NameOf(ColumnStart)
+                        With CType(.Cells(columnName), DataGridViewComboBoxCell)
                             .Items.Add(item:=value.StartTime.ToHoursMinutes)
                             .Value = value.StartTime.ToHoursMinutes()
                             .ReadOnly = True
@@ -290,21 +292,21 @@ Public Class InitializeDialog
                         Dim timeSpan As New TimeSpan(hours:=value.StartTime.Hour,
                                                      minutes:=value.StartTime.Minute,
                                                      seconds:=0)
-                        colName = NameOf(ColumnEnd)
+                        columnName = NameOf(ColumnEnd)
                         Dim comboBoxCell As DataGridViewComboBoxCell =
-                            CType(.Cells(colName), DataGridViewComboBoxCell)
+                            CType(.Cells(columnName), DataGridViewComboBoxCell)
                         InitializeComboList(comboBoxCell, start:=CInt((timeSpan / ThirtyMinuteSpan) + 1))
                         With comboBoxCell
                             .Value = value.EndTime
                             .ReadOnly = i.Index >= 11 OrElse (i.IsLast AndAlso Not i.IsFirst)
                         End With
-                        colName = NameOf(ColumnNumericUpDown)
+                        columnName = NameOf(ColumnNumericUpDown)
                         Dim numericCell As DataGridViewNumericUpDownCell =
-                            CType(.Cells(colName), DataGridViewNumericUpDownCell)
+                            CType(.Cells(columnName), DataGridViewNumericUpDownCell)
                         numericCell.Value = value.CarbRatio
                         numericCell.ReadOnly = False
-                        colName = NameOf(ColumnSave)
-                        With CType(.Cells(colName), DataGridViewDisableButtonCell)
+                        columnName = NameOf(ColumnSave)
+                        With CType(.Cells(columnName), DataGridViewDisableButtonCell)
                             .ReadOnly = False
                             .Enabled = i.IsLast
                         End With
@@ -314,23 +316,23 @@ Public Class InitializeDialog
             Else
                 .Rows.Add()
                 With .Rows(index:=0)
-                    Dim colName As String = NameOf(ColumnDeleteRow)
-                    CType(.Cells(colName), DataGridViewDisableButtonCell).Enabled = False
-                    colName = NameOf(ColumnStart)
-                    With CType(.Cells(colName), DataGridViewComboBoxCell)
+                    Dim columnName As String = NameOf(ColumnDeleteRow)
+                    CType(.Cells(columnName), DataGridViewDisableButtonCell).Enabled = False
+                    columnName = NameOf(ColumnStart)
+                    With CType(.Cells(columnName), DataGridViewComboBoxCell)
                         .Items.Add(item:=MidnightStr)
                         .Value = MidnightStr
                         .ReadOnly = True
                     End With
-                    colName = NameOf(ColumnEnd)
-                    Dim comboBoxCell As DataGridViewComboBoxCell = CType(.Cells(colName), DataGridViewComboBoxCell)
+                    columnName = NameOf(ColumnEnd)
+                    Dim comboBoxCell As DataGridViewComboBoxCell = CType(.Cells(columnName), DataGridViewComboBoxCell)
                     InitializeComboList(comboBoxCell, start:=1)
 
-                    colName = NameOf(ColumnEnd)
-                    CType(.Cells(colName), DataGridViewComboBoxCell).Value = Eleven59
+                    columnName = NameOf(ColumnEnd)
+                    CType(.Cells(columnName), DataGridViewComboBoxCell).Value = Eleven59
 
-                    colName = NameOf(ColumnNumericUpDown)
-                    CType(.Cells(colName), DataGridViewNumericUpDownCell).Value = 15.0
+                    columnName = NameOf(ColumnNumericUpDown)
+                    CType(.Cells(columnName), DataGridViewNumericUpDownCell).Value = 15.0
                 End With
                 Me.InitializeDataGridView.Enabled = False
             End If
@@ -383,7 +385,7 @@ Public Class InitializeDialog
         Me.DialogResult = DialogResult.OK
 
         Me.CurrentUser.PumpAit =
-            ParseAsSingle(value:=Me.PumpAitComboBox.SelectedValue).RoundToSingle(digits:=2)
+            ParseAsSingle(obj:=Me.PumpAitComboBox.SelectedValue).RoundToSingle(digits:=2)
 
         Me.CurrentUser.InsulinTypeName = Me.InsulinTypeComboBox.Text
         Me.CurrentUser.InsulinRealAit = CType(Me.InsulinTypeComboBox.SelectedValue, InsulinActivationRecord).AitHours

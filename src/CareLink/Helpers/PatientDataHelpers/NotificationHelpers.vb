@@ -121,7 +121,7 @@ Friend Module NotificationHelpers
         End If
         For Each row As DataGridViewRow In dgv.Rows
             Dim wrap As DataGridViewTriState = If(row.Index = 0, DataGridViewTriState.True, DataGridViewTriState.False)
-            Dim cell As DataGridViewCell = row.Cells(index:=lastColumn.Index)
+            Dim cell As DataGridViewCell = row.Cells(lastColumn.Index)
             If cell.Style.WrapMode <> wrap Then
                 cell.Style.WrapMode = wrap
             End If
@@ -212,7 +212,6 @@ Friend Module NotificationHelpers
             dgv.SuspendLayout()
             dgv.Visible = False
             dgv.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None
-            dgv.RowTemplate.Height = 24
         End If
 
         BindingStarted(owner, dgv)

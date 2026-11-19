@@ -228,7 +228,7 @@ Friend Module DgvExportHelpers
                                      NameOf([Single])
 
                                     Dim valueASingle As Single =
-                                        ParseAsSingle(value:=valueObject).RoundToSingle(digits:=3)
+                                        ParseAsSingle(obj:=valueObject).RoundToSingle(digits:=3)
                                     If Single.IsNaN(valueASingle) Then
                                         .Value = "'Infinity"
                                         align = XLAlignmentHorizontalValues.Center

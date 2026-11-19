@@ -30,6 +30,10 @@ Public Class ControlPositionsForm
 
     Private Sub InitializePositionForm()
         Me.InitializeComponent()
+        Me.DgvControlPositions.ApplyCellFontIncrease()
+        Me.DgvControlPositions.InitializeGridTheme()
+        Me.DgvControlPositions.RowHeadersVisible = False
+        Me.DgvControlPositions.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         ' Build context menu and wire to existing shared helpers in DgvExportHelpers
         _contextMenu.Items.AddRange(New ToolStripItem() {
             _copyWithHeaderMenuItem,
@@ -43,10 +47,10 @@ Public Class ControlPositionsForm
         AddHandler _copyWithoutHeaderMenuItem.Click, AddressOf CopyToClipboardWithoutHeaders
         AddHandler _copyToExcelMenuItem.Click, AddressOf CopyDataToExcel
 
-        Me.DataGridView1.ContextMenuStrip = _contextMenu
+        Me.DgvControlPositions.ContextMenuStrip = _contextMenu
 
         ' Hook header click to the shared sort helper
-        AddHandler Me.DataGridView1.ColumnHeaderMouseClick, AddressOf Me.DataGridView1_ColumnHeaderMouseClick
+        AddHandler Me.DgvControlPositions.ColumnHeaderMouseClick, AddressOf Me.DataGridView1_ColumnHeaderMouseClick
 
     End Sub
 

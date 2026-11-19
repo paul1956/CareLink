@@ -248,6 +248,7 @@ Friend Module UserMessageConstants
         {"SEARCHING_FOR_SENSOR_SIGNAL", $"Searching For{vbCrLf}Sensor Signal"},
         {"SENSOR_DISCONNECTED", $"Sensor{vbCrLf}Disconnected"},
         {"SENSOR_OFF", $"Sensor{vbCrLf}Off"},
+        {"SG_BELOW_50_MGDL", $"Sensor{vbCrLf}Below 50 mg/dL"},
         {"SQUARE_BOLUS", $"Square{vbCrLf}Bolus"},
         {"SUSPENDED_BEFORE_LOW", $"Suspended{vbCrLf}Before Low"},
         {"SUSPENDED_ON_LOW", $"Suspended{vbCrLf}On Low"},

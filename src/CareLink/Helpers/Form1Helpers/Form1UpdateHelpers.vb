@@ -157,7 +157,7 @@ Friend Module Form1UpdateHelpers
         Dim count As Integer = 0
         For index As Integer = 0 To json.Count - 1
             Dim item As New SG(json:=json(index), index:=count)
-            If index > 0 OrElse item.Sg.IsSgValid Then
+            If index > 0 OrElse item.IsSgRecordValid Then
                 sGs.Add(item)
                 count += 1
             End If
@@ -1057,13 +1057,19 @@ Friend Module Form1UpdateHelpers
                                                          150)
 
                             Dim record As New OADateValueRecord(oaDate:=s_sgRecords.Last.GetOaDateTime,
-                                                           sg:=CSng(target150))
+                                                                sg:=CSng(target150))
                             s_circularOADateBuffer.Add(record)
                             .PumpBannerStateLabel.Text =
                                 $"Temp Target {minutes.ToHoursMinutes} hr"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
                             .SmartGuardShieldPictureBox.Image = GetBitmapFromCache(imageId:=ImageEnum.SmartGuardShieldExercise)
+                        Case "SG_BELOW_50_MGDL"
+                            .PumpBannerStateLabel.BackColor = Color.IndianRed
+                            .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
+                            .PumpBannerStateLabel.Text = "SG Below 50 mg/dL"
+                            .PumpBannerStateLabel.Visible = True
+                            .PumpBannerStateLabel.Dock = DockStyle.Top
                         Case "BG_REQUIRED"
                             .PumpBannerStateLabel.BackColor = Color.CadetBlue
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
@@ -1100,8 +1106,18 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
                             .PumpBannerStateLabel.Font = s_font_7Bold
+                        Case "WAIT_TO_CALIBRATE"
+                            .PumpBannerStateLabel.BackColor = Color.IndianRed
+                            .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
+                            .PumpBannerStateLabel.Text = "Wait to Calibrate"
+                            .PumpBannerStateLabel.Visible = True
+                            .PumpBannerStateLabel.Dock = DockStyle.Top
                         Case "WAIT_TO_ENTER_BG"
-                            Stop
+                            .PumpBannerStateLabel.BackColor = Color.IndianRed
+                            .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
+                            .PumpBannerStateLabel.Text = "Wait to Enter BG"
+                            .PumpBannerStateLabel.Visible = True
+                            .PumpBannerStateLabel.Dock = DockStyle.Top
                         Case Else
                             Dim stackFrame As StackFrame
                             If s_showLogger Then
@@ -1134,6 +1150,34 @@ Friend Module Form1UpdateHelpers
             DisplayDataTable(Of BannerState)(
                 table:=ClassCollectionToDataTable(classCollection:=listOfBannerState),
                 className:=NameOf(BannerState), rowIndex:=ServerDataEnum.pumpBannerState)
+    End Sub
+
+    ''' <summary>
+    '''  Displays the compliance category for the available readings on one side of the range.
+    ''' </summary>
+    ''' <param name="label">The label to update.</param>
+    ''' <param name="direction">The range direction displayed on the label.</param>
+    ''' <param name="deviations">The sum of squared deviations.</param>
+    ''' <param name="count">The number of readings used in the calculation.</param>
+    Friend Sub UpdateTirComplianceLabel(label As Label, direction As String, deviations As Double, count As Integer)
+        If count = 0 Then
+            label.Text = $"{direction}{vbCrLf}N/A{Superscript2}"
+            label.ForeColor = SystemColors.ControlText
+            Return
+        End If
+
+        Dim deviation As Single = CSng(Math.Sqrt(d:=deviations / count)).RoundSg()
+        Select Case True
+            Case deviation <= 2
+                label.Text = $"{direction}{vbCrLf}Excellent{Superscript2}"
+                label.ForeColor = Color.LimeGreen
+            Case deviation <= 4
+                label.Text = $"{direction}{vbCrLf}({deviation}) OK{Superscript2}"
+                label.ForeColor = Color.Yellow
+            Case Else
+                label.Text = $"{direction}{vbCrLf}({deviation}) Needs{vbCrLf}Improvement{Superscript2}"
+                label.ForeColor = Color.Red
+        End Select
     End Sub
 
     ''' <summary>

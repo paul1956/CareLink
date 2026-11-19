@@ -59,7 +59,7 @@ Public Class LivePollingScheduleTests
     <InlineData(45000, 50000)>
     Public Sub ChoosesExpectedIntervalForServerPhase(age As Long, expected As Integer)
         Dim schedule As LivePollingSchedule = ConfirmedSchedule(serverAge:=age)
-        Assert.Equal(expected:=expected,
+        Assert.Equal(expected,
                      actual:=schedule.NextInterval(nowTicks:=0))
     End Sub
 

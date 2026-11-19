@@ -631,7 +631,7 @@ Public Class RawDataViewerDialog
 
         If matchIndex >= 0 Then
             ' Highlight the match
-            rtb.Select(start:=matchIndex, length:=typedText.Length)
+            rtb.Select(start:=matchIndex, typedText.Length)
             rtb.SelectionColor = Color.Green
             rtb.FindNext(Me.txtFind.Text,
                          reportNotFound:=False,

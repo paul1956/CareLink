@@ -275,7 +275,7 @@ Friend Class Client2
         Using request As New HttpRequestMessage(method:=HttpMethod.Get, requestUri:=requestUri)
 
             For Each header As KeyValuePair(Of String, String) In BuildHeaders(token_data)
-                request.Headers.TryAddWithoutValidation(name:=header.Key, value:=header.Value)
+                request.Headers.TryAddWithoutValidation(name:=header.Key, header.Value)
             Next
 
             Using response As HttpResponseMessage = Await _httpClient.SendAsync(request)
