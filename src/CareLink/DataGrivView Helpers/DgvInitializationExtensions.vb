@@ -4,6 +4,7 @@
 
 Imports System.ComponentModel
 Imports System.Runtime.CompilerServices
+Imports DataGridViewColumnControls
 
 ''' <summary>
 '''  Provides extension methods for <see cref="DataGridView"/> to simplify
@@ -18,6 +19,7 @@ Public Module DgvInitializationExtensions
         Dim dgv As DataGridView = DirectCast(sender, DataGridView)
         dgv.SetAlternatingRowColor(isDarkMode:=Application.IsDarkModeEnabled, SystemInformation.HighContrast)
         dgv.SetHeaderColors(isDarkMode:=Application.IsDarkModeEnabled, SystemInformation.HighContrast)
+        dgv.Invalidate()
     End Sub
 
     Private Sub DgvContentSizing_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs)
@@ -73,8 +75,9 @@ Public Module DgvInitializationExtensions
         dgv.RowHeadersDefaultCellStyle.Font = state.Font
         previousFont?.Dispose()
 
-        dgv.RowTemplate.Height = Math.Max(dgv.RowTemplate.Height,
-            CInt(Math.Ceiling(a:=state.Font.GetHeight(dpi:=dgv.DeviceDpi) + (8.0 * dgv.DeviceDpi / 96.0))))
+        dgv.RowTemplate.Height =
+            Math.Max(dgv.RowTemplate.Height,
+                     CInt(Math.Ceiling(a:=state.Font.GetHeight(dpi:=dgv.DeviceDpi) + (8.0 * dgv.DeviceDpi / 96.0))))
     End Sub
 
     ''' <summary>
@@ -121,8 +124,11 @@ Public Module DgvInitializationExtensions
             .ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True
             .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
             .DataSource = Nothing
-            .DefaultCellStyle.Padding = New Padding(left:=GridCellHorizontalPadding, top:=0,
-                                                    right:=GridCellHorizontalPadding, bottom:=0)
+            .DefaultCellStyle.Padding =
+                New Padding(left:=GridCellHorizontalPadding,
+                            top:=0,
+                            right:=GridCellHorizontalPadding,
+                            bottom:=0)
             .Dock = dock
             .Location = New Point(x:=0, y:=0)
             .Padding = New Padding(all:=0)
@@ -150,6 +156,120 @@ Public Module DgvInitializationExtensions
         dgv.SetHeaderColors(isDarkMode:=Application.IsDarkModeEnabled, SystemInformation.HighContrast)
         RemoveHandler dgv.SystemColorsChanged, AddressOf Dgv_SystemColorsChanged
         AddHandler dgv.SystemColorsChanged, AddressOf Dgv_SystemColorsChanged
+    End Sub
+
+    Friend Sub PaintDarkUserButton(graphics As Graphics, cellBounds As Rectangle, font As Font,
+                                   text As String, enabled As Boolean, dpi As Integer)
+        Dim inset As Integer = Math.Max(1, CInt(Math.Round(a:=2.0 * dpi / 96.0)))
+        Dim bounds As Rectangle = Rectangle.Inflate(rect:=cellBounds, x:=-inset, y:=-inset)
+        If bounds.Width <= 1 OrElse bounds.Height <= 1 Then Return
+
+        Dim fill As Color = Color.FromArgb(red:=56, green:=56, blue:=56)
+        Dim border As Color = If(enabled, Color.FromArgb(red:=170, green:=170, blue:=170),
+                                 Color.FromArgb(red:=105, green:=105, blue:=105))
+        Dim foreground As Color = If(enabled, Color.White, Color.FromArgb(red:=155, green:=155, blue:=155))
+        Using brush As New SolidBrush(color:=fill), pen As New Pen(color:=border)
+            graphics.FillRectangle(brush, rect:=bounds)
+            graphics.DrawRectangle(pen, bounds.X, bounds.Y, width:=bounds.Width - 1, height:=bounds.Height - 1)
+        End Using
+        TextRenderer.DrawText(dc:=graphics, text, font, bounds, foreColor:=foreground,
+                              flags:=TextFormatFlags.HorizontalCenter Or
+                                     TextFormatFlags.VerticalCenter Or
+                                     TextFormatFlags.SingleLine Or
+                                     TextFormatFlags.EndEllipsis)
+    End Sub
+
+    Friend Sub PaintDarkUserCheckBox(graphics As Graphics, cellBounds As Rectangle,
+                                     checkState As CheckState, dpi As Integer)
+        Dim size As Integer =
+            Math.Min(Math.Min(cellBounds.Width, cellBounds.Height),
+                     Math.Max(1, CInt(Math.Round(a:=14.0 * dpi / 96.0))))
+        If size < 4 Then Return
+        Dim bounds As New Rectangle(x:=cellBounds.X + ((cellBounds.Width - size) \ 2),
+                                    y:=cellBounds.Y + ((cellBounds.Height - size) \ 2), width:=size, height:=size)
+        Dim fill As Color = If(checkState = CheckState.Unchecked,
+                               Color.FromArgb(red:=56, green:=56, blue:=56),
+                               Color.FromArgb(red:=0, green:=100, blue:=180))
+        Using brush As New SolidBrush(color:=fill), border As New Pen(color:=Color.FromArgb(red:=180, green:=180, blue:=180)),
+              mark As New Pen(color:=Color.White, width:=Math.Max(1.0F, CSng(size) / 8.0F))
+            graphics.FillRectangle(brush, rect:=bounds)
+            graphics.DrawRectangle(pen:=border,
+                                   bounds.X,
+                                   bounds.Y,
+                                   width:=bounds.Width - 1,
+                                   height:=bounds.Height - 1)
+            If checkState = CheckState.Checked Then
+                graphics.DrawLines(pen:=mark,
+                                   {New Point(x:=bounds.X + (size \ 4), y:=bounds.Y + (size \ 2)),
+                                          New Point(x:=bounds.X + ((size * 2) \ 5), y:=bounds.Y + ((size * 3) \ 4)),
+                                          New Point(x:=bounds.X + ((size * 3) \ 4), y:=bounds.Y + (size \ 4))})
+            ElseIf checkState = CheckState.Indeterminate Then
+                graphics.DrawLine(pen:=mark,
+                                  x1:=bounds.X + (size \ 4),
+                                  y1:=bounds.Y + (size \ 2),
+                                  x2:=bounds.X + ((size * 3) \ 4),
+                                  y2:=bounds.Y + (size \ 2))
+            End If
+        End Using
+    End Sub
+
+    <Extension>
+    Friend Sub PaintDarkUserGridCell(dgv As DataGridView, e As DataGridViewCellPaintingEventArgs,
+                                     isDarkMode As Boolean, highContrast As Boolean)
+        If Not isDarkMode OrElse highContrast OrElse e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then Return
+
+        Dim cell As DataGridViewCell = dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex)
+        Dim button As DataGridViewDisableButtonCell = TryCast(cell, DataGridViewDisableButtonCell)
+        If button Is Nothing AndAlso TypeOf cell IsNot DataGridViewCheckBoxCell Then Return
+
+        Dim nativeParts As DataGridViewPaintParts = DataGridViewPaintParts.Background Or
+            DataGridViewPaintParts.SelectionBackground Or DataGridViewPaintParts.Border Or
+            DataGridViewPaintParts.Focus Or DataGridViewPaintParts.ErrorIcon
+        ' The disable-button cell paints its native button even when only other parts are requested.
+        e.Paint(e.ClipBounds, paintParts:=e.PaintParts And nativeParts)
+
+        If (e.PaintParts And DataGridViewPaintParts.ContentForeground) <> 0 Then
+            If button IsNot Nothing Then
+                Dim buttonBounds As Rectangle = e.CellBounds
+                If dgv.ShowCellErrors AndAlso Not String.IsNullOrEmpty(e.ErrorText) AndAlso
+                   (e.PaintParts And DataGridViewPaintParts.ErrorIcon) <> 0 Then
+                    buttonBounds.Width =
+                        Math.Max(0, buttonBounds.Width - CInt(Math.Ceiling(a:=20.0 * dgv.DeviceDpi / 96.0)))
+                End If
+                PaintDarkUserButton(e.Graphics,
+                                    cellBounds:=buttonBounds,
+                                    e.CellStyle.Font,
+                                    text:=Convert.ToString(value:=e.FormattedValue),
+                                    button.Enabled,
+                                    dpi:=dgv.DeviceDpi)
+                If (e.PaintParts And DataGridViewPaintParts.Focus) <> 0 AndAlso
+                    dgv.Focused AndAlso
+                    dgv.CurrentCell Is cell Then
+
+                    Dim inset As Integer = Math.Max(2, CInt(Math.Round(a:=4.0 * dgv.DeviceDpi / 96.0)))
+                    Dim focusBounds As Rectangle = Rectangle.Inflate(rect:=buttonBounds, x:=-inset, y:=-inset)
+                    If focusBounds.Width > 0 AndAlso focusBounds.Height > 0 Then
+                        ControlPaint.DrawFocusRectangle(e.Graphics,
+                                                        rectangle:=focusBounds,
+                                                        foreColor:=Color.White,
+                                                        backColor:=Color.FromArgb(red:=56, green:=56, blue:=56))
+                    End If
+                End If
+            Else
+                Dim checkState As CheckState = CheckState.Unchecked
+                If TypeOf e.FormattedValue Is CheckState Then
+                    checkState = DirectCast(e.FormattedValue, CheckState)
+                ElseIf TypeOf e.FormattedValue Is Boolean AndAlso CBool(e.FormattedValue) Then
+                    checkState = CheckState.Checked
+                End If
+                PaintDarkUserCheckBox(e.Graphics,
+                                      e.CellBounds,
+                                      checkState,
+                                      dpi:=dgv.DeviceDpi)
+            End If
+        End If
+
+        e.Handled = True
     End Sub
 
     <Extension>

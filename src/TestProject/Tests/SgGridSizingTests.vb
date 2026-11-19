@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Data
+Imports System.Drawing
 Imports System.Runtime.ExceptionServices
 Imports System.Threading
 Imports System.Windows.Forms
@@ -20,7 +21,7 @@ Public Class SgGridSizingTests
                 Try
                     Using owner As New Form1(), host As New Form()
                         Dim dgv As DataGridView = owner.DgvSummary
-                        host.ClientSize = New Drawing.Size(width:=600, height:=300)
+                        host.ClientSize = New Size(width:=600, height:=300)
                         dgv.Dock = DockStyle.Fill
                         host.Controls.Add(value:=dgv)
                         host.Show()
@@ -44,7 +45,7 @@ Public Class SgGridSizingTests
                                 dgv.Columns(columnName:=NameOf(SummaryRecord.RecordNumber))
                             Assert.Equal(expected:="Record Number", actual:=column.HeaderText)
                             For Each width As Integer In {600, 400}
-                                host.ClientSize = New Drawing.Size(width, height:=300)
+                                host.ClientSize = New Size(width, height:=300)
                                 Application.DoEvents()
                                 Assert.Equal(expected:=DataGridViewTriState.False,
                                              actual:=column.HeaderCell.InheritedStyle.WrapMode)
@@ -59,13 +60,13 @@ Public Class SgGridSizingTests
                                              actual:=dgv.Columns(columnName:=NameOf(SummaryRecord.Message)).AutoSizeMode)
                             Next
                             dgv.SetHeaderColors(isDarkMode:=True, highContrast:=False)
-                            Using bitmap As New Drawing.Bitmap(dgv.Width, dgv.Height)
+                            Using bitmap As New Bitmap(dgv.Width, dgv.Height)
                                 dgv.DrawToBitmap(bitmap, targetBounds:=dgv.ClientRectangle)
-                                Dim header As Drawing.Rectangle =
+                                Dim header As Rectangle =
                                     dgv.GetCellDisplayRectangle(columnIndex:=0,
                                                                 rowIndex:=-1,
                                                                 cutOverflow:=False)
-                                Dim pixel As Drawing.Color = bitmap.GetPixel(x:=header.Left + 4, y:=header.Top + 4)
+                                Dim pixel As Color = bitmap.GetPixel(x:=header.Left + 4, y:=header.Top + 4)
                                 Assert.True(condition:=pixel.R < 100 AndAlso pixel.G < 100 AndAlso pixel.B < 100,
                                             userMessage:=$"Header pixel was {pixel}")
                             End Using
@@ -92,7 +93,7 @@ Public Class SgGridSizingTests
             Sub()
                 Try
                     Using host As New Form(), dgv As New DataGridView(), basal As New DataGridView()
-                        host.ClientSize = New Drawing.Size(width:=600, height:=300)
+                        host.ClientSize = New Size(width:=600, height:=300)
                         dgv.Dock = DockStyle.Fill
                         host.Controls.Add(value:=dgv)
                         dgv.Columns.Add(columnName:="First", headerText:="First")
@@ -154,7 +155,7 @@ Public Class SgGridSizingTests
                 Try
                     Using owner As New Form1(), host As New Form(), table As New DataTable()
                         Dim dgv As DataGridView = owner.DgvSGs
-                        host.ClientSize = New Drawing.Size(width:=1200, height:=400)
+                        host.ClientSize = New Size(width:=1200, height:=400)
                         dgv.Dock = DockStyle.Fill
                         host.Controls.Add(value:=dgv)
                         host.Show()
@@ -196,7 +197,7 @@ Public Class SgGridSizingTests
                                 Assert.Equal(expected:=3, actual:=headerLines.Length)
                                 Assert.Equal(expected:=DataGridViewTriState.True,
                                              actual:=glucose.HeaderCell.InheritedStyle.WrapMode)
-                                Dim headerFont As Drawing.Font = glucose.HeaderCell.InheritedStyle.Font
+                                Dim headerFont As Font = glucose.HeaderCell.InheritedStyle.Font
                                 For Each line As String In headerLines
                                     Assert.True(condition:=glucose.Width >= TextRenderer.MeasureText(text:=line, font:=headerFont).Width)
                                 Next
@@ -229,7 +230,7 @@ Public Class SgGridSizingTests
                             Assert.True(condition:=dgv.Rows(index:=rowCount - 1).Height > normalHeight)
 
                             Dim oldMessageWidth As Integer = message.Width
-                            host.ClientSize = New Drawing.Size(width:=host.ClientSize.Width + 200, height:=400)
+                            host.ClientSize = New Size(width:=host.ClientSize.Width + 200, height:=400)
                             Application.DoEvents()
                             Assert.True(condition:=message.Width > oldMessageWidth)
                             Assert.Equal(expected:=stateWidth, actual:=state.Width)
@@ -311,7 +312,7 @@ Public Class SgGridSizingTests
                 Try
                     Using owner As New Form1(), host As New Form(), table As New DataTable()
                         Dim dgv As DataGridView = owner.DgvSGs
-                        host.ClientSize = New Drawing.Size(width:=1200, height:=400)
+                        host.ClientSize = New Size(width:=1200, height:=400)
                         host.Controls.Add(value:=dgv)
                         host.Show()
                         table.Columns.Add(columnName:=NameOf(SG.RecordNumber), type:=GetType(Integer))
@@ -348,12 +349,12 @@ Public Class SgGridSizingTests
                                               End Function)
                             Assert.True(condition:=column.Width >= longestLine + style.Padding.Horizontal +
                                         CInt(Math.Ceiling(a:=32.0 * dgv.DeviceDpi / 96.0)))
-                            Using sorted As New Drawing.Bitmap(dgv.Width, dgv.Height),
-                                  unsorted As New Drawing.Bitmap(dgv.Width, dgv.Height)
+                            Using sorted As New Bitmap(dgv.Width, dgv.Height),
+                                  unsorted As New Bitmap(dgv.Width, dgv.Height)
                                 dgv.DrawToBitmap(bitmap:=sorted, targetBounds:=dgv.ClientRectangle)
                                 column.HeaderCell.SortGlyphDirection = SortOrder.None
                                 dgv.DrawToBitmap(bitmap:=unsorted, targetBounds:=dgv.ClientRectangle)
-                                Dim bounds As Drawing.Rectangle =
+                                Dim bounds As Rectangle =
                                     dgv.GetCellDisplayRectangle(columnIndex:=column.Index,
                                                                 rowIndex:=-1,
                                                                 cutOverflow:=False)
@@ -366,7 +367,7 @@ Public Class SgGridSizingTests
                                 Dim glyphTop As Integer = bounds.Top + ((bounds.Height - glyphHeight) \ 2)
                                 For y As Integer = glyphTop To glyphTop + glyphHeight - 1
                                     For x As Integer = glyphLeft To glyphLeft + glyphWidth - 1
-                                        Dim pixel As Drawing.Color = sorted.GetPixel(x, y)
+                                        Dim pixel As Color = sorted.GetPixel(x, y)
                                         If pixel.ToArgb() <> unsorted.GetPixel(x, y).ToArgb() AndAlso
                                            If(isDarkMode, pixel.R >= 180 AndAlso pixel.G >= 180 AndAlso pixel.B >= 180,
                                               pixel.R <= 100 AndAlso pixel.G <= 100 AndAlso pixel.B <= 100) Then
@@ -379,13 +380,13 @@ Public Class SgGridSizingTests
                             End Using
                             column.HeaderCell.SortGlyphDirection = expectedGlyph
                         Next
-                        Using ascending As New Drawing.Bitmap(dgv.Width, dgv.Height),
-                              descending As New Drawing.Bitmap(dgv.Width, dgv.Height)
+                        Using ascending As New Bitmap(dgv.Width, dgv.Height),
+                              descending As New Bitmap(dgv.Width, dgv.Height)
                             column.HeaderCell.SortGlyphDirection = SortOrder.Ascending
                             dgv.DrawToBitmap(bitmap:=ascending, targetBounds:=dgv.ClientRectangle)
                             column.HeaderCell.SortGlyphDirection = SortOrder.Descending
                             dgv.DrawToBitmap(bitmap:=descending, targetBounds:=dgv.ClientRectangle)
-                            Dim bounds As Drawing.Rectangle =
+                            Dim bounds As Rectangle =
                                 dgv.GetCellDisplayRectangle(columnIndex:=column.Index, rowIndex:=-1, cutOverflow:=False)
                             Dim changedPixels As Integer = 0
                             Dim glyphRegionWidth As Integer = CInt(Math.Ceiling(a:=24.0 * dgv.DeviceDpi / 96.0))

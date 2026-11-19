@@ -2020,6 +2020,14 @@ Public Class Form1
         End Try
     End Sub
 
+    Private Sub DgvCareLinkUsers_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) _
+            Handles DgvCareLinkUsers.CellPainting
+
+        Dim dgv As DataGridView = DirectCast(sender, DataGridView)
+        dgv.PaintDarkUserGridCell(e, isDarkMode:=Application.IsDarkModeEnabled,
+                                  highContrast:=SystemInformation.HighContrast)
+    End Sub
+
     ''' <summary>
     '''  Handles the <see cref="DataGridView.CellValidating"/> event
     '''  for the <see cref="DgvCareLinkUsers"/> DataGridView.
@@ -2106,6 +2114,8 @@ Public Class Form1
     ''' </summary>
     ''' <param name="dgv">The <see cref="DataGridView"/> to initialize.</param>
     Private Sub InitializeDgvCareLinkUsers(dgv As DataGridView)
+        dgv.RowHeadersVisible = False
+
         Dim dgvCareLinkUsersID As New DataGridViewTextBoxColumn With {
             .DataPropertyName = "ID",
             .HeaderText = "ID",

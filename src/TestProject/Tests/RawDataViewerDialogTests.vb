@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Drawing
 Imports System.Runtime.ExceptionServices
 Imports System.Runtime.InteropServices
 Imports System.Text.Json
@@ -57,7 +58,7 @@ Public Class RawDataViewerDialogTests
     End Sub
 
     Private Shared Function ScrollY(control As RichTextBox) As Integer
-        Dim position As Drawing.Point
+        Dim position As Point
         SendPointMessage(control.Handle, message:=EM_GETSCROLLPOS, wParam:=IntPtr.Zero, position)
         Return position.Y
     End Function
@@ -66,7 +67,7 @@ Public Class RawDataViewerDialogTests
     Private Shared Function SendPointMessage(handle As IntPtr,
                                              message As Integer,
                                              wParam As IntPtr,
-                                             ByRef position As Drawing.Point) As IntPtr
+                                             ByRef position As Point) As IntPtr
     End Function
 
     <DllImport("user32.dll", EntryPoint:="SendMessageW")>
@@ -126,7 +127,7 @@ Public Class RawDataViewerDialogTests
                     toggle.Checked = False
                     Dim previousText As String = previous.Text
                     Dim currentText As String = current.Text
-                    Dim originalBounds As Drawing.Rectangle = current.Bounds
+                    Dim originalBounds As Rectangle = current.Bounds
                     Dim previousWordWrap As Boolean = previous.WordWrap
                     Dim currentWordWrap As Boolean = current.WordWrap
 
@@ -277,7 +278,7 @@ Public Class RawDataViewerDialogTests
                         Assert.Equal(expected:=DockStyle.None, actual:=current.Dock)
                         Assert.Equal(expected:="$[""value""] = 2", actual:=previous.Text)
                         Assert.Equal(expected:="$[""value""] = 3", actual:=current.Text)
-                        Dim sideBySideBounds As Drawing.Rectangle = current.Bounds
+                        Dim sideBySideBounds As Rectangle = current.Bounds
                         search.Text = "value"
 
                         PatientDataElement = Parse(json:="{""value"":2}")
@@ -465,7 +466,7 @@ Public Class RawDataViewerDialogTests
                     Assert.Equal(expected:=ScrollY(control:=previous), actual:=ScrollY(control:=current))
                     beforePreviousScroll = ScrollY(control:=previous)
                     previous.Focus()
-                    Dim mousePosition As Drawing.Point = previous.PointToScreen(p:=New Drawing.Point(x:=10, y:=10))
+                    Dim mousePosition As Point = previous.PointToScreen(p:=New Point(x:=10, y:=10))
                     Dim mouseCoordinates As Integer =
                         (mousePosition.X And &HFFFF) Or ((mousePosition.Y And &HFFFF) << 16)
                     SendWindowMessage(previous.Handle,

@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Drawing
 Imports CareLink
 Imports FluentAssertions
 Imports Xunit
@@ -57,19 +58,19 @@ Public Class SystemVariablesTests
         Using label As New System.Windows.Forms.Label()
             UpdateTirComplianceLabel(label, direction:="High", deviations:=0, count:=0)
             label.Text.Should().Be(expected:=$"High{vbCrLf}N/A{Superscript2}")
-            label.ForeColor.Should().Be(expected:=Drawing.SystemColors.ControlText)
+            label.ForeColor.Should().Be(expected:=SystemColors.ControlText)
 
             UpdateTirComplianceLabel(label, direction:="Low", deviations:=8, count:=2)
             label.Text.Should().Be(expected:=$"Low{vbCrLf}Excellent{Superscript2}")
-            label.ForeColor.Should().Be(expected:=Drawing.Color.LimeGreen)
+            label.ForeColor.Should().Be(expected:=Color.LimeGreen)
 
             UpdateTirComplianceLabel(label, direction:="High", deviations:=32, count:=2)
             label.Text.Should().Be(expected:=$"High{vbCrLf}(4) OK{Superscript2}")
-            label.ForeColor.Should().Be(expected:=Drawing.Color.Yellow)
+            label.ForeColor.Should().Be(expected:=Color.Yellow)
 
             UpdateTirComplianceLabel(label, direction:="Low", deviations:=50, count:=2)
             label.Text.Should().Be(expected:=$"Low{vbCrLf}(5) Needs{vbCrLf}Improvement{Superscript2}")
-            label.ForeColor.Should().Be(expected:=Drawing.Color.Red)
+            label.ForeColor.Should().Be(expected:=Color.Red)
         End Using
     End Sub
 

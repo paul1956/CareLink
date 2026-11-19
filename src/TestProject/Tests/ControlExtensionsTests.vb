@@ -2,6 +2,8 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Drawing
+Imports System.Reflection
 Imports System.Windows.Forms
 Imports CareLink
 Imports FluentAssertions
@@ -10,19 +12,21 @@ Imports Xunit
 <Collection("Sequential")>
 Public Class ControlExtensionsTests
 
-    Private Shared Function ContrastRatio(first As Drawing.Color, second As Drawing.Color) As Double
-        Dim firstLuminance As Double = RelativeLuminance(first)
-        Dim secondLuminance As Double = RelativeLuminance(second)
+    Private Shared Function ContrastRatio(first As Color, second As Color) As Double
+        Dim firstLuminance As Double = RelativeLuminance(color:=first)
+        Dim secondLuminance As Double = RelativeLuminance(color:=second)
         Return (Math.Max(firstLuminance, secondLuminance) + 0.05) /
                (Math.Min(firstLuminance, secondLuminance) + 0.05)
     End Function
 
     Private Shared Function LinearChannel(channel As Byte) As Double
         Dim value As Double = channel / 255.0
-        Return If(value <= 0.04045, value / 12.92, Math.Pow((value + 0.055) / 1.055, 2.4))
+        Return If(value <= 0.04045,
+                  value / 12.92,
+                  Math.Pow(x:=(value + 0.055) / 1.055, y:=2.4))
     End Function
 
-    Private Shared Function RelativeLuminance(color As Drawing.Color) As Double
+    Private Shared Function RelativeLuminance(color As Color) As Double
         Return (0.2126 * LinearChannel(channel:=color.R)) + (0.7152 * LinearChannel(channel:=color.G)) +
                (0.0722 * LinearChannel(channel:=color.B))
     End Function
@@ -32,9 +36,9 @@ Public Class ControlExtensionsTests
         Using dgv As New DataGridView(), basal As New DataGridView()
             basal.Name = NameOf(Form1.DgvBasalPerHour)
             Dim baseline As Single = dgv.Font.SizeInPoints
-            Dim basalFont As Drawing.Font = basal.DefaultCellStyle.Font
-            Dim basalColumnFont As Drawing.Font = basal.ColumnHeadersDefaultCellStyle.Font
-            Dim basalRowFont As Drawing.Font = basal.RowHeadersDefaultCellStyle.Font
+            Dim basalFont As Font = basal.DefaultCellStyle.Font
+            Dim basalColumnFont As Font = basal.ColumnHeadersDefaultCellStyle.Font
+            Dim basalRowFont As Font = basal.RowHeadersDefaultCellStyle.Font
             dgv.DefaultCellStyle.Font = dgv.Font
             dgv.ColumnHeadersDefaultCellStyle.Font = dgv.Font
 
@@ -50,7 +54,7 @@ Public Class ControlExtensionsTests
             style.Font.SizeInPoints.Should().Be(expected:=baseline + 1.0F)
             Dim args As New DataGridViewCellFormattingEventArgs(0, 0, "value", GetType(String), style)
             args.CellFormattingApplyBold()
-            Using boldFont As Drawing.Font = args.CellStyle.Font
+            Using boldFont As Font = args.CellStyle.Font
                 boldFont.SizeInPoints.Should().Be(expected:=baseline + 3.0F)
                 boldFont.Bold.Should().BeTrue()
             End Using
@@ -87,10 +91,10 @@ Public Class ControlExtensionsTests
             dgv.Columns.Add(columnName:="Value", headerText:="Value")
             dgv.AllowUserToAddRows = False
             dgv.Rows.Add(count:=2)
-            dgv.RowsDefaultCellStyle.BackColor = If(isDark, Drawing.Color.FromArgb(red:=48, green:=48, blue:=48), Drawing.Color.White)
+            dgv.RowsDefaultCellStyle.BackColor = If(isDark, Color.FromArgb(red:=48, green:=48, blue:=48), Color.White)
             dgv.SetAlternatingRowColor(isDarkMode:=isDark, highContrast:=False)
 
-            For Each textColor As Drawing.Color In {Drawing.Color.Red, Drawing.Color.Yellow}
+            For Each textColor As Color In {Color.Red, Color.Yellow}
                 Dim style As DataGridViewCellStyle = dgv.Rows(index:=rowIndex).Cells(index:=0).InheritedStyle.Clone()
                 Dim args As New DataGridViewCellFormattingEventArgs(columnIndex:=0,
                                                                     rowIndex,
@@ -100,15 +104,18 @@ Public Class ControlExtensionsTests
                 dgv.CellFormattingApplyColor(e:=args, textColor)
 
                 args.FormattingApplied.Should().BeTrue()
-                style.BackColor.Should().Be(expected:=
-                    If(rowIndex Mod 2 = 0,
-                       dgv.RowsDefaultCellStyle.BackColor,
-                       dgv.AlternatingRowsDefaultCellStyle.BackColor))
-                ContrastRatio(first:=style.ForeColor, second:=style.BackColor).Should().BeGreaterThanOrEqualTo(expected:=4.5)
+                style.BackColor.Should().
+                    Be(expected:=If(rowIndex Mod 2 = 0,
+                                    dgv.RowsDefaultCellStyle.BackColor,
+                                    dgv.AlternatingRowsDefaultCellStyle.BackColor))
+                ContrastRatio(first:=style.ForeColor, second:=style.BackColor).Should().
+                    BeGreaterThanOrEqualTo(expected:=4.5)
                 ContrastRatio(first:=style.SelectionForeColor, second:=style.SelectionBackColor).Should().
                     BeGreaterThanOrEqualTo(expected:=4.5)
-                dgv.RowsDefaultCellStyle.BackColor.Should().Be(expected:=If(isDark,
-                    Drawing.Color.FromArgb(red:=48, green:=48, blue:=48), Drawing.Color.White))
+                dgv.RowsDefaultCellStyle.BackColor.Should().
+                    Be(expected:=If(isDark,
+Color.FromArgb(red:=48, green:=48, blue:=48),
+Color.White))
             Next
         End Using
     End Sub
@@ -253,18 +260,25 @@ Public Class ControlExtensionsTests
             expected.InitializeGridTheme()
             dgv.RowHeadersVisible.Should().BeFalse()
             dgv.SelectionMode.Should().Be(expected:=DataGridViewSelectionMode.FullRowSelect)
-            dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().Be(expected:=expected.AlternatingRowsDefaultCellStyle.BackColor)
-            dgv.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(expected:=expected.ColumnHeadersDefaultCellStyle.BackColor)
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor.Should().Be(expected:=expected.ColumnHeadersDefaultCellStyle.ForeColor)
+            dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().
+                Be(expected:=expected.AlternatingRowsDefaultCellStyle.BackColor)
+            dgv.ColumnHeadersDefaultCellStyle.BackColor.Should().
+                Be(expected:=expected.ColumnHeadersDefaultCellStyle.BackColor)
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor.Should().
+                Be(expected:=expected.ColumnHeadersDefaultCellStyle.ForeColor)
             dgv.EnableHeadersVisualStyles.Should().Be(expected:=expected.EnableHeadersVisualStyles)
 
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = Drawing.Color.Magenta
-            dgv.ColumnHeadersDefaultCellStyle.BackColor = Drawing.Color.Magenta
-            Dim onSystemColorsChanged As Reflection.MethodInfo = GetType(Control).GetMethod(
-                name:="OnSystemColorsChanged", bindingAttr:=Reflection.BindingFlags.Instance Or Reflection.BindingFlags.NonPublic)
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.Magenta
+            dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.Magenta
+
+            Const bindingAttr As BindingFlags = BindingFlags.Instance Or BindingFlags.NonPublic
+            Dim onSystemColorsChanged As MethodInfo =
+                GetType(Control).GetMethod(name:="OnSystemColorsChanged", bindingAttr)
             onSystemColorsChanged.Invoke(obj:=dgv, parameters:={EventArgs.Empty})
-            dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().Be(expected:=expected.AlternatingRowsDefaultCellStyle.BackColor)
-            dgv.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(expected:=expected.ColumnHeadersDefaultCellStyle.BackColor)
+            dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().
+                Be(expected:=expected.AlternatingRowsDefaultCellStyle.BackColor)
+            dgv.ColumnHeadersDefaultCellStyle.BackColor.Should().
+                Be(expected:=expected.ColumnHeadersDefaultCellStyle.BackColor)
         End Using
     End Sub
 
@@ -333,12 +347,12 @@ Public Class ControlExtensionsTests
                 Be(expected:=defaults.RowsDefaultCellStyle.SelectionBackColor)
             dgv.RowsDefaultCellStyle.SelectionForeColor.Should().
                 Be(expected:=defaults.RowsDefaultCellStyle.SelectionForeColor)
-            Dim expectedStripe As Drawing.Color =
+            Dim expectedStripe As Color =
                 If(SystemInformation.HighContrast,
-                   Drawing.Color.Empty,
+Color.Empty,
                    If(Application.IsDarkModeEnabled,
-                      Drawing.Color.FromArgb(red:=72, green:=72, blue:=72),
-                      Drawing.Color.FromArgb(red:=230, green:=230, blue:=230)))
+Color.FromArgb(red:=72, green:=72, blue:=72),
+Color.FromArgb(red:=230, green:=230, blue:=230)))
             dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().Be(expected:=expectedStripe)
             dgv.AlternatingRowsDefaultCellStyle.ForeColor.Should().
                 Be(expected:=defaults.AlternatingRowsDefaultCellStyle.ForeColor)
@@ -350,8 +364,8 @@ Public Class ControlExtensionsTests
             dgv.EnableHeadersVisualStyles.Should().Be(expected:=Not useDarkHeaders)
             If useDarkHeaders Then
                 dgv.ColumnHeadersDefaultCellStyle.BackColor.Should().
-                    Be(expected:=Drawing.Color.FromArgb(red:=38, green:=47, blue:=58))
-                dgv.ColumnHeadersDefaultCellStyle.ForeColor.Should().Be(expected:=Drawing.Color.White)
+                    Be(expected:=Color.FromArgb(red:=38, green:=47, blue:=58))
+                dgv.ColumnHeadersDefaultCellStyle.ForeColor.Should().Be(expected:=Color.White)
             End If
             dgv.ColumnHeadersDefaultCellStyle.Alignment.Should().Be(expected:=DataGridViewContentAlignment.MiddleCenter)
             dgv.ColumnHeadersDefaultCellStyle.WrapMode.Should().Be(expected:=DataGridViewTriState.True)
@@ -366,18 +380,129 @@ Public Class ControlExtensionsTests
     Public Sub IsDarkRow_UsesInheritedBackgroundInsteadOfRowParity()
         Using dgv As New DataGridView()
             dgv.Columns.Add(columnName:="Value", headerText:="Value")
-            dgv.RowsDefaultCellStyle.BackColor = Drawing.Color.Black
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = Drawing.Color.White
+            dgv.RowsDefaultCellStyle.BackColor = Color.Black
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.White
             dgv.Rows.Add()
             dgv.Rows.Add()
 
             dgv.Rows(index:=0).IsDarkRow().Should().BeTrue()
             dgv.Rows(index:=1).IsDarkRow().Should().BeFalse()
 
-            dgv.RowsDefaultCellStyle.BackColor = Drawing.Color.White
-            dgv.AlternatingRowsDefaultCellStyle.BackColor = Drawing.Color.Black
+            dgv.RowsDefaultCellStyle.BackColor = Color.White
+            dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.Black
             dgv.Rows(index:=0).IsDarkRow().Should().BeFalse()
             dgv.Rows(index:=1).IsDarkRow().Should().BeTrue()
+        End Using
+    End Sub
+
+    <Theory>
+    <InlineData(True)>
+    <InlineData(False)>
+    Public Sub PaintDarkUserButton_UsesDarkFillForEnabledAndDisabled(enabled As Boolean)
+        Using bitmap As New Bitmap(width:=100, height:=30),
+              graphics As Graphics = Graphics.FromImage(bitmap),
+              font As New Font("Segoe UI", 9.0F)
+            graphics.Clear(Color.Black)
+            PaintDarkUserButton(graphics, New Rectangle(x:=0, y:=0, width:=100, height:=30),
+                                font, "Delete Row", enabled, dpi:=96)
+            bitmap.GetPixel(x:=4, y:=4).ToArgb().Should().
+                Be(expected:=Color.FromArgb(red:=56, green:=56, blue:=56).ToArgb())
+            Dim expectedBorder As Integer = If(enabled, 170, 105)
+            bitmap.GetPixel(x:=2, y:=2).ToArgb().Should().
+                Be(expected:=Color.FromArgb(expectedBorder, expectedBorder, expectedBorder).ToArgb())
+        End Using
+    End Sub
+
+    <Theory>
+    <InlineData(CheckState.Unchecked, 56, 56, 56)>
+    <InlineData(CheckState.Checked, 0, 100, 180)>
+    <InlineData(CheckState.Indeterminate, 0, 100, 180)>
+    Public Sub PaintDarkUserCheckBox_UsesThemeColorsAndState(state As CheckState, red As Integer,
+                                                            green As Integer, blue As Integer)
+        Using bitmap As New Bitmap(width:=40, height:=40), graphics As Graphics = Graphics.FromImage(bitmap)
+            graphics.Clear(Color.Black)
+            PaintDarkUserCheckBox(graphics, New Rectangle(x:=0, y:=0, width:=40, height:=40), state, dpi:=96)
+            bitmap.GetPixel(x:=14, y:=14).ToArgb().Should().
+                Be(expected:=Color.FromArgb(red, green, blue).ToArgb())
+            bitmap.GetPixel(x:=13, y:=13).ToArgb().Should().
+                Be(expected:=Color.FromArgb(red:=180, green:=180, blue:=180).ToArgb())
+            Dim hasWhiteMark As Boolean = False
+            For x As Integer = 14 To 25
+                For y As Integer = 14 To 25
+                    hasWhiteMark = hasWhiteMark OrElse bitmap.GetPixel(x, y).ToArgb() = Color.White.ToArgb()
+                Next
+            Next
+            hasWhiteMark.Should().Be(expected:=state <> CheckState.Unchecked)
+        End Using
+    End Sub
+
+    <Theory>
+    <InlineData(False)>
+    <InlineData(True)>
+    Public Sub PaintDarkUserGridCell_DrawsButtonForEnabledAndDisabledCells(enabled As Boolean)
+        Using dgv As New DataGridView(), bitmap As New Bitmap(width:=100, height:=30),
+              graphics As Graphics = Graphics.FromImage(bitmap)
+            dgv.AllowUserToAddRows = False
+            dgv.Columns.Add(New DataGridViewColumnControls.DataGridViewDisableButtonColumn())
+            dgv.Rows.Add()
+            Dim cell As DataGridViewColumnControls.DataGridViewDisableButtonCell =
+                DirectCast(dgv.Rows(index:=0).Cells(index:=0), DataGridViewColumnControls.DataGridViewDisableButtonCell)
+            cell.Enabled = enabled
+            Dim bounds As New Rectangle(x:=0, y:=0, width:=100, height:=30)
+            Dim args As New DataGridViewCellPaintingEventArgs(dgv, graphics, bounds, bounds, 0, 0,
+                DataGridViewElementStates.None, value:="Delete Row", formattedValue:="Delete Row", errorText:=Nothing,
+                cellStyle:=cell.InheritedStyle, advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
+                paintParts:=DataGridViewPaintParts.All)
+            dgv.PaintDarkUserGridCell(args, isDarkMode:=True, highContrast:=False)
+            args.Handled.Should().BeTrue()
+            bitmap.GetPixel(x:=4, y:=4).ToArgb().Should().
+                Be(expected:=Color.FromArgb(red:=56, green:=56, blue:=56).ToArgb())
+            Dim expectedBorder As Integer = If(enabled, 170, 105)
+            bitmap.GetPixel(x:=2, y:=2).ToArgb().Should().
+                Be(expected:=Color.FromArgb(expectedBorder, expectedBorder, expectedBorder).ToArgb())
+        End Using
+    End Sub
+
+    <Theory>
+    <InlineData(False)>
+    <InlineData(True)>
+    Public Sub PaintDarkUserGridCell_DrawsFormattedCheckBoxValue(value As Boolean)
+        Using dgv As New DataGridView(), bitmap As New Bitmap(width:=40, height:=40),
+              graphics As Graphics = Graphics.FromImage(bitmap)
+            dgv.AllowUserToAddRows = False
+            dgv.Columns.Add(New DataGridViewCheckBoxColumn())
+            dgv.Rows.Add()
+            Dim bounds As New Rectangle(x:=0, y:=0, width:=40, height:=40)
+            Dim args As New DataGridViewCellPaintingEventArgs(dgv, graphics, bounds, bounds, 0, 0,
+                DataGridViewElementStates.None, value, formattedValue:=value, errorText:=Nothing,
+                cellStyle:=dgv.Rows(index:=0).Cells(index:=0).InheritedStyle,
+                advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
+                paintParts:=DataGridViewPaintParts.ContentForeground)
+            dgv.PaintDarkUserGridCell(args, isDarkMode:=True, highContrast:=False)
+            args.Handled.Should().BeTrue()
+            Dim expected As Color = If(value, Color.FromArgb(red:=0, green:=100, blue:=180),
+Color.FromArgb(red:=56, green:=56, blue:=56))
+            bitmap.GetPixel(x:=14, y:=14).ToArgb().Should().Be(expected:=expected.ToArgb())
+        End Using
+    End Sub
+
+    <Theory>
+    <InlineData(False, False)>
+    <InlineData(True, True)>
+    Public Sub PaintDarkUserGridCell_LeavesNativeRenderingForLightAndHighContrast(isDarkMode As Boolean,
+                                                                                 highContrast As Boolean)
+        Using dgv As New DataGridView(), bitmap As New Bitmap(width:=40, height:=40),
+              graphics As Graphics = Graphics.FromImage(bitmap)
+            dgv.AllowUserToAddRows = False
+            dgv.Columns.Add(New DataGridViewCheckBoxColumn())
+            dgv.Rows.Add()
+            Dim bounds As New Rectangle(x:=0, y:=0, width:=40, height:=40)
+            Dim args As New DataGridViewCellPaintingEventArgs(dgv, graphics, bounds, bounds, 0, 0,
+                DataGridViewElementStates.None, value:=False, formattedValue:=False, errorText:=Nothing,
+                cellStyle:=dgv.DefaultCellStyle, advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
+                paintParts:=DataGridViewPaintParts.All)
+            dgv.PaintDarkUserGridCell(args, isDarkMode, highContrast)
+            args.Handled.Should().BeFalse()
         End Using
     End Sub
 
@@ -386,7 +511,7 @@ Public Class ControlExtensionsTests
         Using dgv As New DataGridView()
             dgv.SetAlternatingRowColor(isDarkMode:=True, highContrast:=False)
             dgv.SetAlternatingRowColor(isDarkMode:=False, highContrast:=True)
-            dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().Be(expected:=Drawing.Color.Empty)
+            dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().Be(expected:=Color.Empty)
         End Using
     End Sub
 
@@ -397,7 +522,7 @@ Public Class ControlExtensionsTests
         Using dgv As New DataGridView()
             dgv.SetAlternatingRowColor(isDarkMode, highContrast)
             dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().
-                Be(expected:=Drawing.Color.FromArgb(red:=shade, green:=shade, blue:=shade))
+                Be(expected:=Color.FromArgb(red:=shade, green:=shade, blue:=shade))
         End Using
     End Sub
 
@@ -422,10 +547,10 @@ Public Class ControlExtensionsTests
             dgv.SetHeaderColors(isDarkMode:=True, highContrast:=False)
             dgv.SetHeaderColors(isDarkMode, highContrast)
             dgv.EnableHeadersVisualStyles.Should().BeTrue()
-            dgv.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(expected:=Drawing.Color.Empty)
-            dgv.ColumnHeadersDefaultCellStyle.ForeColor.Should().Be(expected:=Drawing.Color.Empty)
-            dgv.RowHeadersDefaultCellStyle.BackColor.Should().Be(expected:=Drawing.Color.Empty)
-            dgv.RowHeadersDefaultCellStyle.ForeColor.Should().Be(expected:=Drawing.Color.Empty)
+            dgv.ColumnHeadersDefaultCellStyle.BackColor.Should().Be(expected:=Color.Empty)
+            dgv.ColumnHeadersDefaultCellStyle.ForeColor.Should().Be(expected:=Color.Empty)
+            dgv.RowHeadersDefaultCellStyle.BackColor.Should().Be(expected:=Color.Empty)
+            dgv.RowHeadersDefaultCellStyle.ForeColor.Should().Be(expected:=Color.Empty)
         End Using
     End Sub
 
