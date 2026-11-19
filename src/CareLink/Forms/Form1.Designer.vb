@@ -1547,7 +1547,7 @@ Partial Class Form1
         SensorTimeLeftLabel.Name = "SensorTimeLeftLabel"
         SensorTimeLeftLabel.Size = New Size(80, 42)
         SensorTimeLeftLabel.TabIndex = 46
-        SensorTimeLeftLabel.Text = "1 day 22 hrs" & vbCrLf & "(Followed by 24" & vbCrLf & "hr grace period)"
+        SensorTimeLeftLabel.Text = "1 day 22 hrs" & vbCrLf & "+ 24 hour" & vbCrLf & "grace period"
         SensorTimeLeftLabel.TextAlign = ContentAlignment.MiddleCenter
         ' 
         ' SensorTimeLeftPanel

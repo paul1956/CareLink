@@ -5670,10 +5670,10 @@ Public Class Form1
                 Return $"{hoursStr} left{vbCrLf}in grace period"
             Case Is < 48
                 hoursStr = (SensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
-                Return $"{hoursStr} (Followed{vbCrLf}by 24 hr grace{vbCrLf}period)"
+                Return $"{hoursStr}{vbCrLf}+ 24 hour{vbCrLf}grace period"
             Case Else  ' sensorDurationHours >= 48
                 hoursStr = (SensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
-                Return $"{hoursStr}{vbCrLf}(Followed by 24{vbCrLf}hr grace period)"
+                Return $"{hoursStr}{vbCrLf}+ 24 hour{vbCrLf}grace period"
         End Select
     End Function
 
@@ -6560,7 +6560,7 @@ Public Class Form1
                 Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpirationUnknown)
                 Me.SensorTimeLeftLabel.Text = "Unknown"
             Case Is >= 48
-                Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(durationWithoutGrace / 24))
+                Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(a:=durationWithoutGrace / 24))
                 Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeOK)
                 Me.SensorTimeLeftLabel.Text = GetSimpleraTimeLeftMessage(sensorDurationHours)
             Case Is > 24
