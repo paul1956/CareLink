@@ -664,7 +664,6 @@ Partial Class Form1
         ' 
         ' DgvBasalPerHour
         ' 
-        DgvBasalPerHour.Dock = DockStyle.Fill
         DgvBasalPerHour.Location = New Point(0, 0)
         DgvBasalPerHour.Name = "DgvBasalPerHour"
         DgvBasalPerHour.ReadOnly = True

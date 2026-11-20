@@ -79,7 +79,7 @@ Friend Module Form1CollectMarkersHelper
                     Dim basalDelMarker As New AutoBasalDelivery(
                         item,
                         recordNumber:=AutoBasalDeliveryMarkers.Count + 1)
-                    InsulinPerHour.AddBasalAmountToInsulinPerHour(basalDelMarker)
+                    BasalPerHour.AddBasalAmountToBasalPerHour(basalDeliveryMarker:=basalDelMarker)
                     AutoBasalDeliveryMarkers.Add(item:=basalDelMarker)
                     If Not basalDic.TryAdd(key:=basalDelMarker.GetOaDateTime(), value:=basalDelMarker.BolusAmount) Then
                         basalDic(key:=basalDelMarker.GetOaDateTime()) += basalDelMarker.BolusAmount

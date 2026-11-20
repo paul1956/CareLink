@@ -85,13 +85,13 @@ Public Class DateTimeExtensionsTests
     <Fact>
     Public Sub Epoch2DateTimeString_UsesUtcAndLocalAndPumpTimes()
         Const milliseconds As String = "1609459200000"
-        Dim utc As Date = New Date(year:=2021,
-                                   month:=1,
-                                   day:=1,
-                                   hour:=0,
-                                   minute:=0,
-                                   second:=0,
-                                   kind:=DateTimeKind.Utc)
+        Dim utc As New Date(year:=2021,
+                            month:=1,
+                            day:=1,
+                            hour:=0,
+                            minute:=0,
+                            second:=0,
+                            kind:=DateTimeKind.Utc)
         Dim local As Date = utc.ToLocalTime()
         Dim pump As Date = TimeZoneInfo.ConvertTimeFromUtc(dateTime:=utc,
                                                            destinationTimeZone:=PumpTimeZoneInfo)

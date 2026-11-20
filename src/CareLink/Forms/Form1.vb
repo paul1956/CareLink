@@ -1638,13 +1638,11 @@ Public Class Form1
             Select Case columnName
                 Case NameOf(BasalPerHour.BasalRate),
                      NameOf(BasalPerHour.BasalRate2)
-                    If dgv.Name = NameOf(DgvBasalPerHour) Then
-                        dgv.CellFormattingBasal(e, TrailingText:=" U/h")
-                        e.CellStyle.Font = s_font12
-                    End If
+                    dgv.CellFormattingBasal(e, TrailingText:=" U/h")
+                    e.CellStyle.Font = s_font12Mono
 
-                Case NameOf(InsulinPerHour.Hour),
-                     NameOf(InsulinPerHour.Hour2)
+                Case NameOf(BasalPerHour.Hour),
+                     NameOf(BasalPerHour.Hour2)
                     Dim hour As Integer =
                         TimeSpan.FromHours(CInt(e.Value)).Hours
                     Dim time As New Date(year:=1,
@@ -1653,8 +1651,12 @@ Public Class Form1
                                          hour,
                                          minute:=0,
                                          second:=0)
-                    e.Value = time.ToString(format:=s_timeWithoutMinuteFormat)
-                    e.CellStyle.Font = s_font12
+                    e.Value = time.ToString(format:=s_timeWithoutMinuteFormat).
+                                   Trim.
+                                   PadLeft(totalWidth:=6).
+                                   PadRight(totalWidth:=7)
+                    e.CellStyle.Font = s_font12Mono
+                    e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
                 Case Else
                     Stop
@@ -1673,7 +1675,7 @@ Public Class Form1
         With e.Column
             .SortMode = DataGridViewColumnSortMode.NotSortable
             e.DgvColumnAdded(
-                cellStyle:=GetCellStyle(Of InsulinPerHour)(.Name),
+                cellStyle:=GetCellStyle(Of BasalPerHour)(.Name),
                 forceReadOnly:=True,
                 CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
         End With
@@ -3622,9 +3624,11 @@ Public Class Form1
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(index:=1)
 
         Me.DgvBasalPerHour.Font = s_font12Bold
-        Dim currentHeaderStyle As DataGridViewCellStyle = Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle.Clone
+        Dim currentHeaderStyle As DataGridViewCellStyle =
+            Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle.Clone
         currentHeaderStyle.Font = s_font12Bold
-        Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle = currentHeaderStyle
+        Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle =
+            currentHeaderStyle
         Me.DgvBasalPerHour.DefaultCellStyle =
             New DataGridViewCellStyle With {.Font = s_font12}
         Me.MenuHelpShowControlPositions.Visible = Debugger.IsAttached

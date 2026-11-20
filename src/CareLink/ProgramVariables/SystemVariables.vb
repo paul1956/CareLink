@@ -26,6 +26,7 @@ Public Module SystemVariables
     Friend ReadOnly s_font11Bold As New Font(FamilyName, emSize:=11.0F, style:=FontStyle.Bold)
     Friend ReadOnly s_font12 As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Regular)
     Friend ReadOnly s_font12Bold As New Font(FamilyName, emSize:=12.0F, style:=FontStyle.Bold)
+    Friend ReadOnly s_font12Mono As New Font(familyName:="Consolas", emSize:=12.0F, style:=FontStyle.Regular)
     Friend ReadOnly s_font14Bold As New Font(FamilyName, emSize:=14.0F, style:=FontStyle.Bold)
     Friend ReadOnly s_font18Bold As New Font(FamilyName, emSize:=18.0F, style:=FontStyle.Bold)
 
