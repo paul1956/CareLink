@@ -35,41 +35,12 @@ Public Class ExceptionHandlerDialog
     Public Property UnhandledException As UnhandledExceptionEventArgs
 
     ''' <summary>
-    '''  Creates a report file containing exception and stack trace information,
-    '''  as well as cleaned patient data.
-    ''' </summary>
-    ''' <param name="exceptionText">The exception message text.</param>
-    ''' <param name="stackTraceText">The stack trace text.</param>
-    ''' <param name="withPath">The full path for the report file.</param>
-    Private Shared Sub CreateReportFile(exceptionText As String,
-                                        stackTraceText As String,
-                                        withPath As String)
-
-        Using stream As StreamWriter = File.CreateText(path:=withPath)
-            ' write exception header
-            stream.WriteLine(value:=ExceptionStartingString)
-            ' write exception
-            stream.WriteLine(value:=exceptionText)
-            ' write exception trailer
-            stream.WriteLine(value:=ExceptionTerminatingString)
-            ' write stack trace header
-            stream.WriteLine(value:=StackTraceStartingStr)
-            ' write stack trace
-            stream.WriteLine(value:=stackTraceText)
-            ' write stack trace trailer
-            stream.WriteLine(value:=StackTraceTerminatingStr)
-            ' write out data file
-            stream.Write(value:=CleanPatientData())
-        End Using
-    End Sub
-
-    ''' <summary>
     '''  Trims the stack trace string at the terminating marker, if present.
     ''' </summary>
     ''' <param name="stackTrace">The stack trace string to trim.</param>
     ''' <returns>The trimmed stack trace string.</returns>
     Private Shared Function TrimmedStackTrace(stackTrace As String) As String
-        Dim index As Integer = stackTrace.IndexOf(StackTraceTerminatingStr)
+        Dim index As Integer = stackTrace.IndexOf(value:=StackTraceTerminatingStr)
         Return If(index < 0,
                   stackTrace,
                   stackTrace.Substring(startIndex:=0, length:=index - 1))
@@ -248,6 +219,35 @@ Public Class ExceptionHandlerDialog
     End Sub
 
     ''' <summary>
+    '''  Creates a report file containing exception and stack trace information,
+    '''  as well as cleaned patient data.
+    ''' </summary>
+    ''' <param name="exceptionText">The exception message text.</param>
+    ''' <param name="stackTraceText">The stack trace text.</param>
+    ''' <param name="withPath">The full path for the report file.</param>
+    Friend Shared Sub CreateReportFile(exceptionText As String,
+                                       stackTraceText As String,
+                                       withPath As String)
+
+        Using stream As StreamWriter = File.CreateText(path:=withPath)
+            ' write exception header
+            stream.WriteLine(value:=ExceptionStartingString)
+            ' write exception
+            stream.WriteLine(value:=exceptionText)
+            ' write exception trailer
+            stream.WriteLine(value:=ExceptionTerminatingString)
+            ' write stack trace header
+            stream.WriteLine(value:=StackTraceStartingStr)
+            ' write stack trace
+            stream.WriteLine(value:=stackTraceText)
+            ' write stack trace trailer
+            stream.WriteLine(value:=StackTraceTerminatingStr)
+            ' write out data file
+            stream.Write(value:=CleanPatientData())
+        End Using
+    End Sub
+
+    ''' <summary>
     '''  Decomposes a report file into its exception, stack trace, and data components.
     ''' </summary>
     ''' <param name="exTextBox">The TextBox to receive the exception message.</param>
@@ -255,7 +255,7 @@ Public Class ExceptionHandlerDialog
     ''' <param name="reportNameWithPath">The full path to the report file.</param>
     ''' <returns>The raw data portion of the report file.</returns>
     Friend Function ReportFile(exTextBox As TextBox, traceTextBox As TextBox, reportNameWithPath As String) As String
-        Using stream As StreamReader = IO.File.OpenText(path:=reportNameWithPath)
+        Using stream As StreamReader = File.OpenText(path:=reportNameWithPath)
             ' read exception header
             Dim currentLine As String = stream.ReadLine()
             If currentLine <> ExceptionStartingString Then
@@ -292,7 +292,7 @@ Public Class ExceptionHandlerDialog
                 Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=StackTraceTerminatingStr)
             End If
             traceTextBox.Text = sb.ToString
-            Return stream.ReadToEnd & "}"
+            Return stream.ReadToEnd()
         End Using
     End Function
 

@@ -2,14 +2,34 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Text.Json.Nodes
+
 Public Module PatientDataHelpers
 
     Private ReadOnly s_keyDictionary As New Dictionary(Of String, String)(Comparer) From {
-        {$"{Quote}{NameOf(ServerDataEnum.firstName)}{Quote}: ", $"{Quote}First{Quote}"},
-        {$"{Quote}{NameOf(ServerDataEnum.lastName)}{Quote}: ", $"{Quote}Last{Quote}"},
-        {$"{Quote}{NameOf(ServerDataEnum.conduitSerialNumber)}{Quote}: ", $"{Quote}{New Guid()}{Quote}"},
-        {$"{Quote}{NameOf(MedicalDeviceInformation.SystemId)}{Quote}: ", $"{Quote}40000000000 0000{Quote}"},
-        {$"{Quote}{NameOf(MedicalDeviceInformation.DeviceSerialNumber)}{Quote}: ", $"{Quote}NG4000000H{Quote}"}}
+        {NameOf(ServerDataEnum.firstName), "First"},
+        {NameOf(ServerDataEnum.lastName), "Last"},
+        {NameOf(ServerDataEnum.conduitSerialNumber), Guid.Empty.ToString()},
+        {NameOf(MedicalDeviceInformation.SystemId), "40000000000 0000"},
+        {NameOf(MedicalDeviceInformation.DeviceSerialNumber), "NG4000000H"}}
+
+    Private Sub CleanPatientNode(node As JsonNode)
+        If TypeOf node Is JsonObject Then
+            Dim jsonObject As JsonObject = DirectCast(node, JsonObject)
+            For Each entry As KeyValuePair(Of String, JsonNode) In jsonObject.ToArray()
+                Dim replacement As String = Nothing
+                If s_keyDictionary.TryGetValue(key:=entry.Key, value:=replacement) Then
+                    jsonObject(propertyName:=entry.Key) = JsonValue.Create(value:=replacement)
+                Else
+                    CleanPatientNode(node:=entry.Value)
+                End If
+            Next
+        ElseIf TypeOf node Is JsonArray Then
+            For Each item As JsonNode In DirectCast(node, JsonArray)
+                CleanPatientNode(node:=item)
+            Next
+        End If
+    End Sub
 
     ''' <summary>
     '''  Serialize <see cref="PatientDataElement"/> while removing any personal information
@@ -20,17 +40,9 @@ Public Module PatientDataHelpers
         If String.IsNullOrWhiteSpace(value) Then
             Return value
         End If
-        Dim charList As New List(Of Char) From {","c, CChar(vbCr)}
-        For Each kvp As KeyValuePair(Of String, String) In s_keyDictionary
-            Dim startIndex As Integer = value.IndexOfNoCase(value:=kvp.Key) + kvp.Key.Length
-            If startIndex = -1 Then
-                Continue For
-            End If
-            Dim endPos As Integer = FindIndexOfAnyChar(inputString:=value, chars:=charList, startIndex)
-            Dim length As Integer = endPos - startIndex
-            value = value.Replace(oldValue:=value.Substring(startIndex, length), newValue:=kvp.Value)
-        Next
-        Return value
+        Dim node As JsonNode = JsonNode.Parse(json:=value)
+        CleanPatientNode(node)
+        Return node.ToJsonString(options:=SerializerOptions)
     End Function
 
 End Module
