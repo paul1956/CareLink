@@ -129,7 +129,7 @@ Partial Class Form1
         ToolStripSeparator4 = New ToolStripSeparator()
         MenuStartManuallyImportDeviceSettings = New ToolStripMenuItem()
         ToolStripSeparator5 = New ToolStripSeparator()
-        MenuStartLoadDataFile = New ToolStripMenuItem()
+        MenuStartLoadSavedDataFile = New ToolStripMenuItem()
         MenuStartLoadExceptionReport = New ToolStripMenuItem()
         ToolStripSeparator6 = New ToolStripSeparator()
         MenuStartUseLastFile = New ToolStripMenuItem()
@@ -1315,7 +1315,7 @@ Partial Class Form1
         ' 
         ' MenuStartHere
         ' 
-        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartUserLogin, ToolStripSeparator4, MenuStartManuallyImportDeviceSettings, ToolStripSeparator5, MenuStartLoadDataFile, MenuStartLoadExceptionReport, ToolStripSeparator6, MenuStartUseLastFile, MenuStartUseTestData, ToolStripSeparator7, MenuStartSaveSnapshot, MenuStartCleanUpObsoleteFiles, ToolStripSeparator8, MenuStartExit})
+        MenuStartHere.DropDownItems.AddRange(New ToolStripItem() {MenuStartUserLogin, ToolStripSeparator4, MenuStartManuallyImportDeviceSettings, ToolStripSeparator5, MenuStartLoadSavedDataFile, MenuStartLoadExceptionReport, ToolStripSeparator6, MenuStartUseLastFile, MenuStartUseTestData, ToolStripSeparator7, MenuStartSaveSnapshot, MenuStartCleanUpObsoleteFiles, ToolStripSeparator8, MenuStartExit})
         MenuStartHere.Name = "MenuStartHere"
         MenuStartHere.Size = New Size(71, 20)
         MenuStartHere.Text = "Start Here"
@@ -1342,11 +1342,11 @@ Partial Class Form1
         ToolStripSeparator5.Name = "ToolStripSeparator5"
         ToolStripSeparator5.Size = New Size(242, 6)
         ' 
-        ' MenuStartLoadDataFile
+        ' MenuStartLoadSavedDataFile
         ' 
-        MenuStartLoadDataFile.Name = "MenuStartLoadDataFile"
-        MenuStartLoadDataFile.Size = New Size(245, 22)
-        MenuStartLoadDataFile.Text = "Load Saved Data File"
+        MenuStartLoadSavedDataFile.Name = "MenuStartLoadSavedDataFile"
+        MenuStartLoadSavedDataFile.Size = New Size(245, 22)
+        MenuStartLoadSavedDataFile.Text = "Load Saved Data File"
         ' 
         ' MenuStartLoadExceptionReport
         ' 
@@ -3209,7 +3209,7 @@ Partial Class Form1
     Friend WithEvents MenuStartCleanUpObsoleteFiles As ToolStripMenuItem
     Friend WithEvents MenuStartExit As ToolStripMenuItem
     Friend WithEvents MenuStartHere As ToolStripMenuItem
-    Friend WithEvents MenuStartLoadDataFile As ToolStripMenuItem
+    Friend WithEvents MenuStartLoadSavedDataFile As ToolStripMenuItem
     Friend WithEvents MenuStartLoadExceptionReport As ToolStripMenuItem
     Friend WithEvents MenuStartManuallyImportDeviceSettings As ToolStripMenuItem
     Friend WithEvents MenuStartSaveSnapshot As ToolStripMenuItem

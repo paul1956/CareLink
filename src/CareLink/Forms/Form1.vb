@@ -3838,7 +3838,7 @@ Public Class Form1
         Me.MenuStartUseTestData.Visible = debuggerIsAttached
 
         Dim path As String = GetProjectDataDirectory()
-        Me.MenuStartLoadDataFile.Enabled =
+        Me.MenuStartLoadSavedDataFile.Enabled =
             debuggerIsAttached AndAlso
             AnyMatchingFiles(path, searchPattern:=$"CareLink*.json")
 
@@ -4059,12 +4059,12 @@ Public Class Form1
     ''' <remarks>
     '''  The user can select a saved data file to load and process.
     ''' </remarks>
-    Private Async Sub MenuStartUseDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartLoadDataFile.Click
+    Private Async Sub MenuStartUseDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartLoadSavedDataFile.Click
         Dim success As Boolean =
             Await OptionalLoginUpdateDataAsync(owner:=Me,
                                                updateAllTabs:=True,
                                                fileToLoad:=FileToLoadOptions.Snapshot)
-        Me.MenuStartLoadDataFile.Enabled = Not success
+        Me.MenuStartLoadSavedDataFile.Enabled = Not success
     End Sub
 
     ''' <summary>
