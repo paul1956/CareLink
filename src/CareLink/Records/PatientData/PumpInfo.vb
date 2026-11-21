@@ -28,8 +28,10 @@ Public Module PumpInfo
                 Return "MiniMed™ 780G-mmol/L"
             Case "MMT-1886"
                 Return "MiniMed™ 780G-mg/dL"
-            Case "MMT-8162"
+            Case "MMT-8062"
                 Return "MiniMed™ Flex-mg/dL"
+            Case "MMT-8162"
+                Return "MiniMed™ Flex2-mg/dL"
             Case Else
                 Return "Unknown"
         End Select

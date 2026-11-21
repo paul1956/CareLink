@@ -7,7 +7,7 @@ Imports System.IO
 
 Imports DataGridViewColumnControls
 
-Public Class InitializeDialog
+Public Class InitializePumpSettingsDialog
     Private ReadOnly _fromPdf As Boolean
 
     Private ReadOnly _insulinTypesBindingSource As _
@@ -15,14 +15,14 @@ Public Class InitializeDialog
 
     Private _currentUserBackup As CurrentUserRecord = Nothing
 
-    Public Sub New(ait As Single, currentTarget As Single, CarbRatios As List(Of CarbRatioRecord))
+    Public Sub New(CurrentUserRecord As CurrentUserRecord, newUser As Boolean)
         MyBase.New
         Me.InitializeComponent()
-        Me.CurrentUser = SystemVariables.CurrentUser
-        Me.CurrentUser.PumpAit = ait
-        Me.CurrentUser.CarbRatios = CarbRatios
-        Me.CurrentUser.CurrentTarget = currentTarget
-        _fromPdf = True
+        Me.CurrentUser = CurrentUserRecord.Clone
+        Me.CurrentUser.PumpAit = CurrentUserRecord.PumpAit
+        Me.CurrentUser.CarbRatios = CurrentUserRecord.CarbRatios
+        Me.CurrentUser.CurrentTarget = CurrentUserRecord.CurrentTarget
+        _fromPdf = newUser
     End Sub
 
     Public Property CurrentUser As CurrentUserRecord

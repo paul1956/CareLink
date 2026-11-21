@@ -16,10 +16,10 @@ Public Class ActiveInsulin
     <JsonPropertyName("amount")>
     Public Property Amount As Single
         Get
-            Return _amount
+            Return _amount.RoundToStep()
         End Get
         Set
-            _amount = Value.RoundToStep()
+            _amount = Value
         End Set
     End Property
 

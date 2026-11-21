@@ -31,7 +31,7 @@
     <Compile Update="Dialogs\ExceptionHandlerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Dialogs\InitializeDialog.vb">
+    <Compile Update="Dialogs\InitializePumpSettingsDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Dialogs\LoginDialog.vb">
@@ -43,7 +43,7 @@
     <Compile Update="Dialogs\OptionsConfigureTiTR.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Dialogs\PumpSetupDialog.vb">
+    <Compile Update="Dialogs\PumpSetupInstructionsDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="Forms\AboutBox1.vb">
@@ -66,7 +66,7 @@
     <EmbeddedResource Update="Dialogs\OptionsConfigureTiTR.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Update="Dialogs\PumpSetupDialog.resx">
+    <EmbeddedResource Update="Dialogs\PumpSetupInstructionsDialog.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Update="Forms\AboutBox1.resx">
@@ -81,7 +81,7 @@
     <EmbeddedResource Update="Forms\Form1.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Update="Dialogs\InitializeDialog.resx">
+    <EmbeddedResource Update="Dialogs\InitializePumpSettingsDialog.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Update="Dialogs\LoginDialog.resx">

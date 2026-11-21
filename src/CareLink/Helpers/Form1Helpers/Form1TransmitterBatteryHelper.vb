@@ -12,14 +12,14 @@ Friend Module Form1TransmitterBatteryHelper
                 Form1.TransmitterBatteryPictureBox.GetBatteryImage(PatientData.GstBatteryLevel)
                 Form1.TransmitterBatteryPercentLabel.Text = $"{PatientData.GstBatteryLevel}%"
             Else
-                Select Case $"{PatientData.CgmInfo?.SensorProductModel}".TrimEnd
-                    Case "MMT-5120"
+                Select Case $"{PatientData.CgmInfo?.SensorType}".TrimEnd
+                    Case "MMT-5120", "DISPOSIBLE"
                         Const imageId As ImageEnum = ImageEnum.PumpConnectivityToSimpleraOK
                         Form1.TransmitterBatteryPictureBox.UpdatePictureBox(imageId)
                         Form1.TransmitterBatteryPercentLabel.Text =
                             $"Simplera{vbCrLf}Connected"
 
-                    Case "MMT-1894"
+                    Case "OEM"
                         Const imageId As ImageEnum = ImageEnum.PumpConnectivityToInstinctOK
                         Form1.TransmitterBatteryPictureBox.UpdatePictureBox(imageId)
                         Form1.TransmitterBatteryPercentLabel.Text =

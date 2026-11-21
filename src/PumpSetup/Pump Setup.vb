@@ -56,7 +56,7 @@ Public Class PumpSetup
                             buttons:=MessageBoxButtons.OK,
                             icon:=MessageBoxIcon.Error)
         Else
-            Using dialog As New PumpSetupDialog
+            Using dialog As New PumpSetupInstructionsDialog
                 dialog.Pdf = currentPdf
                 dialog.ShowDialog(owner:=Me)
             End Using

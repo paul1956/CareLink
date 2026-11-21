@@ -379,145 +379,142 @@ Friend Module LoginHelpers
     Friend Sub SetUpCareLinkUser(forceUI As Boolean)
         Dim carbRatios As New List(Of CarbRatioRecord)
         Dim currentUserUpdateNeeded As Boolean = False
+        Dim ait As Single = 2
+        Dim currentTarget As Single
         NativeMmolL = Not PatientData.BgUnits.Equals(value:="MGDL")
+        Dim useAdvancedAitDecay As CheckState
+        Select Case True
+            Case Is700Series()
+                useAdvancedAitDecay = CheckState.Indeterminate
+            Case IsFlex()
+                useAdvancedAitDecay = CheckState.Unchecked
+            Case Else
+                useAdvancedAitDecay = CheckState.Checked
+        End Select
         Dim mdi As MedicalDeviceInformation = PatientData.MedicalDeviceInformation
-        If mdi.ModelNumber.StartsWith(value:="MMT-8") Then
-            If CurrentUser Is Nothing Then
-                CurrentUser = New CurrentUserRecord(userName:=GetUserName(),
-                                                    useAdvancedAitDecay:=CheckState.Checked)
-            End If
-            CurrentUser.CurrentTarget =
-                If(NativeMmolL,
-                   Target5mmol,
-                   Target90mgDl)
-            CurrentUser.InsulinRealAit = 3
-            CurrentUser.PumpAit = 2
-            CurrentUser.InsulinTypeName = $"Lyumjev{RegisteredTrademark}"
-            carbRatios.Add(item:=New CarbRatioRecord With {
-                .StartTime = New TimeOnly(hour:=0, minute:=0),
-                .CarbRatio = 5,
-                .EndTime = Eleven59})
-            CurrentUser.CarbRatios = carbRatios
-            currentUserUpdateNeeded = True
-        Else
-            Dim newPdfFile As Boolean = False
-
-            Dim pdfFilePath As String = GetUserPdfPath()
-            Dim userSettingsFileFullPath As String = GetUserSettingsPath()
-
-            If File.Exists(path:=userSettingsFileFullPath) Then
-                Dim element As JsonElement = ReadJsonElementFromFile(userSettingsFileFullPath)
-                If Not element.IsEmpty Then
-                    Dim cur As CurrentUserRecord = Nothing
-                    Try
-                        cur = JsonExtensions.FromJson(Of CurrentUserRecord)(element)
-                    Catch ex As Exception
-                        cur = Nothing
-                    End Try
-                    CurrentUser = cur
-                End If
-
-                If CurrentUser.InsulinRealAit = 0 Then
-                    CurrentUser.InsulinRealAit = s_insulinTypes.Values(index:=0).AitHours
-                End If
-                If String.IsNullOrWhiteSpace(value:=CurrentUser.InsulinTypeName) Then
-                    CurrentUser.InsulinTypeName = s_insulinTypes.Keys(index:=0)
-                End If
-
-                If File.Exists(path:=pdfFilePath) Then
-                    Dim lastWriteTime As Date =
-                        File.GetLastWriteTime(path:=userSettingsFileFullPath)
-                    newPdfFile =
-                        Not IsFileReadOnly(path:=userSettingsFileFullPath) AndAlso
-                          File.GetLastWriteTime(path:=pdfFilePath) > lastWriteTime
+        Dim pdfFilePath As String = GetUserPdfPath()
+        Dim userSettingsFileFullPath As String = GetUserSettingsPath()
+        Try
+            Dim newUser As Boolean = CurrentUser Is Nothing
+            If newUser Then
+                If mdi.ModelNumber.StartsWith(value:="MMT-8") Then
+                    If CurrentUser Is Nothing Then
+                        CurrentUser = New CurrentUserRecord(userName:=GetUserName(),
+                                                            useAdvancedAitDecay:=CheckState.Checked)
+                    End If
+                    currentTarget = If(NativeMmolL,
+                                       Target5mmol,
+                                       Target90mgDl)
+                    CurrentUser.CurrentTarget = currentTarget
+                    CurrentUser.InsulinRealAit = 3
+                    CurrentUser.PumpAit = ait
+                    CurrentUser.InsulinTypeName = $"Lyumjev{RegisteredTrademark}"
+                    carbRatios.Add(item:=New CarbRatioRecord With {
+                        .StartTime = New TimeOnly(hour:=0, minute:=0),
+                        .CarbRatio = 5,
+                        .EndTime = Eleven59})
+                    CurrentUser.CarbRatios = carbRatios
                 Else
-                    While Not File.Exists(path:=pdfFilePath)
-                        If MsgBox(
-                            heading:=$"No Device Setting PDF file exists!",
-                            prompt:="Do you want to load one now, if not the program will exit?",
-                            buttonStyle:=MsgBoxStyle.OkCancel,
-                            title:="Missing PDF Device Settings File") = MsgBoxResult.Cancel Then
-                            End
+                    Dim newPdfFile As Boolean = False
+                    If File.Exists(path:=userSettingsFileFullPath) Then
+                        Dim element As JsonElement = ReadJsonElementFromFile(path:=userSettingsFileFullPath)
+                        If Not element.IsEmpty Then
+                            Dim cur As CurrentUserRecord = Nothing
+                            Try
+                                cur = JsonExtensions.FromJson(Of CurrentUserRecord)(element)
+                            Catch ex As Exception
+                                cur = Nothing
+                            End Try
+                            CurrentUser = cur
                         End If
 
-                        Form1.MenuStartManuallyImportDeviceSettings.PerformClick()
+                        If CurrentUser.InsulinRealAit = 0 Then
+                            CurrentUser.InsulinRealAit = s_insulinTypes.Values(index:=0).AitHours
+                        End If
+                        If String.IsNullOrWhiteSpace(value:=CurrentUser.InsulinTypeName) Then
+                            CurrentUser.InsulinTypeName = s_insulinTypes.Keys(index:=0)
+                        End If
 
-                        newPdfFile = True
-                        Stop
-                    End While
-                End If
-                If Not forceUI Then
-                    If Not newPdfFile Then
-                        ' If the PDF file exists and is valid, load it without prompting
-                        ' the user.
-                        CursorStarted(owner:=My.Forms.Form1, pumpMessages:=True)
+                        If File.Exists(path:=pdfFilePath) Then
+                            Dim lastWriteTime As Date =
+                                File.GetLastWriteTime(path:=userSettingsFileFullPath)
+                            newPdfFile =
+                                Not IsFileReadOnly(path:=userSettingsFileFullPath) AndAlso
+                                  File.GetLastWriteTime(path:=pdfFilePath) > lastWriteTime
+                        Else
+                            While Not File.Exists(path:=pdfFilePath)
+                                If MsgBox(
+                                    heading:=$"No Device Setting PDF file exists!",
+                                    prompt:="Do you want to load one now, if not the program will exit?",
+                                    buttonStyle:=MsgBoxStyle.OkCancel,
+                                    title:="Missing PDF Device Settings File") = MsgBoxResult.Cancel Then
+                                    End
+                                End If
+
+                                Form1.MenuStartManuallyImportDeviceSettings.PerformClick()
+
+                                newPdfFile = True
+                                Stop
+                            End While
+                        End If
+                        If Not newPdfFile Then
+                            ' If the PDF file exists and is valid, load it without prompting
+                            ' the user.
+                            CursorStarted(owner:=My.Forms.Form1, pumpMessages:=True)
+                            CurrentPdf = New PdfSettingsRecord(pdfFilePath)
+                        End If
+                    Else
+                        CurrentUser = New CurrentUserRecord(userName:=GetUserName(), useAdvancedAitDecay)
+                        currentUserUpdateNeeded = True
+                    End If
+
+                    CursorStarted(owner:=My.Forms.Form1, pumpMessages:=True)
+                    If (Form1.Client IsNot Nothing AndAlso Not My.Settings.CareLinkPartner) OrElse newPdfFile Then
                         CurrentPdf = New PdfSettingsRecord(pdfFilePath)
+
+                        If CurrentPdf.IsValid Then
+                            If CurrentUser.PumpAit <> CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime Then
+                                currentUserUpdateNeeded = True
+                            End If
+                            ait = CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime
+                            If CurrentUser.CurrentTarget <> CurrentPdf.SmartGuard.Target Then
+                                currentUserUpdateNeeded = True
+                            End If
+                            currentTarget = CurrentPdf.SmartGuard.Target
+                            Dim deviceCarbRatios As List(Of DeviceCarbRatioRecord) = CurrentPdf.Bolus.DeviceCarbohydrateRatios
+
+                            If Not deviceCarbRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
+                                currentUserUpdateNeeded = True
+                            End If
+                            carbRatios = deviceCarbRatios.ToCarbRatioList
+                        End If
                     End If
                 End If
-            Else
-                Dim useAdvancedAitDecay As CheckState
-                Select Case True
-                    Case Is700Series()
-                        useAdvancedAitDecay = CheckState.Indeterminate
-                    Case IsFlex()
-                        useAdvancedAitDecay = CheckState.Unchecked
-                    Case Else
-                        useAdvancedAitDecay = CheckState.Checked
-                End Select
-                CurrentUser = New CurrentUserRecord(userName:=GetUserName(), useAdvancedAitDecay)
-                currentUserUpdateNeeded = True
             End If
-
-            CursorStarted(owner:=My.Forms.Form1, pumpMessages:=True)
-            Try
-                Dim ait As Single = 2
-                Dim currentTarget As Single = 120
-
-                If (Form1.Client IsNot Nothing AndAlso Not My.Settings.CareLinkPartner) OrElse newPdfFile Then
-                    CurrentPdf = New PdfSettingsRecord(pdfFilePath)
-
-                    If CurrentPdf.IsValid Then
-                        If CurrentUser.PumpAit <> CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime Then
-                            currentUserUpdateNeeded = True
-                        End If
-                        ait = CurrentPdf.Bolus.BolusWizard.ActiveInsulinTime
-                        If CurrentUser.CurrentTarget <> CurrentPdf.SmartGuard.Target Then
-                            currentUserUpdateNeeded = True
-                        End If
-                        currentTarget = CurrentPdf.SmartGuard.Target
-                        Dim deviceCarbRatios As List(Of DeviceCarbRatioRecord) = CurrentPdf.Bolus.DeviceCarbohydrateRatios
-
-                        If Not deviceCarbRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
-                            currentUserUpdateNeeded = True
-                        End If
-                        carbRatios = deviceCarbRatios.ToCarbRatioList
+            If currentUserUpdateNeeded OrElse forceUI Then
+                Using f As New InitializePumpSettingsDialog(CurrentUserRecord:=CurrentUser, newUser:=newUser)
+                    Dim result As DialogResult = f.ShowDialog(owner:=My.Forms.Form1)
+                    If result = DialogResult.OK Then
+                        currentUserUpdateNeeded =
+                            currentUserUpdateNeeded OrElse Not CurrentUser.Equals(other:=f.CurrentUser)
+                        CurrentUser = f.CurrentUser.Clone
                     End If
-                End If
-                If currentUserUpdateNeeded OrElse forceUI Then
-                    Using f As New InitializeDialog(ait, currentTarget, carbRatios)
-                        Dim result As DialogResult = f.ShowDialog(owner:=My.Forms.Form1)
-                        If result = DialogResult.OK Then
-                            currentUserUpdateNeeded =
-                                currentUserUpdateNeeded OrElse Not CurrentUser.Equals(other:=f.CurrentUser)
-                            CurrentUser = f.CurrentUser.Clone
-                        End If
-                    End Using
-                End If
-                If currentUserUpdateNeeded Then
-                    Dim cuJson As String
-                    Try
-                        cuJson = CurrentUser.ToJson()
-                        File.WriteAllTextAsync(path:=userSettingsFileFullPath, contents:=cuJson)
-                    Catch ex As Exception
-                        Debug.WriteLine(message:=$"ERROR: failed serializing CurrentUser to {userSettingsFileFullPath}: {ex.Message}")
-                    End Try
-                Else
-                    TouchFile(path:=userSettingsFileFullPath)
-                End If
-            Finally
-                My.Forms.Form1.CursorFinished(pumpMessages:=True)
-            End Try
-        End If
+                End Using
+            End If
+            If currentUserUpdateNeeded Then
+                Dim cuJson As String
+                Try
+                    cuJson = CurrentUser.ToJson()
+                    File.WriteAllTextAsync(path:=userSettingsFileFullPath, contents:=cuJson)
+                Catch ex As Exception
+                    Debug.WriteLine(message:=$"ERROR: failed serializing CurrentUser to {userSettingsFileFullPath}: {ex.Message}")
+                End Try
+            Else
+                TouchFile(path:=userSettingsFileFullPath)
+            End If
+        Finally
+            My.Forms.Form1.CursorFinished(pumpMessages:=True)
+        End Try
     End Sub
 
     ''' <summary>

@@ -3840,7 +3840,6 @@ Public Class Form1
         Dim path As String = GetProjectDataDirectory()
         Me.MenuStartLoadDataFile.Enabled =
             debuggerIsAttached AndAlso
-            Not PatientDataElement.IsEmpty AndAlso
             AnyMatchingFiles(path, searchPattern:=$"CareLink*.json")
 
         Me.MenuStartSaveSnapshot.Enabled = Not IsPatientDataEmpty()
@@ -4125,14 +4124,11 @@ Public Class Form1
     Private Sub MenuView_DropDownOpening(sender As Object, e As EventArgs) Handles MenuView.DropDownOpening
         Dim debuggerIsAttached As Boolean = Debugger.IsAttached
 
-        Dim show As Boolean =
-            True AndAlso
-            Not PatientDataElement.IsEmpty
+        Dim show As Boolean = debuggerIsAttached OrElse Not PatientDataElement.IsEmpty
 
         Me.MenuViewRawJsonData.Enabled = show
-        Me.MenuViewPumpSetup.Enabled = show AndAlso
-                                       CurrentPdf IsNot Nothing AndAlso
-                                       CurrentPdf.IsValid
+        Dim pdfIsValid As Boolean = CurrentPdf IsNot Nothing AndAlso CurrentPdf.IsValid
+        Me.MenuViewPumpSetup.Enabled = show OrElse pdfIsValid
     End Sub
 
     ''' <summary>
@@ -4145,13 +4141,14 @@ Public Class Form1
     ''' <param name="e">An EventArgs that contains the event data.</param>
     Private Sub MenuViewShowPumpSetup_Click(sender As Object, e As EventArgs) Handles MenuViewPumpSetup.Click
         If File.Exists(path:=GetUserPdfPath()) Then
-            If CurrentPdf IsNot Nothing AndAlso CurrentPdf.IsValid Then
-                SetServerUpdateTimer(Start:=False)
-                Using dialog As New PumpSetupDialog
-                    dialog.Pdf = CurrentPdf
-                    dialog.ShowDialog(owner:=Me)
-                End Using
+            If CurrentPdf Is Nothing Then
+                CurrentPdf = New PdfSettingsRecord(pdfFilePath:=GetUserPdfPath())
             End If
+            SetServerUpdateTimer(Start:=False)
+            Using dialog As New PumpSetupInstructionsDialog
+                dialog.Pdf = CurrentPdf
+                dialog.ShowDialog(owner:=Me)
+            End Using
 
             ' If the PDF file is not valid after setup, show a message box to the user.
             If CurrentPdf.IsValid Then
@@ -5676,21 +5673,6 @@ Public Class Form1
         Return Date.MinValue
     End Function
 
-    Private Shared Function GetSimpleraTimeLeftMessage(SensorDurationHours As Integer) As String
-        Dim hoursStr As String
-        Select Case SensorDurationHours
-            Case Is <= 24
-                hoursStr = SensorDurationHours.HoursToDaysAndHours(shortHr:=True)
-                Return $"{hoursStr} left{vbCrLf}in grace period"
-            Case Is < 48
-                hoursStr = (SensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
-                Return $"{hoursStr}{vbCrLf}+ 24 hour{vbCrLf}grace period"
-            Case Else  ' sensorDurationHours >= 48
-                hoursStr = (SensorDurationHours - 24).HoursToDaysAndHours(shortHr:=True)
-                Return $"{hoursStr}{vbCrLf}+ 24 hour{vbCrLf}grace period"
-        End Select
-    End Function
-
     ''' <summary>
     '''  Returns a subtitle string for the summary chart based on the
     '''  current AutoMode state and basal pattern. If in AutoMode, the subtitle
@@ -6232,6 +6214,40 @@ Public Class Form1
     End Sub
 
     ''' <summary>
+    '''  Updates the Treatment Markers chart with the latest data and settings.
+    ''' </summary>
+    ''' <remarks>
+    '''  This method reinitializes the Treatment Markers chart,
+    '''  updates its title, axes, and series. It plots suspend areas,
+    '''  treatment markers, sensor glucose series, and high/low/target limits.
+    '''  If the program is not initialized, the method exits without making changes.
+    '''  Any exceptions encountered during the update are caught, the debugger is stopped,
+    '''  and an <see cref="ApplicationException"/> is thrown.
+    ''' </remarks>
+    Private Sub UpdateChartTreatment()
+        If Not ProgramInitialized Then
+            Exit Sub
+        End If
+        Try
+            Me.InitializeTreatmentMarkersChart()
+            With Me.TreatmentMarkersChart
+                .Titles(name:=NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details{BasalList.Subtitle()}"
+                .ChartAreas(name:=NameOf(ChartArea)).UpdateChartAreaSgAxisX()
+                .PlotSuspendArea(SuspendSeries:=Me.TreatmentSuspendSeries)
+                .PlotTreatmentMarkers(Me.TreatmentTimeChangeSeries)
+                .PlotSgSeries(HomePageMealRow:=GetYMinNativeMmolL())
+                .PlotHighLowLimitsAndTargetSg(targetSgOnly:=True)
+            End With
+        Catch innerException As Exception
+            Stop
+            Throw New ApplicationException(
+                message:=$"{innerException.DecodeException()} exception in {NameOf(UpdateChartTreatment)}",
+                innerException)
+        End Try
+        Application.DoEvents()
+    End Sub
+
+    ''' <summary>
     '''  Updates the dosing and carbs information on the home tab.
     '''  This method calculates and displays the total insulin
     '''  doses, basal rates, auto corrections, manual boluses,
@@ -6465,157 +6481,6 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Updates the sensor life display on the home tab.
-    '''  This method updates the sensor days left label and sensor time left
-    '''  picture box based on the current sensor duration hours.
-    ''' </summary>
-    ''' <remarks>
-    '''  The sensor days left label is set based on the remaining sensor duration,
-    '''  and the sensor time left picture box is updated accordingly.
-    ''' </remarks>
-    Private Sub UpdateSensorLife()
-        Dim haveCGM As Boolean = PatientData.ConduitInRange AndAlso PatientData.CgmInfo IsNot Nothing
-        If haveCGM Then
-            Dim sensorModelNumber As String =
-                PatientData.CgmInfo.SensorProductModel?.Trim
-
-            If IsFlex() Then
-                If sensorModelNumber Is Nothing Then
-                    ' Simplera
-                    Me.UpdateSimpleraLife()
-                Else
-                    ' Instinct
-                    Stop
-                End If
-                Return
-            End If
-
-            Dim sensorDurationHours As Integer =
-                PatientData.SensorDurationHours
-            Select Case sensorModelNumber
-                Case "MMT-5120" ' Simplera
-                    Me.UpdateSimpleraLife()
-                Case Nothing ' Guardian 4
-                    Dim sensorDurationDays As Integer = CInt(Math.Ceiling(sensorDurationHours / 24))
-                    Select Case sensorDurationHours
-                        Case Is >= 255
-                            Me.SensorDaysLeftLabel.Text = EmptyString
-                            Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpirationUnknown)
-                            Me.SensorTimeLeftLabel.Text = "Unknown"
-                        Case Is >= 168
-                            Me.SensorDaysLeftLabel.Text = "~7"
-                            Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeOK)
-                            Me.SensorTimeLeftLabel.Text = "7 Days"
-                        Case Is >= 24
-                            Me.SensorDaysLeftLabel.Text = sensorDurationDays.ToString()
-                            Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeOK)
-                            Me.SensorTimeLeftLabel.Text = sensorDurationDays.ToUnits(unit:="Day")
-                        Case Is > 0
-                            Me.SensorDaysLeftLabel.Text =
-                                $"<{sensorDurationDays}"
-                            Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeNotOK)
-                            Me.SensorTimeLeftLabel.Text =
-                                sensorDurationHours.ToUnits(unit:="Hour", separator:=vbCrLf)
-                        Case Is = 0
-                            Dim sensorDurationMinutes As Integer =
-                                If(PatientData.SensorDurationMinutes Is Nothing,
-                                   -1,
-                                   CInt(PatientData.SensorDurationMinutes))
-                            Select Case sensorDurationMinutes
-                                Case Is > 0
-                                    Me.SensorDaysLeftLabel.Text = "0"
-                                    Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeNotOK)
-                                    Me.SensorTimeLeftLabel.Text = sensorDurationMinutes.ToUnits(unit:="minute", separator:=vbCrLf)
-                                Case Is = 0
-                                    Me.SensorDaysLeftLabel.Text = EmptyString
-                                    Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpired)
-                                    Me.SensorTimeLeftLabel.Text = "Expired"
-                                Case Else
-                                    Me.SensorDaysLeftLabel.Text = EmptyString
-                                    Const imageId As ImageEnum = ImageEnum.SensorExpirationUnknown
-                                    Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId)
-                                    Me.SensorTimeLeftLabel.Text = "Unknown"
-                            End Select
-
-                        Case Else
-                            Me.SensorDaysLeftLabel.Text =
-                                sensorDurationDays.ToString()
-                            Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpirationUnknown)
-                            Me.SensorTimeLeftLabel.Text = "Unknown"
-                    End Select
-                Case Else ' Instinct
-                    If sensorDurationHours > 24 Then
-                        Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeOK)
-                    Else
-                        Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeNotOK)
-                    End If
-
-                    Me.SensorDaysLeftLabel.Text =
-                        sensorDurationHours.HoursToDaysAndHours(shortHr:=False)
-                    Me.SensorTimeLeftLabel.Text = "Unknown"
-            End Select
-        Else
-            Me.SensorDaysLeftLabel.Text = EmptyString
-            Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpirationUnknown)
-            Me.SensorTimeLeftLabel.Text = "Unknown"
-            Me.SensorTimeLeftPanel.Visible = True
-        End If
-        Me.SensorDaysLeftLabel.Visible = Me.SensorDaysLeftLabel.Text <> String.Empty
-        Me.SensorTimeLeftPanel.Visible = PatientData.ConduitInRange
-    End Sub
-
-    Private Sub UpdateSimpleraLife()
-        Dim sensorDurationHours As Integer = PatientData.SensorDurationHours
-        Dim durationWithoutGrace As Integer = sensorDurationHours - 24
-
-        Select Case sensorDurationHours
-            Case Is >= 255
-                Me.SensorDaysLeftLabel.Text = EmptyString
-                Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpirationUnknown)
-                Me.SensorTimeLeftLabel.Text = "Unknown"
-            Case Is >= 48
-                Me.SensorDaysLeftLabel.Text = CStr(Math.Ceiling(a:=durationWithoutGrace / 24))
-                Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeOK)
-                Me.SensorTimeLeftLabel.Text = GetSimpleraTimeLeftMessage(sensorDurationHours)
-            Case Is > 24
-                Me.SensorDaysLeftLabel.Text =
-                    Math.Ceiling(durationWithoutGrace / 24).ToString()
-                Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeOK)
-                Me.SensorTimeLeftLabel.Text =
-                    GetSimpleraTimeLeftMessage(sensorDurationHours)
-            Case Is > 0 ' Grace
-                Me.SensorDaysLeftLabel.Text = EmptyString
-                Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpiringSoon)
-                Me.SensorTimeLeftLabel.Text =
-                    GetSimpleraTimeLeftMessage(sensorDurationHours)
-            Case Is = 0
-                Dim sensorDurationMinutes As Integer =
-                    If(PatientData.SensorDurationMinutes Is Nothing,
-                       -1,
-                       CInt(PatientData.SensorDurationMinutes))
-                Select Case sensorDurationMinutes
-                    Case Is > 0
-                        Me.SensorDaysLeftLabel.Text = "0"
-                        Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorLifeNotOK)
-                        Me.SensorTimeLeftLabel.Text = sensorDurationMinutes.ToUnits(unit:="minute", separator:=vbCrLf)
-                    Case Is = 0
-                        Me.SensorDaysLeftLabel.Text = EmptyString
-                        Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpired)
-                        Me.SensorTimeLeftLabel.Text = "Expired"
-                    Case Else
-                        Me.SensorDaysLeftLabel.Text = EmptyString
-                        Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpirationUnknown)
-                        Me.SensorTimeLeftLabel.Text = "Unknown"
-                End Select
-            Case Else
-                Me.SensorDaysLeftLabel.Text = EmptyString
-                Me.SensorTimeLeftPictureBox.UpdatePictureBox(imageId:=ImageEnum.SensorExpirationUnknown)
-                Me.SensorTimeLeftLabel.Text = "Unknown"
-        End Select
-        Me.SensorDaysLeftLabel.AdjustFontToFitWidth(maxWidth:=70)
-    End Sub
-
-    ''' <summary>
     '''  Updates the Time in Range chart with the latest data and settings.
     ''' </summary>
     ''' <remarks>
@@ -6791,40 +6656,6 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Updates the Treatment Markers chart with the latest data and settings.
-    ''' </summary>
-    ''' <remarks>
-    '''  This method reinitializes the Treatment Markers chart,
-    '''  updates its title, axes, and series. It plots suspend areas,
-    '''  treatment markers, sensor glucose series, and high/low/target limits.
-    '''  If the program is not initialized, the method exits without making changes.
-    '''  Any exceptions encountered during the update are caught, the debugger is stopped,
-    '''  and an <see cref="ApplicationException"/> is thrown.
-    ''' </remarks>
-    Private Sub UpdateTreatmentChart()
-        If Not ProgramInitialized Then
-            Exit Sub
-        End If
-        Try
-            Me.InitializeTreatmentMarkersChart()
-            With Me.TreatmentMarkersChart
-                .Titles(name:=NameOf(TreatmentMarkersChartTitle)).Text = $"Treatment Details{BasalList.Subtitle()}"
-                .ChartAreas(name:=NameOf(ChartArea)).UpdateChartAreaSgAxisX()
-                .PlotSuspendArea(SuspendSeries:=Me.TreatmentSuspendSeries)
-                .PlotTreatmentMarkers(Me.TreatmentTimeChangeSeries)
-                .PlotSgSeries(HomePageMealRow:=GetYMinNativeMmolL())
-                .PlotHighLowLimitsAndTargetSg(targetSgOnly:=True)
-            End With
-        Catch innerException As Exception
-            Stop
-            Throw New ApplicationException(
-                message:=$"{innerException.DecodeException()} exception in {NameOf(UpdateTreatmentChart)}",
-                innerException)
-        End Try
-        Application.DoEvents()
-    End Sub
-
-    ''' <summary>
     '''  Updates the trend arrows display on the home tab.
     '''  This method updates the trend arrows label based on the
     '''  current sensor glucose trend headerText.
@@ -6984,7 +6815,7 @@ Public Class Form1
 
         Me.MenuStartHere.Enabled = True
         ProgramInitialized = True
-        Me.UpdateTreatmentChart()
+        Me.UpdateChartTreatment()
         Me.UpdateActiveInsulinChart()
         Me.UpdateActiveInsulin()
 

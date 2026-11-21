@@ -4,7 +4,7 @@
 
 Imports System.Drawing.Printing
 
-Public Class PumpSetupDialog
+Public Class PumpSetupInstructionsDialog
 
     Private _charFrom As Integer
     Private _charTo As Integer

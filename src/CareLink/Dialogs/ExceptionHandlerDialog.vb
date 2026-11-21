@@ -292,7 +292,7 @@ Public Class ExceptionHandlerDialog
                 Me.ReportInvalidErrorFile(currentLine, exceptionStartingString:=StackTraceTerminatingStr)
             End If
             traceTextBox.Text = sb.ToString
-            Return stream.ReadToEnd
+            Return stream.ReadToEnd & "}"
         End Using
     End Function
 
