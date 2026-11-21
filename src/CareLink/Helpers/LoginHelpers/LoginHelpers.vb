@@ -95,7 +95,7 @@ Friend Module LoginHelpers
                 Dim fileDate As Date = File.GetLastWriteTime(path)
                 Dim msg As String = fileDate.ToShortDateTime
                 Dim isDaylightSavingTime As Boolean = fileDate.IsDaylightSavingTime
-                owner.SetLastUpdateTime(msg, suffixMessage:="from file", isDaylightSavingTime)
+                owner.SetLastUpdateTime(msg, suffixMessage:="from file", highLight:=isDaylightSavingTime)
                 SetUpCareLinkUser()
                 fromFile = True
                 owner.TabControlPage1.Visible = True

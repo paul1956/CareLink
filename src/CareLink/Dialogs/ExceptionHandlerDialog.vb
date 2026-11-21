@@ -255,7 +255,7 @@ Public Class ExceptionHandlerDialog
     ''' <param name="reportNameWithPath">The full path to the report file.</param>
     ''' <returns>The raw data portion of the report file.</returns>
     Friend Function ReportFile(exTextBox As TextBox, traceTextBox As TextBox, reportNameWithPath As String) As String
-        Using stream As StreamReader = IO.File.OpenText(reportNameWithPath)
+        Using stream As StreamReader = IO.File.OpenText(path:=reportNameWithPath)
             ' read exception header
             Dim currentLine As String = stream.ReadLine()
             If currentLine <> ExceptionStartingString Then
