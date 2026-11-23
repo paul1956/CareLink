@@ -501,7 +501,7 @@ Friend Module LoginHelpers
                     End If
                 End Using
             End If
-            If currentUserUpdateNeeded Then
+            If currentUserUpdateNeeded OrElse Not File.Exists(path:=userSettingsFileFullPath) Then
                 Dim cuJson As String
                 Try
                     cuJson = CurrentUser.ToJson()
