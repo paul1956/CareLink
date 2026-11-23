@@ -42,6 +42,7 @@ Public Module SystemVariables
     Friend s_showLogger As Boolean = False
     Friend s_useLocalTimeZone As Boolean
     Friend s_userName As String
+    Friend s_errorLookups As PersistentLookups
     Friend ReadOnly Property CareLinkDecimalSeparator As Char = "."c
     Friend Property CurrentUser As CurrentUserRecord
     Friend Property DecimalSeparator As String = CultureInfo.CurrentUICulture.NumberFormat.NumberDecimalSeparator

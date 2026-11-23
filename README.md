@@ -47,10 +47,30 @@ A directory MyDocuments/CareLink/Settings contains a Settings File
 
 CareLink uses the latest stable `Microsoft.Web.WebView2` NuGet package for its WebView2 APIs. The package does not include the browser runtime; the Evergreen WebView2 Runtime must be installed on the system. If it is missing, CareLink offers to open [Microsoft's WebView2 download page](https://developer.microsoft.com/microsoft-edge/webview2/#download-section), where you can install the Evergreen Runtime, then restart CareLink. No Evergreen bootstrapper is bundled with the application.
 
+## Notification messages
+
+When CareLink encounters an unknown numeric fault ID, it asks for a message and saves it in
+`LegacyErrors.json` or `FlexErrors.json` in the project data directory. Built-in messages take
+precedence over saved messages, so a later release can replace a user-supplied entry. Legacy IDs
+have no decimal point; Flex IDs do, and trailing fractional zeros do not change their value.
+
+Messages can contain placeholders such as `(triggeredDateTime)` and `(unitsRemaining)`.
+Placeholder names start with a lowercase letter and contain only letters and digits, without spaces.
+Supported names are `activeInsulinResetTime`, `alertClearType`, `basalName`, `bgValue`,
+`criticalLow`, `deliveredAmount`, `lastSetChange`, `lowLimit`, `notDeliveredAmount`,
+`programmedAmount`, `reminderName`, `resolved`, `secondaryTime`, `secondaryTimeReminder`,
+`sensorUpdateTime`, `sg`, `sg64`, `suspendedSince`, `triggeredDateTime`, `units`,
+`unitsRemaining`, and `vbCrLf`. Values are substituted when available; otherwise the placeholder
+remains visible. Unknown placeholders produce a warning, with options to save anyway, edit, or
+cancel. If saved, they remain visible until a release supports them.
+
 ## Updated
-11/21/2026
+11/23/2026
 
 ## What's New
+New in 6.1.7.0
+- When CareLink encounters an unknown numeric fault ID, it asks for a message and saves it
+
 New in 6.1.6.1
 - Cleanup only
 

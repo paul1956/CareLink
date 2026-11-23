@@ -648,7 +648,9 @@ Public Class RawDataViewerDialog
     End Sub
 
     Private NotInheritable Class DifferenceRow
-        Private Shared ReadOnly s_arrayIndex As New Regex("\[(\d+)\]", RegexOptions.CultureInvariant)
+
+        Private Shared ReadOnly s_arrayIndex As New Regex(pattern:="\[(\d+)\]",
+                                                          options:=RegexOptions.CultureInvariant)
 
         Public Sub New(path As String, sequence As Integer, previousLine As String, currentLine As String)
             Me.Sequence = sequence

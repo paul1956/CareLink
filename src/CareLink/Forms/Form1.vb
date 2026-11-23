@@ -58,6 +58,8 @@ Public Class Form1
     ''' <returns> </returns>
     Friend Shared Property Client As Client2
 
+    Public Shared Property ErrorLookups As New PersistentLookups()
+
 #Region "Overrides"
 
     ''' <summary>
@@ -3594,6 +3596,17 @@ Public Class Form1
         s_showLogger = Debugger.IsAttached
         InitLogger(show:=s_showLogger)
         LogMessage(message:="Application started in DEBUG mode.")
+        Try
+            ErrorLookups = New PersistentLookups()
+        Catch ex As Exception
+            MessageBox.Show(owner:=Me,
+                            text:=$"Could not load the error lookup data: {ex.Message}",
+                            caption:="Error lookup error",
+                            buttons:=MessageBoxButtons.OK,
+                            icon:=MessageBoxIcon.Error)
+
+            Me.Close()
+        End Try
 
         PreloadBitmaps()
 

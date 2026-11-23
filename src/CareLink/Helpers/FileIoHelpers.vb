@@ -52,11 +52,10 @@ Public Module FileIoHelpers
     ''' </summary>
     ''' <returns>The full path to the last download file.</returns>
     Friend Function GetLastDownloadFileWithPath() As String
-        Return GetUniqueDataFileName(
-            baseName:=BaseDownloadName,
-            cultureName:=CultureInfo.CurrentUICulture.Name,
-            extension:="json",
-            mustBeUnique:=False).WithPath
+        Return GetUniqueDataFileName(baseName:=BaseDownloadName,
+                                     cultureName:=CultureInfo.CurrentUICulture.Name,
+                                     extension:="json",
+                                     mustBeUnique:=False).WithPath
     End Function
 
     ''' <summary>
@@ -65,14 +64,6 @@ Public Module FileIoHelpers
     ''' </summary>
     Friend Function GetProjectDataDirectory() As String
         Return Path.Join(GetMyDocuments(), "CareLink")
-    End Function
-
-    ''' <summary>
-    '''  Gets the full path to the WebCache.
-    ''' </summary>
-    ''' <returns>The full path to the WebCache directory.</returns>
-    Friend Function GetProjectWebCache() As String
-        Return Path.Join(GetProjectDataDirectory(), "WebCache")
     End Function
 
     ''' <summary>
@@ -102,63 +93,14 @@ Public Module FileIoHelpers
     End Function
 
     ''' <summary>
-    '''  Determines whether the specified file has not been modified for at least 30 days.
-    ''' </summary>
-    ''' <param name="path">The full path to the user settings file.</param>
-    ''' <returns>
-    '''  <see langword="True"/> if the file is stale;
-    '''  otherwise, <see langword="False"/>.
-    ''' </returns>
-    ''' <exception cref="ArgumentNullException">
-    '''  Thrown if the path is null or whitespace.
-    ''' </exception>
-    ''' <remarks>
-    '''  A file is considered stale if it has not been modified in the last 30 days.
-    ''' </remarks>
-    Friend Function IsFileStale(path As String) As Boolean
-        If String.IsNullOrWhiteSpace(value:=path) Then
-            Throw New ArgumentNullException(paramName:=NameOf(path), message:="Path cannot be null or whitespace.")
-        End If
-        Return File.GetLastWriteTime(path).IsDateOlderThan(referenceDate:=Date.Now, span:=ThirtyDaysSpan)
-    End Function
-
-    ''' <summary>
-    '''  Moves all files matching the specified pattern from one directory to another.
-    ''' </summary>
-    ''' <param name="path">The source directory.</param>
-    ''' <param name="currentDirectory">The destination directory.</param>
-    ''' <param name="searchPattern">The search pattern for files to move.</param>
-    ''' <exception cref="ArgumentNullException">
-    '''  Thrown if the path or current directory is null or whitespace.
-    ''' </exception>
-    ''' <remarks>
-    '''  This method moves all files matching the specified search pattern
-    '''  from the source directory to the destination directory,
-    '''  which is typically the current working directory.
-    ''' </remarks>
-    Friend Sub MoveFiles(path As String, currentDirectory As String, searchPattern As String)
-        If String.IsNullOrWhiteSpace(value:=path) Then
-            Throw New ArgumentNullException(paramName:=NameOf(path), message:="Path cannot be null or whitespace.")
-        End If
-        If String.IsNullOrWhiteSpace(value:=currentDirectory) Then
-            Const message As String = "Current directory cannot be null or whitespace."
-            Throw New ArgumentNullException(paramName:=NameOf(currentDirectory), message)
-        End If
-        For Each sourceFileName As String In Directory.EnumerateFiles(path, searchPattern)
-            Dim fileName As String = IO.Path.GetFileName(path:=sourceFileName)
-            File.Move(sourceFileName, destFileName:=IO.Path.Join(currentDirectory, fileName))
-        Next
-    End Sub
-
-    ''' <summary>
     '''  The base name for the last download file, used to store the last downloaded data.
     ''' </summary>
     ''' <value>
     '''  The base name for the last download file, which is "SavedLastDownload".
     ''' </value>
     Public Function GetDownloadsDirectory() As String
-        Dim folder As Environment.SpecialFolder = Environment.SpecialFolder.UserProfile
-        Return Path.Combine(Environment.GetFolderPath(folder), "Downloads")
+        Return Path.Combine(Environment.GetFolderPath(folder:=Environment.SpecialFolder.UserProfile),
+                            "Downloads")
     End Function
 
     ''' <summary>
@@ -177,7 +119,7 @@ Public Module FileIoHelpers
     '''  under "CareLink\Settings".
     ''' </remarks>
     Public Function GetSettingsDirectory() As String
-        Return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CareLink", "Settings")
+        Return Path.Combine(GetProjectDataDirectory(), "Settings")
     End Function
 
     ''' <summary>
@@ -192,8 +134,8 @@ Public Module FileIoHelpers
     '''  Thrown if the file name is null or whitespace.
     ''' </exception>
     Public Function IsFileReadOnly(path As String) As Boolean
-        If String.IsNullOrWhiteSpace(path) Then
-            Throw New ArgumentException($"'{NameOf(path)}' cannot be null or whitespace.", paramName:=NameOf(path))
+        If String.IsNullOrWhiteSpace(value:=path) Then
+            Throw New ArgumentNullException(paramName:=NameOf(path))
         End If
 
         Try
@@ -239,7 +181,7 @@ Public Module FileIoHelpers
                 End Try
             End While
         Catch ex As Exception
-            Debug.WriteLine($"SafeDeleteFile outer: {ex.Message}")
+            Debug.WriteLine(message:=$"SafeDeleteFile outer: {ex.Message}")
         End Try
     End Sub
 
@@ -247,12 +189,12 @@ Public Module FileIoHelpers
     '''  Updates the last write time of the specified file to the current UTC time.
     ''' </summary>
     ''' <param name="path">The full path to the file.</param>
-    ''' <exception cref="ArgumentException">
+    ''' <exception cref="ArgumentNullException">
     '''  Thrown if the file name is null or whitespace.
     ''' </exception>
     Public Sub TouchFile(path As String)
         If String.IsNullOrWhiteSpace(value:=path) Then
-            Throw New ArgumentException($"'{NameOf(path)}' cannot be null or whitespace.", paramName:=NameOf(path))
+            Throw New ArgumentNullException(paramName:=NameOf(path))
         End If
         If File.Exists(path) Then
             Using myFileStream As FileStream =
