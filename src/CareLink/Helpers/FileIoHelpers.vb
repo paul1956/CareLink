@@ -197,9 +197,6 @@ Public Module FileIoHelpers
             Throw New ArgumentNullException(paramName:=NameOf(path))
         End If
         If File.Exists(path) Then
-            Using myFileStream As FileStream =
-                File.Open(path, mode:=FileMode.OpenOrCreate, access:=FileAccess.ReadWrite, share:=FileShare.ReadWrite)
-            End Using
             File.SetLastWriteTimeUtc(path, lastWriteTimeUtc:=Date.UtcNow)
         Else
             Throw New FileNotFoundException(message:="The specified file does not exist.", fileName:=path)
