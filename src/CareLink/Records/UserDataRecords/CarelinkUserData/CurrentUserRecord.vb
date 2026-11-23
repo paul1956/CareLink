@@ -33,16 +33,16 @@ Public Class CurrentUserRecord
 
     Friend Function GetCarbRatio(forTime As TimeOnly) As Single
         For Each carbRatio As CarbRatioRecord In Me.CarbRatios
-            Dim startTime As TimeOnly = RoundToMinute(carbRatio.StartTime)
-            Dim endTime As TimeOnly = RoundToMinute(carbRatio.EndTime)
-            Dim checkTime As TimeOnly = RoundToMinute(forTime)
+            Dim startTime As TimeOnly = RoundToMinute(t:=carbRatio.StartTime)
+            Dim endTime As TimeOnly = RoundToMinute(t:=carbRatio.EndTime)
+            Dim checkTime As TimeOnly = RoundToMinute(t:=forTime)
 
             If checkTime.IsBetween(start:=startTime, [end]:=endTime) OrElse checkTime = startTime OrElse checkTime = endTime Then
                 Return carbRatio.CarbRatio
             End If
         Next
 
-        Throw New InvalidOperationException("No carb ratio found for the specified time.")
+        Throw New InvalidOperationException(message:="No carb ratio found for the specified time.")
     End Function
 
     Friend Function Clone() As CurrentUserRecord
@@ -86,13 +86,12 @@ Public Class CurrentUserRecord
     End Function
 
     Public Overrides Function GetHashCode() As Integer
-        Return HashCode.Combine(
-            Me.PumpAit,
-            Me.CarbRatios,
-            Me.InsulinRealAit,
-            Me.InsulinTypeName,
-            Me.UseAdvancedAitDecay,
-            Me.UserName)
+        Return HashCode.Combine(Me.PumpAit,
+                                Me.CarbRatios,
+                                Me.InsulinRealAit,
+                                Me.InsulinTypeName,
+                                Me.UseAdvancedAitDecay,
+                                Me.UserName)
     End Function
 
     Public Function GetPumpAitString() As String
