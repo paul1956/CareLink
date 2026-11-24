@@ -4208,14 +4208,13 @@ Public Class Form1
     ''' <summary>
     '''  Handles the <see cref="MenuOptions.DropDownOpening"/> event
     '''  for the <see cref="MenuOptions"/> menu. Enables or disables the Edit Pump Settings
-    '''  menu item based on debugger state or user name.
+    '''  menu item based on user name.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">The event data.</param>
     <DebuggerNonUserCode()>
     Private Sub MenuOptions_DropDownOpening(sender As Object, e As EventArgs) Handles MenuOptions.DropDownOpening
-        Me.MenuOptionsEditPumpSettings.Enabled = Debugger.IsAttached OrElse
-                                                 Not String.IsNullOrWhiteSpace(value:=CurrentUser?.UserName)
+        Me.MenuOptionsEditPumpSettings.Enabled = Not String.IsNullOrWhiteSpace(value:=CurrentUser?.UserName)
     End Sub
 
     ''' <summary>
@@ -5914,7 +5913,7 @@ Public Class Form1
                 Dim windowSize As Integer =
                     CInt(s_insulinTypes(key:=CurrentUser.InsulinTypeName).AitHours * 12)
                 Dim timestamp As Date = s_sgRecords(index:=0).Timestamp
-                Dim insulinIncrements As Integer = CurrentUser.GetActiveInsulinIncrements
+                Dim insulinIncrements As Integer = SystemVariables.CurrentUser.GetActiveInsulinIncrements
                 ' set up table that holds active insulin for every 5 minutes
                 If _remainingInsulinList.Count >= PatientData.Sgs.Count Then
                     If _remainingInsulinList.Count > PatientData.Sgs.Count + insulinIncrements Then
@@ -5945,7 +5944,7 @@ Public Class Form1
                 .ChartAreas(name:=NameOf(ChartArea)).AxisY2.Maximum = GetYMaxNativeMmolL()
                 ' walk all markers, adjust active insulin and then add new markerWithIndex
                 Dim maxActiveInsulin As Double = 0
-                Dim count As Integer = CurrentUser.GetActiveInsulinIncrements
+                Dim count As Integer = SystemVariables.CurrentUser.GetActiveInsulinIncrements
                 Dim startIndex As Integer = _remainingInsulinList.Count - PatientData.Sgs.Count
                 For i As Integer = startIndex To startIndex + PatientData.Sgs.Count - 1
                     If i < windowSize - 1 Then

@@ -38,7 +38,7 @@ Public Class Insulin
         End With
 
         If Me.InsulinType.EqualsNoCase("Unknown") Then
-            Me.InsulinType = CurrentUser.InsulinTypeName
+            Me.InsulinType = SystemVariables.CurrentUser.InsulinTypeName
         End If
     End Sub
 
@@ -185,7 +185,7 @@ Public Class Insulin
                 Dim meal As Meal = Nothing
                 If Meal.TryGetMealRecord(Me.Timestamp, meal) Then
                     Dim forTime As TimeOnly = TimeOnly.FromDateTime(meal.Timestamp)
-                    Dim cRatio As Single = CurrentUser.GetCarbRatio(forTime)
+                    Dim cRatio As Single = SystemVariables.CurrentUser.GetCarbRatio(forTime)
                     Dim expectedBolus As Single = meal.Amount / cRatio
                     If expectedBolus - GetMinBasal() > Me.ProgrammedFastAmount Then
                         Return (expectedBolus - Me.ProgrammedFastAmount).RoundToStep()

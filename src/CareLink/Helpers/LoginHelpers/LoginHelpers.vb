@@ -239,15 +239,15 @@ Friend Module LoginHelpers
                 fromFile = True
         End Select
         If Form1.Client IsNot Nothing Then
-            Form1.Client.PatientPersonalData.InsulinType = CurrentUser.InsulinTypeName
+            Form1.Client.PatientPersonalData.InsulinType = SystemVariables.CurrentUser.InsulinTypeName
             With owner.DgvCurrentUser
                 .InitializeDgv()
                 .DataSource = Form1.Client.UserElementDictionary.ToDataSource
             End With
         End If
 
-        owner.PumpAITLabel.Text = CurrentUser.GetPumpAitString
-        owner.InsulinTypeLabel.Text = CurrentUser.InsulinTypeName
+        owner.PumpAITLabel.Text = SystemVariables.CurrentUser.GetPumpAitString
+        owner.InsulinTypeLabel.Text = SystemVariables.CurrentUser.InsulinTypeName
         If updateAllTabs Then
             owner.UpdateAllTabPages(fromFile)
         End If
@@ -395,25 +395,25 @@ Friend Module LoginHelpers
         Dim pdfFilePath As String = GetUserPdfPath()
         Dim userSettingsFileFullPath As String = GetUserSettingsPath()
         Try
-            Dim newUser As Boolean = CurrentUser Is Nothing
+            Dim newUser As Boolean = SystemVariables.CurrentUser Is Nothing
             If newUser Then
                 If mdi.ModelNumber.StartsWith(value:="MMT-8") Then
-                    If CurrentUser Is Nothing Then
-                        CurrentUser = New CurrentUserRecord(userName:=GetUserName(),
+                    If SystemVariables.CurrentUser Is Nothing Then
+                        SystemVariables.CurrentUser = New CurrentUserRecord(userName:=GetUserName(),
                                                             useAdvancedAitDecay:=CheckState.Checked)
                     End If
                     currentTarget = If(NativeMmolL,
                                        Target5mmol,
                                        Target90mgDl)
-                    CurrentUser.CurrentTarget = currentTarget
-                    CurrentUser.InsulinRealAit = 3
-                    CurrentUser.PumpAit = ait
-                    CurrentUser.InsulinTypeName = $"Lyumjev{RegisteredTrademark}"
+                    SystemVariables.CurrentUser.CurrentTarget = currentTarget
+                    SystemVariables.CurrentUser.InsulinRealAit = 3
+                    SystemVariables.CurrentUser.PumpAit = ait
+                    SystemVariables.CurrentUser.InsulinTypeName = $"Lyumjev{RegisteredTrademark}"
                     carbRatios.Add(item:=New CarbRatioRecord With {
                         .StartTime = New TimeOnly(hour:=0, minute:=0),
                         .CarbRatio = 5,
                         .EndTime = Eleven59})
-                    CurrentUser.CarbRatios = carbRatios
+                    SystemVariables.CurrentUser.CarbRatios = carbRatios
                 Else
                     Dim newPdfFile As Boolean = False
                     If File.Exists(path:=userSettingsFileFullPath) Then
@@ -421,7 +421,7 @@ Friend Module LoginHelpers
                         If Not element.IsEmpty Then
                             Dim cur As CurrentUserRecord = Nothing
                             Try
-                                cur = JsonExtensions.FromJson(Of CurrentUserRecord)(element)
+                                cur = element.FromJson(Of CurrentUserRecord)
                             Catch ex As Exception
                                 cur = Nothing
                             End Try
@@ -504,7 +504,7 @@ Friend Module LoginHelpers
             If currentUserUpdateNeeded OrElse Not File.Exists(path:=userSettingsFileFullPath) Then
                 Dim cuJson As String
                 Try
-                    cuJson = CurrentUser.ToJson()
+                    cuJson = SystemVariables.CurrentUser.ToJson()
                     File.WriteAllTextAsync(path:=userSettingsFileFullPath, contents:=cuJson)
                 Catch ex As Exception
                     Debug.WriteLine(message:=$"ERROR: failed serializing CurrentUser to {userSettingsFileFullPath}: {ex.Message}")

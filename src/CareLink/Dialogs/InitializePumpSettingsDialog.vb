@@ -27,14 +27,23 @@ Public Class InitializePumpSettingsDialog
 
     Public Property CurrentUser As CurrentUserRecord
 
-    Private Shared Sub InitializeComboList(comboBoxCell As DataGridViewComboBoxCell, start As Integer)
+    Private Shared Sub InitializeComboList(comboBoxCell As DataGridViewComboBoxCell,
+                                           start As Integer,
+                                           Optional currentEnd As TimeOnly? = Nothing)
         Dim data As New Dictionary(Of String, TimeOnly)(Comparer)
         For i As Integer = start To 47
             Dim value As New TimeOnly(hour:=i \ 2, minute:=(i Mod 2) * 30)
             data.Add(key:=value.ToHoursMinutes, value)
         Next
         data.Add(key:=Eleven59PM, value:=Eleven59)
-        comboBoxCell.DataSource = data.ToArray
+        If currentEnd.HasValue Then
+            data(key:=currentEnd.Value.ToHoursMinutes()) = currentEnd.Value
+        End If
+        Dim keySelector As Func(Of KeyValuePair(Of String, TimeOnly), TimeOnly) =
+            Function(item As KeyValuePair(Of String, TimeOnly))
+                Return item.Value
+            End Function
+        comboBoxCell.DataSource = data.OrderBy(keySelector).ToArray()
         comboBoxCell.DisplayMember = "Key"
         comboBoxCell.ValueMember = "Value"
     End Sub
@@ -113,7 +122,7 @@ Public Class InitializePumpSettingsDialog
                 With Me.InitializeDataGridView
                     columnName = NameOf(ColumnEnd)
                     cell = Me.InitializeDataGridView.Rows(index:=e.RowIndex).Cells(columnName)
-                    If cell.Value.ToString = Eleven59PM OrElse .RowCount = 12 Then
+                    If DirectCast(cell.Value, TimeOnly) = Eleven59 OrElse .RowCount = 12 Then
                         Me.OK_Button.Enabled = True
                         columnName = NameOf(ColumnSave)
                         index = .RowCount - 1
@@ -128,8 +137,8 @@ Public Class InitializePumpSettingsDialog
                         Exit Sub
                     End If
                     With .Rows(index:=e.RowIndex)
-                        CType(.Cells(NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = False
-                        CType(.Cells(NameOf(ColumnSave)), DataGridViewDisableButtonCell).Enabled = False
+                        CType(.Cells(columnName:=NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = False
+                        CType(.Cells(columnName:=NameOf(ColumnSave)), DataGridViewDisableButtonCell).Enabled = False
                     End With
                     For Each c As DataGridViewCell In .Rows(index:=e.RowIndex).Cells
                         c.ReadOnly = Not c.OwningColumn.HeaderText = "Carb Ratio g/U"
@@ -141,10 +150,11 @@ Public Class InitializePumpSettingsDialog
                         Dim comboBoxCell As DataGridViewComboBoxCell =
                             CType(.Cells(columnName), DataGridViewComboBoxCell)
                         columnName = NameOf(ColumnEnd)
-                        Dim colEndCell As DataGridViewCell = Me.InitializeDataGridView.Rows(index:=e.RowIndex) _
-                                                                                      .Cells(columnName)
+                        Dim colEndCell As DataGridViewCell =
+                            Me.InitializeDataGridView.Rows(index:=e.RowIndex).
+                                                      Cells(columnName)
                         colEndCell.ErrorText = String.Empty
-                        Dim timeOnly As TimeOnly = TimeOnly.Parse(colEndCell.Value.ToString)
+                        Dim timeOnly As TimeOnly = TimeOnly.Parse(s:=colEndCell.Value.ToString)
                         Dim item As String = timeOnly.ToHoursMinutes
                         comboBoxCell.Items.Add(item)
                         comboBoxCell.Value = item
@@ -154,19 +164,13 @@ Public Class InitializePumpSettingsDialog
                         InitializeComboList(comboBoxCell, start)
                         comboBoxCell.Value = Eleven59
                         columnName = NameOf(ColumnNumericUpDown)
-                        .Cells(columnName).Value = 15.0
+                        .Cells(columnName).Value = 15D
                         columnName = NameOf(ColumnDeleteRow)
                         CType(.Cells(columnName), DataGridViewDisableButtonCell).Enabled = True
                     End With
 
                 End With
         End Select
-    End Sub
-
-    Private Sub InitializeDataGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) _
-        Handles InitializeDataGridView.DataError
-
-        Stop
     End Sub
 
     Private Sub InitializeDataGridView_Enter(sender As Object, e As EventArgs) Handles InitializeDataGridView.Enter
@@ -178,12 +182,12 @@ Public Class InitializePumpSettingsDialog
 
         Dim index As Integer = Me.InitializeDataGridView.RowCount - 1
         Dim cell As DataGridViewCell = Me.InitializeDataGridView.Rows(index).Cells(columnName:=NameOf(ColumnEnd))
-        If cell.Value.ToString = MidnightStr Then
+        If DirectCast(cell.Value, TimeOnly) = Eleven59 Then
             cell.ErrorText = String.Empty
         Else
             With Me.InitializeDataGridView
                 If .RowCount = 12 Then
-                    cell.Value = Eleven59PM
+                    cell.Value = Eleven59
                     cell.ErrorText = String.Empty
                     Dim obj As Object = .Rows(index).Cells(columnName:=NameOf(ColumnSave))
                     Dim buttonCell As DataGridViewDisableButtonCell = CType(obj, DataGridViewDisableButtonCell)
@@ -295,15 +299,20 @@ Public Class InitializePumpSettingsDialog
                         columnName = NameOf(ColumnEnd)
                         Dim comboBoxCell As DataGridViewComboBoxCell =
                             CType(.Cells(columnName), DataGridViewComboBoxCell)
-                        InitializeComboList(comboBoxCell, start:=CInt((timeSpan / ThirtyMinuteSpan) + 1))
+                        Dim endTime As TimeOnly = value.EndTime
+                        If endTime.Hour = 23 AndAlso endTime.Minute = 59 Then
+                            endTime = Eleven59
+                        End If
+                        InitializeComboList(comboBoxCell, start:=CInt((timeSpan / ThirtyMinuteSpan) + 1),
+                                            currentEnd:=endTime)
                         With comboBoxCell
-                            .Value = value.EndTime
+                            .Value = endTime
                             .ReadOnly = i.Index >= 11 OrElse (i.IsLast AndAlso Not i.IsFirst)
                         End With
                         columnName = NameOf(ColumnNumericUpDown)
                         Dim numericCell As DataGridViewNumericUpDownCell =
                             CType(.Cells(columnName), DataGridViewNumericUpDownCell)
-                        numericCell.Value = value.CarbRatio
+                        numericCell.Value = CDec(value.CarbRatio)
                         numericCell.ReadOnly = False
                         columnName = NameOf(ColumnSave)
                         With CType(.Cells(columnName), DataGridViewDisableButtonCell)
@@ -332,7 +341,7 @@ Public Class InitializePumpSettingsDialog
                     CType(.Cells(columnName), DataGridViewComboBoxCell).Value = Eleven59
 
                     columnName = NameOf(ColumnNumericUpDown)
-                    CType(.Cells(columnName), DataGridViewNumericUpDownCell).Value = 15.0
+                    CType(.Cells(columnName), DataGridViewNumericUpDownCell).Value = 15D
                 End With
                 Me.InitializeDataGridView.Enabled = False
             End If
@@ -406,7 +415,7 @@ Public Class InitializePumpSettingsDialog
             carbRecord.StartTime = TimeOnly.Parse(cell.Value.ToString, provider:=CurrentDateCulture)
             columnName = NameOf(ColumnEnd)
             cell = row.Cells(columnName)
-            carbRecord.EndTime = TimeOnly.Parse(cell.Value.ToString, provider:=CurrentDateCulture)
+            carbRecord.EndTime = DirectCast(cell.Value, TimeOnly)
             columnName = NameOf(ColumnNumericUpDown)
             Dim numericCell As DataGridViewNumericUpDownCell =
                 CType(row.Cells(columnName), DataGridViewNumericUpDownCell)
@@ -465,7 +474,7 @@ Public Class InitializePumpSettingsDialog
         Dim dgv As DataGridView = Me.InitializeDataGridView
         Dim colName As String = NameOf(ColumnEnd)
         Dim cell As DataGridViewCell = dgv.Rows(index:=Me.InitializeDataGridView.RowCount - 1).Cells(colName)
-        cell.Value = Eleven59PM
+        cell.Value = Eleven59
         Me.InitializeDataGridView.Enabled = True
     End Sub
 
