@@ -15,6 +15,24 @@ Imports Xunit
 Public Class ExceptionReportTests
 
     <Fact>
+    Public Sub CleanPatientData_RedactsRepeatedPropertiesWithoutChangingOtherValues()
+        Dim previousPatientData As JsonElement = PatientDataElement
+        Try
+            Const json As String = "{""firstName"":""firstName"",""other"":""firstName""," &
+                                   """items"":[{""FIRSTNAME"":""a,b""},{""firstName"":""last""}]}"
+            Const expected As String = "{""firstName"":""First"",""other"":""firstName""," &
+                                       """items"":[{""FIRSTNAME"":""First""},{""firstName"":""First""}]}"
+            PatientDataElement = json.FromJson(Of JsonElement)()
+
+            Dim actual As String = CleanPatientData()
+
+            Assert.True(condition:=JsonNode.DeepEquals(JsonNode.Parse(json:=expected), JsonNode.Parse(json:=actual)))
+        Finally
+            PatientDataElement = previousPatientData
+        End Try
+    End Sub
+
+    <Fact>
     Public Sub ReportFile_RoundTripsExceptionStackTraceAndCleanPatientData()
         Dim failure As Exception = Nothing
         Dim start As ThreadStart =
@@ -45,13 +63,18 @@ Public Class ExceptionReportTests
                         Dim actualJson As String = dialog.ReportFile(exTextBox:=exceptionBox,
                                                                     traceTextBox:=traceBox,
                                                                     reportNameWithPath:=path)
-                        Assert.Equal(expected:=exceptionText, actual:=exceptionBox.Text)
-                        Assert.Equal(expected:=$"{stackTraceText}{Environment.NewLine}", actual:=traceBox.Text)
-                        Assert.Equal(expected:=expectedJson, actual:=actualJson)
+                        Assert.Equal(expected:=exceptionText,
+                                     actual:=exceptionBox.Text)
+                        Assert.Equal(expected:=$"{stackTraceText}{Environment.NewLine}",
+                                     actual:=traceBox.Text)
+                        Assert.Equal(expected:=expectedJson,
+                                     actual:=actualJson)
 
                         Dim loaded As JsonElement = actualJson.FromJson(Of JsonElement)()
-                        Assert.Equal(expected:="First", actual:=loaded.GetProperty(propertyName:="firstName").GetString())
-                        Assert.Equal(expected:="Last", actual:=loaded.GetProperty(propertyName:="lastName").GetString())
+                        Assert.Equal(expected:="First",
+                                     actual:=loaded.GetProperty(propertyName:="firstName").GetString())
+                        Assert.Equal(expected:="Last",
+                                     actual:=loaded.GetProperty(propertyName:="lastName").GetString())
                         Assert.Equal(expected:=PatientDataElement.GetProperty(propertyName:="medicalDeviceFamily").GetString(),
                                      actual:=loaded.GetProperty(propertyName:="medicalDeviceFamily").GetString())
                         Assert.True(condition:=JsonNode.DeepEquals(expected, JsonNode.Parse(json:=loaded.GetRawText())))
@@ -83,24 +106,6 @@ Public Class ExceptionReportTests
         If failure IsNot Nothing Then
             ExceptionDispatchInfo.Capture(source:=failure).Throw()
         End If
-    End Sub
-
-    <Fact>
-    Public Sub CleanPatientData_RedactsRepeatedPropertiesWithoutChangingOtherValues()
-        Dim previousPatientData As JsonElement = PatientDataElement
-        Try
-            Const json As String = "{""firstName"":""firstName"",""other"":""firstName""," &
-                                   """items"":[{""FIRSTNAME"":""a,b""},{""firstName"":""last""}]}"
-            Const expected As String = "{""firstName"":""First"",""other"":""firstName""," &
-                                       """items"":[{""FIRSTNAME"":""First""},{""firstName"":""First""}]}"
-            PatientDataElement = json.FromJson(Of JsonElement)()
-
-            Dim actual As String = CleanPatientData()
-
-            Assert.True(condition:=JsonNode.DeepEquals(JsonNode.Parse(json:=expected), JsonNode.Parse(json:=actual)))
-        Finally
-            PatientDataElement = previousPatientData
-        End Try
     End Sub
 
 End Class

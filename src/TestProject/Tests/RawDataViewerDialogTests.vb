@@ -103,8 +103,10 @@ Public Class RawDataViewerDialogTests
                     Dim toggle As CheckBox =
                         DirectCast(dialog.Controls.Find(key:="CheckBoxDifferenceOnly", SearchAllChildren)(0), CheckBox)
                     toggle.Checked = True
-                    Assert.Equal(expected:=expectedPrevious, actual:=previous.Text)
-                    Assert.Equal(expected:=expectedCurrent, actual:=current.Text)
+                    Assert.Equal(expected:=expectedPrevious,
+                                 actual:=previous.Text)
+                    Assert.Equal(expected:=expectedCurrent,
+                                 actual:=current.Text)
                 End Using
             End Sub
         RunOnSta(action)
@@ -133,18 +135,26 @@ Public Class RawDataViewerDialogTests
 
                     toggle.Checked = SearchAllChildren
                     Assert.True(condition:=previous.Visible)
-                    Assert.Equal(expected:=DockStyle.None, actual:=current.Dock)
+                    Assert.Equal(expected:=DockStyle.None,
+                                 actual:=current.Dock)
                     Assert.False(condition:=previous.WordWrap)
                     Assert.False(condition:=current.WordWrap)
-                    Assert.Equal(expected:=String.Join(separator:=vbLf, s_value1), actual:=previous.Text)
-                    Assert.Equal(expected:=String.Join(separator:=vbLf, s_value2), actual:=current.Text)
+                    Assert.Equal(expected:=String.Join(separator:=vbLf, s_value1),
+                                 actual:=previous.Text)
+                    Assert.Equal(expected:=String.Join(separator:=vbLf, s_value2),
+                                 actual:=current.Text)
 
                     toggle.Checked = False
-                    Assert.Equal(expected:=previousText, actual:=previous.Text)
-                    Assert.Equal(expected:=currentText, actual:=current.Text)
-                    Assert.Equal(expected:=originalBounds, actual:=current.Bounds)
-                    Assert.Equal(expected:=previousWordWrap, actual:=previous.WordWrap)
-                    Assert.Equal(expected:=currentWordWrap, actual:=current.WordWrap)
+                    Assert.Equal(expected:=previousText,
+                                 actual:=previous.Text)
+                    Assert.Equal(expected:=currentText,
+                                 actual:=current.Text)
+                    Assert.Equal(expected:=originalBounds,
+                                 actual:=current.Bounds)
+                    Assert.Equal(expected:=previousWordWrap,
+                                 actual:=previous.WordWrap)
+                    Assert.Equal(expected:=currentWordWrap,
+                                 actual:=current.WordWrap)
                 End Using
             End Sub
 
@@ -175,7 +185,8 @@ Public Class RawDataViewerDialogTests
                                       wParam:=New IntPtr(value:=SB_BOTTOM),
                                       lParam:=IntPtr.Zero)
                     Assert.True(condition:=ScrollY(control:=current) > 0)
-                    Assert.Equal(expected:=ScrollY(control:=current), actual:=ScrollY(control:=previous))
+                    Assert.Equal(expected:=ScrollY(control:=current),
+                                 actual:=ScrollY(control:=previous))
                 End Using
             End Sub
         RunOnSta(action)
@@ -215,11 +226,14 @@ Public Class RawDataViewerDialogTests
                         DirectCast(dialog.Controls.Find(key:="CheckBoxDifferenceOnly", SearchAllChildren)(0), CheckBox)
                     Dim currentText As String = current.Text
                     Assert.False(condition:=previous.Visible)
-                    Assert.Equal(expected:=DockStyle.Top, actual:=current.Dock)
+                    Assert.Equal(expected:=DockStyle.Top,
+                                 actual:=current.Dock)
                     toggle.Checked = SearchAllChildren
                     Assert.False(condition:=previous.Visible)
-                    Assert.Equal(expected:=DockStyle.Top, actual:=current.Dock)
-                    Assert.Equal(expected:=currentText, actual:=current.Text)
+                    Assert.Equal(expected:=DockStyle.Top,
+                                 actual:=current.Dock)
+                    Assert.Equal(expected:=currentText,
+                                 actual:=current.Text)
                 End Using
             End Sub
 
@@ -241,9 +255,12 @@ Public Class RawDataViewerDialogTests
                     Dim currentText As String = current.Text
                     toggle.Checked = SearchAllChildren
                     Assert.False(condition:=previous.Visible)
-                    Assert.Equal(expected:=DockStyle.Top, actual:=current.Dock)
-                    Assert.Equal(expected:=currentText, actual:=current.Text)
-                    Assert.Contains(expectedSubstring:="""a""", actualString:=current.Text)
+                    Assert.Equal(expected:=DockStyle.Top,
+                                 actual:=current.Dock)
+                    Assert.Equal(expected:=currentText,
+                                 actual:=current.Text)
+                    Assert.Contains(expectedSubstring:="""a""",
+                                    actualString:=current.Text)
                 End Using
             End Sub
         RunOnSta(action)
@@ -275,9 +292,12 @@ Public Class RawDataViewerDialogTests
                         CheckForDataChanges()
                         refresh.PerformClick()
                         Assert.True(condition:=previous.Visible)
-                        Assert.Equal(expected:=DockStyle.None, actual:=current.Dock)
-                        Assert.Equal(expected:="$[""value""] = 2", actual:=previous.Text)
-                        Assert.Equal(expected:="$[""value""] = 3", actual:=current.Text)
+                        Assert.Equal(expected:=DockStyle.None,
+                                     actual:=current.Dock)
+                        Assert.Equal(expected:="$[""value""] = 2",
+                                     actual:=previous.Text)
+                        Assert.Equal(expected:="$[""value""] = 3",
+                                     actual:=current.Text)
                         Dim sideBySideBounds As Rectangle = current.Bounds
                         search.Text = "value"
 
@@ -285,9 +305,12 @@ Public Class RawDataViewerDialogTests
                         CheckForDataChanges()
                         refresh.PerformClick()
                         Assert.False(condition:=previous.Visible)
-                        Assert.Equal(expected:=DockStyle.Top, actual:=current.Dock)
-                        Assert.Contains(expectedSubstring:="""value""", actualString:=current.Text)
-                        Assert.Equal(expected:="", actual:=search.Text)
+                        Assert.Equal(expected:=DockStyle.Top,
+                                     actual:=current.Dock)
+                        Assert.Contains(expectedSubstring:="""value""",
+                                        actualString:=current.Text)
+                        Assert.Equal(expected:="",
+                                     actual:=search.Text)
 
                         PreviousPatientDataElement = New JsonElement()
                         PatientDataElement = Parse(json:="{""new"":4}")
@@ -301,12 +324,17 @@ Public Class RawDataViewerDialogTests
                         CheckForDataChanges()
                         refresh.PerformClick()
                         Assert.True(condition:=previous.Visible)
-                        Assert.Equal(expected:=DockStyle.None, actual:=current.Dock)
-                        Assert.Equal(expected:=sideBySideBounds, actual:=current.Bounds)
-                        Assert.Equal(expected:="$[""new""] = 4", actual:=previous.Text)
-                        Assert.Equal(expected:="$[""new""] = 5", actual:=current.Text)
+                        Assert.Equal(expected:=DockStyle.None,
+                                     actual:=current.Dock)
+                        Assert.Equal(expected:=sideBySideBounds,
+                                     actual:=current.Bounds)
+                        Assert.Equal(expected:="$[""new""] = 4",
+                                     actual:=previous.Text)
+                        Assert.Equal(expected:="$[""new""] = 5",
+                                     actual:=current.Text)
                         toggle.Checked = False
-                        Assert.Contains(expectedSubstring:="""new""", actualString:=previous.Text)
+                        Assert.Contains(expectedSubstring:="""new""",
+                                        actualString:=previous.Text)
                         Assert.Contains(expectedSubstring:="4", actualString:=previous.Text)
                         Assert.Contains(expectedSubstring:="5", actualString:=current.Text)
                     End Using
@@ -415,7 +443,8 @@ Public Class RawDataViewerDialogTests
                         DirectCast(dialog.Controls.Find(key:="CheckBoxDifferenceOnly", SearchAllChildren)(0), CheckBox)
                     toggle.Checked = True
                     Assert.False(condition:=previous.Visible)
-                    Assert.Equal(expected:=DockStyle.Top, actual:=current.Dock)
+                    Assert.Equal(expected:=DockStyle.Top,
+                                 actual:=current.Dock)
                 End Using
             End Sub
         RunOnSta(action)
@@ -448,14 +477,16 @@ Public Class RawDataViewerDialogTests
                     Dim findAll As Button =
                         DirectCast(dialog.Controls.Find(key:="btnFindAll", SearchAllChildren)(0), Button)
                     toggle.Checked = True
-                    Assert.Equal(expected:=RichTextBoxScrollBars.Horizontal, actual:=previous.ScrollBars)
+                    Assert.Equal(expected:=RichTextBoxScrollBars.Horizontal,
+                                 actual:=previous.ScrollBars)
 
                     SendWindowMessage(current.Handle,
                                       message:=WM_VSCROLL,
                                       wParam:=New IntPtr(value:=SB_PAGEDOWN),
                                       lParam:=IntPtr.Zero)
                     Assert.True(condition:=ScrollY(control:=current) > 0)
-                    Assert.Equal(expected:=ScrollY(control:=current), actual:=ScrollY(control:=previous))
+                    Assert.Equal(expected:=ScrollY(control:=current),
+                                 actual:=ScrollY(control:=previous))
 
                     Dim beforePreviousScroll As Integer = ScrollY(control:=previous)
                     SendWindowMessage(previous.Handle,
@@ -463,7 +494,8 @@ Public Class RawDataViewerDialogTests
                                       wParam:=New IntPtr(value:=SB_PAGEDOWN),
                                       lParam:=IntPtr.Zero)
                     Assert.True(condition:=ScrollY(control:=previous) > beforePreviousScroll)
-                    Assert.Equal(expected:=ScrollY(control:=previous), actual:=ScrollY(control:=current))
+                    Assert.Equal(expected:=ScrollY(control:=previous),
+                                 actual:=ScrollY(control:=current))
                     beforePreviousScroll = ScrollY(control:=previous)
                     previous.Focus()
                     Dim mousePosition As Point = previous.PointToScreen(p:=New Point(x:=10, y:=10))
@@ -475,7 +507,8 @@ Public Class RawDataViewerDialogTests
                                       lParam:=New IntPtr(value:=mouseCoordinates))
                     Application.DoEvents()
                     Assert.True(condition:=ScrollY(control:=previous) < beforePreviousScroll)
-                    Assert.Equal(expected:=ScrollY(control:=previous), actual:=ScrollY(control:=current))
+                    Assert.Equal(expected:=ScrollY(control:=previous),
+                                 actual:=ScrollY(control:=current))
 
                     current.Focus()
                     current.Select(start:=0, length:=0)
@@ -487,25 +520,31 @@ Public Class RawDataViewerDialogTests
                                       message:=WM_KEYDOWN,
                                       wParam:=New IntPtr(value:=CInt(Keys.PageDown)),
                                       lParam:=IntPtr.Zero)
-                    Assert.Equal(expected:=ScrollY(control:=current), actual:=ScrollY(control:=previous))
+                    Assert.Equal(expected:=ScrollY(control:=current),
+                                 actual:=ScrollY(control:=previous))
 
                     search.Text = "needle"
-                    Assert.Equal(expected:=ScrollY(control:=current), actual:=ScrollY(control:=previous))
+                    Assert.Equal(expected:=ScrollY(control:=current),
+                                 actual:=ScrollY(control:=previous))
                     Dim beforeNext As Integer = ScrollY(control:=current)
                     findNext.PerformClick()
                     Assert.True(condition:=ScrollY(control:=current) > beforeNext)
-                    Assert.Equal(expected:=ScrollY(control:=current), actual:=ScrollY(control:=previous))
+                    Assert.Equal(expected:=ScrollY(control:=current),
+                                 actual:=ScrollY(control:=previous))
                     findAll.PerformClick()
-                    Assert.Equal(expected:=ScrollY(control:=current), actual:=ScrollY(control:=previous))
+                    Assert.Equal(expected:=ScrollY(control:=current),
+                                 actual:=ScrollY(control:=previous))
 
                     toggle.Checked = False
-                    Assert.Equal(expected:=RichTextBoxScrollBars.Both, actual:=previous.ScrollBars)
+                    Assert.Equal(expected:=RichTextBoxScrollBars.Both,
+                                 actual:=previous.ScrollBars)
                     SendWindowMessage(current.Handle,
                                       message:=WM_VSCROLL,
                                       wParam:=New IntPtr(value:=SB_PAGEDOWN),
                                       lParam:=IntPtr.Zero)
                     Assert.True(condition:=ScrollY(control:=current) > 0)
-                    Assert.Equal(expected:=ScrollY(control:=current), actual:=ScrollY(control:=previous))
+                    Assert.Equal(expected:=ScrollY(control:=current),
+                                 actual:=ScrollY(control:=previous))
                 End Using
             End Sub
         RunOnSta(action)

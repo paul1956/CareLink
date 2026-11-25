@@ -564,11 +564,18 @@ Public Class DataGridViewNumericUpDownCell
                     editingControlBounds.Height)
                 If targetBounds.Width > 0 AndAlso targetBounds.Height > 0 Then
                     s_paintingNumericUpDown.DrawToBitmap(bitmap:=s_renderingBitmap, targetBounds)
-                    graphics.DrawImage(
-                        image:=s_renderingBitmap,
-                        destRect:=New Rectangle(editingControlBounds.Location, editingControlBounds.Size),
-                        srcRect:=targetBounds,
-                        srcUnit:=GraphicsUnit.Pixel)
+                    Dim graphicsState As Drawing2D.GraphicsState = graphics.Save()
+                    Try
+                        graphics.SetClip(rect:=Rectangle.Intersect(cellBounds, clipBounds),
+                                         combineMode:=Drawing2D.CombineMode.Intersect)
+                        graphics.DrawImage(
+                            image:=s_renderingBitmap,
+                            destRect:=New Rectangle(editingControlBounds.Location, editingControlBounds.Size),
+                            srcRect:=targetBounds,
+                            srcUnit:=GraphicsUnit.Pixel)
+                    Finally
+                        graphics.Restore(gstate:=graphicsState)
+                    End Try
                 End If
             End If
             If (paintParts And DataGridViewPaintParts.ErrorIcon) <> 0 Then

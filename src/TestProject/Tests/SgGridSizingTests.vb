@@ -43,7 +43,8 @@ Public Class SgGridSizingTests
                             Next
                             Dim column As DataGridViewColumn =
                                 dgv.Columns(columnName:=NameOf(SummaryRecord.RecordNumber))
-                            Assert.Equal(expected:="Record Number", actual:=column.HeaderText)
+                            Assert.Equal(expected:="Record Number",
+                                         actual:=column.HeaderText)
                             For Each width As Integer In {600, 400}
                                 host.ClientSize = New Size(width, height:=300)
                                 Application.DoEvents()
@@ -107,7 +108,8 @@ Public Class SgGridSizingTests
                         Dim last As DataGridViewColumn = dgv.Columns(columnName:="LastVisible")
                         Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.AllCells,
                                      actual:=dgv.Columns(columnName:="First").AutoSizeMode)
-                        Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill, actual:=last.AutoSizeMode)
+                        Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill,
+                                     actual:=last.AutoSizeMode)
                         Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.AllCells,
                                      actual:=dgv.Columns(columnName:="Hidden").AutoSizeMode)
                         Assert.True(condition:=last.Width >= last.GetPreferredWidth(
@@ -194,7 +196,8 @@ Public Class SgGridSizingTests
                                 Dim glucose As DataGridViewColumn = dgv.Columns(columnName)
                                 Dim headerLines As String() = glucose.HeaderText.Split(separator:=New String() {vbCrLf},
                                                                                        options:=StringSplitOptions.None)
-                                Assert.Equal(expected:=3, actual:=headerLines.Length)
+                                Assert.Equal(expected:=3,
+                                             actual:=headerLines.Length)
                                 Assert.Equal(expected:=DataGridViewTriState.True,
                                              actual:=glucose.HeaderCell.InheritedStyle.WrapMode)
                                 Dim headerFont As Font = glucose.HeaderCell.InheritedStyle.Font
@@ -205,22 +208,31 @@ Public Class SgGridSizingTests
                                 Assert.True(condition:=glucose.Width < TextRenderer.MeasureText(text:=singleLine, font:=headerFont).Width)
                                 Assert.True(condition:=dgv.ColumnHeadersHeight >= 3 * TextRenderer.MeasureText(text:="Glucose", font:=headerFont).Height)
                             Next
-                            Assert.Equal(expected:=DataGridViewAutoSizeColumnsMode.None, actual:=dgv.AutoSizeColumnsMode)
-                            Assert.Equal(expected:=DataGridViewAutoSizeRowsMode.DisplayedCells, actual:=dgv.AutoSizeRowsMode)
-                            Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.None, actual:=state.AutoSizeMode)
-                            Assert.Equal(expected:=DataGridViewTriState.False, actual:=state.DefaultCellStyle.WrapMode)
+                            Assert.Equal(expected:=DataGridViewAutoSizeColumnsMode.None,
+                                         actual:=dgv.AutoSizeColumnsMode)
+                            Assert.Equal(expected:=DataGridViewAutoSizeRowsMode.DisplayedCells,
+                                         actual:=dgv.AutoSizeRowsMode)
+                            Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.None,
+                                         actual:=state.AutoSizeMode)
+                            Assert.Equal(expected:=DataGridViewTriState.False,
+                                         actual:=state.DefaultCellStyle.WrapMode)
                             Assert.Equal(expected:=DataGridViewTriState.False,
                                          actual:=dgv.Rows(index:=0).Cells(state.Index).InheritedStyle.WrapMode)
                             dgv.Rows(index:=0).DefaultCellStyle.WrapMode = DataGridViewTriState.True
                             Dim stateStyle As DataGridViewCellStyle = dgv.Rows(index:=0).Cells(state.Index).GetFormattedStyle()
-                            Assert.Equal(expected:=DataGridViewTriState.False, actual:=stateStyle.WrapMode)
-                            Assert.Equal(expected:=DataGridViewContentAlignment.MiddleCenter, actual:=stateStyle.Alignment)
-                            Assert.Equal(expected:="NO_ERROR_MESSAGE", actual:=dgv.Rows(index:=0).Cells(state.Index).FormattedValue)
+                            Assert.Equal(expected:=DataGridViewTriState.False,
+                                         actual:=stateStyle.WrapMode)
+                            Assert.Equal(expected:=DataGridViewContentAlignment.MiddleCenter,
+                                         actual:=stateStyle.Alignment)
+                            Assert.Equal(expected:="NO_ERROR_MESSAGE",
+                                         actual:=dgv.Rows(index:=0).Cells(state.Index).FormattedValue)
                             Assert.True(condition:=state.Width >= TextRenderer.MeasureText(
                                 text:="NO_ERROR_MESSAGE", font:=stateStyle.Font).Width)
                             dgv.Rows(index:=0).DefaultCellStyle.WrapMode = DataGridViewTriState.NotSet
-                            Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill, actual:=message.AutoSizeMode)
-                            Assert.Equal(expected:=DataGridViewTriState.True, actual:=message.DefaultCellStyle.WrapMode)
+                            Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill,
+                                         actual:=message.AutoSizeMode)
+                            Assert.Equal(expected:=DataGridViewTriState.True,
+                                         actual:=message.DefaultCellStyle.WrapMode)
                             Assert.True(condition:=state.Width >= state.GetPreferredWidth(autoSizeColumnMode:=DataGridViewAutoSizeColumnMode.AllCells, fixedHeight:=True))
                             Assert.True(condition:=message.Width > state.Width)
                             Dim stateWidth As Integer = state.Width
@@ -233,15 +245,19 @@ Public Class SgGridSizingTests
                             host.ClientSize = New Size(width:=host.ClientSize.Width + 200, height:=400)
                             Application.DoEvents()
                             Assert.True(condition:=message.Width > oldMessageWidth)
-                            Assert.Equal(expected:=stateWidth, actual:=state.Width)
+                            Assert.Equal(expected:=stateWidth,
+                                         actual:=state.Width)
 
                             table.DefaultView.Sort = $"{NameOf(SG.RecordNumber)} ASC"
                             Application.DoEvents()
-                            Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.None, actual:=state.AutoSizeMode)
-                            Assert.Equal(expected:=stateWidth, actual:=state.Width)
+                            Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.None,
+                                         actual:=state.AutoSizeMode)
+                            Assert.Equal(expected:=stateWidth,
+                                         actual:=state.Width)
                             Assert.Equal(expected:=DataGridViewTriState.False,
                                          actual:=dgv.Rows(index:=0).Cells(state.Index).InheritedStyle.WrapMode)
-                            Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill, actual:=message.AutoSizeMode)
+                            Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill,
+                                         actual:=message.AutoSizeMode)
                         Next
                     End Using
                 Catch ex As Exception
@@ -278,15 +294,18 @@ Public Class SgGridSizingTests
                         dgv.DefaultCellStyle.Padding = Padding.Empty
                         Dim unpaddedWidth As Integer = column.GetPreferredWidth(
                             autoSizeColumnMode:=DataGridViewAutoSizeColumnMode.AllCellsExceptHeader, fixedHeight:=True)
-                        Assert.Equal(expected:=4, actual:=paddedWidth - unpaddedWidth)
+                        Assert.Equal(expected:=4,
+                                     actual:=paddedWidth - unpaddedWidth)
                         dgv.InitializeDgv()
                         Assert.Equal(expected:=New Padding(left:=2, top:=0, right:=2, bottom:=0),
                                      actual:=dgv.DefaultCellStyle.Padding)
                         Dim style As New DataGridViewCellStyle()
                         style.SetCellStyle(align:=DataGridViewContentAlignment.MiddleRight,
                                            pad:=New Padding(left:=0, top:=1, right:=1, bottom:=1))
-                        Assert.Equal(expected:=New Padding(left:=2, top:=1, right:=3, bottom:=1), actual:=style.Padding)
-                        Assert.Equal(expected:=DataGridViewContentAlignment.MiddleRight, actual:=style.Alignment)
+                        Assert.Equal(expected:=New Padding(left:=2, top:=1, right:=3, bottom:=1),
+                                     actual:=style.Padding)
+                        Assert.Equal(expected:=DataGridViewContentAlignment.MiddleRight,
+                                     actual:=style.Alignment)
                     End Using
                 Catch ex As Exception
                     failure = ex
@@ -329,7 +348,8 @@ Public Class SgGridSizingTests
                         Application.DoEvents()
 
                         Dim column As DataGridViewColumn = dgv.Columns(columnName:=NameOf(SG.RecordNumber))
-                        Assert.Equal(expected:=SortOrder.Descending, actual:=column.HeaderCell.SortGlyphDirection)
+                        Assert.Equal(expected:=SortOrder.Descending,
+                                     actual:=column.HeaderCell.SortGlyphDirection)
                         For Each direction As System.ComponentModel.ListSortDirection In {
                             System.ComponentModel.ListSortDirection.Descending,
                             System.ComponentModel.ListSortDirection.Ascending}
@@ -340,7 +360,8 @@ Public Class SgGridSizingTests
                                                                 SortOrder.Descending)
                             Assert.Equal(expected:=If(expectedGlyph = SortOrder.Ascending, 1, 3),
                                          actual:=CInt(dgv.Rows(index:=0).Cells(index:=0).Value))
-                            Assert.Equal(expected:=expectedGlyph, actual:=column.HeaderCell.SortGlyphDirection)
+                            Assert.Equal(expected:=expectedGlyph,
+                                         actual:=column.HeaderCell.SortGlyphDirection)
                             Dim style As DataGridViewCellStyle = column.HeaderCell.InheritedStyle
                             Dim longestLine As Integer =
                                 column.HeaderText.Split(separator:=New String() {vbCrLf}, options:=StringSplitOptions.None).Max(

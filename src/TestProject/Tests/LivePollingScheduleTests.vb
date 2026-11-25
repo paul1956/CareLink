@@ -33,7 +33,8 @@ Public Class LivePollingScheduleTests
         Dim elapsedSeconds As Long = 0
         For i As Integer = 1 To 4
             Dim interval As Integer = schedule.NextInterval(nowTicks:=elapsedSeconds * Stopwatch.Frequency)
-            Assert.Equal(expected:=50000, actual:=interval)
+            Assert.Equal(expected:=50000,
+                         actual:=interval)
             elapsedSeconds += interval \ 1000
         Next
         Assert.Equal(expected:=60000,
@@ -45,10 +46,12 @@ Public Class LivePollingScheduleTests
         Dim schedule As LivePollingSchedule = ConfirmedSchedule(serverAge:=45000)
         schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 640000, updateTime:=ServerBase + 640000, serverTime:=ServerBase + 685000),
                          observationTicks:=0)
-        Assert.Equal(expected:=60000, actual:=schedule.NextInterval(nowTicks:=0))
+        Assert.Equal(expected:=60000,
+                     actual:=schedule.NextInterval(nowTicks:=0))
         schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 940000, updateTime:=ServerBase + 940000, serverTime:=ServerBase + 985000),
                          observationTicks:=0)
-        Assert.Equal(expected:=50000, actual:=schedule.NextInterval(nowTicks:=0))
+        Assert.Equal(expected:=50000,
+                     actual:=schedule.NextInterval(nowTicks:=0))
     End Sub
 
     <Theory>
@@ -71,7 +74,9 @@ Public Class LivePollingScheduleTests
             Dim aligned As Boolean = False
             For i As Integer = 0 To 6
                 Dim interval As Integer = schedule.NextInterval(nowTicks:=elapsedSeconds * Stopwatch.Frequency)
-                Assert.InRange(actual:=interval, low:=50000, high:=60000)
+                Assert.InRange(actual:=interval,
+                               low:=50000,
+                               high:=60000)
                 If interval = 60000 Then
                     aligned = True
                     Exit For
@@ -87,10 +92,12 @@ Public Class LivePollingScheduleTests
         Dim schedule As LivePollingSchedule = ConfirmedSchedule(serverAge:=45000)
         schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 360000, updateTime:=ServerBase + 360000, serverTime:=ServerBase + 360000, sg:=0),
                          observationTicks:=0)
-        Assert.Equal(expected:=50000, actual:=schedule.NextInterval(nowTicks:=0))
+        Assert.Equal(expected:=50000,
+                     actual:=schedule.NextInterval(nowTicks:=0))
         schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 900000, updateTime:=ServerBase + 900000, serverTime:=ServerBase + 945000),
                          observationTicks:=0)
-        Assert.Equal(expected:=50000, actual:=schedule.NextInterval(nowTicks:=0))
+        Assert.Equal(expected:=50000,
+                     actual:=schedule.NextInterval(nowTicks:=0))
     End Sub
 
     <Fact>
@@ -104,7 +111,8 @@ Public Class LivePollingScheduleTests
                      actual:=schedule.NextInterval(nowTicks:=0))
         schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 300000, updateTime:=ServerBase + 300000, serverTime:=ServerBase + 345000),
                          observationTicks:=0)
-        Assert.Equal(expected:=50000, actual:=schedule.NextInterval(nowTicks:=0))
+        Assert.Equal(expected:=50000,
+                     actual:=schedule.NextInterval(nowTicks:=0))
     End Sub
 
     <Fact>

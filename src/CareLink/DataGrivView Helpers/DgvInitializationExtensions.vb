@@ -176,7 +176,8 @@ Public Module DgvInitializationExtensions
                               flags:=TextFormatFlags.HorizontalCenter Or
                                      TextFormatFlags.VerticalCenter Or
                                      TextFormatFlags.SingleLine Or
-                                     TextFormatFlags.EndEllipsis)
+                                     TextFormatFlags.EndEllipsis Or
+                                     TextFormatFlags.PreserveGraphicsClipping)
     End Sub
 
     Friend Sub PaintDarkUserCheckBox(graphics As Graphics, cellBounds As Rectangle,
@@ -199,10 +200,12 @@ Public Module DgvInitializationExtensions
                                    width:=bounds.Width - 1,
                                    height:=bounds.Height - 1)
             If checkState = CheckState.Checked Then
+                Dim points As Point() =
+                    {New Point(x:=bounds.X + (size \ 4), y:=bounds.Y + (size \ 2)),
+                     New Point(x:=bounds.X + ((size * 2) \ 5), y:=bounds.Y + ((size * 3) \ 4)),
+                     New Point(x:=bounds.X + ((size * 3) \ 4), y:=bounds.Y + (size \ 4))}
                 graphics.DrawLines(pen:=mark,
-                                   {New Point(x:=bounds.X + (size \ 4), y:=bounds.Y + (size \ 2)),
-                                          New Point(x:=bounds.X + ((size * 2) \ 5), y:=bounds.Y + ((size * 3) \ 4)),
-                                          New Point(x:=bounds.X + ((size * 3) \ 4), y:=bounds.Y + (size \ 4))})
+                                   points)
             ElseIf checkState = CheckState.Indeterminate Then
                 graphics.DrawLine(pen:=mark,
                                   x1:=bounds.X + (size \ 4),
@@ -222,39 +225,76 @@ Public Module DgvInitializationExtensions
         Dim button As DataGridViewDisableButtonCell = TryCast(cell, DataGridViewDisableButtonCell)
         If button Is Nothing AndAlso TypeOf cell IsNot DataGridViewCheckBoxCell Then Return
 
-        Dim nativeParts As DataGridViewPaintParts = DataGridViewPaintParts.Background Or
-            DataGridViewPaintParts.SelectionBackground Or DataGridViewPaintParts.Border Or
-            DataGridViewPaintParts.Focus Or DataGridViewPaintParts.ErrorIcon
-        ' The disable-button cell paints its native button even when only other parts are requested.
-        e.Paint(e.ClipBounds, paintParts:=e.PaintParts And nativeParts)
+        If button Is Nothing Then
+            Dim nativeParts As DataGridViewPaintParts = DataGridViewPaintParts.Background Or
+                DataGridViewPaintParts.SelectionBackground Or DataGridViewPaintParts.Border Or
+                DataGridViewPaintParts.Focus Or DataGridViewPaintParts.ErrorIcon
+            e.Paint(e.ClipBounds, paintParts:=e.PaintParts And nativeParts)
+        Else
+            ' PaintBackground calls the button cell's Paint, which also draws a disabled button.
+            If (e.PaintParts And DataGridViewPaintParts.Background) <> 0 Then
+                Using brush As New SolidBrush(color:=e.CellStyle.BackColor)
+                    e.Graphics.FillRectangle(brush, rect:=Rectangle.Intersect(e.CellBounds, e.ClipBounds))
+                End Using
+            End If
+            If (e.PaintParts And DataGridViewPaintParts.Border) <> 0 Then
+                Dim graphicsState As Drawing2D.GraphicsState = e.Graphics.Save()
+                Try
+                    e.Graphics.SetClip(rect:=Rectangle.Intersect(e.CellBounds, e.ClipBounds),
+                                       combineMode:=Drawing2D.CombineMode.Intersect)
+                    Using pen As New Pen(color:=dgv.GridColor)
+                        e.Graphics.DrawLine(pen,
+                                            x1:=e.CellBounds.Right - 1,
+                                            y1:=e.CellBounds.Top,
+                                            x2:=e.CellBounds.Right - 1,
+                                            y2:=e.CellBounds.Bottom - 1)
+                        e.Graphics.DrawLine(pen,
+                                            x1:=e.CellBounds.Left,
+                                            y1:=e.CellBounds.Bottom - 1,
+                                            x2:=e.CellBounds.Right - 1,
+                                            y2:=e.CellBounds.Bottom - 1)
+                    End Using
+                Finally
+                    e.Graphics.Restore(gstate:=graphicsState)
+                End Try
+            End If
+        End If
 
         If (e.PaintParts And DataGridViewPaintParts.ContentForeground) <> 0 Then
             If button IsNot Nothing Then
                 Dim buttonBounds As Rectangle = e.CellBounds
-                If dgv.ShowCellErrors AndAlso Not String.IsNullOrEmpty(e.ErrorText) AndAlso
+                If dgv.ShowCellErrors AndAlso Not String.IsNullOrEmpty(value:=e.ErrorText) AndAlso
                    (e.PaintParts And DataGridViewPaintParts.ErrorIcon) <> 0 Then
                     buttonBounds.Width =
                         Math.Max(0, buttonBounds.Width - CInt(Math.Ceiling(a:=20.0 * dgv.DeviceDpi / 96.0)))
                 End If
-                PaintDarkUserButton(e.Graphics,
-                                    cellBounds:=buttonBounds,
-                                    e.CellStyle.Font,
-                                    text:=Convert.ToString(value:=e.FormattedValue),
-                                    button.Enabled,
-                                    dpi:=dgv.DeviceDpi)
-                If (e.PaintParts And DataGridViewPaintParts.Focus) <> 0 AndAlso
-                    dgv.Focused AndAlso
-                    dgv.CurrentCell Is cell Then
+                Dim graphicsState As Drawing2D.GraphicsState = e.Graphics.Save()
+                Try
+                    e.Graphics.SetClip(rect:=Rectangle.Intersect(a:=e.CellBounds,
+                                                                 b:=e.ClipBounds),
+                                       combineMode:=Drawing2D.CombineMode.Intersect)
+                    PaintDarkUserButton(e.Graphics,
+                                        cellBounds:=buttonBounds,
+                                        e.CellStyle.Font,
+                                        text:=Convert.ToString(value:=e.FormattedValue),
+                                        button.Enabled,
+                                        dpi:=dgv.DeviceDpi)
+                    If (e.PaintParts And DataGridViewPaintParts.Focus) <> 0 AndAlso
+                        dgv.Focused AndAlso
+                        dgv.CurrentCell Is cell Then
 
-                    Dim inset As Integer = Math.Max(2, CInt(Math.Round(a:=4.0 * dgv.DeviceDpi / 96.0)))
-                    Dim focusBounds As Rectangle = Rectangle.Inflate(rect:=buttonBounds, x:=-inset, y:=-inset)
-                    If focusBounds.Width > 0 AndAlso focusBounds.Height > 0 Then
-                        ControlPaint.DrawFocusRectangle(e.Graphics,
-                                                        rectangle:=focusBounds,
-                                                        foreColor:=Color.White,
-                                                        backColor:=Color.FromArgb(red:=56, green:=56, blue:=56))
+                        Dim inset As Integer = Math.Max(2, CInt(Math.Round(a:=4.0 * dgv.DeviceDpi / 96.0)))
+                        Dim focusBounds As Rectangle = Rectangle.Inflate(rect:=buttonBounds, x:=-inset, y:=-inset)
+                        If focusBounds.Width > 0 AndAlso focusBounds.Height > 0 Then
+                            ControlPaint.DrawFocusRectangle(e.Graphics,
+                                                            rectangle:=focusBounds,
+                                                            foreColor:=Color.White,
+                                                            backColor:=Color.FromArgb(red:=56, green:=56, blue:=56))
+                        End If
                     End If
-                End If
+                Finally
+                    e.Graphics.Restore(gstate:=graphicsState)
+                End Try
             Else
                 Dim checkState As CheckState = CheckState.Unchecked
                 If TypeOf e.FormattedValue Is CheckState Then

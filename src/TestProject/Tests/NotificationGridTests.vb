@@ -146,20 +146,26 @@ Public Class NotificationGridTests
                         Application.DoEvents()
                         For refresh As Integer = 1 To 2
                             owner.UpdateNotificationTabs()
-                            Assert.Equal(expected:=0, actual:=GetPendingBindingsCount(owner))
-                            Assert.Equal(expected:=Cursors.Default, actual:=owner.Cursor)
+                            Assert.Equal(expected:=0,
+                                         actual:=GetPendingBindingsCount(owner))
+                            Assert.Equal(expected:=Cursors.Default,
+                                         actual:=owner.Cursor)
                         Next
 
                         BindingStarted(owner, dgv:=otherGrid)
                         Try
                             owner.UpdateNotificationTabs()
-                            Assert.Equal(expected:=1, actual:=GetPendingBindingsCount(owner))
-                            Assert.Equal(expected:=Cursors.WaitCursor, actual:=owner.Cursor)
+                            Assert.Equal(expected:=1,
+                                         actual:=GetPendingBindingsCount(owner))
+                            Assert.Equal(expected:=Cursors.WaitCursor,
+                                         actual:=owner.Cursor)
                         Finally
                             BindingFinished(owner, dgv:=otherGrid)
                         End Try
-                        Assert.Equal(expected:=0, actual:=GetPendingBindingsCount(owner))
-                        Assert.Equal(expected:=Cursors.Default, actual:=owner.Cursor)
+                        Assert.Equal(expected:=0,
+                                     actual:=GetPendingBindingsCount(owner))
+                        Assert.Equal(expected:=Cursors.Default,
+                                     actual:=owner.Cursor)
                     End Using
                 Catch ex As Exception
                     failure = ex
@@ -196,7 +202,8 @@ Public Class NotificationGridTests
                                owner.TabPage11NotificationsCleared,
                                owner.TabPage13SensorGlucose)
                         Application.DoEvents()
-                        Assert.Equal(expected:=Cursors.Default, actual:=owner.Cursor)
+                        Assert.Equal(expected:=Cursors.Default,
+                                     actual:=owner.Cursor)
                     End Using
                 Catch ex As Exception
                     failure = ex
@@ -233,12 +240,15 @@ Public Class NotificationGridTests
                             owner.UpdateNotificationTabs()
                             Application.DoEvents()
                             Dim grids As DataGridView() = panel.Controls.OfType(Of DataGridView)().ToArray()
-                            Assert.Equal(expected:=2, actual:=grids.Length)
+                            Assert.Equal(expected:=2,
+                                         actual:=grids.Length)
                             Dim activeGrid As DataGridView =
                                 Assert.Single(collection:=owner.TlpNotificationActive.Controls.OfType(Of DataGridView)())
-                            Assert.Equal(expected:=BorderStyle.FixedSingle, actual:=activeGrid.BorderStyle)
+                            Assert.Equal(expected:=BorderStyle.FixedSingle,
+                                         actual:=activeGrid.BorderStyle)
                             For Each grid As DataGridView In grids
-                                Assert.Equal(expected:=BorderStyle.FixedSingle, actual:=grid.BorderStyle)
+                                Assert.Equal(expected:=BorderStyle.FixedSingle,
+                                             actual:=grid.BorderStyle)
                                 Assert.True(condition:=grid.Rows.Count > 1)
                                 For Each column As DataGridViewColumn In grid.Columns
                                     If column.Visible Then
@@ -248,7 +258,8 @@ Public Class NotificationGridTests
                                     End If
                                 Next
                                 Dim lastColumn As DataGridViewColumn = grid.Columns(index:=grid.ColumnCount - 1)
-                                Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill, actual:=lastColumn.AutoSizeMode)
+                                Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill,
+                                             actual:=lastColumn.AutoSizeMode)
                                 Assert.Equal(expected:=DataGridViewTriState.True,
                                              actual:=grid.Rows(index:=0).Cells(lastColumn.Index).InheritedStyle.WrapMode)
                                 Assert.Equal(expected:=DataGridViewTriState.False,
@@ -259,7 +270,9 @@ Public Class NotificationGridTests
                                              actual:=panel.RowStyles(index:=panel.Controls.IndexOf(control:=grid)).Height)
                                 Dim rowsHeight As Integer =
                                     grid.Rows.GetRowsHeight(includeFilter:=DataGridViewElementStates.Visible)
-                                Assert.InRange(actual:=grid.ClientSize.Height - rowsHeight, low:=0, high:=2)
+                                Assert.InRange(actual:=grid.ClientSize.Height - rowsHeight,
+                                               low:=0,
+                                               high:=2)
                                 Dim rowIndex As Integer = panel.GetRow(control:=grid)
                                 If rowIndex < panel.RowCount - 1 Then
                                     Assert.InRange(actual:=panel.GetRowHeights()(rowIndex) - rowsHeight,

@@ -37,7 +37,8 @@ Public Class TimeSpanExtensionsTests
     <InlineData(25, "1 day, 1 hour")>
     <InlineData(50, "2 days, 2 hours")>
     Public Sub HoursToDaysAndHours_LongUnits_ReturnsExpectedString(hours As Integer, expected As String)
-        Assert.Equal(expected, actual:=hours.HoursToDaysAndHours(shortHr:=False))
+        Assert.Equal(expected,
+                     actual:=hours.HoursToDaysAndHours(shortHr:=False))
     End Sub
 
     <Theory>
@@ -77,7 +78,8 @@ Public Class TimeSpanExtensionsTests
     <InlineData(61, "1 hour")>
     <InlineData(1441, "1 day, 0 hours")>
     Public Sub MinutesToDaysHoursMinutes_WithoutMinutes_PreservesExistingLayout(totalMinutes As Integer, expected As String)
-        Assert.Equal(expected, actual:=totalMinutes.MinutesToDaysHoursMinutes(showMinutes:=False))
+        Assert.Equal(expected,
+                     actual:=totalMinutes.MinutesToDaysHoursMinutes(showMinutes:=False))
     End Sub
 
     <Theory>
@@ -87,7 +89,8 @@ Public Class TimeSpanExtensionsTests
     <InlineData(25, "1 day and 1 hr")>
     <InlineData(50, "2 days and 2 hrs")>
     Public Sub ToDaysHours_ReturnsExpectedString(hours As Integer, expected As String)
-        Assert.Equal(expected, actual:=hours.ToDaysHours())
+        Assert.Equal(expected,
+                     actual:=hours.ToDaysHours())
     End Sub
 
     <Theory>
@@ -140,7 +143,8 @@ Public Class TimeSpanExtensionsTests
     <InlineData(122, "2 hrs and 2 mins")>
     <InlineData(60000, "1000 hrs")>
     Public Sub ToHrMinText_ReturnsExpectedString(minutes As Long, expected As String)
-        Assert.Equal(expected, actual:=minutes.ToHrMinText())
+        Assert.Equal(expected,
+                     actual:=minutes.ToHrMinText())
     End Sub
 
 End Class

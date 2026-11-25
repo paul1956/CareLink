@@ -48,6 +48,65 @@ Public Class InitializePumpSettingsDialog
         comboBoxCell.ValueMember = "Value"
     End Sub
 
+    Private Sub ApplyGridTheme()
+        Dim dgv As DataGridView = Me.InitializeDataGridView
+        Dim useDark As Boolean = Application.IsDarkModeEnabled AndAlso Not SystemInformation.HighContrast
+        dgv.InitializeGridTheme()
+        If useDark Then
+            Dim cellBack As Color = Color.FromArgb(red:=56, green:=56, blue:=56)
+            Dim selectionBack As Color = Color.FromArgb(red:=0, green:=100, blue:=180)
+            dgv.BackgroundColor = Color.FromArgb(red:=32, green:=32, blue:=32)
+            dgv.GridColor = Color.FromArgb(red:=105, green:=105, blue:=105)
+            With dgv.DefaultCellStyle
+                .BackColor = cellBack
+                .ForeColor = Color.White
+                .SelectionBackColor = selectionBack
+                .SelectionForeColor = Color.White
+            End With
+        Else
+            dgv.BackgroundColor = SystemColors.AppWorkspace
+            dgv.GridColor = SystemColors.ControlDark
+            With dgv.DefaultCellStyle
+                .BackColor = Color.Empty
+                .ForeColor = Color.Empty
+                .SelectionBackColor = Color.Empty
+                .SelectionForeColor = Color.Empty
+            End With
+        End If
+        Dim flatStyle As FlatStyle = If(useDark,
+                                        FlatStyle.Flat,
+                                        FlatStyle.Standard)
+        Me.ColumnStart.FlatStyle = flatStyle
+        Me.ColumnEnd.FlatStyle = flatStyle
+        For Each comboBox As ComboBox In {Me.PumpAitComboBox, Me.InsulinTypeComboBox, Me.TargetSgComboBox}
+            comboBox.FlatStyle = flatStyle
+            comboBox.DrawMode = If(useDark,
+                                   DrawMode.OwnerDrawFixed,
+                                   DrawMode.Normal)
+            comboBox.BackColor = If(useDark,
+                                    Color.FromArgb(red:=56, green:=56, blue:=56),
+                                    Color.Empty)
+            comboBox.ForeColor = If(useDark,
+                                    Color.White,
+                                    Color.Empty)
+            comboBox.Invalidate()
+        Next
+        For Each button As Button In {Me.OK_Button, Me.Cancel_Button}
+            button.FlatStyle = flatStyle
+            button.UseVisualStyleBackColor = Not useDark
+            If useDark Then
+                button.BackColor = Color.FromArgb(red:=56, green:=56, blue:=56)
+                button.ForeColor = Color.White
+                button.FlatAppearance.BorderColor = Color.FromArgb(red:=170, green:=170, blue:=170)
+                button.FlatAppearance.MouseOverBackColor = Color.FromArgb(red:=72, green:=72, blue:=72)
+                button.FlatAppearance.MouseDownBackColor = Color.FromArgb(red:=0, green:=100, blue:=180)
+            Else
+                button.BackColor = Color.Empty
+                button.ForeColor = Color.Empty
+            End If
+        Next
+    End Sub
+
     Private Sub Cancel_Button_Click(sender As Object, e As EventArgs) Handles Cancel_Button.Click
         If _currentUserBackup Is Nothing Then
             If MsgBox(heading:="If you cancel, the program will exit",
@@ -69,8 +128,28 @@ Public Class InitializePumpSettingsDialog
                     Exit Sub
                 End If
                 Me.CurrentUser = _currentUserBackup.Clone
+                Me.DialogResult = DialogResult.OK
+            Else
+                Me.DialogResult = DialogResult.Cancel
             End If
-            Me.DialogResult = DialogResult.OK
+        End If
+    End Sub
+
+    Private Sub FitDialogToGridColumns()
+        Dim dgv As DataGridView = Me.InitializeDataGridView
+        Me.ColumnSave.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+        Me.ColumnSave.Width = Math.Max(Me.ColumnSave.MinimumWidth, Me.ColumnSave.Width)
+        Dim gap As Integer = CInt(Math.Ceiling(12.0 * Me.DeviceDpi / 96.0))
+        Dim needed As Integer = If(dgv.RowHeadersVisible,
+                                   dgv.RowHeadersWidth,
+                                   0) + 2 + gap
+        For Each col As DataGridViewColumn In dgv.Columns
+            needed += col.Width
+        Next
+        Dim delta As Integer = needed - dgv.Width
+        If delta > 0 Then
+            Me.ClientSize = New Size(width:=Me.ClientSize.Width + delta, height:=Me.ClientSize.Height)
+            dgv.Width += delta
         End If
     End Sub
 
@@ -78,16 +157,15 @@ Public Class InitializePumpSettingsDialog
         Handles InitializeDataGridView.CellContentClick
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
-        Dim cell As DataGridViewCell
+        If e.RowIndex < 0 OrElse e.ColumnIndex < 0 Then Return
+        Dim cell As DataGridViewCell = dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex)
+        Dim button As DataGridViewDisableButtonCell = TryCast(cell, DataGridViewDisableButtonCell)
+        If button IsNot Nothing AndAlso Not button.Enabled Then Return
         Dim start As Integer
         Dim columnName As String = dgv.Columns(index:=e.ColumnIndex).Name
         Dim index As Integer
         Select Case columnName
             Case NameOf(ColumnDeleteRow)
-                cell = dgv.Rows(index:=e.RowIndex).Cells(index:=e.ColumnIndex)
-                If Not CType(cell, DataGridViewDisableButtonCell).Enabled Then
-                    Exit Sub
-                End If
                 index = e.RowIndex
                 dgv.Rows.Remove(dataGridViewRow:=dgv.Rows(index))
                 index -= 1
@@ -173,8 +251,28 @@ Public Class InitializePumpSettingsDialog
         End Select
     End Sub
 
+    Private Sub InitializeDataGridView_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) _
+        Handles InitializeDataGridView.CellPainting
+
+        Dim dgv As DataGridView = DirectCast(sender, DataGridView)
+        dgv.PaintDarkUserGridCell(e,
+                                  isDarkMode:=Application.IsDarkModeEnabled,
+                                  highContrast:=SystemInformation.HighContrast)
+    End Sub
+
     Private Sub InitializeDataGridView_Enter(sender As Object, e As EventArgs) Handles InitializeDataGridView.Enter
         Me.InitializeDataGridView.CausesValidation = True
+    End Sub
+
+    Private Sub InitializeDataGridView_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) _
+        Handles InitializeDataGridView.RowsAdded
+
+        For index As Integer = e.RowIndex To e.RowIndex + e.RowCount - 1
+            For Each cell As DataGridViewCell In Me.InitializeDataGridView.Rows(index).Cells
+                ' An explicit empty tooltip prevents WinForms from showing the cell value on keyboard focus.
+                cell.ToolTipText = String.Empty
+            Next
+        Next
     End Sub
 
     Private Sub InitializeDataGridView_Validating(sender As Object, e As CancelEventArgs) _
@@ -206,6 +304,13 @@ Public Class InitializePumpSettingsDialog
 
     Private Sub InitializeDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.InitializeDataGridView.ApplyCellFontIncrease()
+        Me.ApplyGridTheme()
+        For Each column As DataGridViewButtonColumn In {Me.ColumnDeleteRow, Me.ColumnSave}
+            Dim oldTemplate As DataGridViewButtonCell = DirectCast(column.CellTemplate, DataGridViewButtonCell)
+            column.CellTemplate = New ScheduleButtonCell With {
+                .FlatStyle = oldTemplate.FlatStyle,
+                .UseColumnTextForButtonValue = oldTemplate.UseColumnTextForButtonValue}
+        Next
         Me.InitializeDataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells
         Me.ColumnStart.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
         Me.ColumnEnd.DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
@@ -277,16 +382,14 @@ Public Class InitializePumpSettingsDialog
                 col.SortMode = DataGridViewColumnSortMode.NotSortable
             Next
             If Me.CurrentUser.CarbRatios.Count > 0 Then
-                For Each i As IndexClass(Of CarbRatioRecord) In
-                    Me.CurrentUser.CarbRatios.WithIndex
-
-                    Dim value As CarbRatioRecord = i.Value
+                For Each carbRatio As IndexClass(Of CarbRatioRecord) In Me.CurrentUser.CarbRatios.WithIndex
+                    Dim value As CarbRatioRecord = carbRatio.Value
                     .Rows.Add()
-                    With .Rows(i.Index)
+                    With .Rows(carbRatio.Index)
                         Dim columnName As String = NameOf(ColumnDeleteRow)
                         Dim cell As DataGridViewDisableButtonCell =
                             CType(.Cells(columnName), DataGridViewDisableButtonCell)
-                        cell.Enabled = i.IsLast
+                        cell.Enabled = carbRatio.IsLast AndAlso Not carbRatio.IsFirst
                         columnName = NameOf(ColumnStart)
                         With CType(.Cells(columnName), DataGridViewComboBoxCell)
                             .Items.Add(item:=value.StartTime.ToHoursMinutes)
@@ -307,7 +410,7 @@ Public Class InitializePumpSettingsDialog
                                             currentEnd:=endTime)
                         With comboBoxCell
                             .Value = endTime
-                            .ReadOnly = i.Index >= 11 OrElse (i.IsLast AndAlso Not i.IsFirst)
+                            .ReadOnly = carbRatio.Index >= 11 OrElse (carbRatio.IsLast AndAlso Not carbRatio.IsFirst)
                         End With
                         columnName = NameOf(ColumnNumericUpDown)
                         Dim numericCell As DataGridViewNumericUpDownCell =
@@ -317,7 +420,7 @@ Public Class InitializePumpSettingsDialog
                         columnName = NameOf(ColumnSave)
                         With CType(.Cells(columnName), DataGridViewDisableButtonCell)
                             .ReadOnly = False
-                            .Enabled = i.IsLast
+                            .Enabled = carbRatio.IsLast
                         End With
                     End With
                 Next
@@ -348,6 +451,13 @@ Public Class InitializePumpSettingsDialog
         End With
 
         Me.InitializeDataGridView.ConfigureContentColumnSizing()
+        For Each buttonColumn As DataGridViewButtonColumn In {Me.ColumnDeleteRow, Me.ColumnSave}
+            Dim textWidth As Integer =
+                TextRenderer.MeasureText(text:=buttonColumn.Text,
+                                         font:=Me.InitializeDataGridView.DefaultCellStyle.Font).Width
+            buttonColumn.MinimumWidth = textWidth + CInt(Math.Ceiling(a:=24.0 * Me.DeviceDpi / 96.0))
+        Next
+        Me.FitDialogToGridColumns()
         Me.OK_Button.Enabled = _fromPdf AndAlso Me.InsulinTypeComboBox.SelectedIndex >= 0
     End Sub
 
@@ -456,6 +566,39 @@ Public Class InitializePumpSettingsDialog
             control.Enabled = True
             e.Cancel = True
         End If
+    End Sub
+
+    Private Sub TargetSgComboBox_Leave(sender As Object, e As EventArgs) Handles TargetSgComboBox.Leave
+        CType(sender, ComboBox).Enabled = False
+    End Sub
+
+    Private Sub ThemedComboBox_DrawItem(sender As Object, e As DrawItemEventArgs) _
+            Handles PumpAitComboBox.DrawItem, InsulinTypeComboBox.DrawItem, TargetSgComboBox.DrawItem
+
+        Dim comboBox As ComboBox = DirectCast(sender, ComboBox)
+        If e.Index < 0 Then Return
+
+        ' Only list items are highlighted; the selected value shown in the box stays dark so text is readable.
+        Dim isListHighlight As Boolean = (e.State And DrawItemState.Selected) <> 0 AndAlso
+                                         (e.State And DrawItemState.ComboBoxEdit) = 0
+        Dim back As Color = If(isListHighlight,
+                               Color.FromArgb(red:=0, green:=100, blue:=180),
+                               Color.FromArgb(red:=56, green:=56, blue:=56))
+        ' Disabled text is kept fairly bright so a locked value is still easy to read.
+        Dim fore As Color = If(comboBox.Enabled,
+                               Color.White,
+                               Color.FromArgb(red:=200, green:=200, blue:=200))
+        Using brush As New SolidBrush(color:=back)
+            e.Graphics.FillRectangle(brush, rect:=e.Bounds)
+        End Using
+        TextRenderer.DrawText(dc:=e.Graphics,
+                              text:=comboBox.GetItemText(item:=comboBox.Items(index:=e.Index)),
+                              font:=comboBox.Font,
+                              bounds:=e.Bounds,
+                              foreColor:=fore,
+                              flags:=TextFormatFlags.Left Or
+                                     TextFormatFlags.VerticalCenter Or
+                                     TextFormatFlags.EndEllipsis)
     End Sub
 
     Private Sub UseAITAdvancedDecayCheckBox_Click(sender As Object, e As EventArgs) _

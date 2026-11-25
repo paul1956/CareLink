@@ -2,6 +2,7 @@
 ' The .NET Foundation licenses this file to you under the MIT license.
 ' See the LICENSE file in the project root for more information.
 
+Imports System.Drawing
 Imports System.Runtime.ExceptionServices
 Imports System.Threading
 Imports System.Windows.Forms
@@ -29,6 +30,68 @@ Public Class InitializePumpSettingsDialogTests
         If failure IsNot Nothing Then
             ExceptionDispatchInfo.Capture(source:=failure).Throw()
         End If
+    End Sub
+
+    <Fact>
+    Public Sub DisabledButtons_DoNotChangeSchedule()
+        Dim action As Action =
+            Sub()
+                Dim originalUser As CurrentUserRecord = SystemVariables.CurrentUser
+                Try
+                    Dim user As New CurrentUserRecord(userName:="Test", useAdvancedAitDecay:=CheckState.Unchecked)
+                    user.CarbRatios.Add(item:=New CarbRatioRecord With {
+                                           .StartTime = New TimeOnly(hour:=0, minute:=0),
+                                           .EndTime = New TimeOnly(hour:=7, minute:=30), .CarbRatio = 5.0F})
+                    user.CarbRatios.Add(item:=New CarbRatioRecord With {
+                                           .StartTime = New TimeOnly(hour:=7, minute:=30),
+                                           .EndTime = Eleven59, .CarbRatio = 8.0F})
+                    SystemVariables.CurrentUser = user
+                    Using dialog As New InitializePumpSettingsDialog(CurrentUserRecord:=user, newUser:=False)
+                        dialog.Show()
+                        Dim grid As DataGridView = dialog.InitializeDataGridView
+                        Dim onClick As Reflection.MethodInfo =
+                            GetType(DataGridView).GetMethod(name:="OnCellContentClick",
+                                                            bindingAttr:=Reflection.BindingFlags.Instance Or Reflection.BindingFlags.NonPublic)
+                        Dim deleteCell As DataGridViewColumnControls.DataGridViewDisableButtonCell =
+                                               DirectCast(grid.Rows(index:=0).Cells(columnName:=NameOf(dialog.ColumnDeleteRow)),
+                                                          DataGridViewColumnControls.DataGridViewDisableButtonCell)
+                        Assert.IsType(Of ScheduleButtonCell)([object]:=deleteCell)
+                        Assert.False(condition:=deleteCell.Enabled)
+                        Dim contentClicks As Integer = 0
+                        AddHandler grid.CellContentClick, Sub(sender As Object, e As DataGridViewCellEventArgs)
+                                                              contentClicks += 1
+                                                          End Sub
+                        Dim onKeyUp As Reflection.MethodInfo = GetType(ScheduleButtonCell).GetMethod(
+                                               name:="OnKeyUp", bindingAttr:=Reflection.BindingFlags.Instance Or Reflection.BindingFlags.NonPublic)
+                        onKeyUp.Invoke(obj:=deleteCell, parameters:={New KeyEventArgs(Keys.Space), 0})
+                        Assert.Equal(expected:=0,
+                                     actual:=contentClicks)
+                        onClick.Invoke(obj:=grid,
+                                       parameters:={New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnDeleteRow.Index, rowIndex:=0)})
+                        onClick.Invoke(obj:=grid,
+                                       parameters:={New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnSave.Index, rowIndex:=0)})
+                        Assert.Equal(expected:=2,
+                                     actual:=grid.RowCount)
+                        For Each row As DataGridViewRow In grid.Rows
+                            For Each cell As DataGridViewCell In row.Cells
+                                Assert.Equal(expected:=String.Empty,
+                                             actual:=cell.ToolTipText)
+                            Next
+                        Next
+                        Assert.True(condition:=grid.ShowCellErrors)
+                        Assert.True(condition:=DirectCast(grid.Rows(index:=1).Cells(columnName:=NameOf(dialog.ColumnDeleteRow)),
+                                                          DataGridViewColumnControls.DataGridViewDisableButtonCell).Enabled)
+                        onClick.Invoke(obj:=grid,
+                                       parameters:={New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnDeleteRow.Index, rowIndex:=1)})
+                        Assert.Equal(expected:=1,
+                                     actual:=grid.RowCount)
+                    End Using
+                Finally
+                    SystemVariables.CurrentUser = originalUser
+                End Try
+            End Sub
+
+        RunOnSta(action)
     End Sub
 
     <Theory>
@@ -91,6 +154,45 @@ Public Class InitializePumpSettingsDialogTests
     End Sub
 
     <Fact>
+    Public Sub NumericCell_PartialRepaintStaysWithinClip()
+        Dim action As Action =
+            Sub()
+                Using form As New Form(),
+                        grid As New DataGridView(),
+                        bitmap As New Bitmap(width:=220, height:=40),
+                        graphics As Graphics = Graphics.FromImage(bitmap)
+                    grid.AllowUserToAddRows = False
+                    grid.Columns.Add(dataGridViewColumn:=New DataGridViewNumericUpDownColumn With {
+                                        .CellTemplate = New TestNumericCell()})
+                    grid.Columns.Add(columnName:="Next", headerText:="Next")
+                    grid.Rows.Add()
+                    form.Controls.Add(value:=grid)
+                    form.Show()
+                    grid.CurrentCell = grid.Rows(index:=0).Cells(index:=1)
+                    Dim cell As TestNumericCell = DirectCast(grid.Rows(index:=0).Cells(index:=0), TestNumericCell)
+                    Dim bounds As New Rectangle(x:=20, y:=5, width:=100, height:=30)
+                    Dim clip As New Rectangle(x:=40, y:=5, width:=40, height:=30)
+                    graphics.Clear(color:=Color.Magenta)
+                    cell.PaintForTest(graphics, clip, bounds, style:=cell.InheritedStyle)
+                    Dim painted As Boolean = False
+                    For x As Integer = 0 To bitmap.Width - 1
+                        For y As Integer = 0 To bitmap.Height - 1
+                            If Not clip.Contains(x, y) Then
+                                Assert.Equal(expected:=Color.Magenta.ToArgb(),
+                                             actual:=bitmap.GetPixel(x, y).ToArgb())
+                            ElseIf bitmap.GetPixel(x, y).ToArgb() <> Color.Magenta.ToArgb() Then
+                                painted = True
+                            End If
+                        Next
+                    Next
+                    Assert.True(condition:=painted)
+                End Using
+            End Sub
+
+        RunOnSta(action)
+    End Sub
+
+    <Fact>
     Public Sub SaveRow_AddsNextPeriodAndCompletesAtEndOfDay()
         RunOnSta(Sub()
                      Dim originalUser As CurrentUserRecord = SystemVariables.CurrentUser
@@ -115,6 +217,10 @@ Public Class InitializePumpSettingsDialogTests
                              Assert.Equal(expected:=2,
                                           actual:=grid.RowCount)
                              Dim lastRow As DataGridViewRow = grid.Rows(index:=1)
+                             For Each cell As DataGridViewCell In lastRow.Cells
+                                 Assert.Equal(expected:=String.Empty,
+                                              actual:=cell.ToolTipText)
+                             Next
                              Assert.Equal(expected:=New TimeOnly(hour:=7, minute:=30).ToHoursMinutes(),
                                           actual:=CStr(lastRow.Cells(columnName:=NameOf(dialog.ColumnStart)).Value))
                              Dim endCell As DataGridViewCell = lastRow.Cells(columnName:=NameOf(dialog.ColumnEnd))
@@ -134,4 +240,16 @@ Public Class InitializePumpSettingsDialogTests
                  End Sub)
     End Sub
 
+    Private Class TestNumericCell
+        Inherits DataGridViewNumericUpDownCell
+
+        Public Sub PaintForTest(graphics As Graphics, clip As Rectangle, bounds As Rectangle,
+                                style As DataGridViewCellStyle)
+            MyBase.Paint(graphics, clip, bounds, rowIndex:=0, cellState:=DataGridViewElementStates.None,
+                         value:=5D, formattedValue:="5.0", errorText:=String.Empty, cellStyle:=style,
+                         advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
+                         paintParts:=DataGridViewPaintParts.ContentForeground)
+        End Sub
+
+    End Class
 End Class

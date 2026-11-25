@@ -91,7 +91,10 @@ Public Class ControlExtensionsTests
             dgv.Columns.Add(columnName:="Value", headerText:="Value")
             dgv.AllowUserToAddRows = False
             dgv.Rows.Add(count:=2)
-            dgv.RowsDefaultCellStyle.BackColor = If(isDark, Color.FromArgb(red:=48, green:=48, blue:=48), Color.White)
+            dgv.RowsDefaultCellStyle.BackColor =
+                    If(isDark,
+                       Color.FromArgb(red:=48, green:=48, blue:=48),
+                       Color.White)
             dgv.SetAlternatingRowColor(isDarkMode:=isDark, highContrast:=False)
 
             For Each textColor As Color In {Color.Red, Color.Yellow}
@@ -110,12 +113,12 @@ Public Class ControlExtensionsTests
                                     dgv.AlternatingRowsDefaultCellStyle.BackColor))
                 ContrastRatio(first:=style.ForeColor, second:=style.BackColor).Should().
                     BeGreaterThanOrEqualTo(expected:=4.5)
-                ContrastRatio(first:=style.SelectionForeColor, second:=style.SelectionBackColor).Should().
-                    BeGreaterThanOrEqualTo(expected:=4.5)
+                ContrastRatio(first:=style.SelectionForeColor,
+                              second:=style.SelectionBackColor).Should().BeGreaterThanOrEqualTo(expected:=4.5)
                 dgv.RowsDefaultCellStyle.BackColor.Should().
                     Be(expected:=If(isDark,
-Color.FromArgb(red:=48, green:=48, blue:=48),
-Color.White))
+                                    Color.FromArgb(red:=48, green:=48, blue:=48),
+                                    Color.White))
             Next
         End Using
     End Sub
@@ -349,10 +352,10 @@ Color.White))
                 Be(expected:=defaults.RowsDefaultCellStyle.SelectionForeColor)
             Dim expectedStripe As Color =
                 If(SystemInformation.HighContrast,
-Color.Empty,
+                   Color.Empty,
                    If(Application.IsDarkModeEnabled,
-Color.FromArgb(red:=72, green:=72, blue:=72),
-Color.FromArgb(red:=230, green:=230, blue:=230)))
+                      Color.FromArgb(red:=72, green:=72, blue:=72),
+                      Color.FromArgb(red:=230, green:=230, blue:=230)))
             dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().Be(expected:=expectedStripe)
             dgv.AlternatingRowsDefaultCellStyle.ForeColor.Should().
                 Be(expected:=defaults.AlternatingRowsDefaultCellStyle.ForeColor)
@@ -401,15 +404,19 @@ Color.FromArgb(red:=230, green:=230, blue:=230)))
     Public Sub PaintDarkUserButton_UsesDarkFillForEnabledAndDisabled(enabled As Boolean)
         Using bitmap As New Bitmap(width:=100, height:=30),
               graphics As Graphics = Graphics.FromImage(bitmap),
-              font As New Font("Segoe UI", 9.0F)
-            graphics.Clear(Color.Black)
-            PaintDarkUserButton(graphics, New Rectangle(x:=0, y:=0, width:=100, height:=30),
-                                font, "Delete Row", enabled, dpi:=96)
+              font As New Font(familyName:="Segoe UI", emSize:=9.0F)
+            graphics.Clear(color:=Color.Black)
+            PaintDarkUserButton(graphics,
+                                cellBounds:=New Rectangle(x:=0, y:=0, width:=100, height:=30),
+                                font,
+                                text:="Delete Row", enabled, dpi:=96)
             bitmap.GetPixel(x:=4, y:=4).ToArgb().Should().
                 Be(expected:=Color.FromArgb(red:=56, green:=56, blue:=56).ToArgb())
-            Dim expectedBorder As Integer = If(enabled, 170, 105)
+            Dim expectedBorder As Integer = If(enabled,
+                                               170,
+                                               105)
             bitmap.GetPixel(x:=2, y:=2).ToArgb().Should().
-                Be(expected:=Color.FromArgb(expectedBorder, expectedBorder, expectedBorder).ToArgb())
+                Be(expected:=Color.FromArgb(red:=expectedBorder, green:=expectedBorder, blue:=expectedBorder).ToArgb())
         End Using
     End Sub
 
@@ -420,8 +427,11 @@ Color.FromArgb(red:=230, green:=230, blue:=230)))
     Public Sub PaintDarkUserCheckBox_UsesThemeColorsAndState(state As CheckState, red As Integer,
                                                             green As Integer, blue As Integer)
         Using bitmap As New Bitmap(width:=40, height:=40), graphics As Graphics = Graphics.FromImage(bitmap)
-            graphics.Clear(Color.Black)
-            PaintDarkUserCheckBox(graphics, New Rectangle(x:=0, y:=0, width:=40, height:=40), state, dpi:=96)
+            graphics.Clear(color:=Color.Black)
+            PaintDarkUserCheckBox(graphics,
+                                  cellBounds:=New Rectangle(x:=0, y:=0, width:=40, height:=40),
+                                  checkState:=state,
+                                  dpi:=96)
             bitmap.GetPixel(x:=14, y:=14).ToArgb().Should().
                 Be(expected:=Color.FromArgb(red, green, blue).ToArgb())
             bitmap.GetPixel(x:=13, y:=13).ToArgb().Should().
@@ -439,27 +449,83 @@ Color.FromArgb(red:=230, green:=230, blue:=230)))
     <Theory>
     <InlineData(False)>
     <InlineData(True)>
+    Public Sub PaintDarkUserGridCell_ButtonPaintDoesNotTouchAdjacentCell(enabled As Boolean)
+        Using dgv As New DataGridView(), bitmap As New Bitmap(width:=240, height:=40),
+              graphics As Graphics = Graphics.FromImage(bitmap)
+            graphics.Clear(color:=Color.Magenta)
+            dgv.AllowUserToAddRows = False
+            Dim column As New DataGridViewColumnControls.DataGridViewDisableButtonColumn With {
+                .CellTemplate = New CountingButtonCell()}
+            dgv.Columns.Add(dataGridViewColumn:=column)
+            dgv.Columns.Add(columnName:="Next", headerText:="Next")
+            dgv.Rows.Add()
+            Dim cell As CountingButtonCell = DirectCast(dgv.Rows(index:=0).Cells(index:=0), CountingButtonCell)
+            cell.Enabled = enabled
+            Dim bounds As New Rectangle(x:=20, y:=5, width:=100, height:=30)
+            Dim clip As New Rectangle(x:=40, y:=5, width:=40, height:=30)
+            Dim args As New DataGridViewCellPaintingEventArgs(dataGridView:=dgv,
+                                                              graphics:=graphics,
+                                                              clipBounds:=clip,
+                                                              cellBounds:=bounds,
+                                                              rowIndex:=0,
+                                                              columnIndex:=0,
+                                                              cellState:=DataGridViewElementStates.None,
+                                                              value:="Delete Row",
+                                                              formattedValue:="Delete Row",
+                                                              errorText:=Nothing,
+                                                              cellStyle:=cell.InheritedStyle,
+                                                              advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
+                                                              paintParts:=DataGridViewPaintParts.All)
+            dgv.PaintDarkUserGridCell(args, isDarkMode:=True, highContrast:=False)
+            Assert.Equal(expected:=0,
+                         actual:=cell.PaintCalls)
+            Assert.NotEqual(expected:=Color.Magenta.ToArgb(),
+                            actual:=bitmap.GetPixel(x:=45, y:=10).ToArgb())
+            For x As Integer = 0 To bitmap.Width - 1
+                For y As Integer = 0 To bitmap.Height - 1
+                    If Not clip.Contains(x, y) Then
+                        Assert.Equal(expected:=Color.Magenta.ToArgb(),
+                                     actual:=bitmap.GetPixel(x, y).ToArgb())
+                    End If
+                Next
+            Next
+        End Using
+    End Sub
+
+    <Theory>
+    <InlineData(False)>
+    <InlineData(True)>
     Public Sub PaintDarkUserGridCell_DrawsButtonForEnabledAndDisabledCells(enabled As Boolean)
         Using dgv As New DataGridView(), bitmap As New Bitmap(width:=100, height:=30),
               graphics As Graphics = Graphics.FromImage(bitmap)
             dgv.AllowUserToAddRows = False
-            dgv.Columns.Add(New DataGridViewColumnControls.DataGridViewDisableButtonColumn())
+            dgv.Columns.Add(dataGridViewColumn:=New DataGridViewColumnControls.DataGridViewDisableButtonColumn())
             dgv.Rows.Add()
             Dim cell As DataGridViewColumnControls.DataGridViewDisableButtonCell =
                 DirectCast(dgv.Rows(index:=0).Cells(index:=0), DataGridViewColumnControls.DataGridViewDisableButtonCell)
             cell.Enabled = enabled
             Dim bounds As New Rectangle(x:=0, y:=0, width:=100, height:=30)
-            Dim args As New DataGridViewCellPaintingEventArgs(dgv, graphics, bounds, bounds, 0, 0,
-                DataGridViewElementStates.None, value:="Delete Row", formattedValue:="Delete Row", errorText:=Nothing,
+            Dim args As New DataGridViewCellPaintingEventArgs(dataGridView:=dgv,
+                                                              graphics:=graphics,
+                                                              clipBounds:=bounds,
+                                                              cellBounds:=bounds,
+                                                              rowIndex:=0,
+                                                              columnIndex:=0,
+                                                              cellState:=DataGridViewElementStates.None,
+                                                              value:="Delete Row",
+                                                              formattedValue:="Delete Row",
+                                                              errorText:=Nothing,
                 cellStyle:=cell.InheritedStyle, advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
                 paintParts:=DataGridViewPaintParts.All)
-            dgv.PaintDarkUserGridCell(args, isDarkMode:=True, highContrast:=False)
+            dgv.PaintDarkUserGridCell(e:=args,
+                                      isDarkMode:=True,
+                                      highContrast:=False)
             args.Handled.Should().BeTrue()
             bitmap.GetPixel(x:=4, y:=4).ToArgb().Should().
                 Be(expected:=Color.FromArgb(red:=56, green:=56, blue:=56).ToArgb())
             Dim expectedBorder As Integer = If(enabled, 170, 105)
             bitmap.GetPixel(x:=2, y:=2).ToArgb().Should().
-                Be(expected:=Color.FromArgb(expectedBorder, expectedBorder, expectedBorder).ToArgb())
+                Be(expected:=Color.FromArgb(red:=expectedBorder, green:=expectedBorder, blue:=expectedBorder).ToArgb())
         End Using
     End Sub
 
@@ -467,21 +533,32 @@ Color.FromArgb(red:=230, green:=230, blue:=230)))
     <InlineData(False)>
     <InlineData(True)>
     Public Sub PaintDarkUserGridCell_DrawsFormattedCheckBoxValue(value As Boolean)
-        Using dgv As New DataGridView(), bitmap As New Bitmap(width:=40, height:=40),
+        Using dgv As New DataGridView(),
+              bitmap As New Bitmap(width:=40, height:=40),
               graphics As Graphics = Graphics.FromImage(bitmap)
+
             dgv.AllowUserToAddRows = False
-            dgv.Columns.Add(New DataGridViewCheckBoxColumn())
+            dgv.Columns.Add(dataGridViewColumn:=New DataGridViewCheckBoxColumn())
             dgv.Rows.Add()
             Dim bounds As New Rectangle(x:=0, y:=0, width:=40, height:=40)
-            Dim args As New DataGridViewCellPaintingEventArgs(dgv, graphics, bounds, bounds, 0, 0,
-                DataGridViewElementStates.None, value, formattedValue:=value, errorText:=Nothing,
-                cellStyle:=dgv.Rows(index:=0).Cells(index:=0).InheritedStyle,
-                advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
-                paintParts:=DataGridViewPaintParts.ContentForeground)
-            dgv.PaintDarkUserGridCell(args, isDarkMode:=True, highContrast:=False)
+            Dim args As New DataGridViewCellPaintingEventArgs(dataGridView:=dgv,
+                                                              graphics:=graphics,
+                                                              clipBounds:=bounds,
+                                                              cellBounds:=bounds,
+                                                              rowIndex:=0,
+                                                              columnIndex:=0,
+                                                              cellState:=DataGridViewElementStates.None,
+                                                              value:=value,
+                                                              formattedValue:=value,
+                                                              errorText:=Nothing,
+                                                              cellStyle:=dgv.Rows(index:=0).Cells(index:=0).InheritedStyle,
+                                                              advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
+                                                              paintParts:=DataGridViewPaintParts.ContentForeground)
+            dgv.PaintDarkUserGridCell(e:=args, isDarkMode:=True, highContrast:=False)
             args.Handled.Should().BeTrue()
-            Dim expected As Color = If(value, Color.FromArgb(red:=0, green:=100, blue:=180),
-Color.FromArgb(red:=56, green:=56, blue:=56))
+            Dim expected As Color = If(value,
+                                       Color.FromArgb(red:=0, green:=100, blue:=180),
+                                       Color.FromArgb(red:=56, green:=56, blue:=56))
             bitmap.GetPixel(x:=14, y:=14).ToArgb().Should().Be(expected:=expected.ToArgb())
         End Using
     End Sub
@@ -494,14 +571,23 @@ Color.FromArgb(red:=56, green:=56, blue:=56))
         Using dgv As New DataGridView(), bitmap As New Bitmap(width:=40, height:=40),
               graphics As Graphics = Graphics.FromImage(bitmap)
             dgv.AllowUserToAddRows = False
-            dgv.Columns.Add(New DataGridViewCheckBoxColumn())
+            dgv.Columns.Add(dataGridViewColumn:=New DataGridViewCheckBoxColumn())
             dgv.Rows.Add()
             Dim bounds As New Rectangle(x:=0, y:=0, width:=40, height:=40)
-            Dim args As New DataGridViewCellPaintingEventArgs(dgv, graphics, bounds, bounds, 0, 0,
-                DataGridViewElementStates.None, value:=False, formattedValue:=False, errorText:=Nothing,
-                cellStyle:=dgv.DefaultCellStyle, advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
-                paintParts:=DataGridViewPaintParts.All)
-            dgv.PaintDarkUserGridCell(args, isDarkMode, highContrast)
+            Dim args As New DataGridViewCellPaintingEventArgs(dataGridView:=dgv,
+                                                              graphics:=graphics,
+                                                              clipBounds:=bounds,
+                                                              cellBounds:=bounds,
+                                                              rowIndex:=0,
+                                                              columnIndex:=0,
+                                                              cellState:=DataGridViewElementStates.None,
+                                                              value:=False,
+                                                              formattedValue:=False,
+                                                              errorText:=Nothing,
+                                                              cellStyle:=dgv.DefaultCellStyle,
+                                                              advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
+                                                              paintParts:=DataGridViewPaintParts.All)
+            dgv.PaintDarkUserGridCell(e:=args, isDarkMode, highContrast)
             args.Handled.Should().BeFalse()
         End Using
     End Sub
@@ -554,4 +640,35 @@ Color.FromArgb(red:=56, green:=56, blue:=56))
         End Using
     End Sub
 
+    Private Class CountingButtonCell
+        Inherits DataGridViewColumnControls.DataGridViewDisableButtonCell
+
+        Public Property PaintCalls As Integer
+
+        Protected Overrides Sub Paint(graphics As Graphics,
+                                      clipBounds As Rectangle,
+                                      cellBounds As Rectangle,
+                                      rowIndex As Integer,
+                                      elementState As DataGridViewElementStates,
+                                      value As Object,
+                                      formattedValue As Object,
+                                      errorText As String,
+                                      cellStyle As DataGridViewCellStyle,
+                                      advancedBorderStyle As DataGridViewAdvancedBorderStyle,
+                                      paintParts As DataGridViewPaintParts)
+            Me.PaintCalls += 1
+            MyBase.Paint(graphics,
+                         clipBounds,
+                         cellBounds,
+                         rowIndex,
+                         elementState,
+                         value,
+                         formattedValue,
+                         errorText,
+                         cellStyle,
+                         advancedBorderStyle,
+                         paintParts)
+        End Sub
+
+    End Class
 End Class
