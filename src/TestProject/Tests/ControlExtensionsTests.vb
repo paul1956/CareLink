@@ -12,6 +12,9 @@ Imports Xunit
 <Collection("Sequential")>
 Public Class ControlExtensionsTests
 
+    Private Const BindingAttr As BindingFlags =
+        BindingFlags.Instance Or BindingFlags.NonPublic
+
     Private Shared Function ContrastRatio(first As Color, second As Color) As Double
         Dim firstLuminance As Double = RelativeLuminance(color:=first)
         Dim secondLuminance As Double = RelativeLuminance(color:=second)
@@ -86,7 +89,8 @@ Public Class ControlExtensionsTests
     <InlineData(1, True)>
     <InlineData(0, False)>
     <InlineData(1, False)>
-    Public Sub CellFormattingApplyColor_PreservesLegendColorWithReadableContrast(rowIndex As Integer, isDark As Boolean)
+    Public Sub CellFormattingApplyColor_PreservesLegendColorWithReadableContrast(rowIndex As Integer,
+                                                                                 isDark As Boolean)
         Using dgv As New DataGridView()
             dgv.Columns.Add(columnName:="Value", headerText:="Value")
             dgv.AllowUserToAddRows = False
@@ -274,9 +278,8 @@ Public Class ControlExtensionsTests
             dgv.AlternatingRowsDefaultCellStyle.BackColor = Color.Magenta
             dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.Magenta
 
-            Const bindingAttr As BindingFlags = BindingFlags.Instance Or BindingFlags.NonPublic
             Dim onSystemColorsChanged As MethodInfo =
-                GetType(Control).GetMethod(name:="OnSystemColorsChanged", bindingAttr)
+                GetType(Control).GetMethod(name:="OnSystemColorsChanged", BindingAttr)
             onSystemColorsChanged.Invoke(obj:=dgv, parameters:={EventArgs.Empty})
             dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().
                 Be(expected:=expected.AlternatingRowsDefaultCellStyle.BackColor)
@@ -416,7 +419,9 @@ Public Class ControlExtensionsTests
                                                170,
                                                105)
             bitmap.GetPixel(x:=2, y:=2).ToArgb().Should().
-                Be(expected:=Color.FromArgb(red:=expectedBorder, green:=expectedBorder, blue:=expectedBorder).ToArgb())
+                Be(expected:=Color.FromArgb(red:=expectedBorder,
+                                            green:=expectedBorder,
+                                            blue:=expectedBorder).ToArgb())
         End Using
     End Sub
 
@@ -525,7 +530,9 @@ Public Class ControlExtensionsTests
                 Be(expected:=Color.FromArgb(red:=56, green:=56, blue:=56).ToArgb())
             Dim expectedBorder As Integer = If(enabled, 170, 105)
             bitmap.GetPixel(x:=2, y:=2).ToArgb().Should().
-                Be(expected:=Color.FromArgb(red:=expectedBorder, green:=expectedBorder, blue:=expectedBorder).ToArgb())
+                Be(expected:=Color.FromArgb(red:=expectedBorder,
+                                            green:=expectedBorder,
+                                            blue:=expectedBorder).ToArgb())
         End Using
     End Sub
 
@@ -587,7 +594,9 @@ Public Class ControlExtensionsTests
                                                               cellStyle:=dgv.DefaultCellStyle,
                                                               advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
                                                               paintParts:=DataGridViewPaintParts.All)
-            dgv.PaintDarkUserGridCell(e:=args, isDarkMode, highContrast)
+            dgv.PaintDarkUserGridCell(e:=args,
+                                      isDarkMode,
+                                      highContrast)
             args.Handled.Should().BeFalse()
         End Using
     End Sub
@@ -604,7 +613,9 @@ Public Class ControlExtensionsTests
     <Theory>
     <InlineData(True, False, 72)>
     <InlineData(False, False, 230)>
-    Public Sub SetAlternatingRowColor_UsesThemeStripe(isDarkMode As Boolean, highContrast As Boolean, shade As Integer)
+    Public Sub SetAlternatingRowColor_UsesThemeStripe(isDarkMode As Boolean,
+                                                      highContrast As Boolean,
+                                                      shade As Integer)
         Using dgv As New DataGridView()
             dgv.SetAlternatingRowColor(isDarkMode, highContrast)
             dgv.AlternatingRowsDefaultCellStyle.BackColor.Should().

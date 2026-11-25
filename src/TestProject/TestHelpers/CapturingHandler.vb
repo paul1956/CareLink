@@ -15,7 +15,8 @@ Friend Class CapturingHandler
         _factory = factory
     End Sub
 
-    Protected Overrides Function SendAsync(request As HttpRequestMessage, cancellationToken As CancellationToken) As Task(Of HttpResponseMessage)
+    Protected Overrides Function SendAsync(request As HttpRequestMessage,
+                                           cancellationToken As CancellationToken) As Task(Of HttpResponseMessage)
         Return Task.FromResult(_factory.Invoke(arg:=request))
     End Function
 

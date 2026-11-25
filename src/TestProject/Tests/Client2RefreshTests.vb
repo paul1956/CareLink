@@ -13,6 +13,9 @@ Imports Xunit
 
 Public Class Client2RefreshTests
 
+    Private Const BindingAttr As BindingFlags =
+        BindingFlags.Instance Or BindingFlags.NonPublic
+
     <Fact>
     Public Async Function DoRefreshAsync_IncludesMagIdentifierHeader_WhenPresent() As Task
         ' Arrange
@@ -120,13 +123,12 @@ Public Class Client2RefreshTests
         Dim tokenOldPath As String = GetTestDataFile(fileName:="token_old.json")
         Dim tokenJson As String = File.ReadAllText(path:=tokenOldPath)
         Dim tokenElement As JsonElement = JsonSerializer.Deserialize(Of JsonElement)(json:=tokenJson)
-        Dim bindingAttr As BindingFlags = BindingFlags.NonPublic Or BindingFlags.Instance
         Dim tokenProp As PropertyInfo =
-                client.GetType().GetProperty(NameOf(Client2.TokenDataElement), bindingAttr)
+            client.GetType().GetProperty(NameOf(Client2.TokenDataElement), BindingAttr)
         If tokenProp IsNot Nothing Then
             tokenProp.SetValue(obj:=client, value:=tokenElement)
         Else
-            Dim tokenField As FieldInfo = client.GetType().GetField(name:="_tokenDataElement", bindingAttr)
+            Dim tokenField As FieldInfo = client.GetType().GetField(name:="_tokenDataElement", BindingAttr)
             If tokenField IsNot Nothing Then
                 tokenField.SetValue(obj:=client, value:=tokenElement)
             Else

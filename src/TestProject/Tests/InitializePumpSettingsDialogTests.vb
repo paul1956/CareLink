@@ -3,6 +3,7 @@
 ' See the LICENSE file in the project root for more information.
 
 Imports System.Drawing
+Imports System.Reflection
 Imports System.Runtime.ExceptionServices
 Imports System.Threading
 Imports System.Windows.Forms
@@ -11,6 +12,9 @@ Imports Xunit
 
 <Collection("Sequential")>
 Public Class InitializePumpSettingsDialogTests
+
+    Private Const BindingAttr As BindingFlags =
+        BindingFlags.Instance Or BindingFlags.NonPublic
 
     Private Shared Sub RunOnSta(action As Action)
         Dim failure As Exception = Nothing
@@ -49,9 +53,9 @@ Public Class InitializePumpSettingsDialogTests
                     Using dialog As New InitializePumpSettingsDialog(CurrentUserRecord:=user, newUser:=False)
                         dialog.Show()
                         Dim grid As DataGridView = dialog.InitializeDataGridView
-                        Dim onClick As Reflection.MethodInfo =
+                        Dim onClick As MethodInfo =
                             GetType(DataGridView).GetMethod(name:="OnCellContentClick",
-                                                            bindingAttr:=Reflection.BindingFlags.Instance Or Reflection.BindingFlags.NonPublic)
+                                                            BindingAttr)
                         Dim deleteCell As DataGridViewColumnControls.DataGridViewDisableButtonCell =
                                                DirectCast(grid.Rows(index:=0).Cells(columnName:=NameOf(dialog.ColumnDeleteRow)),
                                                           DataGridViewColumnControls.DataGridViewDisableButtonCell)
@@ -61,9 +65,11 @@ Public Class InitializePumpSettingsDialogTests
                         AddHandler grid.CellContentClick, Sub(sender As Object, e As DataGridViewCellEventArgs)
                                                               contentClicks += 1
                                                           End Sub
-                        Dim onKeyUp As Reflection.MethodInfo = GetType(ScheduleButtonCell).GetMethod(
-                                               name:="OnKeyUp", bindingAttr:=Reflection.BindingFlags.Instance Or Reflection.BindingFlags.NonPublic)
-                        onKeyUp.Invoke(obj:=deleteCell, parameters:={New KeyEventArgs(Keys.Space), 0})
+                        Dim onKeyUp As MethodInfo =
+                            GetType(ScheduleButtonCell).GetMethod(name:="OnKeyUp",
+                                                                  BindingAttr)
+                        onKeyUp.Invoke(obj:=deleteCell,
+                                       parameters:={New KeyEventArgs(keyData:=Keys.Space), 0})
                         Assert.Equal(expected:=0,
                                      actual:=contentClicks)
                         onClick.Invoke(obj:=grid,
@@ -208,9 +214,9 @@ Public Class InitializePumpSettingsDialogTests
                              grid.Enabled = True
                              grid.Rows(index:=0).Cells(columnName:=NameOf(dialog.ColumnEnd)).Value =
                                  New TimeOnly(hour:=7, minute:=30)
-                             Dim onClick As Reflection.MethodInfo = GetType(DataGridView).GetMethod(
+                             Dim onClick As MethodInfo = GetType(DataGridView).GetMethod(
                                  name:="OnCellContentClick",
-                                 bindingAttr:=Reflection.BindingFlags.Instance Or Reflection.BindingFlags.NonPublic)
+                                 BindingAttr)
                              onClick.Invoke(obj:=grid,
                                             parameters:={New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnSave.Index, rowIndex:=0)})
 

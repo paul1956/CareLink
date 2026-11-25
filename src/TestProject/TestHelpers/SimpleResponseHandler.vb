@@ -11,7 +11,8 @@ Friend Class SimpleResponseHandler
 
     Public Property ResponseFactory As Func(Of HttpRequestMessage, HttpResponseMessage)
 
-    Protected Overrides Function SendAsync(request As HttpRequestMessage, cancellationToken As CancellationToken) As Task(Of HttpResponseMessage)
+    Protected Overrides Function SendAsync(request As HttpRequestMessage,
+                                           cancellationToken As CancellationToken) As Task(Of HttpResponseMessage)
         Return If(Me.ResponseFactory IsNot Nothing,
                   Task.FromResult(Me.ResponseFactory.Invoke(arg:=request)),
                   Task.FromResult(New HttpResponseMessage(statusCode:=HttpStatusCode.NotFound)))

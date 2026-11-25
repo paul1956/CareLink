@@ -17,8 +17,8 @@ Friend Module ControlInspector
                 .Y = root.Location.Y,
                 .Width = root.Width,
                 .Height = root.Height,
-                .AnchorStyle = ControlInfo.FormatAnchor(root.Anchor),
-                .BorderStyle = GetBorderStyle(root)}}
+                .AnchorStyle = ControlInfo.FormatAnchor(a:=root.Anchor),
+                .BorderStyle = GetBorderStyle(ctrl:=root)}}
 
         'Traverse the control tree so nested controls (e.g., inside Panels) are included.
         Dim seen As New HashSet(Of Control)()
@@ -44,8 +44,8 @@ Friend Module ControlInspector
                         .Y = current.Location.Y,
                         .Width = current.Width,
                         .Height = current.Height,
-                        .AnchorStyle = ControlInfo.FormatAnchor(current.Anchor),
-                        .BorderStyle = GetBorderStyle(current)})
+                        .AnchorStyle = ControlInfo.FormatAnchor(a:=current.Anchor),
+                        .BorderStyle = GetBorderStyle(ctrl:=current)})
                 Else
                     ' Handle unnamed controls specially: include SplitterPanel children so we can
                     ' show which panel (Panel1/Panel2) they are instead of stopping in the debugger.
@@ -68,8 +68,8 @@ Friend Module ControlInspector
                             .Y = current.Location.Y,
                             .Width = current.Width,
                             .Height = current.Height,
-                            .AnchorStyle = ControlInfo.FormatAnchor(current.Anchor),
-                            .BorderStyle = GetBorderStyle(current)})
+                            .AnchorStyle = ControlInfo.FormatAnchor(a:=current.Anchor),
+                            .BorderStyle = GetBorderStyle(ctrl:=current)})
                     Else
                         ' Ignore native scrollbar windows created by other controls (e.g., DataGridView).
                         ' If the unnamed control is not a native ScrollBar or other native window,
@@ -126,7 +126,7 @@ Friend Module ControlInspector
 
     Private Function GetNearestNamedParentName(parent As Control) As String
         While parent IsNot Nothing
-            If Not String.IsNullOrWhiteSpace(parent.Name) Then
+            If Not String.IsNullOrWhiteSpace(value:=parent.Name) Then
                 Return parent.Name
             End If
             parent = parent.Parent
@@ -172,9 +172,9 @@ Friend Module ControlInspector
 
         Try
             ' Many controls have a BorderStyle property (e.g., TextBox, Panel derived), access via reflection
-            Dim pi As PropertyInfo = ctrl.GetType().GetProperty("BorderStyle")
+            Dim pi As PropertyInfo = ctrl.GetType().GetProperty(name:="BorderStyle")
             If pi IsNot Nothing Then
-                Dim val As Object = pi.GetValue(ctrl)
+                Dim val As Object = pi.GetValue(obj:=ctrl)
                 If val IsNot Nothing Then
                     Return val.ToString()
                 End If

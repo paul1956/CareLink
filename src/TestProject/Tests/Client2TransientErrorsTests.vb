@@ -21,7 +21,8 @@ Public Class Client2TransientErrorsTests
         handler.EnqueueException(ex:=New HttpRequestException(message:="transient 1"))
         handler.EnqueueException(ex:=New HttpRequestException(message:="transient 2"))
 
-        Dim validContentPath As String = Path.Combine(AppContext.BaseDirectory, "TestData", "patient_valid_content.json")
+        Dim validContentPath As String =
+            Path.Combine(AppContext.BaseDirectory, "TestData", "patient_valid_content.json")
         Dim validContent As String = File.ReadAllText(path:=validContentPath)
         Dim responseFactory As Func(Of HttpResponseMessage) =
             Function()
@@ -73,7 +74,8 @@ Public Class Client2TransientErrorsTests
 
         Public ReadOnly Property RequestBodies As New List(Of String)
 
-        Protected Overrides Async Function SendAsync(request As HttpRequestMessage, cancellationToken As CancellationToken) As Task(Of HttpResponseMessage)
+        Protected Overrides Async Function SendAsync(request As HttpRequestMessage,
+                                                     cancellationToken As CancellationToken) As Task(Of HttpResponseMessage)
             Me.RequestBodies.Add(item:=Await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwaitFalse())
             If _exceptions.Count > 0 Then
                 Throw _exceptions.Dequeue()
