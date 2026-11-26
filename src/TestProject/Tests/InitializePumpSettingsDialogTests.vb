@@ -57,8 +57,9 @@ Public Class InitializePumpSettingsDialogTests
                             GetType(DataGridView).GetMethod(name:="OnCellContentClick",
                                                             BindingAttr)
                         Dim deleteCell As DataGridViewColumnControls.DataGridViewDisableButtonCell =
-                                               DirectCast(grid.Rows(index:=0).Cells(columnName:=NameOf(dialog.ColumnDeleteRow)),
-                                                          DataGridViewColumnControls.DataGridViewDisableButtonCell)
+                            DirectCast(grid.Rows(index:=0).Cells(columnName:=NameOf(dialog.ColumnDeleteRow)),
+                                        DataGridViewColumnControls.DataGridViewDisableButtonCell)
+
                         Assert.IsType(Of ScheduleButtonCell)([object]:=deleteCell)
                         Assert.False(condition:=deleteCell.Enabled)
                         Dim contentClicks As Integer = 0
@@ -72,10 +73,15 @@ Public Class InitializePumpSettingsDialogTests
                                        parameters:={New KeyEventArgs(keyData:=Keys.Space), 0})
                         Assert.Equal(expected:=0,
                                      actual:=contentClicks)
+
+                        Dim parameters As Object() =
+                            {New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnDeleteRow.Index,
+                                                           rowIndex:=0)}
                         onClick.Invoke(obj:=grid,
-                                       parameters:={New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnDeleteRow.Index, rowIndex:=0)})
+                                       parameters)
                         onClick.Invoke(obj:=grid,
-                                       parameters:={New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnSave.Index, rowIndex:=0)})
+                                       parameters:={New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnSave.Index,
+                                                                                  rowIndex:=0)})
                         Assert.Equal(expected:=2,
                                      actual:=grid.RowCount)
                         For Each row As DataGridViewRow In grid.Rows
@@ -85,10 +91,15 @@ Public Class InitializePumpSettingsDialogTests
                             Next
                         Next
                         Assert.True(condition:=grid.ShowCellErrors)
-                        Assert.True(condition:=DirectCast(grid.Rows(index:=1).Cells(columnName:=NameOf(dialog.ColumnDeleteRow)),
-                                                          DataGridViewColumnControls.DataGridViewDisableButtonCell).Enabled)
+                        Dim dataGridViewDisableButtonCell As DataGridViewColumnControls.DataGridViewDisableButtonCell =
+                            DirectCast(grid.Rows(index:=1).Cells(columnName:=NameOf(dialog.ColumnDeleteRow)),
+                                       DataGridViewColumnControls.DataGridViewDisableButtonCell)
+                        Assert.True(condition:=dataGridViewDisableButtonCell.Enabled)
+                        Dim parameters1 As Object() =
+                            {New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnDeleteRow.Index,
+                                                           rowIndex:=1)}
                         onClick.Invoke(obj:=grid,
-                                       parameters:={New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnDeleteRow.Index, rowIndex:=1)})
+                                       parameters:=parameters1)
                         Assert.Equal(expected:=1,
                                      actual:=grid.RowCount)
                     End Using
@@ -134,7 +145,9 @@ Public Class InitializePumpSettingsDialogTests
                                      actual:=DirectCast(endCell.Value, TimeOnly))
                         Assert.False(condition:=String.IsNullOrEmpty(value:=CStr(endCell.FormattedValue)))
                         Dim choices As KeyValuePair(Of String, TimeOnly)() =
-                            DirectCast(DirectCast(endCell, DataGridViewComboBoxCell).DataSource, KeyValuePair(Of String, TimeOnly)())
+                            DirectCast(DirectCast(endCell, DataGridViewComboBoxCell).DataSource,
+                                                  KeyValuePair(Of String, TimeOnly)())
+
                         Dim keySelector As Func(Of KeyValuePair(Of String, TimeOnly), TimeOnly) =
                             Function(item As KeyValuePair(Of String, TimeOnly))
                                 Return item.Value
@@ -217,8 +230,9 @@ Public Class InitializePumpSettingsDialogTests
                              Dim onClick As MethodInfo = GetType(DataGridView).GetMethod(
                                  name:="OnCellContentClick",
                                  BindingAttr)
-                             onClick.Invoke(obj:=grid,
-                                            parameters:={New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnSave.Index, rowIndex:=0)})
+                             Dim parameters As Object() =
+                                {New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnSave.Index, rowIndex:=0)}
+                             onClick.Invoke(obj:=grid, parameters)
 
                              Assert.Equal(expected:=2,
                                           actual:=grid.RowCount)
@@ -233,10 +247,14 @@ Public Class InitializePumpSettingsDialogTests
                              Assert.Equal(expected:=Eleven59,
                                           actual:=DirectCast(endCell.Value, TimeOnly))
                              Assert.False(condition:=String.IsNullOrEmpty(value:=CStr(endCell.FormattedValue)))
-                             Assert.IsType(Of Decimal)([object]:=lastRow.Cells(columnName:=NameOf(dialog.ColumnNumericUpDown)).Value)
 
-                             onClick.Invoke(obj:=grid,
-                                            parameters:={New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnSave.Index, rowIndex:=1)})
+                             Dim value As Object =
+                                lastRow.Cells(columnName:=NameOf(dialog.ColumnNumericUpDown)).Value
+                             Assert.IsType(Of Decimal)([object]:=value)
+
+                             Dim parameters1 As Object() =
+                                {New DataGridViewCellEventArgs(columnIndex:=dialog.ColumnSave.Index, rowIndex:=1)}
+                             onClick.Invoke(obj:=grid, parameters:=parameters1)
                              Assert.True(condition:=dialog.OK_Button.Enabled)
                              Assert.False(condition:=grid.Enabled)
                          End Using

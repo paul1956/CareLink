@@ -209,10 +209,15 @@ Public Class OAuthBrowserForm
                 Dim idx As Integer = text.IndexOf(value:=$"{param}=", ComparisonType)
                 If idx < 0 Then Return Nothing
                 Dim startIdx As Integer = idx + param.Length + 1
-                Dim sb As New Text.StringBuilder()
+                Dim sb As New StringBuilder()
                 For index As Integer = startIdx To text.Length - 1
                     Dim ch As Char = text(index)
-                    If ch = "&"c OrElse ch = "#"c OrElse ch = ControlChars.Cr OrElse ch = ControlChars.Lf OrElse Char.IsWhiteSpace(ch) OrElse ch = """"c Then
+                    If ch = "&"c OrElse
+                       ch = "#"c OrElse
+                       ch = ControlChars.Cr OrElse
+                       ch = ControlChars.Lf OrElse
+                       Char.IsWhiteSpace(c:=ch) OrElse
+                       ch = """"c Then
                         Exit For
                     End If
                     sb.Append(value:=ch)
@@ -404,7 +409,10 @@ Public Class OAuthBrowserForm
             Return
         End If
         Try
-            LogMessage(message:=$"OAuthBrowserForm.NavigationCompleted: Url={currentUrl}, IsSuccess={e.IsSuccess}, WebErrorStatus={e.WebErrorStatus}", verbose:=True)
+            Dim message As String =
+                "OAuthBrowserForm.NavigationCompleted: " &
+                $"Url={currentUrl}, IsSuccess={e.IsSuccess}, WebErrorStatus={e.WebErrorStatus}"
+            LogMessage(message, verbose:=True)
         Catch
         End Try
         ' If we've reached the redirect URI, capture result and close.
@@ -428,7 +436,9 @@ Public Class OAuthBrowserForm
 
     Private Sub WebView21_NavigationStarting(sender As Object, e As CoreWebView2NavigationStartingEventArgs)
         Try
-            LogMessage(message:=$"OAuthBrowserForm.NavigationStarting: Uri={e.Uri}, IsUserInitiated={e.IsUserInitiated}", verbose:=True)
+            Dim message As String =
+                $"OAuthBrowserForm.NavigationStarting: Uri={e.Uri}, IsUserInitiated={e.IsUserInitiated}"
+            LogMessage(message, verbose:=True)
         Catch
         End Try
 

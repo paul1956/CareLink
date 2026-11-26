@@ -77,7 +77,8 @@ Public Class TimeSpanExtensionsTests
     <InlineData(1, "1 minute")>
     <InlineData(61, "1 hour")>
     <InlineData(1441, "1 day, 0 hours")>
-    Public Sub MinutesToDaysHoursMinutes_WithoutMinutes_PreservesExistingLayout(totalMinutes As Integer, expected As String)
+    Public Sub MinutesToDaysHoursMinutes_WithoutMinutes_PreservesExistingLayout(totalMinutes As Integer,
+                                                                                expected As String)
         Assert.Equal(expected,
                      actual:=totalMinutes.MinutesToDaysHoursMinutes(showMinutes:=False))
     End Sub

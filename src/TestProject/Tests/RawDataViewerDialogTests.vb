@@ -4,7 +4,6 @@
 
 Imports System.Drawing
 Imports System.Runtime.ExceptionServices
-Imports System.Runtime.InteropServices
 Imports System.Text.Json
 Imports System.Threading
 Imports System.Windows.Forms
@@ -63,38 +62,31 @@ Public Class RawDataViewerDialogTests
         Return position.Y
     End Function
 
-    <DllImport("user32.dll", EntryPoint:="SendMessageW")>
-    Private Shared Function SendPointMessage(handle As IntPtr,
-                                             message As Integer,
-                                             wParam As IntPtr,
-                                             ByRef position As Point) As IntPtr
-    End Function
-
-    <DllImport("user32.dll", EntryPoint:="SendMessageW")>
-    Private Shared Function SendWindowMessage(handle As IntPtr,
-                                              message As Integer,
-                                              wParam As IntPtr,
-                                              lParam As IntPtr) As IntPtr
-    End Function
-
     <Theory>
     <InlineData("{""a"":1}", "{""a"":1,""b"":null}", "", "$[""b""] = null")>
     <InlineData("{""a"":1,""b"":null}", "{""a"":1}", "$[""b""] = null", "")>
-    <InlineData("{""a"":1,""b"":2}", "{""b"":3,""a"":4}", "$[""a""] = 1" & vbLf & "$[""b""] = 2", "$[""a""] = 4" & vbLf & "$[""b""] = 3")>
+    <InlineData("{""a"":1,""b"":2}", "{""b"":3,""a"":4}", "$[""a""] = 1" & vbLf &
+        "$[""b""] = 2", "$[""a""] = 4" & vbLf & "$[""b""] = 3")>
     <InlineData("{""a"":{}}", "{""a"":{""b"":1}}", "$[""a""] = {}" & vbLf, vbLf & "$[""a""][""b""] = 1")>
-    <InlineData("{""items"":[{""id"":1},{""id"":2},{""id"":3}]}", "{""items"":[{""id"":4},{""id"":1},{""id"":2}]}", vbLf & "$[""items""][2][""id""] = 3", "$[""items""][0][""id""] = 4" & vbLf)>
+    <InlineData("{""items"":[{""id"":1},{""id"":2},{""id"":3}]}",
+        "{""items"":[{""id"":4},{""id"":1},{""id"":2}]}", vbLf &
+        "$[""items""][2][""id""] = 3", "$[""items""][0][""id""] = 4" & vbLf)>
     <InlineData("[1,2]", "[0,1,2]", "", "$[0] = 0")>
     <InlineData("[null,null]", "[null]", "$[1] = null", "")>
     <InlineData("{""items"":[]}", "{""items"":[1]}", "$[""items""] = []" & vbLf, vbLf & "$[""items""][0] = 1")>
     <InlineData("[1,1,2]", "[1,2,2]", "$[1] = 1" & vbLf, vbLf & "$[2] = 2")>
-    <InlineData("{""a"":[1,2],""b"":[3]}", "{""a"":[3,1],""b"":[2]}", vbLf & "$[""a""][1] = 2" & vbLf & "$[""b""][0] = 3", "$[""a""][0] = 3" & vbLf & vbLf & "$[""b""][0] = 2")>
-    <InlineData("{""items"":[{""id"":1,""value"":2}]}", "{""items"":[{""id"":1,""value"":3}]}", "$[""items""][0][""value""] = 2", "$[""items""][0][""value""] = 3")>
-    <InlineData("{""items"":[{""values"":[1,2]}]}", "{""items"":[{""values"":[3,1]}]}", vbLf & "$[""items""][0][""values""][1] = 2", "$[""items""][0][""values""][0] = 3" & vbLf)>
+    <InlineData("{""a"":[1,2],""b"":[3]}", "{""a"":[3,1],""b"":[2]}", vbLf & "$[""a""][1] = 2" & vbLf &
+        "$[""b""][0] = 3", "$[""a""][0] = 3" & vbLf & vbLf & "$[""b""][0] = 2")>
+    <InlineData("{""items"":[{""id"":1,""value"":2}]}", "{""items"":[{""id"":1,""value"":3}]}",
+        "$[""items""][0][""value""] = 2", "$[""items""][0][""value""] = 3")>
+    <InlineData("{""items"":[{""values"":[1,2]}]}", "{""items"":[{""values"":[3,1]}]}", vbLf &
+        "$[""items""][0][""values""][1] = 2", "$[""items""][0][""values""][0] = 3" & vbLf)>
     Public Sub DifferenceToggle_AlignsMissingAndReorderedValues(previousJson As String, currentJson As String,
-                                                                  expectedPrevious As String, expectedCurrent As String)
+                                                                expectedPrevious As String, expectedCurrent As String)
         Dim action As Action =
             Sub()
-                Using dialog As New RawDataViewerDialog(Parse(previousJson), Parse(currentJson))
+                Using dialog As New RawDataViewerDialog(prevJson:=Parse(json:=previousJson),
+                                                        json:=Parse(json:=currentJson))
                     dialog.Show()
                     Dim previous As RichTextBox =
                         DirectCast(dialog.Controls.Find(key:="PreviousRawDataRTB", SearchAllChildren)(0), RichTextBox)
@@ -119,6 +111,7 @@ Public Class RawDataViewerDialogTests
                 Using dialog As New RawDataViewerDialog(
                     prevJson:=Parse(json:="{""same"":1,""changed"":2,""removed"":null,""items"":[1,2]}"),
                     json:=Parse(json:="{""same"":1,""changed"":3,""added"":{},""items"":[1,4,5]}"))
+
                     dialog.Show()
                     Dim previous As RichTextBox =
                     DirectCast(dialog.Controls.Find(key:="PreviousRawDataRTB", SearchAllChildren)(0), RichTextBox)
@@ -170,8 +163,10 @@ Public Class RawDataViewerDialogTests
                 For index As Integer = 0 To 159
                     previousFields.Add(item:=$"{JsonSerializer.Serialize(value:=$"removed{index}")}:1")
                 Next
-                Using dialog As New RawDataViewerDialog(prevJson:=Parse(json:=$"{{{String.Join(separator:=",", values:=previousFields)}}}"),
-                                                        json:=Parse(json:="{""common"":1}"))
+                Using dialog As New RawDataViewerDialog(
+                    prevJson:=Parse(json:=$"{{{String.Join(separator:=",", values:=previousFields)}}}"),
+                    json:=Parse(json:="{""common"":1}"))
+
                     dialog.Show()
                     Dim previous As RichTextBox =
                         DirectCast(dialog.Controls.Find(key:="PreviousRawDataRTB", SearchAllChildren)(0), RichTextBox)
@@ -277,13 +272,18 @@ Public Class RawDataViewerDialogTests
                                                             json:=Parse(json:="{""value"":1}"))
                         dialog.Show()
                         Dim previous As RichTextBox =
-                            DirectCast(dialog.Controls.Find(key:="PreviousRawDataRTB", SearchAllChildren)(0), RichTextBox)
+                            DirectCast(dialog.Controls.Find(key:="PreviousRawDataRTB", SearchAllChildren)(0),
+                                       RichTextBox)
+
                         Dim current As RichTextBox =
                             DirectCast(dialog.Controls.Find(key:="RawDataRTB", SearchAllChildren)(0), RichTextBox)
                         Dim toggle As CheckBox =
-                            DirectCast(dialog.Controls.Find(key:="CheckBoxDifferenceOnly", SearchAllChildren)(0), CheckBox)
+                            DirectCast(dialog.Controls.Find(key:="CheckBoxDifferenceOnly", SearchAllChildren)(0),
+                                       CheckBox)
+
                         Dim refresh As Button =
                             DirectCast(dialog.Controls.Find(key:="btnRefresh", SearchAllChildren)(0), Button)
+
                         Dim search As TextBox =
                             DirectCast(dialog.Controls.Find(key:="txtFind", SearchAllChildren)(0), TextBox)
 
@@ -461,8 +461,10 @@ Public Class RawDataViewerDialogTests
                     previousFields.Add(item:=$"{JsonSerializer.Serialize(value:=name)}:1")
                     currentFields.Add(item:=$"{JsonSerializer.Serialize(value:=name)}:2")
                 Next
-                Using dialog As New RawDataViewerDialog(prevJson:=Parse(json:=$"{{{String.Join(separator:=",", previousFields)}}}"),
-                                                        json:=Parse(json:=$"{{{String.Join(separator:=",", currentFields)}}}"))
+                Using dialog As New RawDataViewerDialog(
+                    prevJson:=Parse(json:=$"{{{String.Join(separator:=",", previousFields)}}}"),
+                    json:=Parse(json:=$"{{{String.Join(separator:=",", currentFields)}}}"))
+
                     dialog.Show()
                     Dim previous As RichTextBox =
                         DirectCast(dialog.Controls.Find(key:="PreviousRawDataRTB", SearchAllChildren)(0), RichTextBox)
@@ -578,22 +580,33 @@ Public Class RawDataViewerDialogTests
                     DateTimeOffset.FromUnixTimeSeconds(seconds:=1700000000).ToLocalTime().ToString(Format)
                 Dim expectedMillis As String =
                     DateTimeOffset.FromUnixTimeMilliseconds(milliseconds:=1700000001000).ToLocalTime().ToString(Format)
-                Using dialog As New RawDataViewerDialog(prevJson:=Parse(json:="{""lastTime"":1600000000,""count"":1700000000}"),
-                                                        json:=Parse(json:="{""lastTime"":1700000000,""otherTIME"":1700000001000,""count"":1700000000}"))
+                Using dialog As New RawDataViewerDialog(
+                    prevJson:=Parse(json:="{""lastTime"":1600000000,""count"":1700000000}"),
+                    json:=Parse(json:="{""lastTime"":1700000000,""otherTIME"":1700000001000,""count"":1700000000}"))
+
                     dialog.Show()
-                    Dim previous As RichTextBox = DirectCast(dialog.Controls.Find(key:="PreviousRawDataRTB", SearchAllChildren)(0), RichTextBox)
-                    Dim current As RichTextBox = DirectCast(dialog.Controls.Find(key:="RawDataRTB", SearchAllChildren)(0), RichTextBox)
-                    Dim toggle As CheckBox = DirectCast(dialog.Controls.Find(key:="CheckBoxDifferenceOnly", SearchAllChildren)(0), CheckBox)
+                    Dim previous As RichTextBox =
+                        DirectCast(dialog.Controls.Find(key:="PreviousRawDataRTB", SearchAllChildren)(0), RichTextBox)
+                    Dim current As RichTextBox =
+                        DirectCast(dialog.Controls.Find(key:="RawDataRTB", SearchAllChildren)(0), RichTextBox)
+                    Dim toggle As CheckBox =
+                        DirectCast(dialog.Controls.Find(key:="CheckBoxDifferenceOnly", SearchAllChildren)(0), CheckBox)
                     Assert.False(condition:=current.WordWrap)
-                    Assert.Contains(expectedSubstring:="// " & expectedSeconds, actualString:=current.Text)
-                    Assert.Contains(expectedSubstring:="// " & expectedMillis, actualString:=current.Text)
-                    Assert.DoesNotContain(expectedSubstring:="1700000000," & vbLf & "// ", actualString:=current.Text)
-                    Assert.DoesNotContain(expectedSubstring:="""count"": 1700000000,  //", actualString:=current.Text)
+                    Assert.Contains(expectedSubstring:=$"// {expectedSeconds}",
+                                    actualString:=current.Text)
+                    Assert.Contains(expectedSubstring:=$"// {expectedMillis}",
+                                    actualString:=current.Text)
+                    Assert.DoesNotContain(expectedSubstring:=$"1700000000,{vbLf}// ",
+                                          actualString:=current.Text)
+                    Assert.DoesNotContain(expectedSubstring:="""count"": 1700000000,  //",
+                                          actualString:=current.Text)
                     toggle.Checked = True
                     Assert.False(condition:=current.WordWrap)
                     Assert.False(condition:=previous.WordWrap)
-                    Assert.Contains(expectedSubstring:="= 1700000000  // " & expectedSeconds, actualString:=current.Text)
-                    Assert.Contains(expectedSubstring:="= 1600000000  // ", actualString:=previous.Text)
+                    Assert.Contains(expectedSubstring:=$"= 1700000000  // {expectedSeconds}",
+                                    actualString:=current.Text)
+                    Assert.Contains(expectedSubstring:="= 1600000000  // ",
+                                    actualString:=previous.Text)
                 End Using
             End Sub
         RunOnSta(action)

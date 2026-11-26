@@ -777,7 +777,8 @@ Friend Module Form1UpdateHelpers
                     ListOfSummaryRecords.Add(item)
 
                 Case ServerDataEnum.infusionRemainingDuration
-                    message = $"Infusion Set has {PatientData.InfusionRemainingDuration.MinutesToDaysHoursMinutes} left."
+                    message =
+                        $"Infusion Set has {PatientData.InfusionRemainingDuration.MinutesToDaysHoursMinutes} left."
                     item = New SummaryRecord(recordNumber, kvp, message)
                     ListOfSummaryRecords.Add(item)
 
@@ -981,51 +982,50 @@ Friend Module Form1UpdateHelpers
     Friend Sub UpdateMarkerTabs(mainForm As Form1)
         With mainForm
             .TlpAutoBasalDelivery.DisplayDataTable(Of AutoBasalDelivery)(
-                table:=ClassCollectionToDataTable(classCollection:=AutoBasalDeliveryMarkers),
+                table:=AutoBasalDeliveryMarkers.ToDataTable(),
                 className:=NameOf(AutoBasalDelivery),
                 rowIndex:=ServerDataEnum.markers)
 
             .TlpAutoModeStatus.DisplayDataTable(Of AutoModeStatus)(
-                table:=ClassCollectionToDataTable(classCollection:=AutoModeStatusMarkers),
+                table:=AutoModeStatusMarkers.ToDataTable(),
                 className:=NameOf(AutoModeStatus),
                 rowIndex:=ServerDataEnum.markers)
 
             .TlpBgReadings.DisplayDataTable(Of BgReading)(
-                table:=ClassCollectionToDataTable(classCollection:=BgReadingMarkers),
+                table:=BgReadingMarkers.ToDataTable(),
                 className:=NameOf(BgReading),
                 rowIndex:=ServerDataEnum.markers)
 
             .TlpInsulin.DisplayDataTable(Of Insulin)(
-                table:=ClassCollectionToDataTable(classCollection:=InsulinMarkers),
+                table:=InsulinMarkers.ToDataTable(),
                 className:=NameOf(Insulin),
                 rowIndex:=ServerDataEnum.markers)
 
             .TlpMeal.DisplayDataTable(Of Meal)(
-                table:=ClassCollectionToDataTable(classCollection:=MealMarkers),
+                table:=MealMarkers.ToDataTable(),
                 className:=NameOf(Meal),
                 rowIndex:=ServerDataEnum.markers)
 
             .TlpCalibration.DisplayDataTable(Of Calibration)(
-                table:=ClassCollectionToDataTable(classCollection:=CalibrationMarkers),
+                table:=CalibrationMarkers.ToDataTable(),
                 className:=NameOf(Calibration),
                 rowIndex:=ServerDataEnum.markers)
 
             .TlpLowGlucoseSuspended.DisplayDataTable(Of LowGlucoseSuspended)(
-                table:=ClassCollectionToDataTable(classCollection:=SuspendedMarkers),
+                table:=SuspendedMarkers.ToDataTable(),
                 className:=NameOf(LowGlucoseSuspended),
                 rowIndex:=ServerDataEnum.markers)
 
             .TlpTimeChange.DisplayDataTable(Of TimeChange)(
-                table:=ClassCollectionToDataTable(classCollection:=TimeChangeMarkers),
+                table:=TimeChangeMarkers.ToDataTable(),
                 className:=NameOf(TimeChange),
                 rowIndex:=ServerDataEnum.markers)
 
             DisplayDataTable(Of BasalPerHour)(
                 realPanel:=Nothing,
-                table:=ClassCollectionToDataTable(classCollection:=BasalPerHourList),
+                table:=BasalPerHourList.ToDataTable(),
                 dgv:=mainForm.DgvBasalPerHour,
                 rowIndex:=0)
-            mainForm.DgvBasalPerHour.AutoSize = True
         End With
 
     End Sub
@@ -1063,33 +1063,40 @@ Friend Module Form1UpdateHelpers
                                 $"Temp Target {minutes.ToHoursMinutes} hr"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
-                            .SmartGuardShieldPictureBox.Image = GetBitmapFromCache(imageId:=ImageEnum.SmartGuardShieldExercise)
+                            .SmartGuardShieldPictureBox.Image =
+                                GetBitmapFromCache(imageId:=ImageEnum.SmartGuardShieldExercise)
+
                         Case "SG_BELOW_50_MGDL"
                             .PumpBannerStateLabel.BackColor = Color.IndianRed
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
                             .PumpBannerStateLabel.Text = "SG Below 50 mg/dL"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Top
+
                         Case "BG_REQUIRED"
                             .PumpBannerStateLabel.BackColor = Color.CadetBlue
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
                             .PumpBannerStateLabel.Text = "Enter BG Now"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Top
+
                         Case "DELIVERY_SUSPEND"
                             .PumpBannerStateLabel.BackColor = Color.Blue
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
                             .PumpBannerStateLabel.Text = "Delivery Suspended"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
+
                         Case "LOAD_RESERVOIR"
                             .PumpBannerStateLabel.BackColor = Color.Yellow
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
                             .PumpBannerStateLabel.Text = "Load Reservoir"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
+
                         Case "PROCESSING_BG"
                             Stop
+
                         Case "SUSPENDED_BEFORE_LOW", "SUSPENDED_ON_LOW"
                             .PumpBannerStateLabel.BackColor = Color.IndianRed
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
@@ -1097,6 +1104,7 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
                             .PumpBannerStateLabel.Font = s_font_7Bold
+
                         Case "TEMP_BASAL"
                             .PumpBannerStateLabel.BackColor = Color.Blue
                             .PumpBannerStateLabel.ForeColor = Color.White
@@ -1106,18 +1114,21 @@ Friend Module Form1UpdateHelpers
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Bottom
                             .PumpBannerStateLabel.Font = s_font_7Bold
+
                         Case "WAIT_TO_CALIBRATE"
                             .PumpBannerStateLabel.BackColor = Color.IndianRed
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
                             .PumpBannerStateLabel.Text = "Wait to Calibrate"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Top
+
                         Case "WAIT_TO_ENTER_BG"
                             .PumpBannerStateLabel.BackColor = Color.IndianRed
                             .PumpBannerStateLabel.ForeColor = .PumpBannerStateLabel.BackColor.ContrastingColor
                             .PumpBannerStateLabel.Text = "Wait to Enter BG"
                             .PumpBannerStateLabel.Visible = True
                             .PumpBannerStateLabel.Dock = DockStyle.Top
+
                         Case Else
                             Dim stackFrame As StackFrame
                             If s_showLogger Then
@@ -1148,7 +1159,7 @@ Friend Module Form1UpdateHelpers
         End If
         mainForm.TlpPumpBannerState.
             DisplayDataTable(Of BannerState)(
-                table:=ClassCollectionToDataTable(classCollection:=listOfBannerState),
+                table:=listOfBannerState.ToDataTable(),
                 className:=NameOf(BannerState), rowIndex:=ServerDataEnum.pumpBannerState)
     End Sub
 

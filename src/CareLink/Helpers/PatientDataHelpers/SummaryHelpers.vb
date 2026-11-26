@@ -12,7 +12,8 @@ Imports System.Text.RegularExpressions
 ''' </summary>
 Friend Module SummaryHelpers
 
-    Private ReadOnly s_notificationPlaceholderValues As Dictionary(Of String, String) = CreateNotificationPlaceholderValues()
+    Private ReadOnly s_notificationPlaceholderValues As Dictionary(Of String, String) =
+        CreateNotificationPlaceholderValues()
 
     ''' <summary>
     '''  Maps sensor update time keys to their corresponding human-readable time strings.
@@ -37,14 +38,28 @@ Friend Module SummaryHelpers
     End Function
 
     Private Function CreateNotificationPlaceholderValues() As Dictionary(Of String, String)
-        Return New Dictionary(Of String, String)(StringComparer.Ordinal) From {
-            {"alertClearType", Nothing}, {"basalName", Nothing}, {"bgValue", Nothing},
-            {"criticalLow", Nothing}, {"deliveredAmount", Nothing}, {"lastSetChange", Nothing},
-            {"lowLimit", Nothing}, {"notDeliveredAmount", Nothing}, {"programmedAmount", Nothing},
-            {"reminderName", Nothing}, {"resolved", Nothing}, {"secondaryTime", Nothing},
-            {"secondaryTimeReminder", Nothing}, {"sensorUpdateTime", Nothing}, {"suspendedSince", Nothing},
-            {"sg", Nothing}, {"sg64", Nothing}, {"triggeredDateTime", Nothing},
-            {"activeInsulinResetTime", Nothing}, {"units", Nothing}, {"unitsRemaining", Nothing},
+        Return New Dictionary(Of String, String)(comparer:=StringComparer.Ordinal) From {
+            {"alertClearType", Nothing},
+            {"basalName", Nothing},
+            {"bgValue", Nothing},
+            {"criticalLow", Nothing},
+            {"deliveredAmount", Nothing},
+            {"lastSetChange", Nothing},
+            {"lowLimit", Nothing},
+            {"notDeliveredAmount", Nothing},
+            {"programmedAmount", Nothing},
+            {"reminderName", Nothing},
+            {"resolved", Nothing},
+            {"secondaryTime", Nothing},
+            {"secondaryTimeReminder", Nothing},
+            {"sensorUpdateTime", Nothing},
+            {"suspendedSince", Nothing},
+            {"sg", Nothing},
+            {"sg64", Nothing},
+            {"triggeredDateTime", Nothing},
+            {"activeInsulinResetTime", Nothing},
+            {"units", Nothing},
+            {"unitsRemaining", Nothing},
             {"vbCrLf", Nothing}}
     End Function
 

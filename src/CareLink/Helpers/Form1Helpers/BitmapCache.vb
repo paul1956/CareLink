@@ -193,7 +193,8 @@ Public Module BitmapCache
         ' so it is safe to use in a paint loop where callers only need a sized bitmap.
 
         If canvasSize.Width <= 0 OrElse canvasSize.Height <= 0 Then
-            Throw New ArgumentException(message:="canvasSize must have positive Width and Height.", paramName:=NameOf(canvasSize))
+            Throw New ArgumentException(message:="canvasSize must have positive Width and Height.",
+                                        paramName:=NameOf(canvasSize))
         End If
 
         ' Retrieve the trimmed cached bitmap (clone) and size it into the requested canvas.
@@ -248,11 +249,20 @@ Public Module BitmapCache
     ''' </summary>
     ''' <param name="imageId"><see cref="ImageEnum"/></param>
     ''' <param name="canvasSize">Required target canvas size (e.g., PictureBox.Size).</param>
-    ''' <param name="contentMaxSize">Desired largest dimension for the content; if empty (0,0) the canvas largest dimension is used.</param>
+    ''' <param name="contentMaxSize">
+    '''  Desired largest dimension for the content;
+    '''  if empty (0,0) the canvas largest dimension is used.
+    ''' </param>
+    ''' <param name="arcMinutes">Arc minutes for the bitmap.</param>
     ''' <returns>New centered/scaled bitmap sized to canvasSize</returns>
-    Friend Function GetBitmapFromCache(imageId As ImageEnum, canvasSize As Size, contentMaxSize As Size, arcMinutes As Integer) As Bitmap
+    Friend Function GetBitmapFromCache(imageId As ImageEnum,
+                                       canvasSize As Size,
+                                       contentMaxSize As Size,
+                                       arcMinutes As Integer) As Bitmap
+
         If canvasSize.Width <= 0 OrElse canvasSize.Height <= 0 Then
-            Throw New ArgumentException(message:="canvasSize must have positive Width and Height.", paramName:=NameOf(canvasSize))
+            Throw New ArgumentException(message:="canvasSize must have positive Width and Height.",
+                                        paramName:=NameOf(canvasSize))
         End If
 
         Dim result As Bitmap = Nothing
@@ -491,8 +501,12 @@ Public Module BitmapCache
                                 Try
                                     Dim normalizedRelativePath As String =
                                         relativePath.Replace(oldChar:="/"c, newChar:=Path.DirectorySeparatorChar)
-                                    Dim fullPath As String = Path.Combine(manifest.extractedPath, normalizedRelativePath)
-                                    Dim fileNameKey As String = Path.GetFileNameWithoutExtension(path:=normalizedRelativePath)
+
+                                    Dim fullPath As String =
+                                        Path.Combine(manifest.extractedPath, normalizedRelativePath)
+
+                                    Dim fileNameKey As String =
+                                        Path.GetFileNameWithoutExtension(path:=normalizedRelativePath)
 
                                     manifestMap.TryAdd(key:=fileNameKey, value:=fullPath)
                                 Catch
@@ -506,7 +520,9 @@ Public Module BitmapCache
         Catch
         End Try
 
-        Dim imagesFolder As String = Path.Combine(Application.StartupPath, "Images")
+        Dim imagesFolder As String =
+            Path.Combine(Application.StartupPath, "Images")
+
         Dim enumValues As Array = [Enum].GetValues(Of ImageEnum)()
 
         For Each enumValue As Object In enumValues

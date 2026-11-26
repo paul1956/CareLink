@@ -11,11 +11,15 @@ Imports System.Threading
 Public Module LoggerManager
 
     ' Fallback log folder for first-run users when the logger window is not visible.
-    Private ReadOnly s_logFolder As String = Path.Combine(Environment.GetFolderPath(folder:=Environment.SpecialFolder.LocalApplicationData), "CareLink", "Logs")
+    Private ReadOnly s_logFolder As String =
+        Path.Combine(Environment.GetFolderPath(folder:=Environment.SpecialFolder.LocalApplicationData),
+                     "CareLink",
+                     "Logs")
 
     Private s_loggerForm As LoggerForm
     Private s_loggerReady As AutoResetEvent
     Private s_loggerThread As Thread
+
     ' Controls whether the on-screen logger is shown/used. Initialized in InitLogger.
     ' The authoritative storage for this flag lives in ProgramVariables.SystemVariables
     ' to avoid duplicate module-level symbols that cause ambiguous references.
@@ -163,7 +167,10 @@ Public Module LoggerManager
     '''  The message to log.
     ''' </param>
     <Extension>
-    Public Sub LogMessage(message As String, Optional verbose As Boolean = False, Optional level As LogLevel = LogLevel.InfoLevel)
+    Public Sub LogMessage(message As String,
+                          Optional verbose As Boolean = False,
+                          Optional level As LogLevel = LogLevel.InfoLevel)
+
         Try
             ' If this is a verbose message and verbose logging is disabled, skip it.
             If verbose AndAlso Not s_verboseLogging Then

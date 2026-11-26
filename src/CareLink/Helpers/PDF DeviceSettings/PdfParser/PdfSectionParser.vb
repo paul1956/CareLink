@@ -154,22 +154,33 @@ Public Class PdfSectionParser
         startTimeDay = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 1)).ElementAtOrDefault(index:=1)
         startTimeNight = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 1)).ElementAtOrDefault(index:=2)
 
-        Dim highLimitDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 2)).ElementAtOrDefault(index:=1)
-        Dim highLimitNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 2)).ElementAtOrDefault(index:=2)
+        Dim highLimitDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 2)).ElementAtOrDefault(index:=1)
+        Dim highLimitNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 2)).ElementAtOrDefault(index:=2)
 
-        Dim riseAlertDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 3)).ElementAtOrDefault(index:=1)
-        Dim riseAlertNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 3)).ElementAtOrDefault(index:=2)
+        Dim riseAlertDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 3)).ElementAtOrDefault(index:=1)
+        Dim riseAlertNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 3)).ElementAtOrDefault(index:=2)
 
-        Dim alertOnHighDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 4)).ElementAtOrDefault(index:=1)
-        Dim alertOnHighNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 4)).ElementAtOrDefault(index:=2)
+        Dim alertOnHighDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 4)).ElementAtOrDefault(index:=1)
+        Dim alertOnHighNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 4)).ElementAtOrDefault(index:=2)
 
-        Dim alertBeforeHighDay As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 5)).ElementAtOrDefault(index:=1)
-        Dim alertBeforeHighNight As String = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 5)).ElementAtOrDefault(index:=2)
+        Dim alertBeforeHighDay As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 5)).ElementAtOrDefault(index:=1)
+        Dim alertBeforeHighNight As String =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 5)).ElementAtOrDefault(index:=2)
 
-        maxVolumeAtNight = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 6)).ElementAtOrDefault(index:=2)
+        maxVolumeAtNight =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 6)).ElementAtOrDefault(index:=2)
 
-        snoozeDurationDay = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 7)).ElementAtOrDefault(index:=1)
-        snoozeDurationNight = SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 7)).ElementAtOrDefault(index:=2)
+        snoozeDurationDay =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 7)).ElementAtOrDefault(index:=1)
+        snoozeDurationNight =
+            SplitColumns(line:=Me.SafeLineAt(index:=baseIndex + 7)).ElementAtOrDefault(index:=2)
 
         Dim itemHigh As New HighAlertRecord With {
             .Name = nameDay,

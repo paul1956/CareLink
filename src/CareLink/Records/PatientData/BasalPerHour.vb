@@ -31,6 +31,10 @@ Friend Class BasalPerHour
     <Column(Order:=3, TypeName:="Double")>
     Public Property BasalRate2 As Double
 
+    <DisplayName("")>
+    <Column(Order:=4, TypeName:=NameOf([String]))>
+    Public Property Filler As String
+
     Friend Shared Sub AddBasalAmountToBasalPerHour(basalDeliveryMarker As AutoBasalDelivery)
         Dim hour As Integer = basalDeliveryMarker.DisplayTime.Hour
         Dim index As Integer = hour \ 2

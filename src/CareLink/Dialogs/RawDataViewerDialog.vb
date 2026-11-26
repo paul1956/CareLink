@@ -4,7 +4,6 @@
 
 Imports System.ComponentModel
 Imports System.Globalization
-Imports System.Runtime.InteropServices
 Imports System.Text.Json
 Imports System.Text.Json.Nodes
 Imports System.Text.RegularExpressions
@@ -265,13 +264,6 @@ Public Class RawDataViewerDialog
             Next
         End If
     End Sub
-
-    <DllImport("user32.dll", EntryPoint:="SendMessageW")>
-    Private Shared Function SendScrollMessage(handle As IntPtr,
-                                              message As Integer,
-                                              wParam As IntPtr,
-                                              ByRef position As Point) As IntPtr
-    End Function
 
     ''' <summary>
     '''  Handles the Opening event of the context menu, enabling or disabling

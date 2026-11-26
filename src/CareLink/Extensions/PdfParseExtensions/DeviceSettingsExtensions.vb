@@ -7,7 +7,9 @@ Imports System.Runtime.CompilerServices
 Friend Module DeviceSettingsExtensions
 
     <Extension>
-    Friend Function GetSingleLineValue(Of T)(line As String, key As String, Optional endsWith As String = "") As T
+    Friend Function GetSingleLineValue(Of T)(line As String,
+                                             key As String,
+                                             Optional endsWith As String = "") As T
         Dim typeOfT As Type = GetType(T)
         If line.StartsWith(value:=key, ComparisonType) Then
             line = line.Replace(oldValue:=key, newValue:=EmptyString, ComparisonType).Trim
@@ -71,7 +73,9 @@ Friend Module DeviceSettingsExtensions
     End Function
 
     <Extension>
-    Friend Function GetSingleLineValue(Of T)(sTable As StringTable, key As String, Optional endsWith As String = "") As T
+    Friend Function GetSingleLineValue(Of T)(sTable As StringTable,
+                                             key As String,
+                                             Optional endsWith As String = "") As T
         Dim typeOfT As Type = GetType(T)
         For Each r As StringTable.Row In sTable.Rows
             Dim v As String = r.Columns(index:=0)
@@ -152,7 +156,7 @@ Friend Module DeviceSettingsExtensions
         End If
         For Each e As IndexClass(Of CarbRatioRecord) In toCarbRatioList.WithIndex
             Dim deviceCarbRatio As CarbRatioRecord = e.Value
-            If Not deviceCarbRatio.Equals(carbRatios(e.Index)) Then
+            If Not deviceCarbRatio.Equals(other:=carbRatios(e.Index)) Then
                 Return False
             End If
         Next
@@ -170,8 +174,8 @@ Friend Module DeviceSettingsExtensions
                 .StartTime = deviceCarbRatio.Time,
                 .CarbRatio = deviceCarbRatio.Ratio,
                 .EndTime = If(e.IsLast,
-                                Eleven59,
-                                deviceCarbRatios(index:=e.Index + 1).Time)})
+                              Eleven59,
+                              deviceCarbRatios(index:=e.Index + 1).Time)})
         Next
         Return carbRatios
     End Function

@@ -27,7 +27,7 @@ Public Class PersistentLookupsTests
     End Function
 
     Private Function CreateLookups(Optional prompt As Func(Of String, String, String) = Nothing,
-                                           Optional confirm As Func(Of String, DialogResult) = Nothing) As PersistentLookups
+                                   Optional confirm As Func(Of String, DialogResult) = Nothing) As PersistentLookups
         If prompt Is Nothing Then
             prompt = Function(id As String, current As String)
                          Return ThrowUnexpectedPrompt(id)

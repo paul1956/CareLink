@@ -17,8 +17,9 @@ Public Class CareLinkService
 
     Private Shared ReadOnly s_http As New HttpClient(
         handler:=New HttpClientHandler() With {
-            .AutomaticDecompression = DecompressionMethods.GZip Or DecompressionMethods.Deflate Or DecompressionMethods.Brotli
-        }) With {.Timeout = TimeSpan.FromSeconds(120)}
+            .AutomaticDecompression = DecompressionMethods.GZip Or
+                                      DecompressionMethods.Deflate Or
+                                      DecompressionMethods.Brotli}) With {.Timeout = TimeSpan.FromSeconds(120)}
 
     ' Reuse JsonSerializerOptions to avoid allocations on each parse
     Private Shared ReadOnly s_jsonOptions As New JsonSerializerOptions With {
@@ -214,7 +215,9 @@ Public Class CareLinkService
                              ' Determine the best owner for the OAuth dialog. Prefer the
                              ' currently active form (which may be a modal dialog like
                              ' the LoginDialog). Fall back to the main Form1 if none.
-                             Dim ownerForm As System.Windows.Forms.Form = If(System.Windows.Forms.Form.ActiveForm, My.Forms.Form1)
+                             Dim ownerForm As Form =
+                                If(System.Windows.Forms.Form.ActiveForm,
+                                   My.Forms.Form1)
                              Dim dr As DialogResult = frm.ShowDialog(owner:=ownerForm)
                              If dr = DialogResult.OK Then
                                  LoginRetryCount = 1
@@ -277,10 +280,7 @@ Public Class CareLinkService
         Dim body As String = String.Empty
         If rawBytes IsNot Nothing Then
             Dim charset As String = Nothing
-            If response.Content IsNot Nothing AndAlso response.Content.Headers IsNot Nothing AndAlso response.Content.Headers.ContentType IsNot Nothing Then
-                charset = response.Content.Headers.ContentType.CharSet
-            End If
-
+            charset = response.Content?.Headers?.ContentType?.CharSet
             Dim enc As Encoding = Nothing
             If Not String.IsNullOrWhiteSpace(value:=charset) Then
                 Try
@@ -312,7 +312,9 @@ Public Class CareLinkService
             ' Remove persistent dumps in favor of throwing a non-descriptive error
             ' and logging a short message to the in-memory logger only.
             Try
-                LogMessage(message:=$"Token request failed with status {CInt(response.StatusCode)} {response.ReasonPhrase}")
+                message =
+                    $"Token request failed with status {CInt(response.StatusCode)} {response.ReasonPhrase}"
+                LogMessage(message)
             Catch
             End Try
 
@@ -322,10 +324,8 @@ Public Class CareLinkService
 
         Dim token As TokenData = Nothing
         Try
-            Dim mediaType As String = Nothing
-            If response.Content IsNot Nothing AndAlso response.Content.Headers IsNot Nothing AndAlso response.Content.Headers.ContentType IsNot Nothing Then
-                mediaType = response.Content.Headers.ContentType.MediaType
-            End If
+            Dim mediaType As String =
+                response.Content?.Headers?.ContentType?.ToString()
 
             If mediaType IsNot Nothing AndAlso mediaType.Contains(value:="json", ComparisonType) Then
                 Try
@@ -359,7 +359,9 @@ Public Class CareLinkService
                     If Not parsed Then
                         ' Persist raw bytes and text to temp files for offline inspection then throw
                         Try
-                            Dim dumpBase As String = IO.Path.Combine(IO.Path.GetTempPath(), $"carelink_token_raw_{Date.UtcNow:yyyyMMddHHmmss}")
+                            Dim dumpBase As String =
+                                IO.Path.Combine(IO.Path.GetTempPath(),
+                                                $"carelink_token_raw_{Date.UtcNow:yyyyMMddHHmmss}")
                             If rawBytes IsNot Nothing Then
                                 IO.File.WriteAllBytes(path:=$"{dumpBase}.bin", bytes:=rawBytes)
                             End If
@@ -368,7 +370,10 @@ Public Class CareLinkService
                         End Try
 
                         message =
-                            $"Failed to parse token response JSON after multiple encodings. Raw dump: see temp files starting with carelink_token_raw_. Body starts with: {If(body?.Substring(startIndex:=0, length:=Math.Min(200, body.Length)), "<empty>")}"
+                            $"Failed to parse token response JSON after multiple encodings. " &
+                            $"Raw dump: see temp files starting with carelink_token_raw_. Body starts with: " &
+                            $"{If(body?.Substring(startIndex:=0, length:=Math.Min(200, body.Length)),
+                                  "<empty>")}"
                         Throw New ApplicationException(message, innerException)
                     End If
                 End Try

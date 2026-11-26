@@ -59,7 +59,10 @@ Public Class ExceptionReportTests
                     Dim expectedJson As String = CleanPatientData()
                     ExceptionHandlerDialog.CreateReportFile(exceptionText, stackTraceText, withPath:=path)
 
-                    Using dialog As New ExceptionHandlerDialog(), exceptionBox As New TextBox(), traceBox As New TextBox()
+                    Using dialog As New ExceptionHandlerDialog(),
+                          exceptionBox As New TextBox(),
+                          traceBox As New TextBox()
+
                         Dim actualJson As String = dialog.ReportFile(exTextBox:=exceptionBox,
                                                                     traceTextBox:=traceBox,
                                                                     reportNameWithPath:=path)
@@ -75,7 +78,10 @@ Public Class ExceptionReportTests
                                      actual:=loaded.GetProperty(propertyName:="firstName").GetString())
                         Assert.Equal(expected:="Last",
                                      actual:=loaded.GetProperty(propertyName:="lastName").GetString())
-                        Assert.Equal(expected:=PatientDataElement.GetProperty(propertyName:="medicalDeviceFamily").GetString(),
+
+                        Dim expected1 As String =
+                            PatientDataElement.GetProperty(propertyName:="medicalDeviceFamily").GetString()
+                        Assert.Equal(expected:=expected1,
                                      actual:=loaded.GetProperty(propertyName:="medicalDeviceFamily").GetString())
                         Assert.True(condition:=JsonNode.DeepEquals(expected, JsonNode.Parse(json:=loaded.GetRawText())))
 

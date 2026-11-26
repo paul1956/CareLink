@@ -321,7 +321,7 @@ Friend Module NotificationHelpers
                     DisplayNotificationDataTableInDGV(
                         owner:=mainForm,
                         realPanel:=mainForm.TlpNotificationsCleared,
-                        table:=ClassCollectionToDataTable(classCollection),
+                        table:=classCollection.ToDataTable(),
                         className:=NameOf(SummaryRecord),
                         attachHandlers:=AddressOf AttachHandlers)
                 Next
@@ -360,7 +360,7 @@ Friend Module NotificationHelpers
                     DisplayNotificationDataTableInDGV(
                         owner:=mainForm,
                         realPanel:=mainForm.TlpNotificationActive,
-                        table:=ClassCollectionToDataTable(classCollection),
+                        table:=classCollection.ToDataTable(),
                         className:="ActiveNotifications",
                         attachHandlers:=AddressOf AttachHandlers)
                 Next

@@ -481,7 +481,8 @@ Friend Module LoginHelpers
                                 currentUserUpdateNeeded = True
                             End If
                             currentTarget = CurrentPdf.SmartGuard.Target
-                            Dim deviceCarbRatios As List(Of DeviceCarbRatioRecord) = CurrentPdf.Bolus.DeviceCarbohydrateRatios
+                            Dim deviceCarbRatios As List(Of DeviceCarbRatioRecord) =
+                                CurrentPdf.Bolus.DeviceCarbohydrateRatios
 
                             If Not deviceCarbRatios.EqualCarbRatios(CurrentUser.CarbRatios) Then
                                 currentUserUpdateNeeded = True
@@ -507,7 +508,9 @@ Friend Module LoginHelpers
                     cuJson = SystemVariables.CurrentUser.ToJson()
                     File.WriteAllTextAsync(path:=userSettingsFileFullPath, contents:=cuJson)
                 Catch ex As Exception
-                    Debug.WriteLine(message:=$"ERROR: failed serializing CurrentUser to {userSettingsFileFullPath}: {ex.Message}")
+                    Dim message As String =
+                        $"ERROR: failed serializing CurrentUser to {userSettingsFileFullPath}: {ex.Message}"
+                    Debug.WriteLine(message)
                 End Try
             Else
                 TouchFile(path:=userSettingsFileFullPath)

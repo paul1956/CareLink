@@ -37,7 +37,10 @@ Public Class CurrentUserRecord
             Dim endTime As TimeOnly = RoundToMinute(t:=carbRatio.EndTime)
             Dim checkTime As TimeOnly = RoundToMinute(t:=forTime)
 
-            If checkTime.IsBetween(start:=startTime, [end]:=endTime) OrElse checkTime = startTime OrElse checkTime = endTime Then
+            If checkTime.IsBetween(start:=startTime, [end]:=endTime) OrElse
+               checkTime = startTime OrElse
+               checkTime = endTime Then
+
                 Return carbRatio.CarbRatio
             End If
         Next

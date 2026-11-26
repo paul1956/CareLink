@@ -57,8 +57,10 @@ Public Class SgGridSizingTests
                                                                    CInt(Math.Ceiling(a:=16.0 * dgv.DeviceDpi / 96.0))
                                 Assert.True(condition:=column.Width >= requiredWidth,
                                             userMessage:=$"Actual={column.Width}, required={requiredWidth}")
+                                Dim dataGridViewColumn As DataGridViewColumn =
+                                    dgv.Columns(columnName:=NameOf(SummaryRecord.Message))
                                 Assert.Equal(expected:=Fill,
-                                             actual:=dgv.Columns(columnName:=NameOf(SummaryRecord.Message)).AutoSizeMode)
+                                             actual:=dataGridViewColumn.AutoSizeMode)
                             Next
                             dgv.SetHeaderColors(isDarkMode:=True, highContrast:=False)
                             Using bitmap As New Bitmap(dgv.Width, dgv.Height)
@@ -130,9 +132,9 @@ Public Class SgGridSizingTests
                         basal.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
                         basal.Columns.Add(columnName:="Basal", headerText:="Basal")
                         basal.ConfigureContentColumnSizing()
-                        Assert.Equal(expected:=DataGridViewAutoSizeColumnsMode.Fill,
+                        Assert.Equal(expected:=DataGridViewAutoSizeColumnsMode.None,
                                      actual:=basal.AutoSizeColumnsMode)
-                        Assert.Equal(expected:=NotSet,
+                        Assert.Equal(expected:=Fill,
                                      actual:=basal.Columns(columnName:="Basal").AutoSizeMode)
                     End Using
                 Catch ex As Exception
@@ -196,19 +198,26 @@ Public Class SgGridSizingTests
                             Dim glucoseColumns As String() = {NameOf(SG.Sg), NameOf(SG.SgMgdL), NameOf(SG.SgMmolL)}
                             For Each columnName As String In glucoseColumns
                                 Dim glucose As DataGridViewColumn = dgv.Columns(columnName)
-                                Dim headerLines As String() = glucose.HeaderText.Split(separator:=New String() {vbCrLf},
-                                                                                       options:=StringSplitOptions.None)
+                                Dim headerLines As String() =
+                                    glucose.HeaderText.Split(separator:=New String() {vbCrLf},
+                                                             options:=StringSplitOptions.None)
+
                                 Assert.Equal(expected:=3,
                                              actual:=headerLines.Length)
                                 Assert.Equal(expected:=DataGridViewTriState.True,
                                              actual:=glucose.HeaderCell.InheritedStyle.WrapMode)
                                 Dim headerFont As Font = glucose.HeaderCell.InheritedStyle.Font
                                 For Each line As String In headerLines
-                                    Assert.True(condition:=glucose.Width >= TextRenderer.MeasureText(text:=line, font:=headerFont).Width)
+                                    Dim size As Size =
+                                        TextRenderer.MeasureText(text:=line, font:=headerFont)
+                                    Assert.True(condition:=glucose.Width >= size.Width)
                                 Next
                                 Dim singleLine As String = String.Join(separator:=" ", value:=headerLines)
-                                Assert.True(condition:=glucose.Width < TextRenderer.MeasureText(text:=singleLine, font:=headerFont).Width)
-                                Assert.True(condition:=dgv.ColumnHeadersHeight >= 3 * TextRenderer.MeasureText(text:="Glucose", font:=headerFont).Height)
+                                Dim size1 As Size = TextRenderer.MeasureText(text:=singleLine, font:=headerFont)
+                                Assert.True(condition:=glucose.Width < size1.Width)
+
+                                Dim size2 As Size = TextRenderer.MeasureText(text:="Glucose", font:=headerFont)
+                                Assert.True(condition:=dgv.ColumnHeadersHeight >= 3 * size2.Height)
                             Next
                             Assert.Equal(expected:=DataGridViewAutoSizeColumnsMode.None,
                                          actual:=dgv.AutoSizeColumnsMode)
@@ -221,7 +230,8 @@ Public Class SgGridSizingTests
                             Assert.Equal(expected:=DataGridViewTriState.False,
                                          actual:=dgv.Rows(index:=0).Cells(state.Index).InheritedStyle.WrapMode)
                             dgv.Rows(index:=0).DefaultCellStyle.WrapMode = DataGridViewTriState.True
-                            Dim stateStyle As DataGridViewCellStyle = dgv.Rows(index:=0).Cells(state.Index).GetFormattedStyle()
+                            Dim stateStyle As DataGridViewCellStyle =
+                                dgv.Rows(index:=0).Cells(state.Index).GetFormattedStyle()
                             Assert.Equal(expected:=DataGridViewTriState.False,
                                          actual:=stateStyle.WrapMode)
                             Assert.Equal(expected:=DataGridViewContentAlignment.MiddleCenter,
@@ -358,21 +368,29 @@ Public Class SgGridSizingTests
                             System.ComponentModel.ListSortDirection.Ascending}
                             dgv.Sort(dataGridViewColumn:=column, direction)
                             Application.DoEvents()
-                            Dim expectedGlyph As SortOrder = If(direction = System.ComponentModel.ListSortDirection.Ascending,
-                                                                SortOrder.Ascending,
-                                                                SortOrder.Descending)
+                            Dim expectedGlyph As SortOrder =
+                                If(direction = System.ComponentModel.ListSortDirection.Ascending,
+                                   SortOrder.Ascending,
+                                   SortOrder.Descending)
+
                             Assert.Equal(expected:=If(expectedGlyph = SortOrder.Ascending, 1, 3),
                                          actual:=CInt(dgv.Rows(index:=0).Cells(index:=0).Value))
                             Assert.Equal(expected:=expectedGlyph,
                                          actual:=column.HeaderCell.SortGlyphDirection)
                             Dim style As DataGridViewCellStyle = column.HeaderCell.InheritedStyle
+                            Dim selector As Func(Of String, Integer) =
+                                Function(line As String)
+                                    Return TextRenderer.MeasureText(text:=line, style.Font).Width
+                                End Function
+
                             Dim longestLine As Integer =
-                                column.HeaderText.Split(separator:=New String() {vbCrLf}, options:=StringSplitOptions.None).Max(
-                                    selector:=Function(line As String)
-                                                  Return TextRenderer.MeasureText(text:=line, style.Font).Width
-                                              End Function)
-                            Assert.True(condition:=column.Width >= longestLine + style.Padding.Horizontal +
-                                        CInt(Math.Ceiling(a:=32.0 * dgv.DeviceDpi / 96.0)))
+                                column.HeaderText.Split(separator:=New String() {vbCrLf},
+                                                        options:=StringSplitOptions.None).Max(selector)
+
+                            Dim width1 As Integer = longestLine +
+                                                    style.Padding.Horizontal +
+                                                    CInt(Math.Ceiling(a:=32.0 * dgv.DeviceDpi / 96.0))
+                            Assert.True(condition:=column.Width >= width1)
                             Using sorted As New Bitmap(dgv.Width, dgv.Height),
                                   unsorted As New Bitmap(dgv.Width, dgv.Height)
                                 dgv.DrawToBitmap(bitmap:=sorted, targetBounds:=dgv.ClientRectangle)
@@ -399,8 +417,9 @@ Public Class SgGridSizingTests
                                         End If
                                     Next
                                 Next
-                                Assert.True(condition:=contrastingPixels >= 5,
-                                            userMessage:=$"{expectedGlyph} glyph has {contrastingPixels} contrasting pixels.")
+                                Dim userMessage As String =
+                                    $"{expectedGlyph} glyph has {contrastingPixels} contrasting pixels."
+                                Assert.True(condition:=contrastingPixels >= 5, userMessage)
                             End Using
                             column.HeaderCell.SortGlyphDirection = expectedGlyph
                         Next
@@ -411,18 +430,22 @@ Public Class SgGridSizingTests
                             column.HeaderCell.SortGlyphDirection = SortOrder.Descending
                             dgv.DrawToBitmap(bitmap:=descending, targetBounds:=dgv.ClientRectangle)
                             Dim bounds As Rectangle =
-                                dgv.GetCellDisplayRectangle(columnIndex:=column.Index, rowIndex:=-1, cutOverflow:=False)
+                                dgv.GetCellDisplayRectangle(columnIndex:=column.Index,
+                                                            rowIndex:=-1,
+                                                            cutOverflow:=False)
                             Dim changedPixels As Integer = 0
                             Dim glyphRegionWidth As Integer = CInt(Math.Ceiling(a:=24.0 * dgv.DeviceDpi / 96.0))
                             For y As Integer = bounds.Top To bounds.Bottom - 1
-                                For x As Integer = Math.Max(bounds.Left, bounds.Right - glyphRegionWidth) To bounds.Right - 1
+                                Dim maxBound As Integer = Math.Max(bounds.Left, bounds.Right - glyphRegionWidth)
+                                For x As Integer = maxBound To bounds.Right - 1
                                     If ascending.GetPixel(x, y).ToArgb() <> descending.GetPixel(x, y).ToArgb() Then
                                         changedPixels += 1
                                     End If
                                 Next
                             Next
-                            Assert.True(condition:=changedPixels >= 5,
-                                        userMessage:=$"Ascending and descending glyphs differ by {changedPixels} pixels.")
+                            Dim userMessage As String =
+                                $"Ascending and descending glyphs differ by {changedPixels} pixels."
+                            Assert.True(condition:=changedPixels >= 5, userMessage)
                         End Using
                     End Using
                 Catch ex As Exception

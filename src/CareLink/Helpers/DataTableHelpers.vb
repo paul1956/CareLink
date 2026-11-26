@@ -158,7 +158,8 @@ Friend Module DataTableHelpers
     '''  A DataTable who's DataColumns match the name and type of
     '''  each class T's public properties.
     ''' </returns>
-    Public Function ClassCollectionToDataTable(Of T As Class)(classCollection As List(Of T)) As DataTable
+    <Extension>
+    Public Function ToDataTable(Of T As Class)(classCollection As List(Of T)) As DataTable
         Dim table As DataTable = ClassToDataTable(Of T)()
         If Not IsValidDataTable(table, IgnoreRows:=True) Then
             Return New DataTable()

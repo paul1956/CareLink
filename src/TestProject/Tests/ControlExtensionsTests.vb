@@ -468,6 +468,7 @@ Public Class ControlExtensionsTests
             cell.Enabled = enabled
             Dim bounds As New Rectangle(x:=20, y:=5, width:=100, height:=30)
             Dim clip As New Rectangle(x:=40, y:=5, width:=40, height:=30)
+            Dim advancedBorderStyle As New DataGridViewAdvancedBorderStyle()
             Dim args As New DataGridViewCellPaintingEventArgs(dataGridView:=dgv,
                                                               graphics:=graphics,
                                                               clipBounds:=clip,
@@ -479,9 +480,9 @@ Public Class ControlExtensionsTests
                                                               formattedValue:="Delete Row",
                                                               errorText:=Nothing,
                                                               cellStyle:=cell.InheritedStyle,
-                                                              advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
+                                                              advancedBorderStyle,
                                                               paintParts:=DataGridViewPaintParts.All)
-            dgv.PaintDarkUserGridCell(args, isDarkMode:=True, highContrast:=False)
+            dgv.PaintDarkUserGridCell(e:=args, isDarkMode:=True, highContrast:=False)
             Assert.Equal(expected:=0,
                          actual:=cell.PaintCalls)
             Assert.NotEqual(expected:=Color.Magenta.ToArgb(),
@@ -548,6 +549,9 @@ Public Class ControlExtensionsTests
             dgv.Columns.Add(dataGridViewColumn:=New DataGridViewCheckBoxColumn())
             dgv.Rows.Add()
             Dim bounds As New Rectangle(x:=0, y:=0, width:=40, height:=40)
+            Dim cellStyle As DataGridViewCellStyle =
+                dgv.Rows(index:=0).Cells(index:=0).InheritedStyle
+            Dim advancedBorderStyle As New DataGridViewAdvancedBorderStyle()
             Dim args As New DataGridViewCellPaintingEventArgs(dataGridView:=dgv,
                                                               graphics:=graphics,
                                                               clipBounds:=bounds,
@@ -558,8 +562,8 @@ Public Class ControlExtensionsTests
                                                               value:=value,
                                                               formattedValue:=value,
                                                               errorText:=Nothing,
-                                                              cellStyle:=dgv.Rows(index:=0).Cells(index:=0).InheritedStyle,
-                                                              advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
+                                                              cellStyle,
+                                                              advancedBorderStyle,
                                                               paintParts:=DataGridViewPaintParts.ContentForeground)
             dgv.PaintDarkUserGridCell(e:=args, isDarkMode:=True, highContrast:=False)
             args.Handled.Should().BeTrue()
@@ -581,6 +585,7 @@ Public Class ControlExtensionsTests
             dgv.Columns.Add(dataGridViewColumn:=New DataGridViewCheckBoxColumn())
             dgv.Rows.Add()
             Dim bounds As New Rectangle(x:=0, y:=0, width:=40, height:=40)
+            Dim advancedBorderStyle As New DataGridViewAdvancedBorderStyle()
             Dim args As New DataGridViewCellPaintingEventArgs(dataGridView:=dgv,
                                                               graphics:=graphics,
                                                               clipBounds:=bounds,
@@ -592,7 +597,7 @@ Public Class ControlExtensionsTests
                                                               formattedValue:=False,
                                                               errorText:=Nothing,
                                                               cellStyle:=dgv.DefaultCellStyle,
-                                                              advancedBorderStyle:=New DataGridViewAdvancedBorderStyle(),
+                                                              advancedBorderStyle,
                                                               paintParts:=DataGridViewPaintParts.All)
             dgv.PaintDarkUserGridCell(e:=args,
                                       isDarkMode,
@@ -628,8 +633,12 @@ Public Class ControlExtensionsTests
         Using dgv As New DataGridView()
             dgv.SetHeaderColors(isDarkMode:=True, highContrast:=False)
             dgv.EnableHeadersVisualStyles.Should().BeFalse()
-            For Each style As DataGridViewCellStyle In {dgv.ColumnHeadersDefaultCellStyle, dgv.RowHeadersDefaultCellStyle}
-                ContrastRatio(first:=style.ForeColor, second:=style.BackColor).Should().BeGreaterThanOrEqualTo(expected:=4.5)
+            For Each style As DataGridViewCellStyle In {dgv.ColumnHeadersDefaultCellStyle,
+                                                        dgv.RowHeadersDefaultCellStyle}
+
+                ContrastRatio(first:=style.ForeColor, second:=style.BackColor).Should().
+                    BeGreaterThanOrEqualTo(expected:=4.5)
+
                 ContrastRatio(first:=style.SelectionForeColor, second:=style.SelectionBackColor).Should().
                     BeGreaterThanOrEqualTo(expected:=4.5)
             Next

@@ -36,40 +36,57 @@ Public Class LoggerForm
         End Try
     End Sub
 
-    Private Sub CopyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CopyToolStripMenuItem.Click
+    Private Sub CopyToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+        Handles CopyToolStripMenuItem.Click
+
         Me.CopyTextToClipboard()
     End Sub
 
-    Private Sub EditClearToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EditMenuClearToolStripMenuItem.Click
+    Private Sub EditClearToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+        Handles EditMenuClearToolStripMenuItem.Click
+
         Me.txtLog.Clear()
     End Sub
 
-    Private Sub EditCopyToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EditMenuCopyToolStripMenuItem.Click
+    Private Sub EditCopyToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+        Handles EditMenuCopyToolStripMenuItem.Click
+
         Me.CopyTextToClipboard()
     End Sub
 
-    Private Sub FileMenuExitMenuItem_Click(sender As Object, e As EventArgs) Handles FileMenuExitMenuItem.Click
+    Private Sub FileMenuExitMenuItem_Click(sender As Object, e As EventArgs) _
+        Handles FileMenuExitMenuItem.Click
+
         Me.Close()
     End Sub
 
-    Private Sub FileMenuSaveAllToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FileMenuSaveAllToolStripMenuItem.Click
+    Private Sub FileMenuSaveAllToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+        Handles FileMenuSaveAllToolStripMenuItem.Click
+
         Try
             Me.SaveText()
         Catch ex As Exception
             Try
-                MessageBox.Show(text:=ex.Message, caption:="Save failed", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Error)
+                MessageBox.Show(text:=ex.Message,
+                                caption:="Save failed",
+                                buttons:=MessageBoxButtons.OK,
+                                icon:=MessageBoxIcon.Error)
             Catch
             End Try
         End Try
     End Sub
 
-    Private Sub FileMenuSaveSelectionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FileMenuSaveSelectionToolStripMenuItem.Click
+    Private Sub FileMenuSaveSelectionToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+            Handles FileMenuSaveSelectionToolStripMenuItem.Click
         Try
             ' Save only the selected text when user chooses Save Selection
             Me.SaveText(SelectionOnly:=True)
         Catch ex As Exception
             Try
-                MessageBox.Show(text:=ex.Message, caption:="Save failed", buttons:=MessageBoxButtons.OK, icon:=MessageBoxIcon.Error)
+                MessageBox.Show(text:=ex.Message,
+                                caption:="Save failed",
+                                buttons:=MessageBoxButtons.OK,
+                                icon:=MessageBoxIcon.Error)
             Catch
             End Try
         End Try
@@ -111,7 +128,9 @@ Public Class LoggerForm
         End Try
     End Sub
 
-    Private Sub ViewTopmostToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ViewTopmostToolStripMenuItem.Click
+    Private Sub ViewTopmostToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+            Handles ViewTopmostToolStripMenuItem.Click
+
         Try
             Me.TopMost = Me.ViewTopmostToolStripMenuItem.Checked
         Catch

@@ -28,7 +28,8 @@ Public Class SG
                 Me.TimeChange = json.TryGetValue(key:=NameOf(TimeChange), value) AndAlso CBool(value)
             End If
             Dim isBackfillString As String = Nothing
-            Me.IsBackfill = json.TryGetValue(key:=NameOf(IsBackfill), value:=isBackfillString) AndAlso CBool(isBackfillString)
+            Me.IsBackfill =
+                json.TryGetValue(key:=NameOf(IsBackfill), value:=isBackfillString) AndAlso CBool(isBackfillString)
             Me.Kind = json(key:=NameOf(Kind))
             Me.RecordNumber = index + 1
             Me.Version = CInt(json(key:=NameOf(Version)))

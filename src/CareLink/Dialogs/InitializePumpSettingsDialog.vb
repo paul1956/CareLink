@@ -215,8 +215,13 @@ Public Class InitializePumpSettingsDialog
                         Exit Sub
                     End If
                     With .Rows(index:=e.RowIndex)
-                        CType(.Cells(columnName:=NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell).Enabled = False
-                        CType(.Cells(columnName:=NameOf(ColumnSave)), DataGridViewDisableButtonCell).Enabled = False
+                        Dim dataGridViewDisableButtonCell As DataGridViewDisableButtonCell =
+                            CType(.Cells(columnName:=NameOf(ColumnDeleteRow)), DataGridViewDisableButtonCell)
+                        dataGridViewDisableButtonCell.Enabled = False
+
+                        Dim saveButtonCell As DataGridViewDisableButtonCell =
+                            CType(.Cells(columnName:=NameOf(ColumnSave)), DataGridViewDisableButtonCell)
+                        saveButtonCell.Enabled = False
                     End With
                     For Each c As DataGridViewCell In .Rows(index:=e.RowIndex).Cells
                         c.ReadOnly = Not c.OwningColumn.HeaderText = "Carb Ratio g/U"

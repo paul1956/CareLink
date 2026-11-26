@@ -55,7 +55,9 @@ Friend Module ExceptionHelpers
     '''  unreachable code location.
     ''' </returns>
     <ExcludeFromCodeCoverage>
-    Public Function GetUnreachableException(paramName As String, Optional memberName As String = Nothing, Optional sourceLineNumber As Integer = 0) As Exception
+    Public Function GetUnreachableException(paramName As String,
+                                            Optional memberName As String = Nothing,
+                                            Optional sourceLineNumber As Integer = 0) As Exception
         Dim message As String =
                 $"The program location {memberName} line {sourceLineNumber} is thought to be unreachable."
         Return New ArgumentOutOfRangeException(paramName, message)

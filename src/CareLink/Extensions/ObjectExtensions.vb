@@ -10,7 +10,9 @@ Friend Module ObjectExtensions
 
     ' Helper method to convert object to Dictionary(Of String, String)
     <Extension>
-    Public Function InstanceToDictionary(Of T)(instance As T, Optional prefix As String = "") As Dictionary(Of String, String)
+    Public Function ToDictionary(Of T)(instance As T,
+                                       Optional prefix As String = "") As Dictionary(Of String, String)
+
         Dim result As New Dictionary(Of String, String)(Comparer)
         Dim second As New Dictionary(Of String, String)(Comparer)
         Try
@@ -38,8 +40,7 @@ Friend Module ObjectExtensions
                 Select Case pi.Name
                     Case NameOf(AdditionalInfo)
                         second =
-                            CType(obj, AdditionalInfo).
-                                InstanceToDictionary(prefix:="AdditionalInfo:")
+                            CType(obj, AdditionalInfo).ToDictionary(prefix:="AdditionalInfo:")
                         result = result.Concat(second).ToDictionary(keySelector, elementSelector)
                         second.Clear()
                     Case NameOf(AdditionalInfo.AdditionalProperties)
@@ -50,8 +51,7 @@ Friend Module ObjectExtensions
                         second.Clear()
                     Case "Acknowledged"
                         second =
-                            CType(obj, AcknowledgedRecord).
-                                InstanceToDictionary(prefix:="Acknowledged:")
+                            CType(obj, AcknowledgedRecord).ToDictionary(prefix:="Acknowledged:")
                         result = result.Concat(second).ToDictionary(keySelector, elementSelector)
                         second.Clear()
                     Case Else

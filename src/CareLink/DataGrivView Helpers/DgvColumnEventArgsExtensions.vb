@@ -41,11 +41,7 @@ Friend Module DgvColumnEventArgsExtensions
             ' the column AutoSizeMode as NotSet so the grid-level Fill behavior
             ' and any post-bind conversion can control per-column sizing.
             If .DataGridView IsNot Nothing Then
-                ' Preserve explicit behavior for DgvBasalPerHour: do not alter its
-                ' per-column sizing — leave as AllCells so this grid remains unchanged.
-                If .DataGridView.Name = NameOf(Form1.DgvBasalPerHour) Then
-                    .AutoSizeMode = AllCells
-                ElseIf .DataGridView.AutoSizeColumnsMode = Fill Then
+                If .DataGridView.AutoSizeColumnsMode = Fill Then
                     ' Grid-level Fill: let post-bind conversion control per-column sizing
                     .AutoSizeMode = NotSet
                 Else

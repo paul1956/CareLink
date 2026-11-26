@@ -32,7 +32,8 @@ Friend Module CursorManagement
     End Sub
 
     ''' <summary>
-    '''   Retrieves the CursorState associated with the specified form owner, creating a new instance if one does not already exist.
+    '''   Retrieves the CursorState associated with the specified form owner,
+    '''   creating a new instance if one does not already exist.
     ''' </summary>
     ''' <param name="owner">The form that owns the cursor state.</param>
     ''' <returns>The CursorState associated with the specified form.</returns>
@@ -96,7 +97,9 @@ Friend Module CursorManagement
     End Sub
 
     ''' <summary>
-    '''  Indicates that a data binding operation has started for the specified DataGridView, incrementing the pending bindings count and setting the cursor to WaitCursor if it is not already set.
+    '''  Indicates that a data binding operation has started for the specified DataGridView,
+    '''  incrementing the pending bindings count and setting the cursor to WaitCursor
+    '''  if it is not already set.
     ''' </summary>
     ''' <param name="owner">The form that owns the cursor.</param>
     ''' <param name="dgv">The DataGridView that is being bound.</param>
@@ -104,10 +107,10 @@ Friend Module CursorManagement
     Friend Sub BindingStarted(owner As Form, dgv As DataGridView)
         ArgumentNullException.ThrowIfNull(argument:=dgv)
         Dim state As CursorState = GetState(owner)
-        Dim key As Integer = RuntimeHelpers.GetHashCode(dgv)
+        Dim key As Integer = RuntimeHelpers.GetHashCode(o:=dgv)
         SyncLock state.dgvBindingRefs
             Dim count As Integer = 0
-            If state.dgvBindingRefs.TryGetValue(key, count) Then
+            If state.dgvBindingRefs.TryGetValue(key, value:=count) Then
                 state.dgvBindingRefs(key) = count + 1
             Else
                 state.dgvBindingRefs(key) = 1
@@ -141,7 +144,9 @@ Friend Module CursorManagement
     End Sub
 
     ''' <summary>
-    '''  Indicates that a cursor operation has started, incrementing the pending cursor operations count and setting the cursor to WaitCursor if it is not already set.
+    '''  Indicates that a cursor operation has started,
+    '''  incrementing the pending cursor operations count and setting the cursor to WaitCursor
+    '''  if it is not already set.
     ''' </summary>
     ''' <param name="owner">The form that owns the cursor.</param>
     <Extension>

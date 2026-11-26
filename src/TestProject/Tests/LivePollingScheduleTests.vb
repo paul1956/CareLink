@@ -11,15 +11,21 @@ Public Class LivePollingScheduleTests
 
     Private Shared Function ConfirmedSchedule(serverAge As Long) As LivePollingSchedule
         Dim schedule As New LivePollingSchedule()
-        schedule.Observe(data:=Sample(deviceTime:=DeviceBase, updateTime:=ServerBase, serverTime:=ServerBase + 45000),
+        schedule.Observe(data:=Sample(deviceTime:=DeviceBase,
+                                      updateTime:=ServerBase,
+                                      serverTime:=ServerBase + 45000),
                          observationTicks:=0)
-        schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 300000, updateTime:=ServerBase + 300000, serverTime:=ServerBase + 300000 + serverAge),
+        schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 300000,
+                                      updateTime:=ServerBase + 300000,
+                                      serverTime:=ServerBase + 300000 + serverAge),
                          observationTicks:=0)
         Return schedule
     End Function
 
-    Private Shared Function Sample(deviceTime As Long, updateTime As Long, serverTime As Long,
-                                       Optional sg As Single = 100) As PatientDataInfo
+    Private Shared Function Sample(deviceTime As Long,
+                                   updateTime As Long, serverTime As Long,
+                                   Optional sg As Single = 100) As PatientDataInfo
+
         Return New PatientDataInfo With {
             .MedicalDeviceTime = deviceTime,
             .LastMedicalDeviceDataUpdateServerTime = updateTime,
@@ -29,7 +35,7 @@ Public Class LivePollingScheduleTests
 
     <Fact>
     Public Sub AlignsWithoutPollingFasterThanFiftySeconds()
-        Dim schedule As LivePollingSchedule = ConfirmedSchedule(45000)
+        Dim schedule As LivePollingSchedule = ConfirmedSchedule(serverAge:=45000)
         Dim elapsedSeconds As Long = 0
         For i As Integer = 1 To 4
             Dim interval As Integer = schedule.NextInterval(nowTicks:=elapsedSeconds * Stopwatch.Frequency)
@@ -44,11 +50,15 @@ Public Class LivePollingScheduleTests
     <Fact>
     Public Sub ChangedCadenceMustBeConfirmedAgain()
         Dim schedule As LivePollingSchedule = ConfirmedSchedule(serverAge:=45000)
-        schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 640000, updateTime:=ServerBase + 640000, serverTime:=ServerBase + 685000),
+        schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 640000,
+                                      updateTime:=ServerBase + 640000,
+                                      serverTime:=ServerBase + 685000),
                          observationTicks:=0)
         Assert.Equal(expected:=60000,
                      actual:=schedule.NextInterval(nowTicks:=0))
-        schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 940000, updateTime:=ServerBase + 940000, serverTime:=ServerBase + 985000),
+        schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 940000,
+                                      updateTime:=ServerBase + 940000,
+                                      serverTime:=ServerBase + 985000),
                          observationTicks:=0)
         Assert.Equal(expected:=50000,
                      actual:=schedule.NextInterval(nowTicks:=0))
@@ -90,11 +100,16 @@ Public Class LivePollingScheduleTests
     <Fact>
     Public Sub InvalidEventAndMissingSensorDoNotMoveThePhase()
         Dim schedule As LivePollingSchedule = ConfirmedSchedule(serverAge:=45000)
-        schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 360000, updateTime:=ServerBase + 360000, serverTime:=ServerBase + 360000, sg:=0),
+        schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 360000,
+                                      updateTime:=ServerBase + 360000,
+                                      serverTime:=ServerBase + 360000,
+                                      sg:=0),
                          observationTicks:=0)
         Assert.Equal(expected:=50000,
                      actual:=schedule.NextInterval(nowTicks:=0))
-        schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 900000, updateTime:=ServerBase + 900000, serverTime:=ServerBase + 945000),
+        schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 900000,
+                                      updateTime:=ServerBase + 900000,
+                                      serverTime:=ServerBase + 945000),
                          observationTicks:=0)
         Assert.Equal(expected:=50000,
                      actual:=schedule.NextInterval(nowTicks:=0))
@@ -105,11 +120,15 @@ Public Class LivePollingScheduleTests
         Dim schedule As New LivePollingSchedule()
         Assert.Equal(expected:=60000,
                      actual:=schedule.NextInterval(nowTicks:=0))
-        schedule.Observe(data:=Sample(deviceTime:=DeviceBase, updateTime:=ServerBase, serverTime:=ServerBase + 45000),
+        schedule.Observe(data:=Sample(deviceTime:=DeviceBase,
+                                      updateTime:=ServerBase,
+                                      serverTime:=ServerBase + 45000),
                          observationTicks:=0)
         Assert.Equal(expected:=60000,
                      actual:=schedule.NextInterval(nowTicks:=0))
-        schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 300000, updateTime:=ServerBase + 300000, serverTime:=ServerBase + 345000),
+        schedule.Observe(data:=Sample(deviceTime:=DeviceBase + 300000,
+                                      updateTime:=ServerBase + 300000,
+                                      serverTime:=ServerBase + 345000),
                          observationTicks:=0)
         Assert.Equal(expected:=50000,
                      actual:=schedule.NextInterval(nowTicks:=0))

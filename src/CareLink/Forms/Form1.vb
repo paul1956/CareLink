@@ -937,7 +937,9 @@ Public Class Form1
     ''' <remarks>
     '''  Validate minimal prerequisites for inlined formatters.
     ''' </remarks>
-    Private Shared Function DgvCellFormattingValidate(dgv As DataGridView, e As DataGridViewCellFormattingEventArgs, ByRef columnName As String) As Boolean
+    Private Shared Function DgvCellFormattingValidate(dgv As DataGridView,
+                                                      e As DataGridViewCellFormattingEventArgs,
+                                                      ByRef columnName As String) As Boolean
         If e.Value Is Nothing OrElse e.Value Is DBNull.Value Then
             e.Value = String.Empty
         End If
@@ -1660,6 +1662,9 @@ Public Class Form1
                     e.CellStyle.Font = s_font12Mono
                     e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
 
+                Case NameOf(BasalPerHour.Filler)
+                    ' Ignore filler column for formatting; no action needed.
+
                 Case Else
                     Stop
                     dgv.CellFormattingDefault(e)
@@ -1772,7 +1777,8 @@ Public Class Form1
     End Sub
 
     ''' <summary>
-    '''  Handles the <see cref="DataGridView.DataBindingComplete"/> event for the <see cref="DgvBgReadings"/> DataGridView.
+    '''  Handles the <see cref="DataGridView.DataBindingComplete"/>
+    '''  event for the <see cref="DgvBgReadings"/> DataGridView.
     '''  This event is raised when the data binding operation is complete.
     '''  It applies display names to the columns and clears any selection in the DataGridView.
     ''' </summary>
@@ -2685,7 +2691,18 @@ Public Class Form1
         End With
     End Sub
 
-    Private Sub DgvLowGlucoseSuspended_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) _
+    ''' <summary>
+    '''  Handles the <see cref="DataGridView.DataBindingComplete"/>
+    '''  event for the <see cref="DgvLowGlucoseSuspended"/> DataGridView.
+    ''' </summary>
+    ''' <param name="sender">
+    '''  The source of the event, a <see cref="DataGridView"/> control.
+    ''' </param>
+    ''' <param name="e">
+    '''  A <see cref="DataGridViewBindingCompleteEventArgs"/> that contains the event data.
+    ''' </param>
+    Private Sub DgvLowGlucoseSuspended_DataBindingComplete(sender As Object,
+                                                           e As DataGridViewBindingCompleteEventArgs) _
         Handles DgvLowGlucoseSuspended.DataBindingComplete
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -3435,7 +3452,8 @@ Public Class Form1
     ''' <param name="e">
     '''  A <see cref="DataGridViewBindingCompleteEventArgs"/> that contains the event data.
     ''' </param>
-    Private Sub DgvTherapyAlgorithmState_DataBindingComplete(sender As Object, e As DataGridViewBindingCompleteEventArgs) _
+    Private Sub DgvTherapyAlgorithmState_DataBindingComplete(sender As Object,
+                                                             e As DataGridViewBindingCompleteEventArgs) _
         Handles DgvTherapyAlgorithmState.DataBindingComplete
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -6769,7 +6787,7 @@ Public Class Form1
         Me.PumpNameLabel.Text = GetPumpName()
         Me.ReadingsLabel.Text = $"{GetValidSgRecords().Count()}/{PatientData.Sgs.Count} SG Readings"
 
-        Dim table As DataTable = ClassCollectionToDataTable(classCollection:={PatientData.LastSG}.ToList)
+        Dim table As DataTable = {PatientData.LastSG}.ToList().ToDataTable()
         Me.TlpLastSG.
             DisplayDataTable(Of SG)(table,
                                     className:=NameOf(LastSG),
@@ -6778,7 +6796,7 @@ Public Class Form1
 
         If PatientData.LastAlarm IsNot Nothing Then
             Dim classCollection1 As List(Of SummaryRecord) =
-                GetSummaryRecords(jsonDictionary:=PatientData.LastAlarm.InstanceToDictionary)
+                GetSummaryRecords(jsonDictionary:=PatientData.LastAlarm.ToDictionary())
             UpdateSummaryTab(dgv:=Me.DgvLastAlarm,
                              classCollection:=classCollection1,
                              sort:=True, hideHeaderColumn:=True)
@@ -6789,7 +6807,7 @@ Public Class Form1
                                                rowIndex:=ServerDataEnum.lastAlarm,
                                                hideRecordNumberColumn:=True)
         End If
-        table = ClassCollectionToDataTable(classCollection:={s_activeInsulin}.ToList)
+        table = {s_activeInsulin}.ToList().ToDataTable()
         Me.TlpActiveInsulin.
             DisplayDataTable(Of ActiveInsulin)(table,
                                                className:=NameOf(ActiveInsulin),
@@ -6802,7 +6820,7 @@ Public Class Form1
             End Function
         Dim classCollection As List(Of SG) =
             s_sgRecords.OrderByDescending(keySelector).ToList()
-        table = ClassCollectionToDataTable(classCollection)
+        table = classCollection.ToDataTable()
         Me.TlpSgs.
             DisplayDataTable(Of SG)(table,
                                     dgv:=Me.DgvSGs,
@@ -6810,7 +6828,7 @@ Public Class Form1
         Me.DgvSGs.AutoSize = True
         Me.DgvSGs.Columns(index:=0).HeaderCell.SortGlyphDirection = SortOrder.Descending
 
-        table = ClassCollectionToDataTable(classCollection:=LimitRecordsList)
+        table = LimitRecordsList.ToDataTable()
         Me.TlpLimits.
             DisplayDataTable(Of Limit)(table,
                                       className:=NameOf(Limit),
@@ -6818,13 +6836,13 @@ Public Class Form1
 
         If PatientData.TherapyAlgorithmState IsNot Nothing Then
             Dim classCollection2 As List(Of SummaryRecord) =
-            GetSummaryRecords(jsonDictionary:=PatientData.TherapyAlgorithmState.InstanceToDictionary)
+            GetSummaryRecords(jsonDictionary:=PatientData.TherapyAlgorithmState.ToDictionary)
             UpdateSummaryTab(dgv:=Me.DgvTherapyAlgorithmState,
                          classCollection:=classCollection2,
                          sort:=False, hideHeaderColumn:=True)
         End If
 
-        table = ClassCollectionToDataTable(BasalList.ClassCollection)
+        table = BasalList.ClassCollection.ToDataTable()
         Me.TlpBasal.
             DisplayDataTable(Of Basal)(table,
                                        className:=NameOf(Basal),

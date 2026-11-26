@@ -36,7 +36,7 @@ Friend Module Form1SummaryTabHelpers
             BindingStarted(owner:=My.Forms.Form1, dgv)
         Catch
         End Try
-        dgv.DataSource = ClassCollectionToDataTable(classCollection)
+        dgv.DataSource = classCollection.ToDataTable()
         dgv.RowHeadersVisible = False
         If s_currentSummaryRow <> 0 Then
             If dgv.Name = My.Forms.Form1.DgvSummary.Name Then

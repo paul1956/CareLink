@@ -75,8 +75,11 @@ Public Class Client2TransientErrorsTests
         Public ReadOnly Property RequestBodies As New List(Of String)
 
         Protected Overrides Async Function SendAsync(request As HttpRequestMessage,
-                                                     cancellationToken As CancellationToken) As Task(Of HttpResponseMessage)
-            Me.RequestBodies.Add(item:=Await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwaitFalse())
+                                                     cancellationToken As CancellationToken) _
+            As Task(Of HttpResponseMessage)
+
+            Me.RequestBodies.Add(item:=Await request.Content.ReadAsStringAsync(cancellationToken) _
+                                                            .ConfigureAwaitFalse())
             If _exceptions.Count > 0 Then
                 Throw _exceptions.Dequeue()
             End If

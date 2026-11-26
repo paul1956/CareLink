@@ -56,7 +56,9 @@ Friend Module GetManualBasalPoints
             Return New SortedDictionary(Of OADate, Single)
         End If
 
-        Dim basalRateRecords As List(Of BasalRateRecord) = GetActiveBasalRateRecords()
+        Dim basalRateRecords As List(Of BasalRateRecord) =
+            GetActiveBasalRateRecords()
+
         If basalRateRecords.Count = 0 Then
             Return New SortedDictionary(Of OADate, Single)
         End If
@@ -75,7 +77,8 @@ Friend Module GetManualBasalPoints
                                            Eleven59.AddMinutes(value:=1),
                                            basalRateRecords(index:=e.Index + 1).Time)
 
-                Dim currentTimeOnly As TimeOnly = TimeOnly.FromDateTime(Date.FromOADate(currentMarkerTime))
+                Dim currentTimeOnly As TimeOnly =
+                    TimeOnly.FromDateTime(Date.FromOADate(d:=currentMarkerTime))
 
                 If currentTimeOnly.IsBetween(start, [end]) Then
                     Dim rate As Single = basalRecord.UnitsPerHr / 12
@@ -86,8 +89,9 @@ Friend Module GetManualBasalPoints
                         Else
                             timeOrderedMarkers.Add(key:=currentMarkerTime, value:=GetMinBasal())
                         End If
-                        Dim oaBaseDate As Date = Date.FromOADate(currentMarkerTime)
-                        Dim increments As Integer = CInt(Math.Ceiling((basalRecord.UnitsPerHr / GetMinBasal()).RoundToStep()))
+                        Dim oaBaseDate As Date = Date.FromOADate(d:=currentMarkerTime)
+                        Dim increments As Integer =
+                            CInt(Math.Ceiling(a:=(basalRecord.UnitsPerHr / GetMinBasal()).RoundToStep()))
                         value = New TimeSpan(hours:=0, minutes:=60 \ increments, seconds:=0)
                         currentMarkerTime = New OADate(asDate:=oaBaseDate.Add(value))
                     Else
@@ -96,7 +100,7 @@ Friend Module GetManualBasalPoints
                         Else
                             timeOrderedMarkers.Add(key:=currentMarkerTime, value:=rate)
                         End If
-                        Dim oaBaseDate As Date = Date.FromOADate(currentMarkerTime)
+                        Dim oaBaseDate As Date = Date.FromOADate(d:=currentMarkerTime)
                         currentMarkerTime = New OADate(asDate:=oaBaseDate.Add(value:=FiveMinuteSpan))
                     End If
                     Exit For

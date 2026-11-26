@@ -28,11 +28,17 @@ Public Class NotificationGridTests
                     Dim json As String = File.ReadAllText(path:=FileIoHelpers.GetTestDataPath())
                     Using document As JsonDocument = JsonDocument.Parse(json)
                         PatientData = New PatientDataInfo With {
-                            .MedicalDeviceFamily = document.RootElement.GetProperty(propertyName:="medicalDeviceFamily").GetString()}
-                        Dim history As JsonElement = document.RootElement.GetProperty(propertyName:="notificationHistory")
+                            .MedicalDeviceFamily = document.RootElement.
+                                                            GetProperty(propertyName:="medicalDeviceFamily").
+                                                            GetString()}
+
+                        Dim history As JsonElement = document.RootElement.
+                                                              GetProperty(propertyName:="notificationHistory")
                         s_notificationHistoryValue = New Dictionary(Of String, String) From {
-                            {"clearedNotifications", history.GetProperty(propertyName:="clearedNotifications").GetRawText()},
-                            {"activeNotifications", "[]"}}
+                            {"clearedNotifications",
+                             history.GetProperty(propertyName:="clearedNotifications").GetRawText()},
+                            {"activeNotifications",
+                             "[]"}}
                     End Using
 
                     Using owner As New Form1()
@@ -40,7 +46,9 @@ Public Class NotificationGridTests
                         owner.ClientSize = size
                         owner.Show()
                         owner.DeviceDpi.Should().Be(expected:=96, because:="the application currently supports 96 DPI")
-                        owner.ClientSize.Should().Be(expected:=size, because:="the test uses the supported fixed client size")
+
+                        Const because As String = "the test uses the supported fixed client size"
+                        owner.ClientSize.Should().Be(expected:=size, because:=because)
                         owner.TabControlPage1.Visible = True
                         If visibleBeforeLoading Then
                             owner.TabControlPage1.SelectedTab = owner.TabPage11NotificationsCleared
@@ -72,24 +80,34 @@ Public Class NotificationGridTests
                                 Dim rowHeight As Integer = panel.GetRowHeights()(rowIndex)
                                 Dim details As String =
                                     $"{scenario}, size={size}, row={rowIndex}, grid={grid.Bounds}, " &
-                                    $"client={grid.ClientRectangle}, rowsHeight={rowsHeight}, lastRow={lastRowBounds}, " &
+                                    $"client={grid.ClientRectangle}, rowsHeight={rowsHeight}, " &
+                                    $"lastRow={lastRowBounds}, " &
                                     $"panelRowHeight={rowHeight}, scroll={panel.AutoScrollPosition}"
                                 lastRowBounds.Bottom.Should().BeLessThanOrEqualTo(
                                     expected:=grid.ClientRectangle.Bottom + 2,
                                     because:=$"the last row must not be clipped ({{0}})", details)
                                 Dim gridGap As Integer = grid.ClientSize.Height - rowsHeight
+
+                                Const because1 As String =
+                                    "the grid must fit its visible rows without excess space ({0})"
                                 gridGap.Should().BeInRange(minimumValue:=0,
                                                            maximumValue:=2,
-                                                           because:="the grid must fit its visible rows without excess space ({0})",
+                                                           because:=because1,
                                                            details)
                                 Dim rowGap As Integer = rowHeight - rowsHeight
+
+                                Dim because2 As String =
+                                    $"the panel row must fit the notification without excess space ({{0}})"
                                 rowGap.Should().BeInRange(minimumValue:=0,
                                                           maximumValue:=20,
-                                                          because:=$"the panel row must fit the notification without excess space ({{0}})",
+                                                          because:=because2,
                                                           details)
                             Next
+
+                            Const because3 As String =
+                                "the seven notifications must be scrollable ({0}, size={1}, client={2})"
                             panel.VerticalScroll.Visible.Should().BeTrue(
-                                because:=$"the seven notifications must be scrollable ({{0}}, size={{1}}, client={{2}})",
+                                because:=because3,
                                 scenario, size, panel.ClientSize)
                             panel.AutoScrollPosition = New Point(x:=0, y:=Integer.MaxValue)
                             Application.DoEvents()
@@ -102,10 +120,13 @@ Public Class NotificationGridTests
                             Dim bottomDetails As String =
                                 $"{scenario}, size={size}, client={panel.ClientSize}, " &
                                 $"display={panel.DisplayRectangle}, scroll={panel.AutoScrollPosition}, " &
-                                $"last={lastGrid.Bounds}, rows={String.Join(separator:=",", values:=panel.GetRowHeights())}"
+                                $"last={lastGrid.Bounds}, " &
+                                $"rows={String.Join(separator:=",", values:=panel.GetRowHeights())}"
+                            Dim because4 As String =
+                                $"the last grid must be visible without excess scroll space below it ({{0}})"
                             gap.Should().BeInRange(minimumValue:=0,
                                                    maximumValue:=20,
-                                                   because:=$"the last grid must be visible without excess scroll space below it ({{0}})",
+                                                   because:=because4,
                                                    bottomDetails)
                         Next
                     End Using
@@ -242,8 +263,11 @@ Public Class NotificationGridTests
                             Dim grids As DataGridView() = panel.Controls.OfType(Of DataGridView)().ToArray()
                             Assert.Equal(expected:=2,
                                          actual:=grids.Length)
-                            Dim activeGrid As DataGridView =
-                                Assert.Single(collection:=owner.TlpNotificationActive.Controls.OfType(Of DataGridView)())
+
+                            Dim collection As IEnumerable(Of DataGridView) =
+                            owner.TlpNotificationActive.Controls.OfType(Of DataGridView)()
+
+                            Dim activeGrid As DataGridView = Assert.Single(collection)
                             Assert.Equal(expected:=BorderStyle.FixedSingle,
                                          actual:=activeGrid.BorderStyle)
                             For Each grid As DataGridView In grids
@@ -252,7 +276,8 @@ Public Class NotificationGridTests
                                 Assert.True(condition:=grid.Rows.Count > 1)
                                 For Each column As DataGridViewColumn In grid.Columns
                                     If column.Visible Then
-                                        Dim padding As Padding = grid.Rows(index:=0).Cells(column.Index).GetFormattedStyle().Padding
+                                        Dim padding As Padding =
+                                            grid.Rows(index:=0).Cells(column.Index).GetFormattedStyle().Padding
                                         Assert.True(condition:=padding.Left >= 2 AndAlso padding.Right >= 2,
                                                     userMessage:=$"{column.Name} padding was {padding}.")
                                     End If
@@ -261,13 +286,17 @@ Public Class NotificationGridTests
                                 Assert.Equal(expected:=Fill,
                                              actual:=lastColumn.AutoSizeMode)
                                 Assert.Equal(expected:=DataGridViewTriState.True,
-                                             actual:=grid.Rows(index:=0).Cells(lastColumn.Index).InheritedStyle.WrapMode)
+                                             actual:=grid.Rows(index:=0) _
+                                                         .Cells(lastColumn.Index).InheritedStyle.WrapMode)
                                 Assert.Equal(expected:=DataGridViewTriState.False,
-                                             actual:=grid.Rows(index:=1).Cells(lastColumn.Index).InheritedStyle.WrapMode)
+                                             actual:=grid.Rows(index:=1) _
+                                                         .Cells(lastColumn.Index).InheritedStyle.WrapMode)
+                                Dim rowStyle As RowStyle =
+                                    panel.RowStyles(index:=panel.Controls.IndexOf(control:=grid))
                                 Assert.Equal(expected:=SizeType.Absolute,
-                                             actual:=panel.RowStyles(index:=panel.Controls.IndexOf(control:=grid)).SizeType)
-                                Assert.Equal(expected:=CSng(grid.Height + grid.Margin.Vertical),
-                                             actual:=panel.RowStyles(index:=panel.Controls.IndexOf(control:=grid)).Height)
+                                             actual:=rowStyle.SizeType)
+                                Assert.Equal(expected:=grid.Height + grid.Margin.Vertical,
+                                             actual:=rowStyle.Height)
                                 Dim rowsHeight As Integer =
                                     grid.Rows.GetRowsHeight(includeFilter:=DataGridViewElementStates.Visible)
                                 Assert.InRange(actual:=grid.ClientSize.Height - rowsHeight,
@@ -289,8 +318,10 @@ Public Class NotificationGridTests
                                                            End Function).ToArray()
                             Assert.True(condition:=orderedGrids(1).Top > orderedGrids(0).Bottom)
                             For Each grid As DataGridView In grids
+                                Dim rowStyle As RowStyle =
+                                    panel.RowStyles(index:=panel.Controls.IndexOf(control:=grid))
                                 Assert.Equal(expected:=grid.Height + grid.Margin.Vertical,
-                                             actual:=panel.RowStyles(index:=panel.Controls.IndexOf(control:=grid)).Height)
+                                             actual:=rowStyle.Height)
                             Next
                         Next
                     End Using

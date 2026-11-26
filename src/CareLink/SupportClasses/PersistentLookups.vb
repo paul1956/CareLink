@@ -228,13 +228,18 @@ Public Class PersistentLookups
     '''  Loads user notification templates from the project data directory.
     ''' </summary>
     Public Sub New()
-        Me.New(GetProjectDataDirectory(),
-               Function(id As String, current As String) Interaction.InputBox(
-                   Prompt:=$"Enter a description for error {id}:",
-                   Title:="New Error lookup value", DefaultResponse:=current),
-               Function(warning As String) MessageBox.Show(
-                   text:=warning, caption:="Unsupported placeholders",
-                   buttons:=MessageBoxButtons.YesNoCancel, icon:=MessageBoxIcon.Warning))
+        Me.New(folder:=GetProjectDataDirectory(),
+               prompt:=Function(id As String, current As String)
+                           Return Interaction.InputBox(Prompt:=$"Enter a description for error {id}:",
+                                                       Title:="New Error lookup value",
+                                                       DefaultResponse:=current)
+                       End Function,
+               confirm:=Function(warning As String)
+                            Return MessageBox.Show(text:=warning,
+                                                   caption:="Unsupported placeholders",
+                                                   buttons:=MessageBoxButtons.YesNoCancel,
+                                                   icon:=MessageBoxIcon.Warning)
+                        End Function)
     End Sub
 
     Friend Sub New(folder As String, prompt As Func(Of String, String, String),
@@ -244,60 +249,93 @@ Public Class PersistentLookups
         _confirm = confirm
         _flexErrorFileName = Path.Combine(folder, "FlexErrors.json")
         _legacyErrorFileName = Path.Combine(folder, "LegacyErrors.json")
-        _flexErrors = LoadDictionary(_flexErrorFileName, Function(key As String) ParseFlexKey(key))
-        _legacyErrors = LoadDictionary(_legacyErrorFileName, Function(key As String) ParseLegacyKey(key))
+        Dim parseKey As Func(Of String, Decimal) =
+            Function(key As String)
+                Return ParseFlexKey(key)
+            End Function
+        _flexErrors = LoadDictionary(fileName:=_flexErrorFileName, parseKey)
+        _legacyErrors = LoadDictionary(fileName:=_legacyErrorFileName,
+                                       parseKey:=Function(key As String)
+                                                     Return ParseLegacyKey(key)
+                                                 End Function)
     End Sub
 
-    Private Shared Function CreateTemplates(Of TKey)(messages As Dictionary(Of TKey, String)) As Dictionary(Of TKey, NotificationTemplate)
-        Return messages.ToDictionary(Function(pair As KeyValuePair(Of TKey, String)) pair.Key,
-                                     Function(pair As KeyValuePair(Of TKey, String)) New NotificationTemplate(pair.Value))
+    Private Shared Function CreateTemplates(Of TKey)(messages As Dictionary(Of TKey, String)) _
+        As Dictionary(Of TKey, NotificationTemplate)
+
+        Dim keySelector As Func(Of KeyValuePair(Of TKey, String), TKey) =
+            Function(pair As KeyValuePair(Of TKey, String))
+                Return pair.Key
+            End Function
+        Dim elementSelector As Func(Of KeyValuePair(Of TKey, String), NotificationTemplate) =
+            Function(pair As KeyValuePair(Of TKey, String))
+                Return New NotificationTemplate(message:=pair.Value)
+            End Function
+        Return messages.ToDictionary(keySelector,
+                                     elementSelector)
     End Function
 
     Private Shared Function ParseFlexKey(key As String) As Decimal
         Dim value As Decimal
-        If Not Regex.IsMatch(key, "^[0-9]+(?:\.[0-9]+)?$") OrElse
-           Not Decimal.TryParse(key, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, value) Then
-            Throw New FormatException($"Invalid Flex fault ID: {key}")
+        If Not Regex.IsMatch(input:=key, pattern:="^[0-9]+(?:\.[0-9]+)?$") OrElse
+           Not Decimal.TryParse(s:=key,
+                                style:=NumberStyles.AllowDecimalPoint,
+                                provider:=CultureInfo.InvariantCulture,
+                                result:=value) Then
+            Throw New FormatException(message:=$"Invalid Flex fault ID: {key}")
         End If
-        Dim parts As String() = key.Split("."c)
-        Dim whole As String = parts(0).TrimStart("0"c)
+        Dim parts As String() = key.Split(separator:="."c)
+        Dim whole As String = parts(0).TrimStart(trimChar:="0"c)
         If whole.Length = 0 Then
             whole = "0"
         End If
-        Dim fraction As String = If(parts.Length = 2, parts(1).TrimEnd("0"c), String.Empty)
-        Dim normalized As String = whole & If(fraction.Length > 0, "." & fraction, String.Empty)
-        If normalized <> value.ToString("0.############################", CultureInfo.InvariantCulture) Then
-            Throw New FormatException($"Flex fault ID cannot be represented exactly: {key}")
+        Dim fraction As String = If(parts.Length = 2,
+                                    parts(1).TrimEnd(trimChar:="0"c),
+                                    String.Empty)
+        Dim normalized As String = $"{whole}{If(fraction.Length > 0,
+                                                "." & fraction,
+                                                String.Empty)}"
+        Const format As String = "0.############################"
+        If normalized <> value.ToString(format, provider:=CultureInfo.InvariantCulture) Then
+            Throw New FormatException(message:=$"Flex fault ID cannot be represented exactly: {key}")
         End If
         Return value
     End Function
 
     Private Shared Function ParseLegacyKey(key As String) As Integer
         Dim value As Integer
-        If Not Regex.IsMatch(key, "^[0-9]+$") OrElse
-           Not Integer.TryParse(key, NumberStyles.None, CultureInfo.InvariantCulture, value) Then
-            Throw New FormatException($"Invalid legacy fault ID: {key}")
+        If Not Regex.IsMatch(input:=key, pattern:="^[0-9]+$") OrElse
+           Not Integer.TryParse(s:=key,
+                                style:=NumberStyles.None,
+                                provider:=CultureInfo.InvariantCulture,
+                                result:=value) Then
+
+            Throw New FormatException(message:=$"Invalid legacy fault ID: {key}")
         End If
         Return value
     End Function
 
-    Private Shared Function LoadDictionary(Of TKey)(fileName As String, parseKey As Func(Of String, TKey)) As Dictionary(Of TKey, NotificationTemplate)
+    Private Shared Function LoadDictionary(Of TKey)(fileName As String, parseKey As Func(Of String, TKey)) _
+        As Dictionary(Of TKey, NotificationTemplate)
+
         Dim values As New Dictionary(Of TKey, NotificationTemplate)()
         If Not File.Exists(path:=fileName) Then
             Return values
         End If
 
-        Using document As JsonDocument = JsonDocument.Parse(File.ReadAllText(path:=fileName))
+        Using document As JsonDocument = JsonDocument.Parse(json:=File.ReadAllText(path:=fileName))
             If document.RootElement.ValueKind <> JsonValueKind.Object Then
-                Throw New InvalidDataException($"The lookup file must contain an object: {fileName}")
+                Throw New InvalidDataException(message:=$"The lookup file must contain an object: {fileName}")
             End If
             For Each item As JsonProperty In document.RootElement.EnumerateObject()
-                Dim key As TKey = parseKey(item.Name)
-                If item.Value.ValueKind <> JsonValueKind.String OrElse String.IsNullOrWhiteSpace(item.Value.GetString()) Then
-                    Throw New InvalidDataException($"Invalid message for fault ID {item.Name} in {fileName}.")
+                Dim key As TKey = parseKey(arg:=item.Name)
+                If item.Value.ValueKind <> JsonValueKind.String OrElse
+                   String.IsNullOrWhiteSpace(value:=item.Value.GetString()) Then
+
+                    Throw New InvalidDataException(message:=$"Invalid message for fault ID {item.Name} in {fileName}.")
                 End If
-                If Not values.TryAdd(key, New NotificationTemplate(item.Value.GetString())) Then
-                    Throw New InvalidDataException($"Duplicate fault ID {item.Name} in {fileName}.")
+                If Not values.TryAdd(key, value:=New NotificationTemplate(message:=item.Value.GetString())) Then
+                    Throw New InvalidDataException(message:=$"Duplicate fault ID {item.Name} in {fileName}.")
                 End If
             Next
         End Using
@@ -309,26 +347,31 @@ Public Class PersistentLookups
                                          values As Dictionary(Of TKey, NotificationTemplate),
                                          fileName As String) As NotificationTemplate
         Dim template As NotificationTemplate = Nothing
-        If builtIn.TryGetValue(key, template) OrElse values.TryGetValue(key, template) Then
+        If builtIn.TryGetValue(key, value:=template) OrElse values.TryGetValue(key, value:=template) Then
             Return template
         End If
 
         Dim message As String = String.Empty
         Do
             message = _prompt(faultId, message)
-            If String.IsNullOrWhiteSpace(message) Then
+            If String.IsNullOrWhiteSpace(value:=message) Then
                 Return Nothing
             End If
             template = New NotificationTemplate(message)
-            Dim unsupported As String() = template.Placeholders.
-                Where(Function(name As String) Not IsSupportedNotificationPlaceholder(name)).ToArray()
+            Dim predicate As Func(Of String, Boolean) =
+                Function(name As String)
+                    Return Not IsSupportedNotificationPlaceholder(name)
+                End Function
+            Dim unsupported As String() =
+                template.Placeholders.Where(predicate).ToArray()
             If unsupported.Length = 0 Then
                 Exit Do
             End If
-            Dim warning As String = $"Unsupported placeholders: {String.Join(", ", unsupported)}.{vbCrLf}" &
+            Dim warning As String =
+                $"Unsupported placeholders: {String.Join(separator:=", ", value:=unsupported)}.{vbCrLf}" &
                 "These will remain in the message until a future release supports them." & vbCrLf &
                 "Choose Yes to save anyway, No to edit, or Cancel to discard."
-            Select Case _confirm(warning)
+            Select Case _confirm(arg:=warning)
                 Case DialogResult.Yes
                     Exit Do
                 Case DialogResult.No
@@ -338,11 +381,19 @@ Public Class PersistentLookups
             End Select
         Loop
 
-        values.Add(key, template)
+        values.Add(key, value:=template)
         Try
-            SaveDictionary(fileName, values.ToDictionary(
-                Function(pair As KeyValuePair(Of TKey, NotificationTemplate)) pair.Key,
-                Function(pair As KeyValuePair(Of TKey, NotificationTemplate)) pair.Value.Message))
+            Dim keySelector As Func(Of KeyValuePair(Of TKey, NotificationTemplate), TKey) =
+                Function(pair As KeyValuePair(Of TKey, NotificationTemplate))
+                    Return pair.Key
+                End Function
+            Dim elementSelector As Func(Of KeyValuePair(Of TKey, NotificationTemplate), String) =
+                Function(pair As KeyValuePair(Of TKey, NotificationTemplate))
+                    Return pair.Value.Message
+                End Function
+
+            SaveDictionary(fileName,
+                           values:=values.ToDictionary(keySelector, elementSelector))
         Catch
             values.Remove(key)
             Throw
@@ -393,11 +444,19 @@ Public Class PersistentLookups
             Throw New ArgumentException(message:="A fault ID is required.", paramName:=NameOf(faultId))
         End If
         If faultId.Contains(value:="."c) Then
-            Dim key As Decimal = ParseFlexKey(faultId)
-            Return Me.LookupCore(faultId, key, s_flexTemplates, _flexErrors, _flexErrorFileName)
+            Dim key As Decimal = ParseFlexKey(key:=faultId)
+            Return Me.LookupCore(faultId,
+                                 key,
+                                 builtIn:=s_flexTemplates,
+                                 values:=_flexErrors,
+                                 fileName:=_flexErrorFileName)
         End If
-        Dim legacyKey As Integer = ParseLegacyKey(faultId)
-        Return Me.LookupCore(faultId, legacyKey, s_legacyTemplates, _legacyErrors, _legacyErrorFileName)
+        Dim legacyKey As Integer = ParseLegacyKey(key:=faultId)
+        Return Me.LookupCore(faultId,
+                             key:=legacyKey,
+                             builtIn:=s_legacyTemplates,
+                             values:=_legacyErrors,
+                             fileName:=_legacyErrorFileName)
     End Function
 
 End Class
