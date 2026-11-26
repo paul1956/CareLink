@@ -68,7 +68,8 @@ Public Module JsonExtensions
     ''' </summary>
     ''' <Property name="source">The source dictionary to convert.</Property>
     ''' <returns>A new dictionary with string values.</returns>
-    Friend Function ConvertJsonElementDict(source As Dictionary(Of String, JsonElement)) As Dictionary(Of String, String)
+    <Extension>
+    Friend Function ToDictionary(source As Dictionary(Of String, JsonElement)) As Dictionary(Of String, String)
         Dim result As New Dictionary(Of String, String)(Comparer)
 
         If source Is Nothing Then
@@ -88,6 +89,28 @@ Public Module JsonExtensions
                 ' Handle unexpected conversion issues
                 result(kvp.Key) = Nothing
             End Try
+        Next
+
+        Return result
+    End Function
+
+    ''' <summary>
+    '''  Converts a JsonElement (Object) into a Dictionary(Of String, JsonElement).
+    ''' </summary>
+    ''' <param name="element">The JsonElement representing a JSON object.</param>
+    ''' <returns>A dictionary of the object's properties.</returns>
+    <Extension>
+    Public Function ElementToDictionary(element As JsonElement) As Dictionary(Of String, JsonElement)
+        Dim result As New Dictionary(Of String, JsonElement)(Comparer)
+
+        ' Ensure the element is an object
+        If element.ValueKind <> JsonValueKind.Object Then
+            Throw New ArgumentException(message:="JsonElement must be an object to convert to Dictionary.")
+        End If
+
+        ' Enumerate properties and add to dictionary
+        For Each prop As JsonProperty In element.EnumerateObject()
+            result(key:=prop.Name) = prop.Value
         Next
 
         Return result
@@ -244,28 +267,6 @@ Public Module JsonExtensions
             ' Other unexpected errors (e.g., OutOfMemoryException)
             Return False
         End Try
-    End Function
-
-    ''' <summary>
-    '''  Converts a JsonElement (Object) into a Dictionary(Of String, JsonElement).
-    ''' </summary>
-    ''' <param name="element">The JsonElement representing a JSON object.</param>
-    ''' <returns>A dictionary of the object's properties.</returns>
-    <Extension>
-    Public Function JsonElementToDictionary(element As JsonElement) As Dictionary(Of String, JsonElement)
-        Dim result As New Dictionary(Of String, JsonElement)(Comparer)
-
-        ' Ensure the element is an object
-        If element.ValueKind <> JsonValueKind.Object Then
-            Throw New ArgumentException(message:="JsonElement must be an object to convert to Dictionary.")
-        End If
-
-        ' Enumerate properties and add to dictionary
-        For Each prop As JsonProperty In element.EnumerateObject()
-            result(key:=prop.Name) = prop.Value
-        Next
-
-        Return result
     End Function
 
     ''' <summary>

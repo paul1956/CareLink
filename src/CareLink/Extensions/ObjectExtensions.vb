@@ -45,7 +45,7 @@ Friend Module ObjectExtensions
                     Case NameOf(AdditionalInfo.AdditionalProperties)
                         Dim source As Dictionary(Of String, JsonElement) =
                             CType(obj, Dictionary(Of String, JsonElement))
-                        second = ConvertJsonElementDict(source)
+                        second = source.ToDictionary()
                         result = result.Concat(second).ToDictionary(keySelector, elementSelector)
                         second.Clear()
                     Case "Acknowledged"

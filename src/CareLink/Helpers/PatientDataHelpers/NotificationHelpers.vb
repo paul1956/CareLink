@@ -74,7 +74,7 @@ Friend Module NotificationHelpers
     Private Sub DgvNotification_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs)
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             ' Notification tables are not filtered by the global JSON filter.
             ' Do not change visibility here so notification tables remain untouched.
             Dim cellStyle As DataGridViewCellStyle =
@@ -83,7 +83,7 @@ Friend Module NotificationHelpers
             Dim caption As String =
                 CType(dgv.DataSource, DataTable).Columns(.Index).Caption
             e.DgvColumnAdded(cellStyle, forceReadOnly:=True, caption)
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
         End With
     End Sub
 
@@ -111,7 +111,9 @@ Friend Module NotificationHelpers
     Private Sub ConfigureNotificationWrapping(dgv As DataGridView)
         If dgv.ColumnCount = 0 OrElse dgv.Rows.Count = 0 Then Return
         Dim lastColumn As DataGridViewColumn = dgv.Columns(index:=dgv.ColumnCount - 1)
-        If lastColumn.AutoSizeMode <> DataGridViewAutoSizeColumnMode.Fill Then Return
+        If lastColumn.AutoSizeMode <> Fill Then
+            Return
+        End If
 
         Dim defaultWrap As DataGridViewTriState = If(dgv.Rows.Count = 1,
                                                     DataGridViewTriState.True,

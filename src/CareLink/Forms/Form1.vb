@@ -216,7 +216,7 @@ Public Class Form1
                     If .Index = lastColumnIndex Then
                         dgv.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
                         .DefaultCellStyle.WrapMode = DataGridViewTriState.True
-                        If .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill Then
+                        If .AutoSizeMode = Fill Then
                             .DefaultCellStyle.WrapMode = DataGridViewTriState.True
                         End If
                     Else
@@ -1273,7 +1273,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         ' No-op placeholder edit.
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of ActiveInsulin)(.Name),
                 forceReadOnly:=True,
@@ -1379,7 +1379,7 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
+            e.Column.SortMode = NotSortable
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
             ' to avoid duplicated/hard-to-maintain visibility logic.
             e.DgvColumnAdded(
@@ -1474,7 +1474,7 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
+            e.Column.SortMode = NotSortable
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
             e.DgvColumnAdded(cellStyle:=GetCellStyle(Of AutoModeStatus)(.Name),
                              forceReadOnly:=True,
@@ -1583,7 +1583,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of Basal)(.Name),
                 forceReadOnly:=True,
@@ -1675,7 +1675,7 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of BasalPerHour)(.Name),
                 forceReadOnly:=True,
@@ -1763,7 +1763,7 @@ Public Class Form1
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of BgReading)(.Name),
                 forceReadOnly:=True,
@@ -1865,7 +1865,7 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             e.DgvColumnAdded(cellStyle:=GetCellStyle(Of Calibration)(.Name),
                              forceReadOnly:=True,
                              CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
@@ -2057,7 +2057,7 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             Dim headerText As String = dgv.Columns(.Index).HeaderText
             If String.IsNullOrWhiteSpace(value:=headerText) Then
                 headerText = .DataPropertyName.Remove(s:="DgvCareLinkUsers")
@@ -2137,7 +2137,7 @@ Public Class Form1
             .Width = 5}
 
         Dim dgvCareLinkUsersCareLinkUserName As New DataGridViewTextBoxColumn With {
-            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .AutoSizeMode = AllCells,
             .DataPropertyName = "CareLinkUserName",
             .HeaderText = $"CareLink™ UserName",
             .MinimumWidth = 125,
@@ -2145,42 +2145,42 @@ Public Class Form1
             .Width = 125}
 
         Dim dgvCareLinkUsersCareLinkPassword As New DataGridViewTextBoxColumn With {
-            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .AutoSizeMode = AllCells,
             .DataPropertyName = "CareLinkPassword",
             .HeaderText = $"CareLink™ Password",
             .Name = NameOf(dgvCareLinkUsersCareLinkPassword),
             .Width = 120}
 
         Dim dgvCareLinkUsersCountryCode As New DataGridViewTextBoxColumn With {
-            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .AutoSizeMode = AllCells,
             .DataPropertyName = "CountryCode",
             .HeaderText = "Country Code",
             .Name = NameOf(dgvCareLinkUsersCountryCode),
             .Width = 97}
 
         Dim dgvCareLinkUsersUseLocalTimeZone As New DataGridViewCheckBoxColumn With {
-            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .AutoSizeMode = AllCells,
             .DataPropertyName = "UseLocalTimeZone",
             .HeaderText = $"Use Local{vbCrLf}Time Zone",
             .Name = NameOf(dgvCareLinkUsersUseLocalTimeZone),
             .Width = 86}
 
         Dim dgvCareLinkUsersAutoLogin As New DataGridViewCheckBoxColumn With {
-            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .AutoSizeMode = AllCells,
             .DataPropertyName = "AutoLogin",
             .HeaderText = "Auto Login",
             .Name = NameOf(dgvCareLinkUsersAutoLogin),
             .Width = 65}
 
         Dim dgvCareLinkUsersCareLinkPartner As New DataGridViewCheckBoxColumn With {
-            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .AutoSizeMode = AllCells,
             .DataPropertyName = "CareLinkPartner",
             .HeaderText = $"CareLink™ Partner",
             .Name = NameOf(dgvCareLinkUsersCareLinkPartner),
             .Width = 86}
 
         Dim dgvCareLinkPatientUserID As New DataGridViewTextBoxColumn With {
-            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells,
+            .AutoSizeMode = AllCells,
             .DataPropertyName = "CareLinkPatientUserID",
             .HeaderText = $"CareLink™ Patient UserID",
             .Name = NameOf(dgvCareLinkPatientUserID),
@@ -2238,7 +2238,7 @@ Public Class Form1
     Private Sub DgvCurrentUser_ColumnAdded(sender As Object, e As DataGridViewColumnEventArgs) _
         Handles DgvCurrentUser.ColumnAdded
 
-        e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
+        e.Column.SortMode = NotSortable
         Dim align As DataGridViewContentAlignment = DataGridViewContentAlignment.MiddleLeft
         Dim padding As New Padding(all:=1)
         Dim cellStyle As New DataGridViewCellStyle()
@@ -2411,7 +2411,7 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of LastAlarm)(.Name),
                 forceReadOnly:=True,
@@ -2491,8 +2491,8 @@ Public Class Form1
         With e.Column
             .AutoSizeMode =
                 If(e.Column.Name = "SensorState",
-                   DataGridViewAutoSizeColumnMode.Fill,
-                   DataGridViewAutoSizeColumnMode.AllCells)
+                   Fill,
+                   AllCells)
 
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
             Dim dgv As DataGridView = CType(sender, DataGridView)
@@ -2500,7 +2500,7 @@ Public Class Form1
                 cellStyle:=GetCellStyle(Of LastSG)(.Name),
                 forceReadOnly:=True,
                 CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
         End With
     End Sub
 
@@ -2593,7 +2593,7 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of Limit)(.Name),
@@ -2676,7 +2676,7 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of LowGlucoseSuspended)(.Name),
@@ -2759,7 +2759,7 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of Meal)(.Name),
@@ -2832,7 +2832,7 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of BannerState)(.Name),
@@ -2851,8 +2851,8 @@ Public Class Form1
         For index As Integer = 0 To last
             dgv.Columns(index).AutoSizeMode =
                 If(index = last,
-                   DataGridViewAutoSizeColumnMode.Fill,
-                   DataGridViewAutoSizeColumnMode.AllCells)
+                   Fill,
+                   AllCells)
         Next
         dgv.ClearSelection()
     End Sub
@@ -3002,13 +3002,13 @@ Public Class Form1
                 CType(dgv.DataSource, DataTable).Columns(e.Column.Index).Caption)
         Select Case e.Column.Index
             Case 0
-                e.Column.SortMode = DataGridViewColumnSortMode.Programmatic
+                e.Column.SortMode = Programmatic
                 e.Column.HeaderCell.SortGlyphDirection = SortOrder.Descending
             Case 1
-                e.Column.SortMode = DataGridViewColumnSortMode.Automatic
+                e.Column.SortMode = Automatic
                 e.Column.HeaderCell.SortGlyphDirection = SortOrder.None
             Case Else
-                e.Column.SortMode = DataGridViewColumnSortMode.NotSortable
+                e.Column.SortMode = NotSortable
         End Select
     End Sub
 
@@ -3316,7 +3316,7 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of SummaryRecord)(.Name),
                 forceReadOnly:=True,
@@ -3413,8 +3413,8 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .AutoSizeMode = AllCells
+            .SortMode = NotSortable
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of TherapyAlgorithmState)(.Name),
@@ -3501,7 +3501,7 @@ Public Class Form1
 
         Dim dgv As DataGridView = CType(sender, DataGridView)
         With e.Column
-            .SortMode = DataGridViewColumnSortMode.NotSortable
+            .SortMode = NotSortable
             ' Column visibility is handled centrally (HideDataGridViewColumnsByName)
             e.DgvColumnAdded(
                 cellStyle:=GetCellStyle(Of TimeChange)(.Name),
@@ -3684,7 +3684,8 @@ Public Class Form1
             Dim result As DialogResult =
                 MessageBox.Show(
                     text:="The Microsoft Edge WebView2 Runtime is required for CareLink login and was not found. " &
-                          "Open Microsoft's download page to install the Evergreen Runtime? Install it, then restart CareLink.",
+                          "Open Microsoft's download page to install the Evergreen Runtime? " &
+                          "Install it, then restart CareLink.",
                     caption:="WebView2 Runtime Required",
                     buttons:=MessageBoxButtons.YesNo,
                     icon:=MessageBoxIcon.Warning)
@@ -4072,7 +4073,9 @@ Public Class Form1
     ''' <remarks>
     '''  The user can select a saved data file to load and process.
     ''' </remarks>
-    Private Async Sub MenuStartUseDataFile_Click(sender As Object, e As EventArgs) Handles MenuStartLoadSavedDataFile.Click
+    Private Async Sub MenuStartUseDataFile_Click(sender As Object, e As EventArgs) _
+              Handles MenuStartLoadSavedDataFile.Click
+
         Dim success As Boolean =
             Await OptionalLoginUpdateDataAsync(owner:=Me,
                                                updateAllTabs:=True,
@@ -4900,7 +4903,8 @@ Public Class Form1
                     Me.DgvCareLinkUsers.DataSource = Nothing
                 Else
                     ' Convert non-generic collection to a List(Of CareLinkUserDataRecord)
-                    Me.DgvCareLinkUsers.BindToList(Of CareLinkUserDataRecord)(s_allUserSettingsData.Cast(Of CareLinkUserDataRecord)().ToList())
+                    Me.DgvCareLinkUsers.BindToList(items:=s_allUserSettingsData.Cast(Of CareLinkUserDataRecord)() _
+                                                                               .ToList())
                 End If
                 For Each c As DataGridViewColumn In Me.DgvCareLinkUsers.Columns
                     c.Visible = Not HideColumn(Of CareLinkUserDataRecord)(item:=c.DataPropertyName)
@@ -5089,7 +5093,10 @@ Public Class Form1
                 End If
             End If
 
-            If _livePollingEnabled AndAlso String.IsNullOrEmpty(value:=lastErrorMessage) AndAlso Not IsPatientDataEmpty() Then
+            If _livePollingEnabled AndAlso
+               String.IsNullOrEmpty(value:=lastErrorMessage) AndAlso
+               Not IsPatientDataEmpty() Then
+
                 _livePolling.Observe(data:=PatientData, observationTicks:=Stopwatch.GetTimestamp())
             End If
             Me.LoginStatus.ReportLoginStatus(hasErrors:=IsPatientDataEmpty(),
@@ -6069,39 +6076,41 @@ Public Class Form1
                     AndAlso s_basalTypes.Contains(value:=PatientData.TherapyAlgorithmState.AutoModeShieldState)
             End If
 
-            If InAutoMode Then
-                Me.SmartGuardShieldPictureBox.Image = Nothing
-                Select Case PatientData.SensorState
-                    Case "CALIBRATION_REQUIRED"
-                        Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.ShieldDisabled)
-                    Case "NO_ERROR_MESSAGE", "CALIBRATING"
-                        If s_pumpBannerStateValue IsNot Nothing AndAlso
-                            s_pumpBannerStateValue.Count > 0 Then
-                            Select Case s_pumpBannerStateValue.Last()(key:="Type")
-                                Case "TEMP_TARGET"
-                                    Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShieldExercise)
-                                Case "DELIVERY_SUSPEND", "LOAD_RESERVOIR"
-                                    Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShieldDeliverySuspended)
-                                Case Else
-                                    Stop
-                            End Select
-                        Else
-                            Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShield)
-                        End If
+            With Me.SmartGuardShieldPictureBox
+                If InAutoMode Then
+                    .Image = Nothing
+                    Select Case PatientData.SensorState
+                        Case "CALIBRATION_REQUIRED"
+                            .UpdatePictureBox(imageId:=ImageEnum.ShieldDisabled)
+                        Case "NO_ERROR_MESSAGE", "CALIBRATING"
+                            If s_pumpBannerStateValue IsNot Nothing AndAlso
+                                s_pumpBannerStateValue.Count > 0 Then
+                                Select Case s_pumpBannerStateValue.Last()(key:="Type")
+                                    Case "TEMP_TARGET"
+                                        .UpdatePictureBox(imageId:=ImageEnum.SmartGuardShieldExercise)
+                                    Case "DELIVERY_SUSPEND", "LOAD_RESERVOIR"
+                                        .UpdatePictureBox(imageId:=ImageEnum.SmartGuardShieldDeliverySuspended)
+                                    Case Else
+                                        Stop
+                                End Select
+                            Else
+                                .UpdatePictureBox(imageId:=ImageEnum.SmartGuardShield)
+                            End If
 
-                    Case "WARM_UP"
-                        Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.ShieldDisabled)
-                    Case "UNKNOWN"
-                        Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.FlexActiveInsulinReset)
-                    Case Else
-                        Me.SmartGuardShieldPictureBox.UpdatePictureBox(imageId:=ImageEnum.SmartGuardShield)
-                End Select
-                Me.ShieldUnitsLabel.Visible = True
-            Else
-                Me.SmartGuardShieldPictureBox.Image = Nothing
-                Me.ShieldUnitsLabel.Visible =
-                    PatientData.SensorState = "NO_ERROR_MESSAGE"
-            End If
+                        Case "WARM_UP"
+                            .UpdatePictureBox(imageId:=ImageEnum.ShieldDisabled)
+                        Case "UNKNOWN"
+                            .UpdatePictureBox(imageId:=ImageEnum.FlexActiveInsulinReset)
+                        Case Else
+                            .UpdatePictureBox(imageId:=ImageEnum.SmartGuardShield)
+                    End Select
+                    Me.ShieldUnitsLabel.Visible = True
+                Else
+                    .Image = Nothing
+                    Me.ShieldUnitsLabel.Visible =
+                        PatientData.SensorState = "NO_ERROR_MESSAGE"
+                End If
+            End With
             Me.LastSgOrExitTimeLabel.Visible = True
 
             Dim message As String = EmptyString

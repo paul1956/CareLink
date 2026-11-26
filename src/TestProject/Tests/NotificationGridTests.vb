@@ -258,7 +258,7 @@ Public Class NotificationGridTests
                                     End If
                                 Next
                                 Dim lastColumn As DataGridViewColumn = grid.Columns(index:=grid.ColumnCount - 1)
-                                Assert.Equal(expected:=DataGridViewAutoSizeColumnMode.Fill,
+                                Assert.Equal(expected:=Fill,
                                              actual:=lastColumn.AutoSizeMode)
                                 Assert.Equal(expected:=DataGridViewTriState.True,
                                              actual:=grid.Rows(index:=0).Cells(lastColumn.Index).InheritedStyle.WrapMode)

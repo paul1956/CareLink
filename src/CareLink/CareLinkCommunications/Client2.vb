@@ -104,7 +104,7 @@ Friend Class Client2
                 Return Nothing
             End If
             Dim token As String =
-                tokenDataElement.JsonElementToDictionary(key:="access_token").ToString
+                tokenDataElement.ElementToDictionary(key:="access_token").ToString
             Dim payload_b64 As String = token.Split(separator:="."c)(1)
             Dim payload_b64_bytes As Byte() = Encoding.UTF8.GetBytes(s:=payload_b64)
             Dim count As Integer = (4 - (payload_b64_bytes.Length Mod 4)) Mod 4
@@ -263,7 +263,7 @@ Friend Class Client2
         _lastHttpStatus = HttpStatusCode.OK
         Const key As String = "baseUrlCareLink"
         Dim configDict As Dictionary(Of String, JsonElement) =
-            configJsonElement.JsonElementToDictionary()
+            configJsonElement.ElementToDictionary()
 
         Dim baseUrl As String = String.Empty
         Dim baseElem As JsonElement = Nothing
@@ -547,7 +547,11 @@ Friend Class Client2
             ' Enhanced logging for first-time failures: capture environment and context
             Try
                 Dim envInfo As String =
-                    $"GetLoginData: tokenData is Nothing. Server={serverRegion}, User={userName}, OS={Environment.OSVersion}, Culture={CultureInfo.CurrentCulture.Name}, Machine={Environment.MachineName}"
+                    $"GetLoginData: tokenData is Nothing. " &
+                    $"Server={serverRegion}, User={userName}, " &
+                    $"OS={Environment.OSVersion}, " &
+                    $"Culture={CultureInfo.CurrentCulture.Name}, " &
+                    $"Machine={Environment.MachineName}"
                 LogMessage(message:=envInfo)
             Catch
                 ' Best-effort logging; swallow any failures here
@@ -822,20 +826,20 @@ Friend Class Client2
 
                                 For Each ent As ZipArchiveEntry In archive.Entries
                                     Dim fullName As String = ent.FullName
-                                    If String.IsNullOrEmpty(fullName) Then
+                                    If String.IsNullOrEmpty(value:=fullName) Then
                                         Continue For
                                     End If
 
                                     Dim normalized As String = fullName.NormalizePath()
                                     Dim firstSeg As String = normalized.Split(separator:="/"c)(0)
-                                    If String.IsNullOrEmpty(firstSeg) Then
+                                    If String.IsNullOrEmpty(value:=firstSeg) Then
                                         Continue For
                                     End If
 
                                     hasEntries = True
                                     If commonRoot Is Nothing Then
                                         commonRoot = firstSeg
-                                    ElseIf Not String.Equals(commonRoot, firstSeg, StringComparison.OrdinalIgnoreCase) Then
+                                    ElseIf Not String.Equals(a:=commonRoot, b:=firstSeg, ComparisonType) Then
                                         hasMixedRoots = True
                                         Exit For
                                     End If
@@ -860,7 +864,9 @@ Friend Class Client2
 
                                     If stripMatchingRoot Then
                                         Dim rootPrefix As String = $"{commonRoot}/"
-                                        If String.Equals(normalized.TrimEnd("/"c), commonRoot, StringComparison.OrdinalIgnoreCase) Then
+                                        If String.Equals(a:=normalized.TrimEnd(trimChar:="/"c),
+                                                         b:=commonRoot,
+                                                         ComparisonType) Then
                                             Directory.CreateDirectory(path:=extractDir)
                                             Continue For
                                         End If

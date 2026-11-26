@@ -48,7 +48,12 @@ Namespace My
                        Settings.CountryCode)
                 Dim regionName As String = country.GetRegionFromCode()
                 Dim serverMapping As String = GetServerMapping(regionName)
-                Dim serverRegion As ServerLocation = If(serverMapping.EqualsNoCase("US"), ServerLocation.US, If(serverMapping.EqualsNoCase("EU"), ServerLocation.EU, ServerLocation.CLINICAL))
+                Dim serverRegion As ServerLocation =
+                    If(serverMapping.EqualsNoCase(b:="US"),
+                       ServerLocation.US,
+                       If(serverMapping.EqualsNoCase(b:="EU"),
+                          ServerLocation.EU,
+                          ServerLocation.CLINICAL))
                 Dim [function] As Func(Of Task(Of DiscoveryRoot)) =
                     Function()
                         Return GetCachedDiscoveryAsync(serverRegion)

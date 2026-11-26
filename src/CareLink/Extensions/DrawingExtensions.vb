@@ -75,8 +75,11 @@ Friend Module DrawingExtensions
         Catch ex As ExternalException
             ' Diagnostics: avoid crashing the caller. Log and return the original image.
             Try
-                Debug.WriteLine(message:=$"DrawCenteredArc Graphics.FromImage failed: {ex.GetType().FullName} - {ex.Message}")
-                Debug.WriteLine(message:=$"backImage size={backImage.Width}x{backImage.Height} format={backImage.PixelFormat}")
+                Dim message As String =
+                    $"DrawCenteredArc Graphics.FromImage failed: {ex.GetType().FullName} - {ex.Message}"
+                Debug.WriteLine(message)
+                message = $"backImage size={backImage.Width}x{backImage.Height} format={backImage.PixelFormat}"
+                Debug.WriteLine(message)
             Catch
             End Try
 

@@ -106,8 +106,13 @@ Public Class RawDataViewerDialog
                 Catch ex As ArgumentOutOfRangeException
                     Continue For
                 End Try
-                Dim timeFormat As String = If(PatientData?.TimeFormat = "HR_12", "yyyy-MM-dd h:mm:ss tt", "yyyy-MM-dd HH:mm:ss")
-                lines(index) = $"{body}  // {local.ToString(format:=timeFormat, formatProvider:=CultureInfo.CurrentCulture)}{trailingReturn}"
+                Dim timeFormat As String =
+                    If(PatientData?.TimeFormat = "HR_12",
+                       "yyyy-MM-dd h:mm:ss tt",
+                       "yyyy-MM-dd HH:mm:ss")
+                lines(index) =
+                    $"{body}  // {local.ToString(format:=timeFormat,
+                                                 formatProvider:=CultureInfo.CurrentCulture)}{trailingReturn}"
             End If
         Next
         Return String.Join(separator:=vbLf, value:=lines)
@@ -158,7 +163,10 @@ Public Class RawDataViewerDialog
         End If
 
         Dim raw As Long
-        If Not Long.TryParse(s:=m.Groups(groupname:="value").Value, style:=NumberStyles.None, Provider, result:=raw) Then
+        If Not Long.TryParse(s:=m.Groups(groupname:="value").Value,
+                             style:=NumberStyles.None,
+                             Provider,
+                             result:=raw) Then
             Return ""
         End If
 
@@ -231,8 +239,12 @@ Public Class RawDataViewerDialog
                         Dim currentPath As String = $"{path}[{currentIndex.ToString(Provider)}]"
                         Dim matchedPrevious As New Dictionary(Of String, JsonNode)(Comparer)
                         Dim matchedCurrent As New Dictionary(Of String, JsonNode)(Comparer)
-                        CollectValues(node:=previousArray(index:=previousIndex), path:=previousPath, values:=matchedPrevious)
-                        CollectValues(node:=currentArray(index:=currentIndex), path:=currentPath, values:=matchedCurrent)
+                        CollectValues(node:=previousArray(index:=previousIndex),
+                                      path:=previousPath,
+                                      values:=matchedPrevious)
+                        CollectValues(node:=currentArray(index:=currentIndex),
+                                      path:=currentPath,
+                                      values:=matchedCurrent)
                         For Each key As String In matchedPrevious.Keys
                             previousValues.Remove(key)
                         Next
@@ -255,7 +267,10 @@ Public Class RawDataViewerDialog
     End Sub
 
     <DllImport("user32.dll", EntryPoint:="SendMessageW")>
-    Private Shared Function SendScrollMessage(handle As IntPtr, message As Integer, wParam As IntPtr, ByRef position As Point) As IntPtr
+    Private Shared Function SendScrollMessage(handle As IntPtr,
+                                              message As Integer,
+                                              wParam As IntPtr,
+                                              ByRef position As Point) As IntPtr
     End Function
 
     ''' <summary>
@@ -295,7 +310,15 @@ Public Class RawDataViewerDialog
         Me.Close()
     End Sub
 
-    Private Sub CheckBoxDifferenceOnly_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBoxDifferenceOnly.CheckedChanged
+    ''' <summary>
+    '''  Handles the CheckedChanged event of the CheckBoxDifferenceOnly,
+    '''  updating the data view if not currently updating.
+    ''' </summary>
+    ''' <param name="sender">The source of the event.</param>
+    ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
+    Private Sub CheckBoxDifferenceOnly_CheckedChanged(sender As Object, e As EventArgs) _
+        Handles CheckBoxDifferenceOnly.CheckedChanged
+
         If Not _updatingDataView Then
             Me.UpdateDataView()
         End If
@@ -323,7 +346,8 @@ Public Class RawDataViewerDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the Click event of the "Find All" button, finding all occurrences of the search text in the RichTextBox.
+    '''  Handles the Click event of the "Find All" button,
+    '''  finding all occurrences of the search text in the RichTextBox.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
@@ -334,7 +358,8 @@ Public Class RawDataViewerDialog
     End Sub
 
     ''' <summary>
-    '''  Handles the Click event of the "Find Next" button, finding the next occurrence of the search text in the RichTextBox.
+    '''  Handles the Click event of the "Find Next" button,
+    '''  finding the next occurrence of the search text in the RichTextBox.
     ''' </summary>
     ''' <param name="sender">The source of the event.</param>
     ''' <param name="e">An <see cref="EventArgs"/> that contains the event data.</param>
@@ -559,7 +584,10 @@ Public Class RawDataViewerDialog
             SendScrollMessage(target.Handle, message:=EM_GETSCROLLPOS, wParam:=IntPtr.Zero, position:=targetPosition)
             If targetPosition.Y <> sourcePosition.Y Then
                 targetPosition.Y = sourcePosition.Y
-                SendScrollMessage(target.Handle, message:=EM_SETSCROLLPOS, wParam:=IntPtr.Zero, position:=targetPosition)
+                SendScrollMessage(target.Handle,
+                                  message:=EM_SETSCROLLPOS,
+                                  wParam:=IntPtr.Zero,
+                                  position:=targetPosition)
             End If
         Finally
             _synchronizingScroll = False
@@ -656,14 +684,19 @@ Public Class RawDataViewerDialog
             Me.Sequence = sequence
             Me.PreviousLine = previousLine
             Me.CurrentLine = currentLine
-            Dim matches As MatchCollection = s_arrayIndex.Matches(path)
-            Me.Indexes = matches.Select(
-                selector:=Function(m)
-                              Dim index As Long = Long.MaxValue
-                              Long.TryParse(s:=m.Groups(groupnum:=1).Value, style:=NumberStyles.None, Provider, result:=index)
-                              Return index
-                          End Function).ToArray()
-            Me.Group = If(matches.Count > 0, path.Substring(0, matches(0).Index), path)
+            Dim matches As MatchCollection = s_arrayIndex.Matches(input:=path)
+            Dim selector As Func(Of Match, Long) =
+                Function(m As Match) As Long
+                    Dim index As Long = Long.MaxValue
+                    Long.TryParse(s:=m.Groups(groupnum:=1).Value,
+                                  style:=NumberStyles.None,
+                                  Provider,
+                                  result:=index)
+                    Return index
+                End Function
+
+            Me.Indexes = matches.Select(selector).ToArray()
+            Me.Group = If(matches.Count > 0, path.Substring(startIndex:=0, length:=matches(i:=0).Index), path)
         End Sub
 
         Public ReadOnly Property CurrentLine As String

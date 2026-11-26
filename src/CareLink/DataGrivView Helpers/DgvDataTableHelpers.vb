@@ -17,6 +17,41 @@ Friend Module DgvDataTableHelpers
     Private Const BindingAttr As BindingFlags =
         BindingFlags.Public Or BindingFlags.Instance
 
+#Region "DataGridView column sizing constants"
+
+    Friend Const AllCells As DataGridViewAutoSizeColumnMode =
+        DataGridViewAutoSizeColumnMode.AllCells
+
+    Friend Const AllCellsExceptHeader As DataGridViewAutoSizeColumnMode =
+        DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
+
+    Friend Const ColumnHeader As DataGridViewAutoSizeColumnMode =
+        DataGridViewAutoSizeColumnMode.ColumnHeader
+
+    Friend Const Fill As DataGridViewAutoSizeColumnMode =
+        DataGridViewAutoSizeColumnMode.Fill
+
+    Friend Const None As DataGridViewAutoSizeColumnMode =
+        DataGridViewAutoSizeColumnMode.None
+
+    Friend Const NotSet As DataGridViewAutoSizeColumnMode =
+        DataGridViewAutoSizeColumnMode.NotSet
+
+#End Region
+
+#Region "DataGridView column sort mode constants"
+
+    Friend Const Automatic As DataGridViewColumnSortMode =
+        DataGridViewColumnSortMode.Automatic
+
+    Friend Const NotSortable As DataGridViewColumnSortMode =
+        DataGridViewColumnSortMode.NotSortable
+
+    Friend Const Programmatic As DataGridViewColumnSortMode =
+        DataGridViewColumnSortMode.Programmatic
+
+#End Region
+
     ''' <summary>
     '''  Delegate for attaching event handlers to a <see cref="DataGridView"/>.
     ''' </summary>
@@ -62,19 +97,19 @@ Friend Module DgvDataTableHelpers
                     ' Fast path: avoid per-column width dependency for very large grids
                     Dim equalWeight As Single = 100.0F / Math.Max(1, dgv.Columns.Count)
                     For Each c As DataGridViewColumn In dgv.Columns
-                        c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                        c.AutoSizeMode = Fill
                         c.FillWeight = equalWeight
                     Next
                 Else
                     For Each c As DataGridViewColumn In dgv.Columns
                         Dim capped As Integer = Math.Min(c.Width, maxColumnWidth)
-                        c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                        c.AutoSizeMode = Fill
                         c.FillWeight = CSng(capped) / totalWidth * 100.0F
                     Next
                 End If
             Else
                 For Each c As DataGridViewColumn In dgv.Columns
-                    c.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                    c.AutoSizeMode = Fill
                     c.FillWeight = 100.0F
                 Next
             End If
@@ -90,7 +125,7 @@ Friend Module DgvDataTableHelpers
         dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
         Dim lastColumn As DataGridViewColumn = Nothing
         For Each column As DataGridViewColumn In dgv.Columns
-            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+            column.AutoSizeMode = None
             If column.Visible AndAlso (lastColumn Is Nothing OrElse column.DisplayIndex > lastColumn.DisplayIndex) Then
                 lastColumn = column
             End If
@@ -107,21 +142,29 @@ Friend Module DgvDataTableHelpers
                         column.HeaderCell.Style.WrapMode = DataGridViewTriState.True
                         Dim headerStyle As DataGridViewCellStyle = column.HeaderCell.InheritedStyle
                         Dim headerWidth As Integer = 0
-                        For Each line As String In column.HeaderText.Split(New String() {vbCrLf}, StringSplitOptions.None)
-                            headerWidth = Math.Max(headerWidth, TextRenderer.MeasureText(line, headerStyle.Font).Width)
+                        Dim separator As String() = New String() {vbCrLf}
+                        For Each line As String In column.HeaderText.Split(separator,
+                                                                           options:=StringSplitOptions.None)
+                            headerWidth =
+                                Math.Max(headerWidth, TextRenderer.MeasureText(text:=line, headerStyle.Font).Width)
                         Next
-                        headerWidth += headerStyle.Padding.Horizontal + CInt(Math.Ceiling(8.0 * dgv.DeviceDpi / 96.0))
+                        headerWidth +=
+                            headerStyle.Padding.Horizontal + CInt(Math.Ceiling(a:=8.0 * dgv.DeviceDpi / 96.0))
                         Dim contentWidth As Integer =
-                            column.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCellsExceptHeader, fixedHeight:=True)
+                            column.GetPreferredWidth(autoSizeColumnMode:=AllCellsExceptHeader,
+                                                     fixedHeight:=True)
                         column.Width = Math.Max(column.MinimumWidth, Math.Max(headerWidth, contentWidth))
                     Case Else
                         column.Width = Math.Max(column.MinimumWidth,
-                            column.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, fixedHeight:=True))
+                            column.GetPreferredWidth(autoSizeColumnMode:=AllCells,
+                                                     fixedHeight:=True))
                 End Select
-                If column.SortMode <> DataGridViewColumnSortMode.NotSortable AndAlso dgv.ColumnHeadersVisible Then
+                If column.SortMode <> NotSortable AndAlso dgv.ColumnHeadersVisible Then
                     Dim style As DataGridViewCellStyle = column.HeaderCell.InheritedStyle
                     Dim headerWidth As Integer = 0
-                    For Each line As String In column.HeaderText.Split(New String() {vbCrLf}, StringSplitOptions.None)
+                    Dim separator As String() = New String() {vbCrLf}
+                    For Each line As String In column.HeaderText.Split(separator,
+                                                                       options:=StringSplitOptions.None)
                         headerWidth = Math.Max(headerWidth, TextRenderer.MeasureText(line, style.Font).Width)
                     Next
                     headerWidth += style.Padding.Horizontal + CInt(Math.Ceiling(32.0 * dgv.DeviceDpi / 96.0))
@@ -133,15 +176,15 @@ Friend Module DgvDataTableHelpers
         If lastColumn IsNot Nothing Then
             If lastColumn.DataPropertyName = NameOf(SG.SensorState) Then
                 lastColumn.MinimumWidth = Math.Max(lastColumn.MinimumWidth,
-                    lastColumn.GetPreferredWidth(DataGridViewAutoSizeColumnMode.AllCells, fixedHeight:=True))
+                    lastColumn.GetPreferredWidth(autoSizeColumnMode:=AllCells, fixedHeight:=True))
             Else
                 lastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
                 If dgv.ColumnHeadersVisible Then
                     lastColumn.MinimumWidth = Math.Max(lastColumn.MinimumWidth,
-                        lastColumn.GetPreferredWidth(DataGridViewAutoSizeColumnMode.ColumnHeader, fixedHeight:=True))
+                        lastColumn.GetPreferredWidth(autoSizeColumnMode:=ColumnHeader, fixedHeight:=True))
                 End If
             End If
-            lastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            lastColumn.AutoSizeMode = Fill
         End If
     End Sub
 
@@ -165,8 +208,12 @@ Friend Module DgvDataTableHelpers
         ' If the header already contains line breaks (from a previous pass),
         ' normalize them to spaces so this function is idempotent and will not
         ' insert additional line breaks on subsequent calls.
-        If input.Contains(value:=vbCrLf) OrElse input.Contains(value:=vbLf) OrElse input.Contains(value:=vbCr) Then
-            input = input.Replace(oldValue:=vbCrLf, newValue:=" ").Replace(oldValue:=vbLf, newValue:=" ").Replace(oldValue:=vbCr, newValue:=" ")
+        If input.Contains(value:=vbCrLf) OrElse
+           input.Contains(value:=vbLf) OrElse
+           input.Contains(value:=vbCr) Then
+            input = input.Replace(oldValue:=vbCrLf, newValue:=" ") _
+                         .Replace(oldValue:=vbLf, newValue:=" ") _
+                         .Replace(oldValue:=vbCr, newValue:=" ")
         End If
 
         ' Normalize spaces
@@ -244,16 +291,16 @@ Friend Module DgvDataTableHelpers
             End If
             If dgv.Name = NameOf(Form1.DgvSGs) Then Continue For
             If col.HeaderText.Contains(value:="Record") Then
-                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+                col.AutoSizeMode = None
                 col.Width = If(dgv.Name = NameOf(Form1.DgvSGs),
                                100,
                                70)
                 col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
             ElseIf col.HeaderText.Equals(value:="Time Change") Then
-                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+                col.AutoSizeMode = AllCells
                 col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
             ElseIf col.HeaderText.Contains(value:="Time") Then
-                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCellsExceptHeader
+                col.AutoSizeMode = AllCellsExceptHeader
                 col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
             End If
         Next
@@ -284,7 +331,7 @@ Friend Module DgvDataTableHelpers
                     headerStyle.Padding.Horizontal + CInt(Math.Ceiling(16.0 * dgv.DeviceDpi / 96.0))
                 column.MinimumWidth = Math.Max(column.MinimumWidth, headerWidth)
             End If
-            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+            column.AutoSizeMode = AllCells
         Next
 
         If lastColumn IsNot Nothing Then
@@ -294,10 +341,10 @@ Friend Module DgvDataTableHelpers
                 lastColumn.DefaultCellStyle.WrapMode = DataGridViewTriState.True
                 If dgv.ColumnHeadersVisible Then
                     lastColumn.MinimumWidth = Math.Max(lastColumn.MinimumWidth,
-                        lastColumn.GetPreferredWidth(DataGridViewAutoSizeColumnMode.ColumnHeader, fixedHeight:=True))
+                        lastColumn.GetPreferredWidth(autoSizeColumnMode:=ColumnHeader, fixedHeight:=True))
                 End If
             End If
-            lastColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            lastColumn.AutoSizeMode = Fill
         End If
     End Sub
 

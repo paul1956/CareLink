@@ -92,7 +92,9 @@ Public Module DgvInitializationExtensions
         End If
 
         Dim list As BindingList(Of T) =
-            If(TypeOf items Is BindingList(Of T), DirectCast(items, BindingList(Of T)), New BindingList(Of T)(items.ToList()))
+            If(TypeOf items Is BindingList(Of T),
+               DirectCast(items, BindingList(Of T)),
+               New BindingList(Of T)(list:=items.ToList()))
 
         Dim bs As New BindingSource(dataSource:=list,
                                     dataMember:=Nothing)
@@ -191,8 +193,10 @@ Public Module DgvInitializationExtensions
         Dim fill As Color = If(checkState = CheckState.Unchecked,
                                Color.FromArgb(red:=56, green:=56, blue:=56),
                                Color.FromArgb(red:=0, green:=100, blue:=180))
-        Using brush As New SolidBrush(color:=fill), border As New Pen(color:=Color.FromArgb(red:=180, green:=180, blue:=180)),
+        Using brush As New SolidBrush(color:=fill),
+              border As New Pen(color:=Color.FromArgb(red:=180, green:=180, blue:=180)),
               mark As New Pen(color:=Color.White, width:=Math.Max(1.0F, CSng(size) / 8.0F))
+
             graphics.FillRectangle(brush, rect:=bounds)
             graphics.DrawRectangle(pen:=border,
                                    bounds.X,

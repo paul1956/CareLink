@@ -26,8 +26,9 @@ Public Module EnumExtensions
     Public Function GetEnumDescription(enumVal As [Enum]) As String
         Dim field As FieldInfo =
             enumVal.GetType().GetField(name:=enumVal.ToString())
-        Dim attribute As DescriptionAttribute() =
-            DirectCast(field.GetCustomAttributes(attributeType:=GetType(DescriptionAttribute), inherit:=False), DescriptionAttribute())
+        Dim objects As Object() =
+            field.GetCustomAttributes(attributeType:=GetType(DescriptionAttribute), inherit:=False)
+        Dim attribute As DescriptionAttribute() = DirectCast(objects, DescriptionAttribute())
 
         Return If(attribute IsNot Nothing AndAlso attribute.Length > 0, attribute(0).Description, enumVal.ToString())
     End Function

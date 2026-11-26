@@ -27,10 +27,16 @@ Public Module ListExtensions
 
         ' Normalize non-breaking spaces for matching so NBSP and normal spaces
         ' are treated equivalently when checking prefixes.
-        Dim headerNormalized As String = If(headerText Is Nothing, headerText, headerText.Replace(oldValue:=NonBreakingSpace, newValue:=" "c))
+        Dim headerNormalized As String =
+            If(headerText Is Nothing,
+               headerText,
+               headerText.Replace(oldValue:=NonBreakingSpace, newValue:=" "c))
         For Each value As String In list
-            Dim valueNormalized As String = If(value Is Nothing, value, value.Replace(oldValue:=NonBreakingSpace, newValue:=" "c))
-            If headerNormalized.StartsWithNoCase(valueNormalized) Then
+            Dim valueNormalized As String =
+                If(value Is Nothing,
+                   value,
+                   value.Replace(oldValue:=NonBreakingSpace, newValue:=" "c))
+            If headerNormalized.StartsWithNoCase(value:=valueNormalized) Then
                 result = value
                 Return True
             End If

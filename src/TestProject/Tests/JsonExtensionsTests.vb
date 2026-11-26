@@ -79,10 +79,11 @@ Public Class JsonExtensionsTests
 
     <Fact>
     Public Sub FromJson_String_DeserializesCaseInsensitiveAndNumericStrings()
-        Dim result As Dictionary(Of String, Integer) = "{""a"":""5"",""B"":6}".FromJson(Of Dictionary(Of String, Integer))()
+        Dim result As Dictionary(Of String, Integer) =
+            "{""a"":""5"",""B"":6}".FromJson(Of Dictionary(Of String, Integer))()
 
-        result.Should().Contain(New KeyValuePair(Of String, Integer)("a", 5))
-        result.Should().Contain(New KeyValuePair(Of String, Integer)("B", 6))
+        result.Should().Contain(expected:=New KeyValuePair(Of String, Integer)(key:="a", value:=5))
+        result.Should().Contain(expected:=New KeyValuePair(Of String, Integer)(key:="B", value:=6))
     End Sub
 
     <Fact>
@@ -98,41 +99,41 @@ Public Class JsonExtensionsTests
 
         Dim json As String = source.ToJson()
 
-        json.FromJson(Of List(Of Integer))().Should().Equal(source)
+        json.FromJson(Of List(Of Integer))().Should().Equal(expected:=source)
     End Sub
 
     <Fact>
     Public Sub ToJson_WritesIndentedOutputWithNativeNumbers()
         Dim json As String = New Dictionary(Of String, Integer) From {{"a", 1}}.ToJson()
 
-        json.Should().Contain("""a"": 1")
-        json.Should().Contain(Environment.NewLine)
+        json.Should().Contain(expected:="""a"": 1")
+        json.Should().Contain(expected:=Environment.NewLine)
     End Sub
 
     <Fact>
     Public Sub ToJsonElement_String_ReturnsStringElement()
         Dim element As JsonElement = "hello".ToJsonElement()
 
-        element.ValueKind.Should().Be(JsonValueKind.String)
-        element.GetString().Should().Be("hello")
+        element.ValueKind.Should().Be(expected:=JsonValueKind.String)
+        element.GetString().Should().Be(expected:="hello")
     End Sub
 
     Private Shared ReadOnly s_expectation As String() = {"a", "b"}
 
     <Fact>
     Public Sub JsonElementToDictionary_Object_ReturnsProperties()
-        Dim dict As Dictionary(Of String, JsonElement) = Parse("{""a"":1,""b"":""x""}").JsonElementToDictionary()
+        Dim dict As Dictionary(Of String, JsonElement) = Parse(json:="{""a"":1,""b"":""x""}").ElementToDictionary()
 
-        dict.Keys.Should().BeEquivalentTo(s_expectation)
+        dict.Keys.Should().BeEquivalentTo(expectation:=s_expectation)
         dict(key:="a").GetInt32().Should().Be(expected:=1)
         dict(key:="b").GetString().Should().Be(expected:="x")
     End Sub
 
     <Fact>
     Public Sub JsonElementToDictionary_NonObject_Throws()
-        Dim element As JsonElement = Parse("[1]")
+        Dim element As JsonElement = Parse(json:="[1]")
 
-        Dim act As Func(Of Dictionary(Of String, JsonElement)) = Function() element.JsonElementToDictionary()
+        Dim act As Func(Of Dictionary(Of String, JsonElement)) = Function() element.ElementToDictionary()
 
         act.Should().Throw(Of ArgumentException)()
     End Sub
@@ -159,7 +160,7 @@ Public Class JsonExtensionsTests
     <Fact>
     Public Sub ToStringDictionary_Element_SkipsNullsAndKeepsRawText()
         Dim dict As Dictionary(Of String, String) =
-            Parse("{""s"":""x"",""n"":1,""t"":true,""o"":{""k"":1},""z"":null}").ToStringDictionary()
+            Parse(json:="{""s"":""x"",""n"":1,""t"":true,""o"":{""k"":1},""z"":null}").ToStringDictionary()
 
         dict(key:="s").Should().Be(expected:="x")
         dict(key:="n").Should().Be(expected:="1")
@@ -172,7 +173,7 @@ Public Class JsonExtensionsTests
     Public Sub TryGetStringProperty_ExistingProperty_ReturnsTrue()
         Dim value As String = Nothing
 
-        Parse("{""a"":""x""}").TryGetStringProperty("a", value).Should().BeTrue()
+        Parse(json:="{""a"":""x""}").TryGetStringProperty(propertyName:="a", value:=value).Should().BeTrue()
 
         value.Should().Be(expected:="x")
     End Sub

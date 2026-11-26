@@ -137,7 +137,7 @@ Public Class InitializePumpSettingsDialog
 
     Private Sub FitDialogToGridColumns()
         Dim dgv As DataGridView = Me.InitializeDataGridView
-        Me.ColumnSave.AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+        Me.ColumnSave.AutoSizeMode = None
         Me.ColumnSave.Width = Math.Max(Me.ColumnSave.MinimumWidth, Me.ColumnSave.Width)
         Dim gap As Integer = CInt(Math.Ceiling(12.0 * Me.DeviceDpi / 96.0))
         Dim needed As Integer = If(dgv.RowHeadersVisible,
@@ -379,7 +379,7 @@ Public Class InitializePumpSettingsDialog
             .Enabled = Not _fromPdf
             For Each col As DataGridViewColumn In .Columns
                 col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
-                col.SortMode = DataGridViewColumnSortMode.NotSortable
+                col.SortMode = NotSortable
             Next
             If Me.CurrentUser.CarbRatios.Count > 0 Then
                 For Each carbRatio As IndexClass(Of CarbRatioRecord) In Me.CurrentUser.CarbRatios.WithIndex

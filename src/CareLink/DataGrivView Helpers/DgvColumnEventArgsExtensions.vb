@@ -44,18 +44,15 @@ Friend Module DgvColumnEventArgsExtensions
                 ' Preserve explicit behavior for DgvBasalPerHour: do not alter its
                 ' per-column sizing — leave as AllCells so this grid remains unchanged.
                 If .DataGridView.Name = NameOf(Form1.DgvBasalPerHour) Then
-                    .AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
-                ElseIf .DataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill Then
+                    .AutoSizeMode = AllCells
+                ElseIf .DataGridView.AutoSizeColumnsMode = Fill Then
                     ' Grid-level Fill: let post-bind conversion control per-column sizing
-                    .AutoSizeMode =
-                        DataGridViewAutoSizeColumnMode.NotSet
+                    .AutoSizeMode = NotSet
                 Else
-                    .AutoSizeMode =
-                        DataGridViewAutoSizeColumnMode.AllCells
+                    .AutoSizeMode = AllCells
                 End If
             Else
-                .AutoSizeMode =
-                    DataGridViewAutoSizeColumnMode.AllCells
+                .AutoSizeMode = AllCells
             End If
             .ReadOnly = forceReadOnly OrElse .DataPropertyName = "ID"
             .Resizable = DataGridViewTriState.False
@@ -83,9 +80,9 @@ Friend Module DgvColumnEventArgsExtensions
             End If
             .HeaderText = caption.Remove(s:="_")
             If .DataPropertyName.ContainsNoCase(value:="message") Then
-                .AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                .AutoSizeMode = Fill
             Else
-                .SortMode = DataGridViewColumnSortMode.NotSortable
+                .SortMode = NotSortable
             End If
         End With
 

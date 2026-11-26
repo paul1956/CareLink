@@ -683,7 +683,8 @@ Public Class LoginDialog
                 My.Settings.CareLinkPassword = Me.PasswordTextBox.Text
                 My.Settings.CareLinkPatientUserID = Me.PatientUserIDTextBox.Text
                 Dim checked As Boolean = Me.CarePartnerCheckBox.Checked
-                My.Settings.CareLinkPartner = checked OrElse Not String.IsNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text)
+                My.Settings.CareLinkPartner =
+                    checked OrElse Not String.IsNullOrWhiteSpace(value:=Me.PatientUserIDTextBox.Text)
                 My.Settings.Save()
                 Dim key As String = GetUserName()
                 If Not s_allUserSettingsData.TryGetValue(key, userRecord:=Me.LoggedOnUser) Then
@@ -1007,7 +1008,9 @@ Public Class LoginDialog
                                              "*"c)
     End Sub
 
-    <CodeAnalysis.SuppressMessage("Globalization", "CA1308:Normalize strings to uppercase", Justification:="Keys must be lowercase to match file names")>
+    <CodeAnalysis.SuppressMessage("Globalization",
+                                  "CA1308:Normalize strings to uppercase",
+                                  Justification:="Keys must be lowercase to match file names")>
     Private Function TryGetFlagImage(code As String) As Image
         Try
             If String.IsNullOrEmpty(value:=code) Then
@@ -1072,14 +1075,14 @@ Public Class LoginDialog
         ' No-op edit to update file timestamp.
         Try
             Dim userRecord As CareLinkUserDataRecord = Nothing
-            If s_allUserSettingsData.TryGetValue(Me.UsernameComboBox.Text, userRecord) Then
-                If userRecord.CareLinkUserName.EqualsNoCase(Me.UsernameComboBox.Text) Then
+            If s_allUserSettingsData.TryGetValue(key:=Me.UsernameComboBox.Text, userRecord) Then
+                If userRecord.CareLinkUserName.EqualsNoCase(b:=Me.UsernameComboBox.Text) Then
                     Me.UsernameComboBox.Text = userRecord.CareLinkUserName
                 End If
                 SetUserName(value:=Me.UsernameComboBox.Text)
                 Me.PasswordTextBox.Text = userRecord.CareLinkPassword
                 Dim userRegionName As String = userRecord.CountryCode.GetRegionFromCode()
-                If Not String.IsNullOrEmpty(userRegionName) Then
+                If Not String.IsNullOrEmpty(value:=userRegionName) Then
                     Me.RegionComboBox.SelectedItem = userRegionName
                 End If
                 Me.PatientUserIDTextBox.Text = userRecord.CareLinkPatientUserID
@@ -1119,13 +1122,13 @@ Public Class LoginDialog
         If Me.UsernameComboBox.SelectedValue IsNot Nothing AndAlso
            s_allUserSettingsData.TryGetValue(key, userRecord) Then
 
-            If Not userRecord.CareLinkUserName.EqualsNoCase(Me.UsernameComboBox.Text) Then
+            If Not userRecord.CareLinkUserName.EqualsNoCase(b:=Me.UsernameComboBox.Text) Then
                 Me.UsernameComboBox.Text = userRecord.CareLinkUserName
             End If
             My.Settings.CareLinkUserName = Me.UsernameComboBox.Text
             Me.PasswordTextBox.Text = userRecord.CareLinkPassword
             Dim userRegionName2 As String = userRecord.CountryCode.GetRegionFromCode()
-            If Not String.IsNullOrEmpty(userRegionName2) Then
+            If Not String.IsNullOrEmpty(value:=userRegionName2) Then
                 Me.RegionComboBox.SelectedItem = userRegionName2
             End If
             Me.PatientUserIDTextBox.Text = userRecord.CareLinkPatientUserID
