@@ -87,7 +87,8 @@ Public Class ExceptionReportTests
 
                         ' A truncated payload must not be silently repaired by appending a brace.
                         Dim report As String = File.ReadAllText(path)
-                        Assert.EndsWith(expectedEndString:="}", actualString:=report.TrimEnd())
+                        Assert.EndsWith(expectedEndString:="}",
+                                        actualString:=report.TrimEnd())
                         Dim closingBrace As Integer = report.LastIndexOf(value:="}"c)
                         File.WriteAllText(path, contents:=report.Remove(startIndex:=closingBrace, count:=1))
                         Dim truncatedJson As String = dialog.ReportFile(exTextBox:=exceptionBox,

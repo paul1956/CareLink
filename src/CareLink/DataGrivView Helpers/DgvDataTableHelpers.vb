@@ -72,7 +72,9 @@ Friend Module DgvDataTableHelpers
         Dim lastColumn As DataGridViewColumn = Nothing
         For Each column As DataGridViewColumn In dgv.Columns
             column.AutoSizeMode = None
-            If column.Visible AndAlso (lastColumn Is Nothing OrElse column.DisplayIndex > lastColumn.DisplayIndex) Then
+            If column.Visible AndAlso
+               (lastColumn Is Nothing OrElse column.DisplayIndex > lastColumn.DisplayIndex) Then
+
                 lastColumn = column
             End If
             If column.DataPropertyName = NameOf(SG.SensorState) Then
@@ -258,10 +260,13 @@ Friend Module DgvDataTableHelpers
     ''' <param name="dgv">The grid to size.</param>
     <Extension>
     Friend Sub ConfigureContentColumnSizing(dgv As DataGridView)
+        dgv.ApplyForm1GridFonts()
         dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
         Dim lastColumn As DataGridViewColumn = Nothing
         For Each column As DataGridViewColumn In dgv.Columns
-            If column.Visible AndAlso (lastColumn Is Nothing OrElse column.DisplayIndex > lastColumn.DisplayIndex) Then
+            If column.Visible AndAlso
+               (lastColumn Is Nothing OrElse column.DisplayIndex > lastColumn.DisplayIndex) Then
+
                 lastColumn = column
             End If
             If column.DataPropertyName = NameOf(SG.SensorState) Then
@@ -271,8 +276,10 @@ Friend Module DgvDataTableHelpers
                column.DataPropertyName = NameOf(SummaryRecord.RecordNumber) Then
                 column.HeaderCell.Style.WrapMode = DataGridViewTriState.False
                 Dim headerStyle As DataGridViewCellStyle = column.HeaderCell.InheritedStyle
-                Dim headerWidth As Integer = TextRenderer.MeasureText(column.HeaderText, headerStyle.Font).Width +
-                    headerStyle.Padding.Horizontal + CInt(Math.Ceiling(16.0 * dgv.DeviceDpi / 96.0))
+                Dim headerWidth As Integer =
+                        TextRenderer.MeasureText(text:=column.HeaderText, headerStyle.Font).Width +
+                        headerStyle.Padding.Horizontal +
+                        CInt(Math.Ceiling(a:=16.0 * dgv.DeviceDpi / 96.0))
                 column.MinimumWidth = Math.Max(column.MinimumWidth, headerWidth)
             End If
             column.AutoSizeMode = AllCells

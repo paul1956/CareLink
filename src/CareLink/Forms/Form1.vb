@@ -1685,6 +1685,9 @@ Public Class Form1
                 cellStyle:=GetCellStyle(Of BasalPerHour)(.Name),
                 forceReadOnly:=True,
                 CType(dgv.DataSource, DataTable).Columns(.Index).Caption)
+            If .DataPropertyName = NameOf(BasalPerHour.Filler) Then
+                .HeaderText = String.Empty
+            End If
         End With
     End Sub
 
@@ -2204,6 +2207,7 @@ Public Class Form1
             dgvCareLinkPatientUserID}
         dgv.Columns.AddRange(dataGridViewColumns)
         dgv.DataSource = Me.CareLinkUserDataRecordBindingSource
+        dgv.ApplyForm1GridFonts()
     End Sub
 
 #End Region ' Dgv CareLink™ Users Events
@@ -3654,14 +3658,6 @@ Public Class Form1
 
         Me.InsulinTypeLabel.Text = s_insulinTypes.Keys(index:=1)
 
-        Me.DgvBasalPerHour.Font = s_font12Bold
-        Dim currentHeaderStyle As DataGridViewCellStyle =
-            Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle.Clone
-        currentHeaderStyle.Font = s_font12Bold
-        Me.DgvBasalPerHour.ColumnHeadersDefaultCellStyle =
-            currentHeaderStyle
-        Me.DgvBasalPerHour.DefaultCellStyle =
-            New DataGridViewCellStyle With {.Font = s_font12}
         Me.MenuHelpShowControlPositions.Visible = Debugger.IsAttached
     End Sub
 

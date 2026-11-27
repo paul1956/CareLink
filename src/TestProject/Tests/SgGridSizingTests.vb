@@ -14,6 +14,123 @@ Imports Xunit
 Public Class SgGridSizingTests
 
     <Fact>
+    Public Sub BasalPerHour_FillerHeaderRemainsBlankAfterBinding()
+        Dim failure As Exception = Nothing
+        Dim start As ThreadStart =
+            Sub()
+                Try
+                    Using owner As New Form1(), host As New Form()
+                        Dim dgv As DataGridView = owner.DgvBasalPerHour
+                        host.Controls.Add(value:=dgv)
+                        host.Show()
+                        Dim records As New List(Of BasalPerHour) From {New BasalPerHour(hour:=0)}
+                        For refresh As Integer = 1 To 2
+                            DisplayDataTable(Of BasalPerHour)(realPanel:=Nothing,
+                                                              table:=records.ToDataTable(),
+                                                              dgv,
+                                                              rowIndex:=0)
+                            Application.DoEvents()
+                            Dim filler As DataGridViewColumn = dgv.Columns(columnName:=NameOf(BasalPerHour.Filler))
+                            Assert.Equal(expected:=String.Empty,
+                                         actual:=filler.HeaderText)
+                            Assert.Equal(expected:=Fill,
+                                         actual:=filler.AutoSizeMode)
+                            Assert.Equal(expected:=4,
+                                         actual:=filler.DisplayIndex)
+                        Next
+                    End Using
+                Catch ex As Exception
+                    failure = ex
+                End Try
+            End Sub
+
+        Dim thread As New Thread(start)
+        thread.SetApartmentState(state:=ApartmentState.STA)
+        thread.Start()
+        thread.Join()
+        If failure IsNot Nothing Then
+            ExceptionDispatchInfo.Capture(source:=failure).Throw()
+        End If
+    End Sub
+
+    <Fact>
+    Public Sub CalibrationGrid_FitsHeadersAndDataWithLargerFonts()
+        Dim failure As Exception = Nothing
+        Dim start As ThreadStart =
+            Sub()
+                Try
+                    Using owner As New GridTestForm(), table As DataTable = New List(Of Calibration)().ToDataTable()
+                        owner.ClientSize = New Size(width:=1370, height:=400)
+                        Dim dgv As DataGridView = owner.DgvCalibration
+                        owner.Controls.Add(value:=dgv)
+                        dgv.Dock = DockStyle.Fill
+                        owner.Show()
+                        Dim row As DataRow = table.NewRow()
+                        row(columnName:=NameOf(Calibration.RecordNumber)) = 1
+                        row(columnName:=NameOf(Calibration.TimestampAsString)) = "2026-11-25T20:53:53"
+                        row(columnName:=NameOf(Calibration.Timestamp)) = New Date(year:=2026,
+                                                                                  month:=11,
+                                                                                  day:=25,
+                                                                                  hour:=20,
+                                                                                  minute:=53,
+                                                                                  second:=53)
+                        row(columnName:=NameOf(Calibration.DisplayTimeAsString)) = "2026-11-25T20:53:53"
+                        row(columnName:=NameOf(Calibration.DisplayTime)) =
+                            row(columnName:=NameOf(Calibration.Timestamp))
+                        row(columnName:=NameOf(Calibration.UnitValue)) = 91.0F
+                        row(columnName:=NameOf(Calibration.UnitValueMgdL)) = 91.0F
+                        row(columnName:=NameOf(Calibration.UnitValueMmolL)) = 5.1F
+                        row(columnName:=NameOf(Calibration.BgUnits)) = "mg/dL"
+                        row(columnName:=NameOf(Calibration.CalibrationSuccess)) = True
+                        table.Rows.Add(row)
+
+                        For refresh As Integer = 1 To 2
+                            DisplayDataTable(Of Calibration)(realPanel:=Nothing,
+                                                             table,
+                                                             dgv,
+                                                             rowIndex:=0)
+                            Application.DoEvents()
+                            Assert.True(condition:=dgv.ColumnHeadersDefaultCellStyle.Font.Bold)
+                            Assert.Equal(expected:=12.0F,
+                                         actual:=dgv.ColumnHeadersDefaultCellStyle.Font.SizeInPoints)
+                            Assert.Equal(expected:=dgv.Font.SizeInPoints + 2.0F,
+                                         actual:=dgv.DefaultCellStyle.Font.SizeInPoints)
+                            Dim filler As DataGridViewColumn = dgv.Columns(columnName:=NameOf(Calibration.Filler))
+                            Assert.Equal(expected:=String.Empty,
+                                         actual:=filler.HeaderText)
+                            Assert.Equal(expected:=Fill,
+                                         actual:=filler.AutoSizeMode)
+                            Dim totalWidth As Integer = 0
+                            For Each column As DataGridViewColumn In dgv.Columns
+                                If column.Visible Then
+                                    totalWidth += column.Width
+                                    If column IsNot filler Then
+                                        Dim required As Integer = column.GetPreferredWidth(
+                                            autoSizeColumnMode:=AllCells, fixedHeight:=True)
+                                        Assert.True(condition:=column.Width >= required,
+                                                    userMessage:=$"{column.Name}: {column.Width} < {required}")
+                                    End If
+                                End If
+                            Next
+                            Assert.True(condition:=totalWidth <= dgv.ClientSize.Width,
+                                        userMessage:=$"Columns need {totalWidth}, available {dgv.ClientSize.Width}.")
+                        Next
+                    End Using
+                Catch ex As Exception
+                    failure = ex
+                End Try
+            End Sub
+
+        Dim thread As New Thread(start)
+        thread.SetApartmentState(state:=ApartmentState.STA)
+        thread.Start()
+        thread.Join()
+        If failure IsNot Nothing Then
+            ExceptionDispatchInfo.Capture(source:=failure).Throw()
+        End If
+    End Sub
+
+    <Fact>
     Public Sub ConfigureContentColumnSizing_SummaryRecordHeaderFitsAfterRefreshAndResize()
         Dim failure As Exception = Nothing
         Dim start As ThreadStart =
@@ -50,11 +167,13 @@ Public Class SgGridSizingTests
                                 Application.DoEvents()
                                 Assert.Equal(expected:=DataGridViewTriState.False,
                                              actual:=column.HeaderCell.InheritedStyle.WrapMode)
-                                Dim requiredWidth As Integer =
+                                Dim size As Size =
                                     TextRenderer.MeasureText(text:=column.HeaderText,
-                                                             font:=column.HeaderCell.InheritedStyle.Font).Width +
-                                                                   column.HeaderCell.InheritedStyle.Padding.Horizontal +
-                                                                   CInt(Math.Ceiling(a:=16.0 * dgv.DeviceDpi / 96.0))
+                                                             font:=column.HeaderCell.InheritedStyle.Font)
+                                Dim requiredWidth As Integer = size.Width +
+                                                               column.HeaderCell.InheritedStyle.Padding.Horizontal +
+                                                               CInt(Math.Ceiling(a:=16.0 * dgv.DeviceDpi / 96.0))
+
                                 Assert.True(condition:=column.Width >= requiredWidth,
                                             userMessage:=$"Actual={column.Width}, required={requiredWidth}")
                                 Dim dataGridViewColumn As DataGridViewColumn =
@@ -175,7 +294,8 @@ Public Class SgGridSizingTests
                         For index As Integer = 1 To rowCount
                             If index = rowCount Then
                                 table.Rows.Add(index, 107.0F, 107.0F, 5.9F, "SENSOR_NOT_READY",
-                                    String.Concat(Enumerable.Repeat(element:="A long sensor message ", count:=30)))
+                                    String.Concat(Enumerable.Repeat(element:="A long sensor message ",
+                                                                          count:=30)))
                             Else
                                 table.Rows.Add(index, 107.0F, 107.0F, 5.9F, "NO_ERROR_MESSAGE", "---")
                             End If
@@ -272,6 +392,64 @@ Public Class SgGridSizingTests
                             Assert.Equal(expected:=Fill,
                                          actual:=message.AutoSizeMode)
                         Next
+                    End Using
+                Catch ex As Exception
+                    failure = ex
+                End Try
+            End Sub
+
+        Dim thread As New Thread(start)
+        thread.SetApartmentState(state:=ApartmentState.STA)
+        thread.Start()
+        thread.Join()
+        If failure IsNot Nothing Then
+            ExceptionDispatchInfo.Capture(source:=failure).Throw()
+        End If
+    End Sub
+
+    <Fact>
+    Public Sub Form1GridFonts_UseBoldHeadersAndIncreaseFillerGridText()
+        Dim failure As Exception = Nothing
+        Dim start As ThreadStart =
+            Sub()
+                Try
+                    Using owner As New Form1(), grid As New DataGridView(), other As New DataGridView()
+                        owner.Controls.Add(value:=grid)
+                        grid.Columns.Add(dataGridViewColumn:=New DataGridViewTextBoxColumn With {
+                            .Name = "Value",
+                            .DataPropertyName = "Value",
+                            .HeaderText = "Value"})
+
+                        grid.InitializeDgv()
+                        Dim baseline As Single = grid.Font.SizeInPoints
+                        Assert.Equal(expected:=baseline + 1.0F,
+                                     actual:=grid.DefaultCellStyle.Font.SizeInPoints)
+                        Assert.True(condition:=grid.ColumnHeadersDefaultCellStyle.Font.Bold)
+                        Assert.Equal(expected:=12.0F,
+                                     actual:=grid.ColumnHeadersDefaultCellStyle.Font.SizeInPoints)
+
+                        grid.Columns.Add(dataGridViewColumn:=New DataGridViewTextBoxColumn With {
+                            .Name = NameOf(BasalPerHour.Filler),
+                            .DataPropertyName = NameOf(BasalPerHour.Filler)})
+
+                        For refresh As Integer = 1 To 2
+                            grid.ConfigureContentColumnSizing()
+                            Assert.Equal(expected:=baseline + 2.0F,
+                                         actual:=grid.DefaultCellStyle.Font.SizeInPoints)
+                            Assert.True(condition:=grid.ColumnHeadersDefaultCellStyle.Font.Bold)
+                            Assert.Equal(expected:=Fill,
+                                         actual:=grid.Columns(index:=1).AutoSizeMode)
+                        Next
+                        grid.Columns.RemoveAt(index:=1)
+                        grid.ConfigureContentColumnSizing()
+                        Assert.Equal(expected:=baseline + 1.0F,
+                                     actual:=grid.DefaultCellStyle.Font.SizeInPoints)
+
+                        owner.DgvBasalPerHour.InitializeDgv()
+                        Assert.Equal(expected:=grid.ColumnHeadersDefaultCellStyle.Font,
+                                     actual:=owner.DgvBasalPerHour.ColumnHeadersDefaultCellStyle.Font)
+                        other.InitializeDgv()
+                        Assert.False(condition:=other.ColumnHeadersDefaultCellStyle.Font.Bold)
                     End Using
                 Catch ex As Exception
                     failure = ex
@@ -462,4 +640,11 @@ Public Class SgGridSizingTests
         End If
     End Sub
 
+    Private NotInheritable Class GridTestForm
+        Inherits Form1
+
+        Protected Overrides Sub OnLoad(e As EventArgs)
+        End Sub
+
+    End Class
 End Class

@@ -13,6 +13,7 @@ Imports DataGridViewColumnControls
 Public Module DgvInitializationExtensions
 
     Private Const DefaultCellFontIncreasePoints As Single = 1.0F
+    Private Const FillerCellFontIncreasePoints As Single = 2.0F
     Private ReadOnly s_gridFonts As New ConditionalWeakTable(Of DataGridView, GridFontState)()
 
     Private Sub Dgv_SystemColorsChanged(sender As Object, e As EventArgs)
@@ -80,6 +81,18 @@ Public Module DgvInitializationExtensions
                      CInt(Math.Ceiling(a:=state.Font.GetHeight(dpi:=dgv.DeviceDpi) + (8.0 * dgv.DeviceDpi / 96.0))))
     End Sub
 
+    <Extension>
+    Friend Sub ApplyForm1GridFonts(dgv As DataGridView)
+        If TypeOf dgv.FindForm() IsNot Form1 Then Return
+
+        Dim hasFiller As Boolean = dgv.Columns.Cast(Of DataGridViewColumn)().
+            Any(Function(column As DataGridViewColumn) column.DataPropertyName = NameOf(BasalPerHour.Filler))
+        dgv.ApplyCellFontIncrease(increasePoints:=If(hasFiller,
+                                                     FillerCellFontIncreasePoints,
+                                                     DefaultCellFontIncreasePoints))
+        dgv.ColumnHeadersDefaultCellStyle.Font = s_font12Bold
+    End Sub
+
     ''' <summary>
     ''' Binds the specified list to the DataGridView using a BindingList and BindingSource
     ''' so that later additions/removals update the grid automatically.
@@ -140,6 +153,7 @@ Public Module DgvInitializationExtensions
         End With
 
         dgv.ApplyCellFontIncrease()
+        dgv.ApplyForm1GridFonts()
         dgv.InitializeGridTheme()
 
         RemoveHandler dgv.DataBindingComplete, AddressOf DgvContentSizing_DataBindingComplete

@@ -200,7 +200,8 @@ Public Class RawDataViewerDialogTests
                     dialog.Show()
                     Dim current As RichTextBox =
                         DirectCast(dialog.Controls.Find(key:="RawDataRTB", SearchAllChildren)(0), RichTextBox)
-                    Assert.Contains(expectedSubstring:=$"// {expected}", actualString:=current.Text)
+                    Assert.Contains(expectedSubstring:=$"// {expected}",
+                                    actualString:=current.Text)
                 End Using
             End Sub
         RunOnSta(action)
@@ -317,7 +318,8 @@ Public Class RawDataViewerDialogTests
                         CheckForDataChanges()
                         refresh.PerformClick()
                         Assert.False(condition:=previous.Visible)
-                        Assert.Contains(expectedSubstring:="""new""", actualString:=current.Text)
+                        Assert.Contains(expectedSubstring:="""new""",
+                                        actualString:=current.Text)
 
                         PreviousPatientDataElement = Parse(json:="{""new"":4}")
                         PatientDataElement = Parse(json:="{""new"":5}")
@@ -335,8 +337,10 @@ Public Class RawDataViewerDialogTests
                         toggle.Checked = False
                         Assert.Contains(expectedSubstring:="""new""",
                                         actualString:=previous.Text)
-                        Assert.Contains(expectedSubstring:="4", actualString:=previous.Text)
-                        Assert.Contains(expectedSubstring:="5", actualString:=current.Text)
+                        Assert.Contains(expectedSubstring:="4",
+                                        actualString:=previous.Text)
+                        Assert.Contains(expectedSubstring:="5",
+                                        actualString:=current.Text)
                     End Using
                 Finally
                     PreviousPatientDataElement = originalPrevious
@@ -404,14 +408,16 @@ Public Class RawDataViewerDialogTests
                         Assert.True(condition:=refresh.Enabled)
                         refresh.PerformClick()
                         Assert.False(condition:=refresh.Enabled)
-                        Assert.Contains(expectedSubstring:="2", actualString:=current.Text)
+                        Assert.Contains(expectedSubstring:="2",
+                                        actualString:=current.Text)
 
                         PatientDataElement = Parse(json:="{""currentServerTime"":4,""value"":4}")
                         CheckForDataChanges()
                         Assert.True(condition:=refresh.Enabled)
                         refresh.PerformClick()
                         Assert.False(condition:=refresh.Enabled)
-                        Assert.Contains(expectedSubstring:="4", actualString:=current.Text)
+                        Assert.Contains(expectedSubstring:="4",
+                                        actualString:=current.Text)
                         CheckForDataChanges()
                         Assert.False(condition:=refresh.Enabled)
                     End Using
@@ -467,11 +473,13 @@ Public Class RawDataViewerDialogTests
 
                     dialog.Show()
                     Dim previous As RichTextBox =
-                        DirectCast(dialog.Controls.Find(key:="PreviousRawDataRTB", SearchAllChildren)(0), RichTextBox)
+                        DirectCast(dialog.Controls.Find(key:="PreviousRawDataRTB", SearchAllChildren)(0),
+                                   RichTextBox)
                     Dim current As RichTextBox =
                         DirectCast(dialog.Controls.Find(key:="RawDataRTB", SearchAllChildren)(0), RichTextBox)
                     Dim toggle As CheckBox =
-                        DirectCast(dialog.Controls.Find(key:="CheckBoxDifferenceOnly", SearchAllChildren)(0), CheckBox)
+                        DirectCast(dialog.Controls.Find(key:="CheckBoxDifferenceOnly", SearchAllChildren)(0),
+                                   CheckBox)
                     Dim search As TextBox =
                         DirectCast(dialog.Controls.Find(key:="txtFind", SearchAllChildren)(0), TextBox)
                     Dim findNext As Button =
@@ -564,9 +572,11 @@ Public Class RawDataViewerDialogTests
                     Dim differenceOnly As CheckBox =
                         DirectCast(dialog.Controls.Find(key:="CheckBoxDifferenceOnly", SearchAllChildren)(0), CheckBox)
 
-                    Assert.Contains(expectedSubstring:="// 20 min", actualString:=current.Text)
+                    Assert.Contains(expectedSubstring:="// 20 min",
+                                    actualString:=current.Text)
                     differenceOnly.Checked = True
-                    Assert.Contains(expectedSubstring:="// 20 min", actualString:=current.Text)
+                    Assert.Contains(expectedSubstring:="// 20 min",
+                                    actualString:=current.Text)
                 End Using
             End Sub
         RunOnSta(action)
@@ -577,9 +587,13 @@ Public Class RawDataViewerDialogTests
         Dim action As Action =
             Sub()
                 Dim expectedSeconds As String =
-                    DateTimeOffset.FromUnixTimeSeconds(seconds:=1700000000).ToLocalTime().ToString(Format)
+                    DateTimeOffset.FromUnixTimeSeconds(seconds:=1700000000) _
+                                  .ToLocalTime() _
+                                  .ToString(Format)
                 Dim expectedMillis As String =
-                    DateTimeOffset.FromUnixTimeMilliseconds(milliseconds:=1700000001000).ToLocalTime().ToString(Format)
+                    DateTimeOffset.FromUnixTimeMilliseconds(milliseconds:=1700000001000) _
+                                  .ToLocalTime() _
+                                  .ToString(Format)
                 Using dialog As New RawDataViewerDialog(
                     prevJson:=Parse(json:="{""lastTime"":1600000000,""count"":1700000000}"),
                     json:=Parse(json:="{""lastTime"":1700000000,""otherTIME"":1700000001000,""count"":1700000000}"))
@@ -621,11 +635,15 @@ Public Class RawDataViewerDialogTests
                     json:=Parse(json:="{""sgs"":[{""sg"":0},{""sg"":1},{""sg"":2}]}"))
                     dialog.Show()
                     Dim previous As RichTextBox =
-                        DirectCast(dialog.Controls.Find(key:="PreviousRawDataRTB", SearchAllChildren)(0), RichTextBox)
+                        DirectCast(dialog.Controls.Find(key:="PreviousRawDataRTB", SearchAllChildren)(0),
+                                   RichTextBox)
+
                     Dim current As RichTextBox =
                         DirectCast(dialog.Controls.Find(key:="RawDataRTB", SearchAllChildren)(0), RichTextBox)
-                    Assert.DoesNotContain(expectedSubstring:="= 9", actualString:=previous.Text)
-                    Assert.Contains(expectedSubstring:="$[""sgs""][0][""sg""] = 0", actualString:=current.Text)
+                    Assert.DoesNotContain(expectedSubstring:="= 9",
+                                          actualString:=previous.Text)
+                    Assert.Contains(expectedSubstring:="$[""sgs""][0][""sg""] = 0",
+                                    actualString:=current.Text)
                 End Using
             End Sub
         RunOnSta(action)
